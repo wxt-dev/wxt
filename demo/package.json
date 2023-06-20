@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -w build && exvite",
+    "build": "pnpm -w build && exvite build",
+    "prepare": "pnpm -w build && exvite prepare"
+  },
+  "devDependencies": {
+    "exvite": "workspace:*"
+  },
+  "dependencies": {
+    "unimport": "^3.0.8"
+  }
+}

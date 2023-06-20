@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.env.*
+.exvite
+.idea
+.output
+*.log
+/.vscode/
+/docs/.vitepress/cache
+coverage
+dist
+node_modules
+TODOs.md
