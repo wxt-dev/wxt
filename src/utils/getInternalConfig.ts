@@ -1,12 +1,9 @@
-import {
-  InlineConfig,
-  InternalConfig,
-  UserConfig,
-  UserConfigExport,
-} from '../types';
+import { InlineConfig, InternalConfig, UserConfig } from '../types';
 import path from 'node:path';
 import * as vite from 'vite';
 import Unimport, { UnimportPluginOptions } from 'unimport/unplugin';
+import { consola } from 'consola';
+import fs from 'fs-extra';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -28,6 +25,7 @@ export async function getInternalConfig(
     storeIds: config.storeIds ?? {},
     browser: config.browser ?? 'chromium',
     mode,
+    logger: config.logger ?? consola,
     vite: config.vite,
   };
 
@@ -40,7 +38,6 @@ export async function getInternalConfig(
       { command, mode },
       config.configFile ?? 'exvite.config.ts',
     );
-    console.log('Loaded config:', loadedConfig);
     userConfig = loadedConfig?.config as any;
   }
 

@@ -10,7 +10,6 @@ export * from './utils/defineConfig';
  */
 export async function build(config: InlineConfig): Promise<BuildOutput> {
   const internalConfig = await getInternalConfig(config, 'build');
-  console.log({ internalConfig });
   throw Error('Not implemented');
 }
 
@@ -18,7 +17,6 @@ export async function createServer(
   config: InlineConfig,
 ): Promise<ExviteDevServer> {
   const internalConfig = await getInternalConfig(config, 'serve');
-  console.log({ internalConfig });
   const server = await vite.createServer(internalConfig.vite);
   throw Error('Not implemented');
 }

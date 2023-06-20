@@ -13,6 +13,7 @@ export interface InlineConfig {
   mode?: string;
   imports?: Partial<UnimportPluginOptions>;
   browser?: TargetBrowser;
+  logger?: Logger;
   vite?: Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode'>;
 }
 
@@ -28,3 +29,12 @@ export type UserConfigExport =
   | UserConfig
   | ((info: { mode: string }) => UserConfig)
   | ((info: { mode: string }) => Promise<UserConfig>);
+
+export interface Logger {
+  debug(...args: any[]): void;
+  log(...args: any[]): void;
+  info(...args: any[]): void;
+  warn(...args: any[]): void;
+  error(...args: any[]): void;
+  fatal(...args: any[]): void;
+}

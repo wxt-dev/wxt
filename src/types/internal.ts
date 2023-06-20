@@ -1,5 +1,5 @@
 import * as vite from 'vite';
-import { TargetBrowser } from './external';
+import { Logger, TargetBrowser } from './external';
 
 export interface InternalConfig {
   srcDir: string;
@@ -10,5 +10,6 @@ export interface InternalConfig {
   };
   mode: string;
   browser: TargetBrowser;
+  logger: Logger;
   vite?: vite.InlineConfig;
 }
