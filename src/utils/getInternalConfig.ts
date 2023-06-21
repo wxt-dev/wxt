@@ -1,9 +1,9 @@
 import { InlineConfig, InternalConfig, UserConfig } from '../types';
 import path from 'node:path';
 import * as vite from 'vite';
-import Unimport, { UnimportPluginOptions } from 'unimport/unplugin';
 import { consola } from 'consola';
-import fs from 'fs-extra';
+import { importTsFile } from './importTsFile';
+import * as plugins from '../vite-plugins';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -17,14 +17,25 @@ export async function getInternalConfig(
   const root = config.root ? path.resolve(config.root) : process.cwd();
   const srcDir =
     config.srcDir == null ? root : path.resolve(root, config.srcDir);
+  const entrypointsDir = path.resolve(
+    srcDir,
+    config.entrypointsDir ?? 'entrypoints',
+  );
   const mode =
     config.mode ?? (command === 'build' ? 'production' : 'development');
+  const browser = config.browser ?? 'chromium';
+  const manifestVersion =
+    config.manifestVersion ?? (browser === 'chromium' ? 3 : 2);
 
   const baseConfig: InternalConfig = {
     srcDir,
+    entrypointsDir,
     storeIds: config.storeIds ?? {},
-    browser: config.browser ?? 'chromium',
+    browser,
+    manifestVersion,
     mode,
+    command,
+    outDir: '.output',
     logger: config.logger ?? consola,
     vite: config.vite,
   };
@@ -34,11 +45,9 @@ export async function getInternalConfig(
     mode: config.mode,
   };
   if (config.configFile !== false) {
-    const loadedConfig = await vite.loadConfigFromFile(
-      { command, mode },
-      config.configFile ?? 'exvite.config.ts',
+    userConfig = await importTsFile<UserConfig>(
+      path.resolve(config.configFile ?? 'exvite.config.ts'),
     );
-    userConfig = loadedConfig?.config as any;
   }
 
   // Merge inline and user configs
@@ -50,26 +59,8 @@ export async function getInternalConfig(
   merged.vite.configFile = false;
   merged.vite.plugins ??= [];
 
-  const defaultOptions: UnimportPluginOptions = {
-    include: srcDir,
-    exclude: [],
-    addons: [],
-    debugLog: () => {},
-    dts: path.resolve(root, '.exvite/types/imports.d.ts'),
-    imports: [{ name: '*', as: 'browser', from: 'webextension-polyfill' }],
-    presets: [],
-    virtualImports: [],
-    warn: () => {},
-    dirs: ['components', 'composables', 'hooks', 'utils'],
-  };
-  const unimportConfig = vite.mergeConfig(
-    defaultOptions,
-    userConfig.imports ?? {},
-  ) as UnimportPluginOptions;
-  const unimport: typeof Unimport.vite =
-    // @ts-expect-error: esm availabe within the default object?
-    Unimport.vite ?? Unimport.default?.vite;
-  merged.vite.plugins.push(unimport(unimportConfig));
+  merged.vite.plugins.push(plugins.unimport(root, srcDir, userConfig.imports));
+  merged.vite.plugins.push(plugins.download());
 
   return merged;
 }
