@@ -5,10 +5,11 @@
     "build": "pnpm -w build && exvite build",
     "prepare": "pnpm -w build && exvite prepare"
   },
-  "devDependencies": {
-    "exvite": "workspace:*"
-  },
   "dependencies": {
-    "unimport": "^3.0.8"
+    "webextension-polyfill": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.10.0",
+    "exvite": "workspace:*"
   }
 }

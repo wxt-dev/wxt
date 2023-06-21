@@ -16,7 +16,7 @@
   "files": [
     "dist"
   ],
-  "bin": "dist/cli.cjs",
+  "bin": "dist/cli/index.cjs",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,13 +25,19 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "require": "./dist/client/index.cjs",
+      "import": "./dist/client/index.js",
+      "types": "./dist/client/index.d.ts"
     }
   },
   "scripts": {
     "dev": "tsx src/cli.ts",
     "build": "run-s build:*",
     "build:js": "tsup src/index.ts --clean --sourcemap --dts --format esm,cjs",
-    "build:cli": "tsup src/cli.ts",
+    "build:cli": "tsup src/cli/index.ts -d dist/cli --sourcemap",
+    "build:client": "tsup src/client/index.ts -d dist/client --sourcemap --dts --format esm,cjs",
     "format": "prettier --write .",
     "format:check": "prettier --write .",
     "prepare": "simple-git-hooks"
