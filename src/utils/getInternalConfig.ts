@@ -35,7 +35,7 @@ export async function getInternalConfig(
     manifestVersion,
     mode,
     command,
-    outDir: '.output',
+    outDir: path.resolve(root, '.output', `${browser}-mv${manifestVersion}`),
     logger: config.logger ?? consola,
     vite: config.vite,
   };
