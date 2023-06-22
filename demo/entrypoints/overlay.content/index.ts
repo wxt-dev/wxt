@@ -1,5 +1,6 @@
 import { defineContentScript, mountContentScriptUi } from 'exvite/client';
 import browser from 'webextension-polyfill';
+import '../../common/style.css';
 
 export default defineContentScript({
   matches: ['*://*/*'],

@@ -10,6 +10,9 @@
     /* Type Checking */
     "strict": true,
 
+    /* Linting */
+    "noUnusedLocals": true,
+
     /* Completeness */
     "skipLibCheck": true
   }

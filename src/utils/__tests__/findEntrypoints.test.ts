@@ -59,8 +59,9 @@ describe('findEntrypoints', () => {
       `,
       {
         type: 'popup',
+        name: 'popup',
         inputPath: resolve(config.entrypointsDir, 'popup.html'),
-        outputDir: resolve(config.outDir, 'popup'),
+        outputDir: config.outDir,
         options: {
           defaultIcon: { '16': '/icon/16.png' },
           defaultTitle: 'Default Title',
@@ -78,8 +79,9 @@ describe('findEntrypoints', () => {
       `,
       {
         type: 'popup',
+        name: 'popup',
         inputPath: resolve(config.entrypointsDir, 'popup/index.html'),
-        outputDir: resolve(config.outDir, 'popup'),
+        outputDir: config.outDir,
         options: {
           defaultTitle: 'Title',
         },
@@ -110,8 +112,9 @@ describe('findEntrypoints', () => {
       `,
       {
         type: 'options',
+        name: 'options',
         inputPath: resolve(config.entrypointsDir, 'options.html'),
-        outputDir: resolve(config.outDir, 'options'),
+        outputDir: config.outDir,
         options: {},
       },
     ],
@@ -127,8 +130,9 @@ describe('findEntrypoints', () => {
       `,
       {
         type: 'options',
+        name: 'options',
         inputPath: resolve(config.entrypointsDir, 'options/index.html'),
-        outputDir: resolve(config.outDir, 'options'),
+        outputDir: config.outDir,
         options: {
           openInTab: true,
         },
@@ -152,16 +156,27 @@ describe('findEntrypoints', () => {
       'overlay.content.ts',
       {
         type: 'content-script',
+        name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.ts'),
-        outputDir: resolve(config.outDir, 'content-scripts/overlay'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
       },
     ],
     [
       'overlay.content/index.ts',
       {
         type: 'content-script',
+        name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.ts'),
-        outputDir: resolve(config.outDir, 'content-scripts/overlay'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
+      'overlay.content.tsx',
+      {
+        type: 'content-script',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'overlay.content.tsx'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
       },
     ],
   ])(
@@ -171,19 +186,13 @@ describe('findEntrypoints', () => {
         matches: ['<all_urls>'],
       };
       globMock.mockResolvedValueOnce([path]);
-      importTsFileMock.mockResolvedValue({
-        defaultExport: options,
-        dependencies: [],
-      });
+      importTsFileMock.mockResolvedValue(options);
 
       const entrypoints = await findEntrypoints(config);
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(
-        { mode: config.mode, command: config.command },
-        expected.inputPath,
-      );
+      expect(importTsFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -192,8 +201,9 @@ describe('findEntrypoints', () => {
       'background.ts',
       {
         type: 'background',
+        name: 'background',
         inputPath: resolve(config.entrypointsDir, 'background.ts'),
-        outputDir: resolve(config.outDir, 'background'),
+        outputDir: config.outDir,
       },
     ],
   ])(
@@ -203,19 +213,13 @@ describe('findEntrypoints', () => {
         matches: ['<all_urls>'],
       };
       globMock.mockResolvedValueOnce([path]);
-      importTsFileMock.mockResolvedValue({
-        defaultExport: options,
-        dependencies: [],
-      });
+      importTsFileMock.mockResolvedValue(options);
 
       const entrypoints = await findEntrypoints(config);
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(
-        { mode: config.mode, command: config.command },
-        expected.inputPath,
-      );
+      expect(importTsFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -225,32 +229,36 @@ describe('findEntrypoints', () => {
       'sandbox.html',
       {
         type: 'sandbox',
+        name: 'sandbox',
         inputPath: resolve(config.entrypointsDir, 'sandbox.html'),
-        outputDir: resolve(config.outDir, 'sandbox'),
+        outputDir: config.outDir,
       },
     ],
     [
       'sandbox/index.html',
       {
         type: 'sandbox',
+        name: 'sandbox',
         inputPath: resolve(config.entrypointsDir, 'sandbox/index.html'),
-        outputDir: resolve(config.outDir, 'sandbox'),
+        outputDir: config.outDir,
       },
     ],
     [
       'named.sandbox.html',
       {
         type: 'sandbox',
+        name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sandbox.html'),
-        outputDir: resolve(config.outDir, 'named.sandbox'),
+        outputDir: config.outDir,
       },
     ],
     [
       'named.sandbox/index.html',
       {
         type: 'sandbox',
+        name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sandbox/index.html'),
-        outputDir: resolve(config.outDir, 'named.sandbox'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -259,16 +267,18 @@ describe('findEntrypoints', () => {
       'bookmarks.html',
       {
         type: 'bookmarks',
+        name: 'bookmarks',
         inputPath: resolve(config.entrypointsDir, 'bookmarks.html'),
-        outputDir: resolve(config.outDir, 'bookmarks'),
+        outputDir: config.outDir,
       },
     ],
     [
       'bookmarks/index.html',
       {
         type: 'bookmarks',
+        name: 'bookmarks',
         inputPath: resolve(config.entrypointsDir, 'bookmarks/index.html'),
-        outputDir: resolve(config.outDir, 'bookmarks'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -277,16 +287,18 @@ describe('findEntrypoints', () => {
       'history.html',
       {
         type: 'history',
+        name: 'history',
         inputPath: resolve(config.entrypointsDir, 'history.html'),
-        outputDir: resolve(config.outDir, 'history'),
+        outputDir: config.outDir,
       },
     ],
     [
       'history/index.html',
       {
         type: 'history',
+        name: 'history',
         inputPath: resolve(config.entrypointsDir, 'history/index.html'),
-        outputDir: resolve(config.outDir, 'history'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -295,16 +307,18 @@ describe('findEntrypoints', () => {
       'newtab.html',
       {
         type: 'newtab',
+        name: 'newtab',
         inputPath: resolve(config.entrypointsDir, 'newtab.html'),
-        outputDir: resolve(config.outDir, 'newtab'),
+        outputDir: config.outDir,
       },
     ],
     [
       'newtab/index.html',
       {
         type: 'newtab',
+        name: 'newtab',
         inputPath: resolve(config.entrypointsDir, 'newtab/index.html'),
-        outputDir: resolve(config.outDir, 'newtab'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -313,32 +327,36 @@ describe('findEntrypoints', () => {
       'sidepanel.html',
       {
         type: 'sidepanel',
+        name: 'sidepanel',
         inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
-        outputDir: resolve(config.outDir, 'sidepanel'),
+        outputDir: config.outDir,
       },
     ],
     [
       'sidepanel/index.html',
       {
         type: 'sidepanel',
+        name: 'sidepanel',
         inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
-        outputDir: resolve(config.outDir, 'sidepanel'),
+        outputDir: config.outDir,
       },
     ],
     [
       'named.sidepanel.html',
       {
         type: 'sidepanel',
+        name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
-        outputDir: resolve(config.outDir, 'named.sidepanel'),
+        outputDir: config.outDir,
       },
     ],
     [
       'named.sidepanel/index.html',
       {
         type: 'sidepanel',
+        name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
-        outputDir: resolve(config.outDir, 'named.sidepanel'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -347,16 +365,18 @@ describe('findEntrypoints', () => {
       'devtools.html',
       {
         type: 'devtools',
+        name: 'devtools',
         inputPath: resolve(config.entrypointsDir, 'devtools.html'),
-        outputDir: resolve(config.outDir, 'devtools'),
+        outputDir: config.outDir,
       },
     ],
     [
       'devtools/index.html',
       {
         type: 'devtools',
+        name: 'devtools',
         inputPath: resolve(config.entrypointsDir, 'devtools/index.html'),
-        outputDir: resolve(config.outDir, 'devtools'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -365,16 +385,18 @@ describe('findEntrypoints', () => {
       'onboarding.html',
       {
         type: 'unlisted-page',
+        name: 'onboarding',
         inputPath: resolve(config.entrypointsDir, 'onboarding.html'),
-        outputDir: resolve(config.outDir, 'onboarding'),
+        outputDir: config.outDir,
       },
     ],
     [
       'onboarding/index.html',
       {
         type: 'unlisted-page',
+        name: 'onboarding',
         inputPath: resolve(config.entrypointsDir, 'onboarding/index.html'),
-        outputDir: resolve(config.outDir, 'onboarding'),
+        outputDir: config.outDir,
       },
     ],
 
@@ -383,8 +405,9 @@ describe('findEntrypoints', () => {
       'injected.ts',
       {
         type: 'unlisted-script',
+        name: 'injected',
         inputPath: resolve(config.entrypointsDir, 'injected.ts'),
-        outputDir: resolve(config.outDir, 'injected'),
+        outputDir: config.outDir,
       },
     ],
   ])('should find entrypoint for %s', async (path, expected) => {
@@ -410,4 +433,6 @@ describe('findEntrypoints', () => {
     'should ignore entrypoints starting with a . (preventing warnings like .DS_Store files)',
     () => {},
   );
+
+  it.todo('should not allow multiple entrypoints with the same name', () => {});
 });

@@ -1,4 +1,7 @@
 {
+  "name": "Demo Extension",
+  "version": "1.0.0",
+  "description": "Demo extension for exvite",
   "type": "module",
   "scripts": {
     "dev": "pnpm -w build && exvite",

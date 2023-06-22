@@ -1,7 +1,14 @@
 import * as vite from 'vite';
-import { Logger, TargetBrowser, TargetManifestVersion } from './external';
+import {
+  Entrypoint,
+  Logger,
+  TargetBrowser,
+  TargetManifestVersion,
+  UserManifest,
+} from './external';
 
 export interface InternalConfig {
+  root: string;
   srcDir: string;
   entrypointsDir: string;
   outDir: string;
@@ -15,5 +22,8 @@ export interface InternalConfig {
   browser: TargetBrowser;
   manifestVersion: TargetManifestVersion;
   logger: Logger;
-  vite?: vite.InlineConfig;
+  vite: vite.InlineConfig;
+  manifest: UserManifest;
 }
+
+export type EntrypointGroup = Entrypoint | Entrypoint[];

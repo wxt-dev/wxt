@@ -26,8 +26,14 @@ export async function getInternalConfig(
   const browser = config.browser ?? 'chromium';
   const manifestVersion =
     config.manifestVersion ?? (browser === 'chromium' ? 3 : 2);
+  const outDir = path.resolve(
+    root,
+    '.output',
+    `${browser}-mv${manifestVersion}`,
+  );
 
   const baseConfig: InternalConfig = {
+    root,
     srcDir,
     entrypointsDir,
     storeIds: config.storeIds ?? {},
@@ -35,9 +41,10 @@ export async function getInternalConfig(
     manifestVersion,
     mode,
     command,
-    outDir: path.resolve(root, '.output', `${browser}-mv${manifestVersion}`),
+    outDir,
     logger: config.logger ?? consola,
-    vite: config.vite,
+    vite: config.vite ?? {},
+    manifest: config.manifest ?? {},
   };
 
   // Load user config from file
@@ -54,13 +61,16 @@ export async function getInternalConfig(
   const merged = vite.mergeConfig(baseConfig, userConfig) as InternalConfig;
 
   // Customize the default vite config
-  merged.vite ??= {};
   merged.vite.root = root;
   merged.vite.configFile = false;
+  merged.vite.build ??= {};
+  merged.vite.build.outDir = outDir;
+  merged.vite.build.emptyOutDir = false;
+  merged.vite.logLevel = 'silent';
   merged.vite.plugins ??= [];
 
   merged.vite.plugins.push(plugins.unimport(root, srcDir, userConfig.imports));
-  merged.vite.plugins.push(plugins.download());
+  merged.vite.plugins.push(plugins.download(merged));
 
   return merged;
 }

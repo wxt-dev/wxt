@@ -15,6 +15,7 @@ import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
 import { importTsFile } from './importTsFile';
 import glob from 'fast-glob';
+import { getEntrypointName } from './entrypoints';
 
 /**
  * Return entrypoints and their configuration by looking through the
@@ -70,15 +71,11 @@ export async function findEntrypoints(
           );
           break;
         default:
-          const name = relativePath.split(/[\.\/]/, 2)[0];
-          const outDir =
-            name === type || type.startsWith('unlisted')
-              ? name
-              : `${name}.${type}`;
           entrypoint = {
             type,
+            name: getEntrypointName(config.entrypointsDir, path),
             inputPath: path,
-            outputDir: resolve(config.outDir, outDir),
+            outputDir: config.outDir,
           };
       }
 
@@ -118,9 +115,10 @@ async function getPopupEntrypoint(
 
   return {
     type: 'popup',
+    name: 'popup',
     options,
     inputPath: path,
-    outputDir: resolve(config.outDir, 'popup'),
+    outputDir: config.outDir,
   };
 }
 
@@ -145,9 +143,10 @@ async function getOptionsEntrypoint(
 
   return {
     type: 'options',
+    name: 'options',
     options,
     inputPath: path,
-    outputDir: resolve(config.outDir, 'options'),
+    outputDir: config.outDir,
   };
 }
 
@@ -165,8 +164,9 @@ async function getBackgroundEntrypoint(
   }
   return {
     type: 'background',
+    name: 'background',
     inputPath: path,
-    outputDir: resolve(config.outDir, 'background'),
+    outputDir: config.outDir,
     options: options,
   };
 }
@@ -187,8 +187,9 @@ async function getContentScriptEntrypoint(
   }
   return {
     type: 'content-script',
+    name: getEntrypointName(config.entrypointsDir, path),
     inputPath: path,
-    outputDir: resolve(config.outDir, 'content-scripts', name),
+    outputDir: resolve(config.outDir, 'content-scripts'),
     options,
   };
 }
@@ -218,8 +219,8 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
 
   'background.ts': 'background',
 
-  '*.content.ts': 'content-script',
-  '*.content/index.ts': 'content-script',
+  '*.content.ts?(x)': 'content-script',
+  '*.content/index.ts?(x)': 'content-script',
 
   'popup.html': 'popup',
   'popup/index.html': 'popup',

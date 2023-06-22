@@ -2,6 +2,7 @@ import Unimport, { UnimportPluginOptions } from 'unimport/unplugin';
 import { UserConfig } from '../types';
 import path from 'node:path';
 import * as vite from 'vite';
+import fs from 'fs-extra';
 
 /**
  * Apply defaults and returns an instance of the unimport plugin.
@@ -15,12 +16,16 @@ export function unimport(
   srcDir: string,
   imports: UserConfig['imports'],
 ) {
+  const declartionFile = path.resolve(root, '.exvite/types/imports.d.ts');
+  const declarationDir = path.dirname(declartionFile);
+  fs.ensureDirSync(declarationDir);
+
   const defaultOptions: UnimportPluginOptions = {
     include: srcDir,
     exclude: [],
     addons: [],
     debugLog: () => {},
-    dts: path.resolve(root, '.exvite/types/imports.d.ts'),
+    dts: declartionFile,
     imports: [{ name: '*', as: 'browser', from: 'webextension-polyfill' }],
     presets: [
       // Scan for exported functions from the client package

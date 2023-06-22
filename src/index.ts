@@ -1,7 +1,10 @@
 import { BuildOutput, ExviteDevServer, InlineConfig } from './types';
-import * as vite from 'vite';
 import { getInternalConfig } from './utils/getInternalConfig';
 import { findEntrypoints } from './utils/findEntrypoints';
+import { buildEntrypoints } from './utils/buildEntrypoints';
+import { generateMainfest, writeManifest } from './utils/manifest';
+import { printBuildSummary } from './utils/printBuildSummary';
+import fs from 'fs-extra';
 
 export * from './types/external';
 export * from './utils/defineConfig';
@@ -11,9 +14,18 @@ export * from './utils/defineConfig';
  */
 export async function build(config: InlineConfig): Promise<BuildOutput> {
   const internalConfig = await getInternalConfig(config, 'build');
+  await fs.rm(internalConfig.outDir, { recursive: true, force: true });
+  await fs.ensureDir(internalConfig.outDir);
+
   const entrypoints = await findEntrypoints(internalConfig);
-  console.log(entrypoints);
-  throw Error('Not implemented');
+  const output = await buildEntrypoints(entrypoints, internalConfig);
+
+  const manifest = await generateMainfest(entrypoints, output, internalConfig);
+  await writeManifest(manifest, internalConfig);
+
+  printBuildSummary(output, internalConfig);
+
+  return output;
 }
 
 export async function createServer(
@@ -21,6 +33,7 @@ export async function createServer(
 ): Promise<ExviteDevServer> {
   const internalConfig = await getInternalConfig(config, 'serve');
   const entrypoints = await findEntrypoints(internalConfig);
-  const server = await vite.createServer(internalConfig.vite);
+  await buildEntrypoints(entrypoints, internalConfig);
+
   throw Error('Not implemented');
 }
