@@ -11,10 +11,16 @@ export async function printBuildSummary(
 ) {
   const chunks = output.sort((l, r) => {
     const lWeight =
-      CHUNK_SORT_WEIGHTS[extname(l.fileName)] ?? DEFAULT_SORT_WEIGHT;
+      CHUNK_SORT_WEIGHTS[l.fileName] ??
+      CHUNK_SORT_WEIGHTS[extname(l.fileName)] ??
+      DEFAULT_SORT_WEIGHT;
     const rWeight =
-      CHUNK_SORT_WEIGHTS[extname(r.fileName)] ?? DEFAULT_SORT_WEIGHT;
-    return lWeight - rWeight;
+      CHUNK_SORT_WEIGHTS[r.fileName] ??
+      CHUNK_SORT_WEIGHTS[extname(r.fileName)] ??
+      DEFAULT_SORT_WEIGHT;
+    const diff = lWeight - rWeight;
+    if (diff !== 0) return diff;
+    return l.fileName.localeCompare(r.fileName);
   });
 
   let totalSize = 0;
@@ -47,9 +53,10 @@ export async function printBuildSummary(
 
 const DEFAULT_SORT_WEIGHT = 100;
 const CHUNK_SORT_WEIGHTS: Record<string, number> = {
-  '.html': 0,
-  '.js': 1,
-  '.css': 2,
+  'manifest.json': 0,
+  '.html': 1,
+  '.js': 2,
+  '.css': 3,
 };
 
 const DEFAULT_COLOR = pc.blue;
