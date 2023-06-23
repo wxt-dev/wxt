@@ -8,6 +8,10 @@ export const dev = defineCommand(
       root,
       configFile,
     };
-    await exvite.createServer(cliConfig);
+    const server = await exvite.createServer(cliConfig);
+
+    await server.listen(server.port);
+    server.logger.success(`Started dev server @ ${server.origin}`);
+    return true;
   },
 );

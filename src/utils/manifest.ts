@@ -11,12 +11,14 @@ import {
 import fs from 'fs-extra';
 import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
+import { ContentSecurityPolicy } from './ContentSecurityPolicy';
 
 /**
- * Writes the manifest to the output directory.
+ * Writes the manifest to the output directory and the build output.
  */
 export async function writeManifest(
   manifest: Manifest.WebExtensionManifest,
+  output: BuildOutput,
   config: InternalConfig,
 ): Promise<void> {
   const str =
@@ -25,6 +27,14 @@ export async function writeManifest(
       : JSON.stringify(manifest, null, 2);
 
   await fs.writeFile(resolve(config.outDir, 'manifest.json'), str, 'utf-8');
+
+  output.unshift({
+    type: 'asset',
+    fileName: 'manifest.json',
+    name: 'manifest',
+    needsCodeReference: false,
+    source: str,
+  });
 }
 
 /**
@@ -51,6 +61,47 @@ export async function generateMainfest(
     ...config.manifest,
   };
 
+  addEntrypoints(manifest, entrypoints, buildOutput, config);
+
+  if (config.command === 'serve') addDevModeCsp(manifest, config);
+
+  return manifest;
+}
+
+/**
+ * Read the package.json from the current directory.
+ *
+ * TODO: look in root and up directories until it's found
+ */
+async function getPackageJson(): Promise<any> {
+  return await fs.readJson('package.json');
+}
+
+/**
+ * Removes suffixes from the version, like X.Y.Z-alpha1 (which brosers don't allow), so it's a
+ * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
+ */
+function simplifyVersion(versionName: string): string {
+  // Regex adapted from here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format
+
+  const version = /^((0|[1-9][0-9]{0,8})([.](0|[1-9][0-9]{0,8})){0,3}).*$/.exec(
+    versionName,
+  )?.[1];
+
+  if (version == null)
+    throw Error(
+      `Cannot simplify package.json version "${versionName}" to a valid extension version, "X.Y.Z"`,
+    );
+
+  return version;
+}
+
+function addEntrypoints(
+  manifest: Manifest.WebExtensionManifest,
+  entrypoints: Entrypoint[],
+  buildOutput: BuildOutput,
+  config: InternalConfig,
+): void {
   const entriesByType = entrypoints.reduce<
     Partial<Record<Entrypoint['type'], Entrypoint[]>>
   >((map, entrypoint) => {
@@ -210,55 +261,72 @@ export async function generateMainfest(
   }
 
   if (contentScripts?.length) {
-    const hashToEntrypointsMap = contentScripts.reduce<
-      Record<string, ContentScriptEntrypoint[]>
-    >((map, script) => {
-      const hash = JSON.stringify(script.options);
-      map[hash] ??= [];
-      map[hash].push(script);
-      return map;
-    }, {});
+    if (config.command === 'serve') {
+      const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
+      contentScripts.forEach((script) => {
+        script.options.matches.forEach((matchPattern) => {
+          hostPermissions.add(matchPattern);
+        });
+      });
+      manifest.host_permissions = Array.from(hostPermissions).sort();
+    } else {
+      const hashToEntrypointsMap = contentScripts.reduce<
+        Record<string, ContentScriptEntrypoint[]>
+      >((map, script) => {
+        const hash = JSON.stringify(script.options);
+        map[hash] ??= [];
+        map[hash].push(script);
+        return map;
+      }, {});
 
-    manifest.content_scripts = Object.entries(hashToEntrypointsMap).map(
-      ([, scripts]) => ({
-        ...scripts[0].options,
-        css: getContentScriptCssFiles(scripts, buildOutput),
-        js: scripts.map((entry) =>
-          getEntrypointBundlePath(entry, config.outDir, '.js'),
-        ),
-      }),
-    );
+      manifest.content_scripts = Object.entries(hashToEntrypointsMap).map(
+        ([, scripts]) => ({
+          ...scripts[0].options,
+          css: getContentScriptCssFiles(scripts, buildOutput),
+          js: scripts.map((entry) =>
+            getEntrypointBundlePath(entry, config.outDir, '.js'),
+          ),
+        }),
+      );
+    }
+  }
+}
+
+function addDevModeCsp(
+  manifest: Manifest.WebExtensionManifest,
+  config: InternalConfig,
+): void {
+  const permission = `http://${config.server?.hostname ?? ''}/*`;
+  const allowedCsp = config.server?.origin ?? 'http://localhost:*';
+
+  if (manifest.manifest_version === 3) {
+    manifest.host_permissions ??= [];
+    if (!manifest.host_permissions.includes(permission))
+      manifest.host_permissions.push(permission);
+  } else {
+    manifest.permissions ??= [];
+    if (!manifest.permissions.includes(permission))
+      manifest.permissions.push(permission);
   }
 
-  return manifest;
-}
+  const csp = new ContentSecurityPolicy(
+    manifest.manifest_version === 3
+      ? // @ts-expect-error: extension_pages is not typed
+        manifest.content_security_policy?.extension_pages ??
+        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" // default CSP for MV3
+      : manifest.content_security_policy ??
+        "script-src 'self'; object-src 'self';", // default CSP for MV2
+  );
 
-/**
- * Read the package.json from the current directory.
- *
- * TODO: look in root and up directories until it's found
- */
-async function getPackageJson(): Promise<any> {
-  return await fs.readJson('package.json');
-}
+  if (config.server) csp.add('script-src', allowedCsp);
 
-/**
- * Removes suffixes from the version, like X.Y.Z-alpha1 (which brosers don't allow), so it's a
- * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
- */
-function simplifyVersion(versionName: string): string {
-  // Regex adapted from here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format
-
-  const version = /^((0|[1-9][0-9]{0,8})([.](0|[1-9][0-9]{0,8})){0,3}).*$/.exec(
-    versionName,
-  )?.[1];
-
-  if (version == null)
-    throw Error(
-      `Cannot simplify package.json version "${versionName}" to a valid extension version, "X.Y.Z"`,
-    );
-
-  return version;
+  if (manifest.manifest_version === 3) {
+    manifest.content_security_policy ??= {};
+    // @ts-expect-error: extension_pages is not typed
+    manifest.content_security_policy.extension_pages = csp.toString();
+  } else {
+    manifest.content_security_policy = csp.toString();
+  }
 }
 
 /**

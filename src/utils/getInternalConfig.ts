@@ -77,6 +77,8 @@ export async function getInternalConfig(
 
   merged.vite.plugins ??= [];
   merged.vite.plugins.push(plugins.download(merged));
+  merged.vite.plugins.push(plugins.devHtmlPrerender(merged));
+  merged.vite.plugins.push(plugins.unimport(merged));
 
   return merged;
 }

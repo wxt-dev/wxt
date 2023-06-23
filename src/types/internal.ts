@@ -1,6 +1,7 @@
 import * as vite from 'vite';
 import {
   Entrypoint,
+  ExviteDevServer,
   Logger,
   TargetBrowser,
   TargetManifestVersion,
@@ -30,6 +31,7 @@ export interface InternalConfig {
   vite: vite.InlineConfig;
   manifest: UserManifest;
   fsCache: FsCache;
+  server?: ExviteDevServer;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];

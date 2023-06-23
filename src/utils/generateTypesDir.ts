@@ -1,9 +1,9 @@
-import { UnimportOptions, createUnimport } from 'unimport';
+import { createUnimport } from 'unimport';
 import { Entrypoint, InternalConfig } from '../types';
-import * as vite from 'vite';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
+import { getUnimportOptions } from './auto-imports';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -26,27 +26,10 @@ async function writeImportsDeclarationFile(
   config: InternalConfig,
 ): Promise<string> {
   const filePath = resolve(config.typesDir, 'imports.d.ts');
+  const unimport = createUnimport(getUnimportOptions(config));
 
-  const defaultOptions: Partial<UnimportOptions> = {
-    debugLog: config.logger.debug,
-    imports: [
-      { name: '*', as: 'browser', from: 'webextension-polyfill' },
-      { name: 'defineConfig', from: 'exvite' },
-    ],
-    warn: config.logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
-  };
-  const merged = vite.mergeConfig(
-    defaultOptions,
-    config.imports,
-  ) as Partial<UnimportOptions>;
-
-  const unimport = createUnimport(merged);
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
   await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
-  await unimport.scanImportsFromFile(
-    resolve('node_modules/exvite/dist/client/index.js'),
-  );
 
   await fs.writeFile(
     filePath,

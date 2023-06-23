@@ -19,6 +19,7 @@ export interface InlineConfig {
   logger?: Logger;
   vite?: Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode'>;
   manifest?: UserManifest;
+  server?: ExviteDevServer;
 }
 
 export interface ExviteInlineViteConfig
@@ -28,7 +29,12 @@ export interface ExviteInlineViteConfig
 
 export type BuildOutput = (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
 
-export interface ExviteDevServer {}
+export interface ExviteDevServer extends vite.ViteDevServer {
+  logger: Logger;
+  port: number;
+  hostname: string;
+  origin: string;
+}
 
 export type TargetBrowser = 'chromium' | 'firefox';
 export type TargetManifestVersion = 2 | 3;
