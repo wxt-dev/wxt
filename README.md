@@ -11,9 +11,15 @@ cyfer, wavex, webext, aura, iron, reyna, aggron, wxt, yiga
 - [x] Supports all browsers
 - [x] MV2 & MV3 support
 - [x] Directory based entrypoints
-- [ ] Great DX: auto-imports, TypeScript, HMR, and fast reload for content scripts
-- [ ] ~~_Infer permissions from code_~~
+- [ ] Open browser during development with extension installed
+- [ ] Great DX
+  - [x] Auto-imports
+  - [x] TypeScript,
+  - [ ] HMR for HTML pages
+  - [ ] auto-reload for background and content scripts
 - [ ] Automated publishing
 - [x] Download and bundle remote dependencies
-- [ ] Supports all major frontend frameworks (Vue, React, Svelte)
+- [x] Supports all major frontend frameworks (Vue, React, Svelte)
 - [ ] Bundle analysis
+- [ ] Project bootstrap
+- [ ] ~~_Infer permissions from code_~~ Maybe in the future...

@@ -5,7 +5,9 @@ import { buildEntrypoints } from './utils/buildEntrypoints';
 import { generateMainfest, writeManifest } from './utils/manifest';
 import { printBuildSummary } from './utils/printBuildSummary';
 import fs from 'fs-extra';
+import { generateTypesDir } from './utils/generateTypesDir';
 
+export { version } from '../package.json';
 export * from './types/external';
 export * from './utils/defineConfig';
 
@@ -18,12 +20,13 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
   await fs.ensureDir(internalConfig.outDir);
 
   const entrypoints = await findEntrypoints(internalConfig);
+  await generateTypesDir(entrypoints, internalConfig);
   const output = await buildEntrypoints(entrypoints, internalConfig);
 
   const manifest = await generateMainfest(entrypoints, output, internalConfig);
   await writeManifest(manifest, internalConfig);
 
-  printBuildSummary(output, internalConfig);
+  await printBuildSummary(output, internalConfig);
 
   return output;
 }

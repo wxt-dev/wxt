@@ -1,5 +1,5 @@
 import { InlineConfig, InternalConfig, UserConfig } from '../types';
-import path from 'node:path';
+import path, { resolve } from 'node:path';
 import * as vite from 'vite';
 import { consola } from 'consola';
 import { importTsFile } from './importTsFile';
@@ -24,30 +24,33 @@ export async function getInternalConfig(
   );
   const mode =
     config.mode ?? (command === 'build' ? 'production' : 'development');
+  const exviteDir = resolve(srcDir, '.exvite');
+  const typesDir = resolve(exviteDir, 'types');
   const browser = config.browser ?? 'chromium';
   const manifestVersion =
     config.manifestVersion ?? (browser === 'chromium' ? 3 : 2);
-  const outDir = path.resolve(
-    root,
-    '.output',
-    `${browser}-mv${manifestVersion}`,
-  );
+  const outBaseDir = path.resolve(root, '.output');
+  const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
 
   const baseConfig: InternalConfig = {
     root,
     srcDir,
     entrypointsDir,
+    exviteDir,
+    typesDir,
+    outDir,
+    outBaseDir,
     storeIds: config.storeIds ?? {},
     browser,
     manifestVersion,
     mode,
     command,
-    outDir,
     logger,
     vite: config.vite ?? {},
     manifest: config.manifest ?? {},
     fsCache: createFsCache(srcDir),
+    imports: config.imports ?? {},
   };
 
   // Load user config from file
@@ -66,13 +69,13 @@ export async function getInternalConfig(
   // Customize the default vite config
   merged.vite.root = root;
   merged.vite.configFile = false;
+  merged.vite.logLevel = 'silent';
+
   merged.vite.build ??= {};
   merged.vite.build.outDir = outDir;
   merged.vite.build.emptyOutDir = false;
-  merged.vite.logLevel = 'silent';
-  merged.vite.plugins ??= [];
 
-  merged.vite.plugins.push(plugins.unimport(srcDir, userConfig.imports));
+  merged.vite.plugins ??= [];
   merged.vite.plugins.push(plugins.download(merged));
 
   return merged;

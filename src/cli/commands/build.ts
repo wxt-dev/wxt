@@ -1,9 +1,10 @@
 import * as exvite from '../..';
+import { defineCommand } from '../utils/defineCommand';
 
-export async function build(root: any, { mode, config }: any) {
+export const build = defineCommand(async (root: any, { mode, config }: any) => {
   await exvite.build({
     mode,
     root,
     configFile: config,
   });
-}
+});

@@ -1,5 +1,6 @@
 import { consola } from 'consola';
+import { defineCommand } from '../utils/defineCommand';
 
-export async function publish(root: any, { mode, config }: any) {
+export const publish = defineCommand(async (root: any, { config }: any) => {
   consola.warn('exvite publish: Not implemented');
-}
+});

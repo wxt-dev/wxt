@@ -1,6 +1,6 @@
 import * as vite from 'vite';
-import { UnimportPluginOptions } from 'unimport/unplugin';
 import { Manifest } from 'webextension-polyfill';
+import { UnimportOptions } from 'unimport';
 
 export interface InlineConfig {
   root?: string;
@@ -13,7 +13,7 @@ export interface InlineConfig {
     edge?: string;
   };
   mode?: string;
-  imports?: Partial<UnimportPluginOptions>;
+  imports?: Partial<UnimportOptions>;
   browser?: TargetBrowser;
   manifestVersion?: TargetManifestVersion;
   logger?: Logger;

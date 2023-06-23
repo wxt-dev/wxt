@@ -1,13 +1,14 @@
 import { consola } from 'consola';
 import createJITI from 'jiti';
 import transform from 'jiti/dist/babel';
+import { resolve } from 'path';
+import { scanExports } from 'unimport';
 
 export async function importTsFile<T>(path: string): Promise<T> {
+  const clientImports = await scanExports(
+    resolve('node_modules/exvite/dist/client/index.js'),
+  );
   const jiti = createJITI(__filename, {
-    alias: {
-      'webextension-polyfill': 'exvite',
-      '*.css': 'exvite',
-    },
     cache: false,
     esmResolve: true,
     interopDefault: true,
@@ -15,6 +16,27 @@ export async function importTsFile<T>(path: string): Promise<T> {
     transform(opts) {
       // Remove CSS imports from the source code - Jiti can't handle them.
       opts.source = opts.source.replace(/^import ['"].*\.css['"];?$/gm, '');
+      opts.source = opts.source.replace(
+        /^import\s+.*\s+from ['"]webextension-polyfill['"];?$/gm,
+        '',
+      );
+
+      // Append any exvite/client functions so babel doesn't complain about undefined variables
+      if (opts.filename === path) {
+        // TODO: Only append import if it isn't already imported
+        const imports =
+          clientImports
+            .map((i) => `import { ${i.name} } from "${i.from}";`)
+            .join('\n') + '\n';
+        opts.source = imports + opts.source;
+      }
+
+      // console.log(
+      //   `---\n${path}\n---\n${opts.source}---\n`,
+      //   imports,
+      //   '\n\n\n\n',
+      // );
+
       // Call the default babel transformer with our modified source code
       return transform(opts);
     },
