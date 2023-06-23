@@ -2,16 +2,16 @@ import { getInternalConfig } from '../../utils/getInternalConfig';
 import { findEntrypoints } from '../../utils/findEntrypoints';
 import { generateTypesDir } from '../../utils/generateTypesDir';
 import { defineCommand } from '../utils/defineCommand';
+import * as exvite from '../..';
 
 export const prepare = defineCommand(
-  async (root: any, { mode, config }: any) => {
-    const internalConfig = await getInternalConfig(
-      { root, mode, configFile: config },
-      'build',
-    );
-    internalConfig.logger.info('Generating types...');
+  async (root: any, { mode, config: configFile }: any) => {
+    const cliConfig: exvite.InlineConfig = { root, mode, configFile };
+    const config = await getInternalConfig(cliConfig, 'build');
 
-    const entrypoints = await findEntrypoints(internalConfig);
-    await generateTypesDir(entrypoints, internalConfig);
+    config.logger.info('Generating types...');
+
+    const entrypoints = await findEntrypoints(config);
+    await generateTypesDir(entrypoints, config);
   },
 );
