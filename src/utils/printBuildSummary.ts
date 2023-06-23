@@ -9,15 +9,13 @@ export async function printBuildSummary(
   output: BuildOutput,
   config: InternalConfig,
 ) {
-  const chunks = output
-    .flatMap(({ output }) => output)
-    .sort((l, r) => {
-      const lWeight =
-        CHUNK_SORT_WEIGHTS[extname(l.fileName)] ?? DEFAULT_SORT_WEIGHT;
-      const rWeight =
-        CHUNK_SORT_WEIGHTS[extname(r.fileName)] ?? DEFAULT_SORT_WEIGHT;
-      return lWeight - rWeight;
-    });
+  const chunks = output.sort((l, r) => {
+    const lWeight =
+      CHUNK_SORT_WEIGHTS[extname(l.fileName)] ?? DEFAULT_SORT_WEIGHT;
+    const rWeight =
+      CHUNK_SORT_WEIGHTS[extname(r.fileName)] ?? DEFAULT_SORT_WEIGHT;
+    return lWeight - rWeight;
+  });
 
   const chunkRows: string[][] = await Promise.all(
     chunks.map(async (chunk) => {

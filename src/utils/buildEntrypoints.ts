@@ -60,8 +60,8 @@ async function buildSingleEntrypoint(
     config.vite,
   ) as vite.InlineConfig;
 
-  const res = await vite.build(entryConfig);
-  return res as BuildOutput;
+  const result = await vite.build(entryConfig);
+  return getBuildOutput(result);
 }
 
 /**
@@ -88,6 +88,14 @@ async function buildMultipleEntrypoints(
     config.vite,
   ) as vite.InlineConfig;
 
-  const res = await vite.build(entryConfig);
-  return res as BuildOutput;
+  const result = await vite.build(entryConfig);
+  return getBuildOutput(result);
+}
+
+function getBuildOutput(
+  result: Awaited<ReturnType<typeof vite.build>>,
+): BuildOutput {
+  if ('on' in result) throw Error('exvite does not support vite watch mode.');
+  if (Array.isArray(result)) return result.flatMap(({ output }) => output);
+  return result.output;
 }

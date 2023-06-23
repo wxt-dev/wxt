@@ -26,7 +26,7 @@ export interface ExviteInlineViteConfig
   build?: Omit<vite.BuildOptions, 'outDir'>;
 }
 
-export type BuildOutput = vite.Rollup.RollupOutput[];
+export type BuildOutput = (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
 
 export interface ExviteDevServer {}
 
