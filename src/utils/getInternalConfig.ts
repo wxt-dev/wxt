@@ -69,7 +69,7 @@ export async function getInternalConfig(
   merged.vite.logLevel = 'silent';
   merged.vite.plugins ??= [];
 
-  merged.vite.plugins.push(plugins.unimport(root, srcDir, userConfig.imports));
+  merged.vite.plugins.push(plugins.unimport(srcDir, userConfig.imports));
   merged.vite.plugins.push(plugins.download(merged));
 
   return merged;

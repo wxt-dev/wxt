@@ -11,12 +11,8 @@ import fs from 'fs-extra';
  * @param srcDir Absolute path to the source directory
  * @param imports Custom import settings defined by the user
  */
-export function unimport(
-  root: string,
-  srcDir: string,
-  imports: UserConfig['imports'],
-) {
-  const declartionFile = path.resolve(root, '.exvite/types/imports.d.ts');
+export function unimport(srcDir: string, imports: UserConfig['imports']) {
+  const declartionFile = path.resolve(srcDir, '.exvite/types/imports.d.ts');
   const declarationDir = path.dirname(declartionFile);
   fs.ensureDirSync(declarationDir);
 
