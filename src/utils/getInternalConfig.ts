@@ -4,6 +4,7 @@ import * as vite from 'vite';
 import { consola } from 'consola';
 import { importTsFile } from './importTsFile';
 import * as plugins from '../vite-plugins';
+import { createFsCache } from './createFsCache';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -31,6 +32,7 @@ export async function getInternalConfig(
     '.output',
     `${browser}-mv${manifestVersion}`,
   );
+  const logger = config.logger ?? consola;
 
   const baseConfig: InternalConfig = {
     root,
@@ -42,9 +44,10 @@ export async function getInternalConfig(
     mode,
     command,
     outDir,
-    logger: config.logger ?? consola,
+    logger,
     vite: config.vite ?? {},
     manifest: config.manifest ?? {},
+    fsCache: createFsCache(srcDir),
   };
 
   // Load user config from file

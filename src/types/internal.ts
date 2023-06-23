@@ -24,6 +24,12 @@ export interface InternalConfig {
   logger: Logger;
   vite: vite.InlineConfig;
   manifest: UserManifest;
+  fsCache: FsCache;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];
+
+export interface FsCache {
+  set(key: string, value: string): Promise<void>;
+  get(key: string): Promise<string | undefined>;
+}
