@@ -269,6 +269,16 @@ function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
   buildOutput: BuildOutput,
 ): string[] | undefined {
-  console.warn('TODO: getContentScriptCssFiles');
+  const css: string[] = [];
+
+  contentScripts.forEach((script) => {
+    const cssRegex = new RegExp(`^assets/${script.name}-[a-f0-9]{8}.css$`);
+    const relatedCss = buildOutput.find((chunk) =>
+      chunk.fileName.match(cssRegex),
+    );
+    if (relatedCss) css.push(relatedCss.fileName);
+  });
+
+  if (css.length > 0) return css;
   return undefined;
 }
