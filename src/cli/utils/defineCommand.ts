@@ -9,9 +9,10 @@ export function defineCommand(cb: (...args: any[]) => void | Promise<void>) {
 
       await cb(...args);
 
-      consola.success(`Done in ${Date.now() - startTime} ms`);
+      consola.success(`Finished in ${Date.now() - startTime} ms`);
     } catch (err) {
-      consola.fail(`Command failed after ${Date.now() - startTime} ms`, err);
+      consola.fail(`Command failed after ${Date.now() - startTime} ms`);
+      consola.error(err);
       process.exit(1);
     }
   };

@@ -17,21 +17,32 @@ export async function printBuildSummary(
     return lWeight - rWeight;
   });
 
+  let totalSize = 0;
+
   const chunkRows: string[][] = await Promise.all(
-    chunks.map(async (chunk) => {
+    chunks.map(async (chunk, i) => {
       const file = [
         relative(process.cwd(), config.outDir) + path.sep,
         chunk.fileName,
       ];
       const ext = extname(chunk.fileName);
+      const prefix = i === chunks.length - 1 ? '  └─' : '  ├─';
       const color = CHUNK_COLORS[ext] ?? DEFAULT_COLOR;
       const stats = await fs.lstat(resolve(config.outDir, chunk.fileName));
+      totalSize += stats.size;
       const size = String(filesize(stats.size));
-      return [`${pc.dim(file[0])}${color(file[1])}`, pc.dim(size)];
+      return [
+        `${pc.gray(prefix)} ${pc.dim(file[0])}${color(file[1])}`,
+        pc.dim(size),
+      ];
     }),
   );
 
-  printTable(config.logger.log, [['Chunks'], ...chunkRows]);
+  printTable(config.logger.log, chunkRows);
+
+  config.logger.log(
+    `${pc.cyan('Σ Total size:')} ${String(filesize(totalSize))}`,
+  );
 }
 
 const DEFAULT_SORT_WEIGHT = 100;

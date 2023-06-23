@@ -42,6 +42,7 @@ export interface Logger {
   warn(...args: any[]): void;
   error(...args: any[]): void;
   fatal(...args: any[]): void;
+  success(...args: any[]): void;
 }
 
 export interface BaseEntrypoint {

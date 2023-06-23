@@ -21,7 +21,7 @@ export function printTable(
       str += col.padEnd(columnWidths[j], ' ');
       if (j !== row.length - 1) str += ''.padEnd(gap, ' ');
     });
-    str += '\n';
+    if (i !== rows.length - 1) str += '\n';
   });
 
   log(str);
