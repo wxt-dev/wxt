@@ -1,6 +1,7 @@
 import { defineConfig } from 'exvite';
 
 export default defineConfig({
+  srcDir: 'src',
   storeIds: {
     chrome: '123',
   },

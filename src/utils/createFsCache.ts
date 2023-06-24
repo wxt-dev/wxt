@@ -8,9 +8,9 @@ import { dirname, resolve } from 'path';
  *
  * @param srcDir Absolute path to source directory. See `InternalConfig.srcDir`
  */
-export function createFsCache(srcDir: string): FsCache {
+export function createFsCache(exviteDir: string): FsCache {
   const getPath = (key: string) =>
-    resolve(srcDir, '.exvite/cache', encodeURIComponent(key));
+    resolve(exviteDir, 'cache', encodeURIComponent(key));
 
   return {
     async set(key: string, value: string): Promise<void> {

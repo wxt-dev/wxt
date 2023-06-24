@@ -26,6 +26,7 @@ export async function writeManifest(
       ? JSON.stringify(manifest)
       : JSON.stringify(manifest, null, 2);
 
+  await fs.ensureDir(config.outDir);
   await fs.writeFile(resolve(config.outDir, 'manifest.json'), str, 'utf-8');
 
   output.unshift({

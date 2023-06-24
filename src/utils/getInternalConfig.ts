@@ -52,7 +52,7 @@ export async function getInternalConfig(
     logger,
     vite: config.vite ?? {},
     manifest: config.manifest ?? {},
-    fsCache: createFsCache(srcDir),
+    fsCache: createFsCache(exviteDir),
     imports: config.imports ?? {},
   };
 
@@ -68,6 +68,16 @@ export async function getInternalConfig(
 
   // Merge inline and user configs
   const merged = vite.mergeConfig(baseConfig, userConfig) as InternalConfig;
+
+  // Ensure user customized directories are absolute
+  merged.srcDir = userConfig.srcDir ? resolve(root, merged.srcDir) : root;
+  merged.entrypointsDir = resolve(
+    merged.srcDir,
+    userConfig.entrypointsDir ?? 'entrypoints',
+  );
+  merged.publicDir = resolve(merged.srcDir, userConfig.publicDir ?? 'public');
+  merged.exviteDir = resolve(merged.srcDir, '.exvite');
+  merged.typesDir = resolve(merged.exviteDir, 'types');
 
   // Customize the default vite config
   merged.vite.root = root;
