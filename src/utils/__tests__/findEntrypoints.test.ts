@@ -421,20 +421,11 @@ describe('findEntrypoints', () => {
     expect(entrypoints[0]).toEqual(expected);
   });
 
-  it.todo(
-    'should ignore CSS and JS files inside a HTML page directory',
-    () => {},
-  );
+  it('should not allow multiple entrypoints with the same name', async () => {
+    globMock.mockResolvedValueOnce(['popup.html', 'popup/index.html']);
 
-  it.todo(
-    'should warn when there is an unexpected file in the entrypoints directory',
-    () => {},
-  );
-
-  it.todo(
-    'should ignore entrypoints starting with a . (preventing warnings like .DS_Store files)',
-    () => {},
-  );
-
-  it.todo('should not allow multiple entrypoints with the same name', () => {});
+    await expect(() => findEntrypoints(config)).rejects.toThrowError(
+      'Multiple entrypoints with the name "popup" detected, but only one is allowed: src/entrypoints/popup.html, src/entrypoints/popup/index.html',
+    );
+  });
 });

@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { relative, resolve } from 'path';
 import {
   BackgroundEntrypoint,
   BackgroundScriptDefintition,
@@ -30,6 +30,7 @@ export async function findEntrypoints(
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
+  const existingNames: Record<string, Entrypoint | undefined> = {};
 
   const entrypoints: Entrypoint[] = [];
   await Promise.all(
@@ -79,7 +80,19 @@ export async function findEntrypoints(
           };
       }
 
+      const withSameName = existingNames[entrypoint.name];
+      if (withSameName) {
+        throw Error(
+          `Multiple entrypoints with the name "${
+            entrypoint.name
+          }" detected, but only one is allowed: ${[
+            relative(config.root, withSameName.inputPath),
+            relative(config.root, entrypoint.inputPath),
+          ].join(', ')}`,
+        );
+      }
       entrypoints.push(entrypoint);
+      existingNames[entrypoint.name] = entrypoint;
     }),
   );
   return entrypoints;
