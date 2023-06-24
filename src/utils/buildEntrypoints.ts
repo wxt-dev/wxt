@@ -4,6 +4,9 @@ import { groupEntrypoints } from './groupEntrypoints';
 import * as plugins from '../vite-plugins';
 import { removeEmptyDirs } from './removeEmptyDirs';
 import { getEntrypointBundlePath } from './entrypoints';
+import glob from 'fast-glob';
+import fs from 'fs-extra';
+import { dirname, resolve } from 'path';
 
 export async function buildEntrypoints(
   entrypoints: Entrypoint[],
@@ -18,6 +21,8 @@ export async function buildEntrypoints(
       : await buildSingleEntrypoint(group, config);
     outputs.push(output);
   }
+  const publicOutput = await copyPublicDirectory(config);
+  outputs.push(publicOutput);
 
   // Remove any empty directories from moving outputs around
   await removeEmptyDirs(config.outDir);
@@ -104,4 +109,29 @@ function getBuildOutput(
   if ('on' in result) throw Error('exvite does not support vite watch mode.');
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
   return result.output;
+}
+
+async function copyPublicDirectory(
+  config: InternalConfig,
+): Promise<BuildOutput> {
+  if (!(await fs.exists(config.publicDir))) return [];
+
+  const files = await glob('**/*', { cwd: config.publicDir });
+
+  const outputs: BuildOutput = [];
+  for (const file of files) {
+    const srcPath = resolve(config.publicDir, file);
+    const outPath = resolve(config.outDir, file);
+
+    await fs.ensureDir(dirname(outPath));
+    await fs.copyFile(srcPath, outPath);
+    outputs.push({
+      type: 'asset',
+      fileName: file,
+      name: file,
+      needsCodeReference: false,
+      source: await fs.readFile(srcPath),
+    });
+  }
+  return outputs;
 }

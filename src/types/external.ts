@@ -5,6 +5,7 @@ import { UnimportOptions } from 'unimport';
 export interface InlineConfig {
   root?: string;
   srcDir?: string;
+  publicDir?: string;
   entrypointsDir?: string;
   configFile?: string | false;
   storeIds?: {

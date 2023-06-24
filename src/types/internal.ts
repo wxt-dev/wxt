@@ -12,6 +12,7 @@ import { UnimportOptions } from 'unimport';
 export interface InternalConfig {
   root: string;
   srcDir: string;
+  publicDir: string;
   exviteDir: string;
   typesDir: string;
   entrypointsDir: string;
