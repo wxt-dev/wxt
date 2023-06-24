@@ -17,17 +17,8 @@ export async function getInternalConfig(
 ): Promise<InternalConfig> {
   // Apply defaults to a base config
   const root = config.root ? path.resolve(config.root) : process.cwd();
-  const srcDir =
-    config.srcDir == null ? root : path.resolve(root, config.srcDir);
-  const publicDir = path.resolve(srcDir, config.publicDir ?? 'public');
-  const entrypointsDir = path.resolve(
-    srcDir,
-    config.entrypointsDir ?? 'entrypoints',
-  );
   const mode =
     config.mode ?? (command === 'build' ? 'production' : 'development');
-  const exviteDir = resolve(srcDir, '.exvite');
-  const typesDir = resolve(exviteDir, 'types');
   const browser = config.browser ?? 'chromium';
   const manifestVersion =
     config.manifestVersion ?? (browser === 'chromium' ? 3 : 2);
@@ -35,13 +26,8 @@ export async function getInternalConfig(
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
 
-  const baseConfig: InternalConfig = {
+  const baseConfig: InternalConfigNoUserDirs = {
     root,
-    srcDir,
-    publicDir,
-    entrypointsDir,
-    exviteDir,
-    typesDir,
     outDir,
     outBaseDir,
     storeIds: config.storeIds ?? {},
@@ -52,7 +38,6 @@ export async function getInternalConfig(
     logger,
     vite: config.vite ?? {},
     manifest: config.manifest ?? {},
-    fsCache: createFsCache(exviteDir),
     imports: config.imports ?? {},
   };
 
@@ -67,38 +52,67 @@ export async function getInternalConfig(
   }
 
   // Merge inline and user configs
-  const merged = vite.mergeConfig(baseConfig, userConfig) as InternalConfig;
+  const merged = vite.mergeConfig(
+    baseConfig,
+    userConfig,
+  ) as InternalConfigNoUserDirs;
 
-  // Ensure user customized directories are absolute
-  merged.srcDir = userConfig.srcDir ? resolve(root, merged.srcDir) : root;
-  merged.entrypointsDir = resolve(
-    merged.srcDir,
+  // Apply user config and create final config
+  const srcDir = userConfig.srcDir ? resolve(root, userConfig.srcDir) : root;
+  const entrypointsDir = resolve(
+    srcDir,
     userConfig.entrypointsDir ?? 'entrypoints',
   );
-  merged.publicDir = resolve(merged.srcDir, userConfig.publicDir ?? 'public');
-  merged.exviteDir = resolve(merged.srcDir, '.exvite');
-  merged.typesDir = resolve(merged.exviteDir, 'types');
+  const publicDir = resolve(srcDir, userConfig.publicDir ?? 'public');
+  const exviteDir = resolve(srcDir, '.exvite');
+  const typesDir = resolve(exviteDir, 'types');
+
+  const finalConfig: InternalConfig = {
+    ...merged,
+    srcDir,
+    entrypointsDir,
+    publicDir,
+    exviteDir,
+    typesDir,
+    fsCache: createFsCache(exviteDir),
+  };
+
+  // Ensure user customized directories are absolute
 
   // Customize the default vite config
-  merged.vite.root = root;
-  merged.vite.configFile = false;
-  merged.vite.logLevel = 'silent';
+  finalConfig.vite.root = root;
+  finalConfig.vite.configFile = false;
+  finalConfig.vite.logLevel = 'silent';
 
-  merged.vite.build ??= {};
-  merged.vite.build.outDir = outDir;
-  merged.vite.build.emptyOutDir = false;
+  finalConfig.vite.build ??= {};
+  finalConfig.vite.build.outDir = outDir;
+  finalConfig.vite.build.emptyOutDir = false;
 
-  merged.vite.plugins ??= [];
-  merged.vite.plugins.push(plugins.download(merged));
-  merged.vite.plugins.push(plugins.devHtmlPrerender(merged));
-  merged.vite.plugins.push(plugins.unimport(merged));
-  merged.vite.plugins.push(plugins.virtualEntrypoin('background'));
-  merged.vite.plugins.push(plugins.virtualEntrypoin('content-script'));
+  finalConfig.vite.plugins ??= [];
+  finalConfig.vite.plugins.push(plugins.download(finalConfig));
+  finalConfig.vite.plugins.push(plugins.devHtmlPrerender(finalConfig));
+  finalConfig.vite.plugins.push(plugins.unimport(finalConfig));
+  finalConfig.vite.plugins.push(plugins.virtualEntrypoin('background'));
+  finalConfig.vite.plugins.push(plugins.virtualEntrypoin('content-script'));
 
-  merged.vite.define ??= {};
-  getGlobals(merged).forEach((global) => {
-    merged.vite.define![global.name] = JSON.stringify(global.value);
+  finalConfig.vite.define ??= {};
+  getGlobals(finalConfig).forEach((global) => {
+    finalConfig.vite.define![global.name] = JSON.stringify(global.value);
   });
 
-  return merged;
+  return finalConfig;
 }
+
+/**
+ * Helper type for defining a base config, since user-configurable directories must be set after
+ * reading in the user config.
+ */
+type InternalConfigNoUserDirs = Omit<
+  InternalConfig,
+  | 'srcDir'
+  | 'publicDir'
+  | 'entrypointsDir'
+  | 'exviteDir'
+  | 'typesDir'
+  | 'fsCache'
+>;
