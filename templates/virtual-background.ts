@@ -8,6 +8,6 @@ try {
     );
   }
 } catch (err) {
-  console.error('The background script crashed on startup!\n\n', err);
+  console.error('The background script crashed on startup!');
   throw err;
 }
