@@ -31,12 +31,6 @@ export async function importTsFile<T>(path: string): Promise<T> {
         opts.source = imports + opts.source;
       }
 
-      // console.log(
-      //   `---\n${path}\n---\n${opts.source}---\n`,
-      //   imports,
-      //   '\n\n\n\n',
-      // );
-
       // Call the default babel transformer with our modified source code
       return transform(opts);
     },
