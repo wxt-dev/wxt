@@ -25,6 +25,7 @@ const readFileMock = vi.mocked(
 
 describe('findEntrypoints', () => {
   const config: FindEntrypointsConfig = {
+    root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
     logger: {
@@ -36,6 +37,7 @@ describe('findEntrypoints', () => {
       info: vi.fn(),
       log: vi.fn(),
       warn: vi.fn(),
+      success: vi.fn(),
     },
     command: 'build',
     mode: 'production',
@@ -192,7 +194,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(expected.inputPath);
+      expect(importTsFileMock).toBeCalledWith(config.root, expected.inputPath);
     },
   );
 
@@ -219,7 +221,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(expected.inputPath);
+      expect(importTsFileMock).toBeCalledWith(config.root, expected.inputPath);
     },
   );
 

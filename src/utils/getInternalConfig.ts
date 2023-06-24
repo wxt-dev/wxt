@@ -78,8 +78,6 @@ export async function getInternalConfig(
     fsCache: createFsCache(exviteDir),
   };
 
-  // Ensure user customized directories are absolute
-
   // Customize the default vite config
   finalConfig.vite.root = root;
   finalConfig.vite.configFile = false;

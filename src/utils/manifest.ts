@@ -46,7 +46,7 @@ export async function generateMainfest(
   buildOutput: BuildOutput,
   config: InternalConfig,
 ): Promise<Manifest.WebExtensionManifest> {
-  const pkg = await getPackageJson();
+  const pkg = await getPackageJson(config);
   if (pkg.version == null)
     throw Error('package.json does not include a version');
   if (pkg.name == null) throw Error('package.json does not include a name');
@@ -74,8 +74,8 @@ export async function generateMainfest(
  *
  * TODO: look in root and up directories until it's found
  */
-async function getPackageJson(): Promise<any> {
-  return await fs.readJson('package.json');
+async function getPackageJson(config: InternalConfig): Promise<any> {
+  return await fs.readJson(resolve(config.root, 'package.json'));
 }
 
 /**
