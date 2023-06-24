@@ -5,6 +5,7 @@ import { consola } from 'consola';
 import { importTsFile } from './importTsFile';
 import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
+import { getGlobals } from './globals';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -18,6 +19,7 @@ export async function getInternalConfig(
   const root = config.root ? path.resolve(config.root) : process.cwd();
   const srcDir =
     config.srcDir == null ? root : path.resolve(root, config.srcDir);
+  const publicDir = path.resolve(srcDir, config.publicDir ?? 'public');
   const entrypointsDir = path.resolve(
     srcDir,
     config.entrypointsDir ?? 'entrypoints',
@@ -36,6 +38,7 @@ export async function getInternalConfig(
   const baseConfig: InternalConfig = {
     root,
     srcDir,
+    publicDir,
     entrypointsDir,
     exviteDir,
     typesDir,
@@ -81,6 +84,11 @@ export async function getInternalConfig(
   merged.vite.plugins.push(plugins.unimport(merged));
   merged.vite.plugins.push(plugins.virtualEntrypoin('background'));
   merged.vite.plugins.push(plugins.virtualEntrypoin('content-script'));
+
+  merged.vite.define ??= {};
+  getGlobals(merged).forEach((global) => {
+    merged.vite.define![global.name] = JSON.stringify(global.value);
+  });
 
   return merged;
 }
