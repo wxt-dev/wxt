@@ -15,6 +15,7 @@ import pc from 'picocolors';
 import * as vite from 'vite';
 import { findOpenPort } from './utils/findOpenPort';
 import { relative } from 'path';
+import { formatDuration } from './utils/formatDuration';
 
 export { version } from '../package.json';
 export * from './types/external';
@@ -79,6 +80,7 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   const verb = config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${config.browser}-mv${config.manifestVersion}`;
   config.logger.info(`${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)}`);
+  const startTime = Date.now();
 
   // Cleanup
   await fs.rm(config.outDir, { recursive: true, force: true });
@@ -94,7 +96,9 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   await writeManifest(manifest, output, config);
 
   // Post-build
-  config.logger.success('Entrypoints built');
+  config.logger.success(
+    `Built extension in ${formatDuration(Date.now() - startTime)}`,
+  );
   await printBuildSummary(output, config);
 
   return output;
