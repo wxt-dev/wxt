@@ -32,10 +32,16 @@ async function buildSingleEntrypoint(
   entrypoint: Entrypoint,
   config: InternalConfig,
 ): Promise<BuildOutput> {
+  // Should this entrypoint be wrapped by the vite-plugins/virtualEntrypoint plugin?
+  const isVirtual = ['background', 'content-script'].includes(entrypoint.type);
+  const entry = isVirtual
+    ? `virtual:exvite-${entrypoint.type}?${entrypoint.inputPath}`
+    : entrypoint.inputPath;
+
   const libMode: vite.InlineConfig = {
     build: {
       lib: {
-        entry: entrypoint.inputPath,
+        entry,
         formats: ['iife'],
         name: entrypoint.name,
         fileName: entrypoint.name,

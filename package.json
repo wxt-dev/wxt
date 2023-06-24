@@ -14,7 +14,8 @@
   "author": "Aaron Klinker",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "bin": "dist/cli/index.cjs",
   "main": "./dist/index.cjs",
