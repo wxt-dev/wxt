@@ -34,7 +34,7 @@
     }
   },
   "scripts": {
-    "dev": "tsx src/cli.ts",
+    "exvite": "tsx src/cli/index.ts",
     "build": "run-s -s build:*",
     "build:js": "tsup src/index.ts --sourcemap --dts --format esm,cjs",
     "build:cli": "tsup src/cli/index.ts -d dist/cli --sourcemap",

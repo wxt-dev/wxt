@@ -158,7 +158,7 @@ async function getBackgroundEntrypoint(
   path: string,
 ): Promise<BackgroundEntrypoint> {
   const { main: _, ...options } =
-    await importTsFile<BackgroundScriptDefintition>(path);
+    await importTsFile<BackgroundScriptDefintition>(config.root, path);
   if (options == null) {
     throw Error('Background script does not have a default export');
   }
@@ -180,6 +180,7 @@ async function getContentScriptEntrypoint(
   path: string,
 ): Promise<ContentScriptEntrypoint> {
   const { main: _, ...options } = await importTsFile<ContentScriptDefinition>(
+    config.root,
     path,
   );
   if (options == null) {
@@ -238,5 +239,5 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
 
 export type FindEntrypointsConfig = Pick<
   InternalConfig,
-  'entrypointsDir' | 'outDir' | 'logger' | 'mode' | 'command'
+  'root' | 'entrypointsDir' | 'outDir' | 'logger' | 'mode' | 'command'
 >;

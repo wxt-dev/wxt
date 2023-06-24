@@ -1,12 +1,15 @@
 import { Plugin } from 'vite';
-import { Entrypoint } from '../types';
+import { Entrypoint, InternalConfig } from '../types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 
 /**
  * Wraps a user's entrypoint with a vitual version with additional logic.
  */
-export function virtualEntrypoin(type: Entrypoint['type']): Plugin {
+export function virtualEntrypoin(
+  type: Entrypoint['type'],
+  config: InternalConfig,
+): Plugin {
   const virtualId = `virtual:exvite-${type}?`;
   const resolvedVirtualId = `\0${virtualId}`;
 
@@ -26,7 +29,10 @@ export function virtualEntrypoin(type: Entrypoint['type']): Plugin {
 
       const inputPath = id.replace(resolvedVirtualId, '');
       const template = await fs.readFile(
-        resolve(`node_modules/exvite/templates/virtual-${type}.ts`),
+        resolve(
+          config.root,
+          `node_modules/exvite/templates/virtual-${type}.ts`,
+        ),
         'utf-8',
       );
       return template.replaceAll('{{moduleId}}', inputPath);

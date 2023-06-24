@@ -43,11 +43,12 @@ export async function getInternalConfig(
 
   // Load user config from file
   let userConfig: UserConfig = {
-    mode: config.mode,
+    mode,
   };
   if (config.configFile !== false) {
     userConfig = await importTsFile<UserConfig>(
-      path.resolve(config.configFile ?? 'exvite.config.ts'),
+      root,
+      path.resolve(root, config.configFile ?? 'exvite.config.ts'),
     );
   }
 
@@ -92,8 +93,12 @@ export async function getInternalConfig(
   finalConfig.vite.plugins.push(plugins.download(finalConfig));
   finalConfig.vite.plugins.push(plugins.devHtmlPrerender(finalConfig));
   finalConfig.vite.plugins.push(plugins.unimport(finalConfig));
-  finalConfig.vite.plugins.push(plugins.virtualEntrypoin('background'));
-  finalConfig.vite.plugins.push(plugins.virtualEntrypoin('content-script'));
+  finalConfig.vite.plugins.push(
+    plugins.virtualEntrypoin('background', finalConfig),
+  );
+  finalConfig.vite.plugins.push(
+    plugins.virtualEntrypoin('content-script', finalConfig),
+  );
 
   finalConfig.vite.define ??= {};
   getGlobals(finalConfig).forEach((global) => {

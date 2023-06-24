@@ -13,7 +13,7 @@ export function unimport(config: InternalConfig): Plugin {
   return {
     name: 'exvite:unimport',
     async config() {
-      await unimport.scanImportsFromDir();
+      await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
     },
     async transform(code, id) {
       return unimport.injectImports(code, id);

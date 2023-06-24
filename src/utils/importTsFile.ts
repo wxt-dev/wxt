@@ -4,9 +4,9 @@ import transform from 'jiti/dist/babel';
 import { resolve } from 'path';
 import { scanExports } from 'unimport';
 
-export async function importTsFile<T>(path: string): Promise<T> {
+export async function importTsFile<T>(root: string, path: string): Promise<T> {
   const clientImports = await scanExports(
-    resolve('node_modules/exvite/dist/client/index.js'),
+    resolve(root, 'node_modules/exvite/dist/client/index.js'),
   );
   const jiti = createJITI(__filename, {
     cache: false,
