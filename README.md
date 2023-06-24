@@ -11,7 +11,7 @@ cyfer, wavex, webext, aura, iron, reyna, aggron, wxt, yiga
 - [x] Supports all browsers
 - [x] MV2 & MV3 support
 - [x] Directory based entrypoints
-- [ ] Virtual content script and background entryoints for default behaviors
+- [x] Virtual content script and background entryoints for default behaviors
 - [ ] Great DX
   - [x] Auto-imports
   - [x] TypeScript,
