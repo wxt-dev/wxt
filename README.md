@@ -14,14 +14,14 @@
 
 ## Features
 
-- 🌐 Build for Chrome, Firefox, Edge, and Safari
+- 🌐 Supports all browsers
 - ✅ Supports both MV2 and MV3
 - 📂 Directory based entrypoints
 - 🚔 TypeScript
 - 🦾 Auto-imports
 - ⚡ Dev mode with HMR
 - ⬇️ Download and bundle remote URL imports
-- 🎨 Supports all major frontend frameworks (Vue, React, Svelte)
+- 🎨 Frontend frameworks agnostic, works with Vue, React, Svelte, etc
 
 ### Todo
 
