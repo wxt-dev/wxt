@@ -222,7 +222,7 @@ function addEntrypoints(
       browser_style:
         config.browser === 'firefox' ? options.options.browserStyle : undefined,
       chrome_style:
-        config.browser === 'chromium' ? options.options.chromeStyle : undefined,
+        config.browser !== 'firefox' ? options.options.chromeStyle : undefined,
       page,
     };
   }
@@ -257,12 +257,12 @@ function addEntrypoints(
         // ...defaultSidepanel.options,
         default_panel: page,
       };
-    } else if (config.browser === 'chromium' && config.manifestVersion === 3) {
+    } else if (config.manifestVersion === 3) {
       // @ts-expect-error: Untyped
       manifest.side_panel = {
         default_path: page,
       };
-    } else if (config.browser === 'chromium') {
+    } else {
       config.logger.warn(
         'Side panel not supported by Chromium using MV2. side_panel.default_path was not added to the manifest',
       );

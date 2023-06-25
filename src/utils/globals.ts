@@ -15,13 +15,28 @@ export function getGlobals(
       type: `"chromium" | "firefox"`,
     },
     {
-      name: '__IS_CHROMIUM__',
-      value: config.browser === 'chromium',
+      name: '__IS_CHROME__',
+      value: config.browser === 'chrome',
       type: `boolean`,
     },
     {
       name: '__IS_FIREFOX__',
       value: config.browser === 'firefox',
+      type: `boolean`,
+    },
+    {
+      name: '__IS_SAFARI__',
+      value: config.browser === 'safari',
+      type: `boolean`,
+    },
+    {
+      name: '__IS_EDGE__',
+      value: config.browser === 'edge',
+      type: `boolean`,
+    },
+    {
+      name: '__IS_OPERA__',
+      value: config.browser === 'opera',
       type: `boolean`,
     },
   ];

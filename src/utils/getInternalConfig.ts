@@ -19,9 +19,9 @@ export async function getInternalConfig(
   const root = config.root ? path.resolve(config.root) : process.cwd();
   const mode =
     config.mode ?? (command === 'build' ? 'production' : 'development');
-  const browser = config.browser ?? 'chromium';
+  const browser = config.browser ?? 'chrome';
   const manifestVersion =
-    config.manifestVersion ?? (browser === 'chromium' ? 3 : 2);
+    config.manifestVersion ?? (browser == 'firefox' ? 2 : 3);
   const outBaseDir = path.resolve(root, '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
