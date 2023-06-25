@@ -190,14 +190,18 @@ function addEntrypoints(
       config.outDir,
       '.html',
     );
+    const options: Manifest.ActionManifest = {
+      default_icon: popup.options.defaultIcon,
+      default_title: popup.options.defaultTitle,
+    };
     if (manifest.manifest_version === 3) {
       manifest.action = {
-        ...popup.options,
+        ...options,
         default_popup,
       };
     } else {
       manifest[popup.options.mv2Key ?? 'browser_action'] = {
-        ...popup.options,
+        ...options,
         default_popup,
       };
     }

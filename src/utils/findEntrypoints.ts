@@ -110,8 +110,10 @@ async function getPopupEntrypoint(
 
   const content = await fs.readFile(path, 'utf-8');
   const { document } = parseHTML(content);
+
   const title = document.querySelector('title');
   if (title != null) options.defaultTitle = title.textContent ?? undefined;
+
   const defaultIconContent = document
     .querySelector("meta[name='manifest.default_icon']")
     ?.getAttribute('content');
@@ -124,6 +126,14 @@ async function getPopupEntrypoint(
         err,
       );
     }
+  }
+
+  const mv2KeyContent = document
+    .querySelector("meta[name='manifest.type']")
+    ?.getAttribute('content');
+  if (mv2KeyContent) {
+    options.mv2Key =
+      mv2KeyContent === 'page_action' ? 'page_action' : 'browser_action';
   }
 
   return {
