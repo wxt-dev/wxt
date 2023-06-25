@@ -2,6 +2,16 @@
 
 <p align="center"><i>Next gen framework for building web extensions. Powered by <a href="https://vitejs.dev/" target="_blank">Vite</a>.</i></p>
 
+![Example CLI Output](./.github/assets/cli-output.png)
+
+> **Warning**
+>
+> WXT is not ready for use yet. Production builds work, but dev mode is incomplete:
+>
+> - [x] HMR for HTML entrypoints
+> - [ ] Open browser with extension installed
+> - [ ] Rebuild and reload on certain file changes
+
 ## Features
 
 - 🌐 Build for Chrome, Firefox, Edge, and Safari
