@@ -1,12 +1,26 @@
 import * as wxt from '../..';
-import { getInternalConfig } from '../../utils/getInternalConfig';
 import { defineCommand } from '../utils/defineCommand';
 
-export const build = defineCommand(
-  async (root: any, { mode, config: configFile }: any) => {
-    const cliConfig: wxt.InlineConfig = { root, mode, configFile };
-    const config = await getInternalConfig(cliConfig, mode);
+export const build = defineCommand<
+  [
+    root: string | undefined,
+    flags: {
+      mode?: string;
+      config?: string;
+      browser?: wxt.TargetBrowser;
+      mv3?: boolean;
+      mv2?: boolean;
+    },
+  ]
+>(async (root, flags) => {
+  const mode = flags.mode ?? 'production';
+  const cliConfig: wxt.InlineConfig = {
+    root,
+    mode,
+    browser: flags.browser,
+    manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
+    configFile: flags.config,
+  };
 
-    await wxt.build(config);
-  },
-);
+  await wxt.build(cliConfig);
+});
