@@ -6,11 +6,9 @@
 
 > **Warning**
 >
-> WXT is not ready for use yet. Production builds work, but dev mode is incomplete:
+> WXT is not ready for use yet. Production builds work, but dev mode is incomplete.
 >
-> - [x] HMR for HTML entrypoints
-> - [ ] Open browser with extension installed
-> - [ ] Rebuild and reload on certain file changes
+> See the [Initial Release Candidate](https://github.com/aklinker1/wxt/milestone/1) milestone for more details.
 
 ## Features
 
