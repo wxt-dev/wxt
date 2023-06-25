@@ -7,6 +7,7 @@ importers:
       '@types/node': ^20.3.1
       '@types/picomatch': ^2.3.0
       '@types/webextension-polyfill': ^0.10.0
+      '@vitest/coverage-v8': ^0.32.2
       cac: ^6.7.14
       consola: ^3.1.0
       fast-glob: ^3.2.12
@@ -47,6 +48,7 @@ importers:
       '@types/node': 20.3.1
       '@types/picomatch': 2.3.0
       '@types/webextension-polyfill': 0.10.0
+      '@vitest/coverage-v8': 0.32.2_vitest@0.32.2
       npm-run-all: 4.1.5
       prettier: 2.8.8
       pretty-quick: 3.1.3_prettier@2.8.8
@@ -68,6 +70,24 @@ importers:
       exvite: link:..
 
 packages:
+  /@ampproject/remapping/2.2.1:
+    resolution:
+      {
+        integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==,
+      }
+    engines: { node: '>=6.0.0' }
+    dependencies:
+      '@jridgewell/gen-mapping': 0.3.3
+      '@jridgewell/trace-mapping': 0.3.18
+    dev: true
+
+  /@bcoe/v8-coverage/0.2.3:
+    resolution:
+      {
+        integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==,
+      }
+    dev: true
+
   /@esbuild-kit/cjs-loader/2.4.2:
     resolution:
       {
@@ -604,6 +624,14 @@ packages:
     dev: true
     optional: true
 
+  /@istanbuljs/schema/0.1.3:
+    resolution:
+      {
+        integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==,
+      }
+    engines: { node: '>=8' }
+    dev: true
+
   /@jridgewell/gen-mapping/0.3.3:
     resolution:
       {
@@ -732,6 +760,13 @@ packages:
       '@types/node': 20.3.1
     dev: true
 
+  /@types/istanbul-lib-coverage/2.0.4:
+    resolution:
+      {
+        integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==,
+      }
+    dev: true
+
   /@types/jsonfile/6.1.1:
     resolution:
       {
@@ -766,6 +801,30 @@ packages:
       {
         integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==,
       }
+    dev: true
+
+  /@vitest/coverage-v8/0.32.2_vitest@0.32.2:
+    resolution:
+      {
+        integrity: sha512-/+V3nB3fyeuuSeKxCfi6XmWjDIxpky7AWSkGVfaMjAk7di8igBwRsThLjultwIZdTDH1RAxpjmCXEfSqsMFZOA==,
+      }
+    peerDependencies:
+      vitest: '>=0.32.0 <1'
+    dependencies:
+      '@ampproject/remapping': 2.2.1
+      '@bcoe/v8-coverage': 0.2.3
+      istanbul-lib-coverage: 3.2.0
+      istanbul-lib-report: 3.0.0
+      istanbul-lib-source-maps: 4.0.1
+      istanbul-reports: 3.1.5
+      magic-string: 0.30.0
+      picocolors: 1.0.0
+      std-env: 3.3.3
+      test-exclude: 6.0.0
+      v8-to-istanbul: 9.1.0
+      vitest: 0.32.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@vitest/expect/0.32.2:
@@ -1158,6 +1217,13 @@ packages:
         integrity: sha512-rrrJE6rP0qzl/Srg+C9x/AE5Kxfux7reVm1Wh0wCjuXvih6DqZgqDZe8auTD28fzJ9TF0mHlSDrPpWlujQRo1Q==,
       }
     dev: false
+
+  /convert-source-map/1.9.0:
+    resolution:
+      {
+        integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==,
+      }
+    dev: true
 
   /cross-spawn/6.0.5:
     resolution:
@@ -1857,6 +1923,13 @@ packages:
       }
     dev: true
 
+  /html-escaper/2.0.2:
+    resolution:
+      {
+        integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==,
+      }
+    dev: true
+
   /html-escaper/3.0.3:
     resolution:
       {
@@ -2122,6 +2195,51 @@ packages:
       }
     dev: true
 
+  /istanbul-lib-coverage/3.2.0:
+    resolution:
+      {
+        integrity: sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==,
+      }
+    engines: { node: '>=8' }
+    dev: true
+
+  /istanbul-lib-report/3.0.0:
+    resolution:
+      {
+        integrity: sha512-wcdi+uAKzfiGT2abPpKZ0hSU1rGQjUQnLvtY5MpQ7QCTahD3VODhcu4wcfY1YtkGaDD5yuydOLINXsfbus9ROw==,
+      }
+    engines: { node: '>=8' }
+    dependencies:
+      istanbul-lib-coverage: 3.2.0
+      make-dir: 3.1.0
+      supports-color: 7.2.0
+    dev: true
+
+  /istanbul-lib-source-maps/4.0.1:
+    resolution:
+      {
+        integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==,
+      }
+    engines: { node: '>=10' }
+    dependencies:
+      debug: 4.3.4
+      istanbul-lib-coverage: 3.2.0
+      source-map: 0.6.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /istanbul-reports/3.1.5:
+    resolution:
+      {
+        integrity: sha512-nUsEMa9pBt/NOHqbcbeJEgqIlY/K7rVWUX6Lql2orY5e9roQOthbR3vtY4zzf2orPELg80fnxxk9zUyPlgwD1w==,
+      }
+    engines: { node: '>=8' }
+    dependencies:
+      html-escaper: 2.0.2
+      istanbul-lib-report: 3.0.0
+    dev: true
+
   /jiti/1.18.2:
     resolution:
       {
@@ -2286,6 +2404,16 @@ packages:
     engines: { node: '>=12' }
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /make-dir/3.1.0:
+    resolution:
+      {
+        integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==,
+      }
+    engines: { node: '>=8' }
+    dependencies:
+      semver: 6.3.0
+    dev: true
 
   /md5-hex/3.0.1:
     resolution:
@@ -2903,6 +3031,14 @@ packages:
     hasBin: true
     dev: true
 
+  /semver/6.3.0:
+    resolution:
+      {
+        integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==,
+      }
+    hasBin: true
+    dev: true
+
   /semver/7.5.2:
     resolution:
       {
@@ -3197,6 +3333,18 @@ packages:
     engines: { node: '>= 0.4' }
     dev: true
 
+  /test-exclude/6.0.0:
+    resolution:
+      {
+        integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==,
+      }
+    engines: { node: '>=8' }
+    dependencies:
+      '@istanbuljs/schema': 0.1.3
+      glob: 7.1.6
+      minimatch: 3.1.2
+    dev: true
+
   /thenify-all/1.6.0:
     resolution:
       {
@@ -3426,6 +3574,18 @@ packages:
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.5.0
     dev: false
+
+  /v8-to-istanbul/9.1.0:
+    resolution:
+      {
+        integrity: sha512-6z3GW9x8G1gd+JIIgQQQxXuiJtCXeAjp6RaPEPLv62mH3iPHPxV6W3robxtCzNErRo6ZwTmzWhsbNvjyEBKzKA==,
+      }
+    engines: { node: '>=10.12.0' }
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.18
+      '@types/istanbul-lib-coverage': 2.0.4
+      convert-source-map: 1.9.0
+    dev: true
 
   /validate-npm-package-license/3.0.4:
     resolution:
