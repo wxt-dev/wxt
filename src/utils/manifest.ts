@@ -279,22 +279,27 @@ function addEntrypoints(
       });
       manifest.host_permissions = Array.from(hostPermissions).sort();
     } else {
-      const hashToEntrypointsMap = contentScripts.reduce<
-        Record<string, ContentScriptEntrypoint[]>
-      >((map, script) => {
+      const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
         const hash = JSON.stringify(script.options);
-        map[hash] ??= [];
-        map[hash].push(script);
+        if (!map.has(hash)) {
+          map.set(hash, [script]);
+        } else {
+          map.get(hash)?.push(script);
+        }
         return map;
-      }, {});
+      }, new Map<string, ContentScriptEntrypoint[]>());
 
-      manifest.content_scripts = Object.entries(hashToEntrypointsMap).map(
+      manifest.content_scripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
           ...scripts[0].options,
-          css: getContentScriptCssFiles(scripts, buildOutput),
-          js: scripts.map((entry) =>
-            getEntrypointBundlePath(entry, config.outDir, '.js'),
-          ),
+          // TOOD: Sorting css and js arrays here so we get consistent test results... but we
+          // shouldn't have to. Where is the inconsistency coming from?
+          css: getContentScriptCssFiles(scripts, buildOutput)?.sort(),
+          js: scripts
+            .map((entry) =>
+              getEntrypointBundlePath(entry, config.outDir, '.js'),
+            )
+            .sort(),
         }),
       );
     }
