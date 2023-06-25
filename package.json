@@ -1,8 +1,8 @@
 {
-  "name": "exvite",
+  "name": "wxt",
   "type": "module",
   "version": "0.1.0",
-  "description": "Modern JS framework for building web extensions",
+  "description": "Next gen framework for building web extensions",
   "keywords": [
     "vite",
     "chrome",
@@ -34,7 +34,7 @@
     }
   },
   "scripts": {
-    "exvite": "tsx src/cli/index.ts",
+    "wxt": "tsx src/cli/index.ts",
     "build": "run-s -s build:*",
     "build:js": "tsup src/index.ts --sourcemap --dts --format esm,cjs",
     "build:cli": "tsup src/cli/index.ts -d dist/cli --sourcemap",

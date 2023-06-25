@@ -20,17 +20,17 @@ export interface InlineConfig {
   logger?: Logger;
   vite?: Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode'>;
   manifest?: UserManifest;
-  server?: ExviteDevServer;
+  server?: WxtDevServer;
 }
 
-export interface ExviteInlineViteConfig
+export interface WxtInlineViteConfig
   extends Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode' | 'build'> {
   build?: Omit<vite.BuildOptions, 'outDir'>;
 }
 
 export type BuildOutput = (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
 
-export interface ExviteDevServer extends vite.ViteDevServer {
+export interface WxtDevServer extends vite.ViteDevServer {
   logger: Logger;
   port: number;
   hostname: string;
@@ -152,7 +152,7 @@ export interface BackgroundScriptDefintition {
 }
 
 /**
- * Manifest customization available in the `exvite.config.ts` file. Any missing fields like "name"
+ * Manifest customization available in the `wxt.config.ts` file. Any missing fields like "name"
  * and "version" are managed automatically, and don't need to be listed here.
  */
 export type UserManifest = Omit<

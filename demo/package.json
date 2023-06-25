@@ -1,18 +1,18 @@
 {
   "name": "Demo Extension",
   "version": "1.0.0",
-  "description": "Demo extension for exvite",
+  "description": "Demo extension for WXT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm -w build && exvite",
-    "build": "pnpm -w build && exvite build",
-    "prepare": "pnpm -w build && exvite prepare"
+    "dev": "pnpm -w build && wxt",
+    "build": "pnpm -w build && wxt build",
+    "prepare": "pnpm -w build && wxt prepare"
   },
   "dependencies": {
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.10.0",
-    "exvite": "workspace:*"
+    "wxt": "workspace:*"
   }
 }

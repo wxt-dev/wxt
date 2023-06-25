@@ -40,7 +40,7 @@ async function buildSingleEntrypoint(
   // Should this entrypoint be wrapped by the vite-plugins/virtualEntrypoint plugin?
   const isVirtual = ['background', 'content-script'].includes(entrypoint.type);
   const entry = isVirtual
-    ? `virtual:exvite-${entrypoint.type}?${entrypoint.inputPath}`
+    ? `virtual:wxt-${entrypoint.type}?${entrypoint.inputPath}`
     : entrypoint.inputPath;
 
   const libMode: vite.InlineConfig = {
@@ -106,7 +106,7 @@ async function buildMultipleEntrypoints(
 function getBuildOutput(
   result: Awaited<ReturnType<typeof vite.build>>,
 ): BuildOutput {
-  if ('on' in result) throw Error('exvite does not support vite watch mode.');
+  if ('on' in result) throw Error('wxt does not support vite watch mode.');
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
   return result.output;
 }

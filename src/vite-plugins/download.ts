@@ -11,7 +11,7 @@ import { fetchCached } from '../utils/network';
  */
 export function download(config: InternalConfig): Plugin {
   return {
-    name: 'exvite:download',
+    name: 'wxt:download',
     resolveId(id) {
       if (id.startsWith('url:')) return '\0' + id;
     },

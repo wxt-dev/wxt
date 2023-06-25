@@ -1,6 +1,6 @@
 import {
   BuildOutput,
-  ExviteDevServer,
+  WxtDevServer,
   InlineConfig,
   InternalConfig,
 } from './types';
@@ -30,7 +30,7 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
 
 export async function createServer(
   config?: InlineConfig,
-): Promise<ExviteDevServer> {
+): Promise<WxtDevServer> {
   const port = await findOpenPort(3000, 3010);
   const hostname = 'localhost';
   const origin = `http://${hostname}:${port}`;
@@ -53,7 +53,7 @@ export async function createServer(
     if (
       !path.startsWith(internalConfig.srcDir) ||
       path.startsWith(internalConfig.outBaseDir) ||
-      path.startsWith(internalConfig.exviteDir)
+      path.startsWith(internalConfig.wxtDir)
     )
       return;
 
@@ -61,7 +61,7 @@ export async function createServer(
       `${pc.green(eventName + ':')} ${relative(process.cwd(), path)}`,
     );
   });
-  const server: ExviteDevServer = {
+  const server: WxtDevServer = {
     ...viteServer,
     logger: internalConfig.logger,
     port,
@@ -79,7 +79,11 @@ export async function createServer(
 async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   const verb = config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${config.browser}-mv${config.manifestVersion}`;
-  config.logger.info(`${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)}`);
+  config.logger.info(
+    `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
+      `Vite ${vite.version}`,
+    )}`,
+  );
   const startTime = Date.now();
 
   // Cleanup

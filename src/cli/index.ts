@@ -4,7 +4,7 @@ import cac from 'cac';
 import { version } from '../../package.json';
 import * as commands from './commands';
 
-const cli = cac('exvite');
+const cli = cac('wxt');
 cli.help();
 cli.version(version);
 

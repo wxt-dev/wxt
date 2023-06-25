@@ -11,7 +11,7 @@ export function unimport(config: InternalConfig): Plugin {
   const unimport = createUnimport(options);
 
   return {
-    name: 'exvite:unimport',
+    name: 'wxt:unimport',
     async config() {
       await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
     },

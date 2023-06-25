@@ -10,7 +10,7 @@ export class TestProject {
   private readonly root: string;
 
   constructor(root = 'e2e/project') {
-    // We can't put each test's project inside e2e/project directly, otherwise the exvite.config.ts
+    // We can't put each test's project inside e2e/project directly, otherwise the wxt.config.ts
     // file is cached and cannot be different between each test. Instead, we add a random ID to the
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
@@ -23,7 +23,7 @@ export class TestProject {
           description: 'Example description',
           version: '0.0.0-test',
           dependencies: {
-            exvite: '../../..',
+            wxt: '../../..',
           },
         },
         null,
@@ -33,13 +33,13 @@ export class TestProject {
   }
 
   /**
-   * Add a `exvite.config.ts` to the project with specific contents.
+   * Add a `wxt.config.ts` to the project with specific contents.
    */
   setConfigFileConfig(config: UserConfig = {}) {
     this.config = config;
     this.files.push([
-      'exvite.config.ts',
-      `import { defineConfig } from 'exvite'\n\nexport default defineConfig(${JSON.stringify(
+      'wxt.config.ts',
+      `import { defineConfig } from 'wxt'\n\nexport default defineConfig(${JSON.stringify(
         config,
         null,
         2,
@@ -86,12 +86,12 @@ export class TestProject {
   }
 
   /**
-   * Read all the files from the test project's `.exvite` directory and combine them into a string
+   * Read all the files from the test project's `.wxt` directory and combine them into a string
    * that can be used in a snapshot.
    */
-  serializeExviteDir(): Promise<string> {
+  serializeWxtDir(): Promise<string> {
     return this.serializeDir(
-      resolve(this.config?.srcDir ?? this.root, '.exvite/types'),
+      resolve(this.config?.srcDir ?? this.root, '.wxt/types'),
     );
   }
 

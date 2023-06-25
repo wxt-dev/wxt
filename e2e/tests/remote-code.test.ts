@@ -16,7 +16,7 @@ describe('Remote Code', () => {
     );
     expect(output).not.toContain(url);
     expect(
-      await project.fileExists(`.exvite/cache/${encodeURIComponent(url)}`),
+      await project.fileExists(`.wxt/cache/${encodeURIComponent(url)}`),
     ).toBe(true);
   });
 });

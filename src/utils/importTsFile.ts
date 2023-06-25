@@ -6,7 +6,7 @@ import { scanExports } from 'unimport';
 
 export async function importTsFile<T>(root: string, path: string): Promise<T> {
   const clientImports = await scanExports(
-    resolve(root, 'node_modules/exvite/dist/client/index.js'),
+    resolve(root, 'node_modules/wxt/dist/client/index.js'),
   );
   const jiti = createJITI(__filename, {
     cache: false,
@@ -21,7 +21,7 @@ export async function importTsFile<T>(root: string, path: string): Promise<T> {
         '',
       );
 
-      // Append any exvite/client functions so babel doesn't complain about undefined variables
+      // Append any wxt/client functions so babel doesn't complain about undefined variables
       if (opts.filename === path) {
         // TODO: Only append import if it isn't already imported
         const imports =

@@ -1,9 +1,9 @@
 .DS_Store
 .env
 .env.*
-.exvite
 .idea
 .output
+.wxt
 *.log
 /.vscode/
 /docs/.vitepress/cache

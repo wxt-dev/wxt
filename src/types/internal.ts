@@ -1,7 +1,7 @@
 import * as vite from 'vite';
 import {
   Entrypoint,
-  ExviteDevServer,
+  WxtDevServer,
   Logger,
   TargetBrowser,
   TargetManifestVersion,
@@ -13,7 +13,7 @@ export interface InternalConfig {
   root: string;
   srcDir: string;
   publicDir: string;
-  exviteDir: string;
+  wxtDir: string;
   typesDir: string;
   entrypointsDir: string;
   outBaseDir: string;
@@ -32,7 +32,7 @@ export interface InternalConfig {
   vite: vite.InlineConfig;
   manifest: UserManifest;
   fsCache: FsCache;
-  server?: ExviteDevServer;
+  server?: WxtDevServer;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];

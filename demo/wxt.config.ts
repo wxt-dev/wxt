@@ -1,4 +1,4 @@
-import { defineConfig } from 'exvite';
+import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',

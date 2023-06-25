@@ -20,7 +20,7 @@ export function multipageMove(
   config: InternalConfig,
 ): vite.Plugin {
   return {
-    name: 'exvite:multipage-move',
+    name: 'wxt:multipage-move',
     async writeBundle(_, bundle) {
       for (const oldBundlePath in bundle) {
         // oldBundlePath = 'entrypoints/popup.html' or 'entrypoints/o ptions/index.html'

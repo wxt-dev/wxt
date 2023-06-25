@@ -48,7 +48,7 @@ export async function getInternalConfig(
   if (config.configFile !== false) {
     userConfig = await importTsFile<UserConfig>(
       root,
-      path.resolve(root, config.configFile ?? 'exvite.config.ts'),
+      path.resolve(root, config.configFile ?? 'wxt.config.ts'),
     );
   }
 
@@ -65,17 +65,17 @@ export async function getInternalConfig(
     userConfig.entrypointsDir ?? 'entrypoints',
   );
   const publicDir = resolve(srcDir, userConfig.publicDir ?? 'public');
-  const exviteDir = resolve(srcDir, '.exvite');
-  const typesDir = resolve(exviteDir, 'types');
+  const wxtDir = resolve(srcDir, '.wxt');
+  const typesDir = resolve(wxtDir, 'types');
 
   const finalConfig: InternalConfig = {
     ...merged,
     srcDir,
     entrypointsDir,
     publicDir,
-    exviteDir,
+    wxtDir: wxtDir,
     typesDir,
-    fsCache: createFsCache(exviteDir),
+    fsCache: createFsCache(wxtDir),
   };
 
   // Customize the default vite config
@@ -112,10 +112,5 @@ export async function getInternalConfig(
  */
 type InternalConfigNoUserDirs = Omit<
   InternalConfig,
-  | 'srcDir'
-  | 'publicDir'
-  | 'entrypointsDir'
-  | 'exviteDir'
-  | 'typesDir'
-  | 'fsCache'
+  'srcDir' | 'publicDir' | 'entrypointsDir' | 'wxtDir' | 'typesDir' | 'fsCache'
 >;

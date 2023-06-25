@@ -10,7 +10,7 @@ import { dirname, isAbsolute, relative, resolve } from 'path';
 export function devHtmlPrerender(config: InternalConfig): vite.Plugin {
   return {
     apply: 'build',
-    name: 'exvite:dev-html-prerender',
+    name: 'wxt:dev-html-prerender',
     async transform(html, id) {
       const server = config.server;
       if (config.command !== 'serve' || server == null || !id.endsWith('.html'))

@@ -10,11 +10,11 @@ export function virtualEntrypoin(
   type: Entrypoint['type'],
   config: InternalConfig,
 ): Plugin {
-  const virtualId = `virtual:exvite-${type}?`;
+  const virtualId = `virtual:wxt-${type}?`;
   const resolvedVirtualId = `\0${virtualId}`;
 
   return {
-    name: `exvite:virtual-entrypoint`,
+    name: `wxt:virtual-entrypoint`,
     resolveId(id) {
       // Id doesn't start with prefix, it looks like this:
       // /path/to/project/virtual:background?/path/to/project/entrypoints/background.ts
@@ -29,10 +29,7 @@ export function virtualEntrypoin(
 
       const inputPath = id.replace(resolvedVirtualId, '');
       const template = await fs.readFile(
-        resolve(
-          config.root,
-          `node_modules/exvite/templates/virtual-${type}.ts`,
-        ),
+        resolve(config.root, `node_modules/wxt/templates/virtual-${type}.ts`),
         'utf-8',
       );
       return template.replaceAll('{{moduleId}}', inputPath);

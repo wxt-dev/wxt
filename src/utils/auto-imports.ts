@@ -9,9 +9,9 @@ export function getUnimportOptions(
     debugLog: config.logger.debug,
     imports: [
       { name: '*', as: 'browser', from: 'webextension-polyfill' },
-      { name: 'defineConfig', from: 'exvite' },
+      { name: 'defineConfig', from: 'wxt' },
     ],
-    presets: [{ package: 'exvite/client' }],
+    presets: [{ package: 'wxt/client' }],
     warn: config.logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],
   };

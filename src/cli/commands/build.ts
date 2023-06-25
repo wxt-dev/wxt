@@ -1,12 +1,12 @@
-import * as exvite from '../..';
+import * as wxt from '../..';
 import { getInternalConfig } from '../../utils/getInternalConfig';
 import { defineCommand } from '../utils/defineCommand';
 
 export const build = defineCommand(
   async (root: any, { mode, config: configFile }: any) => {
-    const cliConfig: exvite.InlineConfig = { root, mode, configFile };
+    const cliConfig: wxt.InlineConfig = { root, mode, configFile };
     const config = await getInternalConfig(cliConfig, mode);
 
-    await exvite.build(config);
+    await wxt.build(config);
   },
 );

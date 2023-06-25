@@ -61,13 +61,13 @@ importers:
   demo:
     specifiers:
       '@types/webextension-polyfill': ^0.10.0
-      exvite: workspace:*
+      wxt: workspace:*
       webextension-polyfill: ^0.10.0
     dependencies:
       webextension-polyfill: 0.10.0
     devDependencies:
       '@types/webextension-polyfill': 0.10.0
-      exvite: link:..
+      wxt: link:..
 
 packages:
   /@ampproject/remapping/2.2.1:
