@@ -2,10 +2,10 @@ import { consola } from 'consola';
 import { printHeader } from './printHeader';
 import { formatDuration } from '../../utils/formatDuration';
 
-export function defineCommand(
-  cb: (...args: any[]) => void | boolean | Promise<void | boolean>,
+export function defineCommand<TArgs extends any[]>(
+  cb: (...args: TArgs) => void | boolean | Promise<void | boolean>,
 ) {
-  return async (...args: any[]) => {
+  return async (...args: TArgs) => {
     const startTime = Date.now();
     try {
       printHeader();
