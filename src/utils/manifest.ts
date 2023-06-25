@@ -132,12 +132,12 @@ function addEntrypoints(
     const script = getEntrypointBundlePath(background, config.outDir, '.js');
     if (manifest.manifest_version === 3) {
       manifest.background = {
-        ...background.options,
+        type: background.options.type,
         service_worker: script,
       };
     } else {
       manifest.background = {
-        ...background.options,
+        persistent: background.options.persistent,
         scripts: [script],
       };
     }
