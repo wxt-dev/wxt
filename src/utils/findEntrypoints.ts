@@ -157,11 +157,26 @@ async function getOptionsEntrypoint(
 
   const content = await fs.readFile(path, 'utf-8');
   const { document } = parseHTML(content);
-  const defaultIconContent = document
+
+  const openInTabContent = document
     .querySelector("meta[name='manifest.open_in_tab']")
     ?.getAttribute('content');
-  if (defaultIconContent) {
-    options.openInTab = Boolean(defaultIconContent);
+  if (openInTabContent) {
+    options.openInTab = Boolean(openInTabContent);
+  }
+
+  const chromeStyleContent = document
+    .querySelector("meta[name='manifest.chrome_style']")
+    ?.getAttribute('content');
+  if (chromeStyleContent) {
+    options.chromeStyle = Boolean(chromeStyleContent);
+  }
+
+  const browserStyleContent = document
+    .querySelector("meta[name='manifest.browser_style']")
+    ?.getAttribute('content');
+  if (browserStyleContent) {
+    options.browserStyle = Boolean(browserStyleContent);
   }
 
   return {

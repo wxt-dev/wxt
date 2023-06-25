@@ -43,11 +43,6 @@ describe('findEntrypoints', () => {
     mode: 'production',
   };
 
-  beforeEach(() => {
-    vi.resetAllMocks();
-    vi.restoreAllMocks();
-  });
-
   it.each<[string, string, PopupEntrypoint]>([
     [
       'popup.html',
