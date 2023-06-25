@@ -123,6 +123,8 @@ export interface OptionsEntrypoint extends BaseEntrypoint {
   type: 'options';
   options: {
     openInTab?: boolean;
+    browserStyle?: boolean;
+    chromeStyle?: boolean;
   };
 }
 

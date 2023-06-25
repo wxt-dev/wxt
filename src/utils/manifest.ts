@@ -214,7 +214,11 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, config.outDir, '.html');
     manifest.options_ui = {
-      ...options.options,
+      open_in_tab: options.options.openInTab,
+      browser_style:
+        config.browser === 'firefox' ? options.options.browserStyle : undefined,
+      chrome_style:
+        config.browser === 'chromium' ? options.options.chromeStyle : undefined,
       page,
     };
   }
