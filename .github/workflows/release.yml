@@ -8,6 +8,8 @@ jobs:
 
   publish:
     runs-on: ubuntu-20.04
+    needs:
+      - validate
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,6 +35,8 @@ jobs:
 
       - name: Bump and Tag
         run: |
+          git config user.email "github-actions@users.noreply.github.com"
+          git config user.name "GitHub Actions"
           pnpx changelogen@latest --release
           git push
           git push --tags

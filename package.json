@@ -52,7 +52,8 @@
     "compile": "tsc --noEmit",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "prepublish": "pnpm -s build"
   },
   "dependencies": {
     "c12": "^1.4.2",
