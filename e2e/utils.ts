@@ -124,7 +124,7 @@ export class TestProject {
   }
 
   async getOutputManifest(
-    path: string = '.output/chromium-mv3/manifest.json',
+    path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
     return await fs.readJson(resolve(this.root, path));
   }

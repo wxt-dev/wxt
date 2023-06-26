@@ -1,9 +1,9 @@
 import * as vite from 'vite';
 import { BuildOutput, Entrypoint, InternalConfig } from '../types';
-import { groupEntrypoints } from './groupEntrypoints';
+import { groupEntrypoints } from '../utils/groupEntrypoints';
 import * as plugins from '../vite-plugins';
-import { removeEmptyDirs } from './removeEmptyDirs';
-import { getEntrypointBundlePath } from './entrypoints';
+import { removeEmptyDirs } from '../utils/removeEmptyDirs';
+import { getEntrypointBundlePath } from '../utils/entrypoints';
 import glob from 'fast-glob';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';

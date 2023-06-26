@@ -42,7 +42,7 @@ describe('Manifest Content', () => {
         await project.build({ manifestVersion: 2 });
 
         const manifest = await project.getOutputManifest(
-          '.output/chromium-mv2/manifest.json',
+          '.output/chrome-mv2/manifest.json',
         );
         expect(manifest[expectedType]).toEqual({
           default_icon: { '16': '/icon/16.png' },
@@ -123,7 +123,7 @@ describe('Manifest Content', () => {
 
       await project.build({ manifestVersion: 2 });
       const manifest = await project.getOutputManifest(
-        '.output/chromium-mv2/manifest.json',
+        '.output/chrome-mv2/manifest.json',
       );
 
       expect(manifest.background).toEqual({

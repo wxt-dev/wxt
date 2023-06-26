@@ -3,24 +3,24 @@ import {
   WxtDevServer,
   InlineConfig,
   InternalConfig,
-} from './types';
-import { getInternalConfig } from './utils/getInternalConfig';
-import { findEntrypoints } from './utils/findEntrypoints';
-import { buildEntrypoints } from './utils/buildEntrypoints';
-import { generateMainfest, writeManifest } from './utils/manifest';
-import { printBuildSummary } from './utils/printBuildSummary';
+} from './core/types';
+import { getInternalConfig } from './core/utils/getInternalConfig';
+import { findEntrypoints } from './core/build/findEntrypoints';
+import { buildEntrypoints } from './core/build/buildEntrypoints';
+import { generateMainfest, writeManifest } from './core/utils/manifest';
+import { printBuildSummary } from './core/log/printBuildSummary';
 import fs from 'fs-extra';
-import { generateTypesDir } from './utils/generateTypesDir';
+import { generateTypesDir } from './core/build/generateTypesDir';
 import pc from 'picocolors';
 import * as vite from 'vite';
-import { findOpenPort } from './utils/findOpenPort';
-import { formatDuration } from './utils/formatDuration';
-import { createWebExtRunner } from './runners/createWebExtRunner';
+import { findOpenPort } from './core/utils/findOpenPort';
+import { formatDuration } from './core/utils/formatDuration';
+import { createWebExtRunner } from './core/runners/createWebExtRunner';
 
 export { version } from '../package.json';
-export * from './types/external';
-export * from './utils/defineConfig';
-export * from './utils/defineRunnerConfig';
+export * from './core/types/external';
+export * from './core/utils/defineConfig';
+export * from './core/utils/defineRunnerConfig';
 
 /**
  * Bundles the extension for production. Returns a promise of the build result.

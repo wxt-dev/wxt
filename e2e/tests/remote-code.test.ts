@@ -9,7 +9,7 @@ describe('Remote Code', () => {
 
     await project.build();
 
-    const output = await project.serializeFile('.output/chromium-mv3/popup.js');
+    const output = await project.serializeFile('.output/chrome-mv3/popup.js');
     expect(output).toContain(
       // Some text that will hopefully be in future versions of this script
       'umami.disabled',

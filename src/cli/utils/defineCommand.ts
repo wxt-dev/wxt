@@ -1,6 +1,6 @@
 import { consola } from 'consola';
-import { printHeader } from './printHeader';
-import { formatDuration } from '../../utils/formatDuration';
+import { printHeader } from '../../core/log/printHeader';
+import { formatDuration } from '../../core/utils/formatDuration';
 
 export function defineCommand<TArgs extends any[]>(
   cb: (...args: TArgs) => void | boolean | Promise<void | boolean>,

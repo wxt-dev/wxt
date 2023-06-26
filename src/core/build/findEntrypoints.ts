@@ -13,9 +13,9 @@ import fs from 'fs-extra';
 import picomatch from 'picomatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import { importTsFile } from './importTsFile';
+import { importTsFile } from '../utils/importTsFile';
 import glob from 'fast-glob';
-import { getEntrypointName } from './entrypoints';
+import { getEntrypointName } from '../utils/entrypoints';
 
 /**
  * Return entrypoints and their configuration by looking through the

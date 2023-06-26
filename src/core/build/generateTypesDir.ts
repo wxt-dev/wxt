@@ -2,9 +2,9 @@ import { createUnimport } from 'unimport';
 import { Entrypoint, InternalConfig } from '../types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
-import { getEntrypointBundlePath } from './entrypoints';
-import { getUnimportOptions } from './auto-imports';
-import { getGlobals } from './globals';
+import { getEntrypointBundlePath } from '../utils/entrypoints';
+import { getUnimportOptions } from '../utils/auto-imports';
+import { getGlobals } from '../utils/globals';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.

@@ -11,7 +11,7 @@ describe('Output Directory Structure', () => {
     await project.build();
 
     expect(await project.serializeOutput()).toMatchInlineSnapshot(`
-      ".output/chromium-mv3/manifest.json
+      ".output/chrome-mv3/manifest.json
       ----------------------------------------
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\"}"
     `);
@@ -44,31 +44,31 @@ describe('Output Directory Structure', () => {
     await project.build();
 
     expect(await project.serializeOutput()).toMatchInlineSnapshot(`
-      ".output/chromium-mv3/assets/one-dedc7a05.css
+      ".output/chrome-mv3/assets/one-dedc7a05.css
       ----------------------------------------
       body{color:#00f}
 
       ================================================================================
-      .output/chromium-mv3/assets/two-74d94aed.css
+      .output/chrome-mv3/assets/two-74d94aed.css
       ----------------------------------------
       body{color:red}
 
       ================================================================================
-      .output/chromium-mv3/content-scripts/one.js
+      .output/chrome-mv3/content-scripts/one.js
       ----------------------------------------
       (function(){\\"use strict\\";function c(n){return n}const e=\\"\\",t={matches:[\\"*://*/*\\"],main:()=>{}};(async()=>{try{await t.main()}catch(n){console.error(\`The content script crashed on startup!
 
       \`,n)}})()})();
 
       ================================================================================
-      .output/chromium-mv3/content-scripts/two.js
+      .output/chrome-mv3/content-scripts/two.js
       ----------------------------------------
       (function(){\\"use strict\\";function c(n){return n}const e=\\"\\",t={matches:[\\"*://*/*\\"],main:()=>{}};(async()=>{try{await t.main()}catch(n){console.error(\`The content script crashed on startup!
 
       \`,n)}})()})();
 
       ================================================================================
-      .output/chromium-mv3/manifest.json
+      .output/chrome-mv3/manifest.json
       ----------------------------------------
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"assets/one-dedc7a05.css\\",\\"assets/two-74d94aed.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
     `);

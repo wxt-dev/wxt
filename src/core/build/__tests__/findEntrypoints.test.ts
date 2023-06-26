@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -9,10 +9,10 @@ import {
 import { resolve } from 'path';
 import { FindEntrypointsConfig, findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
-import { importTsFile } from '../importTsFile';
+import { importTsFile } from '../../utils/importTsFile';
 import glob from 'fast-glob';
 
-vi.mock('../importTsFile');
+vi.mock('../../utils/importTsFile');
 const importTsFileMock = vi.mocked(importTsFile);
 
 vi.mock('fast-glob');

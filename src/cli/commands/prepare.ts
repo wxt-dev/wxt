@@ -1,6 +1,6 @@
-import { getInternalConfig } from '../../utils/getInternalConfig';
-import { findEntrypoints } from '../../utils/findEntrypoints';
-import { generateTypesDir } from '../../utils/generateTypesDir';
+import { getInternalConfig } from '../../core/utils/getInternalConfig';
+import { findEntrypoints } from '../../core/build/findEntrypoints';
+import { generateTypesDir } from '../../core/build/generateTypesDir';
 import { defineCommand } from '../utils/defineCommand';
 import * as wxt from '../..';
 

@@ -20,12 +20,12 @@ describe('User Config', () => {
 
     const output = await project.serializeOutput();
     expect(output).toMatchInlineSnapshot(`
-      ".output/chromium-mv3/background.js
+      ".output/chrome-mv3/background.js
       ----------------------------------------
       (function(){\\"use strict\\";function o(n){return typeof n==\\"function\\"?{main:n}:n}const r=o(()=>console.log(\\"Hello background\\"));try{r.main()instanceof Promise&&console.warn(\\"The background's main() function return a promise, but it must be synchonous\\")}catch(n){throw console.error(\\"The background script crashed on startup!\\"),n}})();
 
       ================================================================================
-      .output/chromium-mv3/manifest.json
+      .output/chrome-mv3/manifest.json
       ----------------------------------------
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
     `);
@@ -45,12 +45,12 @@ describe('User Config', () => {
 
     const output = await project.serializeOutput();
     expect(output).toMatchInlineSnapshot(`
-      ".output/chromium-mv3/background.js
+      ".output/chrome-mv3/background.js
       ----------------------------------------
       (function(){\\"use strict\\";function o(n){return typeof n==\\"function\\"?{main:n}:n}const r=o(()=>console.log(\\"Hello background\\"));try{r.main()instanceof Promise&&console.warn(\\"The background's main() function return a promise, but it must be synchonous\\")}catch(n){throw console.error(\\"The background script crashed on startup!\\"),n}})();
 
       ================================================================================
-      .output/chromium-mv3/manifest.json
+      .output/chrome-mv3/manifest.json
       ----------------------------------------
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
     `);

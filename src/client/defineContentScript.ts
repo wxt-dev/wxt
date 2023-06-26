@@ -1,4 +1,4 @@
-import { ContentScriptDefinition } from '../types';
+import { ContentScriptDefinition } from '../core/types';
 
 export function defineContentScript(
   definition: ContentScriptDefinition,

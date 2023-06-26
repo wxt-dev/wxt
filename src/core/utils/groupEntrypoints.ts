@@ -1,4 +1,4 @@
-import { Entrypoint } from '..';
+import { Entrypoint } from '../..';
 import { EntrypointGroup } from '../types';
 
 /**
