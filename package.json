@@ -1,17 +1,25 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Next gen framework for developing web extensions",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aklinker1/wxt"
+  },
   "keywords": [
     "vite",
     "chrome",
     "web",
     "extension",
     "browser",
-    "bundler"
+    "bundler",
+    "framework"
   ],
-  "author": "Aaron Klinker",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "license": "MIT",
   "files": [
     "dist",
