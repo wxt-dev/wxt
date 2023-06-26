@@ -73,4 +73,3 @@
 ### ❤️ Contributors
 
 - Aaron Klinker
-- Aaron
