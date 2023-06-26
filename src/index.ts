@@ -14,12 +14,14 @@ import { generateTypesDir } from './utils/generateTypesDir';
 import pc from 'picocolors';
 import * as vite from 'vite';
 import { findOpenPort } from './utils/findOpenPort';
-import { relative } from 'path';
 import { formatDuration } from './utils/formatDuration';
+import { createWebExtRunner } from './runners/createWebExtRunner';
 
 export { version } from '../package.json';
 export * from './types/external';
 export * from './utils/defineConfig';
+export * from './utils/defineRunnerConfig';
+
 /**
  * Bundles the extension for production. Returns a promise of the build result.
  */
@@ -43,26 +45,24 @@ export async function createServer(
     vite.mergeConfig(serverConfig, config ?? {}),
     'serve',
   );
+  const runner = createWebExtRunner();
 
   const viteServer = await vite.createServer(internalConfig.vite);
-  viteServer.middlewares.use(function (req, res, next) {
-    internalConfig.logger.log('middleware');
-    next();
-  });
-  viteServer.watcher.on('all', (eventName, path) => {
-    if (
-      !path.startsWith(internalConfig.srcDir) ||
-      path.startsWith(internalConfig.outBaseDir) ||
-      path.startsWith(internalConfig.wxtDir)
-    )
-      return;
-
-    internalConfig.logger.log(
-      `${pc.green(eventName + ':')} ${relative(process.cwd(), path)}`,
-    );
-  });
   const server: WxtDevServer = {
     ...viteServer,
+    async listen(port, isRestart) {
+      const res = await viteServer.listen(port, isRestart);
+
+      if (!isRestart) {
+        internalConfig.logger.success(`Started dev server @ ${origin}`);
+
+        internalConfig.logger.info('Opening browser...');
+        await runner.openBrowser(internalConfig);
+        internalConfig.logger.success('Opened!');
+      }
+
+      return res;
+    },
     logger: internalConfig.logger,
     port,
     hostname,

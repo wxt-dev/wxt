@@ -6,8 +6,10 @@ import {
   TargetBrowser,
   TargetManifestVersion,
   UserManifest,
+  ExtensionRunnerConfig,
 } from './external';
 import { UnimportOptions } from 'unimport';
+import { ResolvedConfig } from 'c12';
 
 export interface InternalConfig {
   root: string;
@@ -33,6 +35,7 @@ export interface InternalConfig {
   manifest: UserManifest;
   fsCache: FsCache;
   server?: WxtDevServer;
+  runnerConfig: ResolvedConfig<ExtensionRunnerConfig>;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];

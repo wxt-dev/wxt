@@ -47,6 +47,7 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
+    "c12": "^1.4.2",
     "cac": "^6.7.14",
     "consola": "^3.1.0",
     "fast-glob": "^3.2.12",
@@ -59,6 +60,7 @@
     "picomatch": "^2.3.1",
     "unimport": "^3.0.8",
     "vite": "^4.3.9",
+    "web-ext": "^7.6.2",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {

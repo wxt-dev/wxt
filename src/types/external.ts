@@ -21,6 +21,7 @@ export interface InlineConfig {
   vite?: Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode'>;
   manifest?: UserManifest;
   server?: WxtDevServer;
+  runner?: ExtensionRunnerConfig;
 }
 
 export interface WxtInlineViteConfig
@@ -177,3 +178,68 @@ export type UserManifest = Omit<
   | 'version'
   | 'version_name'
 >;
+
+/**
+ * Configure how the browser starts up.
+ */
+export interface ExtensionRunnerConfig {
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#browser-console
+   */
+  openConsole?: boolean;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#devtools
+   */
+  openDevtools?: boolean;
+  /**
+   * List of browser names and the binary that should be used to open the browser.
+   */
+  binaries?: {
+    /**
+     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+     */
+    chrome?: string;
+    /**
+     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+     */
+    edge?: string;
+    /**
+     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+     */
+    opera?: string;
+    /**
+     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
+     */
+    firefox?:
+      | 'firefox'
+      | 'beta'
+      | 'nightly'
+      | 'deved'
+      | 'firefoxdeveloperedition'
+      | string;
+  };
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile
+   */
+  firefoxProfile?: string;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-profile
+   */
+  chromiumProfile?: string;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
+   */
+  firefoxPrefs?: Record<string, string>;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
+   */
+  firefoxArgs?: string[];
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
+   */
+  chromiumArgs?: string[];
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#start-url
+   */
+  startUrls?: string[];
+}

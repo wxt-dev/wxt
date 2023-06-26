@@ -24,6 +24,6 @@ export const dev = defineCommand<
 
   const server = await wxt.createServer(cliConfig);
   await server.listen(server.port);
-  server.logger.success(`Started dev server @ ${server.origin}`);
+
   return true;
 });
