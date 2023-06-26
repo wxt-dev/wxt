@@ -24,7 +24,9 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install --skip-scripts
+          pnpm build
 
       - name: Formatting
         run: pnpm format:check
@@ -32,8 +34,13 @@ jobs:
       - name: Type Check
         run: pnpm compile
 
-      - name: Build
-        run: pnpm build:all
+      - name: Build Demo
+        run: |
+          pnpm install
+          pnpm build:all:chrome-mv2
+          pnpm build:all:chrome-mv3
+          pnpm build:all:firefox-mv2
+          pnpm build:all:firefox-mv3
         working-directory: demo
 
       - name: Tests
