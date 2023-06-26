@@ -31,3 +31,9 @@
 ## Get Started
 
 Checkout the [installation guide](https://wxtjs.dev/get-started) to get started with WXT.
+
+## Contributors
+
+<a href="https://github.com/aklinker1/wxt/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=aklinker1/wxt" />
+</a>
