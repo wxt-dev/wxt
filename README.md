@@ -19,7 +19,7 @@
 - 🦾 Auto-imports
 - ⚡ Dev mode with HMR
 - ⬇️ Download and bundle remote URL imports
-- 🎨 Frontend frameworks agnostic, works with Vue, React, Svelte, etc
+- 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 
 ### Todo
 
