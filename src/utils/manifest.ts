@@ -58,7 +58,7 @@ export async function generateMainfest(
     name: pkg.name,
     short_name: pkg.shortName,
     version: simplifyVersion(pkg.version),
-    version_name: pkg.version,
+    version_name: config.browser === 'firefox' ? undefined : pkg.version,
     ...config.manifest,
   };
 
@@ -271,13 +271,15 @@ function addEntrypoints(
 
   if (contentScripts?.length) {
     if (config.command === 'serve') {
-      const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
+      const permissionsKey =
+        config.manifestVersion === 2 ? 'permissions' : 'host_permissions';
+      const hostPermissions = new Set<string>(manifest[permissionsKey] ?? []);
       contentScripts.forEach((script) => {
         script.options.matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
         });
       });
-      manifest.host_permissions = Array.from(hostPermissions).sort();
+      manifest[permissionsKey] = Array.from(hostPermissions).sort();
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
         const hash = JSON.stringify(script.options);
