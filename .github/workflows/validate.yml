@@ -25,8 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install --skip-scripts
+          pnpm install --ignore-scripts
           pnpm build
+          pnpm install
 
       - name: Formatting
         run: pnpm format:check
@@ -36,7 +37,6 @@ jobs:
 
       - name: Build Demo
         run: |
-          pnpm install
           pnpm build:all:chrome-mv2
           pnpm build:all:chrome-mv3
           pnpm build:all:firefox-mv2
