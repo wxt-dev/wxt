@@ -3,7 +3,7 @@ export default defineBackgroundScript(() => {
   logId();
   console.log({
     browser: __BROWSER__,
-    chromium: __IS_CHROMIUM__,
+    chrome: __IS_CHROME__,
     firefox: __IS_FIREFOX__,
     manifestVersion: __MANIFEST_VERSION__,
   });
