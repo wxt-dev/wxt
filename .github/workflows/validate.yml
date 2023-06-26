@@ -1,0 +1,47 @@
+name: Validate
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: |
+          pnpm install --ignore-scripts
+          pnpm build
+          pnpm install
+
+      - name: Formatting
+        run: pnpm format:check
+
+      - name: Type Check
+        run: pnpm compile
+
+      - name: Build Demo
+        run: |
+          pnpm build:all:chrome-mv2
+          pnpm build:all:chrome-mv3
+          pnpm build:all:firefox-mv2
+          pnpm build:all:firefox-mv3
+        working-directory: demo
+
+      - name: Tests
+        run: pnpm test:coverage
