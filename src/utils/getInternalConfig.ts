@@ -1,4 +1,9 @@
-import { InlineConfig, InternalConfig, UserConfig } from '../types';
+import {
+  ExtensionRunnerConfig,
+  InlineConfig,
+  InternalConfig,
+  UserConfig,
+} from '../types';
 import path, { resolve } from 'node:path';
 import * as vite from 'vite';
 import { consola } from 'consola';
@@ -6,6 +11,7 @@ import { importTsFile } from './importTsFile';
 import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
 import { getGlobals } from './globals';
+import { loadConfig } from 'c12';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -39,6 +45,13 @@ export async function getInternalConfig(
     vite: config.vite ?? {},
     manifest: config.manifest ?? {},
     imports: config.imports ?? {},
+    runnerConfig: await loadConfig<ExtensionRunnerConfig>({
+      name: 'web-ext',
+      cwd: root,
+      globalRc: true,
+      rcFile: '.webextrc',
+      overrides: config.runner,
+    }),
   };
 
   // Load user config from file

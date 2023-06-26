@@ -3,6 +3,7 @@
 .env.*
 .idea
 .output
+.webextrc
 .wxt
 *.log
 /.vscode/
@@ -12,3 +13,5 @@ dist
 e2e/project
 node_modules
 TODOs.md
+web-ext.config.js
+web-ext.config.ts
