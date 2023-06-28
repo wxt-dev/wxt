@@ -53,6 +53,8 @@ async function buildSingleEntrypoint(
       },
       rollupOptions: {
         output: {
+          // There's only a single output for this build, so we use the desired bundle path for the
+          // entry output (like "content-scripts/overlay.js")
           entryFileNames: getEntrypointBundlePath(
             entrypoint,
             config.outDir,
@@ -90,6 +92,14 @@ async function buildMultipleEntrypoints(
           input[entry.name] = entry.inputPath;
           return input;
         }, {}),
+        output: {
+          // Include a hash to prevent conflicts
+          chunkFileNames: 'chunks/[name]-[hash].js',
+          // Include a hash to prevent conflicts
+          entryFileNames: 'chunks/[name]-[hash].js',
+          // We can't control the "name", so we need a hash to prevent conflicts
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+        },
       },
     },
   };
