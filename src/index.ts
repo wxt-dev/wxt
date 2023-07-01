@@ -57,7 +57,7 @@ export async function createServer(
 
   let hasBuiltOnce = false;
   let currentOutput: BuildOutput | undefined;
-  let fileChangedMutex = new Mutex();
+  const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
   const viteServer = await vite.createServer(internalConfig.vite);
@@ -66,11 +66,6 @@ export async function createServer(
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
-      // Get latest config
-      internalConfig = await getInternalConfig(
-        vite.mergeConfig(serverConfig, config ?? {}),
-        'serve',
-      );
       const fileChanges = changeQueue.splice(0, changeQueue.length);
       const changes = detectDevChanges(fileChanges, currentOutput);
 
@@ -91,9 +86,14 @@ export async function createServer(
         })
         .join(pc.dim(', '));
 
-      // Rebuild groups with changes
+      // Get latest config and Rebuild groups with changes
+      internalConfig = await getInternalConfig(
+        vite.mergeConfig(serverConfig, config ?? {}),
+        'serve',
+      );
       const { output: newOutput } = await rebuild(
         internalConfig,
+        // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
         changes.rebuildGroups,
         changes.cachedOutput,
       );
