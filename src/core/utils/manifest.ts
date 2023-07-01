@@ -29,7 +29,7 @@ export async function writeManifest(
   await fs.ensureDir(config.outDir);
   await fs.writeFile(resolve(config.outDir, 'manifest.json'), str, 'utf-8');
 
-  output.publicAssets.push({
+  output.publicAssets.unshift({
     type: 'asset',
     fileName: 'manifest.json',
     name: 'manifest',

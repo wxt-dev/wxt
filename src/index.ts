@@ -101,12 +101,6 @@ export async function createServer(
 
       // Perform reloads
       switch (changes.type) {
-        case 'browser-restart':
-          consola.info(`Restarting browser: ${rebuiltNames}`);
-          await runner.closeBrowser();
-          await runner.openBrowser(internalConfig);
-          consola.success('Done');
-          break;
         case 'extension-reload':
           runner.reload();
           consola.success(`Reloaded extension: ${rebuiltNames}`);
