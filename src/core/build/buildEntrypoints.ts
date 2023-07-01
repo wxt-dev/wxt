@@ -63,7 +63,7 @@ async function buildSingleEntrypoint(
           // Output content script CSS to assets/ with a hash to prevent conflicts. Defaults to
           // "[name].[ext]" in lib mode, which usually results in "style.css". That means multiple
           // content scripts with styles would overwrite each other if it weren't changed below.
-          assetFileNames: `assets/${entrypoint.name}-[hash].[ext]`,
+          assetFileNames: `assets/${entrypoint.name}.[ext]`,
         },
       },
     },
