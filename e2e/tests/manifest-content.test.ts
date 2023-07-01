@@ -191,21 +191,18 @@ describe('Manifest Content', () => {
     expect(manifest.content_scripts).toContainEqual({
       matches: ['*://duckduckgo.com/*'],
       run_at: 'document_end',
-      css: [expect.stringContaining('assets/four-')],
+      css: ['assets/four.css'],
       js: ['content-scripts/four.js'],
     });
     expect(manifest.content_scripts).toContainEqual({
       matches: ['*://google.com/*'],
       run_at: 'document_end',
-      css: [
-        expect.stringContaining('assets/three-'),
-        expect.stringContaining('assets/two-'),
-      ],
+      css: ['assets/three.css', 'assets/two.css'],
       js: ['content-scripts/three.js', 'content-scripts/two.js'],
     });
     expect(manifest.content_scripts).toContainEqual({
       matches: ['*://google.com/*'],
-      css: [expect.stringContaining('assets/one-')],
+      css: ['assets/one.css'],
       js: ['content-scripts/one.js'],
     });
   });
