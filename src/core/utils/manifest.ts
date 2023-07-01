@@ -356,9 +356,8 @@ function getContentScriptCssFiles(
   const css: string[] = [];
 
   contentScripts.forEach((script) => {
-    const cssRegex = new RegExp(`^assets/${script.name}-[a-f0-9]{8}.css$`);
-    const relatedCss = buildOutput.find((chunk) =>
-      chunk.fileName.match(cssRegex),
+    const relatedCss = buildOutput.find(
+      (chunk) => chunk.fileName === `assets/${script.name}.css`,
     );
     if (relatedCss) css.push(relatedCss.fileName);
   });
