@@ -174,7 +174,7 @@ export async function rebuild(
   config: InternalConfig,
   entrypointGroups: EntrypointGroup[],
   existingOutput: Omit<BuildOutput, 'manifest'> = {
-    parts: [],
+    steps: [],
     publicAssets: [],
   },
 ): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
@@ -195,7 +195,7 @@ export async function rebuild(
   return {
     output: {
       manifest,
-      parts: [...existingOutput.parts, ...output.parts],
+      steps: [...existingOutput.steps, ...output.steps],
       publicAssets: [...existingOutput.publicAssets, ...output.publicAssets],
     },
     manifest,

@@ -10,7 +10,7 @@ export async function printBuildSummary(
   config: InternalConfig,
 ) {
   const chunks = [
-    ...output.parts.flatMap((part) => part.chunks),
+    ...output.steps.flatMap((step) => step.chunks),
     ...output.publicAssets,
   ].sort((l, r) => {
     const lWeight =

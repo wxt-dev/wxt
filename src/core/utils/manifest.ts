@@ -355,7 +355,7 @@ function getContentScriptCssFiles(
 ): string[] | undefined {
   const css: string[] = [];
 
-  const allChunks = buildOutput.parts.flatMap((part) => part.chunks);
+  const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
 
   contentScripts.forEach((script) => {
     const cssRegex = new RegExp(`^assets/${script.name}.css$`);
