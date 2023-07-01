@@ -29,7 +29,7 @@ export async function writeManifest(
   await fs.ensureDir(config.outDir);
   await fs.writeFile(resolve(config.outDir, 'manifest.json'), str, 'utf-8');
 
-  output.unshift({
+  output.publicAssets.push({
     type: 'asset',
     fileName: 'manifest.json',
     name: 'manifest',
@@ -43,7 +43,7 @@ export async function writeManifest(
  */
 export async function generateMainfest(
   entrypoints: Entrypoint[],
-  buildOutput: BuildOutput,
+  buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
 ): Promise<Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
@@ -100,7 +100,7 @@ function simplifyVersion(versionName: string): string {
 function addEntrypoints(
   manifest: Manifest.WebExtensionManifest,
   entrypoints: Entrypoint[],
-  buildOutput: BuildOutput,
+  buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
 ): void {
   const entriesByType = entrypoints.reduce<
@@ -351,13 +351,15 @@ function addDevModeCsp(
  */
 function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
-  buildOutput: BuildOutput,
+  buildOutput: Omit<BuildOutput, 'manifest'>,
 ): string[] | undefined {
   const css: string[] = [];
 
+  const allChunks = buildOutput.parts.flatMap((part) => part.chunks);
+
   contentScripts.forEach((script) => {
-    const cssRegex = new RegExp(`^assets/${script.name}-[a-f0-9]{8}.css$`);
-    const relatedCss = buildOutput.find((chunk) =>
+    const cssRegex = new RegExp(`^assets/${script.name}.css$`);
+    const relatedCss = allChunks.find((chunk) =>
       chunk.fileName.match(cssRegex),
     );
     if (relatedCss) css.push(relatedCss.fileName);

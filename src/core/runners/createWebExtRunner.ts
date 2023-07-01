@@ -59,6 +59,10 @@ export function createWebExtRunner(): ExtensionRunner {
       runner = await webExt.default.cmd.run(finalConfig, options);
     },
 
+    async reload() {
+      await runner?.reloadAllExtensions();
+    },
+
     async closeBrowser() {
       return await runner?.exit();
     },

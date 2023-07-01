@@ -1,6 +1,7 @@
 import * as vite from 'vite';
 import { Manifest } from 'webextension-polyfill';
 import { UnimportOptions } from 'unimport';
+import { EntrypointGroup } from '.';
 
 export interface InlineConfig {
   root?: string;
@@ -29,7 +30,16 @@ export interface WxtInlineViteConfig
   build?: Omit<vite.BuildOptions, 'outDir'>;
 }
 
-export type BuildOutput = (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
+export interface BuildOutput {
+  manifest: Manifest.WebExtensionManifest;
+  publicAssets: vite.Rollup.OutputAsset[];
+  parts: BuildOutputPart[];
+}
+
+export interface BuildOutputPart {
+  entrypoints: EntrypointGroup;
+  chunks: (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
+}
 
 export interface WxtDevServer extends vite.ViteDevServer {
   logger: Logger;
