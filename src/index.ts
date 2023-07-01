@@ -17,13 +17,8 @@ import * as vite from 'vite';
 import { findOpenPort } from './core/utils/findOpenPort';
 import { formatDuration } from './core/utils/formatDuration';
 import { createWebExtRunner } from './core/runners/createWebExtRunner';
-import { detectDevChanges } from './core/utils/detectDevChanges';
-import { Mutex } from 'async-mutex';
 import { groupEntrypoints } from './core/utils/groupEntrypoints';
 import { Manifest } from 'webextension-polyfill';
-import { consola } from 'consola';
-import { relative } from 'node:path';
-import { getEntrypointOutputFile } from './core/utils/entrypoints';
 
 export { version } from '../package.json';
 export * from './core/types/external';
@@ -49,65 +44,13 @@ export async function createServer(
       origin,
     },
   };
-  let internalConfig = await getInternalConfig(
+  const internalConfig = await getInternalConfig(
     vite.mergeConfig(serverConfig, config ?? {}),
     'serve',
   );
   const runner = createWebExtRunner();
 
-  let hasBuiltOnce = false;
-  let currentOutput: BuildOutput | undefined;
-  let fileChangedMutex = new Mutex();
-  const changeQueue: Array<[string, string]> = [];
-
   const viteServer = await vite.createServer(internalConfig.vite);
-  viteServer.watcher.on('all', async (event, path, stats) => {
-    if (!hasBuiltOnce || path.startsWith(internalConfig.outBaseDir)) return;
-    changeQueue.push([event, path]);
-
-    await fileChangedMutex.runExclusive(async () => {
-      // Get latest config
-      internalConfig = await getInternalConfig(
-        vite.mergeConfig(serverConfig, config ?? {}),
-        'serve',
-      );
-      const fileChanges = changeQueue.splice(0, changeQueue.length);
-      const changes = detectDevChanges(fileChanges, currentOutput);
-
-      if (changes.type === 'no-change') return;
-
-      // Log the entrypoints that were effected
-      consola.info(
-        `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
-          .map((file) => pc.dim(relative(internalConfig.root, file)))
-          .join(', ')}`,
-      );
-      const rebuiltNames = changes.rebuildGroups
-        .flat()
-        .map((entry) => {
-          return pc.cyan(
-            relative(internalConfig.outDir, getEntrypointOutputFile(entry, '')),
-          );
-        })
-        .join(pc.dim(', '));
-
-      // Rebuild groups with changes
-      const { output: newOutput } = await rebuild(
-        internalConfig,
-        changes.rebuildGroups,
-        changes.cachedOutput,
-      );
-      currentOutput = newOutput;
-
-      // Perform reloads
-      switch (changes.type) {
-        case 'extension-reload':
-          runner.reload();
-          consola.success(`Reloaded extension: ${rebuiltNames}`);
-          break;
-      }
-    });
-  });
   const server: WxtDevServer = {
     ...viteServer,
     async listen(port, isRestart) {
@@ -131,8 +74,7 @@ export async function createServer(
   internalConfig.logger.info('Created dev server');
 
   internalConfig.server = server;
-  currentOutput = await buildInternal(internalConfig);
-  hasBuiltOnce = true;
+  await buildInternal(internalConfig);
 
   return server;
 }
