@@ -3,6 +3,7 @@ import {
   WxtDevServer,
   InlineConfig,
   InternalConfig,
+  EntrypointGroup,
 } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import { findEntrypoints } from './core/build/findEntrypoints';
@@ -16,6 +17,8 @@ import * as vite from 'vite';
 import { findOpenPort } from './core/utils/findOpenPort';
 import { formatDuration } from './core/utils/formatDuration';
 import { createWebExtRunner } from './core/runners/createWebExtRunner';
+import { groupEntrypoints } from './core/utils/groupEntrypoints';
+import { Manifest } from 'webextension-polyfill';
 
 export { version } from '../package.json';
 export * from './core/types/external';
@@ -90,14 +93,9 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   await fs.rm(config.outDir, { recursive: true, force: true });
   await fs.ensureDir(config.outDir);
 
-  // Build
   const entrypoints = await findEntrypoints(config);
-  await generateTypesDir(entrypoints, config);
-  const output = await buildEntrypoints(entrypoints, config);
-
-  // Write manifest
-  const manifest = await generateMainfest(entrypoints, output, config);
-  await writeManifest(manifest, output, config);
+  const groups = groupEntrypoints(entrypoints);
+  const { output } = await rebuild(config, groups);
 
   // Post-build
   config.logger.success(
@@ -106,4 +104,36 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   await printBuildSummary(output, config);
 
   return output;
+}
+
+export async function rebuild(
+  config: InternalConfig,
+  entrypointGroups: EntrypointGroup[],
+  existingOutput: Omit<BuildOutput, 'manifest'> = {
+    steps: [],
+    publicAssets: [],
+  },
+): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
+  // Build
+  const allEntrypoints = await findEntrypoints(config);
+  await generateTypesDir(allEntrypoints, config);
+  const buildOutput = await buildEntrypoints(entrypointGroups, config);
+
+  const manifest = await generateMainfest(allEntrypoints, buildOutput, config);
+  const output: BuildOutput = {
+    manifest,
+    ...buildOutput,
+  };
+
+  // Write manifest
+  await writeManifest(manifest, output, config);
+
+  return {
+    output: {
+      manifest,
+      steps: [...existingOutput.steps, ...output.steps],
+      publicAssets: [...existingOutput.publicAssets, ...output.publicAssets],
+    },
+    manifest,
+  };
 }
