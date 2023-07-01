@@ -29,7 +29,7 @@ export async function buildEntrypoints(
   // Remove any empty directories from moving outputs around
   await removeEmptyDirs(config.outDir);
 
-  return { publicAssets, steps: steps };
+  return { publicAssets, steps };
 }
 
 /**
