@@ -44,12 +44,12 @@ describe('Output Directory Structure', () => {
     await project.build();
 
     expect(await project.serializeOutput()).toMatchInlineSnapshot(`
-      ".output/chrome-mv3/assets/one-dedc7a05.css
+      ".output/chrome-mv3/assets/one.css
       ----------------------------------------
       body{color:#00f}
 
       ================================================================================
-      .output/chrome-mv3/assets/two-74d94aed.css
+      .output/chrome-mv3/assets/two.css
       ----------------------------------------
       body{color:red}
 
@@ -70,7 +70,7 @@ describe('Output Directory Structure', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"assets/one-dedc7a05.css\\",\\"assets/two-74d94aed.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"assets/one.css\\",\\"assets/two.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
     `);
   });
 });
