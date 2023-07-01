@@ -33,10 +33,10 @@ export interface WxtInlineViteConfig
 export interface BuildOutput {
   manifest: Manifest.WebExtensionManifest;
   publicAssets: vite.Rollup.OutputAsset[];
-  parts: BuildOutputPart[];
+  steps: BuildStepOutput[];
 }
 
-export interface BuildOutputPart {
+export interface BuildStepOutput {
   entrypoints: EntrypointGroup;
   chunks: (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
 }

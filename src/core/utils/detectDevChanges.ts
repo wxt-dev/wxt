@@ -1,4 +1,4 @@
-import { BuildOutput, BuildOutputPart, EntrypointGroup } from '../types';
+import { BuildOutput, BuildStepOutput, EntrypointGroup } from '../types';
 import * as vite from 'vite';
 
 /**
@@ -27,33 +27,33 @@ export function detectDevChanges(
 ): DevModeChange {
   if (currentOutput == null) return { type: 'no-change' };
 
-  const changedParts = new Set(
+  const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
-      findChangedParts(changedFile, currentOutput),
+      findChangedSteps(changedFile, currentOutput),
     ),
   );
-  if (changedParts.size === 0) return { type: 'no-change' };
+  if (changedSteps.size === 0) return { type: 'no-change' };
 
   const unchangedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
-    parts: [],
+    steps: [],
     publicAssets: [],
   };
   const changedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
-    parts: [],
+    steps: [],
     publicAssets: [],
   };
 
-  for (const part of currentOutput.parts) {
-    if (changedParts.has(part)) {
-      changedOutput.parts.push(part);
+  for (const step of currentOutput.steps) {
+    if (!changedSteps.has(step)) {
+      changedOutput.steps.push(step);
     } else {
-      unchangedOutput.parts.push(part);
+      unchangedOutput.steps.push(step);
     }
   }
   for (const asset of currentOutput.publicAssets) {
-    if (changedParts.has(asset)) {
+    if (changedSteps.has(asset)) {
       changedOutput.publicAssets.push(asset);
     } else {
       unchangedOutput.publicAssets.push(asset);
@@ -63,14 +63,14 @@ export function detectDevChanges(
   return {
     type: 'extension-reload',
     cachedOutput: unchangedOutput,
-    rebuildGroups: changedOutput.parts.map((part) => part.entrypoints),
+    rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
   };
 }
 
 /**
- * For a single change, return all the part of the build output that were effected by it.
+ * For a single change, return all the step of the build output that were effected by it.
  */
-function findChangedParts(
+function findChangedSteps(
   changedFile: [event: string, path: string],
   currentOutput: BuildOutput,
 ): DetectedChange[] {
@@ -86,9 +86,9 @@ function findChangedParts(
     // If it's a chunk that depends on the changed file, it is effected
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
 
-  for (const part of currentOutput.parts) {
-    const effectedChunk = part.chunks.find(isChunkEffected);
-    if (effectedChunk) changes.push(part);
+  for (const step of currentOutput.steps) {
+    const effectedChunk = step.chunks.find(isChunkEffected);
+    if (effectedChunk) changes.push(step);
   }
 
   const effectedAsset = currentOutput.publicAssets.find(isChunkEffected);
@@ -146,8 +146,8 @@ interface ExtensionReload extends RebuildChange {
 // }
 
 /**
- * When figuring out what needs reloaded, this stores the part that was changed, or the public
+ * When figuring out what needs reloaded, this stores the step that was changed, or the public
  * directory asset that was changed. It doesn't know what type of change is required yet. Just an
  * intermediate type.
  */
-type DetectedChange = BuildOutputPart | vite.Rollup.OutputAsset;
+type DetectedChange = BuildStepOutput | vite.Rollup.OutputAsset;

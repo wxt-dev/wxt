@@ -1,7 +1,7 @@
 import * as vite from 'vite';
 import {
   BuildOutput,
-  BuildOutputPart,
+  BuildStepOutput,
   Entrypoint,
   EntrypointGroup,
   InternalConfig,
@@ -17,19 +17,19 @@ export async function buildEntrypoints(
   groups: EntrypointGroup[],
   config: InternalConfig,
 ): Promise<Omit<BuildOutput, 'manifest'>> {
-  const parts: BuildOutputPart[] = [];
+  const steps: BuildStepOutput[] = [];
   for (const group of groups) {
-    const part = Array.isArray(group)
+    const step = Array.isArray(group)
       ? await buildMultipleEntrypoints(group, config)
       : await buildSingleEntrypoint(group, config);
-    parts.push(part);
+    steps.push(step);
   }
   const publicAssets = await copyPublicDirectory(config);
 
   // Remove any empty directories from moving outputs around
   await removeEmptyDirs(config.outDir);
 
-  return { publicAssets, parts };
+  return { publicAssets, steps: steps };
 }
 
 /**
@@ -38,7 +38,7 @@ export async function buildEntrypoints(
 async function buildSingleEntrypoint(
   entrypoint: Entrypoint,
   config: InternalConfig,
-): Promise<BuildOutputPart> {
+): Promise<BuildStepOutput> {
   // Should this entrypoint be wrapped by the vite-plugins/virtualEntrypoint plugin?
   const isVirtual = ['background', 'content-script'].includes(entrypoint.type);
   const entry = isVirtual
@@ -88,7 +88,7 @@ async function buildSingleEntrypoint(
 async function buildMultipleEntrypoints(
   entrypoints: Entrypoint[],
   config: InternalConfig,
-): Promise<BuildOutputPart> {
+): Promise<BuildStepOutput> {
   const multiPage: vite.InlineConfig = {
     plugins: [plugins.multipageMove(entrypoints, config)],
     build: {
@@ -123,7 +123,7 @@ async function buildMultipleEntrypoints(
 
 function getBuildOutputChunks(
   result: Awaited<ReturnType<typeof vite.build>>,
-): BuildOutputPart['chunks'] {
+): BuildStepOutput['chunks'] {
   if ('on' in result) throw Error('wxt does not support vite watch mode.');
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
   return result.output;
