@@ -3,6 +3,7 @@ import {
   WxtDevServer,
   InlineConfig,
   InternalConfig,
+  EntrypointGroup,
 } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import { findEntrypoints } from './core/build/findEntrypoints';
@@ -16,6 +17,13 @@ import * as vite from 'vite';
 import { findOpenPort } from './core/utils/findOpenPort';
 import { formatDuration } from './core/utils/formatDuration';
 import { createWebExtRunner } from './core/runners/createWebExtRunner';
+import { detectDevChanges } from './core/utils/detectDevChanges';
+import { Mutex } from 'async-mutex';
+import { groupEntrypoints } from './core/utils/groupEntrypoints';
+import { Manifest } from 'webextension-polyfill';
+import { consola } from 'consola';
+import { relative } from 'node:path';
+import { getEntrypointOutputFile } from './core/utils/entrypoints';
 
 export { version } from '../package.json';
 export * from './core/types/external';
@@ -41,13 +49,71 @@ export async function createServer(
       origin,
     },
   };
-  const internalConfig = await getInternalConfig(
+  let internalConfig = await getInternalConfig(
     vite.mergeConfig(serverConfig, config ?? {}),
     'serve',
   );
   const runner = createWebExtRunner();
 
+  let hasBuiltOnce = false;
+  let currentOutput: BuildOutput | undefined;
+  let fileChangedMutex = new Mutex();
+  const changeQueue: Array<[string, string]> = [];
+
   const viteServer = await vite.createServer(internalConfig.vite);
+  viteServer.watcher.on('all', async (event, path, stats) => {
+    if (!hasBuiltOnce || path.startsWith(internalConfig.outBaseDir)) return;
+    changeQueue.push([event, path]);
+
+    await fileChangedMutex.runExclusive(async () => {
+      // Get latest config
+      internalConfig = await getInternalConfig(
+        vite.mergeConfig(serverConfig, config ?? {}),
+        'serve',
+      );
+      const fileChanges = changeQueue.splice(0, changeQueue.length);
+      const changes = detectDevChanges(fileChanges, currentOutput);
+
+      if (changes.type === 'no-change') return;
+
+      // Log the entrypoints that were effected
+      consola.info(
+        `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
+          .map((file) => pc.dim(relative(internalConfig.root, file)))
+          .join(', ')}`,
+      );
+      const rebuiltNames = changes.rebuildGroups
+        .flat()
+        .map((entry) => {
+          return pc.cyan(
+            relative(internalConfig.outDir, getEntrypointOutputFile(entry, '')),
+          );
+        })
+        .join(pc.dim(', '));
+
+      // Rebuild groups with changes
+      const { output: newOutput } = await rebuild(
+        internalConfig,
+        changes.rebuildGroups,
+        changes.cachedOutput,
+      );
+      currentOutput = newOutput;
+
+      // Perform reloads
+      switch (changes.type) {
+        case 'browser-restart':
+          consola.info(`Restarting browser: ${rebuiltNames}`);
+          await runner.closeBrowser();
+          await runner.openBrowser(internalConfig);
+          consola.success('Done');
+          break;
+        case 'extension-reload':
+          runner.reload();
+          consola.success(`Reloaded extension: ${rebuiltNames}`);
+          break;
+      }
+    });
+  });
   const server: WxtDevServer = {
     ...viteServer,
     async listen(port, isRestart) {
@@ -71,7 +137,8 @@ export async function createServer(
   internalConfig.logger.info('Created dev server');
 
   internalConfig.server = server;
-  await buildInternal(internalConfig);
+  currentOutput = await buildInternal(internalConfig);
+  hasBuiltOnce = true;
 
   return server;
 }
@@ -90,14 +157,9 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   await fs.rm(config.outDir, { recursive: true, force: true });
   await fs.ensureDir(config.outDir);
 
-  // Build
   const entrypoints = await findEntrypoints(config);
-  await generateTypesDir(entrypoints, config);
-  const output = await buildEntrypoints(entrypoints, config);
-
-  // Write manifest
-  const manifest = await generateMainfest(entrypoints, output, config);
-  await writeManifest(manifest, output, config);
+  const groups = groupEntrypoints(entrypoints);
+  const { output } = await rebuild(config, groups);
 
   // Post-build
   config.logger.success(
@@ -106,4 +168,36 @@ async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
   await printBuildSummary(output, config);
 
   return output;
+}
+
+export async function rebuild(
+  config: InternalConfig,
+  entrypointGroups: EntrypointGroup[],
+  existingOutput: Omit<BuildOutput, 'manifest'> = {
+    parts: [],
+    publicAssets: [],
+  },
+): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
+  // Build
+  const allEntrypoints = await findEntrypoints(config);
+  await generateTypesDir(allEntrypoints, config);
+  const buildOutput = await buildEntrypoints(entrypointGroups, config);
+
+  const manifest = await generateMainfest(allEntrypoints, buildOutput, config);
+  const output: BuildOutput = {
+    manifest,
+    ...buildOutput,
+  };
+
+  // Write manifest
+  await writeManifest(manifest, output, config);
+
+  return {
+    output: {
+      manifest,
+      parts: [...existingOutput.parts, ...output.parts],
+      publicAssets: [...existingOutput.publicAssets, ...output.publicAssets],
+    },
+    manifest,
+  };
 }
