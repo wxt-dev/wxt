@@ -29,7 +29,7 @@ export function detectDevChanges(
 
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
-      findChangedSteps(changedFile, currentOutput),
+      findEffectedSteps(changedFile, currentOutput),
     ),
   );
   if (changedSteps.size === 0) return { type: 'no-change' };
@@ -70,7 +70,7 @@ export function detectDevChanges(
 /**
  * For a single change, return all the step of the build output that were effected by it.
  */
-function findChangedSteps(
+function findEffectedSteps(
   changedFile: [event: string, path: string],
   currentOutput: BuildOutput,
 ): DetectedChange[] {
@@ -81,7 +81,7 @@ function findChangedSteps(
     chunk: vite.Rollup.OutputChunk | vite.Rollup.OutputAsset,
   ): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
-    // TODO: use bundle path to support name/index.html?
+    // TODO: use bundle path to support `<name>/index.html`?
     (chunk.type === 'asset' && changedPath.endsWith(chunk.fileName)) ||
     // If it's a chunk that depends on the changed file, it is effected
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
