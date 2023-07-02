@@ -6,11 +6,7 @@ import browser from 'webextension-polyfill';
 if (__COMMAND__ === 'serve') {
   try {
     setupWebSocket((message) => {
-      switch (message.type) {
-        case 'wxt:reload-extension':
-          browser.runtime.reload();
-          break;
-      }
+      if (message.type === 'wxt:reload-extension') browser.runtime.reload();
     });
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
