@@ -154,7 +154,7 @@ export interface ContentScriptDefinition {
   matchAboutBlank?: boolean;
   matchOriginAsFallback?: boolean;
   world?: 'ISOLATED' | 'MAIN';
-  main(onStopped: OnContentScriptStopped): void | Promise<void>;
+  main(): void | Promise<void>;
 }
 
 export interface BackgroundScriptDefintition {

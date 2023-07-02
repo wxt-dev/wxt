@@ -6,7 +6,7 @@ import { scanExports } from 'unimport';
 
 export async function importTsFile<T>(root: string, path: string): Promise<T> {
   const clientImports = await scanExports(
-    resolve(root, 'node_modules/wxt/dist/client/index.js'),
+    resolve(root, 'node_modules/wxt/dist/client.js'),
   );
   const jiti = createJITI(__filename, {
     cache: false,

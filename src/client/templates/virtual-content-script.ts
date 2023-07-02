@@ -1,4 +1,4 @@
-import definition from '{{moduleId}}';
+import definition from 'virtual:user-content-script';
 
 (async () => {
   try {

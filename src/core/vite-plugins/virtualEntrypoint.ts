@@ -29,10 +29,13 @@ export function virtualEntrypoin(
 
       const inputPath = id.replace(resolvedVirtualId, '');
       const template = await fs.readFile(
-        resolve(config.root, `node_modules/wxt/templates/virtual-${type}.ts`),
+        resolve(
+          config.root,
+          `node_modules/wxt/dist/templates/virtual-${type}.js`,
+        ),
         'utf-8',
       );
-      return template.replaceAll('{{moduleId}}', inputPath);
+      return template.replace(`virtual:user-${type}`, inputPath);
     },
   };
 }
