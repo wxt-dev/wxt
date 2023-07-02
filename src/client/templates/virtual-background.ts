@@ -1,10 +1,17 @@
 import definition from 'virtual:user-background';
 import { setupWebSocket } from '../utils/setupWebSocket';
 import { logger } from '../utils/logger';
+import browser from 'webextension-polyfill';
 
 if (__COMMAND__ === 'serve') {
   try {
-    setupWebSocket();
+    setupWebSocket((message) => {
+      switch (message.type) {
+        case 'wxt:reload-extension':
+          browser.runtime.reload();
+          break;
+      }
+    });
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
   }
