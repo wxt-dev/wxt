@@ -1,4 +1,14 @@
 import definition from 'virtual:user-background';
+import { setupWebSocket } from '../utils/setupWebSocket';
+import { logger } from '../utils/logger';
+
+if (__COMMAND__ === 'serve') {
+  try {
+    setupWebSocket();
+  } catch (err) {
+    logger.error('Failed to setup web socket connection with dev server', err);
+  }
+}
 
 try {
   const res = definition.main();
@@ -9,6 +19,6 @@ try {
     );
   }
 } catch (err) {
-  console.error('The background script crashed on startup!');
+  logger.error('The background script crashed on startup!');
   throw err;
 }

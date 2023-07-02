@@ -110,6 +110,7 @@ export async function getInternalConfig(
   finalConfig.vite.plugins.push(
     plugins.virtualEntrypoin('content-script', finalConfig),
   );
+  finalConfig.vite.plugins.push(plugins.devServerGlobals(finalConfig));
 
   finalConfig.vite.define ??= {};
   getGlobals(finalConfig).forEach((global) => {
