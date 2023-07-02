@@ -12,7 +12,7 @@ import merge from 'lodash.merge';
 import { Rollup } from 'vite';
 import { Manifest } from 'webextension-polyfill';
 
-// faker.seed(__TEST_SEED__);
+faker.seed(__TEST_SEED__);
 
 type DeepPartial<T> = { [key in keyof T]+?: Partial<T[key]> };
 function fakeObjectCreator<T>(base: () => T) {
