@@ -358,6 +358,7 @@ function getContentScriptCssFiles(
   const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
 
   contentScripts.forEach((script) => {
+    // TODO: optimize and remove loop with a map
     const relatedCss = allChunks.find(
       (chunk) => chunk.fileName === `assets/${script.name}.css`,
     );
