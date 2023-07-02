@@ -46,7 +46,7 @@ export function detectDevChanges(
   };
 
   for (const step of currentOutput.steps) {
-    if (!changedSteps.has(step)) {
+    if (changedSteps.has(step)) {
       changedOutput.steps.push(step);
     } else {
       unchangedOutput.steps.push(step);
@@ -87,11 +87,13 @@ function findEffectedSteps(
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
 
   for (const step of currentOutput.steps) {
-    const effectedChunk = step.chunks.find(isChunkEffected);
+    const effectedChunk = step.chunks.find((chunk) => isChunkEffected(chunk));
     if (effectedChunk) changes.push(step);
   }
 
-  const effectedAsset = currentOutput.publicAssets.find(isChunkEffected);
+  const effectedAsset = currentOutput.publicAssets.find((chunk) =>
+    isChunkEffected(chunk),
+  );
   if (effectedAsset) changes.push(effectedAsset);
 
   return changes;
