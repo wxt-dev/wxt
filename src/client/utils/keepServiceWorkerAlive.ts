@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 
 /**
- * // https://developer.chrome.com/blog/longer-esw-lifetimes/
+ * https://developer.chrome.com/blog/longer-esw-lifetimes/
  */
 export function keepServiceWorkerAlive() {
   setInterval(async () => {
