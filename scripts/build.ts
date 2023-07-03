@@ -11,7 +11,7 @@ const spinner = ora('Building WXT').start();
 
 const startTime = Date.now();
 const outDir = 'dist';
-const clientTemplates = ['background', 'content-script'];
+const virtualEntrypoints = ['background', 'content-script'];
 
 await fs.rm(outDir, { recursive: true, force: true });
 
@@ -38,20 +38,20 @@ await Promise.all([
     dts: true,
     silent: true,
   }),
-  ...clientTemplates.map((templateName) =>
+  ...virtualEntrypoints.map((entryName) =>
     tsup.build({
       entry: {
-        [`templates/virtual-${templateName}`]: `src/client/templates/virtual-${templateName}.ts`,
+        [`virtual-modules/${entryName}-entrypoint`]: `src/client/virtual-modules/${entryName}-entrypoint.ts`,
       },
       format: ['esm'],
       sourcemap: true,
       silent: true,
-      external: [`virtual:user-${templateName}`],
+      external: [`virtual:user-${entryName}`],
     }),
   ),
   tsup.build({
     entry: {
-      'templates/reload-html': `src/client/templates/reload-html.ts`,
+      'virtual-modules/reload-html': `src/client/virtual-modules/reload-html.ts`,
     },
     format: ['esm'],
     sourcemap: true,

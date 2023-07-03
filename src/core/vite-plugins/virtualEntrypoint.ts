@@ -31,7 +31,7 @@ export function virtualEntrypoin(
       const template = await fs.readFile(
         resolve(
           config.root,
-          `node_modules/wxt/dist/templates/virtual-${type}.js`,
+          `node_modules/wxt/dist/virtual-modules/${type}-entrypoint.js`,
         ),
         'utf-8',
       );
