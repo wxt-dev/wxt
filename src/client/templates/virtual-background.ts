@@ -6,9 +6,8 @@ import { keepServiceWorkerAlive } from '../utils/keepServiceWorkerAlive';
 
 if (__COMMAND__ === 'serve') {
   try {
-    const ws = setupWebSocket((message) => {
+    setupWebSocket((message) => {
       if (message.event === 'wxt:reload-extension') browser.runtime.reload();
-      if (message.event === 'wxt:keep-alive') ws.send('wxt:keep-alive');
     });
 
     // Web Socket will disconnect if the service worker is killed
