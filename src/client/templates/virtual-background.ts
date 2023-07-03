@@ -11,7 +11,7 @@ if (__COMMAND__ === 'serve') {
       if (message.event === 'wxt:keep-alive') ws.send('wxt:keep-alive');
     });
 
-    // Reloading will stop if the service worker is killed, so we don't want that
+    // Web Socket will disconnect if the service worker is killed
     keepServiceWorkerAlive();
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
