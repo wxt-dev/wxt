@@ -47,4 +47,4 @@ jobs:
           pnpm publish
 
       - name: GitHub Release
-        run: pnpx changelogen@latest gh release
+        run: pnpx changelogen@latest gh release --token ${{ secrets.GITHUB_TOKEN }}
