@@ -53,7 +53,7 @@ export function multipageMove(
         const oldAbsPath = resolve(config.outDir, oldBundlePath);
         const newAbsPath = resolve(config.outDir, newBundlePath);
         await ensureDir(dirname(newAbsPath));
-        await fs.move(oldAbsPath, newAbsPath);
+        await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
 
         const renamedChunk = {
           ...bundle[oldBundlePath],
