@@ -2,12 +2,17 @@ import definition from 'virtual:user-background';
 import { setupWebSocket } from '../utils/setupWebSocket';
 import { logger } from '../utils/logger';
 import browser from 'webextension-polyfill';
+import { keepServiceWorkerAlive } from '../utils/keepServiceWorkerAlive';
 
 if (__COMMAND__ === 'serve') {
   try {
-    setupWebSocket((message) => {
-      if (message.type === 'wxt:reload-extension') browser.runtime.reload();
+    const ws = setupWebSocket((message) => {
+      if (message.event === 'wxt:reload-extension') browser.runtime.reload();
+      if (message.event === 'wxt:keep-alive') ws.send('wxt:keep-alive');
     });
+
+    // Reloading will stop if the service worker is killed, so we don't want that
+    keepServiceWorkerAlive();
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
   }
