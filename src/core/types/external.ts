@@ -42,10 +42,22 @@ export interface BuildStepOutput {
 }
 
 export interface WxtDevServer extends vite.ViteDevServer {
-  logger: Logger;
+  /**
+   * Ex: `3000`
+   */
   port: number;
+  /**
+   * Ex: `"localhost"`
+   */
   hostname: string;
+  /**
+   * Ex: `"http://localhost:3000"`
+   */
   origin: string;
+  /**
+   * Tell the extension to reload by running `browser.runtime.reload`.
+   */
+  reloadExtension: () => void;
 }
 
 export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';

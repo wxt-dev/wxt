@@ -91,6 +91,7 @@ export async function createServer(
         vite.mergeConfig(serverConfig, config ?? {}),
         'serve',
       );
+      internalConfig.server = server;
       const { output: newOutput } = await rebuild(
         internalConfig,
         // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
@@ -102,7 +103,7 @@ export async function createServer(
       // Perform reloads
       switch (changes.type) {
         case 'extension-reload':
-          runner.reload();
+          server.reloadExtension();
           consola.success(`Reloaded extension: ${rebuiltNames}`);
           break;
       }
@@ -123,10 +124,12 @@ export async function createServer(
 
       return res;
     },
-    logger: internalConfig.logger,
     port,
     hostname,
     origin,
+    reloadExtension: () => {
+      server.ws.send('wxt:reload-extension');
+    },
   };
   internalConfig.logger.info('Created dev server');
 

@@ -1,4 +1,21 @@
 import definition from 'virtual:user-background';
+import { setupWebSocket } from '../utils/setupWebSocket';
+import { logger } from '../utils/logger';
+import browser from 'webextension-polyfill';
+import { keepServiceWorkerAlive } from '../utils/keepServiceWorkerAlive';
+
+if (__COMMAND__ === 'serve') {
+  try {
+    setupWebSocket((message) => {
+      if (message.event === 'wxt:reload-extension') browser.runtime.reload();
+    });
+
+    // Web Socket will disconnect if the service worker is killed
+    keepServiceWorkerAlive();
+  } catch (err) {
+    logger.error('Failed to setup web socket connection with dev server', err);
+  }
+}
 
 try {
   const res = definition.main();
@@ -9,6 +26,6 @@ try {
     );
   }
 } catch (err) {
-  console.error('The background script crashed on startup!');
+  logger.error('The background script crashed on startup!');
   throw err;
 }

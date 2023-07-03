@@ -39,5 +39,10 @@ export function getGlobals(
       value: config.browser === 'opera',
       type: `boolean`,
     },
+    {
+      name: '__COMMAND__',
+      value: config.command,
+      type: `"build" | "serve"`,
+    },
   ];
 }
