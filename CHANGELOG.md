@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.0.2
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.0.1...v0.0.2)
+
+### 🚀 Enhancements
+
+- Reload extension when source code is changed ([#17](https://github.com/aklinker1/wxt/pull/17))
+- Setup background script web socket/reload ([#22](https://github.com/aklinker1/wxt/pull/22))
+- Reload HTML files individually ([#23](https://github.com/aklinker1/wxt/pull/23))
+
+### 🩹 Fixes
+
+- Output chunks to a chunks directory ([2dd7a99](https://github.com/aklinker1/wxt/commit/2dd7a99))
+- Remove hash from content script css outputs ([#20](https://github.com/aklinker1/wxt/pull/20))
+- Overwrite files with the same name when renaming entrypoints in dev mode ([37986bf](https://github.com/aklinker1/wxt/commit/37986bf))
+- Separate template builds to prevent sharing chunks ([7f3a1e8](https://github.com/aklinker1/wxt/commit/7f3a1e8))
+- Show Vite warnings and errors ([c51f0e0](https://github.com/aklinker1/wxt/commit/c51f0e0))
+
+### 📖 Documentation
+
+- Add milestone progress badge to README ([684197d](https://github.com/aklinker1/wxt/commit/684197d))
+- Fix milestone link in README ([e14f81d](https://github.com/aklinker1/wxt/commit/e14f81d))
+
+### 🏡 Chore
+
+- Update changelog ([a9af4d3](https://github.com/aklinker1/wxt/commit/a9af4d3))
+- Refactor build output type ([#19](https://github.com/aklinker1/wxt/pull/19))
+- Refactor build outputs to support transpiled templates ([a78aada](https://github.com/aklinker1/wxt/commit/a78aada))
+- Rename `templates` to `virtual-modules` ([#24](https://github.com/aklinker1/wxt/pull/24))
+- Update cli screenshot ([54eb118](https://github.com/aklinker1/wxt/commit/54eb118))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+- Aaron
+
 ## v0.0.1
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.0.0...v0.0.1)
