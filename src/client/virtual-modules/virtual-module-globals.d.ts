@@ -1,4 +1,4 @@
-// Types required to make templates happy.
+// Types required to make the virtual modules happy.
 
 declare module '*?raw' {
   const content: any;

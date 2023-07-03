@@ -18,7 +18,7 @@ export function devHtmlPrerender(config: InternalConfig): vite.Plugin {
             alias: {
               '@wxt/reload-html': resolve(
                 config.root,
-                'node_modules/wxt/dist/templates/reload-html.js',
+                'node_modules/wxt/dist/virtual-modules/reload-html.js',
               ),
             },
           },
