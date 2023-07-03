@@ -6,7 +6,7 @@
 
 > **Warning**
 >
-> ![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/aklinker1/wxt/1)
+> [![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/aklinker1/wxt/1)](https://github.com/aklinker1/wxt/milestone/1)
 >
 > WXT is not ready for use yet. Production builds work, but dev mode is incomplete.
 >
