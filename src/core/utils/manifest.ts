@@ -64,7 +64,7 @@ export async function generateMainfest(
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
-  if (config.command === 'serve') modifyForDevMode(manifest, config);
+  if (config.command === 'serve') addDevModeCsp(manifest, config);
 
   return manifest;
 }
@@ -308,7 +308,7 @@ function addEntrypoints(
   }
 }
 
-function modifyForDevMode(
+function addDevModeCsp(
   manifest: Manifest.WebExtensionManifest,
   config: InternalConfig,
 ): void {
@@ -342,12 +342,6 @@ function modifyForDevMode(
     manifest.content_security_policy.extension_pages = csp.toString();
   } else {
     manifest.content_security_policy = csp.toString();
-  }
-
-  // Add offscreen API permission for MV3 to handle reloads
-  if (manifest.manifest_version === 3) {
-    manifest.permissions ??= [];
-    manifest.permissions.push('offscreen');
   }
 }
 
