@@ -60,6 +60,17 @@ export function detectDevChanges(
     }
   }
 
+  const isOnlyHtmlChanges = !changedFiles.find(
+    ([_, file]) => !file.endsWith('.html'),
+  );
+  if (isOnlyHtmlChanges) {
+    return {
+      type: 'html-reload',
+      cachedOutput: unchangedOutput,
+      rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
+    };
+  }
+
   return {
     type: 'extension-reload',
     cachedOutput: unchangedOutput,
@@ -103,10 +114,7 @@ function findEffectedSteps(
  * Contains information about what files changed, what needs rebuilt, and the type of reload that is
  * required.
  */
-export type DevModeChange =
-  | NoChange
-  // | HtmlReload
-  | ExtensionReload;
+export type DevModeChange = NoChange | HtmlReload | ExtensionReload;
 // | BrowserRestart
 // | ContentScriptReload
 
@@ -125,15 +133,9 @@ interface RebuildChange {
   cachedOutput: BuildOutput;
 }
 
-/**
- * This is separate from `ExtensionReload` because if an HTML file changes, for some browsers,
- * reloading the current page is enough to pull from the latest change. Simply reloading the page is
- * less destructive then reloading the entire extension (content scripts aren't invalidated, tabs to
- * extension pages aren't closed, etc).
- */
-// interface HtmlReload extends RebuildChange {
-//   type: 'html-reload';
-// }
+interface HtmlReload extends RebuildChange {
+  type: 'html-reload';
+}
 
 interface ExtensionReload extends RebuildChange {
   type: 'extension-reload';

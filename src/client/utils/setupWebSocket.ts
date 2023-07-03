@@ -33,7 +33,6 @@ export function setupWebSocket(
     try {
       const message = JSON.parse(e.data) as WebSocketMessage;
       if (message.type === 'custom' && message.event?.startsWith?.('wxt:')) {
-        logger.debug(`Recieved message: ${message.event}`, message);
         onMessage?.(message);
       }
     } catch (err) {
