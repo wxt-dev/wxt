@@ -59,9 +59,9 @@ export interface WxtDevServer extends vite.ViteDevServer {
    */
   reloadExtension: () => void;
   /**
-   * Tell extension pages to reload if their path is in the list of paths provided.
+   * Tell an extension page to reload.
    *
-   * There are the bundle paths, not the input paths, so if the input paths is
+   * The path is the bundle path, not the input paths, so if the input paths is
    * "src/options/index.html", you would pass "options.html" because that's where it is written to
    * in the dist directory, and where it's available at in the actual extension.
    *
