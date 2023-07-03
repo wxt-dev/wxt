@@ -56,16 +56,12 @@ describe('Output Directory Structure', () => {
       ================================================================================
       .output/chrome-mv3/content-scripts/one.js
       ----------------------------------------
-      (function(){\\"use strict\\";function c(n){return n}const e=\\"\\",t={matches:[\\"*://*/*\\"],main:()=>{}};(async()=>{try{await t.main()}catch(n){console.error(\`The content script crashed on startup!
-
-      \`,n)}})()})();
+      (function(){\\"use strict\\";function i(n){return n}const s=\\"\\",o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
 
       ================================================================================
       .output/chrome-mv3/content-scripts/two.js
       ----------------------------------------
-      (function(){\\"use strict\\";function c(n){return n}const e=\\"\\",t={matches:[\\"*://*/*\\"],main:()=>{}};(async()=>{try{await t.main()}catch(n){console.error(\`The content script crashed on startup!
-
-      \`,n)}})()})();
+      (function(){\\"use strict\\";function i(n){return n}const s=\\"\\",o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
 
       ================================================================================
       .output/chrome-mv3/manifest.json
