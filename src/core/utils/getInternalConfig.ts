@@ -94,7 +94,7 @@ export async function getInternalConfig(
   // Customize the default vite config
   finalConfig.vite.root = root;
   finalConfig.vite.configFile = false;
-  finalConfig.vite.logLevel = 'silent';
+  finalConfig.vite.logLevel = 'warn';
 
   finalConfig.vite.build ??= {};
   finalConfig.vite.build.outDir = outDir;
