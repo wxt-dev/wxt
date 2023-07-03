@@ -38,23 +38,17 @@ await Promise.all([
     dts: true,
     silent: true,
   }),
+  ...clientTemplates.map((templateName) =>
   tsup.build({
-    entry: clientTemplates.reduce<Record<string, string>>(
-      (entry, templateName) => {
-        entry[
-          `templates/virtual-${templateName}`
-        ] = `src/client/templates/virtual-${templateName}.ts`;
-        return entry;
+      entry: {
+        [`templates/virtual-${templateName}`]: `src/client/templates/virtual-${templateName}.ts`,
       },
-      {},
-    ),
     format: ['esm'],
     sourcemap: true,
     silent: true,
-    external: clientTemplates.map(
-      (templateName) => `virtual:user-${templateName}`,
+      external: [`virtual:user-${templateName}`],
+    }),
     ),
-  }),
 ]).catch((err) => {
   spinner.fail();
   console.error(err);
