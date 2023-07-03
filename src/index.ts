@@ -23,7 +23,10 @@ import { detectDevChanges } from './core/utils/detectDevChanges';
 import { Mutex } from 'async-mutex';
 import { consola } from 'consola';
 import { relative } from 'node:path';
-import { getEntrypointOutputFile } from './core/utils/entrypoints';
+import {
+  getEntrypointBundlePath,
+  getEntrypointOutputFile,
+} from './core/utils/entrypoints';
 
 export { version } from '../package.json';
 export * from './core/types/external';
@@ -106,6 +109,17 @@ export async function createServer(
           server.reloadExtension();
           consola.success(`Reloaded extension: ${rebuiltNames}`);
           break;
+        case 'html-reload':
+          changes.rebuildGroups.flat().forEach((entry) => {
+            const path = getEntrypointBundlePath(
+              entry,
+              internalConfig.outDir,
+              '.html',
+            );
+            server.reloadPage(path);
+          });
+          consola.success(`Reloaded pages: ${rebuiltNames}`);
+          break;
       }
     });
   });
@@ -129,6 +143,11 @@ export async function createServer(
     origin,
     reloadExtension: () => {
       server.ws.send('wxt:reload-extension');
+    },
+    reloadPage: (path) => {
+      // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
+      // paths ending in "/index.html"
+      server.ws.send('wxt:reload-page', path);
     },
   };
   internalConfig.logger.info('Created dev server');

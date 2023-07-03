@@ -58,6 +58,18 @@ export interface WxtDevServer extends vite.ViteDevServer {
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
   reloadExtension: () => void;
+  /**
+   * Tell extension pages to reload if their path is in the list of paths provided.
+   *
+   * There are the bundle paths, not the input paths, so if the input paths is
+   * "src/options/index.html", you would pass "options.html" because that's where it is written to
+   * in the dist directory, and where it's available at in the actual extension.
+   *
+   * @example
+   * server.reloadPage("popup.html")
+   * server.reloadPage("sandbox.html")
+   */
+  reloadPage: (path: string) => void;
 }
 
 export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';

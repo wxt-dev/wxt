@@ -39,16 +39,24 @@ await Promise.all([
     silent: true,
   }),
   ...clientTemplates.map((templateName) =>
-  tsup.build({
+    tsup.build({
       entry: {
         [`templates/virtual-${templateName}`]: `src/client/templates/virtual-${templateName}.ts`,
       },
+      format: ['esm'],
+      sourcemap: true,
+      silent: true,
+      external: [`virtual:user-${templateName}`],
+    }),
+  ),
+  tsup.build({
+    entry: {
+      'templates/reload-html': `src/client/templates/reload-html.ts`,
+    },
     format: ['esm'],
     sourcemap: true,
     silent: true,
-      external: [`virtual:user-${templateName}`],
-    }),
-    ),
+  }),
 ]).catch((err) => {
   spinner.fail();
   console.error(err);

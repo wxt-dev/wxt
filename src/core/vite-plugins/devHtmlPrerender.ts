@@ -11,6 +11,21 @@ export function devHtmlPrerender(config: InternalConfig): vite.Plugin {
   return {
     apply: 'build',
     name: 'wxt:dev-html-prerender',
+    config(userConfig) {
+      return vite.mergeConfig(
+        {
+          resolve: {
+            alias: {
+              '@wxt/reload-html': resolve(
+                config.root,
+                'node_modules/wxt/dist/templates/reload-html.js',
+              ),
+            },
+          },
+        },
+        userConfig,
+      );
+    },
     async transform(html, id) {
       const server = config.server;
       if (config.command !== 'serve' || server == null || !id.endsWith('.html'))
@@ -42,6 +57,12 @@ export function devHtmlPrerender(config: InternalConfig): vite.Plugin {
       };
       pointToDevServer('script[type=module]', 'src');
       pointToDevServer('link[rel=stylesheet]', 'href');
+
+      // Add a script to add page reloading
+      const reloader = document.createElement('script');
+      reloader.src = '@wxt/reload-html';
+      reloader.type = 'module';
+      document.head.appendChild(reloader);
 
       const newHtml = document.toString();
       config.logger.debug('Transformed ' + id);
