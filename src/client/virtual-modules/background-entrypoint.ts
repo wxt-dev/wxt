@@ -3,11 +3,14 @@ import { setupWebSocket } from '../utils/setupWebSocket';
 import { logger } from '../utils/logger';
 import browser from 'webextension-polyfill';
 import { keepServiceWorkerAlive } from '../utils/keepServiceWorkerAlive';
+import { reloadContentScript } from '../utils/reloadContentScript';
 
 if (__COMMAND__ === 'serve') {
   try {
     setupWebSocket((message) => {
       if (message.event === 'wxt:reload-extension') browser.runtime.reload();
+      if (message.event === 'wxt:reload-content-script' && message.data != null)
+        reloadContentScript(message.data);
     });
 
     // Web Socket will disconnect if the service worker is killed

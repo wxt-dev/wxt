@@ -343,13 +343,21 @@ function addDevModeCsp(
   } else {
     manifest.content_security_policy = csp.toString();
   }
+
+  // Add permissions for dev mode
+  // TODO: only add permission if missing
+  manifest.permissions ??= [];
+  manifest.permissions.push('scripting'); // For updating content scripts
+  if (config.manifestVersion === 3) {
+    manifest.permissions.push('tabs'); // For reloading the page
+  }
 }
 
 /**
  * Returns the bundle paths to CSS files associated with a list of content scripts, or undefined if
  * there is no associated CSS.
  */
-function getContentScriptCssFiles(
+export function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): string[] | undefined {

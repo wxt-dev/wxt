@@ -70,6 +70,12 @@ export interface WxtDevServer extends vite.ViteDevServer {
    * server.reloadPage("sandbox.html")
    */
   reloadPage: (path: string) => void;
+  /**
+   * Tell the extension to un-register and re-register a content-script and optionally a CSS file.
+   *
+   * @param contentScript The manifest definition for a content script
+   */
+  reloadContentScript: (contentScript: Manifest.ContentScript) => void;
 }
 
 export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';

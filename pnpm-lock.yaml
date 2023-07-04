@@ -10,6 +10,7 @@ importers:
       '@types/picomatch': ^2.3.0
       '@types/webextension-polyfill': ^0.10.0
       '@vitest/coverage-v8': ^0.32.2
+      '@webext-core/match-patterns': ^1.0.1
       async-mutex: ^0.4.0
       c12: ^1.4.2
       cac: ^6.7.14
@@ -37,6 +38,7 @@ importers:
       web-ext: ^7.6.2
       webextension-polyfill: ^0.10.0
     dependencies:
+      '@webext-core/match-patterns': 1.0.1
       async-mutex: 0.4.0
       c12: 1.4.2
       cac: 6.7.14
@@ -75,9 +77,11 @@ importers:
   demo:
     specifiers:
       '@types/webextension-polyfill': ^0.10.0
+      '@webext-core/match-patterns': ^1.0.1
       webextension-polyfill: ^0.10.0
       wxt: workspace:*
     dependencies:
+      '@webext-core/match-patterns': 1.0.1
       webextension-polyfill: 0.10.0
     devDependencies:
       '@types/webextension-polyfill': 0.10.0
@@ -1149,6 +1153,22 @@ packages:
       loupe: 2.3.6
       pretty-format: 27.5.1
     dev: true
+
+  /@webcomponents/webcomponentsjs/2.8.0:
+    resolution:
+      {
+        integrity: sha512-loGD63sacRzOzSJgQnB9ZAhaQGkN7wl2Zuw7tsphI5Isa0irijrRo6EnJii/GgjGefIFO8AIO7UivzRhFaEk9w==,
+      }
+    dev: false
+
+  /@webext-core/match-patterns/1.0.1:
+    resolution:
+      {
+        integrity: sha512-huti7vdxWQ10XlkmEO/nC7gVmzAcxNRj+Kdp+HrnRzh2PY9pv5BLrjL8QXzN5EdJjxP154yr7/Q7+Z6xe0TZDA==,
+      }
+    dependencies:
+      '@webcomponents/webcomponentsjs': 2.8.0
+    dev: false
 
   /abort-controller/3.0.0:
     resolution:

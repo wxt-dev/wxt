@@ -52,6 +52,7 @@
     "prepublish": "pnpm -s build"
   },
   "dependencies": {
+    "@webext-core/match-patterns": "^1.0.1",
     "async-mutex": "^0.4.0",
     "c12": "^1.4.2",
     "cac": "^6.7.14",

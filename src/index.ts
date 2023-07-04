@@ -8,7 +8,11 @@ import {
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import { findEntrypoints } from './core/build/findEntrypoints';
 import { buildEntrypoints } from './core/build/buildEntrypoints';
-import { generateMainfest, writeManifest } from './core/utils/manifest';
+import {
+  generateMainfest,
+  getContentScriptCssFiles,
+  writeManifest,
+} from './core/utils/manifest';
 import { printBuildSummary } from './core/log/printBuildSummary';
 import fs from 'fs-extra';
 import { generateTypesDir } from './core/build/generateTypesDir';
@@ -120,6 +124,24 @@ export async function createServer(
           });
           consola.success(`Reloaded pages: ${rebuiltNames}`);
           break;
+        case 'content-script-reload':
+          changes.changedSteps.forEach((step) => {
+            const entry = step.entrypoints;
+            if (Array.isArray(entry) || entry.type !== 'content-script') return;
+
+            const js = [
+              getEntrypointBundlePath(entry, internalConfig.outDir, '.js'),
+            ];
+            const css = getContentScriptCssFiles([entry], currentOutput!);
+
+            server.reloadContentScript({
+              js,
+              css,
+              ...entry.options,
+            });
+          });
+          consola.success(`Reloaded content scripts: ${rebuiltNames}`);
+          break;
       }
     });
   });
@@ -148,6 +170,9 @@ export async function createServer(
       // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
       // paths ending in "/index.html"
       server.ws.send('wxt:reload-page', path);
+    },
+    reloadContentScript: (contentScript: Manifest.ContentScript) => {
+      server.ws.send('wxt:reload-content-script', contentScript);
     },
   };
   internalConfig.logger.info('Created dev server');
