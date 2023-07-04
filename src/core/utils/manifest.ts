@@ -346,7 +346,6 @@ function addDevModePermissions(
   manifest: Manifest.WebExtensionManifest,
   config: InternalConfig,
 ) {
-  // Add permissions for dev mode
   addPermission(manifest, 'tabs'); // For reloading the page
   if (config.manifestVersion === 3) {
     addPermission(manifest, 'scripting'); // For updating content scripts
