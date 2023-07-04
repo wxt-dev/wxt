@@ -71,7 +71,7 @@ export interface WxtDevServer extends vite.ViteDevServer {
    */
   reloadPage: (path: string) => void;
   /**
-   * Tell the extension to un-register and re-register a content-script and optionally a CSS file.
+   * Tell the extension to restart a content script.
    *
    * @param contentScript The manifest definition for a content script
    */

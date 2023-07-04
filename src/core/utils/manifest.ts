@@ -65,6 +65,7 @@ export async function generateMainfest(
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
   if (config.command === 'serve') addDevModeCsp(manifest, config);
+  if (config.command === 'serve') addDevModePermissions(manifest, config);
 
   return manifest;
 }
@@ -316,13 +317,9 @@ function addDevModeCsp(
   const allowedCsp = config.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
-    manifest.host_permissions ??= [];
-    if (!manifest.host_permissions.includes(permission))
-      manifest.host_permissions.push(permission);
+    addHostPermission(manifest, permission);
   } else {
-    manifest.permissions ??= [];
-    if (!manifest.permissions.includes(permission))
-      manifest.permissions.push(permission);
+    addPermission(manifest, permission);
   }
 
   const csp = new ContentSecurityPolicy(
@@ -343,13 +340,16 @@ function addDevModeCsp(
   } else {
     manifest.content_security_policy = csp.toString();
   }
+}
 
+function addDevModePermissions(
+  manifest: Manifest.WebExtensionManifest,
+  config: InternalConfig,
+) {
   // Add permissions for dev mode
-  // TODO: only add permission if missing
-  manifest.permissions ??= [];
-  manifest.permissions.push('scripting'); // For updating content scripts
+  addPermission(manifest, 'tabs'); // For reloading the page
   if (config.manifestVersion === 3) {
-    manifest.permissions.push('tabs'); // For reloading the page
+    addPermission(manifest, 'scripting'); // For updating content scripts
   }
 }
 
@@ -375,4 +375,22 @@ export function getContentScriptCssFiles(
 
   if (css.length > 0) return css;
   return undefined;
+}
+
+function addPermission(
+  manifest: Manifest.WebExtensionManifest,
+  permission: string,
+): void {
+  manifest.permissions ??= [];
+  if (manifest.permissions.includes(permission)) return;
+  manifest.permissions.push(permission);
+}
+
+function addHostPermission(
+  manifest: Manifest.WebExtensionManifest,
+  hostPermission: string,
+): void {
+  manifest.host_permissions ??= [];
+  if (manifest.host_permissions.includes(hostPermission)) return;
+  manifest.host_permissions.push(hostPermission);
 }
