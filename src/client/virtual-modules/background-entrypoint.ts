@@ -7,10 +7,16 @@ import { reloadContentScript } from '../utils/reloadContentScript';
 
 if (__COMMAND__ === 'serve') {
   try {
-    setupWebSocket((message) => {
+    const ws = setupWebSocket((message) => {
       if (message.event === 'wxt:reload-extension') browser.runtime.reload();
       if (message.event === 'wxt:reload-content-script' && message.data != null)
         reloadContentScript(message.data);
+    });
+
+    // Tell the server the background script is loaded and ready to go
+    ws.addEventListener('open', () => {
+      const msg = { type: 'custom', event: 'wxt:background-initialized' };
+      ws.send(JSON.stringify(msg));
     });
 
     // Web Socket will disconnect if the service worker is killed

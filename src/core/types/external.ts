@@ -55,6 +55,14 @@ export interface WxtDevServer extends vite.ViteDevServer {
    */
   origin: string;
   /**
+   * Stores the current build output of the server.
+   */
+  currentOutput: BuildOutput;
+  /**
+   * Start the server on the first open port.
+   */
+  start(): Promise<void>;
+  /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
   reloadExtension: () => void;
