@@ -1,5 +1,6 @@
 import { BuildOutput, BuildStepOutput, EntrypointGroup } from '../types';
 import * as vite from 'vite';
+import { every } from './arrays';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -60,9 +61,9 @@ export function detectDevChanges(
     }
   }
 
-  const isOnlyHtmlChanges = !changedFiles.find(
-    ([_, file]) => !file.endsWith('.html'),
-  );
+  const isOnlyHtmlChanges =
+    changedFiles.length > 0 &&
+    every(changedFiles, ([_, file]) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -71,9 +72,12 @@ export function detectDevChanges(
     };
   }
 
-  const isOnlyContentScripts = !changedOutput.steps
-    .flatMap((step) => step.entrypoints)
-    .find((entry) => entry.type !== 'content-script');
+  const isOnlyContentScripts =
+    changedOutput.steps.length > 0 &&
+    every(
+      changedOutput.steps.flatMap((step) => step.entrypoints),
+      (entry) => entry.type === 'content-script',
+    );
   if (isOnlyContentScripts) {
     return {
       type: 'content-script-reload',
