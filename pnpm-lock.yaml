@@ -77,11 +77,9 @@ importers:
   demo:
     specifiers:
       '@types/webextension-polyfill': ^0.10.0
-      '@webext-core/match-patterns': ^1.0.1
       webextension-polyfill: ^0.10.0
       wxt: workspace:*
     dependencies:
-      '@webext-core/match-patterns': 1.0.1
       webextension-polyfill: 0.10.0
     devDependencies:
       '@types/webextension-polyfill': 0.10.0
