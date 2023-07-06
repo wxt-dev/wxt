@@ -91,17 +91,15 @@ export async function createServer(
       switch (changes.type) {
         case 'extension-reload':
           server.reloadExtension();
-          consola.success(`Reloaded extension: ${rebuiltNames}`);
           break;
         case 'html-reload':
           reloadHtmlPages(changes.rebuildGroups, server, internalConfig);
-          consola.success(`Reloaded pages: ${rebuiltNames}`);
           break;
         case 'content-script-reload':
           reloadContentScripts(changes.changedSteps, internalConfig, server);
-          consola.success(`Reloaded content scripts: ${rebuiltNames}`);
           break;
       }
+      consola.success(`Reloaded: ${rebuiltNames}`);
     });
   });
 
