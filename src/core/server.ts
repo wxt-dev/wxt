@@ -93,19 +93,23 @@ export function reloadContentScripts(
   config: InternalConfig,
   server: WxtDevServer,
 ) {
-  steps.forEach((step) => {
-    const entry = step.entrypoints;
-    if (Array.isArray(entry) || entry.type !== 'content-script') return;
+  if (config.manifestVersion === 3) {
+    steps.forEach((step) => {
+      const entry = step.entrypoints;
+      if (Array.isArray(entry) || entry.type !== 'content-script') return;
 
-    const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
-    const css = getContentScriptCssFiles([entry], server.currentOutput);
+      const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
+      const css = getContentScriptCssFiles([entry], server.currentOutput);
 
-    server.reloadContentScript({
-      js,
-      css,
-      ...entry.options,
+      server.reloadContentScript({
+        js,
+        css,
+        ...entry.options,
+      });
     });
-  });
+  } else {
+    server.reloadExtension();
+  }
 }
 
 export function reloadHtmlPages(

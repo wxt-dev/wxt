@@ -271,24 +271,23 @@ function addEntrypoints(
   }
 
   if (contentScripts?.length) {
-    if (config.command === 'serve') {
-      const permissionsKey =
-        config.manifestVersion === 2 ? 'permissions' : 'host_permissions';
-      const hostPermissions = new Set<string>(manifest[permissionsKey] ?? []);
+    // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
+    // at runtime
+    if (config.command === 'serve' && config.manifestVersion === 3) {
+      const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
         script.options.matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
         });
       });
-      manifest[permissionsKey] = Array.from(hostPermissions).sort();
+      hostPermissions.forEach((permission) =>
+        addHostPermission(manifest, permission),
+      );
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
         const hash = JSON.stringify(script.options);
-        if (!map.has(hash)) {
-          map.set(hash, [script]);
-        } else {
-          map.get(hash)?.push(script);
-        }
+        if (map.has(hash)) map.get(hash)?.push(script);
+        else map.set(hash, [script]);
         return map;
       }, new Map<string, ContentScriptEntrypoint[]>());
 

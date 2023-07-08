@@ -13,14 +13,16 @@ if (__COMMAND__ === 'serve') {
         reloadContentScript(message.data);
     });
 
-    // Tell the server the background script is loaded and ready to go
-    ws.addEventListener('open', () => {
-      const msg = { type: 'custom', event: 'wxt:background-initialized' };
-      ws.send(JSON.stringify(msg));
-    });
+    if (__MANIFEST_VERSION__ === 3) {
+      // Tell the server the background script is loaded and ready to go
+      ws.addEventListener('open', () => {
+        const msg = { type: 'custom', event: 'wxt:background-initialized' };
+        ws.send(JSON.stringify(msg));
+      });
 
-    // Web Socket will disconnect if the service worker is killed
-    keepServiceWorkerAlive();
+      // Web Socket will disconnect if the service worker is killed
+      keepServiceWorkerAlive();
+    }
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
   }

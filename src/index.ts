@@ -33,11 +33,13 @@ export async function createServer(
 ): Promise<WxtDevServer> {
   const serverInfo = await getServerInfo();
 
-  const getLatestInternalConfig = () =>
-    getInternalConfig(
-      vite.mergeConfig(serverInfo.viteServerConfig, config?.vite ?? {}),
-      'serve',
+  const getLatestInternalConfig = () => {
+    const viteConfig: vite.InlineConfig = vite.mergeConfig(
+      serverInfo.viteServerConfig,
+      config?.vite ?? {},
     );
+    return getInternalConfig({ ...config, vite: viteConfig }, 'serve');
+  };
 
   let internalConfig = await getLatestInternalConfig();
   const server = await setupServer(serverInfo, internalConfig);
