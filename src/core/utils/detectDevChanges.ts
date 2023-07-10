@@ -1,5 +1,6 @@
 import { BuildOutput, BuildStepOutput, EntrypointGroup } from '../types';
 import * as vite from 'vite';
+import { every } from './arrays';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -60,13 +61,28 @@ export function detectDevChanges(
     }
   }
 
-  const isOnlyHtmlChanges = !changedFiles.find(
-    ([_, file]) => !file.endsWith('.html'),
-  );
+  const isOnlyHtmlChanges =
+    changedFiles.length > 0 &&
+    every(changedFiles, ([_, file]) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
       cachedOutput: unchangedOutput,
+      rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
+    };
+  }
+
+  const isOnlyContentScripts =
+    changedOutput.steps.length > 0 &&
+    every(
+      changedOutput.steps.flatMap((step) => step.entrypoints),
+      (entry) => entry.type === 'content-script',
+    );
+  if (isOnlyContentScripts) {
+    return {
+      type: 'content-script-reload',
+      cachedOutput: unchangedOutput,
+      changedSteps: changedOutput.steps,
       rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
     };
   }
@@ -114,9 +130,12 @@ function findEffectedSteps(
  * Contains information about what files changed, what needs rebuilt, and the type of reload that is
  * required.
  */
-export type DevModeChange = NoChange | HtmlReload | ExtensionReload;
+export type DevModeChange =
+  | NoChange
+  | HtmlReload
+  | ExtensionReload
+  | ContentScriptReload;
 // | BrowserRestart
-// | ContentScriptReload
 
 interface NoChange {
   type: 'no-change';
@@ -145,9 +164,10 @@ interface ExtensionReload extends RebuildChange {
 //   type: 'browser-restart';
 // }
 
-// interface ContentScriptReload extends RebuildChange {
-//   type: 'content-script-reload';
-// }
+interface ContentScriptReload extends RebuildChange {
+  type: 'content-script-reload';
+  changedSteps: BuildStepOutput[];
+}
 
 /**
  * When figuring out what needs reloaded, this stores the step that was changed, or the public

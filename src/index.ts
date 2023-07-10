@@ -1,32 +1,19 @@
-import {
-  BuildOutput,
-  WxtDevServer,
-  InlineConfig,
-  InternalConfig,
-  EntrypointGroup,
-} from './core/types';
+import { BuildOutput, WxtDevServer, InlineConfig } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
-import { findEntrypoints } from './core/build/findEntrypoints';
-import { buildEntrypoints } from './core/build/buildEntrypoints';
-import { generateMainfest, writeManifest } from './core/utils/manifest';
-import { printBuildSummary } from './core/log/printBuildSummary';
-import fs from 'fs-extra';
-import { generateTypesDir } from './core/build/generateTypesDir';
 import pc from 'picocolors';
 import * as vite from 'vite';
-import { findOpenPort } from './core/utils/findOpenPort';
-import { formatDuration } from './core/utils/formatDuration';
-import { createWebExtRunner } from './core/runners/createWebExtRunner';
-import { groupEntrypoints } from './core/utils/groupEntrypoints';
-import { Manifest } from 'webextension-polyfill';
 import { detectDevChanges } from './core/utils/detectDevChanges';
 import { Mutex } from 'async-mutex';
 import { consola } from 'consola';
 import { relative } from 'node:path';
+import { getEntrypointOutputFile } from './core/utils/entrypoints';
+import { buildInternal, rebuild } from './core/build';
 import {
-  getEntrypointBundlePath,
-  getEntrypointOutputFile,
-} from './core/utils/entrypoints';
+  getServerInfo,
+  reloadContentScripts,
+  reloadHtmlPages,
+  setupServer,
+} from './core/server';
 
 export { version } from '../package.json';
 export * from './core/types/external';
@@ -44,33 +31,35 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
 export async function createServer(
   config?: InlineConfig,
 ): Promise<WxtDevServer> {
-  const port = await findOpenPort(3000, 3010);
-  const hostname = 'localhost';
-  const origin = `http://${hostname}:${port}`;
-  const serverConfig: vite.InlineConfig = {
-    server: {
-      origin,
-    },
-  };
-  let internalConfig = await getInternalConfig(
-    vite.mergeConfig(serverConfig, config ?? {}),
-    'serve',
-  );
-  const runner = createWebExtRunner();
+  const serverInfo = await getServerInfo();
 
-  let hasBuiltOnce = false;
-  let currentOutput: BuildOutput | undefined;
+  const getLatestInternalConfig = () => {
+    const viteConfig: vite.InlineConfig = vite.mergeConfig(
+      serverInfo.viteServerConfig,
+      config?.vite ?? {},
+    );
+    return getInternalConfig({ ...config, vite: viteConfig }, 'serve');
+  };
+
+  let internalConfig = await getLatestInternalConfig();
+  const server = await setupServer(serverInfo, internalConfig);
+  internalConfig.server = server;
+
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
-  const viteServer = await vite.createServer(internalConfig.vite);
-  viteServer.watcher.on('all', async (event, path, stats) => {
-    if (!hasBuiltOnce || path.startsWith(internalConfig.outBaseDir)) return;
+  server.ws.on('wxt:background-initialized', () => {
+    // Register content scripts for the first time since they're not listed in the manifest
+    reloadContentScripts(server.currentOutput.steps, internalConfig, server);
+  });
+
+  server.watcher.on('all', async (event, path, _stats) => {
+    if (path.startsWith(internalConfig.outBaseDir)) return;
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
       const fileChanges = changeQueue.splice(0, changeQueue.length);
-      const changes = detectDevChanges(fileChanges, currentOutput);
+      const changes = detectDevChanges(fileChanges, server.currentOutput);
 
       if (changes.type === 'no-change') return;
 
@@ -90,10 +79,7 @@ export async function createServer(
         .join(pc.dim(', '));
 
       // Get latest config and Rebuild groups with changes
-      internalConfig = await getInternalConfig(
-        vite.mergeConfig(serverConfig, config ?? {}),
-        'serve',
-      );
+      internalConfig = await getLatestInternalConfig();
       internalConfig.server = server;
       const { output: newOutput } = await rebuild(
         internalConfig,
@@ -101,119 +87,23 @@ export async function createServer(
         changes.rebuildGroups,
         changes.cachedOutput,
       );
-      currentOutput = newOutput;
+      server.currentOutput = newOutput;
 
       // Perform reloads
       switch (changes.type) {
         case 'extension-reload':
           server.reloadExtension();
-          consola.success(`Reloaded extension: ${rebuiltNames}`);
           break;
         case 'html-reload':
-          changes.rebuildGroups.flat().forEach((entry) => {
-            const path = getEntrypointBundlePath(
-              entry,
-              internalConfig.outDir,
-              '.html',
-            );
-            server.reloadPage(path);
-          });
-          consola.success(`Reloaded pages: ${rebuiltNames}`);
+          reloadHtmlPages(changes.rebuildGroups, server, internalConfig);
+          break;
+        case 'content-script-reload':
+          reloadContentScripts(changes.changedSteps, internalConfig, server);
           break;
       }
+      consola.success(`Reloaded: ${rebuiltNames}`);
     });
   });
-  const server: WxtDevServer = {
-    ...viteServer,
-    async listen(port, isRestart) {
-      const res = await viteServer.listen(port, isRestart);
-
-      if (!isRestart) {
-        internalConfig.logger.success(`Started dev server @ ${origin}`);
-
-        internalConfig.logger.info('Opening browser...');
-        await runner.openBrowser(internalConfig);
-        internalConfig.logger.success('Opened!');
-      }
-
-      return res;
-    },
-    port,
-    hostname,
-    origin,
-    reloadExtension: () => {
-      server.ws.send('wxt:reload-extension');
-    },
-    reloadPage: (path) => {
-      // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
-      // paths ending in "/index.html"
-      server.ws.send('wxt:reload-page', path);
-    },
-  };
-  internalConfig.logger.info('Created dev server');
-
-  internalConfig.server = server;
-  currentOutput = await buildInternal(internalConfig);
-  hasBuiltOnce = true;
 
   return server;
-}
-
-async function buildInternal(config: InternalConfig): Promise<BuildOutput> {
-  const verb = config.command === 'serve' ? 'Pre-rendering' : 'Building';
-  const target = `${config.browser}-mv${config.manifestVersion}`;
-  config.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
-      `Vite ${vite.version}`,
-    )}`,
-  );
-  const startTime = Date.now();
-
-  // Cleanup
-  await fs.rm(config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(config.outDir);
-
-  const entrypoints = await findEntrypoints(config);
-  const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, groups);
-
-  // Post-build
-  config.logger.success(
-    `Built extension in ${formatDuration(Date.now() - startTime)}`,
-  );
-  await printBuildSummary(output, config);
-
-  return output;
-}
-
-export async function rebuild(
-  config: InternalConfig,
-  entrypointGroups: EntrypointGroup[],
-  existingOutput: Omit<BuildOutput, 'manifest'> = {
-    steps: [],
-    publicAssets: [],
-  },
-): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
-  // Build
-  const allEntrypoints = await findEntrypoints(config);
-  await generateTypesDir(allEntrypoints, config);
-  const buildOutput = await buildEntrypoints(entrypointGroups, config);
-
-  const manifest = await generateMainfest(allEntrypoints, buildOutput, config);
-  const output: BuildOutput = {
-    manifest,
-    ...buildOutput,
-  };
-
-  // Write manifest
-  await writeManifest(manifest, output, config);
-
-  return {
-    output: {
-      manifest,
-      steps: [...existingOutput.steps, ...output.steps],
-      publicAssets: [...existingOutput.publicAssets, ...output.publicAssets],
-    },
-    manifest,
-  };
 }

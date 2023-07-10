@@ -65,6 +65,7 @@ export async function generateMainfest(
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
   if (config.command === 'serve') addDevModeCsp(manifest, config);
+  if (config.command === 'serve') addDevModePermissions(manifest, config);
 
   return manifest;
 }
@@ -270,24 +271,23 @@ function addEntrypoints(
   }
 
   if (contentScripts?.length) {
-    if (config.command === 'serve') {
-      const permissionsKey =
-        config.manifestVersion === 2 ? 'permissions' : 'host_permissions';
-      const hostPermissions = new Set<string>(manifest[permissionsKey] ?? []);
+    // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
+    // at runtime
+    if (config.command === 'serve' && config.manifestVersion === 3) {
+      const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
         script.options.matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
         });
       });
-      manifest[permissionsKey] = Array.from(hostPermissions).sort();
+      hostPermissions.forEach((permission) =>
+        addHostPermission(manifest, permission),
+      );
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
         const hash = JSON.stringify(script.options);
-        if (!map.has(hash)) {
-          map.set(hash, [script]);
-        } else {
-          map.get(hash)?.push(script);
-        }
+        if (map.has(hash)) map.get(hash)?.push(script);
+        else map.set(hash, [script]);
         return map;
       }, new Map<string, ContentScriptEntrypoint[]>());
 
@@ -316,13 +316,9 @@ function addDevModeCsp(
   const allowedCsp = config.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
-    manifest.host_permissions ??= [];
-    if (!manifest.host_permissions.includes(permission))
-      manifest.host_permissions.push(permission);
+    addHostPermission(manifest, permission);
   } else {
-    manifest.permissions ??= [];
-    if (!manifest.permissions.includes(permission))
-      manifest.permissions.push(permission);
+    addPermission(manifest, permission);
   }
 
   const csp = new ContentSecurityPolicy(
@@ -345,11 +341,22 @@ function addDevModeCsp(
   }
 }
 
+function addDevModePermissions(
+  manifest: Manifest.WebExtensionManifest,
+  config: InternalConfig,
+) {
+  // For reloading the page
+  addPermission(manifest, 'tabs');
+
+  // For registering content scripts
+  if (config.manifestVersion === 3) addPermission(manifest, 'scripting');
+}
+
 /**
  * Returns the bundle paths to CSS files associated with a list of content scripts, or undefined if
  * there is no associated CSS.
  */
-function getContentScriptCssFiles(
+export function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): string[] | undefined {
@@ -367,4 +374,22 @@ function getContentScriptCssFiles(
 
   if (css.length > 0) return css;
   return undefined;
+}
+
+function addPermission(
+  manifest: Manifest.WebExtensionManifest,
+  permission: string,
+): void {
+  manifest.permissions ??= [];
+  if (manifest.permissions.includes(permission)) return;
+  manifest.permissions.push(permission);
+}
+
+function addHostPermission(
+  manifest: Manifest.WebExtensionManifest,
+  hostPermission: string,
+): void {
+  manifest.host_permissions ??= [];
+  if (manifest.host_permissions.includes(hostPermission)) return;
+  manifest.host_permissions.push(hostPermission);
 }

@@ -4,7 +4,10 @@ import {
   fakeBackgroundEntrypoint,
   fakeContentScriptEntrypoint,
   fakeFile,
+  fakeGenericEntrypoint,
   fakeManifest,
+  fakeOptionsEntrypoint,
+  fakePopupEntrypoint,
   fakeRollupOutputAsset,
   fakeRollupOutputChunk,
 } from '../../../testing/fake-objects';
@@ -119,6 +122,122 @@ describe('Detect Dev Changes', () => {
           steps: [step1],
         },
         rebuildGroups: [background],
+      };
+
+      const actual = detectDevChanges(
+        [['unknown', changedPath]],
+        currentOutput,
+      );
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('HTML Pages', () => {
+    it('should rebuild then reload only the effected pages', async () => {
+      const changedPath = '/root/page1/index.html';
+      const htmlPage1 = fakePopupEntrypoint({
+        inputPath: changedPath,
+      });
+      const htmlPage2 = fakeOptionsEntrypoint({
+        inputPath: '/root/page2.html',
+      });
+      const htmlPage3 = fakeGenericEntrypoint({
+        type: 'sandbox',
+        inputPath: '/root/page3.html',
+      });
+
+      const step1: BuildStepOutput = {
+        entrypoints: [htmlPage1, htmlPage2],
+        chunks: [
+          fakeRollupOutputChunk({
+            moduleIds: [fakeFile(), changedPath],
+          }),
+        ],
+      };
+      const step2: BuildStepOutput = {
+        entrypoints: [htmlPage3],
+        chunks: [
+          fakeRollupOutputChunk({
+            moduleIds: [fakeFile(), fakeFile(), fakeFile()],
+          }),
+        ],
+      };
+
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [step1, step2],
+      };
+      const expected: DevModeChange = {
+        type: 'html-reload',
+        cachedOutput: {
+          ...currentOutput,
+          steps: [step2],
+        },
+        rebuildGroups: [[htmlPage1, htmlPage2]],
+      };
+
+      const actual = detectDevChanges(
+        [['unknown', changedPath]],
+        currentOutput,
+      );
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('Content Scripts', () => {
+    it('should rebuild then reload only the effected content scripts', async () => {
+      const changedPath = '/root/utils/shared.ts';
+      const script1 = fakeContentScriptEntrypoint({
+        inputPath: '/root/overlay1.content/index.ts',
+      });
+      const script2 = fakeContentScriptEntrypoint({
+        inputPath: '/root/overlay2.ts',
+      });
+      const script3 = fakeContentScriptEntrypoint({
+        inputPath: '/root/overlay3.content/index.ts',
+      });
+
+      const step1: BuildStepOutput = {
+        entrypoints: script1,
+        chunks: [
+          fakeRollupOutputChunk({
+            moduleIds: [fakeFile(), changedPath],
+          }),
+        ],
+      };
+      const step2: BuildStepOutput = {
+        entrypoints: script2,
+        chunks: [
+          fakeRollupOutputChunk({
+            moduleIds: [fakeFile(), fakeFile(), fakeFile()],
+          }),
+        ],
+      };
+      const step3: BuildStepOutput = {
+        entrypoints: script3,
+        chunks: [
+          fakeRollupOutputChunk({
+            moduleIds: [changedPath, fakeFile(), fakeFile()],
+          }),
+        ],
+      };
+
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [step1, step2, step3],
+      };
+      const expected: DevModeChange = {
+        type: 'content-script-reload',
+        cachedOutput: {
+          ...currentOutput,
+          steps: [step2],
+        },
+        changedSteps: [step1, step3],
+        rebuildGroups: [script1, script3],
       };
 
       const actual = detectDevChanges(

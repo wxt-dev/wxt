@@ -55,6 +55,14 @@ export interface WxtDevServer extends vite.ViteDevServer {
    */
   origin: string;
   /**
+   * Stores the current build output of the server.
+   */
+  currentOutput: BuildOutput;
+  /**
+   * Start the server on the first open port.
+   */
+  start(): Promise<void>;
+  /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
   reloadExtension: () => void;
@@ -70,6 +78,12 @@ export interface WxtDevServer extends vite.ViteDevServer {
    * server.reloadPage("sandbox.html")
    */
   reloadPage: (path: string) => void;
+  /**
+   * Tell the extension to restart a content script.
+   *
+   * @param contentScript The manifest definition for a content script
+   */
+  reloadContentScript: (contentScript: Manifest.ContentScript) => void;
 }
 
 export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';
@@ -124,7 +138,6 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'newtab'
     | 'sidepanel'
     | 'devtools'
-    | 'unlisted-page'
     | 'unlisted-page'
     | 'unlisted-script';
 }
