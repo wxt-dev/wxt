@@ -2,12 +2,18 @@
 
 ## v0.1.0
 
+Initial release of WXT. Full support for production builds and initial toolkit for development:
+
+- HMR support when HTML page dependencies change
+- Reload extension when background changes
+- Reload HTML pages when saving them directly
+- Re-register and reload tabs when content scripts change
+
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.0.2...v0.1.0)
 
 ### 🚀 Enhancements
 
 - Content scripts reloading ([#25](https://github.com/aklinker1/wxt/pull/25))
-- ⚠️ Initial release ([afe838a](https://github.com/aklinker1/wxt/commit/afe838a))
 
 ### 📖 Documentation
 
@@ -17,14 +23,9 @@
 
 - Create github release ([b7c078f](https://github.com/aklinker1/wxt/commit/b7c078f))
 
-#### ⚠️ Breaking Changes
-
-- ⚠️ Initial release ([afe838a](https://github.com/aklinker1/wxt/commit/afe838a))
-
 ### ❤️ Contributors
 
 - Aaron Klinker
-- Aaron
 
 ## v0.0.2
 
@@ -51,7 +52,6 @@
 
 ### 🏡 Chore
 
-- Update changelog ([a9af4d3](https://github.com/aklinker1/wxt/commit/a9af4d3))
 - Refactor build output type ([#19](https://github.com/aklinker1/wxt/pull/19))
 - Refactor build outputs to support transpiled templates ([a78aada](https://github.com/aklinker1/wxt/commit/a78aada))
 - Rename `templates` to `virtual-modules` ([#24](https://github.com/aklinker1/wxt/pull/24))
@@ -60,7 +60,6 @@
 ### ❤️ Contributors
 
 - Aaron Klinker
-- Aaron
 
 ## v0.0.1
 
