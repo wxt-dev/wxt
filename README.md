@@ -17,18 +17,17 @@
 - 🌐 Supports all browsers
 - ✅ Supports both MV2 and MV3
 - 📂 Directory based entrypoints
+- ⚡ Dev mode with HMR & auto-reload
 - 🚔 TypeScript
 - 🦾 Auto-imports
-- ⚡ Dev mode with HMR
 - ⬇️ Download and bundle remote URL imports
-- 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 
 ### Todo
 
-- 🤖 Automated publishing
+- 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
-- ⚡ Dev mode with HMR and **_auto-reload_**
+- 🤖 Automated publishing
 
 ## Get Started
 
