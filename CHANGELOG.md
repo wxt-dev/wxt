@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.1.0
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.0.2...v0.1.0)
+
+### 🚀 Enhancements
+
+- Content scripts reloading ([#25](https://github.com/aklinker1/wxt/pull/25))
+- ⚠️ Initial release ([afe838a](https://github.com/aklinker1/wxt/commit/afe838a))
+
+### 📖 Documentation
+
+- Update feature list ([0255028](https://github.com/aklinker1/wxt/commit/0255028))
+
+### 🤖 CI
+
+- Create github release ([b7c078f](https://github.com/aklinker1/wxt/commit/b7c078f))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Initial release ([afe838a](https://github.com/aklinker1/wxt/commit/afe838a))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+- Aaron
+
 ## v0.0.2
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.0.1...v0.0.2)
