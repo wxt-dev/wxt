@@ -139,7 +139,6 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'sidepanel'
     | 'devtools'
     | 'unlisted-page'
-    | 'unlisted-page'
     | 'unlisted-script';
 }
 

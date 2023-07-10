@@ -6,6 +6,8 @@ import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   GenericEntrypoint,
+  OptionsEntrypoint,
+  PopupEntrypoint,
 } from '..';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
@@ -74,6 +76,63 @@ export const fakeUnlistedScriptEntrypoint =
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
   }));
+
+export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
+  () => ({
+    type: 'options',
+    inputPath: fakeFile('src'),
+    name: faker.string.alpha(),
+    outputDir: fakeDir('.output'),
+    options: {
+      browserStyle: faker.helpers.arrayElement([true, false, undefined]),
+      chromeStyle: faker.helpers.arrayElement([true, false, undefined]),
+      openInTab: faker.helpers.arrayElement([true, false, undefined]),
+    },
+  }),
+);
+
+export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
+  type: 'popup',
+  inputPath: fakeFile('src'),
+  name: faker.string.alpha(),
+  outputDir: fakeDir('.output'),
+  options: {
+    defaultTitle: faker.helpers.arrayElement([
+      faker.person.fullName(),
+      undefined,
+    ]),
+    defaultIcon: faker.helpers.arrayElement([
+      {
+        '16': 'icon/16.png',
+        '24': 'icon/24.png',
+        '64': 'icon/64.png',
+      },
+    ]),
+    mv2Key: faker.helpers.arrayElement([
+      'browser_action',
+      'page_action',
+      undefined,
+    ]),
+  },
+}));
+
+export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
+  () => ({
+    type: faker.helpers.arrayElement([
+      'sandbox',
+      'bookmarks',
+      'history',
+      'newtab',
+      'sidepanel',
+      'devtools',
+      'unlisted-page',
+      'unlisted-script',
+    ]),
+    inputPath: fakeFile('src'),
+    name: faker.string.alpha(),
+    outputDir: fakeDir('.output'),
+  }),
+);
 
 export const fakeRollupOutputChunk = fakeObjectCreator<Rollup.OutputChunk>(
   () => ({
