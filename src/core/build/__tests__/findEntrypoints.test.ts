@@ -3,7 +3,6 @@ import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   GenericEntrypoint,
-  InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
 } from '../../types';
@@ -12,7 +11,6 @@ import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
 import { importTsFile } from '../../utils/importTsFile';
 import glob from 'fast-glob';
-import { createFsCache } from '../../utils/createFsCache';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
 
 vi.mock('../../utils/importTsFile');
