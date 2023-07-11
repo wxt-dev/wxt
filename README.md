@@ -23,7 +23,7 @@
 
 ## Get Started
 
-Checkout the [installation guide](https://wxtjs.dev/get-started) to get started with WXT.
+Checkout the [installation guide](https://wxt.dev/get-started/installation.html) to get started with WXT.
 
 ## Contributors
 
