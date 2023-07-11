@@ -7,10 +7,11 @@ import {
   PopupEntrypoint,
 } from '../../types';
 import { resolve } from 'path';
-import { FindEntrypointsConfig, findEntrypoints } from '../findEntrypoints';
+import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
 import { importTsFile } from '../../utils/importTsFile';
 import glob from 'fast-glob';
+import { fakeInternalConfig } from '../../../testing/fake-objects';
 
 vi.mock('../../utils/importTsFile');
 const importTsFileMock = vi.mocked(importTsFile);
@@ -24,24 +25,11 @@ const readFileMock = vi.mocked(
 );
 
 describe('findEntrypoints', () => {
-  const config: FindEntrypointsConfig = {
+  const config = fakeInternalConfig({
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
-    logger: {
-      debug: vi.fn(),
-      error: vi.fn(),
-      fatal: (...args) => {
-        throw Error('logger.fatal called with: ' + JSON.stringify(args));
-      },
-      info: vi.fn(),
-      log: vi.fn(),
-      warn: vi.fn(),
-      success: vi.fn(),
-    },
-    command: 'build',
-    mode: 'production',
-  };
+  });
 
   it.each<[string, string, PopupEntrypoint]>([
     [
@@ -189,7 +177,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(config.root, expected.inputPath);
+      expect(importTsFileMock).toBeCalledWith(expected.inputPath, config);
     },
   );
 
@@ -216,7 +204,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(config.root, expected.inputPath);
+      expect(importTsFileMock).toBeCalledWith(expected.inputPath, config);
     },
   );
 

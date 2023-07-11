@@ -7,7 +7,6 @@ import {
 import path, { resolve } from 'node:path';
 import * as vite from 'vite';
 import { consola } from 'consola';
-import { importTsFile } from './importTsFile';
 import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
 import { getGlobals } from './globals';
@@ -59,10 +58,12 @@ export async function getInternalConfig(
     mode,
   };
   if (config.configFile !== false) {
-    userConfig = await importTsFile<UserConfig>(
-      root,
-      path.resolve(root, config.configFile ?? 'wxt.config.ts'),
-    );
+    const loaded = await loadConfig<UserConfig>({
+      name: 'wxt',
+      cwd: root,
+      rcFile: false,
+    });
+    userConfig = loaded.config ?? {};
   }
 
   // Merge inline and user configs

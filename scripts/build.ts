@@ -57,6 +57,13 @@ await Promise.all([
     sourcemap: true,
     silent: true,
   }),
+  tsup.build({
+    entry: {
+      'virtual-modules/fake-browser': `src/client/virtual-modules/fake-browser.ts`,
+    },
+    format: ['esm', 'cjs'],
+    silent: true,
+  }),
 ]).catch((err) => {
   spinner.fail();
   console.error(err);

@@ -1,44 +1,67 @@
-import { consola } from 'consola';
 import createJITI from 'jiti';
-import transform from 'jiti/dist/babel';
+import { InternalConfig } from '../types';
+import { createUnimport } from 'unimport';
+import fs from 'fs-extra';
 import { resolve } from 'path';
-import { scanExports } from 'unimport';
+import transform from 'jiti/dist/babel';
+import { getUnimportOptions } from './auto-imports';
 
-export async function importTsFile<T>(root: string, path: string): Promise<T> {
-  const clientImports = await scanExports(
-    resolve(root, 'node_modules/wxt/dist/client.js'),
+/**
+ * Get the value from the default export of a `path`.
+ *
+ * It works by:
+ *
+ * 1. Reading the file text
+ * 2. Stripping all imports from it via regex
+ * 3. Auto-import only the client helper functions
+ *
+ * This prevents resolving imports of imports, speeding things up and preventing "xxx is not
+ * defined" errors.
+ *
+ * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
+ * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
+ */
+export async function importTsFile<T>(
+  path: string,
+  config: InternalConfig,
+): Promise<T> {
+  config.logger.debug('Loading file metadata:', path);
+
+  const unimport = createUnimport({
+    ...getUnimportOptions(config),
+    // Only allow specific imports, not all from the project
+    imports: [{ name: '*', as: 'browser', from: 'webextension-polyfill' }],
+    dirs: [],
+  });
+  await unimport.init();
+
+  const text = await fs.readFile(path, 'utf-8');
+  const textNoImports = text.replace(/import.*[\n;]/gm, '');
+  const { code } = await unimport.injectImports(textNoImports);
+  config.logger.debug(
+    ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
+
   const jiti = createJITI(__filename, {
     cache: false,
     esmResolve: true,
     interopDefault: true,
-
+    alias: {
+      'webextension-polyfill': resolve(
+        config.root,
+        'node_modules/wxt/dist/virtual-modules/fake-browser.js',
+      ),
+    },
     transform(opts) {
-      // Remove CSS imports from the source code - Jiti can't handle them.
-      opts.source = opts.source.replace(/^import ['"].*\.css['"];?$/gm, '');
-      opts.source = opts.source.replace(
-        /^import\s+.*\s+from ['"]webextension-polyfill['"];?$/gm,
-        '',
-      );
-
-      // Append any wxt/client functions so babel doesn't complain about undefined variables
-      if (opts.filename === path) {
-        // TODO: Only append import if it isn't already imported
-        const imports =
-          clientImports
-            .map((i) => `import { ${i.name} } from "${i.from}";`)
-            .join('\n') + '\n';
-        opts.source = imports + opts.source;
-      }
-
-      // Call the default babel transformer with our modified source code
-      return transform(opts);
+      if (opts.filename === path) return transform({ ...opts, source: code });
+      else return transform(opts);
     },
   });
+
   try {
     return await jiti(path);
   } catch (err) {
-    consola.error(`Failed to import file: ${path}`);
+    config.logger.error(err);
     throw err;
   }
 }

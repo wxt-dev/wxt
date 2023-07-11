@@ -21,7 +21,7 @@ import { getEntrypointName } from '../utils/entrypoints';
  * Return entrypoints and their configuration by looking through the
  */
 export async function findEntrypoints(
-  config: FindEntrypointsConfig,
+  config: InternalConfig,
 ): Promise<Entrypoint[]> {
   const relativePaths = await glob('**/*', {
     cwd: config.entrypointsDir,
@@ -103,7 +103,7 @@ export async function findEntrypoints(
  * @param content String contents of the file at the path.
  */
 async function getPopupEntrypoint(
-  config: FindEntrypointsConfig,
+  config: InternalConfig,
   path: string,
 ): Promise<PopupEntrypoint> {
   const options: PopupEntrypoint['options'] = {};
@@ -150,7 +150,7 @@ async function getPopupEntrypoint(
  * @param content String contents of the file at the path.
  */
 async function getOptionsEntrypoint(
-  config: FindEntrypointsConfig,
+  config: InternalConfig,
   path: string,
 ): Promise<OptionsEntrypoint> {
   const options: OptionsEntrypoint['options'] = {};
@@ -192,11 +192,11 @@ async function getOptionsEntrypoint(
  * @param path Absolute path to the background's TS file.
  */
 async function getBackgroundEntrypoint(
-  config: FindEntrypointsConfig,
+  config: InternalConfig,
   path: string,
 ): Promise<BackgroundEntrypoint> {
   const { main: _, ...options } =
-    await importTsFile<BackgroundScriptDefintition>(config.root, path);
+    await importTsFile<BackgroundScriptDefintition>(path, config);
   if (options == null) {
     throw Error('Background script does not have a default export');
   }
@@ -213,13 +213,13 @@ async function getBackgroundEntrypoint(
  * @param path Absolute path to the content script's TS file.
  */
 async function getContentScriptEntrypoint(
-  config: FindEntrypointsConfig,
+  config: InternalConfig,
   name: string,
   path: string,
 ): Promise<ContentScriptEntrypoint> {
   const { main: _, ...options } = await importTsFile<ContentScriptDefinition>(
-    config.root,
     path,
+    config,
   );
   if (options == null) {
     throw Error(`Content script ${name} does not have a default export`);
@@ -274,8 +274,3 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   // Don't warn about any files in subdirectories, like CSS or JS entrypoints for HTML files
   '*/*': 'ignored',
 };
-
-export type FindEntrypointsConfig = Pick<
-  InternalConfig,
-  'root' | 'entrypointsDir' | 'outDir' | 'logger' | 'mode' | 'command'
->;

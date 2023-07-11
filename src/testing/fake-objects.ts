@@ -13,6 +13,8 @@ import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
 import { Rollup } from 'vite';
 import { Manifest } from 'webextension-polyfill';
+import { FsCache, InternalConfig, WxtDevServer } from '../core/types';
+import { mock } from 'vitest-mock-extended';
 
 faker.seed(__TEST_SEED__);
 
@@ -192,3 +194,28 @@ export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   }
   return array;
 }
+
+export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => ({
+  browser: faker.helpers.arrayElement(['chrome', 'firefox']),
+  command: faker.helpers.arrayElement(['build', 'serve']),
+  entrypointsDir: fakeDir(),
+  fsCache: mock<FsCache>(),
+  imports: {},
+  logger: mock(),
+  manifest: fakeManifest(),
+  manifestVersion: faker.helpers.arrayElement([2, 3]),
+  mode: faker.helpers.arrayElement(['development', 'production']),
+  outBaseDir: fakeDir(),
+  outDir: fakeDir(),
+  publicDir: fakeDir(),
+  root: fakeDir(),
+  runnerConfig: {
+    config: {},
+  },
+  srcDir: fakeDir(),
+  storeIds: {},
+  typesDir: fakeDir(),
+  vite: {},
+  wxtDir: fakeDir(),
+  server: mock<WxtDevServer>(),
+}));

@@ -52,6 +52,7 @@
     "prepublish": "pnpm -s build"
   },
   "dependencies": {
+    "@webext-core/fake-browser": "^1.2.2",
     "@webext-core/match-patterns": "^1.0.1",
     "async-mutex": "^0.4.0",
     "c12": "^1.4.2",
@@ -88,6 +89,7 @@
     "tsx": "^3.12.7",
     "typescript": "^5.1.3",
     "vitest": "^0.32.4",
+    "vitest-mock-extended": "^1.1.4",
     "webextension-polyfill": "^0.10.0"
   },
   "peerDependencies": {
