@@ -55,4 +55,27 @@ describe('User Config', () => {
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
     `);
   });
+
+  it('should accept a function for a manifest', async () => {
+    const project = new TestProject();
+
+    await project.build({
+      // @ts-expect-error: Specifically setting an invalid field for the test - it should show up in the snapshot
+      manifest: ({ mode, browser, manifestVersion, command }) => ({
+        example_customization: [
+          mode,
+          browser,
+          String(manifestVersion),
+          command,
+        ],
+      }),
+    });
+
+    const output = await project.serializeOutput();
+    expect(output).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/manifest.json
+      ----------------------------------------
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
+    `);
+  });
 });

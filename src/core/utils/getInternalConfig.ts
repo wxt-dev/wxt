@@ -3,6 +3,7 @@ import {
   InlineConfig,
   InternalConfig,
   UserConfig,
+  UserManifest,
 } from '../types';
 import path, { resolve } from 'node:path';
 import * as vite from 'vite';
@@ -31,6 +32,15 @@ export async function getInternalConfig(
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
 
+  const manifest: UserManifest = await (typeof config.manifest === 'function'
+    ? config.manifest({
+        browser,
+        command,
+        manifestVersion,
+        mode,
+      })
+    : config.manifest ?? {});
+
   const baseConfig: InternalConfigNoUserDirs = {
     root,
     outDir,
@@ -42,7 +52,7 @@ export async function getInternalConfig(
     command,
     logger,
     vite: config.vite ?? {},
-    manifest: config.manifest ?? {},
+    manifest,
     imports: config.imports ?? {},
     runnerConfig: await loadConfig<ExtensionRunnerConfig>({
       name: 'web-ext',

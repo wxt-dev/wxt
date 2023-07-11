@@ -1,3 +1,4 @@
 .output
 coverage
 dist
+e2e/project

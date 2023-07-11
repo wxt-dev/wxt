@@ -20,7 +20,7 @@ export interface InlineConfig {
   manifestVersion?: TargetManifestVersion;
   logger?: Logger;
   vite?: Omit<vite.UserConfig, 'root' | 'configFile' | 'mode'>;
-  manifest?: UserManifest;
+  manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   server?: WxtDevServer;
   runner?: ExtensionRunnerConfig;
 }
@@ -225,6 +225,23 @@ export type UserManifest = Omit<
   | 'version'
   | 'version_name'
 >;
+
+export type UserManifestFn = (
+  env: ConfigEnv,
+) => UserManifest | Promise<UserManifest>;
+
+export interface ConfigEnv {
+  mode: string;
+  command: 'build' | 'serve';
+  /**
+   * Browser passed in from the CLI
+   */
+  browser: TargetBrowser;
+  /**
+   * Manifest version passed in from the CLI
+   */
+  manifestVersion: 2 | 3;
+}
 
 /**
  * Configure how the browser starts up.
