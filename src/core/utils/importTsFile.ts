@@ -6,6 +6,21 @@ import { resolve } from 'path';
 import transform from 'jiti/dist/babel';
 import { getUnimportOptions } from './auto-imports';
 
+/**
+ * Get the value from the default export of a `path`.
+ *
+ * It works by:
+ *
+ * 1. Reading the file text
+ * 2. Stripping all imports from it via regex
+ * 3. Auto-import only the client helper functions
+ *
+ * This prevents resolving imports of imports, speeding things up and preventing "xxx is not
+ * defined" errors.
+ *
+ * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
+ * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
+ */
 export async function importTsFile<T>(
   path: string,
   config: InternalConfig,
