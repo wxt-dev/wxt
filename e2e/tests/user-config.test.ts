@@ -56,18 +56,23 @@ describe('User Config', () => {
     `);
   });
 
-  it('should accept a function for a manifest', async () => {
+  it('should merge inline and user config based manifests', async () => {
     const project = new TestProject();
+    project.addFile(
+      'wxt.config.ts',
+      `import { defineConfig } from 'wxt';
+      export default defineConfig({
+        manifest: ({ mode, browser }) => ({
+          // @ts-expect-error
+          example_customization: [mode, browser],
+        })
+      })`,
+    );
 
     await project.build({
       // @ts-expect-error: Specifically setting an invalid field for the test - it should show up in the snapshot
-      manifest: ({ mode, browser, manifestVersion, command }) => ({
-        example_customization: [
-          mode,
-          browser,
-          String(manifestVersion),
-          command,
-        ],
+      manifest: ({ manifestVersion, command }) => ({
+        example_customization: [String(manifestVersion), command],
       }),
     });
 

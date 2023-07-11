@@ -1,9 +1,11 @@
 import {
+  ConfigEnv,
   ExtensionRunnerConfig,
   InlineConfig,
   InternalConfig,
   UserConfig,
   UserManifest,
+  UserManifestFn,
 } from '../types';
 import path, { resolve } from 'node:path';
 import * as vite from 'vite';
@@ -32,15 +34,6 @@ export async function getInternalConfig(
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
 
-  const manifest: UserManifest = await (typeof config.manifest === 'function'
-    ? config.manifest({
-        browser,
-        command,
-        manifestVersion,
-        mode,
-      })
-    : config.manifest ?? {});
-
   const baseConfig: InternalConfigNoUserDirs = {
     root,
     outDir,
@@ -52,7 +45,6 @@ export async function getInternalConfig(
     command,
     logger,
     vite: config.vite ?? {},
-    manifest,
     imports: config.imports ?? {},
     runnerConfig: await loadConfig<ExtensionRunnerConfig>({
       name: 'web-ext',
@@ -92,6 +84,12 @@ export async function getInternalConfig(
   const wxtDir = resolve(srcDir, '.wxt');
   const typesDir = resolve(wxtDir, 'types');
 
+  // Merge manifest sources
+  const env: ConfigEnv = { mode, browser, manifestVersion, command };
+  const userManifest = await resolveManifestConfig(env, userConfig.manifest);
+  const inlineManifest = await resolveManifestConfig(env, config.manifest);
+  const manifest = vite.mergeConfig(userManifest, inlineManifest);
+
   const finalConfig: InternalConfig = {
     ...merged,
     srcDir,
@@ -100,6 +98,7 @@ export async function getInternalConfig(
     wxtDir: wxtDir,
     typesDir,
     fsCache: createFsCache(wxtDir),
+    manifest,
   };
 
   // Customize the default vite config
@@ -137,5 +136,20 @@ export async function getInternalConfig(
  */
 type InternalConfigNoUserDirs = Omit<
   InternalConfig,
-  'srcDir' | 'publicDir' | 'entrypointsDir' | 'wxtDir' | 'typesDir' | 'fsCache'
+  | 'srcDir'
+  | 'publicDir'
+  | 'entrypointsDir'
+  | 'wxtDir'
+  | 'typesDir'
+  | 'fsCache'
+  | 'manifest'
 >;
+
+async function resolveManifestConfig(
+  env: ConfigEnv,
+  manifest: UserManifest | Promise<UserManifest> | UserManifestFn | undefined,
+): Promise<UserManifest> {
+  return await (typeof manifest === 'function'
+    ? manifest(env)
+    : manifest ?? {});
+}
