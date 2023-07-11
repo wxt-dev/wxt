@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.1.1
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.0...v0.1.1)
+
+### 🩹 Fixes
+
+- Allow dashes in entrypoint names ([2e51e73](https://github.com/aklinker1/wxt/commit/2e51e73))
+- Unable to read entrypoint options ([#28](https://github.com/aklinker1/wxt/pull/28))
+
+### 🏡 Chore
+
+- Update changelog after release ([28733df](https://github.com/aklinker1/wxt/commit/28733df))
+
+### ❤️ Contributors
+
+- Aaron
+- Aaron Klinker
+
 ## v0.1.0
 
 Initial release of WXT. Full support for production builds and initial toolkit for development:
