@@ -3,11 +3,12 @@ import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   GenericEntrypoint,
+  InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
 } from '../../types';
 import { resolve } from 'path';
-import { FindEntrypointsConfig, findEntrypoints } from '../findEntrypoints';
+import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
 import { importTsFile } from '../../utils/importTsFile';
 import glob from 'fast-glob';
@@ -24,7 +25,7 @@ const readFileMock = vi.mocked(
 );
 
 describe('findEntrypoints', () => {
-  const config: FindEntrypointsConfig = {
+  const config: InternalConfig = {
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
