@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.1.2
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.1...v0.1.2)
+
+### 🚀 Enhancements
+
+- Accept a function for `config.manifest` ([ee49837](https://github.com/aklinker1/wxt/commit/ee49837))
+
+### 🩹 Fixes
+
+- Add missing types for `webextension-polyfill` and the `manifest` option ([636aa48](https://github.com/aklinker1/wxt/commit/636aa48))
+- Only add imports to JS files ([b29c3c6](https://github.com/aklinker1/wxt/commit/b29c3c6))
+- Generate valid type for `EntrypointPath` when there are no entrypoints ([6e7184d](https://github.com/aklinker1/wxt/commit/6e7184d))
+
+### 🌊 Types
+
+- Change `config.vite` to `UserConfig` ([ef6001e](https://github.com/aklinker1/wxt/commit/ef6001e))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.1.1
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.0...v0.1.1)
