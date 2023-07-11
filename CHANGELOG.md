@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.1.3
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.2...v0.1.3)
+
+### 🚀 Enhancements
+
+- Add tsconfig path aliases ([#32](https://github.com/aklinker1/wxt/pull/32))
+
+### 🩹 Fixes
+
+- Merge `manifest` option from both inline and user config ([05ca998](https://github.com/aklinker1/wxt/commit/05ca998))
+- Cleanup build summary with sourcemaps ([ac0b28e](https://github.com/aklinker1/wxt/commit/ac0b28e))
+
+### 📖 Documentation
+
+- Create documentation site ([#31](https://github.com/aklinker1/wxt/pull/31))
+
+### 🏡 Chore
+
+- Upgrade to pnpm 8 ([0ce7c9d](https://github.com/aklinker1/wxt/commit/0ce7c9d))
+
+### ❤️ Contributors
+
+- Aaron
+- Aaron Klinker
+
 ## v0.1.2
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.1...v0.1.2)
