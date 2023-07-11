@@ -2,34 +2,31 @@ import { consola } from 'consola';
 import createJITI from 'jiti';
 import transform from 'jiti/dist/babel';
 import { resolve } from 'path';
-import { scanExports } from 'unimport';
+import { createUnimport } from 'unimport';
+import fs from 'fs-extra';
 
 export async function importTsFile<T>(root: string, path: string): Promise<T> {
-  const clientImports = await scanExports(
+  const unimport = createUnimport({});
+  await unimport.scanImportsFromFile(
     resolve(root, 'node_modules/wxt/dist/client.js'),
   );
+  const text = await fs.readFile(path, 'utf-8');
+  const res = await unimport.injectImports(text, path);
+  const transformedText = res.code;
+
   const jiti = createJITI(__filename, {
     cache: false,
     esmResolve: true,
     interopDefault: true,
+    alias: {
+      'webextension-polyfill': 'wxt',
+    },
 
     transform(opts) {
+      if (opts.filename === path) opts.source = transformedText;
+
       // Remove CSS imports from the source code - Jiti can't handle them.
       opts.source = opts.source.replace(/^import ['"].*\.css['"];?$/gm, '');
-      opts.source = opts.source.replace(
-        /^import\s+.*\s+from ['"]webextension-polyfill['"];?$/gm,
-        '',
-      );
-
-      // Append any wxt/client functions so babel doesn't complain about undefined variables
-      if (opts.filename === path) {
-        // TODO: Only append import if it isn't already imported
-        const imports =
-          clientImports
-            .map((i) => `import { ${i.name} } from "${i.from}";`)
-            .join('\n') + '\n';
-        opts.source = imports + opts.source;
-      }
 
       // Call the default babel transformer with our modified source code
       return transform(opts);
