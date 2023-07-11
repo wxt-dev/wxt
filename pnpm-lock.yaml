@@ -40,6 +40,7 @@ importers:
       web-ext: ^7.6.2
       webextension-polyfill: ^0.10.0
     dependencies:
+      '@types/webextension-polyfill': 0.10.0
       '@webext-core/fake-browser': 1.2.2
       '@webext-core/match-patterns': 1.0.1
       async-mutex: 0.4.0
@@ -64,7 +65,6 @@ importers:
       '@types/lodash.merge': 4.6.7
       '@types/node': 20.3.1
       '@types/picomatch': 2.3.0
-      '@types/webextension-polyfill': 0.10.0
       '@vitest/coverage-v8': 0.32.2_vitest@0.32.4
       lodash.merge: 4.6.2
       npm-run-all: 4.1.5
@@ -1084,7 +1084,6 @@ packages:
       {
         integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==,
       }
-    dev: true
 
   /@types/yauzl/2.10.0:
     resolution:
