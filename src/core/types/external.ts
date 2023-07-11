@@ -19,7 +19,7 @@ export interface InlineConfig {
   browser?: TargetBrowser;
   manifestVersion?: TargetManifestVersion;
   logger?: Logger;
-  vite?: Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode'>;
+  vite?: Omit<vite.UserConfig, 'root' | 'configFile' | 'mode'>;
   manifest?: UserManifest;
   server?: WxtDevServer;
   runner?: ExtensionRunnerConfig;

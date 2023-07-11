@@ -45,7 +45,7 @@ async function buildSingleEntrypoint(
     ? `virtual:wxt-${entrypoint.type}?${entrypoint.inputPath}`
     : entrypoint.inputPath;
 
-  const libMode: vite.InlineConfig = {
+  const libMode: vite.UserConfig = {
     build: {
       lib: {
         entry,
@@ -89,7 +89,7 @@ async function buildMultipleEntrypoints(
   entrypoints: Entrypoint[],
   config: InternalConfig,
 ): Promise<BuildStepOutput> {
-  const multiPage: vite.InlineConfig = {
+  const multiPage: vite.UserConfig = {
     plugins: [plugins.multipageMove(entrypoints, config)],
     build: {
       rollupOptions: {
@@ -112,7 +112,7 @@ async function buildMultipleEntrypoints(
   const entryConfig = vite.mergeConfig(
     multiPage,
     config.vite,
-  ) as vite.InlineConfig;
+  ) as vite.UserConfig;
 
   const result = await vite.build(entryConfig);
   return {
