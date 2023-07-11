@@ -25,7 +25,7 @@ export async function importTsFile<T>(
   path: string,
   config: InternalConfig,
 ): Promise<T> {
-  config.logger.log('Loading file metadata:', path);
+  config.logger.debug('Loading file metadata:', path);
 
   const unimport = createUnimport({
     ...getUnimportOptions(config),
@@ -38,7 +38,7 @@ export async function importTsFile<T>(
   const text = await fs.readFile(path, 'utf-8');
   const textNoImports = text.replace(/import.*[\n;]/gm, '');
   const { code } = await unimport.injectImports(textNoImports);
-  config.logger.log(
+  config.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
 
