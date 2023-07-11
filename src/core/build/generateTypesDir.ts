@@ -129,7 +129,20 @@ async function writeTsConfigFile(
     "strict": true,
 
     /* Completeness */
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    /* Aliases */
+    "baseUrl": "${relative(dir, config.root)}",
+    "paths": {
+      "@@": ["."],
+      "@@/*": ["./*"],
+      "~~": ["."],
+      "~~/*": ["./*"],
+      "@": ["${relative(config.root, config.srcDir)}"],
+      "@/*": ["${relative(config.root, config.srcDir)}/*"],
+      "~": ["${relative(config.root, config.srcDir)}"],
+      "~/*": ["${relative(config.root, config.srcDir)}/*"]
+    }
   },
   "include": [
     "${relative(dir, config.root)}/**/*",
