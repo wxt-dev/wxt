@@ -55,6 +55,7 @@ export class TestProject {
    */
   addFile(filename: string, content?: string) {
     this.files.push([filename, content ?? '']);
+    if (filename === 'wxt.config.ts') this.config = {};
   }
 
   /**
@@ -63,15 +64,13 @@ export class TestProject {
   async build(config: InlineConfig = {}) {
     if (this.config == null) this.setConfigFileConfig();
 
-    await Promise.all(
-      this.files.map(async (file) => {
-        const [name, content] = file;
-        const filePath = resolve(this.root, name);
-        const fileDir = dirname(filePath);
-        await fs.ensureDir(fileDir);
-        await fs.writeFile(filePath, content ?? '', 'utf-8');
-      }),
-    );
+    for (const file of this.files) {
+      const [name, content] = file;
+      const filePath = resolve(this.root, name);
+      const fileDir = dirname(filePath);
+      await fs.ensureDir(fileDir);
+      await fs.writeFile(filePath, content ?? '', 'utf-8');
+    }
     execSync('npm i --ignore-scripts', { cwd: this.root });
 
     await build({ ...config, root: this.root });
