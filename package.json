@@ -4,7 +4,8 @@
   "version": "0.1.2",
   "description": "Next gen framework for developing web extensions",
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=18.16.0",
+    "pnpm": ">=8"
   },
   "repository": {
     "type": "git",
