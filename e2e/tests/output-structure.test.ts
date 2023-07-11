@@ -69,4 +69,28 @@ describe('Output Directory Structure', () => {
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"assets/one.css\\",\\"assets/two.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
     `);
   });
+
+  it('should allow inputs with invalid JS variable names, like dashes', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/overlay-one.content.ts',
+      `export default defineContentScript({
+        matches: ["*://*/*"],
+        main: () => {},
+      })`,
+    );
+
+    await project.build();
+
+    expect(await project.serializeOutput()).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/content-scripts/overlay-one.js
+      ----------------------------------------
+      (function(){\\"use strict\\";function i(n){return n}const o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
+
+      ================================================================================
+      .output/chrome-mv3/manifest.json
+      ----------------------------------------
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"js\\":[\\"content-scripts/overlay-one.js\\"]}]}"
+    `);
+  });
 });

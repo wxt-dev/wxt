@@ -50,7 +50,7 @@ async function buildSingleEntrypoint(
       lib: {
         entry,
         formats: ['iife'],
-        name: entrypoint.name,
+        name: '_',
         fileName: entrypoint.name,
       },
       rollupOptions: {
