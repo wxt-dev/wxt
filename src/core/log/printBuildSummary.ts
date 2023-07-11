@@ -1,4 +1,4 @@
-import path, { extname, relative, resolve } from 'path';
+import path, { relative, resolve } from 'path';
 import { BuildOutput, InternalConfig } from '../types';
 import { printTable } from './printTable';
 import pc from 'picocolors';
@@ -13,14 +13,8 @@ export async function printBuildSummary(
     ...output.steps.flatMap((step) => step.chunks),
     ...output.publicAssets,
   ].sort((l, r) => {
-    const lWeight =
-      CHUNK_SORT_WEIGHTS[l.fileName] ??
-      CHUNK_SORT_WEIGHTS[extname(l.fileName)] ??
-      DEFAULT_SORT_WEIGHT;
-    const rWeight =
-      CHUNK_SORT_WEIGHTS[r.fileName] ??
-      CHUNK_SORT_WEIGHTS[extname(r.fileName)] ??
-      DEFAULT_SORT_WEIGHT;
+    const lWeight = getChunkSortWeight(l.fileName);
+    const rWeight = getChunkSortWeight(r.fileName);
     const diff = lWeight - rWeight;
     if (diff !== 0) return diff;
     return l.fileName.localeCompare(r.fileName);
@@ -34,9 +28,8 @@ export async function printBuildSummary(
         relative(process.cwd(), config.outDir) + path.sep,
         chunk.fileName,
       ];
-      const ext = extname(chunk.fileName);
       const prefix = i === chunks.length - 1 ? '  └─' : '  ├─';
-      const color = CHUNK_COLORS[ext] ?? DEFAULT_COLOR;
+      const color = getChunkColor(chunk.fileName);
       const stats = await fs.lstat(resolve(config.outDir, chunk.fileName));
       totalSize += stats.size;
       const size = String(filesize(stats.size));
@@ -58,13 +51,29 @@ const DEFAULT_SORT_WEIGHT = 100;
 const CHUNK_SORT_WEIGHTS: Record<string, number> = {
   'manifest.json': 0,
   '.html': 1,
+  '.js.map': 2,
   '.js': 2,
   '.css': 3,
 };
+function getChunkSortWeight(filename: string) {
+  return (
+    Object.entries(CHUNK_SORT_WEIGHTS).find(([key, value]) => {
+      if (filename.endsWith(key)) return value;
+    })?.[1] ?? DEFAULT_SORT_WEIGHT
+  );
+}
 
 const DEFAULT_COLOR = pc.blue;
 const CHUNK_COLORS: Record<string, (text: string) => string> = {
+  '.js.map': pc.gray,
   '.html': pc.green,
   '.css': pc.magenta,
   '.js': pc.cyan,
 };
+function getChunkColor(filename: string) {
+  return (
+    Object.entries(CHUNK_COLORS).find(([key, value]) => {
+      if (filename.endsWith(key)) return value;
+    })?.[1] ?? DEFAULT_COLOR
+  );
+}
