@@ -10,6 +10,7 @@ importers:
       '@types/picomatch': ^2.3.0
       '@types/webextension-polyfill': ^0.10.0
       '@vitest/coverage-v8': ^0.32.2
+      '@webext-core/fake-browser': ^1.2.2
       '@webext-core/match-patterns': ^1.0.1
       async-mutex: ^0.4.0
       c12: ^1.4.2
@@ -38,6 +39,7 @@ importers:
       web-ext: ^7.6.2
       webextension-polyfill: ^0.10.0
     dependencies:
+      '@webext-core/fake-browser': 1.2.2
       '@webext-core/match-patterns': 1.0.1
       async-mutex: 0.4.0
       c12: 1.4.2
@@ -1173,6 +1175,15 @@ packages:
       {
         integrity: sha512-loGD63sacRzOzSJgQnB9ZAhaQGkN7wl2Zuw7tsphI5Isa0irijrRo6EnJii/GgjGefIFO8AIO7UivzRhFaEk9w==,
       }
+    dev: false
+
+  /@webext-core/fake-browser/1.2.2:
+    resolution:
+      {
+        integrity: sha512-3w0lU0gAYODoMklGQfBuGwIxR+lakYK8FONRFUg8aEdpHUMMzbf5jPwRaTrnsgqupE0JAoBwk8vF6san/BtDeQ==,
+      }
+    dependencies:
+      lodash.merge: 4.6.2
     dev: false
 
   /@webext-core/match-patterns/1.0.1:

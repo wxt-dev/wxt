@@ -19,7 +19,7 @@ export async function importTsFile<T>(root: string, path: string): Promise<T> {
     esmResolve: true,
     interopDefault: true,
     alias: {
-      'webextension-polyfill': 'wxt',
+      'webextension-polyfill': '@webext-core/fake-browser',
     },
 
     transform(opts) {

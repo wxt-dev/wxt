@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.1.1-alpha1",
+  "version": "0.1.1-alpha2",
   "description": "Next gen framework for developing web extensions",
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "prepublish": "pnpm -s build"
   },
   "dependencies": {
+    "@webext-core/fake-browser": "^1.2.2",
     "@webext-core/match-patterns": "^1.0.1",
     "async-mutex": "^0.4.0",
     "c12": "^1.4.2",
