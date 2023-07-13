@@ -1,0 +1,19 @@
+{
+  "name": "wxt-starter",
+  "description": "manifest.json description",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "compile": "tsc --noEmit",
+    "prepare": "wxt prepare"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "wxt": "^0.1.3"
+  }
+}
