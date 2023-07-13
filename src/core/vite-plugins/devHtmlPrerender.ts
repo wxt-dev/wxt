@@ -11,20 +11,17 @@ export function devHtmlPrerender(config: InternalConfig): vite.Plugin {
   return {
     apply: 'build',
     name: 'wxt:dev-html-prerender',
-    config(userConfig) {
-      return vite.mergeConfig(
-        {
-          resolve: {
-            alias: {
-              '@wxt/reload-html': resolve(
-                config.root,
-                'node_modules/wxt/dist/virtual-modules/reload-html.js',
-              ),
-            },
+    config() {
+      return {
+        resolve: {
+          alias: {
+            '@wxt/reload-html': resolve(
+              config.root,
+              'node_modules/wxt/dist/virtual-modules/reload-html.js',
+            ),
           },
         },
-        userConfig,
-      );
+      };
     },
     async transform(html, id) {
       const server = config.server;
