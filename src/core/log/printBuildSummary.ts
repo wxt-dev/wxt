@@ -57,9 +57,9 @@ const CHUNK_SORT_WEIGHTS: Record<string, number> = {
 };
 function getChunkSortWeight(filename: string) {
   return (
-    Object.entries(CHUNK_SORT_WEIGHTS).find(([key, value]) => {
-      if (filename.endsWith(key)) return value;
-    })?.[1] ?? DEFAULT_SORT_WEIGHT
+    Object.entries(CHUNK_SORT_WEIGHTS).find(([key]) =>
+      filename.endsWith(key),
+    )?.[1] ?? DEFAULT_SORT_WEIGHT
   );
 }
 
@@ -72,8 +72,7 @@ const CHUNK_COLORS: Record<string, (text: string) => string> = {
 };
 function getChunkColor(filename: string) {
   return (
-    Object.entries(CHUNK_COLORS).find(([key, value]) => {
-      if (filename.endsWith(key)) return value;
-    })?.[1] ?? DEFAULT_COLOR
+    Object.entries(CHUNK_COLORS).find(([key]) => filename.endsWith(key))?.[1] ??
+    DEFAULT_COLOR
   );
 }
