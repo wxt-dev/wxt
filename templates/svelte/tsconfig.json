@@ -1,0 +1,6 @@
+{
+  "extends": "./src/.wxt/tsconfig.json",
+  "compilerOptions": {
+    "useDefineForClassFields": true
+  }
+}
