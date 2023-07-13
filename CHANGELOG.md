@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.5
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.4...v0.1.5)
+
+### 🩹 Fixes
+
+- Include `vite/client` types ([371be99](https://github.com/aklinker1/wxt/commit/371be99))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.1.4
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.3...v0.1.4)
