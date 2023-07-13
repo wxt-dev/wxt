@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.base.json",
-  "exclude": ["dist", "demo", "e2e/project"]
+  "exclude": ["dist", "demo", "e2e/project", "templates"]
 }
