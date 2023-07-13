@@ -4,9 +4,12 @@ Bootstrap a new project or start from scratch.
 
 ## Bootstrap Project
 
-:::warning 🚧&ensp;This feature is not implemented yet!
+:::warning 🚧&ensp;The `wxt init` command is not implemented yet.
 
-See [From Scratch](#from-scratch) instead.
+See [From Scratch](#from-scratch) or reference one of the templates on GitHub:
+
+- [Vue](https://github.com/aklinker1/wxt/tree/main/templates/vue)
+- [React](https://github.com/aklinker1/wxt/tree/main/templates/react)
 
 :::
 
@@ -64,22 +67,33 @@ yarn add wxt
 
 :::
 
-Finally, add `package.json` scripts:
+Add your first entrypoint:
+
+```ts
+// entrypoints/background.ts
+export default defineBackgroundScript(() => {
+  console.log(`Hello from ${browser.runtime.id}!`);
+});
+```
+
+Finally, add scripts to your `package.json`:
 
 ```json
 {
   "scripts": {
-    "dev": "wxt",
-    "dev:firefox": "wxt --browser firefox",
-    "build": "wxt build",
-    "build:firefox": "wxt build --browser firefox"
+    "dev": "wxt", // [!code ++]
+    "dev:firefox": "wxt --browser firefox", // [!code ++]
+    "build": "wxt build", // [!code ++]
+    "build:firefox": "wxt build --browser firefox" // [!code ++]
   }
 }
 ```
 
+> You can skip `*:firefox` scripts if you don't want to support Firefox
+
 ## Development
 
-Once you've installed WXT, you can start the development server using the `dev` command:
+Once you've installed WXT, you can start the development server using the `dev` script.
 
 ```sh
 pnpm dev
@@ -92,7 +106,7 @@ The dev command will build the extension for development, open the browser, and 
 
 ## Next Steps
 
-Now that your WXT project is setup, you're ready to build a out your web extension!
+You're ready to build a out your web extension!
 
 - Learn how to [add entrypoints](./entrypoints.md) like the popup, background, or content scripts
 - [Configure WXT](./configuration.md) by creating a `wxt.config.ts` file
