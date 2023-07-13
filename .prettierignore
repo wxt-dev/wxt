@@ -2,3 +2,5 @@
 coverage
 dist
 e2e/project
+.wxt
+docs/.vitepress/cache
