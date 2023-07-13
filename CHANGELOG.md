@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.1.4
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.3...v0.1.4)
+
+### 🩹 Fixes
+
+- Fix regression where manifest was not listed first in build summary ([fa2b656](https://github.com/aklinker1/wxt/commit/fa2b656))
+- Fix config hook implementations for vite plugins ([49965e7](https://github.com/aklinker1/wxt/commit/49965e7))
+
+### 📖 Documentation
+
+- Update CLI screenshot ([0a26673](https://github.com/aklinker1/wxt/commit/0a26673))
+
+### 🏡 Chore
+
+- Update prettier ignore ([68611ae](https://github.com/aklinker1/wxt/commit/68611ae))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.1.3
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.2...v0.1.3)
