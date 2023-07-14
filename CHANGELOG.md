@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.1.6
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.5...v0.1.6)
+
+### 🩹 Fixes
+
+- Resolve tsconfig paths in vite ([ea92a27](https://github.com/aklinker1/wxt/commit/ea92a27))
+- Add logs when a hot reload happens ([977246f](https://github.com/aklinker1/wxt/commit/977246f))
+
+### 🏡 Chore
+
+- React and Vue starter templates ([#33](https://github.com/aklinker1/wxt/pull/33))
+- Svelte template ([#34](https://github.com/aklinker1/wxt/pull/34))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+- Aaron
+
 ## v0.1.5
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.4...v0.1.5)
