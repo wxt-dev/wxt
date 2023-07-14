@@ -44,13 +44,19 @@ export default defineConfig({
 
 ## Vite Config
 
-Vite is the bundler used to build each part of an extension. Vite can be configured via the `vite` option.
+[Vite](https://vitejs.dev/) is the bundler used to build each entrypoint of your extension. Vite can be configured via the `vite` option.
 
-### Example
+See [Vite's documentation](https://vitejs.dev/config/) for configuring the bundler.
 
-A common reason to configure Vite is to add plugins:
+## Frontend Frameworks
 
-```ts
+Adding a framework like Vue, React, or Svelte is easy!
+
+In the `wxt.config.ts` file, install and add the framework's Vite plugin to the config.
+
+:::code-group
+
+```ts [Vue]
 import { defineConfig } from 'wxt';
 import vue from '@vitejs/plugin-vue';
 
@@ -60,3 +66,27 @@ export default defineConfig({
   },
 });
 ```
+
+```ts [React]
+import { defineConfig } from 'wxt';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  vite: {
+    plugins: [react()],
+  },
+});
+```
+
+```ts [Svelte]
+import { defineConfig } from 'wxt';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+
+export default defineConfig({
+  vite: {
+    plugins: [svelte()],
+  },
+});
+```
+
+:::

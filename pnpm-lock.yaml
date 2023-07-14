@@ -58,6 +58,9 @@ importers:
       vite:
         specifier: ^4.3.9
         version: 4.3.9(@types/node@20.3.1)
+      vite-tsconfig-paths:
+        specifier: ^4.2.0
+        version: 4.2.0(typescript@5.1.3)(vite@4.3.9)
       web-ext:
         specifier: ^7.6.2
         version: 7.6.2
@@ -4106,6 +4109,13 @@ packages:
       slash: 3.0.0
     dev: true
 
+  /globrex@0.1.2:
+    resolution:
+      {
+        integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==,
+      }
+    dev: false
+
   /gopd@1.0.1:
     resolution:
       {
@@ -7566,6 +7576,22 @@ packages:
       }
     dev: true
 
+  /tsconfck@2.1.1(typescript@5.1.3):
+    resolution:
+      {
+        integrity: sha512-ZPCkJBKASZBmBUNqGHmRhdhM8pJYDdOXp4nRgj/O0JwUwsMq50lCDRQP/M5GBNAA0elPrq4gAeu4dkaVCuKWww==,
+      }
+    engines: { node: ^14.13.1 || ^16 || >=18 }
+    hasBin: true
+    peerDependencies:
+      typescript: ^4.3.5 || ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.1.3
+    dev: false
+
   /tslib@2.6.0:
     resolution:
       {
@@ -7717,7 +7743,6 @@ packages:
       }
     engines: { node: '>=14.17' }
     hasBin: true
-    dev: true
 
   /ufo@1.1.2:
     resolution:
@@ -7923,6 +7948,26 @@ packages:
       - supports-color
       - terser
     dev: true
+
+  /vite-tsconfig-paths@4.2.0(typescript@5.1.3)(vite@4.3.9):
+    resolution:
+      {
+        integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw==,
+      }
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+      globrex: 0.1.2
+      tsconfck: 2.1.1(typescript@5.1.3)
+      vite: 4.3.9(@types/node@20.3.1)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
 
   /vite@4.3.9(@types/node@20.3.1):
     resolution:

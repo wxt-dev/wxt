@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Next gen framework for developing web extensions",
   "engines": {
     "node": ">=18.16.0",
@@ -76,6 +76,7 @@
     "picomatch": "^2.3.1",
     "unimport": "^3.0.8",
     "vite": "^4.3.9",
+    "vite-tsconfig-paths": "^4.2.0",
     "web-ext": "^7.6.2",
     "webextension-polyfill": "^0.10.0"
   },
