@@ -2,5 +2,7 @@ import { InternalConfig } from '../types';
 import paths from 'vite-tsconfig-paths';
 
 export function tsconfigPaths(config: InternalConfig) {
-  return paths();
+  return ((paths as any).default as typeof paths)({
+    root: config.root,
+  });
 }
