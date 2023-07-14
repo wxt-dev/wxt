@@ -76,6 +76,7 @@
     "picomatch": "^2.3.1",
     "unimport": "^3.0.8",
     "vite": "^4.3.9",
+    "vite-tsconfig-paths": "^4.2.0",
     "web-ext": "^7.6.2",
     "webextension-polyfill": "^0.10.0"
   },
