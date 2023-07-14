@@ -1,19 +1,18 @@
 <script lang="ts">
   import svelteLogo from '../../assets/svelte.svg'
-  import wxtLogo from '/wxt.svg'
   import Counter from '../../lib/Counter.svelte'
 </script>
 
 <main>
   <div>
     <a href="https://wxt.dev" target="_blank" rel="noreferrer">
-      <img src={wxtLogo} class="logo" alt="WXT Logo" />
+      <img src="/wxt.svg" class="logo" alt="WXT Logo" />
     </a>
     <a href="https://svelte.dev" target="_blank" rel="noreferrer">
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>WXT + Svelte</h1>
+  <h1>WXT 2 + Svelte</h1>
 
   <div class="card">
     <Counter />
