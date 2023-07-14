@@ -10,7 +10,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "compile": "vue-tsc --noEmit",
-    "prepare": "wxt prepare"
+    "postinstall": "wxt prepare"
   },
   "dependencies": {
     "vue": "^3.3.4"

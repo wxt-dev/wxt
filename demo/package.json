@@ -11,7 +11,7 @@
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "prepare": "pnpm -w build && wxt prepare"
+    "postinstall": "pnpm -w build && wxt prepare"
   },
   "dependencies": {
     "webextension-polyfill": "^0.10.0"

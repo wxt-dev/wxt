@@ -10,7 +10,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "compile": "tsc --noEmit",
-    "prepare": "wxt prepare"
+    "postinstall": "wxt prepare"
   },
   "devDependencies": {
     "typescript": "^5.1.6",

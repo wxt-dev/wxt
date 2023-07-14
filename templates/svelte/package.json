@@ -9,7 +9,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prepare": "wxt prepare"
+    "postinstall": "wxt prepare"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
