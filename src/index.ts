@@ -64,7 +64,7 @@ export async function createServer(
       if (changes.type === 'no-change') return;
 
       // Log the entrypoints that were effected
-      consola.info(
+      internalConfig.logger.info(
         `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
           .map((file) => pc.dim(relative(internalConfig.root, file)))
           .join(', ')}`,
