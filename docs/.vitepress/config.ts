@@ -4,8 +4,18 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'WXT',
   description: 'Next gen framework for developing web extensions',
+  lastUpdated: true,
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    // logo: '/logo.svg',
+    editLink: {
+      pattern: 'https://github.com/aklinker1/wxt/edit/main/docs/:path',
+    },
+    search: {
+      provider: 'local',
+    },
+
     nav: [
       { text: 'Get Started', link: '/get-started/installation.md' },
       { text: 'Guide', link: '/guide.md' },

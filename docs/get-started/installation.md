@@ -6,10 +6,7 @@ Bootstrap a new project or start from scratch.
 
 :::warning 🚧&ensp;The `wxt init` command is not implemented yet.
 
-See [From Scratch](#from-scratch) or reference one of the templates on GitHub:
-
-- [Vue](https://github.com/aklinker1/wxt/tree/main/templates/vue)
-- [React](https://github.com/aklinker1/wxt/tree/main/templates/react)
+See [From Scratch](#from-scratch) or reference one of the templates below.
 
 :::
 
@@ -24,6 +21,17 @@ npx wxt@latest init <project-name>
 ```
 
 :::
+
+There are several starting templates available.
+
+| TypeScript                                                                                           |
+| ---------------------------------------------------------------------------------------------------- |
+| <Icon name="TypeScript" /> [`vanilla`](https://github.com/aklinker1/wxt/tree/main/templates/vanilla) |
+| <Icon name="Vue" /> [`vue`](https://github.com/aklinker1/wxt/tree/main/templates/vue)                |
+| <Icon name="React" /> [`react`](https://github.com/aklinker1/wxt/tree/main/templates/react)          |
+| <Icon name="Svelte" /> [`svelte`](https://github.com/aklinker1/wxt/tree/main/templates/svelte)       |
+
+> All templates are in TypeScript. To use plain JavaScript, just change the file extensions.
 
 ## From Scratch
 
