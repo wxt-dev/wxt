@@ -31,7 +31,7 @@ There are several starting templates available.
 | <Icon name="React" /> [`react`](https://github.com/aklinker1/wxt/tree/main/templates/react)          |
 | <Icon name="Svelte" /> [`svelte`](https://github.com/aklinker1/wxt/tree/main/templates/svelte)       |
 
-> All templates are in TypeScript. To use plain JavaScript, just change the file extensions.
+> All templates are in TypeScript. WXT does not support JS at this time.
 
 ## From Scratch
 
@@ -79,7 +79,7 @@ Add your first entrypoint:
 
 ```ts
 // entrypoints/background.ts
-export default defineBackgroundScript(() => {
+export default defineBackground(() => {
   console.log(`Hello from ${browser.runtime.id}!`);
 });
 ```

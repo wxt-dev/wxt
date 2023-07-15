@@ -18,14 +18,15 @@ export default defineConfig({
 
     nav: [
       { text: 'Get Started', link: '/get-started/installation.md' },
-      { text: 'Guide', link: '/guide.md' },
+      { text: 'Guide', link: '/guide/auto-imports.md' },
+      { text: 'Config', link: '/config.md' },
       { text: 'API', link: '/api.md' },
     ],
 
     sidebar: {
       '/get-started/': [
         {
-          text: 'Guide',
+          text: 'Get Started',
           items: [
             { text: 'Introduction', link: '/get-started/introduction.md' },
             { text: 'Installation', link: '/get-started/installation.md' },
@@ -35,6 +36,32 @@ export default defineConfig({
             { text: 'Build Targets', link: '/get-started/build-targets.md' },
             { text: 'Publishing', link: '/get-started/publishing.md' },
             { text: 'Testing', link: '/get-started/testing.md' },
+          ],
+        },
+      ],
+      '/guide/': [
+        {
+          text: 'Guide',
+          items: [
+            { text: 'Auto-imports', link: '/guide/auto-imports.md' },
+            { text: 'Manifest.json', link: '/guide/manifest.md' },
+            { text: 'Extension APIs', link: '/guide/extension-apis.md' },
+          ],
+        },
+        {
+          text: 'Entrypoints',
+          items: [
+            { text: 'Background', link: '/guide/background.md' },
+            { text: 'Bookmarks', link: '/guide/bookmarks.md' },
+            { text: 'Content Scripts', link: '/guide/content-scripts.md' },
+            { text: 'Devtools', link: '/guide/devtools.md' },
+            { text: 'History', link: '/guide/history.md' },
+            { text: 'Newtab', link: '/guide/newtab.md' },
+            { text: 'Options', link: '/guide/options.md' },
+            { text: 'Popup', link: '/guide/popup.md' },
+            { text: 'Sandbox', link: '/guide/sandbox.md' },
+            { text: 'Unlisted Pages', link: '/guide/unlisted-pages.md' },
+            { text: 'Unlisted Scripts', link: '/guide/unlisted-scripts.md' },
           ],
         },
       ],

@@ -2,7 +2,7 @@
 
 You can build an extension for any combination of browser and manifest verison. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
 
-Separate build targets are to separate output directories:
+Separate build targets are written to their own output directories:
 
 ```
 <root>
@@ -24,7 +24,7 @@ wxt build --browser firefox
 
 ```
 
-By default, it will build for `chrome`. When excluding the [`--mv2` or `--mv3` flags](#target-manifest-version), it will default to the commonly accepted version used with that browser.
+By default, it will build for `chrome`. When excluding the [`--mv2` or `--mv3` flags](#target-manifest-version), it will default to the commonly accepted manifest version used with that browser.
 
 | Browser          | Default Manifest Version |
 | ---------------- | :----------------------: |
