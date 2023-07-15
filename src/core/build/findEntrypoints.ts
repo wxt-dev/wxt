@@ -67,7 +67,7 @@ export async function findEntrypoints(
         case 'content-script':
           entrypoint = await getContentScriptEntrypoint(
             config,
-            relativePath.split('.', 2)[0],
+            getEntrypointName(config.entrypointsDir, path),
             path,
           );
           break;
@@ -258,6 +258,8 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
 
   'background.ts': 'background',
 
+  'content.ts?(x)': 'content-script',
+  'content/index.ts?(x)': 'content-script',
   '*.content.ts?(x)': 'content-script',
   '*.content/index.ts?(x)': 'content-script',
 

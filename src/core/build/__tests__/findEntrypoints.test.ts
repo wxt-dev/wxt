@@ -138,11 +138,29 @@ describe('findEntrypoints', () => {
 
   it.each<[string, Omit<ContentScriptEntrypoint, 'options'>]>([
     [
+      'content.ts',
+      {
+        type: 'content-script',
+        name: 'content',
+        inputPath: resolve(config.entrypointsDir, 'content.ts'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
       'overlay.content.ts',
       {
         type: 'content-script',
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.ts'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
+      'content/index.ts',
+      {
+        type: 'content-script',
+        name: 'content',
+        inputPath: resolve(config.entrypointsDir, 'content/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
       },
     ],
