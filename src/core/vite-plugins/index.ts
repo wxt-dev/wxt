@@ -5,4 +5,3 @@ export * from './multipageMove';
 export * from './unimport';
 export * from './virtualEntrypoint';
 export * from './tsconfigPaths';
-export * from './hmrLogger';
