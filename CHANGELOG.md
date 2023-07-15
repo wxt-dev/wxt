@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.2.0
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.1.6...v0.2.0)
+
+### 🚀 Enhancements
+
+- ⚠️ Rename `defineBackgroundScript` to `defineBackground` ([5b48ae9](https://github.com/aklinker1/wxt/commit/5b48ae9))
+- Recongize unnamed content scripts (`content.ts` and `content/index.ts`) ([3db5cec](https://github.com/aklinker1/wxt/commit/3db5cec))
+
+### 📖 Documentation
+
+- Update templates ([f28a29e](https://github.com/aklinker1/wxt/commit/f28a29e))
+- Add docs for each type of entrypoint ([77cbfc1](https://github.com/aklinker1/wxt/commit/77cbfc1))
+- Add inline JSDoc for public types ([375a2a6](https://github.com/aklinker1/wxt/commit/375a2a6))
+
+### 🏡 Chore
+
+- Run `wxt prepare` on `postinstall` ([c1ea9ba](https://github.com/aklinker1/wxt/commit/c1ea9ba))
+- Don't format lockfile ([5c7e041](https://github.com/aklinker1/wxt/commit/5c7e041))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ Rename `defineBackgroundScript` to `defineBackground` ([5b48ae9](https://github.com/aklinker1/wxt/commit/5b48ae9))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.1.6
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.5...v0.1.6)
