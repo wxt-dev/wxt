@@ -6,7 +6,7 @@ describe('Auto Imports', () => {
     const project = new TestProject();
     project.addFile(
       'entrypoints/background.ts',
-      'export default defineBackgroundScript(() => {})',
+      'export default defineBackground(() => {})',
     );
     project.addFile(
       'entrypoints/overlay.content.ts',
@@ -43,7 +43,7 @@ describe('Auto Imports', () => {
       export {}
       declare global {
         const browser: typeof import('webextension-polyfill')
-        const defineBackgroundScript: typeof import('wxt/client')['defineBackgroundScript']
+        const defineBackground: typeof import('wxt/client')['defineBackground']
         const defineConfig: typeof import('wxt')['defineConfig']
         const defineContentScript: typeof import('wxt/client')['defineContentScript']
         const mountContentScriptUi: typeof import('wxt/client')['mountContentScriptUi']

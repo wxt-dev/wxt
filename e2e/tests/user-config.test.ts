@@ -11,7 +11,7 @@ describe('User Config', () => {
     });
     project.addFile(
       'src/entrypoints/background.ts',
-      `export default defineBackgroundScript(
+      `export default defineBackground(
         () => console.log('Hello background'),
       );`,
     );
@@ -38,7 +38,7 @@ describe('User Config', () => {
     });
     project.addFile(
       'entries/background.ts',
-      `export default defineBackgroundScript(() => console.log('Hello background'));`,
+      `export default defineBackground(() => console.log('Hello background'));`,
     );
 
     await project.build();

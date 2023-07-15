@@ -97,7 +97,7 @@ describe('Manifest Content', () => {
 
   describe('background', () => {
     const backgroundContent = `
-      export default defineBackgroundScript({
+      export default defineBackground({
         persistent: true,
         type: "module",
         main: () => {},

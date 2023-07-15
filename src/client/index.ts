@@ -1,3 +1,3 @@
 export * from './defineContentScript';
-export * from './defineBackgroundScript';
+export * from './defineBackground';
 export * from './mountContentScriptUi';

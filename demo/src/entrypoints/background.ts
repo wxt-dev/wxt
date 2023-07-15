@@ -1,4 +1,4 @@
-export default defineBackgroundScript(() => {
+export default defineBackground(() => {
   console.log(browser.runtime.id);
   logId();
   console.log({
