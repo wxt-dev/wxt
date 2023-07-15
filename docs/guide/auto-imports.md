@@ -50,17 +50,17 @@ See [`unimport`'s documentation](https://github.com/unjs/unimport#configurations
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
-  autoImport: {
+  imports: {
     // Add auto-imports for vue fuctions like createApp, ref, computed, watch, toRaw, etc...
     preset: ['vue'],
   },
 });
 ```
 
-To disable auto-imports, set `autoImport: false`
+To disable auto-imports, set `imports: false`
 
 ```ts
 export default defineConfig({
-  autoImport: false,
+  imports: false,
 });
 ```

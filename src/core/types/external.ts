@@ -4,24 +4,93 @@ import { UnimportOptions } from 'unimport';
 import { EntrypointGroup } from '.';
 
 export interface InlineConfig {
+  /**
+   * Project root directory.
+   *
+   * @default
+   * process.cwd()
+   */
   root?: string;
+  /**
+   * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
+   * directory.
+   *
+   * @default
+   * "<root>"
+   */
   srcDir?: string;
+  /**
+   * Directory containing files that will be copied to the output directory as-is.
+   *
+   * @default
+   * "<srcDir>/publicDir"
+   */
   publicDir?: string;
+  /**
+   * @default
+   * "<srcDir>/entrypoints"
+   */
   entrypointsDir?: string;
+  /**
+   * Path to `"wxt.config.ts"` file or false to disable config file discovery.
+   *
+   * @default
+   * "wxt.config.ts"
+   */
   configFile?: string | false;
+  /**
+   * ID of the extension for each store. Used for publishing.
+   */
   storeIds?: {
     chrome?: string;
     firefox?: string;
     edge?: string;
   };
+  /**
+   * Explicitly set a mode to run in. This will override the default mode for each command, and can
+   * be overridden by the command line `--mode` option.
+   */
   mode?: string;
+  /**
+   * Customize auto-import options.
+   */
   imports?: Partial<UnimportOptions>;
+  /**
+   * Explicitly set a browser to target. This will override the default browser for each command,
+   * and can be overridden by the command line `--browser` option.
+   *
+   * @default
+   * "chrome"
+   */
   browser?: TargetBrowser;
+  /**
+   * Explicitly set a manifest version to target. This will override the default manifest version
+   * for each command, and can be overridden by the command line `--mv2` or `--mv3` option.
+   */
   manifestVersion?: TargetManifestVersion;
+  /**
+   * Override the logger used.
+   *
+   * @default
+   * consola
+   */
   logger?: Logger;
+  /**
+   * Custom Vite options.
+   */
   vite?: Omit<vite.UserConfig, 'root' | 'configFile' | 'mode'>;
+  /**
+   * Customize the `manifest.json` output. Can be an object, promise, or function that returns an
+   * object or promise.
+   */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
+  /**
+   * Custom server options.
+   */
   server?: WxtDevServer;
+  /**
+   * Custom runner options. Options set here can be overridden in a `web-ext.config.ts` file.
+   */
   runner?: ExtensionRunnerConfig;
 }
 
