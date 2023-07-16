@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.2
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.1...v0.2.2)
+
+### 🩹 Fixes
+
+- Register content scripts correctly ([2fb5a54](https://github.com/aklinker1/wxt/commit/2fb5a54))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.2.1
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.0...v0.2.1)
