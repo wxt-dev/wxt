@@ -57,13 +57,13 @@ export async function generateMainfest(
       name: pkg?.name,
       description: pkg?.description,
       version: pkg?.version && simplifyVersion(pkg.version),
-      manifest_version: config.manifestVersion,
-      short_name: pkg?.shortName,
       // Only add the version name to chromium and if the user hasn't specified a custom version.
       version_name:
         config.browser !== 'firefox' && !config.manifest.version
           ? pkg?.version
           : undefined,
+      manifest_version: config.manifestVersion,
+      short_name: pkg?.shortName,
     },
     config.manifest,
   );
