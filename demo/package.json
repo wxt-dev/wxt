@@ -1,5 +1,5 @@
 {
-  "name": "Demo",
+  "name": "WXT Demo",
   "version": "1.0.0",
   "description": "Demo extension for WXT",
   "type": "module",
@@ -11,6 +11,7 @@
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
+    "zip": "pnpm -w build && wxt zip",
     "postinstall": "pnpm -w build && wxt prepare"
   },
   "dependencies": {

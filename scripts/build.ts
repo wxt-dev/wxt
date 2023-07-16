@@ -1,7 +1,6 @@
 import tsup from 'tsup';
 import glob from 'fast-glob';
-import pc from 'picocolors';
-import path from 'path';
+import { printFileList } from '../src/core/log/printFileList';
 import { formatDuration } from '../src/core/utils/formatDuration';
 import ora from 'ora';
 import fs from 'fs-extra';
@@ -73,18 +72,6 @@ await Promise.all([
 spinner.succeed();
 
 const duration = Date.now() - startTime;
-const outFiles = await glob(`${outDir}/**`);
-outFiles.forEach((file, i) => {
-  const color = file.endsWith('.map')
-    ? pc.dim
-    : file.endsWith('.d.ts')
-    ? pc.blue
-    : pc.cyan;
-  const prefix = i === outFiles.length - 1 ? '  └─' : '  ├─';
-  console.log(
-    `${pc.gray(prefix)} ${pc.dim(outDir + path.sep)}${color(
-      path.relative(outDir, file),
-    )}`,
-  );
-});
+const outFiles = await glob(`${outDir}/**`, { absolute: true });
+await printFileList(consola.log, outDir, outFiles);
 consola.success(`Finished in ${formatDuration(duration)}`);

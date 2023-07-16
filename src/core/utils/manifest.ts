@@ -16,6 +16,7 @@ import {
   hashContentScriptOptions,
   mapWxtOptionsToContentScript,
 } from './content-scripts';
+import { getPackageJson } from './package';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -86,25 +87,6 @@ export async function generateMainfest(
   }
 
   return manifest;
-}
-
-/**
- * Read the package.json from the current directory.
- *
- * TODO: look in root and up directories until it's found
- */
-async function getPackageJson(
-  config: InternalConfig,
-): Promise<Partial<Record<string, any>> | undefined> {
-  const file = resolve(config.root, 'package.json');
-  try {
-    return await fs.readJson(file);
-  } catch (err) {
-    config.logger.debug(
-      `Failed to read package.json at: ${file}. Returning undefined.`,
-    );
-    return {};
-  }
 }
 
 /**
