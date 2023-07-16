@@ -54,6 +54,7 @@ export async function generateMainfest(
 
   const manifest: Manifest.WebExtensionManifest = Object.assign(
     {
+      manifest_version: config.manifestVersion,
       name: pkg?.name,
       description: pkg?.description,
       version: pkg?.version && simplifyVersion(pkg.version),
@@ -62,7 +63,6 @@ export async function generateMainfest(
         config.browser !== 'firefox' && !config.manifest.version
           ? pkg?.version
           : undefined,
-      manifest_version: config.manifestVersion,
       short_name: pkg?.shortName,
     },
     config.manifest,
