@@ -1,5 +1,5 @@
 import * as vite from 'vite';
-import { Manifest } from 'webextension-polyfill';
+import { Manifest, Scripting } from 'webextension-polyfill';
 import { UnimportOptions } from 'unimport';
 import { EntrypointGroup } from '.';
 
@@ -152,7 +152,9 @@ export interface WxtDevServer extends vite.ViteDevServer {
    *
    * @param contentScript The manifest definition for a content script
    */
-  reloadContentScript: (contentScript: Manifest.ContentScript) => void;
+  reloadContentScript: (
+    contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
+  ) => void;
 }
 
 export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';

@@ -6,12 +6,11 @@ import {
 } from './types';
 import * as vite from 'vite';
 import { findOpenPort } from './utils/findOpenPort';
-import { Manifest } from 'webextension-polyfill';
+import { Scripting } from 'webextension-polyfill';
 import { getEntrypointBundlePath } from './utils/entrypoints';
 import { getContentScriptCssFiles } from './utils/manifest';
 import { createWebExtRunner } from './runners/createWebExtRunner';
 import { buildInternal } from './build';
-import { mapWxtOptionsToContentScript } from './utils/content-scripts';
 
 export async function getServerInfo(): Promise<ServerInfo> {
   const port = await findOpenPort(3000, 3010);
@@ -59,7 +58,9 @@ export async function setupServer(
     // paths ending in "/index.html"
     viteServer.ws.send('wxt:reload-page', path);
   };
-  const reloadContentScript = (contentScript: Manifest.ContentScript) => {
+  const reloadContentScript = (
+    contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
+  ) => {
     viteServer.ws.send('wxt:reload-content-script', contentScript);
   };
 
@@ -103,7 +104,7 @@ export function reloadContentScripts(
       const css = getContentScriptCssFiles([entry], server.currentOutput);
 
       server.reloadContentScript({
-        ...mapWxtOptionsToContentScript(entry.options),
+        ...entry.options,
         js,
         css,
       });
