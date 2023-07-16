@@ -6,7 +6,7 @@
 
 ### 🩹 Fixes
 
-- Register content scripts correctly ([2fb5a54](https://github.com/aklinker1/wxt/commit/2fb5a54))
+- Register content scripts correctly in dev mode ([2fb5a54](https://github.com/aklinker1/wxt/commit/2fb5a54))
 
 ### ❤️ Contributors
 
