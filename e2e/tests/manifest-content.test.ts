@@ -57,7 +57,7 @@ describe('Manifest Content', () => {
     const optionsContent = `
       <html>
         <head>
-          <meta name="manifest.open_in_tab" content="true">
+          <meta name="manifest.open_in_tab" content="false">
           <meta name="manifest.chrome_style" content="true">
           <meta name="manifest.browser_style" content="true">
         </head>
@@ -72,7 +72,7 @@ describe('Manifest Content', () => {
       const manifest = await project.getOutputManifest();
 
       expect(manifest.options_ui).toEqual({
-        open_in_tab: true,
+        open_in_tab: false,
         chrome_style: true,
         page: 'options.html',
       });
@@ -88,7 +88,7 @@ describe('Manifest Content', () => {
       );
 
       expect(manifest.options_ui).toEqual({
-        open_in_tab: true,
+        open_in_tab: false,
         browser_style: true,
         page: 'options.html',
       });

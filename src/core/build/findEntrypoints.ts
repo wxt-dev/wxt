@@ -162,21 +162,21 @@ async function getOptionsEntrypoint(
     .querySelector("meta[name='manifest.open_in_tab']")
     ?.getAttribute('content');
   if (openInTabContent) {
-    options.openInTab = Boolean(openInTabContent);
+    options.openInTab = openInTabContent === 'true';
   }
 
   const chromeStyleContent = document
     .querySelector("meta[name='manifest.chrome_style']")
     ?.getAttribute('content');
   if (chromeStyleContent) {
-    options.chromeStyle = Boolean(chromeStyleContent);
+    options.chromeStyle = chromeStyleContent === 'true';
   }
 
   const browserStyleContent = document
     .querySelector("meta[name='manifest.browser_style']")
     ?.getAttribute('content');
   if (browserStyleContent) {
-    options.browserStyle = Boolean(browserStyleContent);
+    options.browserStyle = browserStyleContent === 'true';
   }
 
   return {
