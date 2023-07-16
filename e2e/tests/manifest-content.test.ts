@@ -149,7 +149,7 @@ describe('Manifest Content', () => {
       `import "./style.css";
       export default defineContentScript({
         matches: ["*://google.com/*"],
-        run_at: "document_end",
+        runAt: "document_end",
         main: () => {},
       })`,
     );
@@ -162,7 +162,7 @@ describe('Manifest Content', () => {
       `import "./style.css";
       export default defineContentScript({
         matches: ["*://google.com/*"],
-        run_at: "document_end",
+        runAt: "document_end",
         main: () => {},
       })`,
     );
@@ -175,7 +175,7 @@ describe('Manifest Content', () => {
       `import "./style.css";
       export default defineContentScript({
         matches: ["*://duckduckgo.com/*"],
-        run_at: "document_end",
+        runAt: "document_end",
         main: () => {},
       })`,
     );

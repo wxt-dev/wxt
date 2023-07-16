@@ -11,6 +11,7 @@ import { getEntrypointBundlePath } from './utils/entrypoints';
 import { getContentScriptCssFiles } from './utils/manifest';
 import { createWebExtRunner } from './runners/createWebExtRunner';
 import { buildInternal } from './build';
+import { mapWxtOptionsToContentScript } from './utils/content-scripts';
 
 export async function getServerInfo(): Promise<ServerInfo> {
   const port = await findOpenPort(3000, 3010);
@@ -102,9 +103,9 @@ export function reloadContentScripts(
       const css = getContentScriptCssFiles([entry], server.currentOutput);
 
       server.reloadContentScript({
+        ...mapWxtOptionsToContentScript(entry.options),
         js,
         css,
-        ...entry.options,
       });
     });
   } else {

@@ -17,6 +17,10 @@ When a filename matches the pattern below, it is added as a content script in th
 export default defineContentScript({
   // Set manifest options
   matches: ['*://google.com/*', '*://duckduckgo.com/*'],
+  excludeMatches: undefined | [],
+  includeGlobs: undefined | [],
+  excludeGlobs: undefined | [],
+  allFrames: undefined | [],
   runAt: undefined | 'document_start' | 'document_end' | 'document_idle',
   matchAboutBlank: undefined | true | false,
   matchOriginAsFallback: undefined | true | false,

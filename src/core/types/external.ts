@@ -255,11 +255,50 @@ export type Entrypoint =
 export type OnContentScriptStopped = (cb: () => void) => void;
 
 export interface ContentScriptDefinition {
-  matches: string[];
-  runAt?: 'document_start' | 'document_end' | 'document_idle';
-  matchAboutBlank?: boolean;
+  matches: Manifest.ContentScript['matches'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default "documentIdle"
+   */
+  runAt?: Manifest.ContentScript['run_at'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default false
+   */
+  matchAboutBlank?: Manifest.ContentScript['match_about_blank'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default []
+   */
+  excludeMatches?: Manifest.ContentScript['exclude_matches'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default []
+   */
+  includeGlobs?: Manifest.ContentScript['include_globs'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default []
+   */
+  excludeGlobs?: Manifest.ContentScript['exclude_globs'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default false
+   */
+  allFrames?: Manifest.ContentScript['all_frames'];
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default false
+   */
   matchOriginAsFallback?: boolean;
+  /**
+   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * @default "ISOLATED"
+   */
   world?: 'ISOLATED' | 'MAIN';
+  /**
+   * Main function executed when the content script is loaded.
+   */
   main(): void | Promise<void>;
 }
 

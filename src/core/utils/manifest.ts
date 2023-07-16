@@ -12,6 +12,10 @@ import fs from 'fs-extra';
 import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
 import { ContentSecurityPolicy } from './ContentSecurityPolicy';
+import {
+  hashContentScriptOptions,
+  mapWxtOptionsToContentScript,
+} from './content-scripts';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -285,7 +289,7 @@ function addEntrypoints(
       );
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
-        const hash = JSON.stringify(script.options);
+        const hash = hashContentScriptOptions(script.options);
         if (map.has(hash)) map.get(hash)?.push(script);
         else map.set(hash, [script]);
         return map;
@@ -293,7 +297,7 @@ function addEntrypoints(
 
       manifest.content_scripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
-          ...scripts[0].options,
+          ...mapWxtOptionsToContentScript(scripts[0].options),
           // TOOD: Sorting css and js arrays here so we get consistent test results... but we
           // shouldn't have to. Where is the inconsistency coming from?
           css: getContentScriptCssFiles(scripts, buildOutput)?.sort(),
