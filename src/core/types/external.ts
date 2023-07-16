@@ -310,8 +310,8 @@ export interface BackgroundScriptDefintition {
 }
 
 /**
- * Manifest customization available in the `wxt.config.ts` file. Any missing fields like "name"
- * and "version" are managed automatically, and don't need to be listed here.
+ * Manifest customization available in the `wxt.config.ts` file. You cannot configure entrypoints
+ * here, they are configured inline.
  */
 export type UserManifest = Partial<
   Omit<
@@ -328,7 +328,6 @@ export type UserManifest = Partial<
     | 'sandbox'
     | 'page_action'
     | 'popup'
-    | 'short_name'
     | 'sidepanel'
     | 'sidebar_action'
   >
