@@ -313,27 +313,25 @@ export interface BackgroundScriptDefintition {
  * Manifest customization available in the `wxt.config.ts` file. Any missing fields like "name"
  * and "version" are managed automatically, and don't need to be listed here.
  */
-export type UserManifest = Omit<
-  Manifest.WebExtensionManifest,
-  | 'action'
-  | 'background'
-  | 'browser_action'
-  | 'chrome_url_overrides'
-  | 'content_scripts'
-  | 'description'
-  | 'devtools_page'
-  | 'manifest_version'
-  | 'name'
-  | 'options_page'
-  | 'options_ui'
-  | 'sandbox'
-  | 'page_action'
-  | 'popup'
-  | 'short_name'
-  | 'sidepanel'
-  | 'sidebar_action'
-  | 'version'
-  | 'version_name'
+export type UserManifest = Partial<
+  Omit<
+    Manifest.WebExtensionManifest,
+    | 'action'
+    | 'background'
+    | 'browser_action'
+    | 'chrome_url_overrides'
+    | 'content_scripts'
+    | 'devtools_page'
+    | 'manifest_version'
+    | 'options_page'
+    | 'options_ui'
+    | 'sandbox'
+    | 'page_action'
+    | 'popup'
+    | 'short_name'
+    | 'sidepanel'
+    | 'sidebar_action'
+  >
 >;
 
 export type UserManifestFn = (
