@@ -51,25 +51,39 @@ export async function generateMainfest(
   config: InternalConfig,
 ): Promise<Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
-  if (pkg.version == null)
-    throw Error('package.json does not include a version');
-  if (pkg.name == null) throw Error('package.json does not include a name');
-  if (pkg.description == null)
-    throw Error('package.json does not include a description');
 
-  const manifest: Manifest.WebExtensionManifest = {
-    manifest_version: config.manifestVersion,
-    name: pkg.name,
-    short_name: pkg.shortName,
-    version: simplifyVersion(pkg.version),
-    version_name: config.browser === 'firefox' ? undefined : pkg.version,
-    ...config.manifest,
-  };
+  const manifest: Manifest.WebExtensionManifest = Object.assign(
+    {
+      manifest_version: config.manifestVersion,
+      name: pkg?.name,
+      description: pkg?.description,
+      version: pkg?.version && simplifyVersion(pkg.version),
+      // Only add the version name to chromium and if the user hasn't specified a custom version.
+      version_name:
+        config.browser !== 'firefox' && !config.manifest.version
+          ? pkg?.version
+          : undefined,
+      short_name: pkg?.shortName,
+    },
+    config.manifest,
+  );
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
   if (config.command === 'serve') addDevModeCsp(manifest, config);
   if (config.command === 'serve') addDevModePermissions(manifest, config);
+
+  // TODO: transform manifest here.
+
+  if (manifest.name == null)
+    throw Error(
+      "Manifest 'name' is missing. Either:\n1. Set the name in your <root>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
+    );
+  if (manifest.version == null) {
+    throw Error(
+      "Manifest 'version' is missing. Either:\n1. Add a version in your <root>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
+    );
+  }
 
   return manifest;
 }
@@ -79,8 +93,18 @@ export async function generateMainfest(
  *
  * TODO: look in root and up directories until it's found
  */
-async function getPackageJson(config: InternalConfig): Promise<any> {
-  return await fs.readJson(resolve(config.root, 'package.json'));
+async function getPackageJson(
+  config: InternalConfig,
+): Promise<Partial<Record<string, any>> | undefined> {
+  const file = resolve(config.root, 'package.json');
+  try {
+    return await fs.readJson(file);
+  } catch (err) {
+    config.logger.debug(
+      `Failed to read package.json at: ${file}. Returning undefined.`,
+    );
+    return {};
+  }
 }
 
 /**
@@ -89,7 +113,6 @@ async function getPackageJson(config: InternalConfig): Promise<any> {
  */
 function simplifyVersion(versionName: string): string {
   // Regex adapted from here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format
-
   const version = /^((0|[1-9][0-9]{0,8})([.](0|[1-9][0-9]{0,8})){0,3}).*$/.exec(
     versionName,
   )?.[1];
