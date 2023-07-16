@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.1
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.0...v0.2.1)
+
+### 🚀 Enhancements
+
+- Support all content script options ([6f5bf89](https://github.com/aklinker1/wxt/commit/6f5bf89))
+
+### 🩹 Fixes
+
+- Remove HMR log ([90fa6bf](https://github.com/aklinker1/wxt/commit/90fa6bf))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.2.0
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.1.6...v0.2.0)
