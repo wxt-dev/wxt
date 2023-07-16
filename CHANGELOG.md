@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.4
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.3...v0.2.4)
+
+### 🚀 Enhancements
+
+- Add `wxt zip` command ([#47](https://github.com/aklinker1/wxt/pull/47))
+
+### ❤️ Contributors
+
+- Aaron
+
 ## v0.2.3
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.2...v0.2.3)
