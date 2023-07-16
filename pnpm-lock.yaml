@@ -50,6 +50,9 @@ importers:
       linkedom:
         specifier: ^0.14.26
         version: 0.14.26
+      minimatch:
+        specifier: ^9.0.3
+        version: 9.0.3
       picocolors:
         specifier: ^1.0.0
         version: 1.0.0
@@ -71,6 +74,9 @@ importers:
       webextension-polyfill:
         specifier: ^0.10.0
         version: 0.10.0
+      zip-dir:
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.0.2
@@ -3847,6 +3853,13 @@ packages:
   /minimatch@7.4.6:
     resolution: {integrity: sha512-sBz8G/YjVniEz6lKPNpKxXwazJe4c19fEfV2GDMX6AjFz+MX9uDWIZW8XreVhkFW3fkIdTv/gxWr/Kks5FFAVw==}
     engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: false
+
+  /minimatch@9.0.3:
+    resolution: {integrity: sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==}
+    engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
     dev: false

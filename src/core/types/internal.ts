@@ -36,6 +36,13 @@ export interface InternalConfig {
   fsCache: FsCache;
   server?: WxtDevServer;
   runnerConfig: ResolvedConfig<ExtensionRunnerConfig>;
+  zip: {
+    name?: string;
+    artifactTemplate: string;
+    sourcesTemplate: string;
+    ignoredSources: string[];
+    sourcesRoot: string;
+  };
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];

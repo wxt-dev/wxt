@@ -73,13 +73,15 @@
     "jiti": "^1.18.2",
     "json5": "^2.2.3",
     "linkedom": "^0.14.26",
+    "minimatch": "^9.0.3",
     "picocolors": "^1.0.0",
     "picomatch": "^2.3.1",
     "unimport": "^3.0.8",
     "vite": "^4.3.9",
     "vite-tsconfig-paths": "^4.2.0",
     "web-ext": "^7.6.2",
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.10.0",
+    "zip-dir": "^2.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",

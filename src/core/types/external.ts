@@ -92,6 +92,57 @@ export interface InlineConfig {
    * Custom runner options. Options set here can be overridden in a `web-ext.config.ts` file.
    */
   runner?: ExtensionRunnerConfig;
+  zip?: {
+    /**
+     * Configure the filename output when zipping files.
+     *
+     * Available template variables:
+     *
+     * - `{{name}}` - The project's name converted to kebab-case
+     * - `{{version}} - The version_name or version from the manifest
+     * - `{{browser}} - The target browser from the `--browser` CLI flag
+     * - `{{manifestVersion}}` - Either "2" or "3"
+     *
+     * @default "{{name}}-{{version}}-{{browser}}.zip"
+     */
+    artifactTemplate?: string;
+    /**
+     * Configure the filename output when zipping files.
+     *
+     * Available template variables:
+     *
+     * - `{{name}}` - The project's name converted to kebab-case
+     * - `{{version}} - The version_name or version from the manifest
+     * - `{{browser}} - The target browser from the `--browser` CLI flag
+     * - `{{manifestVersion}}` - Either "2" or "3"
+     *
+     * @default "{{name}}-{{version}}-sources.zip"
+     */
+    sourcesTemplate?: string;
+    /**
+     * Override the artifactTemplate's `{{name}}` template variable. Defaults to the package.json's
+     * name, or if that doesn't exist, the current working directories name.
+     */
+    name?: string;
+    /**
+     * Root directory to ZIP. The ZIP can be uploaded to the Firefox Addon Store as your source
+     * code. Defaults to the `config.root` directory.
+     */
+    sourcesRoot?: string;
+    /**
+     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to exclude when
+     * creating a ZIP of all your source code for Firfox. Patterns are relative to your
+     * `config.zip.sourcesRoot`.
+     *
+     * Hidden files, node_modules, and tests are ignored by default.
+     *
+     * @example
+     * [
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     * ]
+     */
+    ignoredSources?: string[];
+  };
 }
 
 export interface WxtInlineViteConfig

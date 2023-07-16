@@ -99,6 +99,26 @@ export async function getInternalConfig(
     typesDir,
     fsCache: createFsCache(wxtDir),
     manifest,
+    zip: {
+      sourcesTemplate: '{{name}}-{{version}}-sources.zip',
+      artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+      sourcesRoot: root,
+      ...userConfig.zip,
+      ...config.zip,
+      ignoredSources: [
+        '**/node_modules',
+        // WXT files
+        '**/web-ext.config.ts',
+        // Hidden files
+        '**/.*',
+        // Tests
+        '**/__tests__/**',
+        '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
+        // User config
+        ...(userConfig.zip?.ignoredSources ?? []),
+        ...(config.zip?.ignoredSources ?? []),
+      ],
+    },
   };
 
   // Customize the default vite config
@@ -144,6 +164,7 @@ type InternalConfigNoUserDirs = Omit<
   | 'typesDir'
   | 'fsCache'
   | 'manifest'
+  | 'zip'
 >;
 
 async function resolveManifestConfig(
