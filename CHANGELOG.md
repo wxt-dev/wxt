@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.2.3
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.2...v0.2.3)
+
+### 🩹 Fixes
+
+- Correctly lookup open port ([#45](https://github.com/aklinker1/wxt/pull/45))
+- Read boolean maniest options from meta tags correctly ([495c5c8](https://github.com/aklinker1/wxt/commit/495c5c8))
+- Some fields cannot be overridden from `config.manifest` ([#46](https://github.com/aklinker1/wxt/pull/46))
+
+### ❤️ Contributors
+
+- Aaron
+- Aaron Klinker
+
 ## v0.2.2
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.1...v0.2.2)
