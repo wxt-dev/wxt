@@ -5,7 +5,6 @@ import {
   WxtDevServer,
 } from './types';
 import * as vite from 'vite';
-import { findOpenPort } from './utils/findOpenPort';
 import { Scripting } from 'webextension-polyfill';
 import { getEntrypointBundlePath } from './utils/entrypoints';
 import { getContentScriptCssFiles } from './utils/manifest';
@@ -13,7 +12,8 @@ import { createWebExtRunner } from './runners/createWebExtRunner';
 import { buildInternal } from './build';
 
 export async function getServerInfo(): Promise<ServerInfo> {
-  const port = await findOpenPort(3000, 3010);
+  const { default: getPort, portNumbers } = await import('get-port');
+  const port = await getPort({ port: portNumbers(3000, 3010) });
   const hostname = 'localhost';
   const origin = `http://${hostname}:${port}`;
   const serverConfig: vite.InlineConfig = {
