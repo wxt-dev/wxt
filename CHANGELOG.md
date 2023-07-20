@@ -24,7 +24,6 @@
 
 ### ❤️ Contributors
 
-- Aaron
 - Aaron Klinker
 
 ## v0.2.2
@@ -158,7 +157,6 @@
 
 ### ❤️ Contributors
 
-- Aaron
 - Aaron Klinker
 
 ## v0.1.2
