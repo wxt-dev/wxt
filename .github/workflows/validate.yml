@@ -46,7 +46,7 @@ jobs:
         working-directory: demo
 
       - name: Tests
-        run: pnpm test:coverage
+        run: pnpm test:coverage --reporter=default --reporter=hanging-process
 
   project-templates:
     name: Project Templates
