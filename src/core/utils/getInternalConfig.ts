@@ -142,6 +142,7 @@ export async function getInternalConfig(
   );
   finalConfig.vite.plugins.push(plugins.devServerGlobals(finalConfig));
   finalConfig.vite.plugins.push(plugins.tsconfigPaths(finalConfig));
+  finalConfig.vite.plugins.push(plugins.noopBackground());
 
   finalConfig.vite.define ??= {};
   getGlobals(finalConfig).forEach((global) => {

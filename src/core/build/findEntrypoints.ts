@@ -16,9 +16,10 @@ import JSON5 from 'json5';
 import { importTsFile } from '../utils/importTsFile';
 import glob from 'fast-glob';
 import { getEntrypointName } from '../utils/entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../vite-plugins/noopBackground';
 
 /**
- * Return entrypoints and their configuration by looking through the
+ * Return entrypoints and their configuration by looking through the project's files.
  */
 export async function findEntrypoints(
   config: InternalConfig,
@@ -33,6 +34,7 @@ export async function findEntrypoints(
   const existingNames: Record<string, Entrypoint | undefined> = {};
 
   const entrypoints: Entrypoint[] = [];
+  let hasBackground = false;
   await Promise.all(
     relativePaths.map(async (relativePath) => {
       const path = resolve(config.entrypointsDir, relativePath);
@@ -63,6 +65,7 @@ export async function findEntrypoints(
           break;
         case 'background':
           entrypoint = await getBackgroundEntrypoint(config, path);
+          hasBackground = true;
           break;
         case 'content-script':
           entrypoint = await getContentScriptEntrypoint(
@@ -95,6 +98,11 @@ export async function findEntrypoints(
       existingNames[entrypoint.name] = entrypoint;
     }),
   );
+  if (config.command === 'serve' && !hasBackground) {
+    entrypoints.push(
+      await getBackgroundEntrypoint(config, VIRTUAL_NOOP_BACKGROUND_MODULE_ID),
+    );
+  }
   return entrypoints;
 }
 
@@ -195,10 +203,17 @@ async function getBackgroundEntrypoint(
   config: InternalConfig,
   path: string,
 ): Promise<BackgroundEntrypoint> {
-  const { main: _, ...options } =
-    await importTsFile<BackgroundScriptDefintition>(path, config);
-  if (options == null) {
-    throw Error('Background script does not have a default export');
+  let options: Omit<BackgroundScriptDefintition, 'main'> = {};
+  if (path !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
+    const defaultExport = await importTsFile<BackgroundScriptDefintition>(
+      path,
+      config,
+    );
+    if (defaultExport == null) {
+      throw Error('Background script does not have a default export');
+    }
+    const { main: _, ...moduleOptions } = defaultExport;
+    options = moduleOptions;
   }
   return {
     type: 'background',
@@ -257,6 +272,7 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   'devtools/index.html': 'devtools',
 
   'background.ts': 'background',
+  [VIRTUAL_NOOP_BACKGROUND_MODULE_ID]: 'background',
 
   'content.ts?(x)': 'content-script',
   'content/index.ts?(x)': 'content-script',

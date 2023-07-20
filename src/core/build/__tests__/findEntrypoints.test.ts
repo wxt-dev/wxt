@@ -210,10 +210,10 @@ describe('findEntrypoints', () => {
       },
     ],
   ])(
-    'should find and load content script entrypoint config from %s',
+    'should find and load background entrypoint config from %s',
     async (path, expected) => {
-      const options: ContentScriptEntrypoint['options'] = {
-        matches: ['<all_urls>'],
+      const options: BackgroundEntrypoint['options'] = {
+        type: 'module',
       };
       globMock.mockResolvedValueOnce([path]);
       importTsFileMock.mockResolvedValue(options);
@@ -225,6 +225,24 @@ describe('findEntrypoints', () => {
       expect(importTsFileMock).toBeCalledWith(expected.inputPath, config);
     },
   );
+
+  it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
+    globMock.mockResolvedValueOnce([]);
+
+    const entrypoints = await findEntrypoints({
+      ...config,
+      command: 'serve',
+    });
+
+    expect(entrypoints).toHaveLength(1);
+    expect(entrypoints[0]).toEqual({
+      type: 'background',
+      inputPath: 'virtual:user-background',
+      name: 'background',
+      options: {},
+      outputDir: config.outDir,
+    });
+  });
 
   it.each<[string, GenericEntrypoint]>([
     // Sandbox
