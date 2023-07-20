@@ -29,6 +29,7 @@ describe('findEntrypoints', () => {
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
+    command: 'build',
   });
 
   it.each<[string, string, PopupEntrypoint]>([
