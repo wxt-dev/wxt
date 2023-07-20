@@ -39,7 +39,7 @@ export async function buildInternal(
 
   const entrypoints = await findEntrypoints(config);
   const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, groups, undefined, true);
+  const { output } = await rebuild(config, groups, undefined);
 
   // Post-build
   config.logger.success(
