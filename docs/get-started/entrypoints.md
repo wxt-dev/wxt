@@ -1,6 +1,6 @@
 # Defining Entrypoints
 
-Entrypoints are any HTML, JS, or CSS file that needs to be bundled and included with the extension.
+An entrypoints is any HTML, JS, or CSS file that needs to be bundled and included with the extension.
 
 They may or may not be listed in the extension's `manifest.json`.
 
@@ -46,10 +46,10 @@ would result in the following `manifest.json`:
 If a file uses a [special name recognized by WXT](/get-started/entrypoints.md), it will be added to the manifest. In this case:
 
 - `popup.html` &rarr; `action.default_popup`
-- `content.ts` &rarr; `content_scripts.*.js`
+- `content.ts` &rarr; `content_scripts.0.js.0`
 - `background.ts` &rarr; `background.service_worker`
 
-But not all entrypoints are added to the `manifest.json`. If they have a name that is not recognized by WXT, they are still built and included in the extension, but they are unlisted and do not show up in the manifest.
+But not all entrypoints are added to the `manifest.json`. If they have a name that is not recognized by WXT, they are still built and included in the extension, but they are considered "unlisted" and are not apart of the manifest.
 
 In this case, `injected.ts` gets bundled to `<outdir>/injected.js` and is accessible via `browser.runtime.getURL("/injected.js")`.
 

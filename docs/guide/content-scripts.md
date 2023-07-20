@@ -34,6 +34,8 @@ export default defineContentScript({
 
 > All manifest options default to `undefined`.
 
+When defining multiple content scripts, content script entrypoints that have the same set of options will be merged into a single `content_script` item in the manifest.
+
 ## CSS
 
 To include CSS with your content script, import the CSS file at the top of your entrypoint:
