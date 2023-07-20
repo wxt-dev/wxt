@@ -59,8 +59,9 @@ export async function createServer(
 
     await fileChangedMutex.runExclusive(async () => {
       const fileChanges = changeQueue.splice(0, changeQueue.length);
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
+      if (fileChanges.length === 0) return;
 
+      const changes = detectDevChanges(fileChanges, server.currentOutput);
       if (changes.type === 'no-change') return;
 
       // Log the entrypoints that were effected

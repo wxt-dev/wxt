@@ -39,7 +39,7 @@ export async function buildInternal(
 
   const entrypoints = await findEntrypoints(config);
   const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, groups);
+  const { output } = await rebuild(config, groups, undefined, true);
 
   // Post-build
   config.logger.success(
@@ -70,7 +70,11 @@ export async function rebuild(
 ): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
   // Update types directory with new files and types
   const allEntrypoints = await findEntrypoints(config);
-  await generateTypesDir(allEntrypoints, config);
+  await generateTypesDir(allEntrypoints, config).catch((err) => {
+    config.logger.warn('Failed to update .wxt directory:', err);
+    // Throw the error if doing a regular build, don't for dev mode.
+    if (config.command === 'build') throw err;
+  });
 
   // Build and merge the outputs
   const newOutput = await buildEntrypoints(entrypointGroups, config);
