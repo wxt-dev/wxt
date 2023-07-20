@@ -33,7 +33,8 @@ jobs:
         run: |
           pnpm install --ignore-scripts
           pnpm build
-          pnpm install
+          pnpm install --ignore-scripts
+          cd demo && pnpm wxt prepare
 
       - name: Formatting
         run: pnpm format:check
