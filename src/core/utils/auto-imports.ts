@@ -13,7 +13,7 @@ export function getUnimportOptions(
     ],
     presets: [{ package: 'wxt/client' }],
     warn: config.logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
+    dirs: ['./components/*', './composables/*', './hooks/*', './utils/*'],
   };
 
   return mergeConfig(
