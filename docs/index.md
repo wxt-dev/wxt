@@ -38,12 +38,12 @@ features:
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
   - icon: 🎨
-    title: Frontend framework agnostic
+    title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
   - icon: 🤖
     title: Automated Publishing
     details: 'TODO: Automatically zip, upload, and release extensions.'
   - icon: 📏
-    title: Bundle analysis
+    title: Bundle Analysis
     details: 'TODO: Tools for analyizing the final extension bundle.'
 ---
