@@ -43,6 +43,8 @@ jobs:
           pnpm build:all:chrome-mv3
           pnpm build:all:firefox-mv2
           pnpm build:all:firefox-mv3
+          pnpm compile
+          pnpm zip
         working-directory: demo
 
       - name: Tests

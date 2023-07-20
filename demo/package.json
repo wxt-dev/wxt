@@ -12,6 +12,7 @@
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
     "zip": "pnpm -w build && wxt zip",
+    "compile": "pnpm -w build && tsc --noEmit",
     "postinstall": "pnpm -w build && wxt prepare"
   },
   "dependencies": {
