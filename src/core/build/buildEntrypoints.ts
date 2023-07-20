@@ -9,9 +9,9 @@ import {
 import * as plugins from '../vite-plugins';
 import { removeEmptyDirs } from '../utils/removeEmptyDirs';
 import { getEntrypointBundlePath } from '../utils/entrypoints';
-import glob from 'fast-glob';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
+import { getPublicFiles } from '../utils/public';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -132,11 +132,10 @@ function getBuildOutputChunks(
 async function copyPublicDirectory(
   config: InternalConfig,
 ): Promise<BuildOutput['publicAssets']> {
+  const files = await getPublicFiles(config);
+  if (files.length === 0) return [];
+
   const publicAssets: BuildOutput['publicAssets'] = [];
-  if (!(await fs.exists(config.publicDir))) return publicAssets;
-
-  const files = await glob('**/*', { cwd: config.publicDir });
-
   for (const file of files) {
     const srcPath = resolve(config.publicDir, file);
     const outPath = resolve(config.outDir, file);

@@ -37,6 +37,13 @@ await Promise.all([
     dts: true,
     silent: true,
   }),
+  tsup.build({
+    entry: { browser: 'src/client/browser.ts' },
+    format: ['esm'],
+    sourcemap: 'inline',
+    dts: true,
+    silent: true,
+  }),
   ...virtualEntrypoints.map((entryName) =>
     tsup.build({
       entry: {

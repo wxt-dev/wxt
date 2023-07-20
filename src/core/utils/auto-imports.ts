@@ -7,11 +7,8 @@ export function getUnimportOptions(
 ): Partial<UnimportOptions> {
   const defaultOptions: Partial<UnimportOptions> = {
     debugLog: config.logger.debug,
-    imports: [
-      { name: '*', as: 'browser', from: 'webextension-polyfill' },
-      { name: 'defineConfig', from: 'wxt' },
-    ],
-    presets: [{ package: 'wxt/client' }],
+    imports: [{ name: 'defineConfig', from: 'wxt' }],
+    presets: [{ package: 'wxt/client' }, { package: 'wxt/browser' }],
     warn: config.logger.warn,
     dirs: ['./components/*', './composables/*', './hooks/*', './utils/*'],
   };

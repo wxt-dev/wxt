@@ -31,7 +31,6 @@ export async function importTsFile<T>(
   const unimport = createUnimport({
     ...getUnimportOptions(config),
     // Only allow specific imports, not all from the project
-    imports: [{ name: '*', as: 'browser', from: 'webextension-polyfill' }],
     dirs: [],
   });
   await unimport.init();

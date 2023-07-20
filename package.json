@@ -39,9 +39,12 @@
       "types": "./dist/index.d.ts"
     },
     "./client": {
-      "require": "./dist/client.cjs",
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser.js",
+      "types": "./dist/browser.d.ts"
     }
   },
   "scripts": {

@@ -10,7 +10,7 @@ To setup your test environment for auto-imports, see [Testing](/get-started/test
 
 Some WXT APIs can be used without importing them:
 
-- [`browser`](/config.md#browser) from `webextension-polyfill`
+- [`browser`](/config.md#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
 - [`defineContentScript`](/config.md#defiencontentscript) from `wxt/client`
 - [`defineBackground`](/config.md#definebackgroundscript) from `wxt/client`
 
