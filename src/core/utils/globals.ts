@@ -12,7 +12,7 @@ export function getGlobals(
     {
       name: '__BROWSER__',
       value: config.browser,
-      type: `"chromium" | "firefox"`,
+      type: `string`,
     },
     {
       name: '__IS_CHROME__',
