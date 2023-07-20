@@ -54,7 +54,7 @@ But not all entrypoints are added to the `manifest.json`. If they have a name th
 In this case, `injected.ts` gets bundled to `<outdir>/injected.js` and is accessible via `browser.runtime.getURL("/injected.js")`.
 
 :::info
-See [`/entrypoints` folder](/get-started/entrypoints.md) documentation for a full list of recognized entrypoint filenames.
+See [`/entrypoints` folder](/guide/background.md) documentation for a full list of recognized entrypoint filenames.
 :::
 
 ## Entrypoint Options
@@ -85,5 +85,5 @@ export default defineContentScript({
 ```
 
 :::info
-For a full list of entrypoints and each of their options, see the [`/entrypoints` folder](/get-started/entrypoints.md) documentation.
+For a full list of entrypoints and each of their options, see the [`/entrypoints` folder](/guide/background.md) documentation.
 :::
