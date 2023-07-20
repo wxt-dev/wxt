@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.2.5
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.4...v0.2.5)
+
+### 🚀 Enhancements
+
+- Auto-import from subdirectories ([547fee0](https://github.com/aklinker1/wxt/commit/547fee0))
+- Include background script in dev mode if user doesn't define one ([ca20a21](https://github.com/aklinker1/wxt/commit/ca20a21))
+
+### 🩹 Fixes
+
+- Don't crash when generating types in dev mode ([d8c1903](https://github.com/aklinker1/wxt/commit/d8c1903))
+- Properly load entrypoints that reference `import.meta` ([54b18cc](https://github.com/aklinker1/wxt/commit/54b18cc))
+
+### 🏡 Chore
+
+- Update templates to wxt@0.2 ([9d00eb2](https://github.com/aklinker1/wxt/commit/9d00eb2))
+
+### 🤖 CI
+
+- Validate project templates ([9ac756f](https://github.com/aklinker1/wxt/commit/9ac756f))
+
+### ❤️ Contributors
+
+- Aaron Klinker
+
 ## v0.2.4
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.3...v0.2.4)
