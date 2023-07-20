@@ -5,6 +5,7 @@ import fs from 'fs-extra';
 import { resolve } from 'path';
 import transform from 'jiti/dist/babel';
 import { getUnimportOptions } from './auto-imports';
+import { removeImportStatements } from './strings';
 
 /**
  * Get the value from the default export of a `path`.
@@ -36,7 +37,7 @@ export async function importTsFile<T>(
   await unimport.init();
 
   const text = await fs.readFile(path, 'utf-8');
-  const textNoImports = text.replace(/import.*[\n;]/gm, '');
+  const textNoImports = removeImportStatements(text);
   const { code } = await unimport.injectImports(textNoImports);
   config.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),

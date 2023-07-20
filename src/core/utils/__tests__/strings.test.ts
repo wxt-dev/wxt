@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { kebabCaseAlphanumeric } from '../strings';
+import { kebabCaseAlphanumeric, removeImportStatements } from '../strings';
 
 describe('String utils', () => {
   describe('kebabCaseAlphanumeric', () => {
@@ -12,6 +12,34 @@ describe('String utils', () => {
       ['hello-world', 'hello-world'], // Ensure hyphens are preserved
     ])('should convert "%s" to "%s"', (input, expected) => {
       expect(kebabCaseAlphanumeric(input)).toBe(expected);
+    });
+  });
+
+  describe('removeImportStatements', () => {
+    it('should remove all import formats', () => {
+      const imports = `
+import { registerGithubService, createGithubApi } from "@/utils/github";
+import {
+  registerGithubService,
+  createGithubApi
+} from "@/utils/github";
+import{ registerGithubService, createGithubApi }from "@/utils/github";
+import GitHub from "@/utils/github";
+import "@/utils/github";
+import '@/utils/github';
+import"@/utils/github" 
+ import'@/utils/github';
+    `;
+      expect(removeImportStatements(imports).trim()).toEqual('');
+    });
+
+    it('should not remove import.meta or inline import statements', () => {
+      const imports = `
+import.meta.env.DEV
+const a = await import("example");
+import("example");
+    `;
+      expect(removeImportStatements(imports)).toEqual(imports);
     });
   });
 });
