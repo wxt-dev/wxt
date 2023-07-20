@@ -7,7 +7,7 @@ jobs:
     uses: './.github/workflows/validate.yml'
 
   publish:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
       - validate
     steps:
