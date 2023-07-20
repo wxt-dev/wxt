@@ -80,7 +80,7 @@ export async function getInternalConfig(
     srcDir,
     userConfig.entrypointsDir ?? 'entrypoints',
   );
-  const publicDir = resolve(srcDir, userConfig.publicDir ?? 'public');
+  const publicDir = resolve(root, userConfig.publicDir ?? 'public');
   const wxtDir = resolve(srcDir, '.wxt');
   const typesDir = resolve(wxtDir, 'types');
 

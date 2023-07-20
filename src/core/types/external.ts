@@ -16,14 +16,14 @@ export interface InlineConfig {
    * directory.
    *
    * @default
-   * "<root>"
+   * "<rootDir>"
    */
   srcDir?: string;
   /**
    * Directory containing files that will be copied to the output directory as-is.
    *
    * @default
-   * "<srcDir>/publicDir"
+   * "<rootDir>/publicDir"
    */
   publicDir?: string;
   /**
