@@ -7,7 +7,8 @@ on:
       - main
 
 jobs:
-  validate:
+  wxt:
+    name: WXT
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -46,3 +47,49 @@ jobs:
 
       - name: Tests
         run: pnpm test:coverage
+
+  project-templates:
+    name: Project Templates
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Validate Vanilla
+        working-directory: templates/vanilla
+        run: |
+          npm i
+          npm run build
+          npm run compile
+
+      - name: Validate Vue
+        working-directory: templates/vue
+        run: |
+          npm i
+          npm run build
+          npm run compile
+
+      - name: Validate React
+        working-directory: templates/react
+        run: |
+          npm i
+          npm run build
+          npm run compile
+
+      - name: Validate Svelte
+        working-directory: templates/svelte
+        run: |
+          npm i
+          npm run build
+          npm run check
