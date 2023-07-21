@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import glob from 'fast-glob';
 import { execSync } from 'child_process';
 import { InlineConfig, UserConfig, build } from '../src';
+import { normalizePath } from '../src/core/utils/paths';
 
 export class TestProject {
   files: Array<[string, string]> = [];
@@ -113,7 +114,7 @@ export class TestProject {
   async serializeFile(path: string): Promise<string> {
     const absolutePath = resolve(this.root, path);
     return [
-      relative(this.root, absolutePath),
+      normalizePath(relative(this.root, absolutePath)),
       await fs.readFile(absolutePath),
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
