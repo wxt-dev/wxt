@@ -56,6 +56,18 @@ const sandbox2: Entrypoint = {
   inputPath: '/sandbox2.html',
   outputDir: '/.output/sandbox2',
 };
+const unlistedStyle: Entrypoint = {
+  type: 'unlisted-style',
+  name: 'injected',
+  inputPath: '/injected.scss',
+  outputDir: '/.output',
+};
+const contentScriptStyle: Entrypoint = {
+  type: 'content-script-style',
+  name: 'injected',
+  inputPath: '/overlay.content.scss',
+  outputDir: '/.output/content-scripts',
+};
 
 describe('groupEntrypoints', () => {
   it('should keep scripts separate', () => {
@@ -66,6 +78,19 @@ describe('groupEntrypoints', () => {
       popup,
     ];
     const expected = [contentScript, background, unlistedScript, [popup]];
+
+    const actual = groupEntrypoints(entrypoints);
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should keep styles separate', () => {
+    const entrypoints: Entrypoint[] = [
+      unlistedStyle,
+      contentScriptStyle,
+      popup,
+    ];
+    const expected = [unlistedStyle, contentScriptStyle, [popup]];
 
     const actual = groupEntrypoints(entrypoints);
 

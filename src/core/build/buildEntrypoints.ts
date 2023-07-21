@@ -6,7 +6,7 @@ import {
   EntrypointGroup,
   InternalConfig,
 } from '../types';
-import * as plugins from '../vite-plugins';
+import * as wxtPlugins from '../vite-plugins';
 import { removeEmptyDirs } from '../utils/removeEmptyDirs';
 import { getEntrypointBundlePath } from '../utils/entrypoints';
 import fs from 'fs-extra';
@@ -45,7 +45,16 @@ async function buildSingleEntrypoint(
     ? `virtual:wxt-${entrypoint.type}?${entrypoint.inputPath}`
     : entrypoint.inputPath;
 
+  const plugins: NonNullable<vite.UserConfig['plugins']> = [];
+  if (
+    entrypoint.type === 'content-script-style' ||
+    entrypoint.type === 'unlisted-style'
+  ) {
+    plugins.push(wxtPlugins.cssEntrypoints(entrypoint, config));
+  }
+
   const libMode: vite.UserConfig = {
+    plugins,
     build: {
       lib: {
         entry,
@@ -90,7 +99,7 @@ async function buildMultipleEntrypoints(
   config: InternalConfig,
 ): Promise<BuildStepOutput> {
   const multiPage: vite.UserConfig = {
-    plugins: [plugins.multipageMove(entrypoints, config)],
+    plugins: [wxtPlugins.multipageMove(entrypoints, config)],
     build: {
       rollupOptions: {
         input: entrypoints.reduce<Record<string, string>>((input, entry) => {

@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.10.0",
+    "sass": "^1.64.0",
     "wxt": "workspace:*"
   }
 }

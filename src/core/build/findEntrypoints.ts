@@ -10,13 +10,14 @@ import {
   PopupEntrypoint,
 } from '../types';
 import fs from 'fs-extra';
-import picomatch from 'picomatch';
+import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
 import { importTsFile } from '../utils/importTsFile';
 import glob from 'fast-glob';
 import { getEntrypointName } from '../utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../vite-plugins/noopBackground';
+import { CSS_EXTENSIONS_PATTERN } from '../utils/paths';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -39,7 +40,7 @@ export async function findEntrypoints(
     relativePaths.map(async (relativePath) => {
       const path = resolve(config.entrypointsDir, relativePath);
       const matchingGlob = pathGlobs.find((glob) =>
-        picomatch.isMatch(relativePath, glob),
+        minimatch(relativePath, glob),
       );
 
       if (matchingGlob == null) {
@@ -73,6 +74,14 @@ export async function findEntrypoints(
             getEntrypointName(config.entrypointsDir, path),
             path,
           );
+          break;
+        case 'content-script-style':
+          entrypoint = {
+            type,
+            name: getEntrypointName(config.entrypointsDir, path),
+            inputPath: path,
+            outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
+          };
           break;
         default:
           entrypoint = {
@@ -243,7 +252,7 @@ async function getContentScriptEntrypoint(
     type: 'content-script',
     name: getEntrypointName(config.entrypointsDir, path),
     inputPath: path,
-    outputDir: resolve(config.outDir, 'content-scripts'),
+    outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
     options,
   };
 }
@@ -278,6 +287,10 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   'content/index.ts?(x)': 'content-script',
   '*.content.ts?(x)': 'content-script',
   '*.content/index.ts?(x)': 'content-script',
+  [`content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`*.content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`*.content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
 
   'popup.html': 'popup',
   'popup/index.html': 'popup',
@@ -288,7 +301,12 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   '*.html': 'unlisted-page',
   '*/index.html': 'unlisted-page',
   '*.ts': 'unlisted-script',
+  '*/index.ts': 'unlisted-script',
+  [`*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
+  [`*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
 
   // Don't warn about any files in subdirectories, like CSS or JS entrypoints for HTML files
   '*/*': 'ignored',
 };
+
+const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';

@@ -43,6 +43,8 @@ const ENTRY_TYPE_TO_GROUP_MAP: Record<Entrypoint['type'], Group> = {
   background: 'no-group',
   'content-script': 'no-group',
   'unlisted-script': 'no-group',
+  'unlisted-style': 'no-group',
+  'content-script-style': 'no-group',
 };
 
 type Group = 'extension-page' | 'sandbox-page' | 'no-group';

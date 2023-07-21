@@ -433,6 +433,73 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
       },
     ],
+    [
+      'injected/index.ts',
+      {
+        type: 'unlisted-script',
+        name: 'injected',
+        inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
+        outputDir: config.outDir,
+      },
+    ],
+
+    // unlisted-style
+    [
+      'iframe.scss',
+      {
+        type: 'unlisted-style',
+        name: 'iframe',
+        inputPath: resolve(config.entrypointsDir, 'iframe.scss'),
+        outputDir: config.outDir,
+      },
+    ],
+    [
+      'iframe.css',
+      {
+        type: 'unlisted-style',
+        name: 'iframe',
+        inputPath: resolve(config.entrypointsDir, 'iframe.css'),
+        outputDir: config.outDir,
+      },
+    ],
+
+    // content-script-style
+    [
+      'content.css',
+      {
+        type: 'content-script-style',
+        name: 'content',
+        inputPath: resolve(config.entrypointsDir, 'content.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
+      'overlay.content.css',
+      {
+        type: 'content-script-style',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'overlay.content.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
+      'content/index.css',
+      {
+        type: 'content-script-style',
+        name: 'content',
+        inputPath: resolve(config.entrypointsDir, 'content/index.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
+    [
+      'overlay.content/index.css',
+      {
+        type: 'content-script-style',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'overlay.content/index.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+      },
+    ],
   ])('should find entrypoint for %s', async (path, expected) => {
     globMock.mockResolvedValueOnce([path]);
 

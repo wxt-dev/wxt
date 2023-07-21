@@ -261,7 +261,9 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'sidepanel'
     | 'devtools'
     | 'unlisted-page'
-    | 'unlisted-script';
+    | 'unlisted-script'
+    | 'unlisted-style'
+    | 'content-script-style';
 }
 
 export interface BackgroundEntrypoint extends BaseEntrypoint {

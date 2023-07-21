@@ -54,6 +54,7 @@ export default defineConfig({
             { text: 'Background', link: '/guide/background.md' },
             { text: 'Bookmarks', link: '/guide/bookmarks.md' },
             { text: 'Content Scripts', link: '/guide/content-scripts.md' },
+            { text: 'CSS', link: '/guide/css.md' },
             { text: 'Devtools', link: '/guide/devtools.md' },
             { text: 'History', link: '/guide/history.md' },
             { text: 'Newtab', link: '/guide/newtab.md' },

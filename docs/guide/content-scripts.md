@@ -38,7 +38,7 @@ When defining multiple content scripts, content script entrypoints that have the
 
 ## CSS
 
-To include CSS with your content script, import the CSS file at the top of your entrypoint:
+To include CSS with your content script, import the CSS file at the top of your entrypoint.
 
 ```
 
@@ -59,4 +59,19 @@ export default defineContentScript({
     // ...
   },
 });
+```
+
+Any styles imported in your content script will be added to that content script's `css` array in your `manifest.json`:
+
+```json
+// .output/chrome-mv3/manifest.json
+{
+  "content_scripts": [
+    {
+      "matches": ["*://google.com/*", "*://duckduckgo.com/*"],
+      "js": ["content-scripts/overlay.js"],
+      "css": ["content-scripts/overlay.css"]
+    }
+  ]
+}
 ```
