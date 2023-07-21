@@ -5,3 +5,4 @@ e2e/project
 .wxt
 docs/.vitepress/cache
 pnpm-lock.yaml
+CHANGELOG.md

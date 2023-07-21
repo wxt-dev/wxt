@@ -20,7 +20,7 @@
 
 ### 🌊 Types
 
-- Allow any string for the __BROWSER__ global ([6092235](https://github.com/aklinker1/wxt/commit/6092235))
+- Allow any string for the `__BROWSER__` global ([6092235](https://github.com/aklinker1/wxt/commit/6092235))
 
 ### 🤖 CI
 
@@ -33,7 +33,6 @@
 
 ### ❤️  Contributors
 
-- Aaron 
 - Aaron Klinker
 
 ## v0.2.5
