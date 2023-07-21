@@ -9,6 +9,7 @@
 
     /* Type Checking */
     "strict": true,
+    "lib": ["DOM", "WebWorker", "ESNext"],
 
     /* Linting */
     "noUnusedLocals": true,

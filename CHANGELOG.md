@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.3.0
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.2.5...v0.3.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/aklinker1/wxt/commit/58a84ec))
+- ⚠️  Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/aklinker1/wxt/commit/19c0948))
+- Windows support ([#50](https://github.com/aklinker1/wxt/pull/50))
+
+### 🩹 Fixes
+
+- Add `WebWorker` lib to generated tsconfig ([2c70246](https://github.com/aklinker1/wxt/commit/2c70246))
+
+### 📖 Documentation
+
+- Update entrypoint directory links ([0aebb67](https://github.com/aklinker1/wxt/commit/0aebb67))
+
+### 🌊 Types
+
+- Allow any string for the __BROWSER__ global ([6092235](https://github.com/aklinker1/wxt/commit/6092235))
+
+### 🤖 CI
+
+- Improve checks against `demo/` extension ([9cc464f](https://github.com/aklinker1/wxt/commit/9cc464f))
+
+#### ⚠️  Breaking Changes
+
+- ⚠️  Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/aklinker1/wxt/commit/58a84ec))
+- ⚠️  Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/aklinker1/wxt/commit/19c0948))
+
+### ❤️  Contributors
+
+- Aaron 
+- Aaron Klinker
+
 ## v0.2.5
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.4...v0.2.5)

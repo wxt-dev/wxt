@@ -2,6 +2,7 @@ import { Plugin } from 'vite';
 import { Entrypoint, InternalConfig } from '../types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
+import { normalizePath } from '../utils/paths';
 
 /**
  * Wraps a user's entrypoint with a vitual version with additional logic.
@@ -21,7 +22,7 @@ export function virtualEntrypoin(
       const index = id.indexOf(virtualId);
       if (index === -1) return;
 
-      const inputPath = id.substring(index + virtualId.length);
+      const inputPath = normalizePath(id.substring(index + virtualId.length));
       return resolvedVirtualId + inputPath;
     },
     async load(id) {

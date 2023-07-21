@@ -3,6 +3,7 @@ import { Entrypoint, InternalConfig } from '../types';
 import { dirname, extname, resolve } from 'node:path';
 import { getEntrypointBundlePath } from '../utils/entrypoints';
 import fs, { ensureDir } from 'fs-extra';
+import { normalizePath } from '../utils/paths';
 
 /**
  * Ensures the HTML files output by a multipage build are in the correct location. This does two
@@ -23,11 +24,11 @@ export function multipageMove(
     name: 'wxt:multipage-move',
     async writeBundle(_, bundle) {
       for (const oldBundlePath in bundle) {
-        // oldBundlePath = 'entrypoints/popup.html' or 'entrypoints/o ptions/index.html'
+        // oldBundlePath = 'entrypoints/popup.html' or 'entrypoints/options/index.html'
 
         // Find a matching entrypoint - oldBundlePath is the same as end end of the input path.
         const entrypoint = entrypoints.find(
-          (entry) => !!entry.inputPath.endsWith(oldBundlePath),
+          (entry) => !!normalizePath(entry.inputPath).endsWith(oldBundlePath),
         );
         if (entrypoint == null) {
           config.logger.debug('No entrypoint found for', oldBundlePath);

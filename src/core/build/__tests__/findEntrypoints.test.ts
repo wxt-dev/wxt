@@ -12,6 +12,7 @@ import fs from 'fs-extra';
 import { importTsFile } from '../../utils/importTsFile';
 import glob from 'fast-glob';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
+import { unnormalizePath } from '../../utils/paths';
 
 vi.mock('../../utils/importTsFile');
 const importTsFileMock = vi.mocked(importTsFile);
@@ -443,9 +444,14 @@ describe('findEntrypoints', () => {
 
   it('should not allow multiple entrypoints with the same name', async () => {
     globMock.mockResolvedValueOnce(['popup.html', 'popup/index.html']);
+    const expectedPaths = [
+      'src/entrypoints/popup.html',
+      'src/entrypoints/popup/index.html',
+    ].map(unnormalizePath);
 
     await expect(() => findEntrypoints(config)).rejects.toThrowError(
-      'Multiple entrypoints with the name "popup" detected, but only one is allowed: src/entrypoints/popup.html, src/entrypoints/popup/index.html',
+      'Multiple entrypoints with the name "popup" detected, but only one is allowed: ' +
+        expectedPaths.join(', '),
     );
   });
 });

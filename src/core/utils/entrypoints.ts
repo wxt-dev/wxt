@@ -1,5 +1,6 @@
 import { Entrypoint } from '../types';
 import path, { relative, resolve } from 'node:path';
+import { normalizePath } from './paths';
 
 export function getEntrypointName(
   entrypointsDir: string,
@@ -7,8 +8,8 @@ export function getEntrypointName(
   // type: Entrypoint['type'],
 ): string {
   const relativePath = path.relative(entrypointsDir, inputPath);
-  // Grab the string up to the first . or /
-  const name = relativePath.split(/[\.\/]/, 2)[0];
+  // Grab the string up to the first . or / or \\
+  const name = relativePath.split(/[\.\/\\]/, 2)[0];
 
   return name;
 }
@@ -29,5 +30,7 @@ export function getEntrypointBundlePath(
   outDir: string,
   ext: string,
 ): string {
-  return relative(outDir, getEntrypointOutputFile(entrypoint, ext));
+  return normalizePath(
+    relative(outDir, getEntrypointOutputFile(entrypoint, ext)),
+  );
 }

@@ -28,6 +28,10 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
   return await buildInternal(internalConfig);
 }
 
+/**
+ * Creates a dev server, pre-builds all the files that need to exist to load the extension, and open
+ * the browser with the extension installed.
+ */
 export async function createServer(
   config?: InlineConfig,
 ): Promise<WxtDevServer> {
@@ -54,6 +58,7 @@ export async function createServer(
   });
 
   server.watcher.on('all', async (event, path, _stats) => {
+    // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
     if (path.startsWith(internalConfig.outBaseDir)) return;
     changeQueue.push([event, path]);
 
