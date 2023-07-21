@@ -8,7 +8,7 @@
 
 - 🌐 Supports all browsers
 - ✅ Supports both MV2 and MV3
-- ⚡ Dev mode with HMR & auto-reload
+- ⚡ Dev mode with HMR & fast reload
 - 📂 File based entrypoints
 - 🚔 TypeScript
 - 🦾 Auto-imports
