@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/bookmarks.html`
-- `entrypoints/bookmarks/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['bookmarks.html', 'bookmarks.html'],
+    ['bookmarks/index.html', 'bookmarks.html'],
+  ]"
+/>
 
 ## Definition
 

@@ -12,8 +12,12 @@ HTML pages that are built by Vite, but are not included in the manifest.
 
 ## Filenames
 
-- `entrypoints/<name>.html`
-- `entrypoints/<name>/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['<name>.html', '<name>.html'],
+    ['<name>/index.html', '<name>.html'],
+  ]"
+/>
 
 Pages are accessible at `'/<name>.html'`:
 

@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/history.html`
-- `entrypoints/history/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['history.html', 'history.html'],
+    ['history/index.html', 'history.html'],
+  ]"
+/>
 
 ## Definition
 

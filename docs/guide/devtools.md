@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/devtools.html`
-- `entrypoints/devtools/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['devtools.html', 'devtools.html'],
+    ['devtools/index.html', 'devtools.html'],
+  ]"
+/>
 
 ## Definition
 

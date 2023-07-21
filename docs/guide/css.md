@@ -10,13 +10,16 @@ If the recommended approach doesn't work for your use case, you can use any of t
 
 ## Filenames
 
-When a filename matches the pattern below, WXT will transform it and output it with the rest of your extension.
-
-- `entrypoints/content.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/<name>.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/<name>/index.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/<name>.content.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/<name>.content/index.(css|scss|sass|less|styl|stylus)`
+<EntrypointPatterns
+  :patterns="[
+    ['<name>.(css|scss|sass|less|styl|stylus)', '<name>.css'],
+    ['<name>/index.(css|scss|sass|less|styl|stylus)', '<name>.css'],
+    ['content.(css|scss|sass|less|styl|stylus)', 'content-scripts/content.css'],
+    ['content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/content.css'],
+    ['<name>.content.(css|scss|sass|less|styl|stylus)', 'content-scripts/<name>.css'],
+    ['<name>.content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/<name>.css'],
+  ]"
+/>
 
 ## Definition
 

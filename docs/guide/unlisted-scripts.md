@@ -4,12 +4,16 @@ TypeScript files that are built, but are not included in the manifest.
 
 ## Filenames
 
-- `entrypoints/<name>.tsx?`
-- `entrypoints/<name>/index.tsx?`
+<EntrypointPatterns
+  :patterns="[
+    ['<name>.tsx?', '<name>.js'],
+    ['<name>/index.tsx?', '<name>.js'],
+  ]"
+/>
 
 ## Definition
 
-Unlike the background and content scripts, you can define this script's logic in the main scope.
+Unlike the background or content scripts, you can define this script's logic in the top level scope.
 
 ```ts
 // Code goes here

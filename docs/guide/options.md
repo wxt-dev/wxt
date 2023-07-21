@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/options.html`
-- `entrypoints/options/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['options.html', 'options.html'],
+    ['options/index.html', 'options.html'],
+  ]"
+/>
 
 ## Definition
 

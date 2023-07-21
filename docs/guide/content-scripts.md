@@ -2,14 +2,18 @@
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
+When creating content script entrypoints, they are automatically included in the `manifest.json` along with any CSS they import.
+
 ## Filenames
 
-When a filename matches the pattern below, it is added as a content script in the `manifest.json`.
-
-- `entrypoints/content.tsx?`
-- `entrypoints/<name>.content.tsx?`
-- `entrypoints/content/index.tsx?`
-- `entrypoints/<name>.content/index.tsx?`
+<EntrypointPatterns
+  :patterns="[
+    ['content.tsx?', 'content-scripts/content.js'],
+    ['content/index.tsx?', 'content-scripts/content.js'],
+    ['<name>.content.tsx?', 'content-scripts/<name>.js'],
+    ['<name>.content/index.tsx?', 'content-scripts/<name>.js'],
+  ]"
+/>
 
 ## Definition
 

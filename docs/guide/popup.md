@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/popup.html`
-- `entrypoints/popup/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['popup.html', 'popup.html'],
+    ['popup/index.html', 'popup.html'],
+  ]"
+/>
 
 ## Definition
 

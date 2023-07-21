@@ -4,8 +4,12 @@
 
 ## Filenames
 
-- `entrypoints/newtab.html`
-- `entrypoints/newtab/index.html`
+<EntrypointPatterns
+  :patterns="[
+    ['newtab.html', 'newtab.html'],
+    ['newtab/index.html', 'newtab.html'],
+  ]"
+/>
 
 ## Definition
 

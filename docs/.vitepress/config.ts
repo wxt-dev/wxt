@@ -61,6 +61,7 @@ export default defineConfig({
             { text: 'Options', link: '/guide/options.md' },
             { text: 'Popup', link: '/guide/popup.md' },
             { text: 'Sandbox', link: '/guide/sandbox.md' },
+            { text: 'Sidepanel', link: '/guide/sidepanel.md' },
             { text: 'Unlisted Pages', link: '/guide/unlisted-pages.md' },
             { text: 'Unlisted Scripts', link: '/guide/unlisted-scripts.md' },
           ],

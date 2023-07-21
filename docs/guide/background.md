@@ -6,7 +6,11 @@ For MV2, the background is added as a script to the background page. For MV3, th
 
 ## Filenames
 
-`entrypoints/background.ts` is the only recoginzed filename for the background script.
+<EntrypointPatterns
+  :patterns="[
+    ['background.ts', 'background.js'],
+  ]"
+/>
 
 ## Definition
 

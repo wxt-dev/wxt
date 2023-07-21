@@ -48,3 +48,11 @@
   --vp-code-copy-code-bg: #212321;
   --vp-code-copy-code-hover-bg: #292d29;
 }
+
+.vp-doc .no-vertical-dividers th,
+.vp-doc .no-vertical-dividers td {
+  border: none;
+}
+.vp-doc .no-vertical-dividers tr {
+  border: 1px solid var(--vp-c-divider);
+}
