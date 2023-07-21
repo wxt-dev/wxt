@@ -78,11 +78,11 @@ export async function generateMainfest(
 
   if (manifest.name == null)
     throw Error(
-      "Manifest 'name' is missing. Either:\n1. Set the name in your <root>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
+      "Manifest 'name' is missing. Either:\n1. Set the name in your <rootDir>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
     );
   if (manifest.version == null) {
     throw Error(
-      "Manifest 'version' is missing. Either:\n1. Add a version in your <root>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
+      "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
     );
   }
 

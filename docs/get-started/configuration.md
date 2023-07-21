@@ -1,8 +1,6 @@
 # Configuration
 
-WXT's behavior can be configured via the `wxt.config.ts` file. In this file, you can add Vite plugins, change the directory strucutre of your project, and provide permissions or other fields to the `<outdir>/manifest.json`.
-
-However, since WXT is an opinionated framework, some things cannot be configured.
+WXT's behavior can be configured via the `wxt.config.ts` file. In this file, you can add Vite plugins, change the directory strucutre of your project, and set fields on your `manifest.json`.
 
 ## Config File
 
@@ -17,7 +15,7 @@ export default defineConfig({
 ```
 
 :::info
-See the [API reference](/api.md) for a full list of options.
+See the [Config reference](/config.md) for a full list of options.
 :::
 
 ## Directory Config
@@ -25,13 +23,24 @@ See the [API reference](/api.md) for a full list of options.
 WXT allows you to edit several directories to your liking:
 
 - `root` (default: `process.cwd()`) - Root of the WXT project
-- `srcDir` (default: `<root>`) - Location of all your source code
+- `srcDir` (default: `<rootDir>`) - Location of all your source code
 - `entrypointsDir` (default: `<srcDir>/entrypoints`) - Folder containing all the entrypoints.
 - `publicDir` (default: `<srcDir>/public`) - Folder containing [public assets](/get-started/assets.md)
 
 ### Example
 
-If you want a `src/` directory to contain all your source code, and you want to rename `entrypoints/` to `entries/`, your config would look like this:
+You want a `src/` directory to contain all your source code, and you want to rename `entrypoints/` &rarr; `entries/`:
+
+```
+<rootDir>
+├─ src/
+│  └─ entries/
+│     ├─ background.ts
+│     └─ ...
+└─ wxt.config.ts
+```
+
+Your config would look like this:
 
 ```ts
 import { defineConfig } from 'wxt';

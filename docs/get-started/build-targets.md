@@ -5,7 +5,7 @@ You can build an extension for any combination of browser and manifest verison. 
 Separate build targets are written to their own output directories:
 
 ```
-<root>
+<rootDir>
 └─ .output
    ├─ chrome-mv3
    ├─ firefox-mv2

@@ -11,7 +11,7 @@ In WXT, entrypoints are defined by adding a file to the `entrypoints/` directory
 For example, a project that looks like this:
 
 ```
-<root>
+<rootDir>
 ├─ entrypoints/
 │  ├─ background.ts
 │  ├─ content.ts

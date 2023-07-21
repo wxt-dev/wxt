@@ -124,9 +124,20 @@ pnpm dev
 The dev command will build the extension for development, open the browser, and reload the different parts of the extension when you save changes.
 :::
 
+:::details Development Manifest
+When running the dev command, WXT will make several changes to your `manifest.json` to improve your development experience:
+
+- If missing, add a background script/service worker to enable fast reloads
+- Add serveral `permissions` and `host_permissions` to enable HMR and fast reloads
+- Modify the CSP to allow connections with the dev server
+- Remove `content_scripts` and register them at runtime so they can be easily reloaded when you save a file
+
+If you're an experienced web extension developer and think the dev manifest looks wrong, this is why. Run a production build with `wxt build` to see the unmodified `manifest.json`.
+:::
+
 ## Next Steps
 
-You're ready to build a out your web extension!
+You're ready to build your web extension!
 
-- Learn how to [add entrypoints](./entrypoints.md) like the popup, background, or content scripts
+- Learn how to [add entrypoints](./entrypoints.md) like the popup, options page, or content scripts
 - [Configure WXT](./configuration.md) by creating a `wxt.config.ts` file
