@@ -1,20 +1,22 @@
 # CSS
 
-WXT can build CSS entrypoints individually.
+WXT can build CSS entrypoints individually. CSS entrypoints are always unlisted.
 
-While you could build CSS for content scripts using separate entrypoints, this is not the recommended approach to include CSS in a content script. Instead, see [Content Script CSS](/guide/content-scripts.md#css) documentation.
+See [Content Script CSS](/guide/content-scripts.md#css) documentation for the recomended approach to include CSS with a content script.
 
-If the recommended approach doesn't work for your use case, you can use any of the filename patterns above to build the CSS separate from the JS, then use the [`transformManifest` hook](/config.md#transformmanifest) to manually add your CSS file to the manifest.
+:::info
+If the recommended approach doesn't work for your use case, you can use any of the filename patterns below to build the styles separate from the JS and use the [`transformManifest` hook](/config.md#transformmanifest) to manually add your CSS file to the manifest.
+:::
 
 ## Filenames
 
 When a filename matches the pattern below, WXT will transform it and output it with the rest of your extension.
 
 - `entrypoints/content.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/*.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/*/index.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/*.content.(css|scss|sass|less|styl|stylus)`
-- `entrypoints/*.content/index.(css|scss|sass|less|styl|stylus)`
+- `entrypoints/<name>.(css|scss|sass|less|styl|stylus)`
+- `entrypoints/<name>/index.(css|scss|sass|less|styl|stylus)`
+- `entrypoints/<name>.content.(css|scss|sass|less|styl|stylus)`
+- `entrypoints/<name>.content/index.(css|scss|sass|less|styl|stylus)`
 
 ## Definition
 
