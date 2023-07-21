@@ -8,8 +8,8 @@ export function getEntrypointName(
   // type: Entrypoint['type'],
 ): string {
   const relativePath = path.relative(entrypointsDir, inputPath);
-  // Grab the string up to the first . or /
-  const name = relativePath.split(/[\.\/]/, 2)[0];
+  // Grab the string up to the first . or / or \\
+  const name = relativePath.split(/[\.\/\\]/, 2)[0];
 
   return name;
 }
