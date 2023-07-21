@@ -6,6 +6,7 @@ import { resolve } from 'path';
 import transform from 'jiti/dist/babel';
 import { getUnimportOptions } from './auto-imports';
 import { removeImportStatements } from './strings';
+import { normalizePath } from './paths';
 
 /**
  * Get the value from the default export of a `path`.
@@ -27,6 +28,8 @@ export async function importTsFile<T>(
   config: InternalConfig,
 ): Promise<T> {
   config.logger.debug('Loading file metadata:', path);
+  // JITI & Babel uses normalized paths.
+  const normalPath = normalizePath(path);
 
   const unimport = createUnimport({
     ...getUnimportOptions(config),
@@ -53,7 +56,8 @@ export async function importTsFile<T>(
       ),
     },
     transform(opts) {
-      if (opts.filename === path) return transform({ ...opts, source: code });
+      if (opts.filename === normalPath)
+        return transform({ ...opts, source: code });
       else return transform(opts);
     },
   });

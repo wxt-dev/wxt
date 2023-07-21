@@ -1,6 +1,7 @@
 import { BuildOutput, BuildStepOutput, EntrypointGroup } from '../types';
 import * as vite from 'vite';
 import { every } from './arrays';
+import { normalizePath } from './paths';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -102,15 +103,16 @@ function findEffectedSteps(
   currentOutput: BuildOutput,
 ): DetectedChange[] {
   const changes: DetectedChange[] = [];
-  const changedPath = changedFile[1];
+  const changedPath = normalizePath(changedFile[1]);
 
   const isChunkEffected = (
     chunk: vite.Rollup.OutputChunk | vite.Rollup.OutputAsset,
   ): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
-    // TODO: use bundle path to support `<name>/index.html`?
+    // fileName is normalized, relative bundle path
     (chunk.type === 'asset' && changedPath.endsWith(chunk.fileName)) ||
     // If it's a chunk that depends on the changed file, it is effected
+    // moduleIds are absolute, normalized paths
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
 
   for (const step of currentOutput.steps) {
