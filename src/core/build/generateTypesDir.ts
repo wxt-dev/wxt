@@ -139,14 +139,8 @@ async function writeTsConfigFile(
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-
-    /* Type Checking */
     "strict": true,
-
-    /* Completeness */
     "skipLibCheck": true,
-
-    /* Aliases */
     "baseUrl": "${normalizePath(relative(dir, config.root))}",
     "paths": {
       "@@": ["."],
