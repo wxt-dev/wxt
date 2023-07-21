@@ -6,3 +6,4 @@ export * from './unimport';
 export * from './virtualEntrypoint';
 export * from './tsconfigPaths';
 export * from './noopBackground';
+export * from './cssEntrypoints';

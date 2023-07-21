@@ -15,6 +15,8 @@ import { normalizePath } from '../utils/paths';
  * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't need to be modified.
  * HTML files access them via absolute URLs, so we don't need to update any import paths in the HTML
  * files either.
+ *
+ * THIS PLUGIN SHOULD ONLY BE APPLIED TO MULTIPAGE BUILDS. It should not be added to every build.
  */
 export function multipageMove(
   entrypoints: Entrypoint[],

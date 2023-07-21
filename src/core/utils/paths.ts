@@ -15,3 +15,8 @@ export function normalizePath(path: string): string {
 export function unnormalizePath(path: string): string {
   return nodePath.normalize(path);
 }
+
+export const CSS_EXTENSIONS = ['css', 'scss', 'sass', 'less', 'styl', 'stylus'];
+
+// .module.css files are not supported because these are global CSS files, so using CSS modules doesn't make sense.
+export const CSS_EXTENSIONS_PATTERN = `+(${CSS_EXTENSIONS.join('|')})`;
