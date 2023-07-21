@@ -3,7 +3,7 @@
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/sidePanel/)
 
 :::tip Chromium Only
-Firefox does not support sandboxed pages.
+Firefox does not support sidepanel pages.
 :::
 
 ## Filenames
