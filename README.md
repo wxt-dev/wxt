@@ -1,4 +1,4 @@
-<h1 align="center">WXT</h1>
+<h1 align="center"><img align="center" height="36" src="./docs/public/hero-logo.svg"> WXT</h1>
 
 <p align="center"><i>Next gen framework for developing web extensions.<br/>Powered by <a href="https://vitejs.dev/" target="_blank">Vite</a>. Inspired by <a href="https://nuxt.com/" target="_blank">Nuxt</a>.</i></p>
 

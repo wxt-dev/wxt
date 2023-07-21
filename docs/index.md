@@ -5,8 +5,11 @@ titleTemplate: 'Next Generation Web Extension Framework'
 
 hero:
   name: WXT
-  text: Next gen framework for web extensions
+  text: Next-gen Web Extension Framework
   tagline: Powered by Vite, inspired by Nuxt.
+  image:
+    src: /hero-logo.svg
+    alt: WXT
   actions:
     - theme: brand
       text: Get Started

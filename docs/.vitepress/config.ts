@@ -8,7 +8,7 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    // logo: '/logo.svg',
+    logo: '/logo.svg',
     editLink: {
       pattern: 'https://github.com/aklinker1/wxt/edit/main/docs/:path',
     },

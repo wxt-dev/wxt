@@ -1,0 +1,61 @@
+/* Colors */
+:root {
+  --wxt-c-green: #53bc4a;
+  --wxt-c-green-light: #67d45e;
+  --wxt-c-green-lighter: #67d45e;
+  --wxt-c-green-dark: #4fa048;
+  --wxt-c-green-darker: #447e3f;
+}
+
+/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+
+:root {
+  --vp-c-brand: var(--wxt-c-green);
+  --vp-c-brand-light: var(--wxt-c-green-light);
+  --vp-c-brand-lighter: var(--wxt-c-green-lighter);
+  --vp-c-brand-dark: var(--wxt-c-green-dark);
+  --vp-c-brand-darker: var(--wxt-c-green-darker);
+
+  --vp-button-brand-text: var(--vp-c-black);
+  --vp-button-brand-hover-text: var(--vp-c-black);
+  --vp-button-brand-active-text: var(--vp-c-black);
+
+  --vp-custom-block-tip-border: var(--wxt-c-green-dark);
+  --vp-custom-block-tip-text: var(--wxt-c-green-dark);
+
+  --vp-code-block-bg: #222422;
+  --vp-code-copy-code-bg: #313431;
+  --vp-code-copy-code-hover-bg: #3c403c;
+
+  --vp-home-hero-image-background-image: linear-gradient(
+    -45deg,
+    #5ed4c44a 40%,
+    #53bc4a4a 60%
+  );
+  --vp-home-hero-image-filter: blur(40px);
+}
+
+.dark {
+  --vp-c-bg: #131413;
+
+  --vp-c-bg-soft: #1a1b1a;
+  --vp-c-bg-soft-up: #1f201f;
+  --vp-c-bg-soft-down: #262926;
+  --vp-c-bg-soft-mute: #242424;
+
+  --vp-c-bg-alt: #171817;
+
+  --vp-c-mute: #313136;
+  --vp-c-mute-light: #3a3a3c;
+  --vp-c-mute-lighter: #505053;
+  --vp-c-mute-dark: #2c2c30;
+  --vp-c-mute-darker: #252529;
+
+  --vp-code-block-bg: #191a19;
+  --vp-code-copy-code-bg: #212321;
+  --vp-code-copy-code-hover-bg: #292d29;
+
+  /* --vp-c-neutral: var(--vp-c-white);
+  --vp-c-border: rgba(82, 82, 89, 0.40);
+  --vp-c-divider: rgba(82, 82, 89, 0.16); */
+}
