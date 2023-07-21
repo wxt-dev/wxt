@@ -100,6 +100,12 @@ Finally, add scripts to your `package.json`:
 
 > You can skip `*:firefox` scripts if you don't want to support Firefox
 
+## 🚧 WSL Support
+
+**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/aklinker1/wxt/issues/55) to track progress.
+
+In the meantime, you can use `cmd` instead.
+
 ## Development
 
 Once you've installed WXT, you can start the development server using the `dev` script.
