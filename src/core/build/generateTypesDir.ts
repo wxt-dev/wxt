@@ -139,6 +139,7 @@ async function writeTsConfigFile(
 
     /* Type Checking */
     "strict": true,
+    "lib": ["DOM", "WebWorker"],
 
     /* Completeness */
     "skipLibCheck": true,
