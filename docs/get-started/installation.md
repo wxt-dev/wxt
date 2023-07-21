@@ -96,6 +96,8 @@ Finally, add scripts to your `package.json`:
     "dev:firefox": "wxt --browser firefox", // [!code ++]
     "build": "wxt build", // [!code ++]
     "build:firefox": "wxt build --browser firefox", // [!code ++]
+    "zip": "wxt zip", // [!code ++]
+    "zip:firefox": "wxt zip --browser firefox", // [!code ++]
     "postinstall": "wxt prepare" // [!code ++]
   }
 }
