@@ -1,5 +1,4 @@
 import { defineConfig } from 'wxt';
-import react from '@vitejs/plugin-react';
 
 // See https://wxt.dev/config.html
 export default defineConfig({
@@ -11,8 +10,5 @@ export default defineConfig({
       '96': 'icon/96.png',
       '128': 'icon/128.png',
     },
-  },
-  vite: {
-    plugins: [react()],
   },
 });

@@ -1,5 +1,7 @@
 <h1 align="center">WXT</h1>
 
+<p align="center"><img align="center" width="44" src="./docs/public/hero-logo.svg" alt="WXT Logo"></p>
+
 <p align="center"><i>Next gen framework for developing web extensions.<br/>Powered by <a href="https://vitejs.dev/" target="_blank">Vite</a>. Inspired by <a href="https://nuxt.com/" target="_blank">Nuxt</a>.</i></p>
 
 ![Example CLI Output](./docs/assets/cli-output.png)
