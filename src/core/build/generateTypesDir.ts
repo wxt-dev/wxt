@@ -140,6 +140,7 @@ async function writeTsConfigFile(
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "strict": true,
+    "lib": ["DOM", "WebWorker"],
     "skipLibCheck": true,
     "baseUrl": "${normalizePath(relative(dir, config.root))}",
     "paths": {

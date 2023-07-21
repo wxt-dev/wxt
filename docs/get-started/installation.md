@@ -13,11 +13,11 @@ See [From Scratch](#from-scratch) or reference one of the templates below.
 :::code-group
 
 ```sh [pnpm]
-pnpx wxt@latest init <project-name>
+pnpx wxt@latest init
 ```
 
 ```sh [npm]
-npx wxt@latest init <project-name>
+npx wxt@latest init
 ```
 
 :::
@@ -40,19 +40,22 @@ Create a new NPM project:
 :::code-group
 
 ```sh [pnpm]
-pnpm init <project-name>
-cd <project-name>
+mkdir project-name
+cd project-name
+pnpm init
 echo 'shamefully-hoist=true' >> .npmrc
 ```
 
 ```sh [npm]
-npm init <project-name>
-cd <project-name>
+mkdir project-name
+cd project-name
+npm init
 ```
 
 ```sh [yarn]
-yarn init <project-name>
-cd <project-name>
+mkdir project-name
+cd project-name
+yarn init
 ```
 
 :::
