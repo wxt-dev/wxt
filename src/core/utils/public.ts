@@ -1,7 +1,7 @@
 import { InternalConfig } from '../types';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
-import { systemizePath } from './paths';
+import { unnormalizePath } from './paths';
 
 /**
  * Get all the files in the project's public directory. Returned paths are relative to the
@@ -13,5 +13,5 @@ export async function getPublicFiles(
   if (!(await fs.exists(config.publicDir))) return [];
 
   const files = await glob('**/*', { cwd: config.publicDir });
-  return files.map(systemizePath);
+  return files.map(unnormalizePath);
 }

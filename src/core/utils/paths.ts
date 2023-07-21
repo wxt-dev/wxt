@@ -12,6 +12,6 @@ export function normalizePath(path: string): string {
 /**
  * Given a normalized path, convert it to the system path style. On Windows, switch to \, otherwise use /.
  */
-export function systemizePath(path: string): string {
+export function unnormalizePath(path: string): string {
   return nodePath.normalize(path);
 }
