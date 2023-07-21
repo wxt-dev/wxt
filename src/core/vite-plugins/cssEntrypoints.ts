@@ -31,7 +31,6 @@ export function cssEntrypoints(
       };
     },
     generateBundle(_, bundle) {
-      console.log('BUNDLE', Object.keys(bundle));
       Object.keys(bundle).forEach((file) => {
         if (file.endsWith('.js')) delete bundle[file];
       });
