@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import cac from 'cac';
 import { version } from '../../package.json';
 import * as commands from './commands';
