@@ -1,6 +1,6 @@
 <script lang="ts">
-  import svelteLogo from '../../assets/svelte.svg'
-  import Counter from '../../lib/Counter.svelte'
+  import svelteLogo from '@/assets/svelte.svg'
+  import Counter from '@/lib/Counter.svelte'
 </script>
 
 <main>
@@ -31,7 +31,7 @@
     transition: filter 300ms;
   }
   .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+    filter: drop-shadow(0 0 2em #54bc4ae0);
   }
   .logo.svelte:hover {
     filter: drop-shadow(0 0 2em #ff3e00aa);
