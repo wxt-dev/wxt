@@ -30,11 +30,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          pnpm install --ignore-scripts
-          pnpm build
-          pnpm install --ignore-scripts
-          cd demo && pnpm wxt prepare
+        run: pnpm install
 
       - name: Formatting
         run: pnpm format:check
