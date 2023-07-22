@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   name: string;
   icon?: string;
 }>();
+
+const src = computed(() => {
+  if (props.icon) return props.icon;
+  return `https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/icons/${props.name.toLowerCase()}.svg`;
+});
 </script>
 
 <template>
-  <img
-    :src="`https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/icons/${
-      name?.toLowerCase() ?? icon
-    }.svg`"
-    :alt="`${name} Logo`"
-  />
+  <img :src="src" :alt="`${name} Logo`" />
 </template>
 
 <style scoped>
