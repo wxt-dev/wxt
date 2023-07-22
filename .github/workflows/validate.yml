@@ -96,3 +96,10 @@ jobs:
           npm i
           npm run build
           npm run check
+
+      - name: Validate Solid
+        working-directory: templates/solid
+        run: |
+          npm i
+          npm run build
+          npm run compile
