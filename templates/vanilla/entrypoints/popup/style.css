@@ -50,7 +50,7 @@ h1 {
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #54bc4ae0);
 }
 .logo.vanilla:hover {
   filter: drop-shadow(0 0 2em #3178c6aa);
