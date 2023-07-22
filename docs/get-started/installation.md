@@ -24,12 +24,13 @@ npx wxt@latest init
 
 There are several starting templates available.
 
-| TypeScript                                                                                           |
-| ---------------------------------------------------------------------------------------------------- |
-| <Icon name="TypeScript" /> [`vanilla`](https://github.com/aklinker1/wxt/tree/main/templates/vanilla) |
-| <Icon name="Vue" /> [`vue`](https://github.com/aklinker1/wxt/tree/main/templates/vue)                |
-| <Icon name="React" /> [`react`](https://github.com/aklinker1/wxt/tree/main/templates/react)          |
-| <Icon name="Svelte" /> [`svelte`](https://github.com/aklinker1/wxt/tree/main/templates/svelte)       |
+| TypeScript                                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <Icon name="TypeScript" /> [`vanilla`](https://github.com/aklinker1/wxt/tree/main/templates/vanilla)                                                      |
+| <Icon name="Vue" /> [`vue`](https://github.com/aklinker1/wxt/tree/main/templates/vue)                                                                     |
+| <Icon name="React" /> [`react`](https://github.com/aklinker1/wxt/tree/main/templates/react)                                                               |
+| <Icon name="Svelte" /> [`svelte`](https://github.com/aklinker1/wxt/tree/main/templates/svelte)                                                            |
+| <Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png" /> [`solid`](https://github.com/aklinker1/wxt/tree/main/templates/solid) |
 
 > All templates are in TypeScript. WXT does not support JS at this time.
 
