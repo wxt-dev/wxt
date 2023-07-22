@@ -1,9 +1,6 @@
 {
   "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js"
   }
