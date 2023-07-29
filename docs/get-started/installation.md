@@ -2,22 +2,22 @@
 
 Bootstrap a new project or start from scratch.
 
-## Bootstrap Project
+:::warning 🚧&ensp;WSL Support
+**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/aklinker1/wxt/issues/55) to track progress.
 
-:::warning 🚧&ensp;The `wxt init` command is not implemented yet.
-
-See [From Scratch](#from-scratch) or reference one of the templates below.
-
+In the meantime, you can use `cmd` instead.
 :::
+
+## Bootstrap Project
 
 :::code-group
 
 ```sh [pnpm]
-pnpx wxt@latest init
+pnpx wxt@latest init <project-name>
 ```
 
 ```sh [npm]
-npx wxt@latest init
+npx wxt@latest init <project-name>
 ```
 
 :::
@@ -66,15 +66,15 @@ Then install `wxt`:
 :::code-group
 
 ```sh [pnpm]
-pnpm add wxt
+pnpm add -D wxt
 ```
 
 ```sh [npm]
-npm i --save wxt
+npm i --save-dev wxt
 ```
 
 ```sh [yarn]
-yarn add wxt
+yarn add --dev wxt
 ```
 
 :::
@@ -103,14 +103,6 @@ Finally, add scripts to your `package.json`:
   }
 }
 ```
-
-> You can skip `*:firefox` scripts if you don't want to support Firefox
-
-## 🚧 WSL Support
-
-**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/aklinker1/wxt/issues/55) to track progress.
-
-In the meantime, you can use `cmd` instead.
 
 ## Development
 
