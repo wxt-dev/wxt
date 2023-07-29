@@ -50,3 +50,5 @@ features:
     title: Bundle Analysis
     details: 'TODO: Tools for analyizing the final extension bundle.'
 ---
+
+<UsingWxtSection />
