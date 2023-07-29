@@ -54,5 +54,5 @@ describe('Init command', () => {
       48.png
       96.png"
     `);
-  }, 60e3);
+  });
 });
