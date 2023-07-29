@@ -95,10 +95,6 @@ export class TestProject {
     );
   }
 
-  serializeRootDir(): Promise<string> {
-    return this.serializeDir(resolve(this.config?.srcDir ?? this.root));
-  }
-
   private async serializeDir(dir: string): Promise<string> {
     const outputFiles = await glob('**/*', {
       cwd: resolve(this.root, dir),
