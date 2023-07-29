@@ -43,7 +43,7 @@ To automate submissions, use the [`publish-browser-extension`](https://www.npmjs
 
 3. Create a `.env.submit` file and include the code below. If you're not publishing to certain stores, simply ignore their respective variables.
 
-   ```env
+   ```txt
    CHROME_EXTENSION_ID=""
    CHROME_CLIENT_ID=""
    CHROME_CLIENT_SECRET=""
@@ -112,11 +112,11 @@ wxt zip
 
 ✅ Automated &bull; [Developer Dashboard](https://addons.mozilla.org/developers/) &bull; [Publishing Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
 
-Firefox requires you to upload a ZIP of your source code. This allows them to reproduce your extension and review the code in a readable way. More details can be found in [Firefox's docs](https://extensionworkshop.com/documentation/publish/source-code-submission/).
+Firefox requires you to upload a ZIP of your source code. This allows them to rebuild your extension and review the code in a readable way. More details can be found in [Firefox's docs](https://extensionworkshop.com/documentation/publish/source-code-submission/).
 
 WXT and `publish-browser-extension` both fully support generating and automatically submitting a source code ZIP.
 
-When you run `wxt zip -b firefox`, your sources are zipped into the `.output` directory along with your built extension. WXT is configured to exclude certain files such as config files, hidden files, and tests. However, it's important to manually check the ZIP to ensure it only contains the files necessary to reproduce your extension.
+When you run `wxt zip -b firefox`, your sources are zipped into the `.output` directory along with your built extension. WXT is configured to exclude certain files such as config files, hidden files, and tests. However, it's important to manually check the ZIP to ensure it only contains the files necessary to rebuild your extension.
 
 To customize which files are zipped, add the `zip` option to your config file.
 
@@ -131,7 +131,7 @@ export default defineConfig({
 });
 ```
 
-If it's your first time submitting to the Firefox Addon Store, or if you've updated your project layout, always test your sources ZIP! The commands below should allow you to reproduce your extension from inside the extracted ZIP.
+If it's your first time submitting to the Firefox Addon Store, or if you've updated your project layout, always test your sources ZIP! The commands below should allow you to rebuild your extension from inside the extracted ZIP.
 
 :::code-group
 
