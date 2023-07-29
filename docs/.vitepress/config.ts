@@ -36,6 +36,7 @@ export default defineConfig({
             { text: 'Build Targets', link: '/get-started/build-targets.md' },
             { text: 'Publishing', link: '/get-started/publishing.md' },
             { text: 'Testing', link: '/get-started/testing.md' },
+            { text: 'Compare', link: '/get-started/compare.md' },
           ],
         },
       ],
