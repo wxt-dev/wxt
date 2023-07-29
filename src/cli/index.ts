@@ -48,6 +48,7 @@ cli.command('publish [root]', 'publish to stores').action(commands.publish);
 // INIT
 cli
   .command('init [directory]', 'initialize a new project')
+  .option('-t, --template <template>', 'template to use')
   .action(commands.init);
 
 cli.parse();

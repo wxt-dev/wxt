@@ -9,14 +9,14 @@ import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
 
 export const init = defineCommand<
-  [directory: string | undefined, options: { userTemplate?: string }]
+  [directory: string | undefined, options: { template?: string }]
 >(
-  async (userDirectory, { userTemplate }) => {
+  async (userDirectory, flags) => {
     consola.info('Initalizing new project');
 
     const templates = await listTemplates();
     const defaultTemplate = templates.find(
-      (template) => template.name === userTemplate?.toLowerCase().trim(),
+      (template) => template.name === flags.template?.toLowerCase().trim(),
     );
 
     const input = await prompts(
