@@ -12,7 +12,7 @@ const extensions = [
 <template>
   <section class="vp-doc">
     <div class="container">
-      <h2>Whose using WXT?</h2>
+      <h2>Who's Using WXT?</h2>
       <ul>
         <li v-for="extension of extensions">
           <img :src="extension.icon" :alt="`${extension.name} icon`" />
