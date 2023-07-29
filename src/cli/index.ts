@@ -49,6 +49,7 @@ cli.command('publish [root]', 'publish to stores').action(commands.publish);
 cli
   .command('init [directory]', 'initialize a new project')
   .option('-t, --template <template>', 'template to use')
+  .option('--pm <packageManager>', 'which package manager to use')
   .action(commands.init);
 
 cli.parse();

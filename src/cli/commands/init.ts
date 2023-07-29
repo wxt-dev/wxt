@@ -9,7 +9,7 @@ import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
 
 export const init = defineCommand<
-  [directory: string | undefined, options: { template?: string }]
+  [directory: string | undefined, options: { template?: string; pm?: string }]
 >(
   async (userDirectory, flags) => {
     consola.info('Initalizing new project');
@@ -39,7 +39,7 @@ export const init = defineCommand<
         },
         {
           name: 'packageManager',
-          type: 'select',
+          type: () => (flags.pm == null ? 'select' : undefined),
           message: 'Package Manager',
           choices: [
             { title: 'npm', value: 'npm' },
@@ -54,6 +54,7 @@ export const init = defineCommand<
     );
     input.directory ??= userDirectory;
     input.template ??= defaultTemplate;
+    input.packageManager ??= flags.pm;
 
     await cloneProject(input);
 

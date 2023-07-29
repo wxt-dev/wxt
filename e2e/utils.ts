@@ -8,7 +8,7 @@ import { normalizePath } from '../src/core/utils/paths';
 export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
-  private readonly root: string;
+  readonly root: string;
 
   constructor(root = 'e2e/project') {
     // We can't put each test's project inside e2e/project directly, otherwise the wxt.config.ts
@@ -95,9 +95,14 @@ export class TestProject {
     );
   }
 
+  serializeRootDir(): Promise<string> {
+    return this.serializeDir(resolve(this.config?.srcDir ?? this.root));
+  }
+
   private async serializeDir(dir: string): Promise<string> {
     const outputFiles = await glob('**/*', {
       cwd: resolve(this.root, dir),
+      ignore: ['**/node_modules', '**/.output'],
     });
     outputFiles.sort();
     const fileContents = [];
