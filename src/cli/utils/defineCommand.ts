@@ -4,6 +4,9 @@ import { formatDuration } from '../../core/utils/formatDuration';
 
 export function defineCommand<TArgs extends any[]>(
   cb: (...args: TArgs) => void | boolean | Promise<void | boolean>,
+  options?: {
+    disableFinishedLog?: boolean;
+  },
 ) {
   return async (...args: TArgs) => {
     const startTime = Date.now();
@@ -12,7 +15,7 @@ export function defineCommand<TArgs extends any[]>(
 
       const ongoing = await cb(...args);
 
-      if (!ongoing)
+      if (!ongoing && !options?.disableFinishedLog)
         consola.success(
           `Finished in ${formatDuration(Date.now() - startTime)}`,
         );
