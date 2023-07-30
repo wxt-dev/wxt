@@ -17,7 +17,7 @@ describe('Init command', () => {
       dot: true,
     });
 
-    expect(stdout).toMatchInlineSnapshot(`
+    expect(files).toMatchInlineSnapshot(`
       ".gitignore
       .vscode
       README.md
