@@ -33,8 +33,8 @@
 
 ### ❤️  Contributors
 
-- Aaron Klinker <aaronklinker1@gmail.com>
-- BeanWei <bean0wei@dingtalk.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
+- BeanWei ([@BeanWei](https://github.com/BeanWei))
 
 ## v0.3.0
 
@@ -69,7 +69,7 @@
 
 ### ❤️  Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.5
 
@@ -95,7 +95,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.4
 
@@ -107,7 +107,7 @@
 
 ### ❤️ Contributors
 
-- Aaron
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.3
 
@@ -121,7 +121,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.2
 
@@ -133,7 +133,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.1
 
@@ -149,7 +149,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.0
 
@@ -177,7 +177,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.6
 
@@ -195,8 +195,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
-- Aaron
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.5
 
@@ -208,7 +207,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.4
 
@@ -229,7 +228,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.3
 
@@ -254,7 +253,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.2
 
@@ -276,7 +275,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.1
 
@@ -289,7 +288,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.0
 
@@ -316,7 +315,7 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.0.2
 
@@ -350,7 +349,7 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.0.1
 
@@ -424,4 +423,4 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 
 ### ❤️ Contributors
 
-- Aaron Klinker
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
