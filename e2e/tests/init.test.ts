@@ -18,46 +18,27 @@ describe('Init command', () => {
     });
 
     expect(files).toMatchInlineSnapshot(`
-      ".gitignore
-      .vscode
-      README.md
-      assets
-      components
-      entrypoints
-      package.json
-      public
-      tsconfig.json
-      wxt.config.ts
-
-      ./.vscode:
-      extensions.json
-
-      ./assets:
-      vue.svg
-
-      ./components:
-      HelloWorld.vue
-
-      ./entrypoints:
-      background.ts
-      popup
-
-      ./entrypoints/popup:
-      App.vue
-      index.html
-      main.ts
-      style.css
-
-      ./public:
-      icon
-      wxt.svg
-
-      ./public/icon:
-      128.png
-      16.png
-      32.png
-      48.png
-      96.png"
+      [
+        ".gitignore",
+        "README.md",
+        "package.json",
+        "tsconfig.json",
+        "wxt.config.ts",
+        ".vscode/extensions.json",
+        "assets/vue.svg",
+        "components/HelloWorld.vue",
+        "entrypoints/background.ts",
+        "public/wxt.svg",
+        "entrypoints/popup/App.vue",
+        "entrypoints/popup/index.html",
+        "entrypoints/popup/main.ts",
+        "entrypoints/popup/style.css",
+        "public/icon/128.png",
+        "public/icon/16.png",
+        "public/icon/32.png",
+        "public/icon/48.png",
+        "public/icon/96.png",
+      ]
     `);
   }, 30e3);
 });
