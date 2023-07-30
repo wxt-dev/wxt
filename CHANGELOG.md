@@ -1,5 +1,42 @@
 # Changelog
 
+## v0.3.1
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.3.0...v0.3.1)
+
+### 🚀 Enhancements
+
+- CSS entrypoints ([#61](https://github.com/aklinker1/wxt/pull/61))
+- `init` command for bootstrapping new projects ([#65](https://github.com/aklinker1/wxt/pull/65))
+
+### 📖 Documentation
+
+- Add zip command to installation scripts ([94a1097](https://github.com/aklinker1/wxt/commit/94a1097))
+- Add output paths to entrypoint docs ([3a336eb](https://github.com/aklinker1/wxt/commit/3a336eb))
+- Update installation docs ([aea866c](https://github.com/aklinker1/wxt/commit/aea866c))
+- Add publishing docs ([4184b05](https://github.com/aklinker1/wxt/commit/4184b05))
+- Add a section for extensions using WXT ([709b61a](https://github.com/aklinker1/wxt/commit/709b61a))
+- Add a comparison page to compare and contrast against Plasmo ([38d4f9c](https://github.com/aklinker1/wxt/commit/38d4f9c))
+
+### 🏡 Chore
+
+- Update template projects to v0.3 ([#56](https://github.com/aklinker1/wxt/pull/56))
+- Branding and logo ([#60](https://github.com/aklinker1/wxt/pull/60))
+- Simplify binary setup ([#62](https://github.com/aklinker1/wxt/pull/62))
+- Add Solid template ([#63](https://github.com/aklinker1/wxt/pull/63))
+- Increate E2E test timeout to fix flakey test ([dfe424f](https://github.com/aklinker1/wxt/commit/dfe424f))
+
+### 🤖 CI
+
+- Speed up demo validation ([3a9fd39](https://github.com/aklinker1/wxt/commit/3a9fd39))
+- Fix flakey failure when validating templates ([25677ba](https://github.com/aklinker1/wxt/commit/25677ba))
+
+### ❤️  Contributors
+
+- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron 
+- BeanWei <bean0wei@dingtalk.com>
+
 ## v0.3.0
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.2.5...v0.3.0)
