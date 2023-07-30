@@ -16,10 +16,10 @@
 - 🦾 Auto-imports
 - ⬇️ Download and bundle remote URL imports
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
+- 🖍️ Quickly bootstrap a new project
 
 ### Todo
 
-- 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
 - 🤖 Automated publishing
 
