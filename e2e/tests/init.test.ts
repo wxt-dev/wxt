@@ -17,27 +17,27 @@ describe('Init command', () => {
       dot: true,
     });
 
-    expect(files).toMatchInlineSnapshot(`
+    expect(files.sort()).toMatchInlineSnapshot(`
       [
         ".gitignore",
-        "README.md",
-        "package.json",
-        "tsconfig.json",
-        "wxt.config.ts",
         ".vscode/extensions.json",
+        "README.md",
         "assets/vue.svg",
         "components/HelloWorld.vue",
         "entrypoints/background.ts",
-        "public/wxt.svg",
         "entrypoints/popup/App.vue",
         "entrypoints/popup/index.html",
         "entrypoints/popup/main.ts",
         "entrypoints/popup/style.css",
+        "package.json",
         "public/icon/128.png",
         "public/icon/16.png",
         "public/icon/32.png",
         "public/icon/48.png",
         "public/icon/96.png",
+        "public/wxt.svg",
+        "tsconfig.json",
+        "wxt.config.ts",
       ]
     `);
   }, 30e3);
