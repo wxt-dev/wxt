@@ -47,6 +47,7 @@ export default defineConfig({
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
+            { text: 'Remote Code', link: '/guide/remote-code.md' },
           ],
         },
         {
