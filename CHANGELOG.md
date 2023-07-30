@@ -34,7 +34,6 @@
 ### ❤️  Contributors
 
 - Aaron Klinker <aaronklinker1@gmail.com>
-- Aaron 
 - BeanWei <bean0wei@dingtalk.com>
 
 ## v0.3.0
