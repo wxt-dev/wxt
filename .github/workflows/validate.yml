@@ -69,6 +69,9 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Validate Vanilla
         working-directory: templates/vanilla
         run: |
