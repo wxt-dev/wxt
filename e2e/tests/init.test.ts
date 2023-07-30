@@ -12,7 +12,7 @@ describe('Init command', () => {
       stdio: 'ignore',
     });
     const files = await glob('**/*', {
-      cwd: config.publicDir,
+      cwd: project.root,
       onlyFiles: true,
       dot: true,
     });
