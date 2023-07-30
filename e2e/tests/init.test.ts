@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 import { execaCommand } from 'execa';
+import glob from 'fast-glob';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
@@ -10,7 +11,11 @@ describe('Init command', () => {
       env: { ...process.env, CI: 'true' },
       stdio: 'ignore',
     });
-    const { stdout } = await execaCommand('ls -AR', { cwd: project.root });
+    const files = await glob('**/*', {
+      cwd: config.publicDir,
+      onlyFiles: true,
+      dot: true,
+    });
 
     expect(stdout).toMatchInlineSnapshot(`
       ".gitignore
