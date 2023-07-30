@@ -76,6 +76,7 @@ jobs:
         working-directory: templates/vanilla
         run: |
           npm i
+          npm i ../../
           npm run build
           npm run compile
 
@@ -83,6 +84,7 @@ jobs:
         working-directory: templates/vue
         run: |
           npm i
+          npm i ../../
           npm run build
           npm run compile
 
@@ -90,6 +92,7 @@ jobs:
         working-directory: templates/react
         run: |
           npm i
+          npm i ../../
           npm run build
           npm run compile
 
@@ -97,6 +100,7 @@ jobs:
         working-directory: templates/svelte
         run: |
           npm i
+          npm i ../../
           npm run build
           npm run check
 
@@ -104,5 +108,6 @@ jobs:
         working-directory: templates/solid
         run: |
           npm i
+          npm i ../../
           npm run build
           npm run compile
