@@ -43,6 +43,9 @@ features:
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
+  - icon: 🖍️
+    title: Bootstrap a New Project
+    details: Comes with starter templates for all major frontend frameworks.
   - icon: 🤖
     title: Automated Publishing
     details: 'TODO: Automatically zip, upload, and release extensions.'
