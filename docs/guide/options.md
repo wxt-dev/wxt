@@ -13,8 +13,6 @@
 
 ## Definition
 
-Plain old HTML file.
-
 ```html
 <!DOCTYPE html>
 <html lang="en">

@@ -23,7 +23,7 @@ Then you can import this in your HTML files to enable Google Analytics:
 
 ```ts
 // popup/main.ts
-import '@/utils/google-analytics';
+import '~/utils/google-analytics';
 
 gtag('event', 'event_name', {
   key: 'value',

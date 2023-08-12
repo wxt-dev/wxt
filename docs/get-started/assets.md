@@ -2,7 +2,7 @@
 
 WXT has two directories for storing assets like CSS, images, or fonts.
 
-- `<srcDir>/public`: Store files that will be copied into the output directory as-is
+- `<rootDir>/public`: Store files that will be copied into the output directory as-is
 - `<srcDir>/assets`: Store files that will be processed by Vite during the build process
 
 ## `/public` Directory

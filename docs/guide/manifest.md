@@ -2,7 +2,7 @@
 
 The manifest.json is generated at build-time based on files in your `entrypoints` directory and your `wxt.config.ts`.
 
-## Customization
+## Confiuration
 
 While entrypoints are generated and added to the manifest at build-time, you can customize or add to your `manifest.json` in the config file.
 
@@ -47,7 +47,7 @@ The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/
 }
 ```
 
-### `icons`
+## Icon
 
 The [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/) property needs to be set in the config file. The files should be added to WXT's [`public` directory](/get-started/assets#public-directory).
 
@@ -74,7 +74,7 @@ export default defineConfig({
 });
 ```
 
-### Permissions
+## Permissions
 
 [Permissions](https://developer.chrome.com/docs/extensions/reference/permissions/) must be listed in the manifest config.
 
@@ -86,7 +86,7 @@ export default defineConfig({
 });
 ```
 
-### Localization
+## Localization
 
 Similar to the icon, the [`_locales` directory](https://developer.chrome.com/docs/extensions/reference/i18n/) should be placed inside the the WXT's [`public` directory](/get-started/assets#public-directory).
 

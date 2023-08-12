@@ -24,7 +24,7 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework),
 | Opens browser and install extension                  |             ✅              |                    ❌                    |
 | HMR for UIs                                          |             ✅              |              🟡 React only               |
 | Reload HTML Files on Change                          |             ✅              |       🟡 Reloads entire extension        |
-| Reload Content Scripta on Change                     |             ✅              |       🟡 Reloads entire extension        |
+| Reload Content Scripts on Change                     |             ✅              |       🟡 Reloads entire extension        |
 | Reload Background on Change                          | 🟡 Reloads entire extension |       🟡 Reloads entire extension        |
 | <strong style="opacity: 50%">Built-in Utils</strong> |                             |                                          |
 | Storage                                              |             ❌              |                    ✅                    |

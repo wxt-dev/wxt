@@ -25,7 +25,7 @@ WXT allows you to edit several directories to your liking:
 - `root` (default: `process.cwd()`) - Root of the WXT project
 - `srcDir` (default: `<rootDir>`) - Location of all your source code
 - `entrypointsDir` (default: `<srcDir>/entrypoints`) - Folder containing all the entrypoints.
-- `publicDir` (default: `<srcDir>/public`) - Folder containing [public assets](/get-started/assets.md)
+- `publicDir` (default: `<rootDir>/public`) - Folder containing [public assets](/get-started/assets.md)
 
 ### Example
 

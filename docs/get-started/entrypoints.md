@@ -1,8 +1,8 @@
 # Defining Entrypoints
 
-An entrypoints is any HTML, JS, or CSS file that needs to be bundled and included with the extension.
+An "entrypoint" is any HTML, JS, or CSS file that needs to be bundled and included with the extension.
 
-They may or may not be listed in the extension's `manifest.json`.
+Entrypoints may or may not be listed in the extension's `manifest.json`.
 
 ## `/entrypoints` Directory
 

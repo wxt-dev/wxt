@@ -6,8 +6,8 @@ TypeScript files that are built, but are not included in the manifest.
 
 <EntrypointPatterns
   :patterns="[
-    ['<name>.tsx?', '<name>.js'],
-    ['<name>/index.tsx?', '<name>.js'],
+    ['<name>.(ts|tsx)', '<name>.js'],
+    ['<name>/index.(ts|tsx)', '<name>.js'],
   ]"
 />
 

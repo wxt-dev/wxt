@@ -14,8 +14,10 @@ And that's it! Your extension now supports Chrome, Firefox, Safari, Edge, and ot
 The `browser` variable is available globally via [auto-imports](/guide/auto-imports.md), or it can be imported manually.
 
 ```ts
-import browser from 'webextension-polyfill';
+import browser from 'wxt/browser';
 ```
+
+The `wxt/browser` module exports a customized version of `webextension-polyfill`'s browser with improved typing.
 
 ### Example
 
@@ -52,6 +54,13 @@ Follow [Chrome's message passing guide](https://developer.chrome.com/docs/extens
 Here's a basic request/response example:
 
 ```ts
+// popup/main.ts
+const res = await browser.runtime.sendMessage('ping');
+
+console.log('res'); // "pong"
+```
+
+```ts
 // background.ts
 export default defineBackground(() => {
   browser.runtime.onMessage.addEventListener(
@@ -64,13 +73,6 @@ export default defineBackground(() => {
     },
   );
 });
-```
-
-```ts
-// popup/main.ts
-const res = await browser.runtime.sendMessage('ping');
-
-console.log('res'); // "pong"
 ```
 
 There are a number of message passing libraries you can use to improve the message passing experience.
