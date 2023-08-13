@@ -133,6 +133,66 @@ describe('Manifest Content', () => {
     });
   });
 
+  describe('icons', () => {
+    it('should auto-discover icons with the correct name', async () => {
+      const project = new TestProject();
+      project.addFile('public/icon-16.png');
+      project.addFile('public/icon/32.jpeg');
+      project.addFile('public/icon@48w.jpg');
+      project.addFile('public/icon-64x64.gif');
+      project.addFile('public/icon@96.bmp');
+      project.addFile('public/icon/128x128.ico');
+
+      await project.build();
+      const manifest = await project.getOutputManifest();
+
+      expect(manifest.icons).toEqual({
+        '16': 'icon-16.png',
+        '32': 'icon/32.jpeg',
+        '48': 'icon@48w.jpg',
+        '64': 'icon-64x64.gif',
+        '96': 'icon@96.bmp',
+        '128': 'icon/128x128.ico',
+      });
+    });
+
+    it('should return undefined when no icons are found', async () => {
+      const project = new TestProject();
+      project.addFile('public/logo.png');
+      project.addFile('public/icon.jpeg');
+
+      await project.build();
+      const manifest = await project.getOutputManifest();
+
+      expect(manifest.icons).toBeUndefined();
+    });
+
+    it('should allow icons to be overwritten from the wxt.config.ts file', async () => {
+      const project = new TestProject();
+      project.addFile('public/icon-16.png');
+      project.addFile('public/icon-32.png');
+      project.addFile('public/logo-16.png');
+      project.addFile('public/logo-32.png');
+      project.addFile('public/logo-48.png');
+
+      const icons = {
+        '16': 'logo-16.png',
+        '32': 'logo-32.png',
+        '48': 'logo-48.png',
+      };
+      project.setConfigFileConfig({
+        manifest: {
+          icons,
+        },
+      });
+
+      await project.build();
+      const manifest = await project.getOutputManifest();
+
+      expect(manifest.icons).toEqual(icons);
+    });
+  });
+
   it('should group content scripts and styles together based on their matches and run_at', async () => {
     const project = new TestProject();
     project.addFile(
