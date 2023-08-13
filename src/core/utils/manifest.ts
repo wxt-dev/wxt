@@ -322,15 +322,16 @@ function discoverIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): Manifest.WebExtensionManifest['icons'] {
   const icons: [string, string][] = [];
+  // prettier-ignore
   // #region snippet
   const iconRegex = [
-    /^icon-([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon-([0-9]+)x[0-9]+\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon@([0-9]+)w\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon@([0-9]+)h\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon@([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon\/([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,
-    /^icon\/([0-9]+)x[0-9]+\.(png|bmp|jpeg|jpg|ico|gif)$/,
+    /^icon-([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,         // icon-16.png
+    /^icon-([0-9]+)x[0-9]+\.(png|bmp|jpeg|jpg|ico|gif)$/,  // icon-16x16.png
+    /^icon@([0-9]+)w\.(png|bmp|jpeg|jpg|ico|gif)$/,        // icon@16w.png
+    /^icon@([0-9]+)h\.(png|bmp|jpeg|jpg|ico|gif)$/,        // icon@16h.png
+    /^icon@([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,         // icon@16.png
+    /^icon\/([0-9]+)\.(png|bmp|jpeg|jpg|ico|gif)$/,        // icon/16.png
+    /^icon\/([0-9]+)x[0-9]+\.(png|bmp|jpeg|jpg|ico|gif)$/, // icon/16x16.png
   ];
   // #endregion snippet
 

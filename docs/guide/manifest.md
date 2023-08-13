@@ -47,9 +47,9 @@ The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/
 }
 ```
 
-## Icon
+## `icons`
 
-The [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/) property needs to be set in the config file. The files should be added to WXT's [`public` directory](/get-started/assets#public-directory).
+By default, WXT will discover icons in your [`public` directory](/get-started/assets#public-directory) and use them for the [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/).
 
 ```
 public/
@@ -60,21 +60,27 @@ public/
 └─ icon-128.png
 ```
 
+Icon files need to match the following regex to be automatically included in the manifest. Most design software can output icons in one of these formats
+
+<<< @/../src/core/utils/manifest.ts#snippet
+
+If you prefer to use filenames in a different format, you can add the icons manually in your `wxt.config.ts` file:
+
 ```ts
 export default defineConfig({
   manifest: {
     icons: {
-      16: '/icon-16.png',
-      24: '/icon-24.png',
-      48: '/icon-48.png',
-      96: '/icon-96.png',
-      128: '/icon-128.png',
+      16: '/extension-icon-16.png',
+      24: '/extension-icon-24.png',
+      48: '/extension-icon-48.png',
+      96: '/extension-icon-96.png',
+      128: '/extension-icon-128.png',
     },
   },
 });
 ```
 
-## Permissions
+## `permissions`
 
 [Permissions](https://developer.chrome.com/docs/extensions/reference/permissions/) must be listed in the manifest config.
 
