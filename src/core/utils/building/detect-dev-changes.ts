@@ -4,9 +4,11 @@ import {
   EntrypointGroup,
   OutputAsset,
   OutputFile,
+  InternalConfig,
 } from '~/types';
 import { every } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
+import { findEntrypoints } from '../build/findEntrypoints';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -98,6 +100,15 @@ export function detectDevChanges(
     cachedOutput: unchangedOutput,
     rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
   };
+}
+
+export async function detectEntrypointChanges(
+  config: InternalConfig,
+): Promise<DevModeChange[]> {
+  const newEntries = await findEntrypoints(config);
+  const oldEntries = currentOutput.steps.flatMap((step) => step.entrypoints);
+  const addedEntries = newEntries;
+  const removedEntries = [];
 }
 
 /**
