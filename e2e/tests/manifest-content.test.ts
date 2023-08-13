@@ -166,6 +166,31 @@ describe('Manifest Content', () => {
 
       expect(manifest.icons).toBeUndefined();
     });
+
+    it('should allow icons to be overwritten from the wxt.config.ts file', async () => {
+      const project = new TestProject();
+      project.addFile('public/icon-16.png');
+      project.addFile('public/icon-32.png');
+      project.addFile('public/logo-16.png');
+      project.addFile('public/logo-32.png');
+      project.addFile('public/logo-48.png');
+
+      const icons = {
+        '16': 'logo-16.png',
+        '32': 'logo-32.png',
+        '48': 'logo-48.png',
+      };
+      project.setConfigFileConfig({
+        manifest: {
+          icons,
+        },
+      });
+
+      await project.build();
+      const manifest = await project.getOutputManifest();
+
+      expect(manifest.icons).toEqual(icons);
+    });
   });
 
   it('should group content scripts and styles together based on their matches and run_at', async () => {
