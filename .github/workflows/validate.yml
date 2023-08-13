@@ -72,11 +72,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build Local Tarball
+        run: pnpm pack
+
       - name: Validate Vanilla
         working-directory: templates/vanilla
         run: |
           npm i
-          npm i ../../
+          npm i -D ../../wxt-*.tgz
           npm ls vite
           npm run build
           npm run compile
@@ -85,7 +88,7 @@ jobs:
         working-directory: templates/vue
         run: |
           npm i
-          npm i ../../
+          npm i -D ../../wxt-*.tgz
           npm ls vite
           npm run build
           npm run compile
@@ -94,7 +97,7 @@ jobs:
         working-directory: templates/react
         run: |
           npm i
-          npm i ../../
+          npm i -D ../../wxt-*.tgz
           npm ls vite
           npm run build
           npm run compile
@@ -103,7 +106,7 @@ jobs:
         working-directory: templates/svelte
         run: |
           npm i
-          npm i ../../
+          npm i -D ../../wxt-*.tgz
           npm ls vite
           npm run build
           npm run check
@@ -112,7 +115,7 @@ jobs:
         working-directory: templates/solid
         run: |
           npm i
-          npm i ../../
+          npm i -D ../../wxt-*.tgz
           npm ls vite
           npm run build
           npm run compile

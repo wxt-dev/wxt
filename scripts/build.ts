@@ -23,12 +23,14 @@ await Promise.all([
     sourcemap: true,
     dts: true,
     silent: true,
+    external: ['vite'],
   }),
   tsup.build({
     entry: { cli: 'src/cli/index.ts' },
     format: ['cjs'],
     sourcemap: 'inline',
     silent: true,
+    external: ['vite'],
   }),
   tsup.build({
     entry: { client: 'src/client/index.ts' },
@@ -36,6 +38,7 @@ await Promise.all([
     sourcemap: 'inline',
     dts: true,
     silent: true,
+    external: ['vite'],
   }),
   tsup.build({
     entry: { browser: 'src/client/browser.ts' },
@@ -43,6 +46,7 @@ await Promise.all([
     sourcemap: 'inline',
     dts: true,
     silent: true,
+    external: ['vite'],
   }),
   ...virtualEntrypoints.map((entryName) =>
     tsup.build({
@@ -52,7 +56,7 @@ await Promise.all([
       format: ['esm'],
       sourcemap: true,
       silent: true,
-      external: [`virtual:user-${entryName}`],
+      external: [`virtual:user-${entryName}`, 'vite'],
     }),
   ),
   tsup.build({
@@ -62,6 +66,7 @@ await Promise.all([
     format: ['esm'],
     sourcemap: true,
     silent: true,
+    external: ['vite'],
   }),
   tsup.build({
     entry: {
@@ -69,6 +74,7 @@ await Promise.all([
     },
     format: ['esm', 'cjs'],
     silent: true,
+    external: ['vite'],
   }),
 ]).catch((err) => {
   spinner.fail();
