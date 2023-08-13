@@ -77,6 +77,7 @@ jobs:
         run: |
           npm i
           npm i ../../
+          npm ls vite
           npm run build
           npm run compile
 
@@ -85,6 +86,7 @@ jobs:
         run: |
           npm i
           npm i ../../
+          npm ls vite
           npm run build
           npm run compile
 
@@ -93,6 +95,7 @@ jobs:
         run: |
           npm i
           npm i ../../
+          npm ls vite
           npm run build
           npm run compile
 
@@ -101,6 +104,7 @@ jobs:
         run: |
           npm i
           npm i ../../
+          npm ls vite
           npm run build
           npm run check
 
@@ -109,5 +113,6 @@ jobs:
         run: |
           npm i
           npm i ../../
+          npm ls vite
           npm run build
           npm run compile
