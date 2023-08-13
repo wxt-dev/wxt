@@ -33,7 +33,9 @@ export function multipageMove(
           (entry) => !!normalizePath(entry.inputPath).endsWith(oldBundlePath),
         );
         if (entrypoint == null) {
-          config.logger.debug('No entrypoint found for', oldBundlePath);
+          config.logger.debug(
+            `No entrypoint found for ${oldBundlePath}, leaving in chunks directory`,
+          );
           continue;
         }
 

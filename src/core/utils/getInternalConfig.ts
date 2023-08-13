@@ -9,7 +9,7 @@ import {
 } from '../types';
 import path, { resolve } from 'node:path';
 import * as vite from 'vite';
-import { consola } from 'consola';
+import { LogLevels, consola } from 'consola';
 import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
 import { getGlobals } from './globals';
@@ -33,6 +33,8 @@ export async function getInternalConfig(
   const outBaseDir = path.resolve(root, '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const logger = config.logger ?? consola;
+  const debug = !!config.debug;
+  if (debug) logger.level = LogLevels.debug;
 
   const baseConfig: InternalConfigNoUserDirs = {
     root,
@@ -43,6 +45,7 @@ export async function getInternalConfig(
     manifestVersion,
     mode,
     command,
+    debug,
     logger,
     vite: config.vite ?? {},
     imports: config.imports ?? {},

@@ -2,6 +2,7 @@ import * as vite from 'vite';
 import { Manifest, Scripting } from 'webextension-polyfill';
 import { UnimportOptions } from 'unimport';
 import { EntrypointGroup } from '.';
+import { LogLevel } from 'consola';
 
 export interface InlineConfig {
   /**
@@ -34,6 +35,12 @@ export interface InlineConfig {
    * @default "wxt.config.ts"
    */
   configFile?: string | false;
+  /**
+   * Set to `true` to show debug logs. Overriden by the command line `--debug` option.
+   *
+   * @default false
+   */
+  debug?: boolean;
   /**
    * ID of the extension for each store. Used for publishing.
    */
@@ -218,6 +225,7 @@ export interface Logger {
   error(...args: any[]): void;
   fatal(...args: any[]): void;
   success(...args: any[]): void;
+  level: LogLevel;
 }
 
 export interface BaseEntrypoint {

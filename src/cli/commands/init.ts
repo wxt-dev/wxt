@@ -9,7 +9,10 @@ import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
 
 export const init = defineCommand<
-  [directory: string | undefined, options: { template?: string; pm?: string }]
+  [
+    directory: string | undefined,
+    options: { template?: string; pm?: string; debug?: boolean },
+  ]
 >(
   async (userDirectory, flags) => {
     consola.info('Initalizing new project');

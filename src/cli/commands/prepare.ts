@@ -9,12 +9,14 @@ export const prepare = defineCommand<
     root: string | undefined,
     flags: {
       config?: string;
+      debug?: boolean;
     },
   ]
 >(async (root, flags) => {
   const cliConfig: wxt.InlineConfig = {
     root,
     configFile: flags.config,
+    debug: flags.debug,
   };
   const config = await getInternalConfig(cliConfig, 'build');
 
