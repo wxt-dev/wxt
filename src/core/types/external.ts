@@ -5,37 +5,33 @@ import { EntrypointGroup } from '.';
 
 export interface InlineConfig {
   /**
-   * Project root directory.
+   * Your project's root directory containing the `package.json` used to fill out the
+   * `manifest.json`.
    *
-   * @default
-   * process.cwd()
+   * @default process.cwd()
    */
   root?: string;
   /**
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
-   * @default
-   * "<rootDir>"
+   * @default config.root
    */
   srcDir?: string;
   /**
    * Directory containing files that will be copied to the output directory as-is.
    *
-   * @default
-   * "<rootDir>/publicDir"
+   * @default "${config.root}/public"
    */
   publicDir?: string;
   /**
-   * @default
-   * "<srcDir>/entrypoints"
+   * @default "${config.srcDir}/entrypoints"
    */
   entrypointsDir?: string;
   /**
    * Path to `"wxt.config.ts"` file or false to disable config file discovery.
    *
-   * @default
-   * "wxt.config.ts"
+   * @default "wxt.config.ts"
    */
   configFile?: string | false;
   /**
@@ -56,7 +52,7 @@ export interface InlineConfig {
    */
   imports?: Partial<UnimportOptions>;
   /**
-   * Explicitly set a browser to target. This will override the default browser for each command,
+   * Explicitly set a browser to build for. This will override the default browser for each command,
    * and can be overridden by the command line `--browser` option.
    *
    * @default
@@ -98,12 +94,12 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{{name}}` - The project's name converted to kebab-case
-     * - `{{version}} - The version_name or version from the manifest
-     * - `{{browser}} - The target browser from the `--browser` CLI flag
-     * - `{{manifestVersion}}` - Either "2" or "3"
+     * - `{name}` - The project's name converted to kebab-case
+     * - `{version}` - The version_name or version from the manifest
+     * - `{browser}` - The target browser from the `--browser` CLI flag
+     * - `{manifestVersion}` - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-{{browser}}.zip"
+     * @default "{name}-{version}-{browser}.zip"
      */
     artifactTemplate?: string;
     /**
@@ -111,22 +107,23 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{{name}}` - The project's name converted to kebab-case
-     * - `{{version}} - The version_name or version from the manifest
-     * - `{{browser}} - The target browser from the `--browser` CLI flag
-     * - `{{manifestVersion}}` - Either "2" or "3"
+     * - `{name}` - The project's name converted to kebab-case
+     * - `{version}` - The version_name or version from the manifest
+     * - `{browser}` - The target browser from the `--browser` CLI flag
+     * - `{manifestVersion}` - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-sources.zip"
+     * @default "{name}-{version}-sources.zip"
      */
     sourcesTemplate?: string;
     /**
-     * Override the artifactTemplate's `{{name}}` template variable. Defaults to the package.json's
+     * Override the artifactTemplate's `{name}` template variable. Defaults to the `package.json`'s
      * name, or if that doesn't exist, the current working directories name.
      */
     name?: string;
     /**
-     * Root directory to ZIP. The ZIP can be uploaded to the Firefox Addon Store as your source
-     * code. Defaults to the `config.root` directory.
+     * Root directory to ZIP when generating the sources ZIP.
+     *
+     * @default config.root
      */
     sourcesRoot?: string;
     /**

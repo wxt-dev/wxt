@@ -1,8 +1,13 @@
 import { defineConfig } from 'vitepress';
+import { generateConfigDocs } from './plugins/generate-config-docs';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'WXT',
+  vite: {
+    clearScreen: false,
+    plugins: [generateConfigDocs()],
+  },
   description: 'Next gen framework for developing web extensions',
   lastUpdated: true,
 
