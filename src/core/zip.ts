@@ -66,10 +66,12 @@ export async function zipExtension(
     zipFiles.push(sourcesZipPath);
   }
 
-  config.logger.success(
+  await printFileList(
+    config.logger.success,
     `Zipped extension in ${formatDuration(Date.now() - start)}`,
+    config.outBaseDir,
+    zipFiles,
   );
-  await printFileList(config.logger.log, config.outBaseDir, zipFiles);
 
   return zipFiles;
 }

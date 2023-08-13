@@ -82,9 +82,13 @@ await Promise.all([
   process.exit(1);
 });
 
-spinner.succeed();
+spinner.clear().stop();
 
 const duration = Date.now() - startTime;
 const outFiles = await glob(`${outDir}/**`, { absolute: true });
-await printFileList(consola.log, outDir, outFiles);
-consola.success(`Finished in ${formatDuration(duration)}`);
+await printFileList(
+  consola.success,
+  `Built WXT in ${formatDuration(duration)}`,
+  outDir,
+  outFiles,
+);

@@ -42,10 +42,12 @@ export async function buildInternal(
   const { output } = await rebuild(config, groups, undefined);
 
   // Post-build
-  config.logger.success(
+  await printBuildSummary(
+    config.logger.success,
     `Built extension in ${formatDuration(Date.now() - startTime)}`,
+    output,
+    config,
   );
-  await printBuildSummary(output, config);
 
   return output;
 }

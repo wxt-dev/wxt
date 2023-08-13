@@ -6,6 +6,7 @@ import { printTable } from './printTable';
 
 export async function printFileList(
   log: (message: string) => void,
+  header: string,
   baseDir: string,
   files: string[],
 ): Promise<void> {
@@ -29,9 +30,9 @@ export async function printFileList(
     }),
   );
 
-  printTable(log, fileRows);
+  fileRows.push([`${pc.cyan('Σ Total size:')} ${String(filesize(totalSize))}`]);
 
-  log(`${pc.cyan('Σ Total size:')} ${String(filesize(totalSize))}`);
+  printTable(log, header, fileRows);
 }
 
 const DEFAULT_COLOR = pc.blue;
