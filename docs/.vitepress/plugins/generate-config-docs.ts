@@ -31,6 +31,8 @@ const CUSTOM_TYPES = {
 };
 
 export function generateConfigDocs() {
+  writeFileSync(configPath, '');
+
   const generateDocs = async () => {
     consola.info('Generating /config.md');
     try {
