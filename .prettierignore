@@ -6,3 +6,6 @@ e2e/project
 docs/.vitepress/cache
 pnpm-lock.yaml
 CHANGELOG.md
+.gitattributes
+.gitignore
+.prettierignore

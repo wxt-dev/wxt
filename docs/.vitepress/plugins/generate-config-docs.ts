@@ -1,7 +1,10 @@
 import { resolve } from 'node:path';
 import { Project, ts, Type, Node, JSDocableNode } from 'ts-morph';
-import Ora from 'ora';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { format } from 'prettier';
+import consola from 'consola';
+
+let hasGenerated = false;
 
 const externalTypesPath = resolve('src/core/types/external.ts');
 const configTemplatePath = resolve('docs/config.tpl.md');
@@ -28,8 +31,10 @@ const CUSTOM_TYPES = {
 };
 
 export function generateConfigDocs() {
-  const generateDocs = () => {
-    const spinner = Ora('Generating /config.md').start();
+  writeFileSync(configPath, '');
+
+  const generateDocs = async () => {
+    consola.info('Generating /config.md');
     try {
       const project = new Project({
         tsConfigFilePath: resolve('tsconfig.json'),
@@ -39,18 +44,10 @@ export function generateConfigDocs() {
       const externalTypesFile = project.addSourceFileAtPath(externalTypesPath);
       project.resolveSourceFileDependencies();
 
-      const typeChecker = project.getProgram().getTypeChecker();
-
       const inlineConfigInterface =
         externalTypesFile.getInterfaceOrThrow('InlineConfig');
 
-      const getDocsFor = (
-        path: string[],
-        node: Node<ts.Node>,
-        depth = 0,
-      ): string[] => {
-        if (depth > 3) throw Error('Recursion to deep for ' + path.join('.'));
-
+      const getDocsFor = (path: string[], node: Node<ts.Node>): string[] => {
         const pathStr = path.join('.');
 
         let type: Type<ts.Type>;
@@ -73,11 +70,7 @@ export function generateConfigDocs() {
                 const childPath = [...path, property.getName()];
                 if (LEAF_PATHS.includes(childPath.join('.'))) return [];
 
-                return getDocsFor(
-                  childPath,
-                  property.getDeclarations()[0],
-                  depth + 1,
-                );
+                return getDocsFor(childPath, property.getDeclarations()[0]);
               })
           );
         }
@@ -115,33 +108,38 @@ export function generateConfigDocs() {
       };
 
       const lines = getDocsFor([], inlineConfigInterface);
-      const text =
+      const text = await format(
         PREFACE +
-        '\n\n' +
-        readFileSync(configTemplatePath, 'utf-8').replace(
-          '{{ DOCS }}',
-          lines.join('\n'),
-        );
+          '\n\n' +
+          readFileSync(configTemplatePath, 'utf-8').replace(
+            '{{ DOCS }}',
+            lines.join('\n'),
+          ),
+        { parser: 'markdown' },
+      );
 
       writeFileSync(configPath, text);
-      spinner.succeed('Generated /config.md');
+      consola.success('Generated /config.md');
     } catch (err) {
-      spinner.fail('Failed to generate /config.md');
-      console.error(err.message);
+      consola.fail('Failed to generate /config.md');
+      consola.error(err.message);
     }
   };
 
   return {
     name: 'docs:generate-config-docs',
-    buildStart() {
-      generateDocs();
+    async config() {
+      if (!hasGenerated) {
+        hasGenerated = true;
+        await generateDocs();
+      }
     },
     configureServer(server: any) {
       server.watcher.add(externalTypesPath);
     },
-    handleHotUpdate(ctx: { file: string }) {
+    async handleHotUpdate(ctx: { file: string }) {
       if ([externalTypesPath, configTemplatePath].includes(ctx.file)) {
-        generateDocs();
+        await generateDocs();
       }
     },
   };
