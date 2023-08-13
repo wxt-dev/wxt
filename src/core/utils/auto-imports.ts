@@ -10,7 +10,7 @@ export function getUnimportOptions(
     imports: [{ name: 'defineConfig', from: 'wxt' }],
     presets: [{ package: 'wxt/client' }, { package: 'wxt/browser' }],
     warn: config.logger.warn,
-    dirs: ['./components/*', './composables/*', './hooks/*', './utils/*'],
+    dirs: ['components', 'composables', 'hooks', 'utils'],
   };
 
   return mergeConfig(

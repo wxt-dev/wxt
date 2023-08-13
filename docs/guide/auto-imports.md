@@ -20,10 +20,19 @@ And more. All [`wxt/client`](/config.md#wxtclient) APIs can be used without impo
 
 In addition WXT APIs, default and named exports from inside the following directories can be used without listing them in imports.
 
-- `<srcDir>/components/**/*`
-- `<srcDir>/composables/**/*`
-- `<srcDir>/hooks/**/*`
-- `<srcDir>/utils/**/*`
+- `<srcDir>/components/*`
+- `<srcDir>/composables/*`
+- `<srcDir>/hooks/*`
+- `<srcDir>/utils/*`
+
+To add auto-imports from subdirectories, like `utils/api/some-file.ts`, re-export them from the base directory:
+
+```ts
+// utils/index.ts
+export * from './api/some-file.ts';
+```
+
+Alternatively, you could add the directory to the list of auto-import directories in your config file.
 
 ## TypeScript
 
