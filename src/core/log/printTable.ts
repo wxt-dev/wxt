@@ -1,5 +1,6 @@
 export function printTable(
   log: (message: string) => void,
+  header: string,
   rows: string[][],
   gap = 2,
 ): void {
@@ -24,5 +25,5 @@ export function printTable(
     if (i !== rows.length - 1) str += '\n';
   });
 
-  log(str);
+  log(`${header}\n${str}`);
 }

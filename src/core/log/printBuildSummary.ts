@@ -3,6 +3,8 @@ import { BuildOutput, InternalConfig } from '../types';
 import { printFileList } from './printFileList';
 
 export async function printBuildSummary(
+  log: (...args: any[]) => void,
+  header: string,
   output: BuildOutput,
   config: InternalConfig,
 ) {
@@ -18,7 +20,7 @@ export async function printBuildSummary(
   });
 
   const files = chunks.map((chunk) => resolve(config.outDir, chunk.fileName));
-  await printFileList(config.logger.log, config.outDir, files);
+  await printFileList(log, header, config.outDir, files);
 }
 
 const DEFAULT_SORT_WEIGHT = 100;
