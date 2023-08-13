@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.3.2
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.3.1...v0.3.2)
+
+### 🚀 Enhancements
+
+- Discover icons from the public directory ([#72](https://github.com/aklinker1/wxt/pull/72))
+- Don't allow auto-importing from subdirectories ([d54d611](https://github.com/aklinker1/wxt/commit/d54d611))
+
+### 📖 Documentation
+
+- Document the `url:` import prefix for remote code ([323045a](https://github.com/aklinker1/wxt/commit/323045a))
+- Fix typos ([97f0938](https://github.com/aklinker1/wxt/commit/97f0938))
+- Fix capitalization ([39467d1](https://github.com/aklinker1/wxt/commit/39467d1))
+- Generate markdown for config reference ([#74](https://github.com/aklinker1/wxt/pull/74))
+
+### 🏡 Chore
+
+- Upgrade dependencies ([798f02f](https://github.com/aklinker1/wxt/commit/798f02f))
+- Upgrade vite (`v4.3` &rarr; `v4.4`) ([547c185](https://github.com/aklinker1/wxt/commit/547c185))
+- Update templates to work with CSS entrypoints ([7f15305](https://github.com/aklinker1/wxt/commit/7f15305))
+- Improve file list output in CI ([#73](https://github.com/aklinker1/wxt/pull/73))
+
+### 🤖 CI
+
+- Validate templates against `main` ([#66](https://github.com/aklinker1/wxt/pull/66))
+- List vite version when validating project templates ([ef140dc](https://github.com/aklinker1/wxt/commit/ef140dc))
+- Validate templates using tarball to avoid version conflicts within the `wxt/node_modules` directory ([edfa075](https://github.com/aklinker1/wxt/commit/edfa075))
+
+### ❤️  Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.3.1
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.3.0...v0.3.1)
