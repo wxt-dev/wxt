@@ -32,7 +32,7 @@ console.log(url); // "chrome-extension://<id>/<name>.html"
 Plain old HTML file.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />

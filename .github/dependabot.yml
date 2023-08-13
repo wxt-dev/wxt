@@ -6,6 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: pnpm
-    directory: "/" # Location of package manifests
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
