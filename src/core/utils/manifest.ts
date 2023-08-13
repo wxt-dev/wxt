@@ -17,6 +17,7 @@ import {
   mapWxtOptionsToContentScript,
 } from './content-scripts';
 import { getPackageJson } from './package';
+import { normalizePath } from './paths';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -346,7 +347,7 @@ function discoverIcons(
     }
     if (size == null) return;
 
-    icons.push([size, asset.fileName]);
+    icons.push([size, normalizePath(asset.fileName)]);
   });
 
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
