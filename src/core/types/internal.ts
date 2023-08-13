@@ -20,6 +20,7 @@ export interface InternalConfig {
   entrypointsDir: string;
   outBaseDir: string;
   outDir: string;
+  debug: boolean;
   storeIds: {
     chrome?: string;
     firefox?: string;

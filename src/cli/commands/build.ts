@@ -10,6 +10,7 @@ export const build = defineCommand<
       browser?: wxt.TargetBrowser;
       mv3?: boolean;
       mv2?: boolean;
+      debug?: boolean;
     },
   ]
 >(async (root, flags) => {
@@ -20,6 +21,7 @@ export const build = defineCommand<
     browser: flags.browser,
     manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
     configFile: flags.config,
+    debug: flags.debug,
   };
 
   await wxt.build(cliConfig);

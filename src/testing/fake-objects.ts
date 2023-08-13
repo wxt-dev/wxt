@@ -212,6 +212,7 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => ({
   runnerConfig: {
     config: {},
   },
+  debug: faker.datatype.boolean(),
   srcDir: fakeDir(),
   storeIds: {},
   typesDir: fakeDir(),

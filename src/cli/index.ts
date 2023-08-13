@@ -6,6 +6,8 @@ const cli = cac('wxt');
 cli.help();
 cli.version(version);
 
+cli.option('--debug', 'enable debug mode');
+
 // DEV
 cli
   .command('[root]', 'start dev server')

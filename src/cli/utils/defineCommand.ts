@@ -1,4 +1,4 @@
-import { consola } from 'consola';
+import { LogLevels, consola } from 'consola';
 import { printHeader } from '../../core/log/printHeader';
 import { formatDuration } from '../../core/utils/formatDuration';
 
@@ -9,6 +9,13 @@ export function defineCommand<TArgs extends any[]>(
   },
 ) {
   return async (...args: TArgs) => {
+    // Enable consola's debug mode globally at the start of all commands when the `--debug` flag is
+    // passed
+    const isDebug = !!args.find((arg) => arg?.debug);
+    if (isDebug) {
+      consola.level = LogLevels.debug;
+    }
+
     const startTime = Date.now();
     try {
       printHeader();
