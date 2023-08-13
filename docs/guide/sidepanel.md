@@ -22,7 +22,7 @@ Firefox does not support sidepanel pages.
 Plain old HTML file.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
