@@ -77,7 +77,7 @@
     "giget": "^1.1.2",
     "jiti": "^1.19.1",
     "json5": "^2.2.3",
-    "linkedom": "^0.14.26",
+    "linkedom": "^0.15.1",
     "minimatch": "^9.0.3",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",

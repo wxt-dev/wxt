@@ -51,8 +51,8 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       linkedom:
-        specifier: ^0.14.26
-        version: 0.14.26
+        specifier: ^0.15.1
+        version: 0.15.1
       minimatch:
         specifier: ^9.0.3
         version: 9.0.3
@@ -3763,8 +3763,8 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
-  /linkedom@0.14.26:
-    resolution: {integrity: sha512-mK6TrydfFA7phrnp+1j57ycBwFI5bGSW6YXlw9acHoqF+mP/y+FooEYYyniOt5Ot57FSKB3iwmnuQ1UUyNLm5A==}
+  /linkedom@0.15.1:
+    resolution: {integrity: sha512-8U+wi0VI0JW7ehxX+N/rmZyLWV9bypiCOUeklGBWslpiTpxHnVfY+yHmf6sg06q2kXYdpIJWC6LMpepgOq+JXg==}
     dependencies:
       css-select: 5.1.0
       cssom: 0.5.0
