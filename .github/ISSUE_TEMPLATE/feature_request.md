@@ -4,7 +4,6 @@ about: Suggest an idea for WXT
 title: ''
 labels: feature
 assignees: ''
-
 ---
 
 ### Feature Request
