@@ -159,6 +159,7 @@ export const fakeRollupOutputChunk = fakeObjectCreator<Rollup.OutputChunk>(
       importedAssets: new Set(),
       importedCss: new Set(),
     },
+    preliminaryFileName: faker.string.alphanumeric(),
   }),
 );
 
