@@ -161,6 +161,15 @@ importers:
         specifier: workspace:*
         version: link:..
 
+  examples/content-scripts:
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+      wxt:
+        specifier: workspace:*
+        version: link:../..
+
   examples/i18n:
     devDependencies:
       typescript:
