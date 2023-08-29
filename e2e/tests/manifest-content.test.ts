@@ -266,4 +266,44 @@ describe('Manifest Content', () => {
       js: ['content-scripts/one.js'],
     });
   });
+
+  it('should add to any content scripts declared in wxt.config.ts', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/one.content/index.ts',
+      `export default defineContentScript({
+        matches: ["*://google.com/*"],
+        main: () => {},
+      })`,
+    );
+    project.addFile(
+      'entrypoints/two.content/style.css',
+      `body {
+        background-color: red;
+      }`,
+    );
+    project.setConfigFileConfig({
+      manifest: {
+        content_scripts: [
+          {
+            css: ['content-scripts/two.css'],
+            matches: ['*://*.google.com/*'],
+          },
+        ],
+      },
+    });
+
+    await project.build();
+
+    const manifest = await project.getOutputManifest();
+
+    expect(manifest.content_scripts).toContainEqual({
+      css: ['content-scripts/two.css'],
+      matches: ['*://*.google.com/*'],
+    });
+    expect(manifest.content_scripts).toContainEqual({
+      matches: ['*://google.com/*'],
+      js: ['content-scripts/one.js'],
+    });
+  });
 });

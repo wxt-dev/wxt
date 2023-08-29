@@ -302,7 +302,7 @@ function addEntrypoints(
         return map;
       }, new Map<string, ContentScriptEntrypoint[]>());
 
-      manifest.content_scripts = Array.from(hashToEntrypointsMap.entries()).map(
+      const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
           ...mapWxtOptionsToContentScript(scripts[0].options),
           // TOOD: Sorting css and js arrays here so we get consistent test results... but we
@@ -315,6 +315,10 @@ function addEntrypoints(
             .sort(),
         }),
       );
+      if (newContentScripts.length >= 0) {
+        manifest.content_scripts ??= [];
+        manifest.content_scripts.push(...newContentScripts);
+      }
     }
   }
 }
