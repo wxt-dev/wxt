@@ -21,22 +21,22 @@ export function createWebExtRunner(): ExtensionRunner {
         if (level >= WARN_LOG_LEVEL) config.logger.warn(msg);
       };
 
-      const wxtUserConfig = config.runnerConfig.config;
+      const runnerConfig = config.runnerConfig.config;
       const userConfig = {
-        console: wxtUserConfig?.openConsole,
-        devtools: wxtUserConfig?.openDevtools,
-        startUrl: wxtUserConfig?.startUrls,
+        console: runnerConfig?.openConsole,
+        devtools: runnerConfig?.openDevtools,
+        startUrl: runnerConfig?.startUrls,
         ...(config.browser === 'firefox'
           ? {
-              firefox: wxtUserConfig?.binaries?.firefox,
-              firefoxProfile: wxtUserConfig?.firefoxProfile,
-              prefs: wxtUserConfig?.firefoxPrefs,
-              args: wxtUserConfig?.firefoxArgs,
+              firefox: runnerConfig?.binaries?.firefox,
+              firefoxProfile: runnerConfig?.firefoxProfile,
+              prefs: runnerConfig?.firefoxPrefs,
+              args: runnerConfig?.firefoxArgs,
             }
           : {
-              chromiumBinary: wxtUserConfig?.binaries?.[config.browser],
-              chromiumProfile: wxtUserConfig?.chromiumProfile,
-              args: wxtUserConfig?.chromiumArgs,
+              chromiumBinary: runnerConfig?.binaries?.[config.browser],
+              chromiumProfile: runnerConfig?.chromiumProfile,
+              args: runnerConfig?.chromiumArgs,
             }),
       };
 

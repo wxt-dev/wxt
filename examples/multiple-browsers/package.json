@@ -1,0 +1,29 @@
+{
+  "name": "@example/multiple-browsers",
+  "description": "Example setup for 4 different browsers",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "dev:edge": "wxt -b firefox",
+    "dev:custom": "wxt -b custom",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "build:edge": "wxt build -b edge",
+    "build:safari": "wxt build -b safari",
+    "build:custom": "wxt build -b custom",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "zip:edge": "wxt zip -b edge",
+    "zip:safari": "wxt zip -b safari",
+    "zip:custom": "wxt zip -b custom",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "wxt": "workspace:*"
+  }
+}

@@ -424,30 +424,32 @@ export interface ExtensionRunnerConfig {
   /**
    * List of browser names and the binary that should be used to open the browser.
    */
-  binaries?: {
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    chrome?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    edge?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    opera?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
-     */
-    firefox?:
-      | 'firefox'
-      | 'beta'
-      | 'nightly'
-      | 'deved'
-      | 'firefoxdeveloperedition'
-      | string;
-  };
+  binaries?:
+    | {
+        /**
+         * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+         */
+        chrome?: string;
+        /**
+         * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+         */
+        edge?: string;
+        /**
+         * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+         */
+        opera?: string;
+        /**
+         * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
+         */
+        firefox?:
+          | 'firefox'
+          | 'beta'
+          | 'nightly'
+          | 'deved'
+          | 'firefoxdeveloperedition'
+          | string;
+      }
+    | Record<string, string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile
    */

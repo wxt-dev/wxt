@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiple Browsers</title>
+    <meta name="manifest.type" content="browser_action" />
+    <style>
+      html,
+      body {
+        width: max-content;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1 id="browserName"></h1>
+      <p id="isChrome"></p>
+      <p id="isFirefox"></p>
+      <p id="isSafari"></p>
+      <p id="isEdge"></p>
+      <p id="isOpera"></p>
+      <p id="isCustom"></p>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
