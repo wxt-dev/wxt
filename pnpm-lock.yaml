@@ -170,6 +170,22 @@ importers:
         specifier: workspace:*
         version: link:../..
 
+  examples/messaging:
+    dependencies:
+      '@webext-core/messaging':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@webext-core/proxy-service':
+        specifier: ^1.2.0
+        version: 1.2.0(@webext-core/messaging@1.4.0)(webextension-polyfill@0.10.0)
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+      wxt:
+        specifier: ^0.3.0
+        version: link:../..
+
   examples/onboarding-page:
     devDependencies:
       typescript:
@@ -1376,6 +1392,24 @@ packages:
     resolution: {integrity: sha512-huti7vdxWQ10XlkmEO/nC7gVmzAcxNRj+Kdp+HrnRzh2PY9pv5BLrjL8QXzN5EdJjxP154yr7/Q7+Z6xe0TZDA==}
     dependencies:
       '@webcomponents/webcomponentsjs': 2.8.0
+    dev: false
+
+  /@webext-core/messaging@1.4.0:
+    resolution: {integrity: sha512-gzXQ13HfKR3Yrn9TnrvTC/5seA7uPFvaqxqNFBsFOOdSZa5LyXt58Rhym8BYXarkWUGp+fh8f6AYM3RYuNbS+A==}
+    dependencies:
+      serialize-error: 11.0.2
+      webextension-polyfill: 0.10.0
+    dev: false
+
+  /@webext-core/proxy-service@1.2.0(@webext-core/messaging@1.4.0)(webextension-polyfill@0.10.0):
+    resolution: {integrity: sha512-MCUadVakeb7L47AvdtlbJfBUDjFdejr5t4E2WrwZagnev3a5I/xh2wHCkE+G0ihO/VUt/m0R1MPX+y4YVFRyPA==}
+    peerDependencies:
+      '@webext-core/messaging': '>=1.3.1'
+      webextension-polyfill: ^0.10.0
+    dependencies:
+      '@webext-core/messaging': 1.4.0
+      get-value: 3.0.1
+      webextension-polyfill: 0.10.0
     dev: false
 
   /abort-controller@3.0.0:
@@ -2975,6 +3009,13 @@ packages:
       resolve-pkg-maps: 1.0.0
     dev: true
 
+  /get-value@3.0.1:
+    resolution: {integrity: sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA==}
+    engines: {node: '>=6.0'}
+    dependencies:
+      isobject: 3.0.1
+    dev: false
+
   /getpass@0.1.7:
     resolution: {integrity: sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng==}
     dependencies:
@@ -3555,6 +3596,11 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  /isobject@3.0.1:
+    resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
@@ -5017,6 +5063,13 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+
+  /serialize-error@11.0.2:
+    resolution: {integrity: sha512-o43i0jLcA0LXA5Uu+gI1Vj+lF66KR9IAcy0ThbGq1bAMPN+k5IgSHsulfnqf/ddKAz6dWf+k8PD5hAr9oCSHEQ==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      type-fest: 2.19.0
+    dev: false
 
   /setimmediate@1.0.5:
     resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}

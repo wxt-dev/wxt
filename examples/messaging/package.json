@@ -1,0 +1,22 @@
+{
+  "name": "@example/messaging",
+  "description": "Example of how to send and recieve messages in a WXT extension",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "wxt": "^0.3.0"
+  },
+  "dependencies": {
+    "@webext-core/messaging": "^1.4.0",
+    "@webext-core/proxy-service": "^1.2.0"
+  }
+}

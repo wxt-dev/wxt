@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Default Popup Title</title>
+    <meta name="manifest.type" content="browser_action" />
+  </head>
+  <body>
+    <div id="app">
+      <button id="extensionApiSend">Send Extension API</button>
+      <pre id="extensionApiResponse">null</pre>
+
+      <hr />
+
+      <button id="messagingLibSend">Messaging Lib Send</button>
+      <pre id="messagingLibResponse">null</pre>
+
+      <hr />
+
+      <button id="proxyServiceSend">Proxy Service Send</button>
+      <pre id="proxyServiceResponse">null</pre>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
