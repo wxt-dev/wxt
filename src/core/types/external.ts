@@ -380,7 +380,6 @@ export type UserManifest = Partial<
     | 'background'
     | 'browser_action'
     | 'chrome_url_overrides'
-    | 'content_scripts'
     | 'devtools_page'
     | 'manifest_version'
     | 'options_page'
