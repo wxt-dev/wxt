@@ -56,7 +56,7 @@
     "compile": "tsc --noEmit",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "simple-git-hooks",
+    "prepare": "simple-git-hooks && pnpm build",
     "prepublish": "pnpm -s build",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
