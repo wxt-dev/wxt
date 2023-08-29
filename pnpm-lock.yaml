@@ -170,6 +170,15 @@ importers:
         specifier: workspace:*
         version: link:../..
 
+  examples/onboarding-page:
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+      wxt:
+        specifier: workspace:*
+        version: link:../..
+
   examples/storage:
     devDependencies:
       typescript:
