@@ -170,6 +170,25 @@ importers:
         specifier: workspace:*
         version: link:../..
 
+  examples/indexeddb:
+    dependencies:
+      '@webext-core/messaging':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@webext-core/proxy-service':
+        specifier: ^1.2.0
+        version: 1.2.0(@webext-core/messaging@1.4.0)(webextension-polyfill@0.10.0)
+      idb:
+        specifier: ^7.1.1
+        version: 7.1.1
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+      wxt:
+        specifier: workspace:*
+        version: link:../..
+
   examples/messaging:
     dependencies:
       '@webext-core/messaging':
@@ -3300,6 +3319,10 @@ packages:
     resolution: {integrity: sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==}
     engines: {node: '>=14.18.0'}
     dev: true
+
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: false
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}

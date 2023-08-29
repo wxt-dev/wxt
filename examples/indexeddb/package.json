@@ -1,0 +1,23 @@
+{
+  "name": "@example/indexeddb",
+  "description": "manifest.json description",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "wxt": "workspace:*"
+  },
+  "dependencies": {
+    "@webext-core/messaging": "^1.4.0",
+    "@webext-core/proxy-service": "^1.2.0",
+    "idb": "^7.1.1"
+  }
+}

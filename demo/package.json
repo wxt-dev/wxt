@@ -4,16 +4,16 @@
   "description": "Demo extension for WXT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm -w build && wxt",
-    "build": "pnpm -w build && wxt build",
-    "build:all": "pnpm -w build && run-s -s build:all:*",
+    "dev": "wxt",
+    "build": "wxt build",
+    "build:all": "run-s -s build:all:*",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "zip": "pnpm -w build && wxt zip",
-    "compile": "pnpm -w build && tsc --noEmit",
-    "postinstall": "pnpm -w build && wxt prepare"
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
   },
   "dependencies": {
     "webextension-polyfill": "^0.10.0"
