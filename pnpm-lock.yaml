@@ -161,6 +161,15 @@ importers:
         specifier: workspace:*
         version: link:..
 
+  examples/i18n:
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+      wxt:
+        specifier: workspace:*
+        version: link:../..
+
 packages:
 
   /@algolia/autocomplete-core@1.9.3(algoliasearch@4.18.0):

@@ -119,3 +119,33 @@ jobs:
           npm ls vite
           npm run build
           npm run compile
+
+  examples:
+    name: Examples
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build WXT
+        run: pnpm build
+
+      - name: Build Examples
+        run: pnpm run -r --filter '@example/*' build
+
+      - name: Check Types
+        run: pnpm run -r --filter '@example/*' compile

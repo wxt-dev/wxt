@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Localized Action</title>
+    <meta name="manifest.type" content="browser_action" />
+    <style>
+      html,
+      body {
+        width: max-content;
+      }
+    </style>
+  </head>
+  <body>
+    <small data-i18n="@@ui_locale"></small>
+    <h1 data-i18n="extName"></h1>
+    <h2 data-i18n="extDescription"></h2>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

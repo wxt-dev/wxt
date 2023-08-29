@@ -134,3 +134,5 @@ You're ready to build your web extension!
 
 - Learn how to [add entrypoints](./entrypoints.md) like the popup, options page, or content scripts
 - [Configure WXT](./configuration.md) by creating a `wxt.config.ts` file
+- Look at [example extensions](https://github.com/aklinker1/wxt/tree/main/examples) written with WXT
+- To use a frontend framework, look at the [project templates](https://github.com/aklinker1/wxt/tree/main/templates)

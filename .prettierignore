@@ -9,3 +9,4 @@ CHANGELOG.md
 .gitattributes
 .gitignore
 .prettierignore
+*.png

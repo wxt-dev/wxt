@@ -1,0 +1,8 @@
+{
+  "extName": {
+    "message": "I18n Example"
+  },
+  "extDescription": {
+    "message": "Example of how to localize a WXT web extension."
+  }
+}

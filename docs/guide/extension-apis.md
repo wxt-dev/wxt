@@ -47,50 +47,6 @@ export default defineBackground(() => {
 });
 ```
 
-## Messaging
+## More Examples
 
-Follow [Chrome's message passing guide](https://developer.chrome.com/docs/extensions/mv3/messaging/) to understand how message passing works in web extensions. In Google's examples, just replace `chrome` with `browser`, and it will work in WXT.
-
-Here's a basic request/response example:
-
-```ts
-// popup/main.ts
-const res = await browser.runtime.sendMessage('ping');
-
-console.log('res'); // "pong"
-```
-
-```ts
-// background.ts
-export default defineBackground(() => {
-  browser.runtime.onMessage.addEventListener(
-    (message, sender, sendResponse) => {
-      console.log(message); // "ping"
-
-      // Wait 1 second and respond with "pong"
-      setTimeout(() => sendResponse('pong'), 1000);
-      return true;
-    },
-  );
-});
-```
-
-There are a number of message passing libraries you can use to improve the message passing experience.
-
-Here are some that are compatible with WXT (because they are based off `webextension-polyfill` as well):
-
-- [`@webext-core/messaging`](https://webext-core.aklinker1.io/guide/proxy-service/) - "A light-weight, type-safe wrapper around the `browser.runtime` messaging APIs"
-- [`@webext-core/proxy-service`](https://webext-core.aklinker1.io/guide/messaging/) - "Create TRPC-like services that can be called from anywhere but run in the background"
-- [`webext-bridge`](https://github.com/zikaari/webext-bridge) - "Messaging in Web Extensions made super easy. Out of the box."
-
-## Browser Differences
-
-Some APIs are only available on certain browsers or manifest versions. You will have to check if an API exists at runtime if it is not in the `browser` standard.
-
-```ts
-if ('session' in browser.storage) {
-  // Do something with the non-standard session storage API
-}
-```
-
-> If you're using TypeScript, knowing what is non-standard is easy! APIs that are not typed are non-standard.
+See the GitHub repo's [`examples/` directory](https://github.com/aklinker1/wxt/tree/main/examples) for more examples of how to use the extension APIs, including messaging, i18n, content-scripts, and more.
