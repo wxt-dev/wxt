@@ -107,7 +107,7 @@ importers:
         version: 7.2.0
       lint-staged:
         specifier: ^14.0.0
-        version: 14.0.0
+        version: 14.0.1
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -3773,8 +3773,8 @@ packages:
       uhyphen: 0.2.0
     dev: false
 
-  /lint-staged@14.0.0:
-    resolution: {integrity: sha512-0tLf0pqZYkar/wu3nTctk4rVIG+d7PanDYv4/IQR4qwdqfQkTDziLRFnqMcLuLBTuUqmcLwsHPD2EjQ18d/oaA==}
+  /lint-staged@14.0.1:
+    resolution: {integrity: sha512-Mw0cL6HXnHN1ag0mN/Dg4g6sr8uf8sn98w2Oc1ECtFto9tvRF7nkXGJRbx8gPlHyoR0pLyBr2lQHbWwmUHe1Sw==}
     engines: {node: ^16.14.0 || >=18.0.0}
     hasBin: true
     dependencies:
