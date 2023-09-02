@@ -1,4 +1,4 @@
-import type { WebExtRunInstance } from 'web-ext';
+import type { WebExtRunInstance } from 'web-ext-run';
 import { ExtensionRunner } from './ExtensionRunner';
 
 /**
@@ -15,7 +15,7 @@ export function createWebExtRunner(): ExtensionRunner {
       }
 
       // Use the plugin's logger instead of web-ext's built-in one.
-      const webExtLogger = await import('web-ext/util/logger');
+      const webExtLogger = await import('web-ext-run/util/logger');
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
         if (level >= ERROR_LOG_LEVEL) config.logger.error(name, msg);
         if (level >= WARN_LOG_LEVEL) config.logger.warn(msg);
@@ -55,7 +55,7 @@ export function createWebExtRunner(): ExtensionRunner {
       config.logger.debug('web-ext config:', finalConfig);
       config.logger.debug('web-ext options:', options);
 
-      const webExt = await import('web-ext');
+      const webExt = await import('web-ext-run');
       runner = await webExt.default.cmd.run(finalConfig, options);
     },
 
