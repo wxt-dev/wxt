@@ -1,4 +1,4 @@
-declare module 'web-ext' {
+declare module 'web-ext-run' {
   export interface WebExtRunInstance {
     reloadAllExtensions(): Promise<void>;
     exit(): Promise<void>;
@@ -12,7 +12,7 @@ declare module 'web-ext' {
   export default webExt;
 }
 
-declare module 'web-ext/util/logger' {
+declare module 'web-ext-run/util/logger' {
   // https://github.com/mozilla/web-ext/blob/e37e60a2738478f512f1255c537133321f301771/src/util/logger.js#L43
   export interface IConsoleStream {
     stopCapturing(): void;
