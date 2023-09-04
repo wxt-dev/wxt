@@ -128,6 +128,8 @@ async function writeTsConfigFile(
   config: InternalConfig,
 ) {
   const dir = config.wxtDir;
+  const rootPath = normalizePath(relative(dir, config.root));
+  const srcPath = normalizePath(relative(dir, config.srcDir));
   await fs.writeFile(
     resolve(dir, 'tsconfig.json'),
     `{
@@ -142,20 +144,19 @@ async function writeTsConfigFile(
     "strict": true,
     "lib": ["DOM", "WebWorker"],
     "skipLibCheck": true,
-    "baseUrl": "${normalizePath(relative(dir, config.root))}",
     "paths": {
-      "@@": ["."],
-      "@@/*": ["./*"],
-      "~~": ["."],
-      "~~/*": ["./*"],
-      "@": ["${normalizePath(relative(config.root, config.srcDir))}"],
-      "@/*": ["${normalizePath(relative(config.root, config.srcDir))}/*"],
-      "~": ["${normalizePath(relative(config.root, config.srcDir))}"],
-      "~/*": ["${normalizePath(relative(config.root, config.srcDir))}/*"]
+      "@@": ["${rootPath}"],
+      "@@/*": ["${rootPath}/*"],
+      "~~": ["${rootPath}"],
+      "~~/*": ["${rootPath}/*"],
+      "@": ["${srcPath}"],
+      "@/*": ["${srcPath}/*"],
+      "~": ["${srcPath}"],
+      "~/*": ["${srcPath}/*"]
     }
   },
   "include": [
-    "${normalizePath(relative(dir, config.root))}/**/*",
+    "${normalizePath(relative(dir, dir))}/**/*",
     "./${normalizePath(relative(dir, mainReference))}"
   ],
   "exclude": ["${normalizePath(relative(dir, config.outBaseDir))}"]
