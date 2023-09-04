@@ -1,10 +1,20 @@
 import { InternalConfig } from '../types';
-import paths from 'vite-tsconfig-paths';
+import * as vite from 'vite';
 
-export function tsconfigPaths(config: InternalConfig) {
-  const fn: typeof paths =
-    typeof paths === 'function' ? paths : (paths as any).default;
-  return fn({
-    root: config.root,
-  });
+export function tsconfigPaths(config: InternalConfig): vite.Plugin {
+  return {
+    name: 'wxt:aliases',
+    async config() {
+      return {
+        resolve: {
+          alias: {
+            '@@': config.root,
+            '~~': config.root,
+            '@': config.srcDir,
+            '~': config.srcDir,
+          },
+        },
+      };
+    },
+  };
 }
