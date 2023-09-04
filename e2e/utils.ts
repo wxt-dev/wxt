@@ -10,8 +10,8 @@ export class TestProject {
   config: UserConfig | undefined;
   readonly root: string;
 
-  constructor(root = 'e2e/project') {
-    // We can't put each test's project inside e2e/project directly, otherwise the wxt.config.ts
+  constructor(root = 'e2e/dist') {
+    // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
     // file is cached and cannot be different between each test. Instead, we add a random ID to the
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);

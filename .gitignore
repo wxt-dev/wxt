@@ -10,7 +10,6 @@
 /docs/.vitepress/cache
 coverage
 dist
-e2e/project
 node_modules
 TODOs.md
 web-ext.config.js

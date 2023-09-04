@@ -16,7 +16,7 @@ const testSeed = (): Plugin => ({
 });
 
 // Clear e2e test projects
-await fs.rm('e2e/project', { recursive: true, force: true });
+await fs.rm('e2e/dist', { recursive: true, force: true });
 
 export default defineWorkspace([
   {
