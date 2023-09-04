@@ -156,7 +156,7 @@ async function writeTsConfigFile(
     }
   },
   "include": [
-    "${normalizePath(relative(dir, dir))}/**/*",
+    "${normalizePath(relative(dir, config.root))}/**/*",
     "./${normalizePath(relative(dir, mainReference))}"
   ],
   "exclude": ["${normalizePath(relative(dir, config.outBaseDir))}"]
