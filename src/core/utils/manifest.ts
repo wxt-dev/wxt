@@ -18,6 +18,7 @@ import {
 } from './content-scripts';
 import { getPackageJson } from './package';
 import { normalizePath } from './paths';
+import { writeFileIfDifferent } from './fs';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -33,7 +34,7 @@ export async function writeManifest(
       : JSON.stringify(manifest, null, 2);
 
   await fs.ensureDir(config.outDir);
-  await fs.writeFile(resolve(config.outDir, 'manifest.json'), str, 'utf-8');
+  await writeFileIfDifferent(resolve(config.outDir, 'manifest.json'), str);
 
   output.publicAssets.unshift({
     type: 'asset',
