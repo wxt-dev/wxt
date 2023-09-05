@@ -4,3 +4,4 @@ export * from './init';
 export * from './prepare';
 export * from './publish';
 export * from './zip';
+export * from './clean';

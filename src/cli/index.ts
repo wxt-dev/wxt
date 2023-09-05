@@ -40,9 +40,14 @@ cli
 
 // PREPARE
 cli
-  .command('prepare [root]', 'prepare')
+  .command('prepare [root]', 'prepare typescript project')
   .option('-c, --config <file>', 'use specified config file')
   .action(commands.prepare);
+
+// CLEAN
+cli
+  .command('clean [root]', 'clean generated files and caches')
+  .action(commands.clean);
 
 // PUBLISH
 cli.command('publish [root]', 'publish to stores').action(commands.publish);
