@@ -72,7 +72,7 @@ export const init = defineCommand<
     console.log();
     consola.log('Next steps:');
     let step = 0;
-    if (cdPath !== '.') consola.log(`  ${++step}.`, pc.cyan(`cd ${cdPath}`));
+    if (cdPath !== '') consola.log(`  ${++step}.`, pc.cyan(`cd ${cdPath}`));
     consola.log(`  ${++step}.`, pc.cyan(`${input.packageManager} install`));
     console.log();
   },
