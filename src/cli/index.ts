@@ -47,6 +47,7 @@ cli
 // CLEAN
 cli
   .command('clean [root]', 'clean generated files and caches')
+  .alias('cleanup')
   .action(commands.clean);
 
 // PUBLISH
