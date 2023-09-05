@@ -93,7 +93,7 @@ interface Template {
 async function listTemplates(): Promise<Template[]> {
   try {
     const res = await fetch(
-      'https://api.github.com/repos/aklinker1/wxt/contents/templates',
+      'https://api.github.com/repos/wxt-dev/wxt/contents/templates',
       {
         headers: {
           Accept: 'application/vnd.github+json',
@@ -136,7 +136,7 @@ async function cloneProject({
   const spinner = ora('Downloading template').start();
   try {
     // 1. Clone repo
-    await downloadTemplate(`gh:aklinker1/wxt/${template.path}`, {
+    await downloadTemplate(`gh:wxt-dev/wxt/${template.path}`, {
       dir: directory,
       force: true,
     });

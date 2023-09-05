@@ -15,7 +15,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     logo: '/logo.svg',
     editLink: {
-      pattern: 'https://github.com/aklinker1/wxt/edit/main/docs/:path',
+      pattern: 'https://github.com/wxt-dev/wxt/edit/main/docs/:path',
     },
     search: {
       provider: 'local',
@@ -76,6 +76,6 @@ export default defineConfig({
       ],
     },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/aklinker1/wxt' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/wxt-dev/wxt' }],
   },
 });

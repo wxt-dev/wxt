@@ -29,6 +29,6 @@ Checkout the [installation guide](https://wxt.dev/get-started/installation.html)
 
 ## Contributors
 
-<a href="https://github.com/aklinker1/wxt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=aklinker1/wxt" />
+<a href="https://github.com/wxt-dev/wxt/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=wxt-dev/wxt" />
 </a>

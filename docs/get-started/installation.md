@@ -3,7 +3,7 @@
 Bootstrap a new project or start from scratch.
 
 :::warning 🚧&ensp;WSL Support
-**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/aklinker1/wxt/issues/55) to track progress.
+**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/wxt-dev/wxt/issues/55) to track progress.
 
 In the meantime, you can use `cmd` instead.
 :::
@@ -24,13 +24,13 @@ npx wxt@latest init <project-name>
 
 There are several starting templates available.
 
-| TypeScript                                                                                                                                                |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <Icon name="TypeScript" /> [`vanilla`](https://github.com/aklinker1/wxt/tree/main/templates/vanilla)                                                      |
-| <Icon name="Vue" /> [`vue`](https://github.com/aklinker1/wxt/tree/main/templates/vue)                                                                     |
-| <Icon name="React" /> [`react`](https://github.com/aklinker1/wxt/tree/main/templates/react)                                                               |
-| <Icon name="Svelte" /> [`svelte`](https://github.com/aklinker1/wxt/tree/main/templates/svelte)                                                            |
-| <Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png" /> [`solid`](https://github.com/aklinker1/wxt/tree/main/templates/solid) |
+| TypeScript                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <Icon name="TypeScript" /> [`vanilla`](https://github.com/wxt-dev/wxt/tree/main/templates/vanilla)                                                      |
+| <Icon name="Vue" /> [`vue`](https://github.com/wxt-dev/wxt/tree/main/templates/vue)                                                                     |
+| <Icon name="React" /> [`react`](https://github.com/wxt-dev/wxt/tree/main/templates/react)                                                               |
+| <Icon name="Svelte" /> [`svelte`](https://github.com/wxt-dev/wxt/tree/main/templates/svelte)                                                            |
+| <Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png" /> [`solid`](https://github.com/wxt-dev/wxt/tree/main/templates/solid) |
 
 > All templates are in TypeScript. WXT does not support JS at this time.
 

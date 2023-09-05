@@ -45,5 +45,5 @@ Reloading each part of the extension individually improves your iteration speed 
 WXT solves this problem by reloading HTML pages and content scripts individually (when possible) to keep your UIs open while you develop them. This is a MV3 feature, so if you're developing a MV2 extension, you'll get the same dev experience as Plasmo.
 
 :::info
-Unfortunately, there isn't an API for reloading the background page/service worker individually, so if you change a file used by the background, the entire extension will reload. See [Issue #53](https://github.com/aklinker1/wxt/issues/53) for more details.
+Unfortunately, there isn't an API for reloading the background page/service worker individually, so if you change a file used by the background, the entire extension will reload. See [Issue #53](https://github.com/wxt-dev/wxt/issues/53) for more details.
 :::

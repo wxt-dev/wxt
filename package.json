@@ -9,8 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aklinker1/wxt"
+    "url": "https://github.com/wxt-dev/wxt"
   },
+  "homepage": "https://wxt.dev",
   "keywords": [
     "vite",
     "chrome",
