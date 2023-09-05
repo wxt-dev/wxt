@@ -14,8 +14,7 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
-- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.4.0
 
