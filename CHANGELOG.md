@@ -1,5 +1,59 @@
 # Changelog
 
+## v0.4.0
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.3.2...v0.4.0)
+
+### 🚀 Enhancements
+
+- Add `--debug` flag for printing debug logs for all CLI commands ([#75](https://github.com/aklinker1/wxt/pull/75))
+- Replace `web-ext` with `web-ext-run` ([#101](https://github.com/aklinker1/wxt/pull/101))
+- Generate types for `browser.i18n.getMessage` ([#103](https://github.com/aklinker1/wxt/pull/103))
+
+### 🩹 Fixes
+
+- Allow adding custom content scripts ([b428a62](https://github.com/aklinker1/wxt/commit/b428a62))
+- Don't overwrite `wxt.config.ts` content scripts, append entrypoints to it ([5f5f1d9](https://github.com/aklinker1/wxt/commit/5f5f1d9))
+- ⚠️  Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/aklinker1/wxt/pull/102))
+
+### 📖 Documentation
+
+- Add contribution guide ([#76](https://github.com/aklinker1/wxt/pull/76))
+
+### 🏡 Chore
+
+- Setup dependabot for upgrading dependencies ([d66293c](https://github.com/aklinker1/wxt/commit/d66293c))
+- Update social preview ([e164bd5](https://github.com/aklinker1/wxt/commit/e164bd5))
+- Setup bug and feature issue templates ([2bde917](https://github.com/aklinker1/wxt/commit/2bde917))
+- Upgrade to prettier 3 ([#77](https://github.com/aklinker1/wxt/pull/77))
+- **deps-dev:** Bump vitest from 0.32.4 to 0.34.1 ([#81](https://github.com/aklinker1/wxt/pull/81))
+- **deps-dev:** Bump ora from 6.3.1 to 7.0.1 ([#79](https://github.com/aklinker1/wxt/pull/79))
+- **deps-dev:** Bump @types/node from 20.4.5 to 20.5.0 ([#78](https://github.com/aklinker1/wxt/pull/78))
+- **deps-dev:** Bump tsup from 7.1.0 to 7.2.0 ([#80](https://github.com/aklinker1/wxt/pull/80))
+- **deps-dev:** Bump @vitest/coverage-v8 from 0.32.4 to 0.34.1 ([#84](https://github.com/aklinker1/wxt/pull/84))
+- **deps-dev:** Bump vitepress from 1.0.0-beta.5 to 1.0.0-rc.4 ([#85](https://github.com/aklinker1/wxt/pull/85))
+- **deps-dev:** Bump vitest-mock-extended from 1.1.4 to 1.2.0 ([#87](https://github.com/aklinker1/wxt/pull/87))
+- **deps-dev:** Bump lint-staged from 13.3.0 to 14.0.0 ([#89](https://github.com/aklinker1/wxt/pull/89))
+- Fix remote code E2E test ([83e62a1](https://github.com/aklinker1/wxt/commit/83e62a1))
+- Fix failing demo build ([b58a15e](https://github.com/aklinker1/wxt/commit/b58a15e))
+- **deps-dev:** Bump vitest-mock-extended from 1.2.0 to 1.2.1 ([#97](https://github.com/aklinker1/wxt/pull/97))
+- **deps-dev:** Bump lint-staged from 14.0.0 to 14.0.1 ([#100](https://github.com/aklinker1/wxt/pull/100))
+- **deps-dev:** Bump vitest from 0.34.1 to 0.34.3 ([#99](https://github.com/aklinker1/wxt/pull/99))
+- Increase E2E test timeout because GitHub Actions Window runner is slow ([2a0842b](https://github.com/aklinker1/wxt/commit/2a0842b))
+- **deps-dev:** Bump vitepress from 1.0.0-rc.4 to 1.0.0-rc.10 ([#96](https://github.com/aklinker1/wxt/pull/96))
+- Fix test watcher restarting indefinetly ([2c7922c](https://github.com/aklinker1/wxt/commit/2c7922c))
+- Remove explict icon config from templates ([93bfee0](https://github.com/aklinker1/wxt/commit/93bfee0))
+- Use import aliases in Vue template ([#104](https://github.com/aklinker1/wxt/pull/104))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/aklinker1/wxt/pull/102))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.3.2
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.3.1...v0.3.2)
