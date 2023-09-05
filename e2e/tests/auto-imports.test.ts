@@ -28,7 +28,7 @@ describe('Auto Imports', () => {
             | \\"/background.js\\"
             | \\"/content-scripts/overlay.js\\"
             | \\"/popup.html\\"
-          export interface ProjectRuntime extends Runtime.Static {
+          export interface WxtRuntime extends Runtime.Static {
             getURL(path: PublicPath): string;
           }
         }

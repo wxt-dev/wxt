@@ -12,4 +12,11 @@ export default defineBackground(() => {
   browser.runtime.getURL('/');
   browser.runtime.getURL('/background.js');
   browser.runtime.getURL('/icon/128.png');
+
+  // @ts-expect-error: should only accept known message names
+  browser.i18n.getMessage('test');
+  browser.i18n.getMessage('prompt_for_name');
+  browser.i18n.getMessage('hello', 'Aaron');
+  browser.i18n.getMessage('bye', ['Aaron']);
+  browser.i18n.getMessage('@@extension_id');
 });
