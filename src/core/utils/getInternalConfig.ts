@@ -84,7 +84,7 @@ export async function getInternalConfig(
     userConfig.entrypointsDir ?? 'entrypoints',
   );
   const publicDir = resolve(root, userConfig.publicDir ?? 'public');
-  const wxtDir = resolve(srcDir, '.wxt');
+  const wxtDir = resolve(root, '.wxt');
   const typesDir = resolve(wxtDir, 'types');
 
   // Merge manifest sources
