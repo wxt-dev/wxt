@@ -15,6 +15,7 @@ import {
   setupServer,
 } from './core/server';
 
+export * from './core/clean';
 export { version } from '../package.json';
 export * from './core/types/external';
 export * from './core/utils/defineConfig';
