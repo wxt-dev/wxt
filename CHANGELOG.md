@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.4.1
+
+[compare changes](https://github.com/aklinker1/wxt/compare/v0.4.0...v0.4.1)
+
+### 🚀 Enhancements
+
+- **cli:** Add `wxt clean` command to delete generated files ([#106](https://github.com/aklinker1/wxt/pull/106))
+
+### 🩹 Fixes
+
+- **init:** Don't show `cd .` when initializing the current directory ([e086374](https://github.com/aklinker1/wxt/commit/e086374))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.4.0
 
 [compare changes](https://github.com/aklinker1/wxt/compare/v0.3.2...v0.4.0)
