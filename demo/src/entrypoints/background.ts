@@ -18,4 +18,5 @@ export default defineBackground(() => {
   browser.i18n.getMessage('prompt_for_name');
   browser.i18n.getMessage('hello', 'Aaron');
   browser.i18n.getMessage('bye', ['Aaron']);
+  browser.i18n.getMessage('@@extension_id');
 });

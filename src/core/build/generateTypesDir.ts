@@ -8,7 +8,7 @@ import { getGlobals } from '../utils/globals';
 import { getPublicFiles } from '../utils/public';
 import { normalizePath } from '../utils/paths';
 import path from 'node:path';
-import { parseI18nMessages } from '../utils/i18n';
+import { Message, parseI18nMessages } from '../utils/i18n';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -111,8 +111,8 @@ declare module "wxt/browser" {
   }
 }
 `;
-  let overrides: string[] = [];
 
+  let messages: Message[];
   if (defaultLocale) {
     const defaultLocalePath = path.resolve(
       config.publicDir,
@@ -121,9 +121,13 @@ declare module "wxt/browser" {
       'messages.json',
     );
     const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
-    const messages = parseI18nMessages(content);
-    overrides = messages.map((message) => {
-      return `    /**
+    messages = parseI18nMessages(content);
+  } else {
+    messages = parseI18nMessages({});
+  }
+
+  const overrides = messages.map((message) => {
+    return `    /**
      * ${message.description ?? 'No message description.'}
      * 
      * "${message.message}"
@@ -133,9 +137,7 @@ declare module "wxt/browser" {
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;`;
-    });
-  }
-
+  });
   await fs.writeFile(
     filePath,
     template.replace('{{ overrides }}', overrides.join('\n')),
