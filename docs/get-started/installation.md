@@ -134,3 +134,4 @@ You're ready to build your web extension!
 
 - Learn how to [add entrypoints](./entrypoints.md) like the popup, options page, or content scripts
 - [Configure WXT](./configuration.md) by creating a `wxt.config.ts` file
+- Checkout [example projects](https://github.com/wxt-dev/wxt-examples) to see how to perfom common tasks with WXT
