@@ -8,7 +8,4 @@ export const clean = defineCommand<
       debug?: boolean;
     },
   ]
->(async (root) => {
-  const cwd = root ?? process.cwd();
-  await wxt.clean(cwd);
-});
+>(wxt.clean);
