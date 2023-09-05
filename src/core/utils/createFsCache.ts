@@ -1,6 +1,7 @@
 import fs, { ensureDir } from 'fs-extra';
 import { FsCache } from '../types';
 import { dirname, resolve } from 'path';
+import { writeFileIfDifferent } from './fs';
 
 /**
  * A basic file system cache stored at `<srcDir>/.wxt/cache/<key>`. Just caches a string in a
@@ -16,7 +17,7 @@ export function createFsCache(wxtDir: string): FsCache {
     async set(key: string, value: string): Promise<void> {
       const path = getPath(key);
       await ensureDir(dirname(path));
-      await fs.writeFile(path, value, 'utf-8');
+      await writeFileIfDifferent(path, value);
     },
     async get(key: string): Promise<string | undefined> {
       const path = getPath(key);
