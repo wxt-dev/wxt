@@ -9,3 +9,4 @@ CHANGELOG.md
 .gitignore
 .prettierignore
 *.png
+*.svg
