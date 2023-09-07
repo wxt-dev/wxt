@@ -1,6 +1,6 @@
 # Installation
 
-Bootstrap a new project or start from scratch.
+Bootstrap a new project, start from scratch, or migrate an existing project.
 
 :::warning 🚧&ensp;WSL Support
 **_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/wxt-dev/wxt/issues/55) to track progress.
@@ -103,6 +103,22 @@ Finally, add scripts to your `package.json`:
   }
 }
 ```
+
+## Migrate an Existing Project
+
+Before starting the migration, it is recommended to run `pnpx wxt@latest init` to see what a basic project looks like. Once you have an understanding of how WXT projects are structured, you're ready to convert the project, using the initialized project as a reference.
+
+Migrating a project to WXT comes down to a few steps:
+
+1. Install WXT and remove any old build tools: `pnpm i -D wxt`
+1. Refactoring/move your entrypoints to the `entrypoints` directory
+1. Moving public assets to the `public` directory
+1. Update the dev and build scripts to use WXT
+1. Ensure project is compatible with Vite, which is used under the hood to bundle your extension
+
+:::info
+Since projects vary greatly in setup, [start a discussion on GitHub](https://github.com/wxt-dev/wxt/discussions/new/choose) if you need help migrating your project to WXT.
+:::
 
 ## Development
 

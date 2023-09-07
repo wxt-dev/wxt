@@ -3,17 +3,25 @@
   <span>WXT</span>
 </h1>
 
-<p class="float: left"></p>
-
-<p align="center">Next-gen framework for developing web extensions.<br/>◇<br/><q><i>It's like Nuxt, but for Chrome Extensions</i></q></p>
-
-![Example CLI Output](./docs/assets/cli-output.png)
+<p align="center">
+  <span>Next-gen framework for developing web extensions.</span>
+  <br/>
+  <span>⚡</span>
+  <br/>
+  <q><i>It's like Nuxt, but for Chrome Extensions</i></q>
+</p>
 
 <p align="center">
-  <a href="https://github.com/wxt-dev/wxt/actions/workflows/validate.yml" target="blank"><img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/wxt-dev/wxt/validate.yml?label=Checks"></a>
-  <a href="https://wxt.dev" target="blank"><img alt="Documentation" src="https://img.shields.io/badge/Docs-wxt.dev-blue"></a>
-  <a href="https://github.com/wxt-dev/wxt-examples" target="blank"><img alt="Examples" src="https://img.shields.io/badge/Examples-GitHub-blue"></a>
+  <a href="https://wxt.dev" target="_blank">Get Started</a>
+  &bull;
+  <a href="https://wxt.dev/get-started/installation.html" target="_blank">Installation</a>
+  &bull;
+  <a href="https://wxt.dev/guide/background.html" target="_blank">Entrypoints</a>
+  &bull;
+  <a href="https://wxt.dev/config.html" target="_blank">Configuration</a>
 </p>
+
+![Example CLI Output](./docs/assets/cli-output.png)
 
 ## Quick Start
 
@@ -37,7 +45,7 @@ Or see the [installation guide](https://wxt.dev/get-started/installation.html) t
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 - 🖍️ Quickly bootstrap a new project
 
-### Todo
+### Coming Soon
 
 - 📏 Bundle analysis
 - 🤖 Automated publishing
