@@ -16,9 +16,9 @@ wxt zip -b firefox
 
 Generated ZIP files are stored in the `.output` directory.
 
-## Setup Automated Submissions
+## Automation
 
-To automate submissions, use the [`publish-browser-extension`](https://www.npmjs.com/package/publish-browser-extension) package.
+To automate releasing updates, use the [`publish-browser-extension`](https://www.npmjs.com/package/publish-browser-extension) package.
 
 :::info
 🚧 WXT plans to eventually incorporate the `publish-browser-extension` package into its own `wxt submit` command.
@@ -159,7 +159,7 @@ Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the abov
 🚧 Not automated at this time
 
 :::warning
-🚧 WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT isn't configured to create. For now, if you want to publish to Safari, follow this guide:
+🚧 WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT cannot create at this time. For now, if you want to publish to Safari, follow this guide:
 
 https://developer.apple.com/documentation/safariservices/safari_web_extensions/distributing_your_safari_web_extension
 

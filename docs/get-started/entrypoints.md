@@ -12,12 +12,11 @@ For example, a project that looks like this:
 
 ```
 <rootDir>
-├─ entrypoints/
-│  ├─ background.ts
-│  ├─ content.ts
-│  ├─ injected.ts
-│  └─ popup.html
-└─ wxt.config.ts
+└─ entrypoints/
+   ├─ background.ts
+   ├─ content.ts
+   ├─ injected.ts
+   └─ popup.html
 ```
 
 would result in the following `manifest.json`:
@@ -49,9 +48,9 @@ If a file uses a [special name recognized by WXT](/get-started/entrypoints.md), 
 - `content.ts` &rarr; `content_scripts.0.js.0`
 - `background.ts` &rarr; `background.service_worker`
 
-But not all entrypoints are added to the `manifest.json`. If they have a name that is not recognized by WXT, they are still built and included in the extension, but they are considered "unlisted" and are not apart of the manifest.
+But not all entrypoints are added to the `manifest.json`. If the filename is not recognized by WXT, they are still built and included in the extension, but they are considered "unlisted" and are not apart of the manifest.
 
-In this case, `injected.ts` gets bundled to `<outdir>/injected.js` and is accessible via `browser.runtime.getURL("/injected.js")`.
+In this case, `injected.ts` gets output to `<outdir>/injected.js` and is accessible via `browser.runtime.getURL("/injected.js")`.
 
 :::info
 See [`/entrypoints` folder](/guide/background.md) documentation for a full list of recognized entrypoint filenames.
