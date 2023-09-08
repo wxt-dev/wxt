@@ -53,6 +53,7 @@ export default defineConfig({
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
+            { text: 'Vite', link: '/guide/vite.md' },
           ],
         },
         {
