@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.5.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.1...v0.5.0)
+
+### 🩹 Fixes
+
+- **types:** Don't write to files if nothing changes ([#107](https://github.com/wxt-dev/wxt/pull/107))
+- ⚠️  Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
+
+### 📖 Documentation
+
+- Add link to examples repo ([46a5036](https://github.com/wxt-dev/wxt/commit/46a5036))
+- Fix typos ([beafa6a](https://github.com/wxt-dev/wxt/commit/beafa6a))
+- Make README pretty ([b33b663](https://github.com/wxt-dev/wxt/commit/b33b663))
+- Add migration docs ([e2350fe](https://github.com/wxt-dev/wxt/commit/e2350fe))
+- Add vite customization docs ([fe966b6](https://github.com/wxt-dev/wxt/commit/fe966b6))
+
+### 🏡 Chore
+
+- Move repo to wxt-dev org ([ac7cbfc](https://github.com/wxt-dev/wxt/commit/ac7cbfc))
+- **deps-dev:** Bump prettier from 3.0.1 to 3.0.3 ([#111](https://github.com/wxt-dev/wxt/pull/111))
+- **deps-dev:** Bump tsx from 3.12.7 to 3.12.8 ([#109](https://github.com/wxt-dev/wxt/pull/109))
+- **deps-dev:** Bump @types/node from 20.5.0 to 20.5.9 ([#110](https://github.com/wxt-dev/wxt/pull/110))
+- Add entrypoints debug log ([dbd84c8](https://github.com/wxt-dev/wxt/commit/dbd84c8))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
+
+### ❤️ Contributors
+
+- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.4.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.0...v0.4.1)
