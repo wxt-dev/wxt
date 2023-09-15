@@ -1,7 +1,7 @@
 import { createUnimport } from 'unimport';
 import { InternalConfig } from '../types';
 import { getUnimportOptions } from '../utils/auto-imports';
-import { Plugin } from 'vite';
+import * as vite from 'vite';
 import { extname } from 'path';
 
 const ENABLED_EXTENSIONS: Record<string, boolean | undefined> = {
@@ -16,8 +16,10 @@ const ENABLED_EXTENSIONS: Record<string, boolean | undefined> = {
 /**
  * Inject any global imports defined by unimport
  */
-export function unimport(config: InternalConfig): Plugin {
+export function unimport(config: InternalConfig): vite.PluginOption {
   const options = getUnimportOptions(config);
+  if (options === false) return [];
+
   const unimport = createUnimport(options);
 
   return {

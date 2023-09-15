@@ -57,9 +57,9 @@ export interface InlineConfig {
    */
   mode?: string;
   /**
-   * Customize auto-import options.
+   * Customize auto-import options. Set to false to disable auto-imports.
    */
-  imports?: Partial<UnimportOptions>;
+  imports?: Partial<UnimportOptions> | false;
   /**
    * Explicitly set a browser to build for. This will override the default browser for each command,
    * and can be overridden by the command line `--browser` option.
