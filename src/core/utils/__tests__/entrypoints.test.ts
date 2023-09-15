@@ -42,6 +42,7 @@ describe('Entrypoint Utils', () => {
         inputPath: '...',
         name,
         outputDir,
+        options: {},
       };
 
       const actual = getEntrypointOutputFile(entrypoint, ext);

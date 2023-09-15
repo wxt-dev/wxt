@@ -446,31 +446,11 @@ export interface ExtensionRunnerConfig {
   openDevtools?: boolean;
   /**
    * List of browser names and the binary that should be used to open the browser.
+   *
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
    */
-  binaries?: {
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    chrome?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    edge?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    opera?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
-     */
-    firefox?:
-      | 'firefox'
-      | 'beta'
-      | 'nightly'
-      | 'deved'
-      | 'firefoxdeveloperedition'
-      | string;
-  };
+  binaries?: Record<string, string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile
    */
