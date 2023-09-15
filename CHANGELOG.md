@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.5.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.0...v0.5.1)
+
+### 🚀 Enhancements
+
+- Allow disabling auto-imports ([#114](https://github.com/wxt-dev/wxt/pull/114))
+- Include/exclude entrypoints based on target browser ([#115](https://github.com/wxt-dev/wxt/pull/115))
+
+### 🩹 Fixes
+
+- Allow any string for target browser ([b4de93d](https://github.com/wxt-dev/wxt/commit/b4de93d))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.5.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.1...v0.5.0)
