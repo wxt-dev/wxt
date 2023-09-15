@@ -238,6 +238,11 @@ export interface Logger {
   level: LogLevel;
 }
 
+export interface BaseEntrypointOptions {
+  include?: TargetBrowser[];
+  exclude?: TargetBrowser[];
+}
+
 export interface BaseEntrypoint {
   /**
    * The entrypoint's name. This is the filename or dirname without the type suffix.
@@ -265,6 +270,7 @@ export interface BaseEntrypoint {
    * subdirectory of it.
    */
   outputDir: string;
+  options: BaseEntrypointOptions;
 }
 
 export interface GenericEntrypoint extends BaseEntrypoint {
@@ -286,12 +292,12 @@ export interface BackgroundEntrypoint extends BaseEntrypoint {
   options: {
     persistent?: boolean;
     type?: 'module';
-  };
+  } & BaseEntrypointOptions;
 }
 
 export interface ContentScriptEntrypoint extends BaseEntrypoint {
   type: 'content-script';
-  options: Omit<ContentScriptDefinition, 'main'>;
+  options: Omit<ContentScriptDefinition, 'main'> & BaseEntrypointOptions;
 }
 
 export interface PopupEntrypoint extends BaseEntrypoint {
@@ -303,7 +309,7 @@ export interface PopupEntrypoint extends BaseEntrypoint {
     mv2Key?: 'browser_action' | 'page_action';
     defaultIcon?: Record<string, string>;
     defaultTitle?: string;
-  };
+  } & BaseEntrypointOptions;
 }
 
 export interface OptionsEntrypoint extends BaseEntrypoint {
@@ -312,7 +318,7 @@ export interface OptionsEntrypoint extends BaseEntrypoint {
     openInTab?: boolean;
     browserStyle?: boolean;
     chromeStyle?: boolean;
-  };
+  } & BaseEntrypointOptions;
 }
 
 export type Entrypoint =
@@ -324,7 +330,7 @@ export type Entrypoint =
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface ContentScriptDefinition {
+export interface ContentScriptDefinition extends ExcludableEntrypoint {
   matches: Manifest.ContentScript['matches'];
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -372,9 +378,26 @@ export interface ContentScriptDefinition {
   main(): void | Promise<void>;
 }
 
-export interface BackgroundScriptDefintition {
+export interface BackgroundScriptDefintition extends ExcludableEntrypoint {
   type?: 'module';
   main(): void;
+}
+
+export interface ExcludableEntrypoint {
+  /**
+   * List of target browsers to include this entrypoint in. Defaults to being included in all
+   * builds. Cannot be used with `exclude`. You must choose one of the two options.
+   *
+   * @default undefined
+   */
+  include?: TargetBrowser[];
+  /**
+   * List of target browsers to exclude this entrypoint from. Cannot be used with `include`. You
+   * must choose one of the two options.
+   *
+   * @default undefined
+   */
+  exclude?: TargetBrowser[];
 }
 
 /**
@@ -431,31 +454,11 @@ export interface ExtensionRunnerConfig {
   openDevtools?: boolean;
   /**
    * List of browser names and the binary that should be used to open the browser.
+   *
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
    */
-  binaries?: {
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    chrome?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    edge?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-     */
-    opera?: string;
-    /**
-     * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
-     */
-    firefox?:
-      | 'firefox'
-      | 'beta'
-      | 'nightly'
-      | 'deved'
-      | 'firefoxdeveloperedition'
-      | string;
-  };
+  binaries?: Record<string, string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile
    */

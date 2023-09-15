@@ -77,6 +77,7 @@ export const fakeUnlistedScriptEntrypoint =
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
+    options: {},
   }));
 
 export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
@@ -133,6 +134,7 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
+    options: {},
   }),
 );
 

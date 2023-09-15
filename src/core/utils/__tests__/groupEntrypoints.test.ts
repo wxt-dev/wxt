@@ -23,6 +23,7 @@ const unlistedScript: Entrypoint = {
   name: 'injected',
   inputPath: '/injected.ts',
   outputDir: '/.output/injected',
+  options: {},
 };
 const popup: Entrypoint = {
   type: 'popup',
@@ -36,6 +37,7 @@ const unlistedPage: Entrypoint = {
   name: 'onboarding',
   inputPath: '/onboarding.html',
   outputDir: '/.output/onboarding',
+  options: {},
 };
 const options: Entrypoint = {
   type: 'options',
@@ -49,24 +51,28 @@ const sandbox1: Entrypoint = {
   name: 'sandbox',
   inputPath: '/sandbox1.html',
   outputDir: '/.output/sandbox1',
+  options: {},
 };
 const sandbox2: Entrypoint = {
   type: 'sandbox',
   name: 'sandbox2',
   inputPath: '/sandbox2.html',
   outputDir: '/.output/sandbox2',
+  options: {},
 };
 const unlistedStyle: Entrypoint = {
   type: 'unlisted-style',
   name: 'injected',
   inputPath: '/injected.scss',
   outputDir: '/.output',
+  options: {},
 };
 const contentScriptStyle: Entrypoint = {
   type: 'content-script-style',
   name: 'injected',
   inputPath: '/overlay.content.scss',
   outputDir: '/.output/content-scripts',
+  options: {},
 };
 
 describe('groupEntrypoints', () => {
