@@ -32,7 +32,7 @@ export interface InlineConfig {
   /**
    * > Only available when using the JS API. Not available in `wxt.config.ts` files
    *
-   * Path to `"wxt.config.ts"` file or false to disable config file discovery.
+   * Path to `wxt.config.ts` file or `false` to disable config file discovery.
    *
    * @default "wxt.config.ts"
    */
@@ -57,7 +57,17 @@ export interface InlineConfig {
    */
   mode?: string;
   /**
-   * Customize auto-import options. Set to false to disable auto-imports.
+   * Customize auto-import options. Set to `false` to disable auto-imports.
+   *
+   * For example, to add a directory to auto-import from, you can use:
+   *
+   * ```ts
+   * export default defineConfig({
+   *   imports: {
+   *     dirs: ["some-directory"]
+   *   }
+   * })
+   * ```
    */
   imports?: Partial<UnimportOptions> | false;
   /**
@@ -81,7 +91,9 @@ export interface InlineConfig {
    */
   logger?: Logger;
   /**
-   * Custom Vite options.
+   * Custom Vite options, see <https://vitejs.dev/config/shared-options.html>.
+   *
+   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config.
    */
   vite?: Omit<vite.UserConfig, 'root' | 'configFile' | 'mode'>;
   /**
@@ -89,10 +101,6 @@ export interface InlineConfig {
    * object or promise.
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
-  /**
-   * Custom server options.
-   */
-  server?: WxtDevServer;
   /**
    * Custom runner options. Options set here can be overridden in a `web-ext.config.ts` file.
    */
