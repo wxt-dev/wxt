@@ -2,9 +2,11 @@ import { relative, resolve } from 'path';
 import {
   BackgroundEntrypoint,
   BackgroundScriptDefintition,
+  BaseEntrypointOptions,
   ContentScriptDefinition,
   ContentScriptEntrypoint,
   Entrypoint,
+  GenericEntrypoint,
   InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
@@ -75,12 +77,19 @@ export async function findEntrypoints(
             path,
           );
           break;
+        case 'unlisted-page':
+          entrypoint = await getUnlistedPageEntrypoint(config, path);
+          break;
         case 'content-script-style':
           entrypoint = {
             type,
             name: getEntrypointName(config.entrypointsDir, path),
             inputPath: path,
             outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
+            options: {
+              include: undefined,
+              exclude: undefined,
+            },
           };
           break;
         default:
@@ -89,6 +98,10 @@ export async function findEntrypoints(
             name: getEntrypointName(config.entrypointsDir, path),
             inputPath: path,
             outputDir: config.outDir,
+            options: {
+              include: undefined,
+              exclude: undefined,
+            },
           };
       }
 
@@ -112,7 +125,47 @@ export async function findEntrypoints(
       await getBackgroundEntrypoint(config, VIRTUAL_NOOP_BACKGROUND_MODULE_ID),
     );
   }
-  return entrypoints;
+
+  config.logger.debug('All entrypoints:', entrypoints);
+  const targetEntrypoints = entrypoints.filter((entry) => {
+    const { include, exclude } = entry.options;
+    if (include?.length && exclude?.length) {
+      config.logger.warn(
+        `The ${entry.name} entrypoint lists both include and exclude, but only one can be used per entrypoint. Entrypoint ignored.`,
+      );
+      return false;
+    }
+    if (exclude?.length && !include?.length) {
+      return !exclude.includes(config.browser);
+    }
+    if (include?.length && !exclude?.length) {
+      return include.includes(config.browser);
+    }
+
+    return true;
+  });
+  config.logger.debug(`${config.browser} entrypoints:`, targetEntrypoints);
+  return targetEntrypoints;
+}
+
+function getHtmlBaseOptions(document: Document): BaseEntrypointOptions {
+  const options: BaseEntrypointOptions = {};
+
+  const includeContent = document
+    .querySelector("meta[name='manifest.include']")
+    ?.getAttribute('content');
+  if (includeContent) {
+    options.include = JSON5.parse(includeContent);
+  }
+
+  const excludeContent = document
+    .querySelector("meta[name='manifest.exclude']")
+    ?.getAttribute('content');
+  if (excludeContent) {
+    options.exclude = JSON5.parse(excludeContent);
+  }
+
+  return options;
 }
 
 /**
@@ -123,10 +176,10 @@ async function getPopupEntrypoint(
   config: InternalConfig,
   path: string,
 ): Promise<PopupEntrypoint> {
-  const options: PopupEntrypoint['options'] = {};
-
   const content = await fs.readFile(path, 'utf-8');
   const { document } = parseHTML(content);
+
+  const options: PopupEntrypoint['options'] = getHtmlBaseOptions(document);
 
   const title = document.querySelector('title');
   if (title != null) options.defaultTitle = title.textContent ?? undefined;
@@ -170,10 +223,10 @@ async function getOptionsEntrypoint(
   config: InternalConfig,
   path: string,
 ): Promise<OptionsEntrypoint> {
-  const options: OptionsEntrypoint['options'] = {};
-
   const content = await fs.readFile(path, 'utf-8');
   const { document } = parseHTML(content);
+
+  const options: OptionsEntrypoint['options'] = getHtmlBaseOptions(document);
 
   const openInTabContent = document
     .querySelector("meta[name='manifest.open_in_tab']")
@@ -202,6 +255,26 @@ async function getOptionsEntrypoint(
     options,
     inputPath: path,
     outputDir: config.outDir,
+  };
+}
+
+/**
+ * @param path Absolute path to the HTML file.
+ * @param content String contents of the file at the path.
+ */
+async function getUnlistedPageEntrypoint(
+  config: InternalConfig,
+  path: string,
+): Promise<GenericEntrypoint> {
+  const content = await fs.readFile(path, 'utf-8');
+  const { document } = parseHTML(content);
+
+  return {
+    type: 'unlisted-page',
+    name: getEntrypointName(config.entrypointsDir, path),
+    inputPath: path,
+    outputDir: config.outDir,
+    options: getHtmlBaseOptions(document),
   };
 }
 

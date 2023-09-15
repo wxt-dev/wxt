@@ -93,4 +93,44 @@ describe('Output Directory Structure', () => {
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"js\\":[\\"content-scripts/overlay-one.js\\"]}]}"
     `);
   });
+
+  it('should not include an entrypoint if the target browser is not in the list of included targets', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/options.html', '<html></html>');
+    project.addFile(
+      'entrypoints/background.ts',
+      `
+          export default defineBackground({
+            include: ["chrome"],
+            main() {},
+          })
+        `,
+    );
+
+    await project.build({ browser: 'firefox' });
+
+    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+      false,
+    );
+  });
+
+  it('should not include an entrypoint if the target browser is in the list of excluded targets', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/options.html', '<html></html>');
+    project.addFile(
+      'entrypoints/background.ts',
+      `
+          export default defineBackground({
+            exclude: ["chrome"],
+            main() {},
+          })
+        `,
+    );
+
+    await project.build({ browser: 'chrome' });
+
+    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+      false,
+    );
+  });
 });

@@ -30,6 +30,10 @@ export default defineContentScript({
   matchOriginAsFallback: undefined | true | false,
   world: undefined | 'ISOLATED' | 'MAIN',
 
+  // Set include/exclude if the background should be removed from some builds
+  include: undefined | string[],
+  exclude: undefined | string[],
+
   main() {
     // Executed when content script is loaded
   },

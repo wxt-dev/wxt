@@ -22,6 +22,9 @@ Plain old HTML file.
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Title</title>
+    <!-- Set include/exclude if the page should be removed from some builds -->
+    <meta name="manifest.include" content="['chrome', ...]" />
+    <meta name="manifest.exclude" content="['chrome', ...]" />
   </head>
   <body>
     <!-- ... -->

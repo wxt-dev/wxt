@@ -255,6 +255,7 @@ describe('findEntrypoints', () => {
         name: 'sandbox',
         inputPath: resolve(config.entrypointsDir, 'sandbox.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -264,6 +265,7 @@ describe('findEntrypoints', () => {
         name: 'sandbox',
         inputPath: resolve(config.entrypointsDir, 'sandbox/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -273,6 +275,7 @@ describe('findEntrypoints', () => {
         name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sandbox.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -282,6 +285,7 @@ describe('findEntrypoints', () => {
         name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sandbox/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -293,6 +297,7 @@ describe('findEntrypoints', () => {
         name: 'bookmarks',
         inputPath: resolve(config.entrypointsDir, 'bookmarks.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -302,6 +307,7 @@ describe('findEntrypoints', () => {
         name: 'bookmarks',
         inputPath: resolve(config.entrypointsDir, 'bookmarks/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -313,6 +319,7 @@ describe('findEntrypoints', () => {
         name: 'history',
         inputPath: resolve(config.entrypointsDir, 'history.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -322,6 +329,7 @@ describe('findEntrypoints', () => {
         name: 'history',
         inputPath: resolve(config.entrypointsDir, 'history/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -333,6 +341,7 @@ describe('findEntrypoints', () => {
         name: 'newtab',
         inputPath: resolve(config.entrypointsDir, 'newtab.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -342,6 +351,7 @@ describe('findEntrypoints', () => {
         name: 'newtab',
         inputPath: resolve(config.entrypointsDir, 'newtab/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -353,6 +363,7 @@ describe('findEntrypoints', () => {
         name: 'sidepanel',
         inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -362,6 +373,7 @@ describe('findEntrypoints', () => {
         name: 'sidepanel',
         inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -371,6 +383,7 @@ describe('findEntrypoints', () => {
         name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -380,6 +393,7 @@ describe('findEntrypoints', () => {
         name: 'named',
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -391,6 +405,7 @@ describe('findEntrypoints', () => {
         name: 'devtools',
         inputPath: resolve(config.entrypointsDir, 'devtools.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -400,6 +415,7 @@ describe('findEntrypoints', () => {
         name: 'devtools',
         inputPath: resolve(config.entrypointsDir, 'devtools/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -411,6 +427,7 @@ describe('findEntrypoints', () => {
         name: 'onboarding',
         inputPath: resolve(config.entrypointsDir, 'onboarding.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -420,6 +437,7 @@ describe('findEntrypoints', () => {
         name: 'onboarding',
         inputPath: resolve(config.entrypointsDir, 'onboarding/index.html'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -431,6 +449,7 @@ describe('findEntrypoints', () => {
         name: 'injected',
         inputPath: resolve(config.entrypointsDir, 'injected.ts'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -440,6 +459,7 @@ describe('findEntrypoints', () => {
         name: 'injected',
         inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -451,6 +471,7 @@ describe('findEntrypoints', () => {
         name: 'iframe',
         inputPath: resolve(config.entrypointsDir, 'iframe.scss'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
     [
@@ -460,6 +481,7 @@ describe('findEntrypoints', () => {
         name: 'iframe',
         inputPath: resolve(config.entrypointsDir, 'iframe.css'),
         outputDir: config.outDir,
+        options: {},
       },
     ],
 
@@ -471,6 +493,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
       },
     ],
     [
@@ -480,6 +503,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
       },
     ],
     [
@@ -489,6 +513,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
       },
     ],
     [
@@ -498,6 +523,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
       },
     ],
   ])('should find entrypoint for %s', async (path, expected) => {
@@ -520,5 +546,149 @@ describe('findEntrypoints', () => {
       'Multiple entrypoints with the name "popup" detected, but only one is allowed: ' +
         expectedPaths.join(', '),
     );
+  });
+
+  describe('include option', () => {
+    it("should filter out the background when include doesn't contain the target browser", async () => {
+      globMock.mockResolvedValueOnce(['background.ts']);
+      importTsFileMock.mockResolvedValue({
+        include: ['not' + config.browser],
+      });
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it("should filter out content scripts when include doesn't contain the target browser", async () => {
+      globMock.mockResolvedValueOnce(['example.content.ts']);
+      importTsFileMock.mockResolvedValue({
+        include: ['not' + config.browser],
+      });
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it("should filter out the popup when include doesn't contain the target browser", async () => {
+      globMock.mockResolvedValueOnce(['popup.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.include" content="['${
+              'not' + config.browser
+            }']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it("should filter out the options page when include doesn't contain the target browser", async () => {
+      globMock.mockResolvedValueOnce(['options.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.include" content="['${
+              'not' + config.browser
+            }']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it("should filter out an unlisted page when include doesn't contain the target browser", async () => {
+      globMock.mockResolvedValueOnce(['unlisted.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.include" content="['${
+              'not' + config.browser
+            }']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+  });
+
+  describe('exclude option', () => {
+    it('should filter out the background when exclude contains the target browser', async () => {
+      globMock.mockResolvedValueOnce(['background.ts']);
+      importTsFileMock.mockResolvedValue({
+        exclude: [config.browser],
+      });
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it('should filter out content scripts when exclude contains the target browser', async () => {
+      globMock.mockResolvedValueOnce(['example.content.ts']);
+      importTsFileMock.mockResolvedValue({
+        exclude: [config.browser],
+      });
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it('should filter out the popup when exclude contains the target browser', async () => {
+      globMock.mockResolvedValueOnce(['popup.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.exclude" content="['${config.browser}']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it('should filter out the options page when exclude contains the target browser', async () => {
+      globMock.mockResolvedValueOnce(['options.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.exclude" content="['${config.browser}']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
+
+    it('should filter out an unlisted page when exclude contains the target browser', async () => {
+      globMock.mockResolvedValueOnce(['unlisted.html']);
+      readFileMock.mockResolvedValueOnce(
+        `<html>
+          <head>
+            <meta name="manifest.exclude" content="['${config.browser}']" />
+          </head>
+        </html>`,
+      );
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toEqual([]);
+    });
   });
 });

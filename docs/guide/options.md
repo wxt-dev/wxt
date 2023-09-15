@@ -23,6 +23,9 @@
     <meta name="manifest.open_in_tab" content="true|false" />
     <meta name="manifest.chrome_style" content="true|false" />
     <meta name="manifest.browser_style" content="true|false" />
+    <!-- Set include/exclude if the page should be removed from some builds -->
+    <meta name="manifest.include" content="['chrome', ...]" />
+    <meta name="manifest.exclude" content="['chrome', ...]" />
   </head>
   <body>
     <!-- ... -->
