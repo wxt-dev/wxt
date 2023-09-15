@@ -214,7 +214,7 @@ export interface WxtDevServer extends vite.ViteDevServer {
   ) => void;
 }
 
-export type TargetBrowser = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera';
+export type TargetBrowser = string;
 export type TargetManifestVersion = 2 | 3;
 
 export type UserConfig = Omit<InlineConfig, 'configFile'>;
