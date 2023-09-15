@@ -31,7 +31,7 @@ export interface InternalConfig {
   browser: TargetBrowser;
   manifestVersion: TargetManifestVersion;
   logger: Logger;
-  imports: Partial<UnimportOptions>;
+  imports: false | Partial<UnimportOptions>;
   vite: vite.InlineConfig;
   manifest: UserManifest;
   fsCache: FsCache;

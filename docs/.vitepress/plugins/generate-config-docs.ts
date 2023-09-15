@@ -23,11 +23,16 @@ const LEAF_PATHS = ['imports', 'vite', 'server'];
 
 /**
  * Override any types that resolve to `import(...)` instead of their type names when calling
- * `type.getText()`
+ * `type.getText()`.
+ *
+ * This also stops any further type inspection for objects, meaning the object will be documented,
+ * not it's properties.
  */
 const CUSTOM_TYPES = {
   manifest:
     'Manifest | Promise<Manifest> | () => Manifest | () => Promise<Manifest>',
+  imports: "false | Partial<import('unimport').UnimportOptions>",
+  vite: "Omit<import('vite').UserConfig, 'root' | 'configFile' | 'mode'>",
 };
 
 export function generateConfigDocs() {
@@ -61,18 +66,12 @@ export function generateConfigDocs() {
           throw Error('Unsupported type node: ' + node.getKindName());
         }
 
-        if (type.isObject() && !type.isArray()) {
-          return (
-            type
-              .getProperties()
-              // .sort((l, r) => l.getName().localeCompare(r.getName()))
-              .flatMap((property) => {
-                const childPath = [...path, property.getName()];
-                if (LEAF_PATHS.includes(childPath.join('.'))) return [];
+        if (type.isObject() && !type.isArray() && !CUSTOM_TYPES[pathStr]) {
+          return type.getProperties().flatMap((property) => {
+            const childPath = [...path, property.getName()];
 
-                return getDocsFor(childPath, property.getDeclarations()[0]);
-              })
-          );
+            return getDocsFor(childPath, property.getDeclarations()[0]);
+          });
         }
 
         if ('getJsDocs' in node) {

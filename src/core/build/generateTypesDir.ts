@@ -1,4 +1,4 @@
-import { createUnimport } from 'unimport';
+import { UnimportOptions, createUnimport } from 'unimport';
 import { Entrypoint, InternalConfig } from '../types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
@@ -21,7 +21,12 @@ export async function generateTypesDir(
   await fs.ensureDir(config.typesDir);
 
   const references: string[] = [];
-  references.push(await writeImportsDeclarationFile(config));
+
+  const imports = getUnimportOptions(config);
+  if (imports !== false) {
+    references.push(await writeImportsDeclarationFile(config, imports));
+  }
+
   references.push(await writePathsDeclarationFile(entrypoints, config));
   references.push(await writeI18nDeclarationFile(config));
   references.push(await writeGlobalsDeclarationFile(config));
@@ -32,9 +37,10 @@ export async function generateTypesDir(
 
 async function writeImportsDeclarationFile(
   config: InternalConfig,
+  unimportOptions: Partial<UnimportOptions>,
 ): Promise<string> {
   const filePath = resolve(config.typesDir, 'imports.d.ts');
-  const unimport = createUnimport(getUnimportOptions(config));
+  const unimport = createUnimport(unimportOptions);
 
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
   await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });

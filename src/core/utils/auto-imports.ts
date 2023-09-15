@@ -4,7 +4,9 @@ import { mergeConfig } from 'vite';
 
 export function getUnimportOptions(
   config: InternalConfig,
-): Partial<UnimportOptions> {
+): Partial<UnimportOptions | false> {
+  if (config.imports === false) return false;
+
   const defaultOptions: Partial<UnimportOptions> = {
     debugLog: config.logger.debug,
     imports: [{ name: 'defineConfig', from: 'wxt' }],
