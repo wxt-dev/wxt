@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.3...v0.5.4)
+
+### 🩹 Fixes
+
+- Recognize `background/index.ts` as an entrypoint ([419fab8](https://github.com/wxt-dev/wxt/commit/419fab8))
+- Don't warn about deep entrypoint subdirectories not being recognized ([87e8df9](https://github.com/wxt-dev/wxt/commit/87e8df9))
+
+### ❤️ Contributors
+
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.5.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.2...v0.5.3)
