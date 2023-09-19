@@ -1,179 +1,114 @@
+import { loadConfig } from 'c12';
 import {
-  ConfigEnv,
-  ExtensionRunnerConfig,
   InlineConfig,
   InternalConfig,
   UserConfig,
-  UserManifest,
+  ConfigEnv,
   UserManifestFn,
+  UserManifest,
+  WxtViteConfig,
+  ExtensionRunnerConfig,
 } from '../types';
-import path, { resolve } from 'node:path';
+import path from 'node:path';
 import * as vite from 'vite';
-import { LogLevels, consola } from 'consola';
-import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
+import consola, { LogLevels } from 'consola';
+import * as plugins from '../vite-plugins';
 import { getGlobals } from './globals';
-import { loadConfig } from 'c12';
-import { resolveUserViteConfig } from './vite';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
  * relative paths, and apply any defaults.
+ *
+ * Inline config always has priority over user config. Cli flags are passed as inline config if set.
+ * If unset, undefined is passed in, letting this function decide default values.
  */
 export async function getInternalConfig(
-  config: InlineConfig,
+  inlineConfig: InlineConfig,
   command: 'build' | 'serve',
 ): Promise<InternalConfig> {
-  // Apply defaults to a base config
-  const root = config.root ? path.resolve(config.root) : process.cwd();
-  const mode =
-    config.mode ?? (command === 'build' ? 'production' : 'development');
-  const browser = config.browser ?? 'chrome';
-  const manifestVersion =
-    config.manifestVersion ?? (browser == 'firefox' ? 2 : 3);
-  const outBaseDir = path.resolve(root, '.output');
-  const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
-  const logger = config.logger ?? consola;
-  const debug = !!config.debug;
-  if (debug) logger.level = LogLevels.debug;
+  // Load user config
 
-  const env: ConfigEnv = { mode, browser, manifestVersion, command };
-  const inlineViteConfig = await resolveUserViteConfig(config.vite, env);
-
-  const baseConfig: InternalConfigNoUserDirs = {
-    root,
-    outDir,
-    outBaseDir,
-    storeIds: config.storeIds ?? {},
-    browser,
-    manifestVersion,
-    mode,
-    command,
-    debug,
-    logger,
-    vite: inlineViteConfig,
-    imports: config.imports ?? {},
-    runnerConfig: await loadConfig<ExtensionRunnerConfig>({
-      name: 'web-ext',
-      cwd: root,
-      globalRc: true,
-      rcFile: '.webextrc',
-      overrides: config.runner,
-    }),
-  };
-
-  // Load user config from file
-  let userConfig: UserConfig = {
-    mode,
-  };
-  if (config.configFile !== false) {
+  let userConfig: UserConfig = {};
+  if (inlineConfig.configFile !== false) {
     const loaded = await loadConfig<UserConfig>({
       name: 'wxt',
-      cwd: root,
+      cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
     });
     userConfig = loaded.config ?? {};
-    userConfig.vite = await resolveUserViteConfig(userConfig.vite, env);
   }
 
-  // Merge inline and user configs
-  const merged = vite.mergeConfig(
-    baseConfig,
-    userConfig,
-  ) as InternalConfigNoUserDirs;
+  // Merge it into the inline config
 
-  // Apply user config and create final config
-  const srcDir = userConfig.srcDir ? resolve(root, userConfig.srcDir) : root;
-  const entrypointsDir = resolve(
-    srcDir,
-    userConfig.entrypointsDir ?? 'entrypoints',
+  const mergedConfig = mergeInlineConfig(inlineConfig, userConfig);
+
+  // Apply defaults to make internal config.
+
+  const debug = mergedConfig.debug ?? false;
+  const logger = mergedConfig.logger ?? consola;
+  if (debug) logger.level = LogLevels.debug;
+
+  const browser = mergedConfig.browser ?? 'chrome';
+  const manifestVersion =
+    mergedConfig.manifestVersion ?? (browser == 'firefox' ? 2 : 3);
+  const mode =
+    mergedConfig.mode ?? (command === 'build' ? 'production' : 'development');
+  const env: ConfigEnv = { browser, command, manifestVersion, mode };
+
+  const root = path.resolve(
+    inlineConfig.root ?? userConfig.root ?? process.cwd(),
   );
-  const publicDir = resolve(srcDir, userConfig.publicDir ?? 'public');
-  const wxtDir = resolve(root, '.wxt');
-  const typesDir = resolve(wxtDir, 'types');
+  const wxtDir = path.resolve(root, '.wxt');
+  const srcDir = path.resolve(root, mergedConfig.srcDir ?? root);
+  const entrypointsDir = path.resolve(
+    srcDir,
+    mergedConfig.entrypointsDir ?? 'entrypoints',
+  );
+  const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
+  const typesDir = path.resolve(wxtDir, 'types');
+  const outBaseDir = path.resolve(root, '.output');
+  const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
 
-  // Merge manifest sources
-  const userManifest = await resolveManifestConfig(env, userConfig.manifest);
-  const inlineManifest = await resolveManifestConfig(env, config.manifest);
-  const manifest = vite.mergeConfig(userManifest, inlineManifest);
+  const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
+    name: 'web-ext',
+    cwd: root,
+    globalRc: true,
+    rcFile: '.webextrc',
+    overrides: mergedConfig.runner,
+  });
 
   const finalConfig: InternalConfig = {
-    ...merged,
-    srcDir,
+    browser,
+    command,
+    debug,
     entrypointsDir,
-    publicDir,
-    wxtDir: wxtDir,
-    typesDir,
     fsCache: createFsCache(wxtDir),
-    manifest,
-    zip: {
-      sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-      artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
-      sourcesRoot: root,
-      ...userConfig.zip,
-      ...config.zip,
-      ignoredSources: [
-        '**/node_modules',
-        // WXT files
-        '**/web-ext.config.ts',
-        // Hidden files
-        '**/.*',
-        // Tests
-        '**/__tests__/**',
-        '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
-        // User config
-        ...(userConfig.zip?.ignoredSources ?? []),
-        ...(config.zip?.ignoredSources ?? []),
-      ],
-    },
+    imports: mergedConfig.imports ?? {},
+    logger,
+    manifest: await resolveManifestConfig(env, mergedConfig.manifest),
+    manifestVersion,
+    mode,
+    outBaseDir,
+    outDir,
+    publicDir,
+    root,
+    runnerConfig,
+    srcDir,
+    typesDir,
+    vite: {}, // Real value added after this object is initialized.
+    wxtDir,
+    zip: resolveInternalZipConfig(root, mergedConfig),
   };
 
-  // Customize the default vite config
-  finalConfig.vite.root = root;
-  finalConfig.vite.configFile = false;
-  finalConfig.vite.logLevel = 'warn';
-
-  finalConfig.vite.build ??= {};
-  finalConfig.vite.build.outDir = outDir;
-  finalConfig.vite.build.emptyOutDir = false;
-
-  finalConfig.vite.plugins ??= [];
-  finalConfig.vite.plugins.push(plugins.download(finalConfig));
-  finalConfig.vite.plugins.push(plugins.devHtmlPrerender(finalConfig));
-  finalConfig.vite.plugins.push(plugins.unimport(finalConfig));
-  finalConfig.vite.plugins.push(
-    plugins.virtualEntrypoin('background', finalConfig),
+  finalConfig.vite = await resolveInternalViteConfig(
+    env,
+    mergedConfig,
+    finalConfig,
   );
-  finalConfig.vite.plugins.push(
-    plugins.virtualEntrypoin('content-script', finalConfig),
-  );
-  finalConfig.vite.plugins.push(plugins.devServerGlobals(finalConfig));
-  finalConfig.vite.plugins.push(plugins.tsconfigPaths(finalConfig));
-  finalConfig.vite.plugins.push(plugins.noopBackground());
-
-  finalConfig.vite.define ??= {};
-  getGlobals(finalConfig).forEach((global) => {
-    finalConfig.vite.define![global.name] = JSON.stringify(global.value);
-  });
 
   return finalConfig;
 }
-
-/**
- * Helper type for defining a base config, since user-configurable directories must be set after
- * reading in the user config.
- */
-type InternalConfigNoUserDirs = Omit<
-  InternalConfig,
-  | 'srcDir'
-  | 'publicDir'
-  | 'entrypointsDir'
-  | 'wxtDir'
-  | 'typesDir'
-  | 'fsCache'
-  | 'manifest'
-  | 'zip'
->;
 
 async function resolveManifestConfig(
   env: ConfigEnv,
@@ -182,4 +117,129 @@ async function resolveManifestConfig(
   return await (typeof manifest === 'function'
     ? manifest(env)
     : manifest ?? {});
+}
+
+/**
+ * Merge the inline config and user config. Inline config is given priority. Defaults are not applied here.
+ */
+function mergeInlineConfig(
+  inlineConfig: InlineConfig,
+  userConfig: UserConfig,
+): InlineConfig {
+  let imports: InlineConfig['imports'];
+  if (inlineConfig.imports === false || userConfig.imports === false) {
+    imports = false;
+  } else if (userConfig.imports == null && inlineConfig.imports == null) {
+    imports = undefined;
+  } else {
+    imports = vite.mergeConfig(
+      userConfig.imports ?? {},
+      inlineConfig.imports ?? {},
+    );
+  }
+  const manifest: UserManifestFn = async (env) => {
+    const user = await resolveManifestConfig(env, userConfig.manifest);
+    const inline = await resolveManifestConfig(env, inlineConfig.manifest);
+    return vite.mergeConfig(user, inline);
+  };
+  const viteConfig = async (env: ConfigEnv): Promise<WxtViteConfig> => {
+    const user = await resolveViteConfig(env, userConfig.vite);
+    const inline = await resolveViteConfig(env, inlineConfig.vite);
+    return vite.mergeConfig(user, inline);
+  };
+  const runner: InlineConfig['runner'] = vite.mergeConfig(
+    userConfig.runner ?? {},
+    inlineConfig.runner ?? {},
+  );
+  const zip: InlineConfig['zip'] = vite.mergeConfig(
+    userConfig.zip ?? {},
+    inlineConfig.zip ?? {},
+  );
+
+  return {
+    root: inlineConfig.root ?? userConfig.root,
+    browser: inlineConfig.browser ?? userConfig.browser,
+    manifestVersion: inlineConfig.manifestVersion ?? userConfig.manifestVersion,
+    configFile: inlineConfig.configFile,
+    debug: inlineConfig.debug ?? userConfig.debug,
+    entrypointsDir: inlineConfig.entrypointsDir ?? userConfig.entrypointsDir,
+    imports,
+    logger: inlineConfig.logger ?? userConfig.logger,
+    manifest,
+    mode: inlineConfig.mode ?? userConfig.mode,
+    publicDir: inlineConfig.publicDir ?? userConfig.publicDir,
+    runner,
+    srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
+    vite: viteConfig,
+    zip,
+  };
+}
+
+async function resolveViteConfig(
+  env: ConfigEnv,
+  vite: InlineConfig['vite'],
+): Promise<WxtViteConfig> {
+  return await (typeof vite === 'function' ? vite(env) : vite ?? {});
+}
+
+function resolveInternalZipConfig(
+  root: string,
+  mergedConfig: InlineConfig,
+): InternalConfig['zip'] {
+  return {
+    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
+    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesRoot: root,
+    ...mergedConfig.zip,
+    ignoredSources: [
+      '**/node_modules',
+      // WXT files
+      '**/web-ext.config.ts',
+      // Hidden files
+      '**/.*',
+      // Tests
+      '**/__tests__/**',
+      '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
+      // From user
+      ...(mergedConfig.zip?.ignoredSources ?? []),
+    ],
+  };
+}
+
+async function resolveInternalViteConfig(
+  env: ConfigEnv,
+  mergedConfig: InlineConfig,
+  finalConfig: InternalConfig,
+) {
+  const internalVite: vite.InlineConfig = await resolveViteConfig(
+    env,
+    mergedConfig.vite,
+  );
+  internalVite.root = finalConfig.root;
+  internalVite.configFile = false;
+  internalVite.logLevel = 'warn';
+
+  internalVite.build ??= {};
+  internalVite.build.outDir = finalConfig.outDir;
+  internalVite.build.emptyOutDir = false;
+
+  internalVite.plugins ??= [];
+  internalVite.plugins.push(plugins.download(finalConfig));
+  internalVite.plugins.push(plugins.devHtmlPrerender(finalConfig));
+  internalVite.plugins.push(plugins.unimport(finalConfig));
+  internalVite.plugins.push(
+    plugins.virtualEntrypoin('background', finalConfig),
+  );
+  internalVite.plugins.push(
+    plugins.virtualEntrypoin('content-script', finalConfig),
+  );
+  internalVite.plugins.push(plugins.devServerGlobals(finalConfig));
+  internalVite.plugins.push(plugins.tsconfigPaths(finalConfig));
+  internalVite.plugins.push(plugins.noopBackground());
+
+  internalVite.define ??= {};
+  for (const global of getGlobals(finalConfig)) {
+    internalVite.define[global.name] = JSON.stringify(global.value);
+  }
+  return internalVite;
 }

@@ -21,11 +21,6 @@ export interface InternalConfig {
   outBaseDir: string;
   outDir: string;
   debug: boolean;
-  storeIds: {
-    chrome?: string;
-    firefox?: string;
-    edge?: string;
-  };
   mode: string;
   command: 'build' | 'serve';
   browser: TargetBrowser;

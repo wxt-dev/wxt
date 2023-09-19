@@ -14,10 +14,9 @@ export const dev = defineCommand<
     },
   ]
 >(async (root, flags) => {
-  const mode = flags.mode ?? 'development';
   const cliConfig: wxt.InlineConfig = {
     root,
-    mode,
+    mode: flags.mode,
     browser: flags.browser,
     manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
     configFile: flags.config,
