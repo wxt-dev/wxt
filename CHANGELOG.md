@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.2...v0.5.3)
+
+### 🩹 Fixes
+
+- Allow function for vite config ([4ec904e](https://github.com/wxt-dev/wxt/commit/4ec904e))
+
+### 🏡 Chore
+
+- Refactor how config is resolved ([#118](https://github.com/wxt-dev/wxt/pull/118))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.5.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.1...v0.5.2)
