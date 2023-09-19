@@ -95,7 +95,9 @@ export interface InlineConfig {
    *
    * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config.
    */
-  vite?: Omit<vite.UserConfig, 'root' | 'configFile' | 'mode'>;
+  vite?:
+    | WxtViteConfig
+    | ((env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>);
   /**
    * Customize the `manifest.json` output. Can be an object, promise, or function that returns an
    * object or promise.
@@ -484,3 +486,8 @@ export interface ExtensionRunnerConfig {
    */
   startUrls?: string[];
 }
+
+export type WxtViteConfig = Omit<
+  vite.UserConfig,
+  'root' | 'configFile' | 'mode'
+>;

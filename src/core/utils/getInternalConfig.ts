@@ -14,6 +14,7 @@ import * as plugins from '../vite-plugins';
 import { createFsCache } from './createFsCache';
 import { getGlobals } from './globals';
 import { loadConfig } from 'c12';
+import { resolveUserViteConfig } from './vite';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -36,6 +37,9 @@ export async function getInternalConfig(
   const debug = !!config.debug;
   if (debug) logger.level = LogLevels.debug;
 
+  const env: ConfigEnv = { mode, browser, manifestVersion, command };
+  const inlineViteConfig = await resolveUserViteConfig(config.vite, env);
+
   const baseConfig: InternalConfigNoUserDirs = {
     root,
     outDir,
@@ -47,7 +51,7 @@ export async function getInternalConfig(
     command,
     debug,
     logger,
-    vite: config.vite ?? {},
+    vite: inlineViteConfig,
     imports: config.imports ?? {},
     runnerConfig: await loadConfig<ExtensionRunnerConfig>({
       name: 'web-ext',
@@ -69,6 +73,7 @@ export async function getInternalConfig(
       rcFile: false,
     });
     userConfig = loaded.config ?? {};
+    userConfig.vite = await resolveUserViteConfig(userConfig.vite, env);
   }
 
   // Merge inline and user configs
@@ -88,7 +93,6 @@ export async function getInternalConfig(
   const typesDir = resolve(wxtDir, 'types');
 
   // Merge manifest sources
-  const env: ConfigEnv = { mode, browser, manifestVersion, command };
   const userManifest = await resolveManifestConfig(env, userConfig.manifest);
   const inlineManifest = await resolveManifestConfig(env, config.manifest);
   const manifest = vite.mergeConfig(userManifest, inlineManifest);

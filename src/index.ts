@@ -14,6 +14,7 @@ import {
   reloadHtmlPages,
   setupServer,
 } from './core/server';
+import { resolveUserViteConfig } from './core/utils/vite';
 
 export * from './core/clean';
 export { version } from '../package.json';
@@ -38,12 +39,18 @@ export async function createServer(
 ): Promise<WxtDevServer> {
   const serverInfo = await getServerInfo();
 
-  const getLatestInternalConfig = () => {
-    const viteConfig: vite.InlineConfig = vite.mergeConfig(
-      serverInfo.viteServerConfig,
-      config?.vite ?? {},
+  const getLatestInternalConfig = async () => {
+    return getInternalConfig(
+      {
+        ...config,
+        vite: async (env) =>
+          vite.mergeConfig(
+            serverInfo.viteServerConfig,
+            await resolveUserViteConfig(config?.vite, env),
+          ),
+      },
+      'serve',
     );
-    return getInternalConfig({ ...config, vite: viteConfig }, 'serve');
   };
 
   let internalConfig = await getLatestInternalConfig();
