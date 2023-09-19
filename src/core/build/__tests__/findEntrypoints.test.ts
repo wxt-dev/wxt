@@ -214,6 +214,15 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
       },
     ],
+    [
+      'background/index.ts',
+      {
+        type: 'background',
+        name: 'background',
+        inputPath: resolve(config.entrypointsDir, 'background/index.ts'),
+        outputDir: config.outDir,
+      },
+    ],
   ])(
     'should find and load background entrypoint config from %s',
     async (path, expected) => {

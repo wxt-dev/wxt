@@ -350,6 +350,7 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   'devtools/index.html': 'devtools',
 
   'background.ts': 'background',
+  'background/index.ts': 'background',
   [VIRTUAL_NOOP_BACKGROUND_MODULE_ID]: 'background',
 
   'content.ts?(x)': 'content-script',

@@ -9,6 +9,7 @@ For MV2, the background is added as a script to the background page. For MV3, th
 <EntrypointPatterns
   :patterns="[
     ['background.ts', 'background.js'],
+    ['background/index.ts', 'background.js'],
   ]"
 />
 
