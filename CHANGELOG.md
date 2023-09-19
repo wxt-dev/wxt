@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.4...v0.5.5)
+
+### 🩹 Fixes
+
+- Automatically replace vite's `process.env.NODE_ENV` output in lib mode with the mode ([92039b8](https://github.com/wxt-dev/wxt/commit/92039b8))
+
+### ❤️ Contributors
+
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.5.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.3...v0.5.4)
