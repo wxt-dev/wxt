@@ -9,13 +9,13 @@ import {
 import { resolve } from 'path';
 import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
-import { importTsFile } from '../../utils/importTsFile';
+import { importEntrypointFile } from '../../utils/importEntrypointFile';
 import glob from 'fast-glob';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
 import { unnormalizePath } from '../../utils/paths';
 
-vi.mock('../../utils/importTsFile');
-const importTsFileMock = vi.mocked(importTsFile);
+vi.mock('../../utils/importEntrypointFile');
+const importEntrypointFileMock = vi.mocked(importEntrypointFile);
 
 vi.mock('fast-glob');
 const globMock = vi.mocked(glob);
@@ -191,13 +191,16 @@ describe('findEntrypoints', () => {
         matches: ['<all_urls>'],
       };
       globMock.mockResolvedValueOnce([path]);
-      importTsFileMock.mockResolvedValue(options);
+      importEntrypointFileMock.mockResolvedValue(options);
 
       const entrypoints = await findEntrypoints(config);
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(expected.inputPath, config);
+      expect(importEntrypointFileMock).toBeCalledWith(
+        expected.inputPath,
+        config,
+      );
     },
   );
 
@@ -218,13 +221,16 @@ describe('findEntrypoints', () => {
         type: 'module',
       };
       globMock.mockResolvedValueOnce([path]);
-      importTsFileMock.mockResolvedValue(options);
+      importEntrypointFileMock.mockResolvedValue(options);
 
       const entrypoints = await findEntrypoints(config);
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importTsFileMock).toBeCalledWith(expected.inputPath, config);
+      expect(importEntrypointFileMock).toBeCalledWith(
+        expected.inputPath,
+        config,
+      );
     },
   );
 
@@ -551,7 +557,7 @@ describe('findEntrypoints', () => {
   describe('include option', () => {
     it("should filter out the background when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['background.ts']);
-      importTsFileMock.mockResolvedValue({
+      importEntrypointFileMock.mockResolvedValue({
         include: ['not' + config.browser],
       });
 
@@ -562,7 +568,7 @@ describe('findEntrypoints', () => {
 
     it("should filter out content scripts when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['example.content.ts']);
-      importTsFileMock.mockResolvedValue({
+      importEntrypointFileMock.mockResolvedValue({
         include: ['not' + config.browser],
       });
 
@@ -626,7 +632,7 @@ describe('findEntrypoints', () => {
   describe('exclude option', () => {
     it('should filter out the background when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['background.ts']);
-      importTsFileMock.mockResolvedValue({
+      importEntrypointFileMock.mockResolvedValue({
         exclude: [config.browser],
       });
 
@@ -637,7 +643,7 @@ describe('findEntrypoints', () => {
 
     it('should filter out content scripts when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['example.content.ts']);
-      importTsFileMock.mockResolvedValue({
+      importEntrypointFileMock.mockResolvedValue({
         exclude: [config.browser],
       });
 

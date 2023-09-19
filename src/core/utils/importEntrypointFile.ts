@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import { resolve } from 'path';
 import transform from 'jiti/dist/babel';
 import { getUnimportOptions } from './auto-imports';
-import { removeImportStatements } from './strings';
+import { removeProjectImportStatements } from './strings';
 import { normalizePath } from './paths';
 
 /**
@@ -23,7 +23,7 @@ import { normalizePath } from './paths';
  * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
  * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
  */
-export async function importTsFile<T>(
+export async function importEntrypointFile<T>(
   path: string,
   config: InternalConfig,
 ): Promise<T> {
@@ -39,7 +39,7 @@ export async function importTsFile<T>(
   await unimport.init();
 
   const text = await fs.readFile(path, 'utf-8');
-  const textNoImports = removeImportStatements(text);
+  const textNoImports = removeProjectImportStatements(text);
   const { code } = await unimport.injectImports(textNoImports);
   config.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
