@@ -1,7 +1,6 @@
 import { BuildOutput, WxtDevServer, InlineConfig } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import pc from 'picocolors';
-import * as vite from 'vite';
 import { detectDevChanges } from './core/utils/detectDevChanges';
 import { Mutex } from 'async-mutex';
 import { consola } from 'consola';
@@ -14,7 +13,6 @@ import {
   reloadHtmlPages,
   setupServer,
 } from './core/server';
-import { resolveUserViteConfig } from './core/utils/vite';
 
 export * from './core/clean';
 export { version } from '../package.json';
@@ -43,11 +41,7 @@ export async function createServer(
     return getInternalConfig(
       {
         ...config,
-        vite: async (env) =>
-          vite.mergeConfig(
-            serverInfo.viteServerConfig,
-            await resolveUserViteConfig(config?.vite, env),
-          ),
+        vite: serverInfo.viteServerConfig,
       },
       'serve',
     );
