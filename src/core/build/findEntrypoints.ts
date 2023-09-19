@@ -375,8 +375,8 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   [`*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
   [`*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
 
-  // Don't warn about any files in subdirectories, like CSS or JS entrypoints for HTML files
-  '*/*': 'ignored',
+  // Don't warn about any files in subdirectories, like CSS or JS entrypoints for HTML files or tests
+  '*/**': 'ignored',
 };
 
 const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';
