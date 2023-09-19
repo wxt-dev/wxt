@@ -9,13 +9,13 @@ import {
 import { resolve } from 'path';
 import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
-import { importTsFile } from '../../utils/importTsFile';
+import { importEntrypointFile } from '../../utils/importEntrypointFile';
 import glob from 'fast-glob';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
 import { unnormalizePath } from '../../utils/paths';
 
-vi.mock('../../utils/importTsFile');
-const importTsFileMock = vi.mocked(importTsFile);
+vi.mock('../../utils/importEntrypointFile');
+const importTsFileMock = vi.mocked(importEntrypointFile);
 
 vi.mock('fast-glob');
 const globMock = vi.mocked(glob);

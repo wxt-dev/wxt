@@ -15,7 +15,7 @@ import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import { importTsFile } from '../utils/importTsFile';
+import { importEntrypointFile } from '../utils/importEntrypointFile';
 import glob from 'fast-glob';
 import { getEntrypointName } from '../utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../vite-plugins/noopBackground';
@@ -287,10 +287,8 @@ async function getBackgroundEntrypoint(
 ): Promise<BackgroundEntrypoint> {
   let options: Omit<BackgroundScriptDefintition, 'main'> = {};
   if (path !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
-    const defaultExport = await importTsFile<BackgroundScriptDefintition>(
-      path,
-      config,
-    );
+    const defaultExport =
+      await importEntrypointFile<BackgroundScriptDefintition>(path, config);
     if (defaultExport == null) {
       throw Error('Background script does not have a default export');
     }
@@ -314,10 +312,8 @@ async function getContentScriptEntrypoint(
   name: string,
   path: string,
 ): Promise<ContentScriptEntrypoint> {
-  const { main: _, ...options } = await importTsFile<ContentScriptDefinition>(
-    path,
-    config,
-  );
+  const { main: _, ...options } =
+    await importEntrypointFile<ContentScriptDefinition>(path, config);
   if (options == null) {
     throw Error(`Content script ${name} does not have a default export`);
   }
