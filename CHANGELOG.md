@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.1...v0.5.2)
+
+### 🩹 Fixes
+
+- Import client utils when getting entrypoint config ([#117](https://github.com/wxt-dev/wxt/pull/117))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.5.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.0...v0.5.1)
