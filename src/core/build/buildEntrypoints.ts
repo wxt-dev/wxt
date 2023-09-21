@@ -12,6 +12,7 @@ import { getEntrypointBundlePath } from '../utils/entrypoints';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
 import { getPublicFiles } from '../utils/public';
+import { getEntrypointGlobals } from '../utils/globals';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -83,6 +84,9 @@ async function buildSingleEntrypoint(
       'process.env.NODE_ENV': JSON.stringify(config.mode),
     },
   };
+  for (const global of getEntrypointGlobals(config, entrypoint.name)) {
+    libMode.define![global.name] = JSON.stringify(global.value);
+  }
   const entryConfig = vite.mergeConfig(
     libMode,
     config.vite,
@@ -120,7 +124,11 @@ async function buildMultipleEntrypoints(
         },
       },
     },
+    define: {},
   };
+  for (const global of getEntrypointGlobals(config, 'html')) {
+    multiPage.define![global.name] = JSON.stringify(global.value);
+  }
 
   const entryConfig = vite.mergeConfig(
     multiPage,
