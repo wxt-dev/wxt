@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import { relative, resolve } from 'path';
 import { getEntrypointBundlePath } from '../utils/entrypoints';
 import { getUnimportOptions } from '../utils/auto-imports';
-import { getGlobals } from '../utils/globals';
+import { getEntrypointGlobals, getGlobals } from '../utils/globals';
 import { getPublicFiles } from '../utils/public';
 import { normalizePath } from '../utils/paths';
 import path from 'node:path';
@@ -157,7 +157,7 @@ async function writeGlobalsDeclarationFile(
   config: InternalConfig,
 ): Promise<string> {
   const filePath = resolve(config.typesDir, 'globals.d.ts');
-  const globals = getGlobals(config);
+  const globals = [...getGlobals(config), ...getEntrypointGlobals(config, '')];
   await writeFileIfDifferent(
     filePath,
     [

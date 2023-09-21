@@ -22,6 +22,7 @@ describe('TypeScript Project', () => {
         const __IS_EDGE__: boolean;
         const __IS_OPERA__: boolean;
         const __COMMAND__: \\"build\\" | \\"serve\\";
+        const __ENTRYPOINT__: string;
       }
       "
     `);

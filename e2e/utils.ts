@@ -80,9 +80,12 @@ export class TestProject {
   /**
    * Read all the files from the test project's `.output` directory and combine them into a string
    * that can be used in a snapshot.
+   *
+   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
+   * or not relevant to a test).
    */
-  serializeOutput(): Promise<string> {
-    return this.serializeDir('.output');
+  serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
+    return this.serializeDir('.output', ignoreContentsOfFilenames);
   }
 
   /**
@@ -95,7 +98,16 @@ export class TestProject {
     );
   }
 
-  private async serializeDir(dir: string): Promise<string> {
+  /**
+   * Deeply print the filename and contents of all files in a directory.
+   *
+   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
+   * or not relevant to a test).
+   */
+  private async serializeDir(
+    dir: string,
+    ignoreContentsOfFilenames?: string[],
+  ): Promise<string> {
     const outputFiles = await glob('**/*', {
       cwd: resolve(this.root, dir),
       ignore: ['**/node_modules', '**/.output'],
@@ -104,19 +116,24 @@ export class TestProject {
     const fileContents = [];
     for (const file of outputFiles) {
       const path = resolve(this.root, dir, file);
-      fileContents.push(await this.serializeFile(path));
+      const isContentIgnored = !!ignoreContentsOfFilenames?.find(
+        (ignoredFile) => normalizePath(path).endsWith(ignoredFile),
+      );
+      fileContents.push(await this.serializeFile(path, isContentIgnored));
     }
     return fileContents.join(`\n${''.padEnd(80, '=')}\n`);
   }
 
   /**
    * @param path An abosolute path to a file or a path relative to the root.
+   * @param ignoreContents An optional boolean that, when true, causes this function to not print
+   *                       the file contents.
    */
-  async serializeFile(path: string): Promise<string> {
+  async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
     const absolutePath = resolve(this.root, path);
     return [
       normalizePath(relative(this.root, absolutePath)),
-      await fs.readFile(absolutePath),
+      ignoreContents ? '<contents-ignored>' : await fs.readFile(absolutePath),
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 

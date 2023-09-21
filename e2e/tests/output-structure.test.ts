@@ -43,7 +43,12 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.serializeOutput()).toMatchInlineSnapshot(`
+    expect(
+      await project.serializeOutput([
+        '.output/chrome-mv3/content-scripts/one.js',
+        '.output/chrome-mv3/content-scripts/two.js',
+      ]),
+    ).toMatchInlineSnapshot(`
       ".output/chrome-mv3/assets/one.css
       ----------------------------------------
       body{color:#00f}
@@ -56,13 +61,11 @@ describe('Output Directory Structure', () => {
       ================================================================================
       .output/chrome-mv3/content-scripts/one.js
       ----------------------------------------
-      (function(){\\"use strict\\";function i(n){return n}const s=\\"\\",o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
-
+      <contents-ignored>
       ================================================================================
       .output/chrome-mv3/content-scripts/two.js
       ----------------------------------------
-      (function(){\\"use strict\\";function i(n){return n}const s=\\"\\",o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
-
+      <contents-ignored>
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
@@ -82,11 +85,14 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.serializeOutput()).toMatchInlineSnapshot(`
+    expect(
+      await project.serializeOutput([
+        '.output/chrome-mv3/content-scripts/overlay-one.js',
+      ]),
+    ).toMatchInlineSnapshot(`
       ".output/chrome-mv3/content-scripts/overlay-one.js
       ----------------------------------------
-      (function(){\\"use strict\\";function i(n){return n}const o={matches:[\\"*://*/*\\"],main:()=>{}};function t(n,...e){if(typeof e[0]==\\"string\\"){const c=e.shift();n(\`[wxt] \${c}\`,...e)}else n(\\"[wxt]\\",...e)}var r={debug:(...n)=>t(console.debug,...n),log:(...n)=>t(console.log,...n),warn:(...n)=>t(console.warn,...n),error:(...n)=>t(console.error,...n)};(async()=>{try{await o.main()}catch(n){r.error(\\"The content script crashed on startup!\\",n)}})()})();
-
+      <contents-ignored>
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
