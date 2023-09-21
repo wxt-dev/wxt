@@ -113,6 +113,10 @@ export default defineContentScript({
 });
 ```
 
-The class extends `AbortController`, and provides other APIs that are useful to stop the content script's logic once it's context is invalidated.
+The class extends [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) and provides other utilities for stopping a content script's logic once it becomes invalidated.
 
-When in a content script, you should always use the `ctx` object to stop any async or future work.
+:::tip
+When working with content scripts, **you should always use the `ctx` object to stop any async or future work.**
+
+This prevents old content scripts from interfering with new content scripts, and prevents error messages from the console in production.
+:::
