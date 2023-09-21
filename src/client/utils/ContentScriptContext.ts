@@ -20,7 +20,7 @@ export class ContentScriptContext extends AbortController {
       this.#stopOldScripts();
     }
     this.setTimeout(() => {
-      // // Run on next tick so the listener it ads isn't triggered by stopOldScript
+      // Run on next tick so the listener it adds isn't triggered by stopOldScript
       this.#listenForNewerScripts();
     });
   }
