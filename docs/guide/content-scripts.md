@@ -34,7 +34,7 @@ export default defineContentScript({
   include: undefined | string[],
   exclude: undefined | string[],
 
-  main() {
+  main(ctx) {
     // Executed when content script is loaded
   },
 });
@@ -63,7 +63,7 @@ import './style.css';
 
 export default defineContentScript({
   matches: ['*://google.com/*', '*://duckduckgo.com/*'],
-  main() {
+  main(ctx) {
     // ...
   },
 });
@@ -83,3 +83,36 @@ Any styles imported in your content script will be added to that content script'
   ]
 }
 ```
+
+## Context
+
+Old content scripts are not automatically stopped when an extension updates and restarts. Often, this leads to "Invalidated context" errors in production when a content script from an old version of your extension tries to use a web extension API. Since it's not connected to the latest version of your extension, the browser decides to throw an error.
+
+WXT provides a utility for managing this process: `ContentScriptContext`. An instance of this class is provided to you automatically inside the `main` function of your content script.
+
+```ts
+export default defineContentScript({
+  // ...
+  main(ctx: ContentScriptContext) {
+    // Add custom listeners for stopping work
+    ctx.onInvalidated(() => {
+      // ...
+    });
+
+    // Stop fetch requests
+    fetch('...url', { signal: ctx.signal });
+
+    // Timeout utilities
+    ctx.setTimeout(() => {
+      // ...
+    }, 5e3);
+    ctx.setInterval(() => {
+      // ...
+    }, 60e3);
+  },
+});
+```
+
+The class extends `AbortController`, and provides other APIs that are useful to stop the content script's logic once it's context is invalidated.
+
+When in a content script, you should always use the `ctx` object to stop any async or future work.
