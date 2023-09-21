@@ -46,3 +46,16 @@ export function getGlobals(
     },
   ];
 }
+
+export function getEntrypointGlobals(
+  config: InternalConfig,
+  entrypointName: string,
+) {
+  return [
+    {
+      name: '__ENTRYPOINT__',
+      value: entrypointName,
+      type: `string`,
+    },
+  ];
+}

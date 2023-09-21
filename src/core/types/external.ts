@@ -3,6 +3,7 @@ import { Manifest, Scripting } from 'webextension-polyfill';
 import { UnimportOptions } from 'unimport';
 import { EntrypointGroup } from '.';
 import { LogLevel } from 'consola';
+import { ContentScriptContext } from '../../client/utils/ContentScriptContext';
 
 export interface InlineConfig {
   /**
@@ -369,7 +370,7 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
   /**
    * Main function executed when the content script is loaded.
    */
-  main(): void | Promise<void>;
+  main(ctx: ContentScriptContext): void | Promise<void>;
 }
 
 export interface BackgroundScriptDefintition extends ExcludableEntrypoint {

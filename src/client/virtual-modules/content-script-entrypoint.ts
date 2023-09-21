@@ -1,9 +1,12 @@
 import definition from 'virtual:user-content-script';
 import { logger } from '../utils/logger';
+import { ContentScriptContext } from '../utils/ContentScriptContext';
 
 (async () => {
   try {
-    await definition.main();
+    const ctx = new ContentScriptContext(__ENTRYPOINT__);
+
+    await definition.main(ctx);
   } catch (err) {
     logger.error('The content script crashed on startup!', err);
   }
