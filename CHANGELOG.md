@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.6.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.6...v0.6.0)
+
+### 🚀 Enhancements
+
+- Export `ContentScriptContext` from `wxt/client` ([1f448d1](https://github.com/wxt-dev/wxt/commit/1f448d1))
+- ⚠️  Require a function for `vite` configuration ([#121](https://github.com/wxt-dev/wxt/pull/121))
+
+### 🩹 Fixes
+
+- Use the same mode for each build step ([1f6a931](https://github.com/wxt-dev/wxt/commit/1f6a931))
+- Disable dev logs in production ([3f260ee](https://github.com/wxt-dev/wxt/commit/3f260ee))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Require a function for `vite` configuration ([#121](https://github.com/wxt-dev/wxt/pull/121))
+
+### ❤️ Contributors
+
+- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.5.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.5...v0.5.6)
