@@ -7,6 +7,7 @@ import {
   TargetManifestVersion,
   UserManifest,
   ExtensionRunnerConfig,
+  ConfigEnv,
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
@@ -25,9 +26,10 @@ export interface InternalConfig {
   command: 'build' | 'serve';
   browser: TargetBrowser;
   manifestVersion: TargetManifestVersion;
+  env: ConfigEnv;
   logger: Logger;
   imports: false | Partial<UnimportOptions>;
-  vite: vite.InlineConfig;
+  vite: (env: ConfigEnv) => Promise<vite.InlineConfig> | vite.InlineConfig;
   manifest: UserManifest;
   fsCache: FsCache;
   server?: WxtDevServer;
