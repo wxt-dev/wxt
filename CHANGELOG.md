@@ -10,7 +10,7 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.5
 
@@ -22,7 +22,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.4
 
@@ -35,7 +35,7 @@
 
 ### ❤️ Contributors
 
-- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.3
 
@@ -51,8 +51,7 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
-- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.2
 
@@ -64,7 +63,7 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.1
 
@@ -81,8 +80,7 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
-- Aaron Klinker <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.0
 
