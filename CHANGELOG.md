@@ -16,12 +16,11 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Require a function for `vite` configuration ([#121](https://github.com/wxt-dev/wxt/pull/121))
+- ⚠️  The `vite` config option must now be a function. If you were using an object before, change it from `vite: { ... }` to `vite: () => ({ ... })`. ([#121](https://github.com/wxt-dev/wxt/pull/121))
 
 ### ❤️ Contributors
 
-- Aaron Klinker <aaronklinker1@gmail.com>
-- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.6
 
