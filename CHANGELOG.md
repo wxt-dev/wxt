@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.5...v0.5.6)
+
+### 🚀 Enhancements
+
+- Add `ContentScriptContext` util for stopping invalidated content scripts ([#120](https://github.com/wxt-dev/wxt/pull/120))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.5.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.4...v0.5.5)
