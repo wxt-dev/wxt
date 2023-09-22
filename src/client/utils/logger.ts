@@ -1,4 +1,6 @@
 function print(method: (...args: any[]) => void, ...args: any[]) {
+  if (import.meta.env.MODE === 'production') return;
+
   if (typeof args[0] === 'string') {
     const message = args.shift();
     method(`[wxt] ${message}`, ...args);
