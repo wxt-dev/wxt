@@ -4,7 +4,7 @@ import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 // See https://wxt.dev/config.html
 export default defineConfig({
   srcDir: 'src',
-  vite: {
+  vite: () => ({
     plugins: [
       svelte({
         // Using a svelte.config.js file causes a segmentation fault when importing the file
@@ -12,5 +12,5 @@ export default defineConfig({
         preprocess: [vitePreprocess()],
       }),
     ],
-  },
+  }),
 });

@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue';
 
 // See https://wxt.dev/config.html
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [vue()],
-  },
+  }),
 });
