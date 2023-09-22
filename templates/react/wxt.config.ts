@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // See https://wxt.dev/config.html
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [react()],
-  },
+  }),
 });

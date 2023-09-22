@@ -3,10 +3,10 @@ import Solid from 'vite-plugin-solid';
 
 // See https://wxt.dev/config.html
 export default defineConfig({
-  vite: {
+  vite: () => ({
     build: {
       target: 'esnext',
     },
     plugins: [Solid()],
-  },
+  }),
 });
