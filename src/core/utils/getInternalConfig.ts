@@ -208,6 +208,7 @@ async function resolveInternalViteConfig(
   internalVite.root = finalConfig.root;
   internalVite.configFile = false;
   internalVite.logLevel = 'warn';
+  internalVite.mode = env.mode;
 
   internalVite.build ??= {};
   internalVite.build.outDir = finalConfig.outDir;
