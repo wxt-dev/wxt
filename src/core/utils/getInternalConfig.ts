@@ -83,6 +83,7 @@ export async function getInternalConfig(
     command,
     debug,
     entrypointsDir,
+    env,
     fsCache: createFsCache(wxtDir),
     imports: mergedConfig.imports ?? {},
     logger,
@@ -96,16 +97,13 @@ export async function getInternalConfig(
     runnerConfig,
     srcDir,
     typesDir,
-    vite: {}, // Real value added after this object is initialized.
+    vite: () => ({}), // Real value added after this object is initialized.
     wxtDir,
     zip: resolveInternalZipConfig(root, mergedConfig),
   };
 
-  finalConfig.vite = await resolveInternalViteConfig(
-    env,
-    mergedConfig,
-    finalConfig,
-  );
+  finalConfig.vite = (env) =>
+    resolveInternalViteConfig(env, mergedConfig, finalConfig);
 
   return finalConfig;
 }
@@ -143,9 +141,9 @@ function mergeInlineConfig(
     return vite.mergeConfig(user, inline);
   };
   const viteConfig = async (env: ConfigEnv): Promise<WxtViteConfig> => {
-    const user = await resolveViteConfig(env, userConfig.vite);
-    const inline = await resolveViteConfig(env, inlineConfig.vite);
-    return vite.mergeConfig(user, inline);
+    const user = await userConfig.vite?.(env);
+    const inline = await inlineConfig.vite?.(env);
+    return vite.mergeConfig(user ?? {}, inline ?? {});
   };
   const runner: InlineConfig['runner'] = vite.mergeConfig(
     userConfig.runner ?? {},
@@ -173,13 +171,6 @@ function mergeInlineConfig(
     vite: viteConfig,
     zip,
   };
-}
-
-async function resolveViteConfig(
-  env: ConfigEnv,
-  vite: InlineConfig['vite'],
-): Promise<WxtViteConfig> {
-  return await (typeof vite === 'function' ? vite(env) : vite ?? {});
 }
 
 function resolveInternalZipConfig(
@@ -211,10 +202,9 @@ async function resolveInternalViteConfig(
   mergedConfig: InlineConfig,
   finalConfig: InternalConfig,
 ) {
-  const internalVite: vite.InlineConfig = await resolveViteConfig(
-    env,
-    mergedConfig.vite,
-  );
+  const internalVite: vite.InlineConfig =
+    (await mergedConfig.vite?.(env)) ?? {};
+
   internalVite.root = finalConfig.root;
   internalVite.configFile = false;
   internalVite.logLevel = 'warn';

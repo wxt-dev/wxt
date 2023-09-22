@@ -41,7 +41,7 @@ export async function createServer(
     return getInternalConfig(
       {
         ...config,
-        vite: serverInfo.viteServerConfig,
+        vite: () => serverInfo.viteServerConfig,
       },
       'serve',
     );

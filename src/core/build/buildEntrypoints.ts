@@ -89,7 +89,7 @@ async function buildSingleEntrypoint(
   }
   const entryConfig = vite.mergeConfig(
     libMode,
-    config.vite,
+    await config.vite(config.env),
   ) as vite.InlineConfig;
 
   const result = await vite.build(entryConfig);
@@ -132,7 +132,7 @@ async function buildMultipleEntrypoints(
 
   const entryConfig = vite.mergeConfig(
     multiPage,
-    config.vite,
+    await config.vite(config.env),
   ) as vite.UserConfig;
 
   const result = await vite.build(entryConfig);

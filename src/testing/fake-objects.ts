@@ -198,34 +198,42 @@ export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   return array;
 }
 
-export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => ({
-  browser: faker.helpers.arrayElement(['chrome', 'firefox']),
-  command: faker.helpers.arrayElement(['build', 'serve']),
-  entrypointsDir: fakeDir(),
-  fsCache: mock<FsCache>(),
-  imports: {},
-  logger: mock(),
-  manifest: fakeManifest(),
-  manifestVersion: faker.helpers.arrayElement([2, 3]),
-  mode: faker.helpers.arrayElement(['development', 'production']),
-  outBaseDir: fakeDir(),
-  outDir: fakeDir(),
-  publicDir: fakeDir(),
-  root: fakeDir(),
-  runnerConfig: {
-    config: {},
-  },
-  debug: faker.datatype.boolean(),
-  srcDir: fakeDir(),
-  typesDir: fakeDir(),
-  vite: {},
-  wxtDir: fakeDir(),
-  server: mock<WxtDevServer>(),
-  zip: {
-    artifactTemplate: '{{name}}-{{version}}.zip',
-    ignoredSources: [],
-    sourcesRoot: fakeDir(),
-    sourcesTemplate: '{{name}}-sources.zip',
-    name: faker.person.firstName().toLowerCase(),
-  },
-}));
+export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
+  const browser = faker.helpers.arrayElement(['chrome', 'firefox']);
+  const command = faker.helpers.arrayElement(['build', 'serve'] as const);
+  const manifestVersion = faker.helpers.arrayElement([2, 3] as const);
+  const mode = faker.helpers.arrayElement(['development', 'production']);
+
+  return {
+    browser,
+    command,
+    entrypointsDir: fakeDir(),
+    env: { browser, command, manifestVersion, mode },
+    fsCache: mock<FsCache>(),
+    imports: {},
+    logger: mock(),
+    manifest: fakeManifest(),
+    manifestVersion,
+    mode,
+    outBaseDir: fakeDir(),
+    outDir: fakeDir(),
+    publicDir: fakeDir(),
+    root: fakeDir(),
+    runnerConfig: {
+      config: {},
+    },
+    debug: faker.datatype.boolean(),
+    srcDir: fakeDir(),
+    typesDir: fakeDir(),
+    vite: () => ({}),
+    wxtDir: fakeDir(),
+    server: mock<WxtDevServer>(),
+    zip: {
+      artifactTemplate: '{{name}}-{{version}}.zip',
+      ignoredSources: [],
+      sourcesRoot: fakeDir(),
+      sourcesTemplate: '{{name}}-sources.zip',
+      name: faker.person.firstName().toLowerCase(),
+    },
+  };
+});

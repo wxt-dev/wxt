@@ -37,7 +37,7 @@ export async function setupServer(
   const runner = createWebExtRunner();
 
   const viteServer = await vite.createServer(
-    vite.mergeConfig(serverInfo, config.vite),
+    vite.mergeConfig(serverInfo, await config.vite(config.env)),
   );
 
   const start = async () => {

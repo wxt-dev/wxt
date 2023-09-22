@@ -84,13 +84,13 @@ export interface InlineConfig {
    */
   logger?: Logger;
   /**
-   * Custom Vite options, see <https://vitejs.dev/config/shared-options.html>.
+   * Return custom Vite options from a function. See
+   * <https://vitejs.dev/config/shared-options.html>.
    *
-   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config.
+   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config
+   * instead of Vite's.
    */
-  vite?:
-    | WxtViteConfig
-    | ((env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>);
+  vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
   /**
    * Customize the `manifest.json` output. Can be an object, promise, or function that returns an
    * object or promise.
