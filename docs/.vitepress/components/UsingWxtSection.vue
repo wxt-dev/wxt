@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-const extensions = [
-  {
-    name: 'GitHub: Better Line Counts',
-    description: 'Remove generated files from GitHub line counts.',
-    icon: 'https://lh3.googleusercontent.com/GcffNyCJaxT2G9dsQCJHhUEMlu_E0vEzph5cLPrQj7UHKat7QyCzGu69Dmp_DDUL8rY-bPMFJceQarS1wcqdwTalTg=s256',
-    link: 'https://chrome.google.com/webstore/detail/github-better-line-counts/ocfdgncpifmegplaglcnglhioflaimkd',
-  },
+import useListExtensionDetails from '../composables/useListExtensionDetails';
+
+const chromeExtensionIds = [
+  'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
 ];
+
+const { data } = useListExtensionDetails(chromeExtensionIds);
 </script>
 
 <template>
@@ -14,10 +13,14 @@ const extensions = [
     <div class="container">
       <h2>Who's Using WXT?</h2>
       <ul>
-        <li v-for="extension of extensions">
-          <img :src="extension.icon" :alt="`${extension.name} icon`" />
-          <a :href="extension.link" target="_blank">{{ extension.name }}</a>
-          <small>{{ extension.description }}</small>
+        <li v-for="extension of data">
+          <img
+            :src="extension.iconUrl"
+            :alt="`${extension.name} icon`"
+            referrerpolicy="no-referrer"
+          />
+          <a :href="extension.storeUrl" target="_blank">{{ extension.name }}</a>
+          <small>{{ extension.shortDescription }}</small>
         </li>
       </ul>
       <p>Open a PR to add your extension to the list!</p>
@@ -57,6 +60,7 @@ img {
   width: 96px;
   height: 96px;
   margin-bottom: 16px;
+  border-radius: 8px;
 }
 
 ul {

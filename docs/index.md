@@ -54,4 +54,6 @@ features:
     details: 'TODO: Tools for analyizing the final extension bundle.'
 ---
 
-<UsingWxtSection />
+<ClientOnly>
+  <UsingWxtSection />
+</ClientOnly>

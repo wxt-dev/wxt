@@ -141,6 +141,9 @@ importers:
       vitest-mock-extended:
         specifier: ^1.1.4
         version: 1.2.1(typescript@5.1.6)(vitest@0.34.3)
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
 
   demo:
     dependencies:
