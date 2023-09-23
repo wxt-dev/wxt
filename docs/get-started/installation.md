@@ -2,12 +2,6 @@
 
 Bootstrap a new project, start from scratch, or migrate an existing project.
 
-:::warning 🚧&ensp;WSL Support
-**_WXT does not support [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) yet_**. See [Issue #55](https://github.com/wxt-dev/wxt/issues/55) to track progress.
-
-In the meantime, you can use `cmd` instead.
-:::
-
 ## Bootstrap Project
 
 :::code-group
