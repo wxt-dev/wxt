@@ -11,7 +11,7 @@ import fs from 'fs-extra';
 import { groupEntrypoints } from './utils/groupEntrypoints';
 import { formatDuration } from './utils/formatDuration';
 import { printBuildSummary } from './log/printBuildSummary';
-import { spawnSync } from 'node:child_process';
+import { execSync } from 'node:child_process';
 import glob from 'fast-glob';
 import { unnormalizePath } from './utils/paths';
 
@@ -123,15 +123,16 @@ export async function rebuild(
 }
 
 async function combineAnalysisStats(config: InternalConfig): Promise<void> {
-  const unixFiles = await glob(`${config.outDir}/stats-*.json`, {
-    cwd: config.root,
+  const unixFiles = await glob(`stats-*.json`, {
+    cwd: config.outDir,
     absolute: true,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
-  spawnSync(
-    'rollup-plugin-visualizer',
-    [...absolutePaths, '--template', config.analysis.template],
+  execSync(
+    `rollup-plugin-visualizer ${absolutePaths.join(' ')} --template ${
+      config.analysis.template
+    }`,
     { cwd: config.root, stdio: 'inherit' },
   );
 }
