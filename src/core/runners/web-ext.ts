@@ -1,5 +1,5 @@
 import type { WebExtRunInstance } from 'web-ext-run';
-import { ExtensionRunner } from './ExtensionRunner';
+import { ExtensionRunner } from './extension-runner';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -9,10 +9,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
   return {
     async openBrowser(config) {
-      if (config.browser === 'safari') {
-        config.logger.warn('Cannot open safari automatically.');
-        return;
-      }
+      config.logger.info('Opening browser...');
 
       // Use the plugin's logger instead of web-ext's built-in one.
       const webExtLogger = await import('web-ext-run/util/logger');
@@ -57,6 +54,8 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const webExt = await import('web-ext-run');
       runner = await webExt.default.cmd.run(finalConfig, options);
+
+      config.logger.success('Opened!');
     },
 
     async closeBrowser() {

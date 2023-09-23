@@ -8,8 +8,8 @@ import * as vite from 'vite';
 import { Scripting } from 'webextension-polyfill';
 import { getEntrypointBundlePath } from './utils/entrypoints';
 import { getContentScriptCssFiles } from './utils/manifest';
-import { createWebExtRunner } from './runners/createWebExtRunner';
 import { buildInternal } from './build';
+import { createExtensionRunner } from './runners';
 
 export async function getServerInfo(): Promise<ServerInfo> {
   const { default: getPort, portNumbers } = await import('get-port');
@@ -34,7 +34,7 @@ export async function setupServer(
   serverInfo: ServerInfo,
   config: InternalConfig,
 ): Promise<WxtDevServer> {
-  const runner = createWebExtRunner();
+  const runner = await createExtensionRunner(config);
 
   const viteServer = await vite.createServer(
     vite.mergeConfig(serverInfo, await config.vite(config.env)),
@@ -45,9 +45,7 @@ export async function setupServer(
     config.logger.success(`Started dev server @ ${serverInfo.origin}`);
 
     server.currentOutput = await buildInternal(config);
-    config.logger.info('Opening browser...');
     await runner.openBrowser(config);
-    config.logger.success('Opened!');
   };
 
   const reloadExtension = () => {
