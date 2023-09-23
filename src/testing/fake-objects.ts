@@ -235,5 +235,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
       sourcesTemplate: '{{name}}-sources.zip',
       name: faker.person.firstName().toLowerCase(),
     },
+    transformManifest: () => {},
   };
 });
