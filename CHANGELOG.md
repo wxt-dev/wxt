@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.6.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.0...v0.6.1)
+
+### 🚀 Enhancements
+
+- Add `transformManifest` option ([#124](https://github.com/wxt-dev/wxt/pull/124))
+
+### 🩹 Fixes
+
+- Don't open browser during development when using WSL ([#123](https://github.com/wxt-dev/wxt/pull/123))
+
+### 📖 Documentation
+
+- Load extension details from CWS ([8e0a189](https://github.com/wxt-dev/wxt/commit/8e0a189))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Aaron Klinker <aaronklinker1@gmail.com>
+
 ## v0.6.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.6...v0.6.0)
