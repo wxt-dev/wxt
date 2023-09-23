@@ -10,7 +10,6 @@ export async function createExtensionRunner(
   if (config.browser === 'safari') return createSafariRunner();
 
   const { default: isWsl } = await import('is-wsl'); // ESM only, requires dynamic import
-  console.log({ isWsl });
   if (isWsl) return createWslRunner();
 
   return createWebExtRunner();
