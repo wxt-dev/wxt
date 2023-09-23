@@ -19,6 +19,7 @@ import {
 import { getPackageJson } from './package';
 import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
+import { produce } from 'immer';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -89,7 +90,7 @@ export async function generateMainfest(
     );
   }
 
-  return manifest;
+  return produce(manifest, config.transformManifest);
 }
 
 /**
