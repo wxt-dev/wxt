@@ -155,6 +155,23 @@ export interface InlineConfig {
      */
     ignoredSources?: string[];
   };
+
+  /**
+   * Transform the final manifest before it's written to the file system. Edit the `manifest`
+   * parameter directly, do not return a new object. Return values are ignored.
+   *
+   * @example
+   * defineConfig({
+   *   // Add a CSS-only content script.
+   *   transformManifest(manifest) {
+   *     manifest.content_scripts.push({
+   *       matches: ["*://google.com/*"],
+   *       css: ["content-scripts/some-example.css"],
+   *     });
+   *   }
+   * })
+   */
+  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
 }
 
 export interface WxtInlineViteConfig

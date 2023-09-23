@@ -100,6 +100,10 @@ export async function getInternalConfig(
     vite: () => ({}), // Real value added after this object is initialized.
     wxtDir,
     zip: resolveInternalZipConfig(root, mergedConfig),
+    transformManifest(manifest) {
+      userConfig.transformManifest?.(manifest);
+      inlineConfig.transformManifest?.(manifest);
+    },
   };
 
   finalConfig.vite = (env) =>

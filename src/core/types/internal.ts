@@ -11,6 +11,7 @@ import {
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
+import { Manifest } from 'webextension-polyfill';
 
 export interface InternalConfig {
   root: string;
@@ -41,6 +42,7 @@ export interface InternalConfig {
     ignoredSources: string[];
     sourcesRoot: string;
   };
+  transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];

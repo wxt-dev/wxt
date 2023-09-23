@@ -306,4 +306,29 @@ describe('Manifest Content', () => {
       js: ['content-scripts/one.js'],
     });
   });
+
+  it('should respect the transformManifest option', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'wxt.config.ts',
+      `import { defineConfig } from 'wxt';
+      
+      export default defineConfig({
+        transformManifest(manifest) {
+          manifest.author = "Custom Author"
+        }
+      })`,
+    );
+
+    await project.build();
+
+    const output = await project.serializeFile(
+      '.output/chrome-mv3/manifest.json',
+    );
+    expect(output).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/manifest.json
+      ----------------------------------------
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"author\\":\\"Custom Author\\"}"
+    `);
+  });
 });
