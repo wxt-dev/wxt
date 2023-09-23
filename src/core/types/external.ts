@@ -180,7 +180,8 @@ export interface InlineConfig {
      */
     enabled?: boolean;
     /**
-     * How the bundle will be visualized. See
+     * When running `wxt build --analyze` or setting `analysis.enabled` to true, customize how the
+     * bundle will be visualized. See
      * [`rollup-plugin-visualizer`](https://github.com/btd/rollup-plugin-visualizer#how-to-use-generated-files)
      * for more details.
      */
