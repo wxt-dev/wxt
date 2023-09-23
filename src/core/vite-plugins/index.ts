@@ -7,3 +7,4 @@ export * from './virtualEntrypoint';
 export * from './tsconfigPaths';
 export * from './noopBackground';
 export * from './cssEntrypoints';
+export * from './bundleAnalysis';

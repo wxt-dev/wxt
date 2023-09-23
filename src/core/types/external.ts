@@ -4,6 +4,7 @@ import { UnimportOptions } from 'unimport';
 import { EntrypointGroup } from '.';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../../client/utils/ContentScriptContext';
+import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 
 export interface InlineConfig {
   /**
@@ -172,6 +173,19 @@ export interface InlineConfig {
    * })
    */
   transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
+  analysis?: {
+    /**
+     * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
+     * command line `--analysis` option.
+     */
+    enabled?: boolean;
+    /**
+     * How the bundle will be visualized. See
+     * [`rollup-plugin-visualizer`](https://github.com/btd/rollup-plugin-visualizer#how-to-use-generated-files)
+     * for more details.
+     */
+    template?: PluginVisualizerOptions['template'];
+  };
 }
 
 export interface WxtInlineViteConfig

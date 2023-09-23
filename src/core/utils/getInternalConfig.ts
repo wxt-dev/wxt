@@ -104,6 +104,10 @@ export async function getInternalConfig(
       userConfig.transformManifest?.(manifest);
       inlineConfig.transformManifest?.(manifest);
     },
+    analysis: {
+      enabled: mergedConfig.analysis?.enabled ?? false,
+      template: mergedConfig.analysis?.template ?? 'treemap',
+    },
   };
 
   finalConfig.vite = (env) =>
@@ -174,6 +178,11 @@ function mergeInlineConfig(
     srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
     vite: viteConfig,
     zip,
+    analysis: {
+      enabled: inlineConfig.analysis?.enabled ?? userConfig.analysis?.enabled,
+      template:
+        inlineConfig.analysis?.template ?? userConfig.analysis?.template,
+    },
   };
 }
 
@@ -231,6 +240,9 @@ async function resolveInternalViteConfig(
   internalVite.plugins.push(plugins.devServerGlobals(finalConfig));
   internalVite.plugins.push(plugins.tsconfigPaths(finalConfig));
   internalVite.plugins.push(plugins.noopBackground());
+  if (finalConfig.analysis.enabled) {
+    internalVite.plugins.push(plugins.bundleAnalysis());
+  }
 
   internalVite.define ??= {};
   for (const global of getGlobals(finalConfig)) {

@@ -11,6 +11,9 @@ import fs from 'fs-extra';
 import { groupEntrypoints } from './utils/groupEntrypoints';
 import { formatDuration } from './utils/formatDuration';
 import { printBuildSummary } from './log/printBuildSummary';
+import { spawnSync } from 'node:child_process';
+import { glob } from 'fast-glob';
+import { unnormalizePath } from './utils/paths';
 
 /**
  * Builds the extension based on an internal config.
@@ -49,6 +52,13 @@ export async function buildInternal(
     output,
     config,
   );
+
+  if (config.analysis.enabled) {
+    await combineAnalysisStats(config);
+    config.logger.info(
+      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow('stats.html')}`,
+    );
+  }
 
   return output;
 }
@@ -110,4 +120,18 @@ export async function rebuild(
     },
     manifest: newManifest,
   };
+}
+
+async function combineAnalysisStats(config: InternalConfig): Promise<void> {
+  const unixFiles = await glob(`${config.outDir}/stats-*.json`, {
+    cwd: config.root,
+    absolute: true,
+  });
+  const absolutePaths = unixFiles.map(unnormalizePath);
+
+  spawnSync(
+    'rollup-plugin-visualizer',
+    [...absolutePaths, '--template', config.analysis.template],
+    { cwd: config.root, stdio: 'inherit' },
+  );
 }
