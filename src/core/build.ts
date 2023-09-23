@@ -12,7 +12,7 @@ import { groupEntrypoints } from './utils/groupEntrypoints';
 import { formatDuration } from './utils/formatDuration';
 import { printBuildSummary } from './log/printBuildSummary';
 import { spawnSync } from 'node:child_process';
-import { glob } from 'fast-glob';
+import glob from 'fast-glob';
 import { unnormalizePath } from './utils/paths';
 
 /**
