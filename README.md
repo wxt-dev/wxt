@@ -44,10 +44,10 @@ Or see the [installation guide](https://wxt.dev/get-started/installation.html) t
 - ⬇️ Download and bundle remote URL imports
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 - 🖍️ Quickly bootstrap a new project
+- 📏 Bundle analysis
 
 ### Coming Soon
 
-- 📏 Bundle analysis
 - 🤖 Automated publishing
 
 ## Contributors

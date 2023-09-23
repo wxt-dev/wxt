@@ -46,12 +46,12 @@ features:
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Comes with starter templates for all major frontend frameworks.
+  - icon: 📏
+    title: Bundle Analysis
+    details: 'Tools for analyizing the final extension bundle.'
   - icon: 🤖
     title: Automated Publishing
     details: 'TODO: Automatically zip, upload, and release extensions.'
-  - icon: 📏
-    title: Bundle Analysis
-    details: 'TODO: Tools for analyizing the final extension bundle.'
 ---
 
 <ClientOnly>
