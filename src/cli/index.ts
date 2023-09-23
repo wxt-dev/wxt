@@ -26,6 +26,7 @@ cli
   .option('-b, --browser <browser>', 'specify a browser')
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
+  .option('--analyze', 'visualize extension bundle')
   .action(commands.build);
 
 // ZIP

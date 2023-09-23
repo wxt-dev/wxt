@@ -228,6 +228,10 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     vite: () => ({}),
     wxtDir: fakeDir(),
     server: mock<WxtDevServer>(),
+    analysis: {
+      enabled: false,
+      template: 'treemap',
+    },
     zip: {
       artifactTemplate: '{{name}}-{{version}}.zip',
       ignoredSources: [],

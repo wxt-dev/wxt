@@ -18,3 +18,4 @@ templates/*/pnpm-lock.yaml
 templates/*/yarn.lock
 templates/*/package-lock.json
 docs/config.md
+stats.html

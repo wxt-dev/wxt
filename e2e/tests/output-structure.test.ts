@@ -139,4 +139,30 @@ describe('Output Directory Structure', () => {
       false,
     );
   });
+
+  it('should generate a stats file when analyzing the bundle', async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({
+      analysis: {
+        enabled: true,
+        template: 'sunburst',
+      },
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      `export default defineBackground(() => {});`,
+    );
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile(
+      'entrypoints/overlay.content.html',
+      `export default defineContentScript({
+        matches: [],
+        main() {},
+      });`,
+    );
+
+    await project.build();
+
+    expect(await project.fileExists('stats.html')).toBe(true);
+  });
 });

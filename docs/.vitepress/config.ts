@@ -13,11 +13,11 @@ export default defineConfig({
 
   head: [
     [
-      "script",
+      'script',
       {
-        async: "",
-        "data-website-id": "c1840c18-a12c-4a45-a848-55ae85ef7915",
-        src: "https://umami.aklinker1.io/script.js",
+        async: '',
+        'data-website-id': 'c1840c18-a12c-4a45-a848-55ae85ef7915',
+        src: 'https://umami.aklinker1.io/script.js',
       },
     ],
   ],

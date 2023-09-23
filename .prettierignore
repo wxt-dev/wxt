@@ -10,3 +10,4 @@ CHANGELOG.md
 .prettierignore
 *.png
 *.svg
+_gitignore

@@ -11,6 +11,7 @@ export const build = defineCommand<
       mv3?: boolean;
       mv2?: boolean;
       debug?: boolean;
+      analyze?: boolean;
     },
   ]
 >(async (root, flags) => {
@@ -21,6 +22,9 @@ export const build = defineCommand<
     manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
     configFile: flags.config,
     debug: flags.debug,
+    analysis: {
+      enabled: flags.analyze,
+    },
   };
 
   await wxt.build(cliConfig);

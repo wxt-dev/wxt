@@ -12,6 +12,7 @@ import {
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
 import { Manifest } from 'webextension-polyfill';
+import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 
 export interface InternalConfig {
   root: string;
@@ -43,6 +44,10 @@ export interface InternalConfig {
     sourcesRoot: string;
   };
   transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
+  analysis: {
+    enabled: boolean;
+    template: NonNullable<PluginVisualizerOptions['template']>;
+  };
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];
