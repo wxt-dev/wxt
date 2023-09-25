@@ -10,9 +10,9 @@ All of Vite's config can be customized by setting the `vite` configuration in yo
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
-  vite: {
+  vite: () => ({
     // Same as `defineConfig({ ... })` inside vite.config.ts
-  },
+  }),
 });
 ```
 
@@ -26,10 +26,10 @@ All plugins should work in WXT, but it is worth pointing out that since WXT orch
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [
       // ...
     ],
-  },
+  }),
 });
 ```
