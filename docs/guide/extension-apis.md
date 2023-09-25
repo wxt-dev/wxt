@@ -14,7 +14,7 @@ And that's it! Your extension now supports Chrome, Firefox, Safari, Edge, and ot
 The `browser` variable is available globally via [auto-imports](/guide/auto-imports.md), or it can be imported manually.
 
 ```ts
-import browser from 'wxt/browser';
+import { browser } from 'wxt/browser';
 ```
 
 The `wxt/browser` module exports a customized version of `webextension-polyfill`'s browser with improved typing.
