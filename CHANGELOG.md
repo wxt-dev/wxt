@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.6.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.1...v0.6.2)
+
+### 🚀 Enhancements
+
+- `--analyze` build flag ([#125](https://github.com/wxt-dev/wxt/pull/125))
+- Show spinner when building entrypoints ([#126](https://github.com/wxt-dev/wxt/pull/126))
+
+### 📖 Documentation
+
+- Fix import typo ([4c43072](https://github.com/wxt-dev/wxt/commit/4c43072))
+- Update vite docs to use function ([e0929a6](https://github.com/wxt-dev/wxt/commit/e0929a6))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.6.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.0...v0.6.1)
