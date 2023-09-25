@@ -1,6 +1,5 @@
 import { defineCommand } from '../utils/defineCommand';
 import prompts from 'prompts';
-import ora from 'ora';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
 import fs from 'fs-extra';
@@ -133,6 +132,7 @@ async function cloneProject({
   template: Template;
   packageManager: string;
 }) {
+  const { default: ora } = await import('ora');
   const spinner = ora('Downloading template').start();
   try {
     // 1. Clone repo
