@@ -13,13 +13,25 @@ import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
 import { getPublicFiles } from '../utils/public';
 import { getEntrypointGlobals } from '../utils/globals';
+import type { Ora } from 'ora';
+import pc from 'picocolors';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
   config: InternalConfig,
+  spinner: Ora,
 ): Promise<Omit<BuildOutput, 'manifest'>> {
   const steps: BuildStepOutput[] = [];
-  for (const group of groups) {
+  for (let i = 0; i < groups.length; i++) {
+    const group = groups[i];
+
+    spinner.text =
+      pc.dim(`[${i + 1}/${groups.length}]`) +
+      ` ${[group]
+        .flat()
+        .map((e) => e.name)
+        .join(pc.dim(', '))}`;
+
     const step = Array.isArray(group)
       ? await buildMultipleEntrypoints(group, config)
       : await buildSingleEntrypoint(group, config);

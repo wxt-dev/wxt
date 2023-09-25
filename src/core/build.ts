@@ -81,6 +81,9 @@ export async function rebuild(
     publicAssets: [],
   },
 ): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
+  const { default: ora } = await import('ora');
+  const spinner = ora(`Preparing...`).start();
+
   // Update types directory with new files and types
   const allEntrypoints = await findEntrypoints(config);
   await generateTypesDir(allEntrypoints, config).catch((err) => {
@@ -90,7 +93,7 @@ export async function rebuild(
   });
 
   // Build and merge the outputs
-  const newOutput = await buildEntrypoints(entrypointGroups, config);
+  const newOutput = await buildEntrypoints(entrypointGroups, config, spinner);
   const mergedOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [...existingOutput.steps, ...newOutput.steps],
     publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
@@ -108,6 +111,9 @@ export async function rebuild(
 
   // Write manifest
   await writeManifest(newManifest, finalOutput, config);
+
+  // Stop the spinner and remove it from the CLI output
+  spinner.clear().stop();
 
   return {
     output: {
