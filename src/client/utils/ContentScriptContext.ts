@@ -55,6 +55,23 @@ export class ContentScriptContext extends AbortController {
   }
 
   /**
+   * Return a promise that never resolves. Useful if you have an async function that shouldn't run
+   * after the context is expired.
+   *
+   * @example
+   * const getValueFromStorage = async () => {
+   *   if (ctx.isInvalid) return ctx.block();
+   *
+   *   // ...
+   * }
+   */
+  block<T>(): Promise<T> {
+    return new Promise(() => {
+      // noop
+    });
+  }
+
+  /**
    * Wrapper around `window.setInterval` that automatically clears the interval when invalidated.
    */
   setInterval(handler: () => void, timeout?: number): number {
@@ -103,6 +120,29 @@ export class ContentScriptContext extends AbortController {
 
     this.onInvalidated(() => cancelIdleCallback(id));
     return id;
+  }
+
+  /**
+   * Call `target.addEventListener` and remove the event listener when the context is invalidated.
+   *
+   * @example
+   * ctx.addEventListener(window, "mousemove", () => {
+   *   // ...
+   * });
+   * ctx.addEventListener(document, "visibilitychange", () => {
+   *   // ...
+   * });
+   */
+  addEventListener(
+    target: any,
+    type: string,
+    handler: (event: Event) => void,
+    options?: AddEventListenerOptions,
+  ) {
+    target.addEventListener?.(type, handler, options);
+    this.onInvalidated(
+      () => target.removeEventListener?.(type, handler, options),
+    );
   }
 
   /**
