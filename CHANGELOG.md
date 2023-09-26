@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.6.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.2...v0.6.3)
+
+### 🚀 Enhancements
+
+- **client:** Add `block` and `addEventListener` utils to `ContentScriptContext` ([#128](https://github.com/wxt-dev/wxt/pull/128))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+
 ## v0.6.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.1...v0.6.2)
