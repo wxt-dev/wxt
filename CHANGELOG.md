@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.6.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.3...v0.6.4)
+
+### 🩹 Fixes
+
+- **content-scripts:** Don't throw an error when including `include` or `exclude` options on a content script ([455e7f3](https://github.com/wxt-dev/wxt/commit/455e7f3))
+- Use `execaCommand` instead of `node:child_process` ([#130](https://github.com/wxt-dev/wxt/pull/130))
+
+### 🏡 Chore
+
+- **templates:** Add `.wxt` directory to gitignore ([#129](https://github.com/wxt-dev/wxt/pull/129))
+- Increase E2E test timeout ([5482b2f](https://github.com/wxt-dev/wxt/commit/5482b2f))
+
 ## v0.6.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.2...v0.6.3)
