@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 .output
 stats.html
+.wxt
 
 # Editor directories and files
 .vscode/*
