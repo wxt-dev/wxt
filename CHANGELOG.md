@@ -8,10 +8,6 @@
 
 - **client:** Add `block` and `addEventListener` utils to `ContentScriptContext` ([#128](https://github.com/wxt-dev/wxt/pull/128))
 
-### ❤️ Contributors
-
-- Aaron <aaronklinker1@gmail.com>
-
 ## v0.6.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.1...v0.6.2)
@@ -25,10 +21,6 @@
 
 - Fix import typo ([4c43072](https://github.com/wxt-dev/wxt/commit/4c43072))
 - Update vite docs to use function ([e0929a6](https://github.com/wxt-dev/wxt/commit/e0929a6))
-
-### ❤️ Contributors
-
-- Aaron <aaronklinker1@gmail.com>
 
 ## v0.6.1
 
@@ -45,11 +37,6 @@
 ### 📖 Documentation
 
 - Load extension details from CWS ([8e0a189](https://github.com/wxt-dev/wxt/commit/8e0a189))
-
-### ❤️ Contributors
-
-- Aaron <aaronklinker1@gmail.com>
-- Aaron Klinker <aaronklinker1@gmail.com>
 
 ## v0.6.0
 
@@ -69,10 +56,6 @@
 
 - ⚠️  The `vite` config option must now be a function. If you were using an object before, change it from `vite: { ... }` to `vite: () => ({ ... })`. ([#121](https://github.com/wxt-dev/wxt/pull/121))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.5.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.5...v0.5.6)
@@ -80,10 +63,6 @@
 ### 🚀 Enhancements
 
 - Add `ContentScriptContext` util for stopping invalidated content scripts ([#120](https://github.com/wxt-dev/wxt/pull/120))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.5
 
@@ -93,10 +72,6 @@
 
 - Automatically replace vite's `process.env.NODE_ENV` output in lib mode with the mode ([92039b8](https://github.com/wxt-dev/wxt/commit/92039b8))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.5.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.3...v0.5.4)
@@ -105,10 +80,6 @@
 
 - Recognize `background/index.ts` as an entrypoint ([419fab8](https://github.com/wxt-dev/wxt/commit/419fab8))
 - Don't warn about deep entrypoint subdirectories not being recognized ([87e8df9](https://github.com/wxt-dev/wxt/commit/87e8df9))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.3
 
@@ -122,10 +93,6 @@
 
 - Refactor how config is resolved ([#118](https://github.com/wxt-dev/wxt/pull/118))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.5.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.1...v0.5.2)
@@ -133,10 +100,6 @@
 ### 🩹 Fixes
 
 - Import client utils when getting entrypoint config ([#117](https://github.com/wxt-dev/wxt/pull/117))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.1
 
@@ -150,10 +113,6 @@
 ### 🩹 Fixes
 
 - Allow any string for target browser ([b4de93d](https://github.com/wxt-dev/wxt/commit/b4de93d))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.5.0
 
@@ -184,10 +143,6 @@
 
 - ⚠️  Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.4.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.0...v0.4.1)
@@ -199,10 +154,6 @@
 ### 🩹 Fixes
 
 - **init:** Don't show `cd .` when initializing the current directory ([e086374](https://github.com/wxt-dev/wxt/commit/e086374))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.4.0
 
@@ -253,10 +204,6 @@
 
 - ⚠️  Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.3.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.3.1...v0.3.2)
@@ -285,10 +232,6 @@
 - Validate templates against `main` ([#66](https://github.com/wxt-dev/wxt/pull/66))
 - List vite version when validating project templates ([ef140dc](https://github.com/wxt-dev/wxt/commit/ef140dc))
 - Validate templates using tarball to avoid version conflicts within the `wxt/node_modules` directory ([edfa075](https://github.com/wxt-dev/wxt/commit/edfa075))
-
-### ❤️  Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.3.1
 
@@ -321,9 +264,8 @@
 - Speed up demo validation ([3a9fd39](https://github.com/wxt-dev/wxt/commit/3a9fd39))
 - Fix flakey failure when validating templates ([25677ba](https://github.com/wxt-dev/wxt/commit/25677ba))
 
-### ❤️  Contributors
+### ❤️ Contributors
 
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 - BeanWei ([@BeanWei](https://github.com/BeanWei))
 
 ## v0.3.0
@@ -357,10 +299,6 @@
 - ⚠️  Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
 - ⚠️  Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
 
-### ❤️  Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.2.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.2.4...v0.2.5)
@@ -383,10 +321,6 @@
 
 - Validate project templates ([9ac756f](https://github.com/wxt-dev/wxt/commit/9ac756f))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.2.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.2.3...v0.2.4)
@@ -394,10 +328,6 @@
 ### 🚀 Enhancements
 
 - Add `wxt zip` command ([#47](https://github.com/wxt-dev/wxt/pull/47))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.3
 
@@ -409,10 +339,6 @@
 - Read boolean maniest options from meta tags correctly ([495c5c8](https://github.com/wxt-dev/wxt/commit/495c5c8))
 - Some fields cannot be overridden from `config.manifest` ([#46](https://github.com/wxt-dev/wxt/pull/46))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.2.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.2.1...v0.2.2)
@@ -420,10 +346,6 @@
 ### 🩹 Fixes
 
 - Register content scripts correctly in dev mode ([2fb5a54](https://github.com/wxt-dev/wxt/commit/2fb5a54))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.1
 
@@ -436,10 +358,6 @@
 ### 🩹 Fixes
 
 - Remove HMR log ([90fa6bf](https://github.com/wxt-dev/wxt/commit/90fa6bf))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.2.0
 
@@ -465,10 +383,6 @@
 
 - ⚠️ Rename `defineBackgroundScript` to `defineBackground` ([5b48ae9](https://github.com/wxt-dev/wxt/commit/5b48ae9))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.1.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.5...v0.1.6)
@@ -483,10 +397,6 @@
 - React and Vue starter templates ([#33](https://github.com/wxt-dev/wxt/pull/33))
 - Svelte template ([#34](https://github.com/wxt-dev/wxt/pull/34))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.1.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.4...v0.1.5)
@@ -494,10 +404,6 @@
 ### 🩹 Fixes
 
 - Include `vite/client` types ([371be99](https://github.com/wxt-dev/wxt/commit/371be99))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.4
 
@@ -515,10 +421,6 @@
 ### 🏡 Chore
 
 - Update prettier ignore ([68611ae](https://github.com/wxt-dev/wxt/commit/68611ae))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.3
 
@@ -541,10 +443,6 @@
 
 - Upgrade to pnpm 8 ([0ce7c9d](https://github.com/wxt-dev/wxt/commit/0ce7c9d))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.1.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.1...v0.1.2)
@@ -563,10 +461,6 @@
 
 - Change `config.vite` to `UserConfig` ([ef6001e](https://github.com/wxt-dev/wxt/commit/ef6001e))
 
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
-
 ## v0.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.0...v0.1.1)
@@ -575,10 +469,6 @@
 
 - Allow dashes in entrypoint names ([2e51e73](https://github.com/wxt-dev/wxt/commit/2e51e73))
 - Unable to read entrypoint options ([#28](https://github.com/wxt-dev/wxt/pull/28))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.1.0
 
@@ -602,10 +492,6 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 ### 🤖 CI
 
 - Create github release ([b7c078f](https://github.com/wxt-dev/wxt/commit/b7c078f))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.0.2
 
@@ -636,10 +522,6 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 - Refactor build outputs to support transpiled templates ([a78aada](https://github.com/wxt-dev/wxt/commit/a78aada))
 - Rename `templates` to `virtual-modules` ([#24](https://github.com/wxt-dev/wxt/pull/24))
 - Update cli screenshot ([54eb118](https://github.com/wxt-dev/wxt/commit/54eb118))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))
 
 ## v0.0.1
 
@@ -710,7 +592,3 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 
 - Create validation workflow ([#12](https://github.com/wxt-dev/wxt/pull/12))
 - Create release workflow ([#13](https://github.com/wxt-dev/wxt/pull/13))
-
-### ❤️ Contributors
-
-- Aaron Klinker ([@aklinker1](https://github.com/aklinker1))

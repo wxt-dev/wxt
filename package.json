@@ -126,6 +126,11 @@
   "lint-staged": {
     "*": "prettier --write"
   },
+  "changelog": {
+    "excludeAuthors": [
+      "aaronklinker1@gmail.com"
+    ]
+  },
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
