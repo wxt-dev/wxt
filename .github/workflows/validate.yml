@@ -51,6 +51,11 @@ jobs:
       - name: Tests
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   project-templates:
     name: Project Templates
     runs-on: ubuntu-22.04
