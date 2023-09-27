@@ -101,8 +101,10 @@ export function reloadContentScripts(
       const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
       const css = getContentScriptCssFiles([entry], server.currentOutput);
 
+      const { include: _1, exclude: _2, ...options } = entry.options;
+
       server.reloadContentScript({
-        ...entry.options,
+        ...options,
         js,
         css,
       });
