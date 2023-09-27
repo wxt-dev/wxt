@@ -4,6 +4,20 @@
 </h1>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/wxt" target="_blank">
+    <img alt="npm" src="https://img.shields.io/npm/v/wxt">
+  </a>
+  <span> </span>
+  <img alt="npm" src="https://img.shields.io/npm/dm/wxt">
+  <span> </span>
+  <img alt="NPM" src="https://img.shields.io/npm/l/wxt">
+  <span> </span>
+  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank">
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt">
+  </a>
+</p>
+
+<p align="center">
   <span>Next-gen framework for developing web extensions.</span>
   <br/>
   <span>⚡</span>
