@@ -1,7 +1,7 @@
 import { dirname, join, relative, resolve } from 'path';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
-import { execSync } from 'child_process';
+import { execaCommand } from 'execa';
 import { InlineConfig, UserConfig, build } from '../src';
 import { normalizePath } from '../src/core/utils/paths';
 
@@ -72,8 +72,8 @@ export class TestProject {
       await fs.ensureDir(fileDir);
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
-    execSync('npm i --ignore-scripts', { cwd: this.root });
 
+    await execaCommand('npm i --ignore-scripts', { cwd: this.root });
     await build({ ...config, root: this.root });
   }
 

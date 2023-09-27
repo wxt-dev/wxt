@@ -11,7 +11,7 @@ import fs from 'fs-extra';
 import { groupEntrypoints } from './utils/groupEntrypoints';
 import { formatDuration } from './utils/formatDuration';
 import { printBuildSummary } from './log/printBuildSummary';
-import { execSync } from 'node:child_process';
+import { execaCommand } from 'execa';
 import glob from 'fast-glob';
 import { unnormalizePath } from './utils/paths';
 
@@ -135,7 +135,7 @@ async function combineAnalysisStats(config: InternalConfig): Promise<void> {
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
-  execSync(
+  await execaCommand(
     `rollup-plugin-visualizer ${absolutePaths.join(' ')} --template ${
       config.analysis.template
     }`,

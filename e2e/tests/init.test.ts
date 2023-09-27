@@ -40,5 +40,5 @@ describe('Init command', () => {
         "wxt.config.ts",
       ]
     `);
-  }, 30e3);
+  });
 });
