@@ -1,3 +1,10 @@
+---
+head:
+  - - link
+    - rel: canonical
+      href: https://wxt.dev
+---
+
 # Introduction
 
 WXT is a free and open source framework for building web extensions in an conventional, intuative, and safe way **_for all browsers_**.

@@ -1,29 +1,60 @@
 <script lang="ts" setup>
-import useListExtensionDetails from '../composables/useListExtensionDetails';
+import { computed } from 'vue';
+import useListExtensionDetails, {
+  ChromeExtension,
+} from '../composables/useListExtensionDetails';
 
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
+  'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
+const sortedExtensions = computed(() =>
+  !data.value
+    ? undefined
+    : [...data.value].sort((l, r) => r.weeklyActiveUsers - l.weeklyActiveUsers),
+);
+
+function getStoreUrl(extension: ChromeExtension) {
+  const url = new URL(extension.storeUrl);
+  url.searchParams.set('utm_source', 'wxt.dev');
+  return url.href;
+}
 </script>
 
 <template>
   <section class="vp-doc">
     <div class="container">
       <h2>Who's Using WXT?</h2>
+      <p>
+        Battle tested and ready for production. Explore chrome extensions made
+        with WXT.
+      </p>
       <ul>
-        <li v-for="extension of data">
+        <li v-for="extension of sortedExtensions">
           <img
             :src="extension.iconUrl"
             :alt="`${extension.name} icon`"
             referrerpolicy="no-referrer"
           />
-          <a :href="extension.storeUrl" target="_blank">{{ extension.name }}</a>
-          <small>{{ extension.shortDescription }}</small>
+          <div>
+            <a
+              :href="getStoreUrl(extension)"
+              target="_blank"
+              :title="extension.name"
+              >{{ extension.name }}</a
+            >
+            <p class="description" :title="extension.shortDescription">
+              {{ extension.shortDescription }}
+            </p>
+            <p class="user-count">
+              {{ extension.weeklyActiveUsers.toLocaleString() }} users
+            </p>
+          </div>
         </li>
       </ul>
-      <p>Open a PR to add your extension to the list!</p>
+      <p class="centered pr">Open a PR to add your extension to the list!</p>
     </div>
   </section>
 </template>
@@ -31,10 +62,6 @@ const { data } = useListExtensionDetails(chromeExtensionIds);
 <style scoped>
 .vp-doc {
   padding: 0 24px;
-}
-
-h2 {
-  margin-bottom: 32px;
 }
 
 @media (min-width: 640px) {
@@ -56,58 +83,86 @@ h2 {
   flex-direction: column;
 }
 
-img {
-  width: 96px;
-  height: 96px;
-  margin-bottom: 16px;
+li img {
+  width: 116px;
+  height: 116px;
+  padding: 16px;
   border-radius: 8px;
+  background-color: var(--vp-c-default-soft);
 }
 
 ul {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   align-items: stretch;
   gap: 16px;
   list-style: none;
-  margin: 0;
+  margin: 16px 0;
   padding: 0;
 }
-@media (min-width: 640px) {
-  ul {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (min-width: 960px) {
   ul {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 li {
   margin: 0 !important;
-  padding: 12px;
+  padding: 16px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: var(--vp-c-bg-soft);
   border-radius: 12px;
   flex: 1;
-}
-a,
-small {
-  text-align: center;
-}
-small {
-  opacity: 50%;
+  gap: 16px;
 }
 
-p {
+.centered {
   text-align: center;
-  opacity: 50%;
 }
-a {
-  color: var(--vp-c-text-1);
+
+li a,
+li .user-count,
+li .description {
+  padding: 0;
+  margin: 0;
+}
+li .user-count {
+  opacity: 70%;
+  text-align: right;
+  width: 100%;
+  font-size: small;
+}
+
+li a {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}
+li a:hover {
+  text-decoration: underline;
+}
+
+li div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+li .description {
+  opacity: 90%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.pr {
+  opacity: 70%;
 }
 </style>

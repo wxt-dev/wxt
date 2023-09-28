@@ -6,7 +6,7 @@ title: Next-gen Web Extension Framework
 hero:
   name: WXT
   text: Next-gen Web Extension Framework
-  tagline: Powered by Vite, inspired by Nuxt.
+  tagline: An open source tool that makes Chrome Extension devlopment faster than ever before.
   image:
     src: /hero-logo.svg
     alt: WXT
@@ -21,38 +21,69 @@ hero:
 features:
   - icon: 🌐
     title: Supported Browsers
-    details: Chrome, Firefox, Edge, Safari, and any Chromium based browser.
+    details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
+    link: /get-started/build-targets
+    linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
-    details: Supports both manifest versions for each browser.
+    details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
+    link: /get-started/build-targets#target-manifest-version
+    linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
-    details: HMR for UIs and fast reload for background and content scripts.
+    details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
+    link: /get-started/introduction.html#development
+    linkText: Learn more
   - icon: 📂
     title: File Based Entrypoints
-    details: Manifest is generated based on files inside the project.
+    details: Manifest is generated based on files in the project with inline configuration.
+    link: /get-started/entrypoints
+    linkText: See project structure
   - icon: 🚔
     title: TypeScript
-    details: Scale projects with full TS support.
+    details: Create large projects with confidence using TS by default.
   - icon: 🦾
     title: Auto-imports
     details: Nuxt-like auto-imports to speed up development.
+    link: /guide/auto-imports
+    linkText: Read docs
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
+    link: guide/remote-code
+    linkText: Read docs
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
+    link: /get-started/configuration#frontend-frameworks
+    linkText: Add a framework
   - icon: 🖍️
     title: Bootstrap a New Project
-    details: Comes with starter templates for all major frontend frameworks.
+    details: Get started quickly with several awesome project templates.
+    link: /get-started/installation#bootstrap-project
+    linkText: See templates
   - icon: 📏
     title: Bundle Analysis
-    details: 'Tools for analyizing the final extension bundle.'
+    details: Tools for analyizing the final extension bundle and minimizing your extension's size.
   - icon: 🤖
     title: Automated Publishing
-    details: 'TODO: Automatically zip, upload, and release extensions.'
+    details: 'Coming soon. Automatically zip, upload, and release extensions.'
 ---
+
+<section data-v-c46b42c4="" class="vp-doc">
+  <div data-v-c46b42c4="" class="container">
+    <h2>Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First</h2>
+    <p>
+      WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
+    </p>
+    <div style="margin: auto; width: 100%; max-width: 700px; text-align: center">
+      <img src="./assets/cli-output.png" alt="Screenshot of WXT's build output" />
+      <small>
+        And who doesn't appreciate a beautiful CLI?
+      </small>
+    </div>
+  </div>
+</section>
 
 <ClientOnly>
   <UsingWxtSection />

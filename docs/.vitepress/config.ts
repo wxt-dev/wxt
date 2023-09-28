@@ -43,7 +43,10 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.svg',
+    logo: {
+      src: '/logo.svg',
+      alt: 'WXT logo',
+    },
     editLink: {
       pattern: 'https://github.com/wxt-dev/wxt/edit/main/docs/:path',
     },
