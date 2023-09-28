@@ -1,17 +1,36 @@
 import { defineConfig } from 'vitepress';
 import { generateConfigDocs } from './plugins/generate-config-docs';
 
+const title = 'Next-gen Web Extension Framework';
+const titleSuffix = ' – WXT';
+
+const description =
+  "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilties for building, zipping, and publishing your extension, it's easy to get started.";
+const ogTitle = `${title}${titleSuffix}`;
+const ogUrl = 'https://wxt.dev';
+const ogImage = 'https://wxt.dev/social-preview.png';
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  titleTemplate: `:title${titleSuffix}`,
   title: 'WXT',
+  description,
   vite: {
     clearScreen: false,
     plugins: [generateConfigDocs()],
   },
-  description: 'Next gen framework for developing web extensions',
   lastUpdated: true,
+  sitemap: {
+    hostname: 'https://wxt.dev',
+  },
 
   head: [
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: ogTitle }],
+    ['meta', { property: 'og:image', content: ogImage }],
+    ['meta', { property: 'og:url', content: ogUrl }],
+    ['meta', { property: 'og:description', content: description }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     [
       'script',
       {

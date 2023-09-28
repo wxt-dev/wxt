@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api.html
+Disallow: /config.html
+
+Sitemap: https://wxt.dev/sitemap.xml

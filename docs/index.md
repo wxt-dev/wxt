@@ -1,7 +1,6 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
-titleTemplate: 'Next Generation Web Extension Framework'
 
 hero:
   name: WXT
