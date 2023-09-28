@@ -4,6 +4,7 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
+// Add extension IDs here. Order doesn't matter, will be sorted by weekly active users
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
@@ -54,7 +55,14 @@ function getStoreUrl(extension: ChromeExtension) {
           </div>
         </li>
       </ul>
-      <p class="centered pr">Open a PR to add your extension to the list!</p>
+      <p class="centered pr">
+        <a
+          href="https://github.com/wxt-dev/wxt/edit/main/docs/.vitepress/components/UsingWxtSection.vue"
+          target="_blank"
+          >Open a PR</a
+        >
+        to add your extension to the list!
+      </p>
     </div>
   </section>
 </template>
