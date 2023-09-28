@@ -70,8 +70,8 @@ features:
     details: 'Coming soon. Automatically zip, upload, and release extensions.'
 ---
 
-<section data-v-c46b42c4="" class="vp-doc">
-  <div data-v-c46b42c4="" class="container">
+<section class="vp-doc">
+  <div class="container">
     <h2>Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First</h2>
     <p>
       WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
@@ -88,3 +88,10 @@ features:
 <ClientOnly>
   <UsingWxtSection />
 </ClientOnly>
+
+<style scoped>
+.container {
+  margin: 0 auto;
+  max-width: 1152px;
+}
+</style>
