@@ -1,7 +1,7 @@
 import '../../common/style.css';
 
 export default defineContentScript({
-  matches: ['*://*/*'],
+  matches: ['<all_urls>'],
   async main(ctx) {
     console.log(browser.runtime.id);
     logId();

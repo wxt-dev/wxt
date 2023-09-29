@@ -15,8 +15,8 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2
       '@webext-core/match-patterns':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       async-mutex:
         specifier: ^0.4.0
         version: 0.4.0
@@ -1263,8 +1263,8 @@ packages:
       lodash.merge: 4.6.2
     dev: false
 
-  /@webext-core/match-patterns@1.0.1:
-    resolution: {integrity: sha512-huti7vdxWQ10XlkmEO/nC7gVmzAcxNRj+Kdp+HrnRzh2PY9pv5BLrjL8QXzN5EdJjxP154yr7/Q7+Z6xe0TZDA==}
+  /@webext-core/match-patterns@1.0.2:
+    resolution: {integrity: sha512-ApmXwA2HRCgt/vXaZw8NfyV3hBqsyO7wAork4qgH+AtCJW4uRxHbMruSKJ0Flh/yOGMbrbLixd3E9Yw5dmGygw==}
     dependencies:
       '@webcomponents/webcomponentsjs': 2.8.0
     dev: false
