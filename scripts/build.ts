@@ -42,7 +42,7 @@ await Promise.all([
   }),
   tsup.build({
     entry: { browser: 'src/client/browser.ts' },
-    format: ['esm'],
+    format: ['esm', 'cjs'],
     sourcemap: 'inline',
     dts: true,
     silent: true,
