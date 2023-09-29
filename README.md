@@ -5,15 +5,15 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/wxt" target="_blank">
-    <img alt="npm" src="https://img.shields.io/npm/v/wxt">
+    <img alt="npm" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%2353bc4a">
   </a>
   <span> </span>
-  <img alt="npm" src="https://img.shields.io/npm/dm/wxt">
+  <img alt="npm" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%2353bc4a">
   <span> </span>
-  <img alt="NPM" src="https://img.shields.io/npm/l/wxt">
+  <img alt="NPM" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%2353bc4a">
   <span> </span>
   <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank">
-    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt">
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%2353bc4a">
   </a>
 </p>
 
