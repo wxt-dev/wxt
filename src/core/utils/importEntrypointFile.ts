@@ -60,7 +60,7 @@ export async function importEntrypointFile<T>(
     transform(opts) {
       const isEntrypoint = opts.filename === normalPath;
       return transformSync(
-        // Use modified source code for entrypoint
+        // Use modified source code for entrypoints
         isEntrypoint ? code : opts.source,
         getEsbuildOptions(opts),
       );
