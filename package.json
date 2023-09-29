@@ -45,7 +45,6 @@
       "types": "./dist/client.d.ts"
     },
     "./browser": {
-      "require": "./dist/browser.cjs",
       "import": "./dist/browser.js",
       "types": "./dist/browser.d.ts"
     }
