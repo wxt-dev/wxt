@@ -17,7 +17,7 @@ describe('Output Directory Structure', () => {
     `);
   });
 
-  it.only('should output separate CSS files for each content script', async () => {
+  it('should output separate CSS files for each content script', async () => {
     const project = new TestProject();
     project.addFile(
       'entrypoints/one.content/index.ts',
