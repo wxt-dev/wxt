@@ -1,4 +1,4 @@
 export * from './defineContentScript';
 export * from './defineBackground';
-export * from './mountContentScriptUi';
+export * from './createContentScriptUi';
 export * from './utils/ContentScriptContext';

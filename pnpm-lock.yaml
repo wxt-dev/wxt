@@ -14,6 +14,9 @@ importers:
       '@webext-core/fake-browser':
         specifier: ^1.2.2
         version: 1.2.2
+      '@webext-core/isolated-element':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@webext-core/match-patterns':
         specifier: ^1.0.2
         version: 1.0.2
@@ -1298,6 +1301,10 @@ packages:
     resolution: {integrity: sha512-3w0lU0gAYODoMklGQfBuGwIxR+lakYK8FONRFUg8aEdpHUMMzbf5jPwRaTrnsgqupE0JAoBwk8vF6san/BtDeQ==}
     dependencies:
       lodash.merge: 4.6.2
+    dev: false
+
+  /@webext-core/isolated-element@1.0.4:
+    resolution: {integrity: sha512-jbkG+7b6Ty4fNo2o53rokCTkNRinI/0tneJSyuUCJfPzAFtyylF3IxH/WhXykXC+1Ca8ouQnjbEcpYt9IFNcUg==}
     dev: false
 
   /@webext-core/match-patterns@1.0.2:
