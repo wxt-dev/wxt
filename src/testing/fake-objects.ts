@@ -240,5 +240,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
       name: faker.person.firstName().toLowerCase(),
     },
     transformManifest: () => {},
+    userConfigMetadata: {},
   };
 });
