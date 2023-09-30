@@ -30,13 +30,15 @@ export async function getInternalConfig(
   // Load user config
 
   let userConfig: UserConfig = {};
+  let userConfigMetadata: InternalConfig['userConfigMetadata'] | undefined;
   if (inlineConfig.configFile !== false) {
-    const loaded = await loadConfig<UserConfig>({
+    const { config: loadedConfig, ...metadata } = await loadConfig<UserConfig>({
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
     });
-    userConfig = loaded.config ?? {};
+    userConfig = loadedConfig ?? {};
+    userConfigMetadata = metadata;
   }
 
   // Merge it into the inline config
@@ -109,6 +111,7 @@ export async function getInternalConfig(
       enabled: mergedConfig.analysis?.enabled ?? false,
       template: mergedConfig.analysis?.template ?? 'treemap',
     },
+    userConfigMetadata: userConfigMetadata ?? {},
   };
 
   finalConfig.vite = (env) =>

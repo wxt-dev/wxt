@@ -8,6 +8,7 @@ import {
   UserManifest,
   ExtensionRunnerConfig,
   ConfigEnv,
+  UserConfig,
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
@@ -48,6 +49,7 @@ export interface InternalConfig {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
   };
+  userConfigMetadata: Omit<ResolvedConfig<UserConfig>, 'config'>;
 }
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];
