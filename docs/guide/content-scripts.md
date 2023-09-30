@@ -34,6 +34,9 @@ export default defineContentScript({
   include: undefined | string[],
   exclude: undefined | string[],
 
+  // Configure how CSS is injected onto the page
+  cssInjectionMode: undefined | "manifest" | "manual",
+
   main(ctx) {
     // Executed when content script is loaded
   },

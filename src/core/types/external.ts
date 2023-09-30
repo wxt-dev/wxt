@@ -407,6 +407,18 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    */
   world?: 'ISOLATED' | 'MAIN';
   /**
+   * Customize how imported/generated styles are injected with the content script. Regardless of the
+   * mode selected, CSS will always be built and included in the output directory.
+   *
+   * - `"manifest"` - Include the CSS in the manifest, under the content script's `css` array.
+   * - `"manual"` - Exclude the CSS from the manifest. You are responsible for manually loading it
+   *   onto the page. Use `browser.runtime.getURL("content-scripts/<name>.css")` to get the file's
+   *   URL
+   *
+   * @default "manifest"
+   */
+  cssInjectionMode?: 'manifest' | 'manual';
+  /**
    * Main function executed when the content script is loaded.
    */
   main(ctx: ContentScriptContext): void | Promise<void>;

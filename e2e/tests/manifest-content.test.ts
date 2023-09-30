@@ -193,117 +193,202 @@ describe('Manifest Content', () => {
     });
   });
 
-  it('should group content scripts and styles together based on their matches and run_at', async () => {
-    const project = new TestProject();
-    project.addFile(
-      'entrypoints/one.content/index.ts',
-      `import "./style.css";
+  describe('content_scripts', () => {
+    it('should group content scripts and styles together based on their matches and run_at', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/one.content/index.ts',
+        `import "./style.css";
       export default defineContentScript({
         matches: ["*://google.com/*"],
         main: () => {},
       })`,
-    );
-    project.addFile('entrypoints/one.content/style.css', `body { color: red }`);
-    project.addFile(
-      'entrypoints/two.content/index.ts',
-      `import "./style.css";
-      export default defineContentScript({
-        matches: ["*://google.com/*"],
-        runAt: "document_end",
-        main: () => {},
-      })`,
-    );
-    project.addFile(
-      'entrypoints/two.content/style.css',
-      `body { color: green }`,
-    );
-    project.addFile(
-      'entrypoints/three.content/index.ts',
-      `import "./style.css";
+      );
+      project.addFile(
+        'entrypoints/one.content/style.css',
+        `body { color: red }`,
+      );
+      project.addFile(
+        'entrypoints/two.content/index.ts',
+        `import "./style.css";
       export default defineContentScript({
         matches: ["*://google.com/*"],
         runAt: "document_end",
         main: () => {},
       })`,
-    );
-    project.addFile(
-      'entrypoints/three.content/style.css',
-      `body { color: blue }`,
-    );
-    project.addFile(
-      'entrypoints/four.content/index.ts',
-      `import "./style.css";
+      );
+      project.addFile(
+        'entrypoints/two.content/style.css',
+        `body { color: green }`,
+      );
+      project.addFile(
+        'entrypoints/three.content/index.ts',
+        `import "./style.css";
+      export default defineContentScript({
+        matches: ["*://google.com/*"],
+        runAt: "document_end",
+        main: () => {},
+      })`,
+      );
+      project.addFile(
+        'entrypoints/three.content/style.css',
+        `body { color: blue }`,
+      );
+      project.addFile(
+        'entrypoints/four.content/index.ts',
+        `import "./style.css";
       export default defineContentScript({
         matches: ["*://duckduckgo.com/*"],
         runAt: "document_end",
         main: () => {},
       })`,
-    );
-    project.addFile(
-      'entrypoints/four.content/style.css',
-      `body { color: yellow }`,
-    );
+      );
+      project.addFile(
+        'entrypoints/four.content/style.css',
+        `body { color: yellow }`,
+      );
 
-    await project.build();
+      await project.build();
 
-    const manifest = await project.getOutputManifest();
+      const manifest = await project.getOutputManifest();
 
-    expect(manifest.content_scripts).toContainEqual({
-      matches: ['*://duckduckgo.com/*'],
-      run_at: 'document_end',
-      css: ['content-scripts/four.css'],
-      js: ['content-scripts/four.js'],
+      expect(manifest.content_scripts).toContainEqual({
+        matches: ['*://duckduckgo.com/*'],
+        run_at: 'document_end',
+        css: ['content-scripts/four.css'],
+        js: ['content-scripts/four.js'],
+      });
+      expect(manifest.content_scripts).toContainEqual({
+        matches: ['*://google.com/*'],
+        run_at: 'document_end',
+        css: ['content-scripts/three.css', 'content-scripts/two.css'],
+        js: ['content-scripts/three.js', 'content-scripts/two.js'],
+      });
+      expect(manifest.content_scripts).toContainEqual({
+        matches: ['*://google.com/*'],
+        css: ['content-scripts/one.css'],
+        js: ['content-scripts/one.js'],
+      });
     });
-    expect(manifest.content_scripts).toContainEqual({
-      matches: ['*://google.com/*'],
-      run_at: 'document_end',
-      css: ['content-scripts/three.css', 'content-scripts/two.css'],
-      js: ['content-scripts/three.js', 'content-scripts/two.js'],
-    });
-    expect(manifest.content_scripts).toContainEqual({
-      matches: ['*://google.com/*'],
-      css: ['content-scripts/one.css'],
-      js: ['content-scripts/one.js'],
-    });
-  });
 
-  it('should add to any content scripts declared in wxt.config.ts', async () => {
-    const project = new TestProject();
-    project.addFile(
-      'entrypoints/one.content/index.ts',
-      `export default defineContentScript({
+    it('should add to any content scripts declared in wxt.config.ts', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/one.content/index.ts',
+        `export default defineContentScript({
         matches: ["*://google.com/*"],
         main: () => {},
       })`,
-    );
-    project.addFile(
-      'entrypoints/two.content/style.css',
-      `body {
+      );
+      project.addFile(
+        'entrypoints/two.content/style.css',
+        `body {
         background-color: red;
       }`,
-    );
-    project.setConfigFileConfig({
-      manifest: {
-        content_scripts: [
-          {
-            css: ['content-scripts/two.css'],
-            matches: ['*://*.google.com/*'],
-          },
-        ],
-      },
+      );
+      project.setConfigFileConfig({
+        manifest: {
+          content_scripts: [
+            {
+              css: ['content-scripts/two.css'],
+              matches: ['*://*.google.com/*'],
+            },
+          ],
+        },
+      });
+
+      await project.build();
+
+      const manifest = await project.getOutputManifest();
+
+      expect(manifest.content_scripts).toContainEqual({
+        css: ['content-scripts/two.css'],
+        matches: ['*://*.google.com/*'],
+      });
+      expect(manifest.content_scripts).toContainEqual({
+        matches: ['*://google.com/*'],
+        js: ['content-scripts/one.js'],
+      });
     });
 
-    await project.build();
+    it('should add a CSS entry when cssInjectionMode is undefined', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content/style.css',
+        'body { background-color: red; }',
+      );
+      project.addFile(
+        'entrypoints/content/index.ts',
+        `import "./style.css";
+        
+        export default defineContentScript({
+          matches: ["https://*.google.com/*"],
 
-    const manifest = await project.getOutputManifest();
+          main() {},
+        });`,
+      );
+      await project.build();
 
-    expect(manifest.content_scripts).toContainEqual({
-      css: ['content-scripts/two.css'],
-      matches: ['*://*.google.com/*'],
+      expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+        .toMatchInlineSnapshot(`
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        `);
     });
-    expect(manifest.content_scripts).toContainEqual({
-      matches: ['*://google.com/*'],
-      js: ['content-scripts/one.js'],
+
+    it('should add a CSS entry when cssInjectionMode is "manifest"', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content/style.css',
+        'body { background-color: red; }',
+      );
+      project.addFile(
+        'entrypoints/content/index.ts',
+        `import "./style.css";
+        
+        export default defineContentScript({
+          matches: ["https://*.google.com/*"],
+          cssInjectionMode: "manifest",
+
+          main() {},
+        });`,
+      );
+      await project.build();
+
+      expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+        .toMatchInlineSnapshot(`
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        `);
+    });
+
+    it('should not add an entry for CSS when cssInjectionMode is "manual"', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content/style.css',
+        'body { background-color: red; }',
+      );
+      project.addFile(
+        'entrypoints/content/index.ts',
+        `import "./style.css";
+        
+        export default defineContentScript({
+          matches: ["https://*.google.com/*"],
+          cssInjectionMode: "manual",
+
+          main() {},
+        });`,
+      );
+      await project.build();
+
+      expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+        .toMatchInlineSnapshot(`
+        ".output/chrome-mv3/manifest.json
+        ----------------------------------------
+        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+      `);
     });
   });
 

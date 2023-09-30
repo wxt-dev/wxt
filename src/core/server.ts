@@ -101,10 +101,13 @@ export function reloadContentScripts(
       const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
       const css = getContentScriptCssFiles([entry], server.currentOutput);
 
-      const { include: _1, exclude: _2, ...options } = entry.options;
-
       server.reloadContentScript({
-        ...options,
+        allFrames: entry.options.allFrames,
+        excludeMatches: entry.options.excludeMatches,
+        matches: entry.options.matches,
+        runAt: entry.options.runAt,
+        // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
+        world: entry.options.world,
         js,
         css,
       });
