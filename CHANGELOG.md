@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.6.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.4...v0.6.5)
+
+### 🩹 Fixes
+
+- Don't crash when `<all_urls>` matches is used in dev mode ([b48cee9](https://github.com/wxt-dev/wxt/commit/b48cee9))
+- Support loading `tsx` entrypoints ([#134](https://github.com/wxt-dev/wxt/pull/134))
+
+### 📖 Documentation
+
+- Add tags for SEO and socials ([96be879](https://github.com/wxt-dev/wxt/commit/96be879))
+- Add more content to the homepage ([5570793](https://github.com/wxt-dev/wxt/commit/5570793))
+- Fix DX section sizing ([41e1549](https://github.com/wxt-dev/wxt/commit/41e1549))
+- Add link to update extensions using WXT ([24e69fe](https://github.com/wxt-dev/wxt/commit/24e69fe))
+
+### 🏡 Chore
+
+- Code coverage improvements ([#131](https://github.com/wxt-dev/wxt/pull/131))
+
 ## v0.6.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.3...v0.6.4)
