@@ -20,7 +20,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Output content script CSS to `content-scripts/<name>.css` ([#140](https://github.com/wxt-dev/wxt/pull/140))
+- ⚠️ Content script CSS used to be output to `assets/<name>.css`, but is now `content-scripts/<name>.css` to match the docs. ([#140](https://github.com/wxt-dev/wxt/pull/140))
 
 ## v0.6.6
 
