@@ -331,10 +331,10 @@ describe('Manifest Content', () => {
 
       expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
         .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/manifest.json
-        ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"assets/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
-      `);
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        `);
     });
 
     it('should add a CSS entry when cssInjectionMode is "manifest"', async () => {
@@ -358,10 +358,10 @@ describe('Manifest Content', () => {
 
       expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
         .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/manifest.json
-        ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"assets/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
-      `);
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        `);
     });
 
     it('should not add an entry for CSS when cssInjectionMode is "manual"', async () => {
