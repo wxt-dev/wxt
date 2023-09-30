@@ -416,6 +416,8 @@ export function getContentScriptCssFiles(
   const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
 
   contentScripts.forEach((script) => {
+    if (script.options.cssInjectionMode === 'manual') return;
+
     const relatedCss = allChunks.find(
       (chunk) => chunk.fileName === `content-scripts/${script.name}.css`,
     );
