@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.7.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.6...v0.7.0)
+
+### 🚀 Enhancements
+
+- Content script `cssInjectionMode` ([#141](https://github.com/wxt-dev/wxt/pull/141))
+
+### 🩹 Fixes
+
+- Validate transformed manifest correctly ([4b2012c](https://github.com/wxt-dev/wxt/commit/4b2012c))
+- ⚠️  Output content script CSS to `content-scripts/<name>.css` ([#140](https://github.com/wxt-dev/wxt/pull/140))
+- Reorder typescript paths to give priority to `@` and `~` over `@@` and `~~` ([#142](https://github.com/wxt-dev/wxt/pull/142))
+
+### 🏡 Chore
+
+- Store user config metadata in memory ([0591050](https://github.com/wxt-dev/wxt/commit/0591050))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Output content script CSS to `content-scripts/<name>.css` ([#140](https://github.com/wxt-dev/wxt/pull/140))
+
 ## v0.6.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.5...v0.6.6)
