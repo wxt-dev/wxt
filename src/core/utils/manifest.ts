@@ -78,19 +78,19 @@ export async function generateMainfest(
   if (config.command === 'serve') addDevModeCsp(manifest, config);
   if (config.command === 'serve') addDevModePermissions(manifest, config);
 
-  // TODO: transform manifest here.
+  const finalManifest = produce(manifest, config.transformManifest);
 
-  if (manifest.name == null)
+  if (finalManifest.name == null)
     throw Error(
       "Manifest 'name' is missing. Either:\n1. Set the name in your <rootDir>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
     );
-  if (manifest.version == null) {
+  if (finalManifest.version == null) {
     throw Error(
       "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
     );
   }
 
-  return produce(manifest, config.transformManifest);
+  return finalManifest;
 }
 
 /**
