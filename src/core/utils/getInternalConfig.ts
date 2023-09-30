@@ -75,7 +75,8 @@ export async function getInternalConfig(
     cwd: root,
     globalRc: true,
     rcFile: '.webextrc',
-    overrides: mergedConfig.runner,
+    overrides: inlineConfig.runner,
+    defaults: userConfig.runner,
   });
 
   const finalConfig: InternalConfig = {
