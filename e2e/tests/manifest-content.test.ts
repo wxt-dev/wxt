@@ -337,7 +337,7 @@ describe('Manifest Content', () => {
       `);
     });
 
-    it('should not add an entry for CSS when cssInjectionMode is "manifest"', async () => {
+    it('should add a CSS entry when cssInjectionMode is "manifest"', async () => {
       const project = new TestProject();
       project.addFile(
         'entrypoints/content/style.css',
