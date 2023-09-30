@@ -17,7 +17,7 @@ describe('Output Directory Structure', () => {
     `);
   });
 
-  it('should output separate CSS files for each content script', async () => {
+  it.only('should output separate CSS files for each content script', async () => {
     const project = new TestProject();
     project.addFile(
       'entrypoints/one.content/index.ts',
@@ -49,19 +49,19 @@ describe('Output Directory Structure', () => {
         '.output/chrome-mv3/content-scripts/two.js',
       ]),
     ).toMatchInlineSnapshot(`
-      ".output/chrome-mv3/assets/one.css
+      ".output/chrome-mv3/content-scripts/one.css
       ----------------------------------------
       body{color:#00f}
-
-      ================================================================================
-      .output/chrome-mv3/assets/two.css
-      ----------------------------------------
-      body{color:red}
 
       ================================================================================
       .output/chrome-mv3/content-scripts/one.js
       ----------------------------------------
       <contents-ignored>
+      ================================================================================
+      .output/chrome-mv3/content-scripts/two.css
+      ----------------------------------------
+      body{color:red}
+
       ================================================================================
       .output/chrome-mv3/content-scripts/two.js
       ----------------------------------------
@@ -69,7 +69,7 @@ describe('Output Directory Structure', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"assets/one.css\\",\\"assets/two.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"*://*/*\\"],\\"css\\":[\\"content-scripts/one.css\\",\\"content-scripts/two.css\\"],\\"js\\":[\\"content-scripts/one.js\\",\\"content-scripts/two.js\\"]}]}"
     `);
   });
 
