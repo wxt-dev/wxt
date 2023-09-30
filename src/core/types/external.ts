@@ -479,7 +479,7 @@ export interface ConfigEnv {
  */
 export interface ExtensionRunnerConfig {
   /**
-   * Whether or not to open the browser with the extension installed.
+   * Whether or not to open the browser with the extension installed in dev mode.
    *
    * @default false
    */

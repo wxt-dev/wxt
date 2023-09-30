@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createExtensionRunner } from '..';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
