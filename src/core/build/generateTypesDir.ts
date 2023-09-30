@@ -213,14 +213,14 @@ async function writeTsConfigFile(
     "lib": ["DOM", "WebWorker"],
     "skipLibCheck": true,
     "paths": {
-      "@@": ["${rootPath}"],
-      "@@/*": ["${rootPath}/*"],
-      "~~": ["${rootPath}"],
-      "~~/*": ["${rootPath}/*"],
       "@": ["${srcPath}"],
       "@/*": ["${srcPath}/*"],
       "~": ["${srcPath}"],
-      "~/*": ["${srcPath}/*"]
+      "~/*": ["${srcPath}/*"],
+      "@@": ["${rootPath}"],
+      "@@/*": ["${rootPath}/*"],
+      "~~": ["${rootPath}"],
+      "~~/*": ["${rootPath}/*"]
     }
   },
   "include": [
