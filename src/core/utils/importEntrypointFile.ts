@@ -1,12 +1,12 @@
-import createJITI from 'jiti';
+import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
 import { InternalConfig } from '../types';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
 import { resolve } from 'path';
-import transform from 'jiti/dist/babel';
 import { getUnimportOptions } from './auto-imports';
 import { removeProjectImportStatements } from './strings';
 import { normalizePath } from './paths';
+import { TransformOptions, transformSync } from 'esbuild';
 
 /**
  * Get the value from the default export of a `path`.
@@ -47,6 +47,7 @@ export async function importEntrypointFile<T>(
 
   const jiti = createJITI(__filename, {
     cache: false,
+    debug: config.debug,
     esmResolve: true,
     interopDefault: true,
     alias: {
@@ -55,10 +56,14 @@ export async function importEntrypointFile<T>(
         'node_modules/wxt/dist/virtual-modules/fake-browser.js',
       ),
     },
+    extensions: ['.ts', '.tsx', '.cjs', '.js', '.mjs'],
     transform(opts) {
-      if (opts.filename === normalPath)
-        return transform({ ...opts, source: code });
-      else return transform(opts);
+      const isEntrypoint = opts.filename === normalPath;
+      return transformSync(
+        // Use modified source code for entrypoints
+        isEntrypoint ? code : opts.source,
+        getEsbuildOptions(opts),
+      );
     },
   });
 
@@ -68,4 +73,13 @@ export async function importEntrypointFile<T>(
     config.logger.error(err);
     throw err;
   }
+}
+
+function getEsbuildOptions(opts: JitiTransformOptions): TransformOptions {
+  const isJsx = opts.filename?.endsWith('x');
+  return {
+    format: 'cjs',
+    loader: isJsx ? 'tsx' : 'ts',
+    jsx: isJsx ? 'automatic' : undefined,
+  };
 }

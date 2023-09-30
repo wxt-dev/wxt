@@ -4,29 +4,33 @@ import glob from 'fast-glob';
 import { execaCommand } from 'execa';
 import { InlineConfig, UserConfig, build } from '../src';
 import { normalizePath } from '../src/core/utils/paths';
+import merge from 'lodash.merge';
 
 export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
 
-  constructor(root = 'e2e/dist') {
+  constructor(packageJson: any = {}) {
     // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
     // file is cached and cannot be different between each test. Instead, we add a random ID to the
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
-    this.root = join(root, id);
+    this.root = join('e2e/dist', id);
     this.files.push([
       'package.json',
       JSON.stringify(
-        {
-          name: 'E2E Extension',
-          description: 'Example description',
-          version: '0.0.0-test',
-          dependencies: {
-            wxt: '../../..',
+        merge(
+          {
+            name: 'E2E Extension',
+            description: 'Example description',
+            version: '0.0.0-test',
+            dependencies: {
+              wxt: '../../..',
+            },
           },
-        },
+          packageJson,
+        ),
         null,
         2,
       ),
