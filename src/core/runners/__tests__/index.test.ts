@@ -1,5 +1,4 @@
-import { beforeEach } from 'node:test';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { createExtensionRunner } from '..';
 import { fakeInternalConfig } from '../../../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
@@ -26,10 +25,6 @@ vi.mock('../web-ext');
 const createWebExtRunnerMock = vi.mocked(createWebExtRunner);
 
 describe('createExtensionRunner', () => {
-  beforeEach(() => {
-    vi.resetModules();
-  });
-
   it('should return a Safari runner when browser is "safari"', async () => {
     const config = fakeInternalConfig({
       browser: 'safari',
