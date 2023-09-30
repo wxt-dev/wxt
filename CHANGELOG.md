@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.5...v0.6.6)
+
+### 🚀 Enhancements
+
+- Disable opening browser automatically during dev mode ([#136](https://github.com/wxt-dev/wxt/pull/136))
+
 ## v0.6.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.4...v0.6.5)
