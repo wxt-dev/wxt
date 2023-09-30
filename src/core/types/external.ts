@@ -177,6 +177,8 @@ export interface InlineConfig {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
      * command line `--analysis` option.
+     *
+     * @default false
      */
     enabled?: boolean;
     /**
@@ -184,6 +186,8 @@ export interface InlineConfig {
      * bundle will be visualized. See
      * [`rollup-plugin-visualizer`](https://github.com/btd/rollup-plugin-visualizer#how-to-use-generated-files)
      * for more details.
+     *
+     * @default "treemap"
      */
     template?: PluginVisualizerOptions['template'];
   };
@@ -474,6 +478,12 @@ export interface ConfigEnv {
  * Configure how the browser starts up.
  */
 export interface ExtensionRunnerConfig {
+  /**
+   * Whether or not to open the browser with the extension installed.
+   *
+   * @default false
+   */
+  disabled?: boolean;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#browser-console
    */
