@@ -84,10 +84,15 @@ async function buildSingleEntrypoint(
             config.outDir,
             '.js',
           ),
-          // Output content script CSS to assets/ with a hash to prevent conflicts. Defaults to
-          // "[name].[ext]" in lib mode, which usually results in "style.css". That means multiple
-          // content scripts with styles would overwrite each other if it weren't changed below.
-          assetFileNames: `assets/${entrypoint.name}.[ext]`,
+          // Output content script CSS to `content-scripts/`, but all other scripts are written to
+          // `assets/`.
+          assetFileNames: ({ name }) => {
+            if (entrypoint.type === 'content-script' && name?.endsWith('css')) {
+              return `content-scripts/${entrypoint.name}.[ext]`;
+            } else {
+              return `assets/${entrypoint.name}.[ext]`;
+            }
+          },
         },
       },
     },
