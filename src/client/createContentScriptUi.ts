@@ -3,7 +3,34 @@ import { browser } from './browser';
 import { logger } from './utils/logger';
 import { ContentScriptContext } from '.';
 
-// TODO: Add docs
+/**
+ * Utility for mounting content script UI's with isolated styles. Automatically removed from the DOM
+ * when the content script's context is invalidated.
+ *
+ * See <https://wxt.dev/guide/content-scripts.html#ui> for full documentation.
+ *
+ * @example
+ * // entrypoints/example-ui.content/index.ts
+ * import "./style.css"
+ *
+ * export default defineContentScript({
+ *   matches: ["*://*.google.com/*"],
+ *   cssInjectionMode: "ui",
+ *
+ *   async main(ctx) {
+ *     const ui = await createContentScriptUi(ctx, {
+ *       name: "example-overlay",
+ *       type: "modal",
+ *       mount(container) {
+ *         const app = document.createElement("div");
+ *         app.textContent = "Content Script UI";
+ *         container.append(app);
+ *       }
+ *     })
+ *     ui.mount();
+ *   }
+ * })
+ */
 export async function createContentScriptUi<T>(
   ctx: ContentScriptContext,
   options: ContentScriptUiOptions<T>,
@@ -147,36 +174,104 @@ async function loadCss(): Promise<string> {
 }
 
 export interface ContentScriptUi<T> {
+  /**
+   * The `HTMLElement` hosting the shadow root used to isolate the UI's styles. This is the element
+   * that get's added to the DOM. This element's style is not isolated from the webpage.
+   */
   shadowHost: HTMLElement;
+  /**
+   * The container element inside the `ShadowRoot` whose styles are isolated. The UI is mounted
+   * inside this `HTMLElement`.
+   */
   uiContainer: HTMLElement;
+  /**
+   * The shadow root performing the isolation.
+   */
   shadow: ShadowRoot;
+  /**
+   * Custom data returned from the `options.mount` function.
+   */
   mounted: T;
+  /**
+   * Function that mounts or remounts the UI on the page.
+   */
   mount: () => void;
+  /**
+   * Function that removes the UI from the webpage.
+   */
   remove: () => void;
 }
 
 interface BaseContentScriptUiOptions<T> {
+  /**
+   * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
+   */
   name: string;
+  /**
+   * In combination with `anchor`, decide how to add the UI to the DOM.
+   *
+   * - `"last"` (default) - Add the UI as the last child of the `anchor` element
+   * - `"first"` - Add the UI as the last child of the `anchor` element
+   * - `"replace"` - Replace the `anchor` element with the UI.
+   * - `"before"` - Add the UI as the sibling before the `anchor` element
+   * - `"after"` - Add the UI as the sibling after the `anchor` element
+   * - `(anchor, ui) => void` - Customizable function that let's you add the UI to the DOM
+   */
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
+  /**
+   * A CSS selector, element, or function that returns one of the two. Along with `append`, the
+   * `anchor` dictates where in the page the UI will be added.
+   */
   anchor?:
     | string
     | Element
     | null
     | undefined
     | (() => string | Element | null | undefined);
+  /**
+   * Callback executed when mounting the UI. This function should create and append the UI to the
+   * `container` element. It is called every time `ui.mount()` is called
+   *
+   * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+   */
   mount: (container: Element) => T;
+  /**
+   * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
+   * unmounting your vue or react apps.
+   */
   onRemove?: (mounted: T) => void;
+  /**
+   * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
+   * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
+   * to pass those styles in here. This is for any additional styles not in the imported CSS.
+   *
+   * See <https://wxt.dev/guide/content-scripts.html#ui> for more info.
+   */
   css?: string;
 }
 
 export type OverlayContentScriptUiOptions<T> = BaseContentScriptUiOptions<T> & {
   type: 'overlay';
+  /**
+   * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
+   * which corner is aligned with that 0x0 pixel space.
+   *
+   * @default "top-left"
+   */
   alignment?: ContentScriptUiOverlayAlignment;
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
   zIndex?: number;
 };
 
 export type ModalContentScriptUiOptions<T> = BaseContentScriptUiOptions<T> & {
   type: 'modal';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
   zIndex?: number;
 };
 
