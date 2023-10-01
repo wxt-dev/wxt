@@ -112,7 +112,7 @@
     "ts-morph": "^20.0.0",
     "tsup": "^7.1.0",
     "tsx": "^3.12.7",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "vitepress": "1.0.0-rc.10",
     "vitest": "^0.34.1",
     "vitest-mock-extended": "^1.1.4",
