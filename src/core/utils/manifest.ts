@@ -477,6 +477,10 @@ export function getContentScriptCssWebAccessibleResources(
   return resources;
 }
 
+/**
+ * Based on the build output, return a Record of each content script's name to it CSS file if the
+ * script includes one.
+ */
 export function getContentScriptsCssMap(
   buildOutput: Omit<BuildOutput, 'manifest'>,
   scripts: ContentScriptEntrypoint[],
