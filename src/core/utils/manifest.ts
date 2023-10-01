@@ -477,7 +477,7 @@ export function getContentScriptCssWebAccessibleResources(
   return resources;
 }
 
-function getContentScriptsCssMap(
+export function getContentScriptsCssMap(
   buildOutput: Omit<BuildOutput, 'manifest'>,
   scripts: ContentScriptEntrypoint[],
 ) {
