@@ -390,6 +390,98 @@ describe('Manifest Content', () => {
         {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
       `);
     });
+
+    it('should not add a content script entry for CSS when cssInjectionMode is "ui", but add a web_accessible_resources entry for MV2', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content/style.css',
+        'body { background-color: red; }',
+      );
+      project.addFile(
+        'entrypoints/content/index.ts',
+        `import "./style.css";
+        
+        export default defineContentScript({
+          matches: ["https://*.google.com/*"],
+          cssInjectionMode: "ui",
+
+          main() {},
+        });`,
+      );
+      await project.build({
+        manifestVersion: 2,
+      });
+
+      expect(await project.serializeFile('.output/chrome-mv2/manifest.json'))
+        .toMatchInlineSnapshot(`
+          ".output/chrome-mv2/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":2,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[\\"content-scripts/content.css\\"]}"
+        `);
+    });
+
+    it('should not add a content script entry for CSS when cssInjectionMode is "ui", but add a web_accessible_resources entry for MV3', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content/style.css',
+        'body { background-color: red; }',
+      );
+      project.addFile(
+        'entrypoints/content/index.ts',
+        `import "./style.css";
+        
+        export default defineContentScript({
+          matches: ["https://*.google.com/*"],
+          cssInjectionMode: "ui",
+
+          main() {},
+        });`,
+      );
+      await project.build({
+        manifestVersion: 3,
+      });
+
+      expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+        .toMatchInlineSnapshot(`
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}]}"
+        `);
+    });
+  });
+
+  it('should combine web accessible resources', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/content/style.css',
+      'body { background-color: red; }',
+    );
+    project.addFile(
+      'entrypoints/content/index.ts',
+      `import "./style.css";
+      
+      export default defineContentScript({
+        matches: ["https://*.google.com/*"],
+        cssInjectionMode: "ui",
+
+        main() {},
+      });`,
+    );
+    project.setConfigFileConfig({
+      manifest: {
+        web_accessible_resources: [
+          { resources: ['one.png'], matches: ['https://one.com/*'] },
+        ],
+      },
+    });
+    await project.build();
+
+    expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+      .toMatchInlineSnapshot(`
+        ".output/chrome-mv3/manifest.json
+        ----------------------------------------
+        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"web_accessible_resources\\":[{\\"resources\\":[\\"one.png\\"],\\"matches\\":[\\"https://one.com/*\\"]},{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}],\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+      `);
   });
 
   it('should respect the transformManifest option', async () => {

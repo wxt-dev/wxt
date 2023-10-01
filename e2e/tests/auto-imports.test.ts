@@ -18,10 +18,10 @@ describe('Auto Imports', () => {
           declare global {
             const ContentScriptContext: typeof import('wxt/client')['ContentScriptContext']
             const browser: typeof import('wxt/browser')['browser']
+            const createContentScriptUi: typeof import('wxt/client')['createContentScriptUi']
             const defineBackground: typeof import('wxt/client')['defineBackground']
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/client')['defineContentScript']
-            const mountContentScriptUi: typeof import('wxt/client')['mountContentScriptUi']
           }
           "
         `);

@@ -20,6 +20,7 @@ import { getPackageJson } from './package';
 import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import { produce } from 'immer';
+import * as vite from 'vite';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -56,22 +57,25 @@ export async function generateMainfest(
 ): Promise<Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
 
-  const manifest: Manifest.WebExtensionManifest = Object.assign(
-    {
-      manifest_version: config.manifestVersion,
-      name: pkg?.name,
-      description: pkg?.description,
-      version: pkg?.version && simplifyVersion(pkg.version),
-      // Only add the version name to chromium and if the user hasn't specified a custom version.
-      version_name:
-        config.browser !== 'firefox' && !config.manifest.version
-          ? pkg?.version
-          : undefined,
-      short_name: pkg?.shortName,
-      icons: discoverIcons(buildOutput),
-    },
-    config.manifest,
-  );
+  const baseManifest: Manifest.WebExtensionManifest = {
+    manifest_version: config.manifestVersion,
+    name: pkg?.name,
+    description: pkg?.description,
+    version: pkg?.version && simplifyVersion(pkg.version),
+    // Only add the version name to chromium and if the user hasn't specified a custom version.
+    version_name:
+      config.browser !== 'firefox' && !config.manifest.version
+        ? pkg?.version
+        : undefined,
+    short_name: pkg?.shortName,
+    icons: discoverIcons(buildOutput),
+  };
+  const userManifest = config.manifest;
+
+  const manifest = vite.mergeConfig(
+    baseManifest,
+    userManifest,
+  ) as Manifest.WebExtensionManifest;
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
@@ -284,6 +288,8 @@ function addEntrypoints(
   }
 
   if (contentScripts?.length) {
+    const cssMap = getContentScriptsCssMap(buildOutput, contentScripts);
+
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
     if (config.command === 'serve' && config.manifestVersion === 3) {
@@ -309,7 +315,7 @@ function addEntrypoints(
           ...mapWxtOptionsToContentScript(scripts[0].options),
           // TOOD: Sorting css and js arrays here so we get consistent test results... but we
           // shouldn't have to. Where is the inconsistency coming from?
-          css: getContentScriptCssFiles(scripts, buildOutput)?.sort(),
+          css: getContentScriptCssFiles(scripts, cssMap)?.sort(),
           js: scripts
             .map((entry) =>
               getEntrypointBundlePath(entry, config.outDir, '.js'),
@@ -321,6 +327,16 @@ function addEntrypoints(
         manifest.content_scripts ??= [];
         manifest.content_scripts.push(...newContentScripts);
       }
+    }
+
+    const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
+      config,
+      contentScripts,
+      cssMap,
+    );
+    if (contentScriptCssResources.length > 0) {
+      manifest.web_accessible_resources ??= [];
+      manifest.web_accessible_resources.push(...contentScriptCssResources);
     }
   }
 }
@@ -409,23 +425,75 @@ function addDevModePermissions(
  */
 export function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
-  buildOutput: Omit<BuildOutput, 'manifest'>,
+  contentScriptCssMap: Record<string, string | undefined>,
 ): string[] | undefined {
   const css: string[] = [];
 
-  const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
-
   contentScripts.forEach((script) => {
-    if (script.options.cssInjectionMode === 'manual') return;
+    if (
+      script.options.cssInjectionMode === 'manual' ||
+      script.options.cssInjectionMode === 'ui'
+    )
+      return;
 
-    const relatedCss = allChunks.find(
-      (chunk) => chunk.fileName === `content-scripts/${script.name}.css`,
-    );
-    if (relatedCss) css.push(relatedCss.fileName);
+    const cssFile = contentScriptCssMap[script.name];
+    if (cssFile == null) return;
+
+    if (cssFile) css.push(cssFile);
   });
 
   if (css.length > 0) return css;
   return undefined;
+}
+
+/**
+ * Content scripts configured with `cssInjectionMode: "ui"` need to add their CSS files to web
+ * accessible resources so they can be fetched as text and added to shadow roots that the UI is
+ * added to.
+ */
+export function getContentScriptCssWebAccessibleResources(
+  config: InternalConfig,
+  contentScripts: ContentScriptEntrypoint[],
+  contentScriptCssMap: Record<string, string | undefined>,
+): any[] {
+  const resources: any[] = [];
+
+  contentScripts.forEach((script) => {
+    if (script.options.cssInjectionMode !== 'ui') return;
+
+    const cssFile = contentScriptCssMap[script.name];
+    if (cssFile == null) return;
+
+    if (config.manifestVersion === 2) {
+      resources.push(cssFile);
+    } else {
+      resources.push({
+        resources: [cssFile],
+        matches: script.options.matches,
+      });
+    }
+  });
+
+  return resources;
+}
+
+/**
+ * Based on the build output, return a Record of each content script's name to it CSS file if the
+ * script includes one.
+ */
+export function getContentScriptsCssMap(
+  buildOutput: Omit<BuildOutput, 'manifest'>,
+  scripts: ContentScriptEntrypoint[],
+) {
+  const map: Record<string, string | undefined> = {};
+  const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
+  scripts.forEach((script) => {
+    const relatedCss = allChunks.find(
+      (chunk) => chunk.fileName === `content-scripts/${script.name}.css`,
+    );
+    if (relatedCss != null) map[script.name] = relatedCss.fileName;
+  });
+  return map;
 }
 
 function addPermission(

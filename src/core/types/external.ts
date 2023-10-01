@@ -417,7 +417,7 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    *
    * @default "manifest"
    */
-  cssInjectionMode?: 'manifest' | 'manual';
+  cssInjectionMode?: 'manifest' | 'manual' | 'ui';
   /**
    * Main function executed when the content script is loaded.
    */

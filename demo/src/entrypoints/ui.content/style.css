@@ -1,0 +1,11 @@
+:root {
+  color-scheme: dark;
+  color: indianred;
+}
+html {
+  background-color: black;
+}
+
+div {
+  padding: 16px;
+}

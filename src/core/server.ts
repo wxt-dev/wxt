@@ -7,7 +7,10 @@ import {
 import * as vite from 'vite';
 import { Scripting } from 'webextension-polyfill';
 import { getEntrypointBundlePath } from './utils/entrypoints';
-import { getContentScriptCssFiles } from './utils/manifest';
+import {
+  getContentScriptCssFiles,
+  getContentScriptsCssMap,
+} from './utils/manifest';
 import { buildInternal } from './build';
 import { createExtensionRunner } from './runners';
 
@@ -99,7 +102,8 @@ export function reloadContentScripts(
       if (Array.isArray(entry) || entry.type !== 'content-script') return;
 
       const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
-      const css = getContentScriptCssFiles([entry], server.currentOutput);
+      const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
+      const css = getContentScriptCssFiles([entry], cssMap);
 
       server.reloadContentScript({
         allFrames: entry.options.allFrames,
