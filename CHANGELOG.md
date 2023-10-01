@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.0...v0.7.1)
+
+### 🚀 Enhancements
+
+- `createContentScriptUi` helper ([#143](https://github.com/wxt-dev/wxt/pull/143))
+
+### 📖 Documentation
+
+- Add docs for `createContentScriptUi` ([65fcfc0](https://github.com/wxt-dev/wxt/commit/65fcfc0))
+
+### 🏡 Chore
+
+- **release:** V0.7.1-alpha1 ([2d4983e](https://github.com/wxt-dev/wxt/commit/2d4983e))
+
 ## v0.7.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.6...v0.7.0)
