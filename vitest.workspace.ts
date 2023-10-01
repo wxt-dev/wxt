@@ -25,6 +25,7 @@ export default defineWorkspace([
       dir: 'src',
       mockReset: true,
       restoreMocks: true,
+      setupFiles: 'vitest.setup.ts',
     },
     plugins: [testSeed()],
   },

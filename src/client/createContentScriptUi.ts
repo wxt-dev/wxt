@@ -15,19 +15,19 @@ export async function createContentScriptUi<T>(
   } = await createIsolatedElement({
     name: options.name,
     css: {
-      textContent: `${options.css ?? ''}\n${await loadCss()}`,
+      textContent: `${options.css ?? ''}\n${await loadCss()}`.trim(),
     },
     mode: 'open',
   });
 
-  const getAnchor = (): HTMLElement | undefined => {
+  const getAnchor = (): Element | undefined => {
     if (options.anchor == null) return document.body;
 
     let resolved =
       typeof options.anchor === 'function' ? options.anchor() : options.anchor;
     if (typeof resolved === 'string')
-      return document.querySelector<HTMLElement>(resolved) ?? undefined;
-    return resolved;
+      return document.querySelector<Element>(resolved) ?? undefined;
+    return resolved ?? undefined;
   };
 
   let mounted: T;
@@ -45,7 +45,7 @@ export async function createContentScriptUi<T>(
     // Add shadow root element to DOM
     switch (options.append) {
       case undefined:
-      case 'add':
+      case 'last':
         anchor.append(shadowHost);
         break;
       case 'first':
@@ -65,7 +65,7 @@ export async function createContentScriptUi<T>(
         anchor.replaceWith(shadowHost, anchor);
         break;
       default:
-        options.append(anchor);
+        options.append(anchor, shadowHost);
         break;
     }
 
@@ -81,6 +81,7 @@ export async function createContentScriptUi<T>(
       shadowHost.style.display = 'block';
 
       const html = shadow.querySelector('html')!;
+      // HTML doesn't exist in tests
       if (options.type === 'overlay') {
         html.style.position = 'absolute';
         if (options.alignment?.startsWith('bottom-')) html.style.bottom = '0';
@@ -151,9 +152,14 @@ export interface ContentScriptUi<T> {
 
 interface BaseContentScriptUiOptions<T> {
   name: string;
-  append?: ContentScriptAppendMode | ((anchor: HTMLElement) => void);
-  anchor?: string | HTMLElement | (() => string | HTMLElement);
-  mount: (container: HTMLElement) => T;
+  append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
+  anchor?:
+    | string
+    | Element
+    | null
+    | undefined
+    | (() => string | Element | null | undefined);
+  mount: (container: Element) => T;
   onRemove?: (mounted: T) => void;
   css?: string;
 }
@@ -180,7 +186,7 @@ export type ContentScriptUiOverlayAlignment =
   | 'bottom-right';
 
 export type ContentScriptAppendMode =
-  | 'add'
+  | 'last'
   | 'first'
   | 'replace'
   | 'before'

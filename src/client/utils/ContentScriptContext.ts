@@ -157,10 +157,13 @@ export class ContentScriptContext extends AbortController {
 
   #stopOldScripts() {
     // Use postMessage so it get's sent to all the frames of the page.
-    window.postMessage({
-      event: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
-      contentScriptName: this.contentScriptName,
-    });
+    window.postMessage(
+      {
+        event: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
+        contentScriptName: this.contentScriptName,
+      },
+      '*',
+    );
   }
 
   #listenForNewerScripts() {
