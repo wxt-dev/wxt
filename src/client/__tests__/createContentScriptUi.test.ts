@@ -185,7 +185,6 @@ describe('createContentScriptUi', () => {
         });
         ui.mount();
 
-        console.log(document.body.outerHTML);
         expect(
           document.querySelector('#parent > :nth-child(2)')?.tagName,
         ).toEqual('TEST-APP');

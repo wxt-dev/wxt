@@ -124,7 +124,7 @@ export async function createContentScriptUi<T>(
 /**
  * Load the CSS for the current entrypoint.
  */
-export async function loadCss(): Promise<string> {
+async function loadCss(): Promise<string> {
   const url = browser.runtime.getURL(`/content-scripts/${__ENTRYPOINT__}.css`);
   try {
     const res = await fetch(url);
