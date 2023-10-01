@@ -8,6 +8,11 @@ export async function createContentScriptUi<T>(
   ctx: ContentScriptContext,
   options: ContentScriptUiOptions<T>,
 ): Promise<ContentScriptUi<T>> {
+  const css = [options.css ?? ''];
+  if (ctx.options?.cssInjectionMode === 'ui') {
+    css.push(await loadCss());
+  }
+
   const {
     isolatedElement: uiContainer,
     parentElement: shadowHost,
@@ -15,7 +20,7 @@ export async function createContentScriptUi<T>(
   } = await createIsolatedElement({
     name: options.name,
     css: {
-      textContent: `${options.css ?? ''}\n${await loadCss()}`.trim(),
+      textContent: css.join('\n').trim(),
     },
     mode: 'open',
   });

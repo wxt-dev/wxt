@@ -44,10 +44,6 @@ describe('createContentScriptUi', () => {
       const parentElement = document.createElement(config.name);
       const isolatedElement = document.createElement('html');
       parentElement.append(isolatedElement);
-      // const shadow = mock<ShadowRoot>();
-      // shadow.querySelector.mockImplementation((selector) => {
-      //   return parentElement.querySelector(selector);
-      // })
 
       return {
         isolatedElement,
@@ -62,10 +58,14 @@ describe('createContentScriptUi', () => {
   });
 
   describe('css', () => {
-    it('should load the CSS for the current entrypoint', async () => {
+    it('should load the CSS for the current entrypoint when cssInjectionMode=ui', async () => {
       fetch.mockResolvedValue({ text: () => Promise.resolve('body {}') });
+      const ctx = new ContentScriptContext('test', {
+        matches: [],
+        cssInjectionMode: 'ui',
+      });
 
-      await createContentScriptUi(createCtx(), {
+      await createContentScriptUi(ctx, {
         name: 'test',
         type: 'inline',
         mount: testApp,
@@ -85,11 +85,15 @@ describe('createContentScriptUi', () => {
       );
     });
 
-    it('should still load the UI when fetch fails to load CSS file', async () => {
+    it('should still load the UI when fetch fails to load CSS file when cssInjectionMode=ui', async () => {
       const error = Error('Test fetch error');
       fetch.mockRejectedValue(error);
+      const ctx = new ContentScriptContext('test', {
+        matches: [],
+        cssInjectionMode: 'ui',
+      });
 
-      await createContentScriptUi(createCtx(), {
+      await createContentScriptUi(ctx, {
         name: 'test',
         type: 'inline',
         mount: testApp,
@@ -108,6 +112,24 @@ describe('createContentScriptUi', () => {
         }),
       );
     });
+
+    it.each(['manifest', 'manual'] as const)(
+      'should not fetch CSS when cssInjectionMode=%s',
+      async (cssInjectionMode) => {
+        const ctx = new ContentScriptContext('test', {
+          matches: [],
+          cssInjectionMode,
+        });
+
+        await createContentScriptUi(ctx, {
+          name: 'test',
+          type: 'inline',
+          mount: testApp,
+        });
+
+        expect(fetch).not.toBeCalled();
+      },
+    );
   });
 
   describe('mount', () => {

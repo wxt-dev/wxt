@@ -3,7 +3,7 @@ import './style.css';
 
 export default defineContentScript({
   matches: ['https://*.duckduckgo.com/*'],
-  cssInjectionMode: 'manual',
+  cssInjectionMode: 'ui',
 
   async main(ctx) {
     const ui = await createContentScriptUi(ctx, {
@@ -11,10 +11,10 @@ export default defineContentScript({
       type: 'inline',
       append: 'before',
       anchor: 'form[role=search]',
-      mount: (uiContainer) => {
+      mount: (container) => {
         const app = document.createElement('div');
         app.textContent = 'Custom content script UI';
-        uiContainer.append(app);
+        container.append(app);
       },
     });
     ui.mount();

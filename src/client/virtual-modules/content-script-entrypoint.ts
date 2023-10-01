@@ -4,9 +4,10 @@ import { ContentScriptContext } from '../utils/ContentScriptContext';
 
 (async () => {
   try {
-    const ctx = new ContentScriptContext(__ENTRYPOINT__);
+    const { main, ...options } = definition;
+    const ctx = new ContentScriptContext(__ENTRYPOINT__, options);
 
-    await definition.main(ctx);
+    await main(ctx);
   } catch (err) {
     logger.error('The content script crashed on startup!', err);
   }

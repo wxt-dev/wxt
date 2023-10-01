@@ -1,3 +1,4 @@
+import { ContentScriptDefinition } from '../../core/types';
 import { browser } from '../browser';
 import { logger } from './logger';
 
@@ -13,7 +14,10 @@ export class ContentScriptContext extends AbortController {
 
   #isTopFrame = window.self === window.top;
 
-  constructor(private readonly contentScriptName: string) {
+  constructor(
+    private readonly contentScriptName: string,
+    public readonly options?: Omit<ContentScriptDefinition, 'main'>,
+  ) {
     super();
 
     if (this.#isTopFrame) {
