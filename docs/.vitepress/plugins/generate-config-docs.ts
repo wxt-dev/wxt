@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { Project, ts, Type, Node, JSDocableNode } from 'ts-morph';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { format } from 'prettier';
@@ -7,8 +7,8 @@ import consola from 'consola';
 let hasGenerated = false;
 
 const externalTypesPath = resolve('src/core/types/external.ts');
-const configTemplatePath = resolve('docs/config.tpl.md');
-const configPath = resolve('docs/config.md');
+const configTemplatePath = resolve('docs/api/config.tpl.md');
+const configPath = resolve('docs/api/config.md');
 
 const PREFACE = `<!--
 DO NOT EDIT
@@ -39,7 +39,7 @@ export function generateConfigDocs() {
   writeFileSync(configPath, '');
 
   const generateDocs = async () => {
-    consola.info('Generating /config.md');
+    consola.info(`Generating ${relative(process.cwd(), configPath)}`);
     try {
       const project = new Project({
         tsConfigFilePath: resolve('tsconfig.json'),
@@ -118,9 +118,9 @@ export function generateConfigDocs() {
       );
 
       writeFileSync(configPath, text);
-      consola.success('Generated /config.md');
+      consola.success(`Generated ${relative(process.cwd(), configPath)}`);
     } catch (err) {
-      consola.fail('Failed to generate /config.md');
+      consola.fail(`Failed to generate ${relative(process.cwd(), configPath)}`);
       consola.error(err.message);
     }
   };

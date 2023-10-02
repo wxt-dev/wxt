@@ -7,7 +7,7 @@ import { ContentScriptContext } from '.';
  * Utility for mounting content script UI's with isolated styles. Automatically removed from the DOM
  * when the content script's context is invalidated.
  *
- * See <https://wxt.dev/guide/content-scripts.html#ui> for full documentation.
+ * See <https://wxt.dev/entrypoints/content-scripts.html#ui> for full documentation.
  *
  * @example
  * // entrypoints/example-ui.content/index.ts
@@ -245,7 +245,7 @@ interface BaseContentScriptUiOptions<T> {
    * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
    * to pass those styles in here. This is for any additional styles not in the imported CSS.
    *
-   * See <https://wxt.dev/guide/content-scripts.html#ui> for more info.
+   * See <https://wxt.dev/entrypoints/content-scripts.html#ui> for more info.
    */
   css?: string;
 }

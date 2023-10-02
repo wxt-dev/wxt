@@ -49,7 +49,7 @@ The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/
 
 ## `icons`
 
-By default, WXT will discover icons in your [`public` directory](/get-started/assets#public-directory) and use them for the [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/).
+By default, WXT will discover icons in your [`public` directory](/guide/assets#public-directory) and use them for the [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/).
 
 ```
 public/
@@ -94,7 +94,7 @@ export default defineConfig({
 
 ## Localization
 
-Similar to the icon, the [`_locales` directory](https://developer.chrome.com/docs/extensions/reference/i18n/) should be placed inside the the WXT's [`public` directory](/get-started/assets#public-directory).
+Similar to the icon, the [`_locales` directory](https://developer.chrome.com/docs/extensions/reference/i18n/) should be placed inside the the WXT's [`public` directory](/guide/assets#public-directory).
 
 ```
 public/

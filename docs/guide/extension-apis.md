@@ -11,7 +11,7 @@ And that's it! Your extension now supports Chrome, Firefox, Safari, Edge, and ot
 
 ## Basic Usage
 
-The `browser` variable is available globally via [auto-imports](/guide/auto-imports.md), or it can be imported manually.
+The `browser` variable is available globally via [auto-imports](/guide/auto-imports), or it can be imported manually.
 
 ```ts
 import { browser } from 'wxt/browser';

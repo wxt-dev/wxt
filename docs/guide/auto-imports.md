@@ -3,19 +3,19 @@
 WXT uses the same tool as Nuxt for auto-imports, [`unimport`](https://github.com/unjs/unimport).
 
 :::info Testing
-To setup your test environment for auto-imports, see [Testing](/get-started/testing.md).
+To setup your test environment for auto-imports, see [Testing](/guide/testing).
 :::
 
 ## WXT Auto-imports
 
 Some WXT APIs can be used without importing them:
 
-- [`browser`](/config.md#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
-- [`defineContentScript`](/config.md#defiencontentscript) from `wxt/client`
-- [`defineBackground`](/config.md#definebackgroundscript) from `wxt/client`
-- [`createContentScriptUi`](/config.md#createcontentscriptui) from `wxt/client`
+- [`browser`](/api/wxt-browser#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
+- [`defineContentScript`](/api/wxt-client#defiencontentscript) from `wxt/client`
+- [`defineBackground`](/api/wxt-client#definebackgroundscript) from `wxt/client`
+- [`createContentScriptUi`](/api/wxt-client#createcontentscriptui) from `wxt/client`
 
-And more. All [`wxt/client`](/config.md#wxtclient) APIs can be used without imports.
+And more. All [`wxt/client`](/api/wxt-client) APIs can be used without imports.
 
 ## Project Auto-imports
 

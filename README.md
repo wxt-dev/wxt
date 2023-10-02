@@ -28,11 +28,11 @@
 <p align="center">
   <a href="https://wxt.dev" target="_blank">Get Started</a>
   &bull;
-  <a href="https://wxt.dev/get-started/installation.html" target="_blank">Installation</a>
+  <a href="https://wxt.dev/guide/installation.html" target="_blank">Installation</a>
   &bull;
-  <a href="https://wxt.dev/guide/background.html" target="_blank">Entrypoints</a>
+  <a href="https://wxt.dev/entrypoints/background.html" target="_blank">Entrypoints</a>
   &bull;
-  <a href="https://wxt.dev/config.html" target="_blank">Configuration</a>
+  <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
 </p>
 
 ![Example CLI Output](./docs/assets/cli-output.png)
@@ -45,7 +45,7 @@ Bootstrap a new project:
 pnpx wxt@latest init <project-name>
 ```
 
-Or see the [installation guide](https://wxt.dev/get-started/installation.html) to get started with WXT.
+Or see the [installation guide](https://wxt.dev/guide/installation.html) to get started with WXT.
 
 ## Features
 

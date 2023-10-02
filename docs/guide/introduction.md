@@ -35,5 +35,5 @@ Production builds are optimized for store review, changing as few files as possi
 In addition, WXT fully supports Firefox's source code requirements when using a bundler. It will automatically create and upload a ZIP file of your source code.
 
 :::info
-See [Publishing](./publishing.md) for more info around production builds.
+See [Publishing](./publishing) for more info around production builds.
 :::

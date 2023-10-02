@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 import { generateConfigDocs } from './plugins/generate-config-docs';
+import { generateCliDocs } from './plugins/generate-cli-docs';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -17,7 +18,7 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
-    plugins: [generateConfigDocs()],
+    plugins: [generateConfigDocs(), generateCliDocs()],
   },
   lastUpdated: true,
   sitemap: {
@@ -55,56 +56,67 @@ export default defineConfig({
     },
 
     nav: [
-      { text: 'Get Started', link: '/get-started/installation.md' },
-      { text: 'Guide', link: '/guide/auto-imports.md' },
-      { text: 'Config', link: '/config.md' },
-      { text: 'API', link: '/api.md' },
+      { text: 'Guide', link: '/guide/installation.md' },
+      { text: 'Entrypoints', link: '/entrypoints/background.md' },
+      { text: 'API', link: '/api/cli.md' },
     ],
 
     sidebar: {
-      '/get-started/': [
-        {
-          text: 'Get Started',
-          items: [
-            { text: 'Introduction', link: '/get-started/introduction.md' },
-            { text: 'Installation', link: '/get-started/installation.md' },
-            { text: 'Configuration', link: '/get-started/configuration.md' },
-            { text: 'Entrypoints', link: '/get-started/entrypoints.md' },
-            { text: 'Assets', link: '/get-started/assets.md' },
-            { text: 'Build Targets', link: '/get-started/build-targets.md' },
-            { text: 'Publishing', link: '/get-started/publishing.md' },
-            { text: 'Testing', link: '/get-started/testing.md' },
-            { text: 'Compare', link: '/get-started/compare.md' },
-          ],
-        },
-      ],
       '/guide/': [
         {
           text: 'Guide',
           items: [
+            { text: 'Introduction', link: '/guide/introduction.md' },
+            { text: 'Installation', link: '/guide/installation.md' },
+            { text: 'Configuration', link: '/guide/configuration.md' },
+            { text: 'Entrypoints', link: '/guide/entrypoints.md' },
+            { text: 'Assets', link: '/guide/assets.md' },
+            { text: 'Build Targets', link: '/guide/build-targets.md' },
+            { text: 'Publishing', link: '/guide/publishing.md' },
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
+            { text: 'Testing', link: '/guide/testing.md' },
             { text: 'Vite', link: '/guide/vite.md' },
+            { text: 'Compare', link: '/guide/compare.md' },
           ],
         },
+      ],
+      '/entrypoints/': [
         {
           text: 'Entrypoints',
           items: [
-            { text: 'Background', link: '/guide/background.md' },
-            { text: 'Bookmarks', link: '/guide/bookmarks.md' },
-            { text: 'Content Scripts', link: '/guide/content-scripts.md' },
-            { text: 'CSS', link: '/guide/css.md' },
-            { text: 'Devtools', link: '/guide/devtools.md' },
-            { text: 'History', link: '/guide/history.md' },
-            { text: 'Newtab', link: '/guide/newtab.md' },
-            { text: 'Options', link: '/guide/options.md' },
-            { text: 'Popup', link: '/guide/popup.md' },
-            { text: 'Sandbox', link: '/guide/sandbox.md' },
-            { text: 'Sidepanel', link: '/guide/sidepanel.md' },
-            { text: 'Unlisted Pages', link: '/guide/unlisted-pages.md' },
-            { text: 'Unlisted Scripts', link: '/guide/unlisted-scripts.md' },
+            { text: 'Background', link: '/entrypoints/background.md' },
+            { text: 'Bookmarks', link: '/entrypoints/bookmarks.md' },
+            {
+              text: 'Content Scripts',
+              link: '/entrypoints/content-scripts.md',
+            },
+            { text: 'CSS', link: '/entrypoints/css.md' },
+            { text: 'Devtools', link: '/entrypoints/devtools.md' },
+            { text: 'History', link: '/entrypoints/history.md' },
+            { text: 'Newtab', link: '/entrypoints/newtab.md' },
+            { text: 'Options', link: '/entrypoints/options.md' },
+            { text: 'Popup', link: '/entrypoints/popup.md' },
+            { text: 'Sandbox', link: '/entrypoints/sandbox.md' },
+            { text: 'Sidepanel', link: '/entrypoints/sidepanel.md' },
+            { text: 'Unlisted Pages', link: '/entrypoints/unlisted-pages.md' },
+            {
+              text: 'Unlisted Scripts',
+              link: '/entrypoints/unlisted-scripts.md',
+            },
+          ].sort((l, r) => l.text.localeCompare(r.text)),
+        },
+      ],
+      '/api/': [
+        {
+          items: [
+            { text: 'CLI', link: '/api/cli.md' },
+            { text: 'Config', link: '/api/config.md' },
+            { text: 'wxt', link: '/api/wxt.md' },
+            { text: 'wxt/browser', link: '/api/wxt-browser.md' },
+            { text: 'wxt/client', link: '/api/wxt-client.md' },
           ],
         },
       ],

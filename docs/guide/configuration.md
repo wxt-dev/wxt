@@ -15,7 +15,7 @@ export default defineConfig({
 ```
 
 :::info
-See the [Config reference](/config.md) for a full list of options.
+See the [Config reference](/api/config) for a full list of options.
 :::
 
 ## Directory Config
@@ -25,7 +25,7 @@ WXT allows you to edit several directories to your liking:
 - `root` (default: `process.cwd()`) - Root of the WXT project
 - `srcDir` (default: `<rootDir>`) - Location of all your source code
 - `entrypointsDir` (default: `<srcDir>/entrypoints`) - Folder containing all the entrypoints.
-- `publicDir` (default: `<srcDir>/public`) - Folder containing [public assets](/get-started/assets.md)
+- `publicDir` (default: `<srcDir>/public`) - Folder containing [public assets](/guide/assets)
 
 ### Example
 
