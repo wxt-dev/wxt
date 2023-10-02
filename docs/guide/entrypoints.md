@@ -42,7 +42,7 @@ would result in the following `manifest.json`:
 }
 ```
 
-If a file uses a [special name recognized by WXT](/guide/entrypoints), it will be added to the manifest. In this case:
+If a file uses a special name recognized by WXT, it will be added to the manifest. In this case:
 
 - `popup.html` &rarr; `action.default_popup`
 - `content.ts` &rarr; `content_scripts.0.js.0`

@@ -13,26 +13,26 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /get-started/installation
+      link: /guide/installation
     - theme: alt
       text: Learn More
-      link: /get-started/introduction
+      link: /guide/introduction
 
 features:
   - icon: 🌐
     title: Supported Browsers
     details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
-    link: /get-started/build-targets
+    link: /guide/build-targets
     linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
     details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
-    link: /get-started/build-targets#target-manifest-version
+    link: /guide/build-targets#target-manifest-version
     linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
     details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
-    link: /get-started/introduction.html#development
+    link: /guide/introduction.html#development
     linkText: Learn more
   - icon: 📂
     title: File Based Entrypoints
@@ -55,12 +55,12 @@ features:
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
-    link: /get-started/configuration#frontend-frameworks
+    link: /guide/configuration#frontend-frameworks
     linkText: Add a framework
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Get started quickly with several awesome project templates.
-    link: /get-started/installation#bootstrap-project
+    link: /guide/installation#bootstrap-project
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
