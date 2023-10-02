@@ -1,0 +1,29 @@
+# Netlify Redirects File
+# https://docs.netlify.com/routing/redirects/
+
+# Old URLs -> New URLs
+/config.html                    /api/config.html
+/entrypoints                    /entrypoints/background.html
+/get-started/assets.html        /guide/assets.html
+/get-started/build-targets.html /guide/build-targets.html
+/get-started/compare.html       /guide/compare.html
+/get-started/configuration.html /guide/configuration.html
+/get-started/entrypoints.html   /guide/entrypoints.html
+/get-started/installation.html  /guide/installation.html
+/get-started/introduction.html  /guide/introduction.html
+/get-started/publishing.html    /guide/publishing.html
+/get-started/testing.html       /guide/testing.html
+/guide/background.html          /entrypoints/background.html
+/guide/bookmarks.html           /entrypoints/bookmarks.html
+/guide/content-scripts.html     /entrypoints/content-scripts.html
+/guide/css.html                 /entrypoints/css.html
+/guide/devtools.html            /entrypoints/devtools.html
+/guide/history.html             /entrypoints/history.html
+/guide/manifest.html            /entrypoints/manifest.html
+/guide/newtab.html              /entrypoints/newtab.html
+/guide/options.html             /entrypoints/options.html
+/guide/popup.html               /entrypoints/popup.html
+/guide/sandbox.html             /entrypoints/sandbox.html
+/guide/sidepanel.html           /entrypoints/sidepanel.html
+/guide/unlisted-pages.html      /entrypoints/unlisted-pages.html
+/guide/unlisted-scripts.html    /entrypoints/unlisted-scripts.html

@@ -37,7 +37,7 @@ features:
   - icon: 📂
     title: File Based Entrypoints
     details: Manifest is generated based on files in the project with inline configuration.
-    link: /get-started/entrypoints
+    link: /guide/entrypoints
     linkText: See project structure
   - icon: 🚔
     title: TypeScript
@@ -50,7 +50,7 @@ features:
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
-    link: guide/remote-code
+    link: /guide/remote-code
     linkText: Read docs
   - icon: 🎨
     title: Frontend Framework Agnostic

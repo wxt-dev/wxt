@@ -3,7 +3,7 @@
 WXT uses the same tool as Nuxt for auto-imports, [`unimport`](https://github.com/unjs/unimport).
 
 :::info Testing
-To setup your test environment for auto-imports, see [Testing](/get-started/testing.md).
+To setup your test environment for auto-imports, see [Testing](/guide/testing).
 :::
 
 ## WXT Auto-imports

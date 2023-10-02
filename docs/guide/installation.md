@@ -142,6 +142,6 @@ If you're an experienced web extension developer and think the dev manifest look
 
 You're ready to build your web extension!
 
-- Learn how to [add entrypoints](./entrypoints.md) like the popup, options page, or content scripts
-- [Configure WXT](./configuration.md) by creating a `wxt.config.ts` file
+- Learn how to [add entrypoints](./entrypoints) like the popup, options page, or content scripts
+- [Configure WXT](./configuration) by creating a `wxt.config.ts` file
 - Checkout [example projects](https://github.com/wxt-dev/wxt-examples) to see how to perfom common tasks with WXT

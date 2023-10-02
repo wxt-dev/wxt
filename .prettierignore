@@ -12,3 +12,4 @@ CHANGELOG.md
 *.svg
 *.txt
 _gitignore
+_redirects

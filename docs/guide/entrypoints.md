@@ -42,7 +42,7 @@ would result in the following `manifest.json`:
 }
 ```
 
-If a file uses a [special name recognized by WXT](/get-started/entrypoints.md), it will be added to the manifest. In this case:
+If a file uses a [special name recognized by WXT](/guide/entrypoints), it will be added to the manifest. In this case:
 
 - `popup.html` &rarr; `action.default_popup`
 - `content.ts` &rarr; `content_scripts.0.js.0`
@@ -53,7 +53,7 @@ But not all entrypoints are added to the `manifest.json`. If the filename is not
 In this case, `injected.ts` gets output to `<outdir>/injected.js` and is accessible via `browser.runtime.getURL("/injected.js")`.
 
 :::info
-See [`/entrypoints` folder](/guide/background.md) documentation for a full list of recognized entrypoint filenames.
+See [`/entrypoints` folder](/entrypoints/background) documentation for a full list of recognized entrypoint filenames.
 :::
 
 ## Entrypoint Options
@@ -84,5 +84,5 @@ export default defineContentScript({
 ```
 
 :::info
-For a full list of entrypoints and each of their options, see the [`/entrypoints` folder](/guide/background.md) documentation.
+For a full list of entrypoints and each of their options, see the [`/entrypoints` folder](/entrypoints/background) documentation.
 :::

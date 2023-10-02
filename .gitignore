@@ -17,5 +17,6 @@ web-ext.config.ts
 templates/*/pnpm-lock.yaml
 templates/*/yarn.lock
 templates/*/package-lock.json
-docs/config.md
+docs/api/config.md
+docs/api/cli.md
 stats.html
