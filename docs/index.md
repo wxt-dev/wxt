@@ -32,7 +32,7 @@ features:
   - icon: ⚡
     title: Fast Dev Mode
     details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
-    link: /guide/introduction.html#development
+    link: /guide/development.html
     linkText: Learn more
   - icon: 📂
     title: File Based Entrypoints
