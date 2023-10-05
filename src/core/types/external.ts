@@ -365,47 +365,49 @@ export type Entrypoint =
 export type OnContentScriptStopped = (cb: () => void) => void;
 
 export interface ContentScriptDefinition extends ExcludableEntrypoint {
-  matches: Manifest.ContentScript['matches'];
+  matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
    */
-  runAt?: Manifest.ContentScript['run_at'];
+  runAt?: PerBrowserOption<Manifest.ContentScript['run_at']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  matchAboutBlank?: Manifest.ContentScript['match_about_blank'];
+  matchAboutBlank?: PerBrowserOption<
+    Manifest.ContentScript['match_about_blank']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeMatches?: Manifest.ContentScript['exclude_matches'];
+  excludeMatches?: PerBrowserOption<Manifest.ContentScript['exclude_matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  includeGlobs?: Manifest.ContentScript['include_globs'];
+  includeGlobs?: PerBrowserOption<Manifest.ContentScript['include_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeGlobs?: Manifest.ContentScript['exclude_globs'];
+  excludeGlobs?: PerBrowserOption<Manifest.ContentScript['exclude_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  allFrames?: Manifest.ContentScript['all_frames'];
+  allFrames?: PerBrowserOption<Manifest.ContentScript['all_frames']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  matchOriginAsFallback?: boolean;
+  matchOriginAsFallback?: PerBrowserOption<boolean>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "ISOLATED"
    */
-  world?: 'ISOLATED' | 'MAIN';
+  world?: PerBrowserOption<'ISOLATED' | 'MAIN'>;
   /**
    * Customize how imported/generated styles are injected with the content script. Regardless of the
    * mode selected, CSS will always be built and included in the output directory.
@@ -417,7 +419,7 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    *
    * @default "manifest"
    */
-  cssInjectionMode?: 'manifest' | 'manual' | 'ui';
+  cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
   /**
    * Main function executed when the content script is loaded.
    */
@@ -425,9 +427,12 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
 }
 
 export interface BackgroundScriptDefintition extends ExcludableEntrypoint {
-  type?: 'module';
+  type?: PerBrowserOption<'module'>;
+  persistent?: PerBrowserOption<boolean>;
   main(): void;
 }
+
+export type PerBrowserOption<T> = T | { [browser: TargetBrowser]: T };
 
 export interface ExcludableEntrypoint {
   /**

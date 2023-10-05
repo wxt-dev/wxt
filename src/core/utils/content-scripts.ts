@@ -1,5 +1,6 @@
 import { Manifest } from 'webextension-polyfill';
-import { ContentScriptEntrypoint } from '../types';
+import { ContentScriptEntrypoint, InternalConfig } from '../types';
+import { resolvePerBrowserOption } from './entrypoints';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -35,18 +36,34 @@ export function hashContentScriptOptions(
 
 export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
+  config: InternalConfig,
 ): Omit<Manifest.ContentScript, 'js' | 'css'> {
   return {
-    matches: options.matches,
-    all_frames: options.allFrames,
-    match_about_blank: options.matchAboutBlank,
-    exclude_globs: options.excludeGlobs,
-    exclude_matches: options.excludeMatches,
-    include_globs: options.includeGlobs,
-    run_at: options.runAt,
+    matches: resolvePerBrowserOption(options.matches, config.browser),
+    all_frames: resolvePerBrowserOption(options.allFrames, config.browser),
+    match_about_blank: resolvePerBrowserOption(
+      options.matchAboutBlank,
+      config.browser,
+    ),
+    exclude_globs: resolvePerBrowserOption(
+      options.excludeGlobs,
+      config.browser,
+    ),
+    exclude_matches: resolvePerBrowserOption(
+      options.excludeMatches,
+      config.browser,
+    ),
+    include_globs: resolvePerBrowserOption(
+      options.includeGlobs,
+      config.browser,
+    ),
+    run_at: resolvePerBrowserOption(options.runAt, config.browser),
 
     // @ts-expect-error: untyped chrome options
-    match_origin_as_fallback: options.matchOriginAsFallback,
+    match_origin_as_fallback: resolvePerBrowserOption(
+      options.matchOriginAsFallback,
+      config.browser,
+    ),
     world: options.world,
   };
 }
