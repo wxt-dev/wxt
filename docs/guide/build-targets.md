@@ -44,3 +44,67 @@ wxt build --mv2
 ```
 
 When the `-b --browser` flag is not passed, it defaults to `chrome`. So here, we're targetting MV2 for Chrome.
+
+## Customizing Entrypoints
+
+There are several ways to customize entrypoint definitions per browser.
+
+First, you can use either the `include` or `exclude` option to include or exclude the entrypoint from specific browsers. Here are some examples
+
+:::code-group
+
+```ts [Background]
+export default defineBackground({
+  // Only include a background script when targeting chrome
+  include: ['chrome'],
+});
+```
+
+```ts [Content Script]
+export default defineContentScript({
+  // Do not add this content script to the manifest when targeting firefox
+  exclude: ['firefox'],
+});
+```
+
+```html [HTML page]
+<!-- entrypoints/options.html -->
+<html>
+  <head>
+    <!-- Don't include the options page for safari -->
+    <meta name="manifest.exclude" content="['safari']" />
+  </head>
+</html>
+```
+
+:::
+
+Second, you can change individual options per-browser:
+
+:::code-group
+
+```ts [Background]
+export default defineBackground({
+  persistent: {
+    // Use a non-persistent background script for just safari
+    safari: false,
+  },
+});
+```
+
+```ts [Content Script]
+export default defineContentScript({
+  matches: {
+    // Run the content script on different pages for each browser
+    chrome: ['*://*.google.com/*'],
+    firefox: ['*://*.duckduckgo.com/*'],
+    edge: ['*://*.bing.com/*'],
+  },
+});
+```
+
+:::
+
+:::warning
+Only `defineBackground` and `defineContentScript` support per-browser options right now.
+:::
