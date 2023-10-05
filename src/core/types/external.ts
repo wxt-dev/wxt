@@ -426,6 +426,7 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
 
 export interface BackgroundScriptDefintition extends ExcludableEntrypoint {
   type?: 'module';
+  persistent?: boolean;
   main(): void;
 }
 
