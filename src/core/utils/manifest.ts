@@ -10,7 +10,10 @@ import {
 } from '../types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
-import { getEntrypointBundlePath } from './entrypoints';
+import {
+  getEntrypointBundlePath,
+  resolvePerBrowserOption,
+} from './entrypoints';
 import { ContentSecurityPolicy } from './ContentSecurityPolicy';
 import {
   hashContentScriptOptions,
@@ -295,7 +298,11 @@ function addEntrypoints(
     if (config.command === 'serve' && config.manifestVersion === 3) {
       const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        const matches = resolvePerBrowserOption(
+          script.options.matches,
+          config.browser,
+        );
+        matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
         });
       });
@@ -312,7 +319,7 @@ function addEntrypoints(
 
       const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
-          ...mapWxtOptionsToContentScript(scripts[0].options),
+          ...mapWxtOptionsToContentScript(scripts[0].options, config),
           // TOOD: Sorting css and js arrays here so we get consistent test results... but we
           // shouldn't have to. Where is the inconsistency coming from?
           css: getContentScriptCssFiles(scripts, cssMap)?.sort(),

@@ -508,4 +508,33 @@ describe('Manifest Content', () => {
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"author\\":\\"Custom Author\\"}"
     `);
   });
+
+  it.each([
+    { browser: undefined, outDir: 'chrome-mv3', expected: undefined },
+    { browser: 'chrome', outDir: 'chrome-mv3', expected: undefined },
+    { browser: 'firefox', outDir: 'firefox-mv2', expected: true },
+    { browser: 'safari', outDir: 'safari-mv2', expected: false },
+  ])(
+    'should respect the per-browser entrypoint option with %j',
+    async ({ browser, expected, outDir }) => {
+      const project = new TestProject();
+
+      project.addFile(
+        'entrypoints/background.ts',
+        `export default defineBackground({
+          persistent: {
+            firefox: true,
+            safari: false,
+          },
+          main: () => {},
+        })`,
+      );
+      await project.build({ browser });
+
+      const safariManifest = await project.getOutputManifest(
+        `.output/${outDir}/manifest.json`,
+      );
+      expect(safariManifest.background.persistent).toBe(expected);
+    },
+  );
 });

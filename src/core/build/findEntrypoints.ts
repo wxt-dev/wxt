@@ -17,7 +17,10 @@ import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
 import { importEntrypointFile } from '../utils/importEntrypointFile';
 import glob from 'fast-glob';
-import { getEntrypointName } from '../utils/entrypoints';
+import {
+  getEntrypointName,
+  resolvePerBrowserOption,
+} from '../utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../vite-plugins/noopBackground';
 import { CSS_EXTENSIONS_PATTERN } from '../utils/paths';
 
@@ -300,7 +303,11 @@ async function getBackgroundEntrypoint(
     name: 'background',
     inputPath: path,
     outputDir: config.outDir,
-    options: options,
+    options: {
+      ...options,
+      type: resolvePerBrowserOption(options.type, config.browser),
+      persistent: resolvePerBrowserOption(options.persistent, config.browser),
+    },
   };
 }
 
