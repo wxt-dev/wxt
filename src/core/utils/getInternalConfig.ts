@@ -53,7 +53,8 @@ export async function getInternalConfig(
 
   const browser = mergedConfig.browser ?? 'chrome';
   const manifestVersion =
-    mergedConfig.manifestVersion ?? (browser == 'firefox' ? 2 : 3);
+    mergedConfig.manifestVersion ??
+    (browser === 'firefox' || browser === 'safari' ? 2 : 3);
   const mode =
     mergedConfig.mode ?? (command === 'build' ? 'production' : 'development');
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
