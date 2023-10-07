@@ -56,7 +56,8 @@ export async function importEntrypointFile<T>(
         'node_modules/wxt/dist/virtual-modules/fake-browser.js',
       ),
     },
-    extensions: ['.ts', '.tsx', '.cjs', '.js', '.mjs'],
+    // List of extensions to transform with esbuild
+    extensions: ['.ts', '.cts', '.mts', '.tsx', '.js', '.cjs', '.mjs', '.jsx'],
     transform(opts) {
       const isEntrypoint = opts.filename === normalPath;
       return transformSync(

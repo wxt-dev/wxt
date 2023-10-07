@@ -1,4 +1,4 @@
-# Build Targets
+# Multiple Browsers
 
 You can build an extension for any combination of browser and manifest verison. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
 

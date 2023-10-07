@@ -26,7 +26,9 @@ There are several starting templates available.
 | <Icon name="Svelte" /> [`svelte`](https://github.com/wxt-dev/wxt/tree/main/templates/svelte)                                                            |
 | <Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png" /> [`solid`](https://github.com/wxt-dev/wxt/tree/main/templates/solid) |
 
-> All templates are in TypeScript. WXT does not support JS at this time.
+:::info
+All templates default to TypeScript. Rename the file extensions to `.js` to use JavaScript instead.
+:::
 
 ## From Scratch
 

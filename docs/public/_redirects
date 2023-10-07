@@ -5,7 +5,7 @@
 /config.html                    /api/config.html
 /entrypoints                    /entrypoints/background.html
 /get-started/assets.html        /guide/assets.html
-/get-started/build-targets.html /guide/build-targets.html
+/get-started/build-targets.html /guide/multiple-browsers.html
 /get-started/compare.html       /guide/compare.html
 /get-started/configuration.html /guide/configuration.html
 /get-started/entrypoints.html   /guide/entrypoints.html
@@ -27,3 +27,4 @@
 /guide/sidepanel.html           /entrypoints/sidepanel.html
 /guide/unlisted-pages.html      /entrypoints/unlisted-pages.html
 /guide/unlisted-scripts.html    /entrypoints/unlisted-scripts.html
+/guide/build-targets.html       /guide/multiple-browsers.html

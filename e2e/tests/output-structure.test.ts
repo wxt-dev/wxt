@@ -165,4 +165,44 @@ describe('Output Directory Structure', () => {
 
     expect(await project.fileExists('stats.html')).toBe(true);
   });
+
+  it('should support JavaScript entrypoints', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/background.js',
+      `export default defineBackground(() => {});`,
+    );
+    project.addFile('entrypoints/unlisted.js', ``);
+    project.addFile(
+      'entrypoints/content.js',
+      `export default defineContentScript({
+        matches: ["*://*.google.com/*"],
+        main() {},
+      })`,
+    );
+    project.addFile(
+      'entrypoints/named.content.jsx',
+      `export default defineContentScript({
+        matches: ["*://*.duckduckgo.com/*"],
+        main() {},
+      })`,
+    );
+
+    await project.build();
+
+    expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+      .toMatchInlineSnapshot(`
+      ".output/chrome-mv3/manifest.json
+      ----------------------------------------
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"},\\"content_scripts\\":[{\\"matches\\":[\\"*://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]},{\\"matches\\":[\\"*://*.duckduckgo.com/*\\"],\\"js\\":[\\"content-scripts/named.js\\"]}]}"
+    `);
+    expect(await project.fileExists('.output/chrome-mv3/background.js'));
+    expect(
+      await project.fileExists('.output/chrome-mv3/content-scripts/content.js'),
+    );
+    expect(
+      await project.fileExists('.output/chrome-mv3/content-scripts/named.js'),
+    );
+    expect(await project.fileExists('.output/chrome-mv3/unlisted.js'));
+  });
 });

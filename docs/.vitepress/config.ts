@@ -71,7 +71,7 @@ export default defineConfig({
             { text: 'Configuration', link: '/guide/configuration.md' },
             { text: 'Entrypoints', link: '/guide/entrypoints.md' },
             { text: 'Assets', link: '/guide/assets.md' },
-            { text: 'Build Targets', link: '/guide/build-targets.md' },
+            { text: 'Multiple Browsers', link: '/guide/multiple-browsers.md' },
             { text: 'Publishing', link: '/guide/publishing.md' },
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Manifest.json', link: '/guide/manifest.md' },

@@ -8,10 +8,10 @@ When creating content script entrypoints, they are automatically included in the
 
 <EntrypointPatterns
   :patterns="[
-    ['content.(ts|tsx)', 'content-scripts/content.js'],
-    ['content/index.(ts|tsx)', 'content-scripts/content.js'],
-    ['<name>.content.(ts|tsx)', 'content-scripts/<name>.js'],
-    ['<name>.content/index.(ts|tsx)', 'content-scripts/<name>.js'],
+    ['content.[jt]sx?', 'content-scripts/content.js'],
+    ['content/index.[jt]sx?', 'content-scripts/content.js'],
+    ['<name>.content.[jt]sx?', 'content-scripts/<name>.js'],
+    ['<name>.content/index.[jt]sx?', 'content-scripts/<name>.js'],
   ]"
 />
 

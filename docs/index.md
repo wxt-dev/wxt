@@ -22,12 +22,12 @@ features:
   - icon: 🌐
     title: Supported Browsers
     details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
-    link: /guide/build-targets
+    link: /guide/multiple-browsers
     linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
     details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
-    link: /guide/build-targets#target-manifest-version
+    link: /guide/multiple-browsers#target-manifest-version
     linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
