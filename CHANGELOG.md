@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.2...v0.7.3)
+
+### 🚀 Enhancements
+
+- Support JS entrypoints ([#155](https://github.com/wxt-dev/wxt/pull/155))
+
 ## v0.7.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.1...v0.7.2)
