@@ -1,4 +1,4 @@
-import { Entrypoint } from '../types';
+import { Entrypoint, PerBrowserOption, TargetBrowser } from '../types';
 import path, { relative, resolve } from 'node:path';
 import { normalizePath } from './paths';
 
@@ -33,4 +33,16 @@ export function getEntrypointBundlePath(
   return normalizePath(
     relative(outDir, getEntrypointOutputFile(entrypoint, ext)),
   );
+}
+
+/**
+ * Given an entrypoint option, resolve it's value based on a target browser.
+ */
+export function resolvePerBrowserOption<T>(
+  option: PerBrowserOption<T>,
+  browser: TargetBrowser,
+): T {
+  if (typeof option === 'object' && !Array.isArray(option))
+    return (option as any)[browser];
+  return option;
 }

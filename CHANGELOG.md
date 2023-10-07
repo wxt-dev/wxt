@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.7.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.1...v0.7.2)
+
+### 🚀 Enhancements
+
+- Allow customizing entrypoint options per browser ([#154](https://github.com/wxt-dev/wxt/pull/154))
+
+### 🩹 Fixes
+
+- Default safari to MV2 ([5807931](https://github.com/wxt-dev/wxt/commit/5807931))
+- Add missing `persistent` type to `defineBackgroundScript` ([d9fdcb5](https://github.com/wxt-dev/wxt/commit/d9fdcb5))
+
+### 📖 Documentation
+
+- Restructure website to improve UX ([#149](https://github.com/wxt-dev/wxt/pull/149))
+- Add docs for development and testing ([f58d69d](https://github.com/wxt-dev/wxt/commit/f58d69d))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump @types/fs-extra from 11.0.1 to 11.0.2 ([#144](https://github.com/wxt-dev/wxt/pull/144))
+- **deps-dev:** Bump @faker-js/faker from 8.0.2 to 8.1.0 ([#146](https://github.com/wxt-dev/wxt/pull/146))
+- **deps-dev:** Bump vitest-mock-extended from 1.2.1 to 1.3.0 ([#147](https://github.com/wxt-dev/wxt/pull/147))
+- **deps-dev:** Bump vitest from 0.34.3 to 0.34.6 ([#145](https://github.com/wxt-dev/wxt/pull/145))
+- **deps-dev:** Bump typescript from 5.1 to 5.2 ([#148](https://github.com/wxt-dev/wxt/pull/148))
+
 ## v0.7.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.0...v0.7.1)

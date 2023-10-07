@@ -6,7 +6,10 @@ import {
 } from './types';
 import * as vite from 'vite';
 import { Scripting } from 'webextension-polyfill';
-import { getEntrypointBundlePath } from './utils/entrypoints';
+import {
+  getEntrypointBundlePath,
+  resolvePerBrowserOption,
+} from './utils/entrypoints';
 import {
   getContentScriptCssFiles,
   getContentScriptsCssMap,
@@ -106,12 +109,18 @@ export function reloadContentScripts(
       const css = getContentScriptCssFiles([entry], cssMap);
 
       server.reloadContentScript({
-        allFrames: entry.options.allFrames,
-        excludeMatches: entry.options.excludeMatches,
-        matches: entry.options.matches,
-        runAt: entry.options.runAt,
+        allFrames: resolvePerBrowserOption(
+          entry.options.allFrames,
+          config.browser,
+        ),
+        excludeMatches: resolvePerBrowserOption(
+          entry.options.excludeMatches,
+          config.browser,
+        ),
+        matches: resolvePerBrowserOption(entry.options.matches, config.browser),
+        runAt: resolvePerBrowserOption(entry.options.runAt, config.browser),
         // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
-        world: entry.options.world,
+        world: resolvePerBrowserOption(entry.options.world, config.browser),
         js,
         css,
       });

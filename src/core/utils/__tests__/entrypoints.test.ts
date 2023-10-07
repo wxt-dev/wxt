@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { getEntrypointName, getEntrypointOutputFile } from '../entrypoints';
+import {
+  getEntrypointName,
+  getEntrypointOutputFile,
+  resolvePerBrowserOption,
+} from '../entrypoints';
 import { Entrypoint } from '../../types';
 import { resolve } from 'path';
 
@@ -47,6 +51,27 @@ describe('Entrypoint Utils', () => {
 
       const actual = getEntrypointOutputFile(entrypoint, ext);
       expect(actual).toBe(expected);
+    });
+  });
+
+  describe('resolvePerBrowserOption', () => {
+    it('should return the value directly', () => {
+      expect(resolvePerBrowserOption('some-string', '')).toEqual('some-string');
+      expect(resolvePerBrowserOption(false, '')).toEqual(false);
+      expect(resolvePerBrowserOption([1], '')).toEqual([1]);
+      expect(resolvePerBrowserOption(['string'], '')).toEqual(['string']);
+    });
+
+    it('should return the value for the specific browser', () => {
+      expect(resolvePerBrowserOption({ a: 'one', b: 'two' }, 'a')).toEqual(
+        'one',
+      );
+      expect(resolvePerBrowserOption({ c: ['one'], d: ['two'] }, 'c')).toEqual([
+        'one',
+      ]);
+      expect(resolvePerBrowserOption({ c: false, d: true }, 'e')).toEqual(
+        undefined,
+      );
     });
   });
 });
