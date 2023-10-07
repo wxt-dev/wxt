@@ -80,6 +80,12 @@ export default defineConfig({
             { text: 'Development', link: '/guide/development.md' },
             { text: 'Testing', link: '/guide/testing.md' },
             { text: 'Vite', link: '/guide/vite.md' },
+          ],
+        },
+        {
+          text: 'Other',
+          items: [
+            { text: 'Migrate to WXT', link: '/guide/migrate-to-wxt.md' },
             { text: 'Compare', link: '/guide/compare.md' },
           ],
         },

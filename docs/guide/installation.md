@@ -1,6 +1,6 @@
 # Installation
 
-Bootstrap a new project, start from scratch, or migrate an existing project.
+Bootstrap a new project, start from scratch, or [migrate an existing project](/guide/migrate-to-wxt).
 
 ## Bootstrap Project
 

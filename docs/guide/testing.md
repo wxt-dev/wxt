@@ -60,7 +60,7 @@ Eventually, WXT will provide utilities for setting up these auto-imports. For no
 
 Not all testing frameworks can handle auto-imports. If your framework or setup is not listed below, it may be easiest to disable auto-imports.
 
-To setup auto-imports manually, use [`unplugin-auto-import`](https://www.npmjs.com/package/unplugin-auto-import). It uses the same tool, `unimport`, as WXT and will result in compatiple auto-imports. `unplugin-auto-import` supports lots of different tools (vite, webpage, esbuild, rollup, etc). You can try and integrate it into your build process.
+To setup auto-imports manually, use [`unplugin-auto-import`](https://www.npmjs.com/package/unplugin-auto-import). It uses the same tool, `unimport`, as WXT and will result in compatiple auto-imports. `unplugin-auto-import` supports lots of different tools (vite, webpack, esbuild, rollup, etc). You can try and integrate it into your build process.
 
 ### Vitest (Recommended)
 
