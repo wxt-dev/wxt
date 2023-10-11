@@ -132,10 +132,17 @@ export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
         if (id === `/${virtualReactRefreshId}`) {
           return resolvedVirtualReactRefreshId;
         }
+        // Ignore chunk contents when pre-rendering
+        if (id.startsWith('/chunks/')) {
+          return '\0noop';
+        }
       },
       load(id) {
         if (id === resolvedVirtualReactRefreshId) {
           return reactRefreshPreamble;
+        }
+        if (id === '\0noop') {
+          return '';
         }
       },
     },
