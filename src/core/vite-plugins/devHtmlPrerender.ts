@@ -19,27 +19,6 @@ export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
   const virtualReactRefreshId = '@wxt/virtual-react-refresh';
   const resolvedVirtualReactRefreshId = '\0' + virtualReactRefreshId;
 
-  const pointToDevServer = (
-    document: Document,
-    server: WxtDevServer,
-    htmlPath: string,
-    querySelector: string,
-    attr: string,
-  ): void => {
-    document.querySelectorAll(querySelector).forEach((element) => {
-      const src = element.getAttribute(attr);
-      if (!src) return;
-
-      if (isAbsolute(src)) {
-        element.setAttribute(attr, server.origin + src);
-      } else if (src.startsWith('.')) {
-        const abs = resolve(dirname(htmlPath), src);
-        const pathname = relative(config.root, abs);
-        element.setAttribute(attr, `${server.origin}/${pathname}`);
-      }
-    });
-  };
-
   return [
     {
       apply: 'build',
@@ -65,8 +44,26 @@ export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
           return;
 
         const { document } = parseHTML(code);
-        pointToDevServer(document, server, id, 'script[type=module]', 'src');
-        pointToDevServer(document, server, id, 'link[rel=stylesheet]', 'href');
+
+        const pointToDevServer = (
+          querySelector: string,
+          attr: string,
+        ): void => {
+          document.querySelectorAll(querySelector).forEach((element) => {
+            const src = element.getAttribute(attr);
+            if (!src) return;
+
+            if (isAbsolute(src)) {
+              element.setAttribute(attr, server.origin + src);
+            } else if (src.startsWith('.')) {
+              const abs = resolve(dirname(id), src);
+              const pathname = relative(config.root, abs);
+              element.setAttribute(attr, `${server.origin}/${pathname}`);
+            }
+          });
+        };
+        pointToDevServer('script[type=module]', 'src');
+        pointToDevServer('link[rel=stylesheet]', 'href');
 
         // Add a script to add page reloading
         const reloader = document.createElement('script');
