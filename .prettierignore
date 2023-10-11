@@ -13,3 +13,4 @@ CHANGELOG.md
 *.txt
 _gitignore
 _redirects
+*.svelte
