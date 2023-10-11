@@ -1,5 +1,5 @@
 import * as vite from 'vite';
-import { InternalConfig, WxtDevServer } from '../types';
+import { InternalConfig } from '../types';
 import { getEntrypointName } from '../utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, isAbsolute, relative, resolve } from 'path';
