@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.3...v0.7.4)
+
+### 🩹 Fixes
+
+- Support `react-refresh` when pre-rendering HTML pages in dev mode ([#158](https://github.com/wxt-dev/wxt/pull/158))
+
+### 📖 Documentation
+
+- Add migration guides ([b58fb02](https://github.com/wxt-dev/wxt/commit/b58fb02))
+
+### 🏡 Chore
+
+- Upgrade templates to v0.7 ([#156](https://github.com/wxt-dev/wxt/pull/156))
+
 ## v0.7.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.2...v0.7.3)
