@@ -60,16 +60,19 @@ export async function generateMainfest(
 ): Promise<Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
 
+  const versionName = config.manifest.version_name ?? pkg?.version;
+  const version = config.manifest.version ?? simplifyVersion(pkg?.version);
+
   const baseManifest: Manifest.WebExtensionManifest = {
     manifest_version: config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
-    version: pkg?.version && simplifyVersion(pkg.version),
-    // Only add the version name to chromium and if the user hasn't specified a custom version.
+    version,
     version_name:
-      config.browser !== 'firefox' && !config.manifest.version
-        ? pkg?.version
-        : undefined,
+      // Firefox doesn't support version_name
+      config.browser === 'firefox' || versionName === version
+        ? undefined
+        : versionName,
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
