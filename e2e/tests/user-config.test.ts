@@ -28,7 +28,7 @@ describe('User Config', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
     `);
   });
 
@@ -54,7 +54,7 @@ describe('User Config', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
     `);
   });
 
@@ -82,7 +82,7 @@ describe('User Config', () => {
     expect(output).toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
     `);
   });
 });

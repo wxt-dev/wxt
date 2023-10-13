@@ -35,9 +35,9 @@ describe('React', () => {
     ).toBe(true);
     expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
       .toMatchInlineSnapshot(`
-      ".output/chrome-mv3/manifest.json
-      ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":\\"<all_urls>\\",\\"js\\":[\\"content-scripts/demo.js\\"]}]}"
-    `);
+        ".output/chrome-mv3/manifest.json
+        ----------------------------------------
+        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":\\"<all_urls>\\",\\"js\\":[\\"content-scripts/demo.js\\"]}]}"
+      `);
   });
 });

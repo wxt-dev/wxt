@@ -333,7 +333,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
         `);
     });
 
@@ -360,7 +360,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
         `);
     });
 
@@ -385,10 +385,10 @@ describe('Manifest Content', () => {
 
       expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
         .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/manifest.json
-        ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
-      `);
+          ".output/chrome-mv3/manifest.json
+          ----------------------------------------
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        `);
     });
 
     it('should not add a content script entry for CSS when cssInjectionMode is "ui", but add a web_accessible_resources entry for MV2', async () => {
@@ -416,7 +416,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv2/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":2,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[\\"content-scripts/content.css\\"]}"
+          {\\"manifest_version\\":2,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[\\"content-scripts/content.css\\"]}"
         `);
     });
 
@@ -445,7 +445,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}]}"
+          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}]}"
         `);
     });
   });
@@ -480,7 +480,7 @@ describe('Manifest Content', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/manifest.json
         ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"web_accessible_resources\\":[{\\"resources\\":[\\"one.png\\"],\\"matches\\":[\\"https://one.com/*\\"]},{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}],\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"web_accessible_resources\\":[{\\"resources\\":[\\"one.png\\"],\\"matches\\":[\\"https://one.com/*\\"]},{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}],\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
       `);
   });
 
@@ -505,7 +505,7 @@ describe('Manifest Content', () => {
     expect(output).toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"version_name\\":\\"0.0.0-test\\",\\"author\\":\\"Custom Author\\"}"
+      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"author\\":\\"Custom Author\\"}"
     `);
   });
 
@@ -538,7 +538,7 @@ describe('Manifest Content', () => {
     },
   );
 
-  describe.only('versions', () => {
+  describe('versions', () => {
     it.each([
       ['chrome', 3] as const,
       ['safari', 2] as const,
