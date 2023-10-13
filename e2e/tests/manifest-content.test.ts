@@ -537,4 +537,66 @@ describe('Manifest Content', () => {
       expect(safariManifest.background.persistent).toBe(expected);
     },
   );
+
+  describe.only('versions', () => {
+    it.each([
+      ['chrome', 3] as const,
+      ['safari', 2] as const,
+      ['edge', 3] as const,
+    ])(
+      'should include version_name on %s when it needs simplified',
+      async (browser, manifestVersion) => {
+        const project = new TestProject({
+          version: '1.0.0-alpha1',
+        });
+
+        await project.build({ browser, manifestVersion });
+        const manifest = await project.getOutputManifest(
+          `.output/${browser}-mv${manifestVersion}/manifest.json`,
+        );
+
+        expect(manifest.version).toBe('1.0.0');
+        expect(manifest.version_name).toBe('1.0.0-alpha1');
+      },
+    );
+
+    it.each([['firefox', 2] as const])(
+      "should not include a version_name on %s because the browser doesn't support it",
+      async (browser, manifestVersion) => {
+        const project = new TestProject({
+          version: '1.0.0-alpha1',
+        });
+
+        await project.build({ browser, manifestVersion });
+        const manifest = await project.getOutputManifest(
+          `.output/${browser}-mv${manifestVersion}/manifest.json`,
+        );
+
+        expect(manifest.version).toBe('1.0.0');
+        expect(manifest.version_name).toBeUndefined();
+      },
+    );
+
+    it.each([
+      ['chrome', 3] as const,
+      ['firefox', 2] as const,
+      ['safari', 3] as const,
+      ['edge', 3] as const,
+    ])(
+      'should not include the version_name if it is equal to version',
+      async (browser, manifestVersion) => {
+        const project = new TestProject({
+          version: '1.0.0.1',
+        });
+
+        await project.build({ browser, manifestVersion });
+        const manifest = await project.getOutputManifest(
+          `.output/${browser}-mv${manifestVersion}/manifest.json`,
+        );
+
+        expect(manifest.version).toBe('1.0.0.1');
+        expect(manifest.version_name).toBeUndefined();
+      },
+    );
+  });
 });
