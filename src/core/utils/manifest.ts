@@ -311,7 +311,7 @@ function addEntrypoints(
       );
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
-        const hash = hashContentScriptOptions(script.options);
+        const hash = hashContentScriptOptions(script.options, config);
         if (map.has(hash)) map.get(hash)?.push(script);
         else map.set(hash, [script]);
         return map;

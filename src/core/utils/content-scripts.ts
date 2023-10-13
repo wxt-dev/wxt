@@ -9,7 +9,16 @@ import { resolvePerBrowserOption } from './entrypoints';
  */
 export function hashContentScriptOptions(
   options: ContentScriptEntrypoint['options'],
+  config: InternalConfig,
 ): string {
+  const simplifiedOptions = mapWxtOptionsToContentScript(options, config);
+
+  // Remove undefined fields and use defaults to generate hash
+  // Object.keys(simplifiedOptions).forEach((key) => {
+  //   // @ts-expect-error: key not typed as keyof ...
+  //   if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
+  // });
+
   const withDefaults: ContentScriptEntrypoint['options'] = {
     excludeGlobs: [],
     excludeMatches: [],
@@ -19,8 +28,7 @@ export function hashContentScriptOptions(
     runAt: 'document_idle',
     allFrames: false,
     world: 'ISOLATED',
-    // TODO: strip undefined fields from options object to improve content script grouping.
-    ...options,
+    ...simplifiedOptions,
   };
   return JSON.stringify(
     Object.entries(withDefaults)

@@ -416,6 +416,8 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    * - `"manual"` - Exclude the CSS from the manifest. You are responsible for manually loading it
    *   onto the page. Use `browser.runtime.getURL("content-scripts/<name>.css")` to get the file's
    *   URL
+   * - `"ui"` - Exclude the CSS from the manifest. CSS will be automatically added to your UI when
+   *   calling `createContentScriptUi`
    *
    * @default "manifest"
    */
