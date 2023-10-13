@@ -201,12 +201,19 @@ async function getPopupEntrypoint(
     }
   }
 
-  const mv2KeyContent = document
+  const mv2TypeContent = document
     .querySelector("meta[name='manifest.type']")
     ?.getAttribute('content');
-  if (mv2KeyContent) {
+  if (mv2TypeContent) {
     options.mv2Key =
-      mv2KeyContent === 'page_action' ? 'page_action' : 'browser_action';
+      mv2TypeContent === 'page_action' ? 'page_action' : 'browser_action';
+  }
+
+  const browserStyleContent = document
+    .querySelector("meta[name='manifest.browser_style']")
+    ?.getAttribute('content');
+  if (browserStyleContent) {
+    options.browserStyle = browserStyleContent === 'true';
   }
 
   return {

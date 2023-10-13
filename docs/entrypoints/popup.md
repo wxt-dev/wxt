@@ -29,6 +29,7 @@
       }"
     />
     <meta name="manifest.type" content="page_action|browser_action" />
+    <meta name="manifest.browser_style" content="true|false" />
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />

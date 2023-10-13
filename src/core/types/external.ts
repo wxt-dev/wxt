@@ -343,6 +343,7 @@ export interface PopupEntrypoint extends BaseEntrypoint {
     mv2Key?: 'browser_action' | 'page_action';
     defaultIcon?: Record<string, string>;
     defaultTitle?: string;
+    browserStyle?: boolean;
   } & BaseEntrypointOptions;
 }
 
