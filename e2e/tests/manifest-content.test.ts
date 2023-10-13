@@ -201,7 +201,6 @@ describe('Manifest Content', () => {
         `import "./style.css";
         export default defineContentScript({
           matches: ["*://google.com/*"],
-          exclude: ["one"],
           main: () => {},
         })`,
       );
@@ -215,7 +214,6 @@ describe('Manifest Content', () => {
         export default defineContentScript({
           matches: ["*://google.com/*"],
           runAt: "document_end",
-          exclude: ["two"],
           main: () => {},
         })`,
       );

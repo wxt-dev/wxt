@@ -14,19 +14,20 @@ export function hashContentScriptOptions(
   const simplifiedOptions = mapWxtOptionsToContentScript(options, config);
 
   // Remove undefined fields and use defaults to generate hash
-  // Object.keys(simplifiedOptions).forEach((key) => {
-  //   // @ts-expect-error: key not typed as keyof ...
-  //   if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
-  // });
+  Object.keys(simplifiedOptions).forEach((key) => {
+    // @ts-expect-error: key not typed as keyof ...
+    if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
+  });
 
-  const withDefaults: ContentScriptEntrypoint['options'] = {
-    excludeGlobs: [],
-    excludeMatches: [],
-    includeGlobs: [],
-    matchAboutBlank: false,
-    matchOriginAsFallback: false,
-    runAt: 'document_idle',
-    allFrames: false,
+  const withDefaults: Manifest.ContentScript = {
+    exclude_globs: [],
+    exclude_matches: [],
+    include_globs: [],
+    match_about_blank: false,
+    run_at: 'document_idle',
+    all_frames: false,
+    // @ts-expect-error - not in type
+    match_origin_as_fallback: false,
     world: 'ISOLATED',
     ...simplifiedOptions,
   };
