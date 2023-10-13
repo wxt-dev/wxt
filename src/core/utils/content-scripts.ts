@@ -9,18 +9,27 @@ import { resolvePerBrowserOption } from './entrypoints';
  */
 export function hashContentScriptOptions(
   options: ContentScriptEntrypoint['options'],
+  config: InternalConfig,
 ): string {
-  const withDefaults: ContentScriptEntrypoint['options'] = {
-    excludeGlobs: [],
-    excludeMatches: [],
-    includeGlobs: [],
-    matchAboutBlank: false,
-    matchOriginAsFallback: false,
-    runAt: 'document_idle',
-    allFrames: false,
+  const simplifiedOptions = mapWxtOptionsToContentScript(options, config);
+
+  // Remove undefined fields and use defaults to generate hash
+  Object.keys(simplifiedOptions).forEach((key) => {
+    // @ts-expect-error: key not typed as keyof ...
+    if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
+  });
+
+  const withDefaults: Manifest.ContentScript = {
+    exclude_globs: [],
+    exclude_matches: [],
+    include_globs: [],
+    match_about_blank: false,
+    run_at: 'document_idle',
+    all_frames: false,
+    // @ts-expect-error - not in type
+    match_origin_as_fallback: false,
     world: 'ISOLATED',
-    // TODO: strip undefined fields from options object to improve content script grouping.
-    ...options,
+    ...simplifiedOptions,
   };
   return JSON.stringify(
     Object.entries(withDefaults)

@@ -194,15 +194,15 @@ describe('Manifest Content', () => {
   });
 
   describe('content_scripts', () => {
-    it('should group content scripts and styles together based on their matches and run_at', async () => {
+    it('should group content scripts and styles together based on their manifest properties', async () => {
       const project = new TestProject();
       project.addFile(
         'entrypoints/one.content/index.ts',
         `import "./style.css";
-      export default defineContentScript({
-        matches: ["*://google.com/*"],
-        main: () => {},
-      })`,
+        export default defineContentScript({
+          matches: ["*://google.com/*"],
+          main: () => {},
+        })`,
       );
       project.addFile(
         'entrypoints/one.content/style.css',
@@ -211,11 +211,11 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/two.content/index.ts',
         `import "./style.css";
-      export default defineContentScript({
-        matches: ["*://google.com/*"],
-        runAt: "document_end",
-        main: () => {},
-      })`,
+        export default defineContentScript({
+          matches: ["*://google.com/*"],
+          runAt: "document_end",
+          main: () => {},
+        })`,
       );
       project.addFile(
         'entrypoints/two.content/style.css',
@@ -224,11 +224,11 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/three.content/index.ts',
         `import "./style.css";
-      export default defineContentScript({
-        matches: ["*://google.com/*"],
-        runAt: "document_end",
-        main: () => {},
-      })`,
+        export default defineContentScript({
+          matches: ["*://google.com/*"],
+          runAt: "document_end",
+          main: () => {},
+        })`,
       );
       project.addFile(
         'entrypoints/three.content/style.css',
@@ -237,11 +237,11 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/four.content/index.ts',
         `import "./style.css";
-      export default defineContentScript({
-        matches: ["*://duckduckgo.com/*"],
-        runAt: "document_end",
-        main: () => {},
-      })`,
+        export default defineContentScript({
+          matches: ["*://duckduckgo.com/*"],
+          runAt: "document_end",
+          main: () => {},
+        })`,
       );
       project.addFile(
         'entrypoints/four.content/style.css',
@@ -276,15 +276,15 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/one.content/index.ts',
         `export default defineContentScript({
-        matches: ["*://google.com/*"],
-        main: () => {},
-      })`,
+          matches: ["*://google.com/*"],
+          main: () => {},
+        })`,
       );
       project.addFile(
         'entrypoints/two.content/style.css',
         `body {
-        background-color: red;
-      }`,
+          background-color: red;
+        }`,
       );
       project.setConfigFileConfig({
         manifest: {
