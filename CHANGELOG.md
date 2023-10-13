@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.7.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.4...v0.7.5)
+
+### 🩹 Fixes
+
+- More consistent `version_name` generation between browsers ([#163](https://github.com/wxt-dev/wxt/pull/163))
+- Ignore non-manifest fields when merging content script entries ([#164](https://github.com/wxt-dev/wxt/pull/164))
+- Add `browser_style` to popup options ([#165](https://github.com/wxt-dev/wxt/pull/165))
+
 ## v0.7.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.3...v0.7.4)
