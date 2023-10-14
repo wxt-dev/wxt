@@ -18,7 +18,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Use `defineUnlistedScript` to define unlisted scripts ([#167](https://github.com/wxt-dev/wxt/pull/167))
+- ⚠️  Unlisted scripts must now `export default defineUnlistedScript(...)` ([#167](https://github.com/wxt-dev/wxt/pull/167))
 - ⚠️  Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
 
 ### ❤️ Contributors
