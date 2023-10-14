@@ -6,7 +6,7 @@ declare module '*?raw' {
 }
 
 declare module 'virtual:user-background' {
-  const definition: import('../../').BackgroundScriptDefintition;
+  const definition: import('../../').BackgroundDefinition;
   export default definition;
 }
 

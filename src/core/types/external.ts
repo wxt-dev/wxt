@@ -429,7 +429,7 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
   main(ctx: ContentScriptContext): void | Promise<void>;
 }
 
-export interface BackgroundScriptDefintition extends ExcludableEntrypoint {
+export interface BackgroundDefinition extends ExcludableEntrypoint {
   type?: PerBrowserOption<'module'>;
   persistent?: PerBrowserOption<boolean>;
   main(): void;

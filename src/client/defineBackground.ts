@@ -1,12 +1,12 @@
-import { BackgroundScriptDefintition } from '..';
+import { BackgroundDefinition } from '..';
 
-export function defineBackground(main: () => void): BackgroundScriptDefintition;
+export function defineBackground(main: () => void): BackgroundDefinition;
 export function defineBackground(
-  definition: BackgroundScriptDefintition,
-): BackgroundScriptDefintition;
+  definition: BackgroundDefinition,
+): BackgroundDefinition;
 export function defineBackground(
-  arg: (() => void) | BackgroundScriptDefintition,
-): BackgroundScriptDefintition {
+  arg: (() => void) | BackgroundDefinition,
+): BackgroundDefinition {
   if (typeof arg === 'function') return { main: arg };
   return arg;
 }

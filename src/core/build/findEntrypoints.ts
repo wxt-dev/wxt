@@ -1,7 +1,7 @@
 import { relative, resolve } from 'path';
 import {
   BackgroundEntrypoint,
-  BackgroundScriptDefintition,
+  BackgroundDefinition,
   BaseEntrypointOptions,
   ContentScriptDefinition,
   ContentScriptEntrypoint,
@@ -295,10 +295,12 @@ async function getBackgroundEntrypoint(
   config: InternalConfig,
   path: string,
 ): Promise<BackgroundEntrypoint> {
-  let options: Omit<BackgroundScriptDefintition, 'main'> = {};
+  let options: Omit<BackgroundDefinition, 'main'> = {};
   if (path !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
-    const defaultExport =
-      await importEntrypointFile<BackgroundScriptDefintition>(path, config);
+    const defaultExport = await importEntrypointFile<BackgroundDefinition>(
+      path,
+      config,
+    );
     if (defaultExport == null) {
       throw Error('Background script does not have a default export');
     }

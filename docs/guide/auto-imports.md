@@ -12,7 +12,7 @@ Some WXT APIs can be used without importing them:
 
 - [`browser`](/api/wxt-browser#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
 - [`defineContentScript`](/api/wxt-client#defiencontentscript) from `wxt/client`
-- [`defineBackground`](/api/wxt-client#definebackgroundscript) from `wxt/client`
+- [`defineBackground`](/api/wxt-client#definebackground) from `wxt/client`
 - [`createContentScriptUi`](/api/wxt-client#createcontentscriptui) from `wxt/client`
 
 And more. All [`wxt/client`](/api/wxt-client) APIs can be used without imports.
