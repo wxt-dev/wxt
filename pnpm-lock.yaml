@@ -85,7 +85,7 @@ importers:
         version: 3.3.0
       vite:
         specifier: ^4.4.11
-        version: 4.4.11(@types/node@20.5.9)
+        version: 4.4.11(@types/node@20.8.6)
       web-ext-run:
         specifier: ^0.1.0
         version: 0.1.0
@@ -106,8 +106,8 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
       '@types/node':
-        specifier: ^20.4.5
-        version: 20.5.9
+        specifier: ^20.8.6
+        version: 20.8.6
       '@types/prompts':
         specifier: ^2.4.4
         version: 2.4.4
@@ -149,7 +149,7 @@ importers:
         version: 5.2.2
       vitepress:
         specifier: 1.0.0-rc.10
-        version: 1.0.0-rc.10(@types/node@20.5.9)
+        version: 1.0.0-rc.10(@types/node@20.8.6)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(jsdom@22.1.0)
@@ -1005,7 +1005,7 @@ packages:
     resolution: {integrity: sha512-c0hrgAOVYr21EX8J0jBMXGLMgJqVf/v6yxi0dLaJboW9aQPh16Id+z6w2Tx1hm+piJOLv8xPfVKZCLfjPw/IMQ==}
     dependencies:
       '@types/jsonfile': 6.1.1
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
     dev: true
 
   /@types/http-cache-semantics@4.0.1:
@@ -1019,7 +1019,7 @@ packages:
   /@types/jsonfile@6.1.1:
     resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
     dependencies:
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
     dev: true
 
   /@types/lodash.merge@4.6.7:
@@ -1036,13 +1036,15 @@ packages:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
     dev: false
 
-  /@types/node@20.5.9:
-    resolution: {integrity: sha512-PcGNd//40kHAS3sTlzKB9C9XL4K0sTup8nbG5lC14kzEteTNuAFh9u5nA0o5TWnSG2r/JNPRXFVcHJIIeRlmqQ==}
+  /@types/node@20.8.6:
+    resolution: {integrity: sha512-eWO4K2Ji70QzKUqRy6oyJWUeB7+g2cRagT3T/nxYibYcT4y2BDL8lqolRXjTHmkZCdJfIPaY73KbJAZmcryxTQ==}
+    dependencies:
+      undici-types: 5.25.3
 
   /@types/prompts@2.4.4:
     resolution: {integrity: sha512-p5N9uoTH76lLvSAaYSZtBCdEXzpOOufsRjnhjVSrZGXikVGHX9+cc9ERtHRV4hvBKHyZb1bg4K+56Bd2TqUn4A==}
     dependencies:
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
       kleur: 3.0.3
     dev: true
 
@@ -1671,7 +1673,7 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -4680,6 +4682,9 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
+  /undici-types@5.25.3:
+    resolution: {integrity: sha512-Ga1jfYwRn7+cP9v8auvEXN1rX3sWqlayd4HP7OKk4mZWylEmu3KzXDUGrQUN6Ol7qo1gPvB2e5gX6udnyEPgdA==}
+
   /unimport@3.3.0:
     resolution: {integrity: sha512-3jhq3ZG5hFZzrWGDCpx83kjPzefP/EeuKkIO1T0MA4Zwj+dO/Og1mFvZ4aZ5WSDm0FVbbdVIRH1zKBG7c4wOpg==}
     dependencies:
@@ -4781,7 +4786,7 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-node@0.34.6(@types/node@20.5.9):
+  /vite-node@0.34.6(@types/node@20.8.6):
     resolution: {integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -4791,7 +4796,7 @@ packages:
       mlly: 1.4.2
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.4.11(@types/node@20.5.9)
+      vite: 4.4.11(@types/node@20.8.6)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4803,7 +4808,7 @@ packages:
       - terser
     dev: true
 
-  /vite@4.4.11(@types/node@20.5.9):
+  /vite@4.4.11(@types/node@20.8.6):
     resolution: {integrity: sha512-ksNZJlkcU9b0lBwAGZGGaZHCMqHsc8OpgtoYhsQ4/I2v5cnpmmmqe5pM4nv/4Hn6G/2GhTdj0DhZh2e+Er1q5A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -4831,14 +4836,14 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
       esbuild: 0.18.20
       postcss: 8.4.27
       rollup: 3.28.0
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitepress@1.0.0-rc.10(@types/node@20.5.9):
+  /vitepress@1.0.0-rc.10(@types/node@20.8.6):
     resolution: {integrity: sha512-+MsahIWqq5WUEmj6MR4obcKYbT7im07jZPCQPdNJExkeOSbOAJ4xypSLx88x7rvtzWHhHc5aXbOhCRvGEGjFrw==}
     hasBin: true
     dependencies:
@@ -4851,7 +4856,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.1.0
       shiki: 0.14.3
-      vite: 4.4.11(@types/node@20.5.9)
+      vite: 4.4.11(@types/node@20.8.6)
       vue: 3.3.4
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -4924,7 +4929,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.5
       '@types/chai-subset': 1.3.3
-      '@types/node': 20.5.9
+      '@types/node': 20.8.6
       '@vitest/expect': 0.34.6
       '@vitest/runner': 0.34.6
       '@vitest/snapshot': 0.34.6
@@ -4944,8 +4949,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.0
       tinypool: 0.7.0
-      vite: 4.4.11(@types/node@20.5.9)
-      vite-node: 0.34.6(@types/node@20.5.9)
+      vite: 4.4.11(@types/node@20.8.6)
+      vite-node: 0.34.6(@types/node@20.8.6)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
