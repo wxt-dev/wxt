@@ -124,6 +124,7 @@ export default defineConfig({
             { text: 'wxt', link: '/api/wxt.md' },
             { text: 'wxt/browser', link: '/api/wxt-browser.md' },
             { text: 'wxt/client', link: '/api/wxt-client.md' },
+            { text: 'wxt/sandbox', link: '/api/wxt-sandbox.md' },
           ],
         },
       ],
