@@ -5,7 +5,11 @@ describe('Remote Code', () => {
   it('should download "url:*" modules and include them in the final bundle', async () => {
     const url = 'https://code.jquery.com/jquery-3.7.1.slim.min.js';
     const project = new TestProject();
-    project.addFile('entrypoints/popup.ts', `import "url:${url}"`);
+    project.addFile(
+      'entrypoints/popup.ts',
+      `import "url:${url}"
+      export default defineUnlistedScript(() => {})`,
+    );
 
     await project.build();
 

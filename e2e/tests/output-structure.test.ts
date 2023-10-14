@@ -172,7 +172,10 @@ describe('Output Directory Structure', () => {
       'entrypoints/background.js',
       `export default defineBackground(() => {});`,
     );
-    project.addFile('entrypoints/unlisted.js', ``);
+    project.addFile(
+      'entrypoints/unlisted.js',
+      `export default defineUnlistedScript(() => {})`,
+    );
     project.addFile(
       'entrypoints/content.js',
       `export default defineContentScript({
