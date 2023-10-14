@@ -237,10 +237,13 @@ async function resolveInternalViteConfig(
   internalVite.plugins.push(plugins.devHtmlPrerender(finalConfig));
   internalVite.plugins.push(plugins.unimport(finalConfig));
   internalVite.plugins.push(
-    plugins.virtualEntrypoin('background', finalConfig),
+    plugins.virtualEntrypoint('background', finalConfig),
   );
   internalVite.plugins.push(
-    plugins.virtualEntrypoin('content-script', finalConfig),
+    plugins.virtualEntrypoint('content-script', finalConfig),
+  );
+  internalVite.plugins.push(
+    plugins.virtualEntrypoint('unlisted-script', finalConfig),
   );
   internalVite.plugins.push(plugins.devServerGlobals(finalConfig));
   internalVite.plugins.push(plugins.tsconfigPaths(finalConfig));

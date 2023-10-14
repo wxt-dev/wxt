@@ -7,7 +7,7 @@ import { normalizePath } from '../utils/paths';
 /**
  * Wraps a user's entrypoint with a vitual version with additional logic.
  */
-export function virtualEntrypoin(
+export function virtualEntrypoint(
   type: Entrypoint['type'],
   config: InternalConfig,
 ): Plugin {

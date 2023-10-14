@@ -37,6 +37,6 @@ try {
     );
   }
 } catch (err) {
-  logger.error('The background script crashed on startup!');
+  logger.error('The background crashed on startup!');
   throw err;
 }

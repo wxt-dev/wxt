@@ -53,7 +53,11 @@ async function buildSingleEntrypoint(
   config: InternalConfig,
 ): Promise<BuildStepOutput> {
   // Should this entrypoint be wrapped by the vite-plugins/virtualEntrypoint plugin?
-  const isVirtual = ['background', 'content-script'].includes(entrypoint.type);
+  const isVirtual = [
+    'background',
+    'content-script',
+    'unlisted-script',
+  ].includes(entrypoint.type);
   const entry = isVirtual
     ? `virtual:wxt-${entrypoint.type}?${entrypoint.inputPath}`
     : entrypoint.inputPath;

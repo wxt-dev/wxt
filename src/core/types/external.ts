@@ -435,6 +435,13 @@ export interface BackgroundDefinition extends ExcludableEntrypoint {
   main(): void;
 }
 
+export interface UnlistedScriptDefinition extends ExcludableEntrypoint {
+  /**
+   * Main function executed when the unlisted script is ran.
+   */
+  main(): void | Promise<void>;
+}
+
 export type PerBrowserOption<T> = T | { [browser: TargetBrowser]: T };
 
 export interface ExcludableEntrypoint {

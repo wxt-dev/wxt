@@ -9,6 +9,9 @@ import { ContentScriptContext } from '../utils/ContentScriptContext';
 
     await main(ctx);
   } catch (err) {
-    logger.error('The content script crashed on startup!', err);
+    logger.error(
+      `The content script "${__ENTRYPOINT__}" crashed on startup!`,
+      err,
+    );
   }
 })();
