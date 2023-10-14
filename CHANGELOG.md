@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.8.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.5...v0.8.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Use `defineUnlistedScript` to define unlisted scripts ([#167](https://github.com/wxt-dev/wxt/pull/167))
+
+### 📖 Documentation
+
+- Fix wrong links ([#166](https://github.com/wxt-dev/wxt/pull/166))
+
+### 🌊 Types
+
+- ⚠️  Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Use `defineUnlistedScript` to define unlisted scripts ([#167](https://github.com/wxt-dev/wxt/pull/167))
+- ⚠️  Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
+
+### ❤️ Contributors
+
+- 渣渣120 <WOSHIZHAZHA120@qq.com>
+
 ## v0.7.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.4...v0.7.5)
