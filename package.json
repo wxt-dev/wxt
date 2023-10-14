@@ -94,7 +94,7 @@
     "prompts": "^2.4.2",
     "rollup-plugin-visualizer": "^5.9.2",
     "unimport": "^3.1.0",
-    "vite": "^4.4.7",
+    "vite": "^4.4.11",
     "web-ext-run": "^0.1.0",
     "webextension-polyfill": "^0.10.0",
     "zip-dir": "^2.0.0"
