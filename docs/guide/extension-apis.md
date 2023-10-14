@@ -79,8 +79,8 @@ There are a number of message passing libraries you can use to improve the messa
 
 Here are some that are compatible with WXT (because they are based off `webextension-polyfill` as well):
 
-- [`@webext-core/messaging`](https://webext-core.aklinker1.io/guide/proxy-service/) - "A light-weight, type-safe wrapper around the `browser.runtime` messaging APIs"
-- [`@webext-core/proxy-service`](https://webext-core.aklinker1.io/guide/messaging/) - "Create TRPC-like services that can be called from anywhere but run in the background"
+- [`@webext-core/messaging`](https://webext-core.aklinker1.io/guide/messaging/) - "A light-weight, type-safe wrapper around the `browser.runtime` messaging APIs"
+- [`@webext-core/proxy-service`](https://webext-core.aklinker1.io/guide/proxy-service/) - "Create TRPC-like services that can be called from anywhere but run in the background"
 - [`webext-bridge`](https://github.com/zikaari/webext-bridge) - "Messaging in Web Extensions made super easy. Out of the box."
 
 ## Browser Differences
