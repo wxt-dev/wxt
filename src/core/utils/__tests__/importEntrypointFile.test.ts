@@ -10,7 +10,7 @@ const config = fakeInternalConfig({
   imports: false,
   debug: false,
   // Run inside the demo folder so that wxt is in the node_modules
-  // WXT must also be build to tests to pass in this case
+  // WXT must also be built for these tests to pass
   root: 'demo',
 });
 
