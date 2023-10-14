@@ -49,7 +49,6 @@ export async function importEntrypointFile<T>(
     cache: false,
     debug: config.debug,
     esmResolve: true,
-    interopDefault: true,
     alias: {
       'webextension-polyfill': resolve(
         config.root,
@@ -69,7 +68,8 @@ export async function importEntrypointFile<T>(
   });
 
   try {
-    return await jiti(path);
+    const res = await jiti(path);
+    return res.default;
   } catch (err) {
     config.logger.error(err);
     throw err;

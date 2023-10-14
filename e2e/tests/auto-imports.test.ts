@@ -22,6 +22,7 @@ describe('Auto Imports', () => {
             const defineBackground: typeof import('wxt/client')['defineBackground']
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/client')['defineContentScript']
+            const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
           }
           "
         `);

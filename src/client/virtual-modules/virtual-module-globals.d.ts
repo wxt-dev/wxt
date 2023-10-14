@@ -15,6 +15,11 @@ declare module 'virtual:user-content-script' {
   export default definition;
 }
 
+declare module 'virtual:user-unlisted-script' {
+  const definition: import('../../').UnlistedScriptDefinition;
+  export default definition;
+}
+
 // Globals defined by the vite-plugins/devServerGlobals.ts and utils/globals.ts
 declare const __COMMAND__: 'build' | 'serve';
 declare const __DEV_SERVER_PROTOCOL__: string;

@@ -2,6 +2,8 @@
 
 TypeScript files that are built, but are not included in the manifest.
 
+You are responsible for loading/running these scripts where needed.
+
 ## Filenames
 
 <EntrypointPatterns
@@ -13,8 +15,23 @@ TypeScript files that are built, but are not included in the manifest.
 
 ## Definition
 
-Unlike the background or content scripts, you can define this script's logic in the top level scope.
+```ts
+export default defineUnlistedScript(() => {
+  // Executed when script is loaded
+});
+```
+
+or
 
 ```ts
-// Code goes here
+export default defineUnlistedScript({
+  // Set include/exclude if the script should be removed from some builds
+  include: undefined | string[],
+  exclude: undefined | string[],
+
+  // Executed when script is loaded
+  main() {
+    // ...
+  },
+});
 ```

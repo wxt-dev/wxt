@@ -10,7 +10,7 @@ const spinner = ora('Building WXT').start();
 
 const startTime = Date.now();
 const outDir = 'dist';
-const virtualEntrypoints = ['background', 'content-script'];
+const virtualEntrypoints = ['background', 'content-script', 'unlisted-script'];
 
 await fs.rm(outDir, { recursive: true, force: true });
 
@@ -47,6 +47,13 @@ await Promise.all([
     dts: true,
     silent: true,
     external: ['vite'],
+  }),
+  tsup.build({
+    entry: { sandbox: 'src/client/sandbox/index.ts' },
+    format: ['esm'],
+    sourcemap: 'inline',
+    dts: true,
+    silent: true,
   }),
   ...virtualEntrypoints.map((entryName) =>
     tsup.build({

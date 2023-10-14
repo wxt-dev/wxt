@@ -44,6 +44,10 @@
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
     },
+    "./sandbox": {
+      "import": "./dist/sandbox.js",
+      "types": "./dist/sandbox.d.ts"
+    },
     "./browser": {
       "import": "./dist/browser.js",
       "types": "./dist/browser.d.ts"

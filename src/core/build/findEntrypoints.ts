@@ -10,6 +10,7 @@ import {
   InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
+  UnlistedScriptDefinition,
 } from '../types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
@@ -74,14 +75,13 @@ export async function findEntrypoints(
           hasBackground = true;
           break;
         case 'content-script':
-          entrypoint = await getContentScriptEntrypoint(
-            config,
-            getEntrypointName(config.entrypointsDir, path),
-            path,
-          );
+          entrypoint = await getContentScriptEntrypoint(config, path);
           break;
         case 'unlisted-page':
           entrypoint = await getUnlistedPageEntrypoint(config, path);
+          break;
+        case 'unlisted-script':
+          entrypoint = await getUnlistedScriptEntrypoint(config, path);
           break;
         case 'content-script-style':
           entrypoint = {
@@ -289,12 +289,42 @@ async function getUnlistedPageEntrypoint(
 }
 
 /**
+ * @param path Absolute path to the script's file.
+ * @param content String contents of the file at the path.
+ */
+async function getUnlistedScriptEntrypoint(
+  config: InternalConfig,
+  path: string,
+): Promise<GenericEntrypoint> {
+  const name = getEntrypointName(config.entrypointsDir, path);
+  const defaultExport = await importEntrypointFile<UnlistedScriptDefinition>(
+    path,
+    config,
+  );
+  if (defaultExport == null) {
+    throw Error(
+      `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
+    );
+  }
+  const { main: _, ...moduleOptions } = defaultExport;
+  const options: Omit<UnlistedScriptDefinition, 'main'> = moduleOptions;
+  return {
+    type: 'unlisted-script',
+    name,
+    inputPath: path,
+    outputDir: config.outDir,
+    options,
+  };
+}
+
+/**
  * @param path Absolute path to the background's TS file.
  */
 async function getBackgroundEntrypoint(
   config: InternalConfig,
   path: string,
 ): Promise<BackgroundEntrypoint> {
+  const name = 'background';
   let options: Omit<BackgroundDefinition, 'main'> = {};
   if (path !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
     const defaultExport = await importEntrypointFile<BackgroundDefinition>(
@@ -302,14 +332,16 @@ async function getBackgroundEntrypoint(
       config,
     );
     if (defaultExport == null) {
-      throw Error('Background script does not have a default export');
+      throw Error(
+        `${name}: Default export not found, did you forget to call "export default defineBackground(...)"?`,
+      );
     }
     const { main: _, ...moduleOptions } = defaultExport;
     options = moduleOptions;
   }
   return {
     type: 'background',
-    name: 'background',
+    name,
     inputPath: path,
     outputDir: config.outDir,
     options: {
@@ -325,17 +357,19 @@ async function getBackgroundEntrypoint(
  */
 async function getContentScriptEntrypoint(
   config: InternalConfig,
-  name: string,
   path: string,
 ): Promise<ContentScriptEntrypoint> {
+  const name = getEntrypointName(config.entrypointsDir, path);
   const { main: _, ...options } =
     await importEntrypointFile<ContentScriptDefinition>(path, config);
   if (options == null) {
-    throw Error(`Content script ${name} does not have a default export`);
+    throw Error(
+      `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
+    );
   }
   return {
     type: 'content-script',
-    name: getEntrypointName(config.entrypointsDir, path),
+    name,
     inputPath: path,
     outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
     options,

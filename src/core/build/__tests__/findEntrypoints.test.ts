@@ -261,6 +261,43 @@ describe('findEntrypoints', () => {
     });
   });
 
+  it.each<[string, Omit<GenericEntrypoint, 'options'>]>([
+    [
+      'injected.ts',
+      {
+        type: 'unlisted-script',
+        name: 'injected',
+        inputPath: resolve(config.entrypointsDir, 'injected.ts'),
+        outputDir: config.outDir,
+      },
+    ],
+    [
+      'injected/index.ts',
+      {
+        type: 'unlisted-script',
+        name: 'injected',
+        inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
+        outputDir: config.outDir,
+      },
+    ],
+  ])(
+    'should find and load unlisted-script entrypoint config from %s',
+    async (path, expected) => {
+      const options: GenericEntrypoint['options'] = {};
+      globMock.mockResolvedValueOnce([path]);
+      importEntrypointFileMock.mockResolvedValue(options);
+
+      const entrypoints = await findEntrypoints(config);
+
+      expect(entrypoints).toHaveLength(1);
+      expect(entrypoints[0]).toEqual({ ...expected, options });
+      expect(importEntrypointFileMock).toBeCalledWith(
+        expected.inputPath,
+        config,
+      );
+    },
+  );
+
   it.each<[string, GenericEntrypoint]>([
     // Sandbox
     [
@@ -451,28 +488,6 @@ describe('findEntrypoints', () => {
         type: 'unlisted-page',
         name: 'onboarding',
         inputPath: resolve(config.entrypointsDir, 'onboarding/index.html'),
-        outputDir: config.outDir,
-        options: {},
-      },
-    ],
-
-    // unlisted-script
-    [
-      'injected.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected.ts'),
-        outputDir: config.outDir,
-        options: {},
-      },
-    ],
-    [
-      'injected/index.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
         outputDir: config.outDir,
         options: {},
       },
