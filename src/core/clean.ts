@@ -8,6 +8,9 @@ import pc from 'picocolors';
  * Remove generated/temp files from the directory.
  *
  * @param root The directory to look for generated/temp files in. Defaults to `process.cwd()`. Can be relative to `process.cwd()` or absolute.
+ *
+ * @example
+ * await clean();
  */
 export async function clean(root = process.cwd()) {
   consola.info('Cleaning Project');

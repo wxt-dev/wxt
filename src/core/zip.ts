@@ -12,7 +12,12 @@ import { printFileList } from './log/printFileList';
  * Zip the extension for distribution. Does not build, just zips the output that should exist for
  * the given config.
  *
- * Returns a list of ZIP files that were created.
+ * @returns A list of ZIP files that were created.
+ *
+ * @example
+ * const config: InlineConfig = {};
+ * const result = await build(config);
+ * await zipExtension(config, result);
  */
 export async function zipExtension(
   config: InternalConfig,
