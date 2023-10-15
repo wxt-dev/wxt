@@ -32,8 +32,7 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
 }
 
 /**
- * Creates a dev server, pre-builds all the files that need to exist to load the extension, and open
- * the browser with the extension installed.
+ * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
  */
 export async function createServer(
   config?: InlineConfig,

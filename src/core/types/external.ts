@@ -110,12 +110,12 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{name}` - The project's name converted to kebab-case
-     * - `{version}` - The version_name or version from the manifest
-     * - `{browser}` - The target browser from the `--browser` CLI flag
-     * - `{manifestVersion}` - Either "2" or "3"
+     * - `{{name}}` - The project's name converted to kebab-case
+     * - `{{version}}` - The version_name or version from the manifest
+     * - `{{browser}}` - The target browser from the `--browser` CLI flag
+     * - `{{manifestVersion}}` - Either "2" or "3"
      *
-     * @default "{name}-{version}-{browser}.zip"
+     * @default "{{name}}-{{version}}-{{browser}}.zip"
      */
     artifactTemplate?: string;
     /**
@@ -123,12 +123,12 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{name}` - The project's name converted to kebab-case
-     * - `{version}` - The version_name or version from the manifest
-     * - `{browser}` - The target browser from the `--browser` CLI flag
-     * - `{manifestVersion}` - Either "2" or "3"
+     * - `{{name}}` - The project's name converted to kebab-case
+     * - `{{version}}` - The version_name or version from the manifest
+     * - `{{browser}}` - The target browser from the `--browser` CLI flag
+     * - `{{manifestVersion}}` - Either "2" or "3"
      *
-     * @default "{name}-{version}-sources.zip"
+     * @default "{{name}}-{{version}}-sources.zip"
      */
     sourcesTemplate?: string;
     /**
