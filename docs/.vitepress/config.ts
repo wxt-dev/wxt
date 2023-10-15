@@ -1,6 +1,6 @@
 import { DefaultTheme, defineConfig } from 'vitepress';
 import { generateCliDocs } from './plugins/generate-cli-docs';
-import typedocSidebar from '../api/reference/typedoc-sidebar.json';
+import typedocSidebar from '../api/typedoc-sidebar.json';
 
 const filteredTypedocSidebar = typedocSidebar.filter(
   (item) => item.text !== 'API',

@@ -6,7 +6,7 @@
     "../src/client/sandbox"
   ],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
-  "out": "./api/reference",
+  "out": "./api",
   "githubPages": false,
   "excludePrivate": true,
   "excludeProtected": true,
