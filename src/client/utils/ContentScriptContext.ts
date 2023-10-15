@@ -10,7 +10,7 @@ import { logger } from './logger';
  * content scripts instead of `window.setTimeout` or `window.setInterval`.
  */
 export class ContentScriptContext extends AbortController {
-  static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
+  private static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
 
   #isTopFrame = window.self === window.top;
 
@@ -150,6 +150,7 @@ export class ContentScriptContext extends AbortController {
   }
 
   /**
+   * @internal
    * Abort the abort controller and execute all `onInvalidated` listeners.
    */
   notifyInvalidated() {

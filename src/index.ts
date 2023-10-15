@@ -1,3 +1,6 @@
+/**
+ * @module wxt
+ */
 import { BuildOutput, WxtDevServer, InlineConfig } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import pc from 'picocolors';
@@ -22,6 +25,11 @@ export * from './core/utils/defineRunnerConfig';
 
 /**
  * Bundles the extension for production. Returns a promise of the build result.
+ *
+ * @example
+ * const res = await build({
+ *   // Enter config...
+ * })
  */
 export async function build(config: InlineConfig): Promise<BuildOutput> {
   const internalConfig = await getInternalConfig(config, 'build');
@@ -29,8 +37,13 @@ export async function build(config: InlineConfig): Promise<BuildOutput> {
 }
 
 /**
- * Creates a dev server, pre-builds all the files that need to exist to load the extension, and open
- * the browser with the extension installed.
+ * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
+ *
+ * @example
+ * const server = await wxt.createServer({
+ *   // Enter config...
+ * });
+ * await server.start();
  */
 export async function createServer(
   config?: InlineConfig,

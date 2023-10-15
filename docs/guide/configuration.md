@@ -15,7 +15,7 @@ export default defineConfig({
 ```
 
 :::info
-See the [Config reference](/api/config) for a full list of options.
+See the [Config reference](/api/wxt/interfaces/InlineConfig) for a full list of options.
 :::
 
 ## Directory Config

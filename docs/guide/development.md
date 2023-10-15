@@ -15,7 +15,7 @@ WXT's main goal is providing the best DX it possibly can. When running your exte
 
 ## Configure Browser Startup
 
-WXT uses [`web-ext` by Mozilla](https://github.com/mozilla/web-ext) to automatically open a browser with the extension installed. You can configure the runner's behavior via the [`runner`](/api/config#runner.disabled) option, or in a separate gitignored file, `web-ext.config.ts`.
+WXT uses [`web-ext` by Mozilla](https://github.com/mozilla/web-ext) to automatically open a browser with the extension installed. You can configure the runner's behavior via the [`runner`](/api/wxt/interfaces/InlineConfig#runner) option, or in a separate gitignored file, `web-ext.config.ts`.
 
 :::code-group
 

@@ -10,13 +10,13 @@ To setup your test environment for auto-imports, see [Testing](/guide/testing).
 
 Some WXT APIs can be used without importing them:
 
-- [`browser`](/api/wxt-browser#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
-- [`defineContentScript`](/api/wxt-client#defiencontentscript) from `wxt/client`
-- [`defineBackground`](/api/wxt-client#definebackground) from `wxt/client`
-- [`createContentScriptUi`](/api/wxt-client#createcontentscriptui) from `wxt/client`
-- [`defineUnlistedScript`](/api/wxt-sandbox#defineunlistedscript) from `wxt/sandbox`
+- [`browser`](/api/wxt/browser/variables/browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
+- [`defineContentScript`](/api/wxt/client/functions/defineContentScript) from `wxt/client`
+- [`defineBackground`](/api/wxt/client/functions/defineBackground) from `wxt/client`
+- [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi) from `wxt/client`
+- [`defineUnlistedScript`](/api/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
 
-And more. All [`wxt/client`](/api/wxt-client) APIs can be used without imports.
+And more. All `wxt/*` APIs can be used without imports.
 
 ## Project Auto-imports
 

@@ -8,7 +8,7 @@ let hasGenerated = false;
 
 const cliDir = resolve('src/cli/commands');
 const cliDirGlob = resolve(cliDir, '**');
-const cliTemplatePath = resolve('docs/api/cli.tpl.md');
+const cliTemplatePath = resolve('docs/.vitepress/plugins/cli.tpl.md');
 const cliPath = resolve('docs/api/cli.md');
 
 const PREFACE = `<!--
