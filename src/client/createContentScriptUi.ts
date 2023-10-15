@@ -7,7 +7,7 @@ import { ContentScriptContext } from '.';
  * Utility for mounting content script UI's with isolated styles. Automatically removed from the DOM
  * when the content script's context is invalidated.
  *
- * See <https://wxt.dev/entrypoints/content-scripts.html#ui> for full documentation.
+ * See https://wxt.dev/entrypoints/content-scripts.html#ui for full documentation.
  *
  * @example
  * // entrypoints/example-ui.content/index.ts
@@ -31,10 +31,10 @@ import { ContentScriptContext } from '.';
  *   }
  * })
  */
-export async function createContentScriptUi<T>(
+export async function createContentScriptUi<TApp>(
   ctx: ContentScriptContext,
-  options: ContentScriptUiOptions<T>,
-): Promise<ContentScriptUi<T>> {
+  options: ContentScriptUiOptions<TApp>,
+): Promise<ContentScriptUi<TApp>> {
   const css = [options.css ?? ''];
   if (ctx.options?.cssInjectionMode === 'ui') {
     css.push(await loadCss());
@@ -62,7 +62,7 @@ export async function createContentScriptUi<T>(
     return resolved ?? undefined;
   };
 
-  let mounted: T;
+  let mounted: TApp;
 
   const mount = () => {
     const anchor = getAnchor();
@@ -173,7 +173,7 @@ async function loadCss(): Promise<string> {
   }
 }
 
-export interface ContentScriptUi<T> {
+export interface ContentScriptUi<TApp> {
   /**
    * The `HTMLElement` hosting the shadow root used to isolate the UI's styles. This is the element
    * that get's added to the DOM. This element's style is not isolated from the webpage.
@@ -191,7 +191,7 @@ export interface ContentScriptUi<T> {
   /**
    * Custom data returned from the `options.mount` function.
    */
-  mounted: T;
+  mounted: TApp;
   /**
    * Function that mounts or remounts the UI on the page.
    */
@@ -202,7 +202,7 @@ export interface ContentScriptUi<T> {
   remove: () => void;
 }
 
-interface BaseContentScriptUiOptions<T> {
+interface BaseContentScriptUiOptions<TApp> {
   /**
    * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
    */
@@ -234,50 +234,53 @@ interface BaseContentScriptUiOptions<T> {
    *
    * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
    */
-  mount: (container: Element) => T;
+  mount: (container: Element) => TApp;
   /**
    * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
    * unmounting your vue or react apps.
    */
-  onRemove?: (mounted: T) => void;
+  onRemove?: (mounted: TApp) => void;
   /**
    * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
    * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
    * to pass those styles in here. This is for any additional styles not in the imported CSS.
    *
-   * See <https://wxt.dev/entrypoints/content-scripts.html#ui> for more info.
+   * See https://wxt.dev/entrypoints/content-scripts.html#ui for more info.
    */
   css?: string;
 }
 
-export type OverlayContentScriptUiOptions<T> = BaseContentScriptUiOptions<T> & {
-  type: 'overlay';
-  /**
-   * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
-   * which corner is aligned with that 0x0 pixel space.
-   *
-   * @default "top-left"
-   */
-  alignment?: ContentScriptUiOverlayAlignment;
-  /**
-   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-   * content.
-   */
-  zIndex?: number;
-};
+export type OverlayContentScriptUiOptions<TApp> =
+  BaseContentScriptUiOptions<TApp> & {
+    type: 'overlay';
+    /**
+     * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
+     * which corner is aligned with that 0x0 pixel space.
+     *
+     * @default "top-left"
+     */
+    alignment?: ContentScriptUiOverlayAlignment;
+    /**
+     * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+     * content.
+     */
+    zIndex?: number;
+  };
 
-export type ModalContentScriptUiOptions<T> = BaseContentScriptUiOptions<T> & {
-  type: 'modal';
-  /**
-   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-   * content.
-   */
-  zIndex?: number;
-};
+export type ModalContentScriptUiOptions<TApp> =
+  BaseContentScriptUiOptions<TApp> & {
+    type: 'modal';
+    /**
+     * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+     * content.
+     */
+    zIndex?: number;
+  };
 
-export type InlineContentScriptUiOptions<T> = BaseContentScriptUiOptions<T> & {
-  type: 'inline';
-};
+export type InlineContentScriptUiOptions<TApp> =
+  BaseContentScriptUiOptions<TApp> & {
+    type: 'inline';
+  };
 
 export type ContentScriptUiOverlayAlignment =
   | 'top-left'
@@ -292,7 +295,7 @@ export type ContentScriptAppendMode =
   | 'before'
   | 'after';
 
-export type ContentScriptUiOptions<T> =
-  | OverlayContentScriptUiOptions<T>
-  | ModalContentScriptUiOptions<T>
-  | InlineContentScriptUiOptions<T>;
+export type ContentScriptUiOptions<TApp> =
+  | OverlayContentScriptUiOptions<TApp>
+  | ModalContentScriptUiOptions<TApp>
+  | InlineContentScriptUiOptions<TApp>;

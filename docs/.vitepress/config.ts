@@ -1,6 +1,19 @@
-import { defineConfig } from 'vitepress';
-import { generateConfigDocs } from './plugins/generate-config-docs';
+import { DefaultTheme, defineConfig } from 'vitepress';
 import { generateCliDocs } from './plugins/generate-cli-docs';
+import typedocSidebar from '../api/reference/typedoc-sidebar.json';
+
+const filteredTypedocSidebar = typedocSidebar.filter(
+  (item) => item.text !== 'API',
+);
+// Typedoc's markdown theme adds collapse: true to all our items, event ones without any children,
+// so they need to be removed.
+function removeCollapsedWithNoItems(items: DefaultTheme.SidebarItem[]) {
+  for (const item of items) {
+    if (item.items) removeCollapsedWithNoItems(item.items);
+    else delete item.collapsed;
+  }
+}
+removeCollapsedWithNoItems(filteredTypedocSidebar);
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -18,7 +31,7 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
-    plugins: [generateConfigDocs(), generateCliDocs()],
+    plugins: [generateCliDocs()],
   },
   lastUpdated: true,
   sitemap: {
@@ -120,11 +133,10 @@ export default defineConfig({
         {
           items: [
             { text: 'CLI', link: '/api/cli.md' },
-            { text: 'Config', link: '/api/config.md' },
-            { text: 'wxt', link: '/api/wxt.md' },
-            { text: 'wxt/browser', link: '/api/wxt-browser.md' },
-            { text: 'wxt/client', link: '/api/wxt-client.md' },
-            { text: 'wxt/sandbox', link: '/api/wxt-sandbox.md' },
+            {
+              text: 'Modules',
+              items: filteredTypedocSidebar,
+            },
           ],
         },
       ],

@@ -1,3 +1,6 @@
+/**
+ * @module wxt/browser
+ */
 import originalBrowser, { Browser, Runtime, I18n } from 'webextension-polyfill';
 
 export interface AugmentedBrowser extends Browser {

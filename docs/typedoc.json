@@ -1,0 +1,15 @@
+{
+  "entryPoints": [
+    "../src",
+    "../src/client",
+    "../src/client/browser.ts",
+    "../src/client/sandbox"
+  ],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "out": "./api/reference",
+  "githubPages": false,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "readme": "none"
+}

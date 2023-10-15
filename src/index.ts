@@ -1,3 +1,6 @@
+/**
+ * @module wxt
+ */
 import { BuildOutput, WxtDevServer, InlineConfig } from './core/types';
 import { getInternalConfig } from './core/utils/getInternalConfig';
 import pc from 'picocolors';
