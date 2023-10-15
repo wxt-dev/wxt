@@ -8,7 +8,7 @@ on:
 
 jobs:
   checks:
-    name: WXT
+    name: Checks
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -53,7 +53,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   windows-tests:
-    name: WXT
+    name: Windows Tests
     runs-on: windows-latest
     steps:
       - name: Checkout
