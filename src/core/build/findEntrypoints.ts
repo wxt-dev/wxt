@@ -38,11 +38,10 @@ export async function findEntrypoints(
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
-  const existingNames: Record<string, Entrypoint | undefined> = {};
 
-  const entrypoints: Entrypoint[] = [];
   let hasBackground = false;
-  await Promise.all(
+  // TODO: This parallelization is bad
+  const possibleEntrypoints: Array<Entrypoint | undefined> = await Promise.all(
     relativePaths.map(async (relativePath) => {
       const path = resolve(config.entrypointsDir, relativePath);
       const matchingGlob = pathGlobs.find((glob) =>
@@ -50,41 +49,35 @@ export async function findEntrypoints(
       );
 
       if (matchingGlob == null) {
-        return config.logger.warn(
+        config.logger.warn(
           `${relativePath} does not match any known entrypoint. Known entrypoints:\n${JSON.stringify(
             PATH_GLOB_TO_TYPE_MAP,
             null,
             2,
           )}`,
         );
+        return;
       }
 
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
       if (type === 'ignored') return;
 
-      let entrypoint: Entrypoint;
       switch (type) {
         case 'popup':
-          entrypoint = await getPopupEntrypoint(config, path);
-          break;
+          return await getPopupEntrypoint(config, path);
         case 'options':
-          entrypoint = await getOptionsEntrypoint(config, path);
-          break;
+          return await getOptionsEntrypoint(config, path);
         case 'background':
-          entrypoint = await getBackgroundEntrypoint(config, path);
           hasBackground = true;
-          break;
+          return await getBackgroundEntrypoint(config, path);
         case 'content-script':
-          entrypoint = await getContentScriptEntrypoint(config, path);
-          break;
+          return await getContentScriptEntrypoint(config, path);
         case 'unlisted-page':
-          entrypoint = await getUnlistedPageEntrypoint(config, path);
-          break;
+          return await getUnlistedPageEntrypoint(config, path);
         case 'unlisted-script':
-          entrypoint = await getUnlistedScriptEntrypoint(config, path);
-          break;
+          return await getUnlistedScriptEntrypoint(config, path);
         case 'content-script-style':
-          entrypoint = {
+          return {
             type,
             name: getEntrypointName(config.entrypointsDir, path),
             inputPath: path,
@@ -94,9 +87,8 @@ export async function findEntrypoints(
               exclude: undefined,
             },
           };
-          break;
         default:
-          entrypoint = {
+          return {
             type,
             name: getEntrypointName(config.entrypointsDir, path),
             inputPath: path,
@@ -107,22 +99,30 @@ export async function findEntrypoints(
             },
           };
       }
-
-      const withSameName = existingNames[entrypoint.name];
-      if (withSameName) {
-        throw Error(
-          `Multiple entrypoints with the name "${
-            entrypoint.name
-          }" detected, but only one is allowed: ${[
-            relative(config.root, withSameName.inputPath),
-            relative(config.root, entrypoint.inputPath),
-          ].join(', ')}`,
-        );
-      }
-      entrypoints.push(entrypoint);
-      existingNames[entrypoint.name] = entrypoint;
     }),
   );
+
+  const entrypoints = possibleEntrypoints.filter(
+    (entry) => !!entry,
+  ) as Entrypoint[];
+
+  // Report duplicate entrypoint names
+  const existingNames: Record<string, Entrypoint | undefined> = {};
+  entrypoints.forEach((entrypoint) => {
+    const withSameName = existingNames[entrypoint.name];
+    if (withSameName) {
+      throw Error(
+        `Multiple entrypoints with the name "${
+          entrypoint.name
+        }" detected, but only one is allowed: ${[
+          relative(config.root, withSameName.inputPath),
+          relative(config.root, entrypoint.inputPath),
+        ].join(', ')}`,
+      );
+    }
+    existingNames[entrypoint.name] = entrypoint;
+  });
+
   if (config.command === 'serve' && !hasBackground) {
     entrypoints.push(
       await getBackgroundEntrypoint(config, VIRTUAL_NOOP_BACKGROUND_MODULE_ID),

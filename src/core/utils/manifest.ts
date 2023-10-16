@@ -324,14 +324,10 @@ function addEntrypoints(
       const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
           ...mapWxtOptionsToContentScript(scripts[0].options, config),
-          // TOOD: Sorting css and js arrays here so we get consistent test results... but we
-          // shouldn't have to. Where is the inconsistency coming from?
-          css: getContentScriptCssFiles(scripts, cssMap)?.sort(),
-          js: scripts
-            .map((entry) =>
-              getEntrypointBundlePath(entry, config.outDir, '.js'),
-            )
-            .sort(),
+          css: getContentScriptCssFiles(scripts, cssMap),
+          js: scripts.map((entry) =>
+            getEntrypointBundlePath(entry, config.outDir, '.js'),
+          ),
         }),
       );
       if (newContentScripts.length >= 0) {
