@@ -217,6 +217,7 @@ function addEntrypoints(
     const options: Manifest.ActionManifest = {
       default_icon: popup.options.defaultIcon,
       default_title: popup.options.defaultTitle,
+      browser_style: popup.options.browserStyle,
     };
     if (manifest.manifest_version === 3) {
       manifest.action = {
