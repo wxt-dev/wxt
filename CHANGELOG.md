@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.8.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.0...v0.8.1)
+
+### 🩹 Fixes
+
+- Output `action.browser_style` correctly ([6a93f20](https://github.com/wxt-dev/wxt/commit/6a93f20))
+
+### 📖 Documentation
+
+- Generate full API docs with typedoc ([#174](https://github.com/wxt-dev/wxt/pull/174))
+
 ## v0.8.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.5...v0.8.0)
