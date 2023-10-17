@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.8.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.1...v0.8.2)
+
+### 🩹 Fixes
+
+- **firefox:** Stop extending `AbortController` to fix crash in content scripts ([#176](https://github.com/wxt-dev/wxt/pull/176))
+
+### 🏡 Chore
+
+- Improve output consistency ([#175](https://github.com/wxt-dev/wxt/pull/175))
+
 ## v0.8.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.0...v0.8.1)
