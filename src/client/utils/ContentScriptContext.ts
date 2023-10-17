@@ -3,23 +3,23 @@ import { browser } from '../browser';
 import { logger } from './logger';
 
 /**
- * Extends [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+ * Implements [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
  * Used to detect and stop content script code when the script is invalidated.
  *
  * It also provides several utilities like `ctx.setTimeout` and `ctx.setInterval` that should be used in
  * content scripts instead of `window.setTimeout` or `window.setInterval`.
  */
-export class ContentScriptContext extends AbortController {
+export class ContentScriptContext implements AbortController {
   private static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
 
   #isTopFrame = window.self === window.top;
+  #abortController: AbortController;
 
   constructor(
     private readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
-    super();
-
+    this.#abortController = new AbortController();
     if (this.#isTopFrame) {
       this.#stopOldScripts();
     }
@@ -27,6 +27,14 @@ export class ContentScriptContext extends AbortController {
       // Run on next tick so the listener it adds isn't triggered by stopOldScript
       this.#listenForNewerScripts();
     });
+  }
+
+  get signal() {
+    return this.#abortController.signal;
+  }
+
+  abort(reason?: any): void {
+    return this.#abortController.abort(reason);
   }
 
   get isInvalid(): boolean {
