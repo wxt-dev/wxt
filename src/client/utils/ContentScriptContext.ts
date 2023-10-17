@@ -193,5 +193,3 @@ export class ContentScriptContext implements AbortController {
     this.onInvalidated(() => removeEventListener('message', cb));
   }
 }
-
-export interface ContentScriptController extends AbortController {}
