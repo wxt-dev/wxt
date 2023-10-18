@@ -42,6 +42,7 @@ jobs:
           pnpm build:all:firefox-mv3
           pnpm tsc --noEmit
           pnpm wxt zip
+          pnpm vitest run
         working-directory: demo
 
       - name: Tests

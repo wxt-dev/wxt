@@ -15,6 +15,7 @@ Some WXT APIs can be used without importing them:
 - [`defineBackground`](/api/wxt/client/functions/defineBackground) from `wxt/client`
 - [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi) from `wxt/client`
 - [`defineUnlistedScript`](/api/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
+- [`fakeBrowser`](/api/wxt/testing/variables/fakeBrowser) from `wxt/testing`
 
 And more. All `wxt/*` APIs can be used without imports.
 

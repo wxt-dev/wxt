@@ -9,7 +9,10 @@ export function getUnimportOptions(
 
   const defaultOptions: Partial<UnimportOptions> = {
     debugLog: config.logger.debug,
-    imports: [{ name: 'defineConfig', from: 'wxt' }],
+    imports: [
+      { name: 'defineConfig', from: 'wxt' },
+      { name: 'fakeBrowser', from: 'wxt/testing' },
+    ],
     presets: [
       { package: 'wxt/client' },
       { package: 'wxt/browser' },

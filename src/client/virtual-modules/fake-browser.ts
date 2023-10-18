@@ -1,3 +1,3 @@
-import { fakeBrowser as browser } from '@webext-core/fake-browser';
+import { fakeBrowser as browser } from '../../testing/fake-browser';
 
 export default browser;

@@ -1,92 +1,153 @@
 # Testing
 
-WXT provides a couple of utils for unit testing your extension.
+WXT provides several utils for writing tests.
 
-[[toc]]
+## Unit tests
 
-## Fake Browser
+If you're using auto-imports (enabled by default), [Vitest](https://vitest.dev/) is the only testing framework that supports them.
 
-The `wxt/fake-browser` package includes an in-memory implementation of the `browser` variable you can use for testing. WXT simply re-exports the `fakeBrowser` variable from [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/guide/fake-browser/).
+If you want to use a different testing library/framework (like Jest, mocha, node:test, etc), you can keep using it, but you have two options:
 
-Here's an example test using Vitest:
+1. Switch to Vitest (recommended)
+2. Configure the testing library manually
+   - Disable auto-imports by setting `imports: false` in your `wxt.config.ts` file
+   - Manually add globals normally provided by WXT (like `__BROWSER__`) that you consume to the global scope before accessing them (`globalThis.__BROWSER__ = "chrome"`)
 
-```ts
-import { describe, it, expect, vi } from 'vitest';
-import { browser } from 'wxt/browser';
-import { fakeBrowser } from 'wxt';
+### Vitest Setup
 
-// Function we're testing
-function onHelloMessage(cb: () => void) {
-  browser.runtime.onMessage.addEventListener((message) => {
-    if (message.type === 'hello') return 'world';
-  });
-}
+Install vitest and add the `WxtVitest` plugin to your `vitest.config.ts` file.
 
-// Mock the real `browser` object with a fake one
-vi.mock('wxt/browser', () => import('wxt/fake-browser'));
-
-describe('onHelloMessage', () => {
-  it("should call the callback when the message type is 'hello'", () => {
-    const cb = vi.fn();
-    const expected = 'world';
-
-    onHelloMessage(cb);
-    const actual = await fakeBrowser.runtime.sendMessage({ type: 'hello' });
-
-    expect(cb).toBeCalledTimes(1);
-    expect(actual).toBe(expected);
-  });
-
-  it("should ignore the message when the message type is not 'hello'", () => {
-    const cb = vi.fn();
-
-    onHelloMessage(cb);
-    await fakeBrowser.runtime.sendMessage({ type: 'not-hello' }).catch();
-
-    expect(cb).not.toBeCalled();
-  });
-});
+```sh
+pnpm i -D vitest
 ```
 
-See [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/guide/fake-browser/) for setup, implemented APIs, and example tests.
-
-## Handling Auto-imports
-
-By default, WXT uses auto-imports. For tests, this can cause issues if your test environment is not setup to handle them correctly.
-
-:::warning 🚧&ensp;Testing utils are not implemented yet!
-Eventually, WXT will provide utilities for setting up these auto-imports. For now, you'll need to set them up manually.
-:::
-
-Not all testing frameworks can handle auto-imports. If your framework or setup is not listed below, it may be easiest to disable auto-imports.
-
-To setup auto-imports manually, use [`unplugin-auto-import`](https://www.npmjs.com/package/unplugin-auto-import). It uses the same tool, `unimport`, as WXT and will result in compatiple auto-imports. `unplugin-auto-import` supports lots of different tools (vite, webpack, esbuild, rollup, etc). You can try and integrate it into your build process.
-
-### Vitest (Recommended)
-
-Vitest is easy, simply add `uplugin-auto-import` to your project.
-
 ```ts
-// vitest.config.ts
-import autoImports from 'unplugin-auto-import/vite';
+// <root>/vitest.config.ts
+import { defineConfig } from 'vitest/config';
+import { WxtVitest } from 'wxt/testing';
 
 export default defineConfig({
-  plugins: [
-    autoImports({
-      imports: [{ name: 'defineConfig', from: 'wxt' }],
-      presets: [{ package: 'wxt/client' }, { package: 'wxt/browser' }],
-      dirs: ['components', 'composables', 'hooks', 'utils'],
-    }),
-  ],
+  plugins: [WxtVitest()],
 });
 ```
 
-### Jest
+And that's it. You're ready to start writing tests.
 
-Don't use jest and auto-imports. You could try and configure jest to be transpiled by one of `unplugin-auto-import`'s supported built tools, but I don't know of a way to configure this. See [unplugin/unplugin-auto-import#33](https://github.com/unplugin/unplugin-auto-import/issues/33) if you want to try and set it up.
+### Writing Tests
 
-I would recommend disabling auto-imports or migrating to Vitest if you want to use auto-imports.
+Here's a very basic test, written with a few different testing libraries, with a few different approaches for mocking the `browser` global.
 
-### Mocha
+:::code-group
 
-TODO: Is this possible? Maybe with `esbuild-mocha`? I would recommend moving to Vitest.
+```ts [Vitest]
+import { describe, it, expect, vi } from 'vitest';
+
+function logRuntimeId() {
+  // Vitest automatically mocks "browser" with "fakeBrowser"
+  console.log(browser.runtime.id);
+}
+
+describe('logRuntimeId', () => {
+  it("should log the extension's runtime ID", () => {
+    // Set a known ID on fakeBrowser for the test
+    const id = 'some-runtime-id';
+    fakeBrowser.runtime.id = id;
+    const logSpy = vi.spyOn(console, 'log');
+
+    logRuntimeId();
+
+    expect(logSpy).toBeCalledWith(id);
+  });
+});
+```
+
+```ts [Jest - Manual Mock]
+import { fakeBrowser } from 'wxt/testing';
+import { browser } from 'wxt/browser';
+
+function logRuntimeId() {
+  console.log(browser.runtime.id);
+}
+
+// Manually mock
+jest.mock('wxt/browser', () => {
+  const { fakeBrowser } = require('wxt/testing');
+  return { browser: fakeBrowser };
+});
+
+describe('logRuntimeId', () => {
+  it("should log the extension's runtime ID", () => {
+    // Set a known ID on fakeBrowser for the test
+    const id = 'some-runtime-id';
+    fakeBrowser.runtime.id = id;
+    const logSpy = jest.spyOn(console, 'log');
+
+    logRuntimeId();
+
+    expect(logSpy).toBeCalledWith(id);
+  });
+});
+```
+
+```ts [node:test - Parameterized]
+import { describe, it, mock } from 'node:test';
+import { assert } from 'node:assert';
+import { fakeBrowser } from 'wxt/testing';
+import { browser } from 'wxt/browser';
+
+// Add browser as a parameter so fakeBrowser can be passed instead of browser
+function logRuntimeId(browser = browser) {
+  console.log(browser.runtime.id);
+}
+
+describe('logRuntimeId', () => {
+  it("should log the extension's runtime ID", () => {
+    // Set a known ID on fakeBrowser for the test
+    const id = 'some-runtime-id';
+    fakeBrowser.runtime.id = id;
+    console.log = mock.fn();
+
+    // pass in fakeBrowser during tests
+    logRuntimeId(fakeBrowser);
+
+    assert.deepStrictEqual(console.log.mock.calls[0].arguments, [id]);
+  });
+});
+```
+
+:::
+
+:::warning
+Without mocking the `browser` variable, you'll see errors like this:
+
+```
+This script should only be loaded in a browser extension.
+```
+
+:::
+
+WXT provides an in-memory, partial implementation of `browser`, [`fakeBrowser`](/api/wxt/testing/variables/fakeBrowser), from the [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/guide/fake-browser/) package. `fakeBrowser` works with all testing frameworks/libraries. See their docs for a list of [implemented APIs](https://webext-core.aklinker1.io/guide/fake-browser/implemented-apis.html) and more example tests.
+
+## E2E Tests
+
+WXT does not provide any utils for running E2E tests. There are two libraries you can use to run E2E tests for any chrome extension.
+
+- [`playwright`](https://playwright.dev/docs/chrome-extensions) (recommended) - "A high-level API to automate web browsers"
+- [`puppeteer`](https://pptr.dev/guides/chrome-extensions) - "A high-level API to control headless Chrome over the DevTools Protocol"
+
+:::info
+Note that both only support running tests on Chrome.
+:::
+
+Before running tests with either of these tools, you must build the extension with `wxt build` and then load the extension from the output directory in a new tab.
+
+To test an extension's UI, like the popup or options page, you'll need to know the extension's ID to open the URL directly.
+
+> _chrome-extension://`browser.runtime.id`/popup.html_
+
+- Playwright provides an API to get your extension ID after it has been installed. [See their docs](https://playwright.dev/docs/chrome-extensions#testing).
+- Puppeteer requires you know the ID before installing the extension, so you can hard code it into the URLs you open. Follow [Chrome's guide](https://developer.chrome.com/docs/extensions/mv3/manifest/key/) to setup a consistent runtime id.
+
+:::info
+You cannot test popups in their normal popup window, you have to open them in a tab.
+:::

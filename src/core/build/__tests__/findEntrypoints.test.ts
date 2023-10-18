@@ -11,7 +11,7 @@ import { findEntrypoints } from '../findEntrypoints';
 import fs from 'fs-extra';
 import { importEntrypointFile } from '../../utils/importEntrypointFile';
 import glob from 'fast-glob';
-import { fakeInternalConfig } from '../../../testing/fake-objects';
+import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
 import { unnormalizePath } from '../../utils/paths';
 
 vi.mock('../../utils/importEntrypointFile');

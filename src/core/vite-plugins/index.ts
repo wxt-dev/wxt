@@ -8,3 +8,5 @@ export * from './tsconfigPaths';
 export * from './noopBackground';
 export * from './cssEntrypoints';
 export * from './bundleAnalysis';
+export * from './globals';
+export * from './webextensionPolyfillAlias';
