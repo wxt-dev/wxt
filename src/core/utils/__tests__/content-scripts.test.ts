@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { hashContentScriptOptions } from '../content-scripts';
-import { fakeInternalConfig } from '../../../testing/fake-objects';
+import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
 
 describe('Content Script Utils', () => {
   describe('hashContentScriptOptions', () => {

@@ -51,6 +51,10 @@
     "./browser": {
       "import": "./dist/browser.js",
       "types": "./dist/browser.d.ts"
+    },
+    "./testing": {
+      "import": "./dist/testing.js",
+      "types": "./dist/testing.d.ts"
     }
   },
   "scripts": {

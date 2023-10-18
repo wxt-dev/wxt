@@ -10,7 +10,7 @@ import {
   fakePopupEntrypoint,
   fakeRollupOutputAsset,
   fakeRollupOutputChunk,
-} from '../../../testing/fake-objects';
+} from '../../../testing-utils/fake-objects';
 import { BuildOutput, BuildStepOutput } from '../../types';
 
 describe('Detect Dev Changes', () => {

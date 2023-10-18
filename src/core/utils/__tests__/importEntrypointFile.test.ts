@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { importEntrypointFile } from '../importEntrypointFile';
-import { fakeInternalConfig } from '../../../testing/fake-objects';
+import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
 import { resolve } from 'node:path';
 
 const entrypointPath = (filename: string) =>

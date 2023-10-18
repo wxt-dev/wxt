@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createExtensionRunner } from '..';
-import { fakeInternalConfig } from '../../../testing/fake-objects';
+import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { createSafariRunner } from '../safari';
 import { ExtensionRunner } from '../extension-runner';

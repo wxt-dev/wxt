@@ -55,6 +55,13 @@ await Promise.all([
     dts: true,
     silent: true,
   }),
+  tsup.build({
+    entry: { testing: 'src/testing/index.ts' },
+    format: ['esm'],
+    sourcemap: 'inline',
+    dts: true,
+    silent: true,
+  }),
   ...virtualEntrypoints.map((entryName) =>
     tsup.build({
       entry: {
@@ -72,14 +79,6 @@ await Promise.all([
     },
     format: ['esm'],
     sourcemap: true,
-    silent: true,
-    external: ['vite'],
-  }),
-  tsup.build({
-    entry: {
-      'virtual-modules/fake-browser': `src/client/virtual-modules/fake-browser.ts`,
-    },
-    format: ['esm', 'cjs'],
     silent: true,
     external: ['vite'],
   }),
