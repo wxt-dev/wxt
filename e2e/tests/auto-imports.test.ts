@@ -23,6 +23,7 @@ describe('Auto Imports', () => {
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/client')['defineContentScript']
             const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
+            const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
           }
           "
         `);
