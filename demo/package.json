@@ -11,14 +11,16 @@
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
+    "test": "pnpm -w build && vitest",
     "zip": "pnpm -w build && wxt zip",
     "compile": "pnpm -w build && tsc --noEmit",
     "postinstall": "pnpm -w build && wxt prepare"
   },
   "dependencies": {
-    "webextension-polyfill": "^0.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vitest": "^0.34.6",
+    "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

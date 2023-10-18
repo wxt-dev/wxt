@@ -14,7 +14,6 @@ import * as vite from 'vite';
 import { createFsCache } from './createFsCache';
 import consola, { LogLevels } from 'consola';
 import * as plugins from '../vite-plugins';
-import { getGlobals } from './globals';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -251,10 +250,7 @@ async function resolveInternalViteConfig(
   if (finalConfig.analysis.enabled) {
     internalVite.plugins.push(plugins.bundleAnalysis());
   }
+  internalVite.plugins.push(plugins.globals(finalConfig));
 
-  internalVite.define ??= {};
-  for (const global of getGlobals(finalConfig)) {
-    internalVite.define[global.name] = JSON.stringify(global.value);
-  }
   return internalVite;
 }

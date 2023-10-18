@@ -1,1 +1,1 @@
-export * from '@webext-core/fake-browser';
+export { fakeBrowser, type FakeBrowser } from '@webext-core/fake-browser';
