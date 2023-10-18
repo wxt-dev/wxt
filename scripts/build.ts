@@ -57,7 +57,7 @@ await Promise.all([
   }),
   tsup.build({
     entry: { testing: 'src/testing/index.ts' },
-    format: ['esm'],
+    format: ['esm', 'cjs'],
     sourcemap: 'inline',
     dts: true,
     silent: true,
