@@ -82,6 +82,14 @@ await Promise.all([
     silent: true,
     external: ['vite'],
   }),
+  tsup.build({
+    entry: {
+      'virtual-modules/fake-browser': `src/client/virtual-modules/fake-browser.ts`,
+    },
+    format: ['esm', 'cjs'],
+    silent: true,
+    external: ['vite'],
+  }),
 ]).catch((err) => {
   spinner.fail();
   console.error(err);
