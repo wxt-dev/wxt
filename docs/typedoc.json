@@ -3,7 +3,8 @@
     "../src",
     "../src/client",
     "../src/client/browser.ts",
-    "../src/client/sandbox"
+    "../src/client/sandbox",
+    "../src/testing"
   ],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "out": "./api",
