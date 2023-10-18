@@ -26,7 +26,7 @@ import { InlineConfig } from '../core/types';
  */
 export function WxtVitest(inlineConfig?: InlineConfig): vite.PluginOption {
   return getInternalConfig(inlineConfig ?? {}, 'serve').then((config) => [
-    webextensionPolyfillAlias(),
+    webextensionPolyfillAlias(config),
     unimport(config),
     globals(config),
     download(config),
