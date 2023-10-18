@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.2...v0.8.3)
+
+### 🚀 Enhancements
+
+- Add testing utils under `wxt/testing` ([#178](https://github.com/wxt-dev/wxt/pull/178))
+
 ## v0.8.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.1...v0.8.2)
