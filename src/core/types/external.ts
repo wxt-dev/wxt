@@ -468,17 +468,13 @@ export interface ExcludableEntrypoint {
 export type UserManifest = Partial<
   Omit<
     Manifest.WebExtensionManifest,
-    | 'action'
     | 'background'
-    | 'browser_action'
     | 'chrome_url_overrides'
     | 'devtools_page'
     | 'manifest_version'
     | 'options_page'
     | 'options_ui'
     | 'sandbox'
-    | 'page_action'
-    | 'popup'
     | 'sidepanel'
     | 'sidebar_action'
   >

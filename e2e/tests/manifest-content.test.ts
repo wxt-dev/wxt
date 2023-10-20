@@ -599,4 +599,29 @@ describe('Manifest Content', () => {
       },
     );
   });
+
+  it('should respect the action field in the manifest without a popup', async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({
+      manifest: {
+        action: {
+          default_title: 'Hello world',
+        },
+      },
+    });
+
+    await project.build();
+
+    expect(await project.getOutputManifest()).toMatchInlineSnapshot(`
+      {
+        "action": {
+          "default_title": "Hello world",
+        },
+        "description": "Example description",
+        "manifest_version": 3,
+        "name": "E2E Extension",
+        "version": "0.0.0",
+      }
+    `);
+  });
 });
