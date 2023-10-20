@@ -600,7 +600,7 @@ describe('Manifest Content', () => {
     );
   });
 
-  it.only('should respect the action field in the manifest without a popup', async () => {
+  it('should respect the action field in the manifest without a popup', async () => {
     const project = new TestProject();
     project.setConfigFileConfig({
       manifest: {
