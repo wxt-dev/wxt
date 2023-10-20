@@ -214,18 +214,23 @@ function addEntrypoints(
       config.outDir,
       '.html',
     );
-    const options: Manifest.ActionManifest = {
-      default_icon: popup.options.defaultIcon,
-      default_title: popup.options.defaultTitle,
-      browser_style: popup.options.browserStyle,
-    };
+    const options: Manifest.ActionManifest = {};
+    if (popup.options.defaultIcon)
+      options.default_icon = popup.options.defaultIcon;
+    if (popup.options.defaultTitle)
+      options.default_title = popup.options.defaultTitle;
+    if (popup.options.browserStyle)
+      options.browser_style = popup.options.browserStyle;
     if (manifest.manifest_version === 3) {
       manifest.action = {
+        ...(manifest.action ?? {}),
         ...options,
         default_popup,
       };
     } else {
-      manifest[popup.options.mv2Key ?? 'browser_action'] = {
+      const key = popup.options.mv2Key ?? 'browser_action';
+      manifest[key] = {
+        ...(manifest[key] ?? {}),
         ...options,
         default_popup,
       };
