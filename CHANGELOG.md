@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.3...v0.8.4)
+
+### 🩹 Fixes
+
+- Allow actions without a popup ([#181](https://github.com/wxt-dev/wxt/pull/181))
+
 ## v0.8.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.2...v0.8.3)
