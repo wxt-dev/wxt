@@ -14,7 +14,7 @@ import glob from 'fast-glob';
 import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
 import { unnormalizePath } from '~/core/utils/paths';
 
-vi.mock('../importEntrypointFile');
+vi.mock('../import-entrypoint');
 const importEntrypointFileMock = vi.mocked(importEntrypointFile);
 
 vi.mock('fast-glob');

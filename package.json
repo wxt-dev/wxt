@@ -60,7 +60,7 @@
     }
   },
   "scripts": {
-    "wxt": "tsx src/cli/index.ts",
+    "wxt": "tsx src/cli.ts",
     "build": "tsx scripts/build.ts",
     "format": "prettier --write .",
     "format:check": "prettier --write .",

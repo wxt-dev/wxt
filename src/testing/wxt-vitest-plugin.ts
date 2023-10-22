@@ -15,10 +15,10 @@ import { InlineConfig } from '../types';
  * ```ts
  * // vitest.config.ts
  * import { defineConfig } from 'vitest/config';
- * import { AutoImport } from 'wxt/testing';
+ * import { WxtVitest } from 'wxt/testing';
  *
  * export default defineConfig({
- *   plugins: [AutoImport()],
+ *   plugins: [WxtVitest()],
  * });
  * ```
  *

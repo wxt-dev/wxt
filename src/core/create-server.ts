@@ -121,7 +121,7 @@ export async function createServer(
   return server;
 }
 
-export async function getServerInfo(): Promise<ServerInfo> {
+async function getServerInfo(): Promise<ServerInfo> {
   const { default: getPort, portNumbers } = await import('get-port');
   const port = await getPort({ port: portNumbers(3000, 3010) });
   const hostname = 'localhost';
@@ -140,7 +140,7 @@ export async function getServerInfo(): Promise<ServerInfo> {
   };
 }
 
-export async function setupServer(
+async function setupServer(
   serverInfo: ServerInfo,
   config: InternalConfig,
 ): Promise<WxtDevServer> {
@@ -198,7 +198,7 @@ export async function setupServer(
 /**
  * From the server, tell the client to reload content scripts from the provided build step outputs.
  */
-export function reloadContentScripts(
+function reloadContentScripts(
   steps: BuildStepOutput[],
   config: InternalConfig,
   server: WxtDevServer,
@@ -234,7 +234,7 @@ export function reloadContentScripts(
   }
 }
 
-export function reloadHtmlPages(
+function reloadHtmlPages(
   groups: EntrypointGroup[],
   server: WxtDevServer,
   config: InternalConfig,

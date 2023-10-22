@@ -202,7 +202,7 @@ export interface ContentScriptUi<TApp> {
   remove: () => void;
 }
 
-interface BaseContentScriptUiOptions<TApp> {
+export interface BaseContentScriptUiOptions<TApp> {
   /**
    * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
    */
