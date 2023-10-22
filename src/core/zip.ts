@@ -1,69 +1,69 @@
-import { BuildOutput, InternalConfig } from './types';
+import { InlineConfig } from '~/types';
 import zipdir from 'zip-dir';
 import { dirname, relative, resolve } from 'node:path';
 import fs from 'fs-extra';
-import { kebabCaseAlphanumeric } from './utils/strings';
-import { getPackageJson } from './utils/package';
+import { kebabCaseAlphanumeric } from '~/core/utils/strings';
+import { getPackageJson } from '~/core/utils/package';
 import { minimatch } from 'minimatch';
-import { formatDuration } from './utils/formatDuration';
-import { printFileList } from './log/printFileList';
+import { formatDuration } from '~/core/utils/time';
+import { printFileList } from '~/core/utils/log/printFileList';
+import { getInternalConfig, internalBuild } from '~/core/utils/building';
 
 /**
- * Zip the extension for distribution. Does not build, just zips the output that should exist for
- * the given config.
- *
- * @returns A list of ZIP files that were created.
- *
- * @example
- * const config: InlineConfig = {};
- * const result = await build(config);
- * await zipExtension(config, result);
+ * Build and zip the extension for distribution.
+ * @param config Opitonal config that will override your `<root>/wxt.config.ts`.
+ * @returns A list of all files included in the ZIP.
  */
-export async function zipExtension(
-  config: InternalConfig,
-  buildOutput: BuildOutput,
-): Promise<string[]> {
+export async function zip(config?: InlineConfig): Promise<string[]> {
+  const internalConfig = await getInternalConfig(config ?? {}, 'build');
+  const output = await internalBuild(internalConfig);
+
   const start = Date.now();
-  config.logger.info('Zipping extension...');
+  internalConfig.logger.info('Zipping extension...');
   const zipFiles: string[] = [];
 
   const projectName =
-    config.zip.name ??
+    internalConfig.zip.name ??
     kebabCaseAlphanumeric(
-      (await getPackageJson(config))?.name || dirname(process.cwd()),
+      (await getPackageJson(internalConfig))?.name || dirname(process.cwd()),
     );
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
-      .replaceAll('{{browser}}', config.browser)
+      .replaceAll('{{browser}}', internalConfig.browser)
       .replaceAll(
         '{{version}}',
-        buildOutput.manifest.version_name ?? buildOutput.manifest.version,
+        output.manifest.version_name ?? output.manifest.version,
       )
-      .replaceAll('{{manifestVersion}}', `mv${config.manifestVersion}`);
+      .replaceAll('{{manifestVersion}}', `mv${internalConfig.manifestVersion}`);
 
-  await fs.ensureDir(config.outBaseDir);
+  await fs.ensureDir(internalConfig.outBaseDir);
 
   // ZIP output directory
 
-  const outZipFilename = applyTemplate(config.zip.artifactTemplate);
-  const outZipPath = resolve(config.outBaseDir, outZipFilename);
-  await zipdir(config.outDir, {
+  const outZipFilename = applyTemplate(internalConfig.zip.artifactTemplate);
+  const outZipPath = resolve(internalConfig.outBaseDir, outZipFilename);
+  await zipdir(internalConfig.outDir, {
     saveTo: outZipPath,
   });
   zipFiles.push(outZipPath);
 
   // ZIP sources for Firefox
 
-  if (config.browser === 'firefox') {
-    const sourcesZipFilename = applyTemplate(config.zip.sourcesTemplate);
-    const sourcesZipPath = resolve(config.outBaseDir, sourcesZipFilename);
-    await zipdir(config.zip.sourcesRoot, {
+  if (internalConfig.browser === 'firefox') {
+    const sourcesZipFilename = applyTemplate(
+      internalConfig.zip.sourcesTemplate,
+    );
+    const sourcesZipPath = resolve(
+      internalConfig.outBaseDir,
+      sourcesZipFilename,
+    );
+    await zipdir(internalConfig.zip.sourcesRoot, {
       saveTo: sourcesZipPath,
       filter(path) {
-        const relativePath = relative(config.zip.sourcesRoot, path);
-        const matchedPattern = config.zip.ignoredSources.find((pattern) =>
-          minimatch(relativePath, pattern),
+        const relativePath = relative(internalConfig.zip.sourcesRoot, path);
+        const matchedPattern = internalConfig.zip.ignoredSources.find(
+          (pattern) => minimatch(relativePath, pattern),
         );
         return matchedPattern == null;
       },
@@ -72,9 +72,9 @@ export async function zipExtension(
   }
 
   await printFileList(
-    config.logger.success,
+    internalConfig.logger.success,
     `Zipped extension in ${formatDuration(Date.now() - start)}`,
-    config.outBaseDir,
+    internalConfig.outBaseDir,
     zipFiles,
   );
 

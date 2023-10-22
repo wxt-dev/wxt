@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { InternalConfig } from '../types';
+import { InternalConfig } from '~/types';
 
 /**
  * Defines global constants about the dev server. Helps scripts connect to the server's web socket.

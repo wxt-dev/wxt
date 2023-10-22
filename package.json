@@ -41,6 +41,7 @@
       "types": "./dist/index.d.ts"
     },
     "./client": {
+      "require": "./dist/client.cjs",
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
     },

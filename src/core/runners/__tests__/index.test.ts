@@ -1,27 +1,27 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createExtensionRunner } from '..';
-import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
+import { createExtensionRunner } from '~/core/runners';
+import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
-import { createSafariRunner } from '../safari';
-import { ExtensionRunner } from '../extension-runner';
-import { createWslRunner } from '../wsl';
-import { createManualRunner } from '../manual';
-import { isWsl } from '../../utils/wsl';
-import { createWebExtRunner } from '../web-ext';
+import { createSafariRunner } from '~/core/runners/safari';
+import { createWslRunner } from '~/core/runners/wsl';
+import { createManualRunner } from '~/core/runners/manual';
+import { isWsl } from '~/core/utils/wsl';
+import { createWebExtRunner } from '~/core/runners/web-ext';
+import { ExtensionRunner } from '~/types';
 
-vi.mock('../../utils/wsl');
+vi.mock('~/core/utils/wsl');
 const isWslMock = vi.mocked(isWsl);
 
-vi.mock('../safari');
+vi.mock('~/core/runners/safari');
 const createSafariRunnerMock = vi.mocked(createSafariRunner);
 
-vi.mock('../wsl');
+vi.mock('~/core/runners/wsl');
 const createWslRunnerMock = vi.mocked(createWslRunner);
 
-vi.mock('../manual');
+vi.mock('~/core/runners/manual');
 const createManualRunnerMock = vi.mocked(createManualRunner);
 
-vi.mock('../web-ext');
+vi.mock('~/core/runners/web-ext');
 const createWebExtRunnerMock = vi.mocked(createWebExtRunner);
 
 describe('createExtensionRunner', () => {

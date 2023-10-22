@@ -1,3 +1,3 @@
-import { defineUnlistedScript } from '../../../../client/sandbox';
+import { defineUnlistedScript } from '~/sandbox';
 
 export default defineUnlistedScript(() => {});

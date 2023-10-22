@@ -1,6 +1,6 @@
 import dns from 'node:dns';
-import { withTimeout } from './promises';
-import { InternalConfig } from '../types';
+import { InternalConfig } from '~/types';
+import { withTimeout } from './time';
 
 function isOffline(): Promise<boolean> {
   const isOffline = new Promise<boolean>((res) => {

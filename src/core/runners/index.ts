@@ -1,10 +1,9 @@
-import { InternalConfig } from '../types';
-import { ExtensionRunner } from './extension-runner';
+import { InternalConfig, ExtensionRunner } from '~/types';
 import { createWslRunner } from './wsl';
 import { createWebExtRunner } from './web-ext';
 import { createSafariRunner } from './safari';
 import { createManualRunner } from './manual';
-import { isWsl } from '../utils/wsl';
+import { isWsl } from '~/core/utils/wsl';
 
 export async function createExtensionRunner(
   config: InternalConfig,

@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { InternalConfig } from '../types';
+import { InternalConfig } from '~/types';
 import fs from 'fs-extra';
 
 /**

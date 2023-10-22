@@ -1,6 +1,6 @@
 import * as vite from 'vite';
-import { InternalConfig } from '../types';
-import { getEntrypointName } from '../utils/entrypoints';
+import { InternalConfig } from '~/types';
+import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, isAbsolute, relative, resolve } from 'path';
 
@@ -14,7 +14,7 @@ export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
     config.root,
-    'node_modules/wxt/dist/virtual-modules/reload-html.js',
+    'node_modules/wxt/dist/virtual/reload-html.js',
   );
   const virtualReactRefreshId = '@wxt/virtual-react-refresh';
   const resolvedVirtualReactRefreshId = '\0' + virtualReactRefreshId;

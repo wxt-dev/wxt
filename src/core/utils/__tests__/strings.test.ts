@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { kebabCaseAlphanumeric, removeImportStatements } from '../strings';
+import {
+  kebabCaseAlphanumeric,
+  removeImportStatements,
+} from '~/core/utils/strings';
 
 describe('String utils', () => {
   describe('kebabCaseAlphanumeric', () => {

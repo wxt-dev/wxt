@@ -1,7 +1,7 @@
-import tsup from 'tsup';
+import tsup, { Options } from 'tsup';
 import glob from 'fast-glob';
-import { printFileList } from '../src/core/log/printFileList';
-import { formatDuration } from '../src/core/utils/formatDuration';
+import { printFileList } from '~/core/utils/log';
+import { formatDuration } from '~/core/utils/time';
 import ora from 'ora';
 import fs from 'fs-extra';
 import { consola } from 'consola';
@@ -14,81 +14,66 @@ const virtualEntrypoints = ['background', 'content-script', 'unlisted-script'];
 
 await fs.rm(outDir, { recursive: true, force: true });
 
+const baseConfig: Options = {
+  format: ['cjs', 'esm'],
+  sourcemap: true,
+  dts: true,
+  silent: true,
+  external: ['vite'],
+};
+
 await Promise.all([
   tsup.build({
-    entry: {
-      index: 'src/index.ts',
-    },
-    format: ['cjs', 'esm'],
-    sourcemap: true,
-    dts: true,
-    silent: true,
-    external: ['vite'],
+    ...baseConfig,
+    entry: { index: 'src/index.ts' },
   }),
   tsup.build({
-    entry: { cli: 'src/cli/index.ts' },
+    ...baseConfig,
+    entry: { cli: 'src/cli.ts' },
     format: ['cjs'],
     sourcemap: 'inline',
-    silent: true,
-    external: ['vite'],
   }),
   tsup.build({
+    ...baseConfig,
     entry: { client: 'src/client/index.ts' },
-    format: ['esm'],
     sourcemap: 'inline',
-    dts: true,
-    silent: true,
-    external: ['vite'],
   }),
   tsup.build({
-    entry: { browser: 'src/client/browser.ts' },
+    ...baseConfig,
+    entry: { browser: 'src/browser.ts' },
     format: ['esm'],
-    sourcemap: 'inline',
-    dts: true,
-    silent: true,
-    external: ['vite'],
   }),
   tsup.build({
-    entry: { sandbox: 'src/client/sandbox/index.ts' },
+    ...baseConfig,
+    entry: { sandbox: 'src/sandbox/index.ts' },
     format: ['esm'],
-    sourcemap: 'inline',
-    dts: true,
-    silent: true,
   }),
   tsup.build({
+    ...baseConfig,
     entry: { testing: 'src/testing/index.ts' },
-    format: ['esm', 'cjs'],
-    sourcemap: 'inline',
-    dts: true,
-    silent: true,
   }),
   ...virtualEntrypoints.map((entryName) =>
     tsup.build({
+      ...baseConfig,
       entry: {
-        [`virtual-modules/${entryName}-entrypoint`]: `src/client/virtual-modules/${entryName}-entrypoint.ts`,
+        [`virtual/${entryName}-entrypoint`]: `src/virtual/${entryName}-entrypoint.ts`,
       },
       format: ['esm'],
-      sourcemap: true,
-      silent: true,
       external: [`virtual:user-${entryName}`, 'vite'],
     }),
   ),
   tsup.build({
+    ...baseConfig,
     entry: {
-      'virtual-modules/reload-html': `src/client/virtual-modules/reload-html.ts`,
+      'virtual/reload-html': `src/virtual/reload-html.ts`,
     },
     format: ['esm'],
-    sourcemap: true,
-    silent: true,
-    external: ['vite'],
   }),
   tsup.build({
+    ...baseConfig,
     entry: {
-      'virtual-modules/fake-browser': `src/client/virtual-modules/fake-browser.ts`,
+      'virtual/mock-browser': `src/virtual/mock-browser.ts`,
     },
-    format: ['esm', 'cjs'],
-    silent: true,
-    external: ['vite'],
   }),
 ]).catch((err) => {
   spinner.fail();

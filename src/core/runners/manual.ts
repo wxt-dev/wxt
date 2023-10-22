@@ -1,4 +1,4 @@
-import { ExtensionRunner } from './extension-runner';
+import { ExtensionRunner } from '~/types';
 import { relative } from 'node:path';
 
 /**

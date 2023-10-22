@@ -6,8 +6,8 @@ import {
   globals,
   webextensionPolyfillAlias,
 } from '../core/vite-plugins';
-import { getInternalConfig } from '../core/utils/getInternalConfig';
-import { InlineConfig } from '../core/types';
+import { getInternalConfig } from '~/core/utils/building';
+import { InlineConfig } from '../types';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT extension, based on the `<root>/wxt.config.ts`

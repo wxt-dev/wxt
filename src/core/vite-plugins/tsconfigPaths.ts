@@ -1,4 +1,4 @@
-import { InternalConfig } from '../types';
+import { InternalConfig } from '~/types';
 import * as vite from 'vite';
 
 export function tsconfigPaths(config: InternalConfig): vite.Plugin {
