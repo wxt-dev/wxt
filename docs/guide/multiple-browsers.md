@@ -24,7 +24,7 @@ wxt build --browser firefox
 
 ```
 
-By default, it will build for `chrome`. When excluding the [`--mv2` or `--mv3` flags](#target-manifest-version), it will default to the commonly accepted manifest version used with that browser.
+By default, it will build for `chrome`. When excluding the [manifest version flags](#target-manifest-version), it will default to the commonly accepted manifest version for that browser.
 
 | Browser          | Default Manifest Version |
 | ---------------- | :----------------------: |
@@ -33,6 +33,10 @@ By default, it will build for `chrome`. When excluding the [`--mv2` or `--mv3` f
 | `safari`         |            2             |
 | `edge`           |            3             |
 | Any other string |            3             |
+
+:::tip
+To configure which browser is opened when running dev mode via `wxt -b <browser>`, see the [Development docs](/guide/development#configure-browser-startup) docs.
+:::
 
 ## Target Manifest Version
 

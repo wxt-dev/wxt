@@ -39,7 +39,7 @@ export default defineRunnerConfig({
 
 :::
 
-You may also setup default for your entire computer by creating a `web-ext.config.ts` file in your home directory. This is useful if you want to specify config for all project on your computer, like that you want to use Chrome Beta instead of Chrome.
+`web-ext`'s browser discovery is very limitted. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
 
 ```ts
 // ~/web-ext.config.ts
@@ -47,7 +47,13 @@ import { defineRunnerConfig } from 'wxt';
 
 export default defineRunnerConfig({
   binaries: {
-    chrome: '/path/to/chrome-beta',
+    chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
+    firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
+    edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
   },
 });
 ```
+
+:::tip
+When configuring browser binaries, it's helpful to put them in `~/web-ext.config.ts` instead of the project directory's `web-ext.config.ts` file. When placed in your home directory (`~/`), this config will be used by all WXT projects, so you only need to configure the binaries once.
+:::
