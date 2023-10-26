@@ -1,7 +1,13 @@
-import { BuildOutput, BuildStepOutput, EntrypointGroup } from '../types';
+import {
+  BuildOutput,
+  BuildStepOutput,
+  EntrypointGroup,
+  InternalConfig,
+} from '../types';
 import * as vite from 'vite';
 import { every } from './arrays';
 import { normalizePath } from './paths';
+import { findEntrypoints } from '../build/findEntrypoints';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -93,6 +99,15 @@ export function detectDevChanges(
     cachedOutput: unchangedOutput,
     rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
   };
+}
+
+export async function detectEntrypointChanges(
+  config: InternalConfig,
+): Promise<DevModeChange[]> {
+  const newEntries = await findEntrypoints(config);
+  const oldEntries = currentOutput.steps.flatMap((step) => step.entrypoints);
+  const addedEntries = newEntries;
+  const removedEntries = [];
 }
 
 /**
