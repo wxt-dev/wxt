@@ -6,7 +6,8 @@ import ora from 'ora';
 import fs from 'fs-extra';
 import { consola } from 'consola';
 
-const spinner = ora('Building WXT').start();
+const spinnerText = 'Building WXT';
+const spinner = ora(spinnerText).start();
 
 const startTime = Date.now();
 const outDir = 'dist';
@@ -22,7 +23,23 @@ const baseConfig: Options = {
   external: ['vite'],
 };
 
-await Promise.all([
+function spinnerPromiseAll<T>(promises: Promise<T>[]): Promise<T[]> {
+  let completed = 0;
+  const updateSpinner = () => {
+    spinner.text = `${spinnerText} [${completed}/${promises.length}]`;
+  };
+  updateSpinner();
+  return Promise.all(
+    promises.map(async (promise) => {
+      const res = await promise;
+      completed++;
+      updateSpinner();
+      return res;
+    }),
+  );
+}
+
+await spinnerPromiseAll([
   tsup.build({
     ...baseConfig,
     entry: { index: 'src/index.ts' },
