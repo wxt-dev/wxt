@@ -18,6 +18,7 @@ const testSeed = (): Plugin => ({
 const resolve = {
   alias: {
     '~': 'src',
+    'webextension-polyfill': './src/virtual/mock-browser',
   },
 };
 

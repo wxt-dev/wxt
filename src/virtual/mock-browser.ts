@@ -1,3 +1,3 @@
-import { fakeBrowser as browser } from '~/testing';
+import { fakeBrowser as mockBrowser } from '~/testing';
 
-export default browser;
+export default mockBrowser;
