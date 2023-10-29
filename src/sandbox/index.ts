@@ -1,4 +1,4 @@
 /**
  * @module wxt/sandbox
  */
-export * from './defineUnlistedScript';
+export * from './define-unlisted-script';

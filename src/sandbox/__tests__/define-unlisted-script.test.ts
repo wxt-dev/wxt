@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineUnlistedScript } from '../defineUnlistedScript';
+import { defineUnlistedScript } from '../define-unlisted-script';
 import { UnlistedScriptDefinition } from '../../types';
 
 describe('defineUnlistedScript', () => {
