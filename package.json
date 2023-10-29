@@ -66,7 +66,7 @@
     "format:check": "prettier --write .",
     "compile": "tsc --noEmit",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage.enabled --coverage.exclude=e2e --coverage.exclude=src/core/utils/testing",
+    "test:coverage": "vitest run --coverage.enabled --coverage.exclude=e2e --coverage.exclude=src/core/utils/testing '--coverage.exclude=**/__tests__/**'",
     "prepare": "simple-git-hooks",
     "prepublish": "pnpm -s build",
     "docs:gen": "typedoc --options docs/typedoc.json",
