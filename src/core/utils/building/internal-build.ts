@@ -6,7 +6,6 @@ import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '~/core/utils/time';
 import { printBuildSummary } from '~/core/utils/log';
-import { execaCommand } from 'execa';
 import glob from 'fast-glob';
 import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
@@ -61,6 +60,7 @@ export async function internalBuild(
 }
 
 async function combineAnalysisStats(config: InternalConfig): Promise<void> {
+  const { execaCommand } = await import('execa');
   const unixFiles = await glob(`stats-*.json`, {
     cwd: config.outDir,
     absolute: true,
