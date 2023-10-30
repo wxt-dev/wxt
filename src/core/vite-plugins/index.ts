@@ -10,3 +10,4 @@ export * from './cssEntrypoints';
 export * from './bundleAnalysis';
 export * from './globals';
 export * from './webextensionPolyfillAlias';
+export * from './webextensionPolyfillInlineDeps';

@@ -1,4 +1,4 @@
-import { Manifest } from 'webextension-polyfill';
+import type { Manifest } from 'webextension-polyfill';
 import {
   Entrypoint,
   BackgroundEntrypoint,

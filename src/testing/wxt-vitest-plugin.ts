@@ -5,6 +5,7 @@ import {
   tsconfigPaths,
   globals,
   webextensionPolyfillAlias,
+  webextensionPolyfillInlineDeps,
 } from '../core/vite-plugins';
 import { getInternalConfig } from '~/core/utils/building';
 import { InlineConfig } from '../types';
@@ -27,6 +28,7 @@ import { InlineConfig } from '../types';
 export function WxtVitest(inlineConfig?: InlineConfig): vite.PluginOption {
   return getInternalConfig(inlineConfig ?? {}, 'serve').then((config) => [
     webextensionPolyfillAlias(config),
+    webextensionPolyfillInlineDeps(),
     unimport(config),
     globals(config),
     download(config),

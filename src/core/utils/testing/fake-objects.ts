@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
 import { Rollup } from 'vite';
-import { Manifest } from 'webextension-polyfill';
+import type { Manifest } from 'webextension-polyfill';
 import {
   FsCache,
   InternalConfig,

@@ -6,7 +6,7 @@ import {
   WxtDevServer,
 } from '~/types';
 import * as vite from 'vite';
-import { Scripting } from 'webextension-polyfill';
+import type { Scripting } from 'webextension-polyfill';
 import {
   getEntrypointBundlePath,
   getEntrypointOutputFile,
