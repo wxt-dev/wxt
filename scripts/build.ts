@@ -26,7 +26,6 @@ const preset: tsup.Options = {
     'virtual:user-content-script',
     'virtual:user-background',
   ],
-  splitting: false,
 };
 
 function spinnerPMap(configs: tsup.Options[]) {
@@ -84,6 +83,7 @@ const config: tsup.Options[] = [
         'src/virtual/unlisted-script-entrypoint.ts',
     },
     format: ['esm'],
+    splitting: false,
     dts: false,
   },
   // CJS-only
