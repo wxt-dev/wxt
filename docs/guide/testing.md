@@ -28,6 +28,15 @@ import { WxtVitest } from 'wxt/testing';
 
 export default defineConfig({
   plugins: [WxtVitest()],
+  test: {
+    server: {
+      deps: {
+        // Add any dependencies that import webextension-polyfill here, otherwise tests will attempt to import the real polyfill, breaking the
+        // TODO: Auto-detect these dependencies inside `WxtVitest` so maintaining this list manually isn't necessary
+        inline: [...],
+      },
+    },
+  },
 });
 ```
 
