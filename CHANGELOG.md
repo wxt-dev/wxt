@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.8.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.4...v0.8.5)
+
+### 🚀 Enhancements
+
+- Refactor project structure to export `initialize`, `prepare`, and `zip` functions ([#182](https://github.com/wxt-dev/wxt/pull/182))
+
+### 🩹 Fixes
+
+- Enable Vue SFC auto-imports in `vue` template ([f8a0fb3](https://github.com/wxt-dev/wxt/commit/f8a0fb3))
+
+### 📖 Documentation
+
+- Improve `runner.binaries` documentation ([d9e9b43](https://github.com/wxt-dev/wxt/commit/d9e9b43))
+- Update auto-imports.md ([#186](https://github.com/wxt-dev/wxt/pull/186))
+- Add `test.server.deps.inline` to Vitest guide ([19756c6](https://github.com/wxt-dev/wxt/commit/19756c6))
+
+### 🏡 Chore
+
+- Update template docs ([2e24b9e](https://github.com/wxt-dev/wxt/commit/2e24b9e))
+- Reduce package size by 70%, 1.92 MB to 590 kB ([#190](https://github.com/wxt-dev/wxt/pull/190))
+
+### ❤️ Contributors
+
+- Nenad Novaković
+
 ## v0.8.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.3...v0.8.4)
