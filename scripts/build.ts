@@ -26,6 +26,7 @@ const preset: tsup.Options = {
     'virtual:user-content-script',
     'virtual:user-background',
   ],
+  splitting: false,
 };
 
 function spinnerPMap(configs: tsup.Options[]) {
