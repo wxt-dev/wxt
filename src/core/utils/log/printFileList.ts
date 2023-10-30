@@ -38,9 +38,13 @@ export async function printFileList(
 const DEFAULT_COLOR = pc.blue;
 const CHUNK_COLORS: Record<string, (text: string) => string> = {
   '.js.map': pc.gray,
+  '.cjs.map': pc.gray,
+  '.mjs.map': pc.gray,
   '.html': pc.green,
   '.css': pc.magenta,
   '.js': pc.cyan,
+  '.cjs': pc.cyan,
+  '.mjs': pc.cyan,
   '.zip': pc.yellow,
 };
 function getChunkColor(filename: string) {

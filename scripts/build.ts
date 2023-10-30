@@ -7,22 +7,27 @@ import fs from 'fs-extra';
 import { consola } from 'consola';
 import pMap from 'p-map';
 import os from 'node:os';
+import path from 'node:path';
 
 const spinnerText = 'Building WXT';
 const spinner = ora(spinnerText).start();
 
 const startTime = Date.now();
 const outDir = 'dist';
-const virtualEntrypoints = ['background', 'content-script', 'unlisted-script'];
+await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
-await fs.rm(outDir, { recursive: true, force: true });
-
-const baseConfig: tsup.Options = {
+const preset: tsup.Options = {
   format: ['cjs', 'esm'],
-  sourcemap: true,
   dts: true,
   silent: true,
-  external: ['vite'],
+  sourcemap: false,
+  outDir,
+  external: [
+    'vite',
+    'virtual:user-unlisted-script',
+    'virtual:user-content-script',
+    'virtual:user-background',
+  ],
 };
 
 function spinnerPMap(configs: tsup.Options[]) {
@@ -48,57 +53,47 @@ function spinnerPMap(configs: tsup.Options[]) {
 }
 
 const config: tsup.Options[] = [
+  // CJS/ESM
   {
-    ...baseConfig,
-    entry: { index: 'src/index.ts' },
+    ...preset,
+    entry: {
+      index: 'src/index.ts',
+      testing: 'src/testing/index.ts',
+    },
+    format: ['cjs', 'esm'],
+    clean: true,
+  },
+  // ESM-only
+  {
+    ...preset,
+    entry: {
+      browser: 'src/browser.ts',
+      sandbox: 'src/sandbox/index.ts',
+      client: 'src/client/index.ts',
+    },
+    format: ['esm'],
   },
   {
-    ...baseConfig,
-    entry: { cli: 'src/cli.ts' },
+    ...preset,
+    entry: {
+      'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
+      'virtual/content-script-entrypoint':
+        'src/virtual/content-script-entrypoint.ts',
+      'virtual/mock-browser': 'src/virtual/mock-browser.ts',
+      'virtual/reload-html': 'src/virtual/reload-html.ts',
+      'virtual/unlisted-script-entrypoint':
+        'src/virtual/unlisted-script-entrypoint.ts',
+    },
+    format: ['esm'],
+    dts: false,
+  },
+  // CJS-only
+  {
+    ...preset,
+    entry: {
+      cli: 'src/cli.ts',
+    },
     format: ['cjs'],
-    sourcemap: 'inline',
-  },
-  {
-    ...baseConfig,
-    entry: { client: 'src/client/index.ts' },
-    sourcemap: 'inline',
-  },
-  {
-    ...baseConfig,
-    entry: { browser: 'src/browser.ts' },
-    format: ['esm'],
-  },
-  {
-    ...baseConfig,
-    entry: { sandbox: 'src/sandbox/index.ts' },
-    format: ['esm'],
-  },
-  {
-    ...baseConfig,
-    entry: { testing: 'src/testing/index.ts' },
-  },
-  ...virtualEntrypoints.map(
-    (entryName): tsup.Options => ({
-      ...baseConfig,
-      entry: {
-        [`virtual/${entryName}-entrypoint`]: `src/virtual/${entryName}-entrypoint.ts`,
-      },
-      format: ['esm'],
-      external: [`virtual:user-${entryName}`, 'vite'],
-    }),
-  ),
-  {
-    ...baseConfig,
-    entry: {
-      'virtual/reload-html': `src/virtual/reload-html.ts`,
-    },
-    format: ['esm'],
-  },
-  {
-    ...baseConfig,
-    entry: {
-      'virtual/mock-browser': `src/virtual/mock-browser.ts`,
-    },
   },
 ];
 
