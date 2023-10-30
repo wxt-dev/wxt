@@ -11,10 +11,11 @@
   <img alt="npm" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048">
   <span> </span>
   <img alt="NPM" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048">
-  <span> </span>
+  <!-- Hide code coverage while it's broken -->
+  <!-- <span> </span>
   <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank">
     <img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048">
-  </a>
+  </a> -->
 </p>
 
 <p align="center">
