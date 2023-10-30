@@ -70,3 +70,37 @@ pnpm test manifest-contents
 Unit and E2E tests are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
+
+## Templates
+
+Each directory inside `templates/` is it's own standalone project. Simply `cd` into the directory you're updating, install dependencies with `npm` (NOT `pnpm`), and run the relevant commands
+
+```sh
+cd templates/vue
+npm i
+npm run dev
+npm run build
+```
+
+Note that templates are hardcoded to a specific version of `wxt` from NPM, they do not use the local version. PR checks will test your changes against the templates, but if you want to manually do it, update the package.json dependency:
+
+```diff
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "vite-plugin-solid": "^2.7.0",
+-   "wxt": "^0.8.0"
++   "wxt": "../.."
+  }
+```
+
+Then run `npm i` again.
+
+### Adding Templates
+
+To add a template, copy the vanilla template and give it a new name.
+
+```sh
+cp -r templates/vailla templates/<new-template-name>
+```
+
+That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.
