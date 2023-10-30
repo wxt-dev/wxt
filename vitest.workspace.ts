@@ -15,6 +15,13 @@ const testSeed = (): Plugin => ({
   },
 });
 
+const resolve = {
+  alias: {
+    '~': 'src',
+    'webextension-polyfill': './src/virtual/mock-browser',
+  },
+};
+
 // Clear e2e test projects
 await fs.rm('e2e/dist', { recursive: true, force: true });
 
@@ -28,6 +35,7 @@ export default defineWorkspace([
       setupFiles: 'vitest.setup.ts',
     },
     plugins: [testSeed()],
+    resolve,
   },
   {
     test: {
@@ -37,5 +45,6 @@ export default defineWorkspace([
       testTimeout: 120e3,
     },
     plugins: [testSeed()],
+    resolve,
   },
 ]);

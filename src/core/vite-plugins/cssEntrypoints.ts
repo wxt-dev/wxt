@@ -1,6 +1,6 @@
 import * as vite from 'vite';
-import { Entrypoint, InternalConfig } from '../types';
-import { getEntrypointBundlePath } from '../utils/entrypoints';
+import { Entrypoint, InternalConfig } from '~/types';
+import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 
 /**
  * Rename CSS entrypoint outputs to ensure a JS file is not generated, and that the CSS file is

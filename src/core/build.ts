@@ -1,144 +1,20 @@
-import { Manifest } from 'webextension-polyfill';
-import { BuildOutput } from './types';
-import { buildEntrypoints } from './build/buildEntrypoints';
-import { findEntrypoints } from './build/findEntrypoints';
-import { generateTypesDir } from './build/generateTypesDir';
-import { InternalConfig, EntrypointGroup } from './types';
-import { generateMainfest, writeManifest } from './utils/manifest';
-import pc from 'picocolors';
-import * as vite from 'vite';
-import fs from 'fs-extra';
-import { groupEntrypoints } from './utils/groupEntrypoints';
-import { formatDuration } from './utils/formatDuration';
-import { printBuildSummary } from './log/printBuildSummary';
-import { execaCommand } from 'execa';
-import glob from 'fast-glob';
-import { unnormalizePath } from './utils/paths';
+import { BuildOutput, InlineConfig } from '~/types';
+import { getInternalConfig, internalBuild } from './utils/building';
 
 /**
- * Builds the extension based on an internal config.
+ * Bundles the extension for production. Returns a promise of the build result. Discovers the `wxt.config.ts` file in
+ * the root directory, and merges that config with what is passed in.
  *
- * This function:
- * 1. Cleans the output directory
- * 2. Executes the rebuild function with a blank previous output so everything is built (see
- *    `rebuild` for more details)
- * 3. Prints the summary
- */
-export async function buildInternal(
-  config: InternalConfig,
-): Promise<BuildOutput> {
-  const verb = config.command === 'serve' ? 'Pre-rendering' : 'Building';
-  const target = `${config.browser}-mv${config.manifestVersion}`;
-  config.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
-      `Vite ${vite.version}`,
-    )}`,
-  );
-  const startTime = Date.now();
-
-  // Cleanup
-  await fs.rm(config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(config.outDir);
-
-  const entrypoints = await findEntrypoints(config);
-  config.logger.debug('Detected entrypoints:', entrypoints);
-  const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, groups, undefined);
-
-  // Post-build
-  await printBuildSummary(
-    config.logger.success,
-    `Built extension in ${formatDuration(Date.now() - startTime)}`,
-    output,
-    config,
-  );
-
-  if (config.analysis.enabled) {
-    await combineAnalysisStats(config);
-    config.logger.info(
-      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow('stats.html')}`,
-    );
-  }
-
-  return output;
-}
-
-/**
- * Given a configuration, list of entrypoints, and an existing, partial output, build the
- * entrypoints and merge the new output with the existing output.
+ * @example
+ * // Use config from `wxt.config.ts`
+ * const res = await build()
  *
- * This function will:
- * 1. Generate the .wxt directory's types
- * 2. Build the `entrypointGroups` (and copies public files)
- * 3. Generate the latest manifest for all entrypoints
- * 4. Write the new manifest to the file system
+ * // or override config `from wxt.config.ts`
+ * const res = await build({
+ *   // Override config...
+ * })
  */
-export async function rebuild(
-  config: InternalConfig,
-  entrypointGroups: EntrypointGroup[],
-  existingOutput: Omit<BuildOutput, 'manifest'> = {
-    steps: [],
-    publicAssets: [],
-  },
-): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
-  const { default: ora } = await import('ora');
-  const spinner = ora(`Preparing...`).start();
-
-  // Update types directory with new files and types
-  const allEntrypoints = await findEntrypoints(config);
-  await generateTypesDir(allEntrypoints, config).catch((err) => {
-    config.logger.warn('Failed to update .wxt directory:', err);
-    // Throw the error if doing a regular build, don't for dev mode.
-    if (config.command === 'build') throw err;
-  });
-
-  // Build and merge the outputs
-  const newOutput = await buildEntrypoints(entrypointGroups, config, spinner);
-  const mergedOutput: Omit<BuildOutput, 'manifest'> = {
-    steps: [...existingOutput.steps, ...newOutput.steps],
-    publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
-  };
-
-  const newManifest = await generateMainfest(
-    allEntrypoints,
-    mergedOutput,
-    config,
-  );
-  const finalOutput: BuildOutput = {
-    manifest: newManifest,
-    ...newOutput,
-  };
-
-  // Write manifest
-  await writeManifest(newManifest, finalOutput, config);
-
-  // Stop the spinner and remove it from the CLI output
-  spinner.clear().stop();
-
-  return {
-    output: {
-      manifest: newManifest,
-      steps: [...existingOutput.steps, ...finalOutput.steps],
-      publicAssets: [
-        ...existingOutput.publicAssets,
-        ...finalOutput.publicAssets,
-      ],
-    },
-    manifest: newManifest,
-  };
-}
-
-async function combineAnalysisStats(config: InternalConfig): Promise<void> {
-  const unixFiles = await glob(`stats-*.json`, {
-    cwd: config.outDir,
-    absolute: true,
-  });
-  const absolutePaths = unixFiles.map(unnormalizePath);
-
-  await execaCommand(
-    `rollup-plugin-visualizer ${absolutePaths.join(' ')} --template ${
-      config.analysis.template
-    }`,
-    { cwd: config.root, stdio: 'inherit' },
-  );
+export async function build(config?: InlineConfig): Promise<BuildOutput> {
+  const internalConfig = await getInternalConfig(config ?? {}, 'build');
+  return await internalBuild(internalConfig);
 }

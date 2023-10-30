@@ -1,20 +1,20 @@
-import { Entrypoint } from '../..';
 import { Manifest } from 'webextension-polyfill';
 import {
+  Entrypoint,
   BackgroundEntrypoint,
   BuildOutput,
   ContentScriptEntrypoint,
   InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
-} from '../types';
+} from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 import {
   getEntrypointBundlePath,
   resolvePerBrowserOption,
 } from './entrypoints';
-import { ContentSecurityPolicy } from './ContentSecurityPolicy';
+import { ContentSecurityPolicy } from './content-security-policy';
 import {
   hashContentScriptOptions,
   mapWxtOptionsToContentScript,

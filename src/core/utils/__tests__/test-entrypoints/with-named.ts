@@ -1,4 +1,4 @@
-import { defineBackground } from '../../../../client';
+import { defineBackground } from '~/client';
 
 export const a = {};
 

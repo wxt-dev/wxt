@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createExtensionRunner } from '..';
-import { fakeInternalConfig } from '../../../testing-utils/fake-objects';
+import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { createSafariRunner } from '../safari';
-import { ExtensionRunner } from '../extension-runner';
 import { createWslRunner } from '../wsl';
 import { createManualRunner } from '../manual';
 import { isWsl } from '../../utils/wsl';
 import { createWebExtRunner } from '../web-ext';
+import { ExtensionRunner } from '~/types';
 
 vi.mock('../../utils/wsl');
 const isWslMock = vi.mocked(isWsl);

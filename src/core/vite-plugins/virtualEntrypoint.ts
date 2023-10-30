@@ -1,8 +1,8 @@
 import { Plugin } from 'vite';
-import { Entrypoint, InternalConfig } from '../types';
+import { Entrypoint, InternalConfig } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
-import { normalizePath } from '../utils/paths';
+import { normalizePath } from '~/core/utils/paths';
 
 /**
  * Wraps a user's entrypoint with a vitual version with additional logic.
@@ -32,7 +32,7 @@ export function virtualEntrypoint(
       const template = await fs.readFile(
         resolve(
           config.root,
-          `node_modules/wxt/dist/virtual-modules/${type}-entrypoint.js`,
+          `node_modules/wxt/dist/virtual/${type}-entrypoint.js`,
         ),
         'utf-8',
       );

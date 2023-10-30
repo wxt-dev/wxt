@@ -1,5 +1,5 @@
 import type { WebExtRunInstance } from 'web-ext-run';
-import { ExtensionRunner } from './extension-runner';
+import { ExtensionRunner } from '~/types';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
