@@ -17,11 +17,9 @@ const outDir = 'dist';
 await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
 const preset: tsup.Options = {
-  format: ['cjs', 'esm'],
   dts: true,
   silent: true,
   sourcemap: false,
-  outDir,
   external: [
     'vite',
     'virtual:user-unlisted-script',
