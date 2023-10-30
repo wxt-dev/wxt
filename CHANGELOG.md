@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.5...v0.8.6)
+
+### 🩹 Fixes
+
+- Inline WXT modules inside `WxtVitest` plugin ([b75c553](https://github.com/wxt-dev/wxt/commit/b75c553))
+
 ## v0.8.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.4...v0.8.5)
