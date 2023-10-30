@@ -41,7 +41,6 @@
       "types": "./dist/index.d.ts"
     },
     "./client": {
-      "require": "./dist/client.cjs",
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
     },
@@ -121,7 +120,7 @@
     "p-map": "^6.0.0",
     "prettier": "^3.0.1",
     "simple-git-hooks": "^2.9.0",
-    "tsup": "^7.1.0",
+    "tsup": "^7.2.0",
     "tsx": "^3.12.7",
     "typedoc": "^0.25.2",
     "typedoc-plugin-markdown": "4.0.0-next.23",
