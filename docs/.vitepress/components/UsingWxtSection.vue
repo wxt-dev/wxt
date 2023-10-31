@@ -34,26 +34,31 @@ function getStoreUrl(extension: ChromeExtension) {
         with WXT.
       </p>
       <ul>
-        <li v-for="extension of sortedExtensions">
+        <li
+          v-for="extension of sortedExtensions"
+          :key="extension.id"
+          class="relative"
+        >
           <img
             :src="extension.iconUrl"
             :alt="`${extension.name} icon`"
             referrerpolicy="no-referrer"
           />
-          <div>
+          <div class="relative justify-around">
             <a
               :href="getStoreUrl(extension)"
               target="_blank"
               :title="extension.name"
+              class="extension-name"
               >{{ extension.name }}</a
             >
             <p class="description" :title="extension.shortDescription">
               {{ extension.shortDescription }}
             </p>
-            <p class="user-count">
-              {{ extension.weeklyActiveUsers.toLocaleString() }} users
-            </p>
           </div>
+          <p class="user-count">
+            {{ extension.weeklyActiveUsers.toLocaleString() }} users
+          </p>
         </li>
       </ul>
       <p class="centered pr">
@@ -122,7 +127,8 @@ li {
   background-color: var(--vp-c-bg-soft);
   border-radius: 12px;
   flex: 1;
-  gap: 16px;
+  gap: 24px;
+  align-items: center;
 }
 
 .centered {
@@ -137,9 +143,10 @@ li .description {
 }
 li .user-count {
   opacity: 70%;
-  text-align: right;
-  width: 100%;
   font-size: small;
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
 }
 
 li a {
@@ -158,8 +165,6 @@ li a:hover {
 
 li div {
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 li .description {
@@ -168,10 +173,22 @@ li .description {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+li .extension-name {
+  font-size: large;
 }
 
 .pr {
   opacity: 70%;
+}
+
+.relative {
+  position: relative;
+}
+
+.justify-around {
+  justify-content: space-around;
 }
 </style>
