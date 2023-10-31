@@ -44,7 +44,7 @@ function getStoreUrl(extension: ChromeExtension) {
             :alt="`${extension.name} icon`"
             referrerpolicy="no-referrer"
           />
-          <div class="relative justify-around">
+          <div class="relative">
             <a
               :href="getStoreUrl(extension)"
               target="_blank"
@@ -186,9 +186,5 @@ li .extension-name {
 
 .relative {
   position: relative;
-}
-
-.justify-around {
-  justify-content: space-around;
 }
 </style>
