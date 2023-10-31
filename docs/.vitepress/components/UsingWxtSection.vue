@@ -8,6 +8,7 @@ import useListExtensionDetails, {
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
+  'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
@@ -27,7 +28,7 @@ function getStoreUrl(extension: ChromeExtension) {
 <template>
   <section class="vp-doc">
     <div class="container">
-      <h2>Who's Using WXT?</h2>
+      <h2 id="whos-using-wxt">Who's Using WXT?</h2>
       <p>
         Battle tested and ready for production. Explore chrome extensions made
         with WXT.
