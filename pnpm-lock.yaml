@@ -55,7 +55,7 @@ importers:
         version: 10.0.2
       is-wsl:
         specifier: ^3.0.0
-        version: 3.0.0
+        version: 3.1.0
       jiti:
         specifier: ^1.19.1
         version: 1.19.1
@@ -2715,6 +2715,14 @@ packages:
     dependencies:
       is-extglob: 2.1.1
 
+  /is-inside-container@1.0.0:
+    resolution: {integrity: sha512-KIYLCCJghfHZxqjYBE7rEy0OBuTd5xCHS7tHVgvCLkx7StIoaxwNW3hCALgEUjFfeRk+MG/Qxmp/vtETEF3tRA==}
+    engines: {node: '>=14.16'}
+    hasBin: true
+    dependencies:
+      is-docker: 3.0.0
+    dev: false
+
   /is-installed-globally@0.4.0:
     resolution: {integrity: sha512-iwGqO3J21aaSkC7jWnHP/difazwS7SFeIqxv6wEtLU8Y5KlzFTjyqcSIT0d8s4+dDhKytsk9PJZ2BkS5eZwQRQ==}
     engines: {node: '>=10'}
@@ -2835,11 +2843,11 @@ packages:
       is-docker: 2.2.1
     dev: false
 
-  /is-wsl@3.0.0:
-    resolution: {integrity: sha512-TQ7xXW/fTBaz/HhGSV779AC99ocpvb9qJPuPwyIea+F+Z+htcQ1wouAA0xEQaa4saVqyP8mwkoYp5efeM/4Gbg==}
+  /is-wsl@3.1.0:
+    resolution: {integrity: sha512-UcVfVfaK4Sc4m7X3dUSoHoozQGBEFeDC+zVo06t98xe8CzHSZZBekNXH+tu0NalHolcJ/QAGqS46Hef7QXBIMw==}
     engines: {node: '>=16'}
     dependencies:
-      is-docker: 3.0.0
+      is-inside-container: 1.0.0
     dev: false
 
   /is-yarn-global@0.4.1:
