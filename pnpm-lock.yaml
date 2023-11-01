@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@types/webextension-polyfill':
         specifier: ^0.10.1
-        version: 0.10.1
+        version: 0.10.5
       '@webext-core/fake-browser':
         specifier: ^1.2.2
         version: 1.2.2
@@ -1072,8 +1072,8 @@ packages:
     resolution: {integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==}
     dev: true
 
-  /@types/webextension-polyfill@0.10.1:
-    resolution: {integrity: sha512-Sdg+E2F5JUbhkE1qX15QUxpyhfMFKRGJqND9nb1C0gNN4NR7kCV31/1GvNbg6Xe+m/JElJ9/lG5kepMzjGPuQw==}
+  /@types/webextension-polyfill@0.10.5:
+    resolution: {integrity: sha512-LlmbFLUB7+BDrb9nMuM0wlqtx9LZbBV2x3W98o02cD7Y8i10+sBenTlhG56vr47dzC7WIVXbURii+5jMJsyjLw==}
     dev: false
 
   /@vitest/coverage-v8@0.34.6(vitest@0.34.6):
