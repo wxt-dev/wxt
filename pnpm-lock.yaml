@@ -145,11 +145,11 @@ importers:
         specifier: ^3.12.7
         version: 3.14.0
       typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.2.2)
+        specifier: ^0.25.3
+        version: 0.25.3(typescript@5.2.2)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.23
-        version: 4.0.0-next.23(typedoc@0.25.2)
+        version: 4.0.0-next.23(typedoc@0.25.3)
       typedoc-vitepress-theme:
         specifier: 1.0.0-next.3
         version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23)
@@ -1371,6 +1371,10 @@ packages:
 
   /ansi-sequence-parser@1.1.0:
     resolution: {integrity: sha512-lEm8mt52to2fT8GhciPCGeCXACSz2UwIN4X2e2LJSnZ5uAbn2/dsYdOmUXq0AtWS5cpAupysIneExOgH0Vd2TQ==}
+    dev: true
+
+  /ansi-sequence-parser@1.1.1:
+    resolution: {integrity: sha512-vJXt3yiaUL4UU546s3rPXlsry/RnM730G1+HkpKE012AN0sx1eOrxSu95oKDIonskeLTijMgqWZ3uDEe3NFvyg==}
     dev: true
 
   /ansi-styles@3.2.1:
@@ -4047,6 +4051,15 @@ packages:
       vscode-textmate: 8.0.0
     dev: true
 
+  /shiki@0.14.5:
+    resolution: {integrity: sha512-1gCAYOcmCFONmErGTrS1fjzJLA7MGZmKzrBNX7apqSwhyITJg2O102uFzXUeBxNnEkDA9vHIKLyeKq0V083vIw==}
+    dependencies:
+      ansi-sequence-parser: 1.1.1
+      jsonc-parser: 3.2.0
+      vscode-oniguruma: 1.7.0
+      vscode-textmate: 8.0.0
+    dev: true
+
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -4506,12 +4519,12 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.2):
+  /typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.3):
     resolution: {integrity: sha512-bKD0LnrQxUTbuDRiJfCWYLlzyERuskWldJ5eWKKuNY38xBOyBhSN8P+vD5KxlJoAifTOm76MK58sNrl4wgOoWg==}
     peerDependencies:
       typedoc: '>=0.25.0'
     dependencies:
-      typedoc: 0.25.2(typescript@5.2.2)
+      typedoc: 0.25.3(typescript@5.2.2)
     dev: true
 
   /typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23):
@@ -4519,11 +4532,11 @@ packages:
     peerDependencies:
       typedoc-plugin-markdown: '>=4.0.0-next.19'
     dependencies:
-      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.2)
+      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.3)
     dev: true
 
-  /typedoc@0.25.2(typescript@5.2.2):
-    resolution: {integrity: sha512-286F7BeATBiWe/qC4PCOCKlSTwfnsLbC/4cZ68oGBbvAqb9vV33quEOXx7q176OXotD+JdEerdQ1OZGJ818lnA==}
+  /typedoc@0.25.3(typescript@5.2.2):
+    resolution: {integrity: sha512-Ow8Bo7uY1Lwy7GTmphRIMEo6IOZ+yYUyrc8n5KXIZg1svpqhZSWgni2ZrDhe+wLosFS8yswowUzljTAV/3jmWw==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -4532,7 +4545,7 @@ packages:
       lunr: 2.3.9
       marked: 4.3.0
       minimatch: 9.0.3
-      shiki: 0.14.3
+      shiki: 0.14.5
       typescript: 5.2.2
     dev: true
 
