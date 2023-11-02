@@ -112,7 +112,7 @@
     "@types/node": "^20.8.10",
     "@types/prompts": "^2.4.7",
     "@vitest/coverage-v8": "^0.34.6",
-    "execa": "^7.2.0",
+    "execa": "^8.0.1",
     "happy-dom": "^12.4.0",
     "lint-staged": "^14.0.0",
     "lodash.merge": "^4.6.2",
