@@ -7,141 +7,67 @@ on:
       - main
 
 jobs:
-  checks:
-    name: Checks
+  formatting:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Formatting
-        run: pnpm format:check
-
-      - name: Type Check
-        run: pnpm compile
-
-      - name: Build Demo
-        run: |
-          pnpm build:all:chrome-mv2
-          pnpm build:all:chrome-mv3
-          pnpm build:all:firefox-mv2
-          pnpm build:all:firefox-mv3
-          pnpm tsc --noEmit
-          pnpm wxt zip
-          pnpm vitest run
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: pnpm format:check
+  type-check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: pnpm compile
+  validate-demo:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: pnpm build:all
         working-directory: demo
-
-      - name: Tests
+      - run: pnpm tsc --noEmit
+        working-directory: demo
+      - run: pnpm wxt zip
+        working-directory: demo
+      - run: pnpm vitest run
+        working-directory: demo
+  tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   windows-tests:
-    name: Windows Tests
     runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Tests
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
-
   project-templates:
-    name: Project Templates
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        template:
+          - react
+          - solid
+          - svelte
+          - vanilla
+          - vue
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build Local Tarball
-        run: pnpm pack
-
-      - name: Validate Vanilla
-        working-directory: templates/vanilla
-        run: |
-          npm i
-          npm i -D ../../wxt-*.tgz
-          npm ls vite
-          npm run build
-          npm run compile
-
-      - name: Validate Vue
-        working-directory: templates/vue
-        run: |
-          npm i
-          npm i -D ../../wxt-*.tgz
-          npm ls vite
-          npm run build
-          npm run compile
-
-      - name: Validate React
-        working-directory: templates/react
-        run: |
-          npm i
-          npm i -D ../../wxt-*.tgz
-          npm ls vite
-          npm run build
-          npm run compile
-
-      - name: Validate Svelte
-        working-directory: templates/svelte
-        run: |
-          npm i
-          npm i -D ../../wxt-*.tgz
-          npm ls vite
-          npm run build
-          npm run check
-
-      - name: Validate Solid
-        working-directory: templates/solid
-        run: |
-          npm i
-          npm i -D ../../wxt-*.tgz
-          npm ls vite
-          npm run build
-          npm run compile
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: pnpm pack
+      - run: npm i
+        working-directory: templates/${{ matrix.template }}
+      - run: npm i -D ../../wxt-*.tgz
+        working-directory: templates/${{ matrix.template }}
+      - run: npm run compile
+        working-directory: templates/${{ matrix.template }}
+      - run: npm run build
+        working-directory: templates/${{ matrix.template }}
