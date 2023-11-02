@@ -140,7 +140,7 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "prettier --write"
+    "*": "prettier --ignore-unknown --write"
   },
   "changelog": {
     "excludeAuthors": [
