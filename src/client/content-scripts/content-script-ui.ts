@@ -2,6 +2,12 @@ import { createIsolatedElement } from '@webext-core/isolated-element';
 import { browser } from '~/browser';
 import { logger } from '~/client/utils/logger';
 import { ContentScriptContext } from './content-script-context';
+import {
+  ContentScriptAnchoredOptions,
+  ContentScriptPositioningOptions,
+  applyContentScriptUiPosition,
+  mountContentScriptUiRoot,
+} from '../utils/content-script-ui';
 
 /**
  * Utility for mounting content script UI's with isolated styles. Automatically removed from the DOM
@@ -52,83 +58,19 @@ export async function createContentScriptUi<TApp>(
     mode: 'open',
   });
 
-  const getAnchor = (): Element | undefined => {
-    if (options.anchor == null) return document.body;
-
-    let resolved =
-      typeof options.anchor === 'function' ? options.anchor() : options.anchor;
-    if (typeof resolved === 'string')
-      return document.querySelector<Element>(resolved) ?? undefined;
-    return resolved ?? undefined;
-  };
-
   let mounted: TApp;
 
   const mount = () => {
-    const anchor = getAnchor();
-    if (anchor == null)
-      throw Error(
-        'Failed to mount content script ui: could not find anchor element',
-      );
-
     // Mount UI inside shadow root
     mounted = options.mount(uiContainer);
 
     // Add shadow root element to DOM
-    switch (options.append) {
-      case undefined:
-      case 'last':
-        anchor.append(shadowHost);
-        break;
-      case 'first':
-        if (anchor.firstChild) {
-          anchor.insertBefore(shadowHost, anchor.firstChild);
-        } else {
-          anchor.append(shadowHost);
-        }
-        break;
-      case 'replace':
-        anchor.replaceWith(shadowHost);
-        break;
-      case 'after':
-        anchor.replaceWith(anchor, shadowHost);
-        break;
-      case 'before':
-        anchor.replaceWith(shadowHost, anchor);
-        break;
-      default:
-        options.append(anchor, shadowHost);
-        break;
-    }
-
-    // Apply types
-    if (options.type !== 'inline') {
-      if (options.zIndex != null)
-        shadowHost.style.zIndex = String(options.zIndex);
-
-      shadowHost.style.overflow = 'visible';
-      shadowHost.style.position = 'relative';
-      shadowHost.style.width = '0';
-      shadowHost.style.height = '0';
-      shadowHost.style.display = 'block';
-
-      const html = shadow.querySelector('html')!;
-      // HTML doesn't exist in tests
-      if (options.type === 'overlay') {
-        html.style.position = 'absolute';
-        if (options.alignment?.startsWith('bottom-')) html.style.bottom = '0';
-        else html.style.top = '0';
-
-        if (options.alignment?.endsWith('-right')) html.style.right = '0';
-        else html.style.left = '0';
-      } else {
-        html.style.position = 'fixed';
-        html.style.top = '0';
-        html.style.bottom = '0';
-        html.style.left = '0';
-        html.style.right = '0';
-      }
-    }
+    mountContentScriptUiRoot(shadowHost, options);
+    applyContentScriptUiPosition(
+      shadowHost,
+      shadow.querySelector('html'),
+      options,
+    );
   };
 
   const remove = () => {
@@ -202,100 +144,30 @@ export interface ContentScriptUi<TApp> {
   remove: () => void;
 }
 
-export interface BaseContentScriptUiOptions<TApp> {
-  /**
-   * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
-   */
-  name: string;
-  /**
-   * In combination with `anchor`, decide how to add the UI to the DOM.
-   *
-   * - `"last"` (default) - Add the UI as the last child of the `anchor` element
-   * - `"first"` - Add the UI as the last child of the `anchor` element
-   * - `"replace"` - Replace the `anchor` element with the UI.
-   * - `"before"` - Add the UI as the sibling before the `anchor` element
-   * - `"after"` - Add the UI as the sibling after the `anchor` element
-   * - `(anchor, ui) => void` - Customizable function that let's you add the UI to the DOM
-   */
-  append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
-  /**
-   * A CSS selector, element, or function that returns one of the two. Along with `append`, the
-   * `anchor` dictates where in the page the UI will be added.
-   */
-  anchor?:
-    | string
-    | Element
-    | null
-    | undefined
-    | (() => string | Element | null | undefined);
-  /**
-   * Callback executed when mounting the UI. This function should create and append the UI to the
-   * `container` element. It is called every time `ui.mount()` is called
-   *
-   * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
-   */
-  mount: (container: Element) => TApp;
-  /**
-   * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
-   * unmounting your vue or react apps.
-   */
-  onRemove?: (mounted: TApp) => void;
-  /**
-   * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
-   * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
-   * to pass those styles in here. This is for any additional styles not in the imported CSS.
-   *
-   * See https://wxt.dev/entrypoints/content-scripts.html#ui for more info.
-   */
-  css?: string;
-}
-
-export type OverlayContentScriptUiOptions<TApp> =
-  BaseContentScriptUiOptions<TApp> & {
-    type: 'overlay';
+export type ContentScriptUiOptions<TApp> = ContentScriptPositioningOptions &
+  ContentScriptAnchoredOptions & {
     /**
-     * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
-     * which corner is aligned with that 0x0 pixel space.
+     * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
+     */
+    name: string;
+    /**
+     * Callback executed when mounting the UI. This function should create and append the UI to the
+     * `container` element. It is called every time `ui.mount()` is called
      *
-     * @default "top-left"
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
      */
-    alignment?: ContentScriptUiOverlayAlignment;
+    mount: (container: Element) => TApp;
     /**
-     * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-     * content.
+     * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
+     * unmounting your vue or react apps.
      */
-    zIndex?: number;
-  };
-
-export type ModalContentScriptUiOptions<TApp> =
-  BaseContentScriptUiOptions<TApp> & {
-    type: 'modal';
+    onRemove?: (mounted: TApp) => void;
     /**
-     * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-     * content.
+     * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
+     * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
+     * to pass those styles in here. This is for any additional styles not in the imported CSS.
+     *
+     * See https://wxt.dev/entrypoints/content-scripts.html#ui for more info.
      */
-    zIndex?: number;
+    css?: string;
   };
-
-export type InlineContentScriptUiOptions<TApp> =
-  BaseContentScriptUiOptions<TApp> & {
-    type: 'inline';
-  };
-
-export type ContentScriptUiOverlayAlignment =
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
-
-export type ContentScriptAppendMode =
-  | 'last'
-  | 'first'
-  | 'replace'
-  | 'before'
-  | 'after';
-
-export type ContentScriptUiOptions<TApp> =
-  | OverlayContentScriptUiOptions<TApp>
-  | ModalContentScriptUiOptions<TApp>
-  | InlineContentScriptUiOptions<TApp>;
