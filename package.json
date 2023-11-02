@@ -75,7 +75,7 @@
     "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
-    "@types/webextension-polyfill": "^0.10.1",
+    "@types/webextension-polyfill": "^0.10.5",
     "@webext-core/fake-browser": "^1.2.2",
     "@webext-core/isolated-element": "^1.0.4",
     "@webext-core/match-patterns": "^1.0.2",

@@ -23,9 +23,9 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "@types/webextension-polyfill": "^0.10.0",
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.14",
+    "@types/webextension-polyfill": "^0.10.5",
     "sass": "^1.64.0",
     "wxt": "workspace:*"
   }
