@@ -11,14 +11,14 @@ import { ContentScriptContext } from './content-script-context';
  * Utility for mounting a content script UI inside an iframe. Automatically removed from the DOM
  * when the content script's context is invalidated.
  *
- * See https://wxt.dev/entrypoints/content-scripts.html#iframe-ui for full documentation.
+ * See https://wxt.dev/entrypoints/content-scripts.html#iframe for full documentation.
  *
  * @example
  * export default defineContentScript({
  *   matches: ["*://*.google.com/*"],
  *
  *   main(ctx) {
- *     const ui = await createContentScriptIframeUi(ctx, {
+ *     const ui = await createContentScriptIframe(ctx, {
  *       page: "/content-script-overlay.html",
  *       type: "modal",
  *     })
@@ -26,10 +26,10 @@ import { ContentScriptContext } from './content-script-context';
  *   }
  * })
  */
-export function createContentScriptIframeUi(
+export function createContentScriptIframe(
   ctx: ContentScriptContext,
-  options: ContentScriptIframeUiOptions,
-): ContentScriptIframeUi {
+  options: ContentScriptIframeOptions,
+): ContentScriptIframe {
   const iframe = document.createElement('iframe');
   iframe.src = browser.runtime.getURL(options.page);
 
@@ -51,7 +51,7 @@ export function createContentScriptIframeUi(
   };
 }
 
-export interface ContentScriptIframeUi {
+export interface ContentScriptIframe {
   /**
    * The iframe added to the DOM.
    */
@@ -66,7 +66,7 @@ export interface ContentScriptIframeUi {
   remove: () => void;
 }
 
-export type ContentScriptIframeUiOptions = ContentScriptPositioningOptions &
+export type ContentScriptIframeOptions = ContentScriptPositioningOptions &
   ContentScriptAnchoredOptions & {
     /**
      * The path to the unlisted HTML file to display in the iframe.
