@@ -41,7 +41,6 @@ export default defineWorkspace([
     test: {
       name: 'e2e',
       dir: 'e2e',
-      singleThread: true,
       testTimeout: 120e3,
     },
     plugins: [testSeed()],
