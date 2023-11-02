@@ -93,7 +93,7 @@
     "is-wsl": "^3.0.0",
     "jiti": "^1.21.0",
     "json5": "^2.2.3",
-    "linkedom": "^0.15.1",
+    "linkedom": "^0.16.1",
     "minimatch": "^9.0.3",
     "ora": "^7.0.1",
     "picocolors": "^1.0.0",

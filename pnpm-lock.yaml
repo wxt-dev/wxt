@@ -63,8 +63,8 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       linkedom:
-        specifier: ^0.15.1
-        version: 0.15.3
+        specifier: ^0.16.1
+        version: 0.16.1
       minimatch:
         specifier: ^9.0.3
         version: 9.0.3
@@ -2548,8 +2548,8 @@ packages:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
     dev: false
 
-  /htmlparser2@8.0.2:
-    resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
+  /htmlparser2@9.0.0:
+    resolution: {integrity: sha512-uxbSI98wmFT/G4P2zXx4OVx04qWUmyFPrD2/CNepa2Zo3GPNaCaaxElDgwUrwYWkK1nr9fft0Ya8dws8coDLLQ==}
     dependencies:
       domelementtype: 2.3.0
       domhandler: 5.0.3
@@ -3045,13 +3045,13 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
-  /linkedom@0.15.3:
-    resolution: {integrity: sha512-p+lBSEWzawF3Gy7+nw+5+u+iDthsfZZVd9lwiO96Ihj7Zd8he5BD1Wzdc9Z4GqtU6lKvxhye4W4Zr20uOAGe4A==}
+  /linkedom@0.16.1:
+    resolution: {integrity: sha512-kbK4txFSjGstS8aHkYo3sRSD7viQbE1TAlYRqiqU13oihzzQFp23D1OwW3VdAQJuzqzBB+1qo9Qvp0xOeoVKig==}
     dependencies:
       css-select: 5.1.0
       cssom: 0.5.0
       html-escaper: 3.0.3
-      htmlparser2: 8.0.2
+      htmlparser2: 9.0.0
       uhyphen: 0.2.0
     dev: false
 
