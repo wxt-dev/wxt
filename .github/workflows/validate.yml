@@ -47,8 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - name: pnpm test:coverage
-        run: pnpm test:coverage --reporter=default --reporter=hanging-process
+      - run: pnpm test run
   project-template:
     runs-on: ubuntu-22.04
     strategy:
