@@ -49,7 +49,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
-  project-templates:
+  project-template:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -68,6 +68,10 @@ jobs:
       - run: npm i -D ../../wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
       - run: npm run compile
+        if: matrix.template != 'svelte'
+        working-directory: templates/${{ matrix.template }}
+      - run: npm run check
+        if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
       - run: npm run build
         working-directory: templates/${{ matrix.template }}
