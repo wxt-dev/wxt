@@ -164,7 +164,7 @@ describe('createContentScriptIframe', () => {
       ui.remove();
     });
 
-    it.only('should automatically remove the UI when the context is invalidated', async () => {
+    it('should automatically remove the UI when the context is invalidated', async () => {
       const ctx = createCtx();
       const ui = await createContentScriptIframe(ctx, {
         page: '/test.html',
