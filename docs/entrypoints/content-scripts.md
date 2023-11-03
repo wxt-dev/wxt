@@ -153,6 +153,8 @@ const anchor = document.querySelector('#anchor-selector');
 anchor.append(ui);
 ```
 
+You can try out [`createContentScriptIframe`](#createcontentscriptiframe) as an alternative solution
+
 :::
 
 ### Usage
@@ -162,7 +164,7 @@ To use `createContentScriptUi`, follow these steps:
 1. Import your CSS file at the top of your content script
 2. Set `cssInjectionMode: "ui"` inside `defineContentScript`
 3. Call `createContentScriptUi`
-4. Call `ui.mount()` to add the UI to the webpage
+4. Call `mount` to add the UI to the webpage
 
 Here's a basic example:
 
@@ -185,7 +187,7 @@ export default defineContentScript({
       },
     });
 
-    // Yoy must call `mount` to add the UI to the page.
+    // You must call `mount` to add the UI to the page.
     ui.mount();
   },
 });
@@ -290,3 +292,44 @@ There are 3 types of UI's you can mount.
 Because the overlay UI type results in a 0px by 0px container being added to the webpage, the `alignment` option allows you to configure which corner of your UI is aligned with the 0x0 element.
 
 > TODO: Add visualization of the different alignments.
+
+## UI
+
+WXT provides a utility function, `createContentScriptIframe` to simplify mounting a UI from a content script. It creates an iframe to an unlisted HTML page. Unlike `createContentScriptUi`, this API support HMR.
+
+`createContentScriptIframe` requires a `ContentScriptContext` so that when the context is invalidated, the UI is automatically removed from the webpage.
+
+### Usage
+
+To use `createContentScriptIframe`, follow these steps:
+
+1. Create an unlisted HTML page that will be loaded into your iframe
+1. Add unlisted page to the manifest's `web_accessible_resouces`
+1. Call `createContentScriptUi`
+1. Call `mount` to add the UI to the webpage
+
+Here's a basic example:
+
+```ts
+export default defineContentScript({
+  // ...
+
+  async main(ctx) {
+    const ui = await createContentScriptIframe(ctx, {
+      page: '/your-unlisted-page.html',
+      type: 'inline',
+      anchor: '#some-element',
+      append: 'after',
+    });
+
+    // You must call `mount` to add the UI to the page.
+    ui.mount();
+  },
+});
+```
+
+The options, other than `page`, are the same as [`createContentScriptUi`](#anchor).
+
+### `page`
+
+The HTML page you want to load inside the iframe. This string will be passed into `browser.runtime.getURL` to resolve the full path of to your HTML page.
