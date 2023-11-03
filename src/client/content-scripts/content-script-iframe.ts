@@ -30,12 +30,14 @@ export function createContentScriptIframe(
   ctx: ContentScriptContext,
   options: ContentScriptIframeOptions,
 ): ContentScriptIframe {
+  const wrapper = document.createElement('div');
   const iframe = document.createElement('iframe');
   iframe.src = browser.runtime.getURL(options.page);
+  wrapper.appendChild(iframe);
 
   const mount = () => {
-    applyContentScriptUiPosition(iframe, undefined, options);
-    mountContentScriptUiRoot(iframe, options);
+    applyContentScriptUiPosition(wrapper, iframe, options);
+    mountContentScriptUiRoot(wrapper, options);
   };
 
   const remove = () => {
@@ -46,6 +48,7 @@ export function createContentScriptIframe(
 
   return {
     iframe,
+    wrapper,
     mount,
     remove,
   };
@@ -56,6 +59,10 @@ export interface ContentScriptIframe {
    * The iframe added to the DOM.
    */
   iframe: HTMLIFrameElement;
+  /**
+   * A wrapper div that assists in positioning.
+   */
+  wrapper: HTMLDivElement;
   /**
    * Function that mounts or remounts the UI on the page.
    */

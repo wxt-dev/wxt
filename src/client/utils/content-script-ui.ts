@@ -89,7 +89,6 @@ export function applyContentScriptUiPosition(
     root.style.height = '0';
     root.style.display = 'block';
 
-    // HTML doesn't exist in tests
     if (positionedElement) {
       if (options.type === 'overlay') {
         positionedElement.style.position = 'absolute';
