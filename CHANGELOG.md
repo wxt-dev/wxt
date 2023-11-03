@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.8.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.6...v0.8.7)
+
+### 🚀 Enhancements
+
+- `createContentScriptIframe` utility ([#206](https://github.com/wxt-dev/wxt/pull/206))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump happy-dom from 12.4.0 to 12.10.3 ([#194](https://github.com/wxt-dev/wxt/pull/194))
+- **deps-dev:** Bump tsx from 3.12.8 to 3.14.0 ([#198](https://github.com/wxt-dev/wxt/pull/198))
+- Upgrade types ([f3874da](https://github.com/wxt-dev/wxt/commit/f3874da))
+- **deps-dev:** Upgrade `lint-staged` to `^15.0.2` ([5f74a54](https://github.com/wxt-dev/wxt/commit/5f74a54))
+- **deps-dev:** Upgrade `execa` to `^8.0.1` ([#200](https://github.com/wxt-dev/wxt/pull/200))
+- **deps-dev:** Upgrade `typedoc` to `^0.25.3` ([#201](https://github.com/wxt-dev/wxt/pull/201))
+- **deps-dev:** Upgrade `vue` to `3.3.7` ([0b8d101](https://github.com/wxt-dev/wxt/commit/0b8d101))
+- **deps-dev:** Upgrade `vitepress` to `1.0.0-rc.24` ([5de18e5](https://github.com/wxt-dev/wxt/commit/5de18e5))
+- **deps-dev:** Update `@type/*` packages for demo ([cd4d00e](https://github.com/wxt-dev/wxt/commit/cd4d00e))
+- **deps-dev:** Update `sass` to `1.69.5` ([183bb02](https://github.com/wxt-dev/wxt/commit/183bb02))
+- Improve prettier git hook ([0f09cbe](https://github.com/wxt-dev/wxt/commit/0f09cbe))
+- Run E2E tests in parallel ([#204](https://github.com/wxt-dev/wxt/pull/204))
+
+### 🤖 CI
+
+- Separate validation into multiple jobs ([#203](https://github.com/wxt-dev/wxt/pull/203))
+
 ## v0.8.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.5...v0.8.6)
