@@ -31,6 +31,7 @@ export function createContentScriptIframe(
   options: ContentScriptIframeOptions,
 ): ContentScriptIframe {
   const wrapper = document.createElement('div');
+  wrapper.classList.add('wxt-iframe-wrapper');
   const iframe = document.createElement('iframe');
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
@@ -41,7 +42,7 @@ export function createContentScriptIframe(
   };
 
   const remove = () => {
-    iframe.remove();
+    wrapper.remove();
   };
 
   ctx.onInvalidated(remove);
