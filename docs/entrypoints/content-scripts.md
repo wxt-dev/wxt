@@ -293,7 +293,7 @@ Because the overlay UI type results in a 0px by 0px container being added to the
 
 > TODO: Add visualization of the different alignments.
 
-## UI
+## IFrame
 
 WXT provides a utility function, `createContentScriptIframe` to simplify mounting a UI from a content script. It creates an iframe to an unlisted HTML page. Unlike `createContentScriptUi`, this API support HMR.
 
