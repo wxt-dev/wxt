@@ -78,5 +78,5 @@ export type ContentScriptIframeOptions = ContentScriptPositioningOptions &
     /**
      * The path to the unlisted HTML file to display in the iframe.
      */
-    page: PublicPath;
+    page: import('wxt/browser').PublicPath;
   };

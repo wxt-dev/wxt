@@ -77,7 +77,7 @@ async function writePathsDeclarationFile(
 import "wxt/browser";
 
 declare module "wxt/browser" {
-  type PublicPath =
+  export type PublicPath =
 {{ union }}
   export interface WxtRuntime extends Runtime.Static {
     getURL(path: PublicPath): string;
