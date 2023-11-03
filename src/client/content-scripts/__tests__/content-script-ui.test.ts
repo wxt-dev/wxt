@@ -266,7 +266,7 @@ describe('createContentScriptUi', () => {
         });
 
         expect(ui.mount).toThrow(
-          'Failed to mount content script ui: could not find anchor element',
+          'Failed to mount content script UI: could not find anchor element',
         );
       },
     );

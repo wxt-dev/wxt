@@ -44,7 +44,7 @@ describe('TypeScript Project', () => {
       import \\"wxt/browser\\";
 
       declare module \\"wxt/browser\\" {
-        type PublicPath =
+        export type PublicPath =
           | \\"/options.html\\"
           | \\"/popup.html\\"
           | \\"/sandbox.html\\"
