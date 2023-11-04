@@ -32,7 +32,7 @@
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
 </p>
 
-https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c
+https://github.com/wxt-dev/wxt/assets/10101283/07359e53-f491-43b6-8e8f-fae94aec8063
 
 ## Quick Start
 
