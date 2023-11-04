@@ -135,7 +135,7 @@ declare module "wxt/browser" {
   const overrides = messages.map((message) => {
     return `    /**
      * ${message.description ?? 'No message description.'}
-     * 
+     *
      * "${message.message}"
      */
     getMessage(
