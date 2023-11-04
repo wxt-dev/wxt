@@ -252,7 +252,6 @@ describe('TypeScript Project', () => {
           \\"forceConsistentCasingInFileNames\\": true,
           \\"resolveJsonModule\\": true,
           \\"strict\\": true,
-          \\"lib\\": [\\"DOM\\", \\"WebWorker\\"],
           \\"skipLibCheck\\": true,
           \\"paths\\": {
             \\"@\\": [\\"..\\"],
@@ -296,7 +295,6 @@ describe('TypeScript Project', () => {
           \\"forceConsistentCasingInFileNames\\": true,
           \\"resolveJsonModule\\": true,
           \\"strict\\": true,
-          \\"lib\\": [\\"DOM\\", \\"WebWorker\\"],
           \\"skipLibCheck\\": true,
           \\"paths\\": {
             \\"@\\": [\\"../src\\"],
