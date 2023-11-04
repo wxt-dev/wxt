@@ -120,7 +120,7 @@ describe('TypeScript Project', () => {
           /**
            * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
       Note: You can't use this message in a manifest file.
-           * 
+           *
            * \\"<browser.runtime.id>\\"
            */
           getMessage(
@@ -130,7 +130,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * 
-           * 
+           *
            * \\"<browser.i18n.getUiLocale()>\\"
            */
           getMessage(
@@ -140,7 +140,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * The text direction for the current locale, either \\"ltr\\" for left-to-right languages such as English or \\"rtl\\" for right-to-left languages such as Japanese.
-           * 
+           *
            * \\"<ltr|rtl>\\"
            */
           getMessage(
@@ -150,7 +150,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * If the @@bidi_dir is \\"ltr\\", then this is \\"rtl\\"; otherwise, it's \\"ltr\\".
-           * 
+           *
            * \\"<rtl|ltr>\\"
            */
           getMessage(
@@ -160,7 +160,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * If the @@bidi_dir is \\"ltr\\", then this is \\"left\\"; otherwise, it's \\"right\\".
-           * 
+           *
            * \\"<left|right>\\"
            */
           getMessage(
@@ -170,7 +170,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * If the @@bidi_dir is \\"ltr\\", then this is \\"right\\"; otherwise, it's \\"left\\".
-           * 
+           *
            * \\"<right|left>\\"
            */
           getMessage(
@@ -180,7 +180,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * Ask for the user's name
-           * 
+           *
            * \\"What's your name?\\"
            */
           getMessage(
@@ -190,7 +190,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * Greet the user
-           * 
+           *
            * \\"Hello, $USER$\\"
            */
           getMessage(
@@ -200,7 +200,7 @@ describe('TypeScript Project', () => {
           ): string;
           /**
            * Say goodbye to the user
-           * 
+           *
            * \\"Goodbye, $USER$. Come back to $OUR_SITE$ soon!\\"
            */
           getMessage(
