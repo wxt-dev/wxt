@@ -19,11 +19,19 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Remove `lib` from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209))
+- ⚠️  Removed [`"WebWorker"` types](https://www.typescriptlang.org/tsconfig/lib.html) from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209)). These types are useful for MV3 projects using a service worker. To add them back to your project, add the following to your project's TSConfig:
+   ```diff
+   {
+     "extends": "./.wxt/tsconfig.json",
+   + "compilerOptions": {
+   +   "lib": ["ESNext", "DOM", "WebWorker"]
+   + }
+   }
+   ```
 
 ### ❤️ Contributors
 
-- Yyyanghj <yyyanghj@gmail.com>
+- yyyanghj ([@yyyanghj](https://github.com/yyyanghj))
 
 ## v0.8.7
 
@@ -85,7 +93,7 @@
 
 ### ❤️ Contributors
 
-- Nenad Novaković
+- Nenad Novaković ([@dvlden](https://github.com/dvlden))
 
 ## v0.8.4
 
@@ -150,7 +158,7 @@
 
 ### ❤️ Contributors
 
-- 渣渣120 <WOSHIZHAZHA120@qq.com>
+- 渣渣120 [@WOSHIZHAZHA120](https://github.com/WOSHIZHAZHA120)
 
 ## v0.7.5
 
