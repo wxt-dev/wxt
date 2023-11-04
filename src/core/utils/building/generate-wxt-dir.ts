@@ -135,7 +135,7 @@ declare module "wxt/browser" {
   const overrides = messages.map((message) => {
     return `    /**
      * ${message.description ?? 'No message description.'}
-     * 
+     *
      * "${message.message}"
      */
     getMessage(
@@ -209,7 +209,7 @@ async function writeTsConfigFile(
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "strict": true,
-    "lib": ["DOM", "WebWorker"],
+    "lib": ["ESNext","DOM", "WebWorker"],
     "skipLibCheck": true,
     "paths": {
       "@": ["${srcPath}"],
