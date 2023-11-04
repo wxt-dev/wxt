@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.9.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.7...v0.9.0)
+
+### 🩹 Fixes
+
+- ⚠️  Remove `lib` from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209))
+
+### 📖 Documentation
+
+- Fix heading ([345406f](https://github.com/wxt-dev/wxt/commit/345406f))
+- Add demo video ([#208](https://github.com/wxt-dev/wxt/pull/208))
+
+### 🏡 Chore
+
+- Fix Svelte and React template READMEs ([#207](https://github.com/wxt-dev/wxt/pull/207))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Remove `lib` from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209))
+
+### ❤️ Contributors
+
+- Yyyanghj <yyyanghj@gmail.com>
+
 ## v0.8.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.6...v0.8.7)
