@@ -209,7 +209,7 @@ async function writeTsConfigFile(
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "strict": true,
-    "lib": ["ESNext","DOM", "WebWorker"],
+    "lib": ["ESNext", "DOM", "WebWorker"],
     "skipLibCheck": true,
     "paths": {
       "@": ["${srcPath}"],
