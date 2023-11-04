@@ -32,7 +32,7 @@
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
 </p>
 
-![Example CLI Output](./docs/assets/cli-output.png)
+https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c
 
 ## Quick Start
 
