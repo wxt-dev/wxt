@@ -78,6 +78,7 @@ features:
     </p>
     <div style="margin: auto; width: 100%; max-width: 700px; text-align: center">
       <video src="https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c" controls></video>
+      <br />
       <small>
         And who doesn't appreciate a beautiful CLI?
       </small>
