@@ -209,7 +209,6 @@ async function writeTsConfigFile(
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "strict": true,
-    "lib": ["DOM", "WebWorker"],
     "skipLibCheck": true,
     "paths": {
       "@": ["${srcPath}"],
