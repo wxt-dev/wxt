@@ -77,7 +77,7 @@ features:
       WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
     </p>
     <div style="margin: auto; width: 100%; max-width: 700px; text-align: center">
-      <video src="https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c"></video>
+      <video src="https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c" controls></video>
       <small>
         And who doesn't appreciate a beautiful CLI?
       </small>
