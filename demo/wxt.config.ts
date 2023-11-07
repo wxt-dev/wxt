@@ -11,4 +11,7 @@ export default defineConfig({
       },
     ],
   },
+  alias: {
+    public: 'src/public',
+  },
 });

@@ -190,6 +190,22 @@ export interface InlineConfig {
      */
     template?: PluginVisualizerOptions['template'];
   };
+  /**
+   * Add additional paths to the `.wxt/tsconfig.json`. Use this instead of overwriting the `paths`
+   * in the root `tsconfig.json` if you want to add new paths.
+   *
+   * Passed into Vite's
+   * [`resolve.alias`](https://vitejs.dev/config/shared-options.html#resolve-alias) option and used
+   * to generate the `.wxt/tsconfig.json`.
+   *
+   * The key is the import alias and the value is either a relative path to the root directory or an absolute path.
+   *
+   * @example
+   * {
+   *   "testing": "src/utils/testing.ts"
+   * }
+   */
+  alias?: Record<string, string>;
 }
 
 export interface WxtInlineViteConfig

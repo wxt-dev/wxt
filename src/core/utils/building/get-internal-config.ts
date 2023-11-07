@@ -112,6 +112,13 @@ export async function getInternalConfig(
       template: mergedConfig.analysis?.template ?? 'treemap',
     },
     userConfigMetadata: userConfigMetadata ?? {},
+    alias: {
+      ...mergedConfig.alias,
+      '~': srcDir,
+      '@': srcDir,
+      '~~': root,
+      '@@': root,
+    },
   };
 
   finalConfig.vite = (env) =>
@@ -186,6 +193,10 @@ function mergeInlineConfig(
       enabled: inlineConfig.analysis?.enabled ?? userConfig.analysis?.enabled,
       template:
         inlineConfig.analysis?.template ?? userConfig.analysis?.template,
+    },
+    alias: {
+      ...userConfig.alias,
+      ...inlineConfig.alias,
     },
   };
 }
