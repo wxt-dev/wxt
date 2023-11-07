@@ -80,6 +80,16 @@ export async function getInternalConfig(
     overrides: inlineConfig.runner,
     defaults: userConfig.runner,
   });
+  // Make sure alias are absolute
+  const alias = Object.fromEntries(
+    Object.entries({
+      ...mergedConfig.alias,
+      '@': srcDir,
+      '~': srcDir,
+      '@@': root,
+      '~~': root,
+    }).map(([key, value]) => [key, path.resolve(root, value)]),
+  );
 
   const finalConfig: InternalConfig = {
     browser,
@@ -112,6 +122,7 @@ export async function getInternalConfig(
       template: mergedConfig.analysis?.template ?? 'treemap',
     },
     userConfigMetadata: userConfigMetadata ?? {},
+    alias,
   };
 
   finalConfig.vite = (env) =>
@@ -186,6 +197,10 @@ function mergeInlineConfig(
       enabled: inlineConfig.analysis?.enabled ?? userConfig.analysis?.enabled,
       template:
         inlineConfig.analysis?.template ?? userConfig.analysis?.template,
+    },
+    alias: {
+      ...userConfig.alias,
+      ...inlineConfig.alias,
     },
   };
 }

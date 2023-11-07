@@ -49,6 +49,10 @@ export interface InternalConfig {
     template: NonNullable<PluginVisualizerOptions['template']>;
   };
   userConfigMetadata: Omit<ResolvedConfig<UserConfig>, 'config'>;
+  /**
+   * Import aliases to absolute paths.
+   */
+  alias: Record<string, string>;
 }
 
 export interface FsCache {

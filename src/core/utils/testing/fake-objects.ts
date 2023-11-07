@@ -244,5 +244,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     },
     transformManifest: () => {},
     userConfigMetadata: {},
+    alias: {},
   };
 });

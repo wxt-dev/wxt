@@ -7,12 +7,7 @@ export function tsconfigPaths(config: InternalConfig): vite.Plugin {
     async config() {
       return {
         resolve: {
-          alias: {
-            '@@': config.root,
-            '~~': config.root,
-            '@': config.srcDir,
-            '~': config.srcDir,
-          },
+          alias: config.alias,
         },
       };
     },

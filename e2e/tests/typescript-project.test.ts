@@ -315,4 +315,53 @@ describe('TypeScript Project', () => {
       }"
     `);
   });
+
+  it('should add additional path aliases listed in the alias config, preventing defaults from being overridden', async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({
+      srcDir: 'src',
+      alias: {
+        example: 'example',
+        '@': 'ignored-path',
+      },
+    });
+
+    await project.build();
+
+    const output = await project.serializeFile('.wxt/tsconfig.json');
+    expect(output).toMatchInlineSnapshot(`
+      ".wxt/tsconfig.json
+      ----------------------------------------
+      {
+        \\"compilerOptions\\": {
+          \\"target\\": \\"ESNext\\",
+          \\"module\\": \\"ESNext\\",
+          \\"moduleResolution\\": \\"Bundler\\",
+          \\"noEmit\\": true,
+          \\"esModuleInterop\\": true,
+          \\"forceConsistentCasingInFileNames\\": true,
+          \\"resolveJsonModule\\": true,
+          \\"strict\\": true,
+          \\"skipLibCheck\\": true,
+          \\"paths\\": {
+            \\"example\\": [\\"../example\\"],
+            \\"example/*\\": [\\"../example/*\\"],
+            \\"@\\": [\\"../src\\"],
+            \\"@/*\\": [\\"../src/*\\"],
+            \\"~\\": [\\"../src\\"],
+            \\"~/*\\": [\\"../src/*\\"],
+            \\"@@\\": [\\"..\\"],
+            \\"@@/*\\": [\\"../*\\"],
+            \\"~~\\": [\\"..\\"],
+            \\"~~/*\\": [\\"../*\\"]
+          }
+        },
+        \\"include\\": [
+          \\"../**/*\\",
+          \\"./wxt.d.ts\\"
+        ],
+        \\"exclude\\": [\\"../.output\\"]
+      }"
+    `);
+  });
 });
