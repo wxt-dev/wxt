@@ -2,7 +2,7 @@ name: Sync Releases
 on:
   push:
     branches:
-      - update-releases
+      - main
     paths:
       - CHANGELOG.md
 
