@@ -129,11 +129,7 @@
     "vitepress": "1.0.0-rc.24",
     "vitest": "^0.34.6",
     "vitest-mock-extended": "^1.3.1",
-    "vue": "^3.3.7",
-    "webextension-polyfill": "^0.10.0"
-  },
-  "peerDependencies": {
-    "webextension-polyfill": ">=0.10.0"
+    "vue": "^3.3.7"
   },
   "packageManager": "pnpm@8.6.3",
   "simple-git-hooks": {
