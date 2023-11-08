@@ -7,6 +7,7 @@ export interface ChromeExtension {
   weeklyActiveUsers: number;
   shortDescription: string;
   storeUrl: string;
+  rating: number | undefined;
 }
 
 const operationName = 'WxtDocsUsedBy';
@@ -18,6 +19,7 @@ const query = `query ${operationName}($ids:[String!]!) {
     weeklyActiveUsers
     shortDescription
     storeUrl
+    rating
   }
 }`;
 
