@@ -8,6 +8,7 @@ import useListExtensionDetails, {
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
+  'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
