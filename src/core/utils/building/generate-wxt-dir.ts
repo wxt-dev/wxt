@@ -77,7 +77,7 @@ async function writePathsDeclarationFile(
 import "wxt/browser";
 
 declare module "wxt/browser" {
-  type PublicPath =
+  export type PublicPath =
 {{ union }}
   export interface WxtRuntime extends Runtime.Static {
     getURL(path: PublicPath): string;
@@ -135,7 +135,7 @@ declare module "wxt/browser" {
   const overrides = messages.map((message) => {
     return `    /**
      * ${message.description ?? 'No message description.'}
-     * 
+     *
      * "${message.message}"
      */
     getMessage(
@@ -195,8 +195,17 @@ async function writeTsConfigFile(
   config: InternalConfig,
 ) {
   const dir = config.wxtDir;
-  const rootPath = normalizePath(relative(dir, config.root));
-  const srcPath = normalizePath(relative(dir, config.srcDir));
+  const getTsconfigPath = (path: string) => normalizePath(relative(dir, path));
+  const paths = Object.entries(config.alias)
+    .flatMap(([alias, absolutePath]) => {
+      const aliasPath = getTsconfigPath(absolutePath);
+      return [
+        `      "${alias}": ["${aliasPath}"]`,
+        `      "${alias}/*": ["${aliasPath}/*"]`,
+      ];
+    })
+    .join(',\n');
+
   await writeFileIfDifferent(
     resolve(dir, 'tsconfig.json'),
     `{
@@ -209,24 +218,16 @@ async function writeTsConfigFile(
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "strict": true,
-    "lib": ["DOM", "WebWorker"],
     "skipLibCheck": true,
     "paths": {
-      "@": ["${srcPath}"],
-      "@/*": ["${srcPath}/*"],
-      "~": ["${srcPath}"],
-      "~/*": ["${srcPath}/*"],
-      "@@": ["${rootPath}"],
-      "@@/*": ["${rootPath}/*"],
-      "~~": ["${rootPath}"],
-      "~~/*": ["${rootPath}/*"]
+${paths}
     }
   },
   "include": [
-    "${normalizePath(relative(dir, config.root))}/**/*",
-    "./${normalizePath(relative(dir, mainReference))}"
+    "${getTsconfigPath(config.root)}/**/*",
+    "./${getTsconfigPath(mainReference)}"
   ],
-  "exclude": ["${normalizePath(relative(dir, config.outBaseDir))}"]
+  "exclude": ["${getTsconfigPath(config.outBaseDir)}"]
 }`,
   );
 }

@@ -1,3 +1,5 @@
+import messages from 'public/_locales/en/messages.json';
+
 export default defineBackground(() => {
   console.log(browser.runtime.id);
   logId();
@@ -6,6 +8,7 @@ export default defineBackground(() => {
     chrome: __IS_CHROME__,
     firefox: __IS_FIREFOX__,
     manifestVersion: __MANIFEST_VERSION__,
+    messages,
   });
 
   // @ts-expect-error: should only accept entrypoints or public assets

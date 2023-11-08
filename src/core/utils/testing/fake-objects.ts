@@ -164,6 +164,7 @@ export const fakeRollupOutputChunk = fakeObjectCreator<Rollup.OutputChunk>(
       importedCss: new Set(),
     },
     preliminaryFileName: faker.string.alphanumeric(),
+    sourcemapFileName: null,
   }),
 );
 
@@ -243,5 +244,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     },
     transformManifest: () => {},
     userConfigMetadata: {},
+    alias: {},
   };
 });

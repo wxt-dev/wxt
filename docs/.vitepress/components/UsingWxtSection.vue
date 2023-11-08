@@ -12,11 +12,17 @@ const chromeExtensionIds = [
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
-const sortedExtensions = computed(() =>
-  !data.value
-    ? undefined
-    : [...data.value].sort((l, r) => r.weeklyActiveUsers - l.weeklyActiveUsers),
-);
+const sortedExtensions = computed(() => {
+  if (!data.value?.length) return [];
+
+  return [...data.value]
+    .map((item) => ({
+      ...item,
+      // Sort based on the user count weighted by the rating
+      sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
+    }))
+    .sort((l, r) => r.sortKey - l.sortKey);
+});
 
 function getStoreUrl(extension: ChromeExtension) {
   const url = new URL(extension.storeUrl);
@@ -57,7 +63,11 @@ function getStoreUrl(extension: ChromeExtension) {
             </p>
           </div>
           <p class="user-count">
-            {{ extension.weeklyActiveUsers.toLocaleString() }} users
+            <span>{{ extension.weeklyActiveUsers.toLocaleString() }} users</span
+            ><template v-if="extension.rating != null"
+              >,
+              <span>{{ extension.rating }} stars</span>
+            </template>
           </p>
         </li>
       </ul>

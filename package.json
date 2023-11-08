@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.8.5",
+  "version": "0.9.0",
   "description": "Next gen framework for developing web extensions",
   "engines": {
     "node": ">=18",
@@ -75,46 +75,46 @@
     "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
-    "@types/webextension-polyfill": "^0.10.1",
+    "@types/webextension-polyfill": "^0.10.5",
     "@webext-core/fake-browser": "^1.2.2",
     "@webext-core/isolated-element": "^1.0.4",
     "@webext-core/match-patterns": "^1.0.2",
     "async-mutex": "^0.4.0",
-    "c12": "^1.4.2",
+    "c12": "^1.5.1",
     "cac": "^6.7.14",
     "consola": "^3.2.3",
-    "esbuild": "^0.19.4",
+    "esbuild": "^0.19.5",
     "fast-glob": "^3.3.1",
     "filesize": "^10.0.8",
     "fs-extra": "^11.1.1",
     "get-port": "^7.0.0",
-    "giget": "^1.1.2",
-    "immer": "^10.0.2",
+    "giget": "^1.1.3",
+    "immer": "^10.0.3",
     "is-wsl": "^3.0.0",
-    "jiti": "^1.19.1",
+    "jiti": "^1.21.0",
     "json5": "^2.2.3",
-    "linkedom": "^0.15.1",
+    "linkedom": "^0.16.1",
     "minimatch": "^9.0.3",
     "ora": "^7.0.1",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",
     "rollup-plugin-visualizer": "^5.9.2",
-    "unimport": "^3.1.0",
-    "vite": "^4.4.11",
+    "unimport": "^3.4.0",
+    "vite": "^4.0.0 || ^5.0.0-0",
     "web-ext-run": "^0.1.0",
     "webextension-polyfill": "^0.10.0",
     "zip-dir": "^2.0.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
-    "@types/fs-extra": "^11.0.1",
-    "@types/lodash.merge": "^4.6.7",
-    "@types/node": "^20.8.6",
-    "@types/prompts": "^2.4.4",
+    "@faker-js/faker": "^8.2.0",
+    "@types/fs-extra": "^11.0.3",
+    "@types/lodash.merge": "^4.6.8",
+    "@types/node": "^20.8.10",
+    "@types/prompts": "^2.4.7",
     "@vitest/coverage-v8": "^0.34.6",
-    "execa": "^7.2.0",
+    "execa": "^8.0.1",
     "happy-dom": "^12.4.0",
-    "lint-staged": "^14.0.0",
+    "lint-staged": "^15.0.2",
     "lodash.merge": "^4.6.2",
     "npm-run-all": "^4.1.5",
     "p-map": "^6.0.0",
@@ -122,25 +122,21 @@
     "simple-git-hooks": "^2.9.0",
     "tsup": "^7.2.0",
     "tsx": "^3.12.7",
-    "typedoc": "^0.25.2",
+    "typedoc": "^0.25.3",
     "typedoc-plugin-markdown": "4.0.0-next.23",
     "typedoc-vitepress-theme": "1.0.0-next.3",
     "typescript": "^5.2.2",
-    "vitepress": "1.0.0-rc.10",
+    "vitepress": "1.0.0-rc.24",
     "vitest": "^0.34.6",
     "vitest-mock-extended": "^1.3.1",
-    "vue": "^3.3.4",
-    "webextension-polyfill": "^0.10.0"
-  },
-  "peerDependencies": {
-    "webextension-polyfill": ">=0.10.0"
+    "vue": "^3.3.7"
   },
   "packageManager": "pnpm@8.6.3",
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "prettier --write"
+    "*": "prettier --ignore-unknown --write"
   },
   "changelog": {
     "excludeAuthors": [

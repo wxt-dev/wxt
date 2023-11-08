@@ -71,6 +71,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/installation.md' },
       { text: 'Entrypoints', link: '/entrypoints/background.md' },
+      { text: 'Examples', link: '/examples.md' },
       { text: 'API', link: '/api/cli.md' },
     ],
 

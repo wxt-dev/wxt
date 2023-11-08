@@ -1,12 +1,12 @@
 {
-  "name": "WXT Demo",
+  "name": "demo",
   "version": "1.0.0",
   "description": "Demo extension for WXT",
   "type": "module",
   "scripts": {
     "dev": "pnpm -w build && wxt",
     "build": "pnpm -w build && wxt build",
-    "build:all": "pnpm -w build && run-s -s build:all:*",
+    "build:all": "pnpm -w build && run-s -s 'build:all:*'",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
@@ -23,10 +23,10 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "@types/webextension-polyfill": "^0.10.0",
-    "sass": "^1.64.0",
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.14",
+    "@types/webextension-polyfill": "^0.10.5",
+    "sass": "^1.69.5",
     "wxt": "workspace:*"
   }
 }
