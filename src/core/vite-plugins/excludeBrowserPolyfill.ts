@@ -12,7 +12,8 @@ export function excludeBrowserPolyfill(config: InternalConfig): vite.Plugin {
   return {
     name: 'wxt:exclude-browser-polyfill',
     config() {
-      if (config.experimental.includeBrowserPolyfill) return; // Noop, don't return any config
+      // Only apply the config if we're disabling the polyfill
+      if (config.experimental.includeBrowserPolyfill) return;
 
       return {
         resolve: {
