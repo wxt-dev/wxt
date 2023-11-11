@@ -211,11 +211,23 @@ export interface InlineConfig {
    */
   experimental?: {
     /**
-     * Disable the `webextension-polyfill` by setting this to false.
+     * Whether to use [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill)
+     * when importing `browser` from `wxt/browser`.
+     *
+     * When set to `false`, WXT will export the chrome global instead of the polyfill from
+     * `wxt/browser`.
+     *
+     * You should use `browser` to access the web extension APIs.
      *
      * @default true
+     * @example
+     * export default defineConfig({
+     *   experimental: {
+     *     includeBrowserPolyfill: false
+     *   }
+     * })
      */
-    webextensionPolyfill?: boolean;
+    includeBrowserPolyfill?: boolean;
   };
 }
 

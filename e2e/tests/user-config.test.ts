@@ -100,7 +100,7 @@ describe('User Config', () => {
     projectWithoutPolyill.addFile('entrypoints/background.ts', background);
     await projectWithoutPolyill.build({
       experimental: {
-        webextensionPolyfill: false,
+        includeBrowserPolyfill: false,
       },
     });
     const backgroundWithoutPolyfill = await projectWithoutPolyill.serializeFile(

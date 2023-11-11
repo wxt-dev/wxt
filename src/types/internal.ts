@@ -54,7 +54,7 @@ export interface InternalConfig {
    */
   alias: Record<string, string>;
   experimental: {
-    webextensionPolyfill: boolean;
+    includeBrowserPolyfill: boolean;
   };
 }
 

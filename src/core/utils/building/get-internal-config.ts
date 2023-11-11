@@ -124,8 +124,8 @@ export async function getInternalConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: {
-      webextensionPolyfill:
-        mergedConfig.experimental?.webextensionPolyfill ?? true,
+      includeBrowserPolyfill:
+        mergedConfig.experimental?.includeBrowserPolyfill ?? true,
     },
   };
 
