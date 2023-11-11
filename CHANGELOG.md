@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.9.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.0...v0.9.1)
+
+### 🚀 Enhancements
+
+- Add `alias` config for customizing path aliases ([#216](https://github.com/wxt-dev/wxt/pull/216))
+
+### 🩹 Fixes
+
+- Move `webextension-polyfill` from peer to regular dependencies ([609ae2a](https://github.com/wxt-dev/wxt/commit/609ae2a))
+- Generate valid manifest for Firefox MV3 ([#229](https://github.com/wxt-dev/wxt/pull/229))
+
+### 📖 Documentation
+
+- Add examples ([c81dfff](https://github.com/wxt-dev/wxt/commit/c81dfff))
+- Improve the "Used By" section on homepage ([#220](https://github.com/wxt-dev/wxt/pull/220))
+- Add UltraWideo to homepage ([#193](https://github.com/wxt-dev/wxt/pull/193))
+- Add StayFree to homepage ([#221](https://github.com/wxt-dev/wxt/pull/221))
+- Update feature comparison ([67ffa44](https://github.com/wxt-dev/wxt/commit/67ffa44))
+
+### 🏡 Chore
+
+- Remove whitespace from genearted `.wxt` files ([#211](https://github.com/wxt-dev/wxt/pull/211))
+- Upgrade templates to `wxt@^0.9.0` ([#214](https://github.com/wxt-dev/wxt/pull/214))
+- Update Vite dependency range to `^4.0.0 ([](https://github.com/wxt-dev/wxt/commit/))
+
+### 🤖 CI
+
+- Automatically sync GitHub releases with `CHANGELOG.md` on push ([#218](https://github.com/wxt-dev/wxt/pull/218))
+
+### ❤️ Contributors
+
+- Aaron Klinker ([@aaronklinker-st](http://github.com/aaronklinker-st))
+-  ^5.0.0-0` <f1e8084>
+
 ## v0.9.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.7...v0.9.0)
