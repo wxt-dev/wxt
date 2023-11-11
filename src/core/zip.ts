@@ -1,4 +1,3 @@
-import archiver, { Archiver } from 'archiver';
 import { InlineConfig, InternalConfig } from '~/types';
 import { dirname, resolve } from 'node:path';
 import fs from 'fs-extra';
@@ -7,20 +6,9 @@ import { getPackageJson } from '~/core/utils/package';
 import { formatDuration } from '~/core/utils/time';
 import { printFileList } from '~/core/utils/log/printFileList';
 import { getInternalConfig, internalBuild } from '~/core/utils/building';
-// import archiver, { Archiver } from 'archiver';
-// import { InlineConfig, InternalConfig } from '~/types';
-// import { dirname, relative, resolve } from 'node:path';
-// import fs, { outputFile } from 'fs-extra';
-// import { kebabCaseAlphanumeric } from '~/core/utils/strings';
-// import { getPackageJson } from '~/core/utils/package';
-// import { minimatch } from 'minimatch';
-// import { formatDuration } from '~/core/utils/time';
-// import { printFileList } from '~/core/utils/log/printFileList';
-// import { getInternalConfig, internalBuild } from '~/core/utils/building';
-// import { glob } from 'fast-glob';
-// import path from 'node:path';
-// import { normalizePath } from './utils/paths';
-// import archiver, { Archiver } from 'archiver';
+import JSZip from 'jszip';
+import { glob } from 'fast-glob';
+import path from 'node:path';
 
 /**
  * Build and zip the extension for distribution.
@@ -96,34 +84,20 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   return zipFiles;
 }
 
-function zipDir(
+async function zipDir(
   config: InternalConfig,
   directory: string,
   outputPath: string,
-  additionalWork?: (archive: Archiver) => void,
+  additionalWork?: (archive: JSZip) => void,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const archive = archiver('zip');
-
-    archive.on('warning', config.logger.warn);
-    archive.on('error', (err) => {
-      config.logger.error(err);
-      reject(err);
-    });
-    archive.on('close', () => resolve());
-
-    // Create output stream
-    const outputStream = fs.createWriteStream(outputPath);
-    archive.pipe(outputStream);
-
-    // Add files
-    archive.glob('**/*', {
-      cwd: directory,
-      skip: ['**/node_modules', '**/.git'],
-    });
-
-    additionalWork?.(archive);
-
-    archive.finalize().then(resolve);
+  const archive = new JSZip();
+  const files = await glob('**/*', {
+    cwd: directory,
   });
+  for (const file of files) {
+    const content = await fs.readFile(path.resolve(directory, file));
+    archive.file(file, content);
+  }
+  const buffer = await archive.generateAsync({ type: 'base64' });
+  await fs.writeFile(outputPath, buffer, 'base64');
 }

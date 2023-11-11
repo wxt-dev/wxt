@@ -79,7 +79,6 @@
     "@webext-core/fake-browser": "^1.2.2",
     "@webext-core/isolated-element": "^1.0.4",
     "@webext-core/match-patterns": "^1.0.2",
-    "archiver": "^6.0.1",
     "async-mutex": "^0.4.0",
     "c12": "^1.5.1",
     "cac": "^6.7.14",
@@ -95,6 +94,7 @@
     "is-wsl": "^3.0.0",
     "jiti": "^1.21.0",
     "json5": "^2.2.3",
+    "jszip": "^3.10.1",
     "linkedom": "^0.16.1",
     "minimatch": "^9.0.3",
     "ora": "^7.0.1",
@@ -108,7 +108,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
-    "@types/archiver": "^6.0.1",
     "@types/fs-extra": "^11.0.3",
     "@types/lodash.merge": "^4.6.8",
     "@types/node": "^20.8.10",
