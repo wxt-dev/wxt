@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { InlineConfig } from '~/types';
 
 describe('User Config', () => {
   // Root directory is tested with all tests.
@@ -87,26 +88,22 @@ describe('User Config', () => {
   });
 
   it('should exclude the polyfill when the experimental setting is set to false', async () => {
-    const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
+    const buildBackground = async (config?: InlineConfig) => {
+      const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
+      const projectWithPolyfill = new TestProject();
+      projectWithPolyfill.addFile('entrypoints/background.ts', background);
+      await projectWithPolyfill.build(config);
+      return await projectWithPolyfill.serializeFile(
+        '.output/chrome-mv3/background.js',
+      );
+    };
 
-    const projectWithPolyfill = new TestProject();
-    projectWithPolyfill.addFile('entrypoints/background.ts', background);
-    await projectWithPolyfill.build();
-    const backgroundWithPolyfill = await projectWithPolyfill.serializeFile(
-      '.output/chrome-mv3/background.js',
-    );
-
-    const projectWithoutPolyill = new TestProject();
-    projectWithoutPolyill.addFile('entrypoints/background.ts', background);
-    await projectWithoutPolyill.build({
+    const withPolyfill = await buildBackground();
+    const withoutPolyfill = await buildBackground({
       experimental: {
         includeBrowserPolyfill: false,
       },
     });
-    const backgroundWithoutPolyfill = await projectWithoutPolyill.serializeFile(
-      '.output/chrome-mv3/background.js',
-    );
-
-    expect(backgroundWithoutPolyfill).not.toBe(backgroundWithPolyfill);
+    expect(withoutPolyfill).not.toBe(withPolyfill);
   });
 });
