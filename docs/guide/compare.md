@@ -27,9 +27,9 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework),
 | Reload Content Scripts on Change                     |             ✅              |       🟡 Reloads entire extension        |
 | Reload Background on Change                          | 🟡 Reloads entire extension |       🟡 Reloads entire extension        |
 | <strong style="opacity: 50%">Built-in Utils</strong> |                             |                                          |
-| Storage                                              |             ❌              |                    ✅                    |
-| Messaging                                            |             ❌              |                    ✅                    |
-| Content Script UI                                    |             ❌              |                    ✅                    |
+| Storage                                              |       🟡 Coming soon        |                    ✅                    |
+| Messaging                                            |       🟡 Coming soon        |                    ✅                    |
+| Content Script UI                                    |             ✅              |                    ✅                    |
 
 ## Dev Mode
 
