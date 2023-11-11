@@ -86,7 +86,7 @@ describe('User Config', () => {
     `);
   });
 
-  it.only('should exclude the polyfill when the experimental setting is set to false', async () => {
+  it('should exclude the polyfill when the experimental setting is set to false', async () => {
     const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
 
     const projectWithPolyfill = new TestProject();
