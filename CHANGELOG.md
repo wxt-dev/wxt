@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.9.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.1...v0.9.2)
+
+### 🚀 Enhancements
+
+- Experimental option to exclude `webextension-polyfill` ([#231](https://github.com/wxt-dev/wxt/pull/231))
+
+### 🤖 CI
+
+- Fix sync-release workflow ([d1b5230](https://github.com/wxt-dev/wxt/commit/d1b5230))
+
 ## v0.9.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.0...v0.9.1)
