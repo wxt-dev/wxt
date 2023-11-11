@@ -104,24 +104,47 @@ describe('Manifest Content', () => {
       })
     `;
 
-    it('should include a background script for mv2', async () => {
+    it.each(['chrome', 'safari'])(
+      'should include scripts and persistent for %s mv2',
+      async (browser) => {
+        const project = new TestProject();
+        project.addFile('entrypoints/background.ts', backgroundContent);
+
+        await project.build({ browser, manifestVersion: 2 });
+        const manifest = await project.getOutputManifest(
+          `.output/${browser}-mv2/manifest.json`,
+        );
+
+        expect(manifest.background).toEqual({
+          persistent: true,
+          scripts: ['background.js'],
+        });
+      },
+    );
+
+    it.each(['chrome', 'safari'])(
+      'should include a service worker and type for %s mv3',
+      async (browser) => {
+        const project = new TestProject();
+        project.addFile('entrypoints/background.ts', backgroundContent);
+
+        await project.build({ browser, manifestVersion: 3 });
+        const manifest = await project.getOutputManifest(
+          `.output/${browser}-mv3/manifest.json`,
+        );
+
+        expect(manifest.background).toEqual({
+          type: 'module',
+          service_worker: 'background.js',
+        });
+      },
+    );
+
+    it('should include a background script and type for firefox mv3', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/background.ts', backgroundContent);
 
-      await project.build();
-      const manifest = await project.getOutputManifest();
-
-      expect(manifest.background).toEqual({
-        type: 'module',
-        service_worker: 'background.js',
-      });
-    });
-
-    it.only('should include a background script for firefox mv3', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/background.ts', backgroundContent);
-
-      await project.build({ manifestVersion: 3, browser: 'firefox' });
+      await project.build({ browser: 'firefox', manifestVersion: 3 });
       const manifest = await project.getOutputManifest(
         '.output/firefox-mv3/manifest.json',
       );
@@ -132,13 +155,13 @@ describe('Manifest Content', () => {
       });
     });
 
-    it('should include a options_ui and browser_style for firefox', async () => {
+    it('should include a background script and persistent for firefox mv2', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/background.ts', backgroundContent);
 
-      await project.build({ manifestVersion: 2 });
+      await project.build({ browser: 'firefox', manifestVersion: 2 });
       const manifest = await project.getOutputManifest(
-        '.output/chrome-mv2/manifest.json',
+        '.output/firefox-mv2/manifest.json',
       );
 
       expect(manifest.background).toEqual({
