@@ -41,9 +41,13 @@ export async function initialize(options: {
         type: () => (options.packageManager == null ? 'select' : undefined),
         message: 'Package Manager',
         choices: [
-          { title: 'npm', value: 'npm' },
-          { title: 'pnpm', value: 'pnpm' },
-          { title: 'yarn', value: 'yarn' },
+          { title: pc.red('npm'), value: 'npm' },
+          { title: pc.yellow('pnpm'), value: 'pnpm' },
+          { title: pc.cyan('yarn'), value: 'yarn' },
+          {
+            title: `${pc.magenta('bun')}${pc.gray(' (experimental)')}`,
+            value: 'bun',
+          },
         ],
       },
     ],
