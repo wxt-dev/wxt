@@ -117,6 +117,21 @@ describe('Manifest Content', () => {
       });
     });
 
+    it.only('should include a background script for firefox mv3', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/background.ts', backgroundContent);
+
+      await project.build({ manifestVersion: 3, browser: 'firefox' });
+      const manifest = await project.getOutputManifest(
+        '.output/firefox-mv3/manifest.json',
+      );
+
+      expect(manifest.background).toEqual({
+        type: 'module',
+        scripts: ['background.js'],
+      });
+    });
+
     it('should include a options_ui and browser_style for firefox', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/background.ts', backgroundContent);

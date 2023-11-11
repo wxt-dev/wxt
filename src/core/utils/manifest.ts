@@ -154,7 +154,12 @@ function addEntrypoints(
 
   if (background) {
     const script = getEntrypointBundlePath(background, config.outDir, '.js');
-    if (manifest.manifest_version === 3) {
+    if (config.browser === 'firefox' && config.manifestVersion === 3) {
+      manifest.background = {
+        type: background.options.type,
+        scripts: [script],
+      };
+    } else if (config.manifestVersion === 3) {
       manifest.background = {
         type: background.options.type,
         service_worker: script,
