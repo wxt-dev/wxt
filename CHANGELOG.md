@@ -25,7 +25,7 @@
 
 - Remove whitespace from genearted `.wxt` files ([#211](https://github.com/wxt-dev/wxt/pull/211))
 - Upgrade templates to `wxt@^0.9.0` ([#214](https://github.com/wxt-dev/wxt/pull/214))
-- Update Vite dependency range to `^4.0.0 ([](https://github.com/wxt-dev/wxt/commit/))
+- Update Vite dependency range to `^4.0.0 || ^5.0.0-0` ([f1e8084](https://github.com/wxt-dev/wxt/commit/f1e8084be89e512dde441b9197a99183c497f67d))
 
 ### 🤖 CI
 
@@ -34,7 +34,6 @@
 ### ❤️ Contributors
 
 - Aaron Klinker ([@aaronklinker-st](http://github.com/aaronklinker-st))
--  ^5.0.0-0` <f1e8084>
 
 ## v0.9.0
 
