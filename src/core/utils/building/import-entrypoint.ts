@@ -55,6 +55,9 @@ export async function importEntrypointFile<T>(
         'node_modules/wxt/dist/virtual/mock-browser.js',
       ),
     },
+    // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
+    // respect the custom transform function when using it's native bun option.
+    experimentalBun: false,
     // List of extensions to transform with esbuild
     extensions: ['.ts', '.cts', '.mts', '.tsx', '.js', '.cjs', '.mjs', '.jsx'],
     transform(opts) {
