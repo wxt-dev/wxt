@@ -1,5 +1,6 @@
 name: Sync Releases
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -18,4 +19,4 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
-      - run: pnpm sync-releases all
+      - run: pnpm sync-releases all --token ${{ secrets.GITHUB_TOKEN }}
