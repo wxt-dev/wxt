@@ -11,6 +11,12 @@ export function createWebExtRunner(): ExtensionRunner {
     async openBrowser(config) {
       config.logger.info('Opening browser...');
 
+      if (config.browser === 'firefox' && config.manifestVersion === 3) {
+        throw Error(
+          'Dev mode does not support Firefox MV3. For alternatives, see https://github.com/wxt-dev/wxt/issues/230#issuecomment-1806881653',
+        );
+      }
+
       // Use the plugin's logger instead of web-ext's built-in one.
       const webExtLogger = await import('web-ext-run/util/logger');
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
