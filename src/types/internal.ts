@@ -53,6 +53,9 @@ export interface InternalConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
+  experimental: {
+    webextensionPolyfill: boolean;
+  };
 }
 
 export interface FsCache {

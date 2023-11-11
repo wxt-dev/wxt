@@ -206,6 +206,17 @@ export interface InlineConfig {
    * }
    */
   alias?: Record<string, string>;
+  /**
+   * Experimental settings - use with caution.
+   */
+  experimental?: {
+    /**
+     * Disable the `webextension-polyfill` by setting this to false.
+     *
+     * @default true
+     */
+    webextensionPolyfill?: boolean;
+  };
 }
 
 export interface WxtInlineViteConfig
