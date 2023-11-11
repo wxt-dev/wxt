@@ -219,6 +219,8 @@ export interface InlineConfig {
      *
      * You should use `browser` to access the web extension APIs.
      *
+     * @experimental This option will remain experimental until Manifest V2 is dead.
+     *
      * @default true
      * @example
      * export default defineConfig({

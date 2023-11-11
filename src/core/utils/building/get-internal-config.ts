@@ -275,7 +275,7 @@ async function resolveInternalViteConfig(
   }
   internalVite.plugins.push(plugins.globals(finalConfig));
 
-  internalVite.plugins.push(plugins.webextensionPolyfillDisabled(finalConfig));
+  internalVite.plugins.push(plugins.excludeBrowserPolyfill(finalConfig));
 
   return internalVite;
 }
