@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { InlineConfig } from '~/types';
 
 describe('User Config', () => {
   // Root directory is tested with all tests.
@@ -84,5 +85,25 @@ describe('User Config', () => {
       ----------------------------------------
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
     `);
+  });
+
+  it('should exclude the polyfill when the experimental setting is set to false', async () => {
+    const buildBackground = async (config?: InlineConfig) => {
+      const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
+      const projectWithPolyfill = new TestProject();
+      projectWithPolyfill.addFile('entrypoints/background.ts', background);
+      await projectWithPolyfill.build(config);
+      return await projectWithPolyfill.serializeFile(
+        '.output/chrome-mv3/background.js',
+      );
+    };
+
+    const withPolyfill = await buildBackground();
+    const withoutPolyfill = await buildBackground({
+      experimental: {
+        includeBrowserPolyfill: false,
+      },
+    });
+    expect(withoutPolyfill).not.toBe(withPolyfill);
   });
 });

@@ -206,6 +206,31 @@ export interface InlineConfig {
    * }
    */
   alias?: Record<string, string>;
+  /**
+   * Experimental settings - use with caution.
+   */
+  experimental?: {
+    /**
+     * Whether to use [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill)
+     * when importing `browser` from `wxt/browser`.
+     *
+     * When set to `false`, WXT will export the chrome global instead of the polyfill from
+     * `wxt/browser`.
+     *
+     * You should use `browser` to access the web extension APIs.
+     *
+     * @experimental This option will remain experimental until Manifest V2 is dead.
+     *
+     * @default true
+     * @example
+     * export default defineConfig({
+     *   experimental: {
+     *     includeBrowserPolyfill: false
+     *   }
+     * })
+     */
+    includeBrowserPolyfill?: boolean;
+  };
 }
 
 export interface WxtInlineViteConfig

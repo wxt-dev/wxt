@@ -123,6 +123,10 @@ export async function getInternalConfig(
     },
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
+    experimental: {
+      includeBrowserPolyfill:
+        mergedConfig.experimental?.includeBrowserPolyfill ?? true,
+    },
   };
 
   finalConfig.vite = (env) =>
@@ -202,6 +206,10 @@ function mergeInlineConfig(
       ...userConfig.alias,
       ...inlineConfig.alias,
     },
+    experimental: {
+      ...userConfig.experimental,
+      ...inlineConfig.experimental,
+    },
   };
 }
 
@@ -266,6 +274,8 @@ async function resolveInternalViteConfig(
     internalVite.plugins.push(plugins.bundleAnalysis());
   }
   internalVite.plugins.push(plugins.globals(finalConfig));
+
+  internalVite.plugins.push(plugins.excludeBrowserPolyfill(finalConfig));
 
   return internalVite;
 }
