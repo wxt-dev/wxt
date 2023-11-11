@@ -85,4 +85,28 @@ describe('User Config', () => {
       {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
     `);
   });
+
+  it.only('should exclude the polyfill when the experimental setting is set to false', async () => {
+    const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
+
+    const projectWithPolyfill = new TestProject();
+    projectWithPolyfill.addFile('entrypoints/background.ts', background);
+    await projectWithPolyfill.build();
+    const backgroundWithPolyfill = await projectWithPolyfill.serializeFile(
+      '.output/chrome-mv3/background.js',
+    );
+
+    const projectWithoutPolyill = new TestProject();
+    projectWithoutPolyill.addFile('entrypoints/background.ts', background);
+    await projectWithoutPolyill.build({
+      experimental: {
+        webextensionPolyfill: false,
+      },
+    });
+    const backgroundWithoutPolyfill = await projectWithoutPolyill.serializeFile(
+      '.output/chrome-mv3/background.js',
+    );
+
+    expect(backgroundWithoutPolyfill).not.toBe(backgroundWithPolyfill);
+  });
 });

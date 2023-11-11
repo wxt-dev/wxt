@@ -7,8 +7,8 @@ import * as vite from 'vite';
 export function webextensionPolyfillDisabled(
   config: InternalConfig,
 ): vite.Plugin {
-  console.log(config.experimental);
   const virtualId = 'virtual:wxt-webextension-polyfill-disabled';
+
   return {
     name: 'wxt:webextension-polyfill-enabled',
     config() {
