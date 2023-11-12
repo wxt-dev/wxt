@@ -27,9 +27,9 @@
   &bull;
   <a href="https://wxt.dev/guide/installation.html" target="_blank">Installation</a>
   &bull;
-  <a href="https://wxt.dev/entrypoints/background.html" target="_blank">Entrypoints</a>
-  &bull;
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
+  &bull;
+  <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
 </p>
 
 ![Example CLI Output](./docs/assets/cli-output.png)
