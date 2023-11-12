@@ -4,4 +4,5 @@ dist
 .wxt
 docs/.vitepress/cache
 pnpm-lock.yaml
+package-lock.json
 CHANGELOG.md

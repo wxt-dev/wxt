@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "wxt": "0.9.0"
+  },
+  "devDependencies": {
+    "flat": "6.0.1"
+  }
+}
