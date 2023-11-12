@@ -11,5 +11,11 @@ export function createYarnWxtPackageManager(
         'Yarn does not return tarball URLs, getAllDependencies cannot be implemented',
       );
     },
+    addResolutions(packageJson, entries) {
+      packageJson.resolutions ??= {};
+      entries.forEach(({ name, value }) => {
+        packageJson.resolutions[name] = value;
+      });
+    },
   };
 }

@@ -37,6 +37,14 @@ export function createPnpmWxtPackageManager(
           : [],
       ].flat();
     },
+
+    addResolutions(packageJson, entries) {
+      packageJson.pnpm ??= {};
+      packageJson.pnpm.overrides ??= {};
+      entries.forEach(({ name, value }) => {
+        packageJson.pnpm.overrides[name] = value;
+      });
+    },
   };
 }
 

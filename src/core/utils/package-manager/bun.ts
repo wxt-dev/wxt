@@ -5,7 +5,16 @@ import { PackageManager } from 'nypm';
 export function createBunWxtPackageManager(
   config: InternalConfig,
 ): Omit<WxtPackageManager, keyof PackageManager> {
-  throw Error(
-    'WXT does not support bun yet, follow https://github.com/wxt-dev/wxt/issues/222 to track progress',
-  );
+  return {
+    getAllDependencies() {
+      throw Error('Bun: getAllDependencies not implemented');
+    },
+
+    addResolutions(packageJson, entries) {
+      packageJson.overrides ??= {};
+      entries.forEach(({ name, value }) => {
+        packageJson.overrides[name] = value;
+      });
+    },
+  };
 }

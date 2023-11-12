@@ -218,6 +218,7 @@ function resolveInternalZipConfig(
       '**/node_modules',
       // WXT files
       '**/web-ext.config.ts',
+      'stats.html',
       // Hidden files
       '**/.*',
       // Tests

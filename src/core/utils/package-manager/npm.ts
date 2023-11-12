@@ -16,6 +16,13 @@ export function createNpmWxtPackageManager(
       const project: NpmListProject = JSON.parse(json);
       return flattenNpmDependencyMap(project.dependencies);
     },
+
+    addResolutions(packageJson, entries) {
+      packageJson.overrides ??= {};
+      entries.forEach(({ name, value }) => {
+        packageJson.overrides[name] = value;
+      });
+    },
   };
 }
 

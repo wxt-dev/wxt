@@ -1,14 +1,13 @@
 import { loadConfig } from 'c12';
 import { PackageInfo, getPackageManager } from './package-manager';
 import { InternalConfig } from '~/types';
-import { flatten } from 'flat';
 import fs from 'fs-extra';
 import stream from 'node:stream';
 import { promisify } from 'node:util';
 
 export async function getPrivatePackages(
   config: InternalConfig,
-): Promise<PackageInfo[]> {
+): Promise<PrivatePackageInfo[]> {
   const pm = await getPackageManager(config);
 
   const [deps, npmrc] = await Promise.all([
@@ -23,7 +22,7 @@ export async function getPrivatePackages(
       const token = scope ? privateScopes[scope] : undefined;
       return { ...dep, token };
     })
-    .filter((dep) => !!dep.token);
+    .filter((dep) => !!dep.token && !!dep.url) as PrivatePackageInfo[];
 }
 
 export async function downloadPrivatePackage(
@@ -48,6 +47,7 @@ interface PrivatePackageInfo extends PackageInfo {
 }
 
 async function loadNpmrcConfig(): Promise<Record<string, any>> {
+  const { flatten } = await import('flat');
   const { config } = await loadConfig({
     name: 'npm',
     globalRc: true,
