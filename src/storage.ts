@@ -13,10 +13,12 @@ export interface WebExtensionDriverOptions {
 
 export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
   defineDriver((opts) => {
-    if (browser.storage == null)
-      throw Error(
-        "You must request the 'storage' permission to use webExtensionDriver",
-      );
+    const checkPermission = () => {
+      if (browser.storage == null)
+        throw Error(
+          "You must request the 'storage' permission to use webExtensionDriver",
+        );
+    };
 
     const _storageListener: (
       changes: BrowserStorage.StorageAreaSyncOnChangedChangesType,
@@ -32,14 +34,17 @@ export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
     return {
       name: 'web-extension:' + opts.storageArea,
       async hasItem(key) {
+        checkPermission();
         const res = await browser.storage[opts.storageArea].get(key);
         return res[key] != null;
       },
       async getItem(key) {
+        checkPermission();
         const res = await browser.storage[opts.storageArea].get(key);
         return res[key] ?? null;
       },
       async getItems(items) {
+        checkPermission();
         const res = await browser.storage[opts.storageArea].get(
           items.map((item) => item.key),
         );
@@ -49,9 +54,11 @@ export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
         }));
       },
       async setItem(key, value) {
+        checkPermission();
         await browser.storage[opts.storageArea].set({ [key]: value ?? null });
       },
       async setItems(items) {
+        checkPermission();
         const map = items.reduce<Record<string, any>>((map, item) => {
           map[item.key] = item.value ?? null;
           return map;
@@ -59,16 +66,20 @@ export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
         await browser.storage[opts.storageArea].set(map);
       },
       async removeItem(key) {
+        checkPermission();
         await browser.storage[opts.storageArea].remove(key);
       },
       async getKeys() {
+        checkPermission();
         const all = await browser.storage[opts.storageArea].get();
         return Object.keys(all);
       },
       async clear() {
+        checkPermission();
         await browser.storage[opts.storageArea].clear();
       },
       watch(callback) {
+        checkPermission();
         _listeners.add(callback);
         if (_listeners.size === 1) {
           browser.storage[opts.storageArea].onChanged.addListener(
