@@ -1,7 +1,6 @@
 /**
  * @module wxt/storage
  */
-
 import {
   Driver,
   WatchCallback,

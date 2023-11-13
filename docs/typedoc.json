@@ -4,6 +4,7 @@
     "../src/client",
     "../src/browser.ts",
     "../src/sandbox",
+    "../src/storage.ts",
     "../src/testing"
   ],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
