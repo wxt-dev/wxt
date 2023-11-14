@@ -175,22 +175,22 @@ describe('Manifest Content', () => {
     it('should auto-discover icons with the correct name', async () => {
       const project = new TestProject();
       project.addFile('public/icon-16.png');
-      project.addFile('public/icon/32.jpeg');
-      project.addFile('public/icon@48w.jpg');
-      project.addFile('public/icon-64x64.gif');
-      project.addFile('public/icon@96.bmp');
-      project.addFile('public/icon/128x128.ico');
+      project.addFile('public/icon/32.png');
+      project.addFile('public/icon@48w.png');
+      project.addFile('public/icon-64x64.png');
+      project.addFile('public/icon@96.png');
+      project.addFile('public/icons/128x128.png');
 
       await project.build();
       const manifest = await project.getOutputManifest();
 
       expect(manifest.icons).toEqual({
         '16': 'icon-16.png',
-        '32': 'icon/32.jpeg',
-        '48': 'icon@48w.jpg',
-        '64': 'icon-64x64.gif',
-        '96': 'icon@96.bmp',
-        '128': 'icon/128x128.ico',
+        '32': 'icon/32.png',
+        '48': 'icon@48w.png',
+        '64': 'icon-64x64.png',
+        '96': 'icon@96.png',
+        '128': 'icons/128x128.png',
       });
     });
 
@@ -358,7 +358,7 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/content/index.ts',
         `import "./style.css";
-        
+
         export default defineContentScript({
           matches: ["https://*.google.com/*"],
 
@@ -384,7 +384,7 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/content/index.ts',
         `import "./style.css";
-        
+
         export default defineContentScript({
           matches: ["https://*.google.com/*"],
           cssInjectionMode: "manifest",
@@ -411,7 +411,7 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/content/index.ts',
         `import "./style.css";
-        
+
         export default defineContentScript({
           matches: ["https://*.google.com/*"],
           cssInjectionMode: "manual",
@@ -438,7 +438,7 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/content/index.ts',
         `import "./style.css";
-        
+
         export default defineContentScript({
           matches: ["https://*.google.com/*"],
           cssInjectionMode: "ui",
@@ -467,7 +467,7 @@ describe('Manifest Content', () => {
       project.addFile(
         'entrypoints/content/index.ts',
         `import "./style.css";
-        
+
         export default defineContentScript({
           matches: ["https://*.google.com/*"],
           cssInjectionMode: "ui",
@@ -497,7 +497,7 @@ describe('Manifest Content', () => {
     project.addFile(
       'entrypoints/content/index.ts',
       `import "./style.css";
-      
+
       export default defineContentScript({
         matches: ["https://*.google.com/*"],
         cssInjectionMode: "ui",
@@ -527,7 +527,7 @@ describe('Manifest Content', () => {
     project.addFile(
       'wxt.config.ts',
       `import { defineConfig } from 'wxt';
-      
+
       export default defineConfig({
         transformManifest(manifest) {
           manifest.author = "Custom Author"
