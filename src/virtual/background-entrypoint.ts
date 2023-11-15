@@ -2,6 +2,7 @@ import definition from 'virtual:user-background';
 import { setupWebSocket } from '../client/utils/setup-web-socket';
 import { logger } from '../client/utils/logger';
 import browser from 'webextension-polyfill';
+import { storage } from '~/storage';
 import { keepServiceWorkerAlive } from '../client/utils/keep-service-worker-alive';
 import { reloadContentScript } from '../client/utils/reload-content-scripts';
 
@@ -29,6 +30,14 @@ if (__COMMAND__ === 'serve') {
 }
 
 try {
+  // Add utils to global scope so they're accessible from the console during development
+  if (import.meta.env.DEV) {
+    // @ts-expect-error: Untyped global
+    globalThis.wxt = {
+      storage,
+    };
+  }
+
   const res = definition.main();
   // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
   if (res instanceof Promise) {

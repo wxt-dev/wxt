@@ -90,6 +90,7 @@ export default defineConfig({
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
+            { text: 'Storage', link: '/guide/storage.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
             { text: 'Development', link: '/guide/development.md' },
             { text: 'Testing', link: '/guide/testing.md' },
