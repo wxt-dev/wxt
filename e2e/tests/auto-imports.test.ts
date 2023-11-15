@@ -18,13 +18,24 @@ describe('Auto Imports', () => {
           declare global {
             const ContentScriptContext: typeof import('wxt/client')['ContentScriptContext']
             const browser: typeof import('wxt/browser')['browser']
+            const builtinDrivers: typeof import('wxt/storage')['builtinDrivers']
             const createContentScriptIframe: typeof import('wxt/client')['createContentScriptIframe']
             const createContentScriptUi: typeof import('wxt/client')['createContentScriptUi']
+            const createStorage: typeof import('wxt/storage')['createStorage']
             const defineBackground: typeof import('wxt/client')['defineBackground']
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/client')['defineContentScript']
+            const defineDriver: typeof import('wxt/storage')['defineDriver']
             const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
+            const joinKeys: typeof import('wxt/storage')['joinKeys']
+            const normalizeBaseKey: typeof import('wxt/storage')['normalizeBaseKey']
+            const normalizeKey: typeof import('wxt/storage')['normalizeKey']
+            const prefixStorage: typeof import('wxt/storage')['prefixStorage']
+            const restoreSnapshot: typeof import('wxt/storage')['restoreSnapshot']
+            const snapshot: typeof import('wxt/storage')['snapshot']
+            const storage: typeof import('wxt/storage')['storage']
+            const webExtensionDriver: typeof import('wxt/storage')['webExtensionDriver']
           }
           "
         `);
