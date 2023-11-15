@@ -20,11 +20,11 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Allow plural directory and only png's for manifest icons ([#237](https://github.com/wxt-dev/wxt/pull/237))
+- ⚠️ No longer discover icons with extensions other than `.png`. If you previously used `.jpg`, `.jpeg`, `.bmp`, or `.svg`, you'll need to convert your icons to `.png` files or manually add them to the manifest inside your `wxt.config.ts` file ([#237](https://github.com/wxt-dev/wxt/pull/237))
 
 ### ❤️ Contributors
 
-- Nenad Novaković
+- Nenad Novaković ([@dvlden](https://github.com/dvlden))
 
 ## v0.9.2
 
