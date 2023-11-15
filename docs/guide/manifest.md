@@ -2,7 +2,7 @@
 
 The manifest.json is generated at build-time based on files in your `entrypoints` directory and your `wxt.config.ts`.
 
-## Confiuration
+## Configuration
 
 While entrypoints are generated and added to the manifest at build-time, you can customize or add to your `manifest.json` in the config file.
 
