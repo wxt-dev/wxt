@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.10.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.2...v0.10.0)
+
+### 🚀 Enhancements
+
+- List `bun` as an experimental option in `wxt init` ([#233](https://github.com/wxt-dev/wxt/pull/233))
+- ⚠️  Allow plural directory and only png's for manifest icons ([#237](https://github.com/wxt-dev/wxt/pull/237))
+- Add `wxt/storage` API ([#234](https://github.com/wxt-dev/wxt/pull/234))
+
+### 🩹 Fixes
+
+- Don't use `bun` to load entrypoint config ([#232](https://github.com/wxt-dev/wxt/pull/232))
+
+### 📖 Documentation
+
+- Update main README links ([207b750](https://github.com/wxt-dev/wxt/commit/207b750))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Allow plural directory and only png's for manifest icons ([#237](https://github.com/wxt-dev/wxt/pull/237))
+
+### ❤️ Contributors
+
+- Nenad Novaković
+
 ## v0.9.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.1...v0.9.2)
