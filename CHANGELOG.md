@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.0...v0.10.1)
+
+### 🩹 Fixes
+
+- Remove WXT global to remove unused modules from production builds ([3da3e07](https://github.com/wxt-dev/wxt/commit/3da3e07))
+
 ## v0.10.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.2...v0.10.0)
