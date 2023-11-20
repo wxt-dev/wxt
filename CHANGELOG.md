@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.10.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.1...v0.10.2)
+
+### 🩹 Fixes
+
+- Apply `mode` option to build steps correctly ([82ed821](https://github.com/wxt-dev/wxt/commit/82ed821))
+
+### 🏡 Chore
+
+- Upgrade templates to v0.10 ([#239](https://github.com/wxt-dev/wxt/pull/239))
+
 ## v0.10.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.0...v0.10.1)
