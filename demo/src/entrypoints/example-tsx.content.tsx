@@ -6,7 +6,11 @@ export default defineContentScript({
     console.log(browser.runtime.id);
     logId();
 
-    console.log('WXT MODE:', import.meta.env.MODE);
+    console.log('WXT MODE:', {
+      MODE: import.meta.env.MODE,
+      DEV: import.meta.env.DEV,
+      PROD: import.meta.env.PROD,
+    });
 
     const n = (Math.random() * 100).toFixed(1);
     ctx.setInterval(() => {

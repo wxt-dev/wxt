@@ -23,7 +23,11 @@ export default defineBackground(() => {
   browser.i18n.getMessage('bye', ['Aaron']);
   browser.i18n.getMessage('@@extension_id');
 
-  console.log('WXT MODE:', import.meta.env.MODE);
+  console.log('WXT MODE:', {
+    MODE: import.meta.env.MODE,
+    DEV: import.meta.env.DEV,
+    PROD: import.meta.env.PROD,
+  });
 
   storage.setItem('session:startTime', Date.now());
 });
