@@ -71,6 +71,7 @@ async function buildSingleEntrypoint(
   }
 
   const libMode: vite.UserConfig = {
+    mode: config.mode,
     plugins,
     build: {
       lib: {
@@ -128,6 +129,7 @@ async function buildMultipleEntrypoints(
   config: InternalConfig,
 ): Promise<BuildStepOutput> {
   const multiPage: vite.UserConfig = {
+    mode: config.mode,
     plugins: [wxtPlugins.multipageMove(entrypoints, config)],
     build: {
       rollupOptions: {
