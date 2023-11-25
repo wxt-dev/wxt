@@ -21,3 +21,4 @@ jobs:
       - run: pnpm docs:build
       - run: docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag }}
       - run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag }}
+      - run: curl -X POST ${{ secrets.UPDATE_DOCS_WEBHOOK }}
