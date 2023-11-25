@@ -1,5 +1,8 @@
 name: Publish Docs
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       tag:
@@ -19,6 +22,6 @@ jobs:
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
       - run: pnpm docs:build
-      - run: docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag }}
-      - run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag }}
+      - run: docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
+      - run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
       - run: curl -X POST -v ${{ secrets.UPDATE_DOCS_WEBHOOK }}
