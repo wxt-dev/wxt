@@ -23,7 +23,7 @@ import { getPackageJson } from './package';
 import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import { produce } from 'immer';
-import * as vite from 'vite';
+import defu from 'defu';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -78,9 +78,9 @@ export async function generateMainfest(
   };
   const userManifest = config.manifest;
 
-  const manifest = vite.mergeConfig(
-    baseManifest,
+  const manifest = defu(
     userManifest,
+    baseManifest,
   ) as Manifest.WebExtensionManifest;
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
