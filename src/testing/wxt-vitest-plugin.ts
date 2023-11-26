@@ -6,7 +6,7 @@ import {
   globals,
   webextensionPolyfillAlias,
   webextensionPolyfillInlineDeps,
-} from '../core/vite-plugins';
+} from '../core/builders/vite/plugins';
 import { getInternalConfig } from '~/core/utils/building';
 import { InlineConfig } from '../types';
 

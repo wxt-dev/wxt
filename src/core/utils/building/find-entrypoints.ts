@@ -22,7 +22,7 @@ import {
   getEntrypointName,
   resolvePerBrowserOption,
 } from '~/core/utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/vite-plugins/noopBackground';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/builders/vite/plugins/noopBackground';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
 
 /**

@@ -90,17 +90,6 @@ export interface InlineConfig {
    */
   logger?: Logger;
   /**
-   * Return custom Vite options from a function. See
-   * <https://vitejs.dev/config/shared-options.html>.
-   *
-   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config
-   * instead of Vite's.
-   *
-   * This is a function because any vite plugins added need to be recreated for each individual
-   * build step, incase they have internal state causing them to fail when reused.
-   */
-  vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
-  /**
    * Customize the `manifest.json` output. Can be an object, promise, or function that returns an
    * object or promise.
    */
@@ -596,7 +585,10 @@ export interface ExtensionRunnerConfig {
   startUrls?: string[];
 }
 
-export type WxtViteConfig = Omit<
-  vite.UserConfig,
-  'root' | 'configFile' | 'mode'
->;
+export interface WxtBuilder {
+  /**
+   * Build the provided list of entrypoint groups.
+   */
+  build(group: EntrypointGroup): Promise<BuildStepOutput[]>;
+  createServer(): Promise<any>;
+}

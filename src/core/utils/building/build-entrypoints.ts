@@ -6,7 +6,7 @@ import {
   EntrypointGroup,
   InternalConfig,
 } from '~/types';
-import * as wxtPlugins from '~/core/vite-plugins';
+import * as wxtPlugins from '~/core/builders/vite/plugins';
 import { removeEmptyDirs } from '~/core/utils/fs';
 import { getPublicFiles } from '~/core/utils/fs';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
