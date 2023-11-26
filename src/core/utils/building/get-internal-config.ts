@@ -6,14 +6,13 @@ import {
   ConfigEnv,
   UserManifestFn,
   UserManifest,
-  WxtViteConfig,
   ExtensionRunnerConfig,
 } from '~/types';
 import path from 'node:path';
 import * as vite from 'vite';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
-import * as plugins from '~/core/vite-plugins';
+import { craeteViteBuilder } from '~/core/builders/vite';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 
@@ -112,7 +111,6 @@ export async function getInternalConfig(
     runnerConfig,
     srcDir,
     typesDir,
-    vite: () => ({}), // Real value added after this object is initialized.
     wxtDir,
     zip: resolveInternalZipConfig(root, mergedConfig),
     transformManifest(manifest) {
@@ -129,12 +127,19 @@ export async function getInternalConfig(
       includeBrowserPolyfill:
         mergedConfig.experimental?.includeBrowserPolyfill ?? true,
     },
+    builder: undefined as any, // Set later on, left as undefined here for simplicity
   };
 
-  finalConfig.vite = (env) =>
-    resolveInternalViteConfig(env, mergedConfig, finalConfig);
+  const builder = await craeteViteBuilder(
+    inlineConfig,
+    userConfig,
+    finalConfig,
+  );
 
-  return finalConfig;
+  return {
+    ...finalConfig,
+    builder,
+  };
 }
 
 async function resolveManifestConfig(
@@ -169,11 +174,6 @@ function mergeInlineConfig(
     const inline = await resolveManifestConfig(env, inlineConfig.manifest);
     return vite.mergeConfig(user, inline);
   };
-  const viteConfig = async (env: ConfigEnv): Promise<WxtViteConfig> => {
-    const user = await userConfig.vite?.(env);
-    const inline = await inlineConfig.vite?.(env);
-    return vite.mergeConfig(user ?? {}, inline ?? {});
-  };
   const runner: InlineConfig['runner'] = defu(
     inlineConfig.runner ?? {},
     userConfig.runner ?? {},
@@ -198,7 +198,6 @@ function mergeInlineConfig(
     runner,
     srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
     outDir: inlineConfig.outDir ?? userConfig.outDir,
-    vite: viteConfig,
     zip,
     analysis: {
       enabled: inlineConfig.analysis?.enabled ?? userConfig.analysis?.enabled,
@@ -240,47 +239,4 @@ function resolveInternalZipConfig(
       ...(mergedConfig.zip?.ignoredSources ?? []),
     ],
   };
-}
-
-async function resolveInternalViteConfig(
-  env: ConfigEnv,
-  mergedConfig: InlineConfig,
-  finalConfig: InternalConfig,
-) {
-  const internalVite: vite.InlineConfig =
-    (await mergedConfig.vite?.(env)) ?? {};
-
-  internalVite.root = finalConfig.root;
-  internalVite.configFile = false;
-  internalVite.logLevel = 'warn';
-  internalVite.mode = env.mode;
-
-  internalVite.build ??= {};
-  internalVite.build.outDir = finalConfig.outDir;
-  internalVite.build.emptyOutDir = false;
-
-  internalVite.plugins ??= [];
-  internalVite.plugins.push(plugins.download(finalConfig));
-  internalVite.plugins.push(plugins.devHtmlPrerender(finalConfig));
-  internalVite.plugins.push(plugins.unimport(finalConfig));
-  internalVite.plugins.push(
-    plugins.virtualEntrypoint('background', finalConfig),
-  );
-  internalVite.plugins.push(
-    plugins.virtualEntrypoint('content-script', finalConfig),
-  );
-  internalVite.plugins.push(
-    plugins.virtualEntrypoint('unlisted-script', finalConfig),
-  );
-  internalVite.plugins.push(plugins.devServerGlobals(finalConfig));
-  internalVite.plugins.push(plugins.tsconfigPaths(finalConfig));
-  internalVite.plugins.push(plugins.noopBackground());
-  if (finalConfig.analysis.enabled) {
-    internalVite.plugins.push(plugins.bundleAnalysis());
-  }
-  internalVite.plugins.push(plugins.globals(finalConfig));
-
-  internalVite.plugins.push(plugins.excludeBrowserPolyfill(finalConfig));
-
-  return internalVite;
 }
