@@ -1,6 +1,6 @@
 import * as vite from 'vite';
 import { InternalConfig } from '~/types';
-import { getGlobals } from '../utils/globals';
+import { getGlobals } from '../../../utils/globals';
 
 export function globals(config: InternalConfig): vite.PluginOption {
   return {
