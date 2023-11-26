@@ -14,6 +14,7 @@ import * as vite from 'vite';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import * as plugins from '~/core/vite-plugins';
+import defu from 'defu';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -172,13 +173,13 @@ function mergeInlineConfig(
     const inline = await inlineConfig.vite?.(env);
     return vite.mergeConfig(user ?? {}, inline ?? {});
   };
-  const runner: InlineConfig['runner'] = vite.mergeConfig(
-    userConfig.runner ?? {},
+  const runner: InlineConfig['runner'] = defu(
     inlineConfig.runner ?? {},
+    userConfig.runner ?? {},
   );
-  const zip: InlineConfig['zip'] = vite.mergeConfig(
-    userConfig.zip ?? {},
+  const zip: InlineConfig['zip'] = defu(
     inlineConfig.zip ?? {},
+    userConfig.zip ?? {},
   );
 
   return {
