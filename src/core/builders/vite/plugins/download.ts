@@ -9,7 +9,7 @@ import { fetchCached } from '~/core/utils/network';
  * @example
  * import "url:https://google-tagmanager.com/gtag?id=XYZ";
  */
-export function download(config: InternalConfig): Plugin {
+export function download(config: Omit<InternalConfig, 'builder'>): Plugin {
   return {
     name: 'wxt:download',
     resolveId(id) {

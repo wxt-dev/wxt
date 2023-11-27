@@ -147,6 +147,7 @@ async function setupServer(
   const runner = await createExtensionRunner(config);
 
   const viteServer = await vite.createServer(
+    // @ts-ignore: TODO fix
     vite.mergeConfig(serverInfo, await config.vite(config.env)),
   );
 

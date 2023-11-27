@@ -14,7 +14,7 @@ import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
  */
 export function cssEntrypoints(
   entrypoint: Entrypoint,
-  config: InternalConfig,
+  config: Omit<InternalConfig, 'builder'>,
 ): vite.Plugin {
   return {
     name: 'wxt:css-entrypoint',

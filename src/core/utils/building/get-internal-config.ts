@@ -92,7 +92,7 @@ export async function getInternalConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
-  const finalConfig: InternalConfig = {
+  const finalConfig: Omit<InternalConfig, 'builder'> = {
     browser,
     command,
     debug,
@@ -127,7 +127,6 @@ export async function getInternalConfig(
       includeBrowserPolyfill:
         mergedConfig.experimental?.includeBrowserPolyfill ?? true,
     },
-    builder: undefined as any, // Set later on, left as undefined here for simplicity
   };
 
   const builder = await craeteViteBuilder(

@@ -9,7 +9,7 @@ import { normalizePath } from '~/core/utils/paths';
  */
 export function virtualEntrypoint(
   type: Entrypoint['type'],
-  config: InternalConfig,
+  config: Omit<InternalConfig, 'builder'>,
 ): Plugin {
   const virtualId = `virtual:wxt-${type}?`;
   const resolvedVirtualId = `\0${virtualId}`;

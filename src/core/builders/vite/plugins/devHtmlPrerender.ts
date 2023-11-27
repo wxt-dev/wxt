@@ -2,7 +2,7 @@ import * as vite from 'vite';
 import { InternalConfig } from '~/types';
 import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
-import { dirname, isAbsolute, relative, resolve } from 'path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
 // Cache the preamble script for all devHtmlPrerender plugins, not just one
 let reactRefreshPreamble = '';
@@ -10,7 +10,9 @@ let reactRefreshPreamble = '';
 /**
  * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
  */
-export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
+export function devHtmlPrerender(
+  config: Omit<InternalConfig, 'builder'>,
+): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
     config.root,

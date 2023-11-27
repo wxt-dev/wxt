@@ -16,7 +16,9 @@ const ENABLED_EXTENSIONS = new Set([
 /**
  * Inject any global imports defined by unimport
  */
-export function unimport(config: InternalConfig): vite.PluginOption {
+export function unimport(
+  config: Omit<InternalConfig, 'builder'>,
+): vite.PluginOption {
   const options = getUnimportOptions(config);
   if (options === false) return [];
 

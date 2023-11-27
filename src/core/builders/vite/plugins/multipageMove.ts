@@ -20,7 +20,7 @@ import { normalizePath } from '~/core/utils/paths';
  */
 export function multipageMove(
   entrypoints: Entrypoint[],
-  config: InternalConfig,
+  config: Omit<InternalConfig, 'builder'>,
 ): vite.Plugin {
   return {
     name: 'wxt:multipage-move',

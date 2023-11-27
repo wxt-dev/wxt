@@ -3,7 +3,7 @@ import { InternalConfig } from '~/types';
 import { mergeConfig } from 'vite';
 
 export function getUnimportOptions(
-  config: InternalConfig,
+  config: Omit<InternalConfig, 'builder'>,
 ): Partial<UnimportOptions | false> {
   if (config.imports === false) return false;
 

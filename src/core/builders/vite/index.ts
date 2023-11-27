@@ -32,7 +32,7 @@ declare module '~/types' {
 export async function craeteViteBuilder(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-  wxtConfig: InternalConfig,
+  wxtConfig: Omit<InternalConfig, 'builder'>,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
