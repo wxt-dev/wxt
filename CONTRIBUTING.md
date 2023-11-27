@@ -86,7 +86,7 @@ Note that templates are hardcoded to a specific version of `wxt` from NPM, they 
 
 ```diff
   "devDependencies": {
-    "typescript": "^5.1.6",
+    "typescript": "^5.3.2",
     "vite-plugin-solid": "^2.7.0",
 -   "wxt": "^0.8.0"
 +   "wxt": "../.."
