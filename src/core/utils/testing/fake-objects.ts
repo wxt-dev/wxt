@@ -228,7 +228,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     debug: faker.datatype.boolean(),
     srcDir: fakeDir(),
     typesDir: fakeDir(),
-    vite: () => ({}),
     wxtDir: fakeDir(),
     server: mock<WxtDevServer>(),
     analysis: {
@@ -248,5 +247,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     experimental: {
       includeBrowserPolyfill: true,
     },
+    builder: mock(),
   };
 });

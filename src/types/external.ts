@@ -587,8 +587,9 @@ export interface ExtensionRunnerConfig {
 
 export interface WxtBuilder {
   /**
-   * Build the provided list of entrypoint groups.
+   * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
+   * build process.
    */
-  build(group: EntrypointGroup): Promise<BuildStepOutput[]>;
+  build(group: EntrypointGroup): Promise<BuildStepOutput>;
   createServer(): Promise<any>;
 }

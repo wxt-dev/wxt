@@ -1,4 +1,4 @@
-import { InternalConfig } from '~/types';
+import { Entrypoint, InternalConfig } from '~/types';
 
 export function getGlobals(
   config: Omit<InternalConfig, 'builder'>,
@@ -47,10 +47,7 @@ export function getGlobals(
   ];
 }
 
-export function getEntrypointGlobals(
-  config: InternalConfig,
-  entrypointName: string,
-) {
+export function getEntrypointGlobals(entrypointName: string) {
   return [
     {
       name: surroundInUnderscore('ENTRYPOINT'),
