@@ -327,7 +327,7 @@ export interface BaseEntrypoint {
    * - `named.sandbox.html` &rarr; `named`
    * - `named.sandbox/index.html` &rarr; `named`
    * - `sandbox.html` &rarr; `sandbox`
-   * - `sandbox.index.html` &rarr; `sandbox`
+   * - `sandbox/index.html` &rarr; `sandbox`
    * - `overlay.content.ts` &rarr; `overlay`
    * - `overlay.content/index.ts` &rarr; `overlay`
    *
