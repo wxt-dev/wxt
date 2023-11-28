@@ -4,14 +4,14 @@ import { getUnimportOptions } from '~/core/utils/unimport';
 import * as vite from 'vite';
 import { extname } from 'path';
 
-const ENABLED_EXTENSIONS: Record<string, boolean | undefined> = {
-  '.js': true,
-  '.jsx': true,
-  '.ts': true,
-  '.tsx': true,
-  '.vue': true,
-  '.svelte': true,
-};
+const ENABLED_EXTENSIONS = new Set([
+  '.js',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.vue',
+  '.svelte',
+]);
 
 /**
  * Inject any global imports defined by unimport
@@ -28,8 +28,13 @@ export function unimport(config: InternalConfig): vite.PluginOption {
       await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
     },
     async transform(code, id) {
-      const ext = extname(id);
-      if (ENABLED_EXTENSIONS[ext]) return unimport.injectImports(code, id);
+      // Don't transform dependencies
+      if (id.includes('node_modules')) return;
+
+      // Don't transform non-js files
+      if (!ENABLED_EXTENSIONS.has(extname(id))) return;
+
+      return unimport.injectImports(code, id);
     },
   };
 }
