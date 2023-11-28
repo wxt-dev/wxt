@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.10.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.2...v0.10.3)
+
+### 🩹 Fixes
+
+- **auto-imports:** Don't add imports to `node_module` dependencies ([#247](https://github.com/wxt-dev/wxt/pull/247))
+
+### 📖 Documentation
+
+- Fix typo ([317b1b6](https://github.com/wxt-dev/wxt/commit/317b1b6))
+
+### 🏡 Chore
+
+- Trigger docs upgrade via webhook ([742b996](https://github.com/wxt-dev/wxt/commit/742b996))
+- Use `normalize-path` instead of `vite.normalizePath` ([#244](https://github.com/wxt-dev/wxt/pull/244))
+- Use `defu` for merging some config objects ([#243](https://github.com/wxt-dev/wxt/pull/243))
+
+### 🤖 CI
+
+- Publish docs on push to main ([1611c1d](https://github.com/wxt-dev/wxt/commit/1611c1d))
+- Only print response headers from docs webhook ([97cbda3](https://github.com/wxt-dev/wxt/commit/97cbda3))
+
 ## v0.10.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.1...v0.10.2)
