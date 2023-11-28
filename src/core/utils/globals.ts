@@ -1,4 +1,4 @@
-import { Entrypoint, InternalConfig } from '~/types';
+import { InternalConfig } from '~/types';
 
 export function getGlobals(
   config: Omit<InternalConfig, 'builder'>,
