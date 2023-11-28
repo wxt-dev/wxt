@@ -29,7 +29,7 @@ cli
         configFile: flags.config,
         debug: flags.debug,
       });
-      await server.start();
+      await server.listen();
       return { isOngoing: true };
     }),
   );

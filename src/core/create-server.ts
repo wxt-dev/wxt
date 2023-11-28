@@ -40,33 +40,52 @@ import { relative } from 'node:path';
 export async function createServer(
   config?: InlineConfig,
 ): Promise<WxtDevServer> {
-  const serverInfo = await getServerInfo();
+  const getLatestConfig = () => getInternalConfig(config ?? {}, 'serve');
+  const initialConfig = await getLatestConfig();
+  const server = await createWxtDevServer(initialConfig, getLatestConfig);
+  initialConfig.server = server;
 
-  const getLatestInternalConfig = async () => {
-    return getInternalConfig(
-      {
-        ...config,
-        vite: () => serverInfo.viteServerConfig,
-      },
-      'serve',
-    );
+  return server;
+}
+
+export async function createWxtDevServer(
+  initialConfig: InternalConfig,
+  getLatestConfig: () => Promise<InternalConfig>,
+): Promise<WxtDevServer> {
+  let config = initialConfig;
+  const openPort = await getPort();
+  const [runner, builderServer] = await Promise.all([
+    createExtensionRunner(initialConfig),
+    initialConfig.builder.createServer(),
+  ]);
+
+  const server: WxtDevServer = {
+    ...builderServer,
+    async listen(port, isRestart) {
+      await builderServer.listen(port ?? openPort, isRestart);
+      await runner.openBrowser();
+      return server;
+    },
+    async close() {
+      await Promise.all([builderServer.close(), runner.closeBrowser()]);
+    },
+    restart() {},
+    reloadContentScript(contentScript) {},
+    reloadPage(path) {},
+    reloadExtension() {},
   };
-
-  let internalConfig = await getLatestInternalConfig();
-  const server = await setupServer(serverInfo, internalConfig);
-  internalConfig.server = server;
 
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
   server.ws.on('wxt:background-initialized', () => {
     // Register content scripts for the first time since they're not listed in the manifest
-    reloadContentScripts(server.currentOutput.steps, internalConfig, server);
+    reloadContentScripts(server.currentOutput.steps, config, server);
   });
 
   server.watcher.on('all', async (event, path, _stats) => {
     // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
-    if (path.startsWith(internalConfig.outBaseDir)) return;
+    if (path.startsWith(config.outBaseDir)) return;
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -77,25 +96,25 @@ export async function createServer(
       if (changes.type === 'no-change') return;
 
       // Log the entrypoints that were effected
-      internalConfig.logger.info(
+      config.logger.info(
         `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
-          .map((file) => pc.dim(relative(internalConfig.root, file)))
+          .map((file) => pc.dim(relative(config.root, file)))
           .join(', ')}`,
       );
       const rebuiltNames = changes.rebuildGroups
         .flat()
         .map((entry) => {
           return pc.cyan(
-            relative(internalConfig.outDir, getEntrypointOutputFile(entry, '')),
+            relative(config.outDir, getEntrypointOutputFile(entry, '')),
           );
         })
         .join(pc.dim(', '));
 
       // Get latest config and Rebuild groups with changes
-      internalConfig = await getLatestInternalConfig();
-      internalConfig.server = server;
+      config = await getLatestConfig();
+      config.server = server;
       const { output: newOutput } = await rebuild(
-        internalConfig,
+        config,
         // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
         changes.rebuildGroups,
         changes.cachedOutput,
@@ -108,10 +127,10 @@ export async function createServer(
           server.reloadExtension();
           break;
         case 'html-reload':
-          reloadHtmlPages(changes.rebuildGroups, server, internalConfig);
+          reloadHtmlPages(changes.rebuildGroups, server, initialConfig);
           break;
         case 'content-script-reload':
-          reloadContentScripts(changes.changedSteps, internalConfig, server);
+          reloadContentScripts(changes.changedSteps, initialConfig, server);
           break;
       }
       consola.success(`Reloaded: ${rebuiltNames}`);
@@ -121,31 +140,15 @@ export async function createServer(
   return server;
 }
 
-async function getServerInfo(): Promise<ServerInfo> {
+async function getPort(): Promise<number> {
   const { default: getPort, portNumbers } = await import('get-port');
-  const port = await getPort({ port: portNumbers(3000, 3010) });
-  const hostname = 'localhost';
-  const origin = `http://${hostname}:${port}`;
-  const serverConfig: vite.InlineConfig = {
-    server: {
-      origin,
-    },
-  };
-
-  return {
-    port,
-    hostname,
-    origin,
-    viteServerConfig: serverConfig,
-  };
+  return await getPort({ port: portNumbers(3000, 3010) });
 }
 
 async function setupServer(
   serverInfo: ServerInfo,
   config: InternalConfig,
 ): Promise<WxtDevServer> {
-  const runner = await createExtensionRunner(config);
-
   const viteServer = await vite.createServer(
     // @ts-ignore: TODO fix
     vite.mergeConfig(serverInfo, await config.vite(config.env)),
@@ -244,11 +247,4 @@ function reloadHtmlPages(
     const path = getEntrypointBundlePath(entry, config.outDir, '.html');
     server.reloadPage(path);
   });
-}
-
-interface ServerInfo {
-  port: number;
-  hostname: string;
-  origin: string;
-  viteServerConfig: vite.InlineConfig;
 }

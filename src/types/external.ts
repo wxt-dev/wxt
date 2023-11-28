@@ -4,6 +4,7 @@ import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
+import type { WebSocketServer, FSWatcher } from 'vite';
 
 export interface InlineConfig {
   /**
@@ -244,27 +245,11 @@ export interface BuildStepOutput {
   chunks: (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
 }
 
-export interface WxtDevServer extends vite.ViteDevServer {
+export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {
   /**
-   * Ex: `3000`
+   * Start the server.
    */
-  port: number;
-  /**
-   * Ex: `"localhost"`
-   */
-  hostname: string;
-  /**
-   * Ex: `"http://localhost:3000"`
-   */
-  origin: string;
-  /**
-   * Stores the current build output of the server.
-   */
-  currentOutput: BuildOutput;
-  /**
-   * Start the server on the first open port.
-   */
-  start(): Promise<void>;
+  listen(port?: number, isRestart?: boolean): Promise<WxtDevServer>;
   /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
@@ -591,5 +576,47 @@ export interface WxtBuilder {
    * build process.
    */
   build(group: EntrypointGroup): Promise<BuildStepOutput>;
-  createServer(): Promise<any>;
+  /**
+   * Start a dev server at the provided port.
+   */
+  createServer(): Promise<WxtBuilderServer>;
+}
+
+export interface WxtBuilderServer {
+  /**
+   * Ex: `3000`
+   */
+  port: number;
+  /**
+   * Ex: `"localhost"`
+   */
+  hostname: string;
+  /**
+   * Ex: `"http://localhost:3000"`
+   */
+  origin: string;
+  /**
+   * Stores the current build output of the server.
+   */
+  currentOutput: BuildOutput;
+  /**
+   * Stop the server.
+   */
+  close(): Promise<void>;
+  /**
+   * Start the server.
+   */
+  listen(port: number, isRestart?: boolean): Promise<WxtBuilderServer>;
+  /**
+   * Restart the server.
+   */
+  restart(forceOptimize?: boolean): Promise<void>;
+  /**
+   * The web socket server used to communicate with the extension.
+   */
+  ws: WebSocketServer;
+  /**
+   * Chokidar file watcher instance.
+   */
+  watcher: FSWatcher;
 }
