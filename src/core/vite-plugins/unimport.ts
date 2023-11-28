@@ -28,8 +28,13 @@ export function unimport(config: InternalConfig): vite.PluginOption {
       await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
     },
     async transform(code, id) {
-      const ext = extname(id);
-      if (ENABLED_EXTENSIONS[ext]) return unimport.injectImports(code, id);
+      // Don't transform dependencies
+      if (id.includes('node_modules')) return;
+
+      // Don't transform non-js files
+      if (!ENABLED_EXTENSIONS[extname(id)]) return;
+
+      return unimport.injectImports(code, id);
     },
   };
 }
