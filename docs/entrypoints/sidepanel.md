@@ -3,7 +3,7 @@
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/sidePanel/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
 :::warning
-Chrome Manfest V2 does not support for side panels.
+Chrome added support for sidepanels in Manifest V3, they are not available in Manfiest V2.
 :::
 
 ## Filenames
