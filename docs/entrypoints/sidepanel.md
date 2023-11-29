@@ -1,9 +1,9 @@
 # Side Panel
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/sidePanel/)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/sidePanel/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-:::tip Chromium Only
-Firefox does not support sidepanel pages.
+:::warning
+Chrome Manfest V2 does not support for side panels.
 :::
 
 ## Filenames
