@@ -10,6 +10,7 @@ const chromeExtensionIds = [
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
   'elfaihghhjjoknimpccccmkioofjjfkf', // StayFree - Website Blocker & Web Analytics
+  'okifoaikfmpfcamplcfjkpdnhfodpkil', // Doozy: Ai Made Easy
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
