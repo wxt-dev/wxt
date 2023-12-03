@@ -69,6 +69,7 @@ export function multipageMove(
       }
 
       // Remove directories that were created
+      // TOOD: Optimize and only delete old path directories
       removeEmptyDirs(config.outDir);
     },
   };
