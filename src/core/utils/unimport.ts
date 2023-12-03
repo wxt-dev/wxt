@@ -1,6 +1,6 @@
 import { UnimportOptions } from 'unimport';
 import { InternalConfig } from '~/types';
-import { mergeConfig } from 'vite';
+import { defu } from 'defu';
 
 export function getUnimportOptions(
   config: Omit<InternalConfig, 'builder'>,
@@ -23,9 +23,5 @@ export function getUnimportOptions(
     dirs: ['components', 'composables', 'hooks', 'utils'],
   };
 
-  // TODO
-  return mergeConfig(
-    defaultOptions,
-    config.imports,
-  ) as Partial<UnimportOptions>;
+  return defu(config.imports, defaultOptions);
 }

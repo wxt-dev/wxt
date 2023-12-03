@@ -9,7 +9,6 @@ import {
   ExtensionRunnerConfig,
 } from '~/types';
 import path from 'node:path';
-import * as vite from 'vite';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import { craeteViteBuilder } from '~/core/builders/vite';
@@ -163,17 +162,12 @@ function mergeInlineConfig(
   } else if (userConfig.imports == null && inlineConfig.imports == null) {
     imports = undefined;
   } else {
-    // TODO
-    imports = vite.mergeConfig(
-      userConfig.imports ?? {},
-      inlineConfig.imports ?? {},
-    );
+    imports = defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
   }
   const manifest: UserManifestFn = async (env) => {
     const user = await resolveManifestConfig(env, userConfig.manifest);
     const inline = await resolveManifestConfig(env, inlineConfig.manifest);
-    // TODO
-    return vite.mergeConfig(user, inline);
+    return defu(inline, user);
   };
   const runner: InlineConfig['runner'] = defu(
     inlineConfig.runner ?? {},
