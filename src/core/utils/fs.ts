@@ -2,7 +2,6 @@ import { InternalConfig } from '~/types';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
 import { unnormalizePath } from './paths';
-import path from 'node:path';
 
 /**
  * Only write the contents to a file if it results in a change. This prevents unnecessary file

@@ -4,7 +4,6 @@ import {
   EntrypointGroup,
   InternalConfig,
 } from '~/types';
-import { removeEmptyDirs } from '~/core/utils/fs';
 import { getPublicFiles } from '~/core/utils/fs';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
