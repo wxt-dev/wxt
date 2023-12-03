@@ -1,16 +1,19 @@
 import * as vite from 'vite';
-import { Entrypoint } from '~/types';
+import { EntrypointGroup } from '~/types';
 import { getEntrypointGlobals } from '~/core/utils/globals';
 
 /**
  * Define a set of global variables specific to an entrypoint.
  */
-export function libModeGlobals(entrypoint: Entrypoint): vite.PluginOption {
+export function entrypointGroupGlobals(
+  entrypointGroup: EntrypointGroup,
+): vite.PluginOption {
   return {
-    name: 'wxt:lib-mode-globals',
+    name: 'wxt:entrypoint-group-globals',
     config() {
       const define: vite.InlineConfig['define'] = {};
-      for (const global of getEntrypointGlobals(entrypoint.name)) {
+      let name = Array.isArray(entrypointGroup) ? 'html' : entrypointGroup.name;
+      for (const global of getEntrypointGlobals(name)) {
         define[global.name] = JSON.stringify(global.value);
       }
       return {

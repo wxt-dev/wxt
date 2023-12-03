@@ -75,7 +75,7 @@ export async function craeteViteBuilder(
       : entrypoint.inputPath;
 
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
-      wxtPlugins.libModeGlobals(entrypoint),
+      wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
     if (
       entrypoint.type === 'content-script-style' ||
@@ -134,7 +134,7 @@ export async function craeteViteBuilder(
       mode: wxtConfig.mode,
       plugins: [
         wxtPlugins.multipageMove(entrypoints, wxtConfig),
-        wxtPlugins.multipageModeGlobals(),
+        wxtPlugins.entrypointGroupGlobals(entrypoints),
       ],
       build: {
         rollupOptions: {

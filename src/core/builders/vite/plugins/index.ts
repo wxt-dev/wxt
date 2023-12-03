@@ -12,5 +12,4 @@ export * from './globals';
 export * from './webextensionPolyfillAlias';
 export * from './webextensionPolyfillInlineDeps';
 export * from './excludeBrowserPolyfill';
-export * from './libModeGlobals';
-export * from './multipageModeGlobals';
+export * from './entrypointGroupGlobals';
