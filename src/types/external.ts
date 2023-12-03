@@ -4,7 +4,7 @@ import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
-import type { FSWatcher } from 'vite';
+import type { FSWatcher } from 'chokidar';
 
 export interface InlineConfig {
   /**
@@ -190,10 +190,6 @@ export interface InlineConfig {
    * Add additional paths to the `.wxt/tsconfig.json`. Use this instead of overwriting the `paths`
    * in the root `tsconfig.json` if you want to add new paths.
    *
-   * Passed into Vite's
-   * [`resolve.alias`](https://vitejs.dev/config/shared-options.html#resolve-alias) option and used
-   * to generate the `.wxt/tsconfig.json`.
-   *
    * The key is the import alias and the value is either a relative path to the root directory or an absolute path.
    *
    * @example
@@ -227,11 +223,6 @@ export interface InlineConfig {
      */
     includeBrowserPolyfill?: boolean;
   };
-}
-
-export interface WxtInlineViteConfig
-  extends Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode' | 'build'> {
-  build?: Omit<vite.BuildOptions, 'outDir'>;
 }
 
 export interface BuildOutput {

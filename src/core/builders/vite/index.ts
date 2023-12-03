@@ -11,7 +11,6 @@ import {
 } from '~/types';
 import * as wxtPlugins from './plugins';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
-import type { Scripting } from 'webextension-polyfill';
 
 export type WxtViteConfig = Omit<
   vite.UserConfig,
