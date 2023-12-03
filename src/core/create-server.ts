@@ -5,8 +5,6 @@ import {
   InternalConfig,
   WxtDevServer,
 } from '~/types';
-import * as vite from 'vite';
-import type { Scripting } from 'webextension-polyfill';
 import {
   getEntrypointBundlePath,
   getEntrypointOutputFile,
@@ -53,26 +51,59 @@ export async function createWxtDevServer(
   getLatestConfig: () => Promise<InternalConfig>,
 ): Promise<WxtDevServer> {
   let config = initialConfig;
-  const openPort = await getPort();
+  const port = await getPort();
   const [runner, builderServer] = await Promise.all([
     createExtensionRunner(initialConfig),
-    initialConfig.builder.createServer(),
+    initialConfig.builder.createServer(port),
   ]);
+
+  const listen = async () => {
+    await builderServer.listen();
+    config.logger.success(`Started dev server @ ${builderServer.origin}`);
+
+    // Build after starting the dev server so it can be used to transform HTML files
+    server.currentOutput = await internalBuild(config);
+
+    // Open browser after everything is ready to go.
+    await runner.openBrowser(config);
+
+    return server;
+  };
+
+  const close = async () => {
+    await Promise.all([builderServer.close(), runner.closeBrowser()]);
+  };
+
+  const restart = async () => {
+    await close();
+    await listen();
+  };
 
   const server: WxtDevServer = {
     ...builderServer,
-    async listen(port, isRestart) {
-      await builderServer.listen(port ?? openPort, isRestart);
-      await runner.openBrowser();
-      return server;
+    currentOutput: {
+      manifest: {
+        manifest_version: config.manifestVersion,
+        name: '',
+        version: '',
+      },
+      publicAssets: [],
+      steps: [],
     },
-    async close() {
-      await Promise.all([builderServer.close(), runner.closeBrowser()]);
+    listen,
+    close,
+    restart,
+    reloadContentScript(contentScript) {
+      server.ws.send('wxt:reload-content-script', contentScript);
     },
-    restart() {},
-    reloadContentScript(contentScript) {},
-    reloadPage(path) {},
-    reloadExtension() {},
+    reloadPage(path) {
+      // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
+      // paths ending in "/index.html"
+      server.ws.send('wxt:reload-page', path);
+    },
+    reloadExtension() {
+      server.ws.send('wxt:reload-extension');
+    },
   };
 
   const fileChangedMutex = new Mutex();
@@ -143,60 +174,6 @@ export async function createWxtDevServer(
 async function getPort(): Promise<number> {
   const { default: getPort, portNumbers } = await import('get-port');
   return await getPort({ port: portNumbers(3000, 3010) });
-}
-
-async function setupServer(
-  serverInfo: ServerInfo,
-  config: InternalConfig,
-): Promise<WxtDevServer> {
-  const viteServer = await vite.createServer(
-    // @ts-ignore: TODO fix
-    vite.mergeConfig(serverInfo, await config.vite(config.env)),
-  );
-
-  const start = async () => {
-    await viteServer.listen(server.port);
-    config.logger.success(`Started dev server @ ${serverInfo.origin}`);
-
-    server.currentOutput = await internalBuild(config);
-    await runner.openBrowser(config);
-  };
-
-  const reloadExtension = () => {
-    viteServer.ws.send('wxt:reload-extension');
-  };
-  const reloadPage = (path: string) => {
-    // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
-    // paths ending in "/index.html"
-    viteServer.ws.send('wxt:reload-page', path);
-  };
-  const reloadContentScript = (
-    contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
-  ) => {
-    viteServer.ws.send('wxt:reload-content-script', contentScript);
-  };
-
-  const server: WxtDevServer = {
-    ...viteServer,
-    start,
-    currentOutput: {
-      manifest: {
-        manifest_version: 3,
-        name: '',
-        version: '',
-      },
-      publicAssets: [],
-      steps: [],
-    },
-    port: serverInfo.port,
-    hostname: serverInfo.hostname,
-    origin: serverInfo.origin,
-    reloadExtension,
-    reloadPage,
-    reloadContentScript,
-  };
-
-  return server;
 }
 
 /**

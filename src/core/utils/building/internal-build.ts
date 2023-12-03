@@ -27,7 +27,7 @@ export async function internalBuild(
   const target = `${config.browser}-mv${config.manifestVersion}`;
   config.logger.info(
     `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
-      `Vite ${vite.version}`,
+      `${config.builder.name} ${config.builder.version}`,
     )}`,
   );
   const startTime = Date.now();

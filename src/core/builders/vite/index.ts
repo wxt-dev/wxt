@@ -7,9 +7,11 @@ import {
   InternalConfig,
   UserConfig,
   WxtBuilder,
+  WxtBuilderServer,
 } from '~/types';
 import * as wxtPlugins from './plugins';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
+import type { Scripting } from 'webextension-polyfill';
 
 export type WxtViteConfig = Omit<
   vite.UserConfig,
@@ -178,6 +180,8 @@ export async function craeteViteBuilder(
   };
 
   return {
+    name: 'Vite',
+    version: vite.version,
     async build(group) {
       const buildConfig = vite.mergeConfig(
         await getBaseConfig(),
@@ -191,8 +195,60 @@ export async function craeteViteBuilder(
         chunks: getBuildOutputChunks(result),
       };
     },
-    createServer() {
-      throw Error('Not implemented');
+    async createServer(port) {
+      const hostname = 'localhost';
+      const origin = `http://${hostname}:${port}`;
+      const serverConfig: vite.InlineConfig = {
+        server: {
+          origin,
+        },
+      };
+      const baseConfig = await getBaseConfig();
+
+      const viteServer = await vite.createServer(
+        vite.mergeConfig(baseConfig, serverConfig),
+      );
+
+      const listen = async () => {
+        await viteServer.listen(server.port);
+      };
+      const close = async () => {
+        await viteServer.close().catch(() => {
+          wxtConfig.logger.warn('Server not started yet');
+        });
+      };
+      const restart = async () => {
+        await close();
+        await listen();
+      };
+
+      const reloadExtension = () => {
+        viteServer.ws.send('wxt:reload-extension');
+      };
+      const reloadPage = (path: string) => {
+        // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
+        // paths ending in "/index.html"
+        viteServer.ws.send('wxt:reload-page', path);
+      };
+      const reloadContentScript = (
+        contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
+      ) => {
+        viteServer.ws.send('wxt:reload-content-script', contentScript);
+      };
+
+      const server: WxtBuilderServer = {
+        listen,
+        close,
+        restart,
+        port,
+        hostname,
+        origin,
+        // reloadExtension,
+        // reloadPage,
+        // reloadContentScript,
+      };
+
+      return server;
     },
   };
 }

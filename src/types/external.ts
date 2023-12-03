@@ -4,7 +4,7 @@ import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
-import type { WebSocketServer, FSWatcher } from 'vite';
+import type { FSWatcher } from 'vite';
 
 export interface InlineConfig {
   /**
@@ -249,7 +249,7 @@ export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {
   /**
    * Start the server.
    */
-  listen(port?: number, isRestart?: boolean): Promise<WxtDevServer>;
+  listen(): Promise<WxtDevServer>;
   /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
@@ -572,6 +572,14 @@ export interface ExtensionRunnerConfig {
 
 export interface WxtBuilder {
   /**
+   * Name of tool used to build. Ex: "Vite" or "Webpack".
+   */
+  name: string;
+  /**
+   * Version of tool used to build. Ex: "5.0.2"
+   */
+  version: string;
+  /**
    * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
    * build process.
    */
@@ -579,7 +587,7 @@ export interface WxtBuilder {
   /**
    * Start a dev server at the provided port.
    */
-  createServer(): Promise<WxtBuilderServer>;
+  createServer(port: number): Promise<WxtBuilderServer>;
 }
 
 export interface WxtBuilderServer {
@@ -600,21 +608,34 @@ export interface WxtBuilderServer {
    */
   currentOutput: BuildOutput;
   /**
+   * Start the server.
+   */
+  listen(): Promise<void>;
+  /**
    * Stop the server.
    */
   close(): Promise<void>;
   /**
-   * Start the server.
-   */
-  listen(port: number, isRestart?: boolean): Promise<WxtBuilderServer>;
-  /**
    * Restart the server.
    */
-  restart(forceOptimize?: boolean): Promise<void>;
+  restart(): Promise<void>;
   /**
    * The web socket server used to communicate with the extension.
    */
-  ws: WebSocketServer;
+  ws: {
+    /**
+     * Send a message via the server's websocket, with an optional payload.
+     *
+     * @example
+     * ws.send("wxt:reload-extension");
+     * ws.send("wxt:reload-content-script", { ... });
+     */
+    send(message: string, payload?: any): Promise<void>;
+    /**
+     * Listen for messages over the server's websocket.
+     */
+    on(message: string, cb: (payload: any) => void): void;
+  };
   /**
    * Chokidar file watcher instance.
    */
