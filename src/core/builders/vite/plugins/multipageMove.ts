@@ -1,6 +1,6 @@
 import * as vite from 'vite';
 import { Entrypoint, InternalConfig } from '~/types';
-import { dirname, extname, resolve } from 'node:path';
+import { dirname, extname, resolve, join } from 'node:path';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 import fs, { ensureDir } from 'fs-extra';
 import { normalizePath } from '~/core/utils/paths';
@@ -67,6 +67,29 @@ export function multipageMove(
         delete bundle[oldBundlePath];
         bundle[newBundlePath] = renamedChunk;
       }
+
+      // Remove directories that were created
+      removeEmptyDirs(config.outDir);
     },
   };
+}
+
+/**
+ * Recursively remove all directories that are empty/
+ */
+export async function removeEmptyDirs(dir: string): Promise<void> {
+  const files = await fs.readdir(dir);
+  for (const file of files) {
+    const filePath = join(dir, file);
+    const stats = await fs.stat(filePath);
+    if (stats.isDirectory()) {
+      await removeEmptyDirs(filePath);
+    }
+  }
+
+  try {
+    await fs.rmdir(dir);
+  } catch {
+    // noop on failure - this means the directory was not empty.
+  }
 }

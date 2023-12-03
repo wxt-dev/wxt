@@ -28,10 +28,6 @@ export async function buildEntrypoints(
   }
   const publicAssets = await copyPublicDirectory(config);
 
-  // Remove any empty directories from moving outputs around
-  // TODO: Move into vite
-  await removeEmptyDirs(config.outDir);
-
   return { publicAssets, steps };
 }
 
