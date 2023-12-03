@@ -248,13 +248,39 @@ export type WxtViteConfig = Omit<
 
 export interface BuildOutput {
   manifest: Manifest.WebExtensionManifest;
-  publicAssets: vite.Rollup.OutputAsset[];
+  publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
+}
+
+export type OutputFile = OutputChunk | OutputAsset;
+
+export interface OutputChunk {
+  type: 'chunk';
+  /**
+   * Relative, normalized path relative to the output directory.
+   *
+   * Ex: "content-scripts/overlay.js"
+   */
+  fileName: string;
+  /**
+   * Absolute, normalized paths to all dependencies this chunk relies on.
+   */
+  moduleIds: string[];
+}
+
+export interface OutputAsset {
+  type: 'asset';
+  /**
+   * Relative, normalized path relative to the output directory.
+   *
+   * Ex: "icons/16.png"
+   */
+  fileName: string;
 }
 
 export interface BuildStepOutput {
   entrypoints: EntrypointGroup;
-  chunks: (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
+  chunks: OutputFile[];
 }
 
 export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {

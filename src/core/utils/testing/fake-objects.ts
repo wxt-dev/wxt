@@ -4,7 +4,6 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import { Rollup } from 'vite';
 import type { Manifest } from 'webextension-polyfill';
 import {
   FsCache,
@@ -15,6 +14,9 @@ import {
   GenericEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
+  OutputChunk,
+  OutputFile,
+  OutputAsset,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 
@@ -140,49 +142,42 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
   }),
 );
 
-export const fakeRollupOutputChunk = fakeObjectCreator<Rollup.OutputChunk>(
-  () => ({
-    type: 'chunk',
-    code: '',
-    dynamicImports: [],
-    exports: [],
-    facadeModuleId: faker.helpers.arrayElement([null, fakeFile()]),
-    fileName: faker.string.alphanumeric(),
-    implicitlyLoadedBefore: [],
-    importedBindings: {},
-    imports: [],
-    isDynamicEntry: faker.datatype.boolean(),
-    isEntry: faker.datatype.boolean(),
-    isImplicitEntry: faker.datatype.boolean(),
-    map: null,
-    moduleIds: [],
-    modules: {},
-    name: faker.string.alpha(),
-    referencedFiles: [],
-    viteMetadata: {
-      importedAssets: new Set(),
-      importedCss: new Set(),
-    },
-    preliminaryFileName: faker.string.alphanumeric(),
-    sourcemapFileName: null,
-  }),
-);
+export const fakeOutputChunk = fakeObjectCreator<OutputChunk>(() => ({
+  type: 'chunk',
+  code: '',
+  dynamicImports: [],
+  exports: [],
+  facadeModuleId: faker.helpers.arrayElement([null, fakeFile()]),
+  fileName: faker.string.alphanumeric(),
+  implicitlyLoadedBefore: [],
+  importedBindings: {},
+  imports: [],
+  isDynamicEntry: faker.datatype.boolean(),
+  isEntry: faker.datatype.boolean(),
+  isImplicitEntry: faker.datatype.boolean(),
+  map: null,
+  moduleIds: [],
+  modules: {},
+  name: faker.string.alpha(),
+  referencedFiles: [],
+  viteMetadata: {
+    importedAssets: new Set(),
+    importedCss: new Set(),
+  },
+  preliminaryFileName: faker.string.alphanumeric(),
+  sourcemapFileName: null,
+}));
 
-export const fakeRollupOutputAsset = fakeObjectCreator<Rollup.OutputAsset>(
-  () => ({
-    type: 'asset',
-    fileName: fakeFileName(),
-    name: faker.string.alpha(),
-    needsCodeReference: faker.datatype.boolean(),
-    source: '',
-  }),
-);
+export const fakeOutputAsset = fakeObjectCreator<OutputAsset>(() => ({
+  type: 'asset',
+  fileName: fakeFileName(),
+  name: faker.string.alpha(),
+  needsCodeReference: faker.datatype.boolean(),
+  source: '',
+}));
 
-export function fakeRollupOutput(): Rollup.OutputAsset | Rollup.OutputChunk {
-  return faker.helpers.arrayElement([
-    fakeRollupOutputAsset(),
-    fakeRollupOutputChunk(),
-  ]);
+export function fakeOutputFile(): OutputFile {
+  return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
 }
 
 export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(

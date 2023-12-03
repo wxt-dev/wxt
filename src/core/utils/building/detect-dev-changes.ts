@@ -1,5 +1,10 @@
-import { BuildOutput, BuildStepOutput, EntrypointGroup } from '~/types';
-import * as vite from 'vite';
+import {
+  BuildOutput,
+  BuildStepOutput,
+  EntrypointGroup,
+  OutputAsset,
+  OutputFile,
+} from '~/types';
 import { every } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
 
@@ -106,7 +111,8 @@ function findEffectedSteps(
   const changedPath = normalizePath(changedFile[1]);
 
   const isChunkEffected = (
-    chunk: vite.Rollup.OutputChunk | vite.Rollup.OutputAsset,
+    // TODO
+    chunk: OutputFile,
   ): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
     // fileName is normalized, relative bundle path
@@ -176,4 +182,4 @@ interface ContentScriptReload extends RebuildChange {
  * directory asset that was changed. It doesn't know what type of change is required yet. Just an
  * intermediate type.
  */
-type DetectedChange = BuildStepOutput | vite.Rollup.OutputAsset;
+type DetectedChange = BuildStepOutput | OutputAsset;

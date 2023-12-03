@@ -163,6 +163,7 @@ function mergeInlineConfig(
   } else if (userConfig.imports == null && inlineConfig.imports == null) {
     imports = undefined;
   } else {
+    // TODO
     imports = vite.mergeConfig(
       userConfig.imports ?? {},
       inlineConfig.imports ?? {},
@@ -171,6 +172,7 @@ function mergeInlineConfig(
   const manifest: UserManifestFn = async (env) => {
     const user = await resolveManifestConfig(env, userConfig.manifest);
     const inline = await resolveManifestConfig(env, inlineConfig.manifest);
+    // TODO
     return vite.mergeConfig(user, inline);
   };
   const runner: InlineConfig['runner'] = defu(

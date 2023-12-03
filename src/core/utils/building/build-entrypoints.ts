@@ -46,9 +46,6 @@ async function copyPublicDirectory(
     publicAssets.push({
       type: 'asset',
       fileName: file,
-      name: file,
-      needsCodeReference: false,
-      source: await fs.readFile(srcPath),
     });
   }
 
