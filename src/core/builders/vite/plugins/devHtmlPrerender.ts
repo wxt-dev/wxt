@@ -20,6 +20,7 @@ export function devHtmlPrerender(
   );
   const virtualReactRefreshId = '@wxt/virtual-react-refresh';
   const resolvedVirtualReactRefreshId = '\0' + virtualReactRefreshId;
+  let viteServer: vite.ViteDevServer;
 
   return [
     {
@@ -33,6 +34,9 @@ export function devHtmlPrerender(
             },
           },
         };
+      },
+      configureServer(server) {
+        viteServer = server;
       },
       // Convert scripts like src="./main.tsx" -> src="http://localhost:3000/entrypoints/popup/main.tsx"
       // before the paths are replaced with their bundled path
@@ -88,7 +92,7 @@ export function devHtmlPrerender(
         const originalUrl = `${server.origin}${ctx.path}`;
         const name = getEntrypointName(config.entrypointsDir, ctx.filename);
         const url = `${server.origin}/${name}.html`;
-        const serverHtml = await server.transformIndexHtml(
+        const serverHtml = await viteServer.transformIndexHtml(
           url,
           html,
           originalUrl,

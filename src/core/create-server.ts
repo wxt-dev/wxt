@@ -97,8 +97,6 @@ export async function createWxtDevServer(
       server.ws.send('wxt:reload-content-script', contentScript);
     },
     reloadPage(path) {
-      // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
-      // paths ending in "/index.html"
       server.ws.send('wxt:reload-page', path);
     },
     reloadExtension() {

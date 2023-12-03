@@ -240,9 +240,6 @@ export async function craeteViteBuilder(
           },
         },
         watcher: viteServer.watcher,
-        // reloadExtension,
-        // reloadPage,
-        // reloadContentScript,
       };
 
       return server;
