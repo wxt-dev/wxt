@@ -225,6 +225,27 @@ export interface InlineConfig {
   };
 }
 
+// TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
+export interface InlineConfig {
+  /**
+   * Return custom Vite options from a function. See
+   * <https://vitejs.dev/config/shared-options.html>.
+   *
+   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config
+   * instead of Vite's.
+   *
+   * This is a function because any vite plugins added need to be recreated for each individual
+   * build step, incase they have internal state causing them to fail when reused.
+   */
+  vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
+}
+
+// TODO: Move into @wxt/vite-builder
+export type WxtViteConfig = Omit<
+  vite.UserConfig,
+  'root' | 'configFile' | 'mode'
+>;
+
 export interface BuildOutput {
   manifest: Manifest.WebExtensionManifest;
   publicAssets: vite.Rollup.OutputAsset[];
