@@ -247,6 +247,10 @@ export interface BuildStepOutput {
 
 export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {
   /**
+   * Stores the current build output of the server.
+   */
+  currentOutput: BuildOutput;
+  /**
    * Start the server.
    */
   listen(): Promise<WxtDevServer>;
@@ -604,10 +608,6 @@ export interface WxtBuilderServer {
    */
   origin: string;
   /**
-   * Stores the current build output of the server.
-   */
-  currentOutput: BuildOutput;
-  /**
    * Start the server.
    */
   listen(): Promise<void>;
@@ -630,7 +630,7 @@ export interface WxtBuilderServer {
      * ws.send("wxt:reload-extension");
      * ws.send("wxt:reload-content-script", { ... });
      */
-    send(message: string, payload?: any): Promise<void>;
+    send(message: string, payload?: any): void;
     /**
      * Listen for messages over the server's websocket.
      */

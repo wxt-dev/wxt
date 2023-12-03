@@ -222,20 +222,6 @@ export async function craeteViteBuilder(
         await listen();
       };
 
-      const reloadExtension = () => {
-        viteServer.ws.send('wxt:reload-extension');
-      };
-      const reloadPage = (path: string) => {
-        // Can't use Vite's built-in "full-reload" event because it doesn't like our paths, it expects
-        // paths ending in "/index.html"
-        viteServer.ws.send('wxt:reload-page', path);
-      };
-      const reloadContentScript = (
-        contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
-      ) => {
-        viteServer.ws.send('wxt:reload-content-script', contentScript);
-      };
-
       const server: WxtBuilderServer = {
         listen,
         close,
@@ -243,6 +229,18 @@ export async function craeteViteBuilder(
         port,
         hostname,
         origin,
+        ws: {
+          send(message, payload) {
+            return viteServer.ws.send(message, payload);
+          },
+          on(message, cb) {
+            viteServer.ws.on(message, (request) => {
+              // TODO: Pass payload correctly
+              cb(request);
+            });
+          },
+        },
+        watcher: viteServer.watcher,
         // reloadExtension,
         // reloadPage,
         // reloadContentScript,
