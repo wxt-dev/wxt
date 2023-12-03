@@ -1,7 +1,6 @@
 import { findEntrypoints } from './find-entrypoints';
 import { InternalConfig, BuildOutput } from '~/types';
 import pc from 'picocolors';
-import * as vite from 'vite';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '~/core/utils/time';
