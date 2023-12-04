@@ -66,11 +66,11 @@ jobs:
         working-directory: templates/${{ matrix.template }}
       - run: npm i -D ../../wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
-      - run: npm run compile
+      - run: pnpm compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
-      - run: npm run check
+      - run: pnpm check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
-      - run: npm run build
+      - run: pnpm build
         working-directory: templates/${{ matrix.template }}

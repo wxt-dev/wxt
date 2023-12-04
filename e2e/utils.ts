@@ -77,7 +77,9 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await execaCommand('npm i --ignore-scripts', { cwd: this.root });
+    await execaCommand('pnpm --ignore-workspace i --ignore-scripts', {
+      cwd: this.root,
+    });
     await build({ ...config, root: this.root });
   }
 
