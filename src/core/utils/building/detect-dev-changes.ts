@@ -110,10 +110,7 @@ function findEffectedSteps(
   const changes: DetectedChange[] = [];
   const changedPath = normalizePath(changedFile[1]);
 
-  const isChunkEffected = (
-    // TODO
-    chunk: OutputFile,
-  ): boolean =>
+  const isChunkEffected = (chunk: OutputFile): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
     // fileName is normalized, relative bundle path
     (chunk.type === 'asset' && changedPath.endsWith(chunk.fileName)) ||
