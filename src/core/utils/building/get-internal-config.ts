@@ -15,6 +15,7 @@ import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import * as plugins from '~/core/vite-plugins';
 import defu from 'defu';
+import { NullablyRequired } from '../types';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -70,7 +71,7 @@ export async function getInternalConfig(
   );
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
   const typesDir = path.resolve(wxtDir, 'types');
-  const outBaseDir = path.resolve(root, '.output');
+  const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
 
   const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
@@ -151,7 +152,7 @@ async function resolveManifestConfig(
 function mergeInlineConfig(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): InlineConfig {
+): NullablyRequired<InlineConfig> {
   let imports: InlineConfig['imports'];
   if (inlineConfig.imports === false || userConfig.imports === false) {
     imports = false;
@@ -196,6 +197,7 @@ function mergeInlineConfig(
     publicDir: inlineConfig.publicDir ?? userConfig.publicDir,
     runner,
     srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
+    outDir: inlineConfig.outDir ?? userConfig.outDir,
     vite: viteConfig,
     zip,
     analysis: {
@@ -211,14 +213,16 @@ function mergeInlineConfig(
       ...userConfig.experimental,
       ...inlineConfig.experimental,
     },
+    transformManifest: undefined,
   };
 }
 
 function resolveInternalZipConfig(
   root: string,
   mergedConfig: InlineConfig,
-): InternalConfig['zip'] {
+): NullablyRequired<InternalConfig['zip']> {
   return {
+    name: undefined,
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',
     artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
     sourcesRoot: root,

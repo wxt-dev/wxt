@@ -208,4 +208,17 @@ describe('Output Directory Structure', () => {
     );
     expect(await project.fileExists('.output/chrome-mv3/unlisted.js'));
   });
+
+  it("should output to a custom directory when overriding 'outDir'", async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({
+      outDir: 'dist',
+    });
+
+    await project.build();
+
+    expect(await project.fileExists('dist/chrome-mv3/manifest.json')).toBe(
+      true,
+    );
+  });
 });
