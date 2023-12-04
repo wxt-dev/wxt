@@ -31,6 +31,12 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
+   * Output directory that stored build folders and ZIPs.
+   *
+   * @default ".output"
+   */
+  outDir?: string;
+  /**
    * > Only available when using the JS API. Not available in `wxt.config.ts` files
    *
    * Path to `wxt.config.ts` file or `false` to disable config file discovery.
