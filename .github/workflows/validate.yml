@@ -62,9 +62,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: pnpm pack
-      - run: pnpm --ignore-workspace i
+      - run: npm i
         working-directory: templates/${{ matrix.template }}
-      - run: pnpm --ignore-workspace i -D ../../wxt-*.tgz
+      - run: npm i -D ../../wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
       - run: pnpm compile
         if: matrix.template != 'svelte'
