@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.10.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.3...v0.10.4)
+
+### 🚀 Enhancements
+
+- Add config to customize `outDir` ([#258](https://github.com/wxt-dev/wxt/pull/258))
+
+### 📖 Documentation
+
+- Add Doozy to homepage ([#249](https://github.com/wxt-dev/wxt/pull/249))
+- Update sidepanel availability ([#250](https://github.com/wxt-dev/wxt/pull/250))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump prettier from 3.0.3 to 3.1.0 ([#254](https://github.com/wxt-dev/wxt/pull/254))
+- **deps-dev:** Bump @types/lodash.merge from 4.6.8 to 4.6.9 ([#255](https://github.com/wxt-dev/wxt/pull/255))
+- **deps-dev:** Bump tsx from 3.14.0 to 4.6.1 ([#252](https://github.com/wxt-dev/wxt/pull/252))
+
+### ❤️ Contributors
+
+- 冯不游
+
 ## v0.10.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.2...v0.10.3)
