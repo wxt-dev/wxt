@@ -175,14 +175,13 @@ export async function craeteViteBuilder(
     async createServer(info) {
       const serverConfig: vite.InlineConfig = {
         server: {
-          origin: info.origin,
           port: info.port,
           strictPort: true,
           host: info.hostname,
+          origin: info.origin,
         },
       };
       const baseConfig = await getBaseConfig();
-
       const viteServer = await vite.createServer(
         vite.mergeConfig(baseConfig, serverConfig),
       );
@@ -191,21 +190,15 @@ export async function craeteViteBuilder(
         async listen() {
           await viteServer.listen(info.port);
         },
-        async close() {
-          await viteServer.close().catch(() => {
-            wxtConfig.logger.warn('Server not started yet');
-          });
-        },
-        async restart() {
-          await server.close();
-          await server.listen();
-        },
         transformHtml(...args) {
           return viteServer.transformIndexHtml(...args);
         },
         ws: {
           send(message, payload) {
             return viteServer.ws.send(message, payload);
+          },
+          on(message, cb) {
+            viteServer.ws.on(message, cb);
           },
         },
         watcher: viteServer.watcher,

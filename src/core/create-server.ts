@@ -70,13 +70,6 @@ export async function createServer(
     transformHtml(url, html, originalUrl) {
       return builderServer.transformHtml(url, html, originalUrl);
     },
-    async close() {
-      await Promise.all([builderServer.close(), runner.closeBrowser()]);
-    },
-    async restart() {
-      await server.close();
-      await server.listen();
-    },
     reloadContentScript(contentScript) {
       server.ws.send('wxt:reload-content-script', contentScript);
     },
