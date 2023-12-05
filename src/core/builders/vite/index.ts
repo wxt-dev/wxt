@@ -207,12 +207,6 @@ export async function craeteViteBuilder(
           send(message, payload) {
             return viteServer.ws.send(message, payload);
           },
-          on(message, cb) {
-            viteServer.ws.on(message, (request) => {
-              // TODO: Pass payload correctly
-              cb(request);
-            });
-          },
         },
         watcher: viteServer.watcher,
       };

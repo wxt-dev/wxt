@@ -675,10 +675,6 @@ export interface WxtBuilderServer {
      * ws.send("wxt:reload-content-script", { ... });
      */
     send(message: string, payload?: any): void;
-    /**
-     * Listen for messages over the server's websocket.
-     */
-    on(message: string, cb: (payload: any) => void): void;
   };
   /**
    * Chokidar file watcher instance.
