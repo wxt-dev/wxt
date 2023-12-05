@@ -91,17 +91,47 @@ export async function createServer(
   server.watcher = builderServer.watcher;
   server.ws = builderServer.ws;
 
-  const fileChangedMutex = new Mutex();
-  const changeQueue: Array<[string, string]> = [];
-
-  // TODO: Move into `listen` and remove during `close`
+  // Register content scripts for the first time after the background starts up since they're not
+  // listed in the manifest
   server.ws.on('wxt:background-initialized', () => {
-    // Register content scripts for the first time since they're not listed in the manifest
     reloadContentScripts(server.currentOutput.steps, config, server);
   });
 
-  // TODO: Move into `listen` and remove during `close`
-  server.watcher.on('all', async (event, path, _stats) => {
+  // Listen for file changes and reload different parts of the extension accordingly
+  const reloadOnChange = createFileReloader({
+    server,
+    getLatestConfig,
+    updateConfig(newConfig) {
+      config = newConfig;
+    },
+  });
+  server.watcher.on('all', reloadOnChange);
+
+  return server;
+}
+
+async function getPort(): Promise<number> {
+  const { default: getPort, portNumbers } = await import('get-port');
+  return await getPort({ port: portNumbers(3000, 3010) });
+}
+
+/**
+ * Returns a function responsible for reloading different parts of the extension when a file
+ * changes.
+ */
+function createFileReloader(options: {
+  server: WxtDevServer;
+  getLatestConfig: () => Promise<InternalConfig>;
+  updateConfig: (config: InternalConfig) => void;
+}) {
+  const { server, getLatestConfig, updateConfig } = options;
+  const fileChangedMutex = new Mutex();
+  const changeQueue: Array<[string, string]> = [];
+
+  return async (event: string, path: string) => {
+    const config = await getLatestConfig();
+    updateConfig(config);
+
     // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
     if (path.startsWith(config.outBaseDir)) return;
     changeQueue.push([event, path]);
@@ -128,9 +158,7 @@ export async function createServer(
         })
         .join(pc.dim(', '));
 
-      // Get latest config and Rebuild groups with changes
-      config = await getLatestConfig();
-      config.server = server;
+      // Rebuild entrypoints on change
       const { output: newOutput } = await rebuild(
         config,
         // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
@@ -153,14 +181,7 @@ export async function createServer(
       }
       consola.success(`Reloaded: ${rebuiltNames}`);
     });
-  });
-
-  return server;
-}
-
-async function getPort(): Promise<number> {
-  const { default: getPort, portNumbers } = await import('get-port');
-  return await getPort({ port: portNumbers(3000, 3010) });
+  };
 }
 
 /**
