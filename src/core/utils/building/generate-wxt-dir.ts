@@ -156,7 +156,7 @@ async function writeGlobalsDeclarationFile(
   config: InternalConfig,
 ): Promise<string> {
   const filePath = resolve(config.typesDir, 'globals.d.ts');
-  const globals = [...getGlobals(config), ...getEntrypointGlobals(config, '')];
+  const globals = [...getGlobals(config), ...getEntrypointGlobals('')];
   await writeFileIfDifferent(
     filePath,
     [

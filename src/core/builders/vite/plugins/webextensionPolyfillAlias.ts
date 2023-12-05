@@ -8,7 +8,7 @@ import { InternalConfig } from '~/types';
  * This should only be used during tests.
  */
 export function webextensionPolyfillAlias(
-  config: InternalConfig,
+  config: Omit<InternalConfig, 'builder'>,
 ): vite.PluginOption {
   return {
     name: 'wxt:webextension-polyfill-test-alias',

@@ -4,6 +4,7 @@ import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
+import type { FSWatcher } from 'chokidar';
 
 export interface InlineConfig {
   /**
@@ -89,17 +90,6 @@ export interface InlineConfig {
    * consola
    */
   logger?: Logger;
-  /**
-   * Return custom Vite options from a function. See
-   * <https://vitejs.dev/config/shared-options.html>.
-   *
-   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config
-   * instead of Vite's.
-   *
-   * This is a function because any vite plugins added need to be recreated for each individual
-   * build step, incase they have internal state causing them to fail when reused.
-   */
-  vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
   /**
    * Customize the `manifest.json` output. Can be an object, promise, or function that returns an
    * object or promise.
@@ -200,10 +190,6 @@ export interface InlineConfig {
    * Add additional paths to the `.wxt/tsconfig.json`. Use this instead of overwriting the `paths`
    * in the root `tsconfig.json` if you want to add new paths.
    *
-   * Passed into Vite's
-   * [`resolve.alias`](https://vitejs.dev/config/shared-options.html#resolve-alias) option and used
-   * to generate the `.wxt/tsconfig.json`.
-   *
    * The key is the import alias and the value is either a relative path to the root directory or an absolute path.
    *
    * @example
@@ -239,43 +225,83 @@ export interface InlineConfig {
   };
 }
 
-export interface WxtInlineViteConfig
-  extends Omit<vite.InlineConfig, 'root' | 'configFile' | 'mode' | 'build'> {
-  build?: Omit<vite.BuildOptions, 'outDir'>;
+// TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
+export interface InlineConfig {
+  /**
+   * Return custom Vite options from a function. See
+   * <https://vitejs.dev/config/shared-options.html>.
+   *
+   * [`root`](#root), [`configFile`](#configfile), and [`mode`](#mode) should be set in WXT's config
+   * instead of Vite's.
+   *
+   * This is a function because any vite plugins added need to be recreated for each individual
+   * build step, incase they have internal state causing them to fail when reused.
+   */
+  vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
 }
+
+// TODO: Move into @wxt/vite-builder
+export type WxtViteConfig = Omit<
+  vite.UserConfig,
+  'root' | 'configFile' | 'mode'
+>;
 
 export interface BuildOutput {
   manifest: Manifest.WebExtensionManifest;
-  publicAssets: vite.Rollup.OutputAsset[];
+  publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
+}
+
+export type OutputFile = OutputChunk | OutputAsset;
+
+export interface OutputChunk {
+  type: 'chunk';
+  /**
+   * Relative, normalized path relative to the output directory.
+   *
+   * Ex: "content-scripts/overlay.js"
+   */
+  fileName: string;
+  /**
+   * Absolute, normalized paths to all dependencies this chunk relies on.
+   */
+  moduleIds: string[];
+}
+
+export interface OutputAsset {
+  type: 'asset';
+  /**
+   * Relative, normalized path relative to the output directory.
+   *
+   * Ex: "icons/16.png"
+   */
+  fileName: string;
 }
 
 export interface BuildStepOutput {
   entrypoints: EntrypointGroup;
-  chunks: (vite.Rollup.OutputChunk | vite.Rollup.OutputAsset)[];
+  chunks: OutputFile[];
 }
 
-export interface WxtDevServer extends vite.ViteDevServer {
-  /**
-   * Ex: `3000`
-   */
-  port: number;
-  /**
-   * Ex: `"localhost"`
-   */
-  hostname: string;
-  /**
-   * Ex: `"http://localhost:3000"`
-   */
-  origin: string;
+export interface WxtDevServer
+  extends Omit<WxtBuilderServer, 'listen'>,
+    ServerInfo {
   /**
    * Stores the current build output of the server.
    */
   currentOutput: BuildOutput;
   /**
-   * Start the server on the first open port.
+   * Start the server.
    */
   start(): Promise<void>;
+  /**
+   * Transform the HTML for dev mode.
+   */
+  transformHtml(
+    url: string,
+    html: string,
+    originalUrl?: string | undefined,
+  ): Promise<string>;
   /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
@@ -596,7 +622,73 @@ export interface ExtensionRunnerConfig {
   startUrls?: string[];
 }
 
-export type WxtViteConfig = Omit<
-  vite.UserConfig,
-  'root' | 'configFile' | 'mode'
->;
+export interface WxtBuilder {
+  /**
+   * Name of tool used to build. Ex: "Vite" or "Webpack".
+   */
+  name: string;
+  /**
+   * Version of tool used to build. Ex: "5.0.2"
+   */
+  version: string;
+  /**
+   * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
+   * build process.
+   */
+  build(group: EntrypointGroup): Promise<BuildStepOutput>;
+  /**
+   * Start a dev server at the provided port.
+   */
+  createServer(info: ServerInfo): Promise<WxtBuilderServer>;
+}
+
+export interface WxtBuilderServer {
+  /**
+   * Start the server.
+   */
+  listen(): Promise<void>;
+  /**
+   * Transform the HTML for dev mode.
+   */
+  transformHtml(
+    url: string,
+    html: string,
+    originalUrl?: string | undefined,
+  ): Promise<string>;
+  /**
+   * The web socket server used to communicate with the extension.
+   */
+  ws: {
+    /**
+     * Send a message via the server's websocket, with an optional payload.
+     *
+     * @example
+     * ws.send("wxt:reload-extension");
+     * ws.send("wxt:reload-content-script", { ... });
+     */
+    send(message: string, payload?: any): void;
+    /**
+     * Listen for messages over the server's websocket.
+     */
+    on(message: string, cb: (payload: any) => void): void;
+  };
+  /**
+   * Chokidar file watcher instance.
+   */
+  watcher: FSWatcher;
+}
+
+export interface ServerInfo {
+  /**
+   * Ex: `3000`
+   */
+  port: number;
+  /**
+   * Ex: `"localhost"`
+   */
+  hostname: string;
+  /**
+   * Ex: `"http://localhost:3000"`
+   */
+  origin: string;
+}

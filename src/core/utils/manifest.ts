@@ -44,9 +44,6 @@ export async function writeManifest(
   output.publicAssets.unshift({
     type: 'asset',
     fileName: 'manifest.json',
-    name: 'manifest',
-    needsCodeReference: false,
-    source: str,
   });
 }
 

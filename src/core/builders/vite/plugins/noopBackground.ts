@@ -1,4 +1,5 @@
 import { Plugin } from 'vite';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 
 /**
  * In dev mode, if there's not a background script listed, we need to add one.
@@ -20,5 +21,3 @@ export function noopBackground(): Plugin {
     },
   };
 }
-
-export const VIRTUAL_NOOP_BACKGROUND_MODULE_ID = 'virtual:user-background';

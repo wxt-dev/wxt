@@ -1,8 +1,10 @@
 import * as vite from 'vite';
 import { InternalConfig } from '~/types';
-import { getGlobals } from '../utils/globals';
+import { getGlobals } from '~/core/utils/globals';
 
-export function globals(config: InternalConfig): vite.PluginOption {
+export function globals(
+  config: Omit<InternalConfig, 'builder'>,
+): vite.PluginOption {
   return {
     name: 'wxt:globals',
     config() {

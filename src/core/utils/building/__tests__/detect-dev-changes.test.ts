@@ -8,8 +8,8 @@ import {
   fakeManifest,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
-  fakeRollupOutputAsset,
-  fakeRollupOutputChunk,
+  fakeOutputAsset,
+  fakeOutputChunk,
 } from '~/core/utils/testing/fake-objects';
 import { BuildOutput, BuildStepOutput } from '~/types';
 
@@ -32,15 +32,11 @@ describe('Detect Dev Changes', () => {
         steps: [
           {
             entrypoints: fakeContentScriptEntrypoint(),
-            chunks: [fakeRollupOutputChunk(), fakeRollupOutputChunk()],
+            chunks: [fakeOutputChunk(), fakeOutputChunk()],
           },
           {
             entrypoints: fakeContentScriptEntrypoint(),
-            chunks: [
-              fakeRollupOutputChunk(),
-              fakeRollupOutputChunk(),
-              fakeRollupOutputChunk(),
-            ],
+            chunks: [fakeOutputChunk(), fakeOutputChunk(), fakeOutputChunk()],
           },
         ],
       };
@@ -57,10 +53,10 @@ describe('Detect Dev Changes', () => {
         'unknown',
         '/root/src/public/image.svg',
       ];
-      const asset1 = fakeRollupOutputAsset({
+      const asset1 = fakeOutputAsset({
         fileName: 'image.svg',
       });
-      const asset2 = fakeRollupOutputAsset({
+      const asset2 = fakeOutputAsset({
         fileName: 'some-other-image.svg',
       });
       const currentOutput: BuildOutput = {
@@ -96,7 +92,7 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: contentScript,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), fakeFile()],
           }),
         ],
@@ -104,7 +100,7 @@ describe('Detect Dev Changes', () => {
       const step2: BuildStepOutput = {
         entrypoints: background,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), changedPath, fakeFile()],
           }),
         ],
@@ -150,7 +146,7 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: [htmlPage1, htmlPage2],
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), changedPath],
           }),
         ],
@@ -158,7 +154,7 @@ describe('Detect Dev Changes', () => {
       const step2: BuildStepOutput = {
         entrypoints: [htmlPage3],
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), fakeFile(), fakeFile()],
           }),
         ],
@@ -203,7 +199,7 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: script1,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), changedPath],
           }),
         ],
@@ -211,7 +207,7 @@ describe('Detect Dev Changes', () => {
       const step2: BuildStepOutput = {
         entrypoints: script2,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), fakeFile(), fakeFile()],
           }),
         ],
@@ -219,7 +215,7 @@ describe('Detect Dev Changes', () => {
       const step3: BuildStepOutput = {
         entrypoints: script3,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [changedPath, fakeFile(), fakeFile()],
           }),
         ],

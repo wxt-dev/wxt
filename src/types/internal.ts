@@ -1,4 +1,3 @@
-import * as vite from 'vite';
 import {
   WxtDevServer,
   Logger,
@@ -8,6 +7,7 @@ import {
   ExtensionRunnerConfig,
   ConfigEnv,
   UserConfig,
+  WxtBuilder,
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
@@ -31,7 +31,6 @@ export interface InternalConfig {
   env: ConfigEnv;
   logger: Logger;
   imports: false | Partial<UnimportOptions>;
-  vite: (env: ConfigEnv) => Promise<vite.InlineConfig> | vite.InlineConfig;
   manifest: UserManifest;
   fsCache: FsCache;
   server?: WxtDevServer;
@@ -56,6 +55,7 @@ export interface InternalConfig {
   experimental: {
     includeBrowserPolyfill: boolean;
   };
+  builder: WxtBuilder;
 }
 
 export interface FsCache {

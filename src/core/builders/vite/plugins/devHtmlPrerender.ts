@@ -2,7 +2,7 @@ import * as vite from 'vite';
 import { InternalConfig } from '~/types';
 import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
-import { dirname, isAbsolute, relative, resolve } from 'path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
 // Cache the preamble script for all devHtmlPrerender plugins, not just one
 let reactRefreshPreamble = '';
@@ -10,7 +10,9 @@ let reactRefreshPreamble = '';
 /**
  * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
  */
-export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
+export function devHtmlPrerender(
+  config: Omit<InternalConfig, 'builder'>,
+): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
     config.root,
@@ -86,11 +88,7 @@ export function devHtmlPrerender(config: InternalConfig): vite.PluginOption {
         const originalUrl = `${server.origin}${ctx.path}`;
         const name = getEntrypointName(config.entrypointsDir, ctx.filename);
         const url = `${server.origin}/${name}.html`;
-        const serverHtml = await server.transformIndexHtml(
-          url,
-          html,
-          originalUrl,
-        );
+        const serverHtml = await server.transformHtml(url, html, originalUrl);
         const { document } = parseHTML(serverHtml);
 
         // React pages include a preamble as an unsafe-inline type="module" script to enable fast refresh, as shown here:

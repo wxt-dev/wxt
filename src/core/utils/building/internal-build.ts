@@ -1,7 +1,6 @@
 import { findEntrypoints } from './find-entrypoints';
 import { InternalConfig, BuildOutput } from '~/types';
 import pc from 'picocolors';
-import * as vite from 'vite';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '~/core/utils/time';
@@ -27,7 +26,7 @@ export async function internalBuild(
   const target = `${config.browser}-mv${config.manifestVersion}`;
   config.logger.info(
     `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
-      `Vite ${vite.version}`,
+      `${config.builder.name} ${config.builder.version}`,
     )}`,
   );
   const startTime = Date.now();
