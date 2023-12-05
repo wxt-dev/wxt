@@ -55,7 +55,7 @@ export async function createServer(
     watcher: undefined as any, // Filled out later down below
     ws: undefined as any, // Filled out later down below
     currentOutput: undefined as any, // Filled out later down below
-    async listen() {
+    async start() {
       await builderServer.listen();
       config.logger.success(`Started dev server @ ${serverInfo.origin}`);
 
@@ -64,8 +64,6 @@ export async function createServer(
 
       // Open browser after everything is ready to go.
       await runner.openBrowser(config);
-
-      return server;
     },
     transformHtml(url, html, originalUrl) {
       return builderServer.transformHtml(url, html, originalUrl);
