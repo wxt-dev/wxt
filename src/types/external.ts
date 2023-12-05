@@ -293,7 +293,7 @@ export interface WxtDevServer
   /**
    * Start the server.
    */
-  listen(): Promise<WxtDevServer>;
+  start(): Promise<void>;
   /**
    * Transform the HTML for dev mode.
    */
