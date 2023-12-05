@@ -172,12 +172,13 @@ export async function craeteViteBuilder(
         chunks: getBuildOutputChunks(result),
       };
     },
-    async createServer(port) {
-      const hostname = 'localhost';
-      const origin = `http://${hostname}:${port}`;
+    async createServer(info) {
       const serverConfig: vite.InlineConfig = {
         server: {
-          origin,
+          origin: info.origin,
+          port: info.port,
+          strictPort: true,
+          host: info.hostname,
         },
       };
       const baseConfig = await getBaseConfig();
@@ -186,26 +187,22 @@ export async function craeteViteBuilder(
         vite.mergeConfig(baseConfig, serverConfig),
       );
 
-      const listen = async () => {
-        await viteServer.listen(server.port);
-      };
-      const close = async () => {
-        await viteServer.close().catch(() => {
-          wxtConfig.logger.warn('Server not started yet');
-        });
-      };
-      const restart = async () => {
-        await close();
-        await listen();
-      };
-
       const server: WxtBuilderServer = {
-        listen,
-        close,
-        restart,
-        port,
-        hostname,
-        origin,
+        async listen() {
+          await viteServer.listen(info.port);
+        },
+        async close() {
+          await viteServer.close().catch(() => {
+            wxtConfig.logger.warn('Server not started yet');
+          });
+        },
+        async restart() {
+          await server.close();
+          await server.listen();
+        },
+        transformHtml(...args) {
+          return viteServer.transformIndexHtml(...args);
+        },
         ws: {
           send(message, payload) {
             return viteServer.ws.send(message, payload);

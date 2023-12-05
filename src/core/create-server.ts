@@ -3,6 +3,7 @@ import {
   EntrypointGroup,
   InlineConfig,
   InternalConfig,
+  ServerInfo,
   WxtDevServer,
 } from '~/types';
 import {
@@ -36,63 +37,46 @@ import { relative } from 'node:path';
  * await server.start();
  */
 export async function createServer(
-  config?: InlineConfig,
+  inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  const getLatestConfig = () => getInternalConfig(config ?? {}, 'serve');
-  const initialConfig = await getLatestConfig();
-  const server = await createWxtDevServer(initialConfig, getLatestConfig);
-  initialConfig.server = server;
-
-  return server;
-}
-
-export async function createWxtDevServer(
-  initialConfig: InternalConfig,
-  getLatestConfig: () => Promise<InternalConfig>,
-): Promise<WxtDevServer> {
-  let config = initialConfig;
   const port = await getPort();
-  const [runner, builderServer] = await Promise.all([
-    createExtensionRunner(initialConfig),
-    initialConfig.builder.createServer(port),
-  ]);
-
-  const listen = async () => {
-    await builderServer.listen();
-    config.logger.success(`Started dev server @ ${builderServer.origin}`);
-
-    // Build after starting the dev server so it can be used to transform HTML files
-    server.currentOutput = await internalBuild(config);
-
-    // Open browser after everything is ready to go.
-    await runner.openBrowser(config);
-
-    return server;
+  const hostname = 'localhost';
+  const origin = `http://${hostname}:${port}`;
+  const serverInfo: ServerInfo = {
+    port,
+    hostname,
+    origin,
   };
 
-  const close = async () => {
-    await Promise.all([builderServer.close(), runner.closeBrowser()]);
-  };
-
-  const restart = async () => {
-    await close();
-    await listen();
-  };
-
+  // Server instance must be created first so its reference can be added to the internal config used
+  // to pre-render entrypoints
   const server: WxtDevServer = {
-    ...builderServer,
-    currentOutput: {
-      manifest: {
-        manifest_version: config.manifestVersion,
-        name: '',
-        version: '',
-      },
-      publicAssets: [],
-      steps: [],
+    ...serverInfo,
+    watcher: undefined as any, // Filled out later down below
+    ws: undefined as any, // Filled out later down below
+    currentOutput: undefined as any, // Filled out later down below
+    async listen() {
+      await builderServer.listen();
+      config.logger.success(`Started dev server @ ${serverInfo.origin}`);
+
+      // Build after starting the dev server so it can be used to transform HTML files
+      server.currentOutput = await internalBuild(config);
+
+      // Open browser after everything is ready to go.
+      await runner.openBrowser(config);
+
+      return server;
     },
-    listen,
-    close,
-    restart,
+    transformHtml(url, html, originalUrl) {
+      return builderServer.transformHtml(url, html, originalUrl);
+    },
+    async close() {
+      await Promise.all([builderServer.close(), runner.closeBrowser()]);
+    },
+    async restart() {
+      await server.close();
+      await server.listen();
+    },
     reloadContentScript(contentScript) {
       server.ws.send('wxt:reload-content-script', contentScript);
     },
@@ -104,14 +88,28 @@ export async function createWxtDevServer(
     },
   };
 
+  const getLatestConfig = () =>
+    getInternalConfig(inlineConfig ?? {}, 'serve', server);
+  let config = await getLatestConfig();
+
+  const [runner, builderServer] = await Promise.all([
+    createExtensionRunner(config),
+    config.builder.createServer(server),
+  ]);
+
+  server.watcher = builderServer.watcher;
+  server.ws = builderServer.ws;
+
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
+  // TODO: Move into `listen` and remove during `close`
   server.ws.on('wxt:background-initialized', () => {
     // Register content scripts for the first time since they're not listed in the manifest
     reloadContentScripts(server.currentOutput.steps, config, server);
   });
 
+  // TODO: Move into `listen` and remove during `close`
   server.watcher.on('all', async (event, path, _stats) => {
     // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
     if (path.startsWith(config.outBaseDir)) return;
@@ -156,10 +154,10 @@ export async function createWxtDevServer(
           server.reloadExtension();
           break;
         case 'html-reload':
-          reloadHtmlPages(changes.rebuildGroups, server, initialConfig);
+          reloadHtmlPages(changes.rebuildGroups, server, config);
           break;
         case 'content-script-reload':
-          reloadContentScripts(changes.changedSteps, initialConfig, server);
+          reloadContentScripts(changes.changedSteps, config, server);
           break;
       }
       consola.success(`Reloaded: ${rebuiltNames}`);

@@ -7,6 +7,7 @@ import {
   UserManifestFn,
   UserManifest,
   ExtensionRunnerConfig,
+  WxtDevServer,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -25,6 +26,7 @@ import { NullablyRequired } from '../types';
 export async function getInternalConfig(
   inlineConfig: InlineConfig,
   command: 'build' | 'serve',
+  server?: WxtDevServer,
 ): Promise<InternalConfig> {
   // Load user config
 
@@ -126,6 +128,7 @@ export async function getInternalConfig(
       includeBrowserPolyfill:
         mergedConfig.experimental?.includeBrowserPolyfill ?? true,
     },
+    server,
   };
 
   const builder = await craeteViteBuilder(
@@ -207,6 +210,7 @@ function mergeInlineConfig(
       ...userConfig.experimental,
       ...inlineConfig.experimental,
     },
+    vite: undefined,
     transformManifest: undefined,
   };
 }

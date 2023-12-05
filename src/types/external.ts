@@ -283,7 +283,9 @@ export interface BuildStepOutput {
   chunks: OutputFile[];
 }
 
-export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {
+export interface WxtDevServer
+  extends Omit<WxtBuilderServer, 'listen'>,
+    ServerInfo {
   /**
    * Stores the current build output of the server.
    */
@@ -292,6 +294,14 @@ export interface WxtDevServer extends Omit<WxtBuilderServer, 'listen'> {
    * Start the server.
    */
   listen(): Promise<WxtDevServer>;
+  /**
+   * Transform the HTML for dev mode.
+   */
+  transformHtml(
+    url: string,
+    html: string,
+    originalUrl?: string | undefined,
+  ): Promise<string>;
   /**
    * Tell the extension to reload by running `browser.runtime.reload`.
    */
@@ -629,22 +639,10 @@ export interface WxtBuilder {
   /**
    * Start a dev server at the provided port.
    */
-  createServer(port: number): Promise<WxtBuilderServer>;
+  createServer(info: ServerInfo): Promise<WxtBuilderServer>;
 }
 
 export interface WxtBuilderServer {
-  /**
-   * Ex: `3000`
-   */
-  port: number;
-  /**
-   * Ex: `"localhost"`
-   */
-  hostname: string;
-  /**
-   * Ex: `"http://localhost:3000"`
-   */
-  origin: string;
   /**
    * Start the server.
    */
@@ -657,6 +655,14 @@ export interface WxtBuilderServer {
    * Restart the server.
    */
   restart(): Promise<void>;
+  /**
+   * Transform the HTML for dev mode.
+   */
+  transformHtml(
+    url: string,
+    html: string,
+    originalUrl?: string | undefined,
+  ): Promise<string>;
   /**
    * The web socket server used to communicate with the extension.
    */
@@ -678,4 +684,19 @@ export interface WxtBuilderServer {
    * Chokidar file watcher instance.
    */
   watcher: FSWatcher;
+}
+
+export interface ServerInfo {
+  /**
+   * Ex: `3000`
+   */
+  port: number;
+  /**
+   * Ex: `"localhost"`
+   */
+  hostname: string;
+  /**
+   * Ex: `"http://localhost:3000"`
+   */
+  origin: string;
 }
