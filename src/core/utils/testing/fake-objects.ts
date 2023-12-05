@@ -144,36 +144,13 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
 
 export const fakeOutputChunk = fakeObjectCreator<OutputChunk>(() => ({
   type: 'chunk',
-  code: '',
-  dynamicImports: [],
-  exports: [],
-  facadeModuleId: faker.helpers.arrayElement([null, fakeFile()]),
   fileName: faker.string.alphanumeric(),
-  implicitlyLoadedBefore: [],
-  importedBindings: {},
-  imports: [],
-  isDynamicEntry: faker.datatype.boolean(),
-  isEntry: faker.datatype.boolean(),
-  isImplicitEntry: faker.datatype.boolean(),
-  map: null,
   moduleIds: [],
-  modules: {},
-  name: faker.string.alpha(),
-  referencedFiles: [],
-  viteMetadata: {
-    importedAssets: new Set(),
-    importedCss: new Set(),
-  },
-  preliminaryFileName: faker.string.alphanumeric(),
-  sourcemapFileName: null,
 }));
 
 export const fakeOutputAsset = fakeObjectCreator<OutputAsset>(() => ({
   type: 'asset',
   fileName: fakeFileName(),
-  name: faker.string.alpha(),
-  needsCodeReference: faker.datatype.boolean(),
-  source: '',
 }));
 
 export function fakeOutputFile(): OutputFile {
