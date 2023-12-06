@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import type { Manifest, Scripting } from 'webextension-polyfill';
 import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
