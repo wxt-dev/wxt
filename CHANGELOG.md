@@ -19,7 +19,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Vite 5 support ([#261](https://github.com/wxt-dev/wxt/pull/261))
+- You will need to update any other Vite plugins to a version that supports Vite 5 ([#261](https://github.com/wxt-dev/wxt/pull/261))
 
 ### ❤️ Contributors
 
