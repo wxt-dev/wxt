@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.11.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.4...v0.11.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Vite 5 support ([#261](https://github.com/wxt-dev/wxt/pull/261))
+
+### 📖 Documentation
+
+- Adds tl;dv to homepage ([#260](https://github.com/wxt-dev/wxt/pull/260))
+
+### 🏡 Chore
+
+- Speed up CI using `pnpm` instead of `npm` ([#259](https://github.com/wxt-dev/wxt/pull/259))
+- Abstract vite from WXT's core logic ([#242](https://github.com/wxt-dev/wxt/pull/242))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Vite 5 support ([#261](https://github.com/wxt-dev/wxt/pull/261))
+
+### ❤️ Contributors
+
+- Ítalo Brasil ([@italodeverdade](http://github.com/italodeverdade))
+
 ## v0.10.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.3...v0.10.4)
