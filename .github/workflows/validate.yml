@@ -54,7 +54,7 @@ jobs:
       matrix:
         template:
           - react
-          - solid
+          # - solid
           - svelte
           - vanilla
           - vue

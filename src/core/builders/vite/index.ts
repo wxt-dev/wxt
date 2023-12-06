@@ -152,7 +152,32 @@ export async function craeteViteBuilder(
           },
         },
       },
-      define: {},
+    };
+  };
+
+  /**
+   * Return the basic config for building a sinlge CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   */
+  const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
+    return {
+      mode: wxtConfig.mode,
+      plugins: [wxtPlugins.entrypointGroupGlobals(entrypoint)],
+      build: {
+        rollupOptions: {
+          input: {
+            [entrypoint.name]: entrypoint.inputPath,
+          },
+          output: {
+            assetFileNames: () => {
+              if (entrypoint.type === 'content-script-style') {
+                return `content-scripts/${entrypoint.name}.[ext]`;
+              } else {
+                return `assets/${entrypoint.name}.[ext]`;
+              }
+            },
+          },
+        },
+      },
     };
   };
 
@@ -160,12 +185,13 @@ export async function craeteViteBuilder(
     name: 'Vite',
     version: vite.version,
     async build(group) {
-      const buildConfig = vite.mergeConfig(
-        await getBaseConfig(),
-        Array.isArray(group)
-          ? getMultiPageConfig(group)
-          : getLibModeConfig(group),
-      );
+      let entryConfig;
+      if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
+      else if (group.inputPath.endsWith('.css'))
+        entryConfig = getCssConfig(group);
+      else entryConfig = getLibModeConfig(group);
+
+      const buildConfig = vite.mergeConfig(await getBaseConfig(), entryConfig);
       const result = await vite.build(buildConfig);
       return {
         entrypoints: group,

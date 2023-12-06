@@ -2,6 +2,7 @@ import { defineWorkspace } from 'vitest/config';
 import fs from 'fs-extra';
 import pc from 'picocolors';
 import type { Plugin } from 'vite';
+import path from 'node:path';
 
 const seed = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
 console.info('Test seed: ' + pc.cyan(seed));
@@ -17,8 +18,8 @@ const testSeed = (): Plugin => ({
 
 const resolve = {
   alias: {
-    '~': 'src',
-    'webextension-polyfill': './src/virtual/mock-browser',
+    '~': path.resolve('src'),
+    'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
   },
 };
 
