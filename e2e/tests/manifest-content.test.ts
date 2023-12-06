@@ -371,7 +371,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+          {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["https://*.google.com/*"],"css":["content-scripts/content.css"],"js":["content-scripts/content.js"]}]}"
         `);
     });
 
@@ -398,7 +398,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"css\\":[\\"content-scripts/content.css\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+          {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["https://*.google.com/*"],"css":["content-scripts/content.css"],"js":["content-scripts/content.js"]}]}"
         `);
     });
 
@@ -425,7 +425,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+          {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["https://*.google.com/*"],"js":["content-scripts/content.js"]}]}"
         `);
     });
 
@@ -454,7 +454,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv2/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":2,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[\\"content-scripts/content.css\\"]}"
+          {"manifest_version":2,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["https://*.google.com/*"],"js":["content-scripts/content.js"]}],"web_accessible_resources":["content-scripts/content.css"]}"
         `);
     });
 
@@ -483,7 +483,7 @@ describe('Manifest Content', () => {
         .toMatchInlineSnapshot(`
           ".output/chrome-mv3/manifest.json
           ----------------------------------------
-          {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}],\\"web_accessible_resources\\":[{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}]}"
+          {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["https://*.google.com/*"],"js":["content-scripts/content.js"]}],"web_accessible_resources":[{"resources":["content-scripts/content.css"],"matches":["https://*.google.com/*"]}]}"
         `);
     });
   });
@@ -518,7 +518,7 @@ describe('Manifest Content', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/manifest.json
         ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"web_accessible_resources\\":[{\\"resources\\":[\\"one.png\\"],\\"matches\\":[\\"https://one.com/*\\"]},{\\"resources\\":[\\"content-scripts/content.css\\"],\\"matches\\":[\\"https://*.google.com/*\\"]}],\\"content_scripts\\":[{\\"matches\\":[\\"https://*.google.com/*\\"],\\"js\\":[\\"content-scripts/content.js\\"]}]}"
+        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","web_accessible_resources":[{"resources":["one.png"],"matches":["https://one.com/*"]},{"resources":["content-scripts/content.css"],"matches":["https://*.google.com/*"]}],"content_scripts":[{"matches":["https://*.google.com/*"],"js":["content-scripts/content.js"]}]}"
       `);
   });
 
@@ -543,7 +543,7 @@ describe('Manifest Content', () => {
     expect(output).toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"author\\":\\"Custom Author\\"}"
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","author":"Custom Author"}"
     `);
   });
 
