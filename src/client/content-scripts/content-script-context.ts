@@ -1,6 +1,8 @@
 import { ContentScriptDefinition } from '~/types';
 import { browser } from '~/browser';
 import { logger } from '~/client/utils/logger';
+import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
+import { createLocationWatcher } from './location-watcher';
 
 /**
  * Implements [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
@@ -14,6 +16,7 @@ export class ContentScriptContext implements AbortController {
 
   #isTopFrame = window.self === window.top;
   #abortController: AbortController;
+  #locationWatcher = createLocationWatcher(this);
 
   constructor(
     private readonly contentScriptName: string,
@@ -137,23 +140,42 @@ export class ContentScriptContext implements AbortController {
   /**
    * Call `target.addEventListener` and remove the event listener when the context is invalidated.
    *
+   * Includes additional events useful for content scripts:
+   *
+   * - `"wxt:locationchange"` - Triggered when HTML5 history mode is used to change URL. Content
+   *   scripts are not reloaded when navigating this way, so this can be used to reset the content
+   *   script state on URL change, or run custom code.
+   *
    * @example
-   * ctx.addEventListener(window, "mousemove", () => {
-   *   // ...
-   * });
    * ctx.addEventListener(document, "visibilitychange", () => {
    *   // ...
    * });
+   * ctx.addEventListener(document, "wxt:locationchange", () => {
+   *   // ...
+   * });
    */
-  addEventListener(
-    target: any,
-    type: string,
-    handler: (event: Event) => void,
+  addEventListener<
+    TTarget extends EventTarget,
+    TType extends keyof WxtContentScriptEventMap,
+  >(
+    target: TTarget,
+    type: TType,
+    handler: (event: WxtContentScriptEventMap[TType]) => void,
     options?: AddEventListenerOptions,
   ) {
-    target.addEventListener?.(type, handler, options);
-    this.onInvalidated(
-      () => target.removeEventListener?.(type, handler, options),
+    if (type === 'wxt:locationchange') {
+      // Start the location watcher when adding the event for the first time
+      if (this.isValid) this.#locationWatcher.run();
+    }
+
+    target.addEventListener?.(
+      type.startsWith('wxt:') ? getUniqueEventName(type) : type,
+      // @ts-expect-error: Event don't match, but that's OK, EventTarget doesn't allow custom types in the callback
+      handler,
+      {
+        ...options,
+        signal: this.signal,
+      },
     );
   }
 
@@ -192,4 +214,8 @@ export class ContentScriptContext implements AbortController {
     addEventListener('message', cb);
     this.onInvalidated(() => removeEventListener('message', cb));
   }
+}
+
+interface WxtContentScriptEventMap extends WindowEventMap {
+  'wxt:locationchange': WxtLocationChangeEvent;
 }
