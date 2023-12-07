@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.11.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.0...v0.11.1)
+
+### 🚀 Enhancements
+
+- Add util for detecting URL changes in content scripts ([#264](https://github.com/wxt-dev/wxt/pull/264))
+
+### 🏡 Chore
+
+- Upgrade templates to `wxt@^0.11.0` ([#263](https://github.com/wxt-dev/wxt/pull/263))
+
 ## v0.11.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.4...v0.11.0)
