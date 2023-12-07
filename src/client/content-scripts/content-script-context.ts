@@ -165,7 +165,7 @@ export class ContentScriptContext implements AbortController {
   ) {
     if (type === 'wxt:locationchange') {
       // Start the location watcher when adding the event for the first time
-      this.#locationWatcher.start();
+      if (this.isValid) this.#locationWatcher.run();
     }
 
     target.addEventListener?.(

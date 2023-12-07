@@ -2,17 +2,19 @@ import { ContentScriptContext } from '.';
 import { WxtLocationChangeEvent } from './custom-events';
 
 /**
- * Create a util that watches for URL changes, dispatching the custom event when detected.
+ * Create a util that watches for URL changes, dispatching the custom event when detected. Stops
+ * watching when content script is invalidated.
  */
 export function createLocationWatcher(ctx: ContentScriptContext) {
-  let interval: number;
+  let interval: number | undefined;
   let oldUrl: URL;
 
   return {
     /**
-     * Ensure the location watcher is actively looking for URL changes.
+     * Ensure the location watcher is actively looking for URL changes. If it's already watching,
+     * this is a noop.
      */
-    start() {
+    run() {
       if (interval != null) return;
 
       oldUrl = new URL(location.href);
