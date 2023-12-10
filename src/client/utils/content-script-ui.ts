@@ -4,6 +4,9 @@ export type ContentScriptOverlayAlignment =
   | 'bottom-left'
   | 'bottom-right';
 
+/**
+ * ![Visualization of different append modes](https://wxt.dev/content-script-ui-append.png)
+ */
 export type ContentScriptAppendMode =
   | 'last'
   | 'first'
@@ -49,31 +52,46 @@ export function mountContentScriptUiRoot(
   }
 }
 
+export interface ContentScriptInlinePositioningOptions {
+  type: 'inline';
+}
+
+export interface ContentScriptOverlayPositioningOptions {
+  type: 'overlay';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+  /**
+   * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
+   * which corner is aligned with that 0x0 pixel space.
+   *
+   * ![Visualization of alignment options](https://wxt.dev/content-script-ui-alignment.png)
+   *
+   * @default "top-left"
+   */
+  alignment?: ContentScriptOverlayAlignment;
+}
+
+export interface ContentScriptModalPositioningOptions {
+  type: 'modal';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+}
+
+/**
+ * Choose between `"inline"`, `"overlay"`, or `"modal" `types.
+ *
+ * ![Visualization of different types](https://wxt.dev/content-script-ui-types.png)
+ */
 export type ContentScriptPositioningOptions =
-  | { type: 'inline' }
-  | {
-      type: 'overlay';
-      /**
-       * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-       * content.
-       */
-      zIndex?: number;
-      /**
-       * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
-       * which corner is aligned with that 0x0 pixel space.
-       *
-       * @default "top-left"
-       */
-      alignment?: ContentScriptOverlayAlignment;
-    }
-  | {
-      type: 'modal';
-      /**
-       * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-       * content.
-       */
-      zIndex?: number;
-    };
+  | ContentScriptInlinePositioningOptions
+  | ContentScriptOverlayPositioningOptions
+  | ContentScriptModalPositioningOptions;
 
 export function applyContentScriptUiPosition(
   root: HTMLElement,
