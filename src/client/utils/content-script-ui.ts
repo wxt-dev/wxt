@@ -5,7 +5,7 @@ export type ContentScriptOverlayAlignment =
   | 'bottom-right';
 
 /**
- * ![Visualization of different append modes](https://deploy-preview-268--creative-fairy-df92c4.netlify.app/content-script-ui-append.png)
+ * ![Visualization of different append modes](https://wxt.dev/content-script-ui-append.png)
  */
 export type ContentScriptAppendMode =
   | 'last'
@@ -67,7 +67,7 @@ export interface ContentScriptOverlayPositioningOptions {
    * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
    * which corner is aligned with that 0x0 pixel space.
    *
-   * ![Visualization of alignment options](https://deploy-preview-268--creative-fairy-df92c4.netlify.app/content-script-ui-alignment.png)
+   * ![Visualization of alignment options](https://wxt.dev/content-script-ui-alignment.png)
    *
    * @default "top-left"
    */
@@ -86,7 +86,7 @@ export interface ContentScriptModalPositioningOptions {
 /**
  * Choose between `"inline"`, `"overlay"`, or `"modal" `types.
  *
- * ![Visualization of different types](https://https://deploy-preview-268--creative-fairy-df92c4.netlify.app/content-script-ui-types.png)
+ * ![Visualization of different types](https://wxt.dev/content-script-ui-types.png)
  */
 export type ContentScriptPositioningOptions =
   | ContentScriptInlinePositioningOptions
