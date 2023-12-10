@@ -91,6 +91,7 @@ export default defineConfig({
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
             { text: 'Storage', link: '/guide/storage.md' },
+            { text: 'Content Script UI', link: '/guide/content-script-ui.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
             { text: 'Development', link: '/guide/development.md' },
             { text: 'Testing', link: '/guide/testing.md' },
