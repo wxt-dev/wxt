@@ -49,31 +49,39 @@ export function mountContentScriptUiRoot(
   }
 }
 
+export interface ContentScriptInlinePositioningOptions {
+  type: 'inline';
+}
+
+export interface ContentScriptOverlayPositioningOptions {
+  type: 'overlay';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+  /**
+   * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
+   * which corner is aligned with that 0x0 pixel space.
+   *
+   * @default "top-left"
+   */
+  alignment?: ContentScriptOverlayAlignment;
+}
+
+export interface ContentScriptModalPositioningOptions {
+  type: 'modal';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+}
+
 export type ContentScriptPositioningOptions =
-  | { type: 'inline' }
-  | {
-      type: 'overlay';
-      /**
-       * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-       * content.
-       */
-      zIndex?: number;
-      /**
-       * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
-       * which corner is aligned with that 0x0 pixel space.
-       *
-       * @default "top-left"
-       */
-      alignment?: ContentScriptOverlayAlignment;
-    }
-  | {
-      type: 'modal';
-      /**
-       * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
-       * content.
-       */
-      zIndex?: number;
-    };
+  | ContentScriptInlinePositioningOptions
+  | ContentScriptOverlayPositioningOptions
+  | ContentScriptModalPositioningOptions;
 
 export function applyContentScriptUiPosition(
   root: HTMLElement,
