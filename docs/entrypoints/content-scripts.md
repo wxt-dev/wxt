@@ -305,7 +305,7 @@ To use `createContentScriptIframe`, follow these steps:
 
 1. Create an unlisted HTML page that will be loaded into your iframe
 1. Add unlisted page to the manifest's `web_accessible_resouces`
-1. Call `createContentScriptUi`
+1. Call `createContentScriptIframe`
 1. Call `mount` to add the UI to the webpage
 
 Here's a basic example:
