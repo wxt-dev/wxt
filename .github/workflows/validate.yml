@@ -75,4 +75,5 @@ jobs:
       - run: pnpm build
         working-directory: templates/${{ matrix.template }}
         env:
+          # Debug Vite 5's deprecated CJS support
           VITE_CJS_TRACE: true
