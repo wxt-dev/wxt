@@ -2,11 +2,12 @@ import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
 import { InternalConfig } from '~/types';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 import { getUnimportOptions } from '~/core/utils/unimport';
 import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Get the value from the default export of a `path`.
@@ -45,30 +46,44 @@ export async function importEntrypointFile<T>(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
 
-  const jiti = createJITI(__filename, {
-    cache: false,
-    debug: config.debug,
-    esmResolve: true,
-    alias: {
-      'webextension-polyfill': resolve(
-        config.root,
-        'node_modules/wxt/dist/virtual/mock-browser.js',
-      ),
+  const jiti = createJITI(
+    typeof __filename !== 'undefined'
+      ? __filename
+      : fileURLToPath(import.meta.url),
+    {
+      cache: false,
+      debug: config.debug,
+      esmResolve: true,
+      alias: {
+        'webextension-polyfill': resolve(
+          config.root,
+          'node_modules/wxt/dist/virtual/mock-browser.js',
+        ),
+      },
+      // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
+      // respect the custom transform function when using it's native bun option.
+      experimentalBun: false,
+      // List of extensions to transform with esbuild
+      extensions: [
+        '.ts',
+        '.cts',
+        '.mts',
+        '.tsx',
+        '.js',
+        '.cjs',
+        '.mjs',
+        '.jsx',
+      ],
+      transform(opts) {
+        const isEntrypoint = opts.filename === normalPath;
+        return transformSync(
+          // Use modified source code for entrypoints
+          isEntrypoint ? code : opts.source,
+          getEsbuildOptions(opts),
+        );
+      },
     },
-    // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
-    // respect the custom transform function when using it's native bun option.
-    experimentalBun: false,
-    // List of extensions to transform with esbuild
-    extensions: ['.ts', '.cts', '.mts', '.tsx', '.js', '.cjs', '.mjs', '.jsx'],
-    transform(opts) {
-      const isEntrypoint = opts.filename === normalPath;
-      return transformSync(
-        // Use modified source code for entrypoints
-        isEntrypoint ? code : opts.source,
-        getEsbuildOptions(opts),
-      );
-    },
-  });
+  );
 
   try {
     const res = await jiti(path);

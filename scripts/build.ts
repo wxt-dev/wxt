@@ -93,7 +93,7 @@ const config: tsup.Options[] = [
     entry: {
       cli: 'src/cli.ts',
     },
-    format: ['cjs'],
+    format: ['esm'],
   },
 ];
 
