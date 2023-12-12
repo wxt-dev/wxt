@@ -1,4 +1,4 @@
-import { resolve, relative } from 'path';
+import { relative, resolve } from 'path';
 import {
   BackgroundEntrypoint,
   BackgroundDefinition,
@@ -46,15 +46,7 @@ export async function findEntrypoints(
     const matchingGlob = pathGlobs.find((glob) =>
       minimatch(relativePath, glob),
     );
-    if (matchingGlob == null) {
-      config.logger.warn(
-        `${relativePath} does not match any known entrypoint. Known entrypoints:\n${JSON.stringify(
-          PATH_GLOB_TO_TYPE_MAP,
-          null,
-          2,
-        )}`,
-      );
-    } else {
+    if (matchingGlob) {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
       results.push({ name, inputPath, type });
     }
@@ -62,7 +54,7 @@ export async function findEntrypoints(
   }, []);
 
   // Report duplicate entrypoint names
-  validateEntrypointNames(config, entrypointInfos);
+  preventDuplicateEntrypointNames(config, entrypointInfos);
 
   // Import entrypoints to get their config
   let hasBackground = false;
@@ -145,11 +137,10 @@ interface EntrypointInfo {
   type: Entrypoint['type'];
 }
 
-function validateEntrypointNames(
+function preventDuplicateEntrypointNames(
   config: InternalConfig,
   files: EntrypointInfo[],
 ) {
-  // No duplicate names
   const namesToPaths = files.reduce<Record<string, string[]>>(
     (map, { name, inputPath }) => {
       map[name] ??= [];

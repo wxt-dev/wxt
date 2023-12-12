@@ -563,10 +563,6 @@ describe('findEntrypoints', () => {
 
   it('should not allow multiple entrypoints with the same name', async () => {
     globMock.mockResolvedValueOnce(['popup.html', 'popup/index.html']);
-    const expectedPaths = [
-      'src/entrypoints/popup.html',
-      'src/entrypoints/popup/index.html',
-    ].map(unnormalizePath);
 
     await expect(() => findEntrypoints(config)).rejects.toThrowError(
       [
