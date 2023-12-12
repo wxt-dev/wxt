@@ -74,3 +74,5 @@ jobs:
         working-directory: templates/${{ matrix.template }}
       - run: pnpm build
         working-directory: templates/${{ matrix.template }}
+        env:
+          VITE_CJS_TRACE: true
