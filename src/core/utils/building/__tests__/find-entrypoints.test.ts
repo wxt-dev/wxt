@@ -563,15 +563,21 @@ describe('findEntrypoints', () => {
 
   it('should not allow multiple entrypoints with the same name', async () => {
     globMock.mockResolvedValueOnce([
+      'options/index.html',
+      'options/index.jsx',
       'popup.html',
       'popup/index.html',
       'popup/index.ts',
+      'ui.html',
     ]);
 
     await expect(() => findEntrypoints(config)).rejects.toThrowError(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
         '',
+        '- options',
+        `  - ${unnormalizePath('src/entrypoints/options/index.html')}`,
+        `  - ${unnormalizePath('src/entrypoints/options/index.jsx')}`,
         '- popup',
         `  - ${unnormalizePath('src/entrypoints/popup.html')}`,
         `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
