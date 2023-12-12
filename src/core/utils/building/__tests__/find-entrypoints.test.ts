@@ -569,8 +569,13 @@ describe('findEntrypoints', () => {
     ].map(unnormalizePath);
 
     await expect(() => findEntrypoints(config)).rejects.toThrowError(
-      'Multiple entrypoints with the name "popup" detected, but only one is allowed: ' +
-        expectedPaths.join(', '),
+      [
+        'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
+        '',
+        '- popup',
+        `  - ${unnormalizePath('src/entrypoints/popup.html')}`,
+        `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
+      ].join('\n'),
     );
   });
 

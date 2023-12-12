@@ -1,4 +1,4 @@
-import { relative, resolve } from 'path';
+import { resolve, relative } from 'path';
 import {
   BackgroundEntrypoint,
   BackgroundDefinition,
@@ -31,56 +31,62 @@ import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
 export async function findEntrypoints(
   config: InternalConfig,
 ): Promise<Entrypoint[]> {
-  const relativePaths = await glob('**/*', {
+  const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: config.entrypointsDir,
   });
   // Ensure consistent output
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
-
-  let hasBackground = false;
-  // TODO: This parallelization is bad
-  const possibleEntrypoints: Array<Entrypoint | undefined> = await Promise.all(
-    relativePaths.map(async (relativePath) => {
-      const path = resolve(config.entrypointsDir, relativePath);
-      const matchingGlob = pathGlobs.find((glob) =>
-        minimatch(relativePath, glob),
+  const entrypointInfos: EntrypointInfo[] = relativePaths.reduce<
+    EntrypointInfo[]
+  >((results, relativePath) => {
+    const inputPath = resolve(config.entrypointsDir, relativePath);
+    const name = getEntrypointName(config.entrypointsDir, inputPath);
+    const matchingGlob = pathGlobs.find((glob) =>
+      minimatch(relativePath, glob),
+    );
+    if (matchingGlob == null) {
+      config.logger.warn(
+        `${relativePath} does not match any known entrypoint. Known entrypoints:\n${JSON.stringify(
+          PATH_GLOB_TO_TYPE_MAP,
+          null,
+          2,
+        )}`,
       );
-
-      if (matchingGlob == null) {
-        config.logger.warn(
-          `${relativePath} does not match any known entrypoint. Known entrypoints:\n${JSON.stringify(
-            PATH_GLOB_TO_TYPE_MAP,
-            null,
-            2,
-          )}`,
-        );
-        return;
-      }
-
+    } else {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      if (type === 'ignored') return;
+      results.push({ name, inputPath, type });
+    }
+    return results;
+  }, []);
 
+  // Report duplicate entrypoint names
+  validateEntrypointNames(config, entrypointInfos);
+
+  // Import entrypoints to get their config
+  let hasBackground = false;
+  const entrypoints: Entrypoint[] = await Promise.all(
+    entrypointInfos.map(async (info): Promise<Entrypoint> => {
+      const { type } = info;
       switch (type) {
         case 'popup':
-          return await getPopupEntrypoint(config, path);
+          return await getPopupEntrypoint(config, info);
         case 'options':
-          return await getOptionsEntrypoint(config, path);
+          return await getOptionsEntrypoint(config, info);
         case 'background':
           hasBackground = true;
-          return await getBackgroundEntrypoint(config, path);
+          return await getBackgroundEntrypoint(config, info);
         case 'content-script':
-          return await getContentScriptEntrypoint(config, path);
+          return await getContentScriptEntrypoint(config, info);
         case 'unlisted-page':
-          return await getUnlistedPageEntrypoint(config, path);
+          return await getUnlistedPageEntrypoint(config, info);
         case 'unlisted-script':
-          return await getUnlistedScriptEntrypoint(config, path);
+          return await getUnlistedScriptEntrypoint(config, info);
         case 'content-script-style':
           return {
+            ...info,
             type,
-            name: getEntrypointName(config.entrypointsDir, path),
-            inputPath: path,
             outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
             options: {
               include: undefined,
@@ -89,9 +95,8 @@ export async function findEntrypoints(
           };
         default:
           return {
+            ...info,
             type,
-            name: getEntrypointName(config.entrypointsDir, path),
-            inputPath: path,
             outputDir: config.outDir,
             options: {
               include: undefined,
@@ -102,30 +107,13 @@ export async function findEntrypoints(
     }),
   );
 
-  const entrypoints = possibleEntrypoints.filter(
-    (entry) => !!entry,
-  ) as Entrypoint[];
-
-  // Report duplicate entrypoint names
-  const existingNames: Record<string, Entrypoint | undefined> = {};
-  entrypoints.forEach((entrypoint) => {
-    const withSameName = existingNames[entrypoint.name];
-    if (withSameName) {
-      throw Error(
-        `Multiple entrypoints with the name "${
-          entrypoint.name
-        }" detected, but only one is allowed: ${[
-          relative(config.root, withSameName.inputPath),
-          relative(config.root, entrypoint.inputPath),
-        ].join(', ')}`,
-      );
-    }
-    existingNames[entrypoint.name] = entrypoint;
-  });
-
   if (config.command === 'serve' && !hasBackground) {
     entrypoints.push(
-      await getBackgroundEntrypoint(config, VIRTUAL_NOOP_BACKGROUND_MODULE_ID),
+      await getBackgroundEntrypoint(config, {
+        inputPath: VIRTUAL_NOOP_BACKGROUND_MODULE_ID,
+        name: 'background',
+        type: 'background',
+      }),
     );
   }
 
@@ -149,6 +137,45 @@ export async function findEntrypoints(
   });
   config.logger.debug(`${config.browser} entrypoints:`, targetEntrypoints);
   return targetEntrypoints;
+}
+
+interface EntrypointInfo {
+  name: string;
+  inputPath: string;
+  type: Entrypoint['type'];
+}
+
+function validateEntrypointNames(
+  config: InternalConfig,
+  files: EntrypointInfo[],
+) {
+  // No duplicate names
+  const namesToPaths = files.reduce<Record<string, string[]>>(
+    (map, { name, inputPath }) => {
+      map[name] ??= [];
+      map[name].push(inputPath);
+      return map;
+    },
+    {},
+  );
+  const errorLines = Object.entries(namesToPaths).reduce<string[]>(
+    (lines, [name, absolutePaths]) => {
+      if (absolutePaths.length > 1) {
+        lines.push(`- ${name}`);
+        absolutePaths.forEach((absolutePath) => {
+          lines.push(`  - ${relative(config.root, absolutePath)}`);
+        });
+      }
+      return lines;
+    },
+    [],
+  );
+  if (errorLines.length > 0) {
+    const errorContent = errorLines.join('\n');
+    throw Error(
+      `Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.\n\n${errorContent}`,
+    );
+  }
 }
 
 function getHtmlBaseOptions(document: Document): BaseEntrypointOptions {
@@ -177,9 +204,9 @@ function getHtmlBaseOptions(document: Document): BaseEntrypointOptions {
  */
 async function getPopupEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<PopupEntrypoint> {
-  const content = await fs.readFile(path, 'utf-8');
+  const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
   const options: PopupEntrypoint['options'] = getHtmlBaseOptions(document);
@@ -220,7 +247,7 @@ async function getPopupEntrypoint(
     type: 'popup',
     name: 'popup',
     options,
-    inputPath: path,
+    inputPath,
     outputDir: config.outDir,
   };
 }
@@ -231,9 +258,9 @@ async function getPopupEntrypoint(
  */
 async function getOptionsEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<OptionsEntrypoint> {
-  const content = await fs.readFile(path, 'utf-8');
+  const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
   const options: OptionsEntrypoint['options'] = getHtmlBaseOptions(document);
@@ -263,7 +290,7 @@ async function getOptionsEntrypoint(
     type: 'options',
     name: 'options',
     options,
-    inputPath: path,
+    inputPath,
     outputDir: config.outDir,
   };
 }
@@ -274,15 +301,15 @@ async function getOptionsEntrypoint(
  */
 async function getUnlistedPageEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<GenericEntrypoint> {
-  const content = await fs.readFile(path, 'utf-8');
+  const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
   return {
     type: 'unlisted-page',
-    name: getEntrypointName(config.entrypointsDir, path),
-    inputPath: path,
+    name: getEntrypointName(config.entrypointsDir, inputPath),
+    inputPath,
     outputDir: config.outDir,
     options: getHtmlBaseOptions(document),
   };
@@ -294,11 +321,10 @@ async function getUnlistedPageEntrypoint(
  */
 async function getUnlistedScriptEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<GenericEntrypoint> {
-  const name = getEntrypointName(config.entrypointsDir, path);
   const defaultExport = await importEntrypointFile<UnlistedScriptDefinition>(
-    path,
+    inputPath,
     config,
   );
   if (defaultExport == null) {
@@ -311,7 +337,7 @@ async function getUnlistedScriptEntrypoint(
   return {
     type: 'unlisted-script',
     name,
-    inputPath: path,
+    inputPath,
     outputDir: config.outDir,
     options,
   };
@@ -322,13 +348,12 @@ async function getUnlistedScriptEntrypoint(
  */
 async function getBackgroundEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<BackgroundEntrypoint> {
-  const name = 'background';
   let options: Omit<BackgroundDefinition, 'main'> = {};
-  if (path !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
+  if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
     const defaultExport = await importEntrypointFile<BackgroundDefinition>(
-      path,
+      inputPath,
       config,
     );
     if (defaultExport == null) {
@@ -342,7 +367,7 @@ async function getBackgroundEntrypoint(
   return {
     type: 'background',
     name,
-    inputPath: path,
+    inputPath,
     outputDir: config.outDir,
     options: {
       ...options,
@@ -357,11 +382,10 @@ async function getBackgroundEntrypoint(
  */
 async function getContentScriptEntrypoint(
   config: InternalConfig,
-  path: string,
+  { inputPath, name }: EntrypointInfo,
 ): Promise<ContentScriptEntrypoint> {
-  const name = getEntrypointName(config.entrypointsDir, path);
   const { main: _, ...options } =
-    await importEntrypointFile<ContentScriptDefinition>(path, config);
+    await importEntrypointFile<ContentScriptDefinition>(inputPath, config);
   if (options == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
@@ -370,13 +394,13 @@ async function getContentScriptEntrypoint(
   return {
     type: 'content-script',
     name,
-    inputPath: path,
+    inputPath,
     outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
     options,
   };
 }
 
-const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
+const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
   'sandbox.html': 'sandbox',
   'sandbox/index.html': 'sandbox',
   '*.sandbox.html': 'sandbox',
@@ -424,9 +448,6 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
   '*/index.[jt]s?(x)': 'unlisted-script',
   [`*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
   [`*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
-
-  // Don't warn about any files in subdirectories, like CSS or JS entrypoints for HTML files or tests
-  '*/**': 'ignored',
 };
 
 const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';
