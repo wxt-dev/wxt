@@ -420,8 +420,8 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type'] | 'ignored'> = {
 
   '*.html': 'unlisted-page',
   '*/index.html': 'unlisted-page',
-  '*.[jt]s': 'unlisted-script',
-  '*/index.ts': 'unlisted-script',
+  '*.[jt]s?(x)': 'unlisted-script',
+  '*/index.[jt]s?(x)': 'unlisted-script',
   [`*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
   [`*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
 
