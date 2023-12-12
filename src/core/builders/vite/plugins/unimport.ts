@@ -1,7 +1,7 @@
 import { createUnimport } from 'unimport';
 import { InternalConfig } from '~/types';
 import { getUnimportOptions } from '~/core/utils/unimport';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { extname } from 'path';
 
 const ENABLED_EXTENSIONS = new Set([

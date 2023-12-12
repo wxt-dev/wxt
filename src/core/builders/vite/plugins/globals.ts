@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { InternalConfig } from '~/types';
 import { getGlobals } from '~/core/utils/globals';
 

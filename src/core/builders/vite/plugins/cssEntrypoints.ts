@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { Entrypoint, InternalConfig } from '~/types';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 

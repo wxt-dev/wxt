@@ -1,5 +1,5 @@
 import { InternalConfig } from '~/types';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 
 /**
  * Apply the experimental config for disabling the polyfill. It works by aliasing the

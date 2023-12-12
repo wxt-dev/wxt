@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 
 /**
  * Add all deps that import `webextension-polyfill` to `test.server.deps.inline`.

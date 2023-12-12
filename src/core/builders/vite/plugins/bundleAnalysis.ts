@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 let increment = 0;

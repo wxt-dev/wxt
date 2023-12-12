@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { InternalConfig } from '~/types';
 import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';

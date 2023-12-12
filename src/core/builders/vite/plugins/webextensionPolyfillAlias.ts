@@ -1,5 +1,5 @@
 import path from 'node:path';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { InternalConfig } from '~/types';
 
 /**

@@ -1,5 +1,5 @@
 import { InternalConfig } from '~/types';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 
 export function tsconfigPaths(
   config: Omit<InternalConfig, 'builder'>,
