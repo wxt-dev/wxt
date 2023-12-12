@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.11.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.1...v0.11.2)
+
+### 🩹 Fixes
+
+- Discover `.js`, `.jsx`, and `.tsx` unlisted scripts correctly ([#274](https://github.com/wxt-dev/wxt/pull/274))
+- Improve duplicate entrypoint name detection and catch the error before loading their config ([#276](https://github.com/wxt-dev/wxt/pull/276))
+
+### 📖 Documentation
+
+- Improve content script UI docs ([#268](https://github.com/wxt-dev/wxt/pull/268))
+
+### 🏡 Chore
+
+- Update sSolid template to vite 5 ([#265](https://github.com/wxt-dev/wxt/pull/265))
+- Add missing navigation item ([bcb93af](https://github.com/wxt-dev/wxt/commit/bcb93af))
+
 ## v0.11.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.0...v0.11.1)
