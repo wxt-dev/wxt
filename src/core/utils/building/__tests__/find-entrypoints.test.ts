@@ -261,28 +261,24 @@ describe('findEntrypoints', () => {
     });
   });
 
-  it.each<[string, Omit<GenericEntrypoint, 'options'>]>([
-    [
-      'injected.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected.ts'),
-        outputDir: config.outDir,
-      },
-    ],
-    [
-      'injected/index.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
-        outputDir: config.outDir,
-      },
-    ],
+  it.each<string>([
+    'injected.ts',
+    'injected.tsx',
+    'injected.js',
+    'injected.jsx',
+    'injected/index.ts',
+    'injected/index.tsx',
+    'injected/index.js',
+    'injected/index.jsx',
   ])(
     'should find and load unlisted-script entrypoint config from %s',
-    async (path, expected) => {
+    async (path) => {
+      const expected = {
+        type: 'unlisted-script',
+        name: 'injected',
+        inputPath: resolve(config.entrypointsDir, path),
+        outputDir: config.outDir,
+      };
       const options: GenericEntrypoint['options'] = {};
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
