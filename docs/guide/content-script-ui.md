@@ -14,9 +14,9 @@ Each has their own set of advantages and disadvantages.
 
 ## Integrated
 
-Integrated content script UIs use the page's CSS to inject a UI that looks like it's apart of the page.
+Integrated content script UIs are injected alongside the content of a page. This means that they are affected by CSS on that page.
 
-WXT doesn't provide any utils for mounting integrated UIs yet. Here are some examples for setting up integrated UIs.
+You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/ContentScriptDefinition#cssinjectionmode) property.
 
 :::code-group
 
@@ -147,14 +147,14 @@ export default defineContentScript({
 
 ## ShadowRoot
 
-Often in web extensions, you don't want your content script's CSS effecting the page, or vise-versa. The [`ShadowRoot` API](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) is ideal for this. It isolates an element's style from the page's style.
+Often in web extensions, you don't want your content script's CSS affecting the page, or vise-versa. The [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) API is ideal for this.
 
-WXT provides a helper function, [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi), that abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated styles.
+WXT provides a helper function, [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi), that abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated CSS.
 
 To use `createContentScriptUi`, follow these steps:
 
 1. Import your CSS file at the top of your content script
-2. Set `cssInjectionMode: "ui"` inside `defineContentScript`
+2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/ContentScriptDefinition#cssinjectionmode) inside `defineContentScript`
 3. Define your UI with `createContentScriptUi()`
 4. Mount the UI so it is visible to users
 
@@ -194,7 +194,7 @@ See the [API Reference](/api/wxt/client/functions/createContentScriptUi) for the
 `createContentScriptUi` supports TailwindCSS out of the box! When importing the styles, just import the main CSS file containing the `@tailwind` directives, and everything will just work :+1:.
 :::
 
-When using a frontend framework for your UI, you'll need to unmount the app when the UI is removed. When defining the UI, return an app reference from the `mount` option and pass in a custom `onRemoved` option:
+When using a frontend framework for your UI, you'll need to unmount the app when the UI is removed. This is accomplished by returning an app reference from the `mount` option and by passing in a custom `onRemoved` option:
 
 :::code-group
 
