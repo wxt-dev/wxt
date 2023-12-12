@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import { EntrypointGroup } from '~/types';
 import { getEntrypointGlobals } from '~/core/utils/globals';
 

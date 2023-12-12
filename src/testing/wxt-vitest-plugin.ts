@@ -1,4 +1,4 @@
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import {
   unimport,
   download,
