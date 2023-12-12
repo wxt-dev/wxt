@@ -30,7 +30,7 @@
     "bin",
     "dist"
   ],
-  "bin": "./bin/wxt.cjs",
+  "bin": "./bin/wxt.mjs",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
