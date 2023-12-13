@@ -53,7 +53,8 @@ export async function findEntrypoints(
     return results;
   }, []);
 
-  // Report duplicate entrypoint names
+  // Validation
+  preventNoEntrypoints(config, entrypointInfos);
   preventDuplicateEntrypointNames(config, entrypointInfos);
 
   // Import entrypoints to get their config
@@ -166,6 +167,12 @@ function preventDuplicateEntrypointNames(
     throw Error(
       `Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.\n\n${errorContent}`,
     );
+  }
+}
+
+function preventNoEntrypoints(config: InternalConfig, files: EntrypointInfo[]) {
+  if (files.length === 0) {
+    throw Error(`No entrypoints found in ${config.entrypointsDir}`);
   }
 }
 

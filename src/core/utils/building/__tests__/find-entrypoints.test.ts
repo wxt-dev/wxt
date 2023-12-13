@@ -244,15 +244,15 @@ describe('findEntrypoints', () => {
   );
 
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
-    globMock.mockResolvedValueOnce([]);
+    globMock.mockResolvedValueOnce(['popup.html']);
 
     const entrypoints = await findEntrypoints({
       ...config,
       command: 'serve',
     });
 
-    expect(entrypoints).toHaveLength(1);
-    expect(entrypoints[0]).toEqual({
+    expect(entrypoints).toHaveLength(2);
+    expect(entrypoints).toContainEqual({
       type: 'background',
       inputPath: 'virtual:user-background',
       name: 'background',
@@ -583,6 +583,14 @@ describe('findEntrypoints', () => {
         `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
         `  - ${unnormalizePath('src/entrypoints/popup/index.ts')}`,
       ].join('\n'),
+    );
+  });
+
+  it('throw an error if there are no entrypoints', async () => {
+    globMock.mockResolvedValueOnce([]);
+
+    await expect(() => findEntrypoints(config)).rejects.toThrowError(
+      'No entrypoints found in /src/entrypoints',
     );
   });
 
