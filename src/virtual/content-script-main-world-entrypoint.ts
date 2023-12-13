@@ -1,4 +1,3 @@
-console.log('MAIN WORLD', __ENTRYPOINT__);
 import definition from 'virtual:user-content-script-main-world';
 import { logger } from '~/client/utils/logger';
 
