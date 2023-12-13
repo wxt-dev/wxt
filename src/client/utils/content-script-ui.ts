@@ -86,7 +86,7 @@ export interface ContentScriptModalPositioningOptions {
 /**
  * Choose between `"inline"`, `"overlay"`, or `"modal" `types.
  *
- * ![Visualization of different types](https://wxt.dev/content-script-ui-types.png)
+ * ![Visualization of different types](https://wxt.dev/content-script-ui-type.png)
  */
 export type ContentScriptPositioningOptions =
   | ContentScriptInlinePositioningOptions
