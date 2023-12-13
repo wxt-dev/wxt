@@ -22,8 +22,7 @@ export function removeImportStatements(text: string): string {
 export function removeProjectImportStatements(text: string): string {
   const noImports = removeImportStatements(text);
 
-  return `import { defineContentScript, defineBackground } from 'wxt/client';
-import { defineUnlistedScript } from 'wxt/sandbox';
+  return `import { defineUnlistedScript, defineContentScript, defineBackground } from 'wxt/sandbox';
 
 ${noImports}`;
 }

@@ -1,4 +1,4 @@
-import { UnlistedScriptDefinition } from '~/types';
+import type { UnlistedScriptDefinition } from '~/types';
 
 export function defineUnlistedScript(
   main: () => void,

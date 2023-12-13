@@ -1,10 +1,10 @@
-import definition from 'virtual:user-content-script';
+console.log('MAIN WORLD', __ENTRYPOINT__);
+import definition from 'virtual:user-content-script-main-world';
 import { logger } from '~/client/utils/logger';
-import { MainWorldContentScriptDefinition } from '..';
 
 (async () => {
   try {
-    const { main } = definition as MainWorldContentScriptDefinition;
+    const { main } = definition;
     await main();
   } catch (err) {
     logger.error(

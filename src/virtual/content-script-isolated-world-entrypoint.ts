@@ -1,12 +1,11 @@
-import definition from 'virtual:user-content-script';
+console.log('ISOLATED WORLD', __ENTRYPOINT__);
+import definition from 'virtual:user-content-script-isolated-world';
 import { logger } from '~/client/utils/logger';
 import { ContentScriptContext } from '~/client/content-scripts/content-script-context';
-import { IsolatedWorldContentScriptDefinition } from '..';
 
 (async () => {
   try {
-    const { main, ...options } =
-      definition as IsolatedWorldContentScriptDefinition;
+    const { main, ...options } = definition;
     const ctx = new ContentScriptContext(__ENTRYPOINT__, options);
 
     await main(ctx);

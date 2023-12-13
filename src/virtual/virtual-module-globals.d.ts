@@ -10,8 +10,13 @@ declare module 'virtual:user-background' {
   export default definition;
 }
 
-declare module 'virtual:user-content-script' {
-  const definition: import('~/types').ContentScriptDefinition;
+declare module 'virtual:user-content-script-isolated-world' {
+  const definition: import('~/types').IsolatedWorldContentScriptDefinition;
+  export default definition;
+}
+
+declare module 'virtual:user-content-script-main-world' {
+  const definition: import('~/types').MainWorldContentScriptDefinition;
   export default definition;
 }
 

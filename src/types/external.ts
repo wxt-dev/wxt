@@ -446,6 +446,11 @@ export type ContentScriptDefinition =
 export interface IsolatedWorldContentScriptDefinition
   extends BaseContentScriptDefinition {
   /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   * @default "ISOLATED"
+   */
+  world?: 'ISOLATED';
+  /**
    * Main function executed when the content script is loaded.
    */
   main(ctx: ContentScriptContext): void | Promise<void>;
@@ -453,6 +458,10 @@ export interface IsolatedWorldContentScriptDefinition
 
 export interface MainWorldContentScriptDefinition
   extends BaseContentScriptDefinition {
+  /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   */
+  world: 'MAIN';
   /**
    * Main function executed when the content script is loaded.
    */
@@ -498,11 +507,6 @@ export interface BaseContentScriptDefinition extends ExcludableEntrypoint {
    * @default false
    */
   matchOriginAsFallback?: PerBrowserOption<boolean>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default "ISOLATED"
-   */
-  world?: PerBrowserOption<'ISOLATED' | 'MAIN'>;
   /**
    * Customize how imported/generated styles are injected with the content script. Regardless of the
    * mode selected, CSS will always be built and included in the output directory.

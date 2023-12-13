@@ -1,7 +1,8 @@
 /**
+ * Any runtime APIs that use the web extension APIs.
+ *
  * @module wxt/client
  */
-export * from './define-background';
 export * from './content-scripts';
 export {
   ContentScriptOverlayAlignment,
