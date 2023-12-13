@@ -590,7 +590,7 @@ describe('findEntrypoints', () => {
     globMock.mockResolvedValueOnce([]);
 
     await expect(() => findEntrypoints(config)).rejects.toThrowError(
-      `No entrypoints found in ${unnormalizePath('/src/entrypoints')}`,
+      `No entrypoints found in ${unnormalizePath(config.entrypointsDir)}`,
     );
   });
 
