@@ -24,7 +24,14 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Add support for "main world" content scripts ([#284](https://github.com/wxt-dev/wxt/pull/284))
+`defineContentScript` and `defineBackground` are now exported from `wxt/sandbox` instead of `wxt/client`. ([#284](https://github.com/wxt-dev/wxt/pull/284))
+
+- If you use auto-imports, no changes are required.
+- If you have disabled auto-imports, you'll need to manually update your import statements:
+   ```diff
+   - import { defineBackground, defineContentScript } from 'wxt/client';
+   + import { defineBackground, defineContentScript } from 'wxt/sandbox';
+   ```
 
 ## v0.11.2
 
