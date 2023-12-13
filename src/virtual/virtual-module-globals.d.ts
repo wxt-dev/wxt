@@ -11,12 +11,12 @@ declare module 'virtual:user-background' {
 }
 
 declare module 'virtual:user-content-script-isolated-world' {
-  const definition: import('~/types').IsolatedWorldContentScriptDefinition;
+  const definition: import('~/types').ContentScriptIsolatedWorldDefinition;
   export default definition;
 }
 
 declare module 'virtual:user-content-script-main-world' {
-  const definition: import('~/types').MainWorldContentScriptDefinition;
+  const definition: import('~/types').ContentScriptMainWorldDefinition;
   export default definition;
 }
 

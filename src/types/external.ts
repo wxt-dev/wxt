@@ -440,11 +440,11 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 export type OnContentScriptStopped = (cb: () => void) => void;
 
 export type ContentScriptDefinition =
-  | IsolatedWorldContentScriptDefinition
-  | MainWorldContentScriptDefinition;
+  | ContentScriptIsolatedWorldDefinition
+  | ContentScriptMainWorldDefinition;
 
-export interface IsolatedWorldContentScriptDefinition
-  extends BaseContentScriptDefinition {
+export interface ContentScriptIsolatedWorldDefinition
+  extends ContentScriptBaseDefinition {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    * @default "ISOLATED"
@@ -456,8 +456,8 @@ export interface IsolatedWorldContentScriptDefinition
   main(ctx: ContentScriptContext): void | Promise<void>;
 }
 
-export interface MainWorldContentScriptDefinition
-  extends BaseContentScriptDefinition {
+export interface ContentScriptMainWorldDefinition
+  extends ContentScriptBaseDefinition {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    */
@@ -468,7 +468,7 @@ export interface MainWorldContentScriptDefinition
   main(): void | Promise<void>;
 }
 
-export interface BaseContentScriptDefinition extends ExcludableEntrypoint {
+export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
   matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
