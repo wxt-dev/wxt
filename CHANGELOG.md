@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.12.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.2...v0.12.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Add support for "main world" content scripts ([#284](https://github.com/wxt-dev/wxt/pull/284))
+
+### 🩹 Fixes
+
+- Only use type imports for Vite ([#278](https://github.com/wxt-dev/wxt/pull/278))
+- Throw error when no entrypoints are found ([#283](https://github.com/wxt-dev/wxt/pull/283))
+
+### 📖 Documentation
+
+- Improve content script UI guide ([#272](https://github.com/wxt-dev/wxt/pull/272))
+- Fix dead links ([291d25b](https://github.com/wxt-dev/wxt/commit/291d25b))
+
+### 🏡 Chore
+
+- Convert WXT CLI to an ESM binary ([#279](https://github.com/wxt-dev/wxt/pull/279))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Add support for "main world" content scripts ([#284](https://github.com/wxt-dev/wxt/pull/284))
+
 ## v0.11.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.1...v0.11.2)
