@@ -7,13 +7,18 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/.DS_Store');
     project.addFile('entrypoints/.hidden1/index.html');
     project.addFile('entrypoints/.hidden2.html');
+    project.addFile('entrypoints/unlisted.html');
 
     await project.build();
 
     expect(await project.serializeOutput()).toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
-      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0"}"
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0"}
+      ================================================================================
+      .output/chrome-mv3/unlisted.html
+      ----------------------------------------
+      "
     `);
   });
 
@@ -211,6 +216,7 @@ describe('Output Directory Structure', () => {
 
   it("should output to a custom directory when overriding 'outDir'", async () => {
     const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html');
     project.setConfigFileConfig({
       outDir: 'dist',
     });

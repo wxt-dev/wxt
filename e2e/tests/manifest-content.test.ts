@@ -174,6 +174,7 @@ describe('Manifest Content', () => {
   describe('icons', () => {
     it('should auto-discover icons with the correct name', async () => {
       const project = new TestProject();
+      project.addFile('entrypoints/unlisted.html');
       project.addFile('public/icon-16.png');
       project.addFile('public/icon/32.png');
       project.addFile('public/icon@48w.png');
@@ -196,6 +197,7 @@ describe('Manifest Content', () => {
 
     it('should return undefined when no icons are found', async () => {
       const project = new TestProject();
+      project.addFile('entrypoints/unlisted.html');
       project.addFile('public/logo.png');
       project.addFile('public/icon.jpeg');
 
@@ -207,6 +209,7 @@ describe('Manifest Content', () => {
 
     it('should allow icons to be overwritten from the wxt.config.ts file', async () => {
       const project = new TestProject();
+      project.addFile('entrypoints/unlisted.html');
       project.addFile('public/icon-16.png');
       project.addFile('public/icon-32.png');
       project.addFile('public/logo-16.png');
@@ -524,6 +527,7 @@ describe('Manifest Content', () => {
 
   it('should respect the transformManifest option', async () => {
     const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html');
     project.addFile(
       'wxt.config.ts',
       `import { defineConfig } from 'wxt';
@@ -587,6 +591,7 @@ describe('Manifest Content', () => {
         const project = new TestProject({
           version: '1.0.0-alpha1',
         });
+        project.addFile('entrypoints/unlisted.html');
 
         await project.build({ browser, manifestVersion });
         const manifest = await project.getOutputManifest(
@@ -604,6 +609,7 @@ describe('Manifest Content', () => {
         const project = new TestProject({
           version: '1.0.0-alpha1',
         });
+        project.addFile('entrypoints/unlisted.html');
 
         await project.build({ browser, manifestVersion });
         const manifest = await project.getOutputManifest(
@@ -626,6 +632,7 @@ describe('Manifest Content', () => {
         const project = new TestProject({
           version: '1.0.0.1',
         });
+        project.addFile('entrypoints/unlisted.html');
 
         await project.build({ browser, manifestVersion });
         const manifest = await project.getOutputManifest(
@@ -640,6 +647,7 @@ describe('Manifest Content', () => {
 
   it('should respect the action field in the manifest without a popup', async () => {
     const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html');
     project.setConfigFileConfig({
       manifest: {
         action: {
