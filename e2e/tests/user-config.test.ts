@@ -61,6 +61,7 @@ describe('User Config', () => {
 
   it('should merge inline and user config based manifests', async () => {
     const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html');
     project.addFile(
       'wxt.config.ts',
       `import { defineConfig } from 'wxt';
@@ -79,8 +80,8 @@ describe('User Config', () => {
       }),
     });
 
-    const output = await project.serializeOutput();
-    expect(output).toMatchInlineSnapshot(`
+    expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+      .toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
       {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","example_customization":["3","build","production","chrome"]}"
