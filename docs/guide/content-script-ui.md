@@ -16,7 +16,7 @@ Each has their own set of advantages and disadvantages.
 
 Integrated content script UIs are injected alongside the content of a page. This means that they are affected by CSS on that page.
 
-You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/ContentScriptDefinition#cssinjectionmode) property.
+You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/ContentScriptBaseDefinition#cssinjectionmode) property.
 
 :::code-group
 
@@ -154,7 +154,7 @@ WXT provides a helper function, [`createContentScriptUi`](/api/wxt/client/functi
 To use `createContentScriptUi`, follow these steps:
 
 1. Import your CSS file at the top of your content script
-2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/ContentScriptDefinition#cssinjectionmode) inside `defineContentScript`
+2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/ContentScriptBaseDefinition#cssinjectionmode) inside `defineContentScript`
 3. Define your UI with `createContentScriptUi()`
 4. Mount the UI so it is visible to users
 
