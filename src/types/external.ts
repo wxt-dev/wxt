@@ -439,7 +439,36 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface ContentScriptDefinition extends ExcludableEntrypoint {
+export type ContentScriptDefinition =
+  | ContentScriptIsolatedWorldDefinition
+  | ContentScriptMainWorldDefinition;
+
+export interface ContentScriptIsolatedWorldDefinition
+  extends ContentScriptBaseDefinition {
+  /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   * @default "ISOLATED"
+   */
+  world?: 'ISOLATED';
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(ctx: ContentScriptContext): void | Promise<void>;
+}
+
+export interface ContentScriptMainWorldDefinition
+  extends ContentScriptBaseDefinition {
+  /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   */
+  world: 'MAIN';
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(): void | Promise<void>;
+}
+
+export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
   matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -479,11 +508,6 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    */
   matchOriginAsFallback?: PerBrowserOption<boolean>;
   /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default "ISOLATED"
-   */
-  world?: PerBrowserOption<'ISOLATED' | 'MAIN'>;
-  /**
    * Customize how imported/generated styles are injected with the content script. Regardless of the
    * mode selected, CSS will always be built and included in the output directory.
    *
@@ -497,10 +521,6 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    * @default "manifest"
    */
   cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
-  /**
-   * Main function executed when the content script is loaded.
-   */
-  main(ctx: ContentScriptContext): void | Promise<void>;
 }
 
 export interface BackgroundDefinition extends ExcludableEntrypoint {

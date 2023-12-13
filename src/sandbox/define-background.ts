@@ -1,4 +1,4 @@
-import { BackgroundDefinition } from '~/types';
+import type { BackgroundDefinition } from '~/types';
 
 export function defineBackground(main: () => void): BackgroundDefinition;
 export function defineBackground(

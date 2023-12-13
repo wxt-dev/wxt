@@ -23,7 +23,8 @@ const preset: tsup.Options = {
   external: [
     'vite',
     'virtual:user-unlisted-script',
-    'virtual:user-content-script',
+    'virtual:user-content-script-isolated-world',
+    'virtual:user-content-script-main-world',
     'virtual:user-background',
   ],
 };
@@ -76,8 +77,10 @@ const config: tsup.Options[] = [
     ...preset,
     entry: {
       'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
-      'virtual/content-script-entrypoint':
-        'src/virtual/content-script-entrypoint.ts',
+      'virtual/content-script-isolated-world-entrypoint':
+        'src/virtual/content-script-isolated-world-entrypoint.ts',
+      'virtual/content-script-main-world-entrypoint':
+        'src/virtual/content-script-main-world-entrypoint.ts',
       'virtual/mock-browser': 'src/virtual/mock-browser.ts',
       'virtual/reload-html': 'src/virtual/reload-html.ts',
       'virtual/unlisted-script-entrypoint':

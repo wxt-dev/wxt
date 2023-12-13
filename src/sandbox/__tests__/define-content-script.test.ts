@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineContentScript } from '~/client/content-scripts/define-content-script';
+import { defineContentScript } from '~/sandbox/define-content-script';
 import { ContentScriptDefinition } from '~/types';
 
 describe('defineContentScript', () => {

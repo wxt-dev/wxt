@@ -1,4 +1,4 @@
-import definition from 'virtual:user-content-script';
+import definition from 'virtual:user-content-script-isolated-world';
 import { logger } from '~/client/utils/logger';
 import { ContentScriptContext } from '~/client/content-scripts/content-script-context';
 

@@ -67,3 +67,9 @@ export interface ExtensionRunner {
   openBrowser(config: InternalConfig): Promise<void>;
   closeBrowser(): Promise<void>;
 }
+
+export type VirtualEntrypointType =
+  | 'content-script-main-world'
+  | 'content-script-isolated-world'
+  | 'background'
+  | 'unlisted-script';
