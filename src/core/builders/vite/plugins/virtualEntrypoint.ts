@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { Entrypoint, InternalConfig } from '~/types';
+import { InternalConfig, VirtualEntrypointType } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 import { normalizePath } from '~/core/utils/paths';
@@ -8,7 +8,7 @@ import { normalizePath } from '~/core/utils/paths';
  * Wraps a user's entrypoint with a vitual version with additional logic.
  */
 export function virtualEntrypoint(
-  type: Entrypoint['type'],
+  type: VirtualEntrypointType,
   config: Omit<InternalConfig, 'builder'>,
 ): Plugin {
   const virtualId = `virtual:wxt-${type}?`;

@@ -439,7 +439,27 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface ContentScriptDefinition extends ExcludableEntrypoint {
+export type ContentScriptDefinition =
+  | IsolatedWorldContentScriptDefinition
+  | MainWorldContentScriptDefinition;
+
+export interface IsolatedWorldContentScriptDefinition
+  extends BaseContentScriptDefinition {
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(ctx: ContentScriptContext): void | Promise<void>;
+}
+
+export interface MainWorldContentScriptDefinition
+  extends BaseContentScriptDefinition {
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(): void | Promise<void>;
+}
+
+export interface BaseContentScriptDefinition extends ExcludableEntrypoint {
   matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -497,10 +517,6 @@ export interface ContentScriptDefinition extends ExcludableEntrypoint {
    * @default "manifest"
    */
   cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
-  /**
-   * Main function executed when the content script is loaded.
-   */
-  main(ctx: ContentScriptContext): void | Promise<void>;
 }
 
 export interface BackgroundDefinition extends ExcludableEntrypoint {

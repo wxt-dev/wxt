@@ -1,13 +1,11 @@
 import definition from 'virtual:user-content-script';
 import { logger } from '~/client/utils/logger';
-import { ContentScriptContext } from '~/client/content-scripts/content-script-context';
+import { MainWorldContentScriptDefinition } from '..';
 
 (async () => {
   try {
-    const { main, ...options } = definition;
-    const ctx = new ContentScriptContext(__ENTRYPOINT__, options);
-
-    await main(ctx);
+    const { main } = definition as MainWorldContentScriptDefinition;
+    await main();
   } catch (err) {
     logger.error(
       `The content script "${__ENTRYPOINT__}" crashed on startup!`,

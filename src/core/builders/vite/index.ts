@@ -5,6 +5,7 @@ import {
   InlineConfig,
   InternalConfig,
   UserConfig,
+  VirtualEntrypointType,
   WxtBuilder,
   WxtBuilderServer,
 } from '~/types';
@@ -46,7 +47,8 @@ export async function craeteViteBuilder(
       wxtPlugins.devHtmlPrerender(wxtConfig),
       wxtPlugins.unimport(wxtConfig),
       wxtPlugins.virtualEntrypoint('background', wxtConfig),
-      wxtPlugins.virtualEntrypoint('content-script', wxtConfig),
+      wxtPlugins.virtualEntrypoint('content-script-isolated-world', wxtConfig),
+      wxtPlugins.virtualEntrypoint('content-script-main-world', wxtConfig),
       wxtPlugins.virtualEntrypoint('unlisted-script', wxtConfig),
       wxtPlugins.devServerGlobals(wxtConfig),
       wxtPlugins.tsconfigPaths(wxtConfig),
@@ -65,13 +67,21 @@ export async function craeteViteBuilder(
    * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
-    const isVirtual = [
-      'background',
-      'content-script',
-      'unlisted-script',
-    ].includes(entrypoint.type);
-    const entry = isVirtual
-      ? `virtual:wxt-${entrypoint.type}?${entrypoint.inputPath}`
+    let virtualEntrypointType: VirtualEntrypointType | undefined;
+    switch (entrypoint.type) {
+      case 'background':
+      case 'unlisted-script':
+        virtualEntrypointType = entrypoint.type;
+        break;
+      case 'content-script':
+        virtualEntrypointType =
+          entrypoint.options.world === 'MAIN'
+            ? 'content-script-main-world'
+            : 'content-script-isolated-world';
+        break;
+    }
+    const entry = virtualEntrypointType
+      ? `virtual:wxt-${virtualEntrypointType}?${entrypoint.inputPath}`
       : entrypoint.inputPath;
 
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
