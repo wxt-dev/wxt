@@ -1,4 +1,4 @@
-import type { WebextensionPolyfill } from '~/browser';
+import type { Manifest } from '~/browser';
 import { ContentScriptEntrypoint, InternalConfig } from '~/types';
 import { resolvePerBrowserOption } from './entrypoints';
 
@@ -19,7 +19,7 @@ export function hashContentScriptOptions(
     if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
   });
 
-  const withDefaults: WebextensionPolyfill.Manifest.ContentScript = {
+  const withDefaults: Manifest.ContentScript = {
     exclude_globs: [],
     exclude_matches: [],
     include_globs: [],
@@ -46,7 +46,7 @@ export function hashContentScriptOptions(
 export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
   config: InternalConfig,
-): Omit<WebextensionPolyfill.Manifest.ContentScript, 'js' | 'css'> {
+): Omit<Manifest.ContentScript, 'js' | 'css'> {
   return {
     matches: resolvePerBrowserOption(options.matches, config.browser),
     all_frames: resolvePerBrowserOption(options.allFrames, config.browser),

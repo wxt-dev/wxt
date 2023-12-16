@@ -1,4 +1,4 @@
-import type { WebextensionPolyfill } from '~/browser';
+import type { Manifest } from '~/browser';
 import { BuildOutput, EntrypointGroup, InternalConfig } from '~/types';
 import { findEntrypoints } from './find-entrypoints';
 import { generateTypesDir } from './generate-wxt-dir';
@@ -24,7 +24,7 @@ export async function rebuild(
   },
 ): Promise<{
   output: BuildOutput;
-  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest;
+  manifest: Manifest.WebExtensionManifest;
 }> {
   const { default: ora } = await import('ora');
   const spinner = ora(`Preparing...`).start();

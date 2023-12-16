@@ -8,7 +8,7 @@ import {
   defineDriver,
   Storage,
 } from 'unstorage';
-import { browser, WebextensionPolyfill } from '~/browser';
+import { browser, Storage as BrowserStorage } from '~/browser';
 
 export interface WebExtensionDriverOptions {
   storageArea: 'sync' | 'local' | 'managed' | 'session';
@@ -24,7 +24,7 @@ export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
     };
 
     const _storageListener: (
-      changes: WebextensionPolyfill.Storage.StorageAreaSyncOnChangedChangesType,
+      changes: BrowserStorage.StorageAreaSyncOnChangedChangesType,
     ) => void = (changes) => {
       Object.entries(changes).forEach(([key, { newValue }]) => {
         _listeners.forEach((callback) => {

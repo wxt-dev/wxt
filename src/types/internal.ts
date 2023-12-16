@@ -11,7 +11,7 @@ import {
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
-import type { WebextensionPolyfill } from '~/browser';
+import type { Manifest } from '~/browser';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 
 export interface InternalConfig {
@@ -42,9 +42,7 @@ export interface InternalConfig {
     ignoredSources: string[];
     sourcesRoot: string;
   };
-  transformManifest: (
-    manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
-  ) => void;
+  transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
   analysis: {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
