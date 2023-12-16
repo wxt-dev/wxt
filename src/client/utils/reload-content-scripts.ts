@@ -1,8 +1,10 @@
-import browser, { Manifest } from 'webextension-polyfill';
+import { browser, WebextensionPolyfill } from '~/browser';
 import { logger } from './logger';
-import { MatchPattern } from '@webext-core/match-patterns';
+import { MatchPattern } from '~/sandbox';
 
-export function reloadContentScript(contentScript: Manifest.ContentScript) {
+export function reloadContentScript(
+  contentScript: WebextensionPolyfill.Manifest.ContentScript,
+) {
   const manifest = browser.runtime.getManifest();
   if (manifest.manifest_version == 2) {
     void reloadContentScriptMv2(contentScript);
@@ -12,7 +14,7 @@ export function reloadContentScript(contentScript: Manifest.ContentScript) {
 }
 
 export async function reloadContentScriptMv3(
-  contentScript: Manifest.ContentScript,
+  contentScript: WebextensionPolyfill.Manifest.ContentScript,
 ) {
   const id = `wxt:${contentScript.js![0]}`;
   logger.log('Reloading content script:', contentScript);
@@ -42,7 +44,7 @@ export async function reloadContentScriptMv3(
 }
 
 export async function reloadContentScriptMv2(
-  contentScript: Manifest.ContentScript,
+  contentScript: WebextensionPolyfill.Manifest.ContentScript,
 ) {
   throw Error('TODO: reloadContentScriptMv2');
 }

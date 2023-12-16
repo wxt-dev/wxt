@@ -1,4 +1,4 @@
-import type { Manifest } from 'webextension-polyfill';
+import type { WebextensionPolyfill } from '~/browser';
 import {
   Entrypoint,
   BackgroundEntrypoint,
@@ -29,7 +29,7 @@ import defu from 'defu';
  * Writes the manifest to the output directory and the build output.
  */
 export async function writeManifest(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   output: BuildOutput,
   config: InternalConfig,
 ): Promise<void> {
@@ -54,13 +54,13 @@ export async function generateMainfest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
-): Promise<Manifest.WebExtensionManifest> {
+): Promise<WebextensionPolyfill.Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
 
   const versionName = config.manifest.version_name ?? pkg?.version;
   const version = config.manifest.version ?? simplifyVersion(pkg?.version);
 
-  const baseManifest: Manifest.WebExtensionManifest = {
+  const baseManifest: WebextensionPolyfill.Manifest.WebExtensionManifest = {
     manifest_version: config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
@@ -78,7 +78,7 @@ export async function generateMainfest(
   const manifest = defu(
     userManifest,
     baseManifest,
-  ) as Manifest.WebExtensionManifest;
+  ) as WebextensionPolyfill.Manifest.WebExtensionManifest;
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 
@@ -119,7 +119,7 @@ function simplifyVersion(versionName: string): string {
 }
 
 function addEntrypoints(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
@@ -216,7 +216,7 @@ function addEntrypoints(
       config.outDir,
       '.html',
     );
-    const options: Manifest.ActionManifest = {};
+    const options: WebextensionPolyfill.Manifest.ActionManifest = {};
     if (popup.options.defaultIcon)
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
@@ -357,7 +357,7 @@ function addEntrypoints(
 
 function discoverIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Manifest.WebExtensionManifest['icons'] {
+): WebextensionPolyfill.Manifest.WebExtensionManifest['icons'] {
   const icons: [string, string][] = [];
   // prettier-ignore
   // #region snippet
@@ -390,7 +390,7 @@ function discoverIcons(
 }
 
 function addDevModeCsp(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   config: InternalConfig,
 ): void {
   const permission = `http://${config.server?.hostname ?? ''}/*`;
@@ -423,7 +423,7 @@ function addDevModeCsp(
 }
 
 function addDevModePermissions(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   config: InternalConfig,
 ) {
   // For reloading the page
@@ -511,7 +511,7 @@ export function getContentScriptsCssMap(
 }
 
 function addPermission(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   permission: string,
 ): void {
   manifest.permissions ??= [];
@@ -520,7 +520,7 @@ function addPermission(
 }
 
 function addHostPermission(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
   hostPermission: string,
 ): void {
   manifest.host_permissions ??= [];

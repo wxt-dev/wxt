@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from 'webextension-polyfill';
+import type { WebextensionPolyfill } from '~/browser';
 import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
@@ -167,7 +167,9 @@ export interface InlineConfig {
    *   }
    * })
    */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
+  transformManifest?: (
+    manifest: WebextensionPolyfill.Manifest.WebExtensionManifest,
+  ) => void;
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
@@ -247,7 +249,7 @@ export type WxtViteConfig = Omit<
 >;
 
 export interface BuildOutput {
-  manifest: Manifest.WebExtensionManifest;
+  manifest: WebextensionPolyfill.Manifest.WebExtensionManifest;
   publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
 }
@@ -324,7 +326,10 @@ export interface WxtDevServer
    * @param contentScript The manifest definition for a content script
    */
   reloadContentScript: (
-    contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
+    contentScript: Omit<
+      WebextensionPolyfill.Scripting.RegisteredContentScript,
+      'id'
+    >,
   ) => void;
 }
 
@@ -469,39 +474,51 @@ export interface ContentScriptMainWorldDefinition
 }
 
 export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
-  matches: PerBrowserOption<Manifest.ContentScript['matches']>;
+  matches: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['matches']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
    */
-  runAt?: PerBrowserOption<Manifest.ContentScript['run_at']>;
+  runAt?: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['run_at']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
   matchAboutBlank?: PerBrowserOption<
-    Manifest.ContentScript['match_about_blank']
+    WebextensionPolyfill.Manifest.ContentScript['match_about_blank']
   >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeMatches?: PerBrowserOption<Manifest.ContentScript['exclude_matches']>;
+  excludeMatches?: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['exclude_matches']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  includeGlobs?: PerBrowserOption<Manifest.ContentScript['include_globs']>;
+  includeGlobs?: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['include_globs']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeGlobs?: PerBrowserOption<Manifest.ContentScript['exclude_globs']>;
+  excludeGlobs?: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['exclude_globs']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  allFrames?: PerBrowserOption<Manifest.ContentScript['all_frames']>;
+  allFrames?: PerBrowserOption<
+    WebextensionPolyfill.Manifest.ContentScript['all_frames']
+  >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
@@ -561,7 +578,7 @@ export interface ExcludableEntrypoint {
  */
 export type UserManifest = Partial<
   Omit<
-    Manifest.WebExtensionManifest,
+    WebextensionPolyfill.Manifest.WebExtensionManifest,
     | 'background'
     | 'chrome_url_overrides'
     | 'devtools_page'

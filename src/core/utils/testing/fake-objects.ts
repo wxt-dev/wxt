@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import type { Manifest } from 'webextension-polyfill';
+import type { WebextensionPolyfill } from '~/browser';
 import {
   FsCache,
   InternalConfig,
@@ -157,13 +157,12 @@ export function fakeOutputFile(): OutputFile {
   return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
 }
 
-export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(
-  () => ({
+export const fakeManifest =
+  fakeObjectCreator<WebextensionPolyfill.Manifest.WebExtensionManifest>(() => ({
     manifest_version: faker.helpers.arrayElement([2, 3]),
     name: faker.string.alphanumeric(),
     version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
-  }),
-);
+  }));
 
 export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   const array: T[] = [];

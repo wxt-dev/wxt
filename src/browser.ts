@@ -1,18 +1,21 @@
 /**
  * @module wxt/browser
  */
-import originalBrowser, { Browser, Runtime, I18n } from 'webextension-polyfill';
+import originalBrowser from 'webextension-polyfill';
+import * as WebextensionPolyfill from 'webextension-polyfill';
 
-export interface AugmentedBrowser extends Browser {
+export { WebextensionPolyfill };
+
+export interface AugmentedBrowser extends WebextensionPolyfill.Browser {
   runtime: WxtRuntime;
   i18n: WxtI18n;
 }
 
-export interface WxtRuntime extends Runtime.Static {
+export interface WxtRuntime extends WebextensionPolyfill.Runtime.Static {
   // Overriden per-project
 }
 
-export interface WxtI18n extends I18n.Static {
+export interface WxtI18n extends WebextensionPolyfill.I18n.Static {
   // Overriden per-project
 }
 

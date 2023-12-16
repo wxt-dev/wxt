@@ -1,7 +1,7 @@
 import definition from 'virtual:user-background';
 import { setupWebSocket } from '../client/utils/setup-web-socket';
 import { logger } from '../client/utils/logger';
-import browser from 'webextension-polyfill';
+import { browser } from '~/browser';
 import { keepServiceWorkerAlive } from '../client/utils/keep-service-worker-alive';
 import { reloadContentScript } from '../client/utils/reload-content-scripts';
 

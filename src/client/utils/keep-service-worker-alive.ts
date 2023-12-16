@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import { browser } from '~/browser';
 
 /**
  * https://developer.chrome.com/blog/longer-esw-lifetimes/
