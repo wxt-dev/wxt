@@ -4,7 +4,7 @@
 import originalBrowser from 'webextension-polyfill';
 import * as WebextensionPolyfill from 'webextension-polyfill';
 
-export { WebextensionPolyfill };
+export type { WebextensionPolyfill };
 
 export interface AugmentedBrowser extends WebextensionPolyfill.Browser {
   runtime: WxtRuntime;

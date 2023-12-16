@@ -12,10 +12,10 @@ export function getUnimportOptions(
     imports: [
       { name: 'defineConfig', from: 'wxt' },
       { name: 'fakeBrowser', from: 'wxt/testing' },
-      { name: 'browser', from: 'wxt/browser' },
     ],
     presets: [
       { package: 'wxt/client' },
+      { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
     ],
