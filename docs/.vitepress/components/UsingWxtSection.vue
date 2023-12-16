@@ -11,7 +11,7 @@ const chromeExtensionIds = [
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
   'elfaihghhjjoknimpccccmkioofjjfkf', // StayFree - Website Blocker & Web Analytics
   'okifoaikfmpfcamplcfjkpdnhfodpkil', // Doozy: Ai Made Easy
-  'lknmjhcajhfbbglglccadlfdjbaiifig' // tl;dv - Record, Transcribe & ChatGPT for Google Meet
+  'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
