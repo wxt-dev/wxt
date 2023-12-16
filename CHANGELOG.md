@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.12.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.0...v0.12.1)
+
+### 🩹 Fixes
+
+- Upgrade `@webext-core/match-patterns` to `1.0.3` ([#289](https://github.com/wxt-dev/wxt/pull/289))
+- Fix `package.json` lint errors ([#290](https://github.com/wxt-dev/wxt/pull/290))
+
+### 🏡 Chore
+
+- Upgrade templates to `wxt@^0.12.0` ([#285](https://github.com/wxt-dev/wxt/pull/285))
+
 ## v0.12.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.2...v0.12.0)
