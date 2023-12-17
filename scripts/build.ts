@@ -21,7 +21,6 @@ const preset: tsup.Options = {
   silent: true,
   sourcemap: false,
   external: [
-    'vite',
     'virtual:user-unlisted-script',
     'virtual:user-content-script-isolated-world',
     'virtual:user-content-script-main-world',

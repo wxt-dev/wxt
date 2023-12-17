@@ -1,9 +1,9 @@
 import definition from 'virtual:user-background';
-import { setupWebSocket } from '../client/utils/setup-web-socket';
-import { logger } from '../client/utils/logger';
+import { setupWebSocket } from '~/client/utils/setup-web-socket';
+import { logger } from '~/client/utils/logger';
 import { browser } from '~/browser';
-import { keepServiceWorkerAlive } from '../client/utils/keep-service-worker-alive';
-import { reloadContentScript } from '../client/utils/reload-content-scripts';
+import { keepServiceWorkerAlive } from '~/client/utils/keep-service-worker-alive';
+import { reloadContentScript } from '~/client/utils/reload-content-scripts';
 
 if (__COMMAND__ === 'serve') {
   try {

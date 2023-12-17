@@ -1,5 +1,4 @@
 import messages from 'public/_locales/en/messages.json';
-import {} from 'wxt/browser';
 
 export default defineBackground(() => {
   console.log(browser.runtime.id);
