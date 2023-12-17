@@ -17,6 +17,8 @@ describe('Auto Imports', () => {
           export {}
           declare global {
             const ContentScriptContext: typeof import('wxt/client')['ContentScriptContext']
+            const InvalidMatchPattern: typeof import('wxt/sandbox')['InvalidMatchPattern']
+            const MatchPattern: typeof import('wxt/sandbox')['MatchPattern']
             const browser: typeof import('wxt/browser')['browser']
             const builtinDrivers: typeof import('wxt/storage')['builtinDrivers']
             const createContentScriptIframe: typeof import('wxt/client')['createContentScriptIframe']
