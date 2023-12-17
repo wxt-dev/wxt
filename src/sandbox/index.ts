@@ -6,4 +6,4 @@
 export * from './define-unlisted-script';
 export * from './define-background';
 export * from './define-content-script';
-export * from './match-patterns';
+export * from '@webext-core/match-patterns';
