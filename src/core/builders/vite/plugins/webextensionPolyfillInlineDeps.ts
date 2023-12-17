@@ -9,7 +9,7 @@ export function webextensionPolyfillInlineDeps(): vite.PluginOption {
   return {
     name: 'wxt:testing-inline-deps',
     config() {
-      const wxtModules = ['wxt/browser', 'wxt/client'];
+      const wxtModules = ['wxt/browser'];
       return {
         test: {
           server: {
