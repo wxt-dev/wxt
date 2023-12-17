@@ -22,10 +22,7 @@ export async function rebuild(
     steps: [],
     publicAssets: [],
   },
-): Promise<{
-  output: BuildOutput;
-  manifest: Manifest.WebExtensionManifest;
-}> {
+): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
   const { default: ora } = await import('ora');
   const spinner = ora(`Preparing...`).start();
 
