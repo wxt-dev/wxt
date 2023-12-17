@@ -21,6 +21,7 @@ export const browser: AugmentedBrowser = originalBrowser;
 // re-export all the types from webextension-polyfill
 // Because webextension-polyfill uses a weird namespace with "import export", there isn't a good way
 // to get these types without re-listing them.
+/** @ignore */
 export type {
   ActivityLog,
   Alarms,
