@@ -1,6 +1,6 @@
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { browser } from '~/browser';
-import { logger } from '~/client/utils/logger';
+import { logger } from '~/sandbox/utils/logger';
 import { ContentScriptContext } from './content-script-context';
 import {
   ContentScriptAnchoredOptions,

@@ -1,4 +1,4 @@
-import { logger } from './logger';
+import { logger } from '../../sandbox/utils/logger';
 
 interface WebSocketMessage {
   type: string;

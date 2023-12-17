@@ -1,6 +1,6 @@
-import { browser, Manifest } from '~/browser';
-import { logger } from './logger';
-import { MatchPattern } from '~/sandbox';
+import { browser, Manifest } from 'wxt/browser';
+import { logger } from '../../sandbox/utils/logger';
+import { MatchPattern } from 'wxt/sandbox';
 
 export function reloadContentScript(contentScript: Manifest.ContentScript) {
   const manifest = browser.runtime.getManifest();

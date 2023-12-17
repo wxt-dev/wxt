@@ -1,4 +1,4 @@
-import { browser } from '~/browser';
+import { browser } from 'wxt/browser';
 
 /**
  * https://developer.chrome.com/blog/longer-esw-lifetimes/

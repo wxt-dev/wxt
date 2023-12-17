@@ -1,5 +1,5 @@
 import definition from 'virtual:user-content-script-main-world';
-import { logger } from '~/client/utils/logger';
+import { logger } from '../sandbox/utils/logger';
 
 (async () => {
   try {

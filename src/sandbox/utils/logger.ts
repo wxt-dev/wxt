@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 function print(method: (...args: any[]) => void, ...args: any[]) {
   if (import.meta.env.MODE === 'production') return;
 

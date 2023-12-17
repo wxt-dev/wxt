@@ -1,6 +1,6 @@
 import definition from 'virtual:user-content-script-isolated-world';
-import { logger } from '~/client/utils/logger';
-import { ContentScriptContext } from '~/client/content-scripts/content-script-context';
+import { logger } from '../sandbox/utils/logger';
+import { ContentScriptContext } from 'wxt/client';
 
 (async () => {
   try {
