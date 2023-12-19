@@ -2,11 +2,11 @@ import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
 import { MatchPattern } from 'wxt/sandbox';
 
-type ContentScript = {
+interface ContentScript {
   matches: string[];
   js?: string[];
   css?: string[];
-};
+}
 
 export function reloadContentScript(contentScript: ContentScript) {
   const manifest = browser.runtime.getManifest();
