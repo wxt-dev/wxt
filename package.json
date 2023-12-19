@@ -88,7 +88,7 @@
     "lint:package": "publint",
     "compile": "run-s -c compile:*",
     "compile:wxt": "tsc --noEmit",
-    "compile:virtual": "tsc --noEmit",
+    "compile:virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "prepare": "simple-git-hooks",

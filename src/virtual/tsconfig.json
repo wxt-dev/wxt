@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vite/client", "../types/globals.d.ts"],
-    "paths": {
-      "wxt/*": ["../*"]
-    }
-  }
+    "types": ["vite/client", "../types/globals.d.ts"]
+  },
+  "include": ["./*"]
 }
