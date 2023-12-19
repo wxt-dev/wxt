@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.1...v0.12.2)
+
+### 🚀 Enhancements
+
+- Support PNPM without hoisting dependencies ([#291](https://github.com/wxt-dev/wxt/pull/291))
+
 ## v0.12.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.0...v0.12.1)
