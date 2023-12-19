@@ -1,4 +1,4 @@
-import type { Manifest } from 'webextension-polyfill';
+import type { Manifest } from '~/browser';
 import { ContentScriptEntrypoint, InternalConfig } from '~/types';
 import { resolvePerBrowserOption } from './entrypoints';
 

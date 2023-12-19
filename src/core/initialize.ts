@@ -150,14 +150,6 @@ async function cloneProject({
         consola.warn('Failed to move _gitignore to .gitignore:', err),
       );
 
-    // 3. Add .npmrc for pnpm
-    if (packageManager === 'pnpm') {
-      await fs.writeFile(
-        path.join(directory, '.npmrc'),
-        'shamefully-hoist=true\n',
-      );
-    }
-
     spinner.succeed();
   } catch (err) {
     spinner.fail();

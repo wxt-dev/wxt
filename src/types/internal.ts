@@ -11,7 +11,7 @@ import {
 } from './external';
 import { UnimportOptions } from 'unimport';
 import { ResolvedConfig } from 'c12';
-import type { Manifest } from 'webextension-polyfill';
+import type { Manifest } from '~/browser';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 
 export interface InternalConfig {

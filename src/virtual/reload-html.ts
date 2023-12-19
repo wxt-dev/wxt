@@ -1,7 +1,5 @@
-/// <reference types="vite/client" />
-
-import { logger } from '~/client/utils/logger';
-import { setupWebSocket } from '~/client/utils/setup-web-socket';
+import { logger } from '../sandbox/utils/logger';
+import { setupWebSocket } from './utils/setup-web-socket';
 
 if (__COMMAND__ === 'serve') {
   try {

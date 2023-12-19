@@ -1,4 +1,4 @@
-import type { Manifest } from 'webextension-polyfill';
+import type { Manifest } from '~/browser';
 import { BuildOutput, EntrypointGroup, InternalConfig } from '~/types';
 import { findEntrypoints } from './find-entrypoints';
 import { generateTypesDir } from './generate-wxt-dir';

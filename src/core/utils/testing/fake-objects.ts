@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import type { Manifest } from 'webextension-polyfill';
+import type { Manifest } from '~/browser';
 import {
   FsCache,
   InternalConfig,

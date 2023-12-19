@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from 'webextension-polyfill';
+import type { Manifest, Scripting } from '~/browser';
 import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';

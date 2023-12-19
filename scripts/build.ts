@@ -16,18 +16,17 @@ const startTime = Date.now();
 const outDir = 'dist';
 await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
-const preset: tsup.Options = {
+const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
   external: [
-    'vite',
     'virtual:user-unlisted-script',
     'virtual:user-content-script-isolated-world',
     'virtual:user-content-script-main-world',
     'virtual:user-background',
   ],
-};
+} satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
   let completed = 0;
@@ -89,6 +88,7 @@ const config: tsup.Options[] = [
     format: ['esm'],
     splitting: false,
     dts: false,
+    external: [...preset.external, 'wxt'],
   },
   // CJS-only
   {

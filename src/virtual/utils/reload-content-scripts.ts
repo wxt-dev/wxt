@@ -1,8 +1,14 @@
-import browser, { Manifest } from 'webextension-polyfill';
-import { logger } from './logger';
-import { MatchPattern } from '@webext-core/match-patterns';
+import { browser } from 'wxt/browser';
+import { logger } from '../../sandbox/utils/logger';
+import { MatchPattern } from 'wxt/sandbox';
 
-export function reloadContentScript(contentScript: Manifest.ContentScript) {
+interface ContentScript {
+  matches: string[];
+  js?: string[];
+  css?: string[];
+}
+
+export function reloadContentScript(contentScript: ContentScript) {
   const manifest = browser.runtime.getManifest();
   if (manifest.manifest_version == 2) {
     void reloadContentScriptMv2(contentScript);
@@ -11,9 +17,7 @@ export function reloadContentScript(contentScript: Manifest.ContentScript) {
   }
 }
 
-export async function reloadContentScriptMv3(
-  contentScript: Manifest.ContentScript,
-) {
+export async function reloadContentScriptMv3(contentScript: ContentScript) {
   const id = `wxt:${contentScript.js![0]}`;
   logger.log('Reloading content script:', contentScript);
   const registered = await browser.scripting.getRegisteredContentScripts();
@@ -41,8 +45,6 @@ export async function reloadContentScriptMv3(
   await Promise.all(matchingTabs.map((tab) => browser.tabs.reload(tab.id)));
 }
 
-export async function reloadContentScriptMv2(
-  contentScript: Manifest.ContentScript,
-) {
+export async function reloadContentScriptMv2(contentScript: ContentScript) {
   throw Error('TODO: reloadContentScriptMv2');
 }

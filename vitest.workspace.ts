@@ -20,6 +20,7 @@ const resolve = {
   alias: {
     '~': path.resolve('src'),
     'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
+    'wxt/testing': path.resolve('src/testing'),
   },
 };
 

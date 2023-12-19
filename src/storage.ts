@@ -8,7 +8,7 @@ import {
   defineDriver,
   Storage,
 } from 'unstorage';
-import browser, { Storage as BrowserStorage } from 'webextension-polyfill';
+import { browser, Storage as BrowserStorage } from '~/browser';
 
 export interface WebExtensionDriverOptions {
   storageArea: 'sync' | 'local' | 'managed' | 'session';
