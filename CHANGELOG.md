@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.3...v0.12.4)
+
+### 🩹 Fixes
+
+- Disable Vite CJS warnings ([#296](https://github.com/wxt-dev/wxt/pull/296))
+
 ## v0.12.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.2...v0.12.3)
