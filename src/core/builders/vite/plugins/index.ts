@@ -9,7 +9,6 @@ export * from './noopBackground';
 export * from './cssEntrypoints';
 export * from './bundleAnalysis';
 export * from './globals';
-export * from './webextensionPolyfillAlias';
-export * from './webextensionPolyfillInlineDeps';
+export * from './webextensionPolyfillMock';
 export * from './excludeBrowserPolyfill';
 export * from './entrypointGroupGlobals';

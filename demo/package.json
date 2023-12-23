@@ -19,13 +19,11 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vitest": "^0.34.6",
-    "webextension-polyfill": "^0.10.0"
+    "vitest": "^1.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
-    "@types/webextension-polyfill": "^0.10.5",
     "sass": "^1.69.5",
     "wxt": "workspace:*"
   }
