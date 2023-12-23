@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.2...v0.12.3)
+
+### 🩹 Fixes
+
+- Correctly mock `webextension-polyfill` for Vitest ([#294](https://github.com/wxt-dev/wxt/pull/294))
+
 ## v0.12.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.1...v0.12.2)
