@@ -5,6 +5,9 @@ import consola, { LogLevels } from 'consola';
 import { printHeader } from '~/core/utils/log';
 import { formatDuration } from '~/core/utils/time';
 
+// TODO: Remove. See https://github.com/wxt-dev/wxt/issues/277
+process.env.VITE_CJS_IGNORE_WARNING = 'true';
+
 const cli = cac('wxt');
 cli.help();
 cli.version(version);
