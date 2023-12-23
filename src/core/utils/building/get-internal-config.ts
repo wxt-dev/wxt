@@ -33,10 +33,6 @@ export async function getInternalConfig(
   let userConfig: UserConfig = {};
   let userConfigMetadata: InternalConfig['userConfigMetadata'] | undefined;
   if (inlineConfig.configFile !== false) {
-    console.log(
-      'VITE_CJS_IGNORE_WARNING',
-      process.env.VITE_CJS_IGNORE_WARNING ?? 'undefined',
-    );
     const { config: loadedConfig, ...metadata } = await loadConfig<UserConfig>({
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
