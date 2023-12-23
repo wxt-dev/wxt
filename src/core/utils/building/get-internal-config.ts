@@ -33,6 +33,9 @@ export async function getInternalConfig(
   let userConfig: UserConfig = {};
   let userConfigMetadata: InternalConfig['userConfigMetadata'] | undefined;
   if (inlineConfig.configFile !== false) {
+    // TODO: Remove. See https://github.com/wxt-dev/wxt/issues/277
+    process.env.VITE_CJS_IGNORE_WARNING = 'true';
+
     const { config: loadedConfig, ...metadata } = await loadConfig<UserConfig>({
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),

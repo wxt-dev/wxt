@@ -17,8 +17,6 @@ export async function craeteViteBuilder(
   userConfig: UserConfig,
   wxtConfig: Omit<InternalConfig, 'builder'>,
 ): Promise<WxtBuilder> {
-  // See https://github.com/wxt-dev/wxt/issues/277
-  process.env.VITE_CJS_IGNORE_WARNING = 'true';
   const vite = await import('vite');
 
   /**
