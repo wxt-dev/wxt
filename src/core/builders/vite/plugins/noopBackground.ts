@@ -2,7 +2,8 @@ import { Plugin } from 'vite';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 
 /**
- * In dev mode, if there's not a background script listed, we need to add one.
+ * In dev mode, if there's not a background script listed, we need to add one so that the web socket
+ * connection is setup and the extension reloads HTML pages and content scripts correctly.
  *
  * This define's a virtual module that is basically just a noop.
  */
