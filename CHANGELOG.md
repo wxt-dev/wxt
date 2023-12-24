@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.4...v0.12.5)
+
+### 🩹 Fixes
+
+- Correct import in dev-only, noop background ([#298](https://github.com/wxt-dev/wxt/pull/298))
+
 ## v0.12.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.3...v0.12.4)
