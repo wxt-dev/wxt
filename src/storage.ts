@@ -1,118 +1,554 @@
-/**
- * @module wxt/storage
- */
-import {
-  Driver,
-  WatchCallback,
-  createStorage,
-  defineDriver,
-  Storage,
-} from 'unstorage';
-import { browser, Storage as BrowserStorage } from '~/browser';
+import { Storage, browser } from '~/browser';
+import { dequal } from 'dequal/lite';
 
-export interface WebExtensionDriverOptions {
-  storageArea: 'sync' | 'local' | 'managed' | 'session';
-}
+export const storage = createStorage();
 
-export const webExtensionDriver: (opts: WebExtensionDriverOptions) => Driver =
-  defineDriver((opts) => {
-    const checkPermission = () => {
-      if (browser.storage == null)
-        throw Error(
-          "You must request the 'storage' permission to use webExtensionDriver",
-        );
-    };
-
-    const _storageListener: (
-      changes: BrowserStorage.StorageAreaSyncOnChangedChangesType,
-    ) => void = (changes) => {
-      Object.entries(changes).forEach(([key, { newValue }]) => {
-        _listeners.forEach((callback) => {
-          callback(newValue ? 'update' : 'remove', key);
-        });
-      });
-    };
-    const _listeners = new Set<WatchCallback>();
+function createStorage(): WxtStorage {
+  const drivers: Record<string, WxtStorageDriver> = {
+    local: createDriver(browser.storage.local),
+    session: createDriver(browser.storage.session),
+    sync: createDriver(browser.storage.sync),
+    managed: createDriver(browser.storage.managed),
+  };
+  const getDriver = (area: string) => {
+    const driver = drivers[area];
+    if (driver == null) {
+      const areaNames = Object.keys(drivers).join(', ');
+      throw Error(`Invalid area "${area}". Options: ${areaNames}`);
+    }
+    return driver;
+  };
+  const resolveKey = (key: string) => {
+    const [driverArea, driverKey] = key.split(':', 2);
+    if (driverKey == null)
+      throw Error(
+        `Storage key should be in the form of "area:key", but recieved "${key}"`,
+      );
 
     return {
-      name: 'web-extension:' + opts.storageArea,
-      async hasItem(key) {
-        checkPermission();
-        const res = await browser.storage[opts.storageArea].get(key);
-        return res[key] != null;
-      },
-      async getItem(key) {
-        checkPermission();
-        const res = await browser.storage[opts.storageArea].get(key);
-        return res[key] ?? null;
-      },
-      async getItems(items) {
-        checkPermission();
-        const res = await browser.storage[opts.storageArea].get(
-          items.map((item) => item.key),
+      driverArea,
+      driverKey,
+      driver: getDriver(driverArea),
+    };
+  };
+  const getMetaKey = (key: string) => key + '$';
+  const getValueOrDefault = (value: any, defaultValue: any) =>
+    value ?? defaultValue ?? null;
+  const getMetaValue = (fields: any) =>
+    typeof fields === 'object' && !Array.isArray(fields) ? fields : {};
+
+  const getItem = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    opts: GetItemOptions<any> | undefined,
+  ) => {
+    const res = await driver.getItem<any>(driverKey);
+    return getValueOrDefault(res, opts?.defaultValue);
+  };
+  const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
+    const metaKey = getMetaKey(driverKey);
+    const res = await driver.getItem<any>(metaKey);
+    return getMetaValue(res);
+  };
+  const setItem = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    value: any,
+  ) => {
+    await driver.setItem(driverKey, value ?? null);
+  };
+  const setMeta = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    fields: any | undefined,
+  ) => {
+    const metaKey = getMetaKey(driverKey);
+    const existingFields = getMetaValue(await driver.getItem(metaKey));
+    const newFields = { ...existingFields };
+    Object.entries(fields).forEach(([key, value]) => {
+      if (value == null) {
+        delete newFields[key];
+      } else {
+        newFields[key] = value;
+      }
+    });
+    await driver.setItem(metaKey, newFields);
+  };
+  const removeItem = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    opts: RemoveItemOptions | undefined,
+  ) => {
+    await driver.removeItem(driverKey);
+    if (opts?.removeMeta) {
+      const metaKey = getMetaKey(driverKey);
+      await driver.removeItem(metaKey);
+    }
+  };
+  const removeMeta = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    fields: string | string[] | undefined,
+  ) => {
+    const metaKey = getMetaKey(driverKey);
+    if (fields == null) {
+      await driver.removeItem(metaKey);
+    } else {
+      const newFields = getMetaValue(await driver.getItem(metaKey));
+      [fields].flat().forEach((field) => delete newFields[field]);
+      await driver.setItem(metaKey, newFields);
+    }
+  };
+  const watch = (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    cb: WatchCallback<any>,
+  ) => {
+    return driver.watch(driverKey, cb);
+  };
+
+  const storage: WxtStorage = {
+    getItem: async (key, opts) => {
+      const { driver, driverKey } = resolveKey(key);
+      return await getItem(driver, driverKey, opts);
+    },
+    getItems: async (keys) => {
+      const areaToKeyMap = new Map<string, string[]>();
+      const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
+      keys.forEach((key) => {
+        let keyStr: string;
+        let opts: GetItemOptions<any> | undefined;
+        if (typeof key === 'string') {
+          keyStr = key;
+        } else {
+          keyStr = key.key;
+          opts = key.options;
+        }
+        const { driverArea, driverKey } = resolveKey(keyStr);
+        const keys = areaToKeyMap.get(driverArea) ?? [];
+        areaToKeyMap.set(driverArea, keys.concat(driverKey));
+        keyToOptsMap.set(keyStr, opts);
+      });
+
+      const results = await Promise.all(
+        Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
+          const driverResults = await drivers[driverArea].getItems(keys);
+          return driverResults.map((driverResult) => {
+            const key = `${driverArea}:${driverResult.key}`;
+            const value = getValueOrDefault(
+              driverResult.value,
+              keyToOptsMap.get(key)?.defaultValue,
+            );
+            return { key, value };
+          });
+        }),
+      );
+      return results.flat();
+    },
+    getMeta: async (key) => {
+      const { driver, driverKey } = resolveKey(key);
+      return await getMeta(driver, driverKey);
+    },
+    setItem: async (key, value) => {
+      const { driver, driverKey } = resolveKey(key);
+      await setItem(driver, driverKey, value);
+    },
+    setItems: async (values) => {
+      const areaToKeyValueMap = new Map<
+        string,
+        Array<{ key: string; value: any }>
+      >();
+      values.forEach(({ key, value }) => {
+        const { driverArea, driverKey } = resolveKey(key);
+        const values = areaToKeyValueMap.get(driverArea) ?? [];
+        areaToKeyValueMap.set(
+          driverArea,
+          values.concat({ key: driverKey, value }),
         );
-        return items.map((item) => ({
-          key: item.key,
-          value: res[item.key] ?? null,
-        }));
-      },
-      async setItem(key, value) {
-        checkPermission();
-        await browser.storage[opts.storageArea].set({ [key]: value ?? null });
-      },
-      async setItems(items) {
-        checkPermission();
-        const map = items.reduce<Record<string, any>>((map, item) => {
-          map[item.key] = item.value ?? null;
-          return map;
-        }, {});
-        await browser.storage[opts.storageArea].set(map);
-      },
-      async removeItem(key) {
-        checkPermission();
-        await browser.storage[opts.storageArea].remove(key);
-      },
-      async getKeys() {
-        checkPermission();
-        const all = await browser.storage[opts.storageArea].get();
-        return Object.keys(all);
-      },
-      async clear() {
-        checkPermission();
-        await browser.storage[opts.storageArea].clear();
-      },
-      watch(callback) {
-        checkPermission();
-        _listeners.add(callback);
-        if (_listeners.size === 1) {
-          browser.storage[opts.storageArea].onChanged.addListener(
-            _storageListener,
-          );
+      });
+      await Promise.all(
+        Array.from(areaToKeyValueMap.entries()).map(
+          async ([driverArea, values]) => {
+            const driver = getDriver(driverArea);
+            await driver.setItems(values);
+          },
+        ),
+      );
+    },
+    setMeta: async (key, fields) => {
+      const { driver, driverKey } = resolveKey(key);
+      await setMeta(driver, driverKey, fields);
+    },
+    removeItem: async (key, opts) => {
+      const { driver, driverKey } = resolveKey(key);
+      await removeItem(driver, driverKey, opts);
+    },
+    removeItems: async (keys) => {
+      const areaToKeysMap = new Map<string, string[]>();
+      keys.forEach((key) => {
+        let keyStr: string;
+        let opts: RemoveItemOptions | undefined;
+        if (typeof key === 'string') {
+          keyStr = key;
+        } else {
+          keyStr = key.key;
+          opts = key.options;
+        }
+        const { driverArea, driverKey } = resolveKey(keyStr);
+        const areaKeys = areaToKeysMap.get(driverArea) ?? [];
+        areaKeys.push(driverKey);
+        if (opts?.removeMeta) {
+          areaKeys.push(getMetaKey(driverKey));
+        }
+        areaToKeysMap.set(driverArea, areaKeys);
+      });
+
+      await Promise.all(
+        Array.from(areaToKeysMap.entries()).map(async ([driverArea, keys]) => {
+          const driver = getDriver(driverArea);
+          await driver.removeItems(keys);
+        }),
+      );
+    },
+    removeMeta: async (key, fields) => {
+      const { driver, driverKey } = resolveKey(key);
+      await removeMeta(driver, driverKey, fields);
+    },
+    snapshot: async (base, opts) => {
+      const driver = getDriver(base);
+      const data = await driver.snapshot();
+      opts?.excludeKeys?.forEach((key) => {
+        delete data[key];
+        delete data[getMetaKey(key)];
+      });
+      return data;
+    },
+    restoreSnapshot: async (base, data) => {
+      const driver = getDriver(base);
+      await driver.restoreSnapshot(data);
+    },
+    watch: (key, cb) => {
+      const { driver, driverKey } = resolveKey(key);
+      return watch(driver, driverKey, cb);
+    },
+    unwatch() {
+      Object.values(drivers).forEach((driver) => {
+        driver.unwatch();
+      });
+    },
+    defineItem: (key, opts) => {
+      const { driver, driverKey } = resolveKey(key);
+
+      const { version, migrations } = opts ?? {};
+      const runMigrations = async (version: number) => {
+        const [value, meta] = await Promise.all([
+          // TODO: Optimize with getItems
+          getItem(driver, driverKey, undefined),
+          getMeta(driver, driverKey),
+        ]);
+        if (value == null || meta.v == null) {
+          await setMeta(driver, driverKey, { v: version });
+          return;
         }
 
-        return () => {
-          _listeners.delete(callback);
-          if (_listeners.size === 0) {
-            browser.storage[opts.storageArea].onChanged.removeListener(
-              _storageListener,
-            );
-          }
-        };
-      },
-    };
-  });
+        if (meta.v > version)
+          throw Error(
+            `[wxt/storage] Migration ignored for "${key}", version downgrade detected (${meta.v} -> ${version})`,
+          );
 
-function createWebExtensionStorage() {
-  const storage = createStorage();
-  storage.mount('local', webExtensionDriver({ storageArea: 'local' }));
-  storage.mount('session', webExtensionDriver({ storageArea: 'session' }));
-  storage.mount('sync', webExtensionDriver({ storageArea: 'sync' }));
-  storage.mount('managed', webExtensionDriver({ storageArea: 'managed' }));
+        const migrationsToRun = Array.from(
+          { length: version - meta.v },
+          (_, i) => meta.v + i + 1,
+        );
+        let migratedValue = value;
+        for (const migrateToVersion of migrationsToRun) {
+          migratedValue =
+            (await migrations?.[migrateToVersion]?.(migratedValue)) ??
+            migratedValue;
+        }
+        await Promise.all([
+          // TODO: Optimize with `setItem`
+          setItem(driver, driverKey, migratedValue),
+          setMeta(driver, driverKey, { v: version }),
+        ]);
+      };
+      let _migrationsCompleted =
+        version == null ? Promise.resolve() : runMigrations(version);
+
+      return {
+        getValue: () => getItem(driver, driverKey, opts),
+        getMeta: () => getMeta(driver, driverKey),
+        setValue: (value) => setItem(driver, driverKey, value),
+        setMeta: (fields) => setMeta(driver, driverKey, fields),
+        removeValue: (opts) => removeItem(driver, driverKey, opts),
+        removeMeta: (fields) => removeMeta(driver, driverKey, fields),
+        watch: (cb) => watch(driver, driverKey, cb),
+      };
+    },
+  };
   return storage;
 }
 
-export type StorageValue = null | string | number | boolean | object;
+function createDriver(storageArea: Storage.StorageArea): WxtStorageDriver {
+  const watchListeners = new Set<
+    (changes: Storage.StorageAreaOnChangedChangesType) => void
+  >();
+  return {
+    getItem: async (key) => {
+      const res = await storageArea.get(key);
+      return res[key];
+    },
+    getItems: async (keys) => {
+      const result = await storageArea.get(keys);
+      return keys.map((key) => ({ key, value: result[key] ?? null }));
+    },
+    setItem: async (key, value) => {
+      if (value == null) {
+        await storageArea.remove(key);
+      } else {
+        await storageArea.set({ [key]: value });
+      }
+    },
+    setItems: async (values) => {
+      const map = values.reduce<Record<string, unknown>>(
+        (map, { key, value }) => {
+          map[key] = value;
+          return map;
+        },
+        {},
+      );
+      await storageArea.set(map);
+    },
+    removeItem: async (key) => {
+      await storageArea.remove(key);
+    },
+    removeItems: async (keys) => {
+      await storageArea.remove(keys);
+    },
+    snapshot: async () => {
+      return await storageArea.get();
+    },
+    restoreSnapshot: async (data) => {
+      await storageArea.set(data);
+    },
+    watch(key, cb) {
+      const listener = (changes: Storage.StorageAreaOnChangedChangesType) => {
+        const change = changes[key];
+        if (change == null) return;
+        if (dequal(change.newValue, change.oldValue)) return;
+        cb(change.newValue ?? null, change.oldValue ?? null);
+      };
+      storageArea.onChanged.addListener(listener);
+      watchListeners.add(listener);
+      return () => {
+        storageArea.onChanged.removeListener(listener);
+        watchListeners.delete(listener);
+      };
+    },
+    unwatch() {
+      watchListeners.forEach((listener) => {
+        storageArea.onChanged.removeListener(listener);
+      });
+      watchListeners.clear();
+    },
+  };
+}
 
-export const storage: Storage<StorageValue> = createWebExtensionStorage();
+export interface WxtStorage {
+  /**
+   * Get an item from storage, or return `null` if it doesn't exist.
+   *
+   * @example
+   * await storage.getItem<number>("local:installDate");
+   */
+  getItem<T>(key: string, opts?: GetItemOptions<T>): Promise<T | null>;
+  /**
+   * Get multiple items from storage. There is no guarentee of order in the returned array.
+   *
+   * @example
+   * await storage.getItems(["local:installDate", "session:someCounter"]);
+   */
+  getItems(
+    keys: Array<string | { key: string; options?: GetItemOptions<any> }>,
+  ): Promise<Array<{ key: string; value: any }>>;
+  /**
+   * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
+   * is not an object, it returns an empty object.
+   *
+   * @example
+   * await storage.getMeta("local:installDate");
+   */
+  getMeta<T extends Record<string, unknown>>(key: string): Promise<T>;
+  /**
+   * Set a value in storage. Setting a value to `null` or `undefined` is equivalent to calling
+   * `removeItem`.
+   *
+   * @example
+   * await storage.setItem<number>("local:installDate", Date.now());
+   */
+  setItem<T>(key: string, value: T | null): Promise<void>;
+  /**
+   * Set multiple values in storage. If a value is set to `null` or `undefined`, the key is removed.
+   *
+   * @example
+   * await storage.setItem([
+   *   { key: "local:installDate", value: Date.now() },
+   *   { key: "session:someCounter, value: 5 },
+   * ]);
+   */
+  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
+  /**
+   * Sets metadata fields. If some fields are already set, but are not included in the `fields`
+   * parameter, they will not be removed.
+   *
+   * @example
+   * await storage.setMeta("local:installDate", { appVersion });
+   */
+  setMeta<T extends Record<string, unknown>>(
+    key: string,
+    fields: T | null,
+  ): Promise<void>;
+  /**
+   * Removes an item from storage.
+   *
+   * @example
+   * await storage.removeItem("local:installDate");
+   */
+  removeItem(key: string, opts?: RemoveItemOptions): Promise<void>;
+  /**
+   * Remove a list of keys from storage.
+   */
+  removeItems(
+    keys: Array<string | { key: string; options?: RemoveItemOptions }>,
+  ): Promise<void>;
+  /**
+   * Remove the entire metadata for a key, or specific fields by name.
+   *
+   * @example
+   * // Remove all metadata fields from the item
+   * await storage.removeMeta("local:installDate");
+   *
+   * // Remove only specific the "v" field
+   * await storage.removeMeta("local:installDate", "v")
+   */
+  removeMeta(key: string, fields?: string | string[]): Promise<void>;
+  /**
+   * Return all the items in storage.
+   */
+  snapshot(
+    base: string,
+    opts?: SnapshotOptions,
+  ): Promise<Record<string, unknown>>;
+  /**
+   * Restores the results of `snapshot`. If new fields have been saved since the snapshot, they are
+   * not overridden. Only values existing in the snapshot are overritten.
+   */
+  restoreSnapshot(base: string, data: any): Promise<void>;
+  /**
+   * Watch for changes to a specific key in storage.
+   */
+  watch<T>(key: string, cb: WatchCallback<T>): Unwatch;
+  /**
+   * Remove all watch listeners.
+   */
+  unwatch(): void;
+  /**
+   * Define a constant with utilities for reading/writing to a single value in storage.
+   *
+   * @example
+   * export const installDate = storage.defineItem<number>("local:installDate");
+   */
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: string,
+    options?: WxtStorageItemOptions<TValue>,
+  ): WxtStorageItem<TValue, TMetadata>;
+}
 
-export * from 'unstorage';
+interface WxtStorageDriver {
+  getItem<T>(key: string): Promise<T | null>;
+  getItems(keys: string[]): Promise<{ key: string; value: any }[]>;
+  setItem<T>(key: string, value: T | null): Promise<void>;
+  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
+  removeItem(key: string): Promise<void>;
+  removeItems(keys: string[]): Promise<void>;
+  snapshot(): Promise<Record<string, unknown>>;
+  restoreSnapshot(data: Record<string, unknown>): Promise<void>;
+  watch<T>(key: string, cb: WatchCallback<T>): Unwatch;
+  unwatch(): void;
+}
+
+export interface WxtStorageItem<
+  TValue,
+  TMetadata extends Record<string, unknown>,
+> {
+  /**
+   * Get the latest value from storage.
+   */
+  getValue(): Promise<TValue>;
+  /**
+   * Get metadata.
+   */
+  getMeta(): Promise<NullablePartial<TMetadata>>;
+  /**
+   * Set the value in storage.
+   */
+  setValue(value: TValue | null): Promise<void>;
+  /**
+   * Set metadata fields.
+   */
+  setMeta(fields: NullablePartial<TMetadata>): Promise<void>;
+  /**
+   * Remove the value from storage.
+   */
+  removeValue(opts?: RemoveItemOptions): Promise<void>;
+  /**
+   * Remove all metadata or certain fields from metadata.
+   */
+  removeMeta(fields?: string[]): Promise<void>;
+  /**
+   * Listen for changes to the value in storage.
+   */
+  watch(cb: WatchCallback<TValue>): Unwatch;
+}
+
+export interface GetItemOptions<T> {
+  /**
+   * Value returned from `getValue` when it would otherwise return null.
+   */
+  defaultValue?: T;
+}
+
+export interface RemoveItemOptions {
+  /**
+   * Optionally remove metadata when deleting a key.
+   *
+   * @default false
+   */
+  removeMeta?: boolean;
+}
+
+export interface SnapshotOptions {
+  /**
+   * Exclude a list of keys. The storage area prefix should be removed since the snapshot is for a
+   * specific storage area already.
+   */
+  excludeKeys?: string[];
+}
+
+export interface WxtStorageItemOptions<T> extends GetItemOptions<T> {
+  /**
+   * Provide a version number for the storage item to enable migrations. When changing the version
+   * in the future, migration functions will be ran on application startup.
+   */
+  version?: number;
+  /**
+   * A map of version numbers to the functions used to migrate the data to that version.
+   */
+  migrations?: Record<number, (oldValue: any) => any>;
+}
+
+export type NullablePartial<T> = {
+  [key in keyof T]+?: T[key] | undefined | null;
+};
+export type WatchCallback<T> = (newValue: T | null, oldValue: T | null) => void;
+export type Unwatch = () => void;
