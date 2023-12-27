@@ -1,12 +1,13 @@
 # Manifest.json
 
-The manifest.json is generated at build-time based on files in your `entrypoints` directory and your `wxt.config.ts`.
+The manifest.json is generated at build-time based on files in the `entrypoints/` directory and `wxt.config.ts`.
 
 ## Configuration
 
 While entrypoints are generated and added to the manifest at build-time, you can customize or add to your `manifest.json` in the config file.
 
 ```ts
+// wxt.config.tsentrypoint of your extension
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -118,3 +119,8 @@ export default defineConfig({
   },
 });
 ```
+
+See the official localization examples for more details:
+
+- [I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-i18n#readme)
+- [Vue I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vue-i18n#readme)

@@ -4,7 +4,7 @@ WXT offers several utilities that simplify the publishing process.
 
 ## First Time Publishing
 
-If you're publishing an extension to a store for the first time, it's recommended that you manually navigate the process. Each store has unique steps and requirements that you need to familiarize yourself with.
+If you're publishing an extension to a store for the first time, you must manually navigate the process. Each store has unique steps and requirements that you need to familiarize yourself with.
 
 Each store requires that a ZIP file be uploaded. You can generate these using the `wxt zip` command:
 

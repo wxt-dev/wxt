@@ -51,12 +51,6 @@ export default defineConfig({
 });
 ```
 
-## Vite Config
-
-[Vite](https://vitejs.dev/) is the bundler used to build each entrypoint of your extension. Vite can be configured via the `vite` option.
-
-See [Vite's documentation](https://vitejs.dev/config/) for configuring the bundler.
-
 ## Frontend Frameworks
 
 Adding a framework like Vue, React, or Svelte is easy!
@@ -70,9 +64,9 @@ import { defineConfig } from 'wxt';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [vue()],
-  },
+  }),
 });
 ```
 
@@ -81,9 +75,9 @@ import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [react()],
-  },
+  }),
 });
 ```
 
@@ -92,10 +86,14 @@ import { defineConfig } from 'wxt';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
-  vite: {
+  vite: () => ({
     plugins: [svelte()],
-  },
+  }),
 });
 ```
 
+:::
+
+:::info
+Internally, WXT runs `vite build` multiple times during a single build. It can't share the same instance of some plugins between each build, so a function is used to return completely new instances of each plugin for each build.
 :::
