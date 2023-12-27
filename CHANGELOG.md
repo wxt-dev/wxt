@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.5...v0.13.0)
+
+### 🚀 Enhancements
+
+- ⚠️  New `wxt/storage` APIs ([#300](https://github.com/wxt-dev/wxt/pull/300))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  New `wxt/storage` APIs ([#300](https://github.com/wxt-dev/wxt/pull/300))
+
 ## v0.12.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.4...v0.12.5)
