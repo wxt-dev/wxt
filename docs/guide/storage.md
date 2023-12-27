@@ -3,28 +3,60 @@
 WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `storage` auto-import from `wxt/storage` or import it manually to get started:
 
 ```ts
-// import { storage } from 'wxt/storage';
+import { storage } from 'wxt/storage';
 ```
 
 [[toc]]
 
 ## Basic Usage
 
-All storage keys are prefixed by their storage area.
+All storage keys must be prefixed by their storage area.
 
 ```ts
 // ❌ This will throw an error
-await storage.getItem<number>('installDate');
+await storage.getItem('installDate');
 
 // ✅ This is good
-await storage.getItem<number>('local:installDate');
+await storage.getItem('local:installDate');
 ```
 
 You can use `local:`, `session:`, `sync:`, or `managed:`.
 
+If you use TypeScript, you can add a type parameter to most methods to specify the expected type of the key's value:
+
+```ts
+await storage.getItem<number>('local:installDate');
+await storage.watch<number>(
+  'local:installDate',
+  (newInstallDate, oldInstallDate) => {
+    // ...
+  },
+);
+await storage.getMeta<{ v: number }>('local:installDate');
+```
+
+## Watchers
+
+To listen for storage changes, use the `storage.watch` function. It lets you setup a listener for a single key:
+
+```ts
+const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
+  console.log('Count changed:', { newCount, oldCount });
+});
+```
+
+To remove the listener, call the returned `unwatch` function:
+
+```ts
+const unwatch = storage.watch(...);
+
+// Some time later...
+unwatch();
+```
+
 ## Metadata
 
-`wxt/storage` also supports setting metadata for keys, stored at `key + "$"`. Metadata is a collection of properties associated with the key. It might be a version number, last modified date, etc.
+`wxt/storage` also supports setting metadata for keys, stored at `key + "$"`. Metadata is a collection of properties associated with a key. It might be a version number, last modified date, etc.
 
 [Other than versioning](#versioning-and-migrations), you are responsible for managing a field's metadata:
 
@@ -35,7 +67,7 @@ await Promise.all([
 ]);
 ```
 
-When setting different properties of metadata from different locations in the code, they are combined instead of overwritten:
+When setting different properties of metadata from multiple calls, the properties are combined instead of overwritten:
 
 ```ts
 await storage.setMeta('local:preference', { lastModified: Date.now() });
@@ -56,29 +88,29 @@ await storage.removeMeta('local:preference', 'lastModified');
 
 ## Defining Storage Items
 
-Having to specify the key and type parameter for the same key over and over again can be annoying. Instead, you can use `storage.defineItem` to create a "storage item":
+Writing the key and type parameter for the same key over and over again can be annoying. As an alternative, you can use `storage.defineItem` to create a "storage item".
+
+Storage items contain the same APIs as the `storage` variable, but you can configure its type, default value, and more in a single place:
 
 ```ts
 // utils/storage.ts
-export const installDate = storage.defineItem<number>('local:installDate');
-```
-
-Now, instead of using the `storage.*` APIs, you can use the helper functions on `installDate`:
-
-```ts
-await installDate.setValue(Date.now());
-await installDate.getValue();
-```
-
-With a storage item, you can specify the type and default values in a single place, than use it thoughout your code instead:
-
-```ts
 const showChangelogOnUpdate = storage.defineItem<boolean>(
   'local:showChangelogOnUpdate',
   {
     defaultValue: true,
   },
 );
+```
+
+Now, instead of using the `storage` variable, you can use the helper functions on the storage item you created:
+
+```ts
+await showChangelogOnUpdate.getValue();
+await showChangelogOnUpdate.setValue(false);
+await showChangelogOnUpdate.removeValue();
+const unwatch = showChangelogOnUpdate.watch(() => {
+  // ...
+});
 ```
 
 ### Versioning and Migrations
