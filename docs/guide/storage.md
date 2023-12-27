@@ -82,8 +82,11 @@ You can remove all metadata associated with a key, or just specific properties:
 // Remove all properties
 await storage.removeMeta('local:preference');
 
-// Remove just the "lastModified" property
+// Remove one property
 await storage.removeMeta('local:preference', 'lastModified');
+
+// Remove multiple properties
+await storage.removeMeta('local:preference', ['lastModified', 'v']);
 ```
 
 ## Defining Storage Items
@@ -115,7 +118,7 @@ const unwatch = showChangelogOnUpdate.watch(() => {
 
 ### Versioning and Migrations
 
-You can add versioning to storage items if you expect them to grow or change over time. When definiting the first version of an item, start with version 1.
+You can add versioning to storage items if you expect them to grow or change over time. When defining the first version of an item, start with version 1.
 
 For example, consider a storage item that stores a list of websites that are ignored by an extension.
 
@@ -143,10 +146,12 @@ interface IgnoredWebsiteV2 { // [!code ++]
   website: string; // [!code ++]
 } // [!code ++]
 
+export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV1[]>( // [!code --]
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
     defaultValue: [],
+    version: 1, // [!code --]
     version: 2, // [!code ++]
     migrations: { // [!code ++]
       // Ran when migrating from v1 to v2 // [!code ++]
@@ -173,10 +178,12 @@ interface IgnoredWebsiteV3 { // [!code ++]
   enabled: boolean; // [!code ++]
 } // [!code ++]
 
+export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code --]
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code ++]
   'local:ignoredWebsites',
   {
     defaultValue: [],
+    version: 2, // [!code --]
     version: 3, // [!code ++]
     migrations: {
       // Ran when migrating from v1 to v2
@@ -228,6 +235,7 @@ interface IgnoredWebsiteV2 { // [!code ++]
   website: string; // [!code ++]
 } // [!code ++]
 
+export const ignoredWebsites = storage.defineItem<string[]>( // [!code --]
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
