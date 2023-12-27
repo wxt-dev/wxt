@@ -144,7 +144,7 @@ describe('Storage Utils', () => {
         });
 
         it.each([undefined, null])(
-          'should remove any fields set to %s',
+          'should remove any properties set to %s',
           async (version) => {
             const existing = { v: 1 };
             await browser.storage[storageArea].set({ count$: existing });
@@ -233,7 +233,7 @@ describe('Storage Utils', () => {
           expect(actual).toEqual({});
         });
 
-        it('should only remove specific fields', async () => {
+        it('should only remove specific properties', async () => {
           await fakeBrowser.storage[storageArea].set({
             count$: { v: 4, d: Date.now() },
           });
@@ -259,7 +259,7 @@ describe('Storage Utils', () => {
           expect(actual).toEqual(expected);
         });
 
-        it('should exclude specific fields and their metadata', async () => {
+        it('should exclude specific properties and their metadata', async () => {
           const input = {
             count: 1,
             count$: { v: 2 },
@@ -439,10 +439,37 @@ describe('Storage Utils', () => {
             const actualMeta = await item.getMeta();
 
             expect(actualValue).toBeNull();
-            expect(actualMeta).toEqual({ v: 3 });
+            expect(actualMeta).toEqual({});
 
             expect(migrateToV2).not.toBeCalled();
             expect(migrateToV3).not.toBeCalled();
+          });
+
+          it('should run the v2 migration when converting an unversioned item to a versioned one', async () => {
+            await fakeBrowser.storage[storageArea].set({
+              count: 2,
+            });
+            const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+
+            const item = storage.defineItem<number, { v: number }>(
+              `${storageArea}:count`,
+              {
+                version: 2,
+                migrations: {
+                  2: migrateToV2,
+                },
+              },
+            );
+            await waitForMigrations();
+
+            const actualValue = await item.getValue();
+            const actualMeta = await item.getMeta();
+
+            expect(actualValue).toEqual(4);
+            expect(actualMeta).toEqual({ v: 2 });
+
+            expect(migrateToV2).toBeCalledTimes(1);
+            expect(migrateToV2).toBeCalledWith(2);
           });
 
           it('Should not run old migrations if the version is unchanged', async () => {
@@ -497,6 +524,24 @@ describe('Storage Utils', () => {
 
             expect(migrateToV3).toBeCalledTimes(1);
             expect(migrateToV3).toBeCalledWith(2);
+          });
+
+          it('should throw an error if the new version is less than the previous version', async () => {
+            const prevVersion = 2;
+            const nextVersion = 1;
+            await fakeBrowser.storage[storageArea].set({
+              count: 0,
+              count$: { v: prevVersion },
+            });
+
+            const item = storage.defineItem(`${storageArea}:count`, {
+              version: nextVersion,
+            });
+
+            // @ts-expect-error: _migrationsCompleted is returned, but untyped
+            await expect(item._migrationsCompleted).rejects.toThrow(
+              'version downgrade detected',
+            );
           });
         });
 
@@ -665,7 +710,7 @@ describe('Storage Utils', () => {
             expect(actual).toEqual({});
           });
 
-          it('should only remove specific fields', async () => {
+          it('should only remove specific properties', async () => {
             const item = storage.defineItem<number, { v: number; d: number }>(
               `${storageArea}:count`,
             );

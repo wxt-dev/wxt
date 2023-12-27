@@ -1,3 +1,10 @@
+/**
+ * Simplfied storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
+ *
+ * See [the guide](https://wxt.dev/guide/storage.html) for more information.
+ *
+ * @module wxt/storage
+ */
 import { Storage, browser } from '~/browser';
 import { dequal } from 'dequal/lite';
 
@@ -34,8 +41,10 @@ function createStorage(): WxtStorage {
   const getMetaKey = (key: string) => key + '$';
   const getValueOrDefault = (value: any, defaultValue: any) =>
     value ?? defaultValue ?? null;
-  const getMetaValue = (fields: any) =>
-    typeof fields === 'object' && !Array.isArray(fields) ? fields : {};
+  const getMetaValue = (properties: any) =>
+    typeof properties === 'object' && !Array.isArray(properties)
+      ? properties
+      : {};
 
   const getItem = async (
     driver: WxtStorageDriver,
@@ -60,12 +69,12 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    fields: any | undefined,
+    properties: any | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
     const newFields = { ...existingFields };
-    Object.entries(fields).forEach(([key, value]) => {
+    Object.entries(properties).forEach(([key, value]) => {
       if (value == null) {
         delete newFields[key];
       } else {
@@ -88,14 +97,14 @@ function createStorage(): WxtStorage {
   const removeMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    fields: string | string[] | undefined,
+    properties: string | string[] | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
-    if (fields == null) {
+    if (properties == null) {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      [fields].flat().forEach((field) => delete newFields[field]);
+      [properties].flat().forEach((field) => delete newFields[field]);
       await driver.setItem(metaKey, newFields);
     }
   };
@@ -175,9 +184,9 @@ function createStorage(): WxtStorage {
         ),
       );
     },
-    setMeta: async (key, fields) => {
+    setMeta: async (key, properties) => {
       const { driver, driverKey } = resolveKey(key);
-      await setMeta(driver, driverKey, fields);
+      await setMeta(driver, driverKey, properties);
     },
     removeItem: async (key, opts) => {
       const { driver, driverKey } = resolveKey(key);
@@ -210,9 +219,9 @@ function createStorage(): WxtStorage {
         }),
       );
     },
-    removeMeta: async (key, fields) => {
+    removeMeta: async (key, properties) => {
       const { driver, driverKey } = resolveKey(key);
-      await removeMeta(driver, driverKey, fields);
+      await removeMeta(driver, driverKey, properties);
     },
     snapshot: async (base, opts) => {
       const driver = getDriver(base);
@@ -239,26 +248,30 @@ function createStorage(): WxtStorage {
     defineItem: (key, opts) => {
       const { driver, driverKey } = resolveKey(key);
 
-      const { version, migrations } = opts ?? {};
-      const runMigrations = async (version: number) => {
+      const { version: targetVersion = 1, migrations = {} } = opts ?? {};
+      if (targetVersion < 1) {
+        throw Error(
+          'Storage item version cannot be less than 1. Initial versions should be set to 1, not 0.',
+        );
+      }
+      const runMigrations = async () => {
         const [value, meta] = await Promise.all([
           // TODO: Optimize with getItems
           getItem(driver, driverKey, undefined),
           getMeta(driver, driverKey),
         ]);
-        if (value == null || meta.v == null) {
-          await setMeta(driver, driverKey, { v: version });
-          return;
+        if (value == null) return;
+
+        const currentVersion = meta.v ?? 1;
+        if (currentVersion > targetVersion) {
+          throw Error(
+            `[wxt/storage] Migration ignored for "${key}", version downgrade detected (${currentVersion} -> ${targetVersion})`,
+          );
         }
 
-        if (meta.v > version)
-          throw Error(
-            `[wxt/storage] Migration ignored for "${key}", version downgrade detected (${meta.v} -> ${version})`,
-          );
-
         const migrationsToRun = Array.from(
-          { length: version - meta.v },
-          (_, i) => meta.v + i + 1,
+          { length: targetVersion - currentVersion },
+          (_, i) => currentVersion + i + 1,
         );
         let migratedValue = value;
         for (const migrateToVersion of migrationsToRun) {
@@ -269,20 +282,19 @@ function createStorage(): WxtStorage {
         await Promise.all([
           // TODO: Optimize with `setItem`
           setItem(driver, driverKey, migratedValue),
-          setMeta(driver, driverKey, { v: version }),
+          setMeta(driver, driverKey, { v: targetVersion }),
         ]);
       };
-      // @ts-expect-error: Maybe use this variable in the future.
-      let _migrationsCompleted =
-        version == null ? Promise.resolve() : runMigrations(version);
+      let _migrationsCompleted = runMigrations();
 
       return {
+        _migrationsCompleted,
         getValue: () => getItem(driver, driverKey, opts),
         getMeta: () => getMeta(driver, driverKey),
         setValue: (value) => setItem(driver, driverKey, value),
-        setMeta: (fields) => setMeta(driver, driverKey, fields),
+        setMeta: (properties) => setMeta(driver, driverKey, properties),
         removeValue: (opts) => removeItem(driver, driverKey, opts),
-        removeMeta: (fields) => removeMeta(driver, driverKey, fields),
+        removeMeta: (properties) => removeMeta(driver, driverKey, properties),
         watch: (cb) => watch(driver, driverKey, cb),
       };
     },
@@ -409,15 +421,15 @@ export interface WxtStorage {
    */
   setItems(values: Array<{ key: string; value: any }>): Promise<void>;
   /**
-   * Sets metadata fields. If some fields are already set, but are not included in the `fields`
-   * parameter, they will not be removed.
+   * Sets metadata properties. If some properties are already set, but are not included in the
+   * `properties` parameter, they will not be removed.
    *
    * @example
    * await storage.setMeta("local:installDate", { appVersion });
    */
   setMeta<T extends Record<string, unknown>>(
     key: string,
-    fields: T | null,
+    properties: T | null,
   ): Promise<void>;
   /**
    * Removes an item from storage.
@@ -433,16 +445,16 @@ export interface WxtStorage {
     keys: Array<string | { key: string; options?: RemoveItemOptions }>,
   ): Promise<void>;
   /**
-   * Remove the entire metadata for a key, or specific fields by name.
+   * Remove the entire metadata for a key, or specific properties by name.
    *
    * @example
-   * // Remove all metadata fields from the item
+   * // Remove all metadata properties from the item
    * await storage.removeMeta("local:installDate");
    *
    * // Remove only specific the "v" field
    * await storage.removeMeta("local:installDate", "v")
    */
-  removeMeta(key: string, fields?: string | string[]): Promise<void>;
+  removeMeta(key: string, properties?: string | string[]): Promise<void>;
   /**
    * Return all the items in storage.
    */
@@ -451,7 +463,7 @@ export interface WxtStorage {
     opts?: SnapshotOptions,
   ): Promise<Record<string, unknown>>;
   /**
-   * Restores the results of `snapshot`. If new fields have been saved since the snapshot, they are
+   * Restores the results of `snapshot`. If new properties have been saved since the snapshot, they are
    * not overridden. Only values existing in the snapshot are overritten.
    */
   restoreSnapshot(base: string, data: any): Promise<void>;
@@ -505,17 +517,17 @@ export interface WxtStorageItem<
    */
   setValue(value: TValue | null): Promise<void>;
   /**
-   * Set metadata fields.
+   * Set metadata properties.
    */
-  setMeta(fields: NullablePartial<TMetadata>): Promise<void>;
+  setMeta(properties: NullablePartial<TMetadata>): Promise<void>;
   /**
    * Remove the value from storage.
    */
   removeValue(opts?: RemoveItemOptions): Promise<void>;
   /**
-   * Remove all metadata or certain fields from metadata.
+   * Remove all metadata or certain properties from metadata.
    */
-  removeMeta(fields?: string[]): Promise<void>;
+  removeMeta(properties?: string[]): Promise<void>;
   /**
    * Listen for changes to the value in storage.
    */
@@ -558,8 +570,18 @@ export interface WxtStorageItemOptions<T> extends GetItemOptions<T> {
   migrations?: Record<number, (oldValue: any) => any>;
 }
 
+/**
+ * Same as `Partial`, but includes `| null`. It makes all the properties of an object optional and
+ * nullable.
+ */
 export type NullablePartial<T> = {
   [key in keyof T]+?: T[key] | undefined | null;
 };
+/**
+ * Callback called when a value in storage is changed.
+ */
 export type WatchCallback<T> = (newValue: T | null, oldValue: T | null) => void;
+/**
+ * Call to remove a watch listener
+ */
 export type Unwatch = () => void;
