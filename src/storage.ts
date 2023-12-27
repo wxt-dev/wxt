@@ -5,10 +5,10 @@ export const storage = createStorage();
 
 function createStorage(): WxtStorage {
   const drivers: Record<string, WxtStorageDriver> = {
-    local: createDriver(browser.storage.local),
-    session: createDriver(browser.storage.session),
-    sync: createDriver(browser.storage.sync),
-    managed: createDriver(browser.storage.managed),
+    local: createDriver('local'),
+    session: createDriver('session'),
+    sync: createDriver('sync'),
+    managed: createDriver('managed'),
   };
   const getDriver = (area: string) => {
     const driver = drivers[area];
@@ -272,6 +272,7 @@ function createStorage(): WxtStorage {
           setMeta(driver, driverKey, { v: version }),
         ]);
       };
+      // @ts-expect-error: Maybe use this variable in the future.
       let _migrationsCompleted =
         version == null ? Promise.resolve() : runMigrations(version);
 
@@ -289,24 +290,34 @@ function createStorage(): WxtStorage {
   return storage;
 }
 
-function createDriver(storageArea: Storage.StorageArea): WxtStorageDriver {
+function createDriver(
+  storageArea: 'local' | 'session' | 'sync' | 'managed',
+): WxtStorageDriver {
+  const getStorageArea = () => {
+    if (browser.storage == null)
+      throw Error(
+        "You must add the 'storage' permission to your manifest to use 'wxt/storage'",
+      );
+
+    return browser.storage[storageArea];
+  };
   const watchListeners = new Set<
     (changes: Storage.StorageAreaOnChangedChangesType) => void
   >();
   return {
     getItem: async (key) => {
-      const res = await storageArea.get(key);
+      const res = await getStorageArea().get(key);
       return res[key];
     },
     getItems: async (keys) => {
-      const result = await storageArea.get(keys);
+      const result = await getStorageArea().get(keys);
       return keys.map((key) => ({ key, value: result[key] ?? null }));
     },
     setItem: async (key, value) => {
       if (value == null) {
-        await storageArea.remove(key);
+        await getStorageArea().remove(key);
       } else {
-        await storageArea.set({ [key]: value });
+        await getStorageArea().set({ [key]: value });
       }
     },
     setItems: async (values) => {
@@ -317,19 +328,19 @@ function createDriver(storageArea: Storage.StorageArea): WxtStorageDriver {
         },
         {},
       );
-      await storageArea.set(map);
+      await getStorageArea().set(map);
     },
     removeItem: async (key) => {
-      await storageArea.remove(key);
+      await getStorageArea().remove(key);
     },
     removeItems: async (keys) => {
-      await storageArea.remove(keys);
+      await getStorageArea().remove(keys);
     },
     snapshot: async () => {
-      return await storageArea.get();
+      return await getStorageArea().get();
     },
     restoreSnapshot: async (data) => {
-      await storageArea.set(data);
+      await getStorageArea().set(data);
     },
     watch(key, cb) {
       const listener = (changes: Storage.StorageAreaOnChangedChangesType) => {
@@ -338,16 +349,16 @@ function createDriver(storageArea: Storage.StorageArea): WxtStorageDriver {
         if (dequal(change.newValue, change.oldValue)) return;
         cb(change.newValue ?? null, change.oldValue ?? null);
       };
-      storageArea.onChanged.addListener(listener);
+      getStorageArea().onChanged.addListener(listener);
       watchListeners.add(listener);
       return () => {
-        storageArea.onChanged.removeListener(listener);
+        getStorageArea().onChanged.removeListener(listener);
         watchListeners.delete(listener);
       };
     },
     unwatch() {
       watchListeners.forEach((listener) => {
-        storageArea.onChanged.removeListener(listener);
+        getStorageArea().onChanged.removeListener(listener);
       });
       watchListeners.clear();
     },
