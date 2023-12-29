@@ -76,6 +76,9 @@
         "types": "./dist/storage.d.cts",
         "default": "./dist/storage.cjs"
       }
+    },
+    "./vite-builder-env": {
+      "types": "./dist/vite-builder-env.d.ts"
     }
   },
   "scripts": {
