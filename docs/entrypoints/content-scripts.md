@@ -20,7 +20,7 @@ When creating content script entrypoints, they are automatically included in the
 ```ts
 export default defineContentScript({
   // Set manifest options
-  matches: ['*://google.com/*', '*://duckduckgo.com/*'],
+  matches: string[],
   excludeMatches: undefined | [],
   includeGlobs: undefined | [],
   excludeGlobs: undefined | [],
@@ -90,7 +90,7 @@ To include CSS with your content script, import the CSS file at the top of your 
 
 ```
 
-<srcDir>
+<srcDir>/
 └─ entrypoints/
    └─ overlay.content/
       ├─ index.ts
@@ -137,3 +137,5 @@ export default defineContentScript({
   },
 });
 ```
+
+See [Content Script UI](/guide/content-script-ui) for more info on creating UIs and including CSS in content scripts.
