@@ -1,6 +1,6 @@
 # Unlisted Scripts
 
-TypeScript files that are built, but are not included in the manifest.
+TypeScript files that are bundled and shipped with the extension, but are not included in the manifest.
 
 You are responsible for loading/running these scripts where needed.
 
