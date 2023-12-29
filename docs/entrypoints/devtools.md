@@ -13,15 +13,12 @@
 
 ## Definition
 
-Plain old HTML file.
-
 ```html
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Title</title>
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />
@@ -35,3 +32,9 @@ Plain old HTML file.
 ## Adding UI Elements
 
 Chrome extensions allow you to add panels and side panes to the devtools window.
+
+![DevTools window showing Elements panel and Styles sidebar pane.](https://developer.chrome.com/static/docs/extensions/how-to/devtools/extend-devtools/image/devtools-window-showing-e-9051f7f0347cd_1920.png)
+
+See the WXT's examples for a full walkthrough of extending the devtools window:
+
+- [Devtools Setup](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-devtools#readme)
