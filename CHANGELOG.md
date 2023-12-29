@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.13.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.0...v0.13.1)
+
+### 🩹 Fixes
+
+- **storage:** Support multiple `:` characters in storage keys ([#303](https://github.com/wxt-dev/wxt/pull/303))
+- Ship `vite/client` types internally for proper resolution using PNPM ([#304](https://github.com/wxt-dev/wxt/pull/304))
+
+### 📖 Documentation
+
+- Reorder guide ([6421ab3](https://github.com/wxt-dev/wxt/commit/6421ab3))
+- General fixes and improvements ([2ad099b](https://github.com/wxt-dev/wxt/commit/2ad099b))
+
+### 🏡 Chore
+
+- Update `scripts/build.ts` show current build step in progress, not completed count ([#306](https://github.com/wxt-dev/wxt/pull/306))
+
 ## v0.13.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.5...v0.13.0)
