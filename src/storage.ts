@@ -26,7 +26,9 @@ function createStorage(): WxtStorage {
     return driver;
   };
   const resolveKey = (key: string) => {
-    const [driverArea, driverKey] = key.split(':', 2);
+    const deliminatorIndex = key.indexOf(':');
+    const driverArea = key.substring(0, deliminatorIndex);
+    const driverKey = key.substring(deliminatorIndex + 1);
     if (driverKey == null)
       throw Error(
         `Storage key should be in the form of "area:key", but recieved "${key}"`,
