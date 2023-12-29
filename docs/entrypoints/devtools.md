@@ -31,3 +31,7 @@ Plain old HTML file.
   </body>
 </html>
 ```
+
+## Adding UI Elements
+
+Chrome extensions allow you to add panels and side panes to the devtools window.
