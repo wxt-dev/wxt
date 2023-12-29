@@ -29,9 +29,9 @@ const preset = {
 } satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
-  let completed = 0;
+  let progress = 1;
   const updateSpinner = () => {
-    spinner.text = `${spinnerText} [${completed}/${configs.length}]`;
+    spinner.text = `${spinnerText} [${progress}/${configs.length}]`;
   };
   updateSpinner();
 
@@ -39,7 +39,7 @@ function spinnerPMap(configs: tsup.Options[]) {
     config,
     async (config) => {
       const res = await tsup.build(config);
-      completed++;
+      progress++;
       updateSpinner();
       return res;
     },
