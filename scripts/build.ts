@@ -106,6 +106,9 @@ await spinnerPMap(config).catch((err) => {
   process.exit(1);
 });
 
+// Copy "public" files that need shipped inside WXT
+await fs.copyFile('src/vite-builder-env.d.ts', 'dist/vite-builder-env.d.ts');
+
 spinner.clear().stop();
 
 const duration = Date.now() - startTime;
