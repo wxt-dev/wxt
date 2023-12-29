@@ -10,10 +10,10 @@ Chrome added support for sidepanels in Manifest V3, they are not available in Ma
 
 <EntrypointPatterns
   :patterns="[
-    ['entrypoints/sidepanel.html', 'sidepanel.html'],
-    ['entrypoints/sidepanel/index.html', 'sidepanel.html'],
-    ['entrypoints/<name>.sidepanel.html', '<name>.html` '],
-    ['entrypoints/<name>.sidepanel/index.html', '<name>.html` '],
+    ['sidepanel.html', 'sidepanel.html'],
+    ['sidepanel/index.html', 'sidepanel.html'],
+    ['<name>.sidepanel.html', '<name>.html` '],
+    ['<name>.sidepanel/index.html', '<name>.html` '],
   ]"
 />
 
