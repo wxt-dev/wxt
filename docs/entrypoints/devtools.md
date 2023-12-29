@@ -37,4 +37,4 @@ Chrome extensions allow you to add panels and side panes to the devtools window.
 
 See the WXT's examples for a full walkthrough of extending the devtools window:
 
-- [Devtools Setup](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-devtools#readme)
+<ExampleList tag="devtools" />

@@ -122,5 +122,4 @@ export default defineConfig({
 
 See the official localization examples for more details:
 
-- [I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-i18n#readme)
-- [Vue I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vue-i18n#readme)
+<ExampleList tag="i18n" />
