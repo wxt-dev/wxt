@@ -22,6 +22,15 @@ describe('Storage Utils', () => {
           expect(actual).toBe(expected);
         });
 
+        it('should return the value if multiple : are use in the key', async () => {
+          const expected = 'value';
+          await fakeBrowser.storage[storageArea].set({ 'some:key': expected });
+
+          const actual = await storage.getItem(`${storageArea}:some:key`);
+
+          expect(actual).toBe(expected);
+        });
+
         it("should return null if the value doesn't exist", async () => {
           const actual = await storage.getItem(`${storageArea}:count`);
 
