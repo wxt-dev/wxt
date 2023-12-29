@@ -93,7 +93,7 @@
     "compile:wxt": "tsc --noEmit",
     "compile:virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage.enabled \"--coverage.include=src/**\" \"--coverage.exclude=src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\"",
     "prepare": "simple-git-hooks",
     "prepublish": "pnpm -s build",
     "docs:gen": "typedoc --options docs/typedoc.json",
