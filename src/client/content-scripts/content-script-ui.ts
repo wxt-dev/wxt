@@ -10,8 +10,8 @@ import {
 } from '../utils/content-script-ui';
 
 /**
- * Utility for mounting content script UI's with isolated styles. Automatically removed from the DOM
- * when the content script's context is invalidated.
+ * Utility for mounting content script UI's with isolated styles and controlled event bubbling.
+ * Automatically removed from the DOM when the content script's context is invalidated.
  *
  * See https://wxt.dev/guide/content-script-ui.html for full documentation.
  *
@@ -31,7 +31,8 @@ import {
  *         const app = document.createElement("div");
  *         app.textContent = "Content Script UI";
  *         container.append(app);
- *       }
+ *       },
+         isolateEvents: true, // or array of event names to isolate, e.g., ['click', 'keydown']
  *     })
  *     ui.mount();
  *   }
@@ -56,6 +57,7 @@ export async function createContentScriptUi<TApp>(
       textContent: css.join('\n').trim(),
     },
     mode: 'open',
+    isolateEvents: options.isolateEvents,
   });
 
   let mounted: TApp;
@@ -170,4 +172,9 @@ export type ContentScriptUiOptions<TApp> = ContentScriptPositioningOptions &
      * See https://wxt.dev/guide/content-script-ui.html for more info.
      */
     css?: string;
+    /**
+     * Optional array of event names to prevent from bubbling up from the isolated element.
+     * If true, prevents a default set of events. If array, prevents specified events.
+     */
+    isolateEvents?: boolean | string[];
   };

@@ -332,4 +332,53 @@ describe('createContentScriptUi', () => {
       expect(document.querySelector('test-app')).toBeDefined();
     });
   });
+
+  describe('isolateEvents', () => {
+    it('should call createIsolatedElement with isolateEvents=false by default', async () => {
+      await createContentScriptUi(createCtx(), {
+        name: 'test-app',
+        type: 'inline',
+        mount: testApp,
+      });
+
+      expect(createIsolatedElementMock).toBeCalledTimes(1);
+      expect(createIsolatedElementMock).toBeCalledWith(
+        expect.not.objectContaining({
+          isolateEvents: true,
+        }),
+      );
+    });
+
+    it('should call createIsolatedElement with isolateEvents=true when isolateEvents=true', async () => {
+      await createContentScriptUi(createCtx(), {
+        name: 'test-app',
+        type: 'inline',
+        isolateEvents: true,
+        mount: testApp,
+      });
+
+      expect(createIsolatedElementMock).toBeCalledTimes(1);
+      expect(createIsolatedElementMock).toBeCalledWith(
+        expect.objectContaining({
+          isolateEvents: true,
+        }),
+      );
+    });
+
+    it('should call createIsolatedElement with isolateEvents=events when isolateEvents=events', async () => {
+      await createContentScriptUi(createCtx(), {
+        name: 'test-app',
+        type: 'inline',
+        isolateEvents: ['click', 'keydown'],
+        mount: testApp,
+      });
+
+      expect(createIsolatedElementMock).toBeCalledTimes(1);
+      expect(createIsolatedElementMock).toBeCalledWith(
+        expect.objectContaining({
+          isolateEvents: ['click', 'keydown'],
+        }),
+      );
+    });
+  });
 });
