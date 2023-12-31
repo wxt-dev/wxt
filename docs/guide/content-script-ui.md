@@ -6,11 +6,11 @@ There are three ways to mount a UI inside a content script:
 
 Each has their own set of advantages and disadvantages.
 
-| Method     | Isolated Styles | HMR | Use page's context |
-| ---------- | :-------------: | :-: | :----------------: |
-| Integrated |       ❌        | ❌  |         ✅         |
-| ShadowRoot |       ✅        | ❌  |         ✅         |
-| IFrame     |       ✅        | ✅  |         ❌         |
+| Method     | Isolated Styles | Isolated Events  | HMR | Use page's context |
+| ---------- | :-------------: | :--------------: | :-: | :----------------: |
+| Integrated |       ❌        |        ❌        | ❌  |         ✅         |
+| ShadowRoot |       ✅        | ✅ (default off) | ❌  |         ✅         |
+| IFrame     |       ✅        |        ✅        | ✅  |         ❌         |
 
 ## Integrated
 
@@ -149,7 +149,7 @@ export default defineContentScript({
 
 Often in web extensions, you don't want your content script's CSS affecting the page, or vise-versa. The [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) API is ideal for this.
 
-WXT provides a helper function, [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi), that abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated CSS.
+WXT provides a helper function, [`createContentScriptUi`](/api/wxt/client/functions/createContentScriptUi), that abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated CSS. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
 
 To use `createContentScriptUi`, follow these steps:
 
@@ -178,6 +178,10 @@ export default defineContentScript({
         app.textContent = 'Hello world!';
         container.append(app);
       },
+      // Optional: isolateEvents specifies which events to isolate. Default is false (no isolation).
+      // Set true to isolate default events (keydown, keyup, keypress).
+      // Alternatively, provide an array of specific event names, e.g., ['click', 'mousedown', 'mouseup'].
+      isolateEvents: true,
     });
 
     // 4. Mount the UI
