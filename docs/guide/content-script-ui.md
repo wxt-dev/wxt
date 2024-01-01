@@ -6,11 +6,11 @@ There are three ways to mount a UI inside a content script:
 
 Each has their own set of advantages and disadvantages.
 
-| Method     | Isolated Styles | Isolated Events  | HMR | Use page's context |
-| ---------- | :-------------: | :--------------: | :-: | :----------------: |
-| Integrated |       ❌        |        ❌        | ❌  |         ✅         |
-| ShadowRoot |       ✅        | ✅ (default off) | ❌  |         ✅         |
-| IFrame     |       ✅        |        ✅        | ✅  |         ❌         |
+| Method     | Isolated Styles |   Isolated Events   | HMR | Use page's context |
+| ---------- | :-------------: | :-----------------: | :-: | :----------------: |
+| Integrated |       ❌        |        ❌           | ❌  |         ✅         |
+| ShadowRoot |       ✅        | ✅ (off by default) | ❌  |         ✅         |
+| IFrame     |       ✅        |        ✅           | ✅  |         ❌         |
 
 ## Integrated
 
