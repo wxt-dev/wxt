@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.13.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.1...v0.13.2)
+
+### 🚀 Enhancements
+
+- Add `isolateEvents` option to `createContentScripUi` ([#313](https://github.com/wxt-dev/wxt/pull/313))
+
+### 📖 Documentation
+
+- Remove duplicate `entrypoints/` path ([76e63e2](https://github.com/wxt-dev/wxt/commit/76e63e2))
+- Update unlisted pages/scripts description ([c99a281](https://github.com/wxt-dev/wxt/commit/c99a281))
+- Update content script entrypoint docs ([1360eb7](https://github.com/wxt-dev/wxt/commit/1360eb7))
+- Add example for setting up custom panels/panes in devtools ([#308](https://github.com/wxt-dev/wxt/pull/308))
+- Use example tags to automate relevant example lists ([#311](https://github.com/wxt-dev/wxt/pull/311))
+
+### 🏡 Chore
+
+- Update templates to `^0.13.0` ([#309](https://github.com/wxt-dev/wxt/pull/309))
+- Upgrade template dependencies ([#310](https://github.com/wxt-dev/wxt/pull/310))
+- Re-enable coverage ([#312](https://github.com/wxt-dev/wxt/pull/312))
+
+### ❤️ Contributors
+
+- 冯不游
+
 ## v0.13.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.0...v0.13.1)
