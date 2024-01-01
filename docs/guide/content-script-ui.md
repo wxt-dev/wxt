@@ -178,10 +178,6 @@ export default defineContentScript({
         app.textContent = 'Hello world!';
         container.append(app);
       },
-      // Optional: isolateEvents specifies which events to isolate. Default is false (no isolation).
-      // Set true to isolate default events (keydown, keyup, keypress).
-      // Alternatively, provide an array of specific event names, e.g., ['click', 'mousedown', 'mouseup'].
-      isolateEvents: true,
     });
 
     // 4. Mount the UI
