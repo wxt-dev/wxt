@@ -5,6 +5,10 @@ import useListExtensionDetails, {
 } from '../composables/useListExtensionDetails';
 
 // Add extension IDs here. Order doesn't matter, will be sorted by weekly active users
+// During the transition from chrome.google.com/webstore to
+// chromewebstore.google.com, queue.wxt.dev might return null for your
+// extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
+// can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
@@ -12,7 +16,7 @@ const chromeExtensionIds = [
   'elfaihghhjjoknimpccccmkioofjjfkf', // StayFree - Website Blocker & Web Analytics
   'okifoaikfmpfcamplcfjkpdnhfodpkil', // Doozy: Ai Made Easy
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
-  'oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
+  'youtube中文配音/oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
@@ -25,6 +29,7 @@ const sortedExtensions = computed(() => {
       // Sort based on the user count weighted by the rating
       sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
     }))
+    .filter(item => !!item)
     .sort((l, r) => r.sortKey - l.sortKey);
 });
 
