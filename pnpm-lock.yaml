@@ -169,8 +169,8 @@ importers:
         specifier: 4.0.0-next.23
         version: 4.0.0-next.23(typedoc@0.25.4)
       typedoc-vitepress-theme:
-        specifier: 1.0.0-next.3
-        version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23)
+        specifier: 1.0.0-next.4
+        version: 1.0.0-next.4(typedoc-plugin-markdown@4.0.0-next.23)
       typescript:
         specifier: ^5.3.2
         version: 5.3.2
@@ -4750,8 +4750,8 @@ packages:
       typedoc: 0.25.4(typescript@5.3.2)
     dev: true
 
-  /typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23):
-    resolution: {integrity: sha512-MPVXYNu+pU3KgB7he3gdKfhEj1CD44uEwIxSp+ojaVG6jN1Iwo7/D2tNwmzszM3Yocz6IBvNb9EVfZBXzyWG/w==}
+  /typedoc-vitepress-theme@1.0.0-next.4(typedoc-plugin-markdown@4.0.0-next.23):
+    resolution: {integrity: sha512-DprnFk3ioxwfnkfGzx02YzN/hrTde+ifeVB9H4QLoyguAR2zPsNxi7RGUUX1bddxrxiV6IZBkPoECzTE5ibBzA==}
     peerDependencies:
       typedoc-plugin-markdown: '>=4.0.0-next.19'
     dependencies:
