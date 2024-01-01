@@ -32,7 +32,6 @@ import {
  *         app.textContent = "Content Script UI";
  *         container.append(app);
  *       },
-         isolateEvents: true, // or array of event names to isolate, e.g., ['click', 'keydown']
  *     })
  *     ui.mount();
  *   }
