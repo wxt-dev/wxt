@@ -173,8 +173,12 @@ export type ContentScriptUiOptions<TApp> = ContentScriptPositioningOptions &
      */
     css?: string;
     /**
-     * Optional array of event names to prevent from bubbling up from the isolated element.
-     * If true, prevents a default set of events. If array, prevents specified events.
+     * When enabled, `event.stopPropagation` will be called on events trying to bubble out of the
+     * shadow root.
+     *
+     * - Set to `true` to stop the propagation of a default set of events,
+     *   `["keyup", "keydown", "keypress"]`
+     * - Set to an array of event names to stop the propagation of a custom list of events
      */
     isolateEvents?: boolean | string[];
   };
