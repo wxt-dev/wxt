@@ -5,6 +5,7 @@ import { ContentScriptContext } from '~/client/content-scripts/content-script-co
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { mock } from 'vitest-mock-extended';
 import { browser } from '~/browser';
+import { faker } from '@faker-js/faker';
 
 vi.mock('@webext-core/isolated-element', async () => {
   const { vi } = await import('vitest');
@@ -333,52 +334,25 @@ describe('createContentScriptUi', () => {
     });
   });
 
-  describe('isolateEvents', () => {
-    it('should call createIsolatedElement with isolateEvents=false by default', async () => {
-      await createContentScriptUi(createCtx(), {
-        name: 'test-app',
-        type: 'inline',
-        mount: testApp,
-      });
-
-      expect(createIsolatedElementMock).toBeCalledTimes(1);
-      expect(createIsolatedElementMock).toBeCalledWith(
-        expect.not.objectContaining({
-          isolateEvents: true,
-        }),
-      );
+  it('should forward isolateEvents into createIsolatedElement', async () => {
+    const isolateEvents = faker.helpers.arrayElement([
+      undefined,
+      true,
+      false,
+      ['click', 'keydown'],
+    ]);
+    await createContentScriptUi(createCtx(), {
+      name: 'test-app',
+      type: 'inline',
+      mount: testApp,
+      isolateEvents,
     });
 
-    it('should call createIsolatedElement with isolateEvents=true when isolateEvents=true', async () => {
-      await createContentScriptUi(createCtx(), {
-        name: 'test-app',
-        type: 'inline',
-        isolateEvents: true,
-        mount: testApp,
-      });
-
-      expect(createIsolatedElementMock).toBeCalledTimes(1);
-      expect(createIsolatedElementMock).toBeCalledWith(
-        expect.objectContaining({
-          isolateEvents: true,
-        }),
-      );
-    });
-
-    it('should call createIsolatedElement with isolateEvents=events when isolateEvents=events', async () => {
-      await createContentScriptUi(createCtx(), {
-        name: 'test-app',
-        type: 'inline',
-        isolateEvents: ['click', 'keydown'],
-        mount: testApp,
-      });
-
-      expect(createIsolatedElementMock).toBeCalledTimes(1);
-      expect(createIsolatedElementMock).toBeCalledWith(
-        expect.objectContaining({
-          isolateEvents: ['click', 'keydown'],
-        }),
-      );
-    });
+    expect(createIsolatedElementMock).toBeCalledTimes(1);
+    expect(createIsolatedElementMock).toBeCalledWith(
+      expect.objectContaining({
+        isolateEvents,
+      }),
+    );
   });
 });
