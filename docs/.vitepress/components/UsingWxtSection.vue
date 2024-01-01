@@ -29,7 +29,7 @@ const sortedExtensions = computed(() => {
       // Sort based on the user count weighted by the rating
       sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
     }))
-    .filter(item => !!item)
+    .filter((item) => !!item)
     .sort((l, r) => r.sortKey - l.sortKey);
 });
 
