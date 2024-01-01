@@ -8,9 +8,9 @@ Each has their own set of advantages and disadvantages.
 
 | Method     | Isolated Styles |   Isolated Events   | HMR | Use page's context |
 | ---------- | :-------------: | :-----------------: | :-: | :----------------: |
-| Integrated |       ❌        |        ❌           | ❌  |         ✅         |
+| Integrated |       ❌        |          ❌         | ❌  |         ✅         |
 | ShadowRoot |       ✅        | ✅ (off by default) | ❌  |         ✅         |
-| IFrame     |       ✅        |        ✅           | ✅  |         ❌         |
+| IFrame     |       ✅        |          ✅         | ✅  |         ❌         |
 
 ## Integrated
 
