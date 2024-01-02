@@ -73,6 +73,16 @@ export async function generateMainfest(
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
+  if (config.command === 'serve') {
+    baseManifest.commands = {
+      'wxt:reload-extension': {
+        description: 'Reload the extension during development',
+        suggested_key: {
+          default: 'Ctrl+E',
+        },
+      },
+    };
+  }
   const userManifest = config.manifest;
 
   const manifest = defu(
