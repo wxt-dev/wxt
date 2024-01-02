@@ -57,3 +57,13 @@ export default defineRunnerConfig({
 :::tip
 When configuring browser binaries, it's helpful to put them in `~/web-ext.config.ts` instead of the project directory's `web-ext.config.ts` file. When placed in your home directory (`~/`), this config will be used by all WXT projects, so you only need to configure the binaries once.
 :::
+
+## Reload the Extension
+
+Normally, to manually reload an extension, you have to visit `chrome://extensions` and click the reload button for your extension.
+
+When running `wxt` command to start the dev server, WXT adds a keyboard shortcut, `ctrl+E` for Windows/Linux and `cmd+E` for Mac, that reloads the extension when pressed, without visiting `chrome://extensions`.
+
+:::note
+This shortcut is only available during development, and is not be added to your extension when running `wxt build` or `wxt-zip`.
+:::

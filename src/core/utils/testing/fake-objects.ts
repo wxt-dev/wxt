@@ -17,6 +17,8 @@ import {
   OutputChunk,
   OutputFile,
   OutputAsset,
+  BuildOutput,
+  BuildStepOutput,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 
@@ -38,6 +40,16 @@ export function fakeFile(root = process.cwd()): string {
 export function fakeDir(root = process.cwd()): string {
   return resolve(root, faker.string.alphanumeric());
 }
+
+export const fakeEntrypoint = () =>
+  faker.helpers.arrayElement([
+    fakePopupEntrypoint,
+    fakeGenericEntrypoint,
+    fakeOptionsEntrypoint,
+    fakeBackgroundEntrypoint,
+    fakeContentScriptEntrypoint,
+    fakeUnlistedScriptEntrypoint,
+  ])();
 
 export const fakeContentScriptEntrypoint =
   fakeObjectCreator<ContentScriptEntrypoint>(() => ({
@@ -222,3 +234,14 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     builder: mock(),
   };
 });
+
+export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({
+  manifest: fakeManifest(),
+  publicAssets: fakeArray(fakeOutputAsset),
+  steps: fakeArray(fakeBuildStepOutput),
+}));
+
+export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
+  chunks: fakeArray(fakeOutputChunk),
+  entrypoints: fakeArray(fakeEntrypoint),
+}));

@@ -26,6 +26,12 @@ if (__COMMAND__ === 'serve') {
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
   }
+
+  browser.commands.onCommand.addListener((command) => {
+    if (command === 'wxt:reload-extension') {
+      browser.runtime.reload();
+    }
+  });
 }
 
 try {
