@@ -26,10 +26,12 @@ If not provided via the `manifest` config, the [manifest's `name`](https://devel
 
 ## `version` and `version_name`
 
-The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/extensions/mv3/manifest/version/) fields are based on your package.json's `version` property.
+The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/extensions/mv3/manifest/version/) properties are based on the `version` field listed in your `package.json` or `wxt.config.ts`.
 
-- `version_name` is the exact string listed in your package.json
+- `version_name` is the exact string listed in your `package.json` or `wxt.config.ts` file
 - `version` is the string cleaned up, with any invalid suffixes removed
+
+If a version is not found, a warning is logged and the version defaults to `"0.0.0"`.
 
 ### Example
 
