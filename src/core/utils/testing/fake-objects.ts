@@ -19,6 +19,7 @@ import {
   OutputAsset,
   BuildOutput,
   BuildStepOutput,
+  UserManifest,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 
@@ -77,8 +78,8 @@ export const fakeContentScriptEntrypoint =
 export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
   () => ({
     type: 'background',
-    inputPath: fakeFile('src'),
-    name: faker.string.alpha(),
+    inputPath: 'entrypoints/background.ts',
+    name: 'background',
     options: {
       persistent: faker.helpers.arrayElement([true, false, undefined]),
       type: faker.helpers.maybe(() => 'module'),
@@ -99,8 +100,8 @@ export const fakeUnlistedScriptEntrypoint =
 export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
   () => ({
     type: 'options',
-    inputPath: fakeFile('src'),
-    name: faker.string.alpha(),
+    inputPath: 'entrypoints/options.html',
+    name: 'options',
     outputDir: fakeDir('.output'),
     options: {
       browserStyle: faker.helpers.arrayElement([true, false, undefined]),
@@ -112,8 +113,8 @@ export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
 
 export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
   type: 'popup',
-  inputPath: fakeFile('src'),
-  name: faker.string.alpha(),
+  inputPath: 'entrypoints/popup.html',
+  name: 'popup',
   outputDir: fakeDir('.output'),
   options: {
     defaultTitle: faker.helpers.arrayElement([
@@ -177,6 +178,11 @@ export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(
   }),
 );
 
+export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
+  name: faker.string.alphanumeric(),
+  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+}));
+
 export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   const array: T[] = [];
   for (let i = 0; i < count; i++) {
@@ -199,7 +205,7 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     fsCache: mock<FsCache>(),
     imports: {},
     logger: mock(),
-    manifest: fakeManifest(),
+    manifest: fakeUserManifest(),
     manifestVersion,
     mode,
     outBaseDir: fakeDir(),

@@ -50,26 +50,28 @@ export async function writeManifest(
 /**
  * Generates the manifest based on the config and entrypoints.
  */
-export async function generateMainfest(
+export async function generateManifest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
 ): Promise<Manifest.WebExtensionManifest> {
   const pkg = await getPackageJson(config);
 
-  const versionName = config.manifest.version_name ?? pkg?.version;
-  const version = config.manifest.version ?? simplifyVersion(pkg?.version);
+  let versionName =
+    config.manifest.version_name ?? config.manifest.version ?? pkg?.version;
+  if (versionName == null) {
+    versionName = '0.0.0';
+    config.logger.warn(
+      'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/manifest.html#version-and-version-name',
+    );
+  }
+  let version = config.manifest.version ?? simplifyVersion(versionName);
 
   const baseManifest: Manifest.WebExtensionManifest = {
     manifest_version: config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
     version,
-    version_name:
-      // Firefox doesn't support version_name
-      config.browser === 'firefox' || versionName === version
-        ? undefined
-        : versionName,
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
@@ -89,6 +91,14 @@ export async function generateMainfest(
     userManifest,
     baseManifest,
   ) as Manifest.WebExtensionManifest;
+
+  // Apply the final version fields after merging the user manifest
+  manifest.version = version;
+  manifest.version_name =
+    // Firefox doesn't support version_name
+    config.browser === 'firefox' || versionName === version
+      ? undefined
+      : versionName;
 
   addEntrypoints(manifest, entrypoints, buildOutput, config);
 

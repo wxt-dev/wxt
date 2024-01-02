@@ -3,7 +3,7 @@ import { BuildOutput, EntrypointGroup, InternalConfig } from '~/types';
 import { findEntrypoints } from './find-entrypoints';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
-import { generateMainfest, writeManifest } from '~/core/utils/manifest';
+import { generateManifest, writeManifest } from '~/core/utils/manifest';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output, build the
@@ -41,7 +41,7 @@ export async function rebuild(
     publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
   };
 
-  const newManifest = await generateMainfest(
+  const newManifest = await generateManifest(
     allEntrypoints,
     mergedOutput,
     config,
