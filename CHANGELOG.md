@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.13.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.2...v0.13.3)
+
+### 🚀 Enhancements
+
+- **DX:** Add `ctrl+E`/`cmd+E` shortcut to reload extension during development ([#322](https://github.com/wxt-dev/wxt/pull/322))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump tsx from 4.6.2 to 4.7.0 ([#320](https://github.com/wxt-dev/wxt/pull/320))
+- **deps-dev:** Bump prettier from 3.1.0 to 3.1.1 ([#318](https://github.com/wxt-dev/wxt/pull/318))
+- **deps-dev:** Bump vitepress from 1.0.0-rc.31 to 1.0.0-rc.34 ([#316](https://github.com/wxt-dev/wxt/pull/316))
+- Refactor manifest generation E2E tests to unit tests ([#323](https://github.com/wxt-dev/wxt/pull/323))
+
 ## v0.13.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.1...v0.13.2)
