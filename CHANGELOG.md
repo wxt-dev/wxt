@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.13.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.3...v0.13.4)
+
+### 🩹 Fixes
+
+- Disable minification during development ([b7cdf15](https://github.com/wxt-dev/wxt/commit/b7cdf15))
+
+### 🏡 Chore
+
+- Use `const` instead of `let` ([2770974](https://github.com/wxt-dev/wxt/commit/2770974))
+
 ## v0.13.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.2...v0.13.3)
