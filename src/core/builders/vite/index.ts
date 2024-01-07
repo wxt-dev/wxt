@@ -40,6 +40,10 @@ export async function craeteViteBuilder(
     config.build ??= {};
     config.build.outDir = wxtConfig.outDir;
     config.build.emptyOutDir = false;
+    // Disable minification for the dev command
+    if (config.build.minify == null && wxtConfig.command === 'serve') {
+      config.build.minify = false;
+    }
 
     config.plugins ??= [];
     config.plugins.push(
