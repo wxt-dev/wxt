@@ -65,7 +65,7 @@ export async function generateManifest(
       'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/manifest.html#version-and-version-name',
     );
   }
-  let version = config.manifest.version ?? simplifyVersion(versionName);
+  const version = config.manifest.version ?? simplifyVersion(versionName);
 
   const baseManifest: Manifest.WebExtensionManifest = {
     manifest_version: config.manifestVersion,
