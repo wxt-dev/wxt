@@ -503,7 +503,10 @@ export function getContentScriptCssWebAccessibleResources(
     } else {
       resources.push({
         resources: [cssFile],
-        matches: script.options.matches,
+        matches: resolvePerBrowserOption(
+          script.options.matches,
+          config.browser,
+        ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
       });
     }
   });
@@ -546,4 +549,16 @@ function addHostPermission(
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;
   manifest.host_permissions.push(hostPermission);
+}
+
+/**
+ * - "<all_urls>" &rarr; "<all_urls>"
+ * - "*://play.google.com/books/*" &rarr; "*://play.google.com/*"
+ */
+export function stripPathFromMatchPattern(pattern: string) {
+  const protocolSepIndex = pattern.indexOf('://');
+  if (protocolSepIndex === -1) return pattern;
+
+  const startOfPath = pattern.indexOf('/', protocolSepIndex + 3);
+  return pattern.substring(0, startOfPath) + '/*';
 }
