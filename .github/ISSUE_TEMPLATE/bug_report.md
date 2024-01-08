@@ -12,14 +12,22 @@ A clear and concise description of what the bug is.
 
 ### To Reproduce
 
-Upload a ZIP or share a link to a repo representing the minimal reproduction. **_If you don't upload a minimal reproduction, you bug report will be closed._**
+Share minimal reproduction. Examples of a minimal reproduction:
 
-Steps to reproduce the behavior:
+- PR with a failing test case
+- ZIP file containing a minimal WXT project (be sure to include your lockfile!!)
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+> **_⚠️ If you don't upload a minimal reproduction, your issue will be closed until a reproduction is added._**
+>
+> Why? https://antfu.me/posts/why-reproductions-are-required
+
+Steps to reproduce the bug using the reproduction:
+
+1. Install dependencies: `pnpm i`
+2. Start dev mode: `pnpm dev`
+3. Click this...
+4. Do that...
+5. Etc...
 
 ### Expected behavior
 
