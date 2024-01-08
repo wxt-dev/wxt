@@ -646,6 +646,47 @@ describe('Manifest Utils', () => {
             'content-scripts/one.css',
           ]);
         });
+
+        it('should strip the path off the match pattern so the pattern is valid for `web_accessible_resources`', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://play.google.com/books/*'],
+              cssInjectionMode: 'ui',
+            },
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+          const config = fakeInternalConfig({
+            outDir,
+            command: 'build',
+            manifestVersion: 3,
+          });
+
+          const actual = await generateManifest(
+            entrypoints,
+            buildOutput,
+            config,
+          );
+
+          expect(actual.web_accessible_resources).toEqual([
+            {
+              matches: ['*://play.google.com/*'],
+              resources: ['content-scripts/one.css'],
+            },
+          ]);
+        });
       });
     });
 
