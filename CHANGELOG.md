@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.13.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.4...v0.13.5)
+
+### 🩹 Fixes
+
+- Strip path from `web_accessible_resources[0].matches` ([#332](https://github.com/wxt-dev/wxt/pull/332))
+
+### 📖 Documentation
+
+- Add section about customizing other browser options during development ([8683bd4](https://github.com/wxt-dev/wxt/commit/8683bd4))
+
+### 🏡 Chore
+
+- Update bug report template ([9a2cc18](https://github.com/wxt-dev/wxt/commit/9a2cc18))
+
 ## v0.13.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.3...v0.13.4)
