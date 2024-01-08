@@ -39,6 +39,8 @@ export default defineRunnerConfig({
 
 :::
 
+### Browser Binaries
+
 `web-ext`'s browser discovery is very limitted. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
 
 ```ts
@@ -57,6 +59,23 @@ export default defineRunnerConfig({
 :::tip
 When configuring browser binaries, it's helpful to put them in `~/web-ext.config.ts` instead of the project directory's `web-ext.config.ts` file. When placed in your home directory (`~/`), this config will be used by all WXT projects, so you only need to configure the binaries once.
 :::
+
+### Other options
+
+You can customize other options as well, like startup URLs, profiles, or additional command line arguments:
+
+```ts
+// web-ext.config.ts
+import { defineRunnerConfig } from 'wxt';
+
+export default defineRunnerConfig({
+  startUrls: ['https://google.com', 'https://duckduckgo.com'],
+  chromiumProfile: '/path/to/profile/to/use',
+  chromiumArgs: ['--window-size=400x300'],
+});
+```
+
+For a full list of options, see the [API Reference](/api/wxt/interfaces/ExtensionRunnerConfig).
 
 ## Reload the Extension
 
