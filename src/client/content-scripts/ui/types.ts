@@ -1,0 +1,191 @@
+export interface IntegratedContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+  /**
+   * A wrapper div that assists in positioning.
+   */
+  wrapper: HTMLDivElement;
+}
+
+export interface IframeContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+  /**
+   * The iframe added to the DOM.
+   */
+  iframe: HTMLIFrameElement;
+  /**
+   * A wrapper div that assists in positioning.
+   */
+  wrapper: HTMLDivElement;
+}
+
+export interface ShadowRootContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+  /**
+   * The `HTMLElement` hosting the shadow root used to isolate the UI's styles. This is the element
+   * that get's added to the DOM. This element's style is not isolated from the webpage.
+   */
+  shadowHost: HTMLElement;
+  /**
+   * The container element inside the `ShadowRoot` whose styles are isolated. The UI is mounted
+   * inside this `HTMLElement`.
+   */
+  uiContainer: HTMLElement;
+  /**
+   * The shadow root performing the isolation.
+   */
+  shadow: ShadowRoot;
+}
+
+export interface ContentScriptUi<TApp> {
+  /**
+   * Function that mounts or remounts the UI on the page.
+   */
+  mount: () => void;
+  /**
+   * Function that removes the UI from the webpage.
+   */
+  remove: () => void;
+  /**>
+   * Custom data returned from the `options.mount` function.
+   */
+  app: TApp;
+}
+
+export type ContentScriptUiOptions<TApp> = ContentScriptPositioningOptions &
+  ContentScriptAnchoredOptions & {
+    /**
+     * Callback executed when mounting the UI. This function should create and append the UI to the
+     * `container` element. It is called every time `ui.mount()` is called
+     *
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     */
+    mount: (container: Element) => TApp;
+    /**
+     * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
+     * unmounting your Vue or React apps.
+     */
+    onRemove?: (mounted: TApp) => void;
+  };
+
+export type IntegratedContentScriptUiOptions<TApp> =
+  ContentScriptUiOptions<TApp> & {
+    /**
+     * Tag used to create the wrapper element.
+     *
+     * @default "div"
+     */
+    tag?: string;
+  };
+
+export type IframeContentScriptUiOptions<TApp> =
+  ContentScriptUiOptions<TApp> & {
+    /**
+     * The path to the HTML page that will be shown in the iframe. This string is passed into
+     * `browser.runtime.getURL`.
+     */
+    page: PublicPath;
+  };
+
+export type ShadowRootContentScriptUiOptions<TApp> =
+  ContentScriptUiOptions<TApp> & {
+    /**
+     * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
+     */
+    name: string;
+    /**
+     * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
+     * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
+     * to pass those styles in here. This is for any additional styles not in the imported CSS.
+     *
+     * See https://wxt.dev/guide/content-script-ui.html for more info.
+     */
+    css?: string;
+    /**
+     * When enabled, `event.stopPropagation` will be called on events trying to bubble out of the
+     * shadow root.
+     *
+     * - Set to `true` to stop the propagation of a default set of events,
+     *   `["keyup", "keydown", "keypress"]`
+     * - Set to an array of event names to stop the propagation of a custom list of events
+     */
+    isolateEvents?: boolean | string[];
+  };
+
+export type ContentScriptOverlayAlignment =
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right';
+
+/**
+ * ![Visualization of different append modes](https://wxt.dev/content-script-ui-append.png)
+ */
+export type ContentScriptAppendMode =
+  | 'last'
+  | 'first'
+  | 'replace'
+  | 'before'
+  | 'after'
+  | ((anchor: Element, ui: Element) => void);
+
+export interface ContentScriptInlinePositioningOptions {
+  type: 'inline';
+}
+
+export interface ContentScriptOverlayPositioningOptions {
+  type: 'overlay';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+  /**
+   * When using `type: "overlay"`, the mounted element is 0px by 0px in size. Alignment specifies
+   * which corner is aligned with that 0x0 pixel space.
+   *
+   * ![Visualization of alignment options](https://wxt.dev/content-script-ui-alignment.png)
+   *
+   * @default "top-left"
+   */
+  alignment?: ContentScriptOverlayAlignment;
+}
+
+export interface ContentScriptModalPositioningOptions {
+  type: 'modal';
+  /**
+   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * content.
+   */
+  zIndex?: number;
+}
+
+/**
+ * Choose between `"inline"`, `"overlay"`, or `"modal" `types.
+ *
+ * ![Visualization of different types](https://wxt.dev/content-script-ui-type.png)
+ */
+export type ContentScriptPositioningOptions =
+  | ContentScriptInlinePositioningOptions
+  | ContentScriptOverlayPositioningOptions
+  | ContentScriptModalPositioningOptions;
+
+export interface ContentScriptAnchoredOptions {
+  /**
+   * A CSS selector, element, or function that returns one of the two. Along with `append`, the
+   * `anchor` dictates where in the page the UI will be added.
+   */
+  anchor?:
+    | string
+    | Element
+    | null
+    | undefined
+    | (() => string | Element | null | undefined);
+  /**
+   * In combination with `anchor`, decide how to add the UI to the DOM.
+   *
+   * - `"last"` (default) - Add the UI as the last child of the `anchor` element
+   * - `"first"` - Add the UI as the last child of the `anchor` element
+   * - `"replace"` - Replace the `anchor` element with the UI.
+   * - `"before"` - Add the UI as the sibling before the `anchor` element
+   * - `"after"` - Add the UI as the sibling after the `anchor` element
+   * - `(anchor, ui) => void` - Customizable function that let's you add the UI to the DOM
+   */
+  append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
+}
