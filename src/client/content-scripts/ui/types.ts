@@ -1,11 +1,13 @@
-export interface IntegratedContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+export interface IntegratedContentScriptUi<TMounted>
+  extends ContentScriptUi<TMounted> {
   /**
    * A wrapper div that assists in positioning.
    */
-  wrapper: HTMLDivElement;
+  wrapper: HTMLElement;
 }
 
-export interface IframeContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+export interface IframeContentScriptUi<TMounted>
+  extends ContentScriptUi<TMounted> {
   /**
    * The iframe added to the DOM.
    */
@@ -16,7 +18,8 @@ export interface IframeContentScriptUi<TApp> extends ContentScriptUi<TApp> {
   wrapper: HTMLDivElement;
 }
 
-export interface ShadowRootContentScriptUi<TApp> extends ContentScriptUi<TApp> {
+export interface ShadowRootContentScriptUi<TMounted>
+  extends ContentScriptUi<TMounted> {
   /**
    * The `HTMLElement` hosting the shadow root used to isolate the UI's styles. This is the element
    * that get's added to the DOM. This element's style is not isolated from the webpage.
@@ -33,7 +36,7 @@ export interface ShadowRootContentScriptUi<TApp> extends ContentScriptUi<TApp> {
   shadow: ShadowRoot;
 }
 
-export interface ContentScriptUi<TApp> {
+export interface ContentScriptUi<TMounted> {
   /**
    * Function that mounts or remounts the UI on the page.
    */
@@ -45,46 +48,56 @@ export interface ContentScriptUi<TApp> {
   /**>
    * Custom data returned from the `options.mount` function.
    */
-  app: TApp;
+  mounted: TMounted | undefined;
 }
 
-export type ContentScriptUiOptions<TApp> = ContentScriptPositioningOptions &
+export type ContentScriptUiOptions<TMounted> = ContentScriptPositioningOptions &
   ContentScriptAnchoredOptions & {
     /**
-     * Callback executed when mounting the UI. This function should create and append the UI to the
-     * `container` element. It is called every time `ui.mount()` is called
-     *
-     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
-     */
-    mount: (container: Element) => TApp;
-    /**
-     * Callback called when the UI is removed from the webpage. Use to cleanup your UI, like
+     * Callback called before the UI is removed from the webpage. Use to cleanup your UI, like
      * unmounting your Vue or React apps.
      */
-    onRemove?: (mounted: TApp) => void;
+    onRemove?: (mounted: TMounted | undefined) => void;
   };
 
-export type IntegratedContentScriptUiOptions<TApp> =
-  ContentScriptUiOptions<TApp> & {
+export type IntegratedContentScriptUiOptions<TMounted> =
+  ContentScriptUiOptions<TMounted> & {
+    type: 'integrated';
     /**
      * Tag used to create the wrapper element.
      *
      * @default "div"
      */
     tag?: string;
+    /**
+     * Callback executed when mounting the UI. This function should create and append the UI to the
+     * `wrapper` element. It is called every time `ui.mount()` is called.
+     *
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     */
+    onMount: (wrapper: HTMLElement) => TMounted;
   };
 
-export type IframeContentScriptUiOptions<TApp> =
-  ContentScriptUiOptions<TApp> & {
+export type IframeContentScriptUiOptions<TMounted> =
+  ContentScriptUiOptions<TMounted> & {
+    type: 'iframe';
     /**
      * The path to the HTML page that will be shown in the iframe. This string is passed into
      * `browser.runtime.getURL`.
      */
     page: PublicPath;
+    /**
+     * Callback executed when mounting the UI. Use this function to customize the iframe or wrapper
+     * element's appearance. It is called every time `ui.mount()` is called.
+     *
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     */
+    onMount?: (wrapper: HTMLElement, iframe: HTMLIFrameElement) => TMounted;
   };
 
-export type ShadowRootContentScriptUiOptions<TApp> =
-  ContentScriptUiOptions<TApp> & {
+export type ShadowRootContentScriptUiOptions<TMounted> =
+  ContentScriptUiOptions<TMounted> & {
+    type: 'shadow-root';
     /**
      * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
      */
@@ -93,10 +106,15 @@ export type ShadowRootContentScriptUiOptions<TApp> =
      * Custom CSS text to apply to the UI. If your content script imports/generates CSS and you've
      * set `cssInjectionMode: "ui"`, the imported CSS will be included automatically. You do not need
      * to pass those styles in here. This is for any additional styles not in the imported CSS.
-     *
-     * See https://wxt.dev/guide/content-script-ui.html for more info.
      */
     css?: string;
+    /**
+     * ShadowRoot's mode.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot/mode
+     * @default "open"
+     */
+    mode?: 'open' | 'closed';
     /**
      * When enabled, `event.stopPropagation` will be called on events trying to bubble out of the
      * shadow root.
@@ -106,6 +124,17 @@ export type ShadowRootContentScriptUiOptions<TApp> =
      * - Set to an array of event names to stop the propagation of a custom list of events
      */
     isolateEvents?: boolean | string[];
+    /**
+     * Callback executed when mounting the UI. This function should create and append the UI to the
+     * `uiContainer` element. It is called every time `ui.mount()` is called.
+     *
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     */
+    onMount: (
+      uiContainer: HTMLElement,
+      shadow: ShadowRoot,
+      shadowHost: HTMLElement,
+    ) => TMounted;
   };
 
 export type ContentScriptOverlayAlignment =
@@ -126,13 +155,13 @@ export type ContentScriptAppendMode =
   | ((anchor: Element, ui: Element) => void);
 
 export interface ContentScriptInlinePositioningOptions {
-  type: 'inline';
+  position: 'inline';
 }
 
 export interface ContentScriptOverlayPositioningOptions {
-  type: 'overlay';
+  position: 'overlay';
   /**
-   * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
+   * The `z-index` used on the `wrapper` element. Set to a positive number to show your UI over website
    * content.
    */
   zIndex?: number;
@@ -148,7 +177,7 @@ export interface ContentScriptOverlayPositioningOptions {
 }
 
 export interface ContentScriptModalPositioningOptions {
-  type: 'modal';
+  position: 'modal';
   /**
    * The `z-index` used on the `shadowHost`. Set to a positive number to show your UI over website
    * content.
