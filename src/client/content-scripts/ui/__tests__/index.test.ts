@@ -1,6 +1,6 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect } from 'vitest';
-import { createContentScriptUi } from '..';
+import { createIntegratedUi, createIframeUi, createShadowRootUi } from '..';
 import { ContentScriptContext } from '../../content-script-context';
 
 function appendTestApp(container: HTMLElement) {
@@ -9,7 +9,7 @@ function appendTestApp(container: HTMLElement) {
 
 const fetch = vi.fn();
 
-describe('createContentScriptUi', () => {
+describe('Content Script UIs', () => {
   let ctx: ContentScriptContext;
 
   beforeEach(() => {
@@ -28,8 +28,7 @@ describe('createContentScriptUi', () => {
   describe('type', () => {
     describe('integrated', () => {
       it('should add a wrapper and custom UI to the page', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
         });
@@ -42,8 +41,7 @@ describe('createContentScriptUi', () => {
       });
 
       it('should allow customizing the wrapper tag', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           tag: 'pre',
           onMount: appendTestApp,
@@ -59,8 +57,7 @@ describe('createContentScriptUi', () => {
 
     describe('iframe', () => {
       it('should add a wrapper and iframe to the page', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           page: '/page.html',
           position: 'inline',
         });
@@ -73,8 +70,7 @@ describe('createContentScriptUi', () => {
 
     describe('shadow-root', () => {
       it('should load a shadow root to the page', async () => {
-        const ui = await createContentScriptUi(ctx, {
-          type: 'shadow-root',
+        const ui = await createShadowRootUi(ctx, {
           position: 'inline',
           name: 'test',
           onMount(uiContainer) {
@@ -96,8 +92,7 @@ describe('createContentScriptUi', () => {
       ] as const)(
         'should respect the shadow root mode (%s -> %s)',
         async (input, expected) => {
-          const ui = await createContentScriptUi(ctx, {
-            type: 'shadow-root',
+          const ui = await createShadowRootUi(ctx, {
             position: 'inline',
             name: 'test',
             mode: input,
@@ -113,8 +108,7 @@ describe('createContentScriptUi', () => {
   describe('position', () => {
     describe('inline', () => {
       it('should wrap the UI in a simple div', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'inline',
           page: '/page.html',
         });
@@ -127,8 +121,7 @@ describe('createContentScriptUi', () => {
 
     describe('overlay', () => {
       it('should wrap the UI in a positioned div when alignment=undefined', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
         });
@@ -140,8 +133,7 @@ describe('createContentScriptUi', () => {
       });
 
       it('should wrap the UI in a positioned div when alignment=top-left', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
           alignment: 'top-left',
@@ -154,8 +146,7 @@ describe('createContentScriptUi', () => {
       });
 
       it('should wrap the UI in a positioned div when alignment=top-right', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
           alignment: 'top-right',
@@ -168,8 +159,7 @@ describe('createContentScriptUi', () => {
       });
 
       it('should wrap the UI in a positioned div when alignment=bottom-right', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
           alignment: 'bottom-right',
@@ -182,8 +172,7 @@ describe('createContentScriptUi', () => {
       });
 
       it('should wrap the UI in a positioned div when alignment=bottom-left', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
           alignment: 'bottom-left',
@@ -197,8 +186,7 @@ describe('createContentScriptUi', () => {
 
       it('should respect the provided zIndex', () => {
         const zIndex = 123;
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
           zIndex,
@@ -211,8 +199,7 @@ describe('createContentScriptUi', () => {
 
     describe('modal', () => {
       it('should wrap the UI in a div with a fixed position', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'modal',
           page: '/page.html',
         });
@@ -225,8 +212,7 @@ describe('createContentScriptUi', () => {
 
       it('should respect the provided zIndex', () => {
         const zIndex = 123;
-        const ui = createContentScriptUi(ctx, {
-          type: 'iframe',
+        const ui = createIframeUi(ctx, {
           position: 'modal',
           page: '/page.html',
           zIndex,
@@ -241,8 +227,7 @@ describe('createContentScriptUi', () => {
   describe('anchor', () => {
     describe('undefined', () => {
       it('should append the element to the body', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
         });
@@ -256,8 +241,7 @@ describe('createContentScriptUi', () => {
 
     describe('string', () => {
       it('should append the element using the specified query selector', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: '#parent',
@@ -272,8 +256,7 @@ describe('createContentScriptUi', () => {
 
     describe('Element', () => {
       it('should append the element using the specified element', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: document.getElementById('parent'),
@@ -288,8 +271,7 @@ describe('createContentScriptUi', () => {
 
     describe('function', () => {
       it('should append the element using the specified function', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: () => document.getElementById('parent'),
@@ -303,8 +285,7 @@ describe('createContentScriptUi', () => {
     });
 
     it('should throw an error when the anchor does not exist', () => {
-      const ui = createContentScriptUi(ctx, {
-        type: 'integrated',
+      const ui = createIntegratedUi(ctx, {
         position: 'inline',
         onMount: appendTestApp,
         anchor: () => document.getElementById('i-do-not-exist'),
@@ -317,8 +298,7 @@ describe('createContentScriptUi', () => {
   describe('append', () => {
     describe.each([undefined, 'last'] as const)('%s', (append) => {
       it('should append the element as the last child of the anchor', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#parent',
           append,
@@ -336,8 +316,7 @@ describe('createContentScriptUi', () => {
 
     describe('first', () => {
       it('should append the element as the last child of the anchor', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#parent',
           append: 'first',
@@ -355,8 +334,7 @@ describe('createContentScriptUi', () => {
 
     describe('replace', () => {
       it('should replace the the anchor', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#parent',
           append: 'replace',
@@ -373,8 +351,7 @@ describe('createContentScriptUi', () => {
 
     describe('before', () => {
       it('should append the UI before the anchor', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#one',
           append: 'before',
@@ -392,8 +369,7 @@ describe('createContentScriptUi', () => {
 
     describe.todo('after', () => {
       it('should append the UI after the anchor', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#three',
           append: 'after',
@@ -411,8 +387,7 @@ describe('createContentScriptUi', () => {
 
     describe('function', () => {
       it('should append the UI using a function', () => {
-        const ui = createContentScriptUi(ctx, {
-          type: 'integrated',
+        const ui = createIntegratedUi(ctx, {
           position: 'inline',
           anchor: '#parent',
           append: (anchor, ui) => {
