@@ -6,8 +6,7 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
 
   async main(ctx) {
-    const ui = await createContentScriptUi(ctx, {
-      type: 'shadow-root',
+    const ui = await createShadowRootUi(ctx, {
       name: 'demo-ui',
       position: 'inline',
       append: 'before',

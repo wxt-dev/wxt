@@ -62,7 +62,6 @@ export type ContentScriptUiOptions<TMounted> = ContentScriptPositioningOptions &
 
 export type IntegratedContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
-    type: 'integrated';
     /**
      * Tag used to create the wrapper element.
      *
@@ -80,7 +79,6 @@ export type IntegratedContentScriptUiOptions<TMounted> =
 
 export type IframeContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
-    type: 'iframe';
     /**
      * The path to the HTML page that will be shown in the iframe. This string is passed into
      * `browser.runtime.getURL`.
@@ -97,7 +95,6 @@ export type IframeContentScriptUiOptions<TMounted> =
 
 export type ShadowRootContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
-    type: 'shadow-root';
     /**
      * The name of the custom component used to host the ShadowRoot. Must be kebab-case.
      */

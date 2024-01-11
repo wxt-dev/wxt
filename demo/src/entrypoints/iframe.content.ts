@@ -2,8 +2,7 @@ export default defineContentScript({
   matches: ['*://*.google.com/*'],
 
   main(ctx) {
-    const ui = createContentScriptUi(ctx, {
-      type: 'iframe',
+    const ui = createIframeUi(ctx, {
       page: '/iframe-src.html',
       position: 'overlay',
       anchor: 'form[action="/search"]',

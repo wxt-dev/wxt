@@ -19,58 +19,7 @@ export * from './types';
  *
  * @see https://wxt.dev/guide/content-script-ui.html#integrated
  */
-export function createContentScriptUi<TMounted>(
-  ctx: ContentScriptContext,
-  options: IntegratedContentScriptUiOptions<TMounted>,
-): IntegratedContentScriptUi<TMounted>;
-/**
- * Create a content script UI inside an iframe.
- *
- * @see https://wxt.dev/guide/content-script-ui.html#iframe
- */
-export function createContentScriptUi<TMounted>(
-  ctx: ContentScriptContext,
-  options: IframeContentScriptUiOptions<TMounted>,
-): IframeContentScriptUi<TMounted>;
-/**
- * Create a content script UI inside a [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
- *
- * > This function is async because it has to load the CSS via a network call.
- *
- * @see https://wxt.dev/guide/content-script-ui.html#shadowroot
- */
-export function createContentScriptUi<TMounted>(
-  ctx: ContentScriptContext,
-  options: ShadowRootContentScriptUiOptions<TMounted>,
-): Promise<ShadowRootContentScriptUi<TMounted>>;
-
-export function createContentScriptUi<TMounted>(
-  ctx: ContentScriptContext,
-  options:
-    | IntegratedContentScriptUiOptions<TMounted>
-    | IframeContentScriptUiOptions<TMounted>
-    | ShadowRootContentScriptUiOptions<TMounted>,
-):
-  | IntegratedContentScriptUi<TMounted>
-  | IframeContentScriptUi<TMounted>
-  | Promise<ShadowRootContentScriptUi<TMounted>> {
-  switch (options.type) {
-    default:
-      logger.warn(
-        `Unknown content script UI type, '${
-          (options as any).type
-        }', using 'integrated' instead.`,
-      );
-    case 'integrated':
-      return createIntegratedUi(ctx, options);
-    case 'iframe':
-      return createIframeUi(ctx, options);
-    case 'shadow-root':
-      return createShadowRootUi(ctx, options);
-  }
-}
-
-function createIntegratedUi<TMounted>(
+export function createIntegratedUi<TMounted>(
   ctx: ContentScriptContext,
   options: IntegratedContentScriptUiOptions<TMounted>,
 ): IntegratedContentScriptUi<TMounted> {
@@ -98,7 +47,12 @@ function createIntegratedUi<TMounted>(
   };
 }
 
-function createIframeUi<TMounted>(
+/**
+ * Create a content script UI using an iframe.
+ *
+ * @see https://wxt.dev/guide/content-script-ui.html#iframe
+ */
+export function createIframeUi<TMounted>(
   ctx: ContentScriptContext,
   options: IframeContentScriptUiOptions<TMounted>,
 ): IframeContentScriptUi<TMounted> {
@@ -130,7 +84,14 @@ function createIframeUi<TMounted>(
   };
 }
 
-async function createShadowRootUi<TMounted>(
+/**
+ * Create a content script UI inside a [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
+ *
+ * > This function is async because it has to load the CSS via a network call.
+ *
+ * @see https://wxt.dev/guide/content-script-ui.html#shadowroot
+ */
+export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
   options: ShadowRootContentScriptUiOptions<TMounted>,
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
