@@ -6,12 +6,12 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
 
   async main(ctx) {
-    const ui = await createContentScriptUi(ctx, {
+    const ui = await createShadowRootUi(ctx, {
       name: 'demo-ui',
-      type: 'inline',
+      position: 'inline',
       append: 'before',
       anchor: 'form[role=search]',
-      mount: (container) => {
+      onMount: (container) => {
         const app = document.createElement('div');
         app.textContent = 'Custom content script UI';
         container.append(app);
