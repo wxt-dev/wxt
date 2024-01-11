@@ -10,7 +10,12 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
+`createContentScriptUi` and `createContentScriptIframe`, and some of their options, have been renamed:
+
+- `createContentScriptUi({ ... })` &rarr; `createShadowRootUi({ ... })`
+- `createContentScriptIframe({ ... })` &rarr; `createIframeUi({ ... })`
+- `type: "inline" | "overlay" | "modal"` has been changed to `position: "inline" | "overlay" | "modal"`
+- `onRemove` is now called ***before*** the UI is removed from the DOM, previously it was called after the UI was removed
 
 ## v0.13.5
 
