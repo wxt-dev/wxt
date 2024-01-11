@@ -7,11 +7,12 @@ export default defineContentScript({
 
   async main(ctx) {
     const ui = await createContentScriptUi(ctx, {
+      type: 'shadow-root',
       name: 'demo-ui',
-      type: 'inline',
+      position: 'inline',
       append: 'before',
       anchor: 'form[role=search]',
-      mount: (container) => {
+      onMount: (container) => {
         const app = document.createElement('div');
         app.textContent = 'Custom content script UI';
         container.append(app);
