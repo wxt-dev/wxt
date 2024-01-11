@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.5...v0.14.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
+
 ## v0.13.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.4...v0.13.5)
