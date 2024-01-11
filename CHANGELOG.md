@@ -16,6 +16,7 @@
 - `createContentScriptIframe({ ... })` &rarr; `createIframeUi({ ... })`
 - `type: "inline" | "overlay" | "modal"` has been changed to `position: "inline" | "overlay" | "modal"`
 - `onRemove` is now called ***before*** the UI is removed from the DOM, previously it was called after the UI was removed
+- `mount` option has been renamed to `onMount`, to better match the related option, `onRemove`.
 
 ## v0.13.5
 
