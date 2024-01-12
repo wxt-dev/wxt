@@ -20,6 +20,7 @@ import {
   getInternalConfig,
   detectDevChanges,
   rebuild,
+  findEntrypoints,
 } from '~/core/utils/building';
 import { createExtensionRunner } from '~/core/runners';
 import { consola } from 'consola';
@@ -140,6 +141,7 @@ function createFileReloader(options: {
       const fileChanges = changeQueue.splice(0, changeQueue.length);
       if (fileChanges.length === 0) return;
 
+      const allEntrypoints = await findEntrypoints(config);
       const changes = detectDevChanges(fileChanges, server.currentOutput);
       if (changes.type === 'no-change') return;
 
@@ -161,6 +163,7 @@ function createFileReloader(options: {
       // Rebuild entrypoints on change
       const { output: newOutput } = await rebuild(
         config,
+        allEntrypoints,
         // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
         changes.rebuildGroups,
         changes.cachedOutput,
