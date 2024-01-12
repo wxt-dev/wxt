@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.14.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.0...v0.14.1)
+
+### 🩹 Fixes
+
+- Use `Alt+R`/`Opt+R` to reload extension during development ([b6ab7a9](https://github.com/wxt-dev/wxt/commit/b6ab7a9))
+
 ## v0.14.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.5...v0.14.0)
