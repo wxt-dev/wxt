@@ -896,7 +896,7 @@ describe('Manifest Utils', () => {
       const reloadCommandName = 'wxt:reload-extension';
       const reloadCommand = {
         suggested_key: {
-          default: 'Ctrl+E',
+          default: 'Alt+R',
         },
       };
 

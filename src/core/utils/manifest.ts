@@ -80,7 +80,7 @@ export async function generateManifest(
       'wxt:reload-extension': {
         description: 'Reload the extension during development',
         suggested_key: {
-          default: 'Ctrl+E',
+          default: 'Alt+R',
         },
       },
     };
