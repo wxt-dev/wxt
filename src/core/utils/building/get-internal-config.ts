@@ -12,7 +12,7 @@ import {
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
-import { craeteViteBuilder } from '~/core/builders/vite';
+import { createViteBuilder } from '~/core/builders/vite';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 
@@ -134,7 +134,7 @@ export async function getInternalConfig(
     server,
   };
 
-  const builder = await craeteViteBuilder(
+  const builder = await createViteBuilder(
     inlineConfig,
     userConfig,
     finalConfig,

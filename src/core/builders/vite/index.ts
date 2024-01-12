@@ -12,7 +12,7 @@ import {
 import * as wxtPlugins from './plugins';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 
-export async function craeteViteBuilder(
+export async function createViteBuilder(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
   wxtConfig: Omit<InternalConfig, 'builder'>,
