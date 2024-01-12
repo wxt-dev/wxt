@@ -38,7 +38,7 @@ export async function internalBuild(
   const entrypoints = await findEntrypoints(config);
   config.logger.debug('Detected entrypoints:', entrypoints);
   const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, groups, undefined);
+  const { output } = await rebuild(config, entrypoints, groups, undefined);
 
   // Post-build
   await printBuildSummary(

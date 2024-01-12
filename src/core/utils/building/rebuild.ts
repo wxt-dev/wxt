@@ -1,6 +1,10 @@
 import type { Manifest } from '~/browser';
-import { BuildOutput, EntrypointGroup, InternalConfig } from '~/types';
-import { findEntrypoints } from './find-entrypoints';
+import {
+  BuildOutput,
+  Entrypoint,
+  EntrypointGroup,
+  InternalConfig,
+} from '~/types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '~/core/utils/manifest';
@@ -14,9 +18,16 @@ import { generateManifest, writeManifest } from '~/core/utils/manifest';
  * 2. Build the `entrypointGroups` (and copies public files)
  * 3. Generate the latest manifest for all entrypoints
  * 4. Write the new manifest to the file system
+ *
+ * @param config Internal config containing all the project information.
+ * @param allEntrypoints List of entrypoints used to generate the types inside .wxt directory.
+ * @param entrypointGroups The list of entrypoint groups to build.
+ * @param existingOutput The previous output to combine the rebuild results into. An emptry array if
+ *                       this is the first build.
  */
 export async function rebuild(
   config: InternalConfig,
+  allEntrypoints: Entrypoint[],
   entrypointGroups: EntrypointGroup[],
   existingOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [],
@@ -27,7 +38,6 @@ export async function rebuild(
   const spinner = ora(`Preparing...`).start();
 
   // Update types directory with new files and types
-  const allEntrypoints = await findEntrypoints(config);
   await generateTypesDir(allEntrypoints, config).catch((err) => {
     config.logger.warn('Failed to update .wxt directory:', err);
     // Throw the error if doing a regular build, don't for dev mode.
