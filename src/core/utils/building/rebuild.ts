@@ -18,6 +18,12 @@ import { generateManifest, writeManifest } from '~/core/utils/manifest';
  * 2. Build the `entrypointGroups` (and copies public files)
  * 3. Generate the latest manifest for all entrypoints
  * 4. Write the new manifest to the file system
+ *
+ * @param config Internal config containing all the project information.
+ * @param allEntrypoints List of entrypoints used to generate the types inside .wxt directory.
+ * @param entrypointGroups The list of entrypoint groups to build.
+ * @param existingOutput The previous output to combine the rebuild results into. An emptry array if
+ *                       this is the first build.
  */
 export async function rebuild(
   config: InternalConfig,

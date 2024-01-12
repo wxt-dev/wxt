@@ -141,7 +141,6 @@ function createFileReloader(options: {
       const fileChanges = changeQueue.splice(0, changeQueue.length);
       if (fileChanges.length === 0) return;
 
-      const allEntrypoints = await findEntrypoints(config);
       const changes = detectDevChanges(fileChanges, server.currentOutput);
       if (changes.type === 'no-change') return;
 
@@ -161,6 +160,7 @@ function createFileReloader(options: {
         .join(pc.dim(', '));
 
       // Rebuild entrypoints on change
+      const allEntrypoints = await findEntrypoints(config);
       const { output: newOutput } = await rebuild(
         config,
         allEntrypoints,
