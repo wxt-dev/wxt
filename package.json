@@ -77,6 +77,16 @@
         "default": "./dist/storage.cjs"
       }
     },
+    "./i18n": {
+      "import": {
+        "types": "./dist/i18n.d.ts",
+        "default": "./dist/i18n.js"
+      },
+      "require": {
+        "types": "./dist/i18n.d.cts",
+        "default": "./dist/i18n.cjs"
+      }
+    },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
     }
@@ -135,6 +145,7 @@
     "vite": "^5.0.0",
     "web-ext-run": "^0.1.0",
     "webextension-polyfill": "^0.10.0",
+    "yaml": "^2.3.4",
     "zip-dir": "^2.0.0"
   },
   "devDependencies": {
