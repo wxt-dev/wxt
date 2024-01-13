@@ -1,0 +1,13 @@
+simple: Hello world!
+manifestStyle:
+  message: This is the translated text
+  description: This is a description to give translators more context (it's never translated)
+interpolation: Hello $1, my name is $2
+some:
+  nested:
+    translation: You can nest translations inside deep objects
+escapeTheDollarSign: You owe me $$100
+pluralForm:
+  n: $1 items
+  1: 1 item
+  0: Zero items
