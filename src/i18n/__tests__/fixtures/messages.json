@@ -1,0 +1,87 @@
+[
+  {
+    "entry": {
+      "message": "Hello world!"
+    },
+    "name": ["simple"]
+  },
+  {
+    "entry": {
+      "description": "This is a description to give translators more context (it's never translated)",
+      "message": "This is the translated text"
+    },
+    "name": ["manifestStyle"]
+  },
+  {
+    "entry": {
+      "message": "Hello $1, my name is $2"
+    },
+    "name": ["interpolation"]
+  },
+  {
+    "entry": {
+      "message": "You can nest translations inside deep objects"
+    },
+    "name": ["some", "nested", "translation"]
+  },
+  {
+    "entry": {
+      "message": "You owe me $$100"
+    },
+    "name": ["escapeTheDollarSign"]
+  },
+  {
+    "entry": {
+      "message": "Zero items | 1 item | $1 items"
+    },
+    "isPlural": true,
+    "name": ["pluralForm"]
+  },
+  {
+    "entry": {
+      "description": "The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.\nNote: You can't use this message in a manifest file.",
+      "message": "<browser.runtime.id>"
+    },
+    "isBuiltin": true,
+    "name": ["@@extension_id"]
+  },
+  {
+    "entry": {
+      "message": "<browser.i18n.getUiLocale()>"
+    },
+    "isBuiltin": true,
+    "name": ["@@ui_locale"]
+  },
+  {
+    "entry": {
+      "description": "The text direction for the current locale, either \"ltr\" for left-to-right languages such as English or \"rtl\" for right-to-left languages such as Japanese.",
+      "message": "<ltr|rtl>"
+    },
+    "isBuiltin": true,
+    "name": ["@@bidi_dir"]
+  },
+  {
+    "entry": {
+      "description": "If the @@bidi_dir is \"ltr\", then this is \"rtl\"; otherwise, it's \"ltr\".",
+      "message": "<rtl|ltr>"
+    },
+    "isBuiltin": true,
+    "name": ["@@bidi_reversed_dir"]
+  },
+  {
+    "entry": {
+      "description": "If the @@bidi_dir is \"ltr\", then this is \"left\"; otherwise, it's \"right\".",
+      "message": "<left|right>"
+    },
+    "isBuiltin": true,
+    "name": ["@@bidi_start_edge"]
+  },
+  {
+    "entry": {
+      "description": "If the @@bidi_dir is \"ltr\", then this is \"right\"; otherwise, it's \"left\".",
+      "message": "<right|left>"
+    },
+    "isBuiltin": true,
+    "name": ["@@bidi_end_edge"]
+  }
+]

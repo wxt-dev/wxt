@@ -6,9 +6,11 @@ import {
 } from '~/types';
 import { getPublicFiles } from '~/core/utils/fs';
 import fs from 'fs-extra';
-import { dirname, resolve } from 'path';
+import { dirname, resolve, basename, extname } from 'node:path';
 import type { Ora } from 'ora';
 import pc from 'picocolors';
+import { unnormalizePath } from '~/core/utils/paths';
+import { convertMessagesToManifest, readMessagesFile } from '~/i18n/node';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -25,7 +27,13 @@ export async function buildEntrypoints(
     spinner.text = pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNames}`;
     steps.push(await config.builder.build(group));
   }
-  const publicAssets = await copyPublicDirectory(config);
+
+  const publicAssets = (
+    await Promise.all([
+      copyPublicDirectory(config),
+      copyLocalesDirectory(config),
+    ])
+  ).flat();
 
   return { publicAssets, steps };
 }
@@ -50,4 +58,32 @@ async function copyPublicDirectory(
   }
 
   return publicAssets;
+}
+
+async function copyLocalesDirectory(
+  config: InternalConfig,
+): Promise<BuildOutput['publicAssets']> {
+  const localesExist = await fs.exists(config.localesDir);
+  if (!localesExist || config.manifest.default_locale == null) return [];
+
+  const files = await fs.readdir(config.localesDir);
+
+  return await Promise.all(
+    files.map(async (file) => {
+      const locale = file.replace(extname(file), '');
+      const fileName = unnormalizePath(`_locales/${locale}/messages.json`);
+      const srcPath = resolve(config.localesDir, file);
+      const outPath = resolve(config.outDir, fileName);
+
+      const messages = await readMessagesFile(srcPath);
+      const json = convertMessagesToManifest(messages);
+
+      await fs.ensureDir(dirname(outPath));
+      await fs.writeJson(outPath, json);
+      return {
+        fileName,
+        type: 'asset',
+      };
+    }),
+  );
 }

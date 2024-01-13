@@ -6,18 +6,16 @@ import YAML from 'yaml';
  * Convert a file containing localized text in WXT's custom format into valid extension manifest
  * format.
  */
-export async function convertMessagesFile(
-  file: string,
-): Promise<ExtensionI18nSchema> {
+export async function readMessagesFile(file: string): Promise<Message[]> {
   const text = await readFile(file, 'utf-8');
-  return convertMessagesText(text);
+  return readMessagesText(text);
 }
 
 /**
  * Convert a string containing localized text in WXT's custom format into valid extension manifest
  * format.
  */
-export function convertMessagesText(text: string): ExtensionI18nSchema {
+export function readMessagesText(text: string): Message[] {
   const parsers: Array<(text: string) => any> = [
     JSON.parse,
     JSON5.parse,
@@ -28,7 +26,7 @@ export function convertMessagesText(text: string): ExtensionI18nSchema {
     try {
       const result = parse(text);
       if (typeof result === 'object') {
-        return convertMessagesObject(result);
+        return readMessagesObject(result);
       }
     } catch {
       continue;
@@ -42,62 +40,67 @@ export function convertMessagesText(text: string): ExtensionI18nSchema {
  * Convert an object containing localized text in WXT's custom format into valid extension manifest
  * format.
  */
-export function convertMessagesObject(
-  input: WxtI18nSchema,
-): ExtensionI18nSchema {
-  const entries = findEntries([], input);
-  return entries.reduce<ExtensionI18nSchema>((schema, { name, entry }) => {
-    schema[name.join('_')] = entry;
-    return schema;
-  }, {});
+export function readMessagesObject(input: ExtensionI18nSchema): Message[] {
+  const messagesFromInput = findEntries([], input);
+  return [...messagesFromInput, ...PREDEFINED_MESSAGES];
+}
+
+export function convertMessagesToManifest(
+  messages: Message[],
+): RawExtensionI18nSchema {
+  return messages
+    .filter((message) => !message.isBuiltin)
+    .reduce<RawExtensionI18nSchema>((schema, { name, entry }) => {
+      schema[name] = entry;
+      return schema;
+    }, {});
 }
 
 function findEntries(
   keyPath: string[],
-  input: WxtI18nSchema | WxtI18nEntry,
-): DetectedEntry[] {
+  input: ExtensionI18nSchema | ExtensionI18nEntry,
+): Message[] {
+  const name = keyPath.join('_');
   if (isBasicEntry(input))
     return [
       {
-        name: keyPath,
+        name,
         entry: { message: input },
       },
     ];
   if (isManifestEntry(input))
     return [
       {
-        name: keyPath,
+        name,
         entry: input,
       },
     ];
   if (isPluralEntry(input))
     return [
       {
-        name: keyPath,
+        name,
         entry: {
           message: Object.values(input).join(' | '),
         },
+        isPlural: true,
       },
     ];
 
-  return Object.entries(input).reduce<DetectedEntry[]>(
-    (items, [key, child]) => {
-      const nestedEntries = findEntries(keyPath.concat(key), child);
-      return [...items, ...nestedEntries];
-    },
-    [],
-  );
+  return Object.entries(input).reduce<Message[]>((items, [key, child]) => {
+    const nestedEntries = findEntries(keyPath.concat(key), child);
+    return [...items, ...nestedEntries];
+  }, []);
 }
 
 function isBasicEntry(
-  entry: WxtI18nSchema | WxtI18nEntry,
-): entry is WxtI18nBasicEntry {
+  entry: ExtensionI18nSchema | ExtensionI18nEntry,
+): entry is ExtensionI18nBasicEntry {
   return typeof entry === 'string';
 }
 
 function isManifestEntry(
-  entry: WxtI18nSchema | WxtI18nEntry,
-): entry is WxtI18nManifestEntry {
+  entry: ExtensionI18nSchema | ExtensionI18nEntry,
+): entry is ExtensionI18nManifestEntry {
   const keys = Object.keys(entry);
   if (keys.length < 1 || keys.length > 3) return false;
 
@@ -107,8 +110,8 @@ function isManifestEntry(
 }
 
 function isPluralEntry(
-  entry: WxtI18nSchema | WxtI18nEntry,
-): entry is WxtI18nPluralEntry {
+  entry: ExtensionI18nSchema | ExtensionI18nEntry,
+): entry is ExtensionI18nPluralEntry {
   const keys = Object.keys(entry);
   if (keys.length === 0) return false;
 
@@ -116,10 +119,65 @@ function isPluralEntry(
   return invalidKeys.length === 0;
 }
 
-export type ExtensionI18nSchema = Record<string, ExtensionI18nEntry>;
-export interface ExtensionI18nEntry {
+export const PREDEFINED_MESSAGES: Message[] = [
+  {
+    name: '@@extension_id',
+    isBuiltin: true,
+    entry: {
+      message: '<browser.runtime.id>',
+      description:
+        "The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.\nNote: You can't use this message in a manifest file.",
+    },
+  },
+  {
+    name: '@@ui_locale',
+    isBuiltin: true,
+    entry: {
+      message: '<browser.i18n.getUiLocale()>',
+    },
+  },
+  {
+    name: '@@bidi_dir',
+    isBuiltin: true,
+    entry: {
+      message: '<ltr|rtl>',
+      description:
+        'The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Japanese.',
+    },
+  },
+  {
+    name: '@@bidi_reversed_dir',
+    isBuiltin: true,
+    entry: {
+      message: '<rtl|ltr>',
+      description:
+        'If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it\'s "ltr".',
+    },
+  },
+  {
+    name: '@@bidi_start_edge',
+    isBuiltin: true,
+    entry: {
+      message: '<left|right>',
+      description:
+        'If the @@bidi_dir is "ltr", then this is "left"; otherwise, it\'s "right".',
+    },
+  },
+  {
+    name: '@@bidi_end_edge',
+    isBuiltin: true,
+    entry: {
+      message: '<right|left>',
+      description:
+        'If the @@bidi_dir is "ltr", then this is "right"; otherwise, it\'s "left".',
+    },
+  },
+];
+
+export type RawExtensionI18nSchema = Record<string, RawExtensionI18nEntry>;
+export interface RawExtensionI18nEntry {
   message: string;
-  descritption?: string;
+  description?: string;
   placeholders?: Record<
     string,
     {
@@ -129,22 +187,24 @@ export interface ExtensionI18nEntry {
   >;
 }
 
-export type WxtI18nBasicEntry = string;
-export type WxtI18nManifestEntry = ExtensionI18nEntry;
-export type WxtI18nPluralEntry = {
+export type ExtensionI18nBasicEntry = string;
+export type ExtensionI18nManifestEntry = RawExtensionI18nEntry;
+export type ExtensionI18nPluralEntry = {
   n: string;
   [i: number]: string;
 };
-export type WxtI18nEntry =
-  | WxtI18nBasicEntry
-  | WxtI18nManifestEntry
-  | WxtI18nPluralEntry;
+export type ExtensionI18nEntry =
+  | ExtensionI18nBasicEntry
+  | ExtensionI18nManifestEntry
+  | ExtensionI18nPluralEntry;
 
-export interface WxtI18nSchema {
-  [name: string]: WxtI18nSchema | WxtI18nEntry;
+export interface ExtensionI18nSchema {
+  [name: string]: ExtensionI18nSchema | ExtensionI18nEntry;
 }
 
-interface DetectedEntry {
-  name: string[];
-  entry: ExtensionI18nEntry;
+export interface Message {
+  name: string;
+  entry: RawExtensionI18nEntry;
+  isPlural?: boolean;
+  isBuiltin?: boolean;
 }

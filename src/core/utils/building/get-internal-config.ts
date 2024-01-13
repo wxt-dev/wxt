@@ -73,6 +73,7 @@ export async function getInternalConfig(
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
+  const localesDir = path.resolve(srcDir, mergedConfig.localesDir ?? 'locales');
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
@@ -111,6 +112,7 @@ export async function getInternalConfig(
     outBaseDir,
     outDir,
     publicDir,
+    localesDir,
     root,
     runnerConfig,
     srcDir,
@@ -196,6 +198,7 @@ function mergeInlineConfig(
     manifest,
     mode: inlineConfig.mode ?? userConfig.mode,
     publicDir: inlineConfig.publicDir ?? userConfig.publicDir,
+    localesDir: inlineConfig.localesDir ?? userConfig.localesDir,
     runner,
     srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
     outDir: inlineConfig.outDir ?? userConfig.outDir,
