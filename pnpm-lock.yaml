@@ -104,6 +104,9 @@ importers:
       webextension-polyfill:
         specifier: ^0.10.0
         version: 0.10.0
+      yaml:
+        specifier: ^2.3.4
+        version: 2.3.4
       zip-dir:
         specifier: ^2.0.0
         version: 2.0.0
@@ -5385,7 +5388,6 @@ packages:
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
-    dev: true
 
   /yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
