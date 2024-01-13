@@ -1,5 +1,3 @@
-import messages from 'public/_locales/en/messages.json';
-
 export default defineBackground(() => {
   console.log(browser.runtime.id);
   logId();
@@ -8,20 +6,26 @@ export default defineBackground(() => {
     chrome: __IS_CHROME__,
     firefox: __IS_FIREFOX__,
     manifestVersion: __MANIFEST_VERSION__,
-    messages,
   });
 
   // @ts-expect-error: should only accept entrypoints or public assets
   browser.runtime.getURL('/');
   browser.runtime.getURL('/background.js');
-  browser.runtime.getURL('/icon/128.png');
+  browser.runtime.getURL('/icon-128.png');
 
-  // @ts-expect-error: should only accept known message names
+  // @ts-expect-error: browser.i18n should only accept known message names
   browser.i18n.getMessage('test');
-  browser.i18n.getMessage('prompt_for_name');
-  browser.i18n.getMessage('hello', 'Aaron');
+  browser.i18n.getMessage('promptForName');
+  browser.i18n.getMessage('hello', ['Aaron']);
   browser.i18n.getMessage('bye', ['Aaron']);
   browser.i18n.getMessage('@@extension_id');
+
+  // @ts-expect-error: i18n should only accept known message names
+  i18n.t('test');
+  i18n.t('promptForName');
+  i18n.t('hello', ['Aaron']);
+  i18n.t('bye', ['Aaron']);
+  i18n.t('@@extension_id');
 
   console.log('WXT MODE:', {
     MODE: import.meta.env.MODE,
