@@ -18,6 +18,7 @@ export function getUnimportOptions(
       { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
+      { package: 'wxt/i18n' },
     ],
     warn: config.logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],
