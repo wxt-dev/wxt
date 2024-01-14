@@ -89,6 +89,7 @@ export default defineConfig({
             { text: 'Storage', link: '/guide/storage.md' },
             { text: 'Assets', link: '/guide/assets.md' },
             { text: 'Content Script UI', link: '/guide/content-script-ui.md' },
+            { text: 'Localization', link: '/guide/localization.md' },
             { text: 'Multiple Browsers', link: '/guide/multiple-browsers.md' },
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Vite', link: '/guide/vite.md' },

@@ -5,7 +5,8 @@
     "../src/browser.ts",
     "../src/sandbox",
     "../src/storage.ts",
-    "../src/testing"
+    "../src/testing",
+    "../src/i18n"
   ],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "out": "./api",
