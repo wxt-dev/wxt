@@ -1,0 +1,21 @@
+{
+  "simple": {
+    "message": "Hello world!"
+  },
+  "manifestStyle": {
+    "message": "This is the translated text",
+    "description": "This is a description to give translators more context (it's never translated)"
+  },
+  "interpolation": {
+    "message": "Hello $1, my name is $2"
+  },
+  "some_nested_translation": {
+    "message": "You can nest translations inside deep objects"
+  },
+  "escapeTheDollarSign": {
+    "message": "You owe me $$100"
+  },
+  "pluralForm": {
+    "message": "Zero items | 1 item | $1 items"
+  }
+}

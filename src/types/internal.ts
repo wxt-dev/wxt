@@ -18,6 +18,7 @@ export interface InternalConfig {
   root: string;
   srcDir: string;
   publicDir: string;
+  localesDir: string;
   wxtDir: string;
   typesDir: string;
   entrypointsDir: string;

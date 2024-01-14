@@ -61,7 +61,7 @@ describe('TypeScript Project', () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html');
     project.addFile(
-      'public/_locales/en/messages.json',
+      'locales/en.json',
       JSON.stringify({
         prompt_for_name: {
           message: "What's your name?",
@@ -120,6 +120,36 @@ describe('TypeScript Project', () => {
 
         export interface WxtI18n extends I18n.Static {
           /**
+           * Ask for the user's name
+           *
+           * "What's your name?"
+           */
+          getMessage(
+            messageName: "prompt_for_name",
+            substitutions?: string | string[],
+            options?: GetMessageOptions,
+          ): string;
+          /**
+           * Greet the user
+           *
+           * "Hello, $USER$"
+           */
+          getMessage(
+            messageName: "hello",
+            substitutions?: string | string[],
+            options?: GetMessageOptions,
+          ): string;
+          /**
+           * Say goodbye to the user
+           *
+           * "Goodbye, $USER$. Come back to $OUR_SITE$ soon!"
+           */
+          getMessage(
+            messageName: "bye",
+            substitutions?: string | string[],
+            options?: GetMessageOptions,
+          ): string;
+          /**
            * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
       Note: You can't use this message in a manifest file.
            *
@@ -131,7 +161,7 @@ describe('TypeScript Project', () => {
             options?: GetMessageOptions,
           ): string;
           /**
-           * 
+           * No message description.
            *
            * "<browser.i18n.getUiLocale()>"
            */
@@ -180,36 +210,25 @@ describe('TypeScript Project', () => {
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
-          /**
-           * Ask for the user's name
-           *
-           * "What's your name?"
-           */
-          getMessage(
-            messageName: "prompt_for_name",
-            substitutions?: string | string[],
-            options?: GetMessageOptions,
-          ): string;
-          /**
-           * Greet the user
-           *
-           * "Hello, $USER$"
-           */
-          getMessage(
-            messageName: "hello",
-            substitutions?: string | string[],
-            options?: GetMessageOptions,
-          ): string;
-          /**
-           * Say goodbye to the user
-           *
-           * "Goodbye, $USER$. Come back to $OUR_SITE$ soon!"
-           */
-          getMessage(
-            messageName: "bye",
-            substitutions?: string | string[],
-            options?: GetMessageOptions,
-          ): string;
+        }
+      }
+
+      declare module "wxt/i18n" {
+        export interface WxtMessageSchema {
+          t: {
+            "prompt_for_name": any;
+            "hello": any;
+            "bye": any;
+            "@@extension_id": any;
+            "@@ui_locale": any;
+            "@@bidi_dir": any;
+            "@@bidi_reversed_dir": any;
+            "@@bidi_start_edge": any;
+            "@@bidi_end_edge": any;
+          };
+          tp: {
+
+          };
         }
       }
       "

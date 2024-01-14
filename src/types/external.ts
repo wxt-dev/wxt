@@ -28,6 +28,12 @@ export interface InlineConfig {
    */
   publicDir?: string;
   /**
+   * Directory containing localization files used for translation.
+   *
+   * @default "${config.srcDir}/locales"
+   */
+  localesDir?: string;
+  /**
    * @default "${config.srcDir}/entrypoints"
    */
   entrypointsDir?: string;

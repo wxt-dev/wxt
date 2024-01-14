@@ -6,9 +6,9 @@ import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 import { getUnimportOptions } from '~/core/utils/unimport';
 import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
 import { normalizePath } from '~/core/utils/paths';
-import path from 'node:path';
-import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
+import glob from 'fast-glob';
+import { Message, PREDEFINED_MESSAGES, readMessagesFile } from '~/i18n/node';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -113,30 +113,38 @@ declare module "wxt/browser" {
   }
 
   export interface WxtI18n extends I18n.Static {
-{{ overrides }}
+{{ browserOverrides }}
+  }
+}
+
+declare module "wxt/i18n" {
+  export interface WxtMessageSchema {
+    t: {
+{{ translationTOverrides }}
+    };
+    tp: {
+{{ translationTpOverrides }}
+    };
   }
 }
 `;
 
   let messages: Message[];
   if (defaultLocale) {
-    const defaultLocalePath = path.resolve(
-      config.publicDir,
-      '_locales',
-      defaultLocale,
-      'messages.json',
-    );
-    const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
-    messages = parseI18nMessages(content);
+    const [defaultLocalePath] = await glob(`${defaultLocale}.*`, {
+      cwd: config.localesDir,
+      absolute: true,
+    });
+    messages = await readMessagesFile(defaultLocalePath);
   } else {
-    messages = parseI18nMessages({});
+    messages = PREDEFINED_MESSAGES;
   }
 
   const overrides = messages.map((message) => {
     return `    /**
-     * ${message.description ?? 'No message description.'}
+     * ${message.entry.description ?? 'No message description.'}
      *
-     * "${message.message}"
+     * "${message.entry.message}"
      */
     getMessage(
       messageName: "${message.name}",
@@ -146,7 +154,22 @@ declare module "wxt/browser" {
   });
   await writeFileIfDifferent(
     filePath,
-    template.replace('{{ overrides }}', overrides.join('\n')),
+    template
+      .replace('{{ browserOverrides }}', overrides.join('\n'))
+      .replace(
+        '{{ translationTOverrides }}',
+        messages
+          .filter((message) => !message.isPlural)
+          .map((message) => `      "${message.name}": any;`)
+          .join('\n'),
+      )
+      .replace(
+        '{{ translationTpOverrides }}',
+        messages
+          .filter((message) => message.isPlural)
+          .map((message) => `      "${message.name}": any;`)
+          .join('\n'),
+      ),
   );
 
   return filePath;

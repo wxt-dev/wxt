@@ -211,6 +211,7 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     outBaseDir: fakeDir(),
     outDir: fakeDir(),
     publicDir: fakeDir(),
+    localesDir: fakeDir(),
     root: fakeDir(),
     runnerConfig: {
       config: {},
