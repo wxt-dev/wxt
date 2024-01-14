@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, expectTypeOf } from 'vitest';
+import { describe, it, vi, expect } from 'vitest';
 import { createExtensionI18n } from '../client';
 import { fakeBrowser } from '@webext-core/fake-browser';
 

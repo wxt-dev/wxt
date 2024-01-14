@@ -6,7 +6,7 @@ import {
 } from '~/types';
 import { getPublicFiles } from '~/core/utils/fs';
 import fs from 'fs-extra';
-import { dirname, resolve, basename, extname } from 'node:path';
+import { dirname, resolve, extname } from 'node:path';
 import type { Ora } from 'ora';
 import pc from 'picocolors';
 import { unnormalizePath } from '~/core/utils/paths';
