@@ -20,7 +20,19 @@ export function createExtensionI18n<
       const plural = browser.i18n
         .getMessage(key as string, substitutions)
         .split(' | ');
-      return plural[count] || plural.at(-1)!;
+
+      // "n items"
+      if (plural.length === 1) return plural[0];
+
+      // "1 item | n items"
+      if (plural.length === 2) {
+        if (count === 1) return plural[0];
+        return plural[1];
+      }
+
+      // "0 items | 1 item | n items"
+      if (count === 0 || count === 1) return plural[count];
+      return plural[2];
     },
   };
 }
