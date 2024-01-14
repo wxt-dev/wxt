@@ -2,7 +2,7 @@ import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
 import { InternalConfig } from '~/types';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { getUnimportOptions } from '~/core/utils/unimport';
 import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
@@ -89,8 +89,17 @@ export async function importEntrypointFile<T>(
     const res = await jiti(path);
     return res.default;
   } catch (err) {
-    config.logger.error(err);
-    throw err;
+    if (err instanceof ReferenceError) {
+      // "XXX is not defined" - usually due to WXT removing imports
+      const variableName = err.message.replace(' is not defined', '');
+      const filePath = relative(config.root, path);
+      throw Error(
+        `${filePath}: Cannot use imported variable "${variableName}" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects`,
+        { cause: err },
+      );
+    } else {
+      throw err;
+    }
   }
 }
 

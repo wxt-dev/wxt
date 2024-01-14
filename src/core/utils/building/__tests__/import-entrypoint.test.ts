@@ -38,4 +38,12 @@ describe('importEntrypointFile', () => {
 
     expect(actual).toBeUndefined();
   });
+
+  it('should throw a custom error message when an imported variable is used before main', async () => {
+    await expect(() =>
+      importEntrypointFile(entrypointPath('imported-option.ts'), config),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[Error: ../src/core/utils/__tests__/test-entrypoints/imported-option.ts: Cannot use imported variable "faker" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects]`,
+    );
+  });
 });
