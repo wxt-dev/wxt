@@ -10,13 +10,13 @@ export interface DefaultMessageSchema {
 }
 
 export function createExtensionI18n<
-  TMessageSchema extends DefaultMessageSchema = DefaultMessageSchema,
+  TMessageSchema = unknown,
 >(): ExtensionI18n<TMessageSchema> {
-  return {
-    t(key: string, substitutions?: string[]) {
-      return browser.i18n.getMessage(key as string, substitutions);
+  const untyped: UntypedExtensionI18n = {
+    t(key, substitutions) {
+      return browser.i18n.getMessage(key, substitutions);
     },
-    tp(key: string, count: number, substitutions?: string[]) {
+    tp(key, count, substitutions) {
       const plural = browser.i18n
         .getMessage(key as string, substitutions)
         .split(' | ');
@@ -35,9 +35,17 @@ export function createExtensionI18n<
       return plural[2];
     },
   };
+  return untyped as ExtensionI18n<TMessageSchema>;
 }
 
-export interface ExtensionI18n<TMessageSchema extends DefaultMessageSchema> {
+export type ExtensionI18n<TMessageSchema> =
+  TMessageSchema extends DefaultMessageSchema
+    ? TypedExtensionI18n<TMessageSchema>
+    : UntypedExtensionI18n;
+
+export interface TypedExtensionI18n<
+  TMessageSchema extends DefaultMessageSchema,
+> {
   t<TKey extends KeysWithoutSub<TMessageSchema['t']>>(key: TKey): string;
   t<TKey extends KeysWithSub<TMessageSchema['t']>>(
     key: TKey,
@@ -53,6 +61,11 @@ export interface ExtensionI18n<TMessageSchema extends DefaultMessageSchema> {
     count: number,
     substitutions: TMessageSchema['tp'][TKey],
   ): string;
+}
+
+export interface UntypedExtensionI18n {
+  t(key: string, substitutions?: string[]): string;
+  tp(key: string, count: number, substitutions?: string[]): string;
 }
 
 type FilterKeys<TObject, TFilterType> = {
