@@ -13,4 +13,9 @@ export interface WxtMessageSchema extends DefaultMessageSchema {
 }
 
 export const i18n = createExtensionI18n<WxtMessageSchema>();
-export * from './client';
+export {
+  DefaultMessageSchema,
+  ExtensionI18n,
+  TypedExtensionI18n,
+  UntypedExtensionI18n,
+} from './client';

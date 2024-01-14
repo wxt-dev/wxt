@@ -12,13 +12,13 @@ export function getUnimportOptions(
     imports: [
       { name: 'defineConfig', from: 'wxt' },
       { name: 'fakeBrowser', from: 'wxt/testing' },
+      { name: 'i18n', from: 'wxt/i18n' },
     ],
     presets: [
       { package: 'wxt/client' },
       { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
-      { package: 'wxt/i18n' },
     ],
     warn: config.logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],

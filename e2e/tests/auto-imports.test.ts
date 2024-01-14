@@ -28,6 +28,7 @@ describe('Auto Imports', () => {
             const defineContentScript: typeof import('wxt/sandbox')['defineContentScript']
             const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
+            const i18n: typeof import('wxt/i18n')['i18n']
             const storage: typeof import('wxt/storage')['storage']
           }
           "

@@ -3,39 +3,39 @@
     "entry": {
       "message": "Hello world!"
     },
-    "name": ["simple"]
+    "name": "simple"
   },
   {
     "entry": {
       "description": "This is a description to give translators more context (it's never translated)",
       "message": "This is the translated text"
     },
-    "name": ["manifestStyle"]
+    "name": "manifestStyle"
   },
   {
     "entry": {
       "message": "Hello $1, my name is $2"
     },
-    "name": ["interpolation"]
+    "name": "interpolation"
   },
   {
     "entry": {
       "message": "You can nest translations inside deep objects"
     },
-    "name": ["some", "nested", "translation"]
+    "name": "some_nested_translation"
   },
   {
     "entry": {
       "message": "You owe me $$100"
     },
-    "name": ["escapeTheDollarSign"]
+    "name": "escapeTheDollarSign"
   },
   {
     "entry": {
       "message": "Zero items | 1 item | $1 items"
     },
     "isPlural": true,
-    "name": ["pluralForm"]
+    "name": "pluralForm"
   },
   {
     "entry": {
@@ -43,14 +43,14 @@
       "message": "<browser.runtime.id>"
     },
     "isBuiltin": true,
-    "name": ["@@extension_id"]
+    "name": "@@extension_id"
   },
   {
     "entry": {
       "message": "<browser.i18n.getUiLocale()>"
     },
     "isBuiltin": true,
-    "name": ["@@ui_locale"]
+    "name": "@@ui_locale"
   },
   {
     "entry": {
@@ -58,7 +58,7 @@
       "message": "<ltr|rtl>"
     },
     "isBuiltin": true,
-    "name": ["@@bidi_dir"]
+    "name": "@@bidi_dir"
   },
   {
     "entry": {
@@ -66,7 +66,7 @@
       "message": "<rtl|ltr>"
     },
     "isBuiltin": true,
-    "name": ["@@bidi_reversed_dir"]
+    "name": "@@bidi_reversed_dir"
   },
   {
     "entry": {
@@ -74,7 +74,7 @@
       "message": "<left|right>"
     },
     "isBuiltin": true,
-    "name": ["@@bidi_start_edge"]
+    "name": "@@bidi_start_edge"
   },
   {
     "entry": {
@@ -82,6 +82,6 @@
       "message": "<right|left>"
     },
     "isBuiltin": true,
-    "name": ["@@bidi_end_edge"]
+    "name": "@@bidi_end_edge"
   }
 ]
