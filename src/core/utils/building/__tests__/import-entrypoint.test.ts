@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { importEntrypointFile } from '~/core/utils/building';
 import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
 import { resolve } from 'node:path';
+import { unnormalizePath } from '../../paths';
 
 const entrypointPath = (filename: string) =>
   resolve('src/core/utils/__tests__/test-entrypoints', filename);
@@ -40,10 +41,13 @@ describe('importEntrypointFile', () => {
   });
 
   it('should throw a custom error message when an imported variable is used before main', async () => {
+    const filePath = unnormalizePath(
+      '../src/core/utils/__tests__/test-entrypoints/imported-option.ts',
+    );
     await expect(() =>
       importEntrypointFile(entrypointPath('imported-option.ts'), config),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: ../src/core/utils/__tests__/test-entrypoints/imported-option.ts: Cannot use imported variable "faker" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects]`,
+      `[Error: ${filePath}: Cannot use imported variable "faker" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects]`,
     );
   });
 });
