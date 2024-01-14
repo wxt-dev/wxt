@@ -21,6 +21,7 @@ export interface InternalConfig {
   wxtDir: string;
   typesDir: string;
   entrypointsDir: string;
+  allowEntrypoints: true | string[];
   outBaseDir: string;
   outDir: string;
   debug: boolean;

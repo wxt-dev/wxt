@@ -20,6 +20,9 @@ cli
   .option('-c, --config <file>', 'use specified config file')
   .option('-m, --mode <mode>', 'set env mode')
   .option('-b, --browser <browser>', 'specify a browser')
+  .option('-e, --allow-entrypoint <entrypoint>', 'specify allow entrypoints', {
+    type: [],
+  })
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
   .action(
@@ -31,6 +34,7 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
+        allowEntrypoints: flags.allowEntrypoints,
       });
       await server.start();
       return { isOngoing: true };
@@ -43,6 +47,9 @@ cli
   .option('-c, --config <file>', 'use specified config file')
   .option('-m, --mode <mode>', 'set env mode')
   .option('-b, --browser <browser>', 'specify a browser')
+  .option('-e, --allow-entrypoint <entrypoint>', 'specify allow entrypoints', {
+    type: [],
+  })
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
   .option('--analyze', 'visualize extension bundle')
@@ -58,6 +65,7 @@ cli
         analysis: {
           enabled: flags.analyze,
         },
+        allowEntrypoints: flags.allowEntrypoints,
       });
     }),
   );

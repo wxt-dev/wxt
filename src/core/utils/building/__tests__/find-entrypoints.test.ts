@@ -737,4 +737,29 @@ describe('findEntrypoints', () => {
       expect(entrypoints).toEqual([]);
     });
   });
+
+  describe('allowEntrypoints option', () => {
+    it('should control entrypoints accessible', async () => {
+      globMock.mockResolvedValue([
+        'options/index.html',
+        'popup/index.html',
+        'ui.content/index.ts',
+        'injected.content/index.ts',
+      ]);
+      importEntrypointFileMock.mockResolvedValue({});
+      const allowEntrypoints = ['popup', 'ui'];
+      const config = fakeInternalConfig({
+        root: '/',
+        entrypointsDir: resolve('/src/entrypoints'),
+        outDir: resolve('.output'),
+        command: 'build',
+        allowEntrypoints,
+      });
+
+      const entrypoints = await findEntrypoints(config);
+      const names = entrypoints.map((item) => item.name);
+      expect(names).toHaveLength(2);
+      expect(names).toEqual(allowEntrypoints);
+    });
+  });
 });

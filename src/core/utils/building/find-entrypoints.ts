@@ -48,7 +48,14 @@ export async function findEntrypoints(
     );
     if (matchingGlob) {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      results.push({ name, inputPath, type });
+      results.push({
+        name,
+        inputPath,
+        type,
+        disallowed:
+          Array.isArray(config.allowEntrypoints) &&
+          !config.allowEntrypoints.includes(name),
+      });
     }
     return results;
   }, []);
@@ -111,6 +118,18 @@ export async function findEntrypoints(
   }
 
   config.logger.debug('All entrypoints:', entrypoints);
+  const disallowedEntrypointNames = entrypointInfos
+    .filter((item) => item.disallowed)
+    .map((item) => item.name);
+  if (disallowedEntrypointNames.length) {
+    config.logger.warn(
+      `The follow entrypoints is ignored by not allowed:\n${disallowedEntrypointNames
+        .map((item) => {
+          return `- ${item}`;
+        })
+        .join('\n')}`,
+    );
+  }
   const targetEntrypoints = entrypoints.filter((entry) => {
     const { include, exclude } = entry.options;
     if (include?.length && exclude?.length) {
@@ -125,6 +144,9 @@ export async function findEntrypoints(
     if (include?.length && !exclude?.length) {
       return include.includes(config.browser);
     }
+    if (disallowedEntrypointNames.includes(entry.name)) {
+      return false;
+    }
 
     return true;
   });
@@ -136,6 +158,10 @@ interface EntrypointInfo {
   name: string;
   inputPath: string;
   type: Entrypoint['type'];
+  /**
+   * @default false
+   */
+  disallowed?: boolean;
 }
 
 function preventDuplicateEntrypointNames(

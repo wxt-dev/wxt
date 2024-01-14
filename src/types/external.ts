@@ -32,6 +32,12 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
+   * Specify allow entrypoints, default allow all entrypoints
+   *
+   * @default true
+   */
+  allowEntrypoints?: true | string[];
+  /**
    * Output directory that stored build folders and ZIPs.
    *
    * @default ".output"
