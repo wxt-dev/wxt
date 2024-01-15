@@ -8,6 +8,7 @@ const background: Entrypoint = {
   inputPath: '/background.ts',
   outputDir: '/.output/background',
   options: {},
+  skipped: false,
 };
 const contentScript: Entrypoint = {
   type: 'content-script',
@@ -17,6 +18,7 @@ const contentScript: Entrypoint = {
   options: {
     matches: ['<all_urls>'],
   },
+  skipped: false,
 };
 const unlistedScript: Entrypoint = {
   type: 'unlisted-script',
@@ -24,6 +26,7 @@ const unlistedScript: Entrypoint = {
   inputPath: '/injected.ts',
   outputDir: '/.output/injected',
   options: {},
+  skipped: false,
 };
 const popup: Entrypoint = {
   type: 'popup',
@@ -31,6 +34,7 @@ const popup: Entrypoint = {
   inputPath: '/popup.html',
   outputDir: '/.output/popup',
   options: {},
+  skipped: false,
 };
 const unlistedPage: Entrypoint = {
   type: 'unlisted-page',
@@ -38,6 +42,7 @@ const unlistedPage: Entrypoint = {
   inputPath: '/onboarding.html',
   outputDir: '/.output/onboarding',
   options: {},
+  skipped: false,
 };
 const options: Entrypoint = {
   type: 'options',
@@ -45,6 +50,7 @@ const options: Entrypoint = {
   inputPath: '/options.html',
   outputDir: '/.output/options',
   options: {},
+  skipped: false,
 };
 const sandbox1: Entrypoint = {
   type: 'sandbox',
@@ -52,6 +58,7 @@ const sandbox1: Entrypoint = {
   inputPath: '/sandbox1.html',
   outputDir: '/.output/sandbox1',
   options: {},
+  skipped: false,
 };
 const sandbox2: Entrypoint = {
   type: 'sandbox',
@@ -59,6 +66,7 @@ const sandbox2: Entrypoint = {
   inputPath: '/sandbox2.html',
   outputDir: '/.output/sandbox2',
   options: {},
+  skipped: false,
 };
 const unlistedStyle: Entrypoint = {
   type: 'unlisted-style',
@@ -66,6 +74,7 @@ const unlistedStyle: Entrypoint = {
   inputPath: '/injected.scss',
   outputDir: '/.output',
   options: {},
+  skipped: false,
 };
 const contentScriptStyle: Entrypoint = {
   type: 'content-script-style',
@@ -73,6 +82,7 @@ const contentScriptStyle: Entrypoint = {
   inputPath: '/overlay.content.scss',
   outputDir: '/.output/content-scripts',
   options: {},
+  skipped: false,
 };
 
 describe('groupEntrypoints', () => {

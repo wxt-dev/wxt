@@ -381,6 +381,7 @@ export interface BaseEntrypoint {
    */
   outputDir: string;
   options: BaseEntrypointOptions;
+  skipped: boolean;
 }
 
 export interface GenericEntrypoint extends BaseEntrypoint {

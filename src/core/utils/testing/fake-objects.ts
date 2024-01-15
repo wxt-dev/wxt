@@ -73,6 +73,7 @@ export const fakeContentScriptEntrypoint =
       ]),
     },
     outputDir: fakeDir('.output'),
+    skipped: false,
   }));
 
 export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
@@ -85,6 +86,7 @@ export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
       type: faker.helpers.maybe(() => 'module'),
     },
     outputDir: fakeDir('.output'),
+    skipped: false,
   }),
 );
 
@@ -95,6 +97,7 @@ export const fakeUnlistedScriptEntrypoint =
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
     options: {},
+    skipped: false,
   }));
 
 export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
@@ -108,6 +111,7 @@ export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
       chromeStyle: faker.helpers.arrayElement([true, false, undefined]),
       openInTab: faker.helpers.arrayElement([true, false, undefined]),
     },
+    skipped: false,
   }),
 );
 
@@ -134,6 +138,7 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
       undefined,
     ]),
   },
+  skipped: false,
 }));
 
 export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
@@ -152,6 +157,7 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
     options: {},
+    skipped: false,
   }),
 );
 
