@@ -738,7 +738,7 @@ describe('findEntrypoints', () => {
     });
   });
 
-  describe('allowEntrypoints option', () => {
+  describe('filterEntrypoints option', () => {
     it('should control entrypoints accessible', async () => {
       globMock.mockResolvedValue([
         'options/index.html',
@@ -747,19 +747,19 @@ describe('findEntrypoints', () => {
         'injected.content/index.ts',
       ]);
       importEntrypointFileMock.mockResolvedValue({});
-      const allowEntrypoints = ['popup', 'ui'];
+      const filterEntrypoints = ['popup', 'ui'];
       const config = fakeInternalConfig({
         root: '/',
         entrypointsDir: resolve('/src/entrypoints'),
         outDir: resolve('.output'),
         command: 'build',
-        allowEntrypoints,
+        filterEntrypoints,
       });
 
       const entrypoints = await findEntrypoints(config);
       const names = entrypoints.map((item) => item.name);
       expect(names).toHaveLength(2);
-      expect(names).toEqual(allowEntrypoints);
+      expect(names).toEqual(filterEntrypoints);
     });
   });
 });
