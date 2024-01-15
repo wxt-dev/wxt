@@ -201,7 +201,6 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     browser,
     command,
     entrypointsDir: fakeDir(),
-    filterEntrypoints: true,
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
     imports: {},
