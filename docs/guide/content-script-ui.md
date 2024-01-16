@@ -95,7 +95,7 @@ export default defineContentScript({
 });
 ```
 
-```ts [Svelete]
+```ts [Svelte]
 // entrypoints/example-ui.content/index.ts
 import App from './App.svelte';
 
@@ -243,7 +243,8 @@ export default defineContentScript({
 
   main(ctx) {
     // 3. Define your UI
-    const ui = createIntegratedUi(ctx, {
+    const ui = createShadowRootUi(ctx, {
+      name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
       onMount: (container) => {
@@ -264,7 +265,7 @@ export default defineContentScript({
 });
 ```
 
-```ts [Svelete]
+```ts [Svelte]
 // 1. Import the style
 import './style.css';
 import App from './App.svelte';
@@ -275,7 +276,8 @@ export default defineContentScript({
 
   main(ctx) {
     // 3. Define your UI
-    const ui = createIntegratedUi(ctx, {
+    const ui = createShadowRootUi(ctx, {
+      name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
       onMount: (container) => {
@@ -308,7 +310,8 @@ export default defineContentScript({
 
   main(ctx) {
     // 3. Define your UI
-    const ui = createIntegratedUi(ctx, {
+    const ui = createShadowRootUi(ctx, {
+      name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
       onMount: (container) => {
