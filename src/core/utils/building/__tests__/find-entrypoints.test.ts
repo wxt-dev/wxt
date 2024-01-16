@@ -790,7 +790,7 @@ describe('findEntrypoints', () => {
         entrypointsDir: resolve('/src/entrypoints'),
         outDir: resolve('.output'),
         command: 'build',
-        filterEntrypoints,
+        filterEntrypoints: new Set(filterEntrypoints),
       });
 
       const entrypoints = await findEntrypoints(config);

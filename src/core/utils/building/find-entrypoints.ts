@@ -53,8 +53,8 @@ export async function findEntrypoints(
         inputPath,
         type,
         skipped:
-          Array.isArray(config.filterEntrypoints) &&
-          !config.filterEntrypoints.includes(name),
+          config.filterEntrypoints != null &&
+          !config.filterEntrypoints.has(name),
       });
     }
     return results;
