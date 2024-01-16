@@ -38,7 +38,7 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
-        filterEntrypoints: flags.filterEntrypoints,
+        filterEntrypoints: flags.filterEntrypoint,
       });
       await server.start();
       return { isOngoing: true };
@@ -73,7 +73,7 @@ cli
         analysis: {
           enabled: flags.analyze,
         },
-        filterEntrypoints: flags.filterEntrypoints,
+        filterEntrypoints: flags.filterEntrypoint,
       });
     }),
   );
