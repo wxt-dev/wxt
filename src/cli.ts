@@ -22,7 +22,7 @@ cli
   .option('-b, --browser <browser>', 'specify a browser')
   .option(
     '-e, --filter-entrypoint <entrypoint>',
-    'custom allowed entrypoints',
+    'only build specific entrypoints',
     {
       type: [],
     },
@@ -53,7 +53,7 @@ cli
   .option('-b, --browser <browser>', 'specify a browser')
   .option(
     '-e, --filter-entrypoint <entrypoint>',
-    'custom allowed entrypoints',
+    'only build specific entrypoints',
     {
       type: [],
     },
