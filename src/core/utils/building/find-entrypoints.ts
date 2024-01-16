@@ -24,6 +24,7 @@ import {
 } from '~/core/utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
+import pc from 'picocolors';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -124,10 +125,8 @@ export async function findEntrypoints(
     .map((item) => item.name);
   if (skippedEntrypointNames.length) {
     config.logger.warn(
-      `The follow entrypoints is ignored after filtered:\n${skippedEntrypointNames
-        .map((item) => {
-          return `- ${item}`;
-        })
+      `Filter excluded the following entrypoints:\n${skippedEntrypointNames
+        .map((item) => `${pc.dim('-')} ${pc.cyan(item)}`)
         .join('\n')}`,
     );
   }
