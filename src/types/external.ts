@@ -32,6 +32,12 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
+   * A list of entrypoint names (`"popup"`, `"options"`, etc.) to build. Will speed up the build if
+   * your extension has lots of entrypoints, and you don't need to build all of them to develop a
+   * feature.
+   */
+  filterEntrypoints?: string[];
+  /**
    * Output directory that stored build folders and ZIPs.
    *
    * @default ".output"
@@ -377,6 +383,7 @@ export interface BaseEntrypoint {
    */
   outputDir: string;
   options: BaseEntrypointOptions;
+  skipped: boolean;
 }
 
 export interface GenericEntrypoint extends BaseEntrypoint {

@@ -53,6 +53,7 @@ describe('findEntrypoints', () => {
           defaultIcon: { '16': '/icon/16.png' },
           defaultTitle: 'Default Title',
         },
+        skipped: false,
       },
     ],
     [
@@ -72,6 +73,7 @@ describe('findEntrypoints', () => {
         options: {
           defaultTitle: 'Title',
         },
+        skipped: false,
       },
     ],
   ])(
@@ -103,6 +105,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'options.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -123,6 +126,7 @@ describe('findEntrypoints', () => {
         options: {
           openInTab: true,
         },
+        skipped: false,
       },
     ],
   ])(
@@ -146,6 +150,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -155,6 +160,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -164,6 +170,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -173,6 +180,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -182,6 +190,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.tsx'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
   ])(
@@ -212,6 +221,7 @@ describe('findEntrypoints', () => {
         name: 'background',
         inputPath: resolve(config.entrypointsDir, 'background.ts'),
         outputDir: config.outDir,
+        skipped: false,
       },
     ],
     [
@@ -221,6 +231,7 @@ describe('findEntrypoints', () => {
         name: 'background',
         inputPath: resolve(config.entrypointsDir, 'background/index.ts'),
         outputDir: config.outDir,
+        skipped: false,
       },
     ],
   ])(
@@ -258,6 +269,7 @@ describe('findEntrypoints', () => {
       name: 'background',
       options: {},
       outputDir: config.outDir,
+      skipped: false,
     });
   });
 
@@ -278,6 +290,7 @@ describe('findEntrypoints', () => {
         name: 'injected',
         inputPath: resolve(config.entrypointsDir, path),
         outputDir: config.outDir,
+        skipped: false,
       };
       const options: GenericEntrypoint['options'] = {};
       globMock.mockResolvedValueOnce([path]);
@@ -304,6 +317,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sandbox.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -314,6 +328,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sandbox/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -324,6 +339,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sandbox.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -334,6 +350,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sandbox/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -346,6 +363,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'bookmarks.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -356,6 +374,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'bookmarks/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -368,6 +387,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'history.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -378,6 +398,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'history/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -390,6 +411,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'newtab.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -400,6 +422,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'newtab/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -412,6 +435,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -422,6 +446,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -432,6 +457,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -442,6 +468,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -454,6 +481,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'devtools.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -464,6 +492,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'devtools/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -476,6 +505,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'onboarding.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -486,6 +516,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'onboarding/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -498,6 +529,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'iframe.scss'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -508,6 +540,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'iframe.css'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -520,6 +553,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -530,6 +564,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'overlay.content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -540,6 +575,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -550,6 +586,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
   ])('should find entrypoint for %s', async (path, expected) => {
@@ -735,6 +772,31 @@ describe('findEntrypoints', () => {
       const entrypoints = await findEntrypoints(config);
 
       expect(entrypoints).toEqual([]);
+    });
+  });
+
+  describe('filterEntrypoints option', () => {
+    it('should control entrypoints accessible', async () => {
+      globMock.mockResolvedValue([
+        'options/index.html',
+        'popup/index.html',
+        'ui.content/index.ts',
+        'injected.content/index.ts',
+      ]);
+      importEntrypointFileMock.mockResolvedValue({});
+      const filterEntrypoints = ['popup', 'ui'];
+      const config = fakeInternalConfig({
+        root: '/',
+        entrypointsDir: resolve('/src/entrypoints'),
+        outDir: resolve('.output'),
+        command: 'build',
+        filterEntrypoints: new Set(filterEntrypoints),
+      });
+
+      const entrypoints = await findEntrypoints(config);
+      const names = entrypoints.map((item) => item.name);
+      expect(names).toHaveLength(2);
+      expect(names).toEqual(filterEntrypoints);
     });
   });
 });

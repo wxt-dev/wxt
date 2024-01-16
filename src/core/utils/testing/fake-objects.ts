@@ -59,7 +59,7 @@ export const fakeContentScriptEntrypoint =
     name: faker.string.alpha(),
     options: {
       matches: [],
-      matchAboutBlank: faker.helpers.arrayElement([true, false, undefined]),
+      matchAboutBlank: faker.datatype.boolean(),
       matchOriginAsFallback: faker.helpers.arrayElement([
         true,
         false,
@@ -73,6 +73,7 @@ export const fakeContentScriptEntrypoint =
       ]),
     },
     outputDir: fakeDir('.output'),
+    skipped: faker.datatype.boolean(),
   }));
 
 export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
@@ -81,10 +82,11 @@ export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
     inputPath: 'entrypoints/background.ts',
     name: 'background',
     options: {
-      persistent: faker.helpers.arrayElement([true, false, undefined]),
+      persistent: faker.datatype.boolean(),
       type: faker.helpers.maybe(() => 'module'),
     },
     outputDir: fakeDir('.output'),
+    skipped: faker.datatype.boolean(),
   }),
 );
 
@@ -95,6 +97,7 @@ export const fakeUnlistedScriptEntrypoint =
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
     options: {},
+    skipped: faker.datatype.boolean(),
   }));
 
 export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
@@ -104,10 +107,11 @@ export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
     name: 'options',
     outputDir: fakeDir('.output'),
     options: {
-      browserStyle: faker.helpers.arrayElement([true, false, undefined]),
-      chromeStyle: faker.helpers.arrayElement([true, false, undefined]),
-      openInTab: faker.helpers.arrayElement([true, false, undefined]),
+      browserStyle: faker.datatype.boolean(),
+      chromeStyle: faker.datatype.boolean(),
+      openInTab: faker.datatype.boolean(),
     },
+    skipped: faker.datatype.boolean(),
   }),
 );
 
@@ -134,6 +138,7 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
       undefined,
     ]),
   },
+  skipped: faker.datatype.boolean(),
 }));
 
 export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
@@ -152,6 +157,7 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
     name: faker.string.alpha(),
     outputDir: fakeDir('.output'),
     options: {},
+    skipped: faker.datatype.boolean(),
   }),
 );
 

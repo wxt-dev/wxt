@@ -20,6 +20,13 @@ cli
   .option('-c, --config <file>', 'use specified config file')
   .option('-m, --mode <mode>', 'set env mode')
   .option('-b, --browser <browser>', 'specify a browser')
+  .option(
+    '-e, --filter-entrypoint <entrypoint>',
+    'only build specific entrypoints',
+    {
+      type: [],
+    },
+  )
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
   .action(
@@ -31,6 +38,7 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
+        filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
       await server.start();
       return { isOngoing: true };
@@ -43,6 +51,13 @@ cli
   .option('-c, --config <file>', 'use specified config file')
   .option('-m, --mode <mode>', 'set env mode')
   .option('-b, --browser <browser>', 'specify a browser')
+  .option(
+    '-e, --filter-entrypoint <entrypoint>',
+    'only build specific entrypoints',
+    {
+      type: [],
+    },
+  )
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
   .option('--analyze', 'visualize extension bundle')
@@ -58,6 +73,7 @@ cli
         analysis: {
           enabled: flags.analyze,
         },
+        filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
     }),
   );
@@ -164,4 +180,13 @@ function wrapAction(
       process.exit(1);
     }
   };
+}
+
+/**
+ * Array flags, when not passed, are either `undefined` or `[undefined]`. This function filters out
+ * the
+ */
+function getArrayFromFlags<T>(flags: any, name: string): T[] | undefined {
+  const array = [flags[name]].flat() as Array<T | undefined>;
+  return array.filter((item) => item != null) as T[];
 }

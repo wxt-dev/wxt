@@ -24,6 +24,7 @@ import {
 } from '~/core/utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
+import pc from 'picocolors';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -48,7 +49,14 @@ export async function findEntrypoints(
     );
     if (matchingGlob) {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      results.push({ name, inputPath, type });
+      results.push({
+        name,
+        inputPath,
+        type,
+        skipped:
+          config.filterEntrypoints != null &&
+          !config.filterEntrypoints.has(name),
+      });
     }
     return results;
   }, []);
@@ -106,11 +114,22 @@ export async function findEntrypoints(
         inputPath: VIRTUAL_NOOP_BACKGROUND_MODULE_ID,
         name: 'background',
         type: 'background',
+        skipped: false,
       }),
     );
   }
 
   config.logger.debug('All entrypoints:', entrypoints);
+  const skippedEntrypointNames = entrypointInfos
+    .filter((item) => item.skipped)
+    .map((item) => item.name);
+  if (skippedEntrypointNames.length) {
+    config.logger.warn(
+      `Filter excluded the following entrypoints:\n${skippedEntrypointNames
+        .map((item) => `${pc.dim('-')} ${pc.cyan(item)}`)
+        .join('\n')}`,
+    );
+  }
   const targetEntrypoints = entrypoints.filter((entry) => {
     const { include, exclude } = entry.options;
     if (include?.length && exclude?.length) {
@@ -125,6 +144,9 @@ export async function findEntrypoints(
     if (include?.length && !exclude?.length) {
       return include.includes(config.browser);
     }
+    if (skippedEntrypointNames.includes(entry.name)) {
+      return false;
+    }
 
     return true;
   });
@@ -136,6 +158,10 @@ interface EntrypointInfo {
   name: string;
   inputPath: string;
   type: Entrypoint['type'];
+  /**
+   * @default false
+   */
+  skipped: boolean;
 }
 
 function preventDuplicateEntrypointNames(
@@ -202,7 +228,7 @@ function getHtmlBaseOptions(document: Document): BaseEntrypointOptions {
  */
 async function getPopupEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<PopupEntrypoint> {
   const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
@@ -247,6 +273,7 @@ async function getPopupEntrypoint(
     options,
     inputPath,
     outputDir: config.outDir,
+    skipped,
   };
 }
 
@@ -256,7 +283,7 @@ async function getPopupEntrypoint(
  */
 async function getOptionsEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<OptionsEntrypoint> {
   const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
@@ -290,6 +317,7 @@ async function getOptionsEntrypoint(
     options,
     inputPath,
     outputDir: config.outDir,
+    skipped,
   };
 }
 
@@ -299,7 +327,7 @@ async function getOptionsEntrypoint(
  */
 async function getUnlistedPageEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<GenericEntrypoint> {
   const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
@@ -310,6 +338,7 @@ async function getUnlistedPageEntrypoint(
     inputPath,
     outputDir: config.outDir,
     options: getHtmlBaseOptions(document),
+    skipped,
   };
 }
 
@@ -319,7 +348,7 @@ async function getUnlistedPageEntrypoint(
  */
 async function getUnlistedScriptEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<GenericEntrypoint> {
   const defaultExport = await importEntrypointFile<UnlistedScriptDefinition>(
     inputPath,
@@ -338,6 +367,7 @@ async function getUnlistedScriptEntrypoint(
     inputPath,
     outputDir: config.outDir,
     options,
+    skipped,
   };
 }
 
@@ -346,7 +376,7 @@ async function getUnlistedScriptEntrypoint(
  */
 async function getBackgroundEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<BackgroundEntrypoint> {
   let options: Omit<BackgroundDefinition, 'main'> = {};
   if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
@@ -372,6 +402,7 @@ async function getBackgroundEntrypoint(
       type: resolvePerBrowserOption(options.type, config.browser),
       persistent: resolvePerBrowserOption(options.persistent, config.browser),
     },
+    skipped,
   };
 }
 
@@ -380,7 +411,7 @@ async function getBackgroundEntrypoint(
  */
 async function getContentScriptEntrypoint(
   config: InternalConfig,
-  { inputPath, name }: EntrypointInfo,
+  { inputPath, name, skipped }: EntrypointInfo,
 ): Promise<ContentScriptEntrypoint> {
   const { main: _, ...options } =
     await importEntrypointFile<ContentScriptDefinition>(inputPath, config);
@@ -395,6 +426,7 @@ async function getContentScriptEntrypoint(
     inputPath,
     outputDir: resolve(config.outDir, CONTENT_SCRIPT_OUT_DIR),
     options,
+    skipped,
   };
 }
 

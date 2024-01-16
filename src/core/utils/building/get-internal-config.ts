@@ -72,6 +72,9 @@ export async function getInternalConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
+  const filterEntrypoints = !!mergedConfig.filterEntrypoints?.length
+    ? new Set(mergedConfig.filterEntrypoints)
+    : undefined;
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
@@ -101,6 +104,7 @@ export async function getInternalConfig(
     command,
     debug,
     entrypointsDir,
+    filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
     imports: mergedConfig.imports ?? {},
@@ -191,6 +195,8 @@ function mergeInlineConfig(
     configFile: inlineConfig.configFile,
     debug: inlineConfig.debug ?? userConfig.debug,
     entrypointsDir: inlineConfig.entrypointsDir ?? userConfig.entrypointsDir,
+    filterEntrypoints:
+      inlineConfig.filterEntrypoints ?? userConfig.filterEntrypoints,
     imports,
     logger: inlineConfig.logger ?? userConfig.logger,
     manifest,

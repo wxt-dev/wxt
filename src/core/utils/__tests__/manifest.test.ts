@@ -339,6 +339,7 @@ describe('Manifest Utils', () => {
           options: {
             matches: ['*://google.com/*'],
           },
+          skipped: false,
         };
         const cs1Styles: OutputAsset = {
           type: 'asset',
@@ -353,6 +354,7 @@ describe('Manifest Utils', () => {
             matches: ['*://google.com/*'],
             runAt: 'document_end',
           },
+          skipped: false,
         };
         const cs2Styles: OutputAsset = {
           type: 'asset',
@@ -367,6 +369,7 @@ describe('Manifest Utils', () => {
             matches: ['*://google.com/*'],
             runAt: 'document_end',
           },
+          skipped: false,
         };
         const cs3Styles: OutputAsset = {
           type: 'asset',
@@ -381,6 +384,7 @@ describe('Manifest Utils', () => {
             matches: ['*://duckduckgo.com/*'],
             runAt: 'document_end',
           },
+          skipped: false,
         };
         const cs4Styles: OutputAsset = {
           type: 'asset',
@@ -395,6 +399,7 @@ describe('Manifest Utils', () => {
             matches: ['*://google.com/*'],
             world: 'MAIN',
           },
+          skipped: false,
         };
         const cs5Styles: OutputAsset = {
           type: 'asset',
@@ -454,6 +459,7 @@ describe('Manifest Utils', () => {
           options: {
             matches: ['*://google.com/*'],
           },
+          skipped: false,
         };
         const generatedContentScript = {
           matches: ['*://google.com/*'],
@@ -493,6 +499,7 @@ describe('Manifest Utils', () => {
                 matches: ['*://google.com/*'],
                 cssInjectionMode,
               },
+              skipped: false,
             };
             const styles: OutputAsset = {
               type: 'asset',
@@ -537,6 +544,7 @@ describe('Manifest Utils', () => {
                 matches: ['*://google.com/*'],
                 cssInjectionMode,
               },
+              skipped: false,
             };
             const styles: OutputAsset = {
               type: 'asset',
@@ -578,6 +586,7 @@ describe('Manifest Utils', () => {
               matches: ['*://google.com/*'],
               cssInjectionMode: 'ui',
             },
+            skipped: false,
           };
           const styles: OutputAsset = {
             type: 'asset',
@@ -619,6 +628,7 @@ describe('Manifest Utils', () => {
               matches: ['*://google.com/*'],
               cssInjectionMode: 'ui',
             },
+            skipped: false,
           };
           const styles: OutputAsset = {
             type: 'asset',
@@ -657,6 +667,7 @@ describe('Manifest Utils', () => {
               matches: ['*://play.google.com/books/*'],
               cssInjectionMode: 'ui',
             },
+            skipped: false,
           };
           const styles: OutputAsset = {
             type: 'asset',
@@ -701,6 +712,7 @@ describe('Manifest Utils', () => {
             matches: ['*://google.com/*'],
             cssInjectionMode: 'ui',
           },
+          skipped: false,
         };
         const styles: OutputAsset = {
           type: 'asset',
@@ -744,6 +756,7 @@ describe('Manifest Utils', () => {
             matches: ['*://google.com/*'],
             cssInjectionMode: 'ui',
           },
+          skipped: false,
         };
         const styles: OutputAsset = {
           type: 'asset',
