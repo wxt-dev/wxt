@@ -15,6 +15,10 @@ export default defineBackground(() => {
   browser.runtime.getURL('/');
   browser.runtime.getURL('/background.js');
   browser.runtime.getURL('/icon/128.png');
+  browser.runtime.getURL('/example.html#hash');
+  browser.runtime.getURL('/example.html?query=param');
+  // @ts-expect-error: should only allow hashes/query params on HTML files
+  browser.runtime.getURL('/icon-128.png?query=param');
 
   // @ts-expect-error: should only accept known message names
   browser.i18n.getMessage('test');
