@@ -79,8 +79,10 @@ import "wxt/browser";
 declare module "wxt/browser" {
   export type PublicPath =
 {{ union }}
+  type HtmlPublicPath = Extract<PublicPath, \`\${string}.html\`>
   export interface WxtRuntime extends Runtime.Static {
     getURL(path: PublicPath): string;
+    getURL(path: \`\${HtmlPublicPath}\${string}\`): string;
   }
 }
 `;
