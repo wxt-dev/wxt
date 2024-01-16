@@ -38,7 +38,7 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
-        filterEntrypoints: flags.filterEntrypoint,
+        filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
       await server.start();
       return { isOngoing: true };
@@ -73,7 +73,7 @@ cli
         analysis: {
           enabled: flags.analyze,
         },
-        filterEntrypoints: flags.filterEntrypoint,
+        filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
     }),
   );
@@ -180,4 +180,13 @@ function wrapAction(
       process.exit(1);
     }
   };
+}
+
+/**
+ * Array flags, when not passed, are either `undefined` or `[undefined]`. This function filters out
+ * the
+ */
+function getArrayFromFlags<T>(flags: any, name: string): T[] | undefined {
+  const array = [flags[name]].flat() as Array<T | undefined>;
+  return array.filter((item) => item != null) as T[];
 }
