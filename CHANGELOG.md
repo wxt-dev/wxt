@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.14.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.1...v0.14.2)
+
+### 🚀 Enhancements
+
+- Add `filterEntrypoints` option to speed up development ([#344](https://github.com/wxt-dev/wxt/pull/344))
+
+### 🔥 Performance
+
+- Only call `findEntrypoint` once per build ([#342](https://github.com/wxt-dev/wxt/pull/342))
+
+### 🩹 Fixes
+
+- Improve error message and document use of imported variables outside an entrypoint's `main` function ([#346](https://github.com/wxt-dev/wxt/pull/346))
+- Allow `browser.runtime.getURL` to include hashes and query params for HTML paths ([#350](https://github.com/wxt-dev/wxt/pull/350))
+
+### 📖 Documentation
+
+- Fix typos and outdated ui function usage ([#347](https://github.com/wxt-dev/wxt/pull/347))
+
+### 🏡 Chore
+
+- Update templates to `^0.14.0` ([70a4961](https://github.com/wxt-dev/wxt/commit/70a4961))
+- Fix typo in function name ([a329e24](https://github.com/wxt-dev/wxt/commit/a329e24))
+
+### ❤️ Contributors
+
+- Yuns ([@yunsii](http://github.com/yunsii))
+- Armin
+
 ## v0.14.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.0...v0.14.1)
