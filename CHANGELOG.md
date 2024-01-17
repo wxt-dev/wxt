@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.2...v0.14.3)
+
+### 🩹 Fixes
+
+- Make `getArrayFromFlags` result can be undefined ([#352](https://github.com/wxt-dev/wxt/pull/352))
+
+### ❤️ Contributors
+
+- Yuns ([@yunsii](http://github.com/yunsii))
+
 ## v0.14.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.1...v0.14.2)
