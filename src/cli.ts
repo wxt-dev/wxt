@@ -188,5 +188,6 @@ function wrapAction(
  */
 function getArrayFromFlags<T>(flags: any, name: string): T[] | undefined {
   const array = [flags[name]].flat() as Array<T | undefined>;
-  return array.filter((item) => item != null) as T[];
+  const result = array.filter((item) => item != null) as T[];
+  return result.length ? result : undefined;
 }
