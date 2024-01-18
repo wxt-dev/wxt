@@ -70,9 +70,7 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
-        analysis: {
-          enabled: flags.analyze,
-        },
+        analysis: flags.analyze ? { enabled: true } : undefined,
         filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
     }),
@@ -141,7 +139,7 @@ cli
     ),
   );
 
-cli.parse();
+cli.parse(process.argv);
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
