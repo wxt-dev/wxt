@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.3...v0.14.4)
+
+### 🩹 Fixes
+
+- Allow requiring built-in node modules from ESM CLI ([#356](https://github.com/wxt-dev/wxt/pull/356))
+
+### 🏡 Chore
+
+- Add unit tests for passing flags via the CLI ([#354](https://github.com/wxt-dev/wxt/pull/354))
+
 ## v0.14.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.2...v0.14.3)
