@@ -97,6 +97,11 @@ const config: tsup.Options[] = [
       cli: 'src/cli.ts',
     },
     format: ['esm'],
+    banner: {
+      // Fixes dynamic require of nodejs modules. See https://github.com/wxt-dev/wxt/issues/355
+      // https://github.com/evanw/esbuild/issues/1921#issuecomment-1152991694
+      js: "import { createRequire } from 'module';const require = createRequire(import.meta.url);",
+    },
   },
 ];
 
