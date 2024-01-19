@@ -8,6 +8,8 @@ import { printBuildSummary } from '~/core/utils/log';
 import glob from 'fast-glob';
 import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
+import managePath from 'manage-path';
+import { resolve } from 'node:path';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -74,6 +76,10 @@ async function combineAnalysisStats(config: InternalConfig): Promise<void> {
     absolute: true,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
+
+  const alterPath = managePath(process.env);
+  // Add subdependency path for PNPM shamefully-hoist=false
+  alterPath.push(resolve(config.root, 'node_modules/wxt/node_modules/.bin'));
 
   await execaCommand(
     `rollup-plugin-visualizer ${absolutePaths.join(' ')} --template ${
