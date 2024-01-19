@@ -6,6 +6,7 @@ import {
   fakeBuildOutput,
   fakeEntrypoint,
   fakeInternalConfig,
+  fakeManifestCommand,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
 } from '../testing/fake-objects';
@@ -52,7 +53,11 @@ describe('Manifest Utils', () => {
           },
         };
 
-        const actual = await generateManifest([popup], buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+          config,
+        );
 
         expect(actual).toMatchObject(expected);
       });
@@ -79,7 +84,11 @@ describe('Manifest Utils', () => {
             default_popup: 'popup.html',
           };
 
-          const actual = await generateManifest([popup], buildOutput, config);
+          const { manifest: actual } = await generateManifest(
+            [popup],
+            buildOutput,
+            config,
+          );
 
           expect(actual[expectedType]).toEqual(expected);
         },
@@ -102,7 +111,11 @@ describe('Manifest Utils', () => {
           action: config.manifest.action,
         };
 
-        const actual = await generateManifest([], buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          [],
+          buildOutput,
+          config,
+        );
 
         expect(actual).toMatchObject(expected);
       });
@@ -131,7 +144,11 @@ describe('Manifest Utils', () => {
           page: 'options.html',
         };
 
-        const actual = await generateManifest([options], buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          [options],
+          buildOutput,
+          config,
+        );
 
         expect(actual.options_ui).toEqual(expected);
       });
@@ -149,7 +166,11 @@ describe('Manifest Utils', () => {
           page: 'options.html',
         };
 
-        const actual = await generateManifest([options], buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          [options],
+          buildOutput,
+          config,
+        );
 
         expect(actual.options_ui).toEqual(expected);
       });
@@ -179,7 +200,7 @@ describe('Manifest Utils', () => {
               service_worker: 'background.js',
             };
 
-            const actual = await generateManifest(
+            const { manifest: actual } = await generateManifest(
               [background],
               buildOutput,
               config,
@@ -201,7 +222,7 @@ describe('Manifest Utils', () => {
             scripts: ['background.js'],
           };
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             [background],
             buildOutput,
             config,
@@ -226,7 +247,7 @@ describe('Manifest Utils', () => {
               scripts: ['background.js'],
             };
 
-            const actual = await generateManifest(
+            const { manifest: actual } = await generateManifest(
               [background],
               buildOutput,
               config,
@@ -248,7 +269,7 @@ describe('Manifest Utils', () => {
             scripts: ['background.js'],
           };
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             [background],
             buildOutput,
             config,
@@ -274,7 +295,11 @@ describe('Manifest Utils', () => {
         });
         const config = fakeInternalConfig();
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.icons).toEqual({
           16: 'icon-16.png',
@@ -296,7 +321,11 @@ describe('Manifest Utils', () => {
         });
         const config = fakeInternalConfig();
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.icons).toBeUndefined();
       });
@@ -323,7 +352,11 @@ describe('Manifest Utils', () => {
           },
         });
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.icons).toEqual(expected);
       });
@@ -423,7 +456,11 @@ describe('Manifest Utils', () => {
           ],
         };
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.content_scripts).toContainEqual({
           matches: ['*://google.com/*'],
@@ -480,7 +517,11 @@ describe('Manifest Utils', () => {
           },
         });
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.content_scripts).toContainEqual(userContentScript);
         expect(actual.content_scripts).toContainEqual(generatedContentScript);
@@ -516,7 +557,7 @@ describe('Manifest Utils', () => {
               command: 'build',
             });
 
-            const actual = await generateManifest(
+            const { manifest: actual } = await generateManifest(
               entrypoints,
               buildOutput,
               config,
@@ -561,7 +602,7 @@ describe('Manifest Utils', () => {
               command: 'build',
             });
 
-            const actual = await generateManifest(
+            const { manifest: actual } = await generateManifest(
               entrypoints,
               buildOutput,
               config,
@@ -604,7 +645,7 @@ describe('Manifest Utils', () => {
             manifestVersion: 3,
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -646,7 +687,7 @@ describe('Manifest Utils', () => {
             manifestVersion: 2,
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -685,7 +726,7 @@ describe('Manifest Utils', () => {
             manifestVersion: 3,
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -735,7 +776,11 @@ describe('Manifest Utils', () => {
           },
         });
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.web_accessible_resources).toEqual([
           { resources: ['one.png'], matches: ['*://one.com/*'] },
@@ -777,7 +822,11 @@ describe('Manifest Utils', () => {
           },
         });
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.web_accessible_resources).toEqual([
           'one.png',
@@ -800,7 +849,11 @@ describe('Manifest Utils', () => {
           author: newAuthor,
         };
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual).toMatchObject(expected);
       });
@@ -822,7 +875,7 @@ describe('Manifest Utils', () => {
             },
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -848,7 +901,7 @@ describe('Manifest Utils', () => {
             },
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -873,7 +926,7 @@ describe('Manifest Utils', () => {
             },
           });
 
-          const actual = await generateManifest(
+          const { manifest: actual } = await generateManifest(
             entrypoints,
             buildOutput,
             config,
@@ -894,7 +947,11 @@ describe('Manifest Utils', () => {
           },
         });
 
-        const actual = await generateManifest(entrypoints, buildOutput, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+          config,
+        );
 
         expect(actual.version).toBe('0.0.0');
         expect(actual.version_name).toBeUndefined();
@@ -918,7 +975,11 @@ describe('Manifest Utils', () => {
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
-        const actual = await generateManifest(entrypoints, output, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
 
         expect(actual.commands).toMatchObject({
           [reloadCommandName]: reloadCommand,
@@ -927,12 +988,7 @@ describe('Manifest Utils', () => {
 
       it('should not override any existing commands when adding the one to reload the extension', async () => {
         const customCommandName = 'custom-command';
-        const customCommand = {
-          description: 'Some other command',
-          suggested_key: {
-            default: 'Ctrl+H',
-          },
-        };
+        const customCommand = fakeManifestCommand();
         const config = fakeInternalConfig({
           command: 'serve',
           manifest: {
@@ -944,7 +1000,11 @@ describe('Manifest Utils', () => {
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
-        const actual = await generateManifest(entrypoints, output, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
 
         expect(actual.commands).toMatchObject({
           [reloadCommandName]: reloadCommand,
@@ -952,12 +1012,40 @@ describe('Manifest Utils', () => {
         });
       });
 
+      it('should not include the command if there are already 4 others (the max)', async () => {
+        const commands = {
+          command1: fakeManifestCommand(),
+          command2: fakeManifestCommand(),
+          command3: fakeManifestCommand(),
+          command4: fakeManifestCommand(),
+        };
+        const config = fakeInternalConfig({
+          command: 'serve',
+          manifest: { commands },
+        });
+        const output = fakeBuildOutput();
+        const entrypoints = fakeArray(fakeEntrypoint);
+
+        const { manifest: actual, warnings } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
+
+        expect(actual.commands).toEqual(commands);
+        expect(warnings).toHaveLength(1);
+      });
+
       it('should not include the command when building an extension', async () => {
         const config = fakeInternalConfig({ command: 'build' });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
-        const actual = await generateManifest(entrypoints, output, config);
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
 
         expect(actual.commands).toBeUndefined();
       });
