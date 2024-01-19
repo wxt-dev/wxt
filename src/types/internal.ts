@@ -57,6 +57,9 @@ export interface InternalConfig {
     includeBrowserPolyfill: boolean;
   };
   builder: WxtBuilder;
+  dev: {
+    reloadCommand: string | false;
+  };
 }
 
 export interface FsCache {

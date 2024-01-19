@@ -244,6 +244,9 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
       includeBrowserPolyfill: true,
     },
     builder: mock(),
+    dev: {
+      reloadCommand: 'Alt+R',
+    },
   };
 });
 

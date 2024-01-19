@@ -965,6 +965,7 @@ describe('Manifest Utils', () => {
     describe('commands', () => {
       const reloadCommandName = 'wxt:reload-extension';
       const reloadCommand = {
+        description: expect.any(String),
         suggested_key: {
           default: 'Alt+R',
         },
@@ -981,9 +982,54 @@ describe('Manifest Utils', () => {
           config,
         );
 
-        expect(actual.commands).toMatchObject({
+        expect(actual.commands).toEqual({
           [reloadCommandName]: reloadCommand,
         });
+      });
+
+      it('should customize the reload commands key binding if passing a custom command', async () => {
+        const config = fakeInternalConfig({
+          command: 'serve',
+          dev: {
+            reloadCommand: 'Ctrl+E',
+          },
+        });
+        const output = fakeBuildOutput();
+        const entrypoints = fakeArray(fakeEntrypoint);
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
+
+        expect(actual.commands).toEqual({
+          [reloadCommandName]: {
+            ...reloadCommand,
+            suggested_key: {
+              default: 'Ctrl+E',
+            },
+          },
+        });
+      });
+
+      it("should not include the reload command when it's been disabled", async () => {
+        const config = fakeInternalConfig({
+          command: 'serve',
+          dev: {
+            reloadCommand: false,
+          },
+        });
+        const output = fakeBuildOutput();
+        const entrypoints = fakeArray(fakeEntrypoint);
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+          config,
+        );
+
+        expect(actual.commands).toBeUndefined();
       });
 
       it('should not override any existing commands when adding the one to reload the extension', async () => {
@@ -1006,7 +1052,7 @@ describe('Manifest Utils', () => {
           config,
         );
 
-        expect(actual.commands).toMatchObject({
+        expect(actual.commands).toEqual({
           [reloadCommandName]: reloadCommand,
           [customCommandName]: customCommand,
         });

@@ -229,6 +229,24 @@ export interface InlineConfig {
      */
     includeBrowserPolyfill?: boolean;
   };
+  /**
+   * Config effecting dev mode only.
+   */
+  dev?: {
+    /**
+     * Controls whether a custom keyboard shortcut command, `Alt+R`, is added during dev mode to
+     * quickly reload the extension.
+     *
+     * If false, the shortcut is not added during development.
+     *
+     * If set to a custom string, you can override the key combo used. See
+     * [Chrome's command docs](https://developer.chrome.com/docs/extensions/reference/api/commands)
+     * for available options.
+     *
+     * @default "Alt+R"
+     */
+    reloadCommand?: string | false;
+  };
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
