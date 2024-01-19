@@ -15,7 +15,4 @@ export default defineConfig({
   alias: {
     public: 'src/public',
   },
-  dev: {
-    reloadCommand: 'Ctrl+E',
-  },
 });
