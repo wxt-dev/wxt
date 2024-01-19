@@ -125,6 +125,7 @@
     "jiti": "^1.21.0",
     "json5": "^2.2.3",
     "linkedom": "^0.16.1",
+    "manage-path": "^2.0.0",
     "minimatch": "^9.0.3",
     "normalize-path": "^3.0.0",
     "ora": "^7.0.1",
