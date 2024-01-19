@@ -38,7 +38,12 @@ export async function internalBuild(
   const entrypoints = await findEntrypoints(config);
   config.logger.debug('Detected entrypoints:', entrypoints);
   const groups = groupEntrypoints(entrypoints);
-  const { output } = await rebuild(config, entrypoints, groups, undefined);
+  const { output, warnings } = await rebuild(
+    config,
+    entrypoints,
+    groups,
+    undefined,
+  );
 
   // Post-build
   await printBuildSummary(
@@ -47,6 +52,10 @@ export async function internalBuild(
     output,
     config,
   );
+
+  for (const warning of warnings) {
+    config.logger.warn(...warning);
+  }
 
   if (config.analysis.enabled) {
     await combineAnalysisStats(config);

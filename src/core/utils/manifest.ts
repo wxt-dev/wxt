@@ -54,7 +54,8 @@ export async function generateManifest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
   config: InternalConfig,
-): Promise<Manifest.WebExtensionManifest> {
+): Promise<{ manifest: Manifest.WebExtensionManifest; warnings: any[][] }> {
+  const warnings: any[][] = [];
   const pkg = await getPackageJson(config);
 
   let versionName =
@@ -85,9 +86,9 @@ export async function generateManifest(
   // Add reload command in dev mode
   if (config.command === 'serve') {
     if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
-      config.logger.info(
-        "Extension already has 4 registered commands, WXT's reload command is disabled.",
-      );
+      warnings.push([
+        "Extension already has 4 registered commands, WXT's reload command is disabled",
+      ]);
     } else {
       manifest.commands ??= {};
       manifest.commands['wxt:reload-extension'] = {
@@ -124,7 +125,10 @@ export async function generateManifest(
     );
   }
 
-  return finalManifest;
+  return {
+    manifest: finalManifest,
+    warnings,
+  };
 }
 
 /**

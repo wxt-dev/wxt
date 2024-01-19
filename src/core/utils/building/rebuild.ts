@@ -33,7 +33,11 @@ export async function rebuild(
     steps: [],
     publicAssets: [],
   },
-): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
+): Promise<{
+  output: BuildOutput;
+  manifest: Manifest.WebExtensionManifest;
+  warnings: any[][];
+}> {
   const { default: ora } = await import('ora');
   const spinner = ora(`Preparing...`).start();
 
@@ -51,11 +55,8 @@ export async function rebuild(
     publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
   };
 
-  const newManifest = await generateManifest(
-    allEntrypoints,
-    mergedOutput,
-    config,
-  );
+  const { manifest: newManifest, warnings: manifestWarnings } =
+    await generateManifest(allEntrypoints, mergedOutput, config);
   const finalOutput: BuildOutput = {
     manifest: newManifest,
     ...newOutput,
@@ -77,5 +78,6 @@ export async function rebuild(
       ],
     },
     manifest: newManifest,
+    warnings: manifestWarnings,
   };
 }

@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import type { Manifest } from '~/browser';
+import { Commands, type Manifest } from '~/browser';
 import {
   FsCache,
   InternalConfig,
@@ -256,4 +256,12 @@ export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({
 export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
   chunks: fakeArray(fakeOutputChunk),
   entrypoints: fakeArray(fakeEntrypoint),
+}));
+
+export const fakeManifestCommand = fakeObjectCreator<Commands.Command>(() => ({
+  description: faker.string.sample(),
+  shortcut: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int({
+    min: 0,
+    max: 9,
+  })}`,
 }));
