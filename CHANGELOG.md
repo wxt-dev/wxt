@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.4...v0.14.5)
+
+### 🚀 Enhancements
+
+- Add `dev.reloadCommand` config ([#362](https://github.com/wxt-dev/wxt/pull/362))
+
+### 🩹 Fixes
+
+- Disable reload dev command when 4 commands are already registered ([#361](https://github.com/wxt-dev/wxt/pull/361))
+
 ## v0.14.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.3...v0.14.4)
