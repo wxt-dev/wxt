@@ -75,22 +75,29 @@ export async function generateManifest(
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
-  if (config.command === 'serve') {
-    baseManifest.commands = {
-      'wxt:reload-extension': {
-        description: 'Reload the extension during development',
-        suggested_key: {
-          default: 'Alt+R',
-        },
-      },
-    };
-  }
   const userManifest = config.manifest;
 
   const manifest = defu(
     userManifest,
     baseManifest,
   ) as Manifest.WebExtensionManifest;
+
+  // Add reload command in dev mode
+  if (config.command === 'serve') {
+    if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
+      config.logger.info(
+        "Extension already has 4 registered commands, WXT's reload command is disabled.",
+      );
+    } else {
+      manifest.commands ??= {};
+      manifest.commands['wxt:reload-extension'] = {
+        description: 'Reload the extension during development',
+        suggested_key: {
+          default: 'Alt+R',
+        },
+      };
+    }
+  }
 
   // Apply the final version fields after merging the user manifest
   manifest.version = version;

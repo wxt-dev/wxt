@@ -952,6 +952,33 @@ describe('Manifest Utils', () => {
         });
       });
 
+      it('should not include the command if there are already 4 others (the max)', async () => {
+        const commands = {
+          command1: {
+            suggested_key: { default: 'Ctrl+1' },
+          },
+          command2: {
+            suggested_key: { default: 'Ctrl+2' },
+          },
+          command3: {
+            suggested_key: { default: 'Ctrl+3' },
+          },
+          command4: {
+            suggested_key: { default: 'Ctrl+4' },
+          },
+        };
+        const config = fakeInternalConfig({
+          command: 'serve',
+          manifest: { commands },
+        });
+        const output = fakeBuildOutput();
+        const entrypoints = fakeArray(fakeEntrypoint);
+
+        const actual = await generateManifest(entrypoints, output, config);
+
+        expect(actual.commands).toEqual(commands);
+      });
+
       it('should not include the command when building an extension', async () => {
         const config = fakeInternalConfig({ command: 'build' });
         const output = fakeBuildOutput();
