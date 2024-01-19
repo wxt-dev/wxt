@@ -79,6 +79,7 @@ export async function getInternalConfig(
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
+  const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
 
   const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
     name: 'web-ext',
@@ -136,6 +137,9 @@ export async function getInternalConfig(
         mergedConfig.experimental?.includeBrowserPolyfill ?? true,
     },
     server,
+    dev: {
+      reloadCommand,
+    },
   };
 
   const builder = await createViteBuilder(
@@ -221,6 +225,10 @@ function mergeInlineConfig(
     },
     vite: undefined,
     transformManifest: undefined,
+    dev: {
+      ...userConfig.dev,
+      ...inlineConfig.dev,
+    },
   };
 }
 

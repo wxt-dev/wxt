@@ -84,7 +84,7 @@ export async function generateManifest(
   ) as Manifest.WebExtensionManifest;
 
   // Add reload command in dev mode
-  if (config.command === 'serve') {
+  if (config.command === 'serve' && config.dev.reloadCommand) {
     if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
       warnings.push([
         "Extension already has 4 registered commands, WXT's reload command is disabled",
@@ -94,7 +94,7 @@ export async function generateManifest(
       manifest.commands['wxt:reload-extension'] = {
         description: 'Reload the extension during development',
         suggested_key: {
-          default: 'Alt+R',
+          default: config.dev.reloadCommand,
         },
       };
     }
