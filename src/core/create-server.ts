@@ -49,22 +49,46 @@ export async function createServer(
     origin,
   };
 
+  const buildAndOpenBrowser = async () => {
+    // Build after starting the dev server so it can be used to transform HTML files
+    server.currentOutput = await internalBuild(config);
+
+    // Open browser after everything is ready to go.
+    await runner.openBrowser(config);
+  };
+
+  /**
+   * Stops the previous runner, grabs the latest config, and recreates the runner.
+   */
+  const closeAndRecreateRunner = async () => {
+    await runner.closeBrowser();
+    config = await getLatestConfig();
+    runner = await createExtensionRunner(config);
+  };
+
   // Server instance must be created first so its reference can be added to the internal config used
   // to pre-render entrypoints
   const server: WxtDevServer = {
     ...serverInfo,
-    watcher: undefined as any, // Filled out later down below
-    ws: undefined as any, // Filled out later down below
-    currentOutput: undefined as any, // Filled out later down below
+    get watcher() {
+      return builderServer.watcher;
+    },
+    get ws() {
+      return builderServer.ws;
+    },
+    currentOutput: undefined,
     async start() {
       await builderServer.listen();
       config.logger.success(`Started dev server @ ${serverInfo.origin}`);
-
-      // Build after starting the dev server so it can be used to transform HTML files
-      server.currentOutput = await internalBuild(config);
-
-      // Open browser after everything is ready to go.
-      await runner.openBrowser(config);
+      await buildAndOpenBrowser();
+    },
+    async stop() {
+      await runner.closeBrowser();
+      await builderServer.close();
+    },
+    async restart() {
+      await closeAndRecreateRunner();
+      await buildAndOpenBrowser();
     },
     transformHtml(url, html, originalUrl) {
       return builderServer.transformHtml(url, html, originalUrl);
@@ -78,23 +102,25 @@ export async function createServer(
     reloadExtension() {
       server.ws.send('wxt:reload-extension');
     },
+    async restartBrowser() {
+      await closeAndRecreateRunner();
+      await runner.openBrowser(config);
+    },
   };
 
   const getLatestConfig = () =>
     getInternalConfig(inlineConfig ?? {}, 'serve', server);
   let config = await getLatestConfig();
 
-  const [runner, builderServer] = await Promise.all([
+  let [runner, builderServer] = await Promise.all([
     createExtensionRunner(config),
     config.builder.createServer(server),
   ]);
 
-  server.watcher = builderServer.watcher;
-  server.ws = builderServer.ws;
-
   // Register content scripts for the first time after the background starts up since they're not
   // listed in the manifest
   server.ws.on('wxt:background-initialized', () => {
+    if (server.currentOutput == null) return;
     reloadContentScripts(server.currentOutput.steps, config, server);
   });
 
@@ -138,18 +164,39 @@ function createFileReloader(options: {
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
-      const fileChanges = changeQueue.splice(0, changeQueue.length);
+      if (server.currentOutput == null) return;
+
+      const fileChanges = changeQueue
+        .splice(0, changeQueue.length)
+        .map(([_, file]) => file);
       if (fileChanges.length === 0) return;
 
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
+      const changes = detectDevChanges(
+        config,
+        fileChanges,
+        server.currentOutput,
+      );
       if (changes.type === 'no-change') return;
+
+      if (changes.type === 'full-restart') {
+        config.logger.info('Config changed, restarting server...');
+        server.restart();
+        return;
+      }
+
+      if (changes.type === 'browser-restart') {
+        config.logger.info('Runner config changed, restarting browser...');
+        server.restartBrowser();
+        return;
+      }
 
       // Log the entrypoints that were effected
       config.logger.info(
-        `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
+        `Changed: ${Array.from(new Set(fileChanges))
           .map((file) => pc.dim(relative(config.root, file)))
           .join(', ')}`,
       );
+
       const rebuiltNames = changes.rebuildGroups
         .flat()
         .map((entry) => {
@@ -197,6 +244,8 @@ function reloadContentScripts(
 ) {
   if (config.manifestVersion === 3) {
     steps.forEach((step) => {
+      if (server.currentOutput == null) return;
+
       const entry = step.entrypoints;
       if (Array.isArray(entry) || entry.type !== 'content-script') return;
 

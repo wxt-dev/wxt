@@ -2,10 +2,11 @@ import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
+  InternalConfig,
   OutputAsset,
   OutputFile,
 } from '~/types';
-import { every } from '~/core/utils/arrays';
+import { every, some } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
 
 /**
@@ -29,10 +30,21 @@ import { normalizePath } from '~/core/utils/paths';
  *   - Config file changed (wxt.config.ts, .env, web-ext.config.ts, etc)
  */
 export function detectDevChanges(
-  changedFiles: [event: string, path: string][],
-  currentOutput: BuildOutput | undefined,
+  config: InternalConfig,
+  changedFiles: string[],
+  currentOutput: BuildOutput,
 ): DevModeChange {
-  if (currentOutput == null) return { type: 'no-change' };
+  const isConfigChange = some(
+    changedFiles,
+    (file) => file === config.userConfigMetadata.configFile,
+  );
+  if (isConfigChange) return { type: 'full-restart' };
+
+  const isRunnerChange = some(
+    changedFiles,
+    (file) => file === config.runnerConfig.configFile,
+  );
+  if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
@@ -69,7 +81,7 @@ export function detectDevChanges(
 
   const isOnlyHtmlChanges =
     changedFiles.length > 0 &&
-    every(changedFiles, ([_, file]) => file.endsWith('.html'));
+    every(changedFiles, (file) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -104,11 +116,11 @@ export function detectDevChanges(
  * For a single change, return all the step of the build output that were effected by it.
  */
 function findEffectedSteps(
-  changedFile: [event: string, path: string],
+  changedFile: string,
   currentOutput: BuildOutput,
 ): DetectedChange[] {
   const changes: DetectedChange[] = [];
-  const changedPath = normalizePath(changedFile[1]);
+  const changedPath = normalizePath(changedFile);
 
   const isChunkEffected = (chunk: OutputFile): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
@@ -139,8 +151,9 @@ export type DevModeChange =
   | NoChange
   | HtmlReload
   | ExtensionReload
-  | ContentScriptReload;
-// | BrowserRestart
+  | ContentScriptReload
+  | FullRestart
+  | BrowserRestart;
 
 interface NoChange {
   type: 'no-change';
@@ -155,6 +168,14 @@ interface RebuildChange {
    * The previous output stripped of any files are going to change.
    */
   cachedOutput: BuildOutput;
+}
+
+interface FullRestart {
+  type: 'full-restart';
+}
+
+interface BrowserRestart {
+  type: 'browser-restart';
 }
 
 interface HtmlReload extends RebuildChange {

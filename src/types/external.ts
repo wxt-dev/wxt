@@ -308,16 +308,24 @@ export interface BuildStepOutput {
 }
 
 export interface WxtDevServer
-  extends Omit<WxtBuilderServer, 'listen'>,
+  extends Omit<WxtBuilderServer, 'listen' | 'close'>,
     ServerInfo {
   /**
    * Stores the current build output of the server.
    */
-  currentOutput: BuildOutput;
+  currentOutput: BuildOutput | undefined;
   /**
    * Start the server.
    */
   start(): Promise<void>;
+  /**
+   * Stop the server.
+   */
+  stop(): Promise<void>;
+  /**
+   * Close the browser, stop the server, rebuild the entire extension, and start the server again.
+   */
+  restart(): Promise<void>;
   /**
    * Transform the HTML for dev mode.
    */
@@ -350,6 +358,10 @@ export interface WxtDevServer
   reloadContentScript: (
     contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
   ) => void;
+  /**
+   * Grab the latest runner config and restart the browser.
+   */
+  restartBrowser: () => void;
 }
 
 export type TargetBrowser = string;
@@ -692,6 +704,10 @@ export interface WxtBuilderServer {
    * Start the server.
    */
   listen(): Promise<void>;
+  /**
+   * Stop the server.
+   */
+  close(): Promise<void>;
   /**
    * Transform the HTML for dev mode.
    */
