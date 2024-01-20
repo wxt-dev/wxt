@@ -151,7 +151,7 @@ export type DevModeChange =
   | ExtensionReload
   | ContentScriptReload
   | FullRestart
-  | RestartBrowser;
+  | BrowserRestart;
 
 interface NoChange {
   type: 'no-change';
@@ -172,7 +172,7 @@ interface FullRestart {
   type: 'full-restart';
 }
 
-interface RestartBrowser {
+interface BrowserRestart {
   type: 'restart-browser';
 }
 
