@@ -313,7 +313,7 @@ export interface WxtDevServer
   /**
    * Stores the current build output of the server.
    */
-  currentOutput: BuildOutput;
+  currentOutput: BuildOutput | undefined;
   /**
    * Start the server.
    */
@@ -324,10 +324,8 @@ export interface WxtDevServer
   stop(): Promise<void>;
   /**
    * Close the browser, stop the server, rebuild the entire extension, and start the server again.
-   *
-   * The new server is returned.
    */
-  restart(): Promise<WxtDevServer>;
+  restart(): Promise<void>;
   /**
    * Transform the HTML for dev mode.
    */
@@ -360,6 +358,10 @@ export interface WxtDevServer
   reloadContentScript: (
     contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
   ) => void;
+  /**
+   * Grab the latest runner config and restart the browser.
+   */
+  restartBrowser: () => void;
 }
 
 export type TargetBrowser = string;

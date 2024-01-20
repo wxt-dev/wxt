@@ -39,6 +39,11 @@ export function detectDevChanges(
   );
   if (isConfigChange) return { type: 'full-restart' };
 
+  const isRunnerChange = changedFiles.some(
+    (file) => file === config.runnerConfig.configFile,
+  );
+  if (isRunnerChange) return { type: 'restart-browser' };
+
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
       findEffectedSteps(changedFile, currentOutput),
@@ -145,7 +150,8 @@ export type DevModeChange =
   | HtmlReload
   | ExtensionReload
   | ContentScriptReload
-  | FullRestart;
+  | FullRestart
+  | RestartBrowser;
 
 interface NoChange {
   type: 'no-change';
@@ -164,6 +170,10 @@ interface RebuildChange {
 
 interface FullRestart {
   type: 'full-restart';
+}
+
+interface RestartBrowser {
+  type: 'restart-browser';
 }
 
 interface HtmlReload extends RebuildChange {

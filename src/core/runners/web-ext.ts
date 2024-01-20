@@ -1,5 +1,6 @@
 import type { WebExtRunInstance } from 'web-ext-run';
 import { ExtensionRunner } from '~/types';
+import { formatDuration } from '../utils/time';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -9,7 +10,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
   return {
     async openBrowser(config) {
-      config.logger.info('Opening browser...');
+      const startTime = Date.now();
 
       if (config.browser === 'firefox' && config.manifestVersion === 3) {
         throw Error(
@@ -17,7 +18,7 @@ export function createWebExtRunner(): ExtensionRunner {
         );
       }
 
-      // Use the plugin's logger instead of web-ext's built-in one.
+      // Use WXT's logger instead of web-ext's built-in one.
       const webExtLogger = await import('web-ext-run/util/logger');
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
         if (level >= ERROR_LOG_LEVEL) config.logger.error(name, msg);
@@ -61,7 +62,8 @@ export function createWebExtRunner(): ExtensionRunner {
       const webExt = await import('web-ext-run');
       runner = await webExt.default.cmd.run(finalConfig, options);
 
-      config.logger.success('Opened!');
+      const duration = Date.now() - startTime;
+      config.logger.success(`Opened browser in ${formatDuration(duration)}`);
     },
 
     async closeBrowser() {
