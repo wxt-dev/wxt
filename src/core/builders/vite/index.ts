@@ -230,6 +230,9 @@ export async function createViteBuilder(
         async listen() {
           await viteServer.listen(info.port);
         },
+        async close() {
+          await viteServer.close();
+        },
         transformHtml(...args) {
           return viteServer.transformIndexHtml(...args);
         },

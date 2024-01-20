@@ -66,6 +66,16 @@ export async function createServer(
       // Open browser after everything is ready to go.
       await runner.openBrowser(config);
     },
+    async stop() {
+      await runner.closeBrowser();
+      await builderServer.close();
+    },
+    async restart() {
+      await server.stop();
+      const newServer = await createServer(inlineConfig);
+      newServer.start();
+      return newServer;
+    },
     transformHtml(url, html, originalUrl) {
       return builderServer.transformHtml(url, html, originalUrl);
     },
@@ -138,18 +148,31 @@ function createFileReloader(options: {
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
-      const fileChanges = changeQueue.splice(0, changeQueue.length);
+      const fileChanges = changeQueue
+        .splice(0, changeQueue.length)
+        .map(([_, file]) => file);
       if (fileChanges.length === 0) return;
 
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
+      const changes = detectDevChanges(
+        config,
+        fileChanges,
+        server.currentOutput,
+      );
       if (changes.type === 'no-change') return;
 
       // Log the entrypoints that were effected
       config.logger.info(
-        `Changed: ${Array.from(new Set(fileChanges.map((change) => change[1])))
+        `Changed: ${Array.from(new Set(fileChanges))
           .map((file) => pc.dim(relative(config.root, file)))
           .join(', ')}`,
       );
+
+      if (changes.type === 'full-restart') {
+        config.logger.info('Config changed, restarting server\n');
+        server.restart();
+        return;
+      }
+
       const rebuiltNames = changes.rebuildGroups
         .flat()
         .map((entry) => {

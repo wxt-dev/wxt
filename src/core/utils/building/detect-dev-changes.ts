@@ -2,6 +2,7 @@ import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
+  InternalConfig,
   OutputAsset,
   OutputFile,
 } from '~/types';
@@ -29,10 +30,14 @@ import { normalizePath } from '~/core/utils/paths';
  *   - Config file changed (wxt.config.ts, .env, web-ext.config.ts, etc)
  */
 export function detectDevChanges(
-  changedFiles: [event: string, path: string][],
-  currentOutput: BuildOutput | undefined,
+  config: InternalConfig,
+  changedFiles: string[],
+  currentOutput: BuildOutput,
 ): DevModeChange {
-  if (currentOutput == null) return { type: 'no-change' };
+  const isConfigChange = changedFiles.some(
+    (file) => file === config.userConfigMetadata.configFile,
+  );
+  if (isConfigChange) return { type: 'full-restart' };
 
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
@@ -104,11 +109,11 @@ export function detectDevChanges(
  * For a single change, return all the step of the build output that were effected by it.
  */
 function findEffectedSteps(
-  changedFile: [event: string, path: string],
+  changedFile: string,
   currentOutput: BuildOutput,
 ): DetectedChange[] {
   const changes: DetectedChange[] = [];
-  const changedPath = normalizePath(changedFile[1]);
+  const changedPath = normalizePath(changedFile);
 
   const isChunkEffected = (chunk: OutputFile): boolean =>
     // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
@@ -139,8 +144,8 @@ export type DevModeChange =
   | NoChange
   | HtmlReload
   | ExtensionReload
-  | ContentScriptReload;
-// | BrowserRestart
+  | ContentScriptReload
+  | FullRestart;
 
 interface NoChange {
   type: 'no-change';
@@ -155,6 +160,10 @@ interface RebuildChange {
    * The previous output stripped of any files are going to change.
    */
   cachedOutput: BuildOutput;
+}
+
+interface FullRestart {
+  type: 'full-restart';
 }
 
 interface HtmlReload extends RebuildChange {
