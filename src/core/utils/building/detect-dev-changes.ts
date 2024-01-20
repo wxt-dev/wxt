@@ -6,7 +6,7 @@ import {
   OutputAsset,
   OutputFile,
 } from '~/types';
-import { every } from '~/core/utils/arrays';
+import { every, some } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
 
 /**
@@ -34,15 +34,17 @@ export function detectDevChanges(
   changedFiles: string[],
   currentOutput: BuildOutput,
 ): DevModeChange {
-  const isConfigChange = changedFiles.some(
+  const isConfigChange = some(
+    changedFiles,
     (file) => file === config.userConfigMetadata.configFile,
   );
   if (isConfigChange) return { type: 'full-restart' };
 
-  const isRunnerChange = changedFiles.some(
+  const isRunnerChange = some(
+    changedFiles,
     (file) => file === config.runnerConfig.configFile,
   );
-  if (isRunnerChange) return { type: 'restart-browser' };
+  if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
@@ -79,7 +81,7 @@ export function detectDevChanges(
 
   const isOnlyHtmlChanges =
     changedFiles.length > 0 &&
-    every(changedFiles, ([_, file]) => file.endsWith('.html'));
+    every(changedFiles, (file) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -173,7 +175,7 @@ interface FullRestart {
 }
 
 interface BrowserRestart {
-  type: 'restart-browser';
+  type: 'browser-restart';
 }
 
 interface HtmlReload extends RebuildChange {
