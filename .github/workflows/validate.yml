@@ -30,9 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: pnpm build:all
-        working-directory: demo
       - run: pnpm tsc --noEmit
+        working-directory: demo
+      - run: pnpm build:all
         working-directory: demo
       - run: pnpm wxt zip
         working-directory: demo
