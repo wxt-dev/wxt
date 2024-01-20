@@ -184,7 +184,7 @@ function createFileReloader(options: {
         return;
       }
 
-      if (changes.type === 'restart-browser') {
+      if (changes.type === 'browser-restart') {
         config.logger.info('Runner config changed, restarting browser...');
         server.restartBrowser();
         return;
