@@ -10,7 +10,12 @@ import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
 import managePath from 'manage-path';
 import { resolve, relative } from 'node:path';
-import { ValidationError, validateEntrypoints } from '../validation';
+import {
+  ValidationError,
+  ValidationResult,
+  ValidationResults,
+  validateEntrypoints,
+} from '../validation';
 import consola from 'consola';
 
 /**
@@ -47,7 +52,7 @@ export async function internalBuild(
     printValidationResults(config, validationResults);
   }
   if (validationResults.errorCount > 0) {
-    throw Error(`Validation failed`, {
+    throw new ValidationError(`Validation failed`, {
       cause: validationResults,
     });
   }
@@ -104,7 +109,7 @@ async function combineAnalysisStats(config: InternalConfig): Promise<void> {
 
 function printValidationResults(
   config: InternalConfig,
-  { errorCount, errors, warningCount }: ReturnType<typeof validateEntrypoints>,
+  { errorCount, errors, warningCount }: ValidationResults,
 ) {
   (errorCount > 0 ? config.logger.error : config.logger.warn)(
     `Validation failed: ${errorCount} error${
@@ -118,7 +123,7 @@ function printValidationResults(
     entryErrors.push(error);
     map.set(error.entrypoint, entryErrors);
     return map;
-  }, new Map<Entrypoint, ValidationError[]>());
+  }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
     consola.log(relative(cwd, entrypoint.inputPath));

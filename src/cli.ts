@@ -4,6 +4,7 @@ import { build, clean, createServer, initialize, prepare, zip } from '~/core';
 import consola, { LogLevels } from 'consola';
 import { printHeader } from '~/core/utils/log';
 import { formatDuration } from '~/core/utils/time';
+import { ValidationError } from './core/utils/validation';
 
 // TODO: Remove. See https://github.com/wxt-dev/wxt/issues/277
 process.env.VITE_CJS_IGNORE_WARNING = 'true';
@@ -174,7 +175,11 @@ function wrapAction(
       consola.fail(
         `Command failed after ${formatDuration(Date.now() - startTime)}`,
       );
-      consola.error(err);
+      if (err instanceof ValidationError) {
+        // Don't log these errors, they've already been logged
+      } else {
+        consola.error(err);
+      }
       process.exit(1);
     }
   };

@@ -1,10 +1,8 @@
 import { ContentScriptEntrypoint, Entrypoint } from '~/types';
 
-export function validateEntrypoints(entrypoints: Entrypoint[]): {
-  errors: ValidationError[];
-  errorCount: number;
-  warningCount: number;
-} {
+export function validateEntrypoints(
+  entrypoints: Entrypoint[],
+): ValidationResults {
   const errors = entrypoints.flatMap((entrypoint) => {
     switch (entrypoint.type) {
       case 'content-script':
@@ -30,7 +28,7 @@ export function validateEntrypoints(entrypoints: Entrypoint[]): {
 
 function validateContentScriptEntrypoint(
   definition: ContentScriptEntrypoint,
-): ValidationError[] {
+): ValidationResult[] {
   const errors = validateBaseEntrypoint(definition);
   if (definition.options.matches == null) {
     errors.push({
@@ -43,8 +41,8 @@ function validateContentScriptEntrypoint(
   return errors;
 }
 
-function validateBaseEntrypoint(definition: Entrypoint): ValidationError[] {
-  const errors: ValidationError[] = [];
+function validateBaseEntrypoint(definition: Entrypoint): ValidationResult[] {
+  const errors: ValidationResult[] = [];
 
   if (
     definition.options.exclude != null &&
@@ -72,9 +70,17 @@ function validateBaseEntrypoint(definition: Entrypoint): ValidationError[] {
   return errors;
 }
 
-export interface ValidationError {
+export interface ValidationResult {
   type: 'warning' | 'error';
   message: string;
   entrypoint: Entrypoint;
   value: any;
 }
+
+export interface ValidationResults {
+  errors: ValidationResult[];
+  errorCount: number;
+  warningCount: number;
+}
+
+export class ValidationError extends Error {}
