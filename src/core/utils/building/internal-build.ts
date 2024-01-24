@@ -52,7 +52,7 @@ export async function internalBuild(
     printValidationResults(config, validationResults);
   }
   if (validationResults.errorCount > 0) {
-    throw new ValidationError(`Validation failed`, {
+    throw new ValidationError(`Entrypoint validation failed`, {
       cause: validationResults,
     });
   }
@@ -112,7 +112,7 @@ function printValidationResults(
   { errorCount, errors, warningCount }: ValidationResults,
 ) {
   (errorCount > 0 ? config.logger.error : config.logger.warn)(
-    `Validation failed: ${errorCount} error${
+    `Entrypoint validation failed: ${errorCount} error${
       errorCount === 1 ? '' : 's'
     }, ${warningCount} warning${warningCount === 1 ? '' : 's'}`,
   );
