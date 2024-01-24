@@ -21,6 +21,8 @@ Integrated content script UIs are injected alongside the content of a page. This
 ```ts [Vanilla]
 // entrypoints/example-ui.content.ts
 export default defineContentScript({
+  matches: ['*:///*/*'],
+
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
@@ -45,6 +47,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
+
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
@@ -73,6 +77,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
+
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
@@ -100,6 +106,8 @@ export default defineContentScript({
 import App from './App.svelte';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
+
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
@@ -128,6 +136,8 @@ export default defineContentScript({
 import { render } from 'solid-js/web';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
+
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
@@ -174,6 +184,7 @@ To use `createShadowRootUi`, follow these steps:
 import './style.css';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -204,6 +215,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -238,6 +250,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -271,6 +284,7 @@ import './style.css';
 import App from './App.svelte';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -305,6 +319,7 @@ import './style.css';
 import { render } from 'solid-js/web';
 
 export default defineContentScript({
+  matches: ['*:///*/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -377,7 +392,8 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
 
    ```ts
    export default defineContentScript({
-     // ...
+     matches: ['*:///*/*'],
+
      async main(ctx) {
        // Define the UI
        const ui = await createIframeUi(ctx, {
