@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.14.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.5...v0.14.6)
+
+### 🚀 Enhancements
+
+- Restart dev mode when saving config ([#365](https://github.com/wxt-dev/wxt/pull/365))
+- Add basic validation for entrypoint options ([#368](https://github.com/wxt-dev/wxt/pull/368))
+
+### 🩹 Fixes
+
+- Add subdependency bin directory so `wxt build --analyze` works with PNPM ([#363](https://github.com/wxt-dev/wxt/pull/363))
+- Sort build output files naturally ([#364](https://github.com/wxt-dev/wxt/pull/364))
+
+### 🤖 CI
+
+- Check for type errors in demo before building ([4b005b4](https://github.com/wxt-dev/wxt/commit/4b005b4))
+
 ## v0.14.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.4...v0.14.5)
