@@ -1,5 +1,5 @@
 import { findEntrypoints } from './find-entrypoints';
-import { InternalConfig, BuildOutput } from '~/types';
+import { InternalConfig, BuildOutput, Entrypoint } from '~/types';
 import pc from 'picocolors';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
@@ -9,7 +9,9 @@ import glob from 'fast-glob';
 import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
 import managePath from 'manage-path';
-import { resolve } from 'node:path';
+import { resolve, relative } from 'node:path';
+import { ValidationError, validateEntrypoints } from '../validation';
+import consola from 'consola';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -39,6 +41,17 @@ export async function internalBuild(
 
   const entrypoints = await findEntrypoints(config);
   config.logger.debug('Detected entrypoints:', entrypoints);
+
+  const validationResults = validateEntrypoints(entrypoints);
+  if (validationResults.errorCount + validationResults.warningCount > 0) {
+    printValidationResults(config, validationResults);
+  }
+  if (validationResults.errorCount > 0) {
+    throw Error(`Validation failed`, {
+      cause: validationResults,
+    });
+  }
+
   const groups = groupEntrypoints(entrypoints);
   const { output, warnings } = await rebuild(
     config,
@@ -87,4 +100,34 @@ async function combineAnalysisStats(config: InternalConfig): Promise<void> {
     }`,
     { cwd: config.root, stdio: 'inherit' },
   );
+}
+
+function printValidationResults(
+  config: InternalConfig,
+  { errorCount, errors, warningCount }: ReturnType<typeof validateEntrypoints>,
+) {
+  (errorCount > 0 ? config.logger.error : config.logger.warn)(
+    `Validation failed: ${errorCount} error${
+      errorCount === 1 ? '' : 's'
+    }, ${warningCount} warning${warningCount === 1 ? '' : 's'}`,
+  );
+
+  const cwd = process.cwd();
+  const entrypointErrors = errors.reduce((map, error) => {
+    const entryErrors = map.get(error.entrypoint) ?? [];
+    entryErrors.push(error);
+    map.set(error.entrypoint, entryErrors);
+    return map;
+  }, new Map<Entrypoint, ValidationError[]>());
+
+  Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
+    consola.log(relative(cwd, entrypoint.inputPath));
+    console.log();
+    errors.forEach((err) => {
+      const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
+      const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
+      consola.log(`  - ${type} ${err.message} ${recieved}`);
+    });
+    console.log();
+  });
 }

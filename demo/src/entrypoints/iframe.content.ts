@@ -1,5 +1,5 @@
 export default defineContentScript({
-  matches: ['*://*.google.com/*'],
+  // matches: ['*://*.google.com/*'],
 
   main(ctx) {
     const ui = createIframeUi(ctx, {
