@@ -94,7 +94,7 @@ const config: tsup.Options[] = [
   {
     ...preset,
     entry: {
-      cli: 'src/cli.ts',
+      cli: 'src/cli/index.ts',
     },
     format: ['esm'],
     banner: {

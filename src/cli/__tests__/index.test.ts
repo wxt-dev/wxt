@@ -1,10 +1,10 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build } from '../core/build';
-import { createServer } from '../core/create-server';
-import { zip } from '../core/zip';
-import { prepare } from '../core/prepare';
-import { clean } from '../core/clean';
-import { initialize } from '../core/initialize';
+import { build } from '../../core/build';
+import { createServer } from '../../core/create-server';
+import { zip } from '../../core/zip';
+import { prepare } from '../../core/prepare';
+import { clean } from '../../core/clean';
+import { initialize } from '../../core/initialize';
 import { mock } from 'vitest-mock-extended';
 import consola from 'consola';
 
@@ -44,14 +44,14 @@ describe('CLI', () => {
   describe('dev', () => {
     it('should not pass any config when no flags are passed', async () => {
       mockArgv();
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('path/to/root');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         root: 'path/to/root',
@@ -60,7 +60,7 @@ describe('CLI', () => {
 
     it('should respect a custom config file', async () => {
       mockArgv('-c', './path/to/config.ts');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         configFile: './path/to/config.ts',
@@ -69,7 +69,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom mode', async () => {
       mockArgv('-m', 'development');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         mode: 'development',
@@ -78,7 +78,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom browser', async () => {
       mockArgv('-b', 'firefox');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         browser: 'firefox',
@@ -87,7 +87,7 @@ describe('CLI', () => {
 
     it('should pass correct filtered entrypoints', async () => {
       mockArgv('-e', 'popup', '-e', 'options');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         filterEntrypoints: ['popup', 'options'],
@@ -96,7 +96,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv2', async () => {
       mockArgv('--mv2');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         manifestVersion: 2,
@@ -105,7 +105,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv3', async () => {
       mockArgv('--mv3');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         manifestVersion: 3,
@@ -114,7 +114,7 @@ describe('CLI', () => {
 
     it('should respect passing --debug', async () => {
       mockArgv('--debug');
-      await import('../cli');
+      await import('../commands');
 
       expect(createServerMock).toBeCalledWith({
         debug: true,
@@ -125,14 +125,14 @@ describe('CLI', () => {
   describe('build', () => {
     it('should not pass any config when no flags are passed', async () => {
       mockArgv('build');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('build', 'path/to/root');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         root: 'path/to/root',
@@ -141,7 +141,7 @@ describe('CLI', () => {
 
     it('should respect a custom config file', async () => {
       mockArgv('build', '-c', './path/to/config.ts');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         configFile: './path/to/config.ts',
@@ -150,7 +150,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom mode', async () => {
       mockArgv('build', '-m', 'development');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         mode: 'development',
@@ -159,7 +159,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom browser', async () => {
       mockArgv('build', '-b', 'firefox');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         browser: 'firefox',
@@ -168,7 +168,7 @@ describe('CLI', () => {
 
     it('should pass correct filtered entrypoints', async () => {
       mockArgv('build', '-e', 'popup', '-e', 'options');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         filterEntrypoints: ['popup', 'options'],
@@ -177,7 +177,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv2', async () => {
       mockArgv('build', '--mv2');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         manifestVersion: 2,
@@ -186,7 +186,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv3', async () => {
       mockArgv('build', '--mv3');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         manifestVersion: 3,
@@ -195,7 +195,7 @@ describe('CLI', () => {
 
     it('should include analysis in the build', async () => {
       mockArgv('build', '--analyze');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         analysis: {
@@ -206,7 +206,7 @@ describe('CLI', () => {
 
     it('should respect passing --debug', async () => {
       mockArgv('build', '--debug');
-      await import('../cli');
+      await import('../commands');
 
       expect(buildMock).toBeCalledWith({
         debug: true,
@@ -217,14 +217,14 @@ describe('CLI', () => {
   describe('zip', () => {
     it('should not pass any config when no flags are passed', async () => {
       mockArgv('zip');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('zip', 'path/to/root');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         root: 'path/to/root',
@@ -233,7 +233,7 @@ describe('CLI', () => {
 
     it('should respect a custom config file', async () => {
       mockArgv('zip', '-c', './path/to/config.ts');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         configFile: './path/to/config.ts',
@@ -242,7 +242,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom mode', async () => {
       mockArgv('zip', '-m', 'development');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         mode: 'development',
@@ -251,7 +251,7 @@ describe('CLI', () => {
 
     it('should respect passing a custom browser', async () => {
       mockArgv('zip', '-b', 'firefox');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         browser: 'firefox',
@@ -260,7 +260,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv2', async () => {
       mockArgv('zip', '--mv2');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         manifestVersion: 2,
@@ -269,7 +269,7 @@ describe('CLI', () => {
 
     it('should respect passing --mv3', async () => {
       mockArgv('zip', '--mv3');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         manifestVersion: 3,
@@ -278,7 +278,7 @@ describe('CLI', () => {
 
     it('should respect passing --debug', async () => {
       mockArgv('zip', '--debug');
-      await import('../cli');
+      await import('../commands');
 
       expect(zipMock).toBeCalledWith({
         debug: true,
@@ -289,14 +289,14 @@ describe('CLI', () => {
   describe('prepare', () => {
     it('should not pass any config when no flags are passed', async () => {
       mockArgv('prepare');
-      await import('../cli');
+      await import('../commands');
 
       expect(prepareMock).toBeCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('prepare', 'path/to/root');
-      await import('../cli');
+      await import('../commands');
 
       expect(prepareMock).toBeCalledWith({
         root: 'path/to/root',
@@ -305,7 +305,7 @@ describe('CLI', () => {
 
     it('should respect a custom config file', async () => {
       mockArgv('prepare', '-c', './path/to/config.ts');
-      await import('../cli');
+      await import('../commands');
 
       expect(prepareMock).toBeCalledWith({
         configFile: './path/to/config.ts',
@@ -314,7 +314,7 @@ describe('CLI', () => {
 
     it('should respect passing --debug', async () => {
       mockArgv('prepare', '--debug');
-      await import('../cli');
+      await import('../commands');
 
       expect(prepareMock).toBeCalledWith({
         debug: true,
@@ -325,14 +325,14 @@ describe('CLI', () => {
   describe('clean', () => {
     it('should not pass any config when no flags are passed', async () => {
       mockArgv('clean');
-      await import('../cli');
+      await import('../commands');
 
       expect(cleanMock).toBeCalledWith(undefined);
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('clean', 'path/to/root');
-      await import('../cli');
+      await import('../commands');
 
       expect(cleanMock).toBeCalledWith('path/to/root');
     });
@@ -341,14 +341,14 @@ describe('CLI', () => {
   describe('init', () => {
     it('should not pass any options when no flags are passed', async () => {
       mockArgv('init');
-      await import('../cli');
+      await import('../commands');
 
       expect(initializeMock).toBeCalledWith({});
     });
 
     it('should respect the provided folder', async () => {
       mockArgv('init', 'path/to/folder');
-      await import('../cli');
+      await import('../commands');
 
       expect(initializeMock).toBeCalledWith({
         directory: 'path/to/folder',
@@ -357,7 +357,7 @@ describe('CLI', () => {
 
     it('should respect passing --template', async () => {
       mockArgv('init', '-t', 'vue');
-      await import('../cli');
+      await import('../commands');
 
       expect(initializeMock).toBeCalledWith({
         template: 'vue',
@@ -366,7 +366,7 @@ describe('CLI', () => {
 
     it('should respect passing --pm', async () => {
       mockArgv('init', '--pm', 'pnpm');
-      await import('../cli');
+      await import('../commands');
 
       expect(initializeMock).toBeCalledWith({
         packageManager: 'pnpm',
