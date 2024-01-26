@@ -21,7 +21,7 @@ Integrated content script UIs are injected alongside the content of a page. This
 ```ts [Vanilla]
 // entrypoints/example-ui.content.ts
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
 
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -47,7 +47,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
 
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -77,7 +77,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
 
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -106,7 +106,7 @@ export default defineContentScript({
 import App from './App.svelte';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
 
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -136,7 +136,7 @@ export default defineContentScript({
 import { render } from 'solid-js/web';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
 
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -184,7 +184,7 @@ To use `createShadowRootUi`, follow these steps:
 import './style.css';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -193,7 +193,7 @@ export default defineContentScript({
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       anchor: '#anchor',
-      type: 'inline',
+      position: 'inline',
       onMount(container) {
         // Define how your UI will be mounted inside the container
         const app = document.createElement('p');
@@ -215,7 +215,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -224,7 +224,7 @@ export default defineContentScript({
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       anchor: '#anchor',
-      type: 'inline',
+      position: 'inline',
       onMount: (container) => {
         // Define how your UI will be mounted inside the container
         const app = createApp(App);
@@ -250,7 +250,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -284,7 +284,7 @@ import './style.css';
 import App from './App.svelte';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -319,7 +319,7 @@ import './style.css';
 import { render } from 'solid-js/web';
 
 export default defineContentScript({
-  matches: ['*:///*/*'],
+  matches: ['<all_urls>'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
@@ -392,14 +392,14 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
 
    ```ts
    export default defineContentScript({
-     matches: ['*:///*/*'],
+     matches: ['<all_urls>'],
 
      async main(ctx) {
        // Define the UI
        const ui = await createIframeUi(ctx, {
          page: '/example-iframe.html',
          anchor: '#anchor',
-         type: 'inline',
+         position: 'inline',
          onMount: (wrapper, iframe) => {
            // Add styles to the iframe like width
            iframe.width = 123;
