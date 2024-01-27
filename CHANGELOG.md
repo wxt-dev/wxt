@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.14.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.6...v0.14.7)
+
+### 🩹 Fixes
+
+- Improve error messages when importing and building entrypoints ([3b63a51](https://github.com/wxt-dev/wxt/commit/3b63a51))
+- **storage:** Throw better error message when importing outside a extension environment ([35865ad](https://github.com/wxt-dev/wxt/commit/35865ad))
+- Upgrade `web-ext-run` ([62ecb6f](https://github.com/wxt-dev/wxt/commit/62ecb6f))
+
+### 📖 Documentation
+
+- Add `matches` to content script examples ([dab8efa](https://github.com/wxt-dev/wxt/commit/dab8efa))
+- Fix incorrect sample code ([#372](https://github.com/wxt-dev/wxt/pull/372))
+- Document defined constants for the build target ([68874e6](https://github.com/wxt-dev/wxt/commit/68874e6))
+- Add missing `await` to `createShadowRootUi` examples ([fc45c37](https://github.com/wxt-dev/wxt/commit/fc45c37))
+
+### ❤️ Contributors
+
+- 東奈比 ([@dongnaebi](http://github.com/dongnaebi))
+
 ## v0.14.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.5...v0.14.6)
