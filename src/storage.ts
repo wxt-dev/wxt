@@ -308,10 +308,20 @@ function createDriver(
   storageArea: 'local' | 'session' | 'sync' | 'managed',
 ): WxtStorageDriver {
   const getStorageArea = () => {
-    if (browser.storage == null)
+    if (browser.runtime == null) {
+      throw Error(
+        [
+          "'wxt/storage' must be loaded in a web extension environment",
+          '\n - If thrown during a build, see https://github.com/wxt-dev/wxt/issues/371',
+          " - If thrown during tests, mock 'wxt/browser' correctly. See https://wxt.dev/guide/testing.html\n",
+        ].join('\n'),
+      );
+    }
+    if (browser.storage == null) {
       throw Error(
         "You must add the 'storage' permission to your manifest to use 'wxt/storage'",
       );
+    }
 
     return browser.storage[storageArea];
   };
