@@ -89,16 +89,16 @@ export async function importEntrypointFile<T>(
     const res = await jiti(path);
     return res.default;
   } catch (err) {
+    const filePath = relative(config.root, path);
     if (err instanceof ReferenceError) {
       // "XXX is not defined" - usually due to WXT removing imports
       const variableName = err.message.replace(' is not defined', '');
-      const filePath = relative(config.root, path);
       throw Error(
         `${filePath}: Cannot use imported variable "${variableName}" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects`,
         { cause: err },
       );
     } else {
-      throw err;
+      throw Error(`Failed to load entrypoint: ${filePath}`, { cause: err });
     }
   }
 }

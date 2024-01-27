@@ -18,12 +18,15 @@ export async function buildEntrypoints(
   const steps: BuildStepOutput[] = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
-    const groupNames = [group]
-      .flat()
-      .map((e) => e.name)
-      .join(pc.dim(', '));
-    spinner.text = pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNames}`;
-    steps.push(await config.builder.build(group));
+    const groupNames = [group].flat().map((e) => e.name);
+    const groupNameColored = groupNames.join(pc.dim(', '));
+    spinner.text =
+      pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
+    try {
+      steps.push(await config.builder.build(group));
+    } catch (err) {
+      throw Error(`Failed to build ${groupNames.join(', ')}`, { cause: err });
+    }
   }
   const publicAssets = await copyPublicDirectory(config);
 
