@@ -254,9 +254,9 @@ export default defineContentScript({
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
-  main(ctx) {
+  async main(ctx) {
     // 3. Define your UI
-    const ui = createShadowRootUi(ctx, {
+    const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
@@ -288,9 +288,9 @@ export default defineContentScript({
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
-  main(ctx) {
+  async main(ctx) {
     // 3. Define your UI
-    const ui = createShadowRootUi(ctx, {
+    const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
@@ -323,9 +323,9 @@ export default defineContentScript({
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
-  main(ctx) {
+  async main(ctx) {
     // 3. Define your UI
-    const ui = createShadowRootUi(ctx, {
+    const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
       anchor: '#anchor',
