@@ -17,11 +17,9 @@ Separate build targets are written to their own output directories:
 
 To build for a specific browser, pass the `-b --browser` flag from the CLI:
 
-```
-
+```sh
 wxt --browser firefox
 wxt build --browser firefox
-
 ```
 
 By default, it will build for `chrome`. When excluding the [manifest version flags](#target-manifest-version), it will default to the commonly accepted manifest version for that browser.
@@ -111,4 +109,25 @@ export default defineContentScript({
 
 :::warning
 Only `defineBackground` and `defineContentScript` support per-browser options right now.
+:::
+
+## Runtime
+
+To determine the browser or manifest version at runtime, you can use any of the below variables:
+
+- `__BROWSER__`: A string, the target browser, usually equal to the `--browser` flag
+- `__MANIFEST_VERSION__`: A number, either `2` or `3`, depending on the manifest version targetted
+- `__IS_CHROME__`: A boolean equivalent to `__BROWSER__ === "chrome"`
+- `__IS_FIREFOX__`: A boolean equivalent to `__BROWSER__ === "firefox"`
+- `__IS_EDGE__`: A boolean equivalent to `__BROWSER__ === "edge"`
+- `__IS_SAFARI__`: A boolean equivalent to `__BROWSER__ === "safari"`
+- `__IS_OPERA__`: A boolean equivalent to `__BROWSER__ === "opera"`
+- `__COMMAND__`: A string, `"serve"` when running `wxt` for development or `"build"` in all other cases.
+
+:::info
+These variables are constants defined at build time based on the build target. They do not actually detect which browser the code is running in.
+
+For example, if you build for `--browser chrome` and publish it on Edge, `__BROWSER__` will be `"chrome"`, not `"edge"`. You have to build a separate ZIP for `--browser edge` before `__BROWSER__` will be `"edge"`.
+
+If you need to know the actual browser your code is being ran on, you should use a [user agent parser](https://www.npmjs.com/package/ua-parser-js).
 :::
