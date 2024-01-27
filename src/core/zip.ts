@@ -65,7 +65,8 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         const matchedPattern = internalConfig.zip.ignoredSources.find(
           (pattern) => minimatch(relativePath, pattern),
         );
-        return matchedPattern == null;
+
+        return matchedPattern == null || relativePath.startsWith('.env');
       },
     });
     zipFiles.push(sourcesZipPath);
