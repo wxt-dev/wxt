@@ -136,7 +136,7 @@ declare module "wxt/browser" {
 
   const overrides = messages.map((message) => {
     return `    /**
-     * ${message.description ?? 'No message description.'}
+     * ${message.description || 'No message description.'}
      *
      * "${message.message}"
      */
@@ -166,7 +166,7 @@ async function writeGlobalsDeclarationFile(
       'export {}',
       '',
       'interface ImportMetaEnv {',
-      ...globals.map((item) => `  readonly ${item.name}: ${item.type}`),
+      ...globals.map((item) => `  readonly ${item.name}: ${item.type};`),
       '}',
       'interface ImportMeta {',
       '  readonly env: ImportMetaEnv',
