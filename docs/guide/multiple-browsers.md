@@ -117,11 +117,11 @@ To determine the browser or manifest version at runtime, you can use any of the 
 
 - `import.meta.env.BROWSER`: A string, the target browser, usually equal to the `--browser` flag
 - `import.meta.env.MANIFEST_VERSION`: A number, either `2` or `3`, depending on the manifest version targetted
-- `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.browser === "chrome"`
-- `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.browser === "firefox"`
-- `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.browser === "edge"`
-- `import.meta.env.SAFARI`: A boolean equivalent to `import.meta.env.browser === "safari"`
-- `import.meta.env.OPERA`: A boolean equivalent to `import.meta.env.browser === "opera"`
+- `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.BROWSER === "chrome"`
+- `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.BROWSER === "firefox"`
+- `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.BROWSER === "edge"`
+- `import.meta.env.SAFARI`: A boolean equivalent to `import.meta.env.BROWSER === "safari"`
+- `import.meta.env.OPERA`: A boolean equivalent to `import.meta.env.BROWSER === "opera"`
 - `import.meta.env.COMMAND`: A string, `"serve"` when running `wxt` for development or `"build"` in all other cases.
 
 :::info
