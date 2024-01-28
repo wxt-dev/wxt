@@ -145,7 +145,7 @@ export interface InlineConfig {
     sourcesRoot?: string;
     /**
      * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to exclude when
-     * creating a ZIP of all your source code for Firfox. Patterns are relative to your
+     * creating a ZIP of all your source code for Firefox. Patterns are relative to your
      * `config.zip.sourcesRoot`.
      *
      * Hidden files, node_modules, and tests are ignored by default.
