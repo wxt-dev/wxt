@@ -1,7 +1,7 @@
 import { logger } from '../sandbox/utils/logger';
 import { setupWebSocket } from './utils/setup-web-socket';
 
-if (__COMMAND__ === 'serve') {
+if (import.meta.env.COMMAND === 'serve') {
   try {
     setupWebSocket((message) => {
       if (message.event === 'wxt:reload-page') {

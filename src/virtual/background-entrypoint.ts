@@ -5,7 +5,7 @@ import { browser } from 'wxt/browser';
 import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
 import { reloadContentScript } from './utils/reload-content-scripts';
 
-if (__COMMAND__ === 'serve') {
+if (import.meta.env.COMMAND === 'serve') {
   try {
     const ws = setupWebSocket((message) => {
       if (message.event === 'wxt:reload-extension') browser.runtime.reload();
@@ -13,7 +13,7 @@ if (__COMMAND__ === 'serve') {
         reloadContentScript(message.data);
     });
 
-    if (__MANIFEST_VERSION__ === 3) {
+    if (import.meta.env.MANIFEST_VERSION === 3) {
       // Tell the server the background script is loaded and ready to go
       ws.addEventListener('open', () => {
         const msg = { type: 'custom', event: 'wxt:background-initialized' };

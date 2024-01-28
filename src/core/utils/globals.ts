@@ -5,42 +5,42 @@ export function getGlobals(
 ): Array<{ name: string; value: any; type: string }> {
   return [
     {
-      name: surroundInUnderscore('MANIFEST_VERSION'),
+      name: 'MANIFEST_VERSION',
       value: config.manifestVersion,
       type: `2 | 3`,
     },
     {
-      name: surroundInUnderscore('BROWSER'),
+      name: 'BROWSER',
       value: config.browser,
       type: `string`,
     },
     {
-      name: surroundInUnderscore('IS_CHROME'),
+      name: 'CHROME',
       value: config.browser === 'chrome',
       type: `boolean`,
     },
     {
-      name: surroundInUnderscore('IS_FIREFOX'),
+      name: 'FIREFOX',
       value: config.browser === 'firefox',
       type: `boolean`,
     },
     {
-      name: surroundInUnderscore('IS_SAFARI'),
+      name: 'SAFARI',
       value: config.browser === 'safari',
       type: `boolean`,
     },
     {
-      name: surroundInUnderscore('IS_EDGE'),
+      name: 'EDGE',
       value: config.browser === 'edge',
       type: `boolean`,
     },
     {
-      name: surroundInUnderscore('IS_OPERA'),
+      name: 'OPERA',
       value: config.browser === 'opera',
       type: `boolean`,
     },
     {
-      name: surroundInUnderscore('COMMAND'),
+      name: 'COMMAND',
       value: config.command,
       type: `"build" | "serve"`,
     },
@@ -50,17 +50,9 @@ export function getGlobals(
 export function getEntrypointGlobals(entrypointName: string) {
   return [
     {
-      name: surroundInUnderscore('ENTRYPOINT'),
+      name: 'entrypoint',
       value: entrypointName,
       type: `string`,
     },
   ];
-}
-
-/**
- * Don't hardcode the complete name so that the string litterals in this file aren't replaced during
- * tests (which causes syntax errors), only during builds.
- */
-function surroundInUnderscore(name: string): string {
-  return `__${name}__`;
 }

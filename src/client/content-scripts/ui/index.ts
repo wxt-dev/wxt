@@ -236,7 +236,9 @@ function mountUi(
  * Load the CSS for the current entrypoint.
  */
 async function loadCss(): Promise<string> {
-  const url = browser.runtime.getURL(`/content-scripts/${__ENTRYPOINT__}.css`);
+  const url = browser.runtime.getURL(
+    `/content-scripts/${import.meta.env.ENTRYPOINT}.css`,
+  );
   try {
     const res = await fetch(url);
     return await res.text();

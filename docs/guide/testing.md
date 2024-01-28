@@ -19,7 +19,7 @@ If you want to try to use a different framework for unit tests, you will need to
 - **Auto-imports**: Add `unimport` to your test environment or disable them by setting `imports: false` in your `wxt.config.ts` file
 - **`browser` mock**: Mock the `webextension-polyfill` module globally with `wxt/dist/virtual/mock-browser.js`
 - **[Remote Code Bundling](/guide/remote-code)**: If you use it, configure your environment to handle the `url:` module prefix
-- **Global Variables**: If you consume them, manually define globals provided by WXT (like `__BROWSER__`) by adding them to the global scope before accessing them (`globalThis.__BROWSER__ = "chrome"`)
+- **Global Variables**: If you consume them, manually define globals provided by WXT (like `import.meta.env.BROWSER`) by adding them to the global scope before accessing them (`import.meta.env.BROWSER = "chrome"`)
 - **Import paths**: If you use the `@/` or `~/` path aliases, add them to your test environment
 
 [Here's how Vitest is configured](https://github.com/wxt-dev/wxt/blob/main/src/testing/wxt-vitest-plugin.ts) for reference.

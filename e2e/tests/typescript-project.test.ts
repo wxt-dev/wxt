@@ -133,7 +133,7 @@ describe('TypeScript Project', () => {
             options?: GetMessageOptions,
           ): string;
           /**
-           * 
+           *
            *
            * "<browser.i18n.getUiLocale()>"
            */

@@ -5,12 +5,12 @@ import { ContentScriptContext } from 'wxt/client';
 (async () => {
   try {
     const { main, ...options } = definition;
-    const ctx = new ContentScriptContext(__ENTRYPOINT__, options);
+    const ctx = new ContentScriptContext(import.meta.env.ENTRYPOINT, options);
 
     await main(ctx);
   } catch (err) {
     logger.error(
-      `The content script "${__ENTRYPOINT__}" crashed on startup!`,
+      `The content script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
       err,
     );
   }
