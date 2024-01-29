@@ -44,6 +44,10 @@ export async function createViteBuilder(
     if (config.build.minify == null && wxtConfig.command === 'serve') {
       config.build.minify = false;
     }
+    // Enable inline sourcemaps for the dev command (so content scripts have sourcemaps)
+    if (config.build.sourcemap == null && wxtConfig.command === 'serve') {
+      config.build.sourcemap = 'inline';
+    }
 
     config.plugins ??= [];
     config.plugins.push(
