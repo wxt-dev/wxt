@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.15.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.7...v0.15.0)
+
+### 🚀 Enhancements
+
+- **zip:** ⚠️  Add `includeSources` and rename `ignoredSources` to `excludeSources` ([#378](https://github.com/wxt-dev/wxt/pull/378))
+
+### 🩹 Fixes
+
+- Generate missing sourcemap in `wxt:unimport` plugin ([#381](https://github.com/wxt-dev/wxt/pull/381))
+- ⚠️  Move browser constants to `import.meta.env` ([#380](https://github.com/wxt-dev/wxt/pull/380))
+- Enable inline sourcemaps by default during development ([#382](https://github.com/wxt-dev/wxt/pull/382))
+
+### 📖 Documentation
+
+- Fix typo ([f9718a1](https://github.com/wxt-dev/wxt/commit/f9718a1))
+
+### 🏡 Chore
+
+- Update contributor docs ([eb758bd](https://github.com/wxt-dev/wxt/commit/eb758bd))
+
+#### ⚠️ Breaking Changes
+
+- **zip:** ⚠️  Add `includeSources` and rename `ignoredSources` to `excludeSources` ([#378](https://github.com/wxt-dev/wxt/pull/378))
+- ⚠️  Move browser constants to `import.meta.env` ([#380](https://github.com/wxt-dev/wxt/pull/380))
+
+### ❤️ Contributors
+
+- Nenad Novaković
+
 ## v0.14.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.6...v0.14.7)
