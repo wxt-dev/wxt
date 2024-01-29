@@ -145,10 +145,10 @@ export interface InlineConfig {
     sourcesRoot?: string;
     /**
      * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to include when
-     * creating a ZIP of all your source code for Firfox. Patterns are relative to your
+     * creating a ZIP of all your source code for Firefox. Patterns are relative to your
      * `config.zip.sourcesRoot`.
      *
-     * Many files/dirs are already excluded by default. Use this to override exclusion of files/directories that are excluded by default.
+     * Included sources override `excludedSources`. So if a file matches both lists, it is included in the ZIP.
      *
      * @example
      * [
