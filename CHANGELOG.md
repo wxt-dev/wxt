@@ -24,12 +24,22 @@
 
 #### ⚠️ Breaking Changes
 
-- **zip:** ⚠️  Add `includeSources` and rename `ignoredSources` to `excludeSources` ([#378](https://github.com/wxt-dev/wxt/pull/378))
-- ⚠️  Move browser constants to `import.meta.env` ([#380](https://github.com/wxt-dev/wxt/pull/380))
+Renamed `zip.ignoredSources` to `zip.excludeSources` in [#378](https://github.com/wxt-dev/wxt/pull/378)
+
+Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: https://wxt.dev/guide/multiple-browsers.html#runtime
+
+- `__BROWSER__` &rarr; `import.meta.env.BROWSER`
+- `__COMMAND__` &rarr; `import.meta.env.COMMAND`
+- `__MANIFEST_VERSION__` &rarr; `import.meta.env.MANIFEST_VERSION`
+- `__IS_CHROME__` &rarr; `import.meta.env.CHROME`
+- `__IS_FIREFOX__` &rarr; `import.meta.env.FIREFOX`
+- `__IS_SAFARI__` &rarr; `import.meta.env.SAFARI`
+- `__IS_EDGE__` &rarr; `import.meta.env.EDGE`
+- `__IS_OPERA__` &rarr; `import.meta.env.OPERA`
 
 ### ❤️ Contributors
 
-- Nenad Novaković
+- Nenad Novaković ([@dvlden](https://github.com/dvlden))
 
 ## v0.14.7
 
