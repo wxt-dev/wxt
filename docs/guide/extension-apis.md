@@ -63,15 +63,13 @@ console.log(res); // "pong"
 ```ts
 // background.ts
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener(
-    (message, sender, sendResponse) => {
-      console.log(message); // "ping"
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log(message); // "ping"
 
-      // Wait 1 second and respond with "pong"
-      setTimeout(() => sendResponse('pong'), 1000);
-      return true;
-    },
-  );
+    // Wait 1 second and respond with "pong"
+    setTimeout(() => sendResponse('pong'), 1000);
+    return true;
+  });
 });
 ```
 
