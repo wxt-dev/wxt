@@ -62,10 +62,15 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       saveTo: sourcesZipPath,
       filter(path) {
         const relativePath = relative(internalConfig.zip.sourcesRoot, path);
-        const matchedPattern = internalConfig.zip.ignoredSources.find(
-          (pattern) => minimatch(relativePath, pattern),
+
+        return (
+          internalConfig.zip.includedSources.some((pattern) =>
+            minimatch(relativePath, pattern),
+          ) ||
+          !internalConfig.zip.excludedSources.some((pattern) =>
+            minimatch(relativePath, pattern),
+          )
         );
-        return matchedPattern == null;
       },
     });
     zipFiles.push(sourcesZipPath);

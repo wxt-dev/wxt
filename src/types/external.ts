@@ -144,6 +144,19 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
+     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to include when
+     * creating a ZIP of all your source code for Firfox. Patterns are relative to your
+     * `config.zip.sourcesRoot`.
+     *
+     * Many files/dirs are already excluded by default. Use this to override exclusion of files/directories that are excluded by default.
+     *
+     * @example
+     * [
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     * ]
+     */
+    includedSources?: string[];
+    /**
      * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to exclude when
      * creating a ZIP of all your source code for Firfox. Patterns are relative to your
      * `config.zip.sourcesRoot`.
@@ -155,7 +168,7 @@ export interface InlineConfig {
      *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
      * ]
      */
-    ignoredSources?: string[];
+    excludedSources?: string[];
   };
 
   /**

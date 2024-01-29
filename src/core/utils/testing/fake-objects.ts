@@ -232,7 +232,8 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     },
     zip: {
       artifactTemplate: '{{name}}-{{version}}.zip',
-      ignoredSources: [],
+      includedSources: [],
+      excludedSources: [],
       sourcesRoot: fakeDir(),
       sourcesTemplate: '{{name}}-sources.zip',
       name: faker.person.firstName().toLowerCase(),
