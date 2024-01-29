@@ -16,6 +16,6 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3",
-    "wxt": "^0.14.0"
+    "wxt": "^0.15.0"
   }
 }
