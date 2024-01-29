@@ -144,6 +144,19 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
+     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to include when
+     * creating a ZIP of all your source code for Firefox. Patterns are relative to your
+     * `config.zip.sourcesRoot`.
+     *
+     * This setting overrides `excludeSources`. So if a file matches both lists, it is included in the ZIP.
+     *
+     * @example
+     * [
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     * ]
+     */
+    includeSources?: string[];
+    /**
      * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to exclude when
      * creating a ZIP of all your source code for Firefox. Patterns are relative to your
      * `config.zip.sourcesRoot`.
@@ -155,7 +168,7 @@ export interface InlineConfig {
      *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
      * ]
      */
-    ignoredSources?: string[];
+    excludeSources?: string[];
   };
 
   /**
