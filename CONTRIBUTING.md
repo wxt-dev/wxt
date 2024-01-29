@@ -57,9 +57,17 @@ pnpm test
 pnpm docs:dev
 ```
 
+## Updating Docs
+
+Documentation is written with VitePress, and is located in the `docs/` directory.
+
+The API reference is generated from JSDoc comments in the source code. If there's a typo or change you want to make in there, you'll need to update the source code instead of a file in the `docs/` directory.
+
 ## Testing
 
-WXT has unit and E2E tests. When making a change or adding a feature, make sure to update the tests or add new ones.
+WXT has unit and E2E tests. When making a change or adding a feature, make sure to update the tests or add new ones, if they exist.
+
+> If they don't exist, feel free to create them, but that's a lot for a one-time contributor. A maintainer might add them to your PR though.
 
 To run tests for a specific file, add the filename at the end of the test command:
 
