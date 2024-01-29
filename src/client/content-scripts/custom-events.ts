@@ -15,10 +15,12 @@ export class WxtLocationChangeEvent extends Event {
  * Returns an event name unique to the extension and content script that's running.
  */
 export function getUniqueEventName(eventName: string): string {
-  // During the build process, __ENTRYPOINT__ is not defined when importing entrypoints to get their
-  // metadata.
+  // During the build process, import.meta.env is not defined when importing
+  // entrypoints to get their metadata.
   const entrypointName =
-    typeof __ENTRYPOINT__ === 'undefined' ? 'build' : __ENTRYPOINT__;
+    typeof import.meta.env === 'undefined'
+      ? 'build'
+      : import.meta.env.ENTRYPOINT;
 
   return `${browser.runtime.id}:${entrypointName}:${eventName}`;
 }

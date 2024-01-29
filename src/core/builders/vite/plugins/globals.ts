@@ -10,7 +10,7 @@ export function globals(
     config() {
       const define: vite.InlineConfig['define'] = {};
       for (const global of getGlobals(config)) {
-        define[global.name] = JSON.stringify(global.value);
+        define[`import.meta.env.${global.name}`] = JSON.stringify(global.value);
       }
       return {
         define,

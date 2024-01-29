@@ -6,7 +6,7 @@ import { logger } from '../sandbox/utils/logger';
     await definition.main();
   } catch (err) {
     logger.error(
-      `The unlisted script "${__ENTRYPOINT__}" crashed on startup!`,
+      `The unlisted script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
       err,
     );
   }

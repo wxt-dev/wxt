@@ -7,7 +7,7 @@ import { logger } from '../sandbox/utils/logger';
     await main();
   } catch (err) {
     logger.error(
-      `The content script "${__ENTRYPOINT__}" crashed on startup!`,
+      `The content script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
       err,
     );
   }

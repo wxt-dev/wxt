@@ -14,7 +14,7 @@ export function entrypointGroupGlobals(
       const define: vite.InlineConfig['define'] = {};
       let name = Array.isArray(entrypointGroup) ? 'html' : entrypointGroup.name;
       for (const global of getEntrypointGlobals(name)) {
-        define[global.name] = JSON.stringify(global.value);
+        define[`import.meta.env.${global.name}`] = JSON.stringify(global.value);
       }
       return {
         define,

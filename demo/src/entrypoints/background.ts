@@ -4,10 +4,10 @@ export default defineBackground(() => {
   console.log(browser.runtime.id);
   logId();
   console.log({
-    browser: __BROWSER__,
-    chrome: __IS_CHROME__,
-    firefox: __IS_FIREFOX__,
-    manifestVersion: __MANIFEST_VERSION__,
+    browser: import.meta.env.BROWSER,
+    chrome: import.meta.env.CHROME,
+    firefox: import.meta.env.FIREFOX,
+    manifestVersion: import.meta.env.MANIFEST_VERSION,
     messages,
   });
 

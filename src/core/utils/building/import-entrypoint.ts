@@ -98,6 +98,7 @@ export async function importEntrypointFile<T>(
         { cause: err },
       );
     } else {
+      config.logger.error(err);
       throw Error(`Failed to load entrypoint: ${filePath}`, { cause: err });
     }
   }
