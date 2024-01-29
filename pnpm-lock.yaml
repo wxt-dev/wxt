@@ -105,8 +105,8 @@ importers:
         specifier: ^5.0.12
         version: 5.0.12(@types/node@20.10.3)(sass@1.69.5)
       web-ext-run:
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.2.0
+        version: 0.2.0
       webextension-polyfill:
         specifier: ^0.10.0
         version: 0.10.0
@@ -188,7 +188,7 @@ importers:
         version: 1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.2)
       vitest:
         specifier: ^1.1.0
-        version: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)
+        version: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)(sass@1.69.5)
       vitest-mock-extended:
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.3.2)(vitest@1.1.0)
@@ -1194,7 +1194,7 @@ packages:
       std-env: 3.6.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)
+      vitest: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1815,15 +1815,15 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /chrome-launcher@0.15.1:
-    resolution: {integrity: sha512-UugC8u59/w2AyX5sHLZUHoxBAiSiunUhZa3zZwMH6zPVis0C3dDKiRWyUGIo14tTbZHGVviWxv3PQWZ7taZ4fg==}
+  /chrome-launcher@1.1.0:
+    resolution: {integrity: sha512-rJYWeEAERwWIr3c3mEVXwNiODPEdMRlRxHc47B1qHPOolHZnkj7rMv1QSUfPoG6MgatWj5AxSpnKKR4QEwEQIQ==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
       '@types/node': 20.10.3
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
-      lighthouse-logger: 1.4.2
+      lighthouse-logger: 2.0.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2993,6 +2993,18 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  /is-plain-object@2.0.4:
+    resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      isobject: 3.0.1
+    dev: false
+
+  /is-primitive@3.0.1:
+    resolution: {integrity: sha512-GljRxhWvlCNRfZyORiH77FwdFwGcMO620o37EOYC0ORWdq+WYNVqW0w2Juzew4M+L81l6/QS3t5gkkihyRqv9w==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /is-regex@1.1.4:
     resolution: {integrity: sha512-kvRdxDsxZjhzUX07ZnLydzS1TU/TJlTUHHY4YLL87e37oUA49DfkLqgy+VjFocowy29cKvcSiu+kIv728jTTVg==}
     engines: {node: '>= 0.4'}
@@ -3090,6 +3102,11 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  /isobject@3.0.1:
+    resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
@@ -3200,8 +3217,8 @@ packages:
       immediate: 3.0.6
     dev: false
 
-  /lighthouse-logger@1.4.2:
-    resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
+  /lighthouse-logger@2.0.1:
+    resolution: {integrity: sha512-ioBrW3s2i97noEmnXxmUq7cjIcVRjT5HBpAYy8zE11CxU9HqlWHHeRxfeN1tn8F7OEMVPIC9x1f8t3Z7US9ehQ==}
     dependencies:
       debug: 2.6.9
       marky: 1.2.5
@@ -4242,6 +4259,14 @@ packages:
     dependencies:
       lru-cache: 6.0.0
 
+  /set-value@4.1.0:
+    resolution: {integrity: sha512-zTEg4HL0RwVrqcWs3ztF+x1vkxfm0lP+MQQFPiMJTKVceBwEV0A569Ou8l9IYQG8jOZdMVI1hGsc0tmeD2o/Lw==}
+    engines: {node: '>=11.0'}
+    dependencies:
+      is-plain-object: 2.0.4
+      is-primitive: 3.0.1
+    dev: false
+
   /setimmediate@1.0.5:
     resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
     dev: false
@@ -4972,43 +4997,6 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@5.0.5(@types/node@20.10.3)(sass@1.69.5):
-    resolution: {integrity: sha512-OekeWqR9Ls56f3zd4CaxzbbS11gqYkEiBtnWFFgYR2WV8oPJRRKq0mpskYy/XaoCL3L7VINDhqqOMNDiYdGvGg==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.10.3
-      esbuild: 0.19.11
-      postcss: 8.4.32
-      rollup: 4.6.1
-      sass: 1.69.5
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: false
-
   /vitepress@1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.2):
     resolution: {integrity: sha512-TUbTiSdAZFni2XlHlpx61KikgkQ5uG4Wtmw2R0SXhIOG6qGqzDJczAFjkMc4i45I9c3KyatwOYe8oEfCnzVYwQ==}
     hasBin: true
@@ -5073,10 +5061,10 @@ packages:
     dependencies:
       ts-essentials: 9.3.2(typescript@5.3.2)
       typescript: 5.3.2
-      vitest: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)
+      vitest: 1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)(sass@1.69.5)
     dev: true
 
-  /vitest@1.1.0(@types/node@20.10.3)(happy-dom@12.10.3):
+  /vitest@1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)(sass@1.69.5):
     resolution: {integrity: sha512-oDFiCrw7dd3Jf06HoMtSRARivvyjHJaTxikFxuqJjO76U436PqlVw1uLn7a8OSPrhSfMGVaRakKpA2lePdw79A==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -5132,65 +5120,6 @@ packages:
       - sugarss
       - supports-color
       - terser
-    dev: true
-
-  /vitest@1.1.0(@types/node@20.10.3)(happy-dom@12.10.3)(sass@1.69.5):
-    resolution: {integrity: sha512-oDFiCrw7dd3Jf06HoMtSRARivvyjHJaTxikFxuqJjO76U436PqlVw1uLn7a8OSPrhSfMGVaRakKpA2lePdw79A==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@types/node': ^18.0.0 || >=20.0.0
-      '@vitest/browser': ^1.0.0
-      '@vitest/ui': ^1.0.0
-      happy-dom: '*'
-      jsdom: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@types/node':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-    dependencies:
-      '@types/node': 20.10.3
-      '@vitest/expect': 1.1.0
-      '@vitest/runner': 1.1.0
-      '@vitest/snapshot': 1.1.0
-      '@vitest/spy': 1.1.0
-      '@vitest/utils': 1.1.0
-      acorn-walk: 8.3.0
-      cac: 6.7.14
-      chai: 4.3.10
-      debug: 4.3.4
-      execa: 8.0.1
-      happy-dom: 12.10.3
-      local-pkg: 0.5.0
-      magic-string: 0.30.5
-      pathe: 1.1.1
-      picocolors: 1.0.0
-      std-env: 3.6.0
-      strip-literal: 1.3.0
-      tinybench: 2.5.1
-      tinypool: 0.8.1
-      vite: 5.0.5(@types/node@20.10.3)(sass@1.69.5)
-      vite-node: 1.1.0(@types/node@20.10.3)(sass@1.69.5)
-      why-is-node-running: 2.2.2
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-    dev: false
 
   /vscode-oniguruma@1.7.0:
     resolution: {integrity: sha512-L9WMGRfrjOhgHSdOYgCt/yRMsXzLDJSL7BPrOZt73gU0iWO4mpqzqQzOz5srxqTvMBaR0XZTSrVWo4j55Rc6cA==}
@@ -5255,14 +5184,14 @@ packages:
       graceful-fs: 4.2.11
     dev: false
 
-  /web-ext-run@0.1.2:
-    resolution: {integrity: sha512-VygO7lg10keonbku5Lbi21zEz1k91odkW+c6YB5DGb+mITcRMVM2zr/tJ+Suh6wxNUOOFNbinoqDlSUWdxt6YQ==}
+  /web-ext-run@0.2.0:
+    resolution: {integrity: sha512-lAm05ELMr2WDPniyaHmyuPK0rb9tsftC8f/Ui5AQvlU6F3LqoBDfyzOaaUVQrLxtm4F5oax8AHPWswf/XjZzAg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     dependencies:
       '@babel/runtime': 7.23.9
       '@devicefarmer/adbkit': 3.2.6
       bunyan: 1.8.15
-      chrome-launcher: 0.15.1
+      chrome-launcher: 1.1.0
       debounce: 1.2.1
       es6-error: 4.1.1
       firefox-profile: 4.5.0
@@ -5274,6 +5203,7 @@ packages:
       node-notifier: 10.0.1
       parse-json: 7.1.1
       promise-toolbox: 0.21.0
+      set-value: 4.1.0
       source-map-support: 0.5.21
       strip-bom: 5.0.0
       strip-json-comments: 5.0.1
