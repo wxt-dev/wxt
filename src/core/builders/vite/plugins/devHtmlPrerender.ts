@@ -61,6 +61,17 @@ export function devHtmlPrerender(
               const abs = resolve(dirname(id), src);
               const pathname = relative(config.root, abs);
               element.setAttribute(attr, `${server.origin}/${pathname}`);
+            } else {
+              const [alias, path] = Object.entries(config.alias).find(([key]) =>
+                src.startsWith(key),
+              )!;
+
+              const baseUrl = `${server.origin}/${relative(config.root, path)}`;
+
+              element.setAttribute(
+                attr,
+                `${baseUrl}${src.replace(`${alias}`, '')}`,
+              );
             }
           });
         };
