@@ -22,7 +22,7 @@
 
 ### ❤️ Contributors
 
-- 0x7a7a <298164449@qq.com>
+- 0x7a7a ([@0x7a7a](https://github.com/0x7a7a))
 
 ## v0.15.0
 
