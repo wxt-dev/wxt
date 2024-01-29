@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.15.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.0...v0.15.1)
+
+### 🚀 Enhancements
+
+- Allow passing custom preferences to chrome, enabling dev mode on `chrome://extensions` and allowing content script sourcemaps automatically ([#384](https://github.com/wxt-dev/wxt/pull/384))
+
+### 🩹 Fixes
+
+- **security:** Upgrade to vite@5.0.12 to resolve CVE-2024-23331 ([39b76d3](https://github.com/wxt-dev/wxt/commit/39b76d3))
+
+### 📖 Documentation
+
+- Fixed doc errors on the guide/extension-api page ([#383](https://github.com/wxt-dev/wxt/pull/383))
+
+### 🏡 Chore
+
+- Fix vite version conflicts in demo extension ([98d2792](https://github.com/wxt-dev/wxt/commit/98d2792))
+
+### ❤️ Contributors
+
+- 0x7a7a <298164449@qq.com>
+
 ## v0.15.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.7...v0.15.0)
