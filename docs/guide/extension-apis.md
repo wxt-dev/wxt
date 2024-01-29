@@ -57,13 +57,13 @@ Here's a basic request/response example:
 // popup/main.ts
 const res = await browser.runtime.sendMessage('ping');
 
-console.log('res'); // "pong"
+console.log(res); // "pong"
 ```
 
 ```ts
 // background.ts
 export default defineBackground(() => {
-  browser.runtime.onMessage.addEventListener(
+  browser.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
       console.log(message); // "ping"
 
