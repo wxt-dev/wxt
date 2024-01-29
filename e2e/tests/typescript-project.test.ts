@@ -23,7 +23,7 @@ describe('TypeScript Project', () => {
         readonly EDGE: boolean;
         readonly OPERA: boolean;
         readonly COMMAND: "build" | "serve";
-        readonly entrypoint: string;
+        readonly ENTRYPOINT: string;
       }
       interface ImportMeta {
         readonly env: ImportMetaEnv
