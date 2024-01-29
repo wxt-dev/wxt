@@ -241,9 +241,9 @@ function resolveInternalZipConfig(
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',
     artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
     sourcesRoot: root,
-    includedSources: [],
+    includeSources: [],
     ...mergedConfig.zip,
-    excludedSources: [
+    excludeSources: [
       '**/node_modules',
       // WXT files
       '**/web-ext.config.ts',
@@ -253,7 +253,7 @@ function resolveInternalZipConfig(
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
       // From user
-      ...(mergedConfig.zip?.excludedSources ?? []),
+      ...(mergedConfig.zip?.excludeSources ?? []),
     ],
   };
 }

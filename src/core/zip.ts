@@ -64,10 +64,10 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         const relativePath = relative(internalConfig.zip.sourcesRoot, path);
 
         return (
-          internalConfig.zip.includedSources.some((pattern) =>
+          internalConfig.zip.includeSources.some((pattern) =>
             minimatch(relativePath, pattern),
           ) ||
-          !internalConfig.zip.excludedSources.some((pattern) =>
+          !internalConfig.zip.excludeSources.some((pattern) =>
             minimatch(relativePath, pattern),
           )
         );

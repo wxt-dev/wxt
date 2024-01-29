@@ -40,8 +40,8 @@ export interface InternalConfig {
     name?: string;
     artifactTemplate: string;
     sourcesTemplate: string;
-    includedSources: string[];
-    excludedSources: string[];
+    includeSources: string[];
+    excludeSources: string[];
     sourcesRoot: string;
   };
   transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
