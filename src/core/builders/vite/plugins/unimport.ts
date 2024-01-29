@@ -36,7 +36,11 @@ export function unimport(
       // Don't transform non-js files
       if (!ENABLED_EXTENSIONS.has(extname(id))) return;
 
-      return unimport.injectImports(code, id);
+      const injected = await unimport.injectImports(code, id);
+      return {
+        code: injected.code,
+        map: injected.s.generateMap({ hires: 'boundary', source: id }),
+      };
     },
   };
 }
