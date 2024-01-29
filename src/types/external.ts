@@ -675,6 +675,33 @@ export interface ExtensionRunnerConfig {
    */
   chromiumProfile?: string;
   /**
+   * An map of chrome preferences from https://chromium.googlesource.com/chromium/src/+/main/chrome/common/pref_names.h
+   *
+   * @example
+   * // change your downloads directory
+   * {
+   *   download: {
+   *     default_directory: "/my/custom/dir",
+   *   },
+   * }
+   *
+   * @default
+   * // Enable dev mode and allow content script sourcemaps
+   * {
+   *   devtools: {
+   *     synced_preferences_sync_disabled: {
+   *       skipContentScripts: false,
+   *     },
+   *   }
+   *   extensions: {
+   *     ui: {
+   *       developer_mode: true,
+   *     },
+   *   }
+   * }
+   */
+  chromiumPref?: string;
+  /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
   firefoxPrefs?: Record<string, string>;

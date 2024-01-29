@@ -1,6 +1,7 @@
 import type { WebExtRunInstance } from 'web-ext-run';
 import { ExtensionRunner } from '~/types';
 import { formatDuration } from '../utils/time';
+import defu from 'defu';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -40,6 +41,10 @@ export function createWebExtRunner(): ExtensionRunner {
           : {
               chromiumBinary: wxtUserConfig?.binaries?.[config.browser],
               chromiumProfile: wxtUserConfig?.chromiumProfile,
+              chromiumPref: defu(
+                wxtUserConfig?.chromiumPref,
+                DEFAULT_CHROMIUM_PREFS,
+              ),
               args: wxtUserConfig?.chromiumArgs,
             }),
       };
@@ -75,3 +80,14 @@ export function createWebExtRunner(): ExtensionRunner {
 // https://github.com/mozilla/web-ext/blob/e37e60a2738478f512f1255c537133321f301771/src/util/logger.js#L12
 const WARN_LOG_LEVEL = 40;
 const ERROR_LOG_LEVEL = 50;
+
+const DEFAULT_CHROMIUM_PREFS = {
+  devtools: {
+    synced_preferences_sync_disabled: {
+      // Remove content scripts from sourcemap debugger ignore list so stack traces
+      // and log locations show up properly, see:
+      // https://github.com/wxt-dev/wxt/issues/236#issuecomment-1915364520
+      skipContentScripts: false,
+    },
+  },
+};
