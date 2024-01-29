@@ -50,7 +50,7 @@ export function getGlobals(
 export function getEntrypointGlobals(entrypointName: string) {
   return [
     {
-      name: 'entrypoint',
+      name: 'ENTRYPOINT',
       value: entrypointName,
       type: `string`,
     },
