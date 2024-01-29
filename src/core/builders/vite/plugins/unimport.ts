@@ -41,7 +41,6 @@ export function unimport(
         code: injected.code,
         map: injected.s.generateMap({ hires: 'boundary', source: id }),
       };
-      // return
     },
   };
 }
