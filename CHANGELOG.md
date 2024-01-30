@@ -14,7 +14,7 @@
 
 ### ❤️ Contributors
 
-- Nenad Novaković
+- Nenad Novaković ([@dvlden](https://github.com/dvlden))
 
 ## v0.15.1
 
