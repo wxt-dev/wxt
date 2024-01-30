@@ -171,10 +171,10 @@ export function pointToDevServer(
 
       if (relativePath.startsWith('.')) {
         // Outside the config.root directory, serve the absolute path
-        element.setAttribute(
-          attr,
-          `${server.origin}/@fs${normalizePath(resolvedAbsolutePath)}`,
-        );
+        let path = normalizePath(resolvedAbsolutePath);
+        // Add "/" to start of windows paths ("D:/some/path" -> "/D:/some/path")
+        if (!path.startsWith('/')) path = '/' + path;
+        element.setAttribute(attr, `${server.origin}/@fs${path}`);
       } else {
         // Inside the project, use relative path
         const url = new URL(relativePath, server.origin);
