@@ -2,7 +2,7 @@ import type * as vite from 'vite';
 import { InternalConfig } from '~/types';
 import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
-import { dirname, isAbsolute, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, normalize, relative, resolve } from 'node:path';
 
 // Cache the preamble script for all devHtmlPrerender plugins, not just one
 let reactRefreshPreamble = '';
@@ -65,12 +65,11 @@ export function devHtmlPrerender(
               const [alias, path] = Object.entries(config.alias).find(([key]) =>
                 src.startsWith(key),
               )!;
-
-              const baseUrl = `${server.origin}/${relative(config.root, path)}`;
+              const pathname = normalize(relative(config.root, path));
 
               element.setAttribute(
                 attr,
-                `${baseUrl}${src.replace(`${alias}`, '')}`,
+                `${server.origin}/${pathname}${src.replace(`${alias}`, '')}`,
               );
             }
           });
