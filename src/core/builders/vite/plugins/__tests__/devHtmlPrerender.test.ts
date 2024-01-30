@@ -5,6 +5,8 @@ import {
   fakeDevServer,
   fakeInternalConfig,
 } from '~/core/utils/testing/fake-objects';
+import { normalizePath } from '~/core/utils/paths';
+import { resolve } from 'node:path';
 
 describe('Dev HTML Prerender Plugin', () => {
   describe('pointToDevServer', () => {
@@ -23,7 +25,7 @@ describe('Dev HTML Prerender Plugin', () => {
         '~outside/test.css',
         `http://localhost:5173/@fs${
           process.platform === 'win32'
-            ? '/D:/some/non-root/test.css'
+            ? '/' + normalizePath(resolve('/some/non-root/test.css')) // "/D:/some/non-root/test.css"
             : '/some/non-root/test.css'
         }`,
       ],
