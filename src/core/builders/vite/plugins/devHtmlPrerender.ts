@@ -1,8 +1,9 @@
 import type * as vite from 'vite';
-import { InternalConfig } from '~/types';
+import { InternalConfig, WxtDevServer } from '~/types';
 import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
-import { dirname, isAbsolute, normalize, relative, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
+import { normalizePath } from '~/core/utils/paths';
 
 // Cache the preamble script for all devHtmlPrerender plugins, not just one
 let reactRefreshPreamble = '';
@@ -47,35 +48,10 @@ export function devHtmlPrerender(
 
         const { document } = parseHTML(code);
 
-        const pointToDevServer = (
-          querySelector: string,
-          attr: string,
-        ): void => {
-          document.querySelectorAll(querySelector).forEach((element) => {
-            const src = element.getAttribute(attr);
-            if (!src) return;
-
-            if (isAbsolute(src)) {
-              element.setAttribute(attr, server.origin + src);
-            } else if (src.startsWith('.')) {
-              const abs = resolve(dirname(id), src);
-              const pathname = normalize(relative(config.root, abs));
-              element.setAttribute(attr, `${server.origin}/${pathname}`);
-            } else {
-              const [alias, path] = Object.entries(config.alias).find(([key]) =>
-                src.startsWith(key),
-              )!;
-              const pathname = normalize(relative(config.root, path));
-
-              element.setAttribute(
-                attr,
-                `${server.origin}/${pathname}${src.replace(`${alias}`, '')}`,
-              );
-            }
-          });
-        };
-        pointToDevServer('script[type=module]', 'src');
-        pointToDevServer('link[rel=stylesheet]', 'href');
+        const _pointToDevServer = (querySelector: string, attr: string) =>
+          pointToDevServer(config, server, id, document, querySelector, attr);
+        _pointToDevServer('script[type=module]', 'src');
+        _pointToDevServer('link[rel=stylesheet]', 'href');
 
         // Add a script to add page reloading
         const reloader = document.createElement('script');
@@ -155,4 +131,64 @@ export function devHtmlPrerender(
       },
     },
   ];
+}
+
+export function pointToDevServer(
+  config: Omit<InternalConfig, 'builder'>,
+  server: WxtDevServer,
+  id: string,
+  document: Document,
+  querySelector: string,
+  attr: string,
+) {
+  document.querySelectorAll(querySelector).forEach((element) => {
+    const src = element.getAttribute(attr);
+    if (!src || isUrl(src)) return;
+
+    let resolvedAbsolutePath: string | undefined;
+
+    // Check if src uses a project alias
+    const matchingAlias = Object.entries(config.alias).find(([key]) =>
+      src.startsWith(key),
+    );
+    if (matchingAlias) {
+      // Matches a import alias
+      const [alias, replacement] = matchingAlias;
+      resolvedAbsolutePath = resolve(
+        config.root,
+        src.replace(alias, replacement),
+      );
+    } else {
+      // Some file path relative to the HTML file
+      resolvedAbsolutePath = resolve(dirname(id), src);
+    }
+
+    // Apply the final file path
+    if (resolvedAbsolutePath) {
+      const relativePath = normalizePath(
+        relative(config.root, resolvedAbsolutePath),
+      );
+
+      if (relativePath.startsWith('.')) {
+        // Outside the config.root directory, serve the absolute path
+        element.setAttribute(
+          attr,
+          `${server.origin}/@fs${resolvedAbsolutePath}`,
+        );
+      } else {
+        // Inside the project, use relative path
+        const url = new URL(relativePath, server.origin);
+        element.setAttribute(attr, url.href);
+      }
+    }
+  });
+}
+
+function isUrl(str: string): boolean {
+  try {
+    new URL(str);
+    return true;
+  } catch {
+    return false;
+  }
 }

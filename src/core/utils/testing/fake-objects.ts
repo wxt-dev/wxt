@@ -22,6 +22,7 @@ import {
   UserManifest,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
+import { vi } from 'vitest';
 
 faker.seed(__TEST_SEED__);
 
@@ -268,4 +269,21 @@ export const fakeManifestCommand = fakeObjectCreator<Commands.Command>(() => ({
     min: 0,
     max: 9,
   })}`,
+}));
+
+export const fakeDevServer = fakeObjectCreator<WxtDevServer>(() => ({
+  hostname: 'localhost',
+  origin: 'http://localhost',
+  port: 5173,
+  reloadContentScript: vi.fn(),
+  reloadExtension: vi.fn(),
+  reloadPage: vi.fn(),
+  restart: vi.fn(),
+  restartBrowser: vi.fn(),
+  stop: vi.fn(),
+  start: vi.fn(),
+  watcher: mock(),
+  transformHtml: vi.fn(),
+  ws: mock(),
+  currentOutput: undefined,
 }));
