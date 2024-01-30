@@ -59,7 +59,7 @@ export function devHtmlPrerender(
               element.setAttribute(attr, server.origin + src);
             } else if (src.startsWith('.')) {
               const abs = resolve(dirname(id), src);
-              const pathname = relative(config.root, abs);
+              const pathname = normalize(relative(config.root, abs));
               element.setAttribute(attr, `${server.origin}/${pathname}`);
             } else {
               const [alias, path] = Object.entries(config.alias).find(([key]) =>
