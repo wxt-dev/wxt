@@ -173,7 +173,7 @@ export function pointToDevServer(
         // Outside the config.root directory, serve the absolute path
         element.setAttribute(
           attr,
-          `${server.origin}/@fs${resolvedAbsolutePath}`,
+          `${server.origin}/@fs${normalizePath(resolvedAbsolutePath)}`,
         );
       } else {
         // Inside the project, use relative path
