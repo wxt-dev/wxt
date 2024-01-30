@@ -51,7 +51,15 @@ declare module 'web-ext-run/util/logger' {
 }
 
 declare module 'manage-path' {
-  export default function managePath(env: object): string[];
+  export interface ManagedPath {
+    push(...paths: string[]);
+    push(paths: string[]);
+    shift(...paths: string[]);
+    shift(paths: string[]);
+    get(): string;
+    restore(): void;
+  }
+  export default function managePath(env: object): ManagedPath;
 }
 
 declare module 'wxt/browser' {
