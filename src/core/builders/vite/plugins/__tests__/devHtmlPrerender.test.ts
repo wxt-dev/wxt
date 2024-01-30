@@ -19,7 +19,14 @@ describe('Dev HTML Prerender Plugin', () => {
       ['~absolute/style.css', 'http://localhost:5173/assets/style.css'],
       ['~file', 'http://localhost:5173/example.css'],
       // Absolute paths are loaded with the `/@fs/` base path
-      ['~outside/test.css', 'http://localhost:5173/@fs/some/non-root/test.css'],
+      [
+        '~outside/test.css',
+        `http://localhost:5173/@fs${
+          process.platform === 'win32'
+            ? '/D:/some/non-root/test.css'
+            : '/some/non-root/test.css'
+        }`,
+      ],
       // URLs should not be changed
       ['https://example.com/style.css', 'https://example.com/style.css'],
     ])('should transform "%s" into "%s"', (input, expected) => {
