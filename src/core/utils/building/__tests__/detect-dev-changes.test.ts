@@ -167,9 +167,9 @@ describe('Detect Dev Changes', () => {
   });
 
   describe('HTML Pages', () => {
-    it('should rebuild then reload only the effected pages', async () => {
+    it('should detect changes to entrypoints/<name>.html files', async () => {
       const config = fakeInternalConfig();
-      const changedPath = '/root/page1/index.html';
+      const changedPath = '/root/page1.html';
       const htmlPage1 = fakePopupEntrypoint({
         inputPath: changedPath,
       });
@@ -184,16 +184,66 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: [htmlPage1, htmlPage2],
         chunks: [
-          fakeOutputChunk({
-            moduleIds: [fakeFile(), changedPath],
+          fakeOutputAsset({
+            fileName: 'page1.html',
           }),
         ],
       };
       const step2: BuildStepOutput = {
         entrypoints: [htmlPage3],
         chunks: [
-          fakeOutputChunk({
-            moduleIds: [fakeFile(), fakeFile(), fakeFile()],
+          fakeOutputAsset({
+            fileName: 'page2.html',
+          }),
+        ],
+      };
+
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [step1, step2],
+      };
+      const expected: DevModeChange = {
+        type: 'html-reload',
+        cachedOutput: {
+          ...currentOutput,
+          steps: [step2],
+        },
+        rebuildGroups: [[htmlPage1, htmlPage2]],
+      };
+
+      const actual = detectDevChanges(config, [changedPath], currentOutput);
+
+      expect(actual).toEqual(expected);
+    });
+
+    it('should detect changes to entrypoints/<name>/index.html files', async () => {
+      const config = fakeInternalConfig();
+      const changedPath = '/root/page1/index.html';
+      const htmlPage1 = fakePopupEntrypoint({
+        inputPath: changedPath,
+      });
+      const htmlPage2 = fakeOptionsEntrypoint({
+        inputPath: '/root/page2/index.html',
+      });
+      const htmlPage3 = fakeGenericEntrypoint({
+        type: 'sandbox',
+        inputPath: '/root/page3/index.html',
+      });
+
+      const step1: BuildStepOutput = {
+        entrypoints: [htmlPage1, htmlPage2],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page1.html',
+          }),
+        ],
+      };
+      const step2: BuildStepOutput = {
+        entrypoints: [htmlPage3],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page2.html',
           }),
         ],
       };
