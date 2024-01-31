@@ -123,11 +123,12 @@ function findEffectedSteps(
   const changedPath = normalizePath(changedFile);
 
   const isChunkEffected = (chunk: OutputFile): boolean =>
-    // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
-    // fileName is normalized, relative bundle path
-    (chunk.type === 'asset' && changedPath.endsWith(chunk.fileName)) ||
+    // If it's an HTML file with the same path, is is effected because HTML files need to be re-rendered
+    // - fileName is normalized, relative bundle path, "<entrypoint-name>.html"
+    (chunk.type === 'asset' &&
+      changedPath.replace('/index.html', '.html').endsWith(chunk.fileName)) ||
     // If it's a chunk that depends on the changed file, it is effected
-    // moduleIds are absolute, normalized paths
+    // - moduleIds are absolute, normalized paths
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
 
   for (const step of currentOutput.steps) {

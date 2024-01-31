@@ -184,16 +184,16 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: [htmlPage1, htmlPage2],
         chunks: [
-          fakeOutputChunk({
-            moduleIds: [fakeFile(), changedPath],
+          fakeOutputAsset({
+            fileName: 'page1.html',
           }),
         ],
       };
       const step2: BuildStepOutput = {
         entrypoints: [htmlPage3],
         chunks: [
-          fakeOutputChunk({
-            moduleIds: [fakeFile(), fakeFile(), fakeFile()],
+          fakeOutputAsset({
+            fileName: 'page2.html',
           }),
         ],
       };
