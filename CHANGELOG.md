@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.15.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.2...v0.15.3)
+
+### 🩹 Fixes
+
+- **dev:** Reload `<name>/index.html` entrypoints properly on save ([#390](https://github.com/wxt-dev/wxt/pull/390))
+
 ## v0.15.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.1...v0.15.2)
