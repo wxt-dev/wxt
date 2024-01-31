@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.15.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.3...v0.15.4)
+
+### 🩹 Fixes
+
+- **submit:** Load `.env.submit` automatically when running `wxt submit` and `wxt submit init` ([#391](https://github.com/wxt-dev/wxt/pull/391))
+
 ## v0.15.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.2...v0.15.3)
