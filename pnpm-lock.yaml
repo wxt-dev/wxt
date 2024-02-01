@@ -46,7 +46,7 @@ importers:
         version: 0.19.8
       fast-glob:
         specifier: ^3.3.1
-        version: 3.3.1
+        version: 3.3.2
       filesize:
         specifier: ^10.0.8
         version: 10.1.0
@@ -2481,8 +2481,8 @@ packages:
       - supports-color
     dev: false
 
-  /fast-glob@3.3.1:
-    resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
+  /fast-glob@3.3.2:
+    resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
     engines: {node: '>=8.6.0'}
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -2759,7 +2759,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       ignore: 5.2.4
       merge2: 1.4.1
       slash: 3.0.0
@@ -5115,7 +5115,7 @@ packages:
     dependencies:
       '@rollup/pluginutils': 5.0.5
       escape-string-regexp: 5.0.0
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       local-pkg: 0.4.3
       magic-string: 0.30.5
       mlly: 1.4.2
