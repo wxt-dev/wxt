@@ -75,23 +75,7 @@ export async function createViteBuilder(
    * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
-    let virtualEntrypointType: VirtualEntrypointType | undefined;
-    switch (entrypoint.type) {
-      case 'background':
-      case 'unlisted-script':
-        virtualEntrypointType = entrypoint.type;
-        break;
-      case 'content-script':
-        virtualEntrypointType =
-          entrypoint.options.world === 'MAIN'
-            ? 'content-script-main-world'
-            : 'content-script-isolated-world';
-        break;
-    }
-    const entry = virtualEntrypointType
-      ? `virtual:wxt-${virtualEntrypointType}?${entrypoint.inputPath}`
-      : entrypoint.inputPath;
-
+    const entry = getRollupEntry(entrypoint);
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
@@ -157,14 +141,16 @@ export async function createViteBuilder(
       build: {
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
-            input[entry.name] = entry.inputPath;
+            input[entry.name] = getRollupEntry(entry);
             return input;
           }, {}),
           output: {
             // Include a hash to prevent conflicts
             chunkFileNames: 'chunks/[name]-[hash].js',
-            // Include a hash to prevent conflicts
-            entryFileNames: 'chunks/[name]-[hash].js',
+            // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
+            // next to each other). The unique entrypoint name requirement prevents conflicts with
+            // scripts of the same name
+            entryFileNames: '[name].js',
             // We can't control the "name", so we need a hash to prevent conflicts
             assetFileNames: 'assets/[name]-[hash].[ext]',
           },
@@ -262,4 +248,27 @@ function getBuildOutputChunks(
   if ('on' in result) throw Error('wxt does not support vite watch mode.');
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
   return result.output;
+}
+
+/**
+ * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
+ * be passed as an input to rollup.
+ */
+function getRollupEntry(entrypoint: Entrypoint): string {
+  let virtualEntrypointType: VirtualEntrypointType | undefined;
+  switch (entrypoint.type) {
+    case 'background':
+    case 'unlisted-script':
+      virtualEntrypointType = entrypoint.type;
+      break;
+    case 'content-script':
+      virtualEntrypointType =
+        entrypoint.options.world === 'MAIN'
+          ? 'content-script-main-world'
+          : 'content-script-isolated-world';
+      break;
+  }
+  return virtualEntrypointType
+    ? `virtual:wxt-${virtualEntrypointType}?${entrypoint.inputPath}`
+    : entrypoint.inputPath;
 }

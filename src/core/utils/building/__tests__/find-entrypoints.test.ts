@@ -27,6 +27,7 @@ const readFileMock = vi.mocked(
 
 describe('findEntrypoints', () => {
   const config = fakeInternalConfig({
+    manifestVersion: 3,
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
@@ -253,6 +254,32 @@ describe('findEntrypoints', () => {
       );
     },
   );
+
+  it('should remove type=module from MV2 background scripts', async () => {
+    const config = fakeInternalConfig({ manifestVersion: 2 });
+    const options: BackgroundEntrypoint['options'] = {
+      type: 'module',
+    };
+    globMock.mockResolvedValueOnce(['background.ts']);
+    importEntrypointFileMock.mockResolvedValue(options);
+
+    const entrypoints = await findEntrypoints(config);
+
+    expect(entrypoints[0].options).toEqual({});
+  });
+
+  it('should allow type=module for MV3 background service workers', async () => {
+    const config = fakeInternalConfig({ manifestVersion: 3 });
+    const options: BackgroundEntrypoint['options'] = {
+      type: 'module',
+    };
+    globMock.mockResolvedValueOnce(['background.ts']);
+    importEntrypointFileMock.mockResolvedValue(options);
+
+    const entrypoints = await findEntrypoints(config);
+
+    expect(entrypoints[0].options).toEqual(options);
+  });
 
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
     globMock.mockResolvedValueOnce(['popup.html']);

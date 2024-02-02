@@ -392,6 +392,11 @@ async function getBackgroundEntrypoint(
     const { main: _, ...moduleOptions } = defaultExport;
     options = moduleOptions;
   }
+
+  if (config.manifestVersion !== 3) {
+    delete options.type;
+  }
+
   return {
     type: 'background',
     name,
