@@ -8,7 +8,6 @@ import {
 } from '~/types';
 import {
   getEntrypointBundlePath,
-  getEntrypointOutputFile,
   resolvePerBrowserOption,
 } from '~/core/utils/entrypoints';
 import {
@@ -197,15 +196,6 @@ function createFileReloader(options: {
           .join(', ')}`,
       );
 
-      const rebuiltNames = changes.rebuildGroups
-        .flat()
-        .map((entry) => {
-          return pc.cyan(
-            relative(config.outDir, getEntrypointOutputFile(entry, '')),
-          );
-        })
-        .join(pc.dim(', '));
-
       // Rebuild entrypoints on change
       const allEntrypoints = await findEntrypoints(config);
       const { output: newOutput } = await rebuild(
@@ -221,15 +211,24 @@ function createFileReloader(options: {
       switch (changes.type) {
         case 'extension-reload':
           server.reloadExtension();
+          consola.success(`Reloaded extension`);
           break;
         case 'html-reload':
-          reloadHtmlPages(changes.rebuildGroups, server, config);
+          const { reloadedNames } = reloadHtmlPages(
+            changes.rebuildGroups,
+            server,
+            config,
+          );
+          consola.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
           break;
         case 'content-script-reload':
           reloadContentScripts(changes.changedSteps, config, server);
+          const rebuiltNames = changes.rebuildGroups
+            .flat()
+            .map((entry) => entry.name);
+          consola.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
           break;
       }
-      consola.success(`Reloaded: ${rebuiltNames}`);
     });
   };
 }
@@ -279,9 +278,26 @@ function reloadHtmlPages(
   groups: EntrypointGroup[],
   server: WxtDevServer,
   config: InternalConfig,
-) {
-  groups.flat().forEach((entry) => {
+): { reloadedNames: string[] } {
+  // groups might contain other files like background/content scripts, and we only care about the HTMl pages
+  const htmlEntries = groups
+    .flat()
+    .filter((entry) => entry.inputPath.endsWith('.html'));
+
+  htmlEntries.forEach((entry) => {
     const path = getEntrypointBundlePath(entry, config.outDir, '.html');
     server.reloadPage(path);
   });
+
+  return {
+    reloadedNames: htmlEntries.map((entry) => entry.name),
+  };
+}
+
+function getFilenameList(names: string[]): string {
+  return names
+    .map((name) => {
+      return pc.cyan(name);
+    })
+    .join(pc.dim(', '));
 }
