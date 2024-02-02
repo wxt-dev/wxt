@@ -27,6 +27,7 @@ const readFileMock = vi.mocked(
 
 describe('findEntrypoints', () => {
   const config = fakeInternalConfig({
+    manifestVersion: 3,
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
