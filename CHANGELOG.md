@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.16.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.4...v0.16.0)
+
+### 🚀 Enhancements
+
+- ⚠️  ESM background support ([#398](https://github.com/wxt-dev/wxt/pull/398))
+
+### 📖 Documentation
+
+- Document how to opt into ESM ([1e12ce2](https://github.com/wxt-dev/wxt/commit/1e12ce2))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump lint-staged from 15.2.0 to 15.2.1 ([#395](https://github.com/wxt-dev/wxt/pull/395))
+- **deps-dev:** Bump p-map from 7.0.0 to 7.0.1 ([#396](https://github.com/wxt-dev/wxt/pull/396))
+- **deps-dev:** Bump @vitest/coverage-v8 from 1.0.1 to 1.2.2 ([#397](https://github.com/wxt-dev/wxt/pull/397))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  ESM background support ([#398](https://github.com/wxt-dev/wxt/pull/398))
+
 ## v0.15.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.3...v0.15.4)
