@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { Entrypoint } from '~/types';
 import { groupEntrypoints } from '../group-entrypoints';
+import {
+  fakeBackgroundEntrypoint,
+  fakeGenericEntrypoint,
+  fakePopupEntrypoint,
+} from '../../testing/fake-objects';
 
 const background: Entrypoint = {
   type: 'background',
@@ -141,4 +146,29 @@ describe('groupEntrypoints', () => {
 
     expect(actual).toEqual(expected);
   });
+
+  it('should group ESM compatible scripts with extension pages', () => {
+    const background = fakeBackgroundEntrypoint({
+      options: {
+        type: 'module',
+      },
+    });
+    const popup = fakePopupEntrypoint();
+    const sandbox = fakeGenericEntrypoint({
+      inputPath: '/entrypoints/sandbox.html',
+      name: 'sandbox',
+      type: 'sandbox',
+    });
+
+    const actual = groupEntrypoints([background, popup, sandbox]);
+
+    expect(actual).toEqual([[background, popup], [sandbox]]);
+  });
+
+  it.todo(
+    'should group ESM compatible sandbox scripts with sandbox pages',
+    () => {
+      // Main world content scripts
+    },
+  );
 });
