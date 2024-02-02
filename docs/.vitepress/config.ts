@@ -90,6 +90,7 @@ export default defineConfig({
             { text: 'Assets', link: '/guide/assets.md' },
             { text: 'Content Script UI', link: '/guide/content-script-ui.md' },
             { text: 'Multiple Browsers', link: '/guide/multiple-browsers.md' },
+            { text: 'ES Modules', link: '/guide/esm.md' },
             { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Vite', link: '/guide/vite.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
