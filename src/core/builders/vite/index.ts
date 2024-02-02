@@ -147,7 +147,9 @@ export async function createViteBuilder(
           output: {
             // Include a hash to prevent conflicts
             chunkFileNames: 'chunks/[name]-[hash].js',
-            // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are next to each other)
+            // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
+            // next to each other). The unique entrypoint name requirement prevents conflicts with
+            // scripts of the same name
             entryFileNames: '[name].js',
             // We can't control the "name", so we need a hash to prevent conflicts
             assetFileNames: 'assets/[name]-[hash].[ext]',
