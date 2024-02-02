@@ -11,8 +11,11 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
   const groups: EntrypointGroup[] = [];
 
   for (const entry of entrypoints) {
-    const group = ENTRY_TYPE_TO_GROUP_MAP[entry.type];
-    if (group === 'no-group') {
+    let group = ENTRY_TYPE_TO_GROUP_MAP[entry.type];
+    if (entry.type === 'background' && entry.options.type === 'module') {
+      group = 'esm';
+    }
+    if (group === 'individual') {
       groups.push(entry);
     } else {
       let groupIndex = groupIndexMap[group];
@@ -28,22 +31,22 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
 }
 
 const ENTRY_TYPE_TO_GROUP_MAP: Record<Entrypoint['type'], Group> = {
-  sandbox: 'sandbox-page',
+  sandbox: 'sandboxed-esm',
 
-  popup: 'extension-page',
-  newtab: 'extension-page',
-  history: 'extension-page',
-  options: 'extension-page',
-  devtools: 'extension-page',
-  bookmarks: 'extension-page',
-  sidepanel: 'extension-page',
-  'unlisted-page': 'extension-page',
+  popup: 'esm',
+  newtab: 'esm',
+  history: 'esm',
+  options: 'esm',
+  devtools: 'esm',
+  bookmarks: 'esm',
+  sidepanel: 'esm',
+  'unlisted-page': 'esm',
 
-  background: 'no-group',
-  'content-script': 'no-group',
-  'unlisted-script': 'no-group',
-  'unlisted-style': 'no-group',
-  'content-script-style': 'no-group',
+  background: 'individual',
+  'content-script': 'individual',
+  'unlisted-script': 'individual',
+  'unlisted-style': 'individual',
+  'content-script-style': 'individual',
 };
 
-type Group = 'extension-page' | 'sandbox-page' | 'no-group';
+type Group = 'esm' | 'sandboxed-esm' | 'individual';
