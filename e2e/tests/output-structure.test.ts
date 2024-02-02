@@ -228,7 +228,7 @@ describe('Output Directory Structure', () => {
     );
   });
 
-  it('should generate IIFE background script when type=undefined', async () => {
+  it('should generate ESM background script when type=module', async () => {
     const project = new TestProject();
     project.addFile(
       'utils/log.ts',
@@ -309,7 +309,7 @@ describe('Output Directory Structure', () => {
     `);
   });
 
-  it('should generate ESM background script when type=module', async () => {
+  it('should generate IIFE background script when type=undefined', async () => {
     const project = new TestProject();
     project.addFile(
       'utils/log.ts',
