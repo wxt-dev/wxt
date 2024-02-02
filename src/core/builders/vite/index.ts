@@ -75,7 +75,7 @@ export async function createViteBuilder(
    * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
-    const entry = getEntrypointEntry(entrypoint);
+    const entry = getRollupEntry(entrypoint);
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
@@ -141,7 +141,7 @@ export async function createViteBuilder(
       build: {
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
-            input[entry.name] = getEntrypointEntry(entry);
+            input[entry.name] = getRollupEntry(entry);
             return input;
           }, {}),
           output: {
@@ -254,7 +254,7 @@ function getBuildOutputChunks(
  * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
  * be passed as an input to rollup.
  */
-function getEntrypointEntry(entrypoint: Entrypoint): string {
+function getRollupEntry(entrypoint: Entrypoint): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
   switch (entrypoint.type) {
     case 'background':
