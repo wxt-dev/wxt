@@ -20,7 +20,28 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  ESM background support ([#398](https://github.com/wxt-dev/wxt/pull/398))
+In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes. Moving files like this has not historically increased review times or triggered in-depth reviews in the stores.
+
+- Before:
+   ```
+   .output/
+     <target>/
+       chunks/
+         some-shared-chunk-<hash>.js
+         popup-<hash>.js
+       popup.html
+   ```
+- After:
+   ```
+   .output/
+     <target>/
+       chunks/
+         some-shared-chunk-<hash>.js
+       popup.html
+       popup.js
+   ```
+
+This effects all HTML files, not just the Popup. The hash has been removed, and it's been moved to the root of the build target folder, not inside the `chunks/` directory.
 
 ## v0.15.4
 
