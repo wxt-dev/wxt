@@ -45,7 +45,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   windows-tests:
