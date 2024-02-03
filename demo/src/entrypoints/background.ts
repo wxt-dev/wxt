@@ -7,6 +7,7 @@ export default defineBackground({
     console.log(browser.runtime.id);
     logId();
     console.log({
+      url: import.meta.url,
       browser: import.meta.env.BROWSER,
       chrome: import.meta.env.CHROME,
       firefox: import.meta.env.FIREFOX,
