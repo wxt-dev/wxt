@@ -133,11 +133,16 @@ export async function createViteBuilder(
    * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
+    const esmContentScriptNames = new Set(
+      entrypoints.filter((e) => e.type === 'content-script').map((e) => e.name),
+    );
+
     return {
       mode: wxtConfig.mode,
       plugins: [
         wxtPlugins.multipageMove(entrypoints, wxtConfig),
         wxtPlugins.entrypointGroupGlobals(entrypoints),
+        wxtPlugins.esmContentScripts(entrypoints),
       ],
       build: {
         rollupOptions: {
@@ -148,10 +153,17 @@ export async function createViteBuilder(
           output: {
             // Include a hash to prevent conflicts
             chunkFileNames: 'chunks/[name]-[hash].js',
-            // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
-            // next to each other). The unique entrypoint name requirement prevents conflicts with
-            // scripts of the same name
-            entryFileNames: '[name].js',
+            entryFileNames: (chunk) => {
+              // Put content script entrypoints in the `content-scripts/` directory
+              if (esmContentScriptNames.has(chunk.name)) {
+                return 'content-scripts/[name].js';
+              }
+
+              // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
+              // next to each other). The unique entrypoint name requirement prevents conflicts with
+              // scripts of the same name
+              return '[name].js';
+            },
             // We can't control the "name", so we need a hash to prevent conflicts
             assetFileNames: 'assets/[name]-[hash].[ext]',
           },
