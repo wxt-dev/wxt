@@ -1,0 +1,573 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Output Directory Structure > should generate ESM content script when type=module 1`] = `
+".output/chrome-mv3/content-scripts/content.js
+----------------------------------------
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
+};
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
+var __privateMethod = (obj, member, method) => {
+  __accessCheck(obj, member, "access private method");
+  return method;
+};
+var _a, _b, _isTopFrame, _abortController, _locationWatcher, _stopOldScripts, stopOldScripts_fn, _listenForNewerScripts, listenForNewerScripts_fn;
+import { l as logHello } from "../chunks/log-bezs0tt4.js";
+function defineContentScript(definition2) {
+  return definition2;
+}
+const definition = defineContentScript({
+  matches: ["<all_urls>"],
+  type: "module",
+  main() {
+    logHello("background");
+  }
+});
+const originalBrowser = chrome;
+var browser = originalBrowser;
+var define_import_meta_env_default = { BASE_URL: "/", MODE: "production", DEV: true, PROD: false, SSR: false, MANIFEST_VERSION: 3, BROWSER: "chrome", CHROME: true, FIREFOX: false, SAFARI: false, EDGE: false, OPERA: false, COMMAND: "build", ENTRYPOINT: "html" };
+function print$1(method, ...args) {
+  return;
+}
+var logger$1 = {
+  debug: (...args) => print$1(console.debug, ...args),
+  log: (...args) => print$1(console.log, ...args),
+  warn: (...args) => print$1(console.warn, ...args),
+  error: (...args) => print$1(console.error, ...args)
+};
+var WxtLocationChangeEvent = (_a = class extends Event {
+  constructor(newUrl, oldUrl) {
+    super(_a.EVENT_NAME, {});
+    this.newUrl = newUrl;
+    this.oldUrl = oldUrl;
+  }
+}, __publicField(_a, "EVENT_NAME", getUniqueEventName("wxt:locationchange")), _a);
+function getUniqueEventName(eventName) {
+  const entrypointName = typeof define_import_meta_env_default === "undefined" ? "build" : "html";
+  return \`\${browser.runtime.id}:\${entrypointName}:\${eventName}\`;
+}
+function createLocationWatcher(ctx) {
+  let interval;
+  let oldUrl;
+  return {
+    /**
+     * Ensure the location watcher is actively looking for URL changes. If it's already watching,
+     * this is a noop.
+     */
+    run() {
+      if (interval != null)
+        return;
+      oldUrl = new URL(location.href);
+      interval = ctx.setInterval(() => {
+        let newUrl = new URL(location.href);
+        if (newUrl.href !== oldUrl.href) {
+          window.dispatchEvent(new WxtLocationChangeEvent(newUrl, oldUrl));
+          oldUrl = newUrl;
+        }
+      }, 1e3);
+    }
+  };
+}
+var ContentScriptContext = (_b = class {
+  constructor(contentScriptName, options) {
+    __privateAdd(this, _stopOldScripts);
+    __privateAdd(this, _listenForNewerScripts);
+    __privateAdd(this, _isTopFrame, window.self === window.top);
+    __privateAdd(this, _abortController, void 0);
+    __privateAdd(this, _locationWatcher, createLocationWatcher(this));
+    this.contentScriptName = contentScriptName;
+    this.options = options;
+    __privateSet(this, _abortController, new AbortController());
+    if (__privateGet(this, _isTopFrame)) {
+      __privateMethod(this, _stopOldScripts, stopOldScripts_fn).call(this);
+    }
+    this.setTimeout(() => {
+      __privateMethod(this, _listenForNewerScripts, listenForNewerScripts_fn).call(this);
+    });
+  }
+  get signal() {
+    return __privateGet(this, _abortController).signal;
+  }
+  abort(reason) {
+    return __privateGet(this, _abortController).abort(reason);
+  }
+  get isInvalid() {
+    if (browser.runtime.id == null) {
+      this.notifyInvalidated();
+    }
+    return this.signal.aborted;
+  }
+  get isValid() {
+    return !this.isInvalid;
+  }
+  /**
+   * Add a listener that is called when the content script's context is invalidated.
+   *
+   * @returns A function to remove the listener.
+   *
+   * @example
+   * browser.runtime.onMessage.addListener(cb);
+   * const removeInvalidatedListener = ctx.onInvalidated(() => {
+   *   browser.runtime.onMessage.removeListener(cb);
+   * })
+   * // ...
+   * removeInvalidatedListener();
+   */
+  onInvalidated(cb) {
+    this.signal.addEventListener("abort", cb);
+    return () => this.signal.removeEventListener("abort", cb);
+  }
+  /**
+   * Return a promise that never resolves. Useful if you have an async function that shouldn't run
+   * after the context is expired.
+   *
+   * @example
+   * const getValueFromStorage = async () => {
+   *   if (ctx.isInvalid) return ctx.block();
+   *
+   *   // ...
+   * }
+   */
+  block() {
+    return new Promise(() => {
+    });
+  }
+  /**
+   * Wrapper around \`window.setInterval\` that automatically clears the interval when invalidated.
+   */
+  setInterval(handler, timeout) {
+    const id = setInterval(() => {
+      if (this.isValid)
+        handler();
+    }, timeout);
+    this.onInvalidated(() => clearInterval(id));
+    return id;
+  }
+  /**
+   * Wrapper around \`window.setTimeout\` that automatically clears the interval when invalidated.
+   */
+  setTimeout(handler, timeout) {
+    const id = setTimeout(() => {
+      if (this.isValid)
+        handler();
+    }, timeout);
+    this.onInvalidated(() => clearTimeout(id));
+    return id;
+  }
+  /**
+   * Wrapper around \`window.requestAnimationFrame\` that automatically cancels the request when
+   * invalidated.
+   */
+  requestAnimationFrame(callback) {
+    const id = requestAnimationFrame((...args) => {
+      if (this.isValid)
+        callback(...args);
+    });
+    this.onInvalidated(() => cancelAnimationFrame(id));
+    return id;
+  }
+  /**
+   * Wrapper around \`window.requestIdleCallback\` that automatically cancels the request when
+   * invalidated.
+   */
+  requestIdleCallback(callback, options) {
+    const id = requestIdleCallback((...args) => {
+      if (!this.signal.aborted)
+        callback(...args);
+    }, options);
+    this.onInvalidated(() => cancelIdleCallback(id));
+    return id;
+  }
+  /**
+   * Call \`target.addEventListener\` and remove the event listener when the context is invalidated.
+   *
+   * Includes additional events useful for content scripts:
+   *
+   * - \`"wxt:locationchange"\` - Triggered when HTML5 history mode is used to change URL. Content
+   *   scripts are not reloaded when navigating this way, so this can be used to reset the content
+   *   script state on URL change, or run custom code.
+   *
+   * @example
+   * ctx.addEventListener(document, "visibilitychange", () => {
+   *   // ...
+   * });
+   * ctx.addEventListener(document, "wxt:locationchange", () => {
+   *   // ...
+   * });
+   */
+  addEventListener(target, type, handler, options) {
+    var _a2;
+    if (type === "wxt:locationchange") {
+      if (this.isValid)
+        __privateGet(this, _locationWatcher).run();
+    }
+    (_a2 = target.addEventListener) == null ? void 0 : _a2.call(
+      target,
+      type.startsWith("wxt:") ? getUniqueEventName(type) : type,
+      // @ts-expect-error: Event don't match, but that's OK, EventTarget doesn't allow custom types in the callback
+      handler,
+      {
+        ...options,
+        signal: this.signal
+      }
+    );
+  }
+  /**
+   * @internal
+   * Abort the abort controller and execute all \`onInvalidated\` listeners.
+   */
+  notifyInvalidated() {
+    this.abort("Content script context invalidated");
+    logger$1.debug(
+      \`Content script "\${this.contentScriptName}" context invalidated\`
+    );
+  }
+}, _isTopFrame = new WeakMap(), _abortController = new WeakMap(), _locationWatcher = new WeakMap(), _stopOldScripts = new WeakSet(), stopOldScripts_fn = function() {
+  window.postMessage(
+    {
+      event: _b.SCRIPT_STARTED_MESSAGE_TYPE,
+      contentScriptName: this.contentScriptName
+    },
+    "*"
+  );
+}, _listenForNewerScripts = new WeakSet(), listenForNewerScripts_fn = function() {
+  const cb = (event) => {
+    var _a2, _b2;
+    if (((_a2 = event.data) == null ? void 0 : _a2.type) === _b.SCRIPT_STARTED_MESSAGE_TYPE && ((_b2 = event.data) == null ? void 0 : _b2.contentScriptName) === this.contentScriptName) {
+      this.notifyInvalidated();
+    }
+  };
+  addEventListener("message", cb);
+  this.onInvalidated(() => removeEventListener("message", cb));
+}, __publicField(_b, "SCRIPT_STARTED_MESSAGE_TYPE", "wxt:content-script-started"), _b);
+function print(method, ...args) {
+  return;
+}
+var logger = {
+  debug: (...args) => print(console.debug, ...args),
+  log: (...args) => print(console.log, ...args),
+  warn: (...args) => print(console.warn, ...args),
+  error: (...args) => print(console.error, ...args)
+};
+(async () => {
+  try {
+    const { main, ...options } = definition;
+    const ctx = new ContentScriptContext("html", options);
+    await main(ctx);
+  } catch (err) {
+    logger.error(
+      \`The content script "\${"html"}" crashed on startup!\`,
+      err
+    );
+  }
+})();
+"
+`;
+
+exports[`Output Directory Structure > should generate IIFE content script when type=undefined 1`] = `
+".output/chrome-mv3/content-scripts/content.js
+----------------------------------------
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
+};
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
+var __privateMethod = (obj, member, method) => {
+  __accessCheck(obj, member, "access private method");
+  return method;
+};
+(function() {
+  "use strict";
+  var _a, _b, _isTopFrame, _abortController, _locationWatcher, _stopOldScripts, stopOldScripts_fn, _listenForNewerScripts, listenForNewerScripts_fn;
+  function defineContentScript(definition2) {
+    return definition2;
+  }
+  function logHello(name) {
+    console.log(\`Hello \${name}!\`);
+  }
+  const definition = defineContentScript({
+    matches: ["<all_urls>"],
+    main() {
+      logHello("background");
+    }
+  });
+  const originalBrowser = chrome;
+  var browser = originalBrowser;
+  var define_import_meta_env_default = { BASE_URL: "/", MODE: "production", DEV: true, PROD: false, SSR: false, MANIFEST_VERSION: 3, BROWSER: "chrome", CHROME: true, FIREFOX: false, SAFARI: false, EDGE: false, OPERA: false, COMMAND: "build", ENTRYPOINT: "content" };
+  function print$1(method, ...args) {
+    return;
+  }
+  var logger$1 = {
+    debug: (...args) => print$1(console.debug, ...args),
+    log: (...args) => print$1(console.log, ...args),
+    warn: (...args) => print$1(console.warn, ...args),
+    error: (...args) => print$1(console.error, ...args)
+  };
+  var WxtLocationChangeEvent = (_a = class extends Event {
+    constructor(newUrl, oldUrl) {
+      super(_a.EVENT_NAME, {});
+      this.newUrl = newUrl;
+      this.oldUrl = oldUrl;
+    }
+  }, __publicField(_a, "EVENT_NAME", getUniqueEventName("wxt:locationchange")), _a);
+  function getUniqueEventName(eventName) {
+    const entrypointName = typeof define_import_meta_env_default === "undefined" ? "build" : "content";
+    return \`\${browser.runtime.id}:\${entrypointName}:\${eventName}\`;
+  }
+  function createLocationWatcher(ctx) {
+    let interval;
+    let oldUrl;
+    return {
+      /**
+       * Ensure the location watcher is actively looking for URL changes. If it's already watching,
+       * this is a noop.
+       */
+      run() {
+        if (interval != null)
+          return;
+        oldUrl = new URL(location.href);
+        interval = ctx.setInterval(() => {
+          let newUrl = new URL(location.href);
+          if (newUrl.href !== oldUrl.href) {
+            window.dispatchEvent(new WxtLocationChangeEvent(newUrl, oldUrl));
+            oldUrl = newUrl;
+          }
+        }, 1e3);
+      }
+    };
+  }
+  var ContentScriptContext = (_b = class {
+    constructor(contentScriptName, options) {
+      __privateAdd(this, _stopOldScripts);
+      __privateAdd(this, _listenForNewerScripts);
+      __privateAdd(this, _isTopFrame, window.self === window.top);
+      __privateAdd(this, _abortController, void 0);
+      __privateAdd(this, _locationWatcher, createLocationWatcher(this));
+      this.contentScriptName = contentScriptName;
+      this.options = options;
+      __privateSet(this, _abortController, new AbortController());
+      if (__privateGet(this, _isTopFrame)) {
+        __privateMethod(this, _stopOldScripts, stopOldScripts_fn).call(this);
+      }
+      this.setTimeout(() => {
+        __privateMethod(this, _listenForNewerScripts, listenForNewerScripts_fn).call(this);
+      });
+    }
+    get signal() {
+      return __privateGet(this, _abortController).signal;
+    }
+    abort(reason) {
+      return __privateGet(this, _abortController).abort(reason);
+    }
+    get isInvalid() {
+      if (browser.runtime.id == null) {
+        this.notifyInvalidated();
+      }
+      return this.signal.aborted;
+    }
+    get isValid() {
+      return !this.isInvalid;
+    }
+    /**
+     * Add a listener that is called when the content script's context is invalidated.
+     *
+     * @returns A function to remove the listener.
+     *
+     * @example
+     * browser.runtime.onMessage.addListener(cb);
+     * const removeInvalidatedListener = ctx.onInvalidated(() => {
+     *   browser.runtime.onMessage.removeListener(cb);
+     * })
+     * // ...
+     * removeInvalidatedListener();
+     */
+    onInvalidated(cb) {
+      this.signal.addEventListener("abort", cb);
+      return () => this.signal.removeEventListener("abort", cb);
+    }
+    /**
+     * Return a promise that never resolves. Useful if you have an async function that shouldn't run
+     * after the context is expired.
+     *
+     * @example
+     * const getValueFromStorage = async () => {
+     *   if (ctx.isInvalid) return ctx.block();
+     *
+     *   // ...
+     * }
+     */
+    block() {
+      return new Promise(() => {
+      });
+    }
+    /**
+     * Wrapper around \`window.setInterval\` that automatically clears the interval when invalidated.
+     */
+    setInterval(handler, timeout) {
+      const id = setInterval(() => {
+        if (this.isValid)
+          handler();
+      }, timeout);
+      this.onInvalidated(() => clearInterval(id));
+      return id;
+    }
+    /**
+     * Wrapper around \`window.setTimeout\` that automatically clears the interval when invalidated.
+     */
+    setTimeout(handler, timeout) {
+      const id = setTimeout(() => {
+        if (this.isValid)
+          handler();
+      }, timeout);
+      this.onInvalidated(() => clearTimeout(id));
+      return id;
+    }
+    /**
+     * Wrapper around \`window.requestAnimationFrame\` that automatically cancels the request when
+     * invalidated.
+     */
+    requestAnimationFrame(callback) {
+      const id = requestAnimationFrame((...args) => {
+        if (this.isValid)
+          callback(...args);
+      });
+      this.onInvalidated(() => cancelAnimationFrame(id));
+      return id;
+    }
+    /**
+     * Wrapper around \`window.requestIdleCallback\` that automatically cancels the request when
+     * invalidated.
+     */
+    requestIdleCallback(callback, options) {
+      const id = requestIdleCallback((...args) => {
+        if (!this.signal.aborted)
+          callback(...args);
+      }, options);
+      this.onInvalidated(() => cancelIdleCallback(id));
+      return id;
+    }
+    /**
+     * Call \`target.addEventListener\` and remove the event listener when the context is invalidated.
+     *
+     * Includes additional events useful for content scripts:
+     *
+     * - \`"wxt:locationchange"\` - Triggered when HTML5 history mode is used to change URL. Content
+     *   scripts are not reloaded when navigating this way, so this can be used to reset the content
+     *   script state on URL change, or run custom code.
+     *
+     * @example
+     * ctx.addEventListener(document, "visibilitychange", () => {
+     *   // ...
+     * });
+     * ctx.addEventListener(document, "wxt:locationchange", () => {
+     *   // ...
+     * });
+     */
+    addEventListener(target, type, handler, options) {
+      var _a2;
+      if (type === "wxt:locationchange") {
+        if (this.isValid)
+          __privateGet(this, _locationWatcher).run();
+      }
+      (_a2 = target.addEventListener) == null ? void 0 : _a2.call(
+        target,
+        type.startsWith("wxt:") ? getUniqueEventName(type) : type,
+        // @ts-expect-error: Event don't match, but that's OK, EventTarget doesn't allow custom types in the callback
+        handler,
+        {
+          ...options,
+          signal: this.signal
+        }
+      );
+    }
+    /**
+     * @internal
+     * Abort the abort controller and execute all \`onInvalidated\` listeners.
+     */
+    notifyInvalidated() {
+      this.abort("Content script context invalidated");
+      logger$1.debug(
+        \`Content script "\${this.contentScriptName}" context invalidated\`
+      );
+    }
+  }, _isTopFrame = new WeakMap(), _abortController = new WeakMap(), _locationWatcher = new WeakMap(), _stopOldScripts = new WeakSet(), stopOldScripts_fn = function() {
+    window.postMessage(
+      {
+        event: _b.SCRIPT_STARTED_MESSAGE_TYPE,
+        contentScriptName: this.contentScriptName
+      },
+      "*"
+    );
+  }, _listenForNewerScripts = new WeakSet(), listenForNewerScripts_fn = function() {
+    const cb = (event) => {
+      var _a2, _b2;
+      if (((_a2 = event.data) == null ? void 0 : _a2.type) === _b.SCRIPT_STARTED_MESSAGE_TYPE && ((_b2 = event.data) == null ? void 0 : _b2.contentScriptName) === this.contentScriptName) {
+        this.notifyInvalidated();
+      }
+    };
+    addEventListener("message", cb);
+    this.onInvalidated(() => removeEventListener("message", cb));
+  }, __publicField(_b, "SCRIPT_STARTED_MESSAGE_TYPE", "wxt:content-script-started"), _b);
+  function print(method, ...args) {
+    return;
+  }
+  var logger = {
+    debug: (...args) => print(console.debug, ...args),
+    log: (...args) => print(console.log, ...args),
+    warn: (...args) => print(console.warn, ...args),
+    error: (...args) => print(console.error, ...args)
+  };
+  (async () => {
+    try {
+      const { main, ...options } = definition;
+      const ctx = new ContentScriptContext("content", options);
+      await main(ctx);
+    } catch (err) {
+      logger.error(
+        \`The content script "\${"content"}" crashed on startup!\`,
+        err
+      );
+    }
+  })();
+})();
+"
+`;

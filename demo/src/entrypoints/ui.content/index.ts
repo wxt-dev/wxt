@@ -4,8 +4,10 @@ import './style.css';
 export default defineContentScript({
   matches: ['https://*.duckduckgo.com/*'],
   cssInjectionMode: 'ui',
+  type: 'module',
 
   async main(ctx) {
+    logId();
     const ui = await createShadowRootUi(ctx, {
       name: 'demo-ui',
       position: 'inline',
