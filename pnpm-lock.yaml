@@ -100,7 +100,7 @@ importers:
         version: 2.1.1
       rollup-plugin-visualizer:
         specifier: ^5.9.2
-        version: 5.9.3
+        version: 5.12.0
       unimport:
         specifier: ^3.4.0
         version: 3.4.0
@@ -4388,8 +4388,8 @@ packages:
       glob: 7.1.6
     dev: false
 
-  /rollup-plugin-visualizer@5.9.3:
-    resolution: {integrity: sha512-ieGM5UAbMVqThX67GCuFHu/GkaSXIUZwFKJsSzE+7+k9fibU/6gbUz7SL+9BBzNtv5bIFHj7kEu0TWcqEnT/sQ==}
+  /rollup-plugin-visualizer@5.12.0:
+    resolution: {integrity: sha512-8/NU9jXcHRs7Nnj07PF2o4gjxmm9lXIrZ8r175bT9dK8qoLlvKTwRMArRCMgpMGlq8CTLugRvEmyMeMXIU2pNQ==}
     engines: {node: '>=14'}
     hasBin: true
     peerDependencies:
