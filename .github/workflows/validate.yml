@@ -10,25 +10,25 @@ jobs:
   formatting:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm format:check
   lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm lint
   type-check:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm compile
   validate-demo:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm tsc --noEmit
         working-directory: demo
@@ -41,7 +41,7 @@ jobs:
   tests:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
@@ -51,7 +51,7 @@ jobs:
   windows-tests:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm test run
   template:
@@ -65,7 +65,7 @@ jobs:
           - vanilla
           - vue
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm pack
       - run: npm i
