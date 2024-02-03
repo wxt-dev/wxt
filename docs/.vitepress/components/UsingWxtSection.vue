@@ -17,6 +17,7 @@ const chromeExtensionIds = [
   'okifoaikfmpfcamplcfjkpdnhfodpkil', // Doozy: Ai Made Easy
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
   'youtube中文配音/oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
+  'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
 ];
 
 const { data } = useListExtensionDetails(chromeExtensionIds);
