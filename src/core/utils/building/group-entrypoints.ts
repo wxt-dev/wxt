@@ -15,6 +15,9 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
     if (entry.type === 'background' && entry.options.type === 'module') {
       group = 'esm';
     }
+    if (entry.type === 'content-script' && entry.options.type === 'module') {
+      group = entry.options.world === 'MAIN' ? 'sandboxed-esm' : 'esm';
+    }
     if (group === 'individual') {
       groups.push(entry);
     } else {

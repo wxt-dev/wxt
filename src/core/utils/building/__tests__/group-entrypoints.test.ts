@@ -3,6 +3,7 @@ import { Entrypoint } from '~/types';
 import { groupEntrypoints } from '../group-entrypoints';
 import {
   fakeBackgroundEntrypoint,
+  fakeContentScriptEntrypoint,
   fakeGenericEntrypoint,
   fakePopupEntrypoint,
 } from '../../testing/fake-objects';
@@ -165,10 +166,31 @@ describe('groupEntrypoints', () => {
     expect(actual).toEqual([[background, popup], [sandbox]]);
   });
 
-  it.todo(
-    'should group ESM compatible sandbox scripts with sandbox pages',
-    () => {
-      // Main world content scripts
-    },
-  );
+  it('should group ESM compatible sandbox scripts with sandbox pages', () => {
+    const mainWorld = fakeContentScriptEntrypoint({
+      options: {
+        world: 'MAIN',
+        type: 'module',
+      },
+    });
+    const isolatedWorld = fakeContentScriptEntrypoint({
+      options: {
+        world: 'ISOLATED',
+        type: 'module',
+      },
+    });
+    const popup = fakePopupEntrypoint();
+    const sandbox = fakeGenericEntrypoint({
+      inputPath: '/entrypoints/sandbox.html',
+      name: 'sandbox',
+      type: 'sandbox',
+    });
+
+    const actual = groupEntrypoints([isolatedWorld, mainWorld, popup, sandbox]);
+
+    expect(actual).toEqual([
+      [isolatedWorld, popup],
+      [mainWorld, sandbox],
+    ]);
+  });
 });
