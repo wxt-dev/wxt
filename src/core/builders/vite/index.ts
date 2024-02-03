@@ -63,6 +63,7 @@ export async function createViteBuilder(
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
       wxtPlugins.excludeBrowserPolyfill(wxtConfig),
+      wxtPlugins.defineImportMeta(),
     );
     if (wxtConfig.analysis.enabled) {
       config.plugins.push(wxtPlugins.bundleAnalysis());

@@ -12,3 +12,4 @@ export * from './globals';
 export * from './webextensionPolyfillMock';
 export * from './excludeBrowserPolyfill';
 export * from './entrypointGroupGlobals';
+export * from './defineImportMeta';
