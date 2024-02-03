@@ -96,8 +96,8 @@ importers:
         specifier: ^2.4.2
         version: 2.4.2
       publish-browser-extension:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       rollup-plugin-visualizer:
         specifier: ^5.9.2
         version: 5.9.3
@@ -4172,8 +4172,8 @@ packages:
       sade: 1.8.1
     dev: true
 
-  /publish-browser-extension@2.1.0:
-    resolution: {integrity: sha512-OdnhaGTZ5d3PPNh8gUjTvLhrjH4H0lawe+y5gUvGHAt3hVS33FBTt0r/NyP5qgNtN9TM3iHfTduN4GydXiXt8w==}
+  /publish-browser-extension@2.1.1:
+    resolution: {integrity: sha512-WqCnhHXbmiYn4vIbgcyKWVHiOvCoPjjpt3X+hfnU8rlOozU43TURpHUWZlQ0W49LhvJvBRsBfGRQxtRMGhqsxw==}
     engines: {node: '18', pnpm: '8'}
     hasBin: true
     dependencies:
