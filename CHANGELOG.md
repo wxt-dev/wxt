@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.16.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.0...v0.16.1)
+
+### 🩹 Fixes
+
+- Don't require config to run `wxt submit init` ([9318346](https://github.com/wxt-dev/wxt/commit/9318346))
+
+### 📖 Documentation
+
+- Add premid extension to homepage ([#399](https://github.com/wxt-dev/wxt/pull/399))
+
+### 🏡 Chore
+
+- **templates:** Upgrade to wxt `^0.16.0` ([f0b2a12](https://github.com/wxt-dev/wxt/commit/f0b2a12))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.16.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.4...v0.16.0)
