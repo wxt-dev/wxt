@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.16.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.1...v0.16.2)
+
+### 🩹 Fixes
+
+- Don't crash background service worker when using `import.meta.url` ([#402](https://github.com/wxt-dev/wxt/pull/402))
+
 ## v0.16.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.0...v0.16.1)
