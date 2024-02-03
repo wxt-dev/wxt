@@ -20,7 +20,7 @@
 
 #### ⚠️ Breaking Changes
 
-In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes. Moving files like this has not historically increased review times or triggered in-depth reviews in the stores.
+In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes.
 
 - Before:
    ```
@@ -41,7 +41,7 @@ In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints i
        popup.js
    ```
 
-This effects all HTML files, not just the Popup. The hash has been removed, and it's been moved to the root of the build target folder, not inside the `chunks/` directory.
+This effects all HTML files, not just the Popup. The hash has been removed, and it's been moved to the root of the build target folder, not inside the `chunks/` directory. Moving files like this has not historically increased review times or triggered in-depth reviews when submitting updates to the stores.
 
 ## v0.15.4
 
