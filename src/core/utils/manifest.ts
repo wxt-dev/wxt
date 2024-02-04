@@ -205,7 +205,7 @@ function addEntrypoints(
 
   if (bookmarks) {
     if (wxt.config.browser === 'firefox') {
-      wxt.config.logger.warn(
+      wxt.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.bookmarks was not added to the manifest',
       );
     } else {
@@ -221,7 +221,7 @@ function addEntrypoints(
 
   if (history) {
     if (wxt.config.browser === 'firefox') {
-      wxt.config.logger.warn(
+      wxt.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.history was not added to the manifest',
       );
     } else {
