@@ -15,7 +15,7 @@ WXT is based of [Nuxt](https://nuxt.com), and aims to provide the same great DX 
 
 ## Conventions
 
-WXT is an optionated framework. This helps keep projects consistent and easy to pick up.
+WXT is an opinionated framework. This helps keep projects consistent and easy to pick up.
 
 - **Generated manifest**: Based on your project's file structure
 - **Entrypoint configuration**: Configure entrypoints from the same file they're declare in
