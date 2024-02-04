@@ -1,7 +1,7 @@
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 
 export function getGlobals(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): Array<{ name: string; value: any; type: string }> {
   return [
     {

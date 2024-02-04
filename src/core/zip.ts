@@ -7,7 +7,8 @@ import { getPackageJson } from '~/core/utils/package';
 import { minimatch } from 'minimatch';
 import { formatDuration } from '~/core/utils/time';
 import { printFileList } from '~/core/utils/log/printFileList';
-import { getInternalConfig, internalBuild } from '~/core/utils/building';
+import { internalBuild } from '~/core/utils/building';
+import { registerWxt, wxt } from './wxt';
 
 /**
  * Build and zip the extension for distribution.
@@ -15,59 +16,54 @@ import { getInternalConfig, internalBuild } from '~/core/utils/building';
  * @returns A list of all files included in the ZIP.
  */
 export async function zip(config?: InlineConfig): Promise<string[]> {
-  const internalConfig = await getInternalConfig(config ?? {}, 'build');
-  const output = await internalBuild(internalConfig);
+  await registerWxt('build', config);
+  const output = await internalBuild();
 
   const start = Date.now();
-  internalConfig.logger.info('Zipping extension...');
+  wxt.logger.info('Zipping extension...');
   const zipFiles: string[] = [];
 
   const projectName =
-    internalConfig.zip.name ??
+    wxt.config.zip.name ??
     kebabCaseAlphanumeric(
-      (await getPackageJson(internalConfig))?.name || dirname(process.cwd()),
+      (await getPackageJson())?.name || dirname(process.cwd()),
     );
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
-      .replaceAll('{{browser}}', internalConfig.browser)
+      .replaceAll('{{browser}}', wxt.config.browser)
       .replaceAll(
         '{{version}}',
         output.manifest.version_name ?? output.manifest.version,
       )
-      .replaceAll('{{manifestVersion}}', `mv${internalConfig.manifestVersion}`);
+      .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
-  await fs.ensureDir(internalConfig.outBaseDir);
+  await fs.ensureDir(wxt.config.outBaseDir);
 
   // ZIP output directory
 
-  const outZipFilename = applyTemplate(internalConfig.zip.artifactTemplate);
-  const outZipPath = resolve(internalConfig.outBaseDir, outZipFilename);
-  await zipdir(internalConfig.outDir, {
+  const outZipFilename = applyTemplate(wxt.config.zip.artifactTemplate);
+  const outZipPath = resolve(wxt.config.outBaseDir, outZipFilename);
+  await zipdir(wxt.config.outDir, {
     saveTo: outZipPath,
   });
   zipFiles.push(outZipPath);
 
   // ZIP sources for Firefox
 
-  if (internalConfig.browser === 'firefox') {
-    const sourcesZipFilename = applyTemplate(
-      internalConfig.zip.sourcesTemplate,
-    );
-    const sourcesZipPath = resolve(
-      internalConfig.outBaseDir,
-      sourcesZipFilename,
-    );
-    await zipdir(internalConfig.zip.sourcesRoot, {
+  if (wxt.config.browser === 'firefox') {
+    const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
+    const sourcesZipPath = resolve(wxt.config.outBaseDir, sourcesZipFilename);
+    await zipdir(wxt.config.zip.sourcesRoot, {
       saveTo: sourcesZipPath,
       filter(path) {
-        const relativePath = relative(internalConfig.zip.sourcesRoot, path);
+        const relativePath = relative(wxt.config.zip.sourcesRoot, path);
 
         return (
-          internalConfig.zip.includeSources.some((pattern) =>
+          wxt.config.zip.includeSources.some((pattern) =>
             minimatch(relativePath, pattern),
           ) ||
-          !internalConfig.zip.excludeSources.some((pattern) =>
+          !wxt.config.zip.excludeSources.some((pattern) =>
             minimatch(relativePath, pattern),
           )
         );
@@ -77,9 +73,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   }
 
   await printFileList(
-    internalConfig.logger.success,
+    wxt.logger.success,
     `Zipped extension in ${formatDuration(Date.now() - start)}`,
-    internalConfig.outBaseDir,
+    wxt.config.outBaseDir,
     zipFiles,
   );
 

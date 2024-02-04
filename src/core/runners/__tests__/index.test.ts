@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createExtensionRunner } from '..';
-import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
+import { setFakeWxt } from '~/core/utils/testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { createSafariRunner } from '../safari';
 import { createWslRunner } from '../wsl';
@@ -26,54 +26,62 @@ const createWebExtRunnerMock = vi.mocked(createWebExtRunner);
 
 describe('createExtensionRunner', () => {
   it('should return a Safari runner when browser is "safari"', async () => {
-    const config = fakeInternalConfig({
-      browser: 'safari',
+    setFakeWxt({
+      config: {
+        browser: 'safari',
+      },
     });
     const safariRunner = mock<ExtensionRunner>();
     createSafariRunnerMock.mockReturnValue(safariRunner);
 
-    await expect(createExtensionRunner(config)).resolves.toBe(safariRunner);
+    await expect(createExtensionRunner()).resolves.toBe(safariRunner);
   });
 
   it('should return a WSL runner when `is-wsl` is true', async () => {
     isWslMock.mockResolvedValueOnce(true);
-    const config = fakeInternalConfig({
-      browser: 'chrome',
+    setFakeWxt({
+      config: {
+        browser: 'chrome',
+      },
     });
     const wslRunner = mock<ExtensionRunner>();
     createWslRunnerMock.mockReturnValue(wslRunner);
 
-    await expect(createExtensionRunner(config)).resolves.toBe(wslRunner);
+    await expect(createExtensionRunner()).resolves.toBe(wslRunner);
   });
 
   it('should return a manual runner when `runner.disabled` is true', async () => {
     isWslMock.mockResolvedValueOnce(false);
-    const config = fakeInternalConfig({
-      browser: 'chrome',
-      runnerConfig: {
-        config: {
-          disabled: true,
+    setFakeWxt({
+      config: {
+        browser: 'chrome',
+        runnerConfig: {
+          config: {
+            disabled: true,
+          },
         },
       },
     });
     const manualRunner = mock<ExtensionRunner>();
     createManualRunnerMock.mockReturnValue(manualRunner);
 
-    await expect(createExtensionRunner(config)).resolves.toBe(manualRunner);
+    await expect(createExtensionRunner()).resolves.toBe(manualRunner);
   });
 
   it('should return a web-ext runner otherwise', async () => {
-    const config = fakeInternalConfig({
-      browser: 'chrome',
-      runnerConfig: {
-        config: {
-          disabled: undefined,
+    setFakeWxt({
+      config: {
+        browser: 'chrome',
+        runnerConfig: {
+          config: {
+            disabled: undefined,
+          },
         },
       },
     });
     const manualRunner = mock<ExtensionRunner>();
     createWebExtRunnerMock.mockReturnValue(manualRunner);
 
-    await expect(createExtensionRunner(config)).resolves.toBe(manualRunner);
+    await expect(createExtensionRunner()).resolves.toBe(manualRunner);
   });
 });

@@ -1,5 +1,5 @@
 import dns from 'node:dns';
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 import { withTimeout } from './time';
 
 function isOffline(): Promise<boolean> {
@@ -26,7 +26,7 @@ export async function isOnline(): Promise<boolean> {
  */
 export async function fetchCached(
   url: string,
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): Promise<string> {
   let content: string = '';
 

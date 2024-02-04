@@ -1,11 +1,11 @@
 import { Plugin } from 'vite';
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 
 /**
  * Defines global constants about the dev server. Helps scripts connect to the server's web socket.
  */
 export function devServerGlobals(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): Plugin {
   return {
     name: 'wxt:dev-server-globals',

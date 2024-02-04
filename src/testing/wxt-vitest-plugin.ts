@@ -6,7 +6,7 @@ import {
   globals,
   webextensionPolyfillMock,
 } from '../core/builders/vite/plugins';
-import { getInternalConfig } from '~/core/utils/building';
+import { resolveConfig } from '~/core/utils/building';
 import { InlineConfig } from '../types';
 
 /**
@@ -25,7 +25,7 @@ import { InlineConfig } from '../types';
  * @param inlineConfig Customize WXT's config for testing. Any config specified here overrides the config from your `wxt.config.ts` file.
  */
 export function WxtVitest(inlineConfig?: InlineConfig): vite.PluginOption {
-  return getInternalConfig(inlineConfig ?? {}, 'serve').then((config) => [
+  return resolveConfig(inlineConfig ?? {}, 'serve').then((config) => [
     webextensionPolyfillMock(config),
     unimport(config),
     globals(config),

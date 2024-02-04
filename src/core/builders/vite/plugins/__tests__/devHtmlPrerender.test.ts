@@ -3,7 +3,7 @@ import { Window } from 'happy-dom';
 import { pointToDevServer } from '../devHtmlPrerender';
 import {
   fakeDevServer,
-  fakeInternalConfig,
+  fakeResolvedConfig,
 } from '~/core/utils/testing/fake-objects';
 import { normalizePath } from '~/core/utils/paths';
 import { resolve } from 'node:path';
@@ -36,7 +36,7 @@ describe('Dev HTML Prerender Plugin', () => {
         url: 'http://localhost',
       });
       const root = '/some/root';
-      const config = fakeInternalConfig({
+      const config = fakeResolvedConfig({
         root,
         alias: {
           '~local': '.',

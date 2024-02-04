@@ -1,13 +1,9 @@
 import type { Manifest } from '~/browser';
-import {
-  BuildOutput,
-  Entrypoint,
-  EntrypointGroup,
-  InternalConfig,
-} from '~/types';
+import { BuildOutput, Entrypoint, EntrypointGroup } from '~/types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '~/core/utils/manifest';
+import { wxt } from '../../wxt';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output, build the
@@ -26,7 +22,6 @@ import { generateManifest, writeManifest } from '~/core/utils/manifest';
  *                       this is the first build.
  */
 export async function rebuild(
-  config: InternalConfig,
   allEntrypoints: Entrypoint[],
   entrypointGroups: EntrypointGroup[],
   existingOutput: Omit<BuildOutput, 'manifest'> = {
@@ -42,28 +37,28 @@ export async function rebuild(
   const spinner = ora(`Preparing...`).start();
 
   // Update types directory with new files and types
-  await generateTypesDir(allEntrypoints, config).catch((err) => {
-    config.logger.warn('Failed to update .wxt directory:', err);
+  await generateTypesDir(allEntrypoints).catch((err) => {
+    wxt.logger.warn('Failed to update .wxt directory:', err);
     // Throw the error if doing a regular build, don't for dev mode.
-    if (config.command === 'build') throw err;
+    if (wxt.config.command === 'build') throw err;
   });
 
   // Build and merge the outputs
-  const newOutput = await buildEntrypoints(entrypointGroups, config, spinner);
+  const newOutput = await buildEntrypoints(entrypointGroups, spinner);
   const mergedOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [...existingOutput.steps, ...newOutput.steps],
     publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
   };
 
   const { manifest: newManifest, warnings: manifestWarnings } =
-    await generateManifest(allEntrypoints, mergedOutput, config);
+    await generateManifest(allEntrypoints, mergedOutput);
   const finalOutput: BuildOutput = {
     manifest: newManifest,
     ...newOutput,
   };
 
   // Write manifest
-  await writeManifest(newManifest, finalOutput, config);
+  await writeManifest(newManifest, finalOutput);
 
   // Stop the spinner and remove it from the CLI output
   spinner.clear().stop();

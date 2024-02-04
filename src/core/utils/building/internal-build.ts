@@ -1,5 +1,5 @@
 import { findEntrypoints } from './find-entrypoints';
-import { InternalConfig, BuildOutput, Entrypoint } from '~/types';
+import { BuildOutput, Entrypoint } from '~/types';
 import pc from 'picocolors';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
@@ -17,6 +17,7 @@ import {
 } from '../validation';
 import consola from 'consola';
 import { exec } from '../exec';
+import { wxt } from '../../wxt';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -28,28 +29,26 @@ import { exec } from '../exec';
  *    `rebuild` for more details)
  * 3. Prints the summary
  */
-export async function internalBuild(
-  config: InternalConfig,
-): Promise<BuildOutput> {
-  const verb = config.command === 'serve' ? 'Pre-rendering' : 'Building';
-  const target = `${config.browser}-mv${config.manifestVersion}`;
-  config.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(config.mode)} with ${pc.green(
-      `${config.builder.name} ${config.builder.version}`,
+export async function internalBuild(): Promise<BuildOutput> {
+  const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
+  const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
+  wxt.logger.info(
+    `${verb} ${pc.cyan(target)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
+      `${wxt.config.builder.name} ${wxt.config.builder.version}`,
     )}`,
   );
   const startTime = Date.now();
 
   // Cleanup
-  await fs.rm(config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(config.outDir);
+  await fs.rm(wxt.config.outDir, { recursive: true, force: true });
+  await fs.ensureDir(wxt.config.outDir);
 
-  const entrypoints = await findEntrypoints(config);
-  config.logger.debug('Detected entrypoints:', entrypoints);
+  const entrypoints = await findEntrypoints();
+  wxt.logger.debug('Detected entrypoints:', entrypoints);
 
   const validationResults = validateEntrypoints(entrypoints);
   if (validationResults.errorCount + validationResults.warningCount > 0) {
-    printValidationResults(config, validationResults);
+    printValidationResults(validationResults);
   }
   if (validationResults.errorCount > 0) {
     throw new ValidationError(`Entrypoint validation failed`, {
@@ -58,28 +57,22 @@ export async function internalBuild(
   }
 
   const groups = groupEntrypoints(entrypoints);
-  const { output, warnings } = await rebuild(
-    config,
-    entrypoints,
-    groups,
-    undefined,
-  );
+  const { output, warnings } = await rebuild(entrypoints, groups, undefined);
 
   // Post-build
   await printBuildSummary(
-    config.logger.success,
+    wxt.logger.success,
     `Built extension in ${formatDuration(Date.now() - startTime)}`,
     output,
-    config,
   );
 
   for (const warning of warnings) {
-    config.logger.warn(...warning);
+    wxt.logger.warn(...warning);
   }
 
-  if (config.analysis.enabled) {
-    await combineAnalysisStats(config);
-    config.logger.info(
+  if (wxt.config.analysis.enabled) {
+    await combineAnalysisStats();
+    wxt.logger.info(
       `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow('stats.html')}`,
     );
   }
@@ -87,26 +80,26 @@ export async function internalBuild(
   return output;
 }
 
-async function combineAnalysisStats(config: InternalConfig): Promise<void> {
+async function combineAnalysisStats(): Promise<void> {
   const unixFiles = await glob(`stats-*.json`, {
-    cwd: config.outDir,
+    cwd: wxt.config.outDir,
     absolute: true,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
   await exec(
-    config,
     'rollup-plugin-visualizer',
-    [...absolutePaths, '--template', config.analysis.template],
-    { cwd: config.root, stdio: 'inherit' },
+    [...absolutePaths, '--template', wxt.config.analysis.template],
+    { cwd: wxt.config.root, stdio: 'inherit' },
   );
 }
 
-function printValidationResults(
-  config: InternalConfig,
-  { errorCount, errors, warningCount }: ValidationResults,
-) {
-  (errorCount > 0 ? config.logger.error : config.logger.warn)(
+function printValidationResults({
+  errorCount,
+  errors,
+  warningCount,
+}: ValidationResults) {
+  (errorCount > 0 ? wxt.logger.error : wxt.logger.warn)(
     `Entrypoint validation failed: ${errorCount} error${
       errorCount === 1 ? '' : 's'
     }, ${warningCount} warning${warningCount === 1 ? '' : 's'}`,

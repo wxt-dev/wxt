@@ -1,9 +1,9 @@
 import { UnimportOptions } from 'unimport';
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 import { defu } from 'defu';
 
 export function getUnimportOptions(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): Partial<UnimportOptions | false> {
   if (config.imports === false) return false;
 

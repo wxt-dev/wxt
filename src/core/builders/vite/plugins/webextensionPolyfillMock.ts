@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type * as vite from 'vite';
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 
 /**
  * Mock `webextension-polyfill` by inlining all dependencies that import it and adding a custom
@@ -16,7 +16,7 @@ import { InternalConfig } from '~/types';
  * `npm list` and inline them automatically.
  */
 export function webextensionPolyfillMock(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): vite.PluginOption {
   return {
     name: 'wxt:testing-inline-deps',

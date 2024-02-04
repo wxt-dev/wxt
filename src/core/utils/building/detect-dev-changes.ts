@@ -2,12 +2,12 @@ import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
-  InternalConfig,
   OutputAsset,
   OutputFile,
 } from '~/types';
 import { every, some } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
+import { wxt } from '../../wxt';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -30,19 +30,18 @@ import { normalizePath } from '~/core/utils/paths';
  *   - Config file changed (wxt.config.ts, .env, web-ext.config.ts, etc)
  */
 export function detectDevChanges(
-  config: InternalConfig,
   changedFiles: string[],
   currentOutput: BuildOutput,
 ): DevModeChange {
   const isConfigChange = some(
     changedFiles,
-    (file) => file === config.userConfigMetadata.configFile,
+    (file) => file === wxt.config.userConfigMetadata.configFile,
   );
   if (isConfigChange) return { type: 'full-restart' };
 
   const isRunnerChange = some(
     changedFiles,
-    (file) => file === config.runnerConfig.configFile,
+    (file) => file === wxt.config.runnerConfig.configFile,
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 

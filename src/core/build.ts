@@ -1,5 +1,6 @@
 import { BuildOutput, InlineConfig } from '~/types';
-import { getInternalConfig, internalBuild } from './utils/building';
+import { internalBuild } from './utils/building';
+import { registerWxt } from './wxt';
 
 /**
  * Bundles the extension for production. Returns a promise of the build result. Discovers the `wxt.config.ts` file in
@@ -15,6 +16,7 @@ import { getInternalConfig, internalBuild } from './utils/building';
  * })
  */
 export async function build(config?: InlineConfig): Promise<BuildOutput> {
-  const internalConfig = await getInternalConfig(config ?? {}, 'build');
-  return await internalBuild(internalConfig);
+  await registerWxt('build', config);
+
+  return await internalBuild();
 }

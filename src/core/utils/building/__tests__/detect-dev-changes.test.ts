@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { DevModeChange, detectDevChanges } from '~/core/utils/building';
 import {
   fakeBackgroundEntrypoint,
@@ -10,14 +10,19 @@ import {
   fakePopupEntrypoint,
   fakeOutputAsset,
   fakeOutputChunk,
-  fakeInternalConfig,
+  fakeWxt,
+  setFakeWxt,
 } from '~/core/utils/testing/fake-objects';
 import { BuildOutput, BuildStepOutput } from '~/types';
+import { setWxtForTesting } from '../../../wxt';
 
 describe('Detect Dev Changes', () => {
+  beforeEach(() => {
+    setWxtForTesting(fakeWxt());
+  });
+
   describe('No changes', () => {
     it("should return 'no-change' when the changed file isn't used by any of the entrypoints", () => {
-      const config = fakeInternalConfig();
       const changes = ['/some/path.ts'];
       const currentOutput: BuildOutput = {
         manifest: fakeManifest(),
@@ -34,7 +39,7 @@ describe('Detect Dev Changes', () => {
         ],
       };
 
-      const actual = detectDevChanges(config, changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual({ type: 'no-change' });
     });
@@ -43,9 +48,11 @@ describe('Detect Dev Changes', () => {
   describe('wxt.config.ts', () => {
     it("should return 'full-restart' when one of the changed files is the config file", () => {
       const configFile = '/root/wxt.config.ts';
-      const config = fakeInternalConfig({
-        userConfigMetadata: {
-          configFile,
+      setFakeWxt({
+        config: {
+          userConfigMetadata: {
+            configFile,
+          },
         },
       });
       const changes = ['/root/src/public/image.svg', configFile];
@@ -58,7 +65,7 @@ describe('Detect Dev Changes', () => {
         type: 'full-restart',
       };
 
-      const actual = detectDevChanges(config, changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -67,9 +74,11 @@ describe('Detect Dev Changes', () => {
   describe('web-ext.config.ts', () => {
     it("should return 'browser-restart' when one of the changed files is the config file", () => {
       const runnerFile = '/root/web-ext.config.ts';
-      const config = fakeInternalConfig({
-        runnerConfig: {
-          configFile: runnerFile,
+      setFakeWxt({
+        config: {
+          runnerConfig: {
+            configFile: runnerFile,
+          },
         },
       });
       const changes = ['/root/src/public/image.svg', runnerFile];
@@ -82,7 +91,7 @@ describe('Detect Dev Changes', () => {
         type: 'browser-restart',
       };
 
-      const actual = detectDevChanges(config, changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -90,7 +99,6 @@ describe('Detect Dev Changes', () => {
 
   describe('Public Assets', () => {
     it("should return 'extension-reload' without any groups to rebuild when the changed file is a public asset", () => {
-      const config = fakeInternalConfig();
       const changes = ['/root/src/public/image.svg'];
       const asset1 = fakeOutputAsset({
         fileName: 'image.svg',
@@ -112,7 +120,7 @@ describe('Detect Dev Changes', () => {
         },
       };
 
-      const actual = detectDevChanges(config, changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -120,7 +128,6 @@ describe('Detect Dev Changes', () => {
 
   describe('Background', () => {
     it("should rebuild the background and reload the extension when the changed file in it's chunks' `moduleIds` field", () => {
-      const config = fakeInternalConfig();
       const changedPath = '/root/utils/shared.ts';
       const contentScript = fakeContentScriptEntrypoint({
         inputPath: '/root/overlay.content.ts',
@@ -160,7 +167,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [background],
       };
 
-      const actual = detectDevChanges(config, [changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -168,7 +175,6 @@ describe('Detect Dev Changes', () => {
 
   describe('HTML Pages', () => {
     it('should detect changes to entrypoints/<name>.html files', async () => {
-      const config = fakeInternalConfig();
       const changedPath = '/root/page1.html';
       const htmlPage1 = fakePopupEntrypoint({
         inputPath: changedPath,
@@ -212,13 +218,12 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [[htmlPage1, htmlPage2]],
       };
 
-      const actual = detectDevChanges(config, [changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });
 
     it('should detect changes to entrypoints/<name>/index.html files', async () => {
-      const config = fakeInternalConfig();
       const changedPath = '/root/page1/index.html';
       const htmlPage1 = fakePopupEntrypoint({
         inputPath: changedPath,
@@ -262,7 +267,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [[htmlPage1, htmlPage2]],
       };
 
-      const actual = detectDevChanges(config, [changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -270,7 +275,6 @@ describe('Detect Dev Changes', () => {
 
   describe('Content Scripts', () => {
     it('should rebuild then reload only the effected content scripts', async () => {
-      const config = fakeInternalConfig();
       const changedPath = '/root/utils/shared.ts';
       const script1 = fakeContentScriptEntrypoint({
         inputPath: '/root/overlay1.content/index.ts',
@@ -322,7 +326,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [script1, script3],
       };
 
-      const actual = detectDevChanges(config, [changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });

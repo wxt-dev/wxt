@@ -1,7 +1,7 @@
 import { loadConfig } from 'c12';
 import {
   InlineConfig,
-  InternalConfig,
+  ResolvedConfig,
   UserConfig,
   ConfigEnv,
   UserManifestFn,
@@ -23,15 +23,15 @@ import { NullablyRequired } from '../types';
  * Inline config always has priority over user config. Cli flags are passed as inline config if set.
  * If unset, undefined is passed in, letting this function decide default values.
  */
-export async function getInternalConfig(
+export async function resolveConfig(
   inlineConfig: InlineConfig,
   command: 'build' | 'serve',
   server?: WxtDevServer,
-): Promise<InternalConfig> {
+): Promise<ResolvedConfig> {
   // Load user config
 
   let userConfig: UserConfig = {};
-  let userConfigMetadata: InternalConfig['userConfigMetadata'] | undefined;
+  let userConfigMetadata: ResolvedConfig['userConfigMetadata'] | undefined;
   if (inlineConfig.configFile !== false) {
     const { config: loadedConfig, ...metadata } = await loadConfig<UserConfig>({
       name: 'wxt',
@@ -100,7 +100,7 @@ export async function getInternalConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
-  const finalConfig: Omit<InternalConfig, 'builder'> = {
+  const finalConfig: Omit<ResolvedConfig, 'builder'> = {
     browser,
     command,
     debug,
@@ -235,7 +235,7 @@ function mergeInlineConfig(
 function resolveInternalZipConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<InternalConfig['zip']> {
+): NullablyRequired<ResolvedConfig['zip']> {
   return {
     name: undefined,
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',

@@ -3,7 +3,7 @@ import {
   BuildStepOutput,
   Entrypoint,
   InlineConfig,
-  InternalConfig,
+  ResolvedConfig,
   UserConfig,
   VirtualEntrypointType,
   WxtBuilder,
@@ -15,7 +15,7 @@ import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 export async function createViteBuilder(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-  wxtConfig: Omit<InternalConfig, 'builder'>,
+  wxtConfig: Omit<ResolvedConfig, 'builder'>,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
