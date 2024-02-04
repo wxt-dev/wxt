@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.16.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.2...v0.16.3)
+
+### 🚀 Enhancements
+
+- Hooks ([#419](https://github.com/wxt-dev/wxt/pull/419))
+
+### 🩹 Fixes
+
+- **init:** Use `ungh` to prevent rate limits when loading templates ([37ad2c7](https://github.com/wxt-dev/wxt/commit/37ad2c7))
+
+### 📖 Documentation
+
+- Fix typo of intuitive ([#415](https://github.com/wxt-dev/wxt/pull/415))
+- Fix typo of opinionated ([#416](https://github.com/wxt-dev/wxt/pull/416))
+
+### 🏡 Chore
+
+- Add dependabot for github actions ([#404](https://github.com/wxt-dev/wxt/pull/404))
+- **deps-dev:** Bump happy-dom from 12.10.3 to 13.3.8 ([#411](https://github.com/wxt-dev/wxt/pull/411))
+- **deps-dev:** Bump typescript from 5.3.2 to 5.3.3 ([#409](https://github.com/wxt-dev/wxt/pull/409))
+- Register global `wxt` instance ([#418](https://github.com/wxt-dev/wxt/pull/418))
+
+### ❤️ Contributors
+
+- Chen Hua <hcljsq@gmail.com>
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.16.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.1...v0.16.2)
