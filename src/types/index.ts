@@ -6,6 +6,7 @@ import { ContentScriptContext } from '../client/content-scripts/content-script-c
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
+import { Hookable, NestedHooks } from 'hookable';
 
 export interface InlineConfig {
   /**
@@ -173,6 +174,9 @@ export interface InlineConfig {
   };
 
   /**
+   * @deprecated Use `hooks.build.manifestGenerated` to modify your manifest instead. This option
+   *             will be removed in v1.0
+   *
    * Transform the final manifest before it's written to the file system. Edit the `manifest`
    * parameter directly, do not return a new object. Return values are ignored.
    *
@@ -261,6 +265,10 @@ export interface InlineConfig {
      */
     reloadCommand?: string | false;
   };
+  /**
+   * Project hooks for running logic during the build process.
+   */
+  hooks?: NestedHooks<WxtHooks>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -797,8 +805,52 @@ export interface ServerInfo {
 
 export type HookResult = Promise<void> | void;
 
+export interface WxtHooks {
+  /**
+   * Called after WXT initialization, when the WXT instance is ready to work.
+   * @param wxt The configured WXT object
+   * @returns Promise
+   */
+  ready: (wxt: Wxt) => HookResult;
+  /**
+   * Called before the build is started in both dev mode and build mode.
+   *
+   * @param wxt The configured WXT object
+   */
+  'build:before': (wxt: Wxt) => HookResult;
+  /**
+   * Called once the build process has finished.
+   * @param wxt The configured WXT object
+   * @param output The results of the build
+   */
+  'build:done': (wxt: Wxt, output: Readonly<BuildOutput>) => HookResult;
+  /**
+   * Called once the manifest has been generated. Used to transform the manifest by reference before
+   * it is written to the output directory.
+   * @param wxt The configured WXT object
+   * @param manifest The manifest that was generated
+   */
+  'build:manifestGenerated': (
+    wxt: Wxt,
+    manifest: Manifest.WebExtensionManifest,
+  ) => HookResult;
+  /**
+   * Called once all entrypoints have been loaded from the `entrypointsDir`.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of entrypoints to be built
+   */
+  'entrypoints:resolved': (wxt: Wxt, entrypoints: Entrypoint[]) => HookResult;
+  /**
+   * Called once all entrypoints have been grouped into their build groups.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of groups to build in each build step
+   */
+  'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
+}
+
 export interface Wxt {
   config: ResolvedConfig;
+  hooks: Hookable<WxtHooks>;
   /**
    * Alias for config.logger
    */
@@ -856,6 +908,7 @@ export interface ResolvedConfig {
   dev: {
     reloadCommand: string | false;
   };
+  hooks: Partial<WxtHooks>;
 }
 
 export interface FsCache {

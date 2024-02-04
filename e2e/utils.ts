@@ -2,7 +2,14 @@ import { dirname, join, relative, resolve } from 'path';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
 import { execaCommand } from 'execa';
-import { InlineConfig, UserConfig, build } from '../src';
+import {
+  InlineConfig,
+  UserConfig,
+  build,
+  createServer,
+  prepare,
+  zip,
+} from '../src';
 import { normalizePath } from '../src/core/utils/paths';
 import merge from 'lodash.merge';
 
@@ -63,10 +70,29 @@ export class TestProject {
     if (filename === 'wxt.config.ts') this.config = {};
   }
 
-  /**
-   * Write the files to the test directory install dependencies, and build the project.
-   */
+  async prepare(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await prepare({ ...config, root: this.root });
+  }
+
   async build(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await build({ ...config, root: this.root });
+  }
+
+  async zip(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await zip({ ...config, root: this.root });
+  }
+
+  async startServer(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    const server = await createServer({ ...config, root: this.root });
+    await server.start();
+    return server;
+  }
+
+  private async writeProjectToDisk() {
     if (this.config == null) this.setConfigFileConfig();
 
     for (const file of this.files) {
@@ -80,7 +106,6 @@ export class TestProject {
     await execaCommand('pnpm --ignore-workspace i --ignore-scripts', {
       cwd: this.root,
     });
-    await build({ ...config, root: this.root });
   }
 
   /**
