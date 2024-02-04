@@ -90,26 +90,25 @@ interface Template {
 
 async function listTemplates(): Promise<Template[]> {
   try {
-    const res = await fetch(
-      'https://api.github.com/repos/wxt-dev/wxt/contents/templates',
-      {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      },
-    );
+    const res = await fetch('https://ungh.cc/repos/wxt-dev/wxt/files/main');
     if (res.status >= 300)
       throw Error(`Request failed with status ${res.status} ${res.statusText}`);
 
-    const data = (await res.json()) as Array<{
-      type: 'file' | 'dir';
-      name: string;
-      path: string;
-    }>;
-    return data
-      .filter((item: any) => item.type === 'dir')
-      .map((item) => ({ name: item.name, path: item.path }))
+    const data = (await res.json()) as {
+      meta: {
+        sha: string;
+      };
+      files: Array<{
+        path: string;
+        mode: string;
+        sha: string;
+        size: number;
+      }>;
+    };
+    return data.files
+      .map((item) => item.path.match(/templates\/(.+)\/package\.json/)?.[1])
+      .filter((name) => name != null)
+      .map((name) => ({ name: name!, path: `templates/${name}` }))
       .sort((l, r) => {
         const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
         const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
