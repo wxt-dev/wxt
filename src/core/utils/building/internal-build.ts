@@ -30,6 +30,8 @@ import { wxt } from '../../wxt';
  * 3. Prints the summary
  */
 export async function internalBuild(): Promise<BuildOutput> {
+  await wxt.hooks.callHook('build:before', wxt);
+
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
   wxt.logger.info(
@@ -57,7 +59,10 @@ export async function internalBuild(): Promise<BuildOutput> {
   }
 
   const groups = groupEntrypoints(entrypoints);
+  await wxt.hooks.callHook('entrypoints:grouped', wxt, groups);
+
   const { output, warnings } = await rebuild(entrypoints, groups, undefined);
+  await wxt.hooks.callHook('build:done', wxt, output);
 
   // Post-build
   await printBuildSummary(

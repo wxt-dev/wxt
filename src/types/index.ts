@@ -174,6 +174,9 @@ export interface InlineConfig {
   };
 
   /**
+   * @deprecated Use `hooks.build.manifestGenerated` to modify your manifest instead. This option
+   *             will be removed in v1.0
+   *
    * Transform the final manifest before it's written to the file system. Edit the `manifest`
    * parameter directly, do not return a new object. Return values are ignored.
    *
@@ -827,16 +830,7 @@ export interface WxtHooks {
    * @param wxt The configured WXT object
    * @param manifest The manifest that was generated
    */
-  'manifest:generated': (
-    wxt: Wxt,
-    manifest: Manifest.WebExtensionManifest,
-  ) => HookResult;
-  /**
-   * Called after the manifest is written to the output directory.
-   * @param wxt The configured WXT object
-   * @param manifest The manifest
-   */
-  'manifest:written': (
+  'build:manifestGenerated': (
     wxt: Wxt,
     manifest: Manifest.WebExtensionManifest,
   ) => HookResult;

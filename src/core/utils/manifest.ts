@@ -114,6 +114,7 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
   const finalManifest = produce(manifest, wxt.config.transformManifest);
+  await wxt.hooks.callHook('build:manifestGenerated', wxt, finalManifest);
 
   if (finalManifest.name == null)
     throw Error(

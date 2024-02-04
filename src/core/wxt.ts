@@ -17,8 +17,8 @@ export async function registerWxt(
   server?: WxtDevServer,
 ): Promise<void> {
   const config = await resolveConfig(inlineConfig, command, server);
-
   const hooks = createHooks<WxtHooks>();
+
   wxt = {
     config,
     hooks,
@@ -30,6 +30,7 @@ export async function registerWxt(
     },
   };
 
+  // Initialize hooks
   wxt.hooks.addHooks(config.hooks);
   await wxt.hooks.callHook('ready', wxt);
 }

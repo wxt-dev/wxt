@@ -149,6 +149,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     return true;
   });
   wxt.logger.debug(`${wxt.config.browser} entrypoints:`, targetEntrypoints);
+  await wxt.hooks.callHook('entrypoints:resolved', wxt, targetEntrypoints);
+
   return targetEntrypoints;
 }
 
