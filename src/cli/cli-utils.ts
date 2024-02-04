@@ -75,8 +75,7 @@ export function createAliasedCommand(
     .allowUnknownOptions()
     .action(async () => {
       try {
-        const config = await resolveConfig({}, 'build');
-        await registerWxt(config);
+        await registerWxt(await resolveConfig({}, 'build'));
 
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
