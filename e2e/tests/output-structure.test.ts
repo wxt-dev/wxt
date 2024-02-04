@@ -392,4 +392,117 @@ describe('Output Directory Structure', () => {
         "
       `);
   });
+
+  it('should generate ESM content script when type=module', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'utils/log.ts',
+      `export function logHello(name: string) {
+        console.log(\`Hello \${name}!\`);
+      }`,
+    );
+    project.addFile(
+      'entrypoints/content.ts',
+      `export default defineContentScript({
+        matches: ["<all_urls>"],
+        type: "module",
+        main() {
+          logHello("background");
+        },
+      })`,
+    );
+    project.addFile(
+      'entrypoints/popup/index.html',
+      `<html>
+        <head>
+          <script type="module" src="./main.ts"></script>
+        </head>
+      </html>`,
+    );
+    project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
+
+    await project.build({
+      experimental: {
+        // Simplify the build output for comparison
+        includeBrowserPolyfill: false,
+      },
+      vite: () => ({
+        build: {
+          // Make output for snapshot readible
+          minify: false,
+        },
+      }),
+    });
+
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      ),
+    ).toMatchSnapshot();
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content-loader.js',
+      ),
+    ).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/content-scripts/content-loader.js
+      ----------------------------------------
+      import(
+        /* vite-ignore */
+        chrome.runtime.getURL('/content-scripts/content.js')
+      )
+      "
+    `);
+  });
+
+  it('should generate IIFE content script when type=undefined', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'utils/log.ts',
+      `export function logHello(name: string) {
+          console.log(\`Hello \${name}!\`);
+        }`,
+    );
+    project.addFile(
+      'entrypoints/content.ts',
+      `export default defineContentScript({
+          matches: ["<all_urls>"],
+          main() {
+            logHello("background");
+          },
+        })`,
+    );
+    project.addFile(
+      'entrypoints/popup/index.html',
+      `<html>
+          <head>
+            <script type="module" src="./main.ts"></script>
+          </head>
+        </html>`,
+    );
+    project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
+
+    await project.build({
+      experimental: {
+        // Simplify the build output for comparison
+        includeBrowserPolyfill: false,
+      },
+      vite: () => ({
+        build: {
+          // Make output for snapshot readible
+          minify: false,
+        },
+      }),
+    });
+
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      ),
+    ).toMatchSnapshot();
+    expect(
+      await project.fileExists(
+        '.output/chrome-mv3/content-scripts/content-loader.js',
+      ),
+    ).toBe(false);
+  });
 });

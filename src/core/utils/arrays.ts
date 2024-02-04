@@ -21,3 +21,14 @@ export function some<T>(
     if (predicate(array[i], i)) return true;
   return false;
 }
+
+/**
+ * Convert an item or array to an array.
+ */
+export function toArray<T>(a: T | T[]): T[] {
+  return Array.isArray(a) ? a : [a];
+}
+
+export function filterTruthy<T>(array: Array<T | undefined>): T[] {
+  return array.filter((item) => !!item) as T[];
+}

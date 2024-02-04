@@ -57,6 +57,7 @@ export async function createViteBuilder(
       wxtPlugins.virtualEntrypoint('background', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-isolated-world', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-main-world', wxtConfig),
+      wxtPlugins.virtualEntrypoint('content-script-loader', wxtConfig),
       wxtPlugins.virtualEntrypoint('unlisted-script', wxtConfig),
       wxtPlugins.devServerGlobals(wxtConfig),
       wxtPlugins.tsconfigPaths(wxtConfig),
@@ -133,6 +134,10 @@ export async function createViteBuilder(
    * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
+    const esmContentScriptNames = new Set(
+      entrypoints.filter((e) => e.type === 'content-script').map((e) => e.name),
+    );
+
     return {
       mode: wxtConfig.mode,
       plugins: [
@@ -143,17 +148,42 @@ export async function createViteBuilder(
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
             input[entry.name] = getRollupEntry(entry);
+            if (
+              entry.type === 'content-script' &&
+              entry.options.type === 'module'
+            ) {
+              input[`content-scripts/${entry.name}-loader`] = getRollupEntry(
+                entry,
+                true,
+              );
+            }
             return input;
           }, {}),
           output: {
             // Include a hash to prevent conflicts
             chunkFileNames: 'chunks/[name]-[hash].js',
-            // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
-            // next to each other). The unique entrypoint name requirement prevents conflicts with
-            // scripts of the same name
-            entryFileNames: '[name].js',
-            // We can't control the "name", so we need a hash to prevent conflicts
-            assetFileNames: 'assets/[name]-[hash].[ext]',
+            entryFileNames: (chunk) => {
+              // Put content script entrypoints in the `content-scripts/` directory
+              if (esmContentScriptNames.has(chunk.name)) {
+                return 'content-scripts/[name].js';
+              }
+
+              // Place JS entrypoints in main directory without a hash. (popup.html & popup.js are
+              // next to each other). The unique entrypoint name requirement prevents conflicts with
+              // scripts of the same name
+              return '[name].js';
+            },
+            assetFileNames: (asset) => {
+              if (
+                asset.name &&
+                esmContentScriptNames.has(asset.name?.replace('.css', ''))
+              ) {
+                return 'content-scripts/[name].[ext]';
+              }
+
+              // We can't control the "name" for HTML CSS chunks, so we need a hash to prevent conflicts
+              return 'assets/[name]-[hash].[ext]';
+            },
           },
         },
       },
@@ -255,7 +285,7 @@ function getBuildOutputChunks(
  * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
  * be passed as an input to rollup.
  */
-function getRollupEntry(entrypoint: Entrypoint): string {
+function getRollupEntry(entrypoint: Entrypoint, loader = false): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
   switch (entrypoint.type) {
     case 'background':
@@ -263,10 +293,14 @@ function getRollupEntry(entrypoint: Entrypoint): string {
       virtualEntrypointType = entrypoint.type;
       break;
     case 'content-script':
-      virtualEntrypointType =
-        entrypoint.options.world === 'MAIN'
-          ? 'content-script-main-world'
-          : 'content-script-isolated-world';
+      if (loader) {
+        virtualEntrypointType = 'content-script-loader';
+      } else {
+        virtualEntrypointType =
+          entrypoint.options.world === 'MAIN'
+            ? 'content-script-main-world'
+            : 'content-script-isolated-world';
+      }
       break;
   }
   return virtualEntrypointType

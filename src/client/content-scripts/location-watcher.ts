@@ -21,7 +21,7 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
       interval = ctx.setInterval(() => {
         let newUrl = new URL(location.href);
         if (newUrl.href !== oldUrl.href) {
-          window.dispatchEvent(new WxtLocationChangeEvent(newUrl, oldUrl));
+          window.dispatchEvent(new WxtLocationChangeEvent(ctx, newUrl, oldUrl));
           oldUrl = newUrl;
         }
       }, 1e3);

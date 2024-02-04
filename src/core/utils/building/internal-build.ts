@@ -17,6 +17,7 @@ import {
 } from '../validation';
 import consola from 'consola';
 import { exec } from '../exec';
+import { inspect } from 'node:util';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -45,7 +46,6 @@ export async function internalBuild(
   await fs.ensureDir(config.outDir);
 
   const entrypoints = await findEntrypoints(config);
-  config.logger.debug('Detected entrypoints:', entrypoints);
 
   const validationResults = validateEntrypoints(entrypoints);
   if (validationResults.errorCount + validationResults.warningCount > 0) {
@@ -58,6 +58,19 @@ export async function internalBuild(
   }
 
   const groups = groupEntrypoints(entrypoints);
+  if (config.debug) {
+    config.logger.debug(
+      'Groups:',
+      inspect(
+        groups.map((group) =>
+          Array.isArray(group) ? group.map((entry) => entry.name) : group.name,
+        ),
+        undefined,
+        Infinity,
+        true,
+      ),
+    );
+  }
   const { output, warnings } = await rebuild(
     config,
     entrypoints,

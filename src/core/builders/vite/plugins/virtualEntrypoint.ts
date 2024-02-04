@@ -1,8 +1,9 @@
 import { Plugin } from 'vite';
 import { InternalConfig, VirtualEntrypointType } from '~/types';
 import fs from 'fs-extra';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 import { normalizePath } from '~/core/utils/paths';
+import { getEntrypointName } from '~/core/utils/entrypoints';
 
 /**
  * Wraps a user's entrypoint with a vitual version with additional logic.
@@ -29,6 +30,13 @@ export function virtualEntrypoint(
       if (!id.startsWith(resolvedVirtualId)) return;
 
       const inputPath = id.replace(resolvedVirtualId, '');
+      const entrypointName = getEntrypointName(
+        config.entrypointsDir,
+        inputPath,
+      );
+      if (!entrypointName)
+        throw Error('Entrypoint name could not be detected: ' + inputPath);
+
       const template = await fs.readFile(
         resolve(
           config.root,
@@ -36,7 +44,20 @@ export function virtualEntrypoint(
         ),
         'utf-8',
       );
-      return template.replace(`virtual:user-${type}`, inputPath);
+      return template
+        .replaceAll(`virtual:user-${type}`, inputPath)
+        .replaceAll('__ENTRYPOINT__', JSON.stringify(entrypointName))
+        .replaceAll(
+          '__ESM_CONTENT_SCRIPT_URL__',
+          config.command === 'serve'
+            ? // Point to virtual entrypoint in dev server
+              `"${config.server
+                ?.origin}/virtual:wxt-content-script-isolated-world?${normalizePath(
+                inputPath,
+              )}"`
+            : // Point to file in bundle
+              `chrome.runtime.getURL('/content-scripts/${entrypointName}.js')`,
+        );
     },
   };
 }

@@ -571,6 +571,17 @@ export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
    * @default "manifest"
    */
   cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
+  /**
+   * Configure how the content script is built and loaded at runtime.
+   *
+   * - `undefined`: Content script is bundled individually and is loaded synchronously based on the
+   *   `runAt` option.
+   * - `"module"`: Content script starts loading asynchronously based on `runAt`, but supports
+   *   code splitting to reduce the extension's total size.
+   *
+   * @default undefined
+   */
+  type?: 'module';
 }
 
 export interface BackgroundDefinition extends ExcludableEntrypoint {

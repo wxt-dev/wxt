@@ -1,6 +1,9 @@
-import type { Manifest } from '~/browser';
+import type { Manifest, Scripting } from '~/browser';
 import { ContentScriptEntrypoint, InternalConfig } from '~/types';
-import { resolvePerBrowserOption } from './entrypoints';
+import {
+  getEntrypointBundlePath,
+  resolvePerBrowserOption,
+} from './entrypoints';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -75,4 +78,38 @@ export function mapWxtOptionsToContentScript(
     ),
     world: options.world,
   };
+}
+
+export function mapEntrypointToRegisteredContentScript(
+  options: ContentScriptEntrypoint['options'],
+  config: InternalConfig,
+): Omit<Scripting.RegisteredContentScript, 'id' | 'js' | 'css'> {
+  return {
+    matches: resolvePerBrowserOption(options.matches, config.browser),
+    allFrames: resolvePerBrowserOption(options.allFrames, config.browser),
+    excludeMatches: resolvePerBrowserOption(
+      options.excludeMatches,
+      config.browser,
+    ),
+    runAt: resolvePerBrowserOption(options.runAt, config.browser),
+    // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
+    world: options.world,
+  };
+}
+
+export function getContentScriptJs(
+  config: InternalConfig,
+  entrypoint: ContentScriptEntrypoint,
+): string[] {
+  if (entrypoint.options.type === 'module') {
+    entrypoint = getEsmLoaderEntrypoint(entrypoint);
+  }
+
+  return [getEntrypointBundlePath(entrypoint, config.outDir, '.js')];
+}
+
+export function getEsmLoaderEntrypoint(
+  entrypoint: ContentScriptEntrypoint,
+): ContentScriptEntrypoint {
+  return { ...entrypoint, name: `${entrypoint.name}-loader` };
 }

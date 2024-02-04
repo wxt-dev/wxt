@@ -19,7 +19,7 @@ export class ContentScriptContext implements AbortController {
   #locationWatcher = createLocationWatcher(this);
 
   constructor(
-    private readonly contentScriptName: string,
+    readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
     this.#abortController = new AbortController();
@@ -169,7 +169,7 @@ export class ContentScriptContext implements AbortController {
     }
 
     target.addEventListener?.(
-      type.startsWith('wxt:') ? getUniqueEventName(type) : type,
+      type.startsWith('wxt:') ? getUniqueEventName(this, type) : type,
       // @ts-expect-error: Event don't match, but that's OK, EventTarget doesn't allow custom types in the callback
       handler,
       {
