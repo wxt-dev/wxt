@@ -802,6 +802,58 @@ export interface ServerInfo {
 
 export type HookResult = Promise<void> | void;
 
+export interface WxtHooks {
+  /**
+   * Called after WXT initialization, when the WXT instance is ready to work.
+   * @param wxt The configured WXT object
+   * @returns Promise
+   */
+  ready: (wxt: Wxt) => HookResult;
+  /**
+   * Called before the build is started in both dev mode and build mode.
+   *
+   * @param wxt The configured WXT object
+   */
+  'build:before': (wxt: Wxt) => HookResult;
+  /**
+   * Called once the build process has finished.
+   * @param wxt The configured WXT object
+   * @param output The results of the build
+   */
+  'build:done': (wxt: Wxt, output: Readonly<BuildOutput>) => HookResult;
+  /**
+   * Called once the manifest has been generated. Used to transform the manifest by reference before
+   * it is written to the output directory.
+   * @param wxt The configured WXT object
+   * @param manifest The manifest that was generated
+   */
+  'manifest:generated': (
+    wxt: Wxt,
+    manifest: Manifest.WebExtensionManifest,
+  ) => HookResult;
+  /**
+   * Called after the manifest is written to the output directory.
+   * @param wxt The configured WXT object
+   * @param manifest The manifest
+   */
+  'manifest:written': (
+    wxt: Wxt,
+    manifest: Manifest.WebExtensionManifest,
+  ) => HookResult;
+  /**
+   * Called once all entrypoints have been loaded from the `entrypointsDir`.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of entrypoints to be built
+   */
+  'entrypoints:resolved': (wxt: Wxt, entrypoints: Entrypoint[]) => HookResult;
+  /**
+   * Called once all entrypoints have been grouped into their build groups.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of groups to build in each build step
+   */
+  'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
+}
+
 export interface Wxt {
   config: ResolvedConfig;
   hooks: Hookable<WxtHooks>;
