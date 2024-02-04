@@ -7,7 +7,7 @@ import {
 } from '~/types';
 import { every, some } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:

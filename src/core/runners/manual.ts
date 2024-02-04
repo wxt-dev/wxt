@@ -1,6 +1,6 @@
 import { ExtensionRunner } from '~/types';
 import { relative } from 'node:path';
-import { wxt } from '../utils/wxt';
+import { wxt } from '../wxt';
 
 /**
  * The manual runner tells the user to load the unpacked extension manually.

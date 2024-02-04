@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import fs from 'fs-extra';
-import { wxt } from './wxt';
+import { wxt } from '../wxt';
 
 /**
  * Read the project's package.json.

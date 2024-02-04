@@ -2,7 +2,6 @@ import {
   BuildStepOutput,
   EntrypointGroup,
   InlineConfig,
-  ResolvedConfig,
   ServerInfo,
   WxtDevServer,
 } from '~/types';
@@ -16,7 +15,6 @@ import {
 } from '~/core/utils/manifest';
 import {
   internalBuild,
-  resolveConfig,
   detectDevChanges,
   rebuild,
   findEntrypoints,
@@ -26,7 +24,7 @@ import { consola } from 'consola';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
-import { registerWxt, wxt } from './utils/wxt';
+import { registerWxt, wxt } from './wxt';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -62,7 +60,7 @@ export async function createServer(
    */
   const closeAndRecreateRunner = async () => {
     await runner.closeBrowser();
-    wxt.config = await getLatestConfig();
+    await wxt.reloadConfig();
     runner = await createExtensionRunner();
   };
 
@@ -108,9 +106,7 @@ export async function createServer(
     },
   };
 
-  const getLatestConfig = () =>
-    resolveConfig(inlineConfig ?? {}, 'serve', server);
-  await registerWxt(await getLatestConfig());
+  await registerWxt('serve', inlineConfig, server);
 
   let [runner, builderServer] = await Promise.all([
     createExtensionRunner(),
@@ -125,13 +121,7 @@ export async function createServer(
   });
 
   // Listen for file changes and reload different parts of the extension accordingly
-  const reloadOnChange = createFileReloader({
-    server,
-    getLatestConfig,
-    updateConfig(newConfig) {
-      wxt.config = newConfig;
-    },
-  });
+  const reloadOnChange = createFileReloader(server);
   server.watcher.on('all', reloadOnChange);
 
   return server;
@@ -146,21 +136,15 @@ async function getPort(): Promise<number> {
  * Returns a function responsible for reloading different parts of the extension when a file
  * changes.
  */
-function createFileReloader(options: {
-  server: WxtDevServer;
-  getLatestConfig: () => Promise<ResolvedConfig>;
-  updateConfig: (config: ResolvedConfig) => void;
-}) {
-  const { server, getLatestConfig, updateConfig } = options;
+function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
   return async (event: string, path: string) => {
-    const config = await getLatestConfig();
-    updateConfig(config);
+    await wxt.reloadConfig();
 
     // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
-    if (path.startsWith(config.outBaseDir)) return;
+    if (path.startsWith(wxt.config.outBaseDir)) return;
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -189,7 +173,7 @@ function createFileReloader(options: {
       // Log the entrypoints that were effected
       wxt.logger.info(
         `Changed: ${Array.from(new Set(fileChanges))
-          .map((file) => pc.dim(relative(config.root, file)))
+          .map((file) => pc.dim(relative(wxt.config.root, file)))
           .join(', ')}`,
       );
 

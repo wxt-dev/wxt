@@ -23,7 +23,7 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import { produce } from 'immer';
 import defu from 'defu';
-import { wxt } from './wxt';
+import { wxt } from '../wxt';
 
 /**
  * Writes the manifest to the output directory and the build output.

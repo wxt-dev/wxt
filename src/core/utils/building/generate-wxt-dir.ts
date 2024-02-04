@@ -9,7 +9,7 @@ import { normalizePath } from '~/core/utils/paths';
 import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.

@@ -3,7 +3,7 @@ import { BuildOutput, Entrypoint, EntrypointGroup } from '~/types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '~/core/utils/manifest';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output, build the

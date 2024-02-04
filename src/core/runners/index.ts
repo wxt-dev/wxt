@@ -4,7 +4,7 @@ import { createWebExtRunner } from './web-ext';
 import { createSafariRunner } from './safari';
 import { createManualRunner } from './manual';
 import { isWsl } from '~/core/utils/wsl';
-import { wxt } from '../utils/wxt';
+import { wxt } from '../wxt';
 
 export async function createExtensionRunner(): Promise<ExtensionRunner> {
   if (wxt.config.browser === 'safari') return createSafariRunner();

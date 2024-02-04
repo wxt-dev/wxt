@@ -1,13 +1,9 @@
 import { InlineConfig } from '~/types';
-import {
-  findEntrypoints,
-  generateTypesDir,
-  resolveConfig,
-} from '~/core/utils/building';
-import { registerWxt, wxt } from './utils/wxt';
+import { findEntrypoints, generateTypesDir } from '~/core/utils/building';
+import { registerWxt, wxt } from './wxt';
 
 export async function prepare(config: InlineConfig) {
-  await registerWxt(await resolveConfig(config, 'build'));
+  await registerWxt('build', config);
   wxt.logger.info('Generating types...');
 
   const entrypoints = await findEntrypoints();

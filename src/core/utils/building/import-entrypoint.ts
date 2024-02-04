@@ -7,7 +7,7 @@ import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
 import { fileURLToPath } from 'node:url';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Get the value from the default export of a `path`.

@@ -8,7 +8,7 @@ import { createManualRunner } from '../manual';
 import { isWsl } from '../../utils/wsl';
 import { createWebExtRunner } from '../web-ext';
 import { ExtensionRunner } from '~/types';
-import { setWxtForTesting } from '~/core/utils/wxt';
+import { setWxtForTesting } from '~/core/wxt';
 
 vi.mock('../../utils/wsl');
 const isWslMock = vi.mocked(isWsl);

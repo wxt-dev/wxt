@@ -13,7 +13,7 @@ import { importEntrypointFile } from '../import-entrypoint';
 import glob from 'fast-glob';
 import { fakeResolvedConfig, fakeWxt } from '~/core/utils/testing/fake-objects';
 import { unnormalizePath } from '~/core/utils/paths';
-import { setWxtForTesting } from '../../wxt';
+import { setWxtForTesting } from '../../../wxt';
 
 vi.mock('../import-entrypoint');
 const importEntrypointFileMock = vi.mocked(importEntrypointFile);

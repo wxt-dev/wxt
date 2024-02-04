@@ -1,4 +1,5 @@
-import { ResolvedConfig, Wxt } from '~/types';
+import { InlineConfig, Wxt, WxtDevServer } from '~/types';
+import { resolveConfig } from './utils/building';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -9,13 +10,22 @@ export let wxt: Wxt;
 /**
  * Create and register a global instance of the Wxt interface for use throughout the project.
  */
-export async function registerWxt(config: ResolvedConfig): Promise<void> {
-  if (wxt != null) throw Error('Cannot create second instance of Wxt');
+export async function registerWxt(
+  command: 'build' | 'serve',
+  inlineConfig: InlineConfig = {},
+  server?: WxtDevServer,
+): Promise<void> {
+  if (wxt != null) throw Error('Cannot register second instance of Wxt');
+
+  const config = await resolveConfig(inlineConfig, command, server);
 
   wxt = {
     config,
     get logger() {
       return config.logger;
+    },
+    async reloadConfig() {
+      wxt.config = await resolveConfig(inlineConfig, command, server);
     },
   };
 }

@@ -24,7 +24,7 @@ import {
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
 import pc from 'picocolors';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.

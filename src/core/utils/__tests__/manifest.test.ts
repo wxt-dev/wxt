@@ -17,7 +17,7 @@ import {
   Entrypoint,
   OutputAsset,
 } from '~/types';
-import { setWxtForTesting, wxt } from '../wxt';
+import { setWxtForTesting, wxt } from '../../wxt';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';

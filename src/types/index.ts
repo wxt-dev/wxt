@@ -855,6 +855,10 @@ export interface Wxt {
    * Alias for config.logger
    */
   logger: Logger;
+  /**
+   * Reload config file and update the `config` field with the result.
+   */
+  reloadConfig: () => Promise<void>;
 }
 
 export interface ResolvedConfig {

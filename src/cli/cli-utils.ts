@@ -1,11 +1,10 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels } from 'consola';
-import { resolveConfig } from '~/core/utils/building';
 import { exec } from '~/core/utils/exec';
 import { printHeader } from '~/core/utils/log';
 import { formatDuration } from '~/core/utils/time';
 import { ValidationError } from '~/core/utils/validation';
-import { registerWxt } from '~/core/utils/wxt';
+import { registerWxt } from '~/core/wxt';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
@@ -75,7 +74,7 @@ export function createAliasedCommand(
     .allowUnknownOptions()
     .action(async () => {
       try {
-        await registerWxt(await resolveConfig({}, 'build'));
+        await registerWxt('build');
 
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,

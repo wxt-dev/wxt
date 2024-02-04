@@ -3,7 +3,7 @@ import { getPackageJson } from '../package';
 import { fakeWxt } from '../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { Logger } from '~/types';
-import { setWxtForTesting } from '../wxt';
+import { setWxtForTesting } from '../../wxt';
 
 describe('Package JSON Utils', () => {
   describe('getPackageJson', () => {

@@ -13,7 +13,7 @@ import {
   fakeWxt,
 } from '~/core/utils/testing/fake-objects';
 import { BuildOutput, BuildStepOutput } from '~/types';
-import { setWxtForTesting } from '../../wxt';
+import { setWxtForTesting } from '../../../wxt';
 
 describe('Detect Dev Changes', () => {
   beforeEach(() => {

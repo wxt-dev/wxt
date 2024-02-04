@@ -1,7 +1,7 @@
 import type { Options } from 'execa';
 import managePath from 'manage-path';
 import { resolve } from 'node:path';
-import { wxt } from './wxt';
+import { wxt } from '../wxt';
 
 const managedPath = managePath(process.env);
 

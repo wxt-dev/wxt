@@ -1,7 +1,7 @@
 import type { Manifest } from '~/browser';
 import { ContentScriptEntrypoint } from '~/types';
 import { resolvePerBrowserOption } from './entrypoints';
-import { wxt } from './wxt';
+import { wxt } from '../wxt';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.

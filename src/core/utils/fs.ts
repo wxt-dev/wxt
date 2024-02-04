@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import glob from 'fast-glob';
 import { unnormalizePath } from './paths';
-import { wxt } from './wxt';
+import { wxt } from '../wxt';
 
 /**
  * Only write the contents to a file if it results in a change. This prevents unnecessary file

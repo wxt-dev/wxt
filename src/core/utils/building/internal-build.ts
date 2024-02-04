@@ -17,7 +17,7 @@ import {
 } from '../validation';
 import consola from 'consola';
 import { exec } from '../exec';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the

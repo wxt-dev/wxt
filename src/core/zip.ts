@@ -7,8 +7,8 @@ import { getPackageJson } from '~/core/utils/package';
 import { minimatch } from 'minimatch';
 import { formatDuration } from '~/core/utils/time';
 import { printFileList } from '~/core/utils/log/printFileList';
-import { resolveConfig, internalBuild } from '~/core/utils/building';
-import { registerWxt, wxt } from './utils/wxt';
+import { internalBuild } from '~/core/utils/building';
+import { registerWxt, wxt } from './wxt';
 
 /**
  * Build and zip the extension for distribution.
@@ -16,7 +16,7 @@ import { registerWxt, wxt } from './utils/wxt';
  * @returns A list of all files included in the ZIP.
  */
 export async function zip(config?: InlineConfig): Promise<string[]> {
-  await registerWxt(await resolveConfig(config ?? {}, 'build'));
+  await registerWxt('build', config);
   const output = await internalBuild();
 
   const start = Date.now();

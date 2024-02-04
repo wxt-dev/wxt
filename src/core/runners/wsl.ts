@@ -1,6 +1,6 @@
 import { ExtensionRunner } from '~/types';
 import { relative } from 'node:path';
-import { wxt } from '../utils/wxt';
+import { wxt } from '../wxt';
 
 /**
  * The WSL runner just logs a warning message because `web-ext` doesn't work in WSL.

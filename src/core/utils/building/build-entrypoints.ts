@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
 import type { Ora } from 'ora';
 import pc from 'picocolors';
-import { wxt } from '../wxt';
+import { wxt } from '../../wxt';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
