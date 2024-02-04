@@ -1,18 +1,13 @@
-import {
-  BuildOutput,
-  BuildStepOutput,
-  EntrypointGroup,
-  InternalConfig,
-} from '~/types';
+import { BuildOutput, BuildStepOutput, EntrypointGroup } from '~/types';
 import { getPublicFiles } from '~/core/utils/fs';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
 import type { Ora } from 'ora';
 import pc from 'picocolors';
+import { wxt } from '../wxt';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
-  config: InternalConfig,
   spinner: Ora,
 ): Promise<Omit<BuildOutput, 'manifest'>> {
   const steps: BuildStepOutput[] = [];
@@ -23,26 +18,24 @@ export async function buildEntrypoints(
     spinner.text =
       pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
     try {
-      steps.push(await config.builder.build(group));
+      steps.push(await wxt.config.builder.build(group));
     } catch (err) {
       throw Error(`Failed to build ${groupNames.join(', ')}`, { cause: err });
     }
   }
-  const publicAssets = await copyPublicDirectory(config);
+  const publicAssets = await copyPublicDirectory();
 
   return { publicAssets, steps };
 }
 
-async function copyPublicDirectory(
-  config: InternalConfig,
-): Promise<BuildOutput['publicAssets']> {
-  const files = await getPublicFiles(config);
+async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
+  const files = await getPublicFiles();
   if (files.length === 0) return [];
 
   const publicAssets: BuildOutput['publicAssets'] = [];
   for (const file of files) {
-    const srcPath = resolve(config.publicDir, file);
-    const outPath = resolve(config.outDir, file);
+    const srcPath = resolve(wxt.config.publicDir, file);
+    const outPath = resolve(wxt.config.outDir, file);
 
     await fs.ensureDir(dirname(outPath));
     await fs.copyFile(srcPath, outPath);

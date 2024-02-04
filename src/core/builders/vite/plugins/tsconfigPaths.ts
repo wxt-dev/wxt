@@ -1,8 +1,8 @@
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 import type * as vite from 'vite';
 
 export function tsconfigPaths(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): vite.Plugin {
   return {
     name: 'wxt:aliases',

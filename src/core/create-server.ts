@@ -2,7 +2,7 @@ import {
   BuildStepOutput,
   EntrypointGroup,
   InlineConfig,
-  InternalConfig,
+  ResolvedConfig,
   ServerInfo,
   WxtDevServer,
 } from '~/types';
@@ -16,7 +16,7 @@ import {
 } from '~/core/utils/manifest';
 import {
   internalBuild,
-  getInternalConfig,
+  resolveConfig,
   detectDevChanges,
   rebuild,
   findEntrypoints,
@@ -26,6 +26,7 @@ import { consola } from 'consola';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
+import { registerWxt, wxt } from './utils/wxt';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -50,10 +51,10 @@ export async function createServer(
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
-    server.currentOutput = await internalBuild(config);
+    server.currentOutput = await internalBuild();
 
     // Open browser after everything is ready to go.
-    await runner.openBrowser(config);
+    await runner.openBrowser();
   };
 
   /**
@@ -61,8 +62,8 @@ export async function createServer(
    */
   const closeAndRecreateRunner = async () => {
     await runner.closeBrowser();
-    config = await getLatestConfig();
-    runner = await createExtensionRunner(config);
+    wxt.config = await getLatestConfig();
+    runner = await createExtensionRunner();
   };
 
   // Server instance must be created first so its reference can be added to the internal config used
@@ -78,7 +79,7 @@ export async function createServer(
     currentOutput: undefined,
     async start() {
       await builderServer.listen();
-      config.logger.success(`Started dev server @ ${serverInfo.origin}`);
+      wxt.logger.success(`Started dev server @ ${serverInfo.origin}`);
       await buildAndOpenBrowser();
     },
     async stop() {
@@ -103,24 +104,24 @@ export async function createServer(
     },
     async restartBrowser() {
       await closeAndRecreateRunner();
-      await runner.openBrowser(config);
+      await runner.openBrowser();
     },
   };
 
   const getLatestConfig = () =>
-    getInternalConfig(inlineConfig ?? {}, 'serve', server);
-  let config = await getLatestConfig();
+    resolveConfig(inlineConfig ?? {}, 'serve', server);
+  await registerWxt(await getLatestConfig());
 
   let [runner, builderServer] = await Promise.all([
-    createExtensionRunner(config),
-    config.builder.createServer(server),
+    createExtensionRunner(),
+    wxt.config.builder.createServer(server),
   ]);
 
   // Register content scripts for the first time after the background starts up since they're not
   // listed in the manifest
   server.ws.on('wxt:background-initialized', () => {
     if (server.currentOutput == null) return;
-    reloadContentScripts(server.currentOutput.steps, config, server);
+    reloadContentScripts(server.currentOutput.steps, server);
   });
 
   // Listen for file changes and reload different parts of the extension accordingly
@@ -128,7 +129,7 @@ export async function createServer(
     server,
     getLatestConfig,
     updateConfig(newConfig) {
-      config = newConfig;
+      wxt.config = newConfig;
     },
   });
   server.watcher.on('all', reloadOnChange);
@@ -147,8 +148,8 @@ async function getPort(): Promise<number> {
  */
 function createFileReloader(options: {
   server: WxtDevServer;
-  getLatestConfig: () => Promise<InternalConfig>;
-  updateConfig: (config: InternalConfig) => void;
+  getLatestConfig: () => Promise<ResolvedConfig>;
+  updateConfig: (config: ResolvedConfig) => void;
 }) {
   const { server, getLatestConfig, updateConfig } = options;
   const fileChangedMutex = new Mutex();
@@ -170,36 +171,31 @@ function createFileReloader(options: {
         .map(([_, file]) => file);
       if (fileChanges.length === 0) return;
 
-      const changes = detectDevChanges(
-        config,
-        fileChanges,
-        server.currentOutput,
-      );
+      const changes = detectDevChanges(fileChanges, server.currentOutput);
       if (changes.type === 'no-change') return;
 
       if (changes.type === 'full-restart') {
-        config.logger.info('Config changed, restarting server...');
+        wxt.logger.info('Config changed, restarting server...');
         server.restart();
         return;
       }
 
       if (changes.type === 'browser-restart') {
-        config.logger.info('Runner config changed, restarting browser...');
+        wxt.logger.info('Runner config changed, restarting browser...');
         server.restartBrowser();
         return;
       }
 
       // Log the entrypoints that were effected
-      config.logger.info(
+      wxt.logger.info(
         `Changed: ${Array.from(new Set(fileChanges))
           .map((file) => pc.dim(relative(config.root, file)))
           .join(', ')}`,
       );
 
       // Rebuild entrypoints on change
-      const allEntrypoints = await findEntrypoints(config);
+      const allEntrypoints = await findEntrypoints();
       const { output: newOutput } = await rebuild(
-        config,
         allEntrypoints,
         // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
         changes.rebuildGroups,
@@ -217,12 +213,11 @@ function createFileReloader(options: {
           const { reloadedNames } = reloadHtmlPages(
             changes.rebuildGroups,
             server,
-            config,
           );
           consola.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
           break;
         case 'content-script-reload':
-          reloadContentScripts(changes.changedSteps, config, server);
+          reloadContentScripts(changes.changedSteps, server);
           const rebuiltNames = changes.rebuildGroups
             .flat()
             .map((entry) => entry.name);
@@ -236,35 +231,34 @@ function createFileReloader(options: {
 /**
  * From the server, tell the client to reload content scripts from the provided build step outputs.
  */
-function reloadContentScripts(
-  steps: BuildStepOutput[],
-  config: InternalConfig,
-  server: WxtDevServer,
-) {
-  if (config.manifestVersion === 3) {
+function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
+  if (wxt.config.manifestVersion === 3) {
     steps.forEach((step) => {
       if (server.currentOutput == null) return;
 
       const entry = step.entrypoints;
       if (Array.isArray(entry) || entry.type !== 'content-script') return;
 
-      const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
+      const js = [getEntrypointBundlePath(entry, wxt.config.outDir, '.js')];
       const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
       const css = getContentScriptCssFiles([entry], cssMap);
 
       server.reloadContentScript({
         allFrames: resolvePerBrowserOption(
           entry.options.allFrames,
-          config.browser,
+          wxt.config.browser,
         ),
         excludeMatches: resolvePerBrowserOption(
           entry.options.excludeMatches,
-          config.browser,
+          wxt.config.browser,
         ),
-        matches: resolvePerBrowserOption(entry.options.matches, config.browser),
-        runAt: resolvePerBrowserOption(entry.options.runAt, config.browser),
+        matches: resolvePerBrowserOption(
+          entry.options.matches,
+          wxt.config.browser,
+        ),
+        runAt: resolvePerBrowserOption(entry.options.runAt, wxt.config.browser),
         // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
-        world: resolvePerBrowserOption(entry.options.world, config.browser),
+        world: resolvePerBrowserOption(entry.options.world, wxt.config.browser),
         js,
         css,
       });
@@ -277,7 +271,6 @@ function reloadContentScripts(
 function reloadHtmlPages(
   groups: EntrypointGroup[],
   server: WxtDevServer,
-  config: InternalConfig,
 ): { reloadedNames: string[] } {
   // groups might contain other files like background/content scripts, and we only care about the HTMl pages
   const htmlEntries = groups
@@ -285,7 +278,7 @@ function reloadHtmlPages(
     .filter((entry) => entry.inputPath.endsWith('.html'));
 
   htmlEntries.forEach((entry) => {
-    const path = getEntrypointBundlePath(entry, config.outDir, '.html');
+    const path = getEntrypointBundlePath(entry, wxt.config.outDir, '.html');
     server.reloadPage(path);
   });
 

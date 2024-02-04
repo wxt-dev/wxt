@@ -1,4 +1,4 @@
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 import type * as vite from 'vite';
 
 /**
@@ -7,7 +7,7 @@ import type * as vite from 'vite';
  * virtual module.
  */
 export function excludeBrowserPolyfill(
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): vite.Plugin {
   const virtualId = 'virtual:wxt-webextension-polyfill-disabled';
 

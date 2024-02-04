@@ -4,7 +4,6 @@ import {
   BackgroundEntrypoint,
   BuildOutput,
   ContentScriptEntrypoint,
-  InternalConfig,
   OptionsEntrypoint,
   PopupEntrypoint,
 } from '~/types';
@@ -24,6 +23,7 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import { produce } from 'immer';
 import defu from 'defu';
+import { wxt } from './wxt';
 
 /**
  * Writes the manifest to the output directory and the build output.
@@ -31,15 +31,14 @@ import defu from 'defu';
 export async function writeManifest(
   manifest: Manifest.WebExtensionManifest,
   output: BuildOutput,
-  config: InternalConfig,
 ): Promise<void> {
   const str =
-    config.mode === 'production'
+    wxt.config.mode === 'production'
       ? JSON.stringify(manifest)
       : JSON.stringify(manifest, null, 2);
 
-  await fs.ensureDir(config.outDir);
-  await writeFileIfDifferent(resolve(config.outDir, 'manifest.json'), str);
+  await fs.ensureDir(wxt.config.outDir);
+  await writeFileIfDifferent(resolve(wxt.config.outDir, 'manifest.json'), str);
 
   output.publicAssets.unshift({
     type: 'asset',
@@ -53,30 +52,31 @@ export async function writeManifest(
 export async function generateManifest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-  config: InternalConfig,
 ): Promise<{ manifest: Manifest.WebExtensionManifest; warnings: any[][] }> {
   const warnings: any[][] = [];
-  const pkg = await getPackageJson(config);
+  const pkg = await getPackageJson();
 
   let versionName =
-    config.manifest.version_name ?? config.manifest.version ?? pkg?.version;
+    wxt.config.manifest.version_name ??
+    wxt.config.manifest.version ??
+    pkg?.version;
   if (versionName == null) {
     versionName = '0.0.0';
-    config.logger.warn(
+    wxt.logger.warn(
       'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/manifest.html#version-and-version-name',
     );
   }
-  const version = config.manifest.version ?? simplifyVersion(versionName);
+  const version = wxt.config.manifest.version ?? simplifyVersion(versionName);
 
   const baseManifest: Manifest.WebExtensionManifest = {
-    manifest_version: config.manifestVersion,
+    manifest_version: wxt.config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
     version,
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
-  const userManifest = config.manifest;
+  const userManifest = wxt.config.manifest;
 
   const manifest = defu(
     userManifest,
@@ -84,7 +84,7 @@ export async function generateManifest(
   ) as Manifest.WebExtensionManifest;
 
   // Add reload command in dev mode
-  if (config.command === 'serve' && config.dev.reloadCommand) {
+  if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
     if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
       warnings.push([
         "Extension already has 4 registered commands, WXT's reload command is disabled",
@@ -94,7 +94,7 @@ export async function generateManifest(
       manifest.commands['wxt:reload-extension'] = {
         description: 'Reload the extension during development',
         suggested_key: {
-          default: config.dev.reloadCommand,
+          default: wxt.config.dev.reloadCommand,
         },
       };
     }
@@ -104,16 +104,16 @@ export async function generateManifest(
   manifest.version = version;
   manifest.version_name =
     // Firefox doesn't support version_name
-    config.browser === 'firefox' || versionName === version
+    wxt.config.browser === 'firefox' || versionName === version
       ? undefined
       : versionName;
 
-  addEntrypoints(manifest, entrypoints, buildOutput, config);
+  addEntrypoints(manifest, entrypoints, buildOutput);
 
-  if (config.command === 'serve') addDevModeCsp(manifest, config);
-  if (config.command === 'serve') addDevModePermissions(manifest, config);
+  if (wxt.config.command === 'serve') addDevModeCsp(manifest);
+  if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
-  const finalManifest = produce(manifest, config.transformManifest);
+  const finalManifest = produce(manifest, wxt.config.transformManifest);
 
   if (finalManifest.name == null)
     throw Error(
@@ -153,7 +153,6 @@ function addEntrypoints(
   manifest: Manifest.WebExtensionManifest,
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-  config: InternalConfig,
 ): void {
   const entriesByType = entrypoints.reduce<
     Partial<Record<Entrypoint['type'], Entrypoint[]>>
@@ -181,13 +180,17 @@ function addEntrypoints(
   const sidepanels = entriesByType['sidepanel'];
 
   if (background) {
-    const script = getEntrypointBundlePath(background, config.outDir, '.js');
-    if (config.browser === 'firefox' && config.manifestVersion === 3) {
+    const script = getEntrypointBundlePath(
+      background,
+      wxt.config.outDir,
+      '.js',
+    );
+    if (wxt.config.browser === 'firefox' && wxt.config.manifestVersion === 3) {
       manifest.background = {
         type: background.options.type,
         scripts: [script],
       };
-    } else if (config.manifestVersion === 3) {
+    } else if (wxt.config.manifestVersion === 3) {
       manifest.background = {
         type: background.options.type,
         service_worker: script,
@@ -201,8 +204,8 @@ function addEntrypoints(
   }
 
   if (bookmarks) {
-    if (config.browser === 'firefox') {
-      config.logger.warn(
+    if (wxt.config.browser === 'firefox') {
+      wxt.config.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.bookmarks was not added to the manifest',
       );
     } else {
@@ -210,15 +213,15 @@ function addEntrypoints(
       // @ts-expect-error: bookmarks is untyped in webextension-polyfill, but supported by chrome
       manifest.chrome_url_overrides.bookmarks = getEntrypointBundlePath(
         bookmarks,
-        config.outDir,
+        wxt.config.outDir,
         '.html',
       );
     }
   }
 
   if (history) {
-    if (config.browser === 'firefox') {
-      config.logger.warn(
+    if (wxt.config.browser === 'firefox') {
+      wxt.config.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.history was not added to the manifest',
       );
     } else {
@@ -226,7 +229,7 @@ function addEntrypoints(
       // @ts-expect-error: history is untyped in webextension-polyfill, but supported by chrome
       manifest.chrome_url_overrides.history = getEntrypointBundlePath(
         history,
-        config.outDir,
+        wxt.config.outDir,
         '.html',
       );
     }
@@ -236,7 +239,7 @@ function addEntrypoints(
     manifest.chrome_url_overrides ??= {};
     manifest.chrome_url_overrides.newtab = getEntrypointBundlePath(
       newtab,
-      config.outDir,
+      wxt.config.outDir,
       '.html',
     );
   }
@@ -244,7 +247,7 @@ function addEntrypoints(
   if (popup) {
     const default_popup = getEntrypointBundlePath(
       popup,
-      config.outDir,
+      wxt.config.outDir,
       '.html',
     );
     const options: Manifest.ActionManifest = {};
@@ -273,33 +276,37 @@ function addEntrypoints(
   if (devtools) {
     manifest.devtools_page = getEntrypointBundlePath(
       devtools,
-      config.outDir,
+      wxt.config.outDir,
       '.html',
     );
   }
 
   if (options) {
-    const page = getEntrypointBundlePath(options, config.outDir, '.html');
+    const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
       open_in_tab: options.options.openInTab,
       browser_style:
-        config.browser === 'firefox' ? options.options.browserStyle : undefined,
+        wxt.config.browser === 'firefox'
+          ? options.options.browserStyle
+          : undefined,
       chrome_style:
-        config.browser !== 'firefox' ? options.options.chromeStyle : undefined,
+        wxt.config.browser !== 'firefox'
+          ? options.options.chromeStyle
+          : undefined,
       page,
     };
   }
 
   if (sandboxes?.length) {
-    if (config.browser === 'firefox') {
-      config.logger.warn(
+    if (wxt.config.browser === 'firefox') {
+      wxt.logger.warn(
         'Sandboxed pages not supported by Firefox. sandbox.pages was not added to the manifest',
       );
     } else {
       // @ts-expect-error: sandbox not typed
       manifest.sandbox = {
         pages: sandboxes.map((entry) =>
-          getEntrypointBundlePath(entry, config.outDir, '.html'),
+          getEntrypointBundlePath(entry, wxt.config.outDir, '.html'),
         ),
       };
     }
@@ -310,23 +317,23 @@ function addEntrypoints(
       sidepanels.find((entry) => entry.name === 'sidepanel') ?? sidepanels[0];
     const page = getEntrypointBundlePath(
       defaultSidepanel,
-      config.outDir,
+      wxt.config.outDir,
       '.html',
     );
 
-    if (config.browser === 'firefox') {
+    if (wxt.config.browser === 'firefox') {
       manifest.sidebar_action = {
         // TODO: Add options to side panel
         // ...defaultSidepanel.options,
         default_panel: page,
       };
-    } else if (config.manifestVersion === 3) {
+    } else if (wxt.config.manifestVersion === 3) {
       // @ts-expect-error: Untyped
       manifest.side_panel = {
         default_path: page,
       };
     } else {
-      config.logger.warn(
+      wxt.logger.warn(
         'Side panel not supported by Chromium using MV2. side_panel.default_path was not added to the manifest',
       );
     }
@@ -337,12 +344,12 @@ function addEntrypoints(
 
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
-    if (config.command === 'serve' && config.manifestVersion === 3) {
+    if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
         const matches = resolvePerBrowserOption(
           script.options.matches,
-          config.browser,
+          wxt.config.browser,
         );
         matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
@@ -353,7 +360,7 @@ function addEntrypoints(
       );
     } else {
       const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
-        const hash = hashContentScriptOptions(script.options, config);
+        const hash = hashContentScriptOptions(script.options);
         if (map.has(hash)) map.get(hash)?.push(script);
         else map.set(hash, [script]);
         return map;
@@ -361,10 +368,10 @@ function addEntrypoints(
 
       const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
         ([, scripts]) => ({
-          ...mapWxtOptionsToContentScript(scripts[0].options, config),
+          ...mapWxtOptionsToContentScript(scripts[0].options),
           css: getContentScriptCssFiles(scripts, cssMap),
           js: scripts.map((entry) =>
-            getEntrypointBundlePath(entry, config.outDir, '.js'),
+            getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
           ),
         }),
       );
@@ -375,7 +382,6 @@ function addEntrypoints(
     }
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
-      config,
       contentScripts,
       cssMap,
     );
@@ -420,12 +426,9 @@ function discoverIcons(
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
 }
 
-function addDevModeCsp(
-  manifest: Manifest.WebExtensionManifest,
-  config: InternalConfig,
-): void {
-  const permission = `http://${config.server?.hostname ?? ''}/*`;
-  const allowedCsp = config.server?.origin ?? 'http://localhost:*';
+function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
+  const permission = `http://${wxt.config.server?.hostname ?? ''}/*`;
+  const allowedCsp = wxt.config.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
     addHostPermission(manifest, permission);
@@ -442,7 +445,7 @@ function addDevModeCsp(
         "script-src 'self'; object-src 'self';", // default CSP for MV2
   );
 
-  if (config.server) csp.add('script-src', allowedCsp);
+  if (wxt.config.server) csp.add('script-src', allowedCsp);
 
   if (manifest.manifest_version === 3) {
     manifest.content_security_policy ??= {};
@@ -453,15 +456,12 @@ function addDevModeCsp(
   }
 }
 
-function addDevModePermissions(
-  manifest: Manifest.WebExtensionManifest,
-  config: InternalConfig,
-) {
+function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
   // For reloading the page
   addPermission(manifest, 'tabs');
 
   // For registering content scripts
-  if (config.manifestVersion === 3) addPermission(manifest, 'scripting');
+  if (wxt.config.manifestVersion === 3) addPermission(manifest, 'scripting');
 }
 
 /**
@@ -497,7 +497,6 @@ export function getContentScriptCssFiles(
  * added to.
  */
 export function getContentScriptCssWebAccessibleResources(
-  config: InternalConfig,
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
 ): any[] {
@@ -509,14 +508,14 @@ export function getContentScriptCssWebAccessibleResources(
     const cssFile = contentScriptCssMap[script.name];
     if (cssFile == null) return;
 
-    if (config.manifestVersion === 2) {
+    if (wxt.config.manifestVersion === 2) {
       resources.push(cssFile);
     } else {
       resources.push({
         resources: [cssFile],
         matches: resolvePerBrowserOption(
           script.options.matches,
-          config.browser,
+          wxt.config.browser,
         ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
       });
     }

@@ -5,7 +5,7 @@ import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
-import { ResolvedConfig } from 'c12';
+import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 
 export interface InlineConfig {
@@ -171,10 +171,6 @@ export interface InlineConfig {
      * ]
      */
     excludeSources?: string[];
-    /**
-     * Project hooks for running logic during the build process.
-     */
-    hooks?: NestedHooks<WxtHooks>;
   };
 
   /**
@@ -266,6 +262,10 @@ export interface InlineConfig {
      */
     reloadCommand?: string | false;
   };
+  /**
+   * Project hooks for running logic during the build process.
+   */
+  hooks?: NestedHooks<WxtHooks>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -855,11 +855,15 @@ export interface WxtHooks {
 }
 
 export interface Wxt {
-  config: InternalConfig;
+  config: ResolvedConfig;
   hooks: Hookable<WxtHooks>;
+  /**
+   * Alias for config.logger
+   */
+  logger: Logger;
 }
 
-export interface InternalConfig {
+export interface ResolvedConfig {
   root: string;
   srcDir: string;
   publicDir: string;
@@ -880,7 +884,7 @@ export interface InternalConfig {
   manifest: UserManifest;
   fsCache: FsCache;
   server?: WxtDevServer;
-  runnerConfig: ResolvedConfig<ExtensionRunnerConfig>;
+  runnerConfig: C12ResolvedConfig<ExtensionRunnerConfig>;
   zip: {
     name?: string;
     artifactTemplate: string;
@@ -894,7 +898,7 @@ export interface InternalConfig {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
   };
-  userConfigMetadata: Omit<ResolvedConfig<UserConfig>, 'config'>;
+  userConfigMetadata: Omit<C12ResolvedConfig<UserConfig>, 'config'>;
   /**
    * Import aliases to absolute paths.
    */
@@ -915,7 +919,7 @@ export interface FsCache {
 }
 
 export interface ExtensionRunner {
-  openBrowser(config: InternalConfig): Promise<void>;
+  openBrowser(): Promise<void>;
   closeBrowser(): Promise<void>;
 }
 

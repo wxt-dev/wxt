@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { InternalConfig, VirtualEntrypointType } from '~/types';
+import { ResolvedConfig, VirtualEntrypointType } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 import { normalizePath } from '~/core/utils/paths';
@@ -9,7 +9,7 @@ import { normalizePath } from '~/core/utils/paths';
  */
 export function virtualEntrypoint(
   type: VirtualEntrypointType,
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): Plugin {
   const virtualId = `virtual:wxt-${type}?`;
   const resolvedVirtualId = `\0${virtualId}`;

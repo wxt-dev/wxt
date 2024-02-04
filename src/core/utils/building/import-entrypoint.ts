@@ -1,5 +1,4 @@
 import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
-import { InternalConfig } from '~/types';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
 import { relative, resolve } from 'node:path';
@@ -8,6 +7,7 @@ import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
 import { fileURLToPath } from 'node:url';
+import { wxt } from '../wxt';
 
 /**
  * Get the value from the default export of a `path`.
@@ -24,16 +24,13 @@ import { fileURLToPath } from 'node:url';
  * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
  * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
  */
-export async function importEntrypointFile<T>(
-  path: string,
-  config: InternalConfig,
-): Promise<T> {
-  config.logger.debug('Loading file metadata:', path);
+export async function importEntrypointFile<T>(path: string): Promise<T> {
+  wxt.logger.debug('Loading file metadata:', path);
   // JITI & Babel uses normalized paths.
   const normalPath = normalizePath(path);
 
   const unimport = createUnimport({
-    ...getUnimportOptions(config),
+    ...getUnimportOptions(wxt.config),
     // Only allow specific imports, not all from the project
     dirs: [],
   });
@@ -42,7 +39,7 @@ export async function importEntrypointFile<T>(
   const text = await fs.readFile(path, 'utf-8');
   const textNoImports = removeProjectImportStatements(text);
   const { code } = await unimport.injectImports(textNoImports);
-  config.logger.debug(
+  wxt.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
 
@@ -52,11 +49,11 @@ export async function importEntrypointFile<T>(
       : fileURLToPath(import.meta.url),
     {
       cache: false,
-      debug: config.debug,
+      debug: wxt.config.debug,
       esmResolve: true,
       alias: {
         'webextension-polyfill': resolve(
-          config.root,
+          wxt.config.root,
           'node_modules/wxt/dist/virtual/mock-browser.js',
         ),
       },
@@ -89,7 +86,7 @@ export async function importEntrypointFile<T>(
     const res = await jiti(path);
     return res.default;
   } catch (err) {
-    const filePath = relative(config.root, path);
+    const filePath = relative(wxt.config.root, path);
     if (err instanceof ReferenceError) {
       // "XXX is not defined" - usually due to WXT removing imports
       const variableName = err.message.replace(' is not defined', '');
@@ -98,7 +95,7 @@ export async function importEntrypointFile<T>(
         { cause: err },
       );
     } else {
-      config.logger.error(err);
+      wxt.logger.error(err);
       throw Error(`Failed to load entrypoint: ${filePath}`, { cause: err });
     }
   }

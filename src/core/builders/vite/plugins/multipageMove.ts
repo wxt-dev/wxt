@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { Entrypoint, InternalConfig } from '~/types';
+import { Entrypoint, ResolvedConfig } from '~/types';
 import { dirname, extname, resolve, join } from 'node:path';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 import fs, { ensureDir } from 'fs-extra';
@@ -20,7 +20,7 @@ import { normalizePath } from '~/core/utils/paths';
  */
 export function multipageMove(
   entrypoints: Entrypoint[],
-  config: Omit<InternalConfig, 'builder'>,
+  config: Omit<ResolvedConfig, 'builder'>,
 ): vite.Plugin {
   return {
     name: 'wxt:multipage-move',

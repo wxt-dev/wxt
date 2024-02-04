@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { InternalConfig } from '~/types';
+import { ResolvedConfig } from '~/types';
 import { fetchCached } from '~/core/utils/network';
 
 /**
@@ -9,7 +9,7 @@ import { fetchCached } from '~/core/utils/network';
  * @example
  * import "url:https://google-tagmanager.com/gtag?id=XYZ";
  */
-export function download(config: Omit<InternalConfig, 'builder'>): Plugin {
+export function download(config: Omit<ResolvedConfig, 'builder'>): Plugin {
   return {
     name: 'wxt:download',
     resolveId(id) {

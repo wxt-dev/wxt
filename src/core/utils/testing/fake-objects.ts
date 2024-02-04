@@ -7,7 +7,7 @@ import merge from 'lodash.merge';
 import { Commands, type Manifest } from '~/browser';
 import {
   FsCache,
-  InternalConfig,
+  ResolvedConfig,
   WxtDevServer,
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -20,13 +20,18 @@ import {
   BuildOutput,
   BuildStepOutput,
   UserManifest,
+  Wxt,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 
 faker.seed(__TEST_SEED__);
 
-type DeepPartial<T> = { [key in keyof T]+?: Partial<T[key]> };
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
 function fakeObjectCreator<T>(base: () => T) {
   return (overrides?: DeepPartial<T>): T => merge(base(), overrides);
 }
@@ -198,7 +203,7 @@ export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   return array;
 }
 
-export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
+export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
   const browser = faker.helpers.arrayElement(['chrome', 'firefox']);
   const command = faker.helpers.arrayElement(['build', 'serve'] as const);
   const manifestVersion = faker.helpers.arrayElement([2, 3] as const);
@@ -249,8 +254,15 @@ export const fakeInternalConfig = fakeObjectCreator<InternalConfig>(() => {
     dev: {
       reloadCommand: 'Alt+R',
     },
+    hooks: {},
   };
 });
+
+export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
+  config: fakeResolvedConfig(),
+  hooks: mock(),
+  logger: mock(),
+}));
 
 export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({
   manifest: fakeManifest(),

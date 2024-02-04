@@ -11,8 +11,9 @@ import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
 import { importEntrypointFile } from '../import-entrypoint';
 import glob from 'fast-glob';
-import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
+import { fakeResolvedConfig, fakeWxt } from '~/core/utils/testing/fake-objects';
 import { unnormalizePath } from '~/core/utils/paths';
+import { setWxtForTesting } from '../../wxt';
 
 vi.mock('../import-entrypoint');
 const importEntrypointFileMock = vi.mocked(importEntrypointFile);
@@ -26,7 +27,7 @@ const readFileMock = vi.mocked(
 );
 
 describe('findEntrypoints', () => {
-  const config = fakeInternalConfig({
+  const config = fakeResolvedConfig({
     manifestVersion: 3,
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
@@ -83,7 +84,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       readFileMock.mockResolvedValueOnce(content);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual(expected);
@@ -136,7 +137,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       readFileMock.mockResolvedValueOnce(content);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual(expected);
@@ -203,7 +204,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
@@ -244,7 +245,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
@@ -256,38 +257,54 @@ describe('findEntrypoints', () => {
   );
 
   it('should remove type=module from MV2 background scripts', async () => {
-    const config = fakeInternalConfig({ manifestVersion: 2 });
+    setWxtForTesting(
+      fakeWxt({
+        config: {
+          manifestVersion: 2,
+        },
+      }),
+    );
     const options: BackgroundEntrypoint['options'] = {
       type: 'module',
     };
     globMock.mockResolvedValueOnce(['background.ts']);
     importEntrypointFileMock.mockResolvedValue(options);
 
-    const entrypoints = await findEntrypoints(config);
+    const entrypoints = await findEntrypoints();
 
     expect(entrypoints[0].options).toEqual({});
   });
 
   it('should allow type=module for MV3 background service workers', async () => {
-    const config = fakeInternalConfig({ manifestVersion: 3 });
+    setWxtForTesting(
+      fakeWxt({
+        config: {
+          manifestVersion: 3,
+        },
+      }),
+    );
     const options: BackgroundEntrypoint['options'] = {
       type: 'module',
     };
     globMock.mockResolvedValueOnce(['background.ts']);
     importEntrypointFileMock.mockResolvedValue(options);
 
-    const entrypoints = await findEntrypoints(config);
+    const entrypoints = await findEntrypoints();
 
     expect(entrypoints[0].options).toEqual(options);
   });
 
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
+    setWxtForTesting(
+      fakeWxt({
+        config: {
+          command: 'serve',
+        },
+      }),
+    );
     globMock.mockResolvedValueOnce(['popup.html']);
 
-    const entrypoints = await findEntrypoints({
-      ...config,
-      command: 'serve',
-    });
+    const entrypoints = await findEntrypoints();
 
     expect(entrypoints).toHaveLength(2);
     expect(entrypoints).toContainEqual({
@@ -323,7 +340,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
@@ -619,7 +636,7 @@ describe('findEntrypoints', () => {
   ])('should find entrypoint for %s', async (path, expected) => {
     globMock.mockResolvedValueOnce([path]);
 
-    const entrypoints = await findEntrypoints(config);
+    const entrypoints = await findEntrypoints();
 
     expect(entrypoints).toHaveLength(1);
     expect(entrypoints[0]).toEqual(expected);
@@ -635,7 +652,7 @@ describe('findEntrypoints', () => {
       'ui.html',
     ]);
 
-    await expect(() => findEntrypoints(config)).rejects.toThrowError(
+    await expect(() => findEntrypoints()).rejects.toThrowError(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
         '',
@@ -653,7 +670,7 @@ describe('findEntrypoints', () => {
   it('throw an error if there are no entrypoints', async () => {
     globMock.mockResolvedValueOnce([]);
 
-    await expect(() => findEntrypoints(config)).rejects.toThrowError(
+    await expect(() => findEntrypoints()).rejects.toThrowError(
       `No entrypoints found in ${unnormalizePath(config.entrypointsDir)}`,
     );
   });
@@ -665,7 +682,7 @@ describe('findEntrypoints', () => {
         include: ['not' + config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -676,7 +693,7 @@ describe('findEntrypoints', () => {
         include: ['not' + config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -693,7 +710,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -710,7 +727,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -727,7 +744,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -740,7 +757,7 @@ describe('findEntrypoints', () => {
         exclude: [config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -751,7 +768,7 @@ describe('findEntrypoints', () => {
         exclude: [config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -766,7 +783,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -781,7 +798,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -796,7 +813,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -812,15 +829,19 @@ describe('findEntrypoints', () => {
       ]);
       importEntrypointFileMock.mockResolvedValue({});
       const filterEntrypoints = ['popup', 'ui'];
-      const config = fakeInternalConfig({
-        root: '/',
-        entrypointsDir: resolve('/src/entrypoints'),
-        outDir: resolve('.output'),
-        command: 'build',
-        filterEntrypoints: new Set(filterEntrypoints),
-      });
+      setWxtForTesting(
+        fakeWxt({
+          config: {
+            root: '/',
+            entrypointsDir: resolve('/src/entrypoints'),
+            outDir: resolve('.output'),
+            command: 'build',
+            filterEntrypoints: new Set(filterEntrypoints),
+          },
+        }),
+      );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
       const names = entrypoints.map((item) => item.name);
       expect(names).toHaveLength(2);
       expect(names).toEqual(filterEntrypoints);

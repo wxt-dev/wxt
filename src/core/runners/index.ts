@@ -1,17 +1,16 @@
-import { InternalConfig, ExtensionRunner } from '~/types';
+import { ExtensionRunner } from '~/types';
 import { createWslRunner } from './wsl';
 import { createWebExtRunner } from './web-ext';
 import { createSafariRunner } from './safari';
 import { createManualRunner } from './manual';
 import { isWsl } from '~/core/utils/wsl';
+import { wxt } from '../utils/wxt';
 
-export async function createExtensionRunner(
-  config: InternalConfig,
-): Promise<ExtensionRunner> {
-  if (config.browser === 'safari') return createSafariRunner();
+export async function createExtensionRunner(): Promise<ExtensionRunner> {
+  if (wxt.config.browser === 'safari') return createSafariRunner();
 
   if (await isWsl()) return createWslRunner();
-  if (config.runnerConfig.config?.disabled) return createManualRunner();
+  if (wxt.config.runnerConfig.config?.disabled) return createManualRunner();
 
   return createWebExtRunner();
 }

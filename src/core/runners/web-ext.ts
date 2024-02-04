@@ -2,6 +2,7 @@ import type { WebExtRunInstance } from 'web-ext-run';
 import { ExtensionRunner } from '~/types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
+import { wxt } from '../utils/wxt';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -10,10 +11,13 @@ export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 
   return {
-    async openBrowser(config) {
+    async openBrowser() {
       const startTime = Date.now();
 
-      if (config.browser === 'firefox' && config.manifestVersion === 3) {
+      if (
+        wxt.config.browser === 'firefox' &&
+        wxt.config.manifestVersion === 3
+      ) {
         throw Error(
           'Dev mode does not support Firefox MV3. For alternatives, see https://github.com/wxt-dev/wxt/issues/230#issuecomment-1806881653',
         );
@@ -22,16 +26,16 @@ export function createWebExtRunner(): ExtensionRunner {
       // Use WXT's logger instead of web-ext's built-in one.
       const webExtLogger = await import('web-ext-run/util/logger');
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
-        if (level >= ERROR_LOG_LEVEL) config.logger.error(name, msg);
-        if (level >= WARN_LOG_LEVEL) config.logger.warn(msg);
+        if (level >= ERROR_LOG_LEVEL) wxt.logger.error(name, msg);
+        if (level >= WARN_LOG_LEVEL) wxt.logger.warn(msg);
       };
 
-      const wxtUserConfig = config.runnerConfig.config;
+      const wxtUserConfig = wxt.config.runnerConfig.config;
       const userConfig = {
         console: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
-        ...(config.browser === 'firefox'
+        ...(wxt.config.browser === 'firefox'
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
               firefoxProfile: wxtUserConfig?.firefoxProfile,
@@ -39,7 +43,7 @@ export function createWebExtRunner(): ExtensionRunner {
               args: wxtUserConfig?.firefoxArgs,
             }
           : {
-              chromiumBinary: wxtUserConfig?.binaries?.[config.browser],
+              chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
               chromiumProfile: wxtUserConfig?.chromiumProfile,
               chromiumPref: defu(
                 wxtUserConfig?.chromiumPref,
@@ -51,8 +55,9 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const finalConfig = {
         ...userConfig,
-        target: config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
-        sourceDir: config.outDir,
+        target:
+          wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
+        sourceDir: wxt.config.outDir,
         // WXT handles reloads, so disable auto-reload behaviors in web-ext
         noReload: true,
         noInput: true,
@@ -61,14 +66,14 @@ export function createWebExtRunner(): ExtensionRunner {
         // Don't call `process.exit(0)` after starting web-ext
         shouldExitProgram: false,
       };
-      config.logger.debug('web-ext config:', finalConfig);
-      config.logger.debug('web-ext options:', options);
+      wxt.logger.debug('web-ext config:', finalConfig);
+      wxt.logger.debug('web-ext options:', options);
 
       const webExt = await import('web-ext-run');
       runner = await webExt.default.cmd.run(finalConfig, options);
 
       const duration = Date.now() - startTime;
-      config.logger.success(`Opened browser in ${formatDuration(duration)}`);
+      wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
     },
 
     async closeBrowser() {
