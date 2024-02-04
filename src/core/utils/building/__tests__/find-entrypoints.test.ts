@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -35,6 +35,10 @@ describe('findEntrypoints', () => {
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
     command: 'build',
+  });
+
+  beforeEach(() => {
+    setFakeWxt({ config });
   });
 
   it.each<[string, string, PopupEntrypoint]>([
@@ -210,10 +214,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -251,10 +252,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -295,6 +293,7 @@ describe('findEntrypoints', () => {
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
     setFakeWxt({
       config: {
+        ...config,
         command: 'serve',
       },
     });
@@ -340,10 +339,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
