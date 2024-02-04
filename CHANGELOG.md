@@ -26,7 +26,7 @@
 
 ### ❤️ Contributors
 
-- Chen Hua <hcljsq@gmail.com>
+- Chen Hua ([@hcljsq](https://github.com/hcljsq))
 - Florian Metz ([@Timeraa](http://github.com/Timeraa))
 
 ## v0.16.2
