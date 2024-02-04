@@ -1,11 +1,10 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { hashContentScriptOptions } from '~/core/utils/content-scripts';
-import { fakeWxt } from '~/core/utils/testing/fake-objects';
-import { setWxtForTesting } from '../../wxt';
+import { setFakeWxt } from '~/core/utils/testing/fake-objects';
 
 describe('Content Script Utils', () => {
   beforeEach(() => {
-    setWxtForTesting(fakeWxt());
+    setFakeWxt();
   });
 
   describe('hashContentScriptOptions', () => {

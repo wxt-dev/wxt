@@ -8,7 +8,7 @@ import {
   fakeManifestCommand,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
-  fakeWxt,
+  setFakeWxt,
 } from '../testing/fake-objects';
 import { Manifest } from 'webextension-polyfill';
 import {
@@ -17,14 +17,14 @@ import {
   Entrypoint,
   OutputAsset,
 } from '~/types';
-import { setWxtForTesting, wxt } from '../../wxt';
+import { wxt } from '../../wxt';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';
 
 describe('Manifest Utils', () => {
   beforeEach(() => {
-    setWxtForTesting(fakeWxt());
+    setFakeWxt();
   });
 
   describe('generateManifest', () => {
@@ -47,14 +47,12 @@ describe('Manifest Utils', () => {
         const popup = popupEntrypoint();
         const buildOutput = fakeBuildOutput();
 
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              manifestVersion: 3,
-              outDir,
-            },
-          }),
-        );
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+          },
+        });
         const expected: Partial<Manifest.WebExtensionManifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
@@ -83,14 +81,12 @@ describe('Manifest Utils', () => {
         async ({ inputType, expectedType }) => {
           const popup = popupEntrypoint(inputType);
           const buildOutput = fakeBuildOutput();
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                manifestVersion: 2,
-                outDir,
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              manifestVersion: 2,
+              outDir,
+            },
+          });
           const expected = {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
@@ -110,19 +106,17 @@ describe('Manifest Utils', () => {
     describe('action without popup', () => {
       it('should respect the action field in the manifest without a popup', async () => {
         const buildOutput = fakeBuildOutput();
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              outDir,
-              manifest: {
-                action: {
-                  default_icon: 'icon-16.png',
-                  default_title: 'Example title',
-                },
+        setFakeWxt({
+          config: {
+            outDir,
+            manifest: {
+              action: {
+                default_icon: 'icon-16.png',
+                default_title: 'Example title',
               },
             },
-          }),
-        );
+          },
+        });
         const expected: Partial<Manifest.WebExtensionManifest> = {
           action: wxt.config.manifest.action,
         };
@@ -144,15 +138,13 @@ describe('Manifest Utils', () => {
       });
 
       it('should include a options_ui and chrome_style for chrome', async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              manifestVersion: 3,
-              outDir,
-              browser: 'chrome',
-            },
-          }),
-        );
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+            browser: 'chrome',
+          },
+        });
         const buildOutput = fakeBuildOutput();
         const expected = {
           open_in_tab: false,
@@ -169,15 +161,13 @@ describe('Manifest Utils', () => {
       });
 
       it('should include a options_ui and browser_style for firefox', async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              manifestVersion: 3,
-              browser: 'firefox',
-              outDir,
-            },
-          }),
-        );
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'firefox',
+            outDir,
+          },
+        });
         const buildOutput = fakeBuildOutput();
         const expected = {
           open_in_tab: false,
@@ -207,15 +197,13 @@ describe('Manifest Utils', () => {
         it.each(['chrome', 'safari'])(
           'should include a service worker and type for %s',
           async (browser) => {
-            setWxtForTesting(
-              fakeWxt({
-                config: {
-                  outDir,
-                  manifestVersion: 3,
-                  browser,
-                },
-              }),
-            );
+            setFakeWxt({
+              config: {
+                outDir,
+                manifestVersion: 3,
+                browser,
+              },
+            });
             const buildOutput = fakeBuildOutput();
             const expected = {
               type: 'module',
@@ -232,15 +220,13 @@ describe('Manifest Utils', () => {
         );
 
         it('should include a background script and type for firefox', async () => {
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                outDir,
-                manifestVersion: 3,
-                browser: 'firefox',
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              outDir,
+              manifestVersion: 3,
+              browser: 'firefox',
+            },
+          });
           const buildOutput = fakeBuildOutput();
           const expected = {
             type: 'module',
@@ -260,15 +246,13 @@ describe('Manifest Utils', () => {
         it.each(['chrome', 'safari'])(
           'should include scripts and persistent for %s',
           async (browser) => {
-            setWxtForTesting(
-              fakeWxt({
-                config: {
-                  outDir,
-                  manifestVersion: 2,
-                  browser,
-                },
-              }),
-            );
+            setFakeWxt({
+              config: {
+                outDir,
+                manifestVersion: 2,
+                browser,
+              },
+            });
             const buildOutput = fakeBuildOutput();
             const expected = {
               persistent: true,
@@ -285,15 +269,13 @@ describe('Manifest Utils', () => {
         );
 
         it('should include a background script and persistent for firefox mv2', async () => {
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                outDir,
-                manifestVersion: 2,
-                browser: 'firefox',
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              outDir,
+              manifestVersion: 2,
+              browser: 'firefox',
+            },
+          });
           const buildOutput = fakeBuildOutput();
           const expected = {
             persistent: true,
@@ -372,15 +354,13 @@ describe('Manifest Utils', () => {
           32: 'logo-32.png',
           48: 'logo-48.png',
         };
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              manifest: {
-                icons: expected,
-              },
+        setFakeWxt({
+          config: {
+            manifest: {
+              icons: expected,
             },
-          }),
-        );
+          },
+        });
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -469,15 +449,13 @@ describe('Manifest Utils', () => {
         };
 
         const entrypoints = [cs1, cs2, cs3, cs4, cs5];
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              command: 'build',
-              outDir,
-              manifestVersion: 3,
-            },
-          }),
-        );
+        setFakeWxt({
+          config: {
+            command: 'build',
+            outDir,
+            manifestVersion: 3,
+          },
+        });
         const buildOutput: Omit<BuildOutput, 'manifest'> = {
           publicAssets: [],
           steps: [
@@ -541,17 +519,15 @@ describe('Manifest Utils', () => {
 
         const entrypoints = [cs];
         const buildOutput = fakeBuildOutput();
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              outDir,
-              command: 'build',
-              manifest: {
-                content_scripts: [userContentScript],
-              },
+        setFakeWxt({
+          config: {
+            outDir,
+            command: 'build',
+            manifest: {
+              content_scripts: [userContentScript],
             },
-          }),
-        );
+          },
+        });
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -587,14 +563,12 @@ describe('Manifest Utils', () => {
               publicAssets: [],
               steps: [{ entrypoints: cs, chunks: [styles] }],
             };
-            setWxtForTesting(
-              fakeWxt({
-                config: {
-                  outDir,
-                  command: 'build',
-                },
-              }),
-            );
+            setFakeWxt({
+              config: {
+                outDir,
+                command: 'build',
+              },
+            });
 
             const { manifest: actual } = await generateManifest(
               entrypoints,
@@ -635,14 +609,12 @@ describe('Manifest Utils', () => {
               publicAssets: [],
               steps: [{ entrypoints: cs, chunks: [styles] }],
             };
-            setWxtForTesting(
-              fakeWxt({
-                config: {
-                  outDir,
-                  command: 'build',
-                },
-              }),
-            );
+            setFakeWxt({
+              config: {
+                outDir,
+                command: 'build',
+              },
+            });
 
             const { manifest: actual } = await generateManifest(
               entrypoints,
@@ -680,15 +652,13 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                outDir,
-                command: 'build',
-                manifestVersion: 3,
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+              manifestVersion: 3,
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -725,15 +695,13 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                outDir,
-                command: 'build',
-                manifestVersion: 2,
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+              manifestVersion: 2,
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -767,15 +735,13 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                outDir,
-                command: 'build',
-                manifestVersion: 3,
-              },
-            }),
-          );
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+              manifestVersion: 3,
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -815,20 +781,18 @@ describe('Manifest Utils', () => {
           publicAssets: [],
           steps: [{ entrypoints: cs, chunks: [styles] }],
         };
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              outDir,
-              command: 'build',
-              manifestVersion: 3,
-              manifest: {
-                web_accessible_resources: [
-                  { resources: ['one.png'], matches: ['*://one.com/*'] },
-                ],
-              },
+        setFakeWxt({
+          config: {
+            outDir,
+            command: 'build',
+            manifestVersion: 3,
+            manifest: {
+              web_accessible_resources: [
+                { resources: ['one.png'], matches: ['*://one.com/*'] },
+              ],
             },
-          }),
-        );
+          },
+        });
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -866,18 +830,16 @@ describe('Manifest Utils', () => {
           publicAssets: [],
           steps: [{ entrypoints: cs, chunks: [styles] }],
         };
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              outDir,
-              command: 'build',
-              manifestVersion: 2,
-              manifest: {
-                web_accessible_resources: ['one.png'],
-              },
+        setFakeWxt({
+          config: {
+            outDir,
+            command: 'build',
+            manifestVersion: 2,
+            manifest: {
+              web_accessible_resources: ['one.png'],
             },
-          }),
-        );
+          },
+        });
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -896,15 +858,13 @@ describe('Manifest Utils', () => {
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
         const newAuthor = 'Custom Author';
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              transformManifest(manifest: any) {
-                manifest.author = newAuthor;
-              },
+        setFakeWxt({
+          config: {
+            transformManifest(manifest: any) {
+              manifest.author = newAuthor;
             },
-          }),
-        );
+          },
+        });
         const expected = {
           author: newAuthor,
         };
@@ -926,17 +886,15 @@ describe('Manifest Utils', () => {
           const versionName = '1.0.0-alpha1';
           const entrypoints: Entrypoint[] = [];
           const buildOutput = fakeBuildOutput();
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                browser,
-                manifest: {
-                  version,
-                  version_name: versionName,
-                },
+          setFakeWxt({
+            config: {
+              browser,
+              manifest: {
+                version,
+                version_name: versionName,
               },
-            }),
-          );
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -955,17 +913,15 @@ describe('Manifest Utils', () => {
           const versionName = '1.0.0-alpha1';
           const entrypoints: Entrypoint[] = [];
           const buildOutput = fakeBuildOutput();
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                browser,
-                manifest: {
-                  version,
-                  version_name: versionName,
-                },
+          setFakeWxt({
+            config: {
+              browser,
+              manifest: {
+                version,
+                version_name: versionName,
               },
-            }),
-          );
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -983,17 +939,15 @@ describe('Manifest Utils', () => {
           const version = '1.0.0';
           const entrypoints: Entrypoint[] = [];
           const buildOutput = fakeBuildOutput();
-          setWxtForTesting(
-            fakeWxt({
-              config: {
-                browser,
-                manifest: {
-                  version,
-                  version_name: version,
-                },
+          setFakeWxt({
+            config: {
+              browser,
+              manifest: {
+                version,
+                version_name: version,
               },
-            }),
-          );
+            },
+          });
 
           const { manifest: actual } = await generateManifest(
             entrypoints,
@@ -1008,16 +962,14 @@ describe('Manifest Utils', () => {
       it('should log a warning if the version could not be detected', async () => {
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              manifest: {
-                // @ts-ignore: Purposefully removing version from fake object
-                version: null,
-              },
+        setFakeWxt({
+          config: {
+            manifest: {
+              // @ts-ignore: Purposefully removing version from fake object
+              version: null,
             },
-          }),
-        );
+          },
+        });
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -1043,11 +995,9 @@ describe('Manifest Utils', () => {
       };
 
       it('should include a command for reloading the extension during development', async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: { command: 'serve' },
-          }),
-        );
+        setFakeWxt({
+          config: { command: 'serve' },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1062,16 +1012,14 @@ describe('Manifest Utils', () => {
       });
 
       it('should customize the reload commands key binding if passing a custom command', async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              command: 'serve',
-              dev: {
-                reloadCommand: 'Ctrl+E',
-              },
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            dev: {
+              reloadCommand: 'Ctrl+E',
             },
-          }),
-        );
+          },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1091,16 +1039,14 @@ describe('Manifest Utils', () => {
       });
 
       it("should not include the reload command when it's been disabled", async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              command: 'serve',
-              dev: {
-                reloadCommand: false,
-              },
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            dev: {
+              reloadCommand: false,
             },
-          }),
-        );
+          },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1115,18 +1061,16 @@ describe('Manifest Utils', () => {
       it('should not override any existing commands when adding the one to reload the extension', async () => {
         const customCommandName = 'custom-command';
         const customCommand = fakeManifestCommand();
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              command: 'serve',
-              manifest: {
-                commands: {
-                  [customCommandName]: customCommand,
-                },
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            manifest: {
+              commands: {
+                [customCommandName]: customCommand,
               },
             },
-          }),
-        );
+          },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1148,14 +1092,12 @@ describe('Manifest Utils', () => {
           command3: fakeManifestCommand(),
           command4: fakeManifestCommand(),
         };
-        setWxtForTesting(
-          fakeWxt({
-            config: {
-              command: 'serve',
-              manifest: { commands },
-            },
-          }),
-        );
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            manifest: { commands },
+          },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1169,11 +1111,9 @@ describe('Manifest Utils', () => {
       });
 
       it('should not include the command when building an extension', async () => {
-        setWxtForTesting(
-          fakeWxt({
-            config: { command: 'build' },
-          }),
-        );
+        setFakeWxt({
+          config: { command: 'build' },
+        });
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 

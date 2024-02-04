@@ -24,6 +24,7 @@ import {
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
+import { setWxtForTesting } from '~/core/wxt';
 
 faker.seed(__TEST_SEED__);
 
@@ -264,6 +265,11 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   logger: mock(),
   reloadConfig: vi.fn(),
 }));
+
+export function setFakeWxt(overrides?: DeepPartial<Wxt>) {
+  const wxt = fakeWxt(overrides);
+  setWxtForTesting(wxt);
+}
 
 export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({
   manifest: fakeManifest(),

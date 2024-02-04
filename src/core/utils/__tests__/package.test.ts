@@ -1,19 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { getPackageJson } from '../package';
-import { fakeWxt } from '../testing/fake-objects';
+import { setFakeWxt } from '../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { Logger } from '~/types';
-import { setWxtForTesting } from '../../wxt';
 
 describe('Package JSON Utils', () => {
   describe('getPackageJson', () => {
     it('should return the package.json inside <root>/package.json', async () => {
       const root = process.cwd(); // WXT project directory
-      setWxtForTesting(
-        fakeWxt({
-          config: { root },
-        }),
-      );
+      setFakeWxt({
+        config: { root },
+      });
 
       const actual = await getPackageJson();
 
@@ -25,12 +22,10 @@ describe('Package JSON Utils', () => {
     it("should return an empty object when <root>/package.json doesn't exist", async () => {
       const root = '/some/path/that/does/not/exist';
       const logger = mock<Logger>();
-      setWxtForTesting(
-        fakeWxt({
-          config: { root, logger },
-          logger,
-        }),
-      );
+      setFakeWxt({
+        config: { root, logger },
+        logger,
+      });
 
       const actual = await getPackageJson();
 

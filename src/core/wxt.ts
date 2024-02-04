@@ -34,7 +34,9 @@ export async function registerWxt(
  * @internal ONLY USE FOR TESTING.
  *
  * @example
- * setWxtForTesting(fakeWxt());
+ * setWxtForTesting(fakeWxt({ ... }));
+ * // Or use the shorthand
+ * setFakeWxt({ ... })
  */
 export function setWxtForTesting(testInstance: Wxt) {
   wxt = testInstance;

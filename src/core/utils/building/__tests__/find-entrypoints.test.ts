@@ -11,9 +11,11 @@ import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
 import { importEntrypointFile } from '../import-entrypoint';
 import glob from 'fast-glob';
-import { fakeResolvedConfig, fakeWxt } from '~/core/utils/testing/fake-objects';
+import {
+  fakeResolvedConfig,
+  setFakeWxt,
+} from '~/core/utils/testing/fake-objects';
 import { unnormalizePath } from '~/core/utils/paths';
-import { setWxtForTesting } from '../../../wxt';
 
 vi.mock('../import-entrypoint');
 const importEntrypointFileMock = vi.mocked(importEntrypointFile);
@@ -257,13 +259,11 @@ describe('findEntrypoints', () => {
   );
 
   it('should remove type=module from MV2 background scripts', async () => {
-    setWxtForTesting(
-      fakeWxt({
-        config: {
-          manifestVersion: 2,
-        },
-      }),
-    );
+    setFakeWxt({
+      config: {
+        manifestVersion: 2,
+      },
+    });
     const options: BackgroundEntrypoint['options'] = {
       type: 'module',
     };
@@ -276,13 +276,11 @@ describe('findEntrypoints', () => {
   });
 
   it('should allow type=module for MV3 background service workers', async () => {
-    setWxtForTesting(
-      fakeWxt({
-        config: {
-          manifestVersion: 3,
-        },
-      }),
-    );
+    setFakeWxt({
+      config: {
+        manifestVersion: 3,
+      },
+    });
     const options: BackgroundEntrypoint['options'] = {
       type: 'module',
     };
@@ -295,13 +293,11 @@ describe('findEntrypoints', () => {
   });
 
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
-    setWxtForTesting(
-      fakeWxt({
-        config: {
-          command: 'serve',
-        },
-      }),
-    );
+    setFakeWxt({
+      config: {
+        command: 'serve',
+      },
+    });
     globMock.mockResolvedValueOnce(['popup.html']);
 
     const entrypoints = await findEntrypoints();
@@ -829,17 +825,15 @@ describe('findEntrypoints', () => {
       ]);
       importEntrypointFileMock.mockResolvedValue({});
       const filterEntrypoints = ['popup', 'ui'];
-      setWxtForTesting(
-        fakeWxt({
-          config: {
-            root: '/',
-            entrypointsDir: resolve('/src/entrypoints'),
-            outDir: resolve('.output'),
-            command: 'build',
-            filterEntrypoints: new Set(filterEntrypoints),
-          },
-        }),
-      );
+      setFakeWxt({
+        config: {
+          root: '/',
+          entrypointsDir: resolve('/src/entrypoints'),
+          outDir: resolve('.output'),
+          command: 'build',
+          filterEntrypoints: new Set(filterEntrypoints),
+        },
+      });
 
       const entrypoints = await findEntrypoints();
       const names = entrypoints.map((item) => item.name);

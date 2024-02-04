@@ -11,6 +11,7 @@ import {
   fakeOutputAsset,
   fakeOutputChunk,
   fakeWxt,
+  setFakeWxt,
 } from '~/core/utils/testing/fake-objects';
 import { BuildOutput, BuildStepOutput } from '~/types';
 import { setWxtForTesting } from '../../../wxt';
@@ -47,15 +48,13 @@ describe('Detect Dev Changes', () => {
   describe('wxt.config.ts', () => {
     it("should return 'full-restart' when one of the changed files is the config file", () => {
       const configFile = '/root/wxt.config.ts';
-      setWxtForTesting(
-        fakeWxt({
-          config: {
-            userConfigMetadata: {
-              configFile,
-            },
+      setFakeWxt({
+        config: {
+          userConfigMetadata: {
+            configFile,
           },
-        }),
-      );
+        },
+      });
       const changes = ['/root/src/public/image.svg', configFile];
       const currentOutput: BuildOutput = {
         manifest: fakeManifest(),
@@ -75,15 +74,13 @@ describe('Detect Dev Changes', () => {
   describe('web-ext.config.ts', () => {
     it("should return 'browser-restart' when one of the changed files is the config file", () => {
       const runnerFile = '/root/web-ext.config.ts';
-      setWxtForTesting(
-        fakeWxt({
-          config: {
-            runnerConfig: {
-              configFile: runnerFile,
-            },
+      setFakeWxt({
+        config: {
+          runnerConfig: {
+            configFile: runnerFile,
           },
-        }),
-      );
+        },
+      });
       const changes = ['/root/src/public/image.svg', runnerFile];
       const currentOutput: BuildOutput = {
         manifest: fakeManifest(),

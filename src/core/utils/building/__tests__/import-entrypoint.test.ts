@@ -2,25 +2,22 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { importEntrypointFile } from '~/core/utils/building';
 import { resolve } from 'node:path';
 import { unnormalizePath } from '../../paths';
-import { setWxtForTesting } from '../../../wxt';
-import { fakeWxt } from '../../testing/fake-objects';
+import { setFakeWxt } from '../../testing/fake-objects';
 
 const entrypointPath = (filename: string) =>
   resolve('src/core/utils/__tests__/test-entrypoints', filename);
 
 describe('importEntrypointFile', () => {
   beforeEach(() => {
-    setWxtForTesting(
-      fakeWxt({
-        config: {
-          imports: false,
-          debug: false,
-          // Run inside the demo folder so that wxt is in the node_modules
-          // WXT must also be built for these tests to pass
-          root: 'demo',
-        },
-      }),
-    );
+    setFakeWxt({
+      config: {
+        imports: false,
+        debug: false,
+        // Run inside the demo folder so that wxt is in the node_modules
+        // WXT must also be built for these tests to pass
+        root: 'demo',
+      },
+    });
   });
 
   it.each([
