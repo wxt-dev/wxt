@@ -170,13 +170,13 @@ importers:
         version: 2.9.0
       tsup:
         specifier: ^8.0.1
-        version: 8.0.1(typescript@5.3.2)
+        version: 8.0.1(typescript@5.3.3)
       tsx:
         specifier: ^4.6.2
         version: 4.7.0
       typedoc:
         specifier: ^0.25.4
-        version: 0.25.4(typescript@5.3.2)
+        version: 0.25.4(typescript@5.3.3)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.23
         version: 4.0.0-next.23(typedoc@0.25.4)
@@ -185,19 +185,19 @@ importers:
         version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23)
       typescript:
         specifier: ^5.3.2
-        version: 5.3.2
+        version: 5.3.3
       vitepress:
         specifier: 1.0.0-rc.34
-        version: 1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.2)
+        version: 1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.3)
       vitest:
         specifier: ^1.1.0
         version: 1.1.0(@types/node@20.10.3)(happy-dom@13.3.8)(sass@1.69.5)
       vitest-mock-extended:
         specifier: ^1.3.1
-        version: 1.3.1(typescript@5.3.2)(vitest@1.1.0)
+        version: 1.3.1(typescript@5.3.3)(vitest@1.1.0)
       vue:
         specifier: ^3.3.10
-        version: 3.3.10(typescript@5.3.2)
+        version: 3.3.10(typescript@5.3.3)
 
   demo:
     dependencies:
@@ -1176,7 +1176,7 @@ packages:
       vue: ^3.2.25
     dependencies:
       vite: 5.0.12(@types/node@20.10.3)(sass@1.69.5)
-      vue: 3.4.3(typescript@5.3.2)
+      vue: 3.4.3(typescript@5.3.3)
     dev: true
 
   /@vitest/coverage-v8@1.2.2(vitest@1.1.0):
@@ -1374,7 +1374,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.3.10
       '@vue/shared': 3.3.10
-      vue: 3.3.10(typescript@5.3.2)
+      vue: 3.3.10(typescript@5.3.3)
     dev: true
 
   /@vue/server-renderer@3.4.3(vue@3.4.3):
@@ -1384,7 +1384,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.4.3
       '@vue/shared': 3.4.3
-      vue: 3.4.3(typescript@5.3.2)
+      vue: 3.4.3(typescript@5.3.3)
     dev: true
 
   /@vue/shared@3.3.10:
@@ -4927,12 +4927,12 @@ packages:
     hasBin: true
     dev: true
 
-  /ts-essentials@9.3.2(typescript@5.3.2):
+  /ts-essentials@9.3.2(typescript@5.3.3):
     resolution: {integrity: sha512-JxKJzuWqH1MmH4ZFHtJzGEhkfN3QvVR3C3w+4BIoWeoY68UVVoA2Np/Bca9z0IPSErVCWhv439aT0We4Dks8kQ==}
     peerDependencies:
       typescript: '>=4.1.0'
     dependencies:
-      typescript: 5.3.2
+      typescript: 5.3.3
     dev: true
 
   /ts-interface-checker@0.1.13:
@@ -4943,7 +4943,7 @@ packages:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
     dev: false
 
-  /tsup@8.0.1(typescript@5.3.2):
+  /tsup@8.0.1(typescript@5.3.3):
     resolution: {integrity: sha512-hvW7gUSG96j53ZTSlT4j/KL0q1Q2l6TqGBFc6/mu/L46IoNWqLLUzLRLP1R8Q7xrJTmkDxxDoojV5uCVs1sVOg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -4976,7 +4976,7 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.32.0
       tree-kill: 1.2.2
-      typescript: 5.3.2
+      typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -5034,7 +5034,7 @@ packages:
     peerDependencies:
       typedoc: '>=0.25.0'
     dependencies:
-      typedoc: 0.25.4(typescript@5.3.2)
+      typedoc: 0.25.4(typescript@5.3.3)
     dev: true
 
   /typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23):
@@ -5045,7 +5045,7 @@ packages:
       typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4)
     dev: true
 
-  /typedoc@0.25.4(typescript@5.3.2):
+  /typedoc@0.25.4(typescript@5.3.3):
     resolution: {integrity: sha512-Du9ImmpBCw54bX275yJrxPVnjdIyJO/84co0/L9mwe0R3G4FSR6rQ09AlXVRvZEGMUg09+z/usc8mgygQ1aidA==}
     engines: {node: '>= 16'}
     hasBin: true
@@ -5056,11 +5056,11 @@ packages:
       marked: 4.3.0
       minimatch: 9.0.3
       shiki: 0.14.5
-      typescript: 5.3.2
+      typescript: 5.3.3
     dev: true
 
-  /typescript@5.3.2:
-    resolution: {integrity: sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==}
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
@@ -5234,7 +5234,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitepress@1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.2):
+  /vitepress@1.0.0-rc.34(@types/node@20.10.3)(typescript@5.3.3):
     resolution: {integrity: sha512-TUbTiSdAZFni2XlHlpx61KikgkQ5uG4Wtmw2R0SXhIOG6qGqzDJczAFjkMc4i45I9c3KyatwOYe8oEfCnzVYwQ==}
     hasBin: true
     peerDependencies:
@@ -5261,7 +5261,7 @@ packages:
       shikiji-core: 0.9.16
       shikiji-transformers: 0.9.16
       vite: 5.0.12(@types/node@20.10.3)(sass@1.69.5)
-      vue: 3.4.3(typescript@5.3.2)
+      vue: 3.4.3(typescript@5.3.3)
     transitivePeerDependencies:
       - '@algolia/client-search'
       - '@types/node'
@@ -5290,14 +5290,14 @@ packages:
       - universal-cookie
     dev: true
 
-  /vitest-mock-extended@1.3.1(typescript@5.3.2)(vitest@1.1.0):
+  /vitest-mock-extended@1.3.1(typescript@5.3.3)(vitest@1.1.0):
     resolution: {integrity: sha512-OpghYjh4BDuQ/Mzs3lFMQ1QRk9D8/2O9T47MLUA5eLn7K4RWIy+MfIivYOWEyxjTENjsBnzgMihDjyNalN/K0Q==}
     peerDependencies:
       typescript: 3.x || 4.x || 5.x
       vitest: '>=0.31.1'
     dependencies:
-      ts-essentials: 9.3.2(typescript@5.3.2)
-      typescript: 5.3.2
+      ts-essentials: 9.3.2(typescript@5.3.3)
+      typescript: 5.3.3
       vitest: 1.1.0(@types/node@20.10.3)(happy-dom@13.3.8)(sass@1.69.5)
     dev: true
 
@@ -5378,10 +5378,10 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      vue: 3.4.3(typescript@5.3.2)
+      vue: 3.4.3(typescript@5.3.3)
     dev: true
 
-  /vue@3.3.10(typescript@5.3.2):
+  /vue@3.3.10(typescript@5.3.3):
     resolution: {integrity: sha512-zg6SIXZdTBwiqCw/1p+m04VyHjLfwtjwz8N57sPaBhEex31ND0RYECVOC1YrRwMRmxFf5T1dabl6SGUbMKKuVw==}
     peerDependencies:
       typescript: '*'
@@ -5394,10 +5394,10 @@ packages:
       '@vue/runtime-dom': 3.3.10
       '@vue/server-renderer': 3.3.10(vue@3.3.10)
       '@vue/shared': 3.3.10
-      typescript: 5.3.2
+      typescript: 5.3.3
     dev: true
 
-  /vue@3.4.3(typescript@5.3.2):
+  /vue@3.4.3(typescript@5.3.3):
     resolution: {integrity: sha512-GjN+culMAGv/mUbkIv8zMKItno8npcj5gWlXkSxf1SPTQf8eJ4A+YfHIvQFyL1IfuJcMl3soA7SmN1fRxbf/wA==}
     peerDependencies:
       typescript: '*'
@@ -5410,7 +5410,7 @@ packages:
       '@vue/runtime-dom': 3.4.3
       '@vue/server-renderer': 3.4.3(vue@3.4.3)
       '@vue/shared': 3.4.3
-      typescript: 5.3.2
+      typescript: 5.3.3
     dev: true
 
   /watchpack@2.4.0:
