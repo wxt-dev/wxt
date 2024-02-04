@@ -1,5 +1,4 @@
-import { createHooks } from 'hookable';
-import { ResolvedConfig, Wxt, WxtHooks } from '~/types';
+import { ResolvedConfig, Wxt } from '~/types';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -13,17 +12,12 @@ export let wxt: Wxt;
 export async function registerWxt(config: ResolvedConfig): Promise<void> {
   if (wxt != null) throw Error('Cannot create second instance of Wxt');
 
-  const hooks = createHooks<WxtHooks>();
   wxt = {
     config,
-    hooks,
     get logger() {
       return config.logger;
     },
   };
-
-  wxt.hooks.addHooks(config.hooks);
-  await wxt.hooks.callHook('ready', wxt);
 }
 
 /**

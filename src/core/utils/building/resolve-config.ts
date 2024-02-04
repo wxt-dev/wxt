@@ -140,7 +140,6 @@ export async function resolveConfig(
     dev: {
       reloadCommand,
     },
-    hooks: mergedConfig.hooks ?? {},
   };
 
   const builder = await createViteBuilder(
@@ -192,10 +191,6 @@ function mergeInlineConfig(
     inlineConfig.zip ?? {},
     userConfig.zip ?? {},
   );
-  const hooks: InlineConfig['hooks'] = defu(
-    inlineConfig.hooks ?? {},
-    userConfig.hooks ?? {},
-  );
 
   return {
     root: inlineConfig.root ?? userConfig.root,
@@ -234,7 +229,6 @@ function mergeInlineConfig(
       ...userConfig.dev,
       ...inlineConfig.dev,
     },
-    hooks,
   };
 }
 

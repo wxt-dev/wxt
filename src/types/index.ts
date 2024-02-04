@@ -6,7 +6,6 @@ import { ContentScriptContext } from '../client/content-scripts/content-script-c
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
-import { Hookable, NestedHooks } from 'hookable';
 
 export interface InlineConfig {
   /**
@@ -262,10 +261,6 @@ export interface InlineConfig {
      */
     reloadCommand?: string | false;
   };
-  /**
-   * Project hooks for running logic during the build process.
-   */
-  hooks?: NestedHooks<WxtHooks>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -856,7 +851,6 @@ export interface WxtHooks {
 
 export interface Wxt {
   config: ResolvedConfig;
-  hooks: Hookable<WxtHooks>;
   /**
    * Alias for config.logger
    */
@@ -910,7 +904,6 @@ export interface ResolvedConfig {
   dev: {
     reloadCommand: string | false;
   };
-  hooks: Partial<WxtHooks>;
 }
 
 export interface FsCache {
