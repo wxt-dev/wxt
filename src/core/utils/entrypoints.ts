@@ -1,10 +1,4 @@
-import {
-  ContentScriptEntrypoint,
-  Entrypoint,
-  InternalConfig,
-  PerBrowserOption,
-  TargetBrowser,
-} from '~/types';
+import { Entrypoint, PerBrowserOption, TargetBrowser } from '~/types';
 import path, { relative, resolve } from 'node:path';
 import { normalizePath } from './paths';
 

@@ -13,4 +13,3 @@ export * from './webextensionPolyfillMock';
 export * from './excludeBrowserPolyfill';
 export * from './entrypointGroupGlobals';
 export * from './defineImportMeta';
-export * from './esmContentScripts';

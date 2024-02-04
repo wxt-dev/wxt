@@ -236,7 +236,6 @@ function mountUi(
  * Load the CSS for the current entrypoint.
  */
 async function loadCss(ctx: ContentScriptContext): Promise<string> {
-  console.log({ url: import.meta.url, id: browser.runtime.id, ctx });
   const url = browser.runtime.getURL(
     `/content-scripts/${ctx.contentScriptName}.css`,
   );

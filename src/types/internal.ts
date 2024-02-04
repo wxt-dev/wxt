@@ -76,5 +76,6 @@ export interface ExtensionRunner {
 export type VirtualEntrypointType =
   | 'content-script-main-world'
   | 'content-script-isolated-world'
+  | 'content-script-loader'
   | 'background'
   | 'unlisted-script';

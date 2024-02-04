@@ -57,6 +57,7 @@ export async function createViteBuilder(
       wxtPlugins.virtualEntrypoint('background', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-isolated-world', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-main-world', wxtConfig),
+      wxtPlugins.virtualEntrypoint('content-script-loader', wxtConfig),
       wxtPlugins.virtualEntrypoint('unlisted-script', wxtConfig),
       wxtPlugins.devServerGlobals(wxtConfig),
       wxtPlugins.tsconfigPaths(wxtConfig),
@@ -142,12 +143,20 @@ export async function createViteBuilder(
       plugins: [
         wxtPlugins.multipageMove(entrypoints, wxtConfig),
         wxtPlugins.entrypointGroupGlobals(entrypoints),
-        wxtPlugins.esmContentScripts(entrypoints),
       ],
       build: {
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
             input[entry.name] = getRollupEntry(entry);
+            if (
+              entry.type === 'content-script' &&
+              entry.options.type === 'module'
+            ) {
+              input[`content-scripts/${entry.name}-loader`] = getRollupEntry(
+                entry,
+                true,
+              );
+            }
             return input;
           }, {}),
           output: {
@@ -276,7 +285,7 @@ function getBuildOutputChunks(
  * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
  * be passed as an input to rollup.
  */
-function getRollupEntry(entrypoint: Entrypoint): string {
+function getRollupEntry(entrypoint: Entrypoint, loader = false): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
   switch (entrypoint.type) {
     case 'background':
@@ -284,10 +293,14 @@ function getRollupEntry(entrypoint: Entrypoint): string {
       virtualEntrypointType = entrypoint.type;
       break;
     case 'content-script':
-      virtualEntrypointType =
-        entrypoint.options.world === 'MAIN'
-          ? 'content-script-main-world'
-          : 'content-script-isolated-world';
+      if (loader) {
+        virtualEntrypointType = 'content-script-loader';
+      } else {
+        virtualEntrypointType =
+          entrypoint.options.world === 'MAIN'
+            ? 'content-script-main-world'
+            : 'content-script-isolated-world';
+      }
       break;
   }
   return virtualEntrypointType
