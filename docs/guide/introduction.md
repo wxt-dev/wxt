@@ -7,7 +7,7 @@ head:
 
 # Introduction
 
-WXT is a free and open source framework for building web extensions in an conventional, intuative, and safe way **_for all browsers_**.
+WXT is a free and open source framework for building web extensions in an conventional, intuitive, and safe way **_for all browsers_**.
 
 WXT is based of [Nuxt](https://nuxt.com), and aims to provide the same great DX with TypeScript, auto-imports, and an opinionated project structure.
 
