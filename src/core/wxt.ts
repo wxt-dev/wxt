@@ -15,8 +15,6 @@ export async function registerWxt(
   inlineConfig: InlineConfig = {},
   server?: WxtDevServer,
 ): Promise<void> {
-  if (wxt != null) throw Error('Cannot register second instance of Wxt');
-
   const config = await resolveConfig(inlineConfig, command, server);
 
   wxt = {
