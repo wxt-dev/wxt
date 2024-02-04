@@ -85,9 +85,11 @@ export class TestProject {
     await zip({ ...config, root: this.root });
   }
 
-  async createServer(config: InlineConfig = {}) {
+  async startServer(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    return await createServer({ ...config, root: this.root });
+    const server = await createServer({ ...config, root: this.root });
+    await server.start();
+    return server;
   }
 
   private async writeProjectToDisk() {

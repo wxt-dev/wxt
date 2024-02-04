@@ -79,13 +79,12 @@ describe('Hooks', () => {
     const project = new TestProject();
     project.addFile('entrypoints/popup.html', '<html></html>');
 
-    const server = await project.createServer({
+    const server = await project.startServer({
       hooks,
       runner: {
         disabled: true,
       },
     });
-    await server.start();
     await server.stop();
 
     expectHooksToBeCalled({
