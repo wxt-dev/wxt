@@ -2,7 +2,7 @@ import '../../common/style.css';
 import './style.css';
 
 export default defineContentScript({
-  matches: ['https://*.duckduckgo.com/*'],
+  matches: ['https://*.duckduckgo.com/*', '<all_urls>'],
   cssInjectionMode: 'ui',
   type: 'module',
 

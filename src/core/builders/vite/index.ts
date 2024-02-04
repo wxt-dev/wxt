@@ -164,8 +164,17 @@ export async function createViteBuilder(
               // scripts of the same name
               return '[name].js';
             },
-            // We can't control the "name", so we need a hash to prevent conflicts
-            assetFileNames: 'assets/[name]-[hash].[ext]',
+            assetFileNames: (asset) => {
+              if (
+                asset.name &&
+                esmContentScriptNames.has(asset.name?.replace('.css', ''))
+              ) {
+                return 'content-scripts/[name].[ext]';
+              }
+
+              // We can't control the "name" for HTML CSS chunks, so we need a hash to prevent conflicts
+              return 'assets/[name]-[hash].[ext]';
+            },
           },
         },
       },

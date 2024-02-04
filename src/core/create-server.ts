@@ -6,10 +6,7 @@ import {
   ServerInfo,
   WxtDevServer,
 } from '~/types';
-import {
-  getEntrypointBundlePath,
-  resolvePerBrowserOption,
-} from '~/core/utils/entrypoints';
+import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 import {
   getContentScriptCssFiles,
   getContentScriptsCssMap,
@@ -26,6 +23,11 @@ import { consola } from 'consola';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
+import {
+  getContentScriptJs,
+  mapEntrypointToRegisteredContentScript,
+} from './utils/content-scripts';
+import { toArray } from './utils/arrays';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -245,28 +247,18 @@ function reloadContentScripts(
     steps.forEach((step) => {
       if (server.currentOutput == null) return;
 
-      const entry = step.entrypoints;
-      if (Array.isArray(entry) || entry.type !== 'content-script') return;
+      toArray(step.entrypoints).forEach((entry) => {
+        if (entry.type !== 'content-script') return;
 
-      const js = [getEntrypointBundlePath(entry, config.outDir, '.js')];
-      const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
-      const css = getContentScriptCssFiles([entry], cssMap);
+        const js = getContentScriptJs(config, entry);
+        const cssMap = getContentScriptsCssMap(server.currentOutput!, [entry]);
+        const css = getContentScriptCssFiles([entry], cssMap);
 
-      server.reloadContentScript({
-        allFrames: resolvePerBrowserOption(
-          entry.options.allFrames,
-          config.browser,
-        ),
-        excludeMatches: resolvePerBrowserOption(
-          entry.options.excludeMatches,
-          config.browser,
-        ),
-        matches: resolvePerBrowserOption(entry.options.matches, config.browser),
-        runAt: resolvePerBrowserOption(entry.options.runAt, config.browser),
-        // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
-        world: resolvePerBrowserOption(entry.options.world, config.browser),
-        js,
-        css,
+        server.reloadContentScript({
+          ...mapEntrypointToRegisteredContentScript(entry.options, config),
+          js,
+          css,
+        });
       });
     });
   } else {

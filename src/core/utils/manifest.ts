@@ -16,6 +16,7 @@ import {
 } from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
 import {
+  getContentScriptJs,
   hashContentScriptOptions,
   mapWxtOptionsToContentScript,
 } from './content-scripts';
@@ -363,9 +364,7 @@ function addEntrypoints(
         ([, scripts]) => ({
           ...mapWxtOptionsToContentScript(scripts[0].options, config),
           css: getContentScriptCssFiles(scripts, cssMap),
-          js: scripts.map((entry) =>
-            getEntrypointBundlePath(entry, config.outDir, '.js'),
-          ),
+          js: scripts.flatMap((entry) => getContentScriptJs(config, entry)),
         }),
       );
       if (newContentScripts.length >= 0) {
@@ -374,7 +373,7 @@ function addEntrypoints(
       }
     }
 
-    const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
+    const contentScriptCssResources = getContentScriptWebAccessibleResources(
       config,
       contentScripts,
       cssMap,
@@ -495,8 +494,11 @@ export function getContentScriptCssFiles(
  * Content scripts configured with `cssInjectionMode: "ui"` need to add their CSS files to web
  * accessible resources so they can be fetched as text and added to shadow roots that the UI is
  * added to.
+ *
+ * ESM content scripts also need to load scripts that are web accessible. `chunks/*` and
+ * `content-scripts/<name>.js` or else the dynamic import will fail.
  */
-export function getContentScriptCssWebAccessibleResources(
+export function getContentScriptWebAccessibleResources(
   config: InternalConfig,
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
@@ -504,25 +506,69 @@ export function getContentScriptCssWebAccessibleResources(
   const resources: any[] = [];
 
   contentScripts.forEach((script) => {
-    if (script.options.cssInjectionMode !== 'ui') return;
-
-    const cssFile = contentScriptCssMap[script.name];
-    if (cssFile == null) return;
-
-    if (config.manifestVersion === 2) {
-      resources.push(cssFile);
-    } else {
-      resources.push({
-        resources: [cssFile],
-        matches: resolvePerBrowserOption(
-          script.options.matches,
-          config.browser,
-        ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
-      });
-    }
+    addContentScriptUiWebAccessibleResource(
+      config,
+      script,
+      resources,
+      contentScriptCssMap,
+    );
+    addContentScriptEsmWebAccessibleResource(config, script, resources);
   });
 
   return resources;
+}
+
+function addContentScriptUiWebAccessibleResource(
+  config: InternalConfig,
+  entrypoint: ContentScriptEntrypoint,
+  resources: any[],
+  contentScriptCssMap: Record<string, string | undefined>,
+): any | undefined {
+  if (entrypoint.options.cssInjectionMode !== 'ui') return;
+
+  const cssFile = contentScriptCssMap[entrypoint.name];
+  if (cssFile == null) return;
+
+  if (config.manifestVersion === 2) {
+    resources.push(cssFile);
+  } else {
+    resources.push({
+      resources: [cssFile],
+      matches: getWebAccessibleMatches(config, entrypoint),
+    });
+  }
+}
+
+function addContentScriptEsmWebAccessibleResource(
+  config: InternalConfig,
+  entrypoint: ContentScriptEntrypoint,
+  resources: any[],
+): any | undefined {
+  if (entrypoint.options.type !== 'module') return;
+
+  const paths = [
+    getEntrypointBundlePath(entrypoint, config.outDir, '.js'),
+    // Cheating here and adding all chunks instead of just the ones used by the content script
+    'chunks/*',
+  ];
+  if (config.manifestVersion === 2) {
+    resources.push(...paths);
+  } else {
+    resources.push({
+      resources: paths,
+      matches: getWebAccessibleMatches(config, entrypoint),
+    });
+  }
+}
+
+function getWebAccessibleMatches(
+  config: InternalConfig,
+  entrypoint: ContentScriptEntrypoint,
+): string[] {
+  return resolvePerBrowserOption(
+    entrypoint.options.matches,
+    config.browser,
+  ).map((matchPattern) => stripPathFromMatchPattern(matchPattern));
 }
 
 /**

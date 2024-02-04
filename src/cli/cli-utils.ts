@@ -1,5 +1,6 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels } from 'consola';
+import { filterTruthy, toArray } from '~/core/utils/arrays';
 import { getInternalConfig } from '~/core/utils/building';
 import { exec } from '~/core/utils/exec';
 import { printHeader } from '~/core/utils/log';
@@ -57,8 +58,8 @@ export function getArrayFromFlags<T>(
   flags: any,
   name: string,
 ): T[] | undefined {
-  const array = [flags[name]].flat() as Array<T | undefined>;
-  const result = array.filter((item) => item != null) as T[];
+  const array = toArray(flags[name]) as Array<T | undefined>;
+  const result = filterTruthy(array);
   return result.length ? result : undefined;
 }
 

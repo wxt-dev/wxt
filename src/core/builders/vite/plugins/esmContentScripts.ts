@@ -1,4 +1,5 @@
 import * as vite from 'vite';
+import { toArray } from '~/core/utils/arrays';
 import { Entrypoint, EntrypointGroup } from '~/types';
 
 /**
@@ -8,8 +9,7 @@ export function esmContentScripts(group: EntrypointGroup): vite.Plugin {
   return {
     name: 'wxt:esm-content-scripts',
     generateBundle(_options, bundle, _isWrite) {
-      [group]
-        .flat()
+      toArray(group)
         .filter(
           (entrypoint) =>
             entrypoint.type === 'content-script' &&

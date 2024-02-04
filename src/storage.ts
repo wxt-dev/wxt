@@ -7,6 +7,7 @@
  */
 import { Storage, browser } from '~/browser';
 import { dequal } from 'dequal/lite';
+import { toArray } from './core/utils/arrays';
 
 export const storage = createStorage();
 
@@ -106,7 +107,7 @@ function createStorage(): WxtStorage {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      [properties].flat().forEach((field) => delete newFields[field]);
+      toArray(properties).forEach((field) => delete newFields[field]);
       await driver.setItem(metaKey, newFields);
     }
   };

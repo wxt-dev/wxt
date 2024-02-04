@@ -6,5 +6,10 @@ declare const __DEV_SERVER_PORT__: string;
 interface ImportMetaEnv {
   readonly COMMAND: 'build' | 'serve';
   readonly MANIFEST_VERSION: 2 | 3;
-  readonly ENTRYPOINT: string;
 }
+
+/**
+ * Not defined by Vite, since it needs to be different for different entrypoints. Instead, this is
+ * replaced only in virtual entrypoints when loading the template as text.
+ */
+declare const __ENTRYPOINT__: string;

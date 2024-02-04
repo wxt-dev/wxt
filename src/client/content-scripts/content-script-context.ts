@@ -19,7 +19,7 @@ export class ContentScriptContext implements AbortController {
   #locationWatcher = createLocationWatcher(this);
 
   constructor(
-    private readonly contentScriptName: string,
+    readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
     this.#abortController = new AbortController();

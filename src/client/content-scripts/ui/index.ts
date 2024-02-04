@@ -97,7 +97,7 @@ export async function createShadowRootUi<TMounted>(
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
   const css = [options.css ?? ''];
   if (ctx.options?.cssInjectionMode === 'ui') {
-    const entryCss = await loadCss();
+    const entryCss = await loadCss(ctx);
     // Replace :root selectors with :host since we're in a shadow root
     css.push(entryCss.replaceAll(':root', ':host'));
   }
@@ -235,9 +235,10 @@ function mountUi(
 /**
  * Load the CSS for the current entrypoint.
  */
-async function loadCss(): Promise<string> {
+async function loadCss(ctx: ContentScriptContext): Promise<string> {
+  console.log({ url: import.meta.url, id: browser.runtime.id, ctx });
   const url = browser.runtime.getURL(
-    `/content-scripts/${import.meta.env.ENTRYPOINT}.css`,
+    `/content-scripts/${ctx.contentScriptName}.css`,
   );
   try {
     const res = await fetch(url);
