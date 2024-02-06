@@ -236,6 +236,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     analysis: {
       enabled: false,
       template: 'treemap',
+      outputFile: 'stats.html',
     },
     zip: {
       artifactTemplate: '{{name}}-{{version}}.zip',
