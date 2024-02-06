@@ -21,7 +21,6 @@ import {
 import { getPackageJson } from './package';
 import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
-import { produce } from 'immer';
 import defu from 'defu';
 import { wxt } from '../wxt';
 
@@ -78,7 +77,7 @@ export async function generateManifest(
   };
   const userManifest = wxt.config.manifest;
 
-  const manifest = defu(
+  let manifest = defu(
     userManifest,
     baseManifest,
   ) as Manifest.WebExtensionManifest;
@@ -113,21 +112,29 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
-  const finalManifest = produce(manifest, wxt.config.transformManifest);
-  await wxt.hooks.callHook('build:manifestGenerated', wxt, finalManifest);
+  // TODO: Remove in v1
+  wxt.config.transformManifest(manifest);
+  await wxt.hooks.callHook('build:manifestGenerated', wxt, manifest);
 
-  if (finalManifest.name == null)
+  if (wxt.config.manifestVersion === 2)
+    convertWebAccessibleResourcesToMv2(manifest);
+
+  if (wxt.config.manifestVersion === 3) {
+    validateMv3WebAccessbileResources(manifest);
+  }
+
+  if (manifest.name == null)
     throw Error(
       "Manifest 'name' is missing. Either:\n1. Set the name in your <rootDir>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
     );
-  if (finalManifest.version == null) {
+  if (manifest.version == null) {
     throw Error(
       "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
     );
   }
 
   return {
-    manifest: finalManifest,
+    manifest,
     warnings,
   };
 }
@@ -501,7 +508,8 @@ export function getContentScriptCssWebAccessibleResources(
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
 ): any[] {
-  const resources: any[] = [];
+  const resources: Manifest.WebExtensionManifestWebAccessibleResourcesC2ItemType[] =
+    [];
 
   contentScripts.forEach((script) => {
     if (script.options.cssInjectionMode !== 'ui') return;
@@ -509,17 +517,13 @@ export function getContentScriptCssWebAccessibleResources(
     const cssFile = contentScriptCssMap[script.name];
     if (cssFile == null) return;
 
-    if (wxt.config.manifestVersion === 2) {
-      resources.push(cssFile);
-    } else {
-      resources.push({
-        resources: [cssFile],
-        matches: resolvePerBrowserOption(
-          script.options.matches,
-          wxt.config.browser,
-        ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
-      });
-    }
+    resources.push({
+      resources: [cssFile],
+      matches: resolvePerBrowserOption(
+        script.options.matches,
+        wxt.config.browser,
+      ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
+    });
   });
 
   return resources;
@@ -572,4 +576,44 @@ export function stripPathFromMatchPattern(pattern: string) {
 
   const startOfPath = pattern.indexOf('/', protocolSepIndex + 3);
   return pattern.substring(0, startOfPath) + '/*';
+}
+
+/**
+ * Converts all MV3 web accessible resources to their MV2 forms. MV3 web accessible resources are
+ * generated in this file, and may be defined by the user in their manifest. In both cases, when
+ * targetting MV2, automatically convert their definitions down to the basic MV2 array.
+ */
+export function convertWebAccessibleResourcesToMv2(
+  manifest: Manifest.WebExtensionManifest,
+): void {
+  if (manifest.web_accessible_resources == null) return;
+
+  manifest.web_accessible_resources = Array.from(
+    new Set(
+      manifest.web_accessible_resources.flatMap((item) => {
+        if (typeof item === 'string') return item;
+        return item.resources;
+      }),
+    ),
+  );
+}
+
+/**
+ * Make sure all resources are in MV3 format. If not, add a wanring
+ */
+export function validateMv3WebAccessbileResources(
+  manifest: Manifest.WebExtensionManifest,
+): void {
+  if (manifest.web_accessible_resources == null) return;
+
+  const stringResources = manifest.web_accessible_resources.filter(
+    (item) => typeof item === 'string',
+  );
+  if (stringResources.length > 0) {
+    throw Error(
+      `Non-MV3 web_accessible_resources detected: ${JSON.stringify(
+        stringResources,
+      )}. When manually defining web_accessible_resources, define them as MV3 objects ({ matches: [...], resources: [...] }), and WXT will automatically convert them to MV2 when necessary.`,
+    );
+  }
 }

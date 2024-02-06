@@ -62,9 +62,6 @@ importers:
       hookable:
         specifier: ^5.5.3
         version: 5.5.3
-      immer:
-        specifier: ^10.0.3
-        version: 10.0.3
       is-wsl:
         specifier: ^3.0.0
         version: 3.1.0
@@ -2928,10 +2925,6 @@ packages:
 
   /immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
-    dev: false
-
-  /immer@10.0.3:
-    resolution: {integrity: sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==}
     dev: false
 
   /immutable@4.3.4:
