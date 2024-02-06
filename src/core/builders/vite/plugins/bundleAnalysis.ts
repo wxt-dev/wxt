@@ -1,12 +1,15 @@
 import type * as vite from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { ResolvedConfig } from '~/types';
+import path from 'node:path';
 
 let increment = 0;
 
-export function bundleAnalysis(): vite.Plugin {
+export function bundleAnalysis(
+  config: Omit<ResolvedConfig, 'builder'>,
+): vite.Plugin {
   return visualizer({
-    emitFile: true,
     template: 'raw-data',
-    filename: `stats-${increment++}.json`,
+    filename: path.resolve(config.outDir, `.stats-${increment++}.json`),
   }) as vite.Plugin;
 }
