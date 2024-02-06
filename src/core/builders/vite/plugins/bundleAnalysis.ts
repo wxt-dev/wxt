@@ -10,6 +10,6 @@ export function bundleAnalysis(
 ): vite.Plugin {
   return visualizer({
     template: 'raw-data',
-    filename: path.resolve(config.outDir, `.stats-${increment++}.json`),
+    filename: path.resolve(config.outDir, `stats-${increment++}.json`),
   }) as vite.Plugin;
 }
