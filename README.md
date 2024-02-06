@@ -55,14 +55,11 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 📂 File based entrypoints
 - 🚔 TypeScript
 - 🦾 Auto-imports
-- ⬇️ Download and bundle remote URL imports
+- 🤖 Automated publishing
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
-
-### Coming Soon
-
-- 🤖 Automated publishing
+- ⬇️ Download and bundle remote URL imports
 
 ## Contributors
 
