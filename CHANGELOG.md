@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.16.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.3...v0.16.4)
+
+### 🚀 Enhancements
+
+- Automatically convert MV3 `web_accessible_resources` to MV2 ([#423](https://github.com/wxt-dev/wxt/pull/423))
+- Add option to customize the analysis output filename ([#426](https://github.com/wxt-dev/wxt/pull/426))
+
+### 🩹 Fixes
+
+- Don't use immer for `transformManifest` ([#424](https://github.com/wxt-dev/wxt/pull/424))
+- Exclude analysis files from the build summary ([#425](https://github.com/wxt-dev/wxt/pull/425))
+
+### 🏡 Chore
+
+- Fix fake path in test data generator ([d0f1c70](https://github.com/wxt-dev/wxt/commit/d0f1c70))
+
 ## v0.16.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.2...v0.16.3)
