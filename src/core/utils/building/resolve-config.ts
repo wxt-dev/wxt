@@ -129,6 +129,10 @@ export async function resolveConfig(
     analysis: {
       enabled: mergedConfig.analysis?.enabled ?? false,
       template: mergedConfig.analysis?.template ?? 'treemap',
+      outputFile: path.resolve(
+        root,
+        mergedConfig.analysis?.outputFile ?? 'stats.html',
+      ),
     },
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
@@ -216,9 +220,8 @@ function mergeInlineConfig(
     outDir: inlineConfig.outDir ?? userConfig.outDir,
     zip,
     analysis: {
-      enabled: inlineConfig.analysis?.enabled ?? userConfig.analysis?.enabled,
-      template:
-        inlineConfig.analysis?.template ?? userConfig.analysis?.template,
+      ...userConfig.analysis,
+      ...inlineConfig.analysis,
     },
     alias: {
       ...userConfig.alias,

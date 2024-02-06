@@ -209,6 +209,12 @@ export interface InlineConfig {
      * @default "treemap"
      */
     template?: PluginVisualizerOptions['template'];
+    /**
+     * Name of the output HTML file. Relative to the project's root directory.
+     *
+     * @default "stats.html"
+     */
+    outputFile?: string;
   };
   /**
    * Add additional paths to the `.wxt/tsconfig.json`. Use this instead of overwriting the `paths`
@@ -895,6 +901,8 @@ export interface ResolvedConfig {
   analysis: {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
+    /** Absolute file path */
+    outputFile: string;
   };
   userConfigMetadata: Omit<C12ResolvedConfig<UserConfig>, 'config'>;
   /**

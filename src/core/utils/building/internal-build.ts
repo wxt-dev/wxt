@@ -77,8 +77,9 @@ export async function internalBuild(): Promise<BuildOutput> {
 
   if (wxt.config.analysis.enabled) {
     await combineAnalysisStats();
+    const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
     wxt.logger.info(
-      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow('stats.html')}`,
+      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
     );
   }
 
@@ -94,7 +95,13 @@ async function combineAnalysisStats(): Promise<void> {
 
   await exec(
     'rollup-plugin-visualizer',
-    [...absolutePaths, '--template', wxt.config.analysis.template],
+    [
+      ...absolutePaths,
+      '--template',
+      wxt.config.analysis.template,
+      '--filename',
+      wxt.config.analysis.outputFile,
+    ],
     { cwd: wxt.config.root, stdio: 'inherit' },
   );
 }
