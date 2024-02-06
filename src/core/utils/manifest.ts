@@ -21,7 +21,6 @@ import {
 import { getPackageJson } from './package';
 import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
-import { produce } from 'immer';
 import defu from 'defu';
 import { wxt } from '../wxt';
 
@@ -113,21 +112,22 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
-  const finalManifest = produce(manifest, wxt.config.transformManifest);
-  await wxt.hooks.callHook('build:manifestGenerated', wxt, finalManifest);
+  // TODO: Remove in v1
+  wxt.config.transformManifest(manifest);
+  await wxt.hooks.callHook('build:manifestGenerated', wxt, manifest);
 
-  if (finalManifest.name == null)
+  if (manifest.name == null)
     throw Error(
       "Manifest 'name' is missing. Either:\n1. Set the name in your <rootDir>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
     );
-  if (finalManifest.version == null) {
+  if (manifest.version == null) {
     throw Error(
       "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
     );
   }
 
   return {
-    manifest: finalManifest,
+    manifest,
     warnings,
   };
 }
