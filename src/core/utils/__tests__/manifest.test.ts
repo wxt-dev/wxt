@@ -851,6 +851,55 @@ describe('Manifest Utils', () => {
           'content-scripts/one.css',
         ]);
       });
+
+      it('should convert mv3 items to mv2 strings automatically', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 2,
+            manifest: {
+              web_accessible_resources: [
+                {
+                  matches: ['*://*/*'],
+                  resources: ['/icon-128.png'],
+                },
+                {
+                  matches: ['https://google.com'],
+                  resources: ['/icon-128.png', '/icon-32.png'],
+                },
+              ],
+            },
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [],
+          fakeBuildOutput(),
+        );
+
+        expect(actual.web_accessible_resources).toEqual([
+          '/icon-128.png',
+          '/icon-32.png',
+        ]);
+      });
+
+      it('should convert mv2 strings to mv3 items with a warning automatically', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {
+              web_accessible_resources: ['/icon.svg'],
+            },
+          },
+        });
+
+        await expect(() =>
+          generateManifest([], fakeBuildOutput()),
+        ).rejects.toThrow(
+          'Non-MV3 web_accessible_resources detected: ["/icon.svg"]. When manually defining web_accessible_resources, define them as MV3 objects ({ matches: [...], resources: [...] }), and WXT will automatically convert them to MV2 when necessary.',
+        );
+      });
     });
 
     describe('transformManifest option', () => {
