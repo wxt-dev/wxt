@@ -133,6 +133,7 @@ export async function resolveConfig(
         root,
         mergedConfig.analysis?.outputFile ?? 'stats.html',
       ),
+      keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
     },
     userConfigMetadata: userConfigMetadata ?? {},
     alias,

@@ -8,7 +8,7 @@ import { printBuildSummary } from '~/core/utils/log';
 import glob from 'fast-glob';
 import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
-import { relative } from 'node:path';
+import path, { relative } from 'node:path';
 import {
   ValidationError,
   ValidationResult,
@@ -104,7 +104,28 @@ async function combineAnalysisStats(): Promise<void> {
     ],
     { cwd: wxt.config.root, stdio: 'inherit' },
   );
-  await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+
+  if (wxt.config?.analysis?.keepArtifacts) {
+    await Promise.all(
+      absolutePaths.map((statsFile) => {
+        const outputDir = path.dirname(
+          wxt.config?.analysis?.outputFile ?? wxt.config.outDir,
+        );
+
+        // Rename stats*.json artifacts based on outputFile filename
+        const cleanedStatsFilename = path
+          .parse(statsFile)
+          .name.replace('stats-', '');
+        const artifactDestinationPath = `${outputDir}/${
+          path.parse(wxt.config?.analysis?.outputFile).name
+        }_${cleanedStatsFilename}.json`;
+
+        fs.move(statsFile, artifactDestinationPath, { overwrite: true });
+      }),
+    );
+  } else {
+    await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+  }
 }
 
 function printValidationResults({
