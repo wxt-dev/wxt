@@ -66,7 +66,7 @@ export async function createViteBuilder(
       wxtPlugins.defineImportMeta(),
     );
     if (wxtConfig.analysis.enabled) {
-      config.plugins.push(wxtPlugins.bundleAnalysis());
+      config.plugins.push(wxtPlugins.bundleAnalysis(wxtConfig));
     }
 
     return config;

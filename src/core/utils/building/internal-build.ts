@@ -97,6 +97,7 @@ async function combineAnalysisStats(): Promise<void> {
     [...absolutePaths, '--template', wxt.config.analysis.template],
     { cwd: wxt.config.root, stdio: 'inherit' },
   );
+  await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
 }
 
 function printValidationResults({
