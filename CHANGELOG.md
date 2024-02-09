@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.16.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.4...v0.16.5)
+
+### 🩹 Fixes
+
+- Support node 20 when running `wxt submit` ([e835502](https://github.com/wxt-dev/wxt/commit/e835502))
+
+### 📖 Documentation
+
+- Remove "coming soon" from automated publishing feature ([2b374b9](https://github.com/wxt-dev/wxt/commit/2b374b9))
+
 ## v0.16.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.3...v0.16.4)
