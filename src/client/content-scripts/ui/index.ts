@@ -217,10 +217,10 @@ function mountUi(
       anchor.replaceWith(root);
       break;
     case 'after':
-      anchor.replaceWith(anchor, root);
+      anchor.parentElement?.insertBefore(root, anchor.nextElementSibling);
       break;
     case 'before':
-      anchor.replaceWith(root, anchor);
+      anchor.parentElement?.insertBefore(root, anchor);
       break;
     default:
       options.append(anchor, root);
