@@ -83,6 +83,6 @@ Normally, to manually reload an extension, you have to visit `chrome://extension
 
 When running `wxt` command to start the dev server, WXT adds a keyboard shortcut, `ctrl+E` for Windows/Linux and `cmd+E` for Mac, that reloads the extension when pressed, without visiting `chrome://extensions`.
 
-:::note
+:::info
 This shortcut is only available during development, and is not be added to your extension when running `wxt build` or `wxt-zip`.
 :::
