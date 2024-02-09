@@ -211,11 +211,7 @@ function mountUi(
       anchor.append(root);
       break;
     case 'first':
-      if (anchor.firstChild) {
-        anchor.insertBefore(root, anchor.firstChild);
-      } else {
-        anchor.append(root);
-      }
+      anchor.prepend(root);
       break;
     case 'replace':
       anchor.replaceWith(root);
