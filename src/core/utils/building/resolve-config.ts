@@ -100,6 +100,13 @@ export async function resolveConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
+  const analysisOutputFile = path.resolve(
+    root,
+    mergedConfig.analysis?.outputFile ?? 'stats.html',
+  );
+  const analysisOutputDir = path.dirname(analysisOutputFile);
+  const analysisOutputName = path.parse(analysisOutputFile).name;
+
   const finalConfig: Omit<ResolvedConfig, 'builder'> = {
     browser,
     command,
@@ -129,10 +136,10 @@ export async function resolveConfig(
     analysis: {
       enabled: mergedConfig.analysis?.enabled ?? false,
       template: mergedConfig.analysis?.template ?? 'treemap',
-      outputFile: path.resolve(
-        root,
-        mergedConfig.analysis?.outputFile ?? 'stats.html',
-      ),
+      outputFile: analysisOutputFile,
+      outputDir: analysisOutputDir,
+      outputName: analysisOutputName,
+      keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
     },
     userConfigMetadata: userConfigMetadata ?? {},
     alias,

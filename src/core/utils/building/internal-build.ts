@@ -87,8 +87,8 @@ export async function internalBuild(): Promise<BuildOutput> {
 }
 
 async function combineAnalysisStats(): Promise<void> {
-  const unixFiles = await glob(`stats-*.json`, {
-    cwd: wxt.config.outDir,
+  const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
+    cwd: wxt.config.analysis.outputDir,
     absolute: true,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
@@ -104,7 +104,10 @@ async function combineAnalysisStats(): Promise<void> {
     ],
     { cwd: wxt.config.root, stdio: 'inherit' },
   );
-  await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+
+  if (!wxt.config.analysis.keepArtifacts) {
+    await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+  }
 }
 
 function printValidationResults({
