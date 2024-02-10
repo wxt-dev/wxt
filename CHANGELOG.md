@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.16.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.5...v0.16.6)
+
+### 🚀 Enhancements
+
+- Add option to customize the analysis artifacts output ([#431](https://github.com/wxt-dev/wxt/pull/431))
+
+### 🩹 Fixes
+
+- Use `insertBefore` on mounting content script UI ([ba85fdf](https://github.com/wxt-dev/wxt/commit/ba85fdf))
+
+### 💅 Refactors
+
+- Use `Element.prepend` on mounting UI ([295f860](https://github.com/wxt-dev/wxt/commit/295f860))
+
+### 📖 Documentation
+
+- Fix `createShadowRootUi` unmount calls ([946072f](https://github.com/wxt-dev/wxt/commit/946072f))
+
+### 🏡 Chore
+
+- Enable skipped test since it works now ([6b8dfdf](https://github.com/wxt-dev/wxt/commit/6b8dfdf))
+
+### ❤️ Contributors
+
+- Lionelhorn 
+- Okou
+
 ## v0.16.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.4...v0.16.5)
