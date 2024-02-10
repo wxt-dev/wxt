@@ -233,7 +233,7 @@ export default defineContentScript({
       },
       onRemove: (app) => {
         // Unmount the app when the UI is removed
-        app.unmount();
+        app?.unmount();
       },
     });
 
@@ -268,7 +268,7 @@ export default defineContentScript({
       },
       onRemove: (root) => {
         // Unmount the root when the UI is removed
-        root.unmount();
+        root?.unmount();
       },
     });
 
@@ -303,7 +303,7 @@ export default defineContentScript({
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
-        app.$destroy();
+        app?.$destroy();
       },
     });
 
@@ -335,7 +335,7 @@ export default defineContentScript({
       },
       onRemove: (unmount) => {
         // Unmount the app when the UI is removed
-        unmount();
+        unmount?.();
       },
     });
 
