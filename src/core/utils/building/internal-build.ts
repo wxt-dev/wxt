@@ -8,7 +8,7 @@ import { printBuildSummary } from '~/core/utils/log';
 import glob from 'fast-glob';
 import { unnormalizePath } from '~/core/utils/paths';
 import { rebuild } from './rebuild';
-import path, { relative } from 'node:path';
+import { relative } from 'node:path';
 import {
   ValidationError,
   ValidationResult,
