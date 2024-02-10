@@ -13,3 +13,10 @@ export function bundleAnalysis(
     filename: path.resolve(config.outDir, `stats-${increment++}.json`),
   }) as vite.Plugin;
 }
+
+/**
+ * @deprecated FOR TESTING ONLY.
+ */
+export function resetBundleIncrement() {
+  increment = 0;
+}
