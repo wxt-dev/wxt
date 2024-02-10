@@ -367,7 +367,7 @@ describe('Content Script UIs', () => {
       });
     });
 
-    describe.todo('after', () => {
+    describe('after', () => {
       it('should append the UI after the anchor', () => {
         const ui = createIntegratedUi(ctx, {
           position: 'inline',
