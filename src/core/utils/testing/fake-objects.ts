@@ -237,6 +237,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       enabled: false,
       template: 'treemap',
       outputFile: fakeFile(),
+      outputDir: fakeDir(),
+      outputName: 'stats',
       keepArtifacts: false,
     },
     zip: {
