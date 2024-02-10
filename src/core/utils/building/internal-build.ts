@@ -87,8 +87,8 @@ export async function internalBuild(): Promise<BuildOutput> {
 }
 
 async function combineAnalysisStats(): Promise<void> {
-  const unixFiles = await glob(`stats-*.json`, {
-    cwd: wxt.config.outDir,
+  const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
+    cwd: wxt.config.analysis.outputDir,
     absolute: true,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
@@ -105,25 +105,7 @@ async function combineAnalysisStats(): Promise<void> {
     { cwd: wxt.config.root, stdio: 'inherit' },
   );
 
-  if (wxt.config?.analysis?.keepArtifacts) {
-    await Promise.all(
-      absolutePaths.map((statsFile) => {
-        const outputDir = path.dirname(
-          wxt.config?.analysis?.outputFile ?? wxt.config.outDir,
-        );
-
-        // Rename stats*.json artifacts based on outputFile filename
-        const cleanedStatsFilename = path
-          .parse(statsFile)
-          .name.replace('stats-', '');
-        const artifactDestinationPath = `${outputDir}/${
-          path.parse(wxt.config?.analysis?.outputFile).name
-        }_${cleanedStatsFilename}.json`;
-
-        fs.move(statsFile, artifactDestinationPath, { overwrite: true });
-      }),
-    );
-  } else {
+  if (!wxt.config.analysis.keepArtifacts) {
     await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
   }
 }

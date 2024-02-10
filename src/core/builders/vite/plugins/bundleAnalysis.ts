@@ -10,8 +10,11 @@ export function bundleAnalysis(
 ): vite.Plugin {
   return visualizer({
     template: 'raw-data',
-    filename: path.resolve(config.outDir, `stats-${increment++}.json`),
-  }) as vite.Plugin;
+    filename: path.resolve(
+      config.analysis.outputDir,
+      `${config.analysis.outputName}-${increment++}.json`,
+    ),
+  });
 }
 
 /**

@@ -212,11 +212,17 @@ export interface InlineConfig {
     /**
      * Name of the output HTML file. Relative to the project's root directory.
      *
+     * Changing the filename of the outputFile also effects the names of the artifacts generated
+     * when setting `keepArtifacts` to true:
+     * - "stats.html" => "stats-*.json"
+     * - "stats/bundle.html" => "bundle-*.json"
+     * - ".analysis/index.html" => "index-*.json"
+     *
      * @default "stats.html"
      */
     outputFile?: string;
     /**
-     * By default, the `stats-*.json` files generated during bundle analysis are deleted. Set to
+     * By default, the `stats-*.json` artifacts generated during bundle analysis are deleted. Set to
      * `true` to keep them.
      *
      * One stats file is output per build step.
@@ -910,8 +916,12 @@ export interface ResolvedConfig {
   analysis: {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
-    /** Absolute file path */
+    /** Absolute file path to the `stats.html` file */
     outputFile: string;
+    /** The directory where the final `stats.html` file is located */
+    outputDir: string;
+    /** Name of the `stats.html` file, minus ".html" */
+    outputName: string;
     keepArtifacts: boolean;
   };
   userConfigMetadata: Omit<C12ResolvedConfig<UserConfig>, 'config'>;
