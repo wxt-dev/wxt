@@ -6,7 +6,7 @@ title: Next-gen Web Extension Framework
 hero:
   name: WXT
   text: Next-gen Web Extension Framework
-  tagline: An open source tool that makes Chrome Extension devlopment faster than ever before.
+  tagline: An open source tool that makes Chrome Extension development faster than ever before.
   image:
     src: /hero-logo.svg
     alt: WXT
