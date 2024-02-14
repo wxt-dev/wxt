@@ -26,7 +26,6 @@ export default defineContentScript({
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Append children to the container
         const app = document.createElement('p');
@@ -52,7 +51,6 @@ export default defineContentScript({
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Create the app and mount it to the UI container
         const app = createApp(App);
@@ -82,7 +80,6 @@ export default defineContentScript({
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Create a root on the UI container and render a component
         const root = ReactDOM.createRoot(container);
@@ -111,7 +108,6 @@ export default defineContentScript({
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
         const app = new App({
@@ -141,7 +137,6 @@ export default defineContentScript({
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Render your app to the UI container
         const unmount = render(() => <div>...</div>, container);
@@ -192,7 +187,6 @@ export default defineContentScript({
     // 3. Define your UI
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
-      anchor: '#anchor',
       position: 'inline',
       onMount(container) {
         // Define how your UI will be mounted inside the container
@@ -223,7 +217,6 @@ export default defineContentScript({
     // 3. Define your UI
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
-      anchor: '#anchor',
       position: 'inline',
       onMount: (container) => {
         // Define how your UI will be mounted inside the container
@@ -259,7 +252,6 @@ export default defineContentScript({
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Create a root on the UI container and render a component
         const root = ReactDOM.createRoot(container);
@@ -293,7 +285,6 @@ export default defineContentScript({
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
         const app = new App({
@@ -328,7 +319,6 @@ export default defineContentScript({
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
-      anchor: '#anchor',
       onMount: (container) => {
         // Render your app to the UI container
         const unmount = render(() => <div>...</div>, container);
@@ -398,7 +388,6 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
        // Define the UI
        const ui = await createIframeUi(ctx, {
          page: '/example-iframe.html',
-         anchor: '#anchor',
          position: 'inline',
          onMount: (wrapper, iframe) => {
            // Add styles to the iframe like width
