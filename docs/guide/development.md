@@ -13,6 +13,24 @@ WXT's main goal is providing the best DX it possibly can. When running your exte
 | `wxt.config.ts`     |     |                       |                  | 🟡 See [#10](https://github.com/wxt-dev/wxt/issues/10) |
 | `web-ext.config.ts` |     |                       |                  | 🟡 See [#10](https://github.com/wxt-dev/wxt/issues/10) |
 
+## Dev Mode vs Production Builds
+
+There are some notible differences between the development and production versions of an extension. During development:
+
+1. **Content scripts are not listed in the `manifest.json`** when targetting MV3. Instead, the [`scripting`](https://developer.chrome.com/docs/extensions/reference/api/scripting) permission is used to register content scripts at runtime so they can be reloaded individually.
+
+   To get the list of content scripts during development, run the following in the background's console:
+
+   ```ts
+   await chrome.scripting.getRegisteredContentScripts();
+   ```
+
+2. **The CSP is modified to allow loading scripts from the dev server**. Make sure you're using Chrome v110 or above for HMR to work.
+
+3. If you don't include a background script/service worker, one will be created to perform various tasks in dev mode, mostly related to reloading different parts of the extension on change.
+
+For production builds, none of the above modifications will be applied, and you're extension/manifest will only include what you have defined.
+
 ## Configure Browser Startup
 
 WXT uses [`web-ext` by Mozilla](https://github.com/mozilla/web-ext) to automatically open a browser with the extension installed. You can configure the runner's behavior via the [`runner`](/api/wxt/interfaces/InlineConfig#runner) option, or in a separate gitignored file, `web-ext.config.ts`.
