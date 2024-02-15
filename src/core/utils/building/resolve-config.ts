@@ -311,7 +311,7 @@ async function getUnimportOptions(
     dirs: ['components', 'composables', 'hooks', 'utils'],
     eslintrc: {
       enabled,
-      filePath: path.resolve(wxtDir, '.eslintrc-auto-import.json'),
+      filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
       globalsPropValue: true,
     },
   };

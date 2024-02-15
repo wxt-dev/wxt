@@ -28,7 +28,9 @@ export async function generateTypesDir(
   if (wxt.config.imports !== false) {
     const res = await writeImportsDeclarationFile(wxt.config.imports);
     references.push(res.filePath);
-    await writeImportsEslintFile(res.unimport, wxt.config.imports);
+    if (wxt.config.imports.eslintrc.enabled) {
+      await writeImportsEslintFile(res.unimport, wxt.config.imports);
+    }
   }
 
   references.push(await writePathsDeclarationFile(entrypoints));
@@ -62,9 +64,6 @@ async function writeImportsEslintFile(
   unimport: Unimport,
   options: WxtResolvedUnimportOptions,
 ) {
-  const hasEslint = await isModuleInstalled('eslint');
-  if (!hasEslint) return;
-
   const globals: Record<string, ESLintGlobalsPropValue> = {};
   const eslintrc = { globals };
 
@@ -75,7 +74,7 @@ async function writeImportsEslintFile(
     .forEach((name) => {
       eslintrc.globals[name] = options.eslintrc.globalsPropValue;
     });
-  return JSON.stringify(eslintrc, null, 2);
+  await fs.writeJson(options.eslintrc.filePath, eslintrc, { spaces: 2 });
 }
 
 async function writePathsDeclarationFile(

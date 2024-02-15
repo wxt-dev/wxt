@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { resolve } from 'path';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -91,6 +92,84 @@ describe('Auto Imports', () => {
         "
       `,
       );
+    });
+  });
+
+  describe('eslintrc', () => {
+    it('should output the globals list for ESLint to consume', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: true,
+          },
+        },
+      });
+
+      expect(await project.serializeFile('.wxt/eslintrc-auto-import.json'))
+        .toMatchInlineSnapshot(`
+          ".wxt/eslintrc-auto-import.json
+          ----------------------------------------
+          {
+            "globals": {
+              "ContentScriptContext": true,
+              "InvalidMatchPattern": true,
+              "MatchPattern": true,
+              "browser": true,
+              "createIframeUi": true,
+              "createIntegratedUi": true,
+              "createShadowRootUi": true,
+              "defineBackground": true,
+              "defineConfig": true,
+              "defineContentScript": true,
+              "defineUnlistedScript": true,
+              "fakeBrowser": true,
+              "storage": true
+            }
+          }
+          "
+        `);
+    });
+
+    it('should allow customizing the output', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: true,
+            filePath: resolve(project.root, 'example.json'),
+            globalsPropValue: 'readonly',
+          },
+        },
+      });
+
+      expect(await project.serializeFile('example.json'))
+        .toMatchInlineSnapshot(`
+          "example.json
+          ----------------------------------------
+          {
+            "globals": {
+              "ContentScriptContext": "readonly",
+              "InvalidMatchPattern": "readonly",
+              "MatchPattern": "readonly",
+              "browser": "readonly",
+              "createIframeUi": "readonly",
+              "createIntegratedUi": "readonly",
+              "createShadowRootUi": "readonly",
+              "defineBackground": "readonly",
+              "defineConfig": "readonly",
+              "defineContentScript": "readonly",
+              "defineUnlistedScript": "readonly",
+              "fakeBrowser": "readonly",
+              "storage": "readonly"
+            }
+          }
+          "
+        `);
     });
   });
 });

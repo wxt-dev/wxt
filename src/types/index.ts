@@ -976,7 +976,7 @@ export interface ESLintrc {
   /**
    * File path to save the generated eslint config.
    *
-   * @default './.wxt/.eslintrc-auto-import.json'
+   * @default './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /**

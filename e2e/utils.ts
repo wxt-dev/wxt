@@ -92,12 +92,19 @@ export class TestProject {
     return server;
   }
 
+  /**
+   * Call `path.resolve` relative to the project's root directory.
+   */
+  resolvePath(...path: string[]): string {
+    return resolve(this.root, ...path);
+  }
+
   private async writeProjectToDisk() {
     if (this.config == null) this.setConfigFileConfig();
 
     for (const file of this.files) {
       const [name, content] = file;
-      const filePath = resolve(this.root, name);
+      const filePath = this.resolvePath(name);
       const fileDir = dirname(filePath);
       await fs.ensureDir(fileDir);
       await fs.writeFile(filePath, content ?? '', 'utf-8');
@@ -140,13 +147,13 @@ export class TestProject {
     ignoreContentsOfFilenames?: string[],
   ): Promise<string> {
     const outputFiles = await glob('**/*', {
-      cwd: resolve(this.root, dir),
+      cwd: this.resolvePath(dir),
       ignore: ['**/node_modules', '**/.output'],
     });
     outputFiles.sort();
     const fileContents = [];
     for (const file of outputFiles) {
-      const path = resolve(this.root, dir, file);
+      const path = this.resolvePath(dir, file);
       const isContentIgnored = !!ignoreContentsOfFilenames?.find(
         (ignoredFile) => normalizePath(path).endsWith(ignoredFile),
       );
@@ -161,7 +168,7 @@ export class TestProject {
    *                       the file contents.
    */
   async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
-    const absolutePath = resolve(this.root, path);
+    const absolutePath = this.resolvePath(path);
     return [
       normalizePath(relative(this.root, absolutePath)),
       ignoreContents ? '<contents-ignored>' : await fs.readFile(absolutePath),
@@ -169,12 +176,12 @@ export class TestProject {
   }
 
   fileExists(path: string): Promise<boolean> {
-    return fs.exists(resolve(this.root, path));
+    return fs.exists(this.resolvePath(path));
   }
 
   async getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(resolve(this.root, path));
+    return await fs.readJson(this.resolvePath(path));
   }
 }
