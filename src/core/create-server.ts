@@ -55,9 +55,7 @@ export async function createServer(
     // Add file watchers for files not loaded by the dev server. See
     // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
     try {
-      const files = getExternalOutputDependencies(server);
-      console.log('Additional files:', files);
-      server.watcher.add(files);
+      server.watcher.add(getExternalOutputDependencies(server));
     } catch (err) {
       wxt.config.logger.warn('Failed to register additional file paths:', err);
     }
@@ -296,23 +294,23 @@ function getFilenameList(names: string[]): string {
  * 2. Not inside project root
  */
 function getExternalOutputDependencies(server: WxtDevServer) {
-  const additionalFiles = server.currentOutput?.steps
-    .flatMap((step, i) => {
-      if (Array.isArray(step.entrypoints) && i === 0) {
-        // Dev server is already watching all HTML/esm files
-        return [];
-      }
+  return (
+    server.currentOutput?.steps
+      .flatMap((step, i) => {
+        if (Array.isArray(step.entrypoints) && i === 0) {
+          // Dev server is already watching all HTML/esm files
+          return [];
+        }
 
-      return step.chunks.flatMap((chunk) => {
-        if (chunk.type === 'asset') return [];
-        return chunk.moduleIds;
-      });
-    })
-    .filter(
-      (file) => !file.includes('node_modules') && !file.startsWith('\x00'),
-    )
-    .map(unnormalizePath)
-    .filter((file) => !file.startsWith(wxt.config.root));
-
-  return additionalFiles ?? [];
+        return step.chunks.flatMap((chunk) => {
+          if (chunk.type === 'asset') return [];
+          return chunk.moduleIds;
+        });
+      })
+      .filter(
+        (file) => !file.includes('node_modules') && !file.startsWith('\x00'),
+      )
+      .map(unnormalizePath)
+      .filter((file) => !file.startsWith(wxt.config.root)) ?? []
+  );
 }
