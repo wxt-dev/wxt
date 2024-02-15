@@ -1,4 +1,4 @@
-import { Unimport, UnimportOptions, createUnimport } from 'unimport';
+import { Unimport, createUnimport } from 'unimport';
 import {
   EslintGlobalsPropValue,
   Entrypoint,
@@ -13,7 +13,6 @@ import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
 import { wxt } from '../../wxt';
-import { isModuleInstalled } from '../package';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -26,10 +25,10 @@ export async function generateTypesDir(
   const references: string[] = [];
 
   if (wxt.config.imports !== false) {
-    const res = await writeImportsDeclarationFile(wxt.config.imports);
-    references.push(res.filePath);
+    const unimport = createUnimport(wxt.config.imports);
+    references.push(await writeImportsDeclarationFile(unimport));
     if (wxt.config.imports.eslintrc.enabled) {
-      await writeImportsEslintFile(res.unimport, wxt.config.imports);
+      await writeImportsEslintFile(unimport, wxt.config.imports);
     }
   }
 
@@ -41,11 +40,8 @@ export async function generateTypesDir(
   await writeTsConfigFile(mainReference);
 }
 
-async function writeImportsDeclarationFile(
-  unimportOptions: Partial<UnimportOptions>,
-): Promise<{ filePath: string; unimport: Unimport }> {
+async function writeImportsDeclarationFile(unimport: Unimport) {
   const filePath = resolve(wxt.config.typesDir, 'imports.d.ts');
-  const unimport = createUnimport(unimportOptions);
 
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
   await unimport.scanImportsFromDir(undefined, { cwd: wxt.config.srcDir });
@@ -57,7 +53,7 @@ async function writeImportsDeclarationFile(
     ) + '\n',
   );
 
-  return { filePath, unimport };
+  return filePath;
 }
 
 async function writeImportsEslintFile(
