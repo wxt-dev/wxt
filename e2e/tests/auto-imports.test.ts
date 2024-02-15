@@ -141,7 +141,7 @@ describe('Auto Imports', () => {
         imports: {
           eslintrc: {
             enabled: true,
-            filePath: resolve(project.root, 'example.json'),
+            filePath: project.resolvePath('example.json'),
             globalsPropValue: 'readonly',
           },
         },
