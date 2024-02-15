@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.16.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.6...v0.16.7)
+
+### 🚀 Enhancements
+
+- Generate ESLint globals file for auto-imports ([#450](https://github.com/wxt-dev/wxt/pull/450))
+
+### 🔥 Performance
+
+- Upgrade Vite to 5.1 ([#452](https://github.com/wxt-dev/wxt/pull/452))
+
+### 📖 Documentation
+
+- Add section about dev mode differences ([a0d1643](https://github.com/wxt-dev/wxt/commit/a0d1643))
+- Remove anchor from content script ui examples ([87a62a1](https://github.com/wxt-dev/wxt/commit/87a62a1))
+
+### 🏡 Chore
+
+- **e2e:** Use `wxt prepare` instead of `wxt build` when possible to speed up E2E tests ([#451](https://github.com/wxt-dev/wxt/pull/451))
+
 ## v0.16.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.5...v0.16.6)

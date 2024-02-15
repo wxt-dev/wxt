@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.16.6",
+  "version": "0.16.7",
   "description": "Next gen framework for developing web extensions",
   "engines": {
     "node": ">=18",
