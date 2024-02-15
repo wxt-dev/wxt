@@ -955,14 +955,14 @@ export type VirtualEntrypointType =
   | 'background'
   | 'unlisted-script';
 
-export type ESLintGlobalsPropValue =
+export type EslintGlobalsPropValue =
   | boolean
   | 'readonly'
   | 'readable'
   | 'writable'
   | 'writeable';
 
-export interface ESLintrc {
+export interface Eslintrc {
   /**
    * When true, generates a file that can be used by ESLint to know which variables are valid globals.
    *
@@ -982,23 +982,23 @@ export interface ESLintrc {
   /**
    * @default true
    */
-  globalsPropValue?: ESLintGlobalsPropValue;
+  globalsPropValue?: EslintGlobalsPropValue;
 }
 
-export interface ResolvedESLintrc {
+export interface ResolvedEslintrc {
   enabled: boolean;
   /** Absolute path */
   filePath: string;
-  globalsPropValue: ESLintGlobalsPropValue;
+  globalsPropValue: EslintGlobalsPropValue;
 }
 
 export type WxtUnimportOptions = Partial<UnimportOptions> & {
   /**
    * When eslint is installed,
    */
-  eslintrc?: ESLintrc;
+  eslintrc?: Eslintrc;
 };
 
 export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
-  eslintrc: ResolvedESLintrc;
+  eslintrc: ResolvedEslintrc;
 };

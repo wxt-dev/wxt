@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
-import { resolve } from 'path';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {

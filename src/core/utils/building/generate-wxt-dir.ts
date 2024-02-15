@@ -1,6 +1,6 @@
 import { Unimport, UnimportOptions, createUnimport } from 'unimport';
 import {
-  ESLintGlobalsPropValue,
+  EslintGlobalsPropValue,
   Entrypoint,
   WxtResolvedUnimportOptions,
 } from '~/types';
@@ -64,7 +64,7 @@ async function writeImportsEslintFile(
   unimport: Unimport,
   options: WxtResolvedUnimportOptions,
 ) {
-  const globals: Record<string, ESLintGlobalsPropValue> = {};
+  const globals: Record<string, EslintGlobalsPropValue> = {};
   const eslintrc = { globals };
 
   (await unimport.getImports())
