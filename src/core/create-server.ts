@@ -25,6 +25,7 @@ import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
 import { registerWxt, wxt } from './wxt';
+import { unnormalizePath } from './utils/paths';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -54,7 +55,9 @@ export async function createServer(
     // Add file watchers for files not loaded by the dev server. See
     // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
     try {
-      server.watcher.add(getOutputDependencies(server));
+      const files = getExternalOutputDependencies(server);
+      console.log('Additional files:', files);
+      server.watcher.add(files);
     } catch (err) {
       wxt.config.logger.warn('Failed to register additional file paths:', err);
     }
@@ -287,7 +290,12 @@ function getFilenameList(names: string[]): string {
     .join(pc.dim(', '));
 }
 
-function getOutputDependencies(server: WxtDevServer) {
+/**
+ * Based on the current build output, return a list of files that are:
+ * 1. Not in node_modules
+ * 2. Not inside project root
+ */
+function getExternalOutputDependencies(server: WxtDevServer) {
   const additionalFiles = server.currentOutput?.steps
     .flatMap((step, i) => {
       if (Array.isArray(step.entrypoints) && i === 0) {
@@ -302,7 +310,9 @@ function getOutputDependencies(server: WxtDevServer) {
     })
     .filter(
       (file) => !file.includes('node_modules') && !file.startsWith('\x00'),
-    );
+    )
+    .map(unnormalizePath)
+    .filter((file) => !file.startsWith(wxt.config.root));
 
   return additionalFiles ?? [];
 }
