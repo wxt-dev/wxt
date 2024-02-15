@@ -20,3 +20,7 @@ export async function getPackageJson(): Promise<
     return {};
   }
 }
+
+export function isModuleInstalled(name: string) {
+  return import(name).then(() => true).catch(() => false);
+}

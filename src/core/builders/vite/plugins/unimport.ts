@@ -1,6 +1,5 @@
 import { createUnimport } from 'unimport';
 import { ResolvedConfig } from '~/types';
-import { getUnimportOptions } from '~/core/utils/unimport';
 import type * as vite from 'vite';
 import { extname } from 'path';
 
@@ -19,7 +18,7 @@ const ENABLED_EXTENSIONS = new Set([
 export function unimport(
   config: Omit<ResolvedConfig, 'builder'>,
 ): vite.PluginOption {
-  const options = getUnimportOptions(config);
+  const options = config.imports;
   if (options === false) return [];
 
   const unimport = createUnimport(options);

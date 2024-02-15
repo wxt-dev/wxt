@@ -216,7 +216,20 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     entrypointsDir: fakeDir(),
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
-    imports: {},
+    imports: {
+      eslintrc: {
+        enabled: faker.datatype.boolean(),
+        filePath: fakeFile(),
+        globalsPropValue: faker.helpers.arrayElement([
+          true,
+          false,
+          'readable',
+          'readonly',
+          'writable',
+          'writeable',
+        ] as const),
+      },
+    },
     logger: mock(),
     manifest: fakeUserManifest(),
     manifestVersion,

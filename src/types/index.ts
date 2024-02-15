@@ -77,7 +77,7 @@ export interface InlineConfig {
    * })
    * ```
    */
-  imports?: Partial<UnimportOptions> | false;
+  imports?: WxtUnimportOptions | false;
   /**
    * Explicitly set a browser to build for. This will override the default browser for each command,
    * and can be overridden by the command line `--browser` option.
@@ -899,7 +899,7 @@ export interface ResolvedConfig {
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
   logger: Logger;
-  imports: false | Partial<UnimportOptions>;
+  imports: false | WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
   server?: WxtDevServer;
@@ -954,3 +954,51 @@ export type VirtualEntrypointType =
   | 'content-script-isolated-world'
   | 'background'
   | 'unlisted-script';
+
+export type ESLintGlobalsPropValue =
+  | boolean
+  | 'readonly'
+  | 'readable'
+  | 'writable'
+  | 'writeable';
+
+export interface ESLintrc {
+  /**
+   * When true, generates a file that can be used by ESLint to know which variables are valid globals.
+   *
+   * - `'auto'`: Check if eslint is installed, and if it is, generate the helper file
+   * - `true`: Generate the helper file
+   * - `false`: Don't generate the file
+   *
+   * @default 'auto'
+   */
+  enabled?: boolean | 'auto';
+  /**
+   * File path to save the generated eslint config.
+   *
+   * @default './.wxt/.eslintrc-auto-import.json'
+   */
+  filePath?: string;
+  /**
+   * @default true
+   */
+  globalsPropValue?: ESLintGlobalsPropValue;
+}
+
+export interface ResolvedESLintrc {
+  enabled: boolean;
+  /** Absolute path */
+  filePath: string;
+  globalsPropValue: ESLintGlobalsPropValue;
+}
+
+export type WxtUnimportOptions = Partial<UnimportOptions> & {
+  /**
+   * When eslint is installed,
+   */
+  eslintrc?: ESLintrc;
+};
+
+export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
+  eslintrc: ResolvedESLintrc;
+};

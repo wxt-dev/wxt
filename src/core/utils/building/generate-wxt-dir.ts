@@ -1,15 +1,19 @@
-import { UnimportOptions, createUnimport } from 'unimport';
-import { Entrypoint } from '~/types';
+import { Unimport, UnimportOptions, createUnimport } from 'unimport';
+import {
+  ESLintGlobalsPropValue,
+  Entrypoint,
+  WxtResolvedUnimportOptions,
+} from '~/types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
-import { getUnimportOptions } from '~/core/utils/unimport';
 import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
 import { normalizePath } from '~/core/utils/paths';
 import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
 import { wxt } from '../../wxt';
+import { isModuleInstalled } from '../package';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -21,9 +25,10 @@ export async function generateTypesDir(
 
   const references: string[] = [];
 
-  const imports = getUnimportOptions(wxt.config);
-  if (imports !== false) {
-    references.push(await writeImportsDeclarationFile(imports));
+  if (wxt.config.imports !== false) {
+    const res = await writeImportsDeclarationFile(wxt.config.imports);
+    references.push(res.filePath);
+    await writeImportsEslintFile(res.unimport, wxt.config.imports);
   }
 
   references.push(await writePathsDeclarationFile(entrypoints));
@@ -36,7 +41,7 @@ export async function generateTypesDir(
 
 async function writeImportsDeclarationFile(
   unimportOptions: Partial<UnimportOptions>,
-): Promise<string> {
+): Promise<{ filePath: string; unimport: Unimport }> {
   const filePath = resolve(wxt.config.typesDir, 'imports.d.ts');
   const unimport = createUnimport(unimportOptions);
 
@@ -50,7 +55,27 @@ async function writeImportsDeclarationFile(
     ) + '\n',
   );
 
-  return filePath;
+  return { filePath, unimport };
+}
+
+async function writeImportsEslintFile(
+  unimport: Unimport,
+  options: WxtResolvedUnimportOptions,
+) {
+  const hasEslint = await isModuleInstalled('eslint');
+  if (!hasEslint) return;
+
+  const globals: Record<string, ESLintGlobalsPropValue> = {};
+  const eslintrc = { globals };
+
+  (await unimport.getImports())
+    .map((i) => i.as ?? i.name)
+    .filter(Boolean)
+    .sort()
+    .forEach((name) => {
+      eslintrc.globals[name] = options.eslintrc.globalsPropValue;
+    });
+  return JSON.stringify(eslintrc, null, 2);
 }
 
 async function writePathsDeclarationFile(
