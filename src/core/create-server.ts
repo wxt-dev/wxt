@@ -51,6 +51,25 @@ export async function createServer(
     // Build after starting the dev server so it can be used to transform HTML files
     server.currentOutput = await internalBuild();
 
+    // Add file watchers for files not loaded by the dev server
+    const additionalFiles = server.currentOutput.steps
+      .flatMap((step, i) => {
+        if (Array.isArray(step.entrypoints) && i === 0) {
+          // Dev server is already watching all HTML/esm files
+          return [];
+        }
+
+        return step.chunks.flatMap((chunk) => {
+          if (chunk.type === 'asset') return [];
+          return chunk.moduleIds;
+        });
+      })
+      .filter(
+        (file) => !file.includes('node_modules') && !file.startsWith('\x00'),
+      );
+    console.log('Adding files:', additionalFiles);
+    server.watcher.add(additionalFiles);
+
     // Open browser after everything is ready to go.
     await runner.openBrowser();
   };
