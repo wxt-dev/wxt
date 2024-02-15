@@ -7,7 +7,7 @@ describe('Auto Imports', () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.build();
+      await project.prepare();
 
       expect(await project.serializeFile('.wxt/types/imports.d.ts'))
         .toMatchInlineSnapshot(`
@@ -38,7 +38,7 @@ describe('Auto Imports', () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.build();
+      await project.prepare();
 
       expect(await project.serializeFile('.wxt/wxt.d.ts'))
         .toMatchInlineSnapshot(`
@@ -63,7 +63,7 @@ describe('Auto Imports', () => {
       });
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.build();
+      await project.prepare();
 
       expect(await project.fileExists('.wxt/types/imports.d.ts')).toBe(false);
     });
@@ -75,7 +75,7 @@ describe('Auto Imports', () => {
       });
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.build();
+      await project.prepare();
 
       expect(
         await project.serializeFile('.wxt/wxt.d.ts'),

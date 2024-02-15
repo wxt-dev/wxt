@@ -6,7 +6,7 @@ describe('TypeScript Project', () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html');
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/types/globals.d.ts');
     expect(output).toMatchInlineSnapshot(`
@@ -38,7 +38,7 @@ describe('TypeScript Project', () => {
     project.addFile('entrypoints/options.html');
     project.addFile('entrypoints/sandbox.html');
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/types/paths.d.ts');
     expect(output).toMatchInlineSnapshot(`
@@ -103,7 +103,7 @@ describe('TypeScript Project', () => {
       },
     });
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/types/i18n.d.ts');
     expect(output).toMatchInlineSnapshot(`
@@ -225,7 +225,7 @@ describe('TypeScript Project', () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html');
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/wxt.d.ts');
     expect(output).toMatchInlineSnapshot(`
@@ -245,7 +245,7 @@ describe('TypeScript Project', () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html');
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
@@ -289,7 +289,7 @@ describe('TypeScript Project', () => {
       srcDir: 'src',
     });
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
@@ -337,7 +337,7 @@ describe('TypeScript Project', () => {
       },
     });
 
-    await project.build();
+    await project.prepare();
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
