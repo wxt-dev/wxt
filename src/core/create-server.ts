@@ -25,6 +25,7 @@ import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
 import { registerWxt, wxt } from './wxt';
+import { unnormalizePath } from './utils/paths';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -50,6 +51,14 @@ export async function createServer(
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
     server.currentOutput = await internalBuild();
+
+    // Add file watchers for files not loaded by the dev server. See
+    // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
+    try {
+      server.watcher.add(getExternalOutputDependencies(server));
+    } catch (err) {
+      wxt.config.logger.warn('Failed to register additional file paths:', err);
+    }
 
     // Open browser after everything is ready to go.
     await runner.openBrowser();
@@ -277,4 +286,31 @@ function getFilenameList(names: string[]): string {
       return pc.cyan(name);
     })
     .join(pc.dim(', '));
+}
+
+/**
+ * Based on the current build output, return a list of files that are:
+ * 1. Not in node_modules
+ * 2. Not inside project root
+ */
+function getExternalOutputDependencies(server: WxtDevServer) {
+  return (
+    server.currentOutput?.steps
+      .flatMap((step, i) => {
+        if (Array.isArray(step.entrypoints) && i === 0) {
+          // Dev server is already watching all HTML/esm files
+          return [];
+        }
+
+        return step.chunks.flatMap((chunk) => {
+          if (chunk.type === 'asset') return [];
+          return chunk.moduleIds;
+        });
+      })
+      .filter(
+        (file) => !file.includes('node_modules') && !file.startsWith('\x00'),
+      )
+      .map(unnormalizePath)
+      .filter((file) => !file.startsWith(wxt.config.root)) ?? []
+  );
 }
