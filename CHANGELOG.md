@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.16.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.7...v0.16.8)
+
+### 🩹 Fixes
+
+- Watch files outside project root during development ([#454](https://github.com/wxt-dev/wxt/pull/454))
+
+### 📖 Documentation
+
+- Add loading and error states for "Who's using WXT" section ([447a48f](https://github.com/wxt-dev/wxt/commit/447a48f))
+
 ## v0.16.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.6...v0.16.7)
