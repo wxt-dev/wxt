@@ -2,7 +2,6 @@ import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
 import { relative, resolve } from 'node:path';
-import { getUnimportOptions } from '~/core/utils/unimport';
 import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
@@ -30,7 +29,7 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
   const normalPath = normalizePath(path);
 
   const unimport = createUnimport({
-    ...getUnimportOptions(wxt.config),
+    ...wxt.config.imports,
     // Only allow specific imports, not all from the project
     dirs: [],
   });

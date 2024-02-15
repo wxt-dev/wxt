@@ -1,9 +1,12 @@
-import { UnimportOptions, createUnimport } from 'unimport';
-import { Entrypoint } from '~/types';
+import { Unimport, createUnimport } from 'unimport';
+import {
+  EslintGlobalsPropValue,
+  Entrypoint,
+  WxtResolvedUnimportOptions,
+} from '~/types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
 import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
-import { getUnimportOptions } from '~/core/utils/unimport';
 import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
 import { normalizePath } from '~/core/utils/paths';
 import path from 'node:path';
@@ -21,9 +24,12 @@ export async function generateTypesDir(
 
   const references: string[] = [];
 
-  const imports = getUnimportOptions(wxt.config);
-  if (imports !== false) {
-    references.push(await writeImportsDeclarationFile(imports));
+  if (wxt.config.imports !== false) {
+    const unimport = createUnimport(wxt.config.imports);
+    references.push(await writeImportsDeclarationFile(unimport));
+    if (wxt.config.imports.eslintrc.enabled) {
+      await writeImportsEslintFile(unimport, wxt.config.imports);
+    }
   }
 
   references.push(await writePathsDeclarationFile(entrypoints));
@@ -34,11 +40,8 @@ export async function generateTypesDir(
   await writeTsConfigFile(mainReference);
 }
 
-async function writeImportsDeclarationFile(
-  unimportOptions: Partial<UnimportOptions>,
-): Promise<string> {
+async function writeImportsDeclarationFile(unimport: Unimport) {
   const filePath = resolve(wxt.config.typesDir, 'imports.d.ts');
-  const unimport = createUnimport(unimportOptions);
 
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
   await unimport.scanImportsFromDir(undefined, { cwd: wxt.config.srcDir });
@@ -51,6 +54,23 @@ async function writeImportsDeclarationFile(
   );
 
   return filePath;
+}
+
+async function writeImportsEslintFile(
+  unimport: Unimport,
+  options: WxtResolvedUnimportOptions,
+) {
+  const globals: Record<string, EslintGlobalsPropValue> = {};
+  const eslintrc = { globals };
+
+  (await unimport.getImports())
+    .map((i) => i.as ?? i.name)
+    .filter(Boolean)
+    .sort()
+    .forEach((name) => {
+      eslintrc.globals[name] = options.eslintrc.globalsPropValue;
+    });
+  await fs.writeJson(options.eslintrc.filePath, eslintrc, { spaces: 2 });
 }
 
 async function writePathsDeclarationFile(

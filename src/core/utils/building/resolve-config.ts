@@ -8,6 +8,8 @@ import {
   UserManifest,
   ExtensionRunnerConfig,
   WxtDevServer,
+  WxtResolvedUnimportOptions,
+  Logger,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -15,6 +17,7 @@ import consola, { LogLevels } from 'consola';
 import { createViteBuilder } from '~/core/builders/vite';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
+import { isModuleInstalled } from '../package';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -115,7 +118,7 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: mergedConfig.imports ?? {},
+    imports: await getUnimportOptions(wxtDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -272,4 +275,49 @@ function resolveInternalZipConfig(
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
   };
+}
+
+async function getUnimportOptions(
+  wxtDir: string,
+  logger: Logger,
+  config: InlineConfig,
+): Promise<WxtResolvedUnimportOptions | false> {
+  if (config.imports === false) return false;
+
+  const enabledConfig = config.imports?.eslintrc?.enabled;
+  let enabled: boolean;
+  switch (enabledConfig) {
+    case undefined:
+    case 'auto':
+      enabled = await isModuleInstalled('eslint');
+      break;
+    default:
+      enabled = enabledConfig;
+  }
+
+  const defaultOptions: WxtResolvedUnimportOptions = {
+    debugLog: logger.debug,
+    imports: [
+      { name: 'defineConfig', from: 'wxt' },
+      { name: 'fakeBrowser', from: 'wxt/testing' },
+    ],
+    presets: [
+      { package: 'wxt/client' },
+      { package: 'wxt/browser' },
+      { package: 'wxt/sandbox' },
+      { package: 'wxt/storage' },
+    ],
+    warn: logger.warn,
+    dirs: ['components', 'composables', 'hooks', 'utils'],
+    eslintrc: {
+      enabled,
+      filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
+      globalsPropValue: true,
+    },
+  };
+
+  return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
+    config.imports ?? {},
+    defaultOptions,
+  );
 }
