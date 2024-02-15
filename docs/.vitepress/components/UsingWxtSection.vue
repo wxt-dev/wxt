@@ -20,11 +20,12 @@ const chromeExtensionIds = [
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
 ];
 
-const { data } = useListExtensionDetails(chromeExtensionIds);
+const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
 const sortedExtensions = computed(() => {
   if (!data.value?.length) return [];
 
   return [...data.value]
+    .filter((item) => item != null)
     .map((item) => ({
       ...item,
       // Sort based on the user count weighted by the rating
@@ -49,7 +50,16 @@ function getStoreUrl(extension: ChromeExtension) {
         Battle tested and ready for production. Explore chrome extensions made
         with WXT.
       </p>
-      <ul>
+      <p v-if="isLoading" style="text-align: center; opacity: 50%">
+        Loading...
+      </p>
+      <p
+        v-else-if="err || sortedExtensions.length === 0"
+        style="text-align: center; opacity: 50%"
+      >
+        Failed to load extension details.
+      </p>
+      <ul v-else>
         <li
           v-for="extension of sortedExtensions"
           :key="extension.id"
