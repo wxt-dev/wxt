@@ -119,11 +119,10 @@ export async function createShadowRootUi<TMounted>(
   let mounted: TMounted;
 
   const mount = () => {
-    // Mount UI inside shadow root
-    mounted = options.onMount(uiContainer, shadow, shadowHost);
-
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
+    // Mount UI inside shadow root
+    mounted = options.onMount(uiContainer, shadow, shadowHost);
     applyPosition(shadowHost, shadow.querySelector('html'), options);
   };
 
