@@ -119,19 +119,18 @@ export async function createShadowRootUi<TMounted>(
   let mounted: TMounted;
 
   const mount = () => {
-    // Mount UI inside shadow root
-    mounted = options.onMount(uiContainer, shadow, shadowHost);
-
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
     applyPosition(shadowHost, shadow.querySelector('html'), options);
+    // Mount UI inside shadow root
+    mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
 
   const remove = () => {
-    // Detatch shadow root from DOM
-    shadowHost.remove();
     // Cleanup mounted state
     options.onRemove?.(mounted);
+    // Detatch shadow root from DOM
+    shadowHost.remove();
     // Remove children from uiContainer
     while (uiContainer.lastChild)
       uiContainer.removeChild(uiContainer.lastChild);
