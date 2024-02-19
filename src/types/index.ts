@@ -502,7 +502,7 @@ export interface BaseContentScriptEntrypointOptions
    *   onto the page. Use `browser.runtime.getURL("content-scripts/<name>.css")` to get the file's
    *   URL
    * - `"ui"` - Exclude the CSS from the manifest. CSS will be automatically added to your UI when
-   *   calling `createContentScriptUi`
+   *   calling `createShadowRootUi`
    *
    * @default "manifest"
    */
