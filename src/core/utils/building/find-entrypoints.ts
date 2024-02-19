@@ -10,6 +10,8 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   UnlistedScriptDefinition,
+  PopupEntrypointOptions,
+  OptionsEntrypointOptions,
 } from '~/types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
@@ -19,7 +21,7 @@ import { importEntrypointFile } from '~/core/utils/building';
 import glob from 'fast-glob';
 import {
   getEntrypointName,
-  resolvePerBrowserOption,
+  resolvePerBrowserOptions,
 } from '~/core/utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
@@ -231,7 +233,7 @@ async function getPopupEntrypoint({
   const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
-  const options: PopupEntrypoint['options'] = getHtmlBaseOptions(document);
+  const options: PopupEntrypointOptions = getHtmlBaseOptions(document);
 
   const title = document.querySelector('title');
   if (title != null) options.defaultTitle = title.textContent ?? undefined;
@@ -268,7 +270,7 @@ async function getPopupEntrypoint({
   return {
     type: 'popup',
     name: 'popup',
-    options,
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath,
     outputDir: wxt.config.outDir,
     skipped,
@@ -287,7 +289,7 @@ async function getOptionsEntrypoint({
   const content = await fs.readFile(inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
-  const options: OptionsEntrypoint['options'] = getHtmlBaseOptions(document);
+  const options: OptionsEntrypointOptions = getHtmlBaseOptions(document);
 
   const openInTabContent = document
     .querySelector("meta[name='manifest.open_in_tab']")
@@ -313,7 +315,7 @@ async function getOptionsEntrypoint({
   return {
     type: 'options',
     name: 'options',
-    options,
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath,
     outputDir: wxt.config.outDir,
     skipped,
@@ -358,14 +360,13 @@ async function getUnlistedScriptEntrypoint({
       `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
     );
   }
-  const { main: _, ...moduleOptions } = defaultExport;
-  const options: Omit<UnlistedScriptDefinition, 'main'> = moduleOptions;
+  const { main: _, ...options } = defaultExport;
   return {
     type: 'unlisted-script',
     name,
     inputPath,
     outputDir: wxt.config.outDir,
-    options,
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     skipped,
   };
 }
@@ -400,14 +401,7 @@ async function getBackgroundEntrypoint({
     name,
     inputPath,
     outputDir: wxt.config.outDir,
-    options: {
-      ...options,
-      type: resolvePerBrowserOption(options.type, wxt.config.browser),
-      persistent: resolvePerBrowserOption(
-        options.persistent,
-        wxt.config.browser,
-      ),
-    },
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     skipped,
   };
 }
@@ -432,7 +426,7 @@ async function getContentScriptEntrypoint({
     name,
     inputPath,
     outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
-    options,
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     skipped,
   };
 }

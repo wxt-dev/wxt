@@ -5,10 +5,7 @@ import {
   ServerInfo,
   WxtDevServer,
 } from '~/types';
-import {
-  getEntrypointBundlePath,
-  resolvePerBrowserOption,
-} from '~/core/utils/entrypoints';
+import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
 import {
   getContentScriptCssFiles,
   getContentScriptsCssMap,
@@ -26,6 +23,7 @@ import pc from 'picocolors';
 import { relative } from 'node:path';
 import { registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
+import { mapWxtOptionsToRegisteredContentScript } from './utils/content-scripts';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -236,25 +234,9 @@ function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
       const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
       const css = getContentScriptCssFiles([entry], cssMap);
 
-      server.reloadContentScript({
-        allFrames: resolvePerBrowserOption(
-          entry.options.allFrames,
-          wxt.config.browser,
-        ),
-        excludeMatches: resolvePerBrowserOption(
-          entry.options.excludeMatches,
-          wxt.config.browser,
-        ),
-        matches: resolvePerBrowserOption(
-          entry.options.matches,
-          wxt.config.browser,
-        ),
-        runAt: resolvePerBrowserOption(entry.options.runAt, wxt.config.browser),
-        // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
-        world: resolvePerBrowserOption(entry.options.world, wxt.config.browser),
-        js,
-        css,
-      });
+      server.reloadContentScript(
+        mapWxtOptionsToRegisteredContentScript(entry.options, js, css),
+      );
     });
   } else {
     server.reloadExtension();
