@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   BackgroundEntrypoint,
+  BackgroundEntrypointOptions,
+  BaseEntrypointOptions,
   ContentScriptEntrypoint,
   GenericEntrypoint,
   OptionsEntrypoint,
@@ -242,7 +244,7 @@ describe('findEntrypoints', () => {
   ])(
     'should find and load background entrypoint config from %s',
     async (path, expected) => {
-      const options: BackgroundEntrypoint['options'] = {
+      const options: BackgroundEntrypointOptions = {
         type: 'module',
       };
       globMock.mockResolvedValueOnce([path]);
@@ -262,7 +264,7 @@ describe('findEntrypoints', () => {
         manifestVersion: 2,
       },
     });
-    const options: BackgroundEntrypoint['options'] = {
+    const options: BackgroundEntrypointOptions = {
       type: 'module',
     };
     globMock.mockResolvedValueOnce(['background.ts']);
@@ -279,7 +281,7 @@ describe('findEntrypoints', () => {
         manifestVersion: 3,
       },
     });
-    const options: BackgroundEntrypoint['options'] = {
+    const options: BackgroundEntrypointOptions = {
       type: 'module',
     };
     globMock.mockResolvedValueOnce(['background.ts']);
@@ -331,7 +333,7 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
         skipped: false,
       };
-      const options: GenericEntrypoint['options'] = {};
+      const options: BaseEntrypointOptions = {};
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 

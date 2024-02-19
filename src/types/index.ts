@@ -424,131 +424,37 @@ export interface Logger {
 }
 
 export interface BaseEntrypointOptions {
+  /**
+   * List of target browsers to include this entrypoint in. Defaults to being included in all
+   * builds. Cannot be used with `exclude`. You must choose one of the two options.
+   *
+   * @default undefined
+   */
   include?: TargetBrowser[];
+  /**
+   * List of target browsers to exclude this entrypoint from. Cannot be used with `include`. You
+   * must choose one of the two options.
+   *
+   * @default undefined
+   */
   exclude?: TargetBrowser[];
 }
 
-export interface BaseEntrypoint {
+export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
+  persistent?: PerBrowserOption<boolean>;
   /**
-   * The entrypoint's name. This is the filename or dirname without the type suffix.
+   * Set to `"module"` to output the background entrypoint as ESM. ESM outputs can share chunks and
+   * reduce the overall size of the bundled extension.
    *
-   * Examples:
-   * - `popup.html` &rarr; `popup`
-   * - `options/index.html` &rarr; `options`
-   * - `named.sandbox.html` &rarr; `named`
-   * - `named.sandbox/index.html` &rarr; `named`
-   * - `sandbox.html` &rarr; `sandbox`
-   * - `sandbox/index.html` &rarr; `sandbox`
-   * - `overlay.content.ts` &rarr; `overlay`
-   * - `overlay.content/index.ts` &rarr; `overlay`
+   * When `undefined`, the background is bundled individually into an IIFE format.
    *
-   * The name is used when generating an output file:
-   * `<entrypoint.outputDir>/<entrypoint.name>.<ext>`
+   * @default undefined
    */
-  name: string;
-  /**
-   * Absolute path to the entrypoint's input file.
-   */
-  inputPath: string;
-  /**
-   * Absolute path to the entrypoint's output directory. Can be the`InternalConfg.outDir` or a
-   * subdirectory of it.
-   */
-  outputDir: string;
-  options: BaseEntrypointOptions;
-  skipped: boolean;
+  type?: PerBrowserOption<'module'>;
 }
 
-export interface GenericEntrypoint extends BaseEntrypoint {
-  type:
-    | 'sandbox'
-    | 'bookmarks'
-    | 'history'
-    | 'newtab'
-    | 'sidepanel'
-    | 'devtools'
-    | 'unlisted-page'
-    | 'unlisted-script'
-    | 'unlisted-style'
-    | 'content-script-style';
-}
-
-export interface BackgroundEntrypoint extends BaseEntrypoint {
-  type: 'background';
-  options: {
-    persistent?: boolean;
-    type?: 'module';
-  } & BaseEntrypointOptions;
-}
-
-export interface ContentScriptEntrypoint extends BaseEntrypoint {
-  type: 'content-script';
-  options: Omit<ContentScriptDefinition, 'main'> & BaseEntrypointOptions;
-}
-
-export interface PopupEntrypoint extends BaseEntrypoint {
-  type: 'popup';
-  options: {
-    /**
-     * Defaults to "browser_action" to be equivalent to MV3's "action" key
-     */
-    mv2Key?: 'browser_action' | 'page_action';
-    defaultIcon?: Record<string, string>;
-    defaultTitle?: string;
-    browserStyle?: boolean;
-  } & BaseEntrypointOptions;
-}
-
-export interface OptionsEntrypoint extends BaseEntrypoint {
-  type: 'options';
-  options: {
-    openInTab?: boolean;
-    browserStyle?: boolean;
-    chromeStyle?: boolean;
-  } & BaseEntrypointOptions;
-}
-
-export type Entrypoint =
-  | GenericEntrypoint
-  | BackgroundEntrypoint
-  | ContentScriptEntrypoint
-  | PopupEntrypoint
-  | OptionsEntrypoint;
-
-export type EntrypointGroup = Entrypoint | Entrypoint[];
-
-export type OnContentScriptStopped = (cb: () => void) => void;
-
-export type ContentScriptDefinition =
-  | ContentScriptIsolatedWorldDefinition
-  | ContentScriptMainWorldDefinition;
-
-export interface ContentScriptIsolatedWorldDefinition
-  extends ContentScriptBaseDefinition {
-  /**
-   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
-   * @default "ISOLATED"
-   */
-  world?: 'ISOLATED';
-  /**
-   * Main function executed when the content script is loaded.
-   */
-  main(ctx: ContentScriptContext): void | Promise<void>;
-}
-
-export interface ContentScriptMainWorldDefinition
-  extends ContentScriptBaseDefinition {
-  /**
-   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
-   */
-  world: 'MAIN';
-  /**
-   * Main function executed when the content script is loaded.
-   */
-  main(): void | Promise<void>;
-}
-
-export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
+export interface BaseContentScriptEntrypointOptions
+  extends BaseEntrypointOptions {
   matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -596,44 +502,176 @@ export interface ContentScriptBaseDefinition extends ExcludableEntrypoint {
    *   onto the page. Use `browser.runtime.getURL("content-scripts/<name>.css")` to get the file's
    *   URL
    * - `"ui"` - Exclude the CSS from the manifest. CSS will be automatically added to your UI when
-   *   calling `createContentScriptUi`
+   *   calling `createShadowRootUi`
    *
    * @default "manifest"
    */
   cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
 }
 
-export interface BackgroundDefinition extends ExcludableEntrypoint {
-  type?: PerBrowserOption<'module'>;
-  persistent?: PerBrowserOption<boolean>;
+export interface MainWorldContentScriptEntrypointOptions
+  extends BaseContentScriptEntrypointOptions {
+  /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   */
+  world: 'MAIN';
+}
+
+export interface IsolatedWorldContentScriptEntrypointOptions
+  extends BaseContentScriptEntrypointOptions {
+  /**
+   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
+   * @default "ISOLATED"
+   */
+  world?: 'ISOLATED';
+}
+
+export interface PopupEntrypointOptions extends BaseEntrypointOptions {
+  /**
+   * Defaults to "browser_action" to be equivalent to MV3's "action" key
+   */
+  mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
+  defaultIcon?: Record<string, string>;
+  defaultTitle?: PerBrowserOption<string>;
+  browserStyle?: PerBrowserOption<boolean>;
+}
+
+export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
+  openInTab?: PerBrowserOption<boolean>;
+  browserStyle?: PerBrowserOption<boolean>;
+  chromeStyle?: PerBrowserOption<boolean>;
+}
+
+export interface BaseEntrypoint {
+  /**
+   * The entrypoint's name. This is the filename or dirname without the type suffix.
+   *
+   * Examples:
+   * - `popup.html` &rarr; `popup`
+   * - `options/index.html` &rarr; `options`
+   * - `named.sandbox.html` &rarr; `named`
+   * - `named.sandbox/index.html` &rarr; `named`
+   * - `sandbox.html` &rarr; `sandbox`
+   * - `sandbox/index.html` &rarr; `sandbox`
+   * - `overlay.content.ts` &rarr; `overlay`
+   * - `overlay.content/index.ts` &rarr; `overlay`
+   *
+   * The name is used when generating an output file:
+   * `<entrypoint.outputDir>/<entrypoint.name>.<ext>`
+   */
+  name: string;
+  /**
+   * Absolute path to the entrypoint's input file.
+   */
+  inputPath: string;
+  /**
+   * Absolute path to the entrypoint's output directory. Can be the`InternalConfg.outDir` or a
+   * subdirectory of it.
+   */
+  outputDir: string;
+  skipped: boolean;
+}
+
+export interface GenericEntrypoint extends BaseEntrypoint {
+  type:
+    | 'sandbox'
+    | 'bookmarks'
+    | 'history'
+    | 'newtab'
+    | 'sidepanel'
+    | 'devtools'
+    | 'unlisted-page'
+    | 'unlisted-script'
+    | 'unlisted-style'
+    | 'content-script-style';
+  options: ResolvedPerBrowserOptions<BaseEntrypointOptions>;
+}
+
+export interface BackgroundEntrypoint extends BaseEntrypoint {
+  type: 'background';
+  options: ResolvedPerBrowserOptions<BackgroundEntrypointOptions>;
+}
+
+export interface ContentScriptEntrypoint extends BaseEntrypoint {
+  type: 'content-script';
+  options: ResolvedPerBrowserOptions<
+    | MainWorldContentScriptEntrypointOptions
+    | IsolatedWorldContentScriptEntrypointOptions
+  >;
+}
+
+export interface PopupEntrypoint extends BaseEntrypoint {
+  type: 'popup';
+  options: ResolvedPerBrowserOptions<PopupEntrypointOptions, 'defaultIcon'>;
+}
+
+export interface OptionsEntrypoint extends BaseEntrypoint {
+  type: 'options';
+  options: ResolvedPerBrowserOptions<OptionsEntrypointOptions>;
+}
+
+export type Entrypoint =
+  | GenericEntrypoint
+  | BackgroundEntrypoint
+  | ContentScriptEntrypoint
+  | PopupEntrypoint
+  | OptionsEntrypoint;
+
+export type EntrypointGroup = Entrypoint | Entrypoint[];
+
+export type OnContentScriptStopped = (cb: () => void) => void;
+
+export interface IsolatedWorldContentScriptDefinition
+  extends IsolatedWorldContentScriptEntrypointOptions {
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(ctx: ContentScriptContext): void | Promise<void>;
+}
+
+export interface MainWorldContentScriptDefinition
+  extends MainWorldContentScriptEntrypointOptions {
+  /**
+   * Main function executed when the content script is loaded.
+   */
+  main(): void | Promise<void>;
+}
+
+export type ContentScriptDefinition =
+  | IsolatedWorldContentScriptDefinition
+  | MainWorldContentScriptDefinition;
+
+export interface BackgroundDefinition extends BackgroundEntrypointOptions {
+  /**
+   * Main function executed when the background script is started. Cannot be async.
+   */
   main(): void;
 }
 
-export interface UnlistedScriptDefinition extends ExcludableEntrypoint {
+export interface UnlistedScriptDefinition extends BaseEntrypointOptions {
   /**
    * Main function executed when the unlisted script is ran.
    */
   main(): void | Promise<void>;
 }
 
-export type PerBrowserOption<T> = T | { [browser: TargetBrowser]: T };
+/**
+ * Either a single value or a map of different browsers to the value for that browser.
+ */
+export type PerBrowserOption<T> = T | PerBrowserMap<T>;
+export type PerBrowserMap<T> = { [browser: TargetBrowser]: T };
 
-export interface ExcludableEntrypoint {
-  /**
-   * List of target browsers to include this entrypoint in. Defaults to being included in all
-   * builds. Cannot be used with `exclude`. You must choose one of the two options.
-   *
-   * @default undefined
-   */
-  include?: TargetBrowser[];
-  /**
-   * List of target browsers to exclude this entrypoint from. Cannot be used with `include`. You
-   * must choose one of the two options.
-   *
-   * @default undefined
-   */
-  exclude?: TargetBrowser[];
-}
+/**
+ * Convert `{ key: PerBrowserOption<T> }` to just `{ key: T }`, stripping away the
+ * `PerBrowserOption` type for all fields inside the object.
+ *
+ * A optional second list of keys can be passed if a field isn't compatible with `PerBrowserOption`, like `defaultIcon`.
+ */
+export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
+  [key in keyof Omit<T, TOmitted>]: T[key] extends PerBrowserOption<infer U>
+    ? U
+    : T[key];
+} & { [key in TOmitted]: T[key] };
 
 /**
  * Manifest customization available in the `wxt.config.ts` file. You cannot configure entrypoints

@@ -9,10 +9,7 @@ import {
 } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
-import {
-  getEntrypointBundlePath,
-  resolvePerBrowserOption,
-} from './entrypoints';
+import { getEntrypointBundlePath } from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
 import {
   hashContentScriptOptions,
@@ -355,11 +352,7 @@ function addEntrypoints(
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
-        const matches = resolvePerBrowserOption(
-          script.options.matches,
-          wxt.config.browser,
-        );
-        matches.forEach((matchPattern) => {
+        script.options.matches.forEach((matchPattern) => {
           hostPermissions.add(matchPattern);
         });
       });
@@ -375,13 +368,14 @@ function addEntrypoints(
       }, new Map<string, ContentScriptEntrypoint[]>());
 
       const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
-        ([, scripts]) => ({
-          ...mapWxtOptionsToContentScript(scripts[0].options),
-          css: getContentScriptCssFiles(scripts, cssMap),
-          js: scripts.map((entry) =>
-            getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
+        ([, scripts]) =>
+          mapWxtOptionsToContentScript(
+            scripts[0].options,
+            scripts.map((entry) =>
+              getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
+            ),
+            getContentScriptCssFiles(scripts, cssMap),
           ),
-        }),
       );
       if (newContentScripts.length >= 0) {
         manifest.content_scripts ??= [];
@@ -519,10 +513,9 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      matches: resolvePerBrowserOption(
-        script.options.matches,
-        wxt.config.browser,
-      ).map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
+      matches: script.options.matches.map((matchPattern) =>
+        stripPathFromMatchPattern(matchPattern),
+      ),
     });
   });
 

@@ -157,7 +157,7 @@ export default defineContentScript({
 
 See the [API Reference](/api/wxt/client/functions/createIntegratedUi) for the complete list of options.
 
-You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/ContentScriptBaseDefinition#cssinjectionmode) property. Usually, you'll want to leave it as `"manifest"`, the default, so the UI inherits its style from the website's CSS.
+You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) property. Usually, you'll want to leave it as `"manifest"`, the default, so the UI inherits its style from the website's CSS.
 
 ## Shadow Root
 
@@ -168,7 +168,7 @@ WXT's [`createShadowRootUi`](/api/wxt/client/functions/createShadowRootUi) abstr
 To use `createShadowRootUi`, follow these steps:
 
 1. Import your CSS file at the top of your content script
-2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/ContentScriptBaseDefinition#cssinjectionmode) inside `defineContentScript`
+2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) inside `defineContentScript`
 3. Define your UI with `createShadowRootUi()`
 4. Mount the UI so it is visible to users
 
