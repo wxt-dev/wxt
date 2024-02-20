@@ -7,6 +7,7 @@ import {
   GenericEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
+  SidepanelEntrypoint,
 } from '~/types';
 import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
@@ -258,6 +259,80 @@ describe('findEntrypoints', () => {
     },
   );
 
+  it.each<[string, string, SidepanelEntrypoint]>([
+    [
+      'sidepanel.html',
+      `
+        <html>
+          <head>
+            <title>Default Title</title>
+            <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
+            <meta name="manifest.open_at_install" content="true" />
+          </head>
+        </html>
+      `,
+      {
+        type: 'sidepanel',
+        name: 'sidepanel',
+        inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
+        outputDir: config.outDir,
+        options: {
+          defaultTitle: 'Default Title',
+          defaultIcon: { '16': '/icon/16.png' },
+          openAtInstall: true,
+        },
+        skipped: false,
+      },
+    ],
+    [
+      'sidepanel/index.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'sidepanel',
+        inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
+        options: {},
+        outputDir: config.outDir,
+        skipped: false,
+      },
+    ],
+    [
+      'named.sidepanel.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'named',
+        inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
+        options: {},
+        outputDir: config.outDir,
+        skipped: false,
+      },
+    ],
+    [
+      'named.sidepanel/index.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'named',
+        inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
+        outputDir: config.outDir,
+        options: {},
+        skipped: false,
+      },
+    ],
+  ])(
+    'should find and load sidepanel entrypoint config from %s',
+    async (path, content, expected) => {
+      globMock.mockResolvedValueOnce([path]);
+      readFileMock.mockResolvedValueOnce(content);
+
+      const entrypoints = await findEntrypoints();
+
+      expect(entrypoints).toHaveLength(1);
+      expect(entrypoints[0]).toEqual(expected);
+    },
+  );
+
   it('should remove type=module from MV2 background scripts', async () => {
     setFakeWxt({
       config: {
@@ -458,52 +533,6 @@ describe('findEntrypoints', () => {
         type: 'newtab',
         name: 'newtab',
         inputPath: resolve(config.entrypointsDir, 'newtab/index.html'),
-        outputDir: config.outDir,
-        options: {},
-        skipped: false,
-      },
-    ],
-
-    // sidepanel
-    [
-      'sidepanel.html',
-      {
-        type: 'sidepanel',
-        name: 'sidepanel',
-        inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
-        outputDir: config.outDir,
-        options: {},
-        skipped: false,
-      },
-    ],
-    [
-      'sidepanel/index.html',
-      {
-        type: 'sidepanel',
-        name: 'sidepanel',
-        inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
-        outputDir: config.outDir,
-        options: {},
-        skipped: false,
-      },
-    ],
-    [
-      'named.sidepanel.html',
-      {
-        type: 'sidepanel',
-        name: 'named',
-        inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
-        outputDir: config.outDir,
-        options: {},
-        skipped: false,
-      },
-    ],
-    [
-      'named.sidepanel/index.html',
-      {
-        type: 'sidepanel',
-        name: 'named',
-        inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
         outputDir: config.outDir,
         options: {},
         skipped: false,

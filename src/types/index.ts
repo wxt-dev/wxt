@@ -542,6 +542,20 @@ export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
   chromeStyle?: PerBrowserOption<boolean>;
 }
 
+export interface SidepanelEntrypointOptions extends BaseEntrypointOptions {
+  /**
+   * Firefox only. See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/sidebar_action#syntax
+   * @default false
+   */
+  openAtInstall?: PerBrowserOption<boolean>;
+  /**
+   * @deprecated See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/sidebar_action#syntax
+   */
+  browserStyle?: PerBrowserOption<boolean>;
+  defaultIcon?: string | Record<string, string>;
+  defaultTitle?: PerBrowserOption<string>;
+}
+
 export interface BaseEntrypoint {
   /**
    * The entrypoint's name. This is the filename or dirname without the type suffix.
@@ -578,7 +592,6 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'bookmarks'
     | 'history'
     | 'newtab'
-    | 'sidepanel'
     | 'devtools'
     | 'unlisted-page'
     | 'unlisted-script'
@@ -610,12 +623,18 @@ export interface OptionsEntrypoint extends BaseEntrypoint {
   options: ResolvedPerBrowserOptions<OptionsEntrypointOptions>;
 }
 
+export interface SidepanelEntrypoint extends BaseEntrypoint {
+  type: 'sidepanel';
+  options: ResolvedPerBrowserOptions<SidepanelEntrypointOptions, 'defaultIcon'>;
+}
+
 export type Entrypoint =
   | GenericEntrypoint
   | BackgroundEntrypoint
   | ContentScriptEntrypoint
   | PopupEntrypoint
-  | OptionsEntrypoint;
+  | OptionsEntrypoint
+  | SidepanelEntrypoint;
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];
 
@@ -687,8 +706,6 @@ export type UserManifest = Partial<
     | 'options_page'
     | 'options_ui'
     | 'sandbox'
-    | 'sidepanel'
-    | 'sidebar_action'
   >
 >;
 

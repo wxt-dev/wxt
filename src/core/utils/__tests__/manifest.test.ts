@@ -8,6 +8,7 @@ import {
   fakeManifestCommand,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
+  fakeSidepanelEntrypoint,
   setFakeWxt,
 } from '../testing/fake-objects';
 import { Manifest } from 'webextension-polyfill';
@@ -756,6 +757,72 @@ describe('Manifest Utils', () => {
           ]);
         });
       });
+    });
+
+    describe('sidepanel', () => {
+      it.each(['chrome', 'safari', 'edge'])(
+        'should include a side_panel ignoring all options for %s',
+        async (browser) => {
+          const sidepanel = fakeSidepanelEntrypoint({
+            outputDir: outDir,
+          });
+          const buildOutput = fakeBuildOutput();
+
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              browser,
+              outDir,
+            },
+          });
+          const expected = {
+            side_panel: {
+              default_path: 'sidepanel.html',
+            },
+          };
+
+          const { manifest: actual } = await generateManifest(
+            [sidepanel],
+            buildOutput,
+          );
+
+          expect(actual).toMatchObject(expected);
+        },
+      );
+
+      it.each(['firefox'])(
+        'should include a sidebar_action for %s',
+        async (browser) => {
+          const sidepanel = fakeSidepanelEntrypoint({
+            outputDir: outDir,
+          });
+          const buildOutput = fakeBuildOutput();
+
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              browser,
+              outDir,
+            },
+          });
+          const expected = {
+            sidebar_action: {
+              default_panel: 'sidepanel.html',
+              open_at_install: sidepanel.options.openAtInstall,
+              default_title: sidepanel.options.defaultTitle,
+              default_icon: sidepanel.options.defaultIcon,
+              browser_style: sidepanel.options.browserStyle,
+            },
+          };
+
+          const { manifest: actual } = await generateManifest(
+            [sidepanel],
+            buildOutput,
+          );
+
+          expect(actual).toMatchObject(expected);
+        },
+      );
     });
 
     describe('web_accessible_resources', () => {
