@@ -5,6 +5,7 @@ on:
 jobs:
   validate:
     uses: './.github/workflows/validate.yml'
+    secrets: inherit
 
   publish:
     runs-on: ubuntu-22.04
