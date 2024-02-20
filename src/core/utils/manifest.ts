@@ -355,37 +355,54 @@ function addEntrypoints(
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
-      const hostPermissions = new Set<string>(manifest.host_permissions ?? []);
       contentScripts.forEach((script) => {
         script.options.matches.forEach((matchPattern) => {
-          hostPermissions.add(matchPattern);
+          addHostPermission(manifest, matchPattern);
         });
       });
-      hostPermissions.forEach((permission) =>
-        addHostPermission(manifest, permission),
-      );
     } else {
-      const hashToEntrypointsMap = contentScripts.reduce((map, script) => {
-        const hash = hashContentScriptOptions(script.options);
-        if (map.has(hash)) map.get(hash)?.push(script);
-        else map.set(hash, [script]);
-        return map;
-      }, new Map<string, ContentScriptEntrypoint[]>());
-
-      const newContentScripts = Array.from(hashToEntrypointsMap.entries()).map(
-        ([, scripts]) =>
-          mapWxtOptionsToContentScript(
-            scripts[0].options,
-            scripts.map((entry) =>
-              getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
-            ),
-            getContentScriptCssFiles(scripts, cssMap),
+      // Manifest scripts
+      const hashToEntrypointsMap = contentScripts
+        .filter((cs) => cs.options.registration !== 'runtime')
+        .reduce((map, script) => {
+          const hash = hashContentScriptOptions(script.options);
+          if (map.has(hash)) map.get(hash)?.push(script);
+          else map.set(hash, [script]);
+          return map;
+        }, new Map<string, ContentScriptEntrypoint[]>());
+      const manifestContentScripts = Array.from(
+        hashToEntrypointsMap.values(),
+      ).map((scripts) =>
+        mapWxtOptionsToContentScript(
+          scripts[0].options,
+          scripts.map((entry) =>
+            getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
           ),
+          getContentScriptCssFiles(scripts, cssMap),
+        ),
       );
-      if (newContentScripts.length >= 0) {
+      if (manifestContentScripts.length >= 0) {
         manifest.content_scripts ??= [];
-        manifest.content_scripts.push(...newContentScripts);
+        manifest.content_scripts.push(...manifestContentScripts);
       }
+
+      // Runtime content scripts
+      const runtimeContentScripts = contentScripts.filter(
+        (cs) => cs.options.registration === 'runtime',
+      );
+      if (
+        runtimeContentScripts.length > 0 &&
+        wxt.config.manifestVersion === 2
+      ) {
+        throw Error(
+          'Cannot use `registration: "runtime"` with MV2 content scripts, it is a MV3-only feature.',
+        );
+      }
+      runtimeContentScripts.forEach((script) => {
+        script.options.matches.forEach((matchPattern) => {
+          addHostPermission(manifest, matchPattern);
+        });
+      });
     }
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
