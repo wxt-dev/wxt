@@ -4,6 +4,7 @@ import {
   fakeArray,
   fakeBackgroundEntrypoint,
   fakeBuildOutput,
+  fakeContentScriptEntrypoint,
   fakeEntrypoint,
   fakeManifestCommand,
   fakeOptionsEntrypoint,
@@ -755,6 +756,70 @@ describe('Manifest Utils', () => {
               resources: ['content-scripts/one.css'],
             },
           ]);
+        });
+      });
+
+      describe('registration', () => {
+        it('should throw an error when registration=runtime for MV2', async () => {
+          const cs: ContentScriptEntrypoint = fakeContentScriptEntrypoint({
+            options: {
+              registration: 'runtime',
+            },
+          });
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [] }],
+          };
+          setFakeWxt({
+            config: {
+              manifestVersion: 2,
+            },
+          });
+
+          await expect(
+            generateManifest(entrypoints, buildOutput),
+          ).rejects.toThrowError();
+        });
+
+        it('should add host_permissions instead of content_scripts when registration=runtime', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              registration: 'runtime',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.content_scripts).toEqual([]);
+          expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
       });
     });

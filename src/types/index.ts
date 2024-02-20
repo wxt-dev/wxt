@@ -507,6 +507,18 @@ export interface BaseContentScriptEntrypointOptions
    * @default "manifest"
    */
   cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
+  /**
+   * Specify how the content script is registered.
+   *
+   * - `"manifest"`: The content script will be added to the `content_scripts` entry in the
+   *   manifest. This is the normal and most well known way of registering a content script.
+   * - `"runtime"`: The content script's `matches` is added to `host_permissions` and you are
+   *   responsible for using the scripting API to register the content script dynamically at
+   *   runtime.
+   *
+   * @default "manifest"
+   */
+  registration?: PerBrowserOption<'manifest' | 'runtime'>;
 }
 
 export interface MainWorldContentScriptEntrypointOptions
