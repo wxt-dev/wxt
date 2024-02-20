@@ -107,4 +107,29 @@ describe('User Config', () => {
     });
     expect(withoutPolyfill).not.toBe(withPolyfill);
   });
+
+  it('should respect changing config files', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'src/entrypoints/background.ts',
+      `export default defineBackground(
+        () => console.log('Hello background'),
+      );`,
+    );
+    project.addFile(
+      'test.config.ts',
+      `import { defineConfig } from 'wxt';
+      
+      export default defineConfig({
+        outDir: ".custom-output",
+        srcDir: "src",
+      });`,
+    );
+
+    await project.build({ configFile: 'test.config.ts' });
+
+    expect(
+      await project.fileExists('.custom-output/chrome-mv3/background.js'),
+    ).toBe(true);
+  });
 });
