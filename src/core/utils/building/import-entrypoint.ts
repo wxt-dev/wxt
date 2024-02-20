@@ -105,6 +105,13 @@ function getEsbuildOptions(opts: JitiTransformOptions): TransformOptions {
   return {
     format: 'cjs',
     loader: isJsx ? 'tsx' : 'ts',
-    jsx: isJsx ? 'automatic' : undefined,
+    ...(isJsx
+      ? {
+          // `h` and `Fragment` are undefined, but that's OK because JSX is never evaluated while
+          // grabbing the entrypoint's options.
+          jsxFactory: 'h',
+          jsxFragment: 'Fragment',
+        }
+      : undefined),
   };
 }
