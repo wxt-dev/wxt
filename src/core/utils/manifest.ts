@@ -6,6 +6,7 @@ import {
   ContentScriptEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
+  SidepanelEntrypoint,
 } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
@@ -182,7 +183,9 @@ function addEntrypoints(
     | undefined;
   const popup = entriesByType['popup']?.[0] as PopupEntrypoint | undefined;
   const sandboxes = entriesByType['sandbox'];
-  const sidepanels = entriesByType['sidepanel'];
+  const sidepanels = entriesByType['sidepanel'] as
+    | SidepanelEntrypoint[]
+    | undefined;
 
   if (background) {
     const script = getEntrypointBundlePath(
@@ -328,9 +331,11 @@ function addEntrypoints(
 
     if (wxt.config.browser === 'firefox') {
       manifest.sidebar_action = {
-        // TODO: Add options to side panel
-        // ...defaultSidepanel.options,
         default_panel: page,
+        browser_style: defaultSidepanel.options.browserStyle,
+        default_icon: defaultSidepanel.options.defaultIcon,
+        default_title: defaultSidepanel.options.defaultTitle,
+        open_at_install: defaultSidepanel.options.openAtInstall,
       };
     } else if (wxt.config.manifestVersion === 3) {
       // @ts-expect-error: Untyped

@@ -21,6 +21,7 @@ import {
   BuildStepOutput,
   UserManifest,
   Wxt,
+  SidepanelEntrypoint,
 } from '~/types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
@@ -148,6 +149,30 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
   skipped: faker.datatype.boolean(),
 }));
 
+export const fakeSidepanelEntrypoint = fakeObjectCreator<SidepanelEntrypoint>(
+  () => ({
+    type: 'sidepanel',
+    inputPath: 'entrypoints/sidepanel.html',
+    name: 'sidepanel',
+    outputDir: fakeDir('.output'),
+    options: {
+      defaultTitle: faker.helpers.arrayElement([
+        faker.person.fullName(),
+        undefined,
+      ]),
+      defaultIcon: faker.helpers.arrayElement([
+        {
+          '16': 'icon/16.png',
+          '24': 'icon/24.png',
+          '64': 'icon/64.png',
+        },
+      ]),
+      openAtInstall: faker.helpers.arrayElement([true, false, undefined]),
+    },
+    skipped: faker.datatype.boolean(),
+  }),
+);
+
 export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
   () => ({
     type: faker.helpers.arrayElement([
@@ -155,7 +180,6 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
       'bookmarks',
       'history',
       'newtab',
-      'sidepanel',
       'devtools',
       'unlisted-page',
       'unlisted-script',

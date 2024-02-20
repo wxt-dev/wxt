@@ -12,6 +12,8 @@ import {
   UnlistedScriptDefinition,
   PopupEntrypointOptions,
   OptionsEntrypointOptions,
+  SidepanelEntrypoint,
+  SidepanelEntrypointOptions,
 } from '~/types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
@@ -73,6 +75,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       switch (type) {
         case 'popup':
           return await getPopupEntrypoint(info);
+        case 'sidepanel':
+          return await getSidepanelEntrypoint(info);
         case 'options':
           return await getOptionsEntrypoint(info);
         case 'background':
@@ -201,153 +205,81 @@ function preventNoEntrypoints(files: EntrypointInfo[]) {
   }
 }
 
-function getHtmlBaseOptions(document: Document): BaseEntrypointOptions {
-  const options: BaseEntrypointOptions = {};
-
-  const includeContent = document
-    .querySelector("meta[name='manifest.include']")
-    ?.getAttribute('content');
-  if (includeContent) {
-    options.include = JSON5.parse(includeContent);
-  }
-
-  const excludeContent = document
-    .querySelector("meta[name='manifest.exclude']")
-    ?.getAttribute('content');
-  if (excludeContent) {
-    options.exclude = JSON5.parse(excludeContent);
-  }
-
-  return options;
-}
-
-/**
- * @param path Absolute path to the popup HTML file.
- * @param content String contents of the file at the path.
- */
-async function getPopupEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<PopupEntrypoint> {
-  const content = await fs.readFile(inputPath, 'utf-8');
-  const { document } = parseHTML(content);
-
-  const options: PopupEntrypointOptions = getHtmlBaseOptions(document);
-
-  const title = document.querySelector('title');
-  if (title != null) options.defaultTitle = title.textContent ?? undefined;
-
-  const defaultIconContent = document
-    .querySelector("meta[name='manifest.default_icon']")
-    ?.getAttribute('content');
-  if (defaultIconContent) {
-    try {
-      options.defaultIcon = JSON5.parse(defaultIconContent);
-    } catch (err) {
-      wxt.logger.fatal(
-        `Failed to parse default_icon meta tag content as JSON5. content=${defaultIconContent}`,
-        err,
-      );
-    }
-  }
-
-  const mv2TypeContent = document
-    .querySelector("meta[name='manifest.type']")
-    ?.getAttribute('content');
-  if (mv2TypeContent) {
-    options.mv2Key =
-      mv2TypeContent === 'page_action' ? 'page_action' : 'browser_action';
-  }
-
-  const browserStyleContent = document
-    .querySelector("meta[name='manifest.browser_style']")
-    ?.getAttribute('content');
-  if (browserStyleContent) {
-    options.browserStyle = browserStyleContent === 'true';
-  }
+async function getPopupEntrypoint(
+  info: EntrypointInfo,
+): Promise<PopupEntrypoint> {
+  const options = await getHtmlEntrypointOptions<PopupEntrypointOptions>(
+    info,
+    {
+      browserStyle: 'browse_style',
+      exclude: 'exclude',
+      include: 'include',
+      defaultIcon: 'default_icon',
+      defaultTitle: 'default_title',
+      mv2Key: 'type',
+    },
+    {
+      defaultTitle: (document) =>
+        document.querySelector('title')?.textContent || undefined,
+    },
+    {
+      defaultTitle: (content) => content,
+      mv2Key: (content) =>
+        content === 'page_action' ? 'page_action' : 'browser_action',
+    },
+  );
 
   return {
     type: 'popup',
     name: 'popup',
     options: resolvePerBrowserOptions(options, wxt.config.browser),
-    inputPath,
+    inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped,
+    skipped: info.skipped,
   };
 }
 
-/**
- * @param path Absolute path to the options HTML file.
- * @param content String contents of the file at the path.
- */
-async function getOptionsEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<OptionsEntrypoint> {
-  const content = await fs.readFile(inputPath, 'utf-8');
-  const { document } = parseHTML(content);
-
-  const options: OptionsEntrypointOptions = getHtmlBaseOptions(document);
-
-  const openInTabContent = document
-    .querySelector("meta[name='manifest.open_in_tab']")
-    ?.getAttribute('content');
-  if (openInTabContent) {
-    options.openInTab = openInTabContent === 'true';
-  }
-
-  const chromeStyleContent = document
-    .querySelector("meta[name='manifest.chrome_style']")
-    ?.getAttribute('content');
-  if (chromeStyleContent) {
-    options.chromeStyle = chromeStyleContent === 'true';
-  }
-
-  const browserStyleContent = document
-    .querySelector("meta[name='manifest.browser_style']")
-    ?.getAttribute('content');
-  if (browserStyleContent) {
-    options.browserStyle = browserStyleContent === 'true';
-  }
-
+async function getOptionsEntrypoint(
+  info: EntrypointInfo,
+): Promise<OptionsEntrypoint> {
+  const options = await getHtmlEntrypointOptions<OptionsEntrypointOptions>(
+    info,
+    {
+      browserStyle: 'browse_style',
+      chromeStyle: 'chrome_style',
+      exclude: 'exclude',
+      include: 'include',
+      openInTab: 'open_in_tab',
+    },
+  );
   return {
     type: 'options',
     name: 'options',
     options: resolvePerBrowserOptions(options, wxt.config.browser),
-    inputPath,
+    inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped,
+    skipped: info.skipped,
   };
 }
 
-/**
- * @param path Absolute path to the HTML file.
- * @param content String contents of the file at the path.
- */
-async function getUnlistedPageEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<GenericEntrypoint> {
-  const content = await fs.readFile(inputPath, 'utf-8');
-  const { document } = parseHTML(content);
+async function getUnlistedPageEntrypoint(
+  info: EntrypointInfo,
+): Promise<GenericEntrypoint> {
+  const options = await getHtmlEntrypointOptions<BaseEntrypointOptions>(info, {
+    exclude: 'exclude',
+    include: 'include',
+  });
 
   return {
     type: 'unlisted-page',
-    name: getEntrypointName(wxt.config.entrypointsDir, inputPath),
-    inputPath,
+    name: info.name,
+    inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    options: getHtmlBaseOptions(document),
-    skipped,
+    options,
+    skipped: info.skipped,
   };
 }
 
-/**
- * @param path Absolute path to the script's file.
- * @param content String contents of the file at the path.
- */
 async function getUnlistedScriptEntrypoint({
   inputPath,
   name,
@@ -371,9 +303,6 @@ async function getUnlistedScriptEntrypoint({
   };
 }
 
-/**
- * @param path Absolute path to the background's TS file.
- */
 async function getBackgroundEntrypoint({
   inputPath,
   name,
@@ -406,9 +335,6 @@ async function getBackgroundEntrypoint({
   };
 }
 
-/**
- * @param path Absolute path to the content script's TS file.
- */
 async function getContentScriptEntrypoint({
   inputPath,
   name,
@@ -429,6 +355,82 @@ async function getContentScriptEntrypoint({
     options: resolvePerBrowserOptions(options, wxt.config.browser),
     skipped,
   };
+}
+
+async function getSidepanelEntrypoint(
+  info: EntrypointInfo,
+): Promise<SidepanelEntrypoint> {
+  const options = await getHtmlEntrypointOptions<SidepanelEntrypointOptions>(
+    info,
+    {
+      browserStyle: 'browse_style',
+      exclude: 'exclude',
+      include: 'include',
+      defaultIcon: 'default_icon',
+      defaultTitle: 'default_title',
+      openAtInstall: 'open_at_install',
+    },
+    {
+      defaultTitle: (document) =>
+        document.querySelector('title')?.textContent || undefined,
+    },
+    {
+      defaultTitle: (content) => content,
+    },
+  );
+
+  return {
+    type: 'sidepanel',
+    name: info.name,
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
+    inputPath: info.inputPath,
+    outputDir: wxt.config.outDir,
+    skipped: info.skipped,
+  };
+}
+
+/**
+ * Parse the HTML tags to extract options from them.
+ */
+async function getHtmlEntrypointOptions<T extends BaseEntrypointOptions>(
+  info: EntrypointInfo,
+  keyMap: Record<keyof T, string>,
+  queries?: Partial<{
+    [key in keyof T]: (
+      document: Document,
+      manifestKey: string,
+    ) => string | undefined;
+  }>,
+  parsers?: Partial<{ [key in keyof T]: (content: string) => T[key] }>,
+): Promise<T> {
+  const content = await fs.readFile(info.inputPath, 'utf-8');
+  const { document } = parseHTML(content);
+
+  const options = {} as T;
+
+  const defaultQuery = (manifestKey: string) =>
+    document
+      .querySelector(`meta[name='manifest.${manifestKey}']`)
+      ?.getAttribute('content');
+
+  Object.entries(keyMap).forEach(([_key, manifestKey]) => {
+    const key = _key as keyof T;
+    const content = queries?.[key]
+      ? queries[key]!(document, manifestKey)
+      : defaultQuery(manifestKey);
+    if (content) {
+      try {
+        options[key] = (parsers?.[key] ?? JSON5.parse)(content);
+      } catch (err) {
+        wxt.logger.fatal(
+          `Failed to parse meta tag content. Usually this means you have invalid JSON5 content (content=${content})`,
+          err,
+        );
+      }
+    }
+  });
+
+  return options;
 }
 
 const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
