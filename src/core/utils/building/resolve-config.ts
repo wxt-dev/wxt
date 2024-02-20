@@ -37,6 +37,7 @@ export async function resolveConfig(
   let userConfigMetadata: ResolvedConfig['userConfigMetadata'] | undefined;
   if (inlineConfig.configFile !== false) {
     const { config: loadedConfig, ...metadata } = await loadConfig<UserConfig>({
+      configFile: inlineConfig.configFile,
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
