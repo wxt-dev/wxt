@@ -22,7 +22,7 @@
 
 ### ❤️ Contributors
 
-- Okou
+- Okou ([@ookkoouu](https://github.com/ookkoouu))
 
 ## v0.16.8
 
@@ -83,8 +83,8 @@
 
 ### ❤️ Contributors
 
-- Lionelhorn 
-- Okou
+- Lionelhorn ([@Lionelhorn](https://github.com/Lionelhorn))
+- Okou ([@ookkoouu](https://github.com/ookkoouu))
 
 ## v0.16.5
 
