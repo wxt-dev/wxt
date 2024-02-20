@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.16.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.8...v0.16.9)
+
+### 🚀 Enhancements
+
+- Support setting side panel options in HTML file ([#468](https://github.com/wxt-dev/wxt/pull/468))
+
+### 🩹 Fixes
+
+- Fix order of ShadowRootUI hooks calling ([#459](https://github.com/wxt-dev/wxt/pull/459))
+
+### 📖 Documentation
+
+- Add wrapper div to react's `createShadowRootUi` example ([bc24ea4](https://github.com/wxt-dev/wxt/commit/bc24ea4))
+
+### 🏡 Chore
+
+- Simplify entrypoint types ([#464](https://github.com/wxt-dev/wxt/pull/464))
+
+### ❤️ Contributors
+
+- Okou
+
 ## v0.16.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.7...v0.16.8)
