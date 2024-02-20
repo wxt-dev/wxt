@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.16.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.9...v0.16.10)
+
+### 🚀 Enhancements
+
+- Customize when content scripts are registered, in the manifest or at runtime ([#471](https://github.com/wxt-dev/wxt/pull/471))
+
+### 🩹 Fixes
+
+- Don't assume react when importing JSX entrypoints during build ([#470](https://github.com/wxt-dev/wxt/pull/470))
+- Respect `configFile` option ([#472](https://github.com/wxt-dev/wxt/pull/472))
+
 ## v0.16.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.8...v0.16.9)
