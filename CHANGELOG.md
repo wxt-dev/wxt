@@ -15,7 +15,7 @@
 ### 🤖 CI
 
 - Fix codecov warning in release workflow ([7c6973f](https://github.com/wxt-dev/wxt/commit/7c6973f))
-- Upgrade `pnpm/action-setup` to v2 ([905bfc7](https://github.com/wxt-dev/wxt/commit/905bfc7))
+- Upgrade `pnpm/action-setup` to v3 ([905bfc7](https://github.com/wxt-dev/wxt/commit/905bfc7))
 
 ## v0.16.10
 
