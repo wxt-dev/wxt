@@ -101,8 +101,8 @@ export async function createServer(
     transformHtml(url, html, originalUrl) {
       return builderServer.transformHtml(url, html, originalUrl);
     },
-    reloadContentScript(contentScript) {
-      server.ws.send('wxt:reload-content-script', contentScript);
+    reloadContentScript(payload) {
+      server.ws.send('wxt:reload-content-script', payload);
     },
     reloadPage(path) {
       server.ws.send('wxt:reload-page', path);
@@ -237,9 +237,14 @@ function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
       const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
       const css = getContentScriptCssFiles([entry], cssMap);
 
-      server.reloadContentScript(
-        mapWxtOptionsToRegisteredContentScript(entry.options, js, css),
-      );
+      server.reloadContentScript({
+        registration: entry.options.registration,
+        contentScript: mapWxtOptionsToRegisteredContentScript(
+          entry.options,
+          js,
+          css,
+        ),
+      });
     });
   } else {
     server.reloadExtension();

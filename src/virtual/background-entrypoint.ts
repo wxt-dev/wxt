@@ -39,7 +39,7 @@ try {
   // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
   if (res instanceof Promise) {
     console.warn(
-      "The background's main() function return a promise, but it must be synchonous",
+      "The background's main() function return a promise, but it must be synchronous",
     );
   }
 } catch (err) {
