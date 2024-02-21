@@ -5,7 +5,10 @@ import {
   ServerInfo,
   WxtDevServer,
 } from '~/types';
-import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '~/core/utils/entrypoints';
 import {
   getContentScriptCssFiles,
   getContentScriptsCssMap,
@@ -248,9 +251,7 @@ function reloadHtmlPages(
   server: WxtDevServer,
 ): { reloadedNames: string[] } {
   // groups might contain other files like background/content scripts, and we only care about the HTMl pages
-  const htmlEntries = groups
-    .flat()
-    .filter((entry) => entry.inputPath.endsWith('.html'));
+  const htmlEntries = groups.flat().filter(isHtmlEntrypoint);
 
   htmlEntries.forEach((entry) => {
     const path = getEntrypointBundlePath(entry, wxt.config.outDir, '.html');
