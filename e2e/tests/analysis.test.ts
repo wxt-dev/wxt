@@ -84,7 +84,6 @@ describe('Analysis', () => {
         keepArtifacts: true,
       },
     });
-    console.log(project.root);
 
     expect(await project.fileExists('stats/bundle.html')).toBe(true);
     expect(await project.fileExists('stats/bundle-0.json')).toBe(true);
