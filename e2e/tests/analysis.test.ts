@@ -7,7 +7,7 @@ describe('Analysis', () => {
     resetBundleIncrement();
   });
 
-  it('should outptut a stats.html with no part files by default', async () => {
+  it('should output a stats.html with no part files by default', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/popup.html');
     project.addFile('entrypoints/options.html');
