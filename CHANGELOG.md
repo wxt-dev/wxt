@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.16.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.10...v0.16.11)
+
+### 🩹 Fixes
+
+- Output main JS file for HTML entrypoints to chunks directory ([#473](https://github.com/wxt-dev/wxt/pull/473))
+
+### 🏡 Chore
+
+- **e2e:** Remove log ([4fda203](https://github.com/wxt-dev/wxt/commit/4fda203))
+
+### 🤖 CI
+
+- Fix codecov warning in release workflow ([7c6973f](https://github.com/wxt-dev/wxt/commit/7c6973f))
+- Upgrade `pnpm/action-setup` to v2 ([905bfc7](https://github.com/wxt-dev/wxt/commit/905bfc7))
+
 ## v0.16.10
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.9...v0.16.10)
