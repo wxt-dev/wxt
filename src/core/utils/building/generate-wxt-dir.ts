@@ -6,7 +6,10 @@ import {
 } from '~/types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
-import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '~/core/utils/entrypoints';
 import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
 import { normalizePath } from '~/core/utils/paths';
 import path from 'node:path';
@@ -82,7 +85,7 @@ async function writePathsDeclarationFile(
       getEntrypointBundlePath(
         entry,
         wxt.config.outDir,
-        entry.inputPath.endsWith('.html') ? '.html' : '.js',
+        isHtmlEntrypoint(entry) ? '.html' : '.js',
       ),
     )
     .concat(await getPublicFiles())

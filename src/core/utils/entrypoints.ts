@@ -70,3 +70,12 @@ export function resolvePerBrowserOptions<
     ]),
   );
 }
+
+/**
+ * Returns true when the entrypoint is an HTML entrypoint.
+ *
+ * Naively just checking the file extension of the input path.
+ */
+export function isHtmlEntrypoint(entrypoint: Entrypoint): boolean {
+  return entrypoint.inputPath.endsWith('.html');
+}
