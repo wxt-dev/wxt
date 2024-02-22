@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Storage API
 
 WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `storage` auto-import from `wxt/storage` or import it manually to get started:
@@ -60,7 +64,7 @@ unwatch();
 
 `wxt/storage` also supports setting metadata for keys, stored at `key + "$"`. Metadata is a collection of properties associated with a key. It might be a version number, last modified date, etc.
 
-[Other than versioning](#versioning-and-migrations), you are responsible for managing a field's metadata:
+[Other than versioning](#versioning), you are responsible for managing a field's metadata:
 
 ```ts
 await Promise.all([
@@ -120,7 +124,7 @@ const unwatch = showChangelogOnUpdate.watch(() => {
 
 For a full list of properties and methods available, see the [API reference](/api/wxt/storage/interfaces/WxtStorageItem).
 
-### Versioning and Migrations
+### Versioning
 
 You can add versioning to storage items if you expect them to grow or change over time. When defining the first version of an item, start with version 1.
 
@@ -256,3 +260,30 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 ```
 
 :::
+
+### Running Migrations
+
+To run migrations, you have two options:
+
+1. Import all versioned storage items into your background script and they will run automatically whenever your extension updates
+2. Manually call `item.migrate()`
+
+The first approach is recommended. To make importing all your storage items easy, you can define all of them in a single file, `utils/storage.ts`, and import that file into your background entrypoint:
+
+```ts
+// utils/storage.ts
+export countStorage = storage.defineItem(...);
+export themeStorage = storage.defineItem(...);
+export someOtherStorage = storage.defineItem(...);
+```
+
+```ts
+// entrypoints/background.ts
+import '@/utils/storage'; // This import runs migrations on updates
+
+export default defineBackground({
+  // ...
+});
+```
+
+> When you call `storage.defineItem`, a `browser.runtime.onInstalled` listener is added. `onInstalled` listeners are only triggered in the background, which is why you must import them into the background.
