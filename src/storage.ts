@@ -7,6 +7,7 @@
  */
 import { Storage, browser } from '~/browser';
 import { dequal } from 'dequal/lite';
+import { logger } from './sandbox/utils/logger';
 
 export const storage = createStorage();
 
@@ -256,7 +257,7 @@ function createStorage(): WxtStorage {
           'Storage item version cannot be less than 1. Initial versions should be set to 1, not 0.',
         );
       }
-      const runMigrations = async () => {
+      const migrate = async () => {
         const [value, meta] = await Promise.all([
           // TODO: Optimize with getItems
           getItem(driver, driverKey, undefined),
@@ -267,10 +268,13 @@ function createStorage(): WxtStorage {
         const currentVersion = meta.v ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
-            `[wxt/storage] Migration ignored for "${key}", version downgrade detected (${currentVersion} -> ${targetVersion})`,
+            `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
           );
         }
 
+        logger.debug(
+          `Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
+        );
         const migrationsToRun = Array.from(
           { length: targetVersion - currentVersion },
           (_, i) => currentVersion + i + 1,
@@ -286,13 +290,23 @@ function createStorage(): WxtStorage {
           setItem(driver, driverKey, migratedValue),
           setMeta(driver, driverKey, { v: targetVersion }),
         ]);
+        logger.debug(
+          `Storage migration completed for ${key} v${targetVersion}`,
+          { migratedValue },
+        );
       };
-      let _migrationsCompleted = runMigrations();
+      browser.runtime.onInstalled.addListener(async ({ reason }) => {
+        if (reason !== 'update') return;
+        try {
+          await migrate();
+        } catch (err) {
+          logger.error(`Migration failed for ${key}`, err);
+        }
+      });
 
       const getDefaultValue = () => opts?.defaultValue ?? null;
 
       return {
-        _migrationsCompleted,
         get defaultValue() {
           return getDefaultValue();
         },
@@ -306,6 +320,7 @@ function createStorage(): WxtStorage {
           watch(driver, driverKey, (newValue, oldValue) =>
             cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
           ),
+        migrate,
       };
     },
   };
@@ -556,6 +571,13 @@ export interface WxtStorageItem<
    * Listen for changes to the value in storage.
    */
   watch(cb: WatchCallback<TValue>): Unwatch;
+  /**
+   * If there are migrations defined on the storage item, migrate to the latest version.
+   *
+   * **This function is ran automatically whenever the extension updates**, so you don't have to call it
+   * manually.
+   */
+  migrate(): Promise<void>;
 }
 
 export interface GetItemOptions<T> {
