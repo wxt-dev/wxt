@@ -60,15 +60,13 @@ export async function reloadRuntimeContentScriptMv3(
   const registered = await browser.scripting.getRegisteredContentScripts();
   logger.debug('Existing scripts:', registered);
 
-  const existing = registered.find((cs) => {
-    const hasEveryJs = contentScript.js?.every((js) => cs.js?.includes(js));
-    const hasEveryCss = contentScript.css?.every(
-      (css) => cs.css?.includes(css),
-    );
-    return hasEveryJs && hasEveryCss;
+  const matches = registered.filter((cs) => {
+    const hasJs = contentScript.js?.find((js) => cs.js?.includes(js));
+    const hasCss = contentScript.css?.find((css) => cs.css?.includes(css));
+    return hasJs || hasCss;
   });
 
-  if (!existing) {
+  if (matches.length === 0) {
     logger.log(
       'Content script is not registered yet, nothing to reload',
       contentScript,
@@ -76,7 +74,7 @@ export async function reloadRuntimeContentScriptMv3(
     return;
   }
 
-  await browser.scripting.updateContentScripts([existing]);
+  await browser.scripting.updateContentScripts(matches);
   await reloadTabsForContentScript(contentScript);
 }
 
