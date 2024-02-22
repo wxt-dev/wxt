@@ -3,6 +3,13 @@ import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from '~/browser';
 import { WxtStorageItem, storage } from '~/storage';
 
+async function triggerUpdate() {
+  await fakeBrowser.runtime.onInstalled.trigger({
+    reason: 'update',
+    temporary: false,
+  });
+}
+
 describe('Storage Utils', () => {
   beforeEach(() => {
     fakeBrowser.reset();
@@ -389,14 +396,6 @@ describe('Storage Utils', () => {
 
   describe('defineItem', () => {
     describe('versioning', () => {
-      /**
-       * This works because fakeBrowser is syncrounous, and is will finish any number of chained
-       * calls within a single tick of the event loop, ie: a timeout of 0.
-       */
-      async function waitForMigrations() {
-        return new Promise((res) => setTimeout(res));
-      }
-
       it('should migrate values to the latest when a version upgrade is detected', async () => {
         await fakeBrowser.storage.local.set({
           count: 2,
@@ -413,7 +412,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await waitForMigrations();
+        await triggerUpdate();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -440,7 +439,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await waitForMigrations();
+        await triggerUpdate();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -465,7 +464,7 @@ describe('Storage Utils', () => {
             2: migrateToV2,
           },
         });
-        await waitForMigrations();
+        await triggerUpdate();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -477,7 +476,7 @@ describe('Storage Utils', () => {
         expect(migrateToV2).toBeCalledWith(2);
       });
 
-      it('Should not run old migrations if the version is unchanged', async () => {
+      it('should not run old migrations if the version is unchanged', async () => {
         await fakeBrowser.storage.local.set({
           count: 2,
           count$: { v: 3 },
@@ -493,7 +492,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await waitForMigrations();
+        await triggerUpdate();
 
         expect(migrateToV2).not.toBeCalled();
         expect(migrateToV3).not.toBeCalled();
@@ -515,7 +514,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await waitForMigrations();
+        await triggerUpdate();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -542,10 +541,10 @@ describe('Storage Utils', () => {
           defaultValue: 0,
           version: nextVersion,
         });
+        await triggerUpdate();
 
-        // @ts-expect-error: _migrationsCompleted is returned, but untyped
-        await expect(item._migrationsCompleted).rejects.toThrow(
-          'version downgrade detected',
+        await expect(item.migrate()).rejects.toThrow(
+          'Version downgrade detected (v2 -> v1) for "local:count"',
         );
       });
     });
