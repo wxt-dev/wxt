@@ -270,43 +270,43 @@ describe('Output Directory Structure', () => {
 
     expect(await project.serializeFile('.output/chrome-mv3/background.js'))
       .toMatchInlineSnapshot(`
-      ".output/chrome-mv3/background.js
-      ----------------------------------------
-      import { l as logHello } from "./chunks/log-bezs0tt4.js";
-      function defineBackground(arg) {
-        if (typeof arg === "function")
-          return { main: arg };
-        return arg;
-      }
-      const definition = defineBackground({
-        type: "module",
-        main() {
-          logHello("background");
+        ".output/chrome-mv3/background.js
+        ----------------------------------------
+        import { l as logHello } from "./chunks/log-bezs0tt4.js";
+        function defineBackground(arg) {
+          if (typeof arg === "function")
+            return { main: arg };
+          return arg;
         }
-      });
-      chrome;
-      function print(method, ...args) {
-        return;
-      }
-      var logger = {
-        debug: (...args) => print(console.debug, ...args),
-        log: (...args) => print(console.log, ...args),
-        warn: (...args) => print(console.warn, ...args),
-        error: (...args) => print(console.error, ...args)
-      };
-      try {
-        const res = definition.main();
-        if (res instanceof Promise) {
-          console.warn(
-            "The background's main() function return a promise, but it must be synchonous"
-          );
+        const definition = defineBackground({
+          type: "module",
+          main() {
+            logHello("background");
+          }
+        });
+        chrome;
+        function print(method, ...args) {
+          return;
         }
-      } catch (err) {
-        logger.error("The background crashed on startup!");
-        throw err;
-      }
-      "
-    `);
+        var logger = {
+          debug: (...args) => print(console.debug, ...args),
+          log: (...args) => print(console.log, ...args),
+          warn: (...args) => print(console.warn, ...args),
+          error: (...args) => print(console.error, ...args)
+        };
+        try {
+          const res = definition.main();
+          if (res instanceof Promise) {
+            console.warn(
+              "The background's main() function return a promise, but it must be synchronous"
+            );
+          }
+        } catch (err) {
+          logger.error("The background crashed on startup!");
+          throw err;
+        }
+        "
+      `);
   });
 
   it('should generate IIFE background script when type=undefined', async () => {
@@ -381,7 +381,7 @@ describe('Output Directory Structure', () => {
             const res = definition.main();
             if (res instanceof Promise) {
               console.warn(
-                "The background's main() function return a promise, but it must be synchonous"
+                "The background's main() function return a promise, but it must be synchronous"
               );
             }
           } catch (err) {
