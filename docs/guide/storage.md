@@ -35,6 +35,8 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
+For a full list of methods available, see the [API reference](/api/wxt/storage/interfaces/WxtStorage).
+
 ## Watchers
 
 To listen for storage changes, use the `storage.watch` function. It lets you setup a listener for a single key:
@@ -115,6 +117,8 @@ const unwatch = showChangelogOnUpdate.watch(() => {
   // ...
 });
 ```
+
+For a full list of properties and methods available, see the [API reference](/api/wxt/storage/interfaces/WxtStorageItem).
 
 ### Versioning and Migrations
 

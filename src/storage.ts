@@ -497,7 +497,9 @@ export interface WxtStorage {
   unwatch(): void;
 
   /**
-   * Example text
+   * Define a storage item with a default value, type, or versioning.
+   *
+   * Read full docs: https://wxt.dev/guide/storage.html#defining-storage-items
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: string,
