@@ -19,8 +19,66 @@
 
 #### ⚠️ Breaking Changes
 
-- **storage:** ⚠️  Improved support for default values on storage items ([#477](https://github.com/wxt-dev/wxt/pull/477))
-- **storage:** ⚠️  Only run migrations when the extension is updated ([#478](https://github.com/wxt-dev/wxt/pull/478))
+`v0.17.0` introduces several breaking changes to `wxt/storage`.
+
+First, if you were using `defineItem` with versioning and no default value, you will need to add `defaultValue: null` to the options and update the first type parameter:
+
+```ts
+// < 0.17
+const item = storage.defineItem<number>("local:count", {
+  version: ...,
+  migrations: ...,
+})
+
+// >= 0.17
+const item = storage.defineItem<number | null>("local:count", {
+  defaultValue: null,
+  version: ...,
+  migrations: ...,
+})
+```
+
+The `defaultValue` property is now required if passing in the second options argument. 
+
+If you exclude the second options argument, it will default to being nullable, as before.
+
+```ts
+const item: WxtStorageItem<number | null> = storage.defineItem<number>("local:count");
+const value: number | null = await item.getValue();
+```
+
+> If you don't use typescript, there aren't any breaking changes, this is just a type change.
+
+For storage items that are not nullable, the `watch` callback types has improved and will use the default value instead of `null` when the value is missing:
+
+```ts
+// >=0.17
+const item = storage.defineItem<number>("local:count", { defaultValue: 0 });
+item.watch((newValue: number | null, oldValue: number | null) => {
+  // ...
+});
+
+// >=0.17
+const item = storage.defineItem<number>("local:count", { defaultValue: 0 });
+item.watch((newValue: number, oldValue: number) => {
+  // ...
+});
+```
+
+You can also access the default value directly off the item:
+
+```ts
+console.log(item.defaultValue); // 0
+```
+
+The second breaking change is that migrations for versioned items only run when the extension is updated. Before, they were ran whenever the storage item was created, in any entrypoint (background, popup, content script, etc). Now, in v0.17, storage items will only run migrations when the `browser.runtime.onInstalled` event is fired with `reason = "update"` in the background. See the updated docs to make sure they run correctly: https://wxt.dev/guide/storage.html#running-migrations. TLDR: you need to import all storage items into the background entrypoint for the `onInstalled` hook to fire properly and thus run the migrations.
+
+To keep the old behavior, call the new `migrate` function to run migrations as soon as an item is defined:
+
+```ts
+const item = storage.defineItem(...);
+item.migrate();
+```
 
 ## v0.16.11
 
