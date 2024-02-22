@@ -396,15 +396,18 @@ export interface WxtDevServer
   /**
    * Tell the extension to restart a content script.
    *
-   * @param contentScript The manifest definition for a content script
+   * @param payload Information about the content script to reload.
    */
-  reloadContentScript: (
-    contentScript: Omit<Scripting.RegisteredContentScript, 'id'>,
-  ) => void;
+  reloadContentScript: (payload: ReloadContentScriptPayload) => void;
   /**
    * Grab the latest runner config and restart the browser.
    */
   restartBrowser: () => void;
+}
+
+export interface ReloadContentScriptPayload {
+  registration?: BaseContentScriptEntrypointOptions['registration'];
+  contentScript: Omit<Scripting.RegisteredContentScript, 'id'>;
 }
 
 export type TargetBrowser = string;
