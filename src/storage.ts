@@ -247,7 +247,7 @@ function createStorage(): WxtStorage {
         driver.unwatch();
       });
     },
-    defineItem: (key, opts) => {
+    defineItem: (key: string, opts?: WxtStorageItemOptions<any>) => {
       const { driver, driverKey } = resolveKey(key);
 
       const { version: targetVersion = 1, migrations = {} } = opts ?? {};
@@ -289,15 +289,23 @@ function createStorage(): WxtStorage {
       };
       let _migrationsCompleted = runMigrations();
 
+      const getDefaultValue = () => opts?.defaultValue ?? null;
+
       return {
         _migrationsCompleted,
+        get defaultValue() {
+          return getDefaultValue();
+        },
         getValue: () => getItem(driver, driverKey, opts),
         getMeta: () => getMeta(driver, driverKey),
         setValue: (value) => setItem(driver, driverKey, value),
         setMeta: (properties) => setMeta(driver, driverKey, properties),
         removeValue: (opts) => removeItem(driver, driverKey, opts),
         removeMeta: (properties) => removeMeta(driver, driverKey, properties),
-        watch: (cb) => watch(driver, driverKey, cb),
+        watch: (cb) =>
+          watch(driver, driverKey, (newValue, oldValue) =>
+            cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
+          ),
       };
     },
   };
@@ -482,20 +490,21 @@ export interface WxtStorage {
   /**
    * Watch for changes to a specific key in storage.
    */
-  watch<T>(key: string, cb: WatchCallback<T>): Unwatch;
+  watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
   /**
    * Remove all watch listeners.
    */
   unwatch(): void;
+
   /**
-   * Define a constant with utilities for reading/writing to a single value in storage.
-   *
-   * @example
-   * export const installDate = storage.defineItem<number>("local:installDate");
+   * Example text
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: string,
-    options?: WxtStorageItemOptions<TValue>,
+  ): WxtStorageItem<TValue | null, TMetadata>;
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: string,
+    options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
 }
 
@@ -508,7 +517,7 @@ interface WxtStorageDriver {
   removeItems(keys: string[]): Promise<void>;
   snapshot(): Promise<Record<string, unknown>>;
   restoreSnapshot(data: Record<string, unknown>): Promise<void>;
-  watch<T>(key: string, cb: WatchCallback<T>): Unwatch;
+  watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
   unwatch(): void;
 }
 
@@ -516,6 +525,7 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  defaultValue: TValue;
   /**
    * Get the latest value from storage.
    */
@@ -527,7 +537,7 @@ export interface WxtStorageItem<
   /**
    * Set the value in storage.
    */
-  setValue(value: TValue | null): Promise<void>;
+  setValue(value: TValue): Promise<void>;
   /**
    * Set metadata properties.
    */
@@ -570,7 +580,8 @@ export interface SnapshotOptions {
   excludeKeys?: string[];
 }
 
-export interface WxtStorageItemOptions<T> extends GetItemOptions<T> {
+export interface WxtStorageItemOptions<T> {
+  defaultValue: T;
   /**
    * Provide a version number for the storage item to enable migrations. When changing the version
    * in the future, migration functions will be ran on application startup.
@@ -592,7 +603,7 @@ export type NullablePartial<T> = {
 /**
  * Callback called when a value in storage is changed.
  */
-export type WatchCallback<T> = (newValue: T | null, oldValue: T | null) => void;
+export type WatchCallback<T> = (newValue: T, oldValue: T) => void;
 /**
  * Call to remove a watch listener
  */
