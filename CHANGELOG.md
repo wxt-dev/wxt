@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.17.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.11...v0.17.0)
+
+### 🚀 Enhancements
+
+- **storage:** ⚠️  Improved support for default values on storage items ([#477](https://github.com/wxt-dev/wxt/pull/477))
+
+### 🩹 Fixes
+
+- **storage:** ⚠️  Only run migrations when the extension is updated ([#478](https://github.com/wxt-dev/wxt/pull/478))
+- Improve dev mode for content scripts registered at runtime ([#474](https://github.com/wxt-dev/wxt/pull/474))
+
+### 📖 Documentation
+
+- **storage:** Update docs ([91fc41c](https://github.com/wxt-dev/wxt/commit/91fc41c))
+
+#### ⚠️ Breaking Changes
+
+- **storage:** ⚠️  Improved support for default values on storage items ([#477](https://github.com/wxt-dev/wxt/pull/477))
+- **storage:** ⚠️  Only run migrations when the extension is updated ([#478](https://github.com/wxt-dev/wxt/pull/478))
+
 ## v0.16.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.10...v0.16.11)
