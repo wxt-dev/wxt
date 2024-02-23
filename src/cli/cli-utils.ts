@@ -1,6 +1,5 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels } from 'consola';
-import { exec } from '~/core/utils/exec';
 import { printHeader } from '~/core/utils/log';
 import { formatDuration } from '~/core/utils/time';
 import { ValidationError } from '~/core/utils/validation';
@@ -79,7 +78,8 @@ export function createAliasedCommand(
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
-        await exec(alias, args, {
+        const { execa } = await import('execa');
+        await execa(alias, args, {
           stdio: 'inherit',
         });
       } catch {

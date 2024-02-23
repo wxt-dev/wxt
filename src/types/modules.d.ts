@@ -50,18 +50,6 @@ declare module 'web-ext-run/util/logger' {
   export const consoleStream: IConsoleStream;
 }
 
-declare module 'manage-path' {
-  export interface ManagedPath {
-    push(...paths: string[]);
-    push(paths: string[]);
-    shift(...paths: string[]);
-    shift(paths: string[]);
-    get(): string;
-    restore(): void;
-  }
-  export default function managePath(env: object): ManagedPath;
-}
-
 declare module 'wxt/browser' {
   // Overridden when types are generated per project
   export type PublicPath = string;

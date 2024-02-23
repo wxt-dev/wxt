@@ -16,7 +16,6 @@ import {
   validateEntrypoints,
 } from '../validation';
 import consola from 'consola';
-import { exec } from '../exec';
 import { wxt } from '../../wxt';
 
 /**
@@ -93,7 +92,8 @@ async function combineAnalysisStats(): Promise<void> {
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
-  await exec(
+  const { execa } = await import('execa');
+  await execa(
     'rollup-plugin-visualizer',
     [
       ...absolutePaths,
