@@ -62,7 +62,7 @@ features:
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
-    details: Tools for analyizing the final extension bundle and minimizing your extension's size.
+    details: Tools for analyzing the final extension bundle and minimizing your extension's size.
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.

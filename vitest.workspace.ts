@@ -7,7 +7,7 @@ import path from 'node:path';
 const seed = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
 console.info('Test seed: ' + pc.cyan(seed));
 
-// config.define doesn't work with workspaces, so we have to set it inisde a plugin
+// config.define doesn't work with workspaces, so we have to set it inside a plugin
 const testSeed = (): Plugin => ({
   name: 'test-seed',
   config(config) {

@@ -32,7 +32,7 @@ Every project is different, so there's no one-solution-fits-all to migrating you
 
 ## Popular Tools/Frameworks
 
-Here's specific steps for other popuplar frameworks/build tools.
+Here's specific steps for other popular frameworks/build tools.
 
 ### `vite-plugin-web-extension`
 

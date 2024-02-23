@@ -16,7 +16,7 @@ For MV2, the background is added as a script to the background page. For MV3, th
 ## Definition
 
 :::warning
-The main function of the background **_CANNOT BE ASYNC_**. Event listeners must be added syncronously on background startup. If your main function returns a promise, WXT will log an error.
+The main function of the background **_CANNOT BE ASYNC_**. Event listeners must be added synchronously on background startup. If your main function returns a promise, WXT will log an error.
 :::
 
 ```ts

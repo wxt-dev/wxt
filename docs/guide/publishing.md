@@ -64,7 +64,7 @@ See the [Firefox Addon Store](#firefox-addon-store) section for more details abo
 
 ## GitHub Action
 
-Here's an example of a GitHub Action to automate submiting new versions of your extension for review. Ensure that you've added all required secrets used in the workflow to the repo's settings.
+Here's an example of a GitHub Action to automate submitting new versions of your extension for review. Ensure that you've added all required secrets used in the workflow to the repo's settings.
 
 ```yml
 # TODO

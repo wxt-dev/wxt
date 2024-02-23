@@ -30,7 +30,7 @@ export default defineBackground({
 ```
 
 :::warning
-Only MV3 support ESM background scripts/service workers. When targetting MV2, the `type` option is ignored and the background is always bundled into a single file as IIFE.
+Only MV3 support ESM background scripts/service workers. When targeting MV2, the `type` option is ignored and the background is always bundled into a single file as IIFE.
 :::
 
 ## Content Scripts

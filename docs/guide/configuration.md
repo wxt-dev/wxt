@@ -1,6 +1,6 @@
 # Configuration
 
-WXT's behavior can be configured via the `wxt.config.ts` file. In this file, you can add Vite plugins, change the directory strucutre of your project, and set fields on your `manifest.json`.
+WXT's behavior can be configured via the `wxt.config.ts` file. In this file, you can add Vite plugins, change the directory structure of your project, and set fields on your `manifest.json`.
 
 ## Config File
 

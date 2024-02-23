@@ -1,5 +1,5 @@
 /**
- * Simplfied storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
+ * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
  * See [the guide](https://wxt.dev/guide/storage.html) for more information.
  *
@@ -32,7 +32,7 @@ function createStorage(): WxtStorage {
     const driverKey = key.substring(deliminatorIndex + 1);
     if (driverKey == null)
       throw Error(
-        `Storage key should be in the form of "area:key", but recieved "${key}"`,
+        `Storage key should be in the form of "area:key", but received "${key}"`,
       );
 
     return {
@@ -421,7 +421,7 @@ export interface WxtStorage {
    */
   getItem<T>(key: string, opts?: GetItemOptions<T>): Promise<T | null>;
   /**
-   * Get multiple items from storage. There is no guarentee of order in the returned array.
+   * Get multiple items from storage. There is no guarantee of order in the returned array.
    *
    * @example
    * await storage.getItems(["local:installDate", "session:someCounter"]);
@@ -499,7 +499,7 @@ export interface WxtStorage {
   ): Promise<Record<string, unknown>>;
   /**
    * Restores the results of `snapshot`. If new properties have been saved since the snapshot, they are
-   * not overridden. Only values existing in the snapshot are overritten.
+   * not overridden. Only values existing in the snapshot are overridden.
    */
   restoreSnapshot(base: string, data: any): Promise<void>;
   /**

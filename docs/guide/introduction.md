@@ -20,7 +20,7 @@ WXT is an opinionated framework. This helps keep projects consistent and easy to
 - **Generated manifest**: Based on your project's file structure
 - **Entrypoint configuration**: Configure entrypoints from the same file they're declare in
 - **Type-safety is a priority**: Out-of-the-box TypeScript support with improved browser API typing
-- **Simple output file structure**: Ouptut file paths minimize the path at runtime
+- **Simple output file structure**: Output file paths minimize the path at runtime
 
 ## Development
 

@@ -108,7 +108,7 @@ Then run `npm i` again.
 To add a template, copy the vanilla template and give it a new name.
 
 ```sh
-cp -r templates/vailla templates/<new-template-name>
+cp -r templates/vanilla templates/<new-template-name>
 ```
 
 That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.

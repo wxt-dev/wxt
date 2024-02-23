@@ -914,7 +914,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🏡 Chore
 
-- Remove whitespace from genearted `.wxt` files ([#211](https://github.com/wxt-dev/wxt/pull/211))
+- Remove whitespace from generated `.wxt` files ([#211](https://github.com/wxt-dev/wxt/pull/211))
 - Upgrade templates to `wxt@^0.9.0` ([#214](https://github.com/wxt-dev/wxt/pull/214))
 - Update Vite dependency range to `^4.0.0 || ^5.0.0-0` ([f1e8084](https://github.com/wxt-dev/wxt/commit/f1e8084be89e512dde441b9197a99183c497f67d))
 
@@ -1422,8 +1422,8 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 - **deps-dev:** Bump vitest from 0.34.1 to 0.34.3 ([#99](https://github.com/wxt-dev/wxt/pull/99))
 - Increase E2E test timeout because GitHub Actions Window runner is slow ([2a0842b](https://github.com/wxt-dev/wxt/commit/2a0842b))
 - **deps-dev:** Bump vitepress from 1.0.0-rc.4 to 1.0.0-rc.10 ([#96](https://github.com/wxt-dev/wxt/pull/96))
-- Fix test watcher restarting indefinetly ([2c7922c](https://github.com/wxt-dev/wxt/commit/2c7922c))
-- Remove explict icon config from templates ([93bfee0](https://github.com/wxt-dev/wxt/commit/93bfee0))
+- Fix test watcher restarting indefinitely ([2c7922c](https://github.com/wxt-dev/wxt/commit/2c7922c))
+- Remove explicit icon config from templates ([93bfee0](https://github.com/wxt-dev/wxt/commit/93bfee0))
 - Use import aliases in Vue template ([#104](https://github.com/wxt-dev/wxt/pull/104))
 
 #### ⚠️ Breaking Changes
@@ -1483,7 +1483,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 - Branding and logo ([#60](https://github.com/wxt-dev/wxt/pull/60))
 - Simplify binary setup ([#62](https://github.com/wxt-dev/wxt/pull/62))
 - Add Solid template ([#63](https://github.com/wxt-dev/wxt/pull/63))
-- Increate E2E test timeout to fix flakey test ([dfe424f](https://github.com/wxt-dev/wxt/commit/dfe424f))
+- Increase E2E test timeout to fix flakey test ([dfe424f](https://github.com/wxt-dev/wxt/commit/dfe424f))
 
 ### 🤖 CI
 
@@ -1759,7 +1759,7 @@ Initial release of WXT. Full support for production builds and initial toolkit f
 - Export and bootstrap the `/client` package ([5b07c95](https://github.com/wxt-dev/wxt/commit/5b07c95))
 - Resolve entrypoints based on filesystem ([a63f061](https://github.com/wxt-dev/wxt/commit/a63f061))
 - Separate output directories for each browser/manifest version ([f09ffbb](https://github.com/wxt-dev/wxt/commit/f09ffbb))
-- Build entrypoints and output `manfiest.json` ([1e7c738](https://github.com/wxt-dev/wxt/commit/1e7c738))
+- Build entrypoints and output `manifest.json` ([1e7c738](https://github.com/wxt-dev/wxt/commit/1e7c738))
 - Automatically add CSS files to content scripts ([047ce04](https://github.com/wxt-dev/wxt/commit/047ce04))
 - Download and bundle remote URL imports ([523c7df](https://github.com/wxt-dev/wxt/commit/523c7df))
 - Generate type declarations and config for project types and auto-imports ([21debad](https://github.com/wxt-dev/wxt/commit/21debad))
