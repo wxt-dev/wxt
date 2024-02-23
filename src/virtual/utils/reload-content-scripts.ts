@@ -28,7 +28,7 @@ export async function reloadContentScriptMv3({
   if (registration === 'runtime') {
     await reloadRuntimeContentScriptMv3(contentScript);
   } else {
-    await reloadRuntimeContentScriptMv3(contentScript);
+    await reloadManifestContentScriptMv3(contentScript);
   }
 }
 
