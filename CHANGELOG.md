@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.17.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.0...v0.17.1)
+
+### 🩹 Fixes
+
+- Content scripts not loading in dev mode ([3fbbe2c](https://github.com/wxt-dev/wxt/commit/3fbbe2c))
+
+### 📖 Documentation
+
+- Lots of small typo fixes ([#480](https://github.com/wxt-dev/wxt/pull/480))
+
+### ❤️ Contributors
+
+- Leo Shklovskii <leo@thermopylae.net>
+
 ## v0.17.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.11...v0.17.0)
