@@ -15,9 +15,9 @@ WXT's main goal is providing the best DX it possibly can. When running your exte
 
 ## Dev Mode vs Production Builds
 
-There are some notible differences between the development and production versions of an extension. During development:
+There are some notable differences between the development and production versions of an extension. During development:
 
-1. **Content scripts are not listed in the `manifest.json`** when targetting MV3. Instead, the [`scripting`](https://developer.chrome.com/docs/extensions/reference/api/scripting) permission is used to register content scripts at runtime so they can be reloaded individually.
+1. **Content scripts are not listed in the `manifest.json`** when targeting MV3. Instead, the [`scripting`](https://developer.chrome.com/docs/extensions/reference/api/scripting) permission is used to register content scripts at runtime so they can be reloaded individually.
 
    To get the list of content scripts during development, run the following in the background's console:
 
@@ -59,7 +59,7 @@ export default defineRunnerConfig({
 
 ### Browser Binaries
 
-`web-ext`'s browser discovery is very limitted. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
+`web-ext`'s browser discovery is very limited. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
 
 ```ts
 // ~/web-ext.config.ts

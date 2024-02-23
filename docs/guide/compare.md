@@ -40,7 +40,7 @@ WXT's main goal is improving the development experience (DX) of creating web ext
 
 Opening a browser automatically makes it super easy to start and stop development without having to manually load the extension in your browser.
 
-Reloading each part of the extension individually improves your iteration speed while developing UIs. This is because reloading the entire extension on every change will close the popup and any tabs open to an extension page, like options. If you save a file associated with a UI and a content script while working on the UI, it will randomly close because it needed to reload the extension when the content script changed. This interupts your development flow and is really annoying.
+Reloading each part of the extension individually improves your iteration speed while developing UIs. This is because reloading the entire extension on every change will close the popup and any tabs open to an extension page, like options. If you save a file associated with a UI and a content script while working on the UI, it will randomly close because it needed to reload the extension when the content script changed. This interrupts your development flow and is really annoying.
 
 WXT solves this problem by reloading HTML pages and content scripts individually (when possible) to keep your UIs open while you develop them. This is a MV3 feature, so if you're developing a MV2 extension, you'll get the same dev experience as Plasmo.
 

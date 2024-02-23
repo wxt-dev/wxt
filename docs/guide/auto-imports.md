@@ -65,7 +65,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   imports: {
-    // Add auto-imports for vue fuctions like createApp, ref, computed, watch, toRaw, etc...
+    // Add auto-imports for vue functions like createApp, ref, computed, watch, toRaw, etc...
     presets: ['vue'],
   },
 });

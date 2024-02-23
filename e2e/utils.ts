@@ -163,7 +163,7 @@ export class TestProject {
   }
 
   /**
-   * @param path An abosolute path to a file or a path relative to the root.
+   * @param path An absolute path to a file or a path relative to the root.
    * @param ignoreContents An optional boolean that, when true, causes this function to not print
    *                       the file contents.
    */

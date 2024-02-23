@@ -5,7 +5,7 @@
 In Chrome, side panels use the "side_panel" API, while Firefox uses the "sidebar_action" API.
 
 :::warning
-Chrome added support for sidepanels in Manifest V3, they are not available in Manfiest V2.
+Chrome added support for sidepanels in Manifest V3, they are not available in Manifest V2.
 :::
 
 ## Filenames

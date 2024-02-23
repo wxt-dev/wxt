@@ -368,7 +368,7 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
      </body>
    </html>
    ```
-1. Add the page to the manifest's `web_accessible_resouces`
+1. Add the page to the manifest's `web_accessible_resources`
    ```ts
    // wxt.config.ts
    export default defineConfig({

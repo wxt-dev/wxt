@@ -58,7 +58,7 @@ See [`/entrypoints` folder](/entrypoints/background) documentation for a full li
 
 ## Entrypoint Options
 
-Some entrypoints, like content scripts, actions, or the background, can recieve additional options.
+Some entrypoints, like content scripts, actions, or the background, can receive additional options.
 
 In HTML files, options are listed as `meta` tags:
 
@@ -118,7 +118,7 @@ This throws an error because WXT needs to import each entrypoint during the buil
 
 :::details Why?
 
-When importing your entrypoint to get its definition, the file is imported in a **_node environement_**, and doesn't have access to the `window`, `chrome`, or `browser` globals a web extension ususally has access to. If WXT doesn't remove all the imports from the file, the imported modules could try and access one of these variables, throwing an error.
+When importing your entrypoint to get its definition, the file is imported in a **_node environment_**, and doesn't have access to the `window`, `chrome`, or `browser` globals a web extension usually has access to. If WXT doesn't remove all the imports from the file, the imported modules could try and access one of these variables, throwing an error.
 
 :::
 
@@ -126,7 +126,7 @@ When importing your entrypoint to get its definition, the file is imported in a 
 See [`wxt-dev/wxt#336`](https://github.com/wxt-dev/wxt/issues/336) to track the status of this bug.
 :::
 
-Usually, this error occurs when you try to extract options into a shared file or try to run code outside the `main` function. To fix the example from above, use litteral values when defining an entrypoint instead of importing them:
+Usually, this error occurs when you try to extract options into a shared file or try to run code outside the `main` function. To fix the example from above, use literal values when defining an entrypoint instead of importing them:
 
 ```ts
 import { GOOGLE_MATCHES } from '~/utils/match-patterns'; // [!code --]

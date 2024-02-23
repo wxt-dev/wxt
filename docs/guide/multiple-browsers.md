@@ -1,6 +1,6 @@
 # Multiple Browsers
 
-You can build an extension for any combination of browser and manifest verison. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
+You can build an extension for any combination of browser and manifest version. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
 
 Separate build targets are written to their own output directories:
 
@@ -45,7 +45,7 @@ wxt --mv2
 wxt build --mv2
 ```
 
-When the `-b --browser` flag is not passed, it defaults to `chrome`. So here, we're targetting MV2 for Chrome.
+When the `-b --browser` flag is not passed, it defaults to `chrome`. So here, we're targeting MV2 for Chrome.
 
 ## Customizing Entrypoints
 
@@ -116,7 +116,7 @@ Only `defineBackground` and `defineContentScript` support per-browser options ri
 To determine the browser or manifest version at runtime, you can use any of the below variables:
 
 - `import.meta.env.BROWSER`: A string, the target browser, usually equal to the `--browser` flag
-- `import.meta.env.MANIFEST_VERSION`: A number, either `2` or `3`, depending on the manifest version targetted
+- `import.meta.env.MANIFEST_VERSION`: A number, either `2` or `3`, depending on the manifest version targeted
 - `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.BROWSER === "chrome"`
 - `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.BROWSER === "firefox"`
 - `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.BROWSER === "edge"`

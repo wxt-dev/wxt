@@ -133,7 +133,7 @@ The dev command will build the extension for development, open the browser, and 
 When running the dev command, WXT will make several changes to your `manifest.json` to improve your development experience:
 
 - If missing, add a background script/service worker to enable fast reloads
-- Add serveral `permissions` and `host_permissions` to enable HMR and fast reloads
+- Add several `permissions` and `host_permissions` to enable HMR and fast reloads
 - Modify the CSP to allow connections with the dev server
 - Remove `content_scripts` and register them at runtime so they can be easily reloaded when you save a file
 
@@ -147,4 +147,4 @@ You're ready to build your web extension!
 - Learn how to [add entrypoints](./entrypoints) like the popup, options page, or content scripts
 - Configure your entrypoints to [use ESM](./esm) at runtime
 - [Configure WXT](./configuration) by creating a `wxt.config.ts` file
-- Checkout [example projects](https://github.com/wxt-dev/wxt-examples) to see how to perfom common tasks with WXT
+- Checkout [example projects](https://github.com/wxt-dev/wxt-examples) to see how to perform common tasks with WXT
