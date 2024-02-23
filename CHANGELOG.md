@@ -14,7 +14,7 @@
 
 ### ❤️ Contributors
 
-- Leo Shklovskii <leo@thermopylae.net>
+- Leo Shklovskii ([@leos](https://github.com/leos))
 
 ## v0.17.0
 
