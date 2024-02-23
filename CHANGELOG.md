@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.17.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.1...v0.17.2)
+
+### 🩹 Fixes
+
+- Don't use sub-dependency binaries directly ([#482](https://github.com/wxt-dev/wxt/pull/482))
+
 ## v0.17.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.0...v0.17.1)
