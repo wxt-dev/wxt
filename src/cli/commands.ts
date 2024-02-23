@@ -139,6 +139,7 @@ cli
 createAliasedCommand(
   cli,
   'submit',
+  'publish-extension',
   'wxt-publish-extension',
   'https://www.npmjs.com/publish-browser-extension',
 );
