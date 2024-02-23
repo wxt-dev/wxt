@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.17.2-alpha1",
+  "version": "0.17.2-alpha5",
   "description": "Next gen framework for developing web extensions",
   "engines": {
     "node": ">=18",
@@ -32,8 +32,7 @@
   ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.mjs",
-    "wxt-rollup-plugin-visualizer": "./bin/wxt-rollup-plugin-visualizer.mjs"
+    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -135,7 +134,7 @@
     "ora": "^7.0.1",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",
-    "publish-browser-extension": "^2.1.2",
+    "publish-browser-extension": "^2.1.3",
     "rollup-plugin-visualizer": "^5.9.2",
     "unimport": "^3.4.0",
     "vite": "^5.1.3",
