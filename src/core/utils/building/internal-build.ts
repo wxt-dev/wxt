@@ -94,7 +94,7 @@ async function combineAnalysisStats(): Promise<void> {
 
   const { execa } = await import('execa');
   await execa(
-    'rollup-plugin-visualizer',
+    'wxt-rollup-plugin-visualizer',
     [
       ...absolutePaths,
       '--template',

@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.17.1",
+  "version": "0.17.2-alpha1",
   "description": "Next gen framework for developing web extensions",
   "engines": {
     "node": ">=18",
@@ -30,7 +30,11 @@
     "bin",
     "dist"
   ],
-  "bin": "./bin/wxt.mjs",
+  "bin": {
+    "wxt": "./bin/wxt.mjs",
+    "wxt-publish-extension": "./bin/wxt-publish-extension.mjs",
+    "wxt-rollup-plugin-visualizer": "./bin/wxt-rollup-plugin-visualizer.mjs"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -125,7 +129,6 @@
     "jiti": "^1.21.0",
     "json5": "^2.2.3",
     "linkedom": "^0.16.1",
-    "manage-path": "^2.0.0",
     "minimatch": "^9.0.3",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
