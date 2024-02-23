@@ -1,6 +1,5 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels } from 'consola';
-import { exec } from '~/core/utils/exec';
 import { printHeader } from '~/core/utils/log';
 import { formatDuration } from '~/core/utils/time';
 import { ValidationError } from '~/core/utils/validation';
@@ -63,10 +62,18 @@ export function getArrayFromFlags<T>(
 }
 
 const aliasCommandNames = new Set<string>();
+/**
+ * @param base Command to add this one to
+ * @param name The command name to add
+ * @param alias The CLI tool being aliased
+ * @param bin The CLI tool binary name. Usually the same as the alias
+ * @param docsUrl URL to the docs for the aliased CLI tool
+ */
 export function createAliasedCommand(
   base: CAC,
   name: string,
   alias: string,
+  bin: string,
   docsUrl: string,
 ) {
   const aliasedCommand = base
@@ -79,7 +86,8 @@ export function createAliasedCommand(
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
-        await exec(alias, args, {
+        const { execa } = await import('execa');
+        await execa(bin, args, {
           stdio: 'inherit',
         });
       } catch {

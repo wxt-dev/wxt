@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from '@aklinker1/rollup-plugin-visualizer';
 import { ResolvedConfig } from '~/types';
 import path from 'node:path';
 

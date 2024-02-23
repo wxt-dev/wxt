@@ -30,7 +30,10 @@
     "bin",
     "dist"
   ],
-  "bin": "./bin/wxt.mjs",
+  "bin": {
+    "wxt": "./bin/wxt.mjs",
+    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -103,6 +106,7 @@
     "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
+    "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@types/webextension-polyfill": "^0.10.5",
     "@webext-core/fake-browser": "^1.3.1",
     "@webext-core/isolated-element": "^1.1.1",
@@ -125,15 +129,13 @@
     "jiti": "^1.21.0",
     "json5": "^2.2.3",
     "linkedom": "^0.16.1",
-    "manage-path": "^2.0.0",
     "minimatch": "^9.0.3",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
     "ora": "^7.0.1",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",
-    "publish-browser-extension": "^2.1.2",
-    "rollup-plugin-visualizer": "^5.9.2",
+    "publish-browser-extension": "^2.1.3",
     "unimport": "^3.4.0",
     "vite": "^5.1.3",
     "web-ext-run": "^0.2.0",

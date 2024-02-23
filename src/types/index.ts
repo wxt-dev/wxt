@@ -3,7 +3,7 @@ import type { Manifest, Scripting } from '~/browser';
 import { UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
-import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
+import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';

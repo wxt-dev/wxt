@@ -16,8 +16,8 @@ import {
   validateEntrypoints,
 } from '../validation';
 import consola from 'consola';
-import { exec } from '../exec';
 import { wxt } from '../../wxt';
+import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -93,17 +93,11 @@ async function combineAnalysisStats(): Promise<void> {
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
-  await exec(
-    'rollup-plugin-visualizer',
-    [
-      ...absolutePaths,
-      '--template',
-      wxt.config.analysis.template,
-      '--filename',
-      wxt.config.analysis.outputFile,
-    ],
-    { cwd: wxt.config.root, stdio: 'inherit' },
-  );
+  await mergeJsonOutputs({
+    inputs: absolutePaths,
+    template: wxt.config.analysis.template,
+    filename: wxt.config.analysis.outputFile,
+  });
 
   if (!wxt.config.analysis.keepArtifacts) {
     await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
