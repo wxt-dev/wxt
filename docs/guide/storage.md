@@ -263,27 +263,4 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 ### Running Migrations
 
-To run migrations, you have two options:
-
-1. Import all versioned storage items into your background script and they will run automatically whenever your extension updates
-2. Manually call `item.migrate()`
-
-The first approach is recommended. To make importing all your storage items easy, you can define all of them in a single file, `utils/storage.ts`, and import that file into your background entrypoint:
-
-```ts
-// utils/storage.ts
-export countStorage = storage.defineItem(...);
-export themeStorage = storage.defineItem(...);
-export someOtherStorage = storage.defineItem(...);
-```
-
-```ts
-// entrypoints/background.ts
-import '@/utils/storage'; // This import runs migrations on updates
-
-export default defineBackground({
-  // ...
-});
-```
-
-> When you call `storage.defineItem`, a `browser.runtime.onInstalled` listener is added. `onInstalled` listeners are only triggered in the background, which is why you must import them into the background.
+As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Reads and writes will automatically wait for the migration process to finish before actually reading or writing values.

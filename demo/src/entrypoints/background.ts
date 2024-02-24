@@ -1,7 +1,9 @@
 import messages from 'public/_locales/en/messages.json';
+import '@/utils/storage';
 
 export default defineBackground({
   // type: 'module',
+  persistent: false,
 
   main() {
     console.log(browser.runtime.id);
