@@ -258,9 +258,10 @@ function createStorage(): WxtStorage {
         );
       }
       const migrate = async () => {
+        const driverMetaKey = getMetaKey(driverKey);
         const [{ value }, { value: meta }] = await driver.getItems([
           driverKey,
-          getMetaKey(driverKey),
+          driverMetaKey,
         ]);
         if (value == null) return;
 
@@ -284,9 +285,9 @@ function createStorage(): WxtStorage {
             (await migrations?.[migrateToVersion]?.(migratedValue)) ??
             migratedValue;
         }
-        await Promise.all([
-          setItem(driver, driverKey, migratedValue),
-          setMeta(driver, driverKey, { v: targetVersion }),
+        await driver.setItems([
+          { key: driverKey, value: migratedValue },
+          { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
         logger.debug(
           `Storage migration completed for ${key} v${targetVersion}`,
