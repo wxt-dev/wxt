@@ -263,4 +263,4 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 ### Running Migrations
 
-As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Reads and writes will automatically wait for the migration process to finish before actually reading or writing values.
+As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.

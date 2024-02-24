@@ -295,9 +295,11 @@ function createStorage(): WxtStorage {
         );
       };
       const migrationsDone =
-        opts?.migrations != null
-          ? migrate().catch(() => {})
-          : Promise.resolve();
+        opts?.migrations == null
+          ? Promise.resolve()
+          : migrate().catch((err) => {
+              logger.error(`Migration failed for ${key}`, err);
+            });
 
       const getDefaultValue = () => opts?.defaultValue ?? null;
 
