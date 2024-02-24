@@ -258,14 +258,14 @@ function createStorage(): WxtStorage {
         );
       }
       const migrate = async () => {
-        const [value, meta] = await Promise.all([
-          // TODO: Optimize with getItems
-          getItem(driver, driverKey, undefined),
-          getMeta(driver, driverKey),
+        const driverMetaKey = getMetaKey(driverKey);
+        const [{ value }, { value: meta }] = await driver.getItems([
+          driverKey,
+          driverMetaKey,
         ]);
         if (value == null) return;
 
-        const currentVersion = meta.v ?? 1;
+        const currentVersion = meta?.v ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
@@ -285,24 +285,21 @@ function createStorage(): WxtStorage {
             (await migrations?.[migrateToVersion]?.(migratedValue)) ??
             migratedValue;
         }
-        await Promise.all([
-          // TODO: Optimize with `setItem`
-          setItem(driver, driverKey, migratedValue),
-          setMeta(driver, driverKey, { v: targetVersion }),
+        await driver.setItems([
+          { key: driverKey, value: migratedValue },
+          { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
         logger.debug(
           `Storage migration completed for ${key} v${targetVersion}`,
           { migratedValue },
         );
       };
-      browser.runtime.onInstalled?.addListener(async ({ reason }) => {
-        if (reason !== 'update') return;
-        try {
-          await migrate();
-        } catch (err) {
-          logger.error(`Migration failed for ${key}`, err);
-        }
-      });
+      const migrationsDone =
+        opts?.migrations == null
+          ? Promise.resolve()
+          : migrate().catch((err) => {
+              logger.error(`Migration failed for ${key}`, err);
+            });
 
       const getDefaultValue = () => opts?.defaultValue ?? null;
 
@@ -310,12 +307,30 @@ function createStorage(): WxtStorage {
         get defaultValue() {
           return getDefaultValue();
         },
-        getValue: () => getItem(driver, driverKey, opts),
-        getMeta: () => getMeta(driver, driverKey),
-        setValue: (value) => setItem(driver, driverKey, value),
-        setMeta: (properties) => setMeta(driver, driverKey, properties),
-        removeValue: (opts) => removeItem(driver, driverKey, opts),
-        removeMeta: (properties) => removeMeta(driver, driverKey, properties),
+        getValue: async () => {
+          await migrationsDone;
+          return await getItem(driver, driverKey, opts);
+        },
+        getMeta: async () => {
+          await migrationsDone;
+          return await getMeta(driver, driverKey);
+        },
+        setValue: async (value) => {
+          await migrationsDone;
+          return await setItem(driver, driverKey, value);
+        },
+        setMeta: async (properties) => {
+          await migrationsDone;
+          return await setMeta(driver, driverKey, properties);
+        },
+        removeValue: async (opts) => {
+          await migrationsDone;
+          return await removeItem(driver, driverKey, opts);
+        },
+        removeMeta: async (properties) => {
+          await migrationsDone;
+          return await removeMeta(driver, driverKey, properties);
+        },
         watch: (cb) =>
           watch(driver, driverKey, (newValue, oldValue) =>
             cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
@@ -346,7 +361,10 @@ function createDriver(
       );
     }
 
-    return browser.storage[storageArea];
+    const area = browser.storage[storageArea];
+    if (area == null)
+      throw Error(`"browser.storage.${storageArea}" is undefined`);
+    return area;
   };
   const watchListeners = new Set<
     (changes: Storage.StorageAreaOnChangedChangesType) => void
