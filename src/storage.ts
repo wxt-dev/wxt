@@ -421,7 +421,8 @@ export interface WxtStorage {
    */
   getItem<T>(key: string, opts?: GetItemOptions<T>): Promise<T | null>;
   /**
-   * Get multiple items from storage. There is no guarantee of order in the returned array.
+   * Get multiple items from storage. The return order is guaranteed to be the same as the order
+   * requested.
    *
    * @example
    * await storage.getItems(["local:installDate", "session:someCounter"]);

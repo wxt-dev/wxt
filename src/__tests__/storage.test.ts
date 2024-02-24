@@ -75,10 +75,7 @@ describe('Storage Utils', () => {
 
           const actual = await storage.getItems(params);
 
-          expect(actual).toHaveLength(3);
-          expected.forEach((item) => {
-            expect(actual).toContainEqual(item);
-          });
+          expect(actual).toEqual(expected);
         });
       });
 
