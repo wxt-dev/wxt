@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.17.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.2...v0.17.3)
+
+### 🚀 Enhancements
+
+- **storage:** Guarantee `storage.getItems` returns values in the same order as requested ([b5f4d8c](https://github.com/wxt-dev/wxt/commit/b5f4d8c))
+
+### 🩹 Fixes
+
+- Content scripts crash when using `storage.defineItem` ([77e6d1f](https://github.com/wxt-dev/wxt/commit/77e6d1f))
+- **storage:** Revert #478 and run migrations when item is defined and properly wait for migrations before allowing read/writes ([#487](https://github.com/wxt-dev/wxt/pull/487), [#478](https://github.com/wxt-dev/wxt/issues/478))
+
 ## v0.17.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.1...v0.17.2)
