@@ -3,11 +3,12 @@ import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from '~/browser';
 import { WxtStorageItem, storage } from '~/storage';
 
-async function triggerUpdate() {
-  await fakeBrowser.runtime.onInstalled.trigger({
-    reason: 'update',
-    temporary: false,
-  });
+/**
+ * This works because fakeBrowser is synchronous, and is will finish any number of chained
+ * calls within a single tick of the event loop, ie: a timeout of 0.
+ */
+async function waitForMigrations() {
+  return new Promise((res) => setTimeout(res));
 }
 
 describe('Storage Utils', () => {
@@ -409,7 +410,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -436,7 +437,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -461,7 +462,7 @@ describe('Storage Utils', () => {
             2: migrateToV2,
           },
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -489,7 +490,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         expect(migrateToV2).not.toBeCalled();
         expect(migrateToV3).not.toBeCalled();
@@ -511,7 +512,7 @@ describe('Storage Utils', () => {
             3: migrateToV3,
           },
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         const actualValue = await item.getValue();
         const actualMeta = await item.getMeta();
@@ -538,7 +539,7 @@ describe('Storage Utils', () => {
           defaultValue: 0,
           version: nextVersion,
         });
-        await triggerUpdate();
+        await waitForMigrations();
 
         await expect(item.migrate()).rejects.toThrow(
           'Version downgrade detected (v2 -> v1) for "local:count"',

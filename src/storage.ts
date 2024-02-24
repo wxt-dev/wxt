@@ -264,7 +264,7 @@ function createStorage(): WxtStorage {
         ]);
         if (value == null) return;
 
-        const currentVersion = meta.v ?? 1;
+        const currentVersion = meta?.v ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
@@ -285,7 +285,6 @@ function createStorage(): WxtStorage {
             migratedValue;
         }
         await Promise.all([
-          // TODO: Optimize with `setItem`
           setItem(driver, driverKey, migratedValue),
           setMeta(driver, driverKey, { v: targetVersion }),
         ]);
