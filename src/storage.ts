@@ -295,7 +295,7 @@ function createStorage(): WxtStorage {
           { migratedValue },
         );
       };
-      browser.runtime.onInstalled.addListener(async ({ reason }) => {
+      browser.runtime.onInstalled?.addListener(async ({ reason }) => {
         if (reason !== 'update') return;
         try {
           await migrate();
