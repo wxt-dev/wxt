@@ -18,6 +18,7 @@ const chromeExtensionIds = [
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
   'youtube中文配音/oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
+  'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
