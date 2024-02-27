@@ -338,6 +338,7 @@ function addEntrypoints(
         open_at_install: defaultSidepanel.options.openAtInstall,
       };
     } else if (wxt.config.manifestVersion === 3) {
+      addPermission(manifest, 'sidePanel');
       // @ts-expect-error: Untyped
       manifest.side_panel = {
         default_path: page,
