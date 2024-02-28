@@ -26,8 +26,8 @@ export function webextensionPolyfillMock(
           alias: {
             // Alias to use a mocked version of the polyfill
             'webextension-polyfill': path.resolve(
-              config.root,
-              'node_modules/wxt/dist/virtual/mock-browser',
+              config.wxtModuleDir,
+              'dist/virtual/mock-browser',
             ),
           },
         },

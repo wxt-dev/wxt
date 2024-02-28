@@ -963,6 +963,10 @@ export interface ResolvedConfig {
   outBaseDir: string;
   outDir: string;
   debug: boolean;
+  /**
+   * Directory pointing to `node_modules/wxt`, wherever WXT is installed.
+   */
+  wxtModuleDir: string;
   mode: string;
   command: 'build' | 'serve';
   browser: TargetBrowser;

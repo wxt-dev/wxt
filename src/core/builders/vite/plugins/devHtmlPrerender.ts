@@ -16,8 +16,8 @@ export function devHtmlPrerender(
 ): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
-    config.root,
-    'node_modules/wxt/dist/virtual/reload-html.js',
+    config.wxtModuleDir,
+    'dist/virtual/reload-html.js',
   );
   const virtualReactRefreshId = '@wxt/virtual-react-refresh';
   const resolvedVirtualReactRefreshId = '\0' + virtualReactRefreshId;

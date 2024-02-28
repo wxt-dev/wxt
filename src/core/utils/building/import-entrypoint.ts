@@ -52,8 +52,8 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
       esmResolve: true,
       alias: {
         'webextension-polyfill': resolve(
-          wxt.config.root,
-          'node_modules/wxt/dist/virtual/mock-browser.js',
+          wxt.config.wxtModuleDir,
+          'dist/virtual/mock-browser.js',
         ),
       },
       // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
