@@ -262,6 +262,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     outDir: fakeDir(),
     publicDir: fakeDir(),
     root: fakeDir(),
+    wxtModuleDir: fakeDir(),
     runnerConfig: {
       config: {},
     },
