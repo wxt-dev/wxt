@@ -71,7 +71,7 @@ export async function resolveConfig(
     inlineConfig.root ?? userConfig.root ?? process.cwd(),
   );
   const wxtDir = path.resolve(root, '.wxt');
-  const wxtModuleDir = path.resolve(root);
+  const wxtModuleDir = path.resolve(root, 'node_modules/wxt');
   const srcDir = path.resolve(root, mergedConfig.srcDir ?? root);
   const entrypointsDir = path.resolve(
     srcDir,
