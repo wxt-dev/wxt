@@ -330,7 +330,7 @@ async function getUnimportOptions(
  */
 async function resolveWxtModuleDir() {
   // require.resolve returns the wxt/dist/index file
-  let requireResolve =
+  const requireResolve =
     require?.resolve ??
     (await import('node:module')).default.createRequire(import.meta.url)
       .resolve;
