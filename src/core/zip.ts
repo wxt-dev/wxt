@@ -89,6 +89,8 @@ async function zipDir(
   const files = (
     await glob('**/*', {
       cwd: directory,
+      // Ignore node_modules, otherwise this glob step takes forever
+      ignore: ['**/node_modules'],
       onlyFiles: true,
     })
   ).filter((relativePath) => {
