@@ -10,6 +10,29 @@ import { createLocationWatcher } from './location-watcher';
  *
  * It also provides several utilities like `ctx.setTimeout` and `ctx.setInterval` that should be used in
  * content scripts instead of `window.setTimeout` or `window.setInterval`.
+ *
+ * To create context for testing, you can use the class's constructor:
+ *
+ * ```ts
+ * import { ContentScriptContext } from 'wxt/client';
+ *
+ * test("storage listener should be removed when context is invalidated", () => {
+ *   const ctx = new ContentScriptContext('test');
+ *   const item = storage.defineItem("local:count", { defaultValue: 0 });
+ *   const watcher = vi.fn();
+ *
+ *   const unwatch = item.watch(watcher);
+ *   ctx.onInvalidated(unwatch); // Listen for invalidate here
+ *
+ *   await item.setValue(1);
+ *   expect(watcher).toBeCalledTimes(1);
+ *   expect(watcher).toBeCalledWith(1, 0);
+ *
+ *   ctx.notifyInvalidated(); // Use this function to invalidate the context
+ *   await item.setValue(2);
+ *   expect(watcher).toBeCalledTimes(1);
+ * });
+ * ```
  */
 export class ContentScriptContext implements AbortController {
   private static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
