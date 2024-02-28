@@ -15,6 +15,7 @@ import {
   getPrivatePackages,
 } from './utils/private-packages';
 import { getPackageManager } from './utils/package-manager';
+import { minimatch } from 'minimatch';
 
 /**
  * Build and zip the extension for distribution.
@@ -79,15 +80,8 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = resolve(wxt.config.outBaseDir, sourcesZipFilename);
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
-      ignore: wxt.config.zip.excludeSources,
-      // return (
-      //   wxt.config.zip.includeSources.some((pattern) =>
-      //     minimatch(relativePath, pattern),
-      //   ) ||
-      //   !wxt.config.zip.excludeSources.some((pattern) =>
-      //     minimatch(relativePath, pattern),
-      //   )
-      // );
+      include: wxt.config.zip.includeSources,
+      exclude: wxt.config.zip.excludeSources,
 
       async transform(file, content) {
         if (file !== 'package.json') return;
@@ -127,7 +121,8 @@ async function zipDir(
   directory: string,
   outputPath: string,
   options?: {
-    ignore?: string[];
+    include?: string[];
+    exclude?: string[];
     transform?: (
       file: string,
       content: string,
@@ -136,10 +131,20 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
-  const files = await glob('**/*', {
-    cwd: directory,
-    ignore: options?.ignore,
-    onlyFiles: true,
+  const files = (
+    await glob('**/*', {
+      cwd: directory,
+      onlyFiles: true,
+    })
+  ).filter((relativePath) => {
+    return (
+      wxt.config.zip.includeSources.some((pattern) =>
+        minimatch(relativePath, pattern),
+      ) ||
+      !wxt.config.zip.excludeSources.some((pattern) =>
+        minimatch(relativePath, pattern),
+      )
+    );
   });
   for (const file of files) {
     const absolutePath = path.resolve(directory, file);
