@@ -7,6 +7,7 @@ import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualize
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
+import type * as Nypm from 'nypm';
 
 export interface InlineConfig {
   /**
@@ -950,6 +951,10 @@ export interface Wxt {
    * Reload config file and update the `config` field with the result.
    */
   reloadConfig: () => Promise<void>;
+  /**
+   * Package manager utilities.
+   */
+  pm: WxtPackageManager;
 }
 
 export interface ResolvedConfig {
@@ -1076,3 +1081,14 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
 export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
   eslintrc: ResolvedEslintrc;
 };
+
+/**
+ * Package management utils built on top of [`nypm`](https://www.npmjs.com/package/nypm)
+ */
+export interface WxtPackageManager extends Nypm.PackageManager {
+  addDependency: typeof Nypm.addDependency;
+  addDevDependency: typeof Nypm.addDevDependency;
+  ensureDependencyInstalled: typeof Nypm.ensureDependencyInstalled;
+  installDependencies: typeof Nypm.installDependencies;
+  removeDependency: typeof Nypm.removeDependency;
+}
