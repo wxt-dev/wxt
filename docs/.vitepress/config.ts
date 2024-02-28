@@ -19,7 +19,7 @@ const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
 
 const description =
-  "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilties for building, zipping, and publishing your extension, it's easy to get started.";
+  "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
 const ogTitle = `${title}${titleSuffix}`;
 const ogUrl = 'https://wxt.dev';
 const ogImage = 'https://wxt.dev/social-preview.png';
@@ -124,7 +124,7 @@ export default defineConfig({
             { text: 'Options', link: '/entrypoints/options.md' },
             { text: 'Popup', link: '/entrypoints/popup.md' },
             { text: 'Sandbox', link: '/entrypoints/sandbox.md' },
-            { text: 'Sidepanel', link: '/entrypoints/sidepanel.md' },
+            { text: 'Side Panel', link: '/entrypoints/sidepanel.md' },
             { text: 'Unlisted Pages', link: '/entrypoints/unlisted-pages.md' },
             {
               text: 'Unlisted Scripts',
