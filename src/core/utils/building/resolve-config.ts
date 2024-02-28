@@ -71,7 +71,7 @@ export async function resolveConfig(
     inlineConfig.root ?? userConfig.root ?? process.cwd(),
   );
   const wxtDir = path.resolve(root, '.wxt');
-  const wxtModuleDir = path.resolve(root, 'node_modules/wxt');
+  const wxtModuleDir = await resolveWxtModuleDir();
   const srcDir = path.resolve(root, mergedConfig.srcDir ?? root);
   const entrypointsDir = path.resolve(
     srcDir,
@@ -323,4 +323,16 @@ async function getUnimportOptions(
     config.imports ?? {},
     defaultOptions,
   );
+}
+
+/**
+ * Returns the path to `node_modules/wxt`.
+ */
+async function resolveWxtModuleDir() {
+  const requireResolve =
+    require?.resolve ??
+    (await import('node:module')).default.createRequire(import.meta.url)
+      .resolve;
+  // require.resolve returns the wxt/dist/index file, not the package's root directory, which we want to return
+  return path.resolve(requireResolve('wxt'), '../..');
 }
