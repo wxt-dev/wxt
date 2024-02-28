@@ -1,6 +1,6 @@
 # Compare
 
-Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) (another web extension framework) and CRXJS (the most popular bundler plugin).
+Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) (another web extension framework) and [CRXJS](https://crxjs.dev/vite-plugin) (the most popular bundler plugin).
 
 ## Overview
 
@@ -32,7 +32,7 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 | Messaging                                            |             ❌              |                    ✅                    |                                   ❌                                    |
 | Content Script UI                                    |             ✅              |                    ✅                    |                                   ❌                                    |
 
-## Dev Mode
+## Why use WXT?
 
 WXT's main goal is improving the development experience (DX) of creating web extensions, while not sacrificing support. There are two things WXT does differently:
 
