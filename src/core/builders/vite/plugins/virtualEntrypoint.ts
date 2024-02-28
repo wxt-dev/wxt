@@ -30,10 +30,7 @@ export function virtualEntrypoint(
 
       const inputPath = id.replace(resolvedVirtualId, '');
       const template = await fs.readFile(
-        resolve(
-          config.root,
-          `node_modules/wxt/dist/virtual/${type}-entrypoint.js`,
-        ),
+        resolve(config.wxtModuleDir, `dist/virtual/${type}-entrypoint.js`),
         'utf-8',
       );
       return template.replace(`virtual:user-${type}`, inputPath);
