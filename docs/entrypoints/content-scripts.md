@@ -52,9 +52,11 @@ When defining multiple content scripts, content script entrypoints that have the
 
 ## Context
 
-Old content scripts are not automatically stopped when an extension updates and reloads. Often, this leads to "Invalidated context" errors in production when a content script from an old version of your extension tries to use a extension API.
+Old content scripts are not automatically stopped when an extension updates and reloads. Often, this leads to "Invalidated context" errors in production when a content script from an old version of your extension tries to use a web extension API (ie, the `browser` or `chrome` globals).
 
-WXT provides a utility for managing this process: `ContentScriptContext`. An instance of this class is provided to you automatically inside the `main` function of your content script.
+WXT provides a utility for handling this process: `ContentScriptContext`. An instance of this class is provided to you automatically inside the `main` function of your content script.
+
+When your extension updates or is uninstalled, the context will become invalidated, and will trigger any `ctx.onInvalidated` listeners you add:
 
 ```ts
 export default defineContentScript({
@@ -65,26 +67,33 @@ export default defineContentScript({
       // ...
     });
 
-    // Stop fetch requests
-    fetch('...url', { signal: ctx.signal });
-
-    // Timeout utilities
+    // Timeout utilities that are automatically cleared when invalidated
     ctx.setTimeout(() => {
       // ...
     }, 5e3);
     ctx.setInterval(() => {
       // ...
     }, 60e3);
+
+    // Or add event listeners that get removed when invalidated
+    ctx.addEventListener(document, 'visibilitychange', (event) => {
+      // ...
+    });
+
+    // You can also stop fetch requests
+    fetch('...url', { signal: ctx.signal });
   },
 });
 ```
 
 The class extends [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) and provides other utilities for stopping a content script's logic once it becomes invalidated.
 
-:::tip
+:::warning
 When working with content scripts, **you should always use the `ctx` object to stop any async or future work.**
 
 This prevents old content scripts from interfering with new content scripts, and prevents error messages from the console in production.
+
+If you're using a framework like React, Vue, Svelte, etc., make sure you're unmounting your UI properly in the `onRemove` option of [`createShadowRootUi`](https://wxt.dev/guide/content-script-ui.html#shadow-root).
 :::
 
 ## CSS
