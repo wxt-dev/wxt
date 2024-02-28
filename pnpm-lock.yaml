@@ -113,9 +113,6 @@ importers:
       webextension-polyfill:
         specifier: ^0.10.0
         version: 0.10.0
-      zip-dir:
-        specifier: ^2.0.0
-        version: 2.0.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.3.1

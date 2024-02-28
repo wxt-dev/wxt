@@ -9,7 +9,7 @@ import { printFileList } from '~/core/utils/log/printFileList';
 import { internalBuild } from '~/core/utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
-import { glob } from 'fast-glob';
+import glob from 'fast-glob';
 
 /**
  * Build and zip the extension for distribution.
