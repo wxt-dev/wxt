@@ -6,7 +6,7 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 
 | Features                                             |             WXT             |                  Plasmo                  |                                  CRXJS                                  |
 | ---------------------------------------------------- | :-------------------------: | :--------------------------------------: | :---------------------------------------------------------------------: |
-| Supports all browsers                                |             ✅              |                    ✅                    | ❌ See [#56](https://github.com/crxjs/chrome-extension-tools/issues/56) |
+| Supports all browsers                                |             ✅              |                    ✅                    | ✅ |
 | MV2 Support                                          |             ✅              |                    ✅                    |                          🟡 Either MV2 or MV3                           |
 | MV3 Support                                          |             ✅              |                    ✅                    |                          🟡 Either MV2 or MV3                           |
 | Create Extension ZIPs                                |             ✅              |                    ✅                    |                                   ❌                                    |
