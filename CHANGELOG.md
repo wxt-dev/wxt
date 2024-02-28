@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.17.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.3...v0.17.4)
+
+### 🚀 Enhancements
+
+- Add basic content script to templates ([#495](https://github.com/wxt-dev/wxt/pull/495))
+- Add `ResolvedConfig.wxtModuleDir`, resolving the directory once ([#497](https://github.com/wxt-dev/wxt/pull/497))
+
+### 🩹 Fixes
+
+- Resolve the path to `node_modules/wxt` correctly ([#498](https://github.com/wxt-dev/wxt/pull/498))
+
+### 📖 Documentation
+
+- Added DocVersionRedirector to "Using WXT" section ([#492](https://github.com/wxt-dev/wxt/pull/492))
+- Fix typos ([f80fb42](https://github.com/wxt-dev/wxt/commit/f80fb42))
+- Add CRXJS to comparison page ([cb4f9aa](https://github.com/wxt-dev/wxt/commit/cb4f9aa))
+- Update comparison page ([35778f7](https://github.com/wxt-dev/wxt/commit/35778f7))
+- Update context usage ([012bd7e](https://github.com/wxt-dev/wxt/commit/012bd7e))
+- Add testing example for `ContentScriptContext` ([e1c6020](https://github.com/wxt-dev/wxt/commit/e1c6020))
+
+### 🏡 Chore
+
+- Fix tests after template change ([f9b0aa4](https://github.com/wxt-dev/wxt/commit/f9b0aa4))
+
+### ❤️ Contributors
+
+- Btea ([@btea](http://github.com/btea))
+- Leo Shklovskii <leo@thermopylae.net>
+
 ## v0.17.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.2...v0.17.3)
