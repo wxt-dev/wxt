@@ -19,6 +19,7 @@ const chromeExtensionIds = [
   'youtube中文配音/oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
   'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
+  'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
