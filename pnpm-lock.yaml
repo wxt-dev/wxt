@@ -74,6 +74,9 @@ importers:
       json5:
         specifier: ^2.2.3
         version: 2.2.3
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
       linkedom:
         specifier: ^0.16.1
         version: 0.16.1
@@ -110,9 +113,6 @@ importers:
       webextension-polyfill:
         specifier: ^0.10.0
         version: 0.10.0
-      zip-dir:
-        specifier: ^2.0.0
-        version: 2.0.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.3.1
