@@ -1,48 +1,53 @@
-import { UnimportOptions, createUnimport } from 'unimport';
-import { Entrypoint, InternalConfig } from '~/types';
+import { Unimport, createUnimport } from 'unimport';
+import {
+  EslintGlobalsPropValue,
+  Entrypoint,
+  WxtResolvedUnimportOptions,
+} from '~/types';
 import fs from 'fs-extra';
 import { relative, resolve } from 'path';
-import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
-import { getUnimportOptions } from '~/core/utils/unimport';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '~/core/utils/entrypoints';
 import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
 import { normalizePath } from '~/core/utils/paths';
 import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
+import { wxt } from '../../wxt';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
  */
 export async function generateTypesDir(
   entrypoints: Entrypoint[],
-  config: InternalConfig,
 ): Promise<void> {
-  await fs.ensureDir(config.typesDir);
+  await fs.ensureDir(wxt.config.typesDir);
 
   const references: string[] = [];
 
-  const imports = getUnimportOptions(config);
-  if (imports !== false) {
-    references.push(await writeImportsDeclarationFile(config, imports));
+  if (wxt.config.imports !== false) {
+    const unimport = createUnimport(wxt.config.imports);
+    references.push(await writeImportsDeclarationFile(unimport));
+    if (wxt.config.imports.eslintrc.enabled) {
+      await writeImportsEslintFile(unimport, wxt.config.imports);
+    }
   }
 
-  references.push(await writePathsDeclarationFile(entrypoints, config));
-  references.push(await writeI18nDeclarationFile(config));
-  references.push(await writeGlobalsDeclarationFile(config));
+  references.push(await writePathsDeclarationFile(entrypoints));
+  references.push(await writeI18nDeclarationFile());
+  references.push(await writeGlobalsDeclarationFile());
 
-  const mainReference = await writeMainDeclarationFile(references, config);
-  await writeTsConfigFile(mainReference, config);
+  const mainReference = await writeMainDeclarationFile(references);
+  await writeTsConfigFile(mainReference);
 }
 
-async function writeImportsDeclarationFile(
-  config: InternalConfig,
-  unimportOptions: Partial<UnimportOptions>,
-): Promise<string> {
-  const filePath = resolve(config.typesDir, 'imports.d.ts');
-  const unimport = createUnimport(unimportOptions);
+async function writeImportsDeclarationFile(unimport: Unimport) {
+  const filePath = resolve(wxt.config.typesDir, 'imports.d.ts');
 
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
-  await unimport.scanImportsFromDir(undefined, { cwd: config.srcDir });
+  await unimport.scanImportsFromDir(undefined, { cwd: wxt.config.srcDir });
 
   await writeFileIfDifferent(
     filePath,
@@ -54,20 +59,36 @@ async function writeImportsDeclarationFile(
   return filePath;
 }
 
+async function writeImportsEslintFile(
+  unimport: Unimport,
+  options: WxtResolvedUnimportOptions,
+) {
+  const globals: Record<string, EslintGlobalsPropValue> = {};
+  const eslintrc = { globals };
+
+  (await unimport.getImports())
+    .map((i) => i.as ?? i.name)
+    .filter(Boolean)
+    .sort()
+    .forEach((name) => {
+      eslintrc.globals[name] = options.eslintrc.globalsPropValue;
+    });
+  await fs.writeJson(options.eslintrc.filePath, eslintrc, { spaces: 2 });
+}
+
 async function writePathsDeclarationFile(
   entrypoints: Entrypoint[],
-  config: InternalConfig,
 ): Promise<string> {
-  const filePath = resolve(config.typesDir, 'paths.d.ts');
+  const filePath = resolve(wxt.config.typesDir, 'paths.d.ts');
   const unions = entrypoints
     .map((entry) =>
       getEntrypointBundlePath(
         entry,
-        config.outDir,
-        entry.inputPath.endsWith('.html') ? '.html' : '.js',
+        wxt.config.outDir,
+        isHtmlEntrypoint(entry) ? '.html' : '.js',
       ),
     )
-    .concat(await getPublicFiles(config))
+    .concat(await getPublicFiles())
     .map(normalizePath)
     .map((path) => `    | "/${path}"`)
     .sort()
@@ -79,8 +100,10 @@ import "wxt/browser";
 declare module "wxt/browser" {
   export type PublicPath =
 {{ union }}
+  type HtmlPublicPath = Extract<PublicPath, \`\${string}.html\`>
   export interface WxtRuntime extends Runtime.Static {
     getURL(path: PublicPath): string;
+    getURL(path: \`\${HtmlPublicPath}\${string}\`): string;
   }
 }
 `;
@@ -93,11 +116,9 @@ declare module "wxt/browser" {
   return filePath;
 }
 
-async function writeI18nDeclarationFile(
-  config: InternalConfig,
-): Promise<string> {
-  const filePath = resolve(config.typesDir, 'i18n.d.ts');
-  const defaultLocale = config.manifest.default_locale;
+async function writeI18nDeclarationFile(): Promise<string> {
+  const filePath = resolve(wxt.config.typesDir, 'i18n.d.ts');
+  const defaultLocale = wxt.config.manifest.default_locale;
   const template = `// Generated by wxt
 import "wxt/browser";
 
@@ -121,7 +142,7 @@ declare module "wxt/browser" {
   let messages: Message[];
   if (defaultLocale) {
     const defaultLocalePath = path.resolve(
-      config.publicDir,
+      wxt.config.publicDir,
       '_locales',
       defaultLocale,
       'messages.json',
@@ -134,7 +155,7 @@ declare module "wxt/browser" {
 
   const overrides = messages.map((message) => {
     return `    /**
-     * ${message.description ?? 'No message description.'}
+     * ${message.description || 'No message description.'}
      *
      * "${message.message}"
      */
@@ -152,35 +173,33 @@ declare module "wxt/browser" {
   return filePath;
 }
 
-async function writeGlobalsDeclarationFile(
-  config: InternalConfig,
-): Promise<string> {
-  const filePath = resolve(config.typesDir, 'globals.d.ts');
-  const globals = [...getGlobals(config), ...getEntrypointGlobals(config, '')];
+async function writeGlobalsDeclarationFile(): Promise<string> {
+  const filePath = resolve(wxt.config.typesDir, 'globals.d.ts');
+  const globals = [...getGlobals(wxt.config), ...getEntrypointGlobals('')];
   await writeFileIfDifferent(
     filePath,
     [
       '// Generated by wxt',
       'export {}',
-      'declare global {',
-      ...globals.map((global) => `  const ${global.name}: ${global.type};`),
+      'interface ImportMetaEnv {',
+      ...globals.map((global) => `  readonly ${global.name}: ${global.type};`),
+      '}',
+      'interface ImportMeta {',
+      '  readonly env: ImportMetaEnv',
       '}',
     ].join('\n') + '\n',
   );
   return filePath;
 }
 
-async function writeMainDeclarationFile(
-  references: string[],
-  config: InternalConfig,
-): Promise<string> {
-  const dir = config.wxtDir;
+async function writeMainDeclarationFile(references: string[]): Promise<string> {
+  const dir = wxt.config.wxtDir;
   const filePath = resolve(dir, 'wxt.d.ts');
   await writeFileIfDifferent(
     filePath,
     [
       '// Generated by wxt',
-      `/// <reference types="vite/client" />`,
+      `/// <reference types="wxt/vite-builder-env" />`,
       ...references.map(
         (ref) =>
           `/// <reference types="./${normalizePath(relative(dir, ref))}" />`,
@@ -190,13 +209,10 @@ async function writeMainDeclarationFile(
   return filePath;
 }
 
-async function writeTsConfigFile(
-  mainReference: string,
-  config: InternalConfig,
-) {
-  const dir = config.wxtDir;
+async function writeTsConfigFile(mainReference: string) {
+  const dir = wxt.config.wxtDir;
   const getTsconfigPath = (path: string) => normalizePath(relative(dir, path));
-  const paths = Object.entries(config.alias)
+  const paths = Object.entries(wxt.config.alias)
     .flatMap(([alias, absolutePath]) => {
       const aliasPath = getTsconfigPath(absolutePath);
       return [
@@ -224,10 +240,10 @@ ${paths}
     }
   },
   "include": [
-    "${getTsconfigPath(config.root)}/**/*",
+    "${getTsconfigPath(wxt.config.root)}/**/*",
     "./${getTsconfigPath(mainReference)}"
   ],
-  "exclude": ["${getTsconfigPath(config.outBaseDir)}"]
+  "exclude": ["${getTsconfigPath(wxt.config.outBaseDir)}"]
 }`,
   );
 }

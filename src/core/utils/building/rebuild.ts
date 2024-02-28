@@ -1,9 +1,9 @@
-import type { Manifest } from 'webextension-polyfill';
-import { BuildOutput, EntrypointGroup, InternalConfig } from '~/types';
-import { findEntrypoints } from './find-entrypoints';
+import type { Manifest } from '~/browser';
+import { BuildOutput, Entrypoint, EntrypointGroup } from '~/types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
-import { generateMainfest, writeManifest } from '~/core/utils/manifest';
+import { generateManifest, writeManifest } from '~/core/utils/manifest';
+import { wxt } from '../../wxt';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output, build the
@@ -14,45 +14,51 @@ import { generateMainfest, writeManifest } from '~/core/utils/manifest';
  * 2. Build the `entrypointGroups` (and copies public files)
  * 3. Generate the latest manifest for all entrypoints
  * 4. Write the new manifest to the file system
+ *
+ * @param config Internal config containing all the project information.
+ * @param allEntrypoints List of entrypoints used to generate the types inside .wxt directory.
+ * @param entrypointGroups The list of entrypoint groups to build.
+ * @param existingOutput The previous output to combine the rebuild results into. An emptry array if
+ *                       this is the first build.
  */
 export async function rebuild(
-  config: InternalConfig,
+  allEntrypoints: Entrypoint[],
   entrypointGroups: EntrypointGroup[],
   existingOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [],
     publicAssets: [],
   },
-): Promise<{ output: BuildOutput; manifest: Manifest.WebExtensionManifest }> {
+): Promise<{
+  output: BuildOutput;
+  manifest: Manifest.WebExtensionManifest;
+  warnings: any[][];
+}> {
   const { default: ora } = await import('ora');
   const spinner = ora(`Preparing...`).start();
 
   // Update types directory with new files and types
-  const allEntrypoints = await findEntrypoints(config);
-  await generateTypesDir(allEntrypoints, config).catch((err) => {
-    config.logger.warn('Failed to update .wxt directory:', err);
+  await generateTypesDir(allEntrypoints).catch((err) => {
+    wxt.logger.warn('Failed to update .wxt directory:', err);
     // Throw the error if doing a regular build, don't for dev mode.
-    if (config.command === 'build') throw err;
+    if (wxt.config.command === 'build') throw err;
   });
 
   // Build and merge the outputs
-  const newOutput = await buildEntrypoints(entrypointGroups, config, spinner);
+  const newOutput = await buildEntrypoints(entrypointGroups, spinner);
   const mergedOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [...existingOutput.steps, ...newOutput.steps],
     publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
   };
 
-  const newManifest = await generateMainfest(
-    allEntrypoints,
-    mergedOutput,
-    config,
-  );
+  const { manifest: newManifest, warnings: manifestWarnings } =
+    await generateManifest(allEntrypoints, mergedOutput);
   const finalOutput: BuildOutput = {
     manifest: newManifest,
     ...newOutput,
   };
 
   // Write manifest
-  await writeManifest(newManifest, finalOutput, config);
+  await writeManifest(newManifest, finalOutput);
 
   // Stop the spinner and remove it from the CLI output
   spinner.clear().stop();
@@ -67,5 +73,6 @@ export async function rebuild(
       ],
     },
     manifest: newManifest,
+    warnings: manifestWarnings,
   };
 }

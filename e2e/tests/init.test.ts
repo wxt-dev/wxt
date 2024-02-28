@@ -25,6 +25,7 @@ describe('Init command', () => {
         "assets/vue.svg",
         "components/HelloWorld.vue",
         "entrypoints/background.ts",
+        "entrypoints/content.ts",
         "entrypoints/popup/App.vue",
         "entrypoints/popup/index.html",
         "entrypoints/popup/main.ts",

@@ -1,6 +1,5 @@
-import type { Manifest } from 'webextension-polyfill';
-import { ContentScriptEntrypoint, InternalConfig } from '~/types';
-import { resolvePerBrowserOption } from './entrypoints';
+import type { Manifest, Scripting } from '~/browser';
+import { ContentScriptEntrypoint } from '~/types';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -9,9 +8,12 @@ import { resolvePerBrowserOption } from './entrypoints';
  */
 export function hashContentScriptOptions(
   options: ContentScriptEntrypoint['options'],
-  config: InternalConfig,
 ): string {
-  const simplifiedOptions = mapWxtOptionsToContentScript(options, config);
+  const simplifiedOptions = mapWxtOptionsToContentScript(
+    options,
+    undefined,
+    undefined,
+  );
 
   // Remove undefined fields and use defaults to generate hash
   Object.keys(simplifiedOptions).forEach((key) => {
@@ -45,34 +47,39 @@ export function hashContentScriptOptions(
 
 export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
-  config: InternalConfig,
-): Omit<Manifest.ContentScript, 'js' | 'css'> {
+  js: string[] | undefined,
+  css: string[] | undefined,
+): Manifest.ContentScript {
   return {
-    matches: resolvePerBrowserOption(options.matches, config.browser),
-    all_frames: resolvePerBrowserOption(options.allFrames, config.browser),
-    match_about_blank: resolvePerBrowserOption(
-      options.matchAboutBlank,
-      config.browser,
-    ),
-    exclude_globs: resolvePerBrowserOption(
-      options.excludeGlobs,
-      config.browser,
-    ),
-    exclude_matches: resolvePerBrowserOption(
-      options.excludeMatches,
-      config.browser,
-    ),
-    include_globs: resolvePerBrowserOption(
-      options.includeGlobs,
-      config.browser,
-    ),
-    run_at: resolvePerBrowserOption(options.runAt, config.browser),
+    matches: options.matches,
+    all_frames: options.allFrames,
+    match_about_blank: options.matchAboutBlank,
+    exclude_globs: options.excludeGlobs,
+    exclude_matches: options.excludeMatches,
+    include_globs: options.includeGlobs,
+    run_at: options.runAt,
+    css,
+    js,
 
     // @ts-expect-error: untyped chrome options
-    match_origin_as_fallback: resolvePerBrowserOption(
-      options.matchOriginAsFallback,
-      config.browser,
-    ),
+    match_origin_as_fallback: options.matchOriginAsFallback,
+    world: options.world,
+  };
+}
+
+export function mapWxtOptionsToRegisteredContentScript(
+  options: ContentScriptEntrypoint['options'],
+  js: string[] | undefined,
+  css: string[] | undefined,
+): Omit<Scripting.RegisteredContentScript, 'id'> {
+  return {
+    allFrames: options.allFrames,
+    excludeMatches: options.excludeMatches,
+    matches: options.matches,
+    runAt: options.runAt,
+    js,
+    css,
+    // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
     world: options.world,
   };
 }

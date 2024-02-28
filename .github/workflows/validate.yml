@@ -10,23 +10,29 @@ jobs:
   formatting:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm format:check
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm lint
   type-check:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm compile
   validate-demo:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm build:all
-        working-directory: demo
       - run: pnpm tsc --noEmit
+        working-directory: demo
+      - run: pnpm build:all
         working-directory: demo
       - run: pnpm wxt zip
         working-directory: demo
@@ -35,17 +41,17 @@ jobs:
   tests:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - name: pnpm test:coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   windows-tests:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm test run
   template:
@@ -59,18 +65,18 @@ jobs:
           - vanilla
           - vue
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm pack
       - run: npm i
         working-directory: templates/${{ matrix.template }}
       - run: npm i -D ../../wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
-      - run: npm run compile
+      - run: pnpm compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
-      - run: npm run check
+      - run: pnpm check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
-      - run: npm run build
+      - run: pnpm build
         working-directory: templates/${{ matrix.template }}

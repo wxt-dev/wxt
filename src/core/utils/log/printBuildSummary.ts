@@ -1,12 +1,12 @@
 import { resolve } from 'path';
-import { BuildOutput, InternalConfig } from '~/types';
+import { BuildOutput } from '~/types';
 import { printFileList } from './printFileList';
+import { wxt } from '../../wxt';
 
 export async function printBuildSummary(
   log: (...args: any[]) => void,
   header: string,
   output: BuildOutput,
-  config: InternalConfig,
 ) {
   const chunks = [
     ...output.steps.flatMap((step) => step.chunks),
@@ -19,8 +19,10 @@ export async function printBuildSummary(
     return l.fileName.localeCompare(r.fileName);
   });
 
-  const files = chunks.map((chunk) => resolve(config.outDir, chunk.fileName));
-  await printFileList(log, header, config.outDir, files);
+  const files = chunks.map((chunk) =>
+    resolve(wxt.config.outDir, chunk.fileName),
+  );
+  await printFileList(log, header, wxt.config.outDir, files);
 }
 
 const DEFAULT_SORT_WEIGHT = 100;

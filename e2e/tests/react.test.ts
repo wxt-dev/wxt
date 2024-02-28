@@ -37,7 +37,7 @@ describe('React', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/manifest.json
         ----------------------------------------
-        {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"content_scripts\\":[{\\"matches\\":\\"<all_urls>\\",\\"js\\":[\\"content-scripts/demo.js\\"]}]}"
+        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":"<all_urls>","js":["content-scripts/demo.js"]}]}"
       `);
   });
 });

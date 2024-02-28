@@ -1,6 +1,6 @@
 # Unlisted Pages
 
-HTML pages that are built by Vite, but are not included in the manifest.
+HTML pages that are bundled and shipped with the extension, but are not included in the manifest.
 
 ### Examples
 

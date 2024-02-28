@@ -1,4 +1,3 @@
-import { InternalConfig } from '~/types';
 import { WxtPackageManager } from './wxt-package-manager';
 import { PackageManager } from 'nypm';
 import {
@@ -7,13 +6,11 @@ import {
   flattenNpmDependencyMap,
 } from './npm';
 import { execa } from 'execa';
+import { wxt } from '~/core/wxt';
 
-export function createPnpmWxtPackageManager(
-  config: InternalConfig,
-  options?: {
-    pnpmFlags?: string[];
-  },
-): Omit<WxtPackageManager, keyof PackageManager> {
+export function createPnpmWxtPackageManager(options?: {
+  pnpmFlags?: string[];
+}): Omit<WxtPackageManager, keyof PackageManager> {
   return {
     async getAllDependencies() {
       const { stdout: json } = await execa(
@@ -25,7 +22,7 @@ export function createPnpmWxtPackageManager(
           '--depth',
           'Infinity',
         ],
-        { cwd: config.root },
+        { cwd: wxt.config.root },
       );
       const project: PnpmListProject[] = JSON.parse(json);
       return [

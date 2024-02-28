@@ -6,7 +6,7 @@ title: Next-gen Web Extension Framework
 hero:
   name: WXT
   text: Next-gen Web Extension Framework
-  tagline: An open source tool that makes Chrome Extension devlopment faster than ever before.
+  tagline: An open source tool that makes Chrome Extension development faster than ever before.
   image:
     src: /hero-logo.svg
     alt: WXT
@@ -47,11 +47,9 @@ features:
     details: Nuxt-like auto-imports to speed up development.
     link: /guide/auto-imports
     linkText: Read docs
-  - icon: ⬇️
-    title: Bundle Remote Code
-    details: Downloads and bundles remote code imported from URLs.
-    link: /guide/remote-code
-    linkText: Read docs
+  - icon: 🤖
+    title: Automated Publishing
+    details: Automatically zip, upload, submit, and publish extensions.
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
@@ -64,10 +62,12 @@ features:
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
-    details: Tools for analyizing the final extension bundle and minimizing your extension's size.
-  - icon: 🤖
-    title: Automated Publishing
-    details: 'Coming soon. Automatically zip, upload, and release extensions.'
+    details: Tools for analyzing the final extension bundle and minimizing your extension's size.
+  - icon: ⬇️
+    title: Bundle Remote Code
+    details: Downloads and bundles remote code imported from URLs.
+    link: /guide/remote-code
+    linkText: Read docs
 ---
 
 <section class="vp-doc">

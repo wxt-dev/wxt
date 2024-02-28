@@ -1,106 +1,80 @@
+---
+outline: deep
+---
+
 # Publishing
 
-WXT offers several utilities that simplify the publishing process.
+WXT will help you ZIP your extensions and submit them to the stores for review.
 
 ## First Time Publishing
 
-If you're publishing an extension to a store for the first time, it's recommended that you manually navigate the process. Each store has unique steps and requirements that you need to familiarize yourself with.
+If you're publishing an extension to a store for the first time, you must manually navigate the process. WXT doesn't help you create listings, each store has unique steps and requirements that you need to familiarize yourself with.
 
-Each store requires that a ZIP file be uploaded. You can generate these using the `wxt zip` command:
+For specific details about each store, see the stores sections below.
+
+- [Chrome Web Store](#chrome-web-store)
+- [Firefox Addon Store](#firefox-addon-store)
+- [Edge Addons](#edge-addons)
+
+## Automation
+
+WXT provides two commands to help automate the release process:
+
+- `wxt submit`: Submit new versions of your extension for review (and publish them automatically once approved)
+- `wxt submit init`: Help setup all the required secrets and options for the `wxt submit` command
+
+To get started, run `wxt submit init` and follow the prompts. Once finished, you should have a `.env.submit` file! WXT will use this file to submit your updates.
+
+> In CI, make sure you add all the environment variables to the submit step.
+
+To release an update, build all the ZIPs you plan on releasing:
 
 ```sh
 wxt zip
 wxt zip -b firefox
-# etc
 ```
 
-Generated ZIP files are stored in the `.output` directory.
+Then run the `wxt submit` command, passing in all the ZIP files you want to release. In this case, we'll do a release for all 3 major stores: Chrome Web Store, Edge Addons, and Firefox Addons Store.
 
-## Automation
+If it's your first time running the command, you'll want to test your secrets by passing the `--dry-run` flag:
 
-To automate releasing updates, use the [`publish-browser-extension`](https://www.npmjs.com/package/publish-browser-extension) package.
+```sh
+wxt submit --dry-run \
+  --chrome-zip .output/<your-extension>-<version>-chrome.zip \
+  --firefox-zip .output/<your-extension>-<version>-firefox.zip --firefox-sources-zip .output/<your-extension>-<version>-sources.zip \
+  --edge-zip .output/<your-extension>-<version>-chrome.zip
+```
 
-:::info
-🚧 WXT plans to eventually incorporate the `publish-browser-extension` package into its own `wxt submit` command.
+If the dry run passes, remove the flag and do the actual release:
+
+```sh
+wxt submit \
+  --chrome-zip .output/<your-extension>-<version>-chrome.zip \
+  --firefox-zip .output/<your-extension>-<version>-firefox.zip --firefox-sources-zip .output/<your-extension>-<version>-sources.zip \
+  --edge-zip .output/<your-extension>-<version>-chrome.zip
+```
+
+:::tip
+If you only need to release to a single store, only pass that store's ZIP flag.
 :::
 
-1. Install the necessary dependencies:
-
-   ```sh
-   pnpm add -D publish-browser-extension env-cmd
-   ```
-
-2. Add scripts to your `package.json` file:
-
-   ```json
-   {
-     "scripts": {
-       "submit": "env-cmd -f .env.submit -- publish-extension",
-       "submit:dry": "env-cmd -f .env.submit -- publish-extension --dry-run"
-     }
-   }
-   ```
-
-3. Create a `.env.submit` file and include the code below. If you're not publishing to certain stores, simply ignore their respective variables.
-
-   ```txt
-   CHROME_EXTENSION_ID=""
-   CHROME_CLIENT_ID=""
-   CHROME_CLIENT_SECRET=""
-   CHROME_REFRESH_TOKEN=""
-
-   FIREFOX_EXTENSION_ID=""
-   FIREFOX_JWT_ISSUER=""
-   FIREFOX_JWT_SECRET=""
-
-   EDGE_PRODUCT_ID=""
-   EDGE_CLIENT_ID=""
-   EDGE_CLIENT_SECRET=""
-   EDGE_ACCESS_TOKEN_URL=""
-   ```
-
-   > Each value will be filled in during the next step.
-
-4. Run `npx publish-extension --help` for assistance with filling out all the values. Insert the obtained values within the double quotes.
-
-5. ZIP all the targets you plan to publish, in this case Chrome and Firefox.
-
-   ```sh
-   wxt zip
-   wxt zip -b firefox
-   ```
-
-6. Test your credentials by running the `submit:dry` command:
-
-   ```sh
-   pnpm submit:dry \
-     --chrome-zip .output/your-extension-X.Y.Z-chrome.zip \
-     --firefox-zip .output/your-extension-X.Y.Z-firefox.zip \
-     --firefox-sources-zip .output/your-extension-X.Y.Z-sources.zip \
-     --edge-zip .output/your-extension-X.Y.Z-chrome.zip
-   ```
-
-7. Upload and submit your extension for review:
-
-   ```sh
-   pnpm submit \
-     --chrome-zip .output/your-extension-X.Y.Z-chrome.zip \
-     --firefox-zip .output/your-extension-X.Y.Z-firefox.zip \
-     --firefox-sources-zip .output/your-extension-X.Y.Z-sources.zip \
-     --edge-zip .output/your-extension-X.Y.Z-chrome.zip
-   ```
+:::tip
+See the [Firefox Addon Store](#firefox-addon-store) section for more details about the `--firefox-sources-zip` option.
+:::
 
 ## GitHub Action
 
-Here's an example of a GitHub Action to automate submiting new versions of your extension for review. Ensure that you've added all required secrets used in the workflow to the repo's settings.
+Here's an example of a GitHub Action to automate submitting new versions of your extension for review. Ensure that you've added all required secrets used in the workflow to the repo's settings.
 
 ```yml
 # TODO
 ```
 
-## Chrome Web Store
+## Stores
 
-✅ Automated &bull; [Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard) &bull; [Publishing Docs](https://developer.chrome.com/docs/webstore/publish/)
+### Chrome Web Store
+
+> ✅ Supported &bull; [Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard) &bull; [Publishing Docs](https://developer.chrome.com/docs/webstore/publish/)
 
 To create a ZIP for Chrome:
 
@@ -108,15 +82,15 @@ To create a ZIP for Chrome:
 wxt zip
 ```
 
-## Firefox Addon Store
+### Firefox Addon Store
 
-✅ Automated &bull; [Developer Dashboard](https://addons.mozilla.org/developers/) &bull; [Publishing Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+> ✅ Supported &bull; [Developer Dashboard](https://addons.mozilla.org/developers/) &bull; [Publishing Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
 
 Firefox requires you to upload a ZIP of your source code. This allows them to rebuild your extension and review the code in a readable way. More details can be found in [Firefox's docs](https://extensionworkshop.com/documentation/publish/source-code-submission/).
 
-WXT and `publish-browser-extension` both fully support generating and automatically submitting a source code ZIP.
+WXT fully supports generating and automatically submitting a source code ZIP.
 
-When you run `wxt zip -b firefox`, your sources are zipped into the `.output` directory along with your built extension. WXT is configured to exclude certain files such as config files, hidden files, and tests. However, it's important to manually check the ZIP to ensure it only contains the files necessary to rebuild your extension.
+When you run `wxt zip -b firefox`, your sources are zipped into the `.output` directory alongside the extension. WXT will automatically exclude certain files such as config files, hidden files, and tests. However, it's important to manually check the ZIP to ensure it only contains the files necessary to rebuild your extension.
 
 To customize which files are zipped, add the `zip` option to your config file.
 
@@ -152,22 +126,34 @@ yarn zip:firefox
 
 :::
 
-Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the above commands so that the Firefox team knows how to build your extension.
-
-## Safari
-
-🚧 Not automated at this time
+Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
 
 :::warning
-🚧 WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT cannot create at this time. For now, if you want to publish to Safari, follow this guide:
+If you use a `.env` files, they can effect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
 
-https://developer.apple.com/documentation/safariservices/safari_web_extensions/distributing_your_safari_web_extension
-
+See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 :::
 
-## Edge Addons
+Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the above commands so that the Firefox team knows how to build your extension.
 
-✅ Automated &bull; [Developer Dashboard](https://aka.ms/PartnerCenterLogin) &bull; [Publishing Docs](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
+### Safari
+
+> 🚧 Not supported yet
+
+WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT does not create yet. For now, if you want to publish to Safari, follow this guide:
+
+- [Converting a web extension for Safari](https://developer.apple.com/documentation/safariservices/safari_web_extensions/converting_a_web_extension_for_safari) - "Convert your existing extension to a Safari web extension using Xcode’s command-line tool."
+
+When running the `safari-web-extension-converter` CLI tool, pass the `.output/safari-mv2` or `.output/safari-mv3` directory, not your source code directory.
+
+```sh
+pnpm wxt build -b safari
+xcrun safari-web-extension-converter .output/safari-mv2
+```
+
+### Edge Addons
+
+> ✅ Supported &bull; [Developer Dashboard](https://aka.ms/PartnerCenterLogin) &bull; [Publishing Docs](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
 
 No need to create a specific ZIP for Edge. If you're already publishing to the Chrome Web Store, you can reuse your Chrome ZIP.
 

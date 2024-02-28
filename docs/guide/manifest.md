@@ -1,12 +1,13 @@
 # Manifest.json
 
-The manifest.json is generated at build-time based on files in your `entrypoints` directory and your `wxt.config.ts`.
+The manifest.json is generated at build-time based on files in the `entrypoints/` directory and `wxt.config.ts`.
 
-## Confiuration
+## Configuration
 
 While entrypoints are generated and added to the manifest at build-time, you can customize or add to your `manifest.json` in the config file.
 
 ```ts
+// wxt.config.tsentrypoint of your extension
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -25,10 +26,12 @@ If not provided via the `manifest` config, the [manifest's `name`](https://devel
 
 ## `version` and `version_name`
 
-The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/extensions/mv3/manifest/version/) fields are based on your package.json's `version` property.
+The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/extensions/mv3/manifest/version/) properties are based on the `version` field listed in your `package.json` or `wxt.config.ts`.
 
-- `version_name` is the exact string listed in your package.json
+- `version_name` is the exact string listed in your `package.json` or `wxt.config.ts` file
 - `version` is the string cleaned up, with any invalid suffixes removed
+
+If a version is not found, a warning is logged and the version defaults to `"0.0.0"`.
 
 ### Example
 
@@ -118,3 +121,7 @@ export default defineConfig({
   },
 });
 ```
+
+See the official localization examples for more details:
+
+<ExampleList tag="i18n" />

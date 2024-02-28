@@ -1,12 +1,12 @@
 import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
-import { InternalConfig } from '~/types';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
-import { resolve } from 'path';
-import { getUnimportOptions } from '~/core/utils/unimport';
+import { relative, resolve } from 'node:path';
 import { removeProjectImportStatements } from '~/core/utils/strings';
 import { normalizePath } from '~/core/utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
+import { fileURLToPath } from 'node:url';
+import { wxt } from '../../wxt';
 
 /**
  * Get the value from the default export of a `path`.
@@ -23,16 +23,13 @@ import { TransformOptions, transformSync } from 'esbuild';
  * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
  * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
  */
-export async function importEntrypointFile<T>(
-  path: string,
-  config: InternalConfig,
-): Promise<T> {
-  config.logger.debug('Loading file metadata:', path);
+export async function importEntrypointFile<T>(path: string): Promise<T> {
+  wxt.logger.debug('Loading file metadata:', path);
   // JITI & Babel uses normalized paths.
   const normalPath = normalizePath(path);
 
   const unimport = createUnimport({
-    ...getUnimportOptions(config),
+    ...wxt.config.imports,
     // Only allow specific imports, not all from the project
     dirs: [],
   });
@@ -41,38 +38,65 @@ export async function importEntrypointFile<T>(
   const text = await fs.readFile(path, 'utf-8');
   const textNoImports = removeProjectImportStatements(text);
   const { code } = await unimport.injectImports(textNoImports);
-  config.logger.debug(
+  wxt.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
 
-  const jiti = createJITI(__filename, {
-    cache: false,
-    debug: config.debug,
-    esmResolve: true,
-    alias: {
-      'webextension-polyfill': resolve(
-        config.root,
-        'node_modules/wxt/dist/virtual/mock-browser.js',
-      ),
+  const jiti = createJITI(
+    typeof __filename !== 'undefined'
+      ? __filename
+      : fileURLToPath(import.meta.url),
+    {
+      cache: false,
+      debug: wxt.config.debug,
+      esmResolve: true,
+      alias: {
+        'webextension-polyfill': resolve(
+          wxt.config.wxtModuleDir,
+          'dist/virtual/mock-browser.js',
+        ),
+      },
+      // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
+      // respect the custom transform function when using it's native bun option.
+      experimentalBun: false,
+      // List of extensions to transform with esbuild
+      extensions: [
+        '.ts',
+        '.cts',
+        '.mts',
+        '.tsx',
+        '.js',
+        '.cjs',
+        '.mjs',
+        '.jsx',
+      ],
+      transform(opts) {
+        const isEntrypoint = opts.filename === normalPath;
+        return transformSync(
+          // Use modified source code for entrypoints
+          isEntrypoint ? code : opts.source,
+          getEsbuildOptions(opts),
+        );
+      },
     },
-    // List of extensions to transform with esbuild
-    extensions: ['.ts', '.cts', '.mts', '.tsx', '.js', '.cjs', '.mjs', '.jsx'],
-    transform(opts) {
-      const isEntrypoint = opts.filename === normalPath;
-      return transformSync(
-        // Use modified source code for entrypoints
-        isEntrypoint ? code : opts.source,
-        getEsbuildOptions(opts),
-      );
-    },
-  });
+  );
 
   try {
     const res = await jiti(path);
     return res.default;
   } catch (err) {
-    config.logger.error(err);
-    throw err;
+    const filePath = relative(wxt.config.root, path);
+    if (err instanceof ReferenceError) {
+      // "XXX is not defined" - usually due to WXT removing imports
+      const variableName = err.message.replace(' is not defined', '');
+      throw Error(
+        `${filePath}: Cannot use imported variable "${variableName}" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects`,
+        { cause: err },
+      );
+    } else {
+      wxt.logger.error(err);
+      throw Error(`Failed to load entrypoint: ${filePath}`, { cause: err });
+    }
   }
 }
 
@@ -81,6 +105,13 @@ function getEsbuildOptions(opts: JitiTransformOptions): TransformOptions {
   return {
     format: 'cjs',
     loader: isJsx ? 'tsx' : 'ts',
-    jsx: isJsx ? 'automatic' : undefined,
+    ...(isJsx
+      ? {
+          // `h` and `Fragment` are undefined, but that's OK because JSX is never evaluated while
+          // grabbing the entrypoint's options.
+          jsxFactory: 'h',
+          jsxFragment: 'Fragment',
+        }
+      : undefined),
   };
 }

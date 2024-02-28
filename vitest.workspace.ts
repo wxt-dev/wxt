@@ -1,12 +1,13 @@
 import { defineWorkspace } from 'vitest/config';
 import fs from 'fs-extra';
 import pc from 'picocolors';
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
+import path from 'node:path';
 
 const seed = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
 console.info('Test seed: ' + pc.cyan(seed));
 
-// config.define doesn't work with workspaces, so we have to set it inisde a plugin
+// config.define doesn't work with workspaces, so we have to set it inside a plugin
 const testSeed = (): Plugin => ({
   name: 'test-seed',
   config(config) {
@@ -17,8 +18,9 @@ const testSeed = (): Plugin => ({
 
 const resolve = {
   alias: {
-    '~': 'src',
-    'webextension-polyfill': './src/virtual/mock-browser',
+    '~': path.resolve('src'),
+    'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
+    'wxt/testing': path.resolve('src/testing'),
   },
 };
 

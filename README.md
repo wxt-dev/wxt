@@ -9,9 +9,8 @@
   <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
   <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="NPM" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
-  <!-- Hide code coverage while it's broken -->
-  <!-- <span> </span>
-  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a> -->
+  <span> </span>
+  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
 </p>
 
 <p align="center">
@@ -27,9 +26,9 @@
   &bull;
   <a href="https://wxt.dev/guide/installation.html" target="_blank">Installation</a>
   &bull;
-  <a href="https://wxt.dev/entrypoints/background.html" target="_blank">Entrypoints</a>
-  &bull;
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
+  &bull;
+  <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
 </p>
 
 ![Example CLI Output](./docs/assets/cli-output.png)
@@ -56,14 +55,11 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 📂 File based entrypoints
 - 🚔 TypeScript
 - 🦾 Auto-imports
-- ⬇️ Download and bundle remote URL imports
+- 🤖 Automated publishing
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
-
-### Coming Soon
-
-- 🤖 Automated publishing
+- ⬇️ Download and bundle remote URL imports
 
 ## Contributors
 

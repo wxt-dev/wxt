@@ -57,9 +57,17 @@ pnpm test
 pnpm docs:dev
 ```
 
+## Updating Docs
+
+Documentation is written with VitePress, and is located in the `docs/` directory.
+
+The API reference is generated from JSDoc comments in the source code. If there's a typo or change you want to make in there, you'll need to update the source code instead of a file in the `docs/` directory.
+
 ## Testing
 
-WXT has unit and E2E tests. When making a change or adding a feature, make sure to update the tests or add new ones.
+WXT has unit and E2E tests. When making a change or adding a feature, make sure to update the tests or add new ones, if they exist.
+
+> If they don't exist, feel free to create them, but that's a lot for a one-time contributor. A maintainer might add them to your PR though.
 
 To run tests for a specific file, add the filename at the end of the test command:
 
@@ -86,7 +94,7 @@ Note that templates are hardcoded to a specific version of `wxt` from NPM, they 
 
 ```diff
   "devDependencies": {
-    "typescript": "^5.1.6",
+    "typescript": "^5.3.2",
     "vite-plugin-solid": "^2.7.0",
 -   "wxt": "^0.8.0"
 +   "wxt": "../.."
@@ -100,7 +108,7 @@ Then run `npm i` again.
 To add a template, copy the vanilla template and give it a new name.
 
 ```sh
-cp -r templates/vailla templates/<new-template-name>
+cp -r templates/vanilla templates/<new-template-name>
 ```
 
 That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.

@@ -1,17 +1,23 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   BackgroundEntrypoint,
+  BackgroundEntrypointOptions,
+  BaseEntrypointOptions,
   ContentScriptEntrypoint,
   GenericEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
+  SidepanelEntrypoint,
 } from '~/types';
 import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
 import { importEntrypointFile } from '../import-entrypoint';
 import glob from 'fast-glob';
-import { fakeInternalConfig } from '~/core/utils/testing/fake-objects';
+import {
+  fakeResolvedConfig,
+  setFakeWxt,
+} from '~/core/utils/testing/fake-objects';
 import { unnormalizePath } from '~/core/utils/paths';
 
 vi.mock('../import-entrypoint');
@@ -26,11 +32,16 @@ const readFileMock = vi.mocked(
 );
 
 describe('findEntrypoints', () => {
-  const config = fakeInternalConfig({
+  const config = fakeResolvedConfig({
+    manifestVersion: 3,
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
     command: 'build',
+  });
+
+  beforeEach(() => {
+    setFakeWxt({ config });
   });
 
   it.each<[string, string, PopupEntrypoint]>([
@@ -53,6 +64,7 @@ describe('findEntrypoints', () => {
           defaultIcon: { '16': '/icon/16.png' },
           defaultTitle: 'Default Title',
         },
+        skipped: false,
       },
     ],
     [
@@ -72,6 +84,7 @@ describe('findEntrypoints', () => {
         options: {
           defaultTitle: 'Title',
         },
+        skipped: false,
       },
     ],
   ])(
@@ -80,7 +93,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       readFileMock.mockResolvedValueOnce(content);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual(expected);
@@ -103,6 +116,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'options.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -123,6 +137,7 @@ describe('findEntrypoints', () => {
         options: {
           openInTab: true,
         },
+        skipped: false,
       },
     ],
   ])(
@@ -131,7 +146,7 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       readFileMock.mockResolvedValueOnce(content);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual(expected);
@@ -146,6 +161,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -155,6 +171,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -164,6 +181,7 @@ describe('findEntrypoints', () => {
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -173,6 +191,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
     [
@@ -182,6 +201,7 @@ describe('findEntrypoints', () => {
         name: 'overlay',
         inputPath: resolve(config.entrypointsDir, 'overlay.content.tsx'),
         outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
       },
     ],
   ])(
@@ -193,14 +213,11 @@ describe('findEntrypoints', () => {
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -212,6 +229,7 @@ describe('findEntrypoints', () => {
         name: 'background',
         inputPath: resolve(config.entrypointsDir, 'background.ts'),
         outputDir: config.outDir,
+        skipped: false,
       },
     ],
     [
@@ -221,80 +239,184 @@ describe('findEntrypoints', () => {
         name: 'background',
         inputPath: resolve(config.entrypointsDir, 'background/index.ts'),
         outputDir: config.outDir,
+        skipped: false,
       },
     ],
   ])(
     'should find and load background entrypoint config from %s',
     async (path, expected) => {
-      const options: BackgroundEntrypoint['options'] = {
+      const options: BackgroundEntrypointOptions = {
         type: 'module',
       };
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
-  it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
-    globMock.mockResolvedValueOnce([]);
+  it.each<[string, string, SidepanelEntrypoint]>([
+    [
+      'sidepanel.html',
+      `
+        <html>
+          <head>
+            <title>Default Title</title>
+            <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
+            <meta name="manifest.open_at_install" content="true" />
+          </head>
+        </html>
+      `,
+      {
+        type: 'sidepanel',
+        name: 'sidepanel',
+        inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
+        outputDir: config.outDir,
+        options: {
+          defaultTitle: 'Default Title',
+          defaultIcon: { '16': '/icon/16.png' },
+          openAtInstall: true,
+        },
+        skipped: false,
+      },
+    ],
+    [
+      'sidepanel/index.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'sidepanel',
+        inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
+        options: {},
+        outputDir: config.outDir,
+        skipped: false,
+      },
+    ],
+    [
+      'named.sidepanel.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'named',
+        inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
+        options: {},
+        outputDir: config.outDir,
+        skipped: false,
+      },
+    ],
+    [
+      'named.sidepanel/index.html',
+      `<html></html>`,
+      {
+        type: 'sidepanel',
+        name: 'named',
+        inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
+        outputDir: config.outDir,
+        options: {},
+        skipped: false,
+      },
+    ],
+  ])(
+    'should find and load sidepanel entrypoint config from %s',
+    async (path, content, expected) => {
+      globMock.mockResolvedValueOnce([path]);
+      readFileMock.mockResolvedValueOnce(content);
 
-    const entrypoints = await findEntrypoints({
-      ...config,
-      command: 'serve',
+      const entrypoints = await findEntrypoints();
+
+      expect(entrypoints).toHaveLength(1);
+      expect(entrypoints[0]).toEqual(expected);
+    },
+  );
+
+  it('should remove type=module from MV2 background scripts', async () => {
+    setFakeWxt({
+      config: {
+        manifestVersion: 2,
+      },
     });
+    const options: BackgroundEntrypointOptions = {
+      type: 'module',
+    };
+    globMock.mockResolvedValueOnce(['background.ts']);
+    importEntrypointFileMock.mockResolvedValue(options);
 
-    expect(entrypoints).toHaveLength(1);
-    expect(entrypoints[0]).toEqual({
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints[0].options).toEqual({});
+  });
+
+  it('should allow type=module for MV3 background service workers', async () => {
+    setFakeWxt({
+      config: {
+        manifestVersion: 3,
+      },
+    });
+    const options: BackgroundEntrypointOptions = {
+      type: 'module',
+    };
+    globMock.mockResolvedValueOnce(['background.ts']);
+    importEntrypointFileMock.mockResolvedValue(options);
+
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints[0].options).toEqual(options);
+  });
+
+  it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
+    setFakeWxt({
+      config: {
+        ...config,
+        command: 'serve',
+      },
+    });
+    globMock.mockResolvedValueOnce(['popup.html']);
+
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints).toHaveLength(2);
+    expect(entrypoints).toContainEqual({
       type: 'background',
       inputPath: 'virtual:user-background',
       name: 'background',
       options: {},
       outputDir: config.outDir,
+      skipped: false,
     });
   });
 
-  it.each<[string, Omit<GenericEntrypoint, 'options'>]>([
-    [
-      'injected.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected.ts'),
-        outputDir: config.outDir,
-      },
-    ],
-    [
-      'injected/index.ts',
-      {
-        type: 'unlisted-script',
-        name: 'injected',
-        inputPath: resolve(config.entrypointsDir, 'injected/index.ts'),
-        outputDir: config.outDir,
-      },
-    ],
+  it.each<string>([
+    'injected.ts',
+    'injected.tsx',
+    'injected.js',
+    'injected.jsx',
+    'injected/index.ts',
+    'injected/index.tsx',
+    'injected/index.js',
+    'injected/index.jsx',
   ])(
     'should find and load unlisted-script entrypoint config from %s',
-    async (path, expected) => {
-      const options: GenericEntrypoint['options'] = {};
+    async (path) => {
+      const expected = {
+        type: 'unlisted-script',
+        name: 'injected',
+        inputPath: resolve(config.entrypointsDir, path),
+        outputDir: config.outDir,
+        skipped: false,
+      };
+      const options: BaseEntrypointOptions = {};
       globMock.mockResolvedValueOnce([path]);
       importEntrypointFileMock.mockResolvedValue(options);
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointFileMock).toBeCalledWith(
-        expected.inputPath,
-        config,
-      );
+      expect(importEntrypointFileMock).toBeCalledWith(expected.inputPath);
     },
   );
 
@@ -308,6 +430,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sandbox.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -318,6 +441,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'sandbox/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -328,6 +452,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sandbox.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -338,6 +463,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'named.sandbox/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -350,6 +476,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'bookmarks.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -360,6 +487,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'bookmarks/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -372,6 +500,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'history.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -382,6 +511,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'history/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -394,6 +524,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'newtab.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -404,48 +535,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'newtab/index.html'),
         outputDir: config.outDir,
         options: {},
-      },
-    ],
-
-    // sidepanel
-    [
-      'sidepanel.html',
-      {
-        type: 'sidepanel',
-        name: 'sidepanel',
-        inputPath: resolve(config.entrypointsDir, 'sidepanel.html'),
-        outputDir: config.outDir,
-        options: {},
-      },
-    ],
-    [
-      'sidepanel/index.html',
-      {
-        type: 'sidepanel',
-        name: 'sidepanel',
-        inputPath: resolve(config.entrypointsDir, 'sidepanel/index.html'),
-        outputDir: config.outDir,
-        options: {},
-      },
-    ],
-    [
-      'named.sidepanel.html',
-      {
-        type: 'sidepanel',
-        name: 'named',
-        inputPath: resolve(config.entrypointsDir, 'named.sidepanel.html'),
-        outputDir: config.outDir,
-        options: {},
-      },
-    ],
-    [
-      'named.sidepanel/index.html',
-      {
-        type: 'sidepanel',
-        name: 'named',
-        inputPath: resolve(config.entrypointsDir, 'named.sidepanel/index.html'),
-        outputDir: config.outDir,
-        options: {},
+        skipped: false,
       },
     ],
 
@@ -458,6 +548,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'devtools.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -468,6 +559,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'devtools/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -480,6 +572,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'onboarding.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -490,6 +583,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'onboarding/index.html'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -502,6 +596,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'iframe.scss'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -512,6 +607,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'iframe.css'),
         outputDir: config.outDir,
         options: {},
+        skipped: false,
       },
     ],
 
@@ -524,6 +620,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -534,6 +631,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'overlay.content.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -544,6 +642,7 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
     [
@@ -554,27 +653,48 @@ describe('findEntrypoints', () => {
         inputPath: resolve(config.entrypointsDir, 'overlay.content/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
+        skipped: false,
       },
     ],
   ])('should find entrypoint for %s', async (path, expected) => {
     globMock.mockResolvedValueOnce([path]);
 
-    const entrypoints = await findEntrypoints(config);
+    const entrypoints = await findEntrypoints();
 
     expect(entrypoints).toHaveLength(1);
     expect(entrypoints[0]).toEqual(expected);
   });
 
   it('should not allow multiple entrypoints with the same name', async () => {
-    globMock.mockResolvedValueOnce(['popup.html', 'popup/index.html']);
-    const expectedPaths = [
-      'src/entrypoints/popup.html',
-      'src/entrypoints/popup/index.html',
-    ].map(unnormalizePath);
+    globMock.mockResolvedValueOnce([
+      'options/index.html',
+      'options/index.jsx',
+      'popup.html',
+      'popup/index.html',
+      'popup/index.ts',
+      'ui.html',
+    ]);
 
-    await expect(() => findEntrypoints(config)).rejects.toThrowError(
-      'Multiple entrypoints with the name "popup" detected, but only one is allowed: ' +
-        expectedPaths.join(', '),
+    await expect(() => findEntrypoints()).rejects.toThrowError(
+      [
+        'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
+        '',
+        '- options',
+        `  - ${unnormalizePath('src/entrypoints/options/index.html')}`,
+        `  - ${unnormalizePath('src/entrypoints/options/index.jsx')}`,
+        '- popup',
+        `  - ${unnormalizePath('src/entrypoints/popup.html')}`,
+        `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
+        `  - ${unnormalizePath('src/entrypoints/popup/index.ts')}`,
+      ].join('\n'),
+    );
+  });
+
+  it('throw an error if there are no entrypoints', async () => {
+    globMock.mockResolvedValueOnce([]);
+
+    await expect(() => findEntrypoints()).rejects.toThrowError(
+      `No entrypoints found in ${unnormalizePath(config.entrypointsDir)}`,
     );
   });
 
@@ -585,7 +705,7 @@ describe('findEntrypoints', () => {
         include: ['not' + config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -596,7 +716,7 @@ describe('findEntrypoints', () => {
         include: ['not' + config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -613,7 +733,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -630,7 +750,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -647,7 +767,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -660,7 +780,7 @@ describe('findEntrypoints', () => {
         exclude: [config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -671,7 +791,7 @@ describe('findEntrypoints', () => {
         exclude: [config.browser],
       });
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -686,7 +806,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -701,7 +821,7 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
     });
@@ -716,9 +836,36 @@ describe('findEntrypoints', () => {
         </html>`,
       );
 
-      const entrypoints = await findEntrypoints(config);
+      const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toEqual([]);
+    });
+  });
+
+  describe('filterEntrypoints option', () => {
+    it('should control entrypoints accessible', async () => {
+      globMock.mockResolvedValue([
+        'options/index.html',
+        'popup/index.html',
+        'ui.content/index.ts',
+        'injected.content/index.ts',
+      ]);
+      importEntrypointFileMock.mockResolvedValue({});
+      const filterEntrypoints = ['popup', 'ui'];
+      setFakeWxt({
+        config: {
+          root: '/',
+          entrypointsDir: resolve('/src/entrypoints'),
+          outDir: resolve('.output'),
+          command: 'build',
+          filterEntrypoints: new Set(filterEntrypoints),
+        },
+      });
+
+      const entrypoints = await findEntrypoints();
+      const names = entrypoints.map((item) => item.name);
+      expect(names).toHaveLength(2);
+      expect(names).toEqual(filterEntrypoints);
     });
   });
 });

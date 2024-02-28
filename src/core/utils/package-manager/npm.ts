@@ -1,17 +1,18 @@
-import { InternalConfig } from '~/types';
 import { PackageInfo, WxtPackageManager } from './wxt-package-manager';
 import { PackageManager } from 'nypm';
 import { execa } from 'execa';
+import { wxt } from '~/core/wxt';
 
-export function createNpmWxtPackageManager(
-  config: InternalConfig,
-): Omit<WxtPackageManager, keyof PackageManager> {
+export function createNpmWxtPackageManager(): Omit<
+  WxtPackageManager,
+  keyof PackageManager
+> {
   return {
     async getAllDependencies() {
       const { stdout: json } = await execa(
         'npm',
         ['list', '--json', '--depth', 'Infinity'],
-        { cwd: config.root },
+        { cwd: wxt.config.root },
       );
       const project: NpmListProject = JSON.parse(json);
       return flattenNpmDependencyMap(project.dependencies);

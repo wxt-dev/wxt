@@ -19,7 +19,7 @@ const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
 
 const description =
-  "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilties for building, zipping, and publishing your extension, it's easy to get started.";
+  "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
 const ogTitle = `${title}${titleSuffix}`;
 const ogUrl = 'https://wxt.dev';
 const ogImage = 'https://wxt.dev/social-preview.png';
@@ -84,16 +84,19 @@ export default defineConfig({
             { text: 'Installation', link: '/guide/installation.md' },
             { text: 'Configuration', link: '/guide/configuration.md' },
             { text: 'Entrypoints', link: '/guide/entrypoints.md' },
-            { text: 'Assets', link: '/guide/assets.md' },
-            { text: 'Multiple Browsers', link: '/guide/multiple-browsers.md' },
-            { text: 'Publishing', link: '/guide/publishing.md' },
-            { text: 'Auto-imports', link: '/guide/auto-imports.md' },
             { text: 'Manifest.json', link: '/guide/manifest.md' },
             { text: 'Extension APIs', link: '/guide/extension-apis.md' },
+            { text: 'Storage', link: '/guide/storage.md' },
+            { text: 'Assets', link: '/guide/assets.md' },
+            { text: 'Content Script UI', link: '/guide/content-script-ui.md' },
+            { text: 'Multiple Browsers', link: '/guide/multiple-browsers.md' },
+            { text: 'ES Modules', link: '/guide/esm.md' },
+            { text: 'Auto-imports', link: '/guide/auto-imports.md' },
+            { text: 'Vite', link: '/guide/vite.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
+            { text: 'Publishing', link: '/guide/publishing.md' },
             { text: 'Development', link: '/guide/development.md' },
             { text: 'Testing', link: '/guide/testing.md' },
-            { text: 'Vite', link: '/guide/vite.md' },
           ],
         },
         {
@@ -121,7 +124,7 @@ export default defineConfig({
             { text: 'Options', link: '/entrypoints/options.md' },
             { text: 'Popup', link: '/entrypoints/popup.md' },
             { text: 'Sandbox', link: '/entrypoints/sandbox.md' },
-            { text: 'Sidepanel', link: '/entrypoints/sidepanel.md' },
+            { text: 'Side Panel', link: '/entrypoints/sidepanel.md' },
             { text: 'Unlisted Pages', link: '/entrypoints/unlisted-pages.md' },
             {
               text: 'Unlisted Scripts',

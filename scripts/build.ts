@@ -16,22 +16,22 @@ const startTime = Date.now();
 const outDir = 'dist';
 await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
-const preset: tsup.Options = {
+const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
   external: [
-    'vite',
     'virtual:user-unlisted-script',
-    'virtual:user-content-script',
+    'virtual:user-content-script-isolated-world',
+    'virtual:user-content-script-main-world',
     'virtual:user-background',
   ],
-};
+} satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
-  let completed = 0;
+  let progress = 1;
   const updateSpinner = () => {
-    spinner.text = `${spinnerText} [${completed}/${configs.length}]`;
+    spinner.text = `${spinnerText} [${progress}/${configs.length}]`;
   };
   updateSpinner();
 
@@ -39,7 +39,7 @@ function spinnerPMap(configs: tsup.Options[]) {
     config,
     async (config) => {
       const res = await tsup.build(config);
-      completed++;
+      progress++;
       updateSpinner();
       return res;
     },
@@ -57,6 +57,7 @@ const config: tsup.Options[] = [
     entry: {
       index: 'src/index.ts',
       testing: 'src/testing/index.ts',
+      storage: 'src/storage.ts',
     },
     format: ['cjs', 'esm'],
     clean: true,
@@ -75,8 +76,10 @@ const config: tsup.Options[] = [
     ...preset,
     entry: {
       'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
-      'virtual/content-script-entrypoint':
-        'src/virtual/content-script-entrypoint.ts',
+      'virtual/content-script-isolated-world-entrypoint':
+        'src/virtual/content-script-isolated-world-entrypoint.ts',
+      'virtual/content-script-main-world-entrypoint':
+        'src/virtual/content-script-main-world-entrypoint.ts',
       'virtual/mock-browser': 'src/virtual/mock-browser.ts',
       'virtual/reload-html': 'src/virtual/reload-html.ts',
       'virtual/unlisted-script-entrypoint':
@@ -85,14 +88,20 @@ const config: tsup.Options[] = [
     format: ['esm'],
     splitting: false,
     dts: false,
+    external: [...preset.external, 'wxt'],
   },
   // CJS-only
   {
     ...preset,
     entry: {
-      cli: 'src/cli.ts',
+      cli: 'src/cli/index.ts',
     },
-    format: ['cjs'],
+    format: ['esm'],
+    banner: {
+      // Fixes dynamic require of nodejs modules. See https://github.com/wxt-dev/wxt/issues/355
+      // https://github.com/evanw/esbuild/issues/1921#issuecomment-1152991694
+      js: "import { createRequire } from 'module';const require = createRequire(import.meta.url);",
+    },
   },
 ];
 
@@ -101,6 +110,9 @@ await spinnerPMap(config).catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+// Copy "public" files that need shipped inside WXT
+await fs.copyFile('src/vite-builder-env.d.ts', 'dist/vite-builder-env.d.ts');
 
 spinner.clear().stop();
 

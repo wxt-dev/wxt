@@ -10,10 +10,10 @@ Firefox does not support sandboxed pages.
 
 <EntrypointPatterns
   :patterns="[
-    ['entrypoints/sandbox.html', 'sandbox.html'],
-    ['entrypoints/sandbox/index.html', 'sandbox.html'],
-    ['entrypoints/<name>.sandbox.html', '<name>.html` '],
-    ['entrypoints/<name>.sandbox/index.html', '<name>.html` '],
+    ['sandbox.html', 'sandbox.html'],
+    ['sandbox/index.html', 'sandbox.html'],
+    ['<name>.sandbox.html', '<name>.html` '],
+    ['<name>.sandbox/index.html', '<name>.html` '],
   ]"
 />
 

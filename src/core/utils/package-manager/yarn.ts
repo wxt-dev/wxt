@@ -1,10 +1,10 @@
-import { InternalConfig } from '~/types';
 import { WxtPackageManager } from './wxt-package-manager';
 import { PackageManager } from 'nypm';
 
-export function createYarnWxtPackageManager(
-  config: InternalConfig,
-): Omit<WxtPackageManager, keyof PackageManager> {
+export function createYarnWxtPackageManager(): Omit<
+  WxtPackageManager,
+  keyof PackageManager
+> {
   return {
     getAllDependencies() {
       throw Error(

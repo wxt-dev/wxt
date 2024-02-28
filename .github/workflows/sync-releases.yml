@@ -1,5 +1,6 @@
 name: Sync Releases
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -10,12 +11,12 @@ jobs:
   sync:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: pnpm
-      - run: pnpm sync-releases all
+      - run: pnpm sync-releases all --token ${{ secrets.GITHUB_TOKEN }}

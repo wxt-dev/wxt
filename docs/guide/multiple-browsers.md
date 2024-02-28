@@ -1,6 +1,6 @@
 # Multiple Browsers
 
-You can build an extension for any combination of browser and manifest verison. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
+You can build an extension for any combination of browser and manifest version. Different browsers and manifest versions support different APIs and entrypoints, so be sure to check that your extension functions as expected for each target.
 
 Separate build targets are written to their own output directories:
 
@@ -17,11 +17,9 @@ Separate build targets are written to their own output directories:
 
 To build for a specific browser, pass the `-b --browser` flag from the CLI:
 
-```
-
+```sh
 wxt --browser firefox
 wxt build --browser firefox
-
 ```
 
 By default, it will build for `chrome`. When excluding the [manifest version flags](#target-manifest-version), it will default to the commonly accepted manifest version for that browser.
@@ -47,7 +45,7 @@ wxt --mv2
 wxt build --mv2
 ```
 
-When the `-b --browser` flag is not passed, it defaults to `chrome`. So here, we're targetting MV2 for Chrome.
+When the `-b --browser` flag is not passed, it defaults to `chrome`. So here, we're targeting MV2 for Chrome.
 
 ## Customizing Entrypoints
 
@@ -111,4 +109,25 @@ export default defineContentScript({
 
 :::warning
 Only `defineBackground` and `defineContentScript` support per-browser options right now.
+:::
+
+## Runtime
+
+To determine the browser or manifest version at runtime, you can use any of the below variables:
+
+- `import.meta.env.BROWSER`: A string, the target browser, usually equal to the `--browser` flag
+- `import.meta.env.MANIFEST_VERSION`: A number, either `2` or `3`, depending on the manifest version targeted
+- `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.BROWSER === "chrome"`
+- `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.BROWSER === "firefox"`
+- `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.BROWSER === "edge"`
+- `import.meta.env.SAFARI`: A boolean equivalent to `import.meta.env.BROWSER === "safari"`
+- `import.meta.env.OPERA`: A boolean equivalent to `import.meta.env.BROWSER === "opera"`
+- `import.meta.env.COMMAND`: A string, `"serve"` when running `wxt` for development or `"build"` in all other cases.
+
+:::info
+These variables are constants defined at build time based on the build target. They do not actually detect which browser the code is running in.
+
+For example, if you build for `--browser chrome` and publish it on Edge, `import.meta.env.BROWSER` will be `"chrome"`, not `"edge"`. You have to build a separate ZIP for `--browser edge` before `import.meta.env.BROWSER` will be `"edge"`.
+
+If you need to know the actual browser your code is being ran on, you should use a [user agent parser](https://www.npmjs.com/package/ua-parser-js).
 :::

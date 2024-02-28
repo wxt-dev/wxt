@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { Entrypoint } from '~/types';
 import { groupEntrypoints } from '../group-entrypoints';
+import {
+  fakeBackgroundEntrypoint,
+  fakeGenericEntrypoint,
+  fakePopupEntrypoint,
+} from '../../testing/fake-objects';
 
 const background: Entrypoint = {
   type: 'background',
@@ -8,6 +13,7 @@ const background: Entrypoint = {
   inputPath: '/background.ts',
   outputDir: '/.output/background',
   options: {},
+  skipped: false,
 };
 const contentScript: Entrypoint = {
   type: 'content-script',
@@ -17,6 +23,7 @@ const contentScript: Entrypoint = {
   options: {
     matches: ['<all_urls>'],
   },
+  skipped: false,
 };
 const unlistedScript: Entrypoint = {
   type: 'unlisted-script',
@@ -24,6 +31,7 @@ const unlistedScript: Entrypoint = {
   inputPath: '/injected.ts',
   outputDir: '/.output/injected',
   options: {},
+  skipped: false,
 };
 const popup: Entrypoint = {
   type: 'popup',
@@ -31,6 +39,7 @@ const popup: Entrypoint = {
   inputPath: '/popup.html',
   outputDir: '/.output/popup',
   options: {},
+  skipped: false,
 };
 const unlistedPage: Entrypoint = {
   type: 'unlisted-page',
@@ -38,6 +47,7 @@ const unlistedPage: Entrypoint = {
   inputPath: '/onboarding.html',
   outputDir: '/.output/onboarding',
   options: {},
+  skipped: false,
 };
 const options: Entrypoint = {
   type: 'options',
@@ -45,6 +55,7 @@ const options: Entrypoint = {
   inputPath: '/options.html',
   outputDir: '/.output/options',
   options: {},
+  skipped: false,
 };
 const sandbox1: Entrypoint = {
   type: 'sandbox',
@@ -52,6 +63,7 @@ const sandbox1: Entrypoint = {
   inputPath: '/sandbox1.html',
   outputDir: '/.output/sandbox1',
   options: {},
+  skipped: false,
 };
 const sandbox2: Entrypoint = {
   type: 'sandbox',
@@ -59,6 +71,7 @@ const sandbox2: Entrypoint = {
   inputPath: '/sandbox2.html',
   outputDir: '/.output/sandbox2',
   options: {},
+  skipped: false,
 };
 const unlistedStyle: Entrypoint = {
   type: 'unlisted-style',
@@ -66,6 +79,7 @@ const unlistedStyle: Entrypoint = {
   inputPath: '/injected.scss',
   outputDir: '/.output',
   options: {},
+  skipped: false,
 };
 const contentScriptStyle: Entrypoint = {
   type: 'content-script-style',
@@ -73,6 +87,7 @@ const contentScriptStyle: Entrypoint = {
   inputPath: '/overlay.content.scss',
   outputDir: '/.output/content-scripts',
   options: {},
+  skipped: false,
 };
 
 describe('groupEntrypoints', () => {
@@ -131,4 +146,29 @@ describe('groupEntrypoints', () => {
 
     expect(actual).toEqual(expected);
   });
+
+  it('should group ESM compatible scripts with extension pages', () => {
+    const background = fakeBackgroundEntrypoint({
+      options: {
+        type: 'module',
+      },
+    });
+    const popup = fakePopupEntrypoint();
+    const sandbox = fakeGenericEntrypoint({
+      inputPath: '/entrypoints/sandbox.html',
+      name: 'sandbox',
+      type: 'sandbox',
+    });
+
+    const actual = groupEntrypoints([background, popup, sandbox]);
+
+    expect(actual).toEqual([[background, popup], [sandbox]]);
+  });
+
+  it.todo(
+    'should group ESM compatible sandbox scripts with sandbox pages',
+    () => {
+      // Main world content scripts
+    },
+  );
 });

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { DevModeChange, detectDevChanges } from '~/core/utils/building';
 import {
   fakeBackgroundEntrypoint,
@@ -8,59 +8,102 @@ import {
   fakeManifest,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
-  fakeRollupOutputAsset,
-  fakeRollupOutputChunk,
+  fakeOutputAsset,
+  fakeOutputChunk,
+  fakeWxt,
+  setFakeWxt,
 } from '~/core/utils/testing/fake-objects';
 import { BuildOutput, BuildStepOutput } from '~/types';
+import { setWxtForTesting } from '../../../wxt';
 
 describe('Detect Dev Changes', () => {
+  beforeEach(() => {
+    setWxtForTesting(fakeWxt());
+  });
+
   describe('No changes', () => {
-    it("should return 'no-change' when a build hasn't finished", () => {
-      const actual = detectDevChanges(
-        [['unknown', '/path/to/file.ts']],
-        undefined,
-      );
-
-      expect(actual).toEqual({ type: 'no-change' });
-    });
-
     it("should return 'no-change' when the changed file isn't used by any of the entrypoints", () => {
-      const change: [string, string] = ['unknown', '/some/path.ts'];
+      const changes = ['/some/path.ts'];
       const currentOutput: BuildOutput = {
         manifest: fakeManifest(),
         publicAssets: [],
         steps: [
           {
             entrypoints: fakeContentScriptEntrypoint(),
-            chunks: [fakeRollupOutputChunk(), fakeRollupOutputChunk()],
+            chunks: [fakeOutputChunk(), fakeOutputChunk()],
           },
           {
             entrypoints: fakeContentScriptEntrypoint(),
-            chunks: [
-              fakeRollupOutputChunk(),
-              fakeRollupOutputChunk(),
-              fakeRollupOutputChunk(),
-            ],
+            chunks: [fakeOutputChunk(), fakeOutputChunk(), fakeOutputChunk()],
           },
         ],
       };
 
-      const actual = detectDevChanges([change], currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual({ type: 'no-change' });
     });
   });
 
+  describe('wxt.config.ts', () => {
+    it("should return 'full-restart' when one of the changed files is the config file", () => {
+      const configFile = '/root/wxt.config.ts';
+      setFakeWxt({
+        config: {
+          userConfigMetadata: {
+            configFile,
+          },
+        },
+      });
+      const changes = ['/root/src/public/image.svg', configFile];
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [],
+      };
+      const expected: DevModeChange = {
+        type: 'full-restart',
+      };
+
+      const actual = detectDevChanges(changes, currentOutput);
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('web-ext.config.ts', () => {
+    it("should return 'browser-restart' when one of the changed files is the config file", () => {
+      const runnerFile = '/root/web-ext.config.ts';
+      setFakeWxt({
+        config: {
+          runnerConfig: {
+            configFile: runnerFile,
+          },
+        },
+      });
+      const changes = ['/root/src/public/image.svg', runnerFile];
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [],
+      };
+      const expected: DevModeChange = {
+        type: 'browser-restart',
+      };
+
+      const actual = detectDevChanges(changes, currentOutput);
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
   describe('Public Assets', () => {
     it("should return 'extension-reload' without any groups to rebuild when the changed file is a public asset", () => {
-      const change: [string, string] = [
-        'unknown',
-        '/root/src/public/image.svg',
-      ];
-      const asset1 = fakeRollupOutputAsset({
+      const changes = ['/root/src/public/image.svg'];
+      const asset1 = fakeOutputAsset({
         fileName: 'image.svg',
       });
-      const asset2 = fakeRollupOutputAsset({
+      const asset2 = fakeOutputAsset({
         fileName: 'some-other-image.svg',
       });
       const currentOutput: BuildOutput = {
@@ -77,7 +120,7 @@ describe('Detect Dev Changes', () => {
         },
       };
 
-      const actual = detectDevChanges([change], currentOutput);
+      const actual = detectDevChanges(changes, currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -96,7 +139,7 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: contentScript,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), fakeFile()],
           }),
         ],
@@ -104,7 +147,7 @@ describe('Detect Dev Changes', () => {
       const step2: BuildStepOutput = {
         entrypoints: background,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), changedPath, fakeFile()],
           }),
         ],
@@ -124,18 +167,15 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [background],
       };
 
-      const actual = detectDevChanges(
-        [['unknown', changedPath]],
-        currentOutput,
-      );
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });
   });
 
   describe('HTML Pages', () => {
-    it('should rebuild then reload only the effected pages', async () => {
-      const changedPath = '/root/page1/index.html';
+    it('should detect changes to entrypoints/<name>.html files', async () => {
+      const changedPath = '/root/page1.html';
       const htmlPage1 = fakePopupEntrypoint({
         inputPath: changedPath,
       });
@@ -150,16 +190,16 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: [htmlPage1, htmlPage2],
         chunks: [
-          fakeRollupOutputChunk({
-            moduleIds: [fakeFile(), changedPath],
+          fakeOutputAsset({
+            fileName: 'page1.html',
           }),
         ],
       };
       const step2: BuildStepOutput = {
         entrypoints: [htmlPage3],
         chunks: [
-          fakeRollupOutputChunk({
-            moduleIds: [fakeFile(), fakeFile(), fakeFile()],
+          fakeOutputAsset({
+            fileName: 'page2.html',
           }),
         ],
       };
@@ -178,10 +218,56 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [[htmlPage1, htmlPage2]],
       };
 
-      const actual = detectDevChanges(
-        [['unknown', changedPath]],
-        currentOutput,
-      );
+      const actual = detectDevChanges([changedPath], currentOutput);
+
+      expect(actual).toEqual(expected);
+    });
+
+    it('should detect changes to entrypoints/<name>/index.html files', async () => {
+      const changedPath = '/root/page1/index.html';
+      const htmlPage1 = fakePopupEntrypoint({
+        inputPath: changedPath,
+      });
+      const htmlPage2 = fakeOptionsEntrypoint({
+        inputPath: '/root/page2/index.html',
+      });
+      const htmlPage3 = fakeGenericEntrypoint({
+        type: 'sandbox',
+        inputPath: '/root/page3/index.html',
+      });
+
+      const step1: BuildStepOutput = {
+        entrypoints: [htmlPage1, htmlPage2],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page1.html',
+          }),
+        ],
+      };
+      const step2: BuildStepOutput = {
+        entrypoints: [htmlPage3],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page2.html',
+          }),
+        ],
+      };
+
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [step1, step2],
+      };
+      const expected: DevModeChange = {
+        type: 'html-reload',
+        cachedOutput: {
+          ...currentOutput,
+          steps: [step2],
+        },
+        rebuildGroups: [[htmlPage1, htmlPage2]],
+      };
+
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });
@@ -203,7 +289,7 @@ describe('Detect Dev Changes', () => {
       const step1: BuildStepOutput = {
         entrypoints: script1,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), changedPath],
           }),
         ],
@@ -211,7 +297,7 @@ describe('Detect Dev Changes', () => {
       const step2: BuildStepOutput = {
         entrypoints: script2,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [fakeFile(), fakeFile(), fakeFile()],
           }),
         ],
@@ -219,7 +305,7 @@ describe('Detect Dev Changes', () => {
       const step3: BuildStepOutput = {
         entrypoints: script3,
         chunks: [
-          fakeRollupOutputChunk({
+          fakeOutputChunk({
             moduleIds: [changedPath, fakeFile(), fakeFile()],
           }),
         ],
@@ -240,10 +326,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [script1, script3],
       };
 
-      const actual = detectDevChanges(
-        [['unknown', changedPath]],
-        currentOutput,
-      );
+      const actual = detectDevChanges([changedPath], currentOutput);
 
       expect(actual).toEqual(expected);
     });

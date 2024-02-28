@@ -1,11 +1,12 @@
-import { InlineConfig, InternalConfig } from '~/types';
+import { InlineConfig } from '~/types';
 import { dirname, resolve } from 'node:path';
 import fs from 'fs-extra';
 import { kebabCaseAlphanumeric } from '~/core/utils/strings';
 import { getPackageJson } from '~/core/utils/package';
 import { formatDuration } from '~/core/utils/time';
 import { printFileList } from '~/core/utils/log/printFileList';
-import { getInternalConfig, internalBuild } from '~/core/utils/building';
+import { internalBuild } from '~/core/utils/building';
+import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import { glob } from 'fast-glob';
 import path from 'node:path';
@@ -17,73 +18,77 @@ import { getPackageManager } from './utils/package-manager';
 
 /**
  * Build and zip the extension for distribution.
- * @param config Opitonal config that will override your `<root>/wxt.config.ts`.
+ * @param config Optional config that will override your `<root>/wxt.config.ts`.
  * @returns A list of all files included in the ZIP.
  */
 export async function zip(config?: InlineConfig): Promise<string[]> {
-  const internalConfig = await getInternalConfig(config ?? {}, 'build');
-  const output = await internalBuild(internalConfig);
+  await registerWxt('build', config);
+  const output = await internalBuild();
 
   const start = Date.now();
-  internalConfig.logger.info('Zipping extension...');
+  wxt.logger.info('Zipping extension...');
   const zipFiles: string[] = [];
 
   const projectName =
-    internalConfig.zip.name ??
+    wxt.config.zip.name ??
     kebabCaseAlphanumeric(
-      (await getPackageJson(internalConfig))?.name || dirname(process.cwd()),
+      (await getPackageJson())?.name || dirname(process.cwd()),
     );
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
-      .replaceAll('{{browser}}', internalConfig.browser)
+      .replaceAll('{{browser}}', wxt.config.browser)
       .replaceAll(
         '{{version}}',
         output.manifest.version_name ?? output.manifest.version,
       )
-      .replaceAll('{{manifestVersion}}', `mv${internalConfig.manifestVersion}`);
+      .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
-  await fs.ensureDir(internalConfig.outBaseDir);
+  await fs.ensureDir(wxt.config.outBaseDir);
 
   // ZIP output directory
 
-  const outZipFilename = applyTemplate(internalConfig.zip.artifactTemplate);
-  const outZipPath = resolve(internalConfig.outBaseDir, outZipFilename);
-  await zipDir(internalConfig.outDir, outZipPath);
+  const outZipFilename = applyTemplate(wxt.config.zip.artifactTemplate);
+  const outZipPath = resolve(wxt.config.outBaseDir, outZipFilename);
+  await zipDir(wxt.config.outDir, outZipPath);
   zipFiles.push(outZipPath);
 
   // ZIP sources for Firefox
 
-  if (internalConfig.browser === 'firefox') {
+  if (wxt.config.browser === 'firefox') {
     // Download private packages
-    const pm = await getPackageManager(internalConfig);
-    const privatePackages = (await getPrivatePackages(internalConfig)).map(
+    const pm = await getPackageManager();
+    const privatePackages = (await getPrivatePackages(wxt.config)).map(
       (pkg) => ({
         ...pkg,
         path: path.resolve(
-          internalConfig.wxtDir,
+          wxt.config.wxtDir,
           'packages',
           `${pkg.name}_${pkg.version}.tgz`,
         ),
       }),
     );
     for (const pkg of privatePackages) {
-      internalConfig.logger.debug(
+      wxt.logger.debug(
         `Downloading private package: ${pkg.name}@${pkg.version} from ${pkg.url}`,
       );
       await downloadPrivatePackage(pkg, pkg.path);
     }
 
     // Zip source directory
-    const sourcesZipFilename = applyTemplate(
-      internalConfig.zip.sourcesTemplate,
-    );
-    const sourcesZipPath = resolve(
-      internalConfig.outBaseDir,
-      sourcesZipFilename,
-    );
-    await zipDir(internalConfig.zip.sourcesRoot, sourcesZipPath, {
-      ignore: internalConfig.zip.ignoredSources,
+    const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
+    const sourcesZipPath = resolve(wxt.config.outBaseDir, sourcesZipFilename);
+    await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
+      ignore: wxt.config.zip.excludeSources,
+      // return (
+      //   wxt.config.zip.includeSources.some((pattern) =>
+      //     minimatch(relativePath, pattern),
+      //   ) ||
+      //   !wxt.config.zip.excludeSources.some((pattern) =>
+      //     minimatch(relativePath, pattern),
+      //   )
+      // );
+
       async transform(file, content) {
         if (file !== 'package.json') return;
 
@@ -93,13 +98,13 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
           json,
           privatePackages.map((pkg) => ({
             name: pkg.name,
-            value: path.relative(internalConfig.zip.sourcesRoot, pkg.path),
+            value: path.relative(wxt.config.zip.sourcesRoot, pkg.path),
           })),
         );
         return JSON.stringify(json, null, 2);
       },
       async additionalWork(archive) {
-        const md = await getSourceCodeReviewMarkdown(internalConfig);
+        const md = await getSourceCodeReviewMarkdown();
         archive.file('SOURCE_CODE_REVIEW.md', md);
         if (pm.name === 'pnpm')
           archive.file('.npmrc', 'shamefully-hoist=true\n');
@@ -109,9 +114,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   }
 
   await printFileList(
-    internalConfig.logger.success,
+    wxt.logger.success,
     `Zipped extension in ${formatDuration(Date.now() - start)}`,
-    internalConfig.outBaseDir,
+    wxt.config.outBaseDir,
     zipFiles,
   );
 
@@ -154,11 +159,10 @@ async function zipDir(
   await fs.writeFile(outputPath, buffer, 'base64');
 }
 
-async function getSourceCodeReviewMarkdown(
-  config: InternalConfig,
-): Promise<string> {
-  const pm = await getPackageManager(config);
-  const pathToRoot = path.relative(config.root, config.zip.sourcesRoot) || '.';
+async function getSourceCodeReviewMarkdown(): Promise<string> {
+  const pm = await getPackageManager();
+  const pathToRoot =
+    path.relative(wxt.config.root, wxt.config.zip.sourcesRoot) || '.';
 
   // Add a custom SOURCE_CODE_REVIEW.md file
   return `# Source Code Review
@@ -167,7 +171,7 @@ To build the extension, follow these steps:
 
 \`\`\`sh
 ${pm.name} install
-./node_modules/.bin/wxt zip ${pathToRoot} -b ${config.browser} --mv${config.manifestVersion}
+./node_modules/.bin/wxt zip ${pathToRoot} -b ${wxt.config.browser} --mv${wxt.config.manifestVersion}
 \`\`\`
 `;
 }

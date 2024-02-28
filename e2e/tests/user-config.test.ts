@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { InlineConfig } from '~/types';
 
 describe('User Config', () => {
   // Root directory is tested with all tests.
@@ -28,7 +29,7 @@ describe('User Config', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"}}"
     `);
   });
 
@@ -54,12 +55,13 @@ describe('User Config', () => {
       ================================================================================
       .output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"background\\":{\\"service_worker\\":\\"background.js\\"}}"
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"}}"
     `);
   });
 
   it('should merge inline and user config based manifests', async () => {
     const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html');
     project.addFile(
       'wxt.config.ts',
       `import { defineConfig } from 'wxt';
@@ -78,11 +80,56 @@ describe('User Config', () => {
       }),
     });
 
-    const output = await project.serializeOutput();
-    expect(output).toMatchInlineSnapshot(`
+    expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
+      .toMatchInlineSnapshot(`
       ".output/chrome-mv3/manifest.json
       ----------------------------------------
-      {\\"manifest_version\\":3,\\"name\\":\\"E2E Extension\\",\\"description\\":\\"Example description\\",\\"version\\":\\"0.0.0\\",\\"example_customization\\":[\\"production\\",\\"chrome\\",\\"3\\",\\"build\\"]}"
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","example_customization":["3","build","production","chrome"]}"
     `);
+  });
+
+  it('should exclude the polyfill when the experimental setting is set to false', async () => {
+    const buildBackground = async (config?: InlineConfig) => {
+      const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
+      const projectWithPolyfill = new TestProject();
+      projectWithPolyfill.addFile('entrypoints/background.ts', background);
+      await projectWithPolyfill.build(config);
+      return await projectWithPolyfill.serializeFile(
+        '.output/chrome-mv3/background.js',
+      );
+    };
+
+    const withPolyfill = await buildBackground();
+    const withoutPolyfill = await buildBackground({
+      experimental: {
+        includeBrowserPolyfill: false,
+      },
+    });
+    expect(withoutPolyfill).not.toBe(withPolyfill);
+  });
+
+  it('should respect changing config files', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'src/entrypoints/background.ts',
+      `export default defineBackground(
+        () => console.log('Hello background'),
+      );`,
+    );
+    project.addFile(
+      'test.config.ts',
+      `import { defineConfig } from 'wxt';
+      
+      export default defineConfig({
+        outDir: ".custom-output",
+        srcDir: "src",
+      });`,
+    );
+
+    await project.build({ configFile: 'test.config.ts' });
+
+    expect(
+      await project.fileExists('.custom-output/chrome-mv3/background.js'),
+    ).toBe(true);
   });
 });

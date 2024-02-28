@@ -1,0 +1,26 @@
+import { Plugin } from 'vite';
+import { ResolvedConfig } from '~/types';
+import { fetchCached } from '~/core/utils/network';
+
+/**
+ * Downloads any URL imports, like Google Analytics, into virtual modules so they are bundled with
+ * the extension instead of depending on remote code at runtime.
+ *
+ * @example
+ * import "url:https://google-tagmanager.com/gtag?id=XYZ";
+ */
+export function download(config: Omit<ResolvedConfig, 'builder'>): Plugin {
+  return {
+    name: 'wxt:download',
+    resolveId(id) {
+      if (id.startsWith('url:')) return '\0' + id;
+    },
+    async load(id) {
+      if (!id.startsWith('\0url:')) return;
+
+      // Load file from network or cache
+      const url = id.replace('\0url:', '');
+      return await fetchCached(url, config);
+    },
+  };
+}

@@ -2,7 +2,7 @@ export * from './build-entrypoints';
 export * from './detect-dev-changes';
 export * from './find-entrypoints';
 export * from './generate-wxt-dir';
-export * from './get-internal-config';
+export * from './resolve-config';
 export * from './group-entrypoints';
 export * from './import-entrypoint';
 export * from './internal-build';

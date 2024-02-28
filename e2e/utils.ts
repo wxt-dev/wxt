@@ -2,7 +2,14 @@ import { dirname, join, relative, resolve } from 'path';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
 import { execaCommand } from 'execa';
-import { InlineConfig, UserConfig, build } from '../src';
+import {
+  InlineConfig,
+  UserConfig,
+  build,
+  createServer,
+  prepare,
+  zip,
+} from '../src';
 import { normalizePath } from '../src/core/utils/paths';
 import merge from 'lodash.merge';
 
@@ -63,22 +70,49 @@ export class TestProject {
     if (filename === 'wxt.config.ts') this.config = {};
   }
 
-  /**
-   * Write the files to the test directory install dependencies, and build the project.
-   */
+  async prepare(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await prepare({ ...config, root: this.root });
+  }
+
   async build(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await build({ ...config, root: this.root });
+  }
+
+  async zip(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await zip({ ...config, root: this.root });
+  }
+
+  async startServer(config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    const server = await createServer({ ...config, root: this.root });
+    await server.start();
+    return server;
+  }
+
+  /**
+   * Call `path.resolve` relative to the project's root directory.
+   */
+  resolvePath(...path: string[]): string {
+    return resolve(this.root, ...path);
+  }
+
+  private async writeProjectToDisk() {
     if (this.config == null) this.setConfigFileConfig();
 
     for (const file of this.files) {
       const [name, content] = file;
-      const filePath = resolve(this.root, name);
+      const filePath = this.resolvePath(name);
       const fileDir = dirname(filePath);
       await fs.ensureDir(fileDir);
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await execaCommand('npm i --ignore-scripts', { cwd: this.root });
-    await build({ ...config, root: this.root });
+    await execaCommand('pnpm --ignore-workspace i --ignore-scripts', {
+      cwd: this.root,
+    });
   }
 
   /**
@@ -113,13 +147,13 @@ export class TestProject {
     ignoreContentsOfFilenames?: string[],
   ): Promise<string> {
     const outputFiles = await glob('**/*', {
-      cwd: resolve(this.root, dir),
+      cwd: this.resolvePath(dir),
       ignore: ['**/node_modules', '**/.output'],
     });
     outputFiles.sort();
     const fileContents = [];
     for (const file of outputFiles) {
-      const path = resolve(this.root, dir, file);
+      const path = this.resolvePath(dir, file);
       const isContentIgnored = !!ignoreContentsOfFilenames?.find(
         (ignoredFile) => normalizePath(path).endsWith(ignoredFile),
       );
@@ -129,12 +163,12 @@ export class TestProject {
   }
 
   /**
-   * @param path An abosolute path to a file or a path relative to the root.
+   * @param path An absolute path to a file or a path relative to the root.
    * @param ignoreContents An optional boolean that, when true, causes this function to not print
    *                       the file contents.
    */
   async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
-    const absolutePath = resolve(this.root, path);
+    const absolutePath = this.resolvePath(path);
     return [
       normalizePath(relative(this.root, absolutePath)),
       ignoreContents ? '<contents-ignored>' : await fs.readFile(absolutePath),
@@ -142,12 +176,12 @@ export class TestProject {
   }
 
   fileExists(path: string): Promise<boolean> {
-    return fs.exists(resolve(this.root, path));
+    return fs.exists(this.resolvePath(path));
   }
 
   async getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(resolve(this.root, path));
+    return await fs.readJson(this.resolvePath(path));
   }
 }

@@ -26,6 +26,7 @@ const query = `query ${operationName}($ids:[String!]!) {
 export default function (ids: string[]) {
   const data = ref<ChromeExtension[]>();
   const err = ref<unknown>();
+  const isLoading = ref(true);
 
   fetch('https://queue.wxt.dev/api', {
     method: 'POST',
@@ -36,6 +37,7 @@ export default function (ids: string[]) {
     }),
   })
     .then(async (res) => {
+      isLoading.value = false;
       const {
         data: { chromeExtensions },
       } = await res.json();
@@ -43,6 +45,7 @@ export default function (ids: string[]) {
       err.value = undefined;
     })
     .catch((error) => {
+      isLoading.value = false;
       console.error(error);
       data.value = undefined;
       err.value = error;
@@ -51,5 +54,6 @@ export default function (ids: string[]) {
   return {
     data,
     err,
+    isLoading,
   };
 }

@@ -1,9 +1,7 @@
-/// <reference types="vite/client" />
+import { logger } from '../sandbox/utils/logger';
+import { setupWebSocket } from './utils/setup-web-socket';
 
-import { logger } from '~/client/utils/logger';
-import { setupWebSocket } from '~/client/utils/setup-web-socket';
-
-if (__COMMAND__ === 'serve') {
+if (import.meta.env.COMMAND === 'serve') {
   try {
     setupWebSocket((message) => {
       if (message.event === 'wxt:reload-page') {

@@ -1,7 +1,13 @@
-import { BuildOutput, BuildStepOutput, EntrypointGroup } from '~/types';
-import * as vite from 'vite';
-import { every } from '~/core/utils/arrays';
+import {
+  BuildOutput,
+  BuildStepOutput,
+  EntrypointGroup,
+  OutputAsset,
+  OutputFile,
+} from '~/types';
+import { every, some } from '~/core/utils/arrays';
 import { normalizePath } from '~/core/utils/paths';
+import { wxt } from '../../wxt';
 
 /**
  * Compare the changed files vs the build output and determine what kind of reload needs to happen:
@@ -24,10 +30,20 @@ import { normalizePath } from '~/core/utils/paths';
  *   - Config file changed (wxt.config.ts, .env, web-ext.config.ts, etc)
  */
 export function detectDevChanges(
-  changedFiles: [event: string, path: string][],
-  currentOutput: BuildOutput | undefined,
+  changedFiles: string[],
+  currentOutput: BuildOutput,
 ): DevModeChange {
-  if (currentOutput == null) return { type: 'no-change' };
+  const isConfigChange = some(
+    changedFiles,
+    (file) => file === wxt.config.userConfigMetadata.configFile,
+  );
+  if (isConfigChange) return { type: 'full-restart' };
+
+  const isRunnerChange = some(
+    changedFiles,
+    (file) => file === wxt.config.runnerConfig.configFile,
+  );
+  if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
@@ -64,7 +80,7 @@ export function detectDevChanges(
 
   const isOnlyHtmlChanges =
     changedFiles.length > 0 &&
-    every(changedFiles, ([_, file]) => file.endsWith('.html'));
+    every(changedFiles, (file) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -99,20 +115,19 @@ export function detectDevChanges(
  * For a single change, return all the step of the build output that were effected by it.
  */
 function findEffectedSteps(
-  changedFile: [event: string, path: string],
+  changedFile: string,
   currentOutput: BuildOutput,
 ): DetectedChange[] {
   const changes: DetectedChange[] = [];
-  const changedPath = normalizePath(changedFile[1]);
+  const changedPath = normalizePath(changedFile);
 
-  const isChunkEffected = (
-    chunk: vite.Rollup.OutputChunk | vite.Rollup.OutputAsset,
-  ): boolean =>
-    // If it's an HTML file with the same path, is is effected because HTML files need to be pre-rendered
-    // fileName is normalized, relative bundle path
-    (chunk.type === 'asset' && changedPath.endsWith(chunk.fileName)) ||
+  const isChunkEffected = (chunk: OutputFile): boolean =>
+    // If it's an HTML file with the same path, is is effected because HTML files need to be re-rendered
+    // - fileName is normalized, relative bundle path, "<entrypoint-name>.html"
+    (chunk.type === 'asset' &&
+      changedPath.replace('/index.html', '.html').endsWith(chunk.fileName)) ||
     // If it's a chunk that depends on the changed file, it is effected
-    // moduleIds are absolute, normalized paths
+    // - moduleIds are absolute, normalized paths
     (chunk.type === 'chunk' && chunk.moduleIds.includes(changedPath));
 
   for (const step of currentOutput.steps) {
@@ -136,8 +151,9 @@ export type DevModeChange =
   | NoChange
   | HtmlReload
   | ExtensionReload
-  | ContentScriptReload;
-// | BrowserRestart
+  | ContentScriptReload
+  | FullRestart
+  | BrowserRestart;
 
 interface NoChange {
   type: 'no-change';
@@ -152,6 +168,14 @@ interface RebuildChange {
    * The previous output stripped of any files are going to change.
    */
   cachedOutput: BuildOutput;
+}
+
+interface FullRestart {
+  type: 'full-restart';
+}
+
+interface BrowserRestart {
+  type: 'browser-restart';
 }
 
 interface HtmlReload extends RebuildChange {
@@ -176,4 +200,4 @@ interface ContentScriptReload extends RebuildChange {
  * directory asset that was changed. It doesn't know what type of change is required yet. Just an
  * intermediate type.
  */
-type DetectedChange = BuildStepOutput | vite.Rollup.OutputAsset;
+type DetectedChange = BuildStepOutput | OutputAsset;
