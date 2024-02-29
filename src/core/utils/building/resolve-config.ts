@@ -259,14 +259,13 @@ function resolveInternalZipConfig(
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, 'local_modules');
-  const includeSources = mergedConfig.zip?.includeSources ?? [];
   return {
     name: undefined,
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',
     artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
     sourcesRoot: root,
+    includeSources: [],
     ...mergedConfig.zip,
-    includeSources,
     excludeSources: [
       '**/node_modules',
       // WXT files

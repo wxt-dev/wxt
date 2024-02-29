@@ -52,31 +52,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   // ZIP sources for Firefox
 
   if (wxt.config.browser === 'firefox') {
-    // Download private packages
-    const overrides: Record<string, string> = {};
-    if (wxt.config.zip.downloadPackages.length > 0) {
-      const _downloadPackages = new Set(wxt.config.zip.downloadPackages);
-      const allPackages = await wxt.pm.listDependencies({
-        all: true,
-        cwd: wxt.config.root,
-      });
-      const downloadPackages = allPackages.filter((pkg) =>
-        _downloadPackages.has(pkg.name),
-      );
-
-      for (const pkg of downloadPackages) {
-        wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
-        const id = `${pkg.name}@${pkg.version}`;
-        const tgzPath = await wxt.pm.downloadDependency(
-          id,
-          wxt.config.zip.downloadedPackagesDir,
-        );
-        overrides[id] =
-          'file://./' + normalizePath(path.relative(wxt.config.root, tgzPath));
-      }
-    }
-
-    // Zip source directory
+    const overrides = await downloadPrivatePackages();
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -86,17 +62,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       include: wxt.config.zip.includeSources,
       exclude: wxt.config.zip.excludeSources,
       transform(file, content) {
-        if (!file.endsWith('package.json')) return;
-
-        const oldPackage = JSON.parse(content);
-        const newPackage = {
-          ...oldPackage,
-          [wxt.pm.overridesKey]: {
-            ...oldPackage[wxt.pm.overridesKey],
-            ...overrides,
-          },
-        };
-        return JSON.stringify(newPackage, null, 2);
+        if (file.endsWith('package.json')) {
+          return addOverridesToPackageJson(content, overrides);
+        }
       },
     });
     zipFiles.push(sourcesZipPath);
@@ -158,4 +126,47 @@ async function zipDir(
   await options?.additionalWork?.(archive);
   const buffer = await archive.generateAsync({ type: 'base64' });
   await fs.writeFile(outputPath, buffer, 'base64');
+}
+
+async function downloadPrivatePackages(): Promise<Record<string, string>> {
+  const overrides: Record<string, string> = {};
+
+  if (wxt.config.zip.downloadPackages.length > 0) {
+    const _downloadPackages = new Set(wxt.config.zip.downloadPackages);
+    const allPackages = await wxt.pm.listDependencies({
+      all: true,
+      cwd: wxt.config.root,
+    });
+    const downloadPackages = allPackages.filter((pkg) =>
+      _downloadPackages.has(pkg.name),
+    );
+
+    for (const pkg of downloadPackages) {
+      wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
+      const id = `${pkg.name}@${pkg.version}`;
+      const tgzPath = await wxt.pm.downloadDependency(
+        id,
+        wxt.config.zip.downloadedPackagesDir,
+      );
+      overrides[id] =
+        'file://./' + normalizePath(path.relative(wxt.config.root, tgzPath));
+    }
+  }
+
+  return overrides;
+}
+
+function addOverridesToPackageJson(
+  content: string,
+  overrides: Record<string, string>,
+): string {
+  const oldPackage = JSON.parse(content);
+  const newPackage = {
+    ...oldPackage,
+    [wxt.pm.overridesKey]: {
+      ...oldPackage[wxt.pm.overridesKey],
+      ...overrides,
+    },
+  };
+  return JSON.stringify(newPackage, null, 2);
 }
