@@ -1100,4 +1100,26 @@ export interface WxtPackageManager extends Nypm.PackageManager {
   ensureDependencyInstalled: typeof Nypm.ensureDependencyInstalled;
   installDependencies: typeof Nypm.installDependencies;
   removeDependency: typeof Nypm.removeDependency;
+  /**
+   * Download a package's TGZ file and move it into the `downloadDir`. Use's `npm pack <name>`, so
+   * you must have setup authorization in `.npmrc` file, regardless of the package manager used.
+   *
+   * @param name Name of the package to download, can include a version (like `wxt@0.17.1`)
+   * @param downloadDir Where to store the package.
+   */
+  downloadDependency: (name: string, downloadDir: string) => Promise<void>;
+  /**
+   * Run `npm ls`, `pnpm ls`, or `bun pm ls`, or `yarn list` and return the results.
+   *
+   * WARNING: Yarn always returns all dependencies
+   */
+  listDependencies: (options?: {
+    cwd?: string;
+    all?: boolean;
+  }) => Promise<Dependency[]>;
+}
+
+export interface Dependency {
+  name: string;
+  version: string;
 }

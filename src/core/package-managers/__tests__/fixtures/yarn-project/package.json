@@ -1,0 +1,8 @@
+{
+  "name": "yarn-ls",
+  "packageManager": "yarn@1.22.19",
+  "dependencies": {
+    "mime-types": "2.1.35",
+    "flatten": "1.0.3"
+  }
+}

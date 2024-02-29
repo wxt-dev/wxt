@@ -1,2 +1,5 @@
 * text=auto eol=lf
 pnpm-lock.yaml linguist-generated
+package-lock.json linguist-generated
+bun.lockb linguist-generated
+yarn.lock linguist-generated
