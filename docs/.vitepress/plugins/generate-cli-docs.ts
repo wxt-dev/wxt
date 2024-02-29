@@ -32,14 +32,20 @@ export function generateCliDocs() {
         '```',
       ];
 
-      const commands = await Promise.all(
+      const commands = await Promise.allSettled(
         extractCommands(dev.info).map(async (command) => {
           const res = await execaCommand(`pnpm -s wxt ${command} --help`);
           const { rest: docs } = splitInfo(res.stdout);
           return [`## \`wxt ${command}\``, '```sh', docs, '```'];
         }),
       );
-      lines.push(...commands);
+      lines.push(
+        ...commands
+          .filter((res) => res.status === 'fulfilled')
+          .map(
+            (res) => (res as unknown as PromiseFulfilledResult<string>).value,
+          ),
+      );
 
       const text = await format(
         PREFACE +
