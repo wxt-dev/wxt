@@ -3,6 +3,7 @@ import { WxtPackageManagerImpl } from './types';
 import { dedupeDependencies, npm } from './npm';
 
 export const yarn: WxtPackageManagerImpl = {
+  overridesKey: 'resolutions',
   downloadDependency(...args) {
     return npm.downloadDependency(...args);
   },
