@@ -730,14 +730,23 @@ export type UserManifestFn = (
 ) => UserManifest | Promise<UserManifest>;
 
 export interface ConfigEnv {
+  /**
+   * The build mode passed into the CLI. By default, `wxt` uses `"development"` and `wxt build|zip`
+   * uses `"production"`.
+   */
   mode: string;
+  /**
+   * The command used to run WXT. `"serve"` during development and `"build"` for any other command.
+   */
   command: 'build' | 'serve';
   /**
-   * Browser passed in from the CLI
+   * Browser passed in from the CLI via the `-b` or `--browser` flag. Defaults to `"chrome"` when not passed.
    */
   browser: TargetBrowser;
   /**
-   * Manifest version passed in from the CLI
+   * Manifest version passed in from the CLI via the `--mv2` or `--mv3` flags. When not passed, it depends on the target browser. See
+   * [the guide](https://wxt.dev/guide/multiple-browsers.html#target-manifest-version) for more
+   * details.
    */
   manifestVersion: 2 | 3;
 }

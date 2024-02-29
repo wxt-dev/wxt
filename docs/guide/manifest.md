@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Manifest.json
 
 The manifest.json is generated at build-time based on files in the `entrypoints/` directory and `wxt.config.ts`.
@@ -20,11 +24,11 @@ export default defineConfig({
 });
 ```
 
-## `name`
+### `name`
 
 If not provided via the `manifest` config, the [manifest's `name`](https://developer.chrome.com/docs/extensions/mv3/manifest/name/) defaults to your package.json's `name` property.
 
-## `version` and `version_name`
+### `version` and `version_name`
 
 The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/extensions/mv3/manifest/version/) properties are based on the `version` field listed in your `package.json` or `wxt.config.ts`.
 
@@ -33,7 +37,7 @@ The [manifest's `version` and `version_name`](https://developer.chrome.com/docs/
 
 If a version is not found, a warning is logged and the version defaults to `"0.0.0"`.
 
-### Example
+#### Example
 
 ```json
 // package.json
@@ -50,7 +54,7 @@ If a version is not found, a warning is logged and the version defaults to `"0.0
 }
 ```
 
-## `icons`
+### `icons`
 
 By default, WXT will discover icons in your [`public` directory](/guide/assets#public-directory) and use them for the [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/).
 
@@ -83,7 +87,7 @@ export default defineConfig({
 });
 ```
 
-## `permissions`
+### `permissions`
 
 [Permissions](https://developer.chrome.com/docs/extensions/reference/permissions/) must be listed in the manifest config.
 
@@ -125,3 +129,43 @@ export default defineConfig({
 See the official localization examples for more details:
 
 <ExampleList tag="i18n" />
+
+## Per-Browser Configuration
+
+The `manifest` field can be a function. If you are building and extension for multiple browsers, and need to modify the manifest per browser, using a function instead of an object is very useful.
+
+```ts
+export default defineConfig({
+  manifest: ({ browser, manifestVersion, mode, command }) => {
+    return {
+      // Your manifest
+    };
+  },
+});
+```
+
+:::info
+The first argument is of type `ConfigEnv`. See the [API reference](/api/wxt/interfaces/ConfigEnv) for info about each property.
+:::
+
+For example, say you use OAuth, and you need to provide a different `oauth.client_id` for each browser:
+
+```ts
+const clientIds = {
+  chrome: '<your-chrome-client-id>',
+  edge: '<your-edge-client-id>',
+  firefox: '<your-firefox-client-id>',
+  opera: '<your-opera-client-id>',
+};
+
+export default defineConfig({
+  manifest: ({ browser }) => ({
+    oauth: {
+      client_id: clientIds[browser],
+      scopes: [
+        // ...
+      ],
+    },
+  }),
+});
+```
