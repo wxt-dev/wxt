@@ -1,9 +1,18 @@
 import { Dependency } from '~/types';
 import { WxtPackageManagerImpl } from './types';
+import path from 'node:path';
+import { ensureDir } from 'fs-extra';
 
 export const npm: WxtPackageManagerImpl = {
-  downloadDependency(name, downloadDir) {
-    throw Error('TODO');
+  overridesKey: 'overrides',
+  async downloadDependency(id, downloadDir) {
+    await ensureDir(downloadDir);
+    const { execa } = await import('execa');
+    const res = await execa('npm', ['pack', id, '--json'], {
+      cwd: downloadDir,
+    });
+    const packed: PackedDependency[] = JSON.parse(res.stdout);
+    return path.resolve(downloadDir, packed[0].filename);
   },
   async listDependencies(options) {
     const args = ['ls', '--json'];
@@ -58,4 +67,11 @@ export interface NpmListDependency {
   resolved?: string;
   overridden?: boolean;
   dependencies?: Record<string, NpmListDependency>;
+}
+
+interface PackedDependency {
+  id: string;
+  name: string;
+  version: string;
+  filename: string;
 }

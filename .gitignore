@@ -20,3 +20,4 @@ templates/*/package-lock.json
 docs/api
 stats.html
 .tool-versions
+local_modules

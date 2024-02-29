@@ -10,6 +10,7 @@ import { internalBuild } from '~/core/utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
+import { normalizePath } from './utils/paths';
 
 /**
  * Build and zip the extension for distribution.
@@ -51,6 +52,31 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   // ZIP sources for Firefox
 
   if (wxt.config.browser === 'firefox') {
+    // Download private packages
+    const overrides: Record<string, string> = {};
+    if (wxt.config.zip.downloadPackages.length > 0) {
+      const _downloadPackages = new Set(wxt.config.zip.downloadPackages);
+      const allPackages = await wxt.pm.listDependencies({
+        all: true,
+        cwd: wxt.config.root,
+      });
+      const downloadPackages = allPackages.filter((pkg) =>
+        _downloadPackages.has(pkg.name),
+      );
+
+      for (const pkg of downloadPackages) {
+        wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
+        const id = `${pkg.name}@${pkg.version}`;
+        const tgzPath = await wxt.pm.downloadDependency(
+          id,
+          wxt.config.zip.downloadedPackagesDir,
+        );
+        overrides[id] =
+          'file://./' + normalizePath(path.relative(wxt.config.root, tgzPath));
+      }
+    }
+
+    // Zip source directory
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -59,6 +85,19 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: wxt.config.zip.excludeSources,
+      transform(file, content) {
+        if (!file.endsWith('package.json')) return;
+
+        const oldPackage = JSON.parse(content);
+        const newPackage = {
+          ...oldPackage,
+          [wxt.pm.overridesKey]: {
+            ...oldPackage[wxt.pm.overridesKey],
+            ...overrides,
+          },
+        };
+        return JSON.stringify(newPackage, null, 2);
+      },
     });
     zipFiles.push(sourcesZipPath);
   }

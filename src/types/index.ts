@@ -172,6 +172,31 @@ export interface InlineConfig {
      * ]
      */
     excludeSources?: string[];
+    /**
+     * The Firefox review process requires the extension be buildable from source to make reviewing
+     * easier. This field allows you to use private packages without exposing your auth tokens.
+     *
+     * Just list the name of all the packages you want to download and include in the sources zip.
+     * Usually, these will be private packages behind auth tokens, but they don't have to be.
+     *
+     * All packages listed here will be downloaded to in `local_modules/` and an `overrides` or
+     * `resolutions` field (depending on your package manager) will be added to the `package.json`,
+     * pointing to the downloaded packages.
+     *
+     * > ***DO NOT include versions or version filters.*** Just the package name. If multiple
+     * > versions of a package are present in the project, all versions will be downloaded and
+     * > referenced in the package.json correctly.
+     *
+     * @default []
+     *
+     * @example
+     * // Correct:
+     * ["@scope/package-name", "package-name"]
+     *
+     * // Incorrect, don't include versions!!!
+     * ["@scope/package-name@1.1.3", "package-name@^2"]
+     */
+    downloadPackages?: string[];
   };
 
   /**
@@ -999,6 +1024,8 @@ export interface ResolvedConfig {
     includeSources: string[];
     excludeSources: string[];
     sourcesRoot: string;
+    downloadedPackagesDir: string;
+    downloadPackages: string[];
   };
   transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
   analysis: {
@@ -1104,10 +1131,11 @@ export interface WxtPackageManager extends Nypm.PackageManager {
    * Download a package's TGZ file and move it into the `downloadDir`. Use's `npm pack <name>`, so
    * you must have setup authorization in `.npmrc` file, regardless of the package manager used.
    *
-   * @param name Name of the package to download, can include a version (like `wxt@0.17.1`)
+   * @param id Name of the package to download, can include a version (like `wxt@0.17.1`)
    * @param downloadDir Where to store the package.
+   * @returns Absolute path to downloaded file.
    */
-  downloadDependency: (name: string, downloadDir: string) => Promise<void>;
+  downloadDependency: (id: string, downloadDir: string) => Promise<string>;
   /**
    * Run `npm ls`, `pnpm ls`, or `bun pm ls`, or `yarn list` and return the results.
    *
@@ -1117,6 +1145,10 @@ export interface WxtPackageManager extends Nypm.PackageManager {
     cwd?: string;
     all?: boolean;
   }) => Promise<Dependency[]>;
+  /**
+   * Key used to override package versions. Sometimes called "resolutions".
+   */
+  overridesKey: string;
 }
 
 export interface Dependency {

@@ -6,12 +6,12 @@ import { execaCommand } from 'execa';
 const cwd = path.resolve(__dirname, 'fixtures/pnpm-project');
 
 describe('PNPM Package Management Utils', () => {
-  describe('listDependencies', () => {
-    beforeAll(async () => {
-      // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await execaCommand('pnpm i --ignore-workspace', { cwd });
-    });
+  beforeAll(async () => {
+    // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
+    await execaCommand('pnpm i --ignore-workspace', { cwd });
+  });
 
+  describe('listDependencies', () => {
     it('should list direct dependencies', async () => {
       const actual = await pnpm.listDependencies({
         cwd,

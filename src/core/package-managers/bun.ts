@@ -2,6 +2,7 @@ import { dedupeDependencies, npm } from './npm';
 import { WxtPackageManagerImpl } from './types';
 
 export const bun: WxtPackageManagerImpl = {
+  overridesKey: 'overrides', // But also supports "resolutions"
   downloadDependency(...args) {
     return npm.downloadDependency(...args);
   },

@@ -2,6 +2,7 @@ import { NpmListProject, flattenNpmListOutput, npm } from './npm';
 import { WxtPackageManagerImpl } from './types';
 
 export const pnpm: WxtPackageManagerImpl = {
+  overridesKey: 'resolutions', // "pnpm.overrides", but I don't want to deal with nesting
   downloadDependency(...args) {
     return npm.downloadDependency(...args);
   },
