@@ -114,7 +114,7 @@ WXT 0.14.1
 [8:55:54 AM]  ERROR  entrypoints/content.ts: Cannot use imported variable "GOOGLE_MATCHES" before main function. See https://wxt.dev/guide/entrypoints.html#side-effects
 ```
 
-This throws an error because WXT needs to import each entrypoint during the build process to extract its definition (containing the `match`, `run_at`, `include`/`exclude`, etc.) to render the `manifest.json` correctly. Before loading an entrypoint, a transformation is applied to remove all imports. This prevents imported modules (local or NPM) with side-effects from running during the build process, potentially throwing an error.
+This throws an error because WXT needs to import each entrypoint during the build process to extract its definition (containing the `match`, `runAt`, `include`/`exclude`, etc.) to render the `manifest.json` correctly. Before loading an entrypoint, a transformation is applied to remove all imports. This prevents imported modules (local or NPM) with side-effects from running during the build process, potentially throwing an error.
 
 :::details Why?
 
