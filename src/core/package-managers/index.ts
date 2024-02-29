@@ -52,6 +52,9 @@ export async function createWxtPackageManager(
     ensureDependencyInstalled,
     installDependencies,
     removeDependency,
+    get overridesKey() {
+      return requirePm((pm) => packageManagers[pm.name].overridesKey);
+    },
     downloadDependency(...args) {
       return requirePm((pm) =>
         packageManagers[pm.name].downloadDependency(...args),
