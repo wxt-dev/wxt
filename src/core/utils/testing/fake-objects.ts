@@ -306,6 +306,7 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   hooks: mock(),
   logger: mock(),
   reloadConfig: vi.fn(),
+  pm: mock(),
 }));
 
 export function setFakeWxt(overrides?: DeepPartial<Wxt>) {

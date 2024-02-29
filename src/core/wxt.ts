@@ -1,6 +1,7 @@
 import { InlineConfig, Wxt, WxtDevServer, WxtHooks } from '~/types';
 import { resolveConfig } from './utils/building';
 import { createHooks } from 'hookable';
+import { createWxtPackageManager } from './package-managers';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -18,6 +19,7 @@ export async function registerWxt(
 ): Promise<void> {
   const config = await resolveConfig(inlineConfig, command, server);
   const hooks = createHooks<WxtHooks>();
+  const pm = await createWxtPackageManager(config.root);
 
   wxt = {
     config,
@@ -28,6 +30,7 @@ export async function registerWxt(
     async reloadConfig() {
       wxt.config = await resolveConfig(inlineConfig, command, server);
     },
+    pm,
   };
 
   // Initialize hooks

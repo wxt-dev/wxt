@@ -133,6 +133,7 @@
     "minimatch": "^9.0.3",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
+    "nypm": "^0.3.6",
     "ora": "^7.0.1",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",
