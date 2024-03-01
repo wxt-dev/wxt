@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.17.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.4...v0.17.5)
+
+### 🚀 Enhancements
+
+- Expose package management utils under `wxt.pm` ([#502](https://github.com/wxt-dev/wxt/pull/502))
+- Download and override private packages for Firefox code review ([#507](https://github.com/wxt-dev/wxt/pull/507))
+
+### 📖 Documentation
+
+- Fix typos ([#503](https://github.com/wxt-dev/wxt/pull/503))
+- Add docs about configuring the manifest as a function ([195d2cc](https://github.com/wxt-dev/wxt/commit/195d2cc))
+- Fix CLI generation ([b754435](https://github.com/wxt-dev/wxt/commit/b754435))
+
+### 🏡 Chore
+
+- Use JSZip for `wxt zip`, enabling future features ([#501](https://github.com/wxt-dev/wxt/pull/501))
+
+### ❤️ Contributors
+
+- Btea ([@btea](http://github.com/btea))
+
 ## v0.17.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.3...v0.17.4)
