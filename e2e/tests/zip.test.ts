@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import { execaCommand } from 'execa';
+import { readFile, writeFile } from 'fs-extra';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
@@ -28,13 +29,25 @@ describe('Zipping', () => {
     expect(await project.fileExists('.output/')).toBe(true);
 
     await extract(sourcesZip, { dir: unzipDir });
-    await execaCommand('pnpm --ignore-workspace i');
-    const res = await execaCommand('pnpm --ignore-workspace build');
-    expect(res.exitCode).toBe(0);
+    // Update package json wxt path
+    const packageJsonPath = project.resolvePath(unzipDir, 'package.json');
+    const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
+    packageJson.dependencies.wxt = '../../../../..';
+    await writeFile(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2),
+      'utf-8',
+    );
 
+    // Build zipped extension
     await expect(
-      project.fileExists(project.resolvePath(unzipDir, '.output')),
-    ).resolves.toBe(false);
+      execaCommand('pnpm i --ignore-workspace', { cwd: unzipDir }),
+    ).resolves.toMatchObject({ exitCode: 0 });
+    await expect(
+      execaCommand('pnpm wxt build -b firefox', { cwd: unzipDir }),
+    ).resolves.toMatchObject({ exitCode: 0 });
+
+    await expect(project.fileExists(unzipDir, '.output')).resolves.toBe(true);
     expect(
       await project.serializeFile(
         project.resolvePath(unzipDir, 'package.json'),
@@ -47,7 +60,7 @@ describe('Zipping', () => {
         "description": "Example description",
         "version": "1.0.0",
         "dependencies": {
-          "wxt": "../../..",
+          "wxt": "../../../../..",
           "flatten": "1.0.3"
         },
         "resolutions": {
