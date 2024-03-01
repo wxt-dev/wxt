@@ -54,7 +54,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: oven-sh/setup-bun@v1
       - run: pnpm test run
   template:
     runs-on: ubuntu-22.04
