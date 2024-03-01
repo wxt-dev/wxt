@@ -160,6 +160,8 @@ function addOverridesToPackageJson(
   content: string,
   overrides: Record<string, string>,
 ): string {
+  if (Object.keys(overrides).length === 0) return content;
+
   const oldPackage = JSON.parse(content);
   const newPackage = {
     ...oldPackage,
