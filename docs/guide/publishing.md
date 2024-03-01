@@ -154,6 +154,10 @@ export default defineConfig({
 
 Depending on your package manager, the `package.json` in the sources zip will be modified to use the downloaded dependencies via the `overrides` or `resolutions` field.
 
+:::warning
+WXT uses the command `npm pack <package-name>` to download the package. That means regardless of your package manager, you need to properly setup a `.npmrc` file. NPM and PNPM both respect `.npmrc` files, but Yarn and Bun have their own ways of authorizing private registries, so you'll need to add an `.npmrc` file.
+:::
+
 ### Safari
 
 > 🚧 Not supported yet

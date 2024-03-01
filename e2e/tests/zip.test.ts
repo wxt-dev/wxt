@@ -41,7 +41,9 @@ describe('Zipping', () => {
 
     // Build zipped extension
     await expect(
-      execaCommand('pnpm i --ignore-workspace', { cwd: unzipDir }),
+      execaCommand('pnpm i --ignore-workspace --frozen-lockfile false', {
+        cwd: unzipDir,
+      }),
     ).resolves.toMatchObject({ exitCode: 0 });
     await expect(
       execaCommand('pnpm wxt build -b firefox', { cwd: unzipDir }),
