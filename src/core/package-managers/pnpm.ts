@@ -7,13 +7,9 @@ export const pnpm: WxtPackageManagerImpl = {
     return npm.downloadDependency(...args);
   },
   async listDependencies(options) {
-    const args = ['ls', '--json'];
+    const args = ['ls', '--ignore-workspace', '--json'];
     if (options?.all) {
       args.push('--depth', 'Infinity');
-    }
-    // @ts-expect-error: Internal, testing only flag
-    if (options?.ignoreWorkspace) {
-      args.push('--ignore-workspace');
     }
     const { execa } = await import('execa');
     const res = await execa('pnpm', args, { cwd: options?.cwd });
