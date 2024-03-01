@@ -30,6 +30,9 @@ describe('Zipping', () => {
     const res = await execaCommand('pnpm --ignore-workspace build');
     expect(res.exitCode).toBe(0);
 
+    await expect(
+      project.fileExists(project.resolvePath(unzipDir, '.output')),
+    ).resolves.toBe(false);
     expect(
       await project.serializeFile(
         project.resolvePath(unzipDir, 'package.json'),
