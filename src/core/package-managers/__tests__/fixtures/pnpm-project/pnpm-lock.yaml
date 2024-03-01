@@ -5,19 +5,21 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  flatten:
-    specifier: 1.0.3
-    version: 1.0.3
   mime-types:
     specifier: 2.1.35
     version: 2.1.35
+
+devDependencies:
+  flatten:
+    specifier: 1.0.3
+    version: 1.0.3
 
 packages:
 
   /flatten@1.0.3:
     resolution: {integrity: sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==}
     deprecated: flatten is deprecated in favor of utility frameworks such as lodash.
-    dev: false
+    dev: true
 
   /mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}

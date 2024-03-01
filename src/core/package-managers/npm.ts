@@ -28,9 +28,14 @@ export const npm: WxtPackageManagerImpl = {
 };
 
 export function flattenNpmListOutput(projects: NpmListProject[]): Dependency[] {
-  const queue: Record<string, NpmListDependency>[] = projects
-    .filter((p) => p.dependencies != null)
-    .map((project) => project.dependencies!);
+  const queue: Record<string, NpmListDependency>[] = projects.flatMap(
+    (project) => {
+      const acc: Record<string, NpmListDependency>[] = [];
+      if (project.dependencies) acc.push(project.dependencies);
+      if (project.devDependencies) acc.push(project.devDependencies);
+      return acc;
+    },
+  );
   const dependencies: Dependency[] = [];
   while (queue.length > 0) {
     Object.entries(queue.pop()!).forEach(([name, meta]) => {
@@ -39,6 +44,7 @@ export function flattenNpmListOutput(projects: NpmListProject[]): Dependency[] {
         version: meta.version,
       });
       if (meta.dependencies) queue.push(meta.dependencies);
+      if (meta.devDependencies) queue.push(meta.devDependencies);
     });
   }
   return dedupeDependencies(dependencies);
@@ -60,6 +66,7 @@ export function dedupeDependencies(dependencies: Dependency[]): Dependency[] {
 export interface NpmListProject {
   name: string;
   dependencies?: Record<string, NpmListDependency>;
+  devDependencies?: Record<string, NpmListDependency>;
 }
 
 export interface NpmListDependency {
@@ -67,6 +74,7 @@ export interface NpmListDependency {
   resolved?: string;
   overridden?: boolean;
   dependencies?: Record<string, NpmListDependency>;
+  devDependencies?: Record<string, NpmListDependency>;
 }
 
 interface PackedDependency {
