@@ -3,6 +3,8 @@ import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import { execaCommand } from 'execa';
 
+process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
+
 describe('Zipping', () => {
   it('should download packages and produce a valid build when zipping sources', async () => {
     const project = new TestProject({

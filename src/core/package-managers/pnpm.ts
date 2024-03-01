@@ -11,6 +11,14 @@ export const pnpm: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
+    // Helper for test - since WXT uses pnpm workspaces, folders inside it don't behave like
+    // standalone projects unless you pass the --ignore-workspace flag.
+    if (
+      typeof process != null &&
+      process.env.WXT_PNPM_IGNORE_WORKSPACE === 'true'
+    ) {
+      args.push('--ignore-workspace');
+    }
     const { execa } = await import('execa');
     const res = await execa('pnpm', args, { cwd: options?.cwd });
     const projects: NpmListProject[] = JSON.parse(res.stdout);

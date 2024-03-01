@@ -5,6 +5,8 @@ import { execaCommand } from 'execa';
 
 const cwd = path.resolve(__dirname, 'fixtures/pnpm-project');
 
+process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
+
 describe('PNPM Package Management Utils', () => {
   beforeAll(async () => {
     // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
