@@ -52,7 +52,8 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   // ZIP sources for Firefox
 
   if (wxt.config.browser === 'firefox') {
-    const overrides = await downloadPrivatePackages();
+    const { overrides, files: downloadedPackages } =
+      await downloadPrivatePackages();
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -66,6 +67,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
           return addOverridesToPackageJson(content, overrides);
         }
       },
+      additionalFiles: downloadedPackages,
     });
     zipFiles.push(sourcesZipPath);
   }
@@ -90,6 +92,7 @@ async function zipDir(
       content: string,
     ) => Promise<string | undefined | void> | string | undefined | void;
     additionalWork?: (archive: JSZip) => Promise<void> | void;
+    additionalFiles?: string[];
   },
 ): Promise<void> {
   const archive = new JSZip();
@@ -110,7 +113,13 @@ async function zipDir(
       )
     );
   });
-  for (const file of files) {
+  const filesToZip = [
+    ...files,
+    ...(options?.additionalFiles ?? []).map((file) =>
+      path.relative(directory, file),
+    ),
+  ];
+  for (const file of filesToZip) {
     const absolutePath = path.resolve(directory, file);
     if (file.endsWith('.json')) {
       const content = await fs.readFile(absolutePath, 'utf-8');
@@ -128,8 +137,9 @@ async function zipDir(
   await fs.writeFile(outputPath, buffer, 'base64');
 }
 
-async function downloadPrivatePackages(): Promise<Record<string, string>> {
+async function downloadPrivatePackages() {
   const overrides: Record<string, string> = {};
+  const files: string[] = [];
 
   if (wxt.config.zip.downloadPackages.length > 0) {
     const _downloadPackages = new Set(wxt.config.zip.downloadPackages);
@@ -148,12 +158,13 @@ async function downloadPrivatePackages(): Promise<Record<string, string>> {
         id,
         wxt.config.zip.downloadedPackagesDir,
       );
+      files.push(tgzPath);
       overrides[id] =
         'file://./' + normalizePath(path.relative(wxt.config.root, tgzPath));
     }
   }
 
-  return overrides;
+  return { overrides, files };
 }
 
 function addOverridesToPackageJson(

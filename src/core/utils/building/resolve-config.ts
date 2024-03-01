@@ -258,7 +258,7 @@ function resolveInternalZipConfig(
   root: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
-  const downloadedPackagesDir = path.resolve(root, 'local_modules');
+  const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',

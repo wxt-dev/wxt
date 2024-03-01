@@ -179,7 +179,7 @@ export interface InlineConfig {
      * Just list the name of all the packages you want to download and include in the sources zip.
      * Usually, these will be private packages behind auth tokens, but they don't have to be.
      *
-     * All packages listed here will be downloaded to in `local_modules/` and an `overrides` or
+     * All packages listed here will be downloaded to in `.wxt/local_modules/` and an `overrides` or
      * `resolutions` field (depending on your package manager) will be added to the `package.json`,
      * pointing to the downloaded packages.
      *

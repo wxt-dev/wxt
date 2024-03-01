@@ -7,7 +7,7 @@ export const pnpm: WxtPackageManagerImpl = {
     return npm.downloadDependency(...args);
   },
   async listDependencies(options) {
-    const args = ['ls', '--ignore-workspace', '--json'];
+    const args = ['ls', '--json'];
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
