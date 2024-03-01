@@ -175,8 +175,8 @@ export class TestProject {
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 
-  fileExists(path: string): Promise<boolean> {
-    return fs.exists(this.resolvePath(path));
+  fileExists(...path: string[]): Promise<boolean> {
+    return fs.exists(this.resolvePath(...path));
   }
 
   async getOutputManifest(

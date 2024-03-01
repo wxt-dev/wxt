@@ -286,6 +286,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       sourcesRoot: fakeDir(),
       sourcesTemplate: '{{name}}-sources.zip',
       name: faker.person.firstName().toLowerCase(),
+      downloadedPackagesDir: fakeDir(),
+      downloadPackages: [],
     },
     transformManifest: () => {},
     userConfigMetadata: {},

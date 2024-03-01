@@ -153,6 +153,7 @@
     "@types/prompts": "^2.4.9",
     "@vitest/coverage-v8": "^1.0.1",
     "execa": "^8.0.1",
+    "extract-zip": "^2.0.1",
     "happy-dom": "^13.3.8",
     "lint-staged": "^15.2.0",
     "lodash.merge": "^4.6.2",

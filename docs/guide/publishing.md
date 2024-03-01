@@ -136,6 +136,28 @@ See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 
 Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the above commands so that the Firefox team knows how to build your extension.
 
+#### Private Packages
+
+If you use private packages and you don't want to provide your auth token to the Firefox team during the review process, you can use `zip.downloadPackages` to download any private packages and include them in the zip.
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  zip: {
+    downloadPackages: [
+      '@mycompany/some-package',
+      //...
+    ],
+  },
+});
+```
+
+Depending on your package manager, the `package.json` in the sources zip will be modified to use the downloaded dependencies via the `overrides` or `resolutions` field.
+
+:::warning
+WXT uses the command `npm pack <package-name>` to download the package. That means regardless of your package manager, you need to properly setup a `.npmrc` file. NPM and PNPM both respect `.npmrc` files, but Yarn and Bun have their own ways of authorizing private registries, so you'll need to add an `.npmrc` file.
+:::
+
 ### Safari
 
 > 🚧 Not supported yet

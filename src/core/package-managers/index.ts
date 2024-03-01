@@ -6,8 +6,14 @@ import {
   installDependencies,
   removeDependency,
   PackageManager,
+  PackageManagerName,
 } from 'nypm';
 import { WxtPackageManager } from '~/types';
+import { bun } from './bun';
+import { WxtPackageManagerImpl } from './types';
+import { yarn } from './yarn';
+import { pnpm } from './pnpm';
+import { npm } from './npm';
 
 export async function createWxtPackageManager(
   root: string,
@@ -46,5 +52,25 @@ export async function createWxtPackageManager(
     ensureDependencyInstalled,
     installDependencies,
     removeDependency,
+    get overridesKey() {
+      return requirePm((pm) => packageManagers[pm.name].overridesKey);
+    },
+    downloadDependency(...args) {
+      return requirePm((pm) =>
+        packageManagers[pm.name].downloadDependency(...args),
+      );
+    },
+    listDependencies(...args) {
+      return requirePm((pm) =>
+        packageManagers[pm.name].listDependencies(...args),
+      );
+    },
   };
 }
+
+const packageManagers: Record<PackageManagerName, WxtPackageManagerImpl> = {
+  npm,
+  pnpm,
+  bun,
+  yarn,
+};
