@@ -18,6 +18,8 @@ import { createViteBuilder } from '~/core/builders/vite';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
+import fs from 'fs-extra';
+import { normalizePath } from '../paths';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -77,10 +79,16 @@ export async function resolveConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
+  if (await isDirMissing(entrypointsDir)) {
+    logMissingDir(logger, 'Entrypoints', entrypointsDir);
+  }
   const filterEntrypoints = !!mergedConfig.filterEntrypoints?.length
     ? new Set(mergedConfig.filterEntrypoints)
     : undefined;
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
+  if (await isDirMissing(publicDir)) {
+    logMissingDir(logger, 'Public', publicDir);
+  }
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
@@ -338,4 +346,16 @@ async function resolveWxtModuleDir() {
       .resolve;
   // require.resolve returns the wxt/dist/index file, not the package's root directory, which we want to return
   return path.resolve(requireResolve('wxt'), '../..');
+}
+
+async function isDirMissing(dir: string) {
+  return !(await fs.exists(dir));
+}
+
+function logMissingDir(logger: Logger, name: string, expected: string) {
+  logger.warn(
+    `${name} directory not found: ./${normalizePath(
+      path.relative(process.cwd(), expected),
+    )}`,
+  );
 }
