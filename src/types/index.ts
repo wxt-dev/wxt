@@ -21,6 +21,9 @@ export interface InlineConfig {
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
+   * After changing, don't forget to move the `public/` and `entrypoints/` directories into the new
+   * source dir.
+   *
    * @default config.root
    */
   srcDir?: string;
