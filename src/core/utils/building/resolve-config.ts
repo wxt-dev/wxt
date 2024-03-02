@@ -19,6 +19,7 @@ import defu from 'defu';
 import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
+import { normalizePath } from '../paths';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -353,6 +354,8 @@ async function isDirMissing(dir: string) {
 
 function logMissingDir(logger: Logger, name: string, expected: string) {
   logger.warn(
-    `${name} directory not found: ./${path.relative(process.cwd(), expected)}`,
+    `${name} directory not found: ./${normalizePath(
+      path.relative(process.cwd(), expected),
+    )}`,
   );
 }
