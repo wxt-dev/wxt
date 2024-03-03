@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.17.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.5...v0.17.6)
+
+### 🚀 Enhancements
+
+- Add warnings when important directories are missing ([#516](https://github.com/wxt-dev/wxt/pull/516))
+- Automatically remove top-level MV2-only or MV3-only keys ([#518](https://github.com/wxt-dev/wxt/pull/518))
+- Automatically generate `browser_action` based on `action` for MV2 ([#519](https://github.com/wxt-dev/wxt/pull/519))
+
+### 🩹 Fixes
+
+- **zip:** List all private packages correctly in a PNPM workspace ([#520](https://github.com/wxt-dev/wxt/pull/520))
+
+### 📖 Documentation
+
+- Mentions moving folders into `srcDir` ([9cd4e83](https://github.com/wxt-dev/wxt/commit/9cd4e83))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump @types/react from 18.2.34 to 18.2.61 ([#510](https://github.com/wxt-dev/wxt/pull/510))
+
 ## v0.17.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.4...v0.17.5)
