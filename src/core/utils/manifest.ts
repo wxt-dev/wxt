@@ -110,6 +110,8 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
+  stripKeys(manifest);
+
   // TODO: Remove in v1
   wxt.config.transformManifest(manifest);
   await wxt.hooks.callHook('build:manifestGenerated', wxt, manifest);
@@ -632,3 +634,50 @@ export function validateMv3WebAccessbileResources(
     );
   }
 }
+
+/**
+ * Remove keys from the manifest based on the build target.
+ */
+function stripKeys(manifest: Manifest.WebExtensionManifest): void {
+  let keysToRemove: string[] = [];
+  if (wxt.config.manifestVersion === 2) {
+    keysToRemove.push(...mv3OnlyKeys);
+    if (wxt.config.browser === 'firefox')
+      keysToRemove.push(...firefoxMv3OnlyKeys);
+  } else {
+    keysToRemove.push(...mv2OnlyKeys);
+  }
+
+  keysToRemove.forEach((key) => {
+    delete manifest[key as keyof Manifest.WebExtensionManifest];
+  });
+}
+
+const mv2OnlyKeys = [
+  'page_action',
+  'browser_action',
+  'automation',
+  'content_capabilities',
+  'converted_from_user_script',
+  'current_locale',
+  'differential_fingerprint',
+  'event_rules',
+  'file_browser_handlers',
+  'file_system_provider_capabilities',
+  'input_components',
+  'nacl_modules',
+  'natively_connectable',
+  'offline_enabled',
+  'platforms',
+  'replacement_web_app',
+  'system_indicator',
+  'user_scripts',
+];
+
+const mv3OnlyKeys = [
+  'action',
+  'export',
+  'optional_host_permissions',
+  'side_panel',
+];
+const firefoxMv3OnlyKeys = ['host_permissions'];

@@ -314,6 +314,7 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
 export function setFakeWxt(overrides?: DeepPartial<Wxt>) {
   const wxt = fakeWxt(overrides);
   setWxtForTesting(wxt);
+  return wxt;
 }
 
 export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({

@@ -130,6 +130,74 @@ See the official localization examples for more details:
 
 <ExampleList tag="i18n" />
 
+## Per-Manifest Version Config
+
+WXT applies several transformations to your manifest to simplify managing both MV2 and MV3 keys in your `wxt.config.ts` file:
+
+1. Top level MV2-only or MV3-only keys are stripped from the final manifest when targeting the other manifest version
+2. Some keys, are automatically converted between versions when possible:
+   - Define `web_accessible_resources` in it's MV3 style and it will be converted to the MV2 style automatically
+
+For example, a `wxt.config.ts` file that looks like this:
+
+```ts
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  mainfest: {
+    action: {
+      default_title: 'Some MV3 Title',
+    },
+    browser_action: {
+      default_title: 'Some MV2 Title',
+    },
+    web_accessible_resources: [
+      {
+        matches: ['*://*.google.com/*'],
+        resources: ['icon/*.png'],
+      },
+    ],
+  },
+});
+```
+
+Will be output differently for each manifest version:
+
+:::code-group
+
+```json [MV2]
+{
+  "manifest_version": 2,
+  // ...
+  "browser_action": {
+    "default_title": "Some MV2 Title"
+  },
+  "web_accessible_resources": ["icon/*.png"]
+}
+```
+
+```json [MV3]
+{
+  "manifest_version": 3,
+  // ...
+  "action": {
+    "default_title": "Some MV3 Title"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": ["*://*.google.com/*"],
+      "resources": ["icon/*.png"]
+    }
+  ]
+}
+```
+
+:::
+
+:::tip
+If this isn't enough control for your use-case, remember you can use a function for the `manifest` key and generate it however you'd like, or you can use the `build:manifestGenerated` hook to apply additional transformations.
+:::
+
 ## Per-Browser Configuration
 
 The `manifest` field can be a function. If you are building and extension for multiple browsers, and need to modify the manifest per browser, using a function instead of an object is very useful.
