@@ -110,18 +110,20 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
-  stripKeys(manifest);
-
   // TODO: Remove in v1
   wxt.config.transformManifest(manifest);
   await wxt.hooks.callHook('build:manifestGenerated', wxt, manifest);
 
-  if (wxt.config.manifestVersion === 2)
+  if (wxt.config.manifestVersion === 2) {
     convertWebAccessibleResourcesToMv2(manifest);
+    convertActionToMv2(manifest);
+  }
 
   if (wxt.config.manifestVersion === 3) {
     validateMv3WebAccessbileResources(manifest);
   }
+
+  stripKeys(manifest);
 
   if (manifest.name == null)
     throw Error(
@@ -613,6 +615,17 @@ export function convertWebAccessibleResourcesToMv2(
       }),
     ),
   );
+}
+
+function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
+  if (
+    manifest.action == null ||
+    manifest.browser_action != null ||
+    manifest.page_action != null
+  )
+    return;
+
+  manifest.browser_action = manifest.action;
 }
 
 /**
