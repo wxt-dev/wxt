@@ -146,6 +146,7 @@ describe('Manifest Utils', () => {
 
         expect(actual.action).toBeUndefined();
         expect(actual.browser_action).toEqual(wxt.config.manifest.action);
+        expect(actual.page_action).toBeUndefined();
       });
 
       it('should keep the `page_action` for MV2 when both `action` and `page_action` are defined', async () => {
@@ -168,6 +169,7 @@ describe('Manifest Utils', () => {
         const { manifest: actual } = await generateManifest([], buildOutput);
 
         expect(actual.action).toBeUndefined();
+        expect(actual.browser_action).toBeUndefined();
         expect(actual.page_action).toEqual(wxt.config.manifest.page_action);
       });
 
@@ -194,6 +196,7 @@ describe('Manifest Utils', () => {
         expect(actual.browser_action).toEqual(
           wxt.config.manifest.browser_action,
         );
+        expect(actual.page_action).toBeUndefined();
       });
     });
 
