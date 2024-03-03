@@ -137,6 +137,7 @@ WXT applies several transformations to your manifest to simplify managing both M
 1. Top level MV2-only or MV3-only keys are stripped from the final manifest when targeting the other manifest version
 2. Some keys, are automatically converted between versions when possible:
    - Define `web_accessible_resources` in it's MV3 style and it will be converted to the MV2 style automatically
+   - `action` will automatically be converted to `browser_action` for MV3. To use `page_action` instead, add both `action` and `page_action` entries to your manifest
 
 For example, a `wxt.config.ts` file that looks like this:
 
@@ -146,10 +147,7 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   mainfest: {
     action: {
-      default_title: 'Some MV3 Title',
-    },
-    browser_action: {
-      default_title: 'Some MV2 Title',
+      default_title: 'Some Title',
     },
     web_accessible_resources: [
       {
@@ -170,7 +168,7 @@ Will be output differently for each manifest version:
   "manifest_version": 2,
   // ...
   "browser_action": {
-    "default_title": "Some MV2 Title"
+    "default_title": "Some Title"
   },
   "web_accessible_resources": ["icon/*.png"]
 }
@@ -181,7 +179,7 @@ Will be output differently for each manifest version:
   "manifest_version": 3,
   // ...
   "action": {
-    "default_title": "Some MV3 Title"
+    "default_title": "Some Title"
   },
   "web_accessible_resources": [
     {

@@ -120,13 +120,83 @@ describe('Manifest Utils', () => {
             },
           },
         });
-        const expected: Partial<Manifest.WebExtensionManifest> = {
-          action: wxt.config.manifest.action,
-        };
 
         const { manifest: actual } = await generateManifest([], buildOutput);
 
-        expect(actual).toMatchObject(expected);
+        expect(actual.action).toEqual(wxt.config.manifest.action);
+        expect(actual.browser_action).toBeUndefined();
+        expect(actual.page_action).toBeUndefined();
+      });
+
+      it('should generate `browser_action` for MV2 when only `action` is defined', async () => {
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 2,
+            manifest: {
+              action: {
+                default_title: 'Action',
+              },
+            },
+          },
+        });
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.action).toBeUndefined();
+        expect(actual.browser_action).toEqual(wxt.config.manifest.action);
+        expect(actual.page_action).toBeUndefined();
+      });
+
+      it('should keep the `page_action` for MV2 when both `action` and `page_action` are defined', async () => {
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 2,
+            manifest: {
+              action: {
+                default_title: 'Action',
+              },
+              page_action: {
+                default_title: 'Page Action',
+              },
+            },
+          },
+        });
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.action).toBeUndefined();
+        expect(actual.browser_action).toBeUndefined();
+        expect(actual.page_action).toEqual(wxt.config.manifest.page_action);
+      });
+
+      it('should keep the custom `browser_action` for MV2 when both `action` and `browser_action` are defined', async () => {
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 2,
+            manifest: {
+              action: {
+                default_title: 'Action',
+              },
+              browser_action: {
+                default_title: 'Browser Action',
+              },
+            },
+          },
+        });
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.action).toBeUndefined();
+        expect(actual.browser_action).toEqual(
+          wxt.config.manifest.browser_action,
+        );
+        expect(actual.page_action).toBeUndefined();
       });
     });
 
