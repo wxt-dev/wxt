@@ -1306,6 +1306,76 @@ describe('Manifest Utils', () => {
         expect(actual.commands).toBeUndefined();
       });
     });
+
+    describe('Stripping keys', () => {
+      const mv2Manifest = {
+        page_action: {},
+        browser_action: {},
+        automation: {},
+        content_capabilities: {},
+        converted_from_user_script: {},
+        current_locale: {},
+        differential_fingerprint: {},
+        event_rules: {},
+        file_browser_handlers: {},
+        file_system_provider_capabilities: {},
+        input_components: {},
+        nacl_modules: {},
+        natively_connectable: {},
+        offline_enabled: {},
+        platforms: {},
+        replacement_web_app: {},
+        system_indicator: {},
+        user_scripts: {},
+      };
+      const mv3Manifest = {
+        action: {},
+        export: {},
+        optional_host_permissions: {},
+        side_panel: {},
+      };
+      const hostPermissionsManifest = {
+        host_permissions: {},
+      };
+      const manifest: any = {
+        ...mv2Manifest,
+        ...mv3Manifest,
+        ...hostPermissionsManifest,
+      };
+
+      it.each([
+        ['firefox', 2, mv2Manifest],
+        ['chrome', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
+        ['safari', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
+        ['edge', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
+        ['firefox', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        ['chrome', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        ['safari', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        ['edge', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+      ] as const)(
+        "%s MV%s should only include that version's keys",
+        async (browser, manifestVersion, expected) => {
+          setFakeWxt({
+            config: {
+              browser,
+              manifest,
+              manifestVersion,
+              command: 'build',
+            },
+          });
+          const output = fakeBuildOutput();
+
+          const { manifest: actual } = await generateManifest([], output);
+
+          expect(actual).toEqual({
+            name: expect.any(String),
+            version: expect.any(String),
+            manifest_version: manifestVersion,
+            ...expected,
+          });
+        },
+      );
+    });
   });
 
   describe('stripPathFromMatchPattern', () => {

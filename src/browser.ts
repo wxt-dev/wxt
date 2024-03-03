@@ -51,7 +51,7 @@ export type {
   Identity,
   Idle,
   Management,
-  Manifest,
+  Manifest, // TODO: Export custom manifest types that are valid for both Chrome and Firefox.
   ContextMenus,
   Menus,
   NetworkStatus,
