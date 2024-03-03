@@ -111,6 +111,7 @@ describe('Manifest Utils', () => {
         setFakeWxt({
           config: {
             outDir,
+            manifestVersion: 3,
             manifest: {
               action: {
                 default_icon: 'icon-16.png',
