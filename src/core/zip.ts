@@ -153,7 +153,7 @@ async function downloadPrivatePackages() {
     );
 
     for (const pkg of downloadPackages) {
-      wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}...`);
+      wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
       const id = `${pkg.name}@${pkg.version}`;
       const tgzPath = await wxt.pm.downloadDependency(
         id,
