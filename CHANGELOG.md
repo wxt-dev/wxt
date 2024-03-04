@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.17.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.6...v0.17.7)
+
+### 🩹 Fixes
+
+- **zip:** List `.wxt/local_modules` overrides relative to the `package.json` they're added to ([#526](https://github.com/wxt-dev/wxt/pull/526))
+
+### 🏡 Chore
+
+- Bump templates to v0.17 ([#524](https://github.com/wxt-dev/wxt/pull/524))
+- Increase test timeout for windows NPM tests ([#525](https://github.com/wxt-dev/wxt/pull/525))
+
 ## v0.17.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.5...v0.17.6)
