@@ -62,9 +62,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: wxt.config.zip.excludeSources,
-      transform(file, content) {
-        if (file.endsWith('package.json')) {
-          return addOverridesToPackageJson(content, overrides);
+      transform(absolutePath, zipPath, content) {
+        if (zipPath.endsWith('package.json')) {
+          return addOverridesToPackageJson(absolutePath, content, overrides);
         }
       },
       additionalFiles: downloadedPackages,
@@ -88,7 +88,8 @@ async function zipDir(
     include?: string[];
     exclude?: string[];
     transform?: (
-      file: string,
+      absolutePath: string,
+      zipPath: string,
       content: string,
     ) => Promise<string | undefined | void> | string | undefined | void;
     additionalWork?: (archive: JSZip) => Promise<void> | void;
@@ -125,7 +126,7 @@ async function zipDir(
       const content = await fs.readFile(absolutePath, 'utf-8');
       archive.file(
         file,
-        (await options?.transform?.(file, content)) || content,
+        (await options?.transform?.(absolutePath, file, content)) || content,
       );
     } else {
       const content = await fs.readFile(absolutePath);
@@ -152,15 +153,14 @@ async function downloadPrivatePackages() {
     );
 
     for (const pkg of downloadPackages) {
-      wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
+      wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}...`);
       const id = `${pkg.name}@${pkg.version}`;
       const tgzPath = await wxt.pm.downloadDependency(
         id,
         wxt.config.zip.downloadedPackagesDir,
       );
       files.push(tgzPath);
-      overrides[id] =
-        'file://./' + normalizePath(path.relative(wxt.config.root, tgzPath));
+      overrides[id] = tgzPath;
     }
   }
 
@@ -168,18 +168,21 @@ async function downloadPrivatePackages() {
 }
 
 function addOverridesToPackageJson(
+  absolutePackageJsonPath: string,
   content: string,
   overrides: Record<string, string>,
 ): string {
   if (Object.keys(overrides).length === 0) return content;
 
+  const packageJsonDir = path.dirname(absolutePackageJsonPath);
   const oldPackage = JSON.parse(content);
   const newPackage = {
     ...oldPackage,
-    [wxt.pm.overridesKey]: {
-      ...oldPackage[wxt.pm.overridesKey],
-      ...overrides,
-    },
+    [wxt.pm.overridesKey]: { ...oldPackage[wxt.pm.overridesKey] },
   };
+  Object.entries(overrides).forEach(([key, absolutePath]) => {
+    newPackage[wxt.pm.overridesKey][key] =
+      'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
+  });
   return JSON.stringify(newPackage, null, 2);
 }
