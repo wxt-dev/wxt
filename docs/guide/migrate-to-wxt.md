@@ -12,7 +12,7 @@ Always start by generating a new vanilla project and merging it into your projec
 
 ```sh
 cd path/to/your/project
-pnpx wxt@latest init example-wxt --template vanilla
+pnpm dlx wxt@latest init example-wxt --template vanilla
 ```
 
 In general, you'll need to:

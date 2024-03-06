@@ -7,7 +7,7 @@ Bootstrap a new project, start from scratch, or [migrate an existing project](/g
 :::code-group
 
 ```sh [pnpm]
-pnpx wxt@latest init <project-name>
+pnpm dlx wxt@latest init <project-name>
 ```
 
 ```sh [npm]
@@ -102,7 +102,7 @@ Finally, add scripts to your `package.json`:
 
 ## Migrate an Existing Project
 
-Before starting the migration, it is recommended to run `pnpx wxt@latest init` to see what a basic project looks like. Once you have an understanding of how WXT projects are structured, you're ready to convert the project, using the initialized project as a reference.
+Before starting the migration, it is recommended to run `pnpm dlx wxt@latest init` to see what a basic project looks like. Once you have an understanding of how WXT projects are structured, you're ready to convert the project, using the initialized project as a reference.
 
 Migrating a project to WXT comes down to a few steps:
 
