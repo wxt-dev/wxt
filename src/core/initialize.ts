@@ -117,7 +117,8 @@ async function listTemplates(): Promise<Template[]> {
         return l.name.localeCompare(r.name);
       });
   } catch (err) {
-    throw Error(`Cannot load templates: ${JSON.stringify(err, null, 2)}`);
+    consola.error(err);
+    throw Error(`Failed to load templates`);
   }
 }
 
