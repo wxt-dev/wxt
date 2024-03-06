@@ -42,7 +42,7 @@ https://github.com/wxt-dev/wxt/assets/10101283/07359e53-f491-43b6-8e8f-fae94aec8
 Bootstrap a new project:
 
 ```sh
-pnpx wxt@latest init <project-name>
+pnpm dlx wxt@latest init <project-name>
 ```
 
 Or see the [installation guide](https://wxt.dev/guide/installation.html) to get started with WXT.
