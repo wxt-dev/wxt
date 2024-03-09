@@ -26,7 +26,7 @@ import { wxt } from '../wxt';
  * Writes the manifest to the output directory and the build output.
  */
 export async function writeManifest(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: Manifest.Manifest,
   output: BuildOutput,
 ): Promise<void> {
   const str =
@@ -49,7 +49,7 @@ export async function writeManifest(
 export async function generateManifest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Promise<{ manifest: Manifest.WebExtensionManifest; warnings: any[][] }> {
+): Promise<{ manifest: Manifest.Manifest; warnings: any[][] }> {
   const warnings: any[][] = [];
   const pkg = await getPackageJson();
 
@@ -65,7 +65,7 @@ export async function generateManifest(
   }
   const version = wxt.config.manifest.version ?? simplifyVersion(versionName);
 
-  const baseManifest: Manifest.WebExtensionManifest = {
+  const baseManifest: Manifest.Manifest = {
     manifest_version: wxt.config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
@@ -75,10 +75,7 @@ export async function generateManifest(
   };
   const userManifest = wxt.config.manifest;
 
-  let manifest = defu(
-    userManifest,
-    baseManifest,
-  ) as Manifest.WebExtensionManifest;
+  let manifest = defu(userManifest, baseManifest) as Manifest.Manifest;
 
   // Add reload command in dev mode
   if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
@@ -160,7 +157,7 @@ function simplifyVersion(versionName: string): string {
 }
 
 function addEntrypoints(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: Manifest.Manifest,
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): void {
@@ -422,7 +419,7 @@ function addEntrypoints(
 
 function discoverIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Manifest.WebExtensionManifest['icons'] {
+): Manifest.Manifest['icons'] {
   const icons: [string, string][] = [];
   // prettier-ignore
   // #region snippet
@@ -454,7 +451,7 @@ function discoverIcons(
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
 }
 
-function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
+function addDevModeCsp(manifest: Manifest.Manifest): void {
   const permission = `http://${wxt.config.server?.hostname ?? ''}/*`;
   const allowedCsp = wxt.config.server?.origin ?? 'http://localhost:*';
 
@@ -484,7 +481,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   }
 }
 
-function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
+function addDevModePermissions(manifest: Manifest.Manifest) {
   // For reloading the page
   addPermission(manifest, 'tabs');
 
@@ -528,8 +525,7 @@ export function getContentScriptCssWebAccessibleResources(
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
 ): any[] {
-  const resources: Manifest.WebExtensionManifestWebAccessibleResourcesC2ItemType[] =
-    [];
+  const resources: Manifest.ManifestWebAccessibleResourcesC2ItemType[] = [];
 
   contentScripts.forEach((script) => {
     if (script.options.cssInjectionMode !== 'ui') return;
@@ -567,17 +563,14 @@ export function getContentScriptsCssMap(
   return map;
 }
 
-function addPermission(
-  manifest: Manifest.WebExtensionManifest,
-  permission: string,
-): void {
+function addPermission(manifest: Manifest.Manifest, permission: string): void {
   manifest.permissions ??= [];
   if (manifest.permissions.includes(permission)) return;
   manifest.permissions.push(permission);
 }
 
 function addHostPermission(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: Manifest.Manifest,
   hostPermission: string,
 ): void {
   manifest.host_permissions ??= [];
@@ -603,7 +596,7 @@ export function stripPathFromMatchPattern(pattern: string) {
  * targetting MV2, automatically convert their definitions down to the basic MV2 array.
  */
 export function convertWebAccessibleResourcesToMv2(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: Manifest.Manifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
 
@@ -617,7 +610,7 @@ export function convertWebAccessibleResourcesToMv2(
   );
 }
 
-function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
+function convertActionToMv2(manifest: Manifest.Manifest): void {
   if (
     manifest.action == null ||
     manifest.browser_action != null ||
@@ -632,7 +625,7 @@ function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
  * Make sure all resources are in MV3 format. If not, add a wanring
  */
 export function validateMv3WebAccessbileResources(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: Manifest.Manifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
 
@@ -651,7 +644,7 @@ export function validateMv3WebAccessbileResources(
 /**
  * Remove keys from the manifest based on the build target.
  */
-function stripKeys(manifest: Manifest.WebExtensionManifest): void {
+function stripKeys(manifest: Manifest.Manifest): void {
   let keysToRemove: string[] = [];
   if (wxt.config.manifestVersion === 2) {
     keysToRemove.push(...mv3OnlyKeys);
@@ -662,7 +655,7 @@ function stripKeys(manifest: Manifest.WebExtensionManifest): void {
   }
 
   keysToRemove.forEach((key) => {
-    delete manifest[key as keyof Manifest.WebExtensionManifest];
+    delete manifest[key as keyof Manifest.Manifest];
   });
 }
 

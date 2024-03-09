@@ -30,7 +30,7 @@ export async function rebuild(
   },
 ): Promise<{
   output: BuildOutput;
-  manifest: Manifest.WebExtensionManifest;
+  manifest: Manifest.Manifest;
   warnings: any[][];
 }> {
   const { default: ora } = await import('ora');

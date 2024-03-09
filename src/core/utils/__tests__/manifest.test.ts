@@ -12,7 +12,7 @@ import {
   fakeSidepanelEntrypoint,
   setFakeWxt,
 } from '../testing/fake-objects';
-import { Manifest } from 'webextension-polyfill';
+import { Manifest } from '~/browser';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
@@ -55,7 +55,7 @@ describe('Manifest Utils', () => {
             outDir,
           },
         });
-        const expected: Partial<Manifest.WebExtensionManifest> = {
+        const expected: Partial<Manifest.Manifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,

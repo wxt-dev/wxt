@@ -220,7 +220,7 @@ export interface InlineConfig {
    *   }
    * })
    */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
+  transformManifest?: (manifest: Manifest.Manifest) => void;
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
@@ -343,7 +343,7 @@ export type WxtViteConfig = Omit<
 >;
 
 export interface BuildOutput {
-  manifest: Manifest.WebExtensionManifest;
+  manifest: Manifest.Manifest;
   publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
 }
@@ -742,7 +742,7 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
  */
 export type UserManifest = Partial<
   Omit<
-    Manifest.WebExtensionManifest,
+    Manifest.ManifestV2 & Manifest.ManifestV3,
     | 'background'
     | 'chrome_url_overrides'
     | 'devtools_page'
@@ -961,7 +961,7 @@ export interface WxtHooks {
    */
   'build:manifestGenerated': (
     wxt: Wxt,
-    manifest: Manifest.WebExtensionManifest,
+    manifest: Manifest.Manifest,
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
@@ -1030,7 +1030,7 @@ export interface ResolvedConfig {
     downloadedPackagesDir: string;
     downloadPackages: string[];
   };
-  transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
+  transformManifest: (manifest: Manifest.Manifest) => void;
   analysis: {
     enabled: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;

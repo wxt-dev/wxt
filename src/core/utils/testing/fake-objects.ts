@@ -207,13 +207,11 @@ export function fakeOutputFile(): OutputFile {
   return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
 }
 
-export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(
-  () => ({
-    manifest_version: faker.helpers.arrayElement([2, 3]),
-    name: faker.string.alphanumeric(),
-    version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
-  }),
-);
+export const fakeManifest = fakeObjectCreator<Manifest.Manifest>(() => ({
+  manifest_version: faker.helpers.arrayElement([2, 3]),
+  name: faker.string.alphanumeric(),
+  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+}));
 
 export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
   name: faker.string.alphanumeric(),
