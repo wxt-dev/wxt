@@ -20,6 +20,7 @@ const chromeExtensionIds = [
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
   'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
   'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
+  'ceicccfeikoipigeghddpocceifjelph', // Plex Skipper
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
