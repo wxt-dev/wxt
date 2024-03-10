@@ -66,9 +66,164 @@ See the [Firefox Addon Store](#firefox-addon-store) section for more details abo
 
 Here's an example of a GitHub Action to automate submitting new versions of your extension for review. Ensure that you've added all required secrets used in the workflow to the repo's settings.
 
-```yml
-# TODO
+:::code-group
+
+```yml [pnpm]
+env:
+  DIRECTORY: .output
+  PROJECT_NAME: myextension
+
+name: Release
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  Version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      version_changed: ${{ steps.check_version.outputs.version_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for version change
+        id: check_version
+        run: |
+          if git diff --name-only HEAD~1..HEAD | grep -q '^package\.json$'; then
+            VERSION_CHANGED=1
+          else
+            VERSION_CHANGED=0
+          fi
+          echo "version_changed=$VERSION_CHANGED" >> "$GITHUB_OUTPUT"
+      - name: Get version
+        if: ${{ steps.check_version.outputs.version_changed == '1' }}
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  Submit:
+    needs: Version
+    if: ${{ needs.Version.outputs.version_changed == '1' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 'latest'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build extensions
+        run: |
+          pnpm run build && 
+          pnpm run build:firefox
+      - name: Zip extensions
+        run: |
+          pnpm run zip && 
+          pnpm run zip:firefox
+      - name: Submit to stores
+        run: |
+          pnpm wxt submit \
+            --chrome-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-chrome.zip \
+            --firefox-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-firefox.zip \
+            --firefox-sources-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-sources.zip
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
 ```
+
+```yml [npm]
+env:
+  DIRECTORY: .output
+  PROJECT_NAME: myextension
+
+name: Release
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  Version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      version_changed: ${{ steps.check_version.outputs.version_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for version change
+        id: check_version
+        run: |
+          if git diff --name-only HEAD~1..HEAD | grep -q '^package\.json$'; then
+            VERSION_CHANGED=1
+          else
+            VERSION_CHANGED=0
+          fi
+          echo "version_changed=$VERSION_CHANGED" >> "$GITHUB_OUTPUT"
+      - name: Get version
+        if: ${{ steps.check_version.outputs.version_changed == '1' }}
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  Submit:
+    needs: Version
+    if: ${{ needs.Version.outputs.version_changed == '1' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Build extensions
+        run: |
+          npm run build && 
+          npm run build:firefox
+      - name: Zip extensions
+        run: |
+          npm run zip && 
+          npm run zip:firefox
+      - name: Submit to stores
+        run: |
+          npm wxt submit \
+            --chrome-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-chrome.zip \
+            --firefox-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-firefox.zip \
+            --firefox-sources-zip ${{ env.DIRECTORY }}/${{env.PROJECT_NAME}}-${{ needs.Version.outputs.version }}-sources.zip
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+```
+
+:::
 
 ## Stores
 
