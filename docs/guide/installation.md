@@ -10,12 +10,12 @@ Bootstrap a new project, start from scratch, or [migrate an existing project](/g
 pnpx wxt@latest init <project-name>
 ```
 
-```sh [bun]
-bunx wxt@latest init <project-name>
-```
-
 ```sh [npm]
 npx wxt@latest init <project-name>
+```
+
+```sh [bun]
+bunx wxt@latest init <project-name>
 ```
 
 :::
