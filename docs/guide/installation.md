@@ -14,6 +14,10 @@ pnpm dlx wxt@latest init <project-name>
 npx wxt@latest init <project-name>
 ```
 
+```sh [bun]
+bunx wxt@latest init <project-name>
+```
+
 :::
 
 There are several starting templates available.
@@ -55,6 +59,12 @@ cd project-name
 yarn init
 ```
 
+```sh [bun]
+mkdir project-name
+cd project-name
+bun init
+```
+
 :::
 
 Then install `wxt`:
@@ -71,6 +81,10 @@ npm i --save-dev wxt
 
 ```sh [yarn]
 yarn add --dev wxt
+```
+
+```sh [bun]
+bun add --dev wxt
 ```
 
 :::

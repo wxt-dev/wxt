@@ -124,6 +124,11 @@ yarn
 yarn zip:firefox
 ```
 
+```sh [bun]
+bun i
+bun zip:firefox
+```
+
 :::
 
 Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
