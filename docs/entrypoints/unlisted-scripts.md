@@ -2,7 +2,7 @@
 
 TypeScript files that are bundled and shipped with the extension, but are not included in the manifest.
 
-You are responsible for loading/running these scripts where needed.
+You are responsible for loading/running these scripts where needed. If necessary, don't forget to add the script and/or any related stylesheets to [`web_accessible_resources`](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources).
 
 ## Filenames
 

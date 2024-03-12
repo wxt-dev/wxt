@@ -2,6 +2,8 @@
 
 HTML pages that are bundled and shipped with the extension, but are not included in the manifest.
 
+If you plan on using the page in an iframe, don't forget to add the page to [`web_accessible_resources`](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources).
+
 ### Examples
 
 - Onboarding
