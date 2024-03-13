@@ -35,7 +35,6 @@ export default defineWorkspace([
       mockReset: true,
       restoreMocks: true,
       setupFiles: 'vitest.setup.ts',
-      testTimeout: 20e3,
     },
     plugins: [testSeed()],
     resolve,

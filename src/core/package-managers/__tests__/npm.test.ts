@@ -10,7 +10,7 @@ describe('NPM Package Management Utils', () => {
   beforeAll(async () => {
     // NPM needs the modules installed for 'npm ls' to work
     await execaCommand('npm i', { cwd });
-  });
+  }, 60e3);
 
   describe('listDependencies', () => {
     it('should list direct dependencies', async () => {
