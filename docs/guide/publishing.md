@@ -114,12 +114,14 @@ jobs:
 ```
 
 :::tip Advanced Automation
+
 The action above lays the foundation for basic automation processes, including `zip` and `submit` actions. To further enhance your GitHub Action capabilities and delve into more complex scenarios, consider exploring the following examples. They introduce advanced features such as version management and GitHub releases, tailored for different needs:
 
 - [Manual submission](https://github.com/aklinker1/github-better-line-counts/blob/main/.github/workflows/submit.yml): For scenarios requiring control and manual intervention.
 - [Automatic submission](https://github.com/GuiEpi/plex-skipper/blob/main/.github/workflows/deploy.yml): For fully automated update and deployment cycles.
-  > These examples are designed to provide clear insights and are a good starting point for customizing your own workflows. Feel free to explore and adapt them to your project needs.
-  > :::
+
+> These examples are designed to provide clear insights and are a good starting point for customizing your own workflows. Feel free to explore and adapt them to your project needs.
+> :::
 
 ## Stores
 
