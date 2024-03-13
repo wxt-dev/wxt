@@ -121,7 +121,8 @@ The action above lays the foundation for basic automation processes, including `
 - [Automatic submission](https://github.com/GuiEpi/plex-skipper/blob/main/.github/workflows/deploy.yml): For fully automated update and deployment cycles.
 
 > These examples are designed to provide clear insights and are a good starting point for customizing your own workflows. Feel free to explore and adapt them to your project needs.
-> :::
+
+:::
 
 ## Stores
 
