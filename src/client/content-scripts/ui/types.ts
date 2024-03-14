@@ -207,7 +207,7 @@ export interface ContentScriptAnchoredOptions {
    * In combination with `anchor`, decide how to add the UI to the DOM.
    *
    * - `"last"` (default) - Add the UI as the last child of the `anchor` element
-   * - `"first"` - Add the UI as the last child of the `anchor` element
+   * - `"first"` - Add the UI as the first child of the `anchor` element
    * - `"replace"` - Replace the `anchor` element with the UI.
    * - `"before"` - Add the UI as the sibling before the `anchor` element
    * - `"after"` - Add the UI as the sibling after the `anchor` element
