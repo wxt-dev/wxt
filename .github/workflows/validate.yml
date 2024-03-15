@@ -7,24 +7,12 @@ on:
       - main
 
 jobs:
-  formatting:
+  checks:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm format:check
-  lint:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm lint
-  type-check:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm compile
+      - run: pnpm check
   validate-demo:
     runs-on: ubuntu-22.04
     steps:

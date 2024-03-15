@@ -87,14 +87,9 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "tsx scripts/build.ts",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "run-p -c -s lint:*",
-    "lint:eslint": "echo 'ESLint: TODO'",
-    "lint:package": "publint",
-    "compile": "run-s -c compile:*",
-    "compile:wxt": "tsc --noEmit",
-    "compile:virtual": "tsc --noEmit -p src/virtual",
+    "check": "run-s -c check:*",
+    "check:default": "check",
+    "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
     "test:coverage": "vitest run --coverage.enabled \"--coverage.include=src/**\" \"--coverage.exclude=src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\"",
     "prepare": "simple-git-hooks",
@@ -106,6 +101,7 @@
     "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
+    "@aklinker1/check": "^1.0.3",
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@types/webextension-polyfill": "^0.10.5",
     "@webext-core/fake-browser": "^1.3.1",

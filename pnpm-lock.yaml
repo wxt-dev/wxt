@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@aklinker1/check':
+        specifier: ^1.0.3
+        version: 1.0.3(typescript@5.3.3)
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
         version: 5.12.0
@@ -238,6 +241,18 @@ importers:
 
 packages:
 
+  /@aklinker1/check@1.0.3(typescript@5.3.3):
+    resolution: {integrity: sha512-9MPCSMyx9UVkhxLSLsbSLlkUmDatiJBevx4nXEz8uG00xyrAZTP1vHEmJ0QwphObn3/FHBVgsCfru2FNQDchsg==}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
+    dependencies:
+      '@antfu/utils': 0.7.7
+      ci-info: 4.0.0
+      citty: 0.1.6
+      typescript: 5.3.3
+    dev: false
+
   /@aklinker1/rollup-plugin-visualizer@5.12.0:
     resolution: {integrity: sha512-X24LvEGw6UFmy0lpGJDmXsMyBD58XmX1bbwsaMLhNoM+UMQfQ3b2RtC+nz4b/NoRK5r6QJSKJHBNVeUdwqybaQ==}
     engines: {node: '>=14'}
@@ -401,6 +416,10 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
     dev: true
+
+  /@antfu/utils@0.7.7:
+    resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
+    dev: false
 
   /@babel/code-frame@7.22.5:
     resolution: {integrity: sha512-Xmwn266vad+6DAqEB2A6V/CcZVp62BbwVmcOJc2RPuwih1kw02TjQvWVWlcKGbBPd+8/0V5DEkOcizRGYsspYQ==}
@@ -5145,7 +5164,6 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ufo@1.4.0:
     resolution: {integrity: sha512-Hhy+BhRBleFjpJ2vchUNN40qgkh0366FWJGqVLYBHev0vpHTrXSA0ryT+74UiW6KWsldNurQMKGqCm1M2zBciQ==}
