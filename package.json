@@ -171,6 +171,7 @@
     "vitepress": "1.0.0-rc.34",
     "vitest": "^1.2.2",
     "vitest-mock-extended": "^1.3.1",
+    "vitest-plugin-random-seed": "^1.0.2",
     "vue": "^3.3.10"
   },
   "packageManager": "pnpm@8.6.3",

@@ -27,7 +27,7 @@ import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '~/core/wxt';
 
-faker.seed(__TEST_SEED__);
+faker.seed(import.meta.test.SEED);
 
 type DeepPartial<T> = T extends object
   ? {
