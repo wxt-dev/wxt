@@ -145,6 +145,9 @@ async function cloneProject({
       .move(
         path.join(directory, '_gitignore'),
         path.join(directory, '.gitignore'),
+        {
+          overwrite: true,
+        },
       )
       .catch((err) =>
         consola.warn('Failed to move _gitignore to .gitignore:', err),
