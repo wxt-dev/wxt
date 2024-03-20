@@ -63,7 +63,7 @@ export async function initialize(options: {
   if (isExists) {
     const isEmpty = (await fs.readdir(input.directory)).length === 0;
     if (!isEmpty) {
-      consola.warn(`The directory ${input.directory} is not empty. Aborted.`);
+      consola.error(`The directory ${path.resolve(input.directory)} is not empty. Aborted.`);
       process.exit(1);
     }
   }
