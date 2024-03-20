@@ -106,7 +106,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   dev: {
-    reloadCommand: 'Alt+T' // false, to disable
+    reloadCommand: 'Alt+T', // false, to disable
   },
 });
 ```
