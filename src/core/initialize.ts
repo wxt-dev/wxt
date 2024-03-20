@@ -59,6 +59,14 @@ export async function initialize(options: {
   input.template ??= defaultTemplate;
   input.packageManager ??= options.packageManager;
 
+  const isExists = await fs.pathExists(input.directory);
+  if (isExists) {
+    const isEmpty = (await fs.readdir(input.directory)).length === 0;
+    if (!isEmpty) {
+      consola.warn(`The directory ${input.directory} is not empty. Aborted.`);
+      process.exit(1);
+    }
+  }
   await cloneProject(input);
 
   const cdPath = path.relative(process.cwd(), path.resolve(input.directory));
