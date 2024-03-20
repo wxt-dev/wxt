@@ -99,7 +99,17 @@ For a full list of options, see the [API Reference](/api/wxt/interfaces/Extensio
 
 Normally, to manually reload an extension, you have to visit `chrome://extensions` and click the reload button for your extension.
 
-When running `wxt` command to start the dev server, WXT adds a keyboard shortcut, `ctrl+E` for Windows/Linux and `cmd+E` for Mac, that reloads the extension when pressed, without visiting `chrome://extensions`.
+When running `wxt` command to start the dev server, WXT adds a keyboard shortcut `Alt+R`, that reloads the extension when pressed, without visiting `chrome://extensions`. This can also be customized or disabled:
+
+```ts [wxt.config.ts]
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  dev: {
+    reloadCommand: 'Alt+T' // false, to disable
+  },
+});
+```
 
 :::info
 This shortcut is only available during development, and is not be added to your extension when running `wxt build` or `wxt-zip`.
