@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 import { execaCommand } from 'execa';
 import glob from 'fast-glob';
-import consola from 'consola';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
