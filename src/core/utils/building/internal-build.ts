@@ -18,6 +18,7 @@ import {
 import consola from 'consola';
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
+import { isCI } from 'ci-info';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -82,9 +83,13 @@ export async function internalBuild(): Promise<BuildOutput> {
       `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
     );
     if (wxt.config.analysis.open) {
-      wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
-      const { default: open } = await import('open');
-      open(wxt.config.analysis.outputFile);
+      if (isCI) {
+        wxt.logger.debug(`Skipped opening ${pc.yellow(statsPath)} in CI`);
+      } else {
+        wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
+        const { default: open } = await import('open');
+        open(wxt.config.analysis.outputFile);
+      }
     }
   }
 

@@ -35,6 +35,9 @@ importers:
       chokidar:
         specifier: ^3.5.3
         version: 3.6.0
+      ci-info:
+        specifier: ^4.0.0
+        version: 4.0.0
       consola:
         specifier: ^3.2.3
         version: 3.2.3
@@ -1901,6 +1904,11 @@ packages:
 
   /ci-info@3.8.0:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /ci-info@4.0.0:
+    resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
     engines: {node: '>=8'}
     dev: false
 

@@ -230,7 +230,7 @@ export interface InlineConfig {
      */
     enabled?: boolean;
     /**
-     * Set to true to automatically open the `stats.html` file when the build is finished
+     * Set to true to automatically open the `stats.html` file when the build is finished. When building in CI, the browser will never open.
      *
      * @default false
      */

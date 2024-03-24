@@ -34,7 +34,7 @@ jobs:
         working-directory: demo
       - run: pnpm build:all
         working-directory: demo
-      - run: pnpm build --analyze --open
+      - run: pnpm build --analyze --analyze-open
         working-directory: demo
       - run: pnpm wxt zip
         working-directory: demo
