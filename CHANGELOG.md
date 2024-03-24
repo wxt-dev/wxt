@@ -1,5 +1,49 @@
 # Changelog
 
+## v0.17.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.7...v0.17.8)
+
+### 🚀 Enhancements
+
+- **analysis:** Open `stats.html` file automatically ([#564](https://github.com/wxt-dev/wxt/pull/564))
+
+### 🩹 Fixes
+
+- **init:** Better error logging when templates fail to load ([b47c150](https://github.com/wxt-dev/wxt/commit/b47c150))
+- Remove deprecated extension from Vue template ([#534](https://github.com/wxt-dev/wxt/pull/534))
+- Append option description error ([#546](https://github.com/wxt-dev/wxt/pull/546))
+- **init:** Don't overwrite existing files when initializing a new project ([#556](https://github.com/wxt-dev/wxt/pull/556))
+- **dev:** Don't crash dev mode when rebuild fails ([#565](https://github.com/wxt-dev/wxt/pull/565))
+
+### 📖 Documentation
+
+- Replace `pnpx` with `pnpm dlx` ([#527](https://github.com/wxt-dev/wxt/pull/527))
+- Update homepage demo video ([35269da](https://github.com/wxt-dev/wxt/commit/35269da))
+- Update README demo video ([#539](https://github.com/wxt-dev/wxt/pull/539))
+- Add Plex skipper to "Using WXT" section ([#541](https://github.com/wxt-dev/wxt/pull/541))
+- Add documentation for Bun.sh ([#543](https://github.com/wxt-dev/wxt/pull/543))
+- Mention adding unlisted scripts and pages to `web_accessible_resources` ([121b521](https://github.com/wxt-dev/wxt/commit/121b521))
+- Add examples for GitHub Actions ([#540](https://github.com/wxt-dev/wxt/pull/540))
+- Fixed "Reload the Extension" section ([#559](https://github.com/wxt-dev/wxt/pull/559))
+
+### 🏡 Chore
+
+- Increase unit test timeout ([d9cba55](https://github.com/wxt-dev/wxt/commit/d9cba55))
+- Increase hook timeout for Windows/NPM tests ([56b7149](https://github.com/wxt-dev/wxt/commit/56b7149))
+- Switch to seed plugin for testing ([#547](https://github.com/wxt-dev/wxt/pull/547))
+- **vue-template:** Upgrade to `vue-tsc` v2 ([#549](https://github.com/wxt-dev/wxt/pull/549))
+- Add a test covering `wxt init` in a non-empty directory ([#563](https://github.com/wxt-dev/wxt/pull/563))
+
+### ❤️ Contributors
+
+- Btea ([@btea](http://github.com/btea))
+- Vlad Fedosov ([@StyleT](http://github.com/StyleT))
+- Lpmvb ([@Lpmvb](http://github.com/Lpmvb))
+- Guillaume ([@GuiEpi](http://github.com/GuiEpi))
+- Sunshio ([@MPB-Tech](http://github.com/MPB-Tech))
+- Luca Dalli ([@lucadalli](http://github.com/lucadalli))
+
 ## v0.17.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.6...v0.17.7)
