@@ -71,4 +71,34 @@ describe('Zipping', () => {
       }"
     `);
   });
+
+  it('should correctly apply template variables for zip file names based on provided config', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+      dependencies: {
+        flatten: '1.0.3',
+      },
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const artifactZip = '.output/test-1.0.0-firefox-development.zip';
+    const sourcesZip = '.output/test-1.0.0-development-sources.zip';
+
+    await project.zip({
+      browser: 'firefox',
+      mode: 'development',
+      zip: {
+        artifactTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}.zip',
+        sourcesTemplate: '{{name}}-{{version}}-{{mode}}-sources.zip',
+        downloadPackages: ['flatten'],
+      },
+    });
+    expect(await project.fileExists('.output/')).toBe(true);
+
+    await expect(project.fileExists(artifactZip)).resolves.toBe(true);
+    await expect(project.fileExists(sourcesZip)).resolves.toBe(true);
+  });
 });
