@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 import { execaCommand } from 'execa';
 import glob from 'fast-glob';
+import { mkdir, writeJson } from 'fs-extra';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
@@ -45,11 +46,8 @@ describe('Init command', () => {
 
   it('should throw an error if the directory is not empty', async () => {
     const project = new TestProject();
-
-    await execaCommand(`pnpm -s wxt init ${project.root} -t vue --pm npm`, {
-      env: { ...process.env, CI: 'true' },
-      stdio: 'ignore',
-    });
+    await mkdir(project.root);
+    await writeJson(project.resolvePath('package.json'), {});
 
     await expect(() =>
       execaCommand(`pnpm -s wxt init ${project.root} -t vue --pm npm`, {
