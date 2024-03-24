@@ -189,34 +189,38 @@ function createFileReloader(server: WxtDevServer) {
 
       // Rebuild entrypoints on change
       const allEntrypoints = await findEntrypoints();
-      const { output: newOutput } = await rebuild(
-        allEntrypoints,
-        // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
-        changes.rebuildGroups,
-        changes.cachedOutput,
-      );
-      server.currentOutput = newOutput;
+      try {
+        const { output: newOutput } = await rebuild(
+          allEntrypoints,
+          // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
+          changes.rebuildGroups,
+          changes.cachedOutput,
+        );
+        server.currentOutput = newOutput;
 
-      // Perform reloads
-      switch (changes.type) {
-        case 'extension-reload':
-          server.reloadExtension();
-          consola.success(`Reloaded extension`);
-          break;
-        case 'html-reload':
-          const { reloadedNames } = reloadHtmlPages(
-            changes.rebuildGroups,
-            server,
-          );
-          consola.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
-          break;
-        case 'content-script-reload':
-          reloadContentScripts(changes.changedSteps, server);
-          const rebuiltNames = changes.rebuildGroups
-            .flat()
-            .map((entry) => entry.name);
-          consola.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
-          break;
+        // Perform reloads
+        switch (changes.type) {
+          case 'extension-reload':
+            server.reloadExtension();
+            consola.success(`Reloaded extension`);
+            break;
+          case 'html-reload':
+            const { reloadedNames } = reloadHtmlPages(
+              changes.rebuildGroups,
+              server,
+            );
+            consola.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
+            break;
+          case 'content-script-reload':
+            reloadContentScripts(changes.changedSteps, server);
+            const rebuiltNames = changes.rebuildGroups
+              .flat()
+              .map((entry) => entry.name);
+            consola.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
+            break;
+        }
+      } catch (err) {
+        // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
       }
     });
   };
