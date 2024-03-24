@@ -57,6 +57,7 @@ cli
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
   .option('--analyze', 'visualize extension bundle')
+  .option('--analyze-open', 'automatically open stats.html in browser')
   .action(
     wrapAction(async (root, flags) => {
       await build({
@@ -66,7 +67,12 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
-        analysis: flags.analyze ? { enabled: true } : undefined,
+        analysis: flags.analyze
+          ? {
+              enabled: true,
+              open: flags.analyzeOpen,
+            }
+          : undefined,
         filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
       });
     }),

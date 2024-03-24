@@ -230,6 +230,12 @@ export interface InlineConfig {
      */
     enabled?: boolean;
     /**
+     * Set to true to automatically open the `stats.html` file when the build is finished
+     *
+     * @default false
+     */
+    open?: boolean;
+    /**
      * When running `wxt build --analyze` or setting `analysis.enabled` to true, customize how the
      * bundle will be visualized. See
      * [`rollup-plugin-visualizer`](https://github.com/btd/rollup-plugin-visualizer#how-to-use-generated-files)
@@ -1033,6 +1039,7 @@ export interface ResolvedConfig {
   transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
   analysis: {
     enabled: boolean;
+    open: boolean;
     template: NonNullable<PluginVisualizerOptions['template']>;
     /** Absolute file path to the `stats.html` file */
     outputFile: string;

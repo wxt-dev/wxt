@@ -81,6 +81,11 @@ export async function internalBuild(): Promise<BuildOutput> {
     wxt.logger.info(
       `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
     );
+    if (wxt.config.analysis.open) {
+      wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
+      const { default: open } = await import('open');
+      open(wxt.config.analysis.outputFile);
+    }
   }
 
   return output;
