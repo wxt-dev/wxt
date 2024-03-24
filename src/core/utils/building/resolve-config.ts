@@ -149,6 +149,7 @@ export async function resolveConfig(
     },
     analysis: {
       enabled: mergedConfig.analysis?.enabled ?? false,
+      open: mergedConfig.analysis?.open ?? false,
       template: mergedConfig.analysis?.template ?? 'treemap',
       outputFile: analysisOutputFile,
       outputDir: analysisOutputDir,

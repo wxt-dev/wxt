@@ -273,6 +273,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     server: mock<WxtDevServer>(),
     analysis: {
       enabled: false,
+      open: false,
       template: 'treemap',
       outputFile: fakeFile(),
       outputDir: fakeDir(),
