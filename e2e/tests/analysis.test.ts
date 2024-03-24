@@ -6,6 +6,10 @@ import open from 'open';
 vi.mock('open');
 const openMock = vi.mocked(open);
 
+vi.mock('ci-info', () => ({
+  isCI: false,
+}));
+
 describe('Analysis', () => {
   beforeEach(() => {
     resetBundleIncrement();
