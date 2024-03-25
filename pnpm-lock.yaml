@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@aklinker1/check':
-        specifier: ^1.0.3
-        version: 1.0.3(typescript@5.3.3)
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
         version: 5.12.0
@@ -126,6 +123,9 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
     devDependencies:
+      '@aklinker1/check':
+        specifier: ^1.1.1
+        version: 1.1.1(typescript@5.3.3)
       '@faker-js/faker':
         specifier: ^8.3.1
         version: 8.3.1
@@ -241,8 +241,8 @@ importers:
 
 packages:
 
-  /@aklinker1/check@1.0.3(typescript@5.3.3):
-    resolution: {integrity: sha512-9MPCSMyx9UVkhxLSLsbSLlkUmDatiJBevx4nXEz8uG00xyrAZTP1vHEmJ0QwphObn3/FHBVgsCfru2FNQDchsg==}
+  /@aklinker1/check@1.1.1(typescript@5.3.3):
+    resolution: {integrity: sha512-P6+vKw9Qm4y3newTcKt4kfxr4cCZgjaoDpCddpqutTZm6bKTgpmtUQNUzWbmpT/V41+86wNAko/jh58Klmn/5A==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -251,7 +251,7 @@ packages:
       ci-info: 4.0.0
       citty: 0.1.6
       typescript: 5.3.3
-    dev: false
+    dev: true
 
   /@aklinker1/rollup-plugin-visualizer@5.12.0:
     resolution: {integrity: sha512-X24LvEGw6UFmy0lpGJDmXsMyBD58XmX1bbwsaMLhNoM+UMQfQ3b2RtC+nz4b/NoRK5r6QJSKJHBNVeUdwqybaQ==}
@@ -419,7 +419,7 @@ packages:
 
   /@antfu/utils@0.7.7:
     resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
-    dev: false
+    dev: true
 
   /@babel/code-frame@7.22.5:
     resolution: {integrity: sha512-Xmwn266vad+6DAqEB2A6V/CcZVp62BbwVmcOJc2RPuwih1kw02TjQvWVWlcKGbBPd+8/0V5DEkOcizRGYsspYQ==}
@@ -1929,13 +1929,12 @@ packages:
   /ci-info@4.0.0:
     resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
     engines: {node: '>=8'}
-    dev: false
+    dev: true
 
   /citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
     dependencies:
       consola: 3.2.3
-    dev: false
 
   /cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
@@ -2073,7 +2072,6 @@ packages:
   /consola@3.2.3:
     resolution: {integrity: sha512-I5qxpzLv+sJhTVEoLYNcTW+bThDCPsit0vLNKShZx6rLtpilNpmmeTPaeqJb9ZE9dV3DGaeby6Vuhrw38WjeyQ==}
     engines: {node: ^14.18.0 || >=16.10.0}
-    dev: false
 
   /convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -5164,6 +5162,7 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /ufo@1.4.0:
     resolution: {integrity: sha512-Hhy+BhRBleFjpJ2vchUNN40qgkh0366FWJGqVLYBHev0vpHTrXSA0ryT+74UiW6KWsldNurQMKGqCm1M2zBciQ==}
