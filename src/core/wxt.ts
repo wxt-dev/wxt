@@ -1,4 +1,4 @@
-import { InlineConfig, Wxt, WxtDevServer, WxtHooks } from '~/types';
+import { InlineConfig, Wxt, WxtCommand, WxtDevServer, WxtHooks } from '~/types';
 import { resolveConfig } from './utils/building';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
@@ -13,7 +13,7 @@ export let wxt: Wxt;
  * Create and register a global instance of the Wxt interface for use throughout the project.
  */
 export async function registerWxt(
-  command: 'build' | 'serve',
+  command: WxtCommand,
   inlineConfig: InlineConfig = {},
   server?: WxtDevServer,
 ): Promise<void> {

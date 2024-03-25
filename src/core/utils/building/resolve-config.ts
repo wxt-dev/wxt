@@ -10,6 +10,7 @@ import {
   WxtDevServer,
   WxtResolvedUnimportOptions,
   Logger,
+  WxtCommand,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -30,7 +31,7 @@ import { normalizePath } from '../paths';
  */
 export async function resolveConfig(
   inlineConfig: InlineConfig,
-  command: 'build' | 'serve',
+  command: WxtCommand,
   server?: WxtDevServer,
 ): Promise<ResolvedConfig> {
   // Load user config
@@ -65,8 +66,7 @@ export async function resolveConfig(
   const manifestVersion =
     mergedConfig.manifestVersion ??
     (browser === 'firefox' || browser === 'safari' ? 2 : 3);
-  const mode =
-    mergedConfig.mode ?? (command === 'build' ? 'production' : 'development');
+  const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
   const root = path.resolve(
@@ -113,13 +113,6 @@ export async function resolveConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
-  const analysisOutputFile = path.resolve(
-    root,
-    mergedConfig.analysis?.outputFile ?? 'stats.html',
-  );
-  const analysisOutputDir = path.dirname(analysisOutputFile);
-  const analysisOutputName = path.parse(analysisOutputFile).name;
-
   const finalConfig: Omit<ResolvedConfig, 'builder'> = {
     browser,
     command,
@@ -142,26 +135,14 @@ export async function resolveConfig(
     srcDir,
     typesDir,
     wxtDir,
-    zip: resolveInternalZipConfig(root, mergedConfig),
-    transformManifest(manifest) {
-      userConfig.transformManifest?.(manifest);
-      inlineConfig.transformManifest?.(manifest);
-    },
-    analysis: {
-      enabled: mergedConfig.analysis?.enabled ?? false,
-      open: mergedConfig.analysis?.open ?? false,
-      template: mergedConfig.analysis?.template ?? 'treemap',
-      outputFile: analysisOutputFile,
-      outputDir: analysisOutputDir,
-      outputName: analysisOutputName,
-      keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
-    },
+    zip: resolveZipConfig(root, mergedConfig),
+    transformManifest: mergedConfig.transformManifest,
+    analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: {
-      includeBrowserPolyfill:
-        mergedConfig.experimental?.includeBrowserPolyfill ?? true,
-    },
+    experimental: defu(mergedConfig.experimental, {
+      includeBrowserPolyfill: true,
+    }),
     server,
     dev: {
       reloadCommand,
@@ -196,65 +177,40 @@ async function resolveManifestConfig(
 function mergeInlineConfig(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): NullablyRequired<InlineConfig> {
-  let imports: InlineConfig['imports'];
-  if (inlineConfig.imports === false || userConfig.imports === false) {
-    imports = false;
-  } else if (userConfig.imports == null && inlineConfig.imports == null) {
-    imports = undefined;
-  } else {
-    imports = defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
-  }
+): InlineConfig {
+  // Merge imports option
+  const imports: InlineConfig['imports'] =
+    inlineConfig.imports === false || userConfig.imports === false
+      ? false
+      : userConfig.imports == null && inlineConfig.imports == null
+        ? undefined
+        : defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
+
+  // Merge manifest option
   const manifest: UserManifestFn = async (env) => {
     const user = await resolveManifestConfig(env, userConfig.manifest);
     const inline = await resolveManifestConfig(env, inlineConfig.manifest);
     return defu(inline, user);
   };
-  const runner: InlineConfig['runner'] = defu(
-    inlineConfig.runner ?? {},
-    userConfig.runner ?? {},
-  );
-  const zip: InlineConfig['zip'] = defu(
-    inlineConfig.zip ?? {},
-    userConfig.zip ?? {},
-  );
-  const hooks: InlineConfig['hooks'] = defu(
-    inlineConfig.hooks ?? {},
-    userConfig.hooks ?? {},
-  );
+
+  // Merge transformManifest option
+  const transformManifest: InlineConfig['transformManifest'] = (manifest) => {
+    userConfig.transformManifest?.(manifest);
+    inlineConfig.transformManifest?.(manifest);
+  };
 
   return {
-    root: inlineConfig.root ?? userConfig.root,
-    browser: inlineConfig.browser ?? userConfig.browser,
-    manifestVersion: inlineConfig.manifestVersion ?? userConfig.manifestVersion,
-    configFile: inlineConfig.configFile,
-    debug: inlineConfig.debug ?? userConfig.debug,
-    entrypointsDir: inlineConfig.entrypointsDir ?? userConfig.entrypointsDir,
-    filterEntrypoints:
-      inlineConfig.filterEntrypoints ?? userConfig.filterEntrypoints,
+    ...defu(inlineConfig, userConfig),
+    // Custom merge values
+    transformManifest,
     imports,
-    logger: inlineConfig.logger ?? userConfig.logger,
     manifest,
-    mode: inlineConfig.mode ?? userConfig.mode,
-    publicDir: inlineConfig.publicDir ?? userConfig.publicDir,
-    runner,
-    srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
-    outDir: inlineConfig.outDir ?? userConfig.outDir,
-    zip,
-    analysis: defu(inlineConfig.analysis ?? {}, userConfig.analysis ?? {}),
-    alias: defu(inlineConfig.alias ?? {}, userConfig.alias ?? {}),
-    experimental: defu(
-      inlineConfig.experimental ?? {},
-      userConfig.experimental ?? {},
-    ),
+    // Vite builder handles merging vite config internally
     vite: undefined,
-    transformManifest: undefined,
-    dev: defu(inlineConfig.dev ?? {}, userConfig.dev ?? {}),
-    hooks,
   };
 }
 
-function resolveInternalZipConfig(
+function resolveZipConfig(
   root: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
@@ -280,6 +236,28 @@ function resolveInternalZipConfig(
     ],
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
+  };
+}
+
+function resolveAnalysisConfig(
+  root: string,
+  mergedConfig: InlineConfig,
+): NullablyRequired<ResolvedConfig['analysis']> {
+  const analysisOutputFile = path.resolve(
+    root,
+    mergedConfig.analysis?.outputFile ?? 'stats.html',
+  );
+  const analysisOutputDir = path.dirname(analysisOutputFile);
+  const analysisOutputName = path.parse(analysisOutputFile).name;
+
+  return {
+    enabled: mergedConfig.analysis?.enabled ?? false,
+    open: mergedConfig.analysis?.open ?? false,
+    template: mergedConfig.analysis?.template ?? 'treemap',
+    outputFile: analysisOutputFile,
+    outputDir: analysisOutputDir,
+    outputName: analysisOutputName,
+    keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
   };
 }
 
@@ -351,3 +329,11 @@ function logMissingDir(logger: Logger, name: string, expected: string) {
     )}`,
   );
 }
+
+/**
+ * Map of `ConfigEnv` commands to their default modes.
+ */
+const COMMAND_MODES: Record<WxtCommand, string> = {
+  build: 'production',
+  serve: 'development',
+};
