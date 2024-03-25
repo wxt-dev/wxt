@@ -10,6 +10,7 @@ import {
   WxtDevServer,
   WxtResolvedUnimportOptions,
   Logger,
+  WxtCommand,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -30,7 +31,7 @@ import { normalizePath } from '../paths';
  */
 export async function resolveConfig(
   inlineConfig: InlineConfig,
-  command: 'build' | 'serve',
+  command: WxtCommand,
   server?: WxtDevServer,
 ): Promise<ResolvedConfig> {
   // Load user config
@@ -65,8 +66,7 @@ export async function resolveConfig(
   const manifestVersion =
     mergedConfig.manifestVersion ??
     (browser === 'firefox' || browser === 'safari' ? 2 : 3);
-  const mode =
-    mergedConfig.mode ?? (command === 'build' ? 'production' : 'development');
+  const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
   const root = path.resolve(
@@ -113,13 +113,6 @@ export async function resolveConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
-  const analysisOutputFile = path.resolve(
-    root,
-    mergedConfig.analysis?.outputFile ?? 'stats.html',
-  );
-  const analysisOutputDir = path.dirname(analysisOutputFile);
-  const analysisOutputName = path.parse(analysisOutputFile).name;
-
   const finalConfig: Omit<ResolvedConfig, 'builder'> = {
     browser,
     command,
@@ -142,23 +135,14 @@ export async function resolveConfig(
     srcDir,
     typesDir,
     wxtDir,
-    zip: resolveInternalZipConfig(root, mergedConfig),
+    zip: resolveZipConfig(root, mergedConfig),
     transformManifest: mergedConfig.transformManifest,
-    analysis: {
-      enabled: mergedConfig.analysis?.enabled ?? false,
-      open: mergedConfig.analysis?.open ?? false,
-      template: mergedConfig.analysis?.template ?? 'treemap',
-      outputFile: analysisOutputFile,
-      outputDir: analysisOutputDir,
-      outputName: analysisOutputName,
-      keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
-    },
+    analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: {
-      includeBrowserPolyfill:
-        mergedConfig.experimental?.includeBrowserPolyfill ?? true,
-    },
+    experimental: defu(mergedConfig.experimental, {
+      includeBrowserPolyfill: true,
+    }),
     server,
     dev: {
       reloadCommand,
@@ -226,7 +210,7 @@ function mergeInlineConfig(
   };
 }
 
-function resolveInternalZipConfig(
+function resolveZipConfig(
   root: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
@@ -252,6 +236,28 @@ function resolveInternalZipConfig(
     ],
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
+  };
+}
+
+function resolveAnalysisConfig(
+  root: string,
+  mergedConfig: InlineConfig,
+): NullablyRequired<ResolvedConfig['analysis']> {
+  const analysisOutputFile = path.resolve(
+    root,
+    mergedConfig.analysis?.outputFile ?? 'stats.html',
+  );
+  const analysisOutputDir = path.dirname(analysisOutputFile);
+  const analysisOutputName = path.parse(analysisOutputFile).name;
+
+  return {
+    enabled: mergedConfig.analysis?.enabled ?? false,
+    open: mergedConfig.analysis?.open ?? false,
+    template: mergedConfig.analysis?.template ?? 'treemap',
+    outputFile: analysisOutputFile,
+    outputDir: analysisOutputDir,
+    outputName: analysisOutputName,
+    keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
   };
 }
 
@@ -323,3 +329,11 @@ function logMissingDir(logger: Logger, name: string, expected: string) {
     )}`,
   );
 }
+
+/**
+ * Map of `ConfigEnv` commands to their default modes.
+ */
+const COMMAND_MODES: Record<WxtCommand, string> = {
+  build: 'production',
+  serve: 'development',
+};

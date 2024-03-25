@@ -774,7 +774,7 @@ export interface ConfigEnv {
   /**
    * The command used to run WXT. `"serve"` during development and `"build"` for any other command.
    */
-  command: 'build' | 'serve';
+  command: WxtCommand;
   /**
    * Browser passed in from the CLI via the `-b` or `--browser` flag. Defaults to `"chrome"` when not passed.
    */
@@ -786,6 +786,8 @@ export interface ConfigEnv {
    */
   manifestVersion: 2 | 3;
 }
+
+export type WxtCommand = 'build' | 'serve';
 
 /**
  * Configure how the browser starts up.
@@ -1018,7 +1020,7 @@ export interface ResolvedConfig {
    */
   wxtModuleDir: string;
   mode: string;
-  command: 'build' | 'serve';
+  command: WxtCommand;
   browser: TargetBrowser;
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
