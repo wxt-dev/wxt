@@ -1038,7 +1038,10 @@ export interface ResolvedConfig {
     downloadedPackagesDir: string;
     downloadPackages: string[];
   };
-  transformManifest: (manifest: Manifest.WebExtensionManifest) => void;
+  /**
+   * @deprecated Use `build:manifestGenerated` hook instead.
+   */
+  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
   analysis: {
     enabled: boolean;
     open: boolean;

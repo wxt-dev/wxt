@@ -15,7 +15,7 @@ import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import { createViteBuilder } from '~/core/builders/vite';
-import defu, { createDefu } from 'defu';
+import defu from 'defu';
 import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
@@ -143,10 +143,7 @@ export async function resolveConfig(
     typesDir,
     wxtDir,
     zip: resolveInternalZipConfig(root, mergedConfig),
-    transformManifest(manifest) {
-      userConfig.transformManifest?.(manifest);
-      inlineConfig.transformManifest?.(manifest);
-    },
+    transformManifest: mergedConfig.transformManifest,
     analysis: {
       enabled: mergedConfig.analysis?.enabled ?? false,
       open: mergedConfig.analysis?.open ?? false,
@@ -212,10 +209,20 @@ function mergeInlineConfig(
     return defu(inline, user);
   };
 
+  // Merge transformManifest option
+  const transformManifest: InlineConfig['transformManifest'] = (manifest) => {
+    userConfig.transformManifest?.(manifest);
+    inlineConfig.transformManifest?.(manifest);
+  };
+
   return {
     ...defu(inlineConfig, userConfig),
+    // Custom merge values
+    transformManifest,
     imports,
     manifest,
+    // Vite builder handles merging vite config internally
+    vite: undefined,
   };
 }
 
