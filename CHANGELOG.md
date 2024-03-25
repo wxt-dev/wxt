@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.17.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.8...v0.17.9)
+
+### 🚀 Enhancements
+
+- Add `{{mode}}` Template Variable ([#566](https://github.com/wxt-dev/wxt/pull/566))
+
+### 🩹 Fixes
+
+- Don't override `wxt.config.ts` options when CLI flags are not passed ([#567](https://github.com/wxt-dev/wxt/pull/567))
+
+### 🏡 Chore
+
+- Merge user config using `defu` ([#568](https://github.com/wxt-dev/wxt/pull/568))
+
+### ❤️ Contributors
+
+- Guillaume ([@GuiEpi](http://github.com/GuiEpi))
+
 ## v0.17.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.7...v0.17.8)
