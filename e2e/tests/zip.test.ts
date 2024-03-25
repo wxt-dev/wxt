@@ -76,9 +76,6 @@ describe('Zipping', () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
-      dependencies: {
-        flatten: '1.0.3',
-      },
     });
     project.addFile(
       'entrypoints/background.ts',
@@ -93,12 +90,10 @@ describe('Zipping', () => {
       zip: {
         artifactTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}.zip',
         sourcesTemplate: '{{name}}-{{version}}-{{mode}}-sources.zip',
-        downloadPackages: ['flatten'],
       },
     });
-    expect(await project.fileExists('.output/')).toBe(true);
 
-    await expect(project.fileExists(artifactZip)).resolves.toBe(true);
-    await expect(project.fileExists(sourcesZip)).resolves.toBe(true);
+    expect(await project.fileExists(artifactZip)).toBe(true);
+    expect(await project.fileExists(sourcesZip)).toBe(true);
   });
 });
