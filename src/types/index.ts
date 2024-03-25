@@ -117,10 +117,11 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{{name}}` - The project's name converted to kebab-case
-     * - `{{version}}` - The version_name or version from the manifest
-     * - `{{browser}}` - The target browser from the `--browser` CLI flag
-     * - `{{manifestVersion}}` - Either "2" or "3"
+     * - <span v-pre>`{{name}}`</span> - The project's name converted to kebab-case
+     * - <span v-pre>`{{version}}`</span> - The version_name or version from the manifest
+     * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
+     * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
      * @default "{{name}}-{{version}}-{{browser}}.zip"
      */
@@ -130,10 +131,11 @@ export interface InlineConfig {
      *
      * Available template variables:
      *
-     * - `{{name}}` - The project's name converted to kebab-case
-     * - `{{version}}` - The version_name or version from the manifest
-     * - `{{browser}}` - The target browser from the `--browser` CLI flag
-     * - `{{manifestVersion}}` - Either "2" or "3"
+     * - <span v-pre>`{{name}}`</span> - The project's name converted to kebab-case
+     * - <span v-pre>`{{version}}`</span> - The version_name or version from the manifest
+     * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
+     * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
      * @default "{{name}}-{{version}}-sources.zip"
      */

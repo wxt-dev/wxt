@@ -38,6 +38,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         '{{version}}',
         output.manifest.version_name ?? output.manifest.version,
       )
+      .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
   await fs.ensureDir(wxt.config.outBaseDir);
