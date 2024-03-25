@@ -18,4 +18,7 @@ export default defineConfig({
   zip: {
     downloadPackages: ['sass'],
   },
+  analysis: {
+    open: true,
+  },
 });
