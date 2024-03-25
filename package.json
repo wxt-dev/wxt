@@ -87,14 +87,9 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "tsx scripts/build.ts",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "run-p -c -s lint:*",
-    "lint:eslint": "echo 'ESLint: TODO'",
-    "lint:package": "publint",
-    "compile": "run-s -c compile:*",
-    "compile:wxt": "tsc --noEmit",
-    "compile:virtual": "tsc --noEmit -p src/virtual",
+    "check": "run-s -c check:*",
+    "check:default": "check",
+    "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
     "test:coverage": "vitest run --coverage.enabled \"--coverage.include=src/**\" \"--coverage.exclude=src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\"",
     "prepare": "simple-git-hooks",
@@ -146,6 +141,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
+    "@aklinker1/check": "^1.1.1",
     "@faker-js/faker": "^8.3.1",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
