@@ -241,24 +241,15 @@ function mergeInlineConfig(
     srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
     outDir: inlineConfig.outDir ?? userConfig.outDir,
     zip,
-    analysis: {
-      ...userConfig.analysis,
-      ...inlineConfig.analysis,
-    },
-    alias: {
-      ...userConfig.alias,
-      ...inlineConfig.alias,
-    },
-    experimental: {
-      ...userConfig.experimental,
-      ...inlineConfig.experimental,
-    },
+    analysis: defu(inlineConfig.analysis ?? {}, userConfig.analysis ?? {}),
+    alias: defu(inlineConfig.alias ?? {}, userConfig.alias ?? {}),
+    experimental: defu(
+      inlineConfig.experimental ?? {},
+      userConfig.experimental ?? {},
+    ),
     vite: undefined,
     transformManifest: undefined,
-    dev: {
-      ...userConfig.dev,
-      ...inlineConfig.dev,
-    },
+    dev: defu(inlineConfig.dev ?? {}, userConfig.dev ?? {}),
     hooks,
   };
 }
