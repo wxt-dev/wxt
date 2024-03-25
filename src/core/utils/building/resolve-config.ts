@@ -15,7 +15,7 @@ import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import { createViteBuilder } from '~/core/builders/vite';
-import defu from 'defu';
+import defu, { createDefu } from 'defu';
 import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
@@ -196,61 +196,26 @@ async function resolveManifestConfig(
 function mergeInlineConfig(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): NullablyRequired<InlineConfig> {
-  let imports: InlineConfig['imports'];
-  if (inlineConfig.imports === false || userConfig.imports === false) {
-    imports = false;
-  } else if (userConfig.imports == null && inlineConfig.imports == null) {
-    imports = undefined;
-  } else {
-    imports = defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
-  }
+): InlineConfig {
+  // Merge imports option
+  const imports: InlineConfig['imports'] =
+    inlineConfig.imports === false || userConfig.imports === false
+      ? false
+      : userConfig.imports == null && inlineConfig.imports == null
+        ? undefined
+        : defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
+
+  // Merge manifest option
   const manifest: UserManifestFn = async (env) => {
     const user = await resolveManifestConfig(env, userConfig.manifest);
     const inline = await resolveManifestConfig(env, inlineConfig.manifest);
     return defu(inline, user);
   };
-  const runner: InlineConfig['runner'] = defu(
-    inlineConfig.runner ?? {},
-    userConfig.runner ?? {},
-  );
-  const zip: InlineConfig['zip'] = defu(
-    inlineConfig.zip ?? {},
-    userConfig.zip ?? {},
-  );
-  const hooks: InlineConfig['hooks'] = defu(
-    inlineConfig.hooks ?? {},
-    userConfig.hooks ?? {},
-  );
 
   return {
-    root: inlineConfig.root ?? userConfig.root,
-    browser: inlineConfig.browser ?? userConfig.browser,
-    manifestVersion: inlineConfig.manifestVersion ?? userConfig.manifestVersion,
-    configFile: inlineConfig.configFile,
-    debug: inlineConfig.debug ?? userConfig.debug,
-    entrypointsDir: inlineConfig.entrypointsDir ?? userConfig.entrypointsDir,
-    filterEntrypoints:
-      inlineConfig.filterEntrypoints ?? userConfig.filterEntrypoints,
+    ...defu(inlineConfig, userConfig),
     imports,
-    logger: inlineConfig.logger ?? userConfig.logger,
     manifest,
-    mode: inlineConfig.mode ?? userConfig.mode,
-    publicDir: inlineConfig.publicDir ?? userConfig.publicDir,
-    runner,
-    srcDir: inlineConfig.srcDir ?? userConfig.srcDir,
-    outDir: inlineConfig.outDir ?? userConfig.outDir,
-    zip,
-    analysis: defu(inlineConfig.analysis ?? {}, userConfig.analysis ?? {}),
-    alias: defu(inlineConfig.alias ?? {}, userConfig.alias ?? {}),
-    experimental: defu(
-      inlineConfig.experimental ?? {},
-      userConfig.experimental ?? {},
-    ),
-    vite: undefined,
-    transformManifest: undefined,
-    dev: defu(inlineConfig.dev ?? {}, userConfig.dev ?? {}),
-    hooks,
   };
 }
 
