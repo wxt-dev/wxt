@@ -54,11 +54,6 @@ export async function resolveConfig(
   // Merge it into the inline config
 
   const mergedConfig = mergeInlineConfig(inlineConfig, userConfig);
-  console.log({
-    userConfig: userConfig.analysis,
-    inlineConfig: inlineConfig.analysis,
-    mergedConfig: mergedConfig.analysis,
-  });
 
   // Apply defaults to make internal config.
 
@@ -227,10 +222,6 @@ function mergeInlineConfig(
     inlineConfig.hooks ?? {},
     userConfig.hooks ?? {},
   );
-  console.log({
-    userConfig: userConfig.analysis,
-    inlineConfig: inlineConfig.analysis,
-  });
 
   return {
     root: inlineConfig.root ?? userConfig.root,
