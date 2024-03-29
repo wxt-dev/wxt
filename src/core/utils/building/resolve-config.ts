@@ -90,16 +90,6 @@ export async function resolveConfig(
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-  let devServer: ResolvedConfig['dev']['server'] = undefined;
-  if (command === 'serve') {
-    const { default: getPort, portNumbers } = await import('get-port');
-    devServer = {
-      hostname: 'localhost',
-      port:
-        mergedConfig.dev?.server?.port ??
-        (await getPort({ port: portNumbers(3000, 3010) })),
-    };
-  }
 
   const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
     name: 'web-ext',
@@ -151,7 +141,6 @@ export async function resolveConfig(
       includeBrowserPolyfill: true,
     }),
     dev: {
-      server: devServer,
       reloadCommand,
     },
     hooks: mergedConfig.hooks ?? {},
