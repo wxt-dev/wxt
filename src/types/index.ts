@@ -345,6 +345,11 @@ export interface InlineConfig {
 }
 
 // TODO: Move into @wxt/vite-builder
+export interface ResolvedConfig {
+  vite: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
+}
+
+// TODO: Move into @wxt/vite-builder
 export type WxtViteConfig = Omit<
   vite.UserConfig,
   'root' | 'configFile' | 'mode'
@@ -1002,6 +1007,14 @@ export interface Wxt {
    * Package manager utilities.
    */
   pm: WxtPackageManager;
+  /**
+   * If the dev server was started, it will be availble.
+   */
+  server?: WxtDevServer;
+  /**
+   * The module in charge of executing all the build steps.
+   */
+  builder: WxtBuilder;
 }
 
 export interface ResolvedConfig {
@@ -1028,7 +1041,6 @@ export interface ResolvedConfig {
   imports: false | WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  server?: WxtDevServer;
   runnerConfig: C12ResolvedConfig<ExtensionRunnerConfig>;
   zip: {
     name?: string;
@@ -1064,11 +1076,17 @@ export interface ResolvedConfig {
   experimental: {
     includeBrowserPolyfill: boolean;
   };
-  builder: WxtBuilder;
   dev: {
+    /**
+     * Defined during dev only
+     */
+    server?: {
+      hostname: string;
+      port: number;
+    };
     reloadCommand: string | false;
   };
-  hooks: Partial<WxtHooks>;
+  hooks: NestedHooks<WxtHooks>;
 }
 
 export interface FsCache {

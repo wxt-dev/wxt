@@ -40,38 +40,17 @@ import { mapWxtOptionsToRegisteredContentScript } from './utils/content-scripts'
 export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  const port = await getPort();
-  const hostname = 'localhost';
-  const origin = `http://${hostname}:${port}`;
+  await registerWxt('serve', inlineConfig);
+
+  if (wxt.config.dev.server == null) {
+    throw Error('Dev server config missing, cannot start dev server');
+  }
+
+  const { port, hostname } = wxt.config.dev.server!;
   const serverInfo: ServerInfo = {
     port,
     hostname,
-    origin,
-  };
-
-  const buildAndOpenBrowser = async () => {
-    // Build after starting the dev server so it can be used to transform HTML files
-    server.currentOutput = await internalBuild();
-
-    // Add file watchers for files not loaded by the dev server. See
-    // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
-    try {
-      server.watcher.add(getExternalOutputDependencies(server));
-    } catch (err) {
-      wxt.config.logger.warn('Failed to register additional file paths:', err);
-    }
-
-    // Open browser after everything is ready to go.
-    await runner.openBrowser();
-  };
-
-  /**
-   * Stops the previous runner, grabs the latest config, and recreates the runner.
-   */
-  const closeAndRecreateRunner = async () => {
-    await runner.closeBrowser();
-    await wxt.reloadConfig();
-    runner = await createExtensionRunner();
+    origin: `http://${hostname}:${port}`,
   };
 
   // Server instance must be created first so its reference can be added to the internal config used
@@ -116,11 +95,34 @@ export async function createServer(
     },
   };
 
-  await registerWxt('serve', inlineConfig, server);
+  const buildAndOpenBrowser = async () => {
+    // Build after starting the dev server so it can be used to transform HTML files
+    server.currentOutput = await internalBuild();
+
+    // Add file watchers for files not loaded by the dev server. See
+    // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
+    try {
+      server.watcher.add(getExternalOutputDependencies(server));
+    } catch (err) {
+      wxt.config.logger.warn('Failed to register additional file paths:', err);
+    }
+
+    // Open browser after everything is ready to go.
+    await runner.openBrowser();
+  };
+
+  /**
+   * Stops the previous runner, grabs the latest config, and recreates the runner.
+   */
+  const closeAndRecreateRunner = async () => {
+    await runner.closeBrowser();
+    await wxt.reloadConfig();
+    runner = await createExtensionRunner();
+  };
 
   let [runner, builderServer] = await Promise.all([
     createExtensionRunner(),
-    wxt.config.builder.createServer(server),
+    wxt.builder.createServer(server),
   ]);
 
   // Register content scripts for the first time after the background starts up since they're not
@@ -135,11 +137,6 @@ export async function createServer(
   server.watcher.on('all', reloadOnChange);
 
   return server;
-}
-
-async function getPort(): Promise<number> {
-  const { default: getPort, portNumbers } = await import('get-port');
-  return await getPort({ port: portNumbers(3000, 3010) });
 }
 
 /**
