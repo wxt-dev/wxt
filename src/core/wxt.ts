@@ -42,6 +42,7 @@ export async function registerWxt(
     },
     pm,
     builder,
+    server,
   };
 
   // Initialize hooks
