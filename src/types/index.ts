@@ -310,6 +310,12 @@ export interface InlineConfig {
    */
   dev?: {
     /**
+     * Port to run the dev server on.
+     *
+     * @default "Any available port from 3000 to 3010, otherwise fall back to a random port"
+     */
+    port?: number;
+    /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added during dev mode to
      * quickly reload the extension.
      *
