@@ -270,7 +270,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     srcDir: fakeDir(),
     typesDir: fakeDir(),
     wxtDir: fakeDir(),
-    server: mock<WxtDevServer>(),
     analysis: {
       enabled: false,
       open: false,
@@ -296,11 +295,11 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     experimental: {
       includeBrowserPolyfill: true,
     },
-    builder: mock(),
     dev: {
       reloadCommand: 'Alt+R',
     },
     hooks: {},
+    vite: () => ({}),
   };
 });
 
@@ -310,6 +309,8 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   logger: mock(),
   reloadConfig: vi.fn(),
   pm: mock(),
+  server: faker.helpers.arrayElement([undefined, mock<WxtDevServer>()]),
+  builder: mock(),
 }));
 
 export function setFakeWxt(overrides?: DeepPartial<Wxt>) {

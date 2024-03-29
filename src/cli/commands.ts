@@ -16,6 +16,7 @@ cli
   .option('-c, --config <file>', 'use specified config file')
   .option('-m, --mode <mode>', 'set env mode')
   .option('-b, --browser <browser>', 'specify a browser')
+  .option('-p, --port <port>', 'specify a port for the dev server')
   .option(
     '-e, --filter-entrypoint <entrypoint>',
     'only build specific entrypoints',
@@ -35,6 +36,11 @@ cli
         configFile: flags.config,
         debug: flags.debug,
         filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
+        dev: {
+          server: {
+            port: flags.port != null ? parseInt(flags.port) : undefined,
+          },
+        },
       });
       await server.start();
       return { isOngoing: true };

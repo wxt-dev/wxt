@@ -455,8 +455,8 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
-  const permission = `http://${wxt.config.server?.hostname ?? ''}/*`;
-  const allowedCsp = wxt.config.server?.origin ?? 'http://localhost:*';
+  const permission = `http://${wxt.server?.hostname ?? ''}/*`;
+  const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
     addHostPermission(manifest, permission);
@@ -473,7 +473,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
         "script-src 'self'; object-src 'self';", // default CSP for MV2
   );
 
-  if (wxt.config.server) csp.add('script-src', allowedCsp);
+  if (wxt.server) csp.add('script-src', allowedCsp);
 
   if (manifest.manifest_version === 3) {
     manifest.content_security_policy ??= {};
