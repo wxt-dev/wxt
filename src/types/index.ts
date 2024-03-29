@@ -1077,13 +1077,6 @@ export interface ResolvedConfig {
     includeBrowserPolyfill: boolean;
   };
   dev: {
-    /**
-     * Defined during dev only
-     */
-    server?: {
-      hostname: string;
-      port: number;
-    };
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;

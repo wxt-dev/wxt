@@ -40,12 +40,9 @@ import { mapWxtOptionsToRegisteredContentScript } from './utils/content-scripts'
 export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  await registerWxt('serve', inlineConfig, (config) => {
-    if (config.dev.server == null) {
-      throw Error('Dev server config missing, cannot start dev server');
-    }
-
-    const { port, hostname } = config.dev.server;
+  await registerWxt('serve', inlineConfig, async (_config) => {
+    const port = await getPort();
+    const hostname = 'localhost';
     const serverInfo: ServerInfo = {
       port,
       hostname,
@@ -139,6 +136,11 @@ export async function createServer(
   server.watcher.on('all', reloadOnChange);
 
   return server;
+}
+
+async function getPort(): Promise<number> {
+  const { default: getPort, portNumbers } = await import('get-port');
+  return await getPort({ port: portNumbers(3000, 3010) });
 }
 
 /**
