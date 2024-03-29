@@ -36,11 +36,14 @@ cli
         configFile: flags.config,
         debug: flags.debug,
         filterEntrypoints: getArrayFromFlags(flags, 'filterEntrypoint'),
-        dev: {
-          server: {
-            port: flags.port != null ? parseInt(flags.port) : undefined,
-          },
-        },
+        dev:
+          flags.port == null
+            ? undefined
+            : {
+                server: {
+                  port: parseInt(flags.port),
+                },
+              },
       });
       await server.start();
       return { isOngoing: true };
