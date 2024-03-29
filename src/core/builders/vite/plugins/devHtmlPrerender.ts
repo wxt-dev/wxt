@@ -13,6 +13,7 @@ let reactRefreshPreamble = '';
  */
 export function devHtmlPrerender(
   config: Omit<ResolvedConfig, 'builder'>,
+  server: WxtDevServer | undefined,
 ): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
@@ -38,7 +39,6 @@ export function devHtmlPrerender(
       // Convert scripts like src="./main.tsx" -> src="http://localhost:3000/entrypoints/popup/main.tsx"
       // before the paths are replaced with their bundled path
       transform(code, id) {
-        const server = config.server;
         if (
           config.command !== 'serve' ||
           server == null ||
@@ -68,7 +68,6 @@ export function devHtmlPrerender(
 
       // Pass the HTML through the dev server to add dev-mode specific code
       async transformIndexHtml(html, ctx) {
-        const server = config.server;
         if (config.command !== 'serve' || server == null) return;
 
         const originalUrl = `${server.origin}${ctx.path}`;

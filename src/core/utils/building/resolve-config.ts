@@ -7,7 +7,6 @@ import {
   UserManifestFn,
   UserManifest,
   ExtensionRunnerConfig,
-  WxtDevServer,
   WxtResolvedUnimportOptions,
   Logger,
   WxtCommand,
@@ -15,7 +14,6 @@ import {
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
-import { createViteBuilder } from '~/core/builders/vite';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
@@ -32,7 +30,6 @@ import { normalizePath } from '../paths';
 export async function resolveConfig(
   inlineConfig: InlineConfig,
   command: WxtCommand,
-  server?: WxtDevServer,
 ): Promise<ResolvedConfig> {
   // Load user config
 
@@ -54,7 +51,7 @@ export async function resolveConfig(
 
   // Merge it into the inline config
 
-  const mergedConfig = mergeInlineConfig(inlineConfig, userConfig);
+  const mergedConfig = await mergeInlineConfig(inlineConfig, userConfig);
 
   // Apply defaults to make internal config.
 
@@ -113,7 +110,7 @@ export async function resolveConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
-  const finalConfig: Omit<ResolvedConfig, 'builder'> = {
+  return {
     browser,
     command,
     debug,
@@ -143,22 +140,11 @@ export async function resolveConfig(
     experimental: defu(mergedConfig.experimental, {
       includeBrowserPolyfill: true,
     }),
-    server,
     dev: {
       reloadCommand,
     },
     hooks: mergedConfig.hooks ?? {},
-  };
-
-  const builder = await createViteBuilder(
-    inlineConfig,
-    userConfig,
-    finalConfig,
-  );
-
-  return {
-    ...finalConfig,
-    builder,
+    vite: mergedConfig.vite ?? (() => ({})),
   };
 }
 
@@ -174,10 +160,10 @@ async function resolveManifestConfig(
 /**
  * Merge the inline config and user config. Inline config is given priority. Defaults are not applied here.
  */
-function mergeInlineConfig(
+async function mergeInlineConfig(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): InlineConfig {
+): Promise<InlineConfig> {
   // Merge imports option
   const imports: InlineConfig['imports'] =
     inlineConfig.imports === false || userConfig.imports === false
@@ -199,14 +185,16 @@ function mergeInlineConfig(
     inlineConfig.transformManifest?.(manifest);
   };
 
+  // Builders
+  const builderConfig = await mergeBuilderConfig(inlineConfig, userConfig);
+
   return {
     ...defu(inlineConfig, userConfig),
     // Custom merge values
     transformManifest,
     imports,
     manifest,
-    // Vite builder handles merging vite config internally
-    vite: undefined,
+    ...builderConfig,
   };
 }
 
@@ -337,3 +325,21 @@ const COMMAND_MODES: Record<WxtCommand, string> = {
   build: 'production',
   serve: 'development',
 };
+
+export async function mergeBuilderConfig(
+  inlineConfig: InlineConfig,
+  userConfig: UserConfig,
+): Promise<Pick<InlineConfig, 'vite'>> {
+  const vite = await import('vite').catch(() => void 0);
+  if (vite) {
+    return {
+      vite: async (env) => {
+        const resolvedInlineConfig = (await inlineConfig.vite?.(env)) ?? {};
+        const resolvedUserConfig = (await userConfig.vite?.(env)) ?? {};
+        return vite.mergeConfig(resolvedUserConfig, resolvedInlineConfig);
+      },
+    };
+  }
+
+  throw Error('Builder not found. Make sure vite is installed.');
+}

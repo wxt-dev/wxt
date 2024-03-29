@@ -18,7 +18,7 @@ export async function buildEntrypoints(
     spinner.text =
       pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
     try {
-      steps.push(await wxt.config.builder.build(group));
+      steps.push(await wxt.builder.build(group));
     } catch (err) {
       spinner.stop().clear();
       wxt.logger.error(err);

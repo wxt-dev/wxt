@@ -2,12 +2,11 @@ import type * as vite from 'vite';
 import {
   BuildStepOutput,
   Entrypoint,
-  InlineConfig,
   ResolvedConfig,
-  UserConfig,
   VirtualEntrypointType,
   WxtBuilder,
   WxtBuilderServer,
+  WxtDevServer,
 } from '~/types';
 import * as wxtPlugins from './plugins';
 import {
@@ -16,9 +15,8 @@ import {
 } from '~/core/utils/entrypoints';
 
 export async function createViteBuilder(
-  inlineConfig: InlineConfig,
-  userConfig: UserConfig,
-  wxtConfig: Omit<ResolvedConfig, 'builder'>,
+  wxtConfig: ResolvedConfig,
+  server?: WxtDevServer,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
@@ -26,14 +24,7 @@ export async function createViteBuilder(
    * Returns the base vite config shared by all builds based on the inline and user config.
    */
   const getBaseConfig = async () => {
-    const resolvedInlineConfig =
-      (await inlineConfig.vite?.(wxtConfig.env)) ?? {};
-    const resolvedUserConfig = (await userConfig.vite?.(wxtConfig.env)) ?? {};
-
-    const config: vite.InlineConfig = vite.mergeConfig(
-      resolvedUserConfig,
-      resolvedInlineConfig,
-    );
+    const config: vite.InlineConfig = await wxtConfig.vite(wxtConfig.env);
 
     config.root = wxtConfig.root;
     config.configFile = false;
@@ -55,13 +46,13 @@ export async function createViteBuilder(
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.download(wxtConfig),
-      wxtPlugins.devHtmlPrerender(wxtConfig),
+      wxtPlugins.devHtmlPrerender(wxtConfig, server),
       wxtPlugins.unimport(wxtConfig),
       wxtPlugins.virtualEntrypoint('background', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-isolated-world', wxtConfig),
       wxtPlugins.virtualEntrypoint('content-script-main-world', wxtConfig),
       wxtPlugins.virtualEntrypoint('unlisted-script', wxtConfig),
-      wxtPlugins.devServerGlobals(wxtConfig),
+      wxtPlugins.devServerGlobals(wxtConfig, server),
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),

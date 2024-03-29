@@ -37,7 +37,7 @@ export async function internalBuild(): Promise<BuildOutput> {
   const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
   wxt.logger.info(
     `${verb} ${pc.cyan(target)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
-      `${wxt.config.builder.name} ${wxt.config.builder.version}`,
+      `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
   const startTime = Date.now();

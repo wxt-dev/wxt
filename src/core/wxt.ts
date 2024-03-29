@@ -1,7 +1,15 @@
-import { InlineConfig, Wxt, WxtCommand, WxtDevServer, WxtHooks } from '~/types';
+import {
+  InlineConfig,
+  ResolvedConfig,
+  Wxt,
+  WxtCommand,
+  WxtDevServer,
+  WxtHooks,
+} from '~/types';
 import { resolveConfig } from './utils/building';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
+import { createViteBuilder } from './builders/vite';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -15,10 +23,12 @@ export let wxt: Wxt;
 export async function registerWxt(
   command: WxtCommand,
   inlineConfig: InlineConfig = {},
-  server?: WxtDevServer,
+  getServer?: (config: ResolvedConfig) => Promise<WxtDevServer>,
 ): Promise<void> {
-  const config = await resolveConfig(inlineConfig, command, server);
   const hooks = createHooks<WxtHooks>();
+  const config = await resolveConfig(inlineConfig, command);
+  const server = await getServer?.(config);
+  const builder = await createViteBuilder(config, server);
   const pm = await createWxtPackageManager(config.root);
 
   wxt = {
@@ -28,9 +38,11 @@ export async function registerWxt(
       return config.logger;
     },
     async reloadConfig() {
-      wxt.config = await resolveConfig(inlineConfig, command, server);
+      wxt.config = await resolveConfig(inlineConfig, command);
     },
     pm,
+    builder,
+    server,
   };
 
   // Initialize hooks
