@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.17.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.9...v0.17.10)
+
+### 🚀 Enhancements
+
+- Add `dev.server.port` config ([#577](https://github.com/wxt-dev/wxt/pull/577))
+
+### 🏡 Chore
+
+- Use `@aklinker1/check` to simplify checks setup ([#550](https://github.com/wxt-dev/wxt/pull/550))
+- Refactor order of config resolution ([#578](https://github.com/wxt-dev/wxt/pull/578))
+
+### ❤️ Contributors
+
+- Zizheng Tai ([@zizhengtai](http://github.com/zizhengtai))
+
 ## v0.17.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.8...v0.17.9)
