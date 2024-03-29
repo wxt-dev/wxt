@@ -110,6 +110,19 @@ export async function resolveConfig(
     }).map(([key, value]) => [key, path.resolve(root, value)]),
   );
 
+  let devServerConfig: ResolvedConfig['dev']['server'];
+  if (command === 'serve') {
+    let port = mergedConfig.dev?.server?.port;
+    if (port == null || !isFinite(port)) {
+      const { default: getPort, portNumbers } = await import('get-port');
+      port = await getPort({ port: portNumbers(3000, 3010) });
+    }
+    devServerConfig = {
+      port,
+      hostname: 'localhost',
+    };
+  }
+
   return {
     browser,
     command,
@@ -141,6 +154,7 @@ export async function resolveConfig(
       includeBrowserPolyfill: true,
     }),
     dev: {
+      server: devServerConfig,
       reloadCommand,
     },
     hooks: mergedConfig.hooks ?? {},

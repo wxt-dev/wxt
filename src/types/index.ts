@@ -309,6 +309,12 @@ export interface InlineConfig {
    * Config effecting dev mode only.
    */
   dev?: {
+    server?: {
+      /**
+       * Port to run the dev server on. Defaults to the first open port from 3000 to 3010.
+       */
+      port?: number;
+    };
     /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added during dev mode to
      * quickly reload the extension.
@@ -1077,6 +1083,11 @@ export interface ResolvedConfig {
     includeBrowserPolyfill: boolean;
   };
   dev: {
+    /** Only defined during dev command */
+    server?: {
+      port: number;
+      hostname: string;
+    };
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
