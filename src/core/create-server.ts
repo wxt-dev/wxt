@@ -40,60 +40,67 @@ import { mapWxtOptionsToRegisteredContentScript } from './utils/content-scripts'
 export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  await registerWxt('serve', inlineConfig);
+  await registerWxt('serve', inlineConfig, (config) => {
+    if (config.dev.server == null) {
+      throw Error('Dev server config missing, cannot start dev server');
+    }
 
-  if (wxt.config.dev.server == null) {
-    throw Error('Dev server config missing, cannot start dev server');
-  }
+    const { port, hostname } = config.dev.server;
+    const serverInfo: ServerInfo = {
+      port,
+      hostname,
+      origin: `http://${hostname}:${port}`,
+    };
 
-  const { port, hostname } = wxt.config.dev.server!;
-  const serverInfo: ServerInfo = {
-    port,
-    hostname,
-    origin: `http://${hostname}:${port}`,
-  };
+    // Server instance must be created first so its reference can be added to the internal config used
+    // to pre-render entrypoints
+    const server: WxtDevServer = {
+      ...serverInfo,
+      get watcher() {
+        return builderServer.watcher;
+      },
+      get ws() {
+        return builderServer.ws;
+      },
+      currentOutput: undefined,
+      async start() {
+        await builderServer.listen();
+        wxt.logger.success(`Started dev server @ ${serverInfo.origin}`);
+        await buildAndOpenBrowser();
+      },
+      async stop() {
+        await runner.closeBrowser();
+        await builderServer.close();
+      },
+      async restart() {
+        await closeAndRecreateRunner();
+        await buildAndOpenBrowser();
+      },
+      transformHtml(url, html, originalUrl) {
+        return builderServer.transformHtml(url, html, originalUrl);
+      },
+      reloadContentScript(payload) {
+        server.ws.send('wxt:reload-content-script', payload);
+      },
+      reloadPage(path) {
+        server.ws.send('wxt:reload-page', path);
+      },
+      reloadExtension() {
+        server.ws.send('wxt:reload-extension');
+      },
+      async restartBrowser() {
+        await closeAndRecreateRunner();
+        await runner.openBrowser();
+      },
+    };
+    return server;
+  });
 
-  // Server instance must be created first so its reference can be added to the internal config used
-  // to pre-render entrypoints
-  const server: WxtDevServer = {
-    ...serverInfo,
-    get watcher() {
-      return builderServer.watcher;
-    },
-    get ws() {
-      return builderServer.ws;
-    },
-    currentOutput: undefined,
-    async start() {
-      await builderServer.listen();
-      wxt.logger.success(`Started dev server @ ${serverInfo.origin}`);
-      await buildAndOpenBrowser();
-    },
-    async stop() {
-      await runner.closeBrowser();
-      await builderServer.close();
-    },
-    async restart() {
-      await closeAndRecreateRunner();
-      await buildAndOpenBrowser();
-    },
-    transformHtml(url, html, originalUrl) {
-      return builderServer.transformHtml(url, html, originalUrl);
-    },
-    reloadContentScript(payload) {
-      server.ws.send('wxt:reload-content-script', payload);
-    },
-    reloadPage(path) {
-      server.ws.send('wxt:reload-page', path);
-    },
-    reloadExtension() {
-      server.ws.send('wxt:reload-extension');
-    },
-    async restartBrowser() {
-      await closeAndRecreateRunner();
-      await runner.openBrowser();
-    },
-  };
+  const server = wxt.server!;
+  let [runner, builderServer] = await Promise.all([
+    createExtensionRunner(),
+    wxt.builder.createServer(server),
+  ]);
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
@@ -119,11 +126,6 @@ export async function createServer(
     await wxt.reloadConfig();
     runner = await createExtensionRunner();
   };
-
-  let [runner, builderServer] = await Promise.all([
-    createExtensionRunner(),
-    wxt.builder.createServer(server),
-  ]);
 
   // Register content scripts for the first time after the background starts up since they're not
   // listed in the manifest
