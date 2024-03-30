@@ -1,11 +1,11 @@
 // Types required to make the virtual modules happy.
 
-declare module 'virtual:user-background' {
+declare module 'virtual:user-background-entrypoint' {
   const definition: { main: () => void };
   export default definition;
 }
 
-declare module 'virtual:user-content-script-isolated-world' {
+declare module 'virtual:user-content-script-isolated-world-entrypoint' {
   const definition: {
     main: (
       ctx: import('wxt/client').ContentScriptContext,
@@ -14,12 +14,12 @@ declare module 'virtual:user-content-script-isolated-world' {
   export default definition;
 }
 
-declare module 'virtual:user-content-script-main-world' {
+declare module 'virtual:user-content-script-main-world-entrypoint' {
   const definition: { main: () => void | Promise<void> };
   export default definition;
 }
 
-declare module 'virtual:user-unlisted-script' {
+declare module 'virtual:user-unlisted-script-entrypoint' {
   const definition: { main: () => void | Promise<void> };
   export default definition;
 }

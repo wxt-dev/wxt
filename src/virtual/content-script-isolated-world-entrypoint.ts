@@ -1,4 +1,4 @@
-import definition from 'virtual:user-content-script-isolated-world';
+import definition from 'virtual:user-content-script-isolated-world-entrypoint';
 import { logger } from '../sandbox/utils/logger';
 import { ContentScriptContext } from 'wxt/client';
 

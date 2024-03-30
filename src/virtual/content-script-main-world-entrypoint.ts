@@ -1,4 +1,4 @@
-import definition from 'virtual:user-content-script-main-world';
+import definition from 'virtual:user-content-script-main-world-entrypoint';
 import { logger } from '../sandbox/utils/logger';
 
 (async () => {

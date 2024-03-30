@@ -1109,6 +1109,16 @@ export type VirtualEntrypointType =
   | 'background'
   | 'unlisted-script';
 
+export type VirtualModuleName =
+  | `${VirtualEntrypointType}-entrypoint`
+  | 'mock-browser'
+  | 'reload-html';
+
+export type GetVirtualModuleId<TName extends VirtualModuleName> =
+  `virtual:wxt-${TName}`;
+
+export type VirtualModuleId = GetVirtualModuleId<VirtualModuleName>;
+
 export type EslintGlobalsPropValue =
   | boolean
   | 'readonly'

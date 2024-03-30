@@ -4,6 +4,8 @@ import {
   Entrypoint,
   ResolvedConfig,
   VirtualEntrypointType,
+  VirtualModuleId,
+  VirtualModuleName,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
@@ -48,10 +50,7 @@ export async function createViteBuilder(
       wxtPlugins.download(wxtConfig),
       wxtPlugins.devHtmlPrerender(wxtConfig, server),
       wxtPlugins.unimport(wxtConfig),
-      wxtPlugins.virtualEntrypoint('background', wxtConfig),
-      wxtPlugins.virtualEntrypoint('content-script-isolated-world', wxtConfig),
-      wxtPlugins.virtualEntrypoint('content-script-main-world', wxtConfig),
-      wxtPlugins.virtualEntrypoint('unlisted-script', wxtConfig),
+      wxtPlugins.resolveVirtualModules(wxtConfig),
       wxtPlugins.devServerGlobals(wxtConfig, server),
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
@@ -268,7 +267,10 @@ function getRollupEntry(entrypoint: Entrypoint): string {
           : 'content-script-isolated-world';
       break;
   }
-  return virtualEntrypointType
-    ? `virtual:wxt-${virtualEntrypointType}?${entrypoint.inputPath}`
-    : entrypoint.inputPath;
+
+  if (virtualEntrypointType) {
+    const moduleId: VirtualModuleId = `virtual:wxt-${virtualEntrypointType}-entrypoint`;
+    return `${moduleId}?${entrypoint.inputPath}`;
+  }
+  return entrypoint.inputPath;
 }

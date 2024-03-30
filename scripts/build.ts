@@ -8,6 +8,7 @@ import { consola } from 'consola';
 import pMap from 'p-map';
 import os from 'node:os';
 import path from 'node:path';
+import type { VirtualEntrypointType, VirtualModuleName } from '~/types';
 
 const spinnerText = 'Building WXT';
 const spinner = ora(spinnerText).start();
@@ -16,16 +17,33 @@ const startTime = Date.now();
 const outDir = 'dist';
 await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
+const virtualModuleEntries: Record<`virtual/${VirtualModuleName}`, string> = {
+  'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
+  'virtual/content-script-isolated-world-entrypoint':
+    'src/virtual/content-script-isolated-world-entrypoint.ts',
+  'virtual/content-script-main-world-entrypoint':
+    'src/virtual/content-script-main-world-entrypoint.ts',
+  'virtual/mock-browser': 'src/virtual/mock-browser.ts',
+  'virtual/reload-html': 'src/virtual/reload-html.ts',
+  'virtual/unlisted-script-entrypoint':
+    'src/virtual/unlisted-script-entrypoint.ts',
+};
+
+const externalModules: Record<
+  `virtual:user-${VirtualEntrypointType}-entrypoint`,
+  undefined
+> = {
+  'virtual:user-background-entrypoint': undefined,
+  'virtual:user-content-script-isolated-world-entrypoint': undefined,
+  'virtual:user-content-script-main-world-entrypoint': undefined,
+  'virtual:user-unlisted-script-entrypoint': undefined,
+};
+
 const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
-  external: [
-    'virtual:user-unlisted-script',
-    'virtual:user-content-script-isolated-world',
-    'virtual:user-content-script-main-world',
-    'virtual:user-background',
-  ],
+  external: Object.keys(externalModules),
 } satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
@@ -74,17 +92,7 @@ const config: tsup.Options[] = [
   },
   {
     ...preset,
-    entry: {
-      'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
-      'virtual/content-script-isolated-world-entrypoint':
-        'src/virtual/content-script-isolated-world-entrypoint.ts',
-      'virtual/content-script-main-world-entrypoint':
-        'src/virtual/content-script-main-world-entrypoint.ts',
-      'virtual/mock-browser': 'src/virtual/mock-browser.ts',
-      'virtual/reload-html': 'src/virtual/reload-html.ts',
-      'virtual/unlisted-script-entrypoint':
-        'src/virtual/unlisted-script-entrypoint.ts',
-    },
+    entry: virtualModuleEntries,
     format: ['esm'],
     splitting: false,
     dts: false,
