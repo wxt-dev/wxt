@@ -1109,15 +1109,23 @@ export type VirtualEntrypointType =
   | 'background'
   | 'unlisted-script';
 
+/**
+ * Module name of all the different virtual entrypoints.
+ */
+export type VirtualEntrypointModuleName = `${VirtualEntrypointType}-entrypoint`;
+
+/**
+ * Name of files in the `dist/virtual/` directory.
+ */
 export type VirtualModuleName =
-  | `${VirtualEntrypointType}-entrypoint`
+  | VirtualEntrypointModuleName
   | 'mock-browser'
   | 'reload-html';
 
-export type GetVirtualModuleId<TName extends VirtualModuleName> =
-  `virtual:wxt-${TName}`;
-
-export type VirtualModuleId = GetVirtualModuleId<VirtualModuleName>;
+/**
+ * Import aliases for all the virtual modules in the `dist/virtual/` directory.
+ */
+export type VirtualModuleId = `virtual:wxt-${VirtualModuleName}`;
 
 export type EslintGlobalsPropValue =
   | boolean

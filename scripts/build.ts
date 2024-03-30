@@ -8,7 +8,7 @@ import { consola } from 'consola';
 import pMap from 'p-map';
 import os from 'node:os';
 import path from 'node:path';
-import type { VirtualEntrypointType, VirtualModuleName } from '~/types';
+import type { VirtualEntrypointModuleName, VirtualModuleName } from '~/types';
 
 const spinnerText = 'Building WXT';
 const spinner = ora(spinnerText).start();
@@ -30,7 +30,7 @@ const virtualModuleEntries: Record<`virtual/${VirtualModuleName}`, string> = {
 };
 
 const externalModules: Record<
-  `virtual:user-${VirtualEntrypointType}-entrypoint`,
+  `virtual:user-${VirtualEntrypointModuleName}`,
   undefined
 > = {
   'virtual:user-background-entrypoint': undefined,
