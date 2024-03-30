@@ -1103,30 +1103,6 @@ export interface ExtensionRunner {
   closeBrowser(): Promise<void>;
 }
 
-export type VirtualEntrypointType =
-  | 'content-script-main-world'
-  | 'content-script-isolated-world'
-  | 'background'
-  | 'unlisted-script';
-
-/**
- * Module name of all the different virtual entrypoints.
- */
-export type VirtualEntrypointModuleName = `${VirtualEntrypointType}-entrypoint`;
-
-/**
- * Name of files in the `dist/virtual/` directory.
- */
-export type VirtualModuleName =
-  | VirtualEntrypointModuleName
-  | 'mock-browser'
-  | 'reload-html';
-
-/**
- * Import aliases for all the virtual modules in the `dist/virtual/` directory.
- */
-export type VirtualModuleId = `virtual:wxt-${VirtualModuleName}`;
-
 export type EslintGlobalsPropValue =
   | boolean
   | 'readonly'

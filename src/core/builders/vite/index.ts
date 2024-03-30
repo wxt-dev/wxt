@@ -3,8 +3,6 @@ import {
   BuildStepOutput,
   Entrypoint,
   ResolvedConfig,
-  VirtualEntrypointType,
-  VirtualModuleId,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
@@ -14,6 +12,10 @@ import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
 } from '~/core/utils/entrypoints';
+import {
+  VirtualEntrypointType,
+  VirtualModuleId,
+} from '~/core/utils/virtual-modules';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
