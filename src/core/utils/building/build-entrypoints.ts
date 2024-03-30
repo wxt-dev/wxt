@@ -5,6 +5,7 @@ import { dirname, resolve } from 'path';
 import type { Ora } from 'ora';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
+import { toArray } from '../arrays';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -13,7 +14,7 @@ export async function buildEntrypoints(
   const steps: BuildStepOutput[] = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
-    const groupNames = [group].flat().map((e) => e.name);
+    const groupNames = toArray(group).map((e) => e.name);
     const groupNameColored = groupNames.join(pc.dim(', '));
     spinner.text =
       pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
