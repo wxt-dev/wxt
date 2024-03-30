@@ -1,5 +1,6 @@
 import type { Manifest, Scripting } from '~/browser';
-import { ContentScriptEntrypoint } from '~/types';
+import { ContentScriptEntrypoint, ResolvedConfig } from '~/types';
+import { getEntrypointBundlePath } from './entrypoints';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -82,4 +83,11 @@ export function mapWxtOptionsToRegisteredContentScript(
     // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
     world: options.world,
   };
+}
+
+export function getContentScriptJs(
+  config: ResolvedConfig,
+  entrypoint: ContentScriptEntrypoint,
+): string[] {
+  return [getEntrypointBundlePath(entrypoint, config.outDir, '.js')];
 }

@@ -26,7 +26,10 @@ import pc from 'picocolors';
 import { relative } from 'node:path';
 import { registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
-import { mapWxtOptionsToRegisteredContentScript } from './utils/content-scripts';
+import {
+  getContentScriptJs,
+  mapWxtOptionsToRegisteredContentScript,
+} from './utils/content-scripts';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -232,7 +235,7 @@ function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
       const entry = step.entrypoints;
       if (Array.isArray(entry) || entry.type !== 'content-script') return;
 
-      const js = [getEntrypointBundlePath(entry, wxt.config.outDir, '.js')];
+      const js = getContentScriptJs(wxt.config, entry);
       const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
       const css = getContentScriptCssFiles([entry], cssMap);
 
