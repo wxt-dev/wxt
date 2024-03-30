@@ -17,7 +17,10 @@ const startTime = Date.now();
 const outDir = 'dist';
 await fs.rm(path.join(outDir, '*'), { recursive: true, force: true });
 
-const virtualModuleEntries: Record<`virtual/${VirtualModuleName}`, string> = {
+const virtualModuleEntries: Record<
+  `virtual/${VirtualModuleName}`,
+  `src/virtual/${VirtualModuleName}.ts`
+> = {
   'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
   'virtual/content-script-isolated-world-entrypoint':
     'src/virtual/content-script-isolated-world-entrypoint.ts',
