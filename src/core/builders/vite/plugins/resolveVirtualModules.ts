@@ -7,6 +7,7 @@ import {
 } from '~/core/utils/virtual-modules';
 import fs from 'fs-extra';
 import { resolve } from 'path';
+import { getEntrypointName } from '~/core/utils/entrypoints';
 
 /**
  * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual` directory.
@@ -30,11 +31,34 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
         if (!id.startsWith(resolvedVirtualId)) return;
 
         const inputPath = id.replace(resolvedVirtualId, '');
+        const entrypointName = getEntrypointName(
+          config.entrypointsDir,
+          inputPath,
+        );
+        if (!entrypointName)
+          throw Error('Entrypoint name could not be detected: ' + inputPath);
+
         const template = await fs.readFile(
           resolve(config.wxtModuleDir, `dist/virtual/${name}.js`),
           'utf-8',
         );
-        return template.replace(`virtual:user-${name}`, inputPath);
+        return template
+          .replace(`virtual:user-${name}`, inputPath)
+          .replaceAll('__ENTRYPOINT__', JSON.stringify(entrypointName))
+          .replaceAll(
+            '__ESM_CONTENT_SCRIPT_URL__',
+            config.dev.server != null
+              ? // Point to virtual entrypoint in dev server
+                JSON.stringify(
+                  `${
+                    config.dev.server.origin
+                  }/virtual:wxt-content-script-isolated-world?${normalizePath(
+                    inputPath,
+                  )}`,
+                )
+              : // Point to file in bundle
+                `chrome.runtime.getURL('/content-scripts/${entrypointName}.js')`,
+          );
       },
     };
   });

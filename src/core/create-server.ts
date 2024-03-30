@@ -44,11 +44,11 @@ export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
   await registerWxt('serve', inlineConfig, async (config) => {
-    const { port, hostname } = config.dev.server!;
+    const { port, hostname, origin } = config.dev.server!;
     const serverInfo: ServerInfo = {
       port,
       hostname,
-      origin: `http://${hostname}:${port}`,
+      origin,
     };
 
     // Server instance must be created first so its reference can be added to the internal config used

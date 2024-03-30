@@ -1,7 +1,9 @@
 import messages from '~/public/_locales/en/messages.json';
 
 export default defineBackground({
+  // TODO: Leave commented out
   // type: 'module',
+  type: 'module',
 
   main() {
     console.log(browser.runtime.id);

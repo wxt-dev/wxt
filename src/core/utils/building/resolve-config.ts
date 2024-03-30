@@ -117,9 +117,11 @@ export async function resolveConfig(
       const { default: getPort, portNumbers } = await import('get-port');
       port = await getPort({ port: portNumbers(3000, 3010) });
     }
+    const hostname = 'localhost';
     devServerConfig = {
       port,
-      hostname: 'localhost',
+      hostname,
+      origin: `http://${hostname}:${port}`,
     };
   }
 

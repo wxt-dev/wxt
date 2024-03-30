@@ -508,7 +508,29 @@ export interface BaseContentScriptEntrypointOptions
   extends BaseEntrypointOptions {
   matches: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
+   * When `undefined`, the content script is bundled individually and executed
+   * based on the `runAt` option.
+   *
+   * When `"module"`, the content script is code-split and bundled as ESM. A
+   * separate loader file is instead listed in the manifest and executed based
+   * the `runAt` option. This loader dynamically imports the ESM content
+   * script, with no guarantee when it will start executing.
+   *
+   * The trade-off between the two options is this: Leaving `type: undefined`
+   * will guarentee that your content script respsects `runAt` at the cost of a
+   * slower build and larger bundle, while `type: "module"` will reduce build
+   * time and overally bundle size at the cost of being ran asynchrouously.
+   */
+  type?: 'module';
+  /**
+   * Tells the browser when to load the content script. See
+   * <https://developer.chrome.com/docs/extensions/mv3/content_scripts/>
+   *
+   * When used alongside `type: "module"`, this tells the browser when to fetch
+   * the ES module, rather than when to actually execute the code, because ESM
+   * content scripts are imported using a
+   * [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import).
+   *
    * @default "documentIdle"
    */
   runAt?: PerBrowserOption<Manifest.ContentScript['run_at']>;
@@ -1087,6 +1109,7 @@ export interface ResolvedConfig {
     server?: {
       port: number;
       hostname: string;
+      origin: string;
     };
     reloadCommand: string | false;
   };
