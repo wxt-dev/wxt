@@ -1,4 +1,4 @@
-import definition from 'virtual:user-background';
+import definition from 'virtual:user-background-entrypoint';
 import { setupWebSocket } from './utils/setup-web-socket';
 import { logger } from '../sandbox/utils/logger';
 import { browser } from 'wxt/browser';

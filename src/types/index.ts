@@ -1103,12 +1103,6 @@ export interface ExtensionRunner {
   closeBrowser(): Promise<void>;
 }
 
-export type VirtualEntrypointType =
-  | 'content-script-main-world'
-  | 'content-script-isolated-world'
-  | 'background'
-  | 'unlisted-script';
-
 export type EslintGlobalsPropValue =
   | boolean
   | 'readonly'

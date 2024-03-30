@@ -1,4 +1,4 @@
-import definition from 'virtual:user-unlisted-script';
+import definition from 'virtual:user-unlisted-script-entrypoint';
 import { logger } from '../sandbox/utils/logger';
 
 (async () => {

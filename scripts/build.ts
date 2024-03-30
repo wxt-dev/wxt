@@ -8,6 +8,10 @@ import { consola } from 'consola';
 import pMap from 'p-map';
 import os from 'node:os';
 import path from 'node:path';
+import {
+  virtualModuleNames,
+  virtualEntrypointModuleNames,
+} from '~/core/utils/virtual-modules';
 
 const spinnerText = 'Building WXT';
 const spinner = ora(spinnerText).start();
@@ -20,12 +24,7 @@ const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
-  external: [
-    'virtual:user-unlisted-script',
-    'virtual:user-content-script-isolated-world',
-    'virtual:user-content-script-main-world',
-    'virtual:user-background',
-  ],
+  external: virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
 } satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
@@ -74,17 +73,13 @@ const config: tsup.Options[] = [
   },
   {
     ...preset,
-    entry: {
-      'virtual/background-entrypoint': 'src/virtual/background-entrypoint.ts',
-      'virtual/content-script-isolated-world-entrypoint':
-        'src/virtual/content-script-isolated-world-entrypoint.ts',
-      'virtual/content-script-main-world-entrypoint':
-        'src/virtual/content-script-main-world-entrypoint.ts',
-      'virtual/mock-browser': 'src/virtual/mock-browser.ts',
-      'virtual/reload-html': 'src/virtual/reload-html.ts',
-      'virtual/unlisted-script-entrypoint':
-        'src/virtual/unlisted-script-entrypoint.ts',
-    },
+    entry: virtualModuleNames.reduce<Record<string, string>>(
+      (acc, moduleName) => {
+        acc[`virtual/${moduleName}`] = `src/virtual/${moduleName}.ts`;
+        return acc;
+      },
+      {},
+    ),
     format: ['esm'],
     splitting: false,
     dts: false,
