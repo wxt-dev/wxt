@@ -5,7 +5,6 @@ import {
   ResolvedConfig,
   VirtualEntrypointType,
   VirtualModuleId,
-  VirtualModuleName,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
