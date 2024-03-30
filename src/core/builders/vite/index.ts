@@ -132,6 +132,9 @@ export async function createViteBuilder(
     const htmlEntrypoints = new Set(
       entrypoints.filter(isHtmlEntrypoint).map((e) => e.name),
     );
+    const esmContentScripts = new Set(
+      entrypoints.filter((e) => e.type === 'content-script').map((e) => e.name),
+    );
     return {
       mode: wxtConfig.mode,
       plugins: [
@@ -141,7 +144,19 @@ export async function createViteBuilder(
       build: {
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
-            input[entry.name] = getRollupEntry(entry);
+            if (entry.type !== 'content-script') {
+              input[entry.name] = getRollupEntry(entry);
+              return input;
+            }
+
+            // All multi-page content scripts are ESM, don't need to check that
+            if (wxtConfig.command !== 'serve') {
+              // Don't build the content script during development - the script
+              // will be loaded directly from dev server via a URL import
+              input[entry.name] = getRollupEntry(entry);
+            }
+            input[`content-scripts/${entry.name}-loader`] =
+              getEsmContentScriptLoaderRollupEntry(entry);
             return input;
           }, {}),
           output: {
@@ -150,11 +165,26 @@ export async function createViteBuilder(
             entryFileNames: ({ name }) => {
               // HTML main JS files go in the chunks folder
               if (htmlEntrypoints.has(name)) return 'chunks/[name]-[hash].js';
+
+              // ESM Content script entrypoints are placed along side content scripts
+              if (esmContentScripts.has(name))
+                return 'content-scripts/[name].js';
+
               // Scripts are output in the root folder
               return '[name].js';
             },
-            // We can't control the "name", so we need a hash to prevent conflicts
-            assetFileNames: 'assets/[name]-[hash].[ext]',
+            assetFileNames: (asset) => {
+              if (
+                asset.name &&
+                esmContentScripts.has(asset.name.replace('.css', ''))
+              ) {
+                // Place ESM content script stylesheets along side the scripts
+                return 'content-scripts/[name].[ext]';
+              }
+
+              // We can't control the "name" for HTML CSS chunks, so we need a hash to prevent conflicts
+              return 'assets/[name]-[hash].[ext]';
+            },
           },
         },
       },
@@ -276,4 +306,10 @@ function getRollupEntry(entrypoint: Entrypoint): string {
     return `${moduleId}?${entrypoint.inputPath}`;
   }
   return entrypoint.inputPath;
+}
+
+function getEsmContentScriptLoaderRollupEntry(entrypoint: Entrypoint): string {
+  const moduleId: VirtualModuleId =
+    'virtual:wxt-content-script-loader-entrypoint';
+  return `${moduleId}?${entrypoint.inputPath}`;
 }

@@ -42,23 +42,21 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
           resolve(config.wxtModuleDir, `dist/virtual/${name}.js`),
           'utf-8',
         );
+
+        let esmContentScriptUrl = `chrome.runtime.getURL('/content-scripts/${entrypointName}.js')`;
+        if (config.dev.server) {
+          // TODO: Support ESM main world content scripts;
+          const loaderId: VirtualModuleId =
+            'virtual:wxt-content-script-isolated-world-entrypoint';
+          const query = normalizePath(inputPath);
+          const url = `${config.dev.server.origin}/${loaderId}?${query}`;
+          esmContentScriptUrl = JSON.stringify(url);
+        }
+
         return template
           .replace(`virtual:user-${name}`, inputPath)
           .replaceAll('__ENTRYPOINT__', JSON.stringify(entrypointName))
-          .replaceAll(
-            '__ESM_CONTENT_SCRIPT_URL__',
-            config.dev.server != null
-              ? // Point to virtual entrypoint in dev server
-                JSON.stringify(
-                  `${
-                    config.dev.server.origin
-                  }/virtual:wxt-content-script-isolated-world?${normalizePath(
-                    inputPath,
-                  )}`,
-                )
-              : // Point to file in bundle
-                `chrome.runtime.getURL('/content-scripts/${entrypointName}.js')`,
-          );
+          .replaceAll('__ESM_CONTENT_SCRIPT_URL__', esmContentScriptUrl);
       },
     };
   });
