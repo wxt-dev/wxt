@@ -12,7 +12,7 @@ let reactRefreshPreamble = '';
  * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
  */
 export function devHtmlPrerender(
-  config: Omit<ResolvedConfig, 'builder'>,
+  config: ResolvedConfig,
   server: WxtDevServer | undefined,
 ): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
@@ -133,7 +133,7 @@ export function devHtmlPrerender(
 }
 
 export function pointToDevServer(
-  config: Omit<ResolvedConfig, 'builder'>,
+  config: ResolvedConfig,
   server: WxtDevServer,
   id: string,
   document: Document,

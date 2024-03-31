@@ -26,7 +26,7 @@ export async function isOnline(): Promise<boolean> {
  */
 export async function fetchCached(
   url: string,
-  config: Omit<ResolvedConfig, 'builder'>,
+  config: ResolvedConfig,
 ): Promise<string> {
   let content: string = '';
 

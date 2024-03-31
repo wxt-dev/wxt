@@ -16,7 +16,7 @@ import { ResolvedConfig } from '~/types';
  * `npm list` and inline them automatically.
  */
 export function webextensionPolyfillMock(
-  config: Omit<ResolvedConfig, 'builder'>,
+  config: ResolvedConfig,
 ): vite.PluginOption {
   return {
     name: 'wxt:testing-inline-deps',

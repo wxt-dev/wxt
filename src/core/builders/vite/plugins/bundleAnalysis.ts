@@ -5,9 +5,7 @@ import path from 'node:path';
 
 let increment = 0;
 
-export function bundleAnalysis(
-  config: Omit<ResolvedConfig, 'builder'>,
-): vite.Plugin {
+export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
   return visualizer({
     template: 'raw-data',
     filename: path.resolve(

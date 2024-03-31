@@ -1,7 +1,7 @@
 import { ResolvedConfig } from '~/types';
 
 export function getGlobals(
-  config: Omit<ResolvedConfig, 'builder'>,
+  config: ResolvedConfig,
 ): Array<{ name: string; value: any; type: string }> {
   return [
     {

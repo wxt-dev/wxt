@@ -2,9 +2,7 @@ import type * as vite from 'vite';
 import { ResolvedConfig } from '~/types';
 import { getGlobals } from '~/core/utils/globals';
 
-export function globals(
-  config: Omit<ResolvedConfig, 'builder'>,
-): vite.PluginOption {
+export function globals(config: ResolvedConfig): vite.PluginOption {
   return {
     name: 'wxt:globals',
     config() {

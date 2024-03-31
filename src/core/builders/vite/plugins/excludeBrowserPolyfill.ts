@@ -6,9 +6,7 @@ import type * as vite from 'vite';
  * `webextension-polyfill` module to a virtual module and exporting the `chrome` global from the
  * virtual module.
  */
-export function excludeBrowserPolyfill(
-  config: Omit<ResolvedConfig, 'builder'>,
-): vite.Plugin {
+export function excludeBrowserPolyfill(config: ResolvedConfig): vite.Plugin {
   const virtualId = 'virtual:wxt-webextension-polyfill-disabled';
 
   return {
