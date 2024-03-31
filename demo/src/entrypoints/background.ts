@@ -1,4 +1,4 @@
-import messages from 'public/_locales/en/messages.json';
+import messages from '~/public/_locales/en/messages.json';
 
 export default defineBackground({
   // type: 'module',

@@ -35,6 +35,8 @@ export async function createViteBuilder(
     config.mode = wxtConfig.mode;
 
     config.build ??= {};
+    config.publicDir = wxtConfig.publicDir;
+    config.build.copyPublicDir = false;
     config.build.outDir = wxtConfig.outDir;
     config.build.emptyOutDir = false;
     // Disable minification for the dev command
