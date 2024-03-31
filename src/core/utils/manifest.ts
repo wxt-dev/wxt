@@ -10,9 +10,13 @@ import {
 } from '~/types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
-import { getEntrypointBundlePath } from './entrypoints';
+import {
+  getEntrypointBundlePath,
+  resolvePerBrowserOption,
+} from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
 import {
+  getContentScriptJs,
   hashContentScriptOptions,
   mapWxtOptionsToContentScript,
 } from './content-scripts';
@@ -379,9 +383,7 @@ function addEntrypoints(
       ).map((scripts) =>
         mapWxtOptionsToContentScript(
           scripts[0].options,
-          scripts.map((entry) =>
-            getEntrypointBundlePath(entry, wxt.config.outDir, '.js'),
-          ),
+          scripts.flatMap((entry) => getContentScriptJs(wxt.config, entry)),
           getContentScriptCssFiles(scripts, cssMap),
         ),
       );
@@ -409,7 +411,7 @@ function addEntrypoints(
       });
     }
 
-    const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
+    const contentScriptCssResources = getContentScriptWebAccessibleResources(
       contentScripts,
       cssMap,
     );
@@ -523,29 +525,76 @@ export function getContentScriptCssFiles(
  * Content scripts configured with `cssInjectionMode: "ui"` need to add their CSS files to web
  * accessible resources so they can be fetched as text and added to shadow roots that the UI is
  * added to.
+ *
+ * ESM content scripts also need to load scripts that are web accessible. `chunks/*` and
+ * `content-scripts/<name>.js` or else the dynamic import will fail.
  */
-export function getContentScriptCssWebAccessibleResources(
+export function getContentScriptWebAccessibleResources(
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
 ): any[] {
-  const resources: Manifest.WebExtensionManifestWebAccessibleResourcesC2ItemType[] =
-    [];
+  const resources: any[] = [];
 
   contentScripts.forEach((script) => {
-    if (script.options.cssInjectionMode !== 'ui') return;
-
-    const cssFile = contentScriptCssMap[script.name];
-    if (cssFile == null) return;
-
-    resources.push({
-      resources: [cssFile],
-      matches: script.options.matches.map((matchPattern) =>
-        stripPathFromMatchPattern(matchPattern),
-      ),
-    });
+    addContentScriptUiWebAccessibleResource(
+      script,
+      resources,
+      contentScriptCssMap,
+    );
+    addContentScriptEsmWebAccessibleResource(script, resources);
   });
 
   return resources;
+}
+
+function addContentScriptUiWebAccessibleResource(
+  entrypoint: ContentScriptEntrypoint,
+  resources: any[],
+  contentScriptCssMap: Record<string, string | undefined>,
+): any | undefined {
+  if (entrypoint.options.cssInjectionMode !== 'ui') return;
+
+  const cssFile = contentScriptCssMap[entrypoint.name];
+  if (cssFile == null) return;
+
+  if (wxt.config.manifestVersion === 2) {
+    resources.push(cssFile);
+  } else {
+    resources.push({
+      resources: [cssFile],
+      matches: getWebAccessibleMatches(entrypoint),
+    });
+  }
+}
+
+function addContentScriptEsmWebAccessibleResource(
+  entrypoint: ContentScriptEntrypoint,
+  resources: any[],
+): any | undefined {
+  if (entrypoint.options.type !== 'module') return;
+
+  const paths = [
+    getEntrypointBundlePath(entrypoint, wxt.config.outDir, '.js'),
+    // Cheating here and adding all chunks instead of just the ones used by the content script
+    'chunks/*',
+  ];
+  if (wxt.config.manifestVersion === 2) {
+    resources.push(...paths);
+  } else {
+    resources.push({
+      resources: paths,
+      matches: getWebAccessibleMatches(entrypoint),
+    });
+  }
+}
+
+function getWebAccessibleMatches(
+  entrypoint: ContentScriptEntrypoint,
+): string[] {
+  return resolvePerBrowserOption(
+    entrypoint.options.matches,
+    wxt.config.browser,
+  ).map((matchPattern) => stripPathFromMatchPattern(matchPattern));
 }
 
 /**

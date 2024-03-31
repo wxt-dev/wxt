@@ -89,5 +89,14 @@ export function getContentScriptJs(
   config: ResolvedConfig,
   entrypoint: ContentScriptEntrypoint,
 ): string[] {
+  if (entrypoint.options.type === 'module') {
+    entrypoint = getEsmLoaderEntrypoint(entrypoint);
+  }
   return [getEntrypointBundlePath(entrypoint, config.outDir, '.js')];
+}
+
+export function getEsmLoaderEntrypoint(
+  entrypoint: ContentScriptEntrypoint,
+): ContentScriptEntrypoint {
+  return { ...entrypoint, name: `${entrypoint.name}-loader` };
 }

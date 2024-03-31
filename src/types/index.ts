@@ -520,6 +520,8 @@ export interface BaseContentScriptEntrypointOptions
    * will guarentee that your content script respsects `runAt` at the cost of a
    * slower build and larger bundle, while `type: "module"` will reduce build
    * time and overally bundle size at the cost of being ran asynchrouously.
+   *
+   * @default undefined
    */
   type?: 'module';
   /**

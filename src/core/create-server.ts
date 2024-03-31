@@ -30,6 +30,7 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
+import { toArray } from './utils/arrays';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -232,20 +233,21 @@ function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
     steps.forEach((step) => {
       if (server.currentOutput == null) return;
 
-      const entry = step.entrypoints;
-      if (Array.isArray(entry) || entry.type !== 'content-script') return;
+      toArray(step.entrypoints).forEach((entry) => {
+        if (entry.type !== 'content-script') return;
 
-      const js = getContentScriptJs(wxt.config, entry);
-      const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
-      const css = getContentScriptCssFiles([entry], cssMap);
+        const js = getContentScriptJs(wxt.config, entry);
+        const cssMap = getContentScriptsCssMap(server.currentOutput!, [entry]);
+        const css = getContentScriptCssFiles([entry], cssMap);
 
-      server.reloadContentScript({
-        registration: entry.options.registration,
-        contentScript: mapWxtOptionsToRegisteredContentScript(
-          entry.options,
-          js,
-          css,
-        ),
+        server.reloadContentScript({
+          registration: entry.options.registration,
+          contentScript: mapWxtOptionsToRegisteredContentScript(
+            entry.options,
+            js,
+            css,
+          ),
+        });
       });
     });
   } else {
