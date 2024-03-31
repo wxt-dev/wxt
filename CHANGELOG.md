@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.17.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.10...v0.17.11)
+
+### 🩹 Fixes
+
+- Resolve absolute paths from the public directory properly ([#583](https://github.com/wxt-dev/wxt/pull/583))
+
+### 📖 Documentation
+
+- Fix `zip.includeSources` example ([16fc584](https://github.com/wxt-dev/wxt/commit/16fc584))
+- Add "GitHub Custom Notifier" to homepage ([#580](https://github.com/wxt-dev/wxt/pull/580))
+
+### 🏡 Chore
+
+- Simplify virtual module setup ([#581](https://github.com/wxt-dev/wxt/pull/581))
+- Add some array utils ([#582](https://github.com/wxt-dev/wxt/pull/582))
+- Extract helper function ([d3b14af](https://github.com/wxt-dev/wxt/commit/d3b14af))
+
+### ❤️ Contributors
+
+- Qiwei Yang ([@qiweiii](http://github.com/qiweiii))
+
 ## v0.17.10
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.9...v0.17.10)
