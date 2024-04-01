@@ -125,7 +125,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.1.1
-        version: 1.1.1(typescript@5.3.3)
+        version: 1.2.0(typescript@5.3.3)
       '@faker-js/faker':
         specifier: ^8.3.1
         version: 8.3.1
@@ -241,8 +241,8 @@ importers:
 
 packages:
 
-  /@aklinker1/check@1.1.1(typescript@5.3.3):
-    resolution: {integrity: sha512-P6+vKw9Qm4y3newTcKt4kfxr4cCZgjaoDpCddpqutTZm6bKTgpmtUQNUzWbmpT/V41+86wNAko/jh58Klmn/5A==}
+  /@aklinker1/check@1.2.0(typescript@5.3.3):
+    resolution: {integrity: sha512-8GEoPcifx5f7Yx2t1KCGEQyrLOOb2ErP3cG+H1+TwWBYjkT2HV9ZHCLYy0Ws8CET8VeUcKDvLKmn2DW3HBt+FA==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -1929,7 +1929,6 @@ packages:
   /ci-info@4.0.0:
     resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
     engines: {node: '>=8'}
-    dev: true
 
   /citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
