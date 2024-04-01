@@ -1,3 +1,3 @@
-import { fakeBrowser as mockBrowser } from 'wxt/testing';
+import { fakeBrowser as mockBrowser } from '../testing';
 
 export default mockBrowser;

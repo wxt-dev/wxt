@@ -29,11 +29,15 @@ export function webextensionPolyfillMock(
               config.wxtModuleDir,
               'dist/virtual/mock-browser',
             ),
+            'wxt/browser': path.resolve(
+              config.wxtModuleDir,
+              'dist/virtual/mock-browser',
+            ),
           },
         },
         ssr: {
           // Inline all WXT modules
-          noExternal: ['wxt'],
+          noExternal: ['wxt', 'wxt/client', 'wxt/browser', 'wxt/storage'],
         },
       };
     },

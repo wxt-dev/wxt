@@ -63,9 +63,11 @@ export async function createViteBuilder(
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
-      wxtPlugins.excludeBrowserPolyfill(wxtConfig),
       wxtPlugins.defineImportMeta(),
     );
+    if (!wxtConfig.experimental.includeBrowserPolyfill) {
+      config.plugins.push(wxtPlugins.excludeBrowserPolyfill());
+    }
     if (wxtConfig.analysis.enabled) {
       config.plugins.push(wxtPlugins.bundleAnalysis(wxtConfig));
     }
@@ -258,6 +260,38 @@ export async function createViteBuilder(
       };
 
       return server;
+    },
+    async createRuntime() {
+      const config = vite.mergeConfig<vite.InlineConfig, vite.InlineConfig>(
+        await getBaseConfig(),
+        {
+          plugins: [
+            wxtPlugins.webextensionPolyfillMock(wxtConfig),
+            wxtPlugins.excludeBrowserPolyfill(),
+            {
+              name: 'debug',
+              resolveId: {
+                order: 'pre',
+                handler(id) {
+                  console.log('resolveId', id);
+                },
+              },
+              load: {
+                order: 'pre',
+                handler(id) {
+                  console.log('load', id);
+                },
+              },
+            },
+          ],
+        },
+      );
+      const server = await vite.createServer(config);
+      const runtime = await vite.createViteRuntime(server);
+      return {
+        importFile: (path) => runtime.executeUrl(path),
+        close: () => server.close(),
+      };
     },
   };
 }

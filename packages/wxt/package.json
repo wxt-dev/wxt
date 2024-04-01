@@ -22,10 +22,7 @@
     "email": "aaronklinker1+wxt@gmail.com"
   },
   "license": "MIT",
-  "files": [
-    "bin",
-    "dist"
-  ],
+  "files": ["bin", "dist"],
   "bin": {
     "wxt": "./bin/wxt.mjs",
     "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
@@ -83,7 +80,7 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "tsx scripts/build.ts",
-    "check": "run-s -c check:*",
+    "check": "run-s check:*",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
@@ -115,6 +112,7 @@
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
     "linkedom": "^0.16.1",
+    "magicast": "^0.3.3",
     "minimatch": "^9.0.3",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",

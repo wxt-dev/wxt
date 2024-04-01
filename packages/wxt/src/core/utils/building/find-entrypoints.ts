@@ -19,7 +19,6 @@ import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import { importEntrypointFile } from '~/core/utils/building';
 import glob from 'fast-glob';
 import {
   getEntrypointName,
@@ -68,59 +67,78 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   preventDuplicateEntrypointNames(entrypointInfos);
 
   // Import entrypoints to get their config
+  const runtime = await wxt.builder.createRuntime();
   let hasBackground = false;
-  const entrypoints: Entrypoint[] = await Promise.all(
-    entrypointInfos.map(async (info): Promise<Entrypoint> => {
-      const { type } = info;
-      switch (type) {
-        case 'popup':
-          return await getPopupEntrypoint(info);
-        case 'sidepanel':
-          return await getSidepanelEntrypoint(info);
-        case 'options':
-          return await getOptionsEntrypoint(info);
-        case 'background':
-          hasBackground = true;
-          return await getBackgroundEntrypoint(info);
-        case 'content-script':
-          return await getContentScriptEntrypoint(info);
-        case 'unlisted-page':
-          return await getUnlistedPageEntrypoint(info);
-        case 'unlisted-script':
-          return await getUnlistedScriptEntrypoint(info);
-        case 'content-script-style':
-          return {
-            ...info,
-            type,
-            outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
-            options: {
-              include: undefined,
-              exclude: undefined,
-            },
-          };
-        default:
-          return {
-            ...info,
-            type,
-            outputDir: wxt.config.outDir,
-            options: {
-              include: undefined,
-              exclude: undefined,
-            },
-          };
+  const entrypoints: Entrypoint[] = [];
+
+  const doit = async (info: EntrypointInfo) => {
+    const importDefinition = async () => {
+      try {
+        const { default: definition } = await runtime.importFile<{
+          default: any;
+        }>(info.inputPath);
+        return definition;
+      } catch (err) {
+        console.error(info, err.message);
+        throw err;
       }
-    }),
-  );
+    };
+    const { type } = info;
+    switch (type) {
+      case 'popup':
+        return await getPopupEntrypoint(info);
+      case 'sidepanel':
+        return await getSidepanelEntrypoint(info);
+      case 'options':
+        return await getOptionsEntrypoint(info);
+      case 'background':
+        hasBackground = true;
+        return await getBackgroundEntrypoint(await importDefinition(), info);
+      case 'content-script':
+        return await getContentScriptEntrypoint(await importDefinition(), info);
+      case 'unlisted-page':
+        return await getUnlistedPageEntrypoint(info);
+      case 'unlisted-script':
+        return await getUnlistedScriptEntrypoint(
+          await importDefinition(),
+          info,
+        );
+      case 'content-script-style':
+        return {
+          ...info,
+          type,
+          outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
+          options: {
+            include: undefined,
+            exclude: undefined,
+          },
+        };
+      default:
+        return {
+          ...info,
+          type,
+          outputDir: wxt.config.outDir,
+          options: {
+            include: undefined,
+            exclude: undefined,
+          },
+        };
+    }
+  };
+
+  for (const info of entrypointInfos) {
+    entrypoints.push(await doit(info));
+  }
 
   if (wxt.config.command === 'serve' && !hasBackground) {
-    entrypoints.push(
-      await getBackgroundEntrypoint({
-        inputPath: VIRTUAL_NOOP_BACKGROUND_MODULE_ID,
-        name: 'background',
-        type: 'background',
-        skipped: false,
-      }),
-    );
+    entrypoints.push({
+      type: 'background',
+      inputPath: VIRTUAL_NOOP_BACKGROUND_MODULE_ID,
+      name: 'background',
+      outputDir: wxt.config.outDir,
+      skipped: false,
+      options: {},
+    });
   }
 
   wxt.logger.debug('All entrypoints:', entrypoints);
@@ -280,19 +298,16 @@ async function getUnlistedPageEntrypoint(
   };
 }
 
-async function getUnlistedScriptEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<GenericEntrypoint> {
-  const defaultExport =
-    await importEntrypointFile<UnlistedScriptDefinition>(inputPath);
-  if (defaultExport == null) {
+async function getUnlistedScriptEntrypoint(
+  definition: UnlistedScriptDefinition,
+  { inputPath, name, skipped }: EntrypointInfo,
+): Promise<GenericEntrypoint> {
+  if (definition == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
     );
   }
-  const { main: _, ...options } = defaultExport;
+  const { main: _, ...options } = definition;
   return {
     type: 'unlisted-script',
     name,
@@ -303,23 +318,16 @@ async function getUnlistedScriptEntrypoint({
   };
 }
 
-async function getBackgroundEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<BackgroundEntrypoint> {
-  let options: Omit<BackgroundDefinition, 'main'> = {};
-  if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
-    const defaultExport =
-      await importEntrypointFile<BackgroundDefinition>(inputPath);
-    if (defaultExport == null) {
-      throw Error(
-        `${name}: Default export not found, did you forget to call "export default defineBackground(...)"?`,
-      );
-    }
-    const { main: _, ...moduleOptions } = defaultExport;
-    options = moduleOptions;
+async function getBackgroundEntrypoint(
+  definition: BackgroundDefinition,
+  { inputPath, name, skipped }: EntrypointInfo,
+): Promise<BackgroundEntrypoint> {
+  if (definition == null) {
+    throw Error(
+      `${name}: Default export not found, did you forget to call "export default defineBackground(...)"?`,
+    );
   }
+  const { main: _, ...options } = definition;
 
   if (wxt.config.manifestVersion !== 3) {
     delete options.type;
@@ -335,13 +343,11 @@ async function getBackgroundEntrypoint({
   };
 }
 
-async function getContentScriptEntrypoint({
-  inputPath,
-  name,
-  skipped,
-}: EntrypointInfo): Promise<ContentScriptEntrypoint> {
-  const { main: _, ...options } =
-    await importEntrypointFile<ContentScriptDefinition>(inputPath);
+async function getContentScriptEntrypoint(
+  definition: ContentScriptDefinition,
+  { inputPath, name, skipped }: EntrypointInfo,
+): Promise<ContentScriptEntrypoint> {
+  const { main: _, ...options } = definition;
   if (options == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
