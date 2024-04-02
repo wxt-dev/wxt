@@ -146,6 +146,9 @@ export default defineConfig({
       ],
     },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/wxt-dev/wxt' }],
+    socialLinks: [
+      { icon: 'discord', link: 'https://discord.gg/ZFsZqGery9' },
+      { icon: 'github', link: 'https://github.com/wxt-dev/wxt' },
+    ],
   },
 });

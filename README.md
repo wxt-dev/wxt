@@ -29,6 +29,8 @@
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
   &bull;
   <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
+  &bull;
+  <a href="https://discord.gg/ZFsZqGery9" target="_blank">Discord</a>
 </p>
 
 ![Example CLI Output](./docs/assets/cli-output.png)
