@@ -35,12 +35,15 @@ export function createIntegratedUi<TMounted>(
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
+    mounted = undefined;
   };
 
   ctx.onInvalidated(remove);
 
   return {
-    mounted,
+    get mounted() {
+      return mounted;
+    },
     wrapper,
     mount,
     remove,
@@ -71,12 +74,15 @@ export function createIframeUi<TMounted>(
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
+    mounted = undefined;
   };
 
   ctx.onInvalidated(remove);
 
   return {
-    mounted,
+    get mounted() {
+      return mounted;
+    },
     iframe,
     wrapper,
     mount,
@@ -116,7 +122,7 @@ export async function createShadowRootUi<TMounted>(
   });
   shadowHost.setAttribute('data-wxt-shadow-root', '');
 
-  let mounted: TMounted;
+  let mounted: TMounted | undefined;
 
   const mount = () => {
     // Add shadow root element to DOM
@@ -134,6 +140,8 @@ export async function createShadowRootUi<TMounted>(
     // Remove children from uiContainer
     while (uiContainer.lastChild)
       uiContainer.removeChild(uiContainer.lastChild);
+    // Clear mounted value
+    mounted = undefined;
   };
 
   ctx.onInvalidated(remove);
@@ -144,7 +152,9 @@ export async function createShadowRootUi<TMounted>(
     uiContainer,
     mount,
     remove,
-    mounted: mounted!,
+    get mounted() {
+      return mounted;
+    },
   };
 }
 
