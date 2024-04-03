@@ -22,8 +22,8 @@ import { toArray } from '~/core/utils/arrays';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
-  server?: WxtDevServer,
   hooks: Hookable<WxtHooks>,
+  server?: WxtDevServer,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
