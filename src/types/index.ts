@@ -361,6 +361,28 @@ export type WxtViteConfig = Omit<
   'root' | 'configFile' | 'mode'
 >;
 
+// TODO: Move into @wxt/vite-builder
+export interface WxtHooks {
+  /**
+   * Called when WXT has created Vite's config for a build step. Useful if you
+   * want to add plugins or update the vite config per entrypoint group.
+   *
+   * @param entrypoints The list of entrypoints being built with the provided config.
+   * @param viteConfig The config that will be used for the dev server.
+   */
+  'vite:build:extendConfig': (
+    entrypoints: readonly Entrypoint[],
+    viteConfig: vite.InlineConfig,
+  ) => HookResult;
+  /**
+   * Called when WXT has created Vite's config for the dev server. Useful if
+   * you want to add plugins or update the vite config per entrypoint group.
+   *
+   * @param viteConfig The config that will be used to build the entrypoints. Can be updated by reference.
+   */
+  'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
+}
+
 export interface BuildOutput {
   manifest: Manifest.WebExtensionManifest;
   publicAssets: OutputAsset[];

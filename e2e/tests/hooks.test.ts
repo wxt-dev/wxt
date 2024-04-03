@@ -9,16 +9,21 @@ const hooks: WxtHooks = {
   'build:manifestGenerated': vi.fn(),
   'entrypoints:resolved': vi.fn(),
   'entrypoints:grouped': vi.fn(),
+  'vite:build:extendConfig': vi.fn(),
+  'vite:devServer:extendConfig': vi.fn(),
 };
 
-function expectHooksToBeCalled(called: Record<keyof WxtHooks, boolean>) {
+function expectHooksToBeCalled(
+  called: Record<keyof WxtHooks, boolean | number>,
+) {
   Object.keys(hooks).forEach((key) => {
     const hookName = key as keyof WxtHooks;
-    const times = called[hookName] ? 1 : 0;
+    const value = called[hookName];
+    const times = typeof value === 'number' ? value : value ? 1 : 0;
     expect(
       hooks[hookName],
       `Expected "${hookName}" to be called ${times} time(s)`,
-    ).toBeCalledTimes(called[hookName] ? 1 : 0);
+    ).toBeCalledTimes(times);
   });
 }
 
@@ -40,6 +45,8 @@ describe('Hooks', () => {
       'build:manifestGenerated': false,
       'entrypoints:grouped': false,
       'entrypoints:resolved': true,
+      'vite:build:extendConfig': false,
+      'vite:devServer:extendConfig': false,
     });
   });
 
@@ -56,6 +63,8 @@ describe('Hooks', () => {
       'build:manifestGenerated': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
+      'vite:build:extendConfig': 1,
+      'vite:devServer:extendConfig': false,
     });
   });
 
@@ -72,6 +81,8 @@ describe('Hooks', () => {
       'build:manifestGenerated': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
+      'vite:build:extendConfig': 1,
+      'vite:devServer:extendConfig': false,
     });
   });
 
@@ -94,6 +105,8 @@ describe('Hooks', () => {
       'build:manifestGenerated': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
+      'vite:build:extendConfig': 2,
+      'vite:devServer:extendConfig': 1,
     });
   });
 });

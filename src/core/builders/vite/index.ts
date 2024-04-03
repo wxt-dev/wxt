@@ -6,6 +6,7 @@ import {
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
+  WxtHooks,
 } from '~/types';
 import * as wxtPlugins from './plugins';
 import {
@@ -16,9 +17,12 @@ import {
   VirtualEntrypointType,
   VirtualModuleId,
 } from '~/core/utils/virtual-modules';
+import { Hookable } from 'hookable';
+import { toArray } from '~/core/utils/arrays';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
+  hooks: Hookable<WxtHooks>,
   server?: WxtDevServer,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
@@ -27,7 +31,9 @@ export async function createViteBuilder(
    * Returns the base vite config shared by all builds based on the inline and user config.
    */
   const getBaseConfig = async () => {
-    const config: vite.InlineConfig = await wxtConfig.vite(wxtConfig.env);
+    const config: vite.InlineConfig = await wxtConfig.vite({
+      ...wxtConfig.env,
+    });
 
     config.root = wxtConfig.root;
     config.configFile = false;
@@ -198,6 +204,11 @@ export async function createViteBuilder(
       else entryConfig = getLibModeConfig(group);
 
       const buildConfig = vite.mergeConfig(await getBaseConfig(), entryConfig);
+      await hooks.callHook(
+        'vite:build:extendConfig',
+        toArray(group),
+        buildConfig,
+      );
       const result = await vite.build(buildConfig);
       return {
         entrypoints: group,
@@ -214,9 +225,9 @@ export async function createViteBuilder(
         },
       };
       const baseConfig = await getBaseConfig();
-      const viteServer = await vite.createServer(
-        vite.mergeConfig(baseConfig, serverConfig),
-      );
+      const finalConfig = vite.mergeConfig(baseConfig, serverConfig);
+      await hooks.callHook('vite:devServer:extendConfig', finalConfig);
+      const viteServer = await vite.createServer(finalConfig);
 
       const server: WxtBuilderServer = {
         async listen() {
