@@ -31,9 +31,7 @@ export async function createViteBuilder(
    * Returns the base vite config shared by all builds based on the inline and user config.
    */
   const getBaseConfig = async () => {
-    const config: vite.InlineConfig = await wxtConfig.vite({
-      ...wxtConfig.env,
-    });
+    const config: vite.InlineConfig = await wxtConfig.vite(wxtConfig.env);
 
     config.root = wxtConfig.root;
     config.configFile = false;
