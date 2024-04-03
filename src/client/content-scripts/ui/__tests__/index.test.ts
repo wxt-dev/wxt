@@ -404,4 +404,62 @@ describe('Content Script UIs', () => {
       });
     });
   });
+
+  describe('mounted value', () => {
+    describe('integrated', () => {
+      it('should set the mounted value based on the onMounted return value', () => {
+        const expected = Symbol();
+
+        const ui = createIntegratedUi(new ContentScriptContext('test'), {
+          position: 'inline',
+          onMount: () => expected,
+        });
+        expect(ui.mounted).toBeUndefined();
+
+        ui.mount();
+        expect(ui.mounted).toBe(expected);
+
+        ui.remove();
+        expect(ui.mounted).toBeUndefined();
+      });
+    });
+
+    describe('iframe', () => {
+      it('should set the mounted value based on the onMounted return value', async () => {
+        const expected = Symbol();
+
+        const ui = createIframeUi(new ContentScriptContext('test'), {
+          page: '',
+          position: 'inline',
+          onMount: () => expected,
+        });
+        expect(ui.mounted).toBeUndefined();
+
+        ui.mount();
+        expect(ui.mounted).toBe(expected);
+
+        ui.remove();
+        expect(ui.mounted).toBeUndefined();
+      });
+    });
+
+    describe('shadow-root', () => {
+      it('should set the mounted value based on the onMounted return value', async () => {
+        const expected = Symbol();
+
+        const ui = await createShadowRootUi(new ContentScriptContext('test'), {
+          name: 'test',
+          position: 'inline',
+          onMount: () => expected,
+        });
+        expect(ui.mounted).toBeUndefined();
+
+        ui.mount();
+        expect(ui.mounted).toBe(expected);
+
+        ui.remove();
+        expect(ui.mounted).toBeUndefined();
+      });
+    });
+  });
 });
