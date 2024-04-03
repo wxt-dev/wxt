@@ -1,4 +1,4 @@
-import { defineConfig } from 'wxt';
+import { defineConfig, scopedVitePlugin } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
@@ -18,4 +18,14 @@ export default defineConfig({
   analysis: {
     open: true,
   },
+  vite: () => ({
+    plugins: [
+      scopedVitePlugin(['popup', 'ui'], () => ({
+        name: 'TEST',
+        config() {
+          console.log('SCOPE APPLIED!');
+        },
+      })),
+    ],
+  }),
 });
