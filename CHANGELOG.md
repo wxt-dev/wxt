@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.17.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.11...v0.17.12)
+
+### 🚀 Enhancements
+
+- Add hooks for extending vite config ([#599](https://github.com/wxt-dev/wxt/pull/599))
+
+### 🩹 Fixes
+
+- **content-script-ui:** Properly assign and unassign mounted value ([#598](https://github.com/wxt-dev/wxt/pull/598))
+
+### 📖 Documentation
+
+- Add discord server link ([#593](https://github.com/wxt-dev/wxt/pull/593))
+
+### 🏡 Chore
+
+- Remove unnecssary 'Omit' types ([db57c8e](https://github.com/wxt-dev/wxt/commit/db57c8e))
+- **deps-dev:** Bump @aklinker1/check from 1.1.1 to 1.2.0 ([#588](https://github.com/wxt-dev/wxt/pull/588))
+- **deps-dev:** Bump vue from 3.3.10 to 3.4.21 ([#589](https://github.com/wxt-dev/wxt/pull/589))
+- **deps-dev:** Bump sass from 1.69.5 to 1.72.0 ([#591](https://github.com/wxt-dev/wxt/pull/591))
+
 ## v0.17.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.10...v0.17.11)
