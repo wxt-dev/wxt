@@ -367,8 +367,8 @@ export interface WxtHooks {
    * Called when WXT has created Vite's config for a build step. Useful if you
    * want to add plugins or update the vite config per entrypoint group.
    *
-   * @param wxt The configured WXT object.
-   * @param config The config that will be used for the dev server.
+   * @param entrypoints The list of entrypoints being built with the provided config.
+   * @param viteConfig The config that will be used for the dev server.
    */
   'vite:build:extendConfig': (
     entrypoints: readonly Entrypoint[],
@@ -378,8 +378,7 @@ export interface WxtHooks {
    * Called when WXT has created Vite's config for the dev server. Useful if
    * you want to add plugins or update the vite config per entrypoint group.
    *
-   * @param wxt The configured WXT object.
-   * @param config The config that will be used to build the entrypoints. Can be updated by reference.
+   * @param viteConfig The config that will be used to build the entrypoints. Can be updated by reference.
    */
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
 }
