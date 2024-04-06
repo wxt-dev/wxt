@@ -30,8 +30,8 @@ const sortedExtensions = computed(() => {
   if (!data.value?.length) return [];
 
   return [...data.value]
-    。filter((item) => item != null)
-    。map((item) => ({
+    .filter((item) => item != null)
+    .map((item) => ({
       ...item,
       // Sort based on the user count weighted by the rating
       sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
