@@ -22,6 +22,7 @@ const chromeExtensionIds = [
   'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
   'ceicccfeikoipigeghddpocceifjelph', // Plex Skipper
   'aelkipgppclpfimeamgmlonimflbhlgf', // GitHub Custom Notifier
+  'djnlaiohfaaifbibleebjggkghlmcpcj', // Fluent Read
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
