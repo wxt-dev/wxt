@@ -6,6 +6,7 @@ import path from 'node:path';
 let increment = 0;
 
 export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
+  // @ts-expect-error: Vite/Rollup type mismatch, but it's fine.
   return visualizer({
     template: 'raw-data',
     filename: path.resolve(
