@@ -202,6 +202,14 @@ export interface InlineConfig {
      * ["@scope/package-name@1.1.3", "package-name@^2"]
      */
     downloadPackages?: string[];
+    /**
+     * Compression level to use when zipping files.
+     *
+     * Levels: 0 (no compression) to 9 (maximum compression).
+     *
+     * @default 9
+     */
+    compressionLevel?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   };
 
   /**
@@ -1079,6 +1087,7 @@ export interface ResolvedConfig {
     sourcesRoot: string;
     downloadedPackagesDir: string;
     downloadPackages: string[];
+    compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.

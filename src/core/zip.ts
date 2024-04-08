@@ -135,7 +135,15 @@ async function zipDir(
     }
   }
   await options?.additionalWork?.(archive);
-  const buffer = await archive.generateAsync({ type: 'base64' });
+  const buffer = await archive.generateAsync({
+    type: 'base64',
+    ...(wxt.config.zip.compressionLevel === 0
+      ? { compression: 'STORE' }
+      : {
+          compression: 'DEFLATE',
+          compressionOptions: { level: wxt.config.zip.compressionLevel },
+        }),
+  });
   await fs.writeFile(outputPath, buffer, 'base64');
 }
 
