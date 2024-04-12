@@ -12,7 +12,7 @@ export default defineConfig({
     plugins: [vue()],
     build: {
       // When enabled, hot updates in development mode can cause the root component rendering function to be lost
-      sourceMap: false
+      sourceMap: false,
     },
   }),
 });
