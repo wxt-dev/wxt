@@ -39,9 +39,9 @@ Then we can use `browser.storage` to save the install date to local storage.
 ```ts
 // background.ts
 export default defineBackground(() => {
-  browser.runtime.onInstall.addEventListener(({ reason }) => {
+  browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') {
-      browser.storage.local.setItem({ installDate: Date.now() });
+      browser.storage.local.set({ installDate: Date.now() });
     }
   });
 });
