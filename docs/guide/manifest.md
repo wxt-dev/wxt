@@ -11,7 +11,7 @@ The manifest.json is generated at build-time based on files in the `entrypoints/
 While entrypoints are generated and added to the manifest at build-time, you can customize or add to your `manifest.json` in the config file.
 
 ```ts
-// wxt.config.tsentrypoint of your extension
+// wxt.config.ts entrypoint of your extension
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
