@@ -223,6 +223,7 @@ function resolveZipConfig(
     artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
     sourcesRoot: root,
     includeSources: [],
+    compressionLevel: 9,
     ...mergedConfig.zip,
     excludeSources: [
       '**/node_modules',
