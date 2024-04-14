@@ -89,7 +89,7 @@ For a full list of entrypoints and each of their options, see the [`/entrypoints
 
 ### Side Effects
 
-You cannot use imported variables outside the `main` function is JS entrypoints. This includes options, as shown below:
+You cannot use imported variables outside the `main` function in JS entrypoints. This includes options, as shown below:
 
 ```ts
 // entrypoints/content.ts
