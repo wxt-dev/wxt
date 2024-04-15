@@ -23,6 +23,7 @@ const chromeExtensionIds = [
   'ceicccfeikoipigeghddpocceifjelph', // Plex Skipper
   'aelkipgppclpfimeamgmlonimflbhlgf', // GitHub Custom Notifier
   'djnlaiohfaaifbibleebjggkghlmcpcj', // Fluent Read
+  'nhclljcpfmmaiojbhhnkpjcfmacfcian', // Facebook Video Controls
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
