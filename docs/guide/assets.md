@@ -63,7 +63,7 @@ Files in the assets directory will be processed by Vite. They are imported in yo
     <!-- ... -->
   </head>
   <body>
-    <img src="~/illustration.svg" />
+    <img src="~/assets/illustration.svg" />
     <!-- ... -->
   </body>
 </html>
