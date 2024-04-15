@@ -10,5 +10,9 @@ export default defineConfig({
   },
   vite: () => ({
     plugins: [vue()],
+    build: {
+      // Enabling sourcemaps with Vue during development is known to cause problems with Vue
+      sourcemap: false,
+    },
   }),
 });
