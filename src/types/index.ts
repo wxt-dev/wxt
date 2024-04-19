@@ -594,8 +594,8 @@ export interface BaseContentScriptEntrypointOptions
    * - `"manifest"`: The content script will be added to the `content_scripts` entry in the
    *   manifest. This is the normal and most well known way of registering a content script.
    * - `"runtime"`: The content script's `matches` is added to `host_permissions` and you are
-   *   responsible for using the scripting API to register the content script dynamically at
-   *   runtime.
+   *   responsible for using the scripting API to register/execute the content script
+   *   dynamically at runtime.
    *
    * @default "manifest"
    */
