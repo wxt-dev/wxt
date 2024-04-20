@@ -1447,6 +1447,53 @@ describe('Manifest Utils', () => {
         },
       );
     });
+
+    describe('host_permissions', () => {
+      it('should keep host_permissions as-is for MV3', async () => {
+        const expectedHostPermissions = ['https://google.com/*'];
+        const expectedPermissions = ['scripting'];
+        setFakeWxt({
+          config: {
+            manifest: {
+              host_permissions: expectedHostPermissions,
+              permissions: expectedPermissions,
+            },
+            manifestVersion: 3,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.permissions).toEqual(expectedPermissions);
+        expect(actual.host_permissions).toEqual(expectedHostPermissions);
+      });
+
+      it('should move host_permissions to permissions for MV2, ignoring duplicates', async () => {
+        const expectedPermissions = [
+          'scripting',
+          '*://*.youtube.com/*',
+          'https://google.com/*',
+        ];
+        setFakeWxt({
+          config: {
+            manifest: {
+              host_permissions: ['https://google.com/*', '*://*.youtube.com/*'],
+              permissions: ['scripting', '*://*.youtube.com/*'],
+            },
+            manifestVersion: 2,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.permissions).toEqual(expectedPermissions);
+        expect(actual.host_permissions).toBeUndefined();
+      });
+    });
   });
 
   describe('stripPathFromMatchPattern', () => {
