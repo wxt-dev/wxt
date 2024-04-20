@@ -19,6 +19,7 @@ import {
 } from '~/core/utils/virtual-modules';
 import { Hookable } from 'hookable';
 import { toArray } from '~/core/utils/arrays';
+import { safeVarName } from '~/core/utils/strings';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -87,14 +88,22 @@ export async function createViteBuilder(
       plugins.push(wxtPlugins.cssEntrypoints(entrypoint, wxtConfig));
     }
 
+    const iifeReturnValueName = safeVarName(entrypoint.name);
     const libMode: vite.UserConfig = {
       mode: wxtConfig.mode,
       plugins,
+      esbuild: {
+        // Add a footer with the returned value so it can return values to `scripting.executeScript`
+        // Footer is added apart of esbuild to make sure it's not minified. It
+        // get's removed if added to `build.rollupOptions.output.footer`
+        // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
+        footer: iifeReturnValueName + ';',
+      },
       build: {
         lib: {
           entry,
           formats: ['iife'],
-          name: '_',
+          name: iifeReturnValueName,
           fileName: entrypoint.name,
         },
         rollupOptions: {
