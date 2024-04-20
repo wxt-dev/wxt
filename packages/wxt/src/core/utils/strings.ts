@@ -10,7 +10,7 @@ export function kebabCaseAlphanumeric(str: string): string {
  */
 export function safeVarName(str: string): string {
   // _ prefix to ensure it doesn't start with a number
-  return '_' + kebabCaseAlphanumeric(str).replace('-', '_');
+  return '_' + kebabCaseAlphanumeric(str.trim()).replace('-', '_');
 }
 
 /**
