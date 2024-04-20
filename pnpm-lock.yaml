@@ -18,8 +18,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@webext-core/isolated-element':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.1.2
+        version: 1.1.2
       '@webext-core/match-patterns':
         specifier: ^1.0.3
         version: 1.0.3
@@ -1774,8 +1774,10 @@ packages:
       lodash.merge: 4.6.2
     dev: false
 
-  /@webext-core/isolated-element@1.1.1:
-    resolution: {integrity: sha512-kn5OURB8FaEB0oSZdf1jc1PyohWXbWQbdhXfAS2d3AxxkP8HlYfhB75fhZJ3GceZvFf8in4bZNJbOvcArSFxCg==}
+  /@webext-core/isolated-element@1.1.2:
+    resolution: {integrity: sha512-CNHYhsIR8TPkPb+4yqTIuzaGnVn/Fshev5fyoPW+/8Cyc93tJbCjP9PC1XSK6fDWu+xASdPHLZaoa2nWAYoxeQ==}
+    dependencies:
+      is-potential-custom-element-name: 1.0.1
     dev: false
 
   /@webext-core/match-patterns@1.0.3:
@@ -3503,6 +3505,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       isobject: 3.0.1
+    dev: false
+
+  /is-potential-custom-element-name@1.0.1:
+    resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
     dev: false
 
   /is-primitive@3.0.1:
