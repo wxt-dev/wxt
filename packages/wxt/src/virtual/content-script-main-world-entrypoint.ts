@@ -14,7 +14,8 @@ const result = (async () => {
   }
 })();
 
-// Return the main function's result to the background when executed via the scripting API.
+// Return the main function's result to the background when executed via the
+// scripting API. Default export causes the IIFE to return a value.
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
 // Tested on both Chrome and Firefox
-result;
+export default result;
