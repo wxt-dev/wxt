@@ -623,8 +623,9 @@ function moveHostPermissionsToPermissions(
 ): void {
   if (!manifest.host_permissions?.length) return;
 
-  manifest.permissions ??= [];
-  manifest.permissions.push(...manifest.host_permissions);
+  manifest.host_permissions.forEach((permission) =>
+    addPermission(manifest, permission),
+  );
   delete manifest.host_permissions;
 }
 
