@@ -362,11 +362,13 @@ describe('Output Directory Structure', () => {
           function logHello(name) {
             console.log(\`Hello \${name}!\`);
           }
+          _background;
           const definition = defineBackground({
             main() {
               logHello("background");
             }
           });
+          _background;
           chrome;
           function print(method, ...args) {
             return;
@@ -389,6 +391,7 @@ describe('Output Directory Structure', () => {
             throw err;
           }
         })();
+        _background;
         "
       `);
   });
