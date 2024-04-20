@@ -95,6 +95,7 @@ export default defineConfig({
             { text: 'Vite', link: '/guide/vite.md' },
             { text: 'Remote Code', link: '/guide/remote-code.md' },
             { text: 'Publishing', link: '/guide/publishing.md' },
+            { text: 'Handling Updates', link: '/guide/handling-updates.md' },
             { text: 'Development', link: '/guide/development.md' },
             { text: 'Testing', link: '/guide/testing.md' },
           ],
