@@ -117,6 +117,7 @@ export async function generateManifest(
   if (wxt.config.manifestVersion === 2) {
     convertWebAccessibleResourcesToMv2(manifest);
     convertActionToMv2(manifest);
+    moveHostPermissionsToPermissions(manifest);
   }
 
   if (wxt.config.manifestVersion === 3) {
@@ -615,6 +616,16 @@ export function convertWebAccessibleResourcesToMv2(
       }),
     ),
   );
+}
+
+function moveHostPermissionsToPermissions(
+  manifest: Manifest.WebExtensionManifest,
+): void {
+  if (!manifest.host_permissions?.length) return;
+
+  manifest.permissions ??= [];
+  manifest.permissions.push(...manifest.host_permissions);
+  delete manifest.host_permissions;
 }
 
 function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
