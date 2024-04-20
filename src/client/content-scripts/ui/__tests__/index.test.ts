@@ -72,7 +72,7 @@ describe('Content Script UIs', () => {
       it('should load a shadow root to the page', async () => {
         const ui = await createShadowRootUi(ctx, {
           position: 'inline',
-          name: 'test',
+          name: 'test-component',
           onMount(uiContainer) {
             appendTestApp(uiContainer);
           },
@@ -80,7 +80,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(
-          document.querySelector('test[data-wxt-shadow-root]'),
+          document.querySelector('test-component[data-wxt-shadow-root]'),
         ).not.toBeNull();
         expect(ui.shadow.querySelector('app')).not.toBeNull();
       });
@@ -94,7 +94,7 @@ describe('Content Script UIs', () => {
         async (input, expected) => {
           const ui = await createShadowRootUi(ctx, {
             position: 'inline',
-            name: 'test',
+            name: 'test-component',
             mode: input,
             onMount: appendTestApp,
           });
@@ -448,7 +448,7 @@ describe('Content Script UIs', () => {
         const expected = Symbol();
 
         const ui = await createShadowRootUi(new ContentScriptContext('test'), {
-          name: 'test',
+          name: 'test-component',
           position: 'inline',
           onMount: () => expected,
         });
