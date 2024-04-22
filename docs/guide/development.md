@@ -89,7 +89,7 @@ import { defineRunnerConfig } from 'wxt';
 export default defineRunnerConfig({
   startUrls: ['https://google.com', 'https://duckduckgo.com'],
   chromiumProfile: '/path/to/profile/to/use',
-  chromiumArgs: ['--window-size=400x300'],
+  chromiumArgs: ['--window-size=400,300'],
 });
 ```
 
