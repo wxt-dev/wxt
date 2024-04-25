@@ -14,6 +14,19 @@ import { storage } from 'wxt/storage';
 
 ## Basic Usage
 
+first of all, give permission to use storage in the manifest.
+
+```ts
+export default defineConfig({
+  manifest: {
+    permissions: ['storage', 'tabs'],
+  },
+});
+```
+More details [Here](/manifest#permissions)
+
+
+
 All storage keys must be prefixed by their storage area.
 
 ```ts
