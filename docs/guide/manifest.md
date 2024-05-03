@@ -69,7 +69,7 @@ public/
 
 Icon files need to match the following regex to be automatically included in the manifest. Most design software can output icons in one of these formats
 
-<<< @/../src/core/utils/manifest.ts#snippet
+<<< @/../packages/wxt/src/core/utils/manifest.ts#snippet
 
 If you prefer to use filenames in a different format, you can add the icons manually in your `wxt.config.ts` file:
 

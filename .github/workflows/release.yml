@@ -22,14 +22,17 @@ jobs:
         run: |
           git config user.email "github-actions@users.noreply.github.com"
           git config user.name "GitHub Actions"
-          pnpx changelogen@latest --release
+          pnpx changelogen@latest --release --output packages/wxt/CHANGELOG.md
           git push
           git push --tags
+        working-directory: packages/wxt
 
       - name: NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
           pnpm publish
+        working-directory: packages/wxt
 
       - name: GitHub Release
         run: pnpx changelogen@latest gh release --token ${{ secrets.GITHUB_TOKEN }}
+        working-directory: packages/wxt
