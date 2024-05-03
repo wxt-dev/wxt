@@ -19,9 +19,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm build:all
-        working-directory: demo
+        working-directory: packages/wxt-demo
       - run: pnpm wxt zip
-        working-directory: demo
+        working-directory: packages/wxt-demo
   tests:
     runs-on: ubuntu-22.04
     steps:
