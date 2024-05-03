@@ -22,6 +22,7 @@ describe.only('Repro', () => {
     // Can get the new value from `storage`
     expect(await storage.getItem(TEST_KEY1)).toStrictEqual({ name: 'john' });
   });
+
   test('Could not get default value but can set.', async () => {
     // Define item
     const testDefItem = storage.defineItem(TEST_KEY1, {
