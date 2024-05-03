@@ -9,14 +9,6 @@ await fs.rm(path.resolve(__dirname, 'e2e/dist'), {
   force: true,
 });
 
-export const resolve = {
-  alias: {
-    '~': path.resolve(__dirname, 'src'),
-    'wxt/testing': path.resolve('src/testing'),
-    'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
-  },
-};
-
 export default defineProject({
   test: {
     mockReset: true,
@@ -25,5 +17,11 @@ export default defineProject({
     testTimeout: 120e3,
   },
   plugins: [RandomSeed()],
-  resolve,
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+      'wxt/testing': path.resolve('src/testing'),
+      'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
+    },
+  },
 });
