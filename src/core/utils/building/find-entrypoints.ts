@@ -29,6 +29,7 @@ import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
+import { inspect } from 'node:util';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -123,7 +124,12 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     );
   }
 
-  wxt.logger.debug('All entrypoints:', entrypoints);
+  if (wxt.config.debug) {
+    wxt.logger.debug(
+      'All entrypoints:',
+      inspect(entrypoints, undefined, Infinity, true),
+    );
+  }
   const skippedEntrypointNames = entrypointInfos
     .filter((item) => item.skipped)
     .map((item) => item.name);

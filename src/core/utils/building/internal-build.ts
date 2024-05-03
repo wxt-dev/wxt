@@ -19,6 +19,7 @@ import consola from 'consola';
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
+import { inspect } from 'node:util';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is performed, the
@@ -47,7 +48,6 @@ export async function internalBuild(): Promise<BuildOutput> {
   await fs.ensureDir(wxt.config.outDir);
 
   const entrypoints = await findEntrypoints();
-  wxt.logger.debug('Detected entrypoints:', entrypoints);
 
   const validationResults = validateEntrypoints(entrypoints);
   if (validationResults.errorCount + validationResults.warningCount > 0) {
@@ -60,6 +60,19 @@ export async function internalBuild(): Promise<BuildOutput> {
   }
 
   const groups = groupEntrypoints(entrypoints);
+  if (wxt.config.debug) {
+    wxt.logger.debug(
+      'Groups:',
+      inspect(
+        groups.map((group) =>
+          Array.isArray(group) ? group.map((entry) => entry.name) : group.name,
+        ),
+        undefined,
+        Infinity,
+        true,
+      ),
+    );
+  }
   await wxt.hooks.callHook('entrypoints:grouped', wxt, groups);
 
   const { output, warnings } = await rebuild(entrypoints, groups, undefined);

@@ -1,6 +1,7 @@
 export const virtualEntrypointTypes = [
   'content-script-main-world' as const,
   'content-script-isolated-world' as const,
+  'content-script-loader' as const,
   'background' as const,
   'unlisted-script' as const,
 ];

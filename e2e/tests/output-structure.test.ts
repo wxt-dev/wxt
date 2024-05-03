@@ -392,4 +392,187 @@ describe('Output Directory Structure', () => {
         "
       `);
   });
+
+  it('should generate ESM content script when type=module', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'utils/log.ts',
+      `export function logHello(name: string) {
+        console.log(\`Hello \${name}!\`);
+      }`,
+    );
+    project.addFile(
+      'entrypoints/content.ts',
+      `export default defineContentScript({
+        matches: ["<all_urls>"],
+        type: "module",
+        main() {
+          logHello("background");
+        },
+      })`,
+    );
+    project.addFile(
+      'entrypoints/popup/index.html',
+      `<html>
+        <head>
+          <script type="module" src="./main.ts"></script>
+        </head>
+      </html>`,
+    );
+    project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
+
+    await project.build({
+      experimental: {
+        // Simplify the build output for comparison
+        includeBrowserPolyfill: false,
+      },
+      vite: () => ({
+        build: {
+          // Make output for snapshot readible
+          minify: false,
+        },
+      }),
+    });
+
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      ),
+    ).toMatchSnapshot();
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content-loader.js',
+      ),
+    ).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/content-scripts/content-loader.js
+      ----------------------------------------
+      const scriptRel = "modulepreload";
+      const assetsURL = function(dep) {
+        return "/" + dep;
+      };
+      const seen = {};
+      const __vitePreload = function preload(baseModule, deps, importerUrl) {
+        let promise = Promise.resolve();
+        if (deps && deps.length > 0) {
+          const links = document.getElementsByTagName("link");
+          promise = Promise.all(deps.map((dep) => {
+            dep = assetsURL(dep);
+            if (dep in seen)
+              return;
+            seen[dep] = true;
+            const isCss = dep.endsWith(".css");
+            const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+            const isBaseRelative = !!importerUrl;
+            if (isBaseRelative) {
+              for (let i = links.length - 1; i >= 0; i--) {
+                const link2 = links[i];
+                if (link2.href === dep && (!isCss || link2.rel === "stylesheet")) {
+                  return;
+                }
+              }
+            } else if (document.querySelector(\`link[href="\${dep}"]\${cssSelector}\`)) {
+              return;
+            }
+            const link = document.createElement("link");
+            link.rel = isCss ? "stylesheet" : scriptRel;
+            if (!isCss) {
+              link.as = "script";
+              link.crossOrigin = "";
+            }
+            link.href = dep;
+            document.head.appendChild(link);
+            if (isCss) {
+              return new Promise((res, rej) => {
+                link.addEventListener("load", res);
+                link.addEventListener("error", () => rej(new Error(\`Unable to preload CSS for \${dep}\`)));
+              });
+            }
+          }));
+        }
+        return promise.then(() => baseModule()).catch((err) => {
+          const e = new Event("vite:preloadError", { cancelable: true });
+          e.payload = err;
+          window.dispatchEvent(e);
+          if (!e.defaultPrevented) {
+            throw err;
+          }
+        });
+      };
+      function print(method, ...args) {
+        return;
+      }
+      var logger = {
+        debug: (...args) => print(console.debug, ...args),
+        log: (...args) => print(console.log, ...args),
+        warn: (...args) => print(console.warn, ...args),
+        error: (...args) => print(console.error, ...args)
+      };
+      (async () => {
+        try {
+          await __vitePreload(() => import(chrome.runtime.getURL("/content-scripts/content.js")), true ? __vite__mapDeps([]) : void 0);
+        } catch (err) {
+          logger.error(\`Failed to load ESM content script: "\${"content"}"\`, err);
+        }
+      })();
+      function __vite__mapDeps(indexes) {
+        if (!__vite__mapDeps.viteFileDeps) {
+          __vite__mapDeps.viteFileDeps = []
+        }
+        return indexes.map((i) => __vite__mapDeps.viteFileDeps[i])
+      }
+      "
+    `);
+  });
+
+  it('should generate IIFE content script when type=undefined', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'utils/log.ts',
+      `export function logHello(name: string) {
+          console.log(\`Hello \${name}!\`);
+        }`,
+    );
+    project.addFile(
+      'entrypoints/content.ts',
+      `export default defineContentScript({
+          matches: ["<all_urls>"],
+          main() {
+            logHello("background");
+          },
+        })`,
+    );
+    project.addFile(
+      'entrypoints/popup/index.html',
+      `<html>
+          <head>
+            <script type="module" src="./main.ts"></script>
+          </head>
+        </html>`,
+    );
+    project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
+
+    await project.build({
+      experimental: {
+        // Simplify the build output for comparison
+        includeBrowserPolyfill: false,
+      },
+      vite: () => ({
+        build: {
+          // Make output for snapshot readible
+          minify: false,
+        },
+      }),
+    });
+
+    expect(
+      await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      ),
+    ).toMatchSnapshot();
+    expect(
+      await project.fileExists(
+        '.output/chrome-mv3/content-scripts/content-loader.js',
+      ),
+    ).toBe(false);
+  });
 });

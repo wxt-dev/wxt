@@ -1,26 +1,28 @@
 import { browser } from '~/browser';
+import { ContentScriptContext } from '.';
 
 export class WxtLocationChangeEvent extends Event {
-  static EVENT_NAME = getUniqueEventName('wxt:locationchange');
+  static getEventName = (ctx: ContentScriptContext) =>
+    getUniqueEventName(ctx, 'wxt:locationchange');
 
   constructor(
+    ctx: ContentScriptContext,
     readonly newUrl: URL,
     readonly oldUrl: URL,
   ) {
-    super(WxtLocationChangeEvent.EVENT_NAME, {});
+    super(WxtLocationChangeEvent.getEventName(ctx), {});
   }
 }
 
 /**
  * Returns an event name unique to the extension and content script that's running.
  */
-export function getUniqueEventName(eventName: string): string {
+export function getUniqueEventName(
+  ctx: ContentScriptContext,
+  eventName: string,
+): string {
   // During the build process, import.meta.env is not defined when importing
   // entrypoints to get their metadata.
-  const entrypointName =
-    typeof import.meta.env === 'undefined'
-      ? 'build'
-      : import.meta.env.ENTRYPOINT;
 
-  return `${browser.runtime.id}:${entrypointName}:${eventName}`;
+  return `${browser.runtime.id}:${ctx.contentScriptName}:${eventName}`;
 }
