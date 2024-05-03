@@ -10,6 +10,21 @@ WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `
 import { storage } from 'wxt/storage';
 ```
 
+:::warning
+To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  manifest: {
+    permissions: ['storage'],
+  },
+});
+```
+
+More info on permissions [here](/guide/manifest#permissions).
+:::
+
 [[toc]]
 
 ## Basic Usage
@@ -117,7 +132,7 @@ Now, instead of using the `storage` variable, you can use the helper functions o
 await showChangelogOnUpdate.getValue();
 await showChangelogOnUpdate.setValue(false);
 await showChangelogOnUpdate.removeValue();
-const unwatch = showChangelogOnUpdate.watch(() => {
+const unwatch = showChangelogOnUpdate.watch((newValue) => {
   // ...
 });
 ```
