@@ -3,13 +3,13 @@ import { getPackageJson } from '../package';
 import { setFakeWxt } from '../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
 import { Logger } from '~/types';
+import { WXT_PACKAGE_DIR } from '../../../../e2e/utils';
 
 describe('Package JSON Utils', () => {
   describe('getPackageJson', () => {
     it('should return the package.json inside <root>/package.json', async () => {
-      const root = process.cwd(); // WXT project directory
       setFakeWxt({
-        config: { root },
+        config: { root: WXT_PACKAGE_DIR },
       });
 
       const actual = await getPackageJson();

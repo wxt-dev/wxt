@@ -119,7 +119,7 @@ describe('User Config', () => {
     project.addFile(
       'test.config.ts',
       `import { defineConfig } from 'wxt';
-      
+
       export default defineConfig({
         outDir: ".custom-output",
         srcDir: "src",

@@ -6,7 +6,7 @@ import { execaCommand } from 'execa';
 
 let hasGenerated = false;
 
-const cliDir = resolve('src/cli/commands');
+const cliDir = resolve('packages/wxt/src/cli/commands');
 const cliDirGlob = resolve(cliDir, '**');
 const cliTemplatePath = resolve('docs/.vitepress/plugins/cli.tpl.md');
 const cliPath = resolve('docs/api/cli.md');
@@ -23,7 +23,9 @@ export function generateCliDocs() {
   const generateDocs = async () => {
     consola.info(`Generating ${relative(process.cwd(), cliPath)}`);
     try {
-      const res = await execaCommand('pnpm -s wxt --help');
+      const res = await execaCommand('pnpm -s wxt --help', {
+        cwd: 'packages/wxt',
+      });
       const dev = splitInfo(res.stdout);
       const lines: Array<string | string[]> = [
         `## \`wxt\``,
@@ -34,7 +36,9 @@ export function generateCliDocs() {
 
       const commands = await Promise.allSettled(
         extractCommands(dev.info).map(async (command) => {
-          const res = await execaCommand(`pnpm -s wxt ${command} --help`);
+          const res = await execaCommand(`pnpm -s wxt ${command} --help`, {
+            cwd: 'packages/wxt',
+          });
           const { rest: docs } = splitInfo(res.stdout);
           return [`## \`wxt ${command}\``, '```sh', docs, '```'];
         }),

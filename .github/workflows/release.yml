@@ -25,11 +25,14 @@ jobs:
           pnpx changelogen@latest --release
           git push
           git push --tags
+        working-directory: packages/wxt
 
       - name: NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
           pnpm publish
+        working-directory: packages/wxt
 
       - name: GitHub Release
         run: pnpx changelogen@latest gh release --token ${{ secrets.GITHUB_TOKEN }}
+        working-directory: packages/wxt

@@ -1,5 +1,5 @@
-import { dirname, join, relative, resolve } from 'path';
-import fs from 'fs-extra';
+import { dirname, relative, resolve } from 'path';
+import fs, { mkdir } from 'fs-extra';
 import glob from 'fast-glob';
 import { execaCommand } from 'execa';
 import {
@@ -13,6 +13,13 @@ import {
 import { normalizePath } from '../src/core/utils/paths';
 import merge from 'lodash.merge';
 
+// Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
+// wxt package. This uses the TS files instead of the compiled JS package
+// files.
+export const WXT_PACKAGE_DIR = resolve(__dirname, '..');
+
+export const E2E_DIR = resolve(WXT_PACKAGE_DIR, 'e2e');
+
 export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
@@ -23,7 +30,7 @@ export class TestProject {
     // file is cached and cannot be different between each test. Instead, we add a random ID to the
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
-    this.root = join('e2e/dist', id);
+    this.root = resolve(E2E_DIR, 'dist', id);
     this.files.push([
       'package.json',
       JSON.stringify(
@@ -113,6 +120,9 @@ export class TestProject {
     await execaCommand('pnpm --ignore-workspace i --ignore-scripts', {
       cwd: this.root,
     });
+    await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
+      () => {},
+    );
   }
 
   /**
@@ -131,9 +141,7 @@ export class TestProject {
    * that can be used in a snapshot.
    */
   serializeWxtDir(): Promise<string> {
-    return this.serializeDir(
-      resolve(this.config?.srcDir ?? this.root, '.wxt/types'),
-    );
+    return this.serializeDir(resolve(this.root, '.wxt/types'));
   }
 
   /**
