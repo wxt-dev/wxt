@@ -22,7 +22,7 @@ jobs:
         run: |
           git config user.email "github-actions@users.noreply.github.com"
           git config user.name "GitHub Actions"
-          pnpx changelogen@latest --release --output packages/wxt/CHANGELOG.md
+          pnpx changelogen@latest --release
           git push
           git push --tags
         working-directory: packages/wxt
