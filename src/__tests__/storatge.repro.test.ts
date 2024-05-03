@@ -5,7 +5,7 @@ describe.only('Repro', () => {
   const TEST_KEY1 = 'local:test1';
 
   beforeEach(async () => {
-    await storage.removeItems([TEST_KEY1, TEST_KEY1]);
+    await storage.removeItem(TEST_KEY1);
   });
 
   test('Why can not get defaultValue from storage?', async () => {
