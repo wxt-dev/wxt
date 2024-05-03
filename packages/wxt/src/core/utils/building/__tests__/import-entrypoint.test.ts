@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { importEntrypointFile } from '~/core/utils/building';
 import { resolve } from 'node:path';
-import { unnormalizePath } from '../../paths';
-import { setFakeWxt } from '../../testing/fake-objects';
+import { setFakeWxt } from '~/core/utils/testing/fake-objects';
 
 const entrypointPath = (filename: string) =>
   resolve(__dirname, 'test-entrypoints', filename);
