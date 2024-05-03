@@ -143,7 +143,6 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^13.3.8",
     "lodash.merge": "^4.6.2",
-    "npm-run-all": "^4.1.5",
     "p-map": "^7.0.0",
     "publint": "^0.2.6",
     "tsup": "^8.0.1",

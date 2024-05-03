@@ -17,6 +17,9 @@ importers:
       lint-staged:
         specifier: ^15.2.0
         version: 15.2.2
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
       prettier:
         specifier: ^3.1.0
         version: 3.1.1
@@ -207,9 +210,6 @@ importers:
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
-      npm-run-all:
-        specifier: ^4.1.5
-        version: 4.1.5
       p-map:
         specifier: ^7.0.0
         version: 7.0.1
