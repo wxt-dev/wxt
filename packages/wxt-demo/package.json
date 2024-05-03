@@ -4,17 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter wxt build && wxt",
-    "build": "pnpm --filter wxt build && wxt build",
-    "build:all": "pnpm --filter wxt build && run-s -s 'build:all:*'",
+    "setup": "pnpm --filter wxt build",
+    "dev": "pnpm setup && wxt",
+    "build": "pnpm setup && wxt build",
+    "build:all": "pnpm setup && run-s -s 'build:all:*'",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "test": "pnpm --filter wxt build && vitest",
-    "zip": "pnpm --filter wxt build && wxt zip",
-    "compile": "pnpm --filter wxt build && tsc --noEmit",
-    "postinstall": "pnpm --filter wxt build && wxt prepare"
+    "test": "pnpm setup && vitest",
+    "zip": "pnpm setup && wxt zip",
+    "compile": "pnpm setup && tsc --noEmit",
+    "postinstall": "pnpm setup && wxt prepare"
   },
   "dependencies": {
     "react": "^18.2.0",
