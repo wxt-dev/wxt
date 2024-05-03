@@ -30,7 +30,7 @@ import{ registerGithubService, createGithubApi }from "@/utils/github";
 import GitHub from "@/utils/github";
 import "@/utils/github";
 import '@/utils/github';
-import"@/utils/github"
+import"@/utils/github" 
  import'@/utils/github';
     `;
       expect(removeImportStatements(imports).trim()).toEqual('');
