@@ -24,7 +24,8 @@ const chromeExtensionIds = [
   'aelkipgppclpfimeamgmlonimflbhlgf', // GitHub Custom Notifier
   'djnlaiohfaaifbibleebjggkghlmcpcj', // Fluent Read
   'nhclljcpfmmaiojbhhnkpjcfmacfcian', // Facebook Video Controls
-  'mblkhbaakhbhiimkbcnmeciblfhmafna', // ElemSnap - Quick capture of webpage elements and conversion to images
+  'mblkhbaakhbhiimkbcnmeciblfhmafna', // ElemSnap - Quick capture of webpage elements and conversion to images,
+  'oajalfneblkfiejoadecnmodfpnaeblh', // MS Edge TTS (Text to Speech)
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
