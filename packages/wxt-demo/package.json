@@ -1,20 +1,19 @@
 {
-  "name": "demo",
-  "version": "1.0.0",
-  "description": "Demo extension for WXT",
+  "name": "wxt-demo",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm -w build && wxt",
-    "build": "pnpm -w build && wxt build",
-    "build:all": "pnpm -w build && run-s -s 'build:all:*'",
+    "dev": "pnpm --filter wxt build && wxt",
+    "build": "pnpm --filter wxt build && wxt build",
+    "build:all": "pnpm --filter wxt build && run-s -s 'build:all:*'",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "test": "pnpm -w build && vitest",
-    "zip": "pnpm -w build && wxt zip",
-    "compile": "pnpm -w build && tsc --noEmit",
-    "postinstall": "pnpm -w build && wxt prepare"
+    "test": "pnpm --filter wxt build && vitest",
+    "zip": "pnpm --filter wxt build && wxt zip",
+    "compile": "pnpm --filter wxt build && tsc --noEmit",
+    "postinstall": "pnpm --filter wxt build && wxt prepare"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -25,6 +24,7 @@
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
     "sass": "^1.69.5",
+    "typescript": "^5.3.2",
     "wxt": "workspace:*"
   }
 }

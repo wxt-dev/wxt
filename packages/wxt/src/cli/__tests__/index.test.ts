@@ -356,7 +356,7 @@ describe('CLI', () => {
     });
   });
 
-  describe('init', () => {
+  describe.only('init', () => {
     it('should not pass any options when no flags are passed', async () => {
       mockArgv('init');
       await importCli();

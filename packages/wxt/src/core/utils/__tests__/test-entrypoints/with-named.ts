@@ -1,4 +1,4 @@
-import { defineBackground } from '~/sandbox';
+import { defineBackground } from 'wxt/sandbox';
 
 export const a = {};
 
