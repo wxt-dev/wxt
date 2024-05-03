@@ -45,16 +45,11 @@
     "*": "prettier --ignore-unknown --write"
   },
   "changelog": {
-    "excludeAuthors": [
-      "aaronklinker1@gmail.com"
-    ]
+    "excludeAuthors": ["aaronklinker1@gmail.com"]
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search",
-        "search-insights"
-      ]
+      "ignoreMissing": ["@algolia/client-search", "search-insights"]
     }
   }
 }

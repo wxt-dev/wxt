@@ -6,6 +6,14 @@ export function kebabCaseAlphanumeric(str: string): string {
 }
 
 /**
+ * Return a safe variable name for a given string.
+ */
+export function safeVarName(str: string): string {
+  // _ prefix to ensure it doesn't start with a number
+  return '_' + kebabCaseAlphanumeric(str.trim()).replace('-', '_');
+}
+
+/**
  * Removes import statements from the top of a file. Keeps import.meta and inline, async `import()`
  * calls.
  */

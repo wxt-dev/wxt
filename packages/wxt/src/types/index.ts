@@ -737,16 +737,24 @@ export interface IsolatedWorldContentScriptDefinition
   extends IsolatedWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
+   *
+   * When running a content script with `browser.scripting.executeScript`,
+   * values returned from this function will be returned in the `executeScript`
+   * result as well. Otherwise returning a value does nothing.
    */
-  main(ctx: ContentScriptContext): void | Promise<void>;
+  main(ctx: ContentScriptContext): any | Promise<any>;
 }
 
 export interface MainWorldContentScriptDefinition
   extends MainWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
+   *
+   * When running a content script with `browser.scripting.executeScript`,
+   * values returned from this function will be returned in the `executeScript`
+   * result as well. Otherwise returning a value does nothing.
    */
-  main(): void | Promise<void>;
+  main(): any | Promise<any>;
 }
 
 export type ContentScriptDefinition =
@@ -763,8 +771,12 @@ export interface BackgroundDefinition extends BackgroundEntrypointOptions {
 export interface UnlistedScriptDefinition extends BaseEntrypointOptions {
   /**
    * Main function executed when the unlisted script is ran.
+   *
+   * When running a content script with `browser.scripting.executeScript`,
+   * values returned from this function will be returned in the `executeScript`
+   * result as well. Otherwise returning a value does nothing.
    */
-  main(): void | Promise<void>;
+  main(): any | Promise<any>;
 }
 
 /**
