@@ -148,5 +148,10 @@
     "tsup": "^8.0.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.2"
+  },
+  "changelog": {
+    "excludeAuthors": [
+      "aaronklinker1@gmail.com"
+    ]
   }
 }

@@ -45,14 +45,13 @@
 
 ### ❤️ Contributors
 
-- Aaron <aaronklinker1@gmail.com>
-- Alegal200 <alex.gallez11@gmail.com>
+- Alegal200 ([@alegal200](https://github.com/alegal200))
 - Yacine-bens ([@yacine-bens](http://github.com/yacine-bens))
-- Ayden <itxcc420@gmail.com>
+- Ayden ([@AydenGen](https://github.com/AydenGen))
 - Wuzequanyouzi ([@wuzequanyouzi](http://github.com/wuzequanyouzi))
 - Can Rau ([@CanRau](http://github.com/CanRau))
 - 日高 凌 ([@ryohidaka](http://github.com/ryohidaka))
-- Bas Van Zanten <bas.van.zanten007@gmail.com>
+- Bas Van Zanten ([@Bas950](http://github.com/Bas950))
 - ThinkStu ([@Bistutu](http://github.com/Bistutu))
 
 ## v0.17.12
