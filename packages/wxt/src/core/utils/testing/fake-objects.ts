@@ -295,6 +295,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     alias: {},
     experimental: {
       includeBrowserPolyfill: true,
+      viteRuntime: false,
     },
     dev: {
       reloadCommand: 'Alt+R',

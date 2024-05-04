@@ -18,4 +18,7 @@ export default defineConfig({
   analysis: {
     open: true,
   },
+  experimental: {
+    viteRuntime: true,
+  },
 });
