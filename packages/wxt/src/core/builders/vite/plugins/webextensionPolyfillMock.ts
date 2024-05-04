@@ -19,7 +19,7 @@ export function webextensionPolyfillMock(
   config: ResolvedConfig,
 ): vite.PluginOption {
   return {
-    name: 'wxt:testing-inline-deps',
+    name: 'wxt:webextension-polyfill-mock',
     config() {
       return {
         resolve: {

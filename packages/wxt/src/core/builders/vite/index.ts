@@ -265,29 +265,12 @@ export async function createViteBuilder(
       const config = vite.mergeConfig<vite.InlineConfig, vite.InlineConfig>(
         await getBaseConfig(),
         {
-          plugins: [
-            wxtPlugins.webextensionPolyfillMock(wxtConfig),
-            wxtPlugins.excludeBrowserPolyfill(),
-            {
-              name: 'debug',
-              resolveId: {
-                order: 'pre',
-                handler(id) {
-                  console.log('resolveId', id);
-                },
-              },
-              load: {
-                order: 'pre',
-                handler(id) {
-                  console.log('load', id);
-                },
-              },
-            },
-          ],
+          plugins: [wxtPlugins.webextensionPolyfillMock(wxtConfig)],
         },
       );
       const server = await vite.createServer(config);
-      const runtime = await vite.createViteRuntime(server);
+      await server.listen();
+      const runtime = await vite.createViteRuntime(server, { hmr: false });
       return {
         importFile: (path) => runtime.executeUrl(path),
         close: () => server.close(),

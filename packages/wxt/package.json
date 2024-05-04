@@ -22,7 +22,10 @@
     "email": "aaronklinker1+wxt@gmail.com"
   },
   "license": "MIT",
-  "files": ["bin", "dist"],
+  "files": [
+    "bin",
+    "dist"
+  ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
     "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
@@ -123,7 +126,7 @@
     "prompts": "^2.4.2",
     "publish-browser-extension": "^2.1.3",
     "unimport": "^3.4.0",
-    "vite": "^5.2.8",
+    "vite": "^5.2.11",
     "web-ext-run": "^0.2.0",
     "webextension-polyfill": "^0.10.0"
   },

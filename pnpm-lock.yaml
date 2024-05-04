@@ -55,7 +55,7 @@ importers:
         version: 1.3.1(typescript@5.3.3)(vitest@1.5.3)
       vitest-plugin-random-seed:
         specifier: ^1.0.2
-        version: 1.0.2(vite@5.2.8)
+        version: 1.0.2(vite@5.2.11)
       vue:
         specifier: ^3.3.10
         version: 3.4.21(typescript@5.3.3)
@@ -171,8 +171,8 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0
       vite:
-        specifier: ^5.2.8
-        version: 5.2.8(@types/node@20.10.3)
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.10.3)
       web-ext-run:
         specifier: ^0.2.0
         version: 0.2.0
@@ -254,8 +254,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
       vite:
-        specifier: ^5.2.8
-        version: 5.2.8(sass@1.69.5)
+        specifier: ^5.2.11
+        version: 5.2.11(sass@1.69.5)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -1490,14 +1490,14 @@ packages:
       '@types/node': 20.10.3
     optional: true
 
-  /@vitejs/plugin-vue@5.0.2(vite@5.2.8)(vue@3.4.21):
+  /@vitejs/plugin-vue@5.0.2(vite@5.2.11)(vue@3.4.21):
     resolution: {integrity: sha512-kEjJHrLb5ePBvjD0SPZwJlw1QTRcjjCA9sB5VyfonoXVBxTS7TMnqL6EkLt1Eu61RDeiuZ/WN9Hf6PxXhPI2uA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.2.8
+      vite: 5.2.11
       vue: 3.4.21(typescript@5.3.3)
     dev: true
 
@@ -5566,7 +5566,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.8
+      vite: 5.2.11
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -5578,8 +5578,8 @@ packages:
       - terser
     dev: true
 
-  /vite@5.2.8:
-    resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
+  /vite@5.2.11:
+    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5613,8 +5613,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@5.2.8(@types/node@20.10.3):
-    resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
+  /vite@5.2.11(@types/node@20.10.3):
+    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5649,8 +5649,8 @@ packages:
       fsevents: 2.3.3
     dev: false
 
-  /vite@5.2.8(sass@1.69.5):
-    resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
+  /vite@5.2.11(sass@1.69.5):
+    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5700,7 +5700,7 @@ packages:
       '@docsearch/css': 3.5.2
       '@docsearch/js': 3.5.2
       '@types/markdown-it': 13.0.7
-      '@vitejs/plugin-vue': 5.0.2(vite@5.2.8)(vue@3.4.21)
+      '@vitejs/plugin-vue': 5.0.2(vite@5.2.11)(vue@3.4.21)
       '@vue/devtools-api': 6.5.1
       '@vueuse/core': 10.7.1(vue@3.4.21)
       '@vueuse/integrations': 10.7.1(focus-trap@7.5.4)(vue@3.4.21)
@@ -5711,7 +5711,7 @@ packages:
       shikiji: 0.9.16
       shikiji-core: 0.9.16
       shikiji-transformers: 0.9.16
-      vite: 5.2.8
+      vite: 5.2.11
       vue: 3.4.21(typescript@5.3.3)
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -5752,12 +5752,12 @@ packages:
       vitest: 1.5.3
     dev: true
 
-  /vitest-plugin-random-seed@1.0.2(vite@5.2.8):
+  /vitest-plugin-random-seed@1.0.2(vite@5.2.11):
     resolution: {integrity: sha512-Kt5QHmx7I1p2WShsmgJSK/L8hNPZpyNu85zSml5yv/fHDe7gJspcKc7kNYrLVVwZdGcqcZxyHAeH503szzQ95g==}
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.2.8
+      vite: 5.2.11
     dev: true
 
   /vitest@1.5.3:
@@ -5802,7 +5802,7 @@ packages:
       strip-literal: 2.1.0
       tinybench: 2.5.1
       tinypool: 0.8.4
-      vite: 5.2.8
+      vite: 5.2.11
       vite-node: 1.5.3
       why-is-node-running: 2.2.2
     transitivePeerDependencies:

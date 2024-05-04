@@ -126,8 +126,12 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     }
   };
 
-  for (const info of entrypointInfos) {
-    entrypoints.push(await doit(info));
+  try {
+    for (const info of entrypointInfos) {
+      entrypoints.push(await doit(info));
+    }
+  } finally {
+    await runtime.close();
   }
 
   if (wxt.config.command === 'serve' && !hasBackground) {
