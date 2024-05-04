@@ -203,6 +203,22 @@ export async function createViteBuilder(
   return {
     name: 'Vite',
     version: vite.version,
+    async importEntrypoint(url) {
+      const baseConfig = await getBaseConfig();
+      const envConfig: vite.InlineConfig = {
+        plugins: [
+          wxtPlugins.webextensionPolyfillMock(wxtConfig),
+          wxtPlugins.removeEntrypointMainFunction(wxtConfig, url),
+        ],
+      };
+      const config = vite.mergeConfig(baseConfig, envConfig);
+      const server = await vite.createServer(config);
+      await server.listen();
+      const runtime = await vite.createViteRuntime(server, { hmr: false });
+      const module = await runtime.executeUrl(url);
+      await server.close();
+      return module.default;
+    },
     async build(group) {
       let entryConfig;
       if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);

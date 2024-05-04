@@ -152,6 +152,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {
       includeBrowserPolyfill: true,
+      viteRuntime: false,
     }),
     dev: {
       server: devServerConfig,

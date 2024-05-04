@@ -9,7 +9,7 @@
   "scripts": {
     "check": "check && pnpm -r run check",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage.enabled \"--coverage.include=packages/wxt/src/**\" \"--coverage.exclude=packages/wxt/src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\"",
+    "test:coverage": "vitest run --coverage.enabled \"--coverage.include=packages/wxt/src/**\" \"--coverage.exclude=packages/wxt/src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\" \"--coverage.exclude=**/fixtures/**\"",
     "prepare": "simple-git-hooks",
     "prepublish": "pnpm -s build",
     "docs:gen": "typedoc --options docs/typedoc.json",

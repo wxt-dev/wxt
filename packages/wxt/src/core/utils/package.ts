@@ -22,5 +22,5 @@ export async function getPackageJson(): Promise<
 }
 
 export function isModuleInstalled(name: string) {
-  return import(name).then(() => true).catch(() => false);
+  return import(/* @vite-ignore */ name).then(() => true).catch(() => false);
 }

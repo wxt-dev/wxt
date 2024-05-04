@@ -312,6 +312,15 @@ export interface InlineConfig {
      * })
      */
     includeBrowserPolyfill?: boolean;
+    /**
+     * When set to `true`, use the Vite Runtime API to load entrypoint options instead of the default, `jiti`.
+     *
+     * Lets you use imported variables and leverage your Vite config to add support for non-standard APIs/syntax.
+     *
+     * @experimental Early access to try out the feature before it becomes the default.
+     * @default false
+     */
+    viteRuntime?: boolean;
   };
   /**
    * Config effecting dev mode only.
@@ -930,6 +939,10 @@ export interface WxtBuilder {
    */
   version: string;
   /**
+   * Import the entrypoint file, returning the default export containing the options.
+   */
+  importEntrypoint<T>(path: string): Promise<T>;
+  /**
    * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
    * build process.
    */
@@ -1124,6 +1137,7 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {
     includeBrowserPolyfill: boolean;
+    viteRuntime: boolean;
   };
   dev: {
     /** Only defined during dev command */
