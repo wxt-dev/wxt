@@ -14,7 +14,6 @@ import {
   OptionsEntrypointOptions,
   SidepanelEntrypoint,
   SidepanelEntrypointOptions,
-  WxtBuilder,
 } from '~/types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';

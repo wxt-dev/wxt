@@ -20,7 +20,6 @@ import {
 import { Hookable } from 'hookable';
 import { toArray } from '~/core/utils/arrays';
 import { safeVarName } from '~/core/utils/strings';
-import { Module } from 'node:module';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
