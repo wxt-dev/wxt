@@ -5,7 +5,7 @@ import { removeMainFunctionCode } from '~/core/utils/transform';
 import { resolve } from 'node:path';
 
 /**
- * Transforms entrypoints, removing their main function.
+ * Transforms entrypoints, removing the main function from the entrypoint if it exists.
  */
 export function removeEntrypointMainFunction(
   config: ResolvedConfig,
