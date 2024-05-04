@@ -1,5 +1,58 @@
 # Changelog
 
+## v0.18.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.12...v0.18.0)
+
+### 🚀 Enhancements
+
+- Add zip compression settings ([#605](https://github.com/wxt-dev/wxt/pull/605))
+- Support returning values from scripts executed with the scripting API ([#624](https://github.com/wxt-dev/wxt/pull/624))
+- **experimental:** Load entrypoint options with Vite Runtime API ([#648](https://github.com/wxt-dev/wxt/pull/648))
+
+### 🩹 Fixes
+
+- ⚠️  Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
+- **dep:** Upgrade `@webext-core/isolated-element` to v1.1.2 ([#625](https://github.com/wxt-dev/wxt/pull/625))
+
+### 📖 Documentation
+
+- Add Fluent Read to homepage ([#600](https://github.com/wxt-dev/wxt/pull/600))
+- Fix typo on example for wxt.config.ts. ([#609](https://github.com/wxt-dev/wxt/pull/609))
+- Tix typo in `entrypoints.md` ([#614](https://github.com/wxt-dev/wxt/pull/614))
+- Add Facebook Video Controls to homepage ([#615](https://github.com/wxt-dev/wxt/pull/615))
+- Fix typo in assets page ([a94d673](https://github.com/wxt-dev/wxt/commit/a94d673))
+- Add ElemSnap to homepage ([#621](https://github.com/wxt-dev/wxt/pull/621))
+- Update content script registration JSDoc ([e47519f](https://github.com/wxt-dev/wxt/commit/e47519f))
+- Add docs about handling updates ([acb7554](https://github.com/wxt-dev/wxt/commit/acb7554))
+- Add MS Edge TTS to homepage ([#647](https://github.com/wxt-dev/wxt/pull/647))
+- Document required permission for storage API ([#632](https://github.com/wxt-dev/wxt/pull/632))
+
+### 🏡 Chore
+
+- Update vue template config ([#607](https://github.com/wxt-dev/wxt/pull/607))
+- **deps-dev:** Bump lint-staged from 15.2.1 to 15.2.2 ([#637](https://github.com/wxt-dev/wxt/pull/637))
+- **deps-dev:** Bump publint from 0.2.6 to 0.2.7 ([#639](https://github.com/wxt-dev/wxt/pull/639))
+- **deps-dev:** Bump simple-git-hooks from 2.9.0 to 2.11.1 ([#640](https://github.com/wxt-dev/wxt/pull/640))
+- Refactor repo to a standard monorepo ([#646](https://github.com/wxt-dev/wxt/pull/646))
+- Fix formatting after monorepo refactor ([6ca3767](https://github.com/wxt-dev/wxt/commit/6ca3767))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
+
+### ❤️ Contributors
+
+- Aaron <aaronklinker1@gmail.com>
+- Alegal200 <alex.gallez11@gmail.com>
+- Yacine-bens ([@yacine-bens](http://github.com/yacine-bens))
+- Ayden <itxcc420@gmail.com>
+- Wuzequanyouzi ([@wuzequanyouzi](http://github.com/wuzequanyouzi))
+- Can Rau ([@CanRau](http://github.com/CanRau))
+- 日高 凌 ([@ryohidaka](http://github.com/ryohidaka))
+- Bas Van Zanten <bas.van.zanten007@gmail.com>
+- ThinkStu ([@Bistutu](http://github.com/Bistutu))
+
 ## v0.17.12
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.11...v0.17.12)
