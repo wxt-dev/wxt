@@ -1,12 +1,21 @@
-import { parseModule } from 'magicast';
+import { ProxifiedModule, parseModule } from 'magicast';
 
+/**
+ * Removes any code used at runtime related to an entrypoint's main function.
+ * - Removes or clears out `main` function from returned object
+ * - TODO: Removes unused imports after main function has been removed to prevent importing runtime modules
+ */
 export function removeMainFunctionCode(code: string): {
   code: string;
   map?: string;
 } {
   const mod = parseModule(code);
-  if (mod.exports.default.$type === 'function-call') {
-    console.log(mod.exports.default.$ast?.arguments?.[0]?.properties);
+  emptyMainFunction(mod);
+  return mod.generate();
+}
+
+function emptyMainFunction(mod: ProxifiedModule) {
+  if (mod.exports?.default?.$type === 'function-call') {
     if (mod.exports.default.$ast?.arguments?.[0]?.body) {
       // Remove body from function
       // ex: "fn(() => { ... })" to "fn(() => {})"
@@ -21,5 +30,4 @@ export function removeMainFunctionCode(code: string): {
         );
     }
   }
-  return mod.generate();
 }

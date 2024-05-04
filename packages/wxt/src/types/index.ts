@@ -930,6 +930,10 @@ export interface WxtBuilder {
    */
   version: string;
   /**
+   * Import the entrypoint file, returning the default export containing the options.
+   */
+  importEntrypoint<T>(path: string): Promise<T>;
+  /**
    * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
    * build process.
    */

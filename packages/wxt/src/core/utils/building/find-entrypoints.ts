@@ -14,12 +14,12 @@ import {
   OptionsEntrypointOptions,
   SidepanelEntrypoint,
   SidepanelEntrypointOptions,
+  WxtBuilder,
 } from '~/types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import { importEntrypointFile } from '~/core/utils/building';
 import glob from 'fast-glob';
 import {
   getEntrypointName,
@@ -286,7 +286,7 @@ async function getUnlistedScriptEntrypoint({
   skipped,
 }: EntrypointInfo): Promise<GenericEntrypoint> {
   const defaultExport =
-    await importEntrypointFile<UnlistedScriptDefinition>(inputPath);
+    await wxt.builder.importEntrypoint<UnlistedScriptDefinition>(inputPath);
   if (defaultExport == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
@@ -311,7 +311,7 @@ async function getBackgroundEntrypoint({
   let options: Omit<BackgroundDefinition, 'main'> = {};
   if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
     const defaultExport =
-      await importEntrypointFile<BackgroundDefinition>(inputPath);
+      await wxt.builder.importEntrypoint<BackgroundDefinition>(inputPath);
     if (defaultExport == null) {
       throw Error(
         `${name}: Default export not found, did you forget to call "export default defineBackground(...)"?`,
@@ -341,7 +341,7 @@ async function getContentScriptEntrypoint({
   skipped,
 }: EntrypointInfo): Promise<ContentScriptEntrypoint> {
   const { main: _, ...options } =
-    await importEntrypointFile<ContentScriptDefinition>(inputPath);
+    await wxt.builder.importEntrypoint<ContentScriptDefinition>(inputPath);
   if (options == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
