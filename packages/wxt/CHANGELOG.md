@@ -12,7 +12,7 @@
 
 ### 🩹 Fixes
 
-- ⚠️  Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
+- ⚠️ Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
 - **dep:** Upgrade `@webext-core/isolated-element` to v1.1.2 ([#625](https://github.com/wxt-dev/wxt/pull/625))
 
 ### 📖 Documentation
@@ -39,7 +39,9 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
+- ⚠️ Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
+
+  Out of an abundance of caution, I've marked this as a breaking change because permission generation has changed. **_If you list `host_permissions` in your `wxt.config.ts`'s manifest and have released your extension_**, double check that your `permissions` and `host_permissions` have not changed for all browsers you target in your `.output/*/manifest.json` files. Permission changes can cause the extension to be disabled on update, and can cause a drop in users, so be sure to double check for differences compared to the previous manifest version.
 
 ### ❤️ Contributors
 
@@ -312,11 +314,11 @@
 
 ### 🚀 Enhancements
 
-- **storage:** ⚠️  Improved support for default values on storage items ([#477](https://github.com/wxt-dev/wxt/pull/477))
+- **storage:** ⚠️ Improved support for default values on storage items ([#477](https://github.com/wxt-dev/wxt/pull/477))
 
 ### 🩹 Fixes
 
-- **storage:** ⚠️  Only run migrations when the extension is updated ([#478](https://github.com/wxt-dev/wxt/pull/478))
+- **storage:** ⚠️ Only run migrations when the extension is updated ([#478](https://github.com/wxt-dev/wxt/pull/478))
 - Improve dev mode for content scripts registered at runtime ([#474](https://github.com/wxt-dev/wxt/pull/474))
 
 ### 📖 Documentation
@@ -344,12 +346,13 @@ const item = storage.defineItem<number | null>("local:count", {
 })
 ```
 
-The `defaultValue` property is now required if passing in the second options argument. 
+The `defaultValue` property is now required if passing in the second options argument.
 
 If you exclude the second options argument, it will default to being nullable, as before.
 
 ```ts
-const item: WxtStorageItem<number | null> = storage.defineItem<number>("local:count");
+const item: WxtStorageItem<number | null> =
+  storage.defineItem<number>('local:count');
 const value: number | null = await item.getValue();
 ```
 
@@ -359,13 +362,13 @@ For storage items that are not nullable, the `watch` callback types has improved
 
 ```ts
 // >=0.17
-const item = storage.defineItem<number>("local:count", { defaultValue: 0 });
+const item = storage.defineItem<number>('local:count', { defaultValue: 0 });
 item.watch((newValue: number | null, oldValue: number | null) => {
   // ...
 });
 
 // >=0.17
-const item = storage.defineItem<number>("local:count", { defaultValue: 0 });
+const item = storage.defineItem<number>('local:count', { defaultValue: 0 });
 item.watch((newValue: number, oldValue: number) => {
   // ...
 });
@@ -595,7 +598,7 @@ item.migrate();
 
 ### 🚀 Enhancements
 
-- ⚠️  ESM background support ([#398](https://github.com/wxt-dev/wxt/pull/398))
+- ⚠️ ESM background support ([#398](https://github.com/wxt-dev/wxt/pull/398))
 
 ### 📖 Documentation
 
@@ -612,23 +615,23 @@ item.migrate();
 In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes.
 
 - Before:
-   ```
-   .output/
-     <target>/
-       chunks/
-         some-shared-chunk-<hash>.js
-         popup-<hash>.js
-       popup.html
-   ```
+  ```
+  .output/
+    <target>/
+      chunks/
+        some-shared-chunk-<hash>.js
+        popup-<hash>.js
+      popup.html
+  ```
 - After:
-   ```
-   .output/
-     <target>/
-       chunks/
-         some-shared-chunk-<hash>.js
-       popup.html
-       popup.js
-   ```
+  ```
+  .output/
+    <target>/
+      chunks/
+        some-shared-chunk-<hash>.js
+      popup.html
+      popup.js
+  ```
 
 This effects all HTML files, not just the Popup. The hash has been removed, and it's been moved to the root of the build target folder, not inside the `chunks/` directory. Moving files like this has not historically increased review times or triggered in-depth reviews when submitting updates to the stores.
 
@@ -694,12 +697,12 @@ This effects all HTML files, not just the Popup. The hash has been removed, and 
 
 ### 🚀 Enhancements
 
-- **zip:** ⚠️  Add `includeSources` and rename `ignoredSources` to `excludeSources` ([#378](https://github.com/wxt-dev/wxt/pull/378))
+- **zip:** ⚠️ Add `includeSources` and rename `ignoredSources` to `excludeSources` ([#378](https://github.com/wxt-dev/wxt/pull/378))
 
 ### 🩹 Fixes
 
 - Generate missing sourcemap in `wxt:unimport` plugin ([#381](https://github.com/wxt-dev/wxt/pull/381))
-- ⚠️  Move browser constants to `import.meta.env` ([#380](https://github.com/wxt-dev/wxt/pull/380))
+- ⚠️ Move browser constants to `import.meta.env` ([#380](https://github.com/wxt-dev/wxt/pull/380))
 - Enable inline sourcemaps by default during development ([#382](https://github.com/wxt-dev/wxt/pull/382))
 
 ### 📖 Documentation
@@ -849,7 +852,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
+- ⚠️ Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
 
 #### ⚠️ Breaking Changes
 
@@ -858,7 +861,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 - `createContentScriptUi({ ... })` &rarr; `createShadowRootUi({ ... })`
 - `createContentScriptIframe({ ... })` &rarr; `createIframeUi({ ... })`
 - `type: "inline" | "overlay" | "modal"` has been changed to `position: "inline" | "overlay" | "modal"`
-- `onRemove` is now called ***before*** the UI is removed from the DOM, previously it was called after the UI was removed
+- `onRemove` is now called **_before_** the UI is removed from the DOM, previously it was called after the UI was removed
 - `mount` option has been renamed to `onMount`, to better match the related option, `onRemove`.
 
 ## v0.13.5
@@ -954,7 +957,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  New `wxt/storage` APIs ([#300](https://github.com/wxt-dev/wxt/pull/300))
+- ⚠️ New `wxt/storage` APIs ([#300](https://github.com/wxt-dev/wxt/pull/300))
 
 #### ⚠️ Breaking Changes
 
@@ -1011,7 +1014,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  Add support for "main world" content scripts ([#284](https://github.com/wxt-dev/wxt/pull/284))
+- ⚠️ Add support for "main world" content scripts ([#284](https://github.com/wxt-dev/wxt/pull/284))
 
 ### 🩹 Fixes
 
@@ -1033,10 +1036,10 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - If you use auto-imports, no changes are required.
 - If you have disabled auto-imports, you'll need to manually update your import statements:
-   ```diff
-   - import { defineBackground, defineContentScript } from 'wxt/client';
-   + import { defineBackground, defineContentScript } from 'wxt/sandbox';
-   ```
+  ```diff
+  - import { defineBackground, defineContentScript } from 'wxt/client';
+  + import { defineBackground, defineContentScript } from 'wxt/sandbox';
+  ```
 
 ## v0.11.2
 
@@ -1074,7 +1077,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  Vite 5 support ([#261](https://github.com/wxt-dev/wxt/pull/261))
+- ⚠️ Vite 5 support ([#261](https://github.com/wxt-dev/wxt/pull/261))
 
 ### 📖 Documentation
 
@@ -1166,7 +1169,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🚀 Enhancements
 
 - List `bun` as an experimental option in `wxt init` ([#233](https://github.com/wxt-dev/wxt/pull/233))
-- ⚠️  Allow plural directory and only png's for manifest icons ([#237](https://github.com/wxt-dev/wxt/pull/237))
+- ⚠️ Allow plural directory and only png's for manifest icons ([#237](https://github.com/wxt-dev/wxt/pull/237))
 - Add `wxt/storage` API ([#234](https://github.com/wxt-dev/wxt/pull/234))
 
 ### 🩹 Fixes
@@ -1238,7 +1241,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🩹 Fixes
 
-- ⚠️  Remove `lib` from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209))
+- ⚠️ Remove `lib` from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209))
 
 ### 📖 Documentation
 
@@ -1251,15 +1254,15 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Removed [`"WebWorker"` types](https://www.typescriptlang.org/tsconfig/lib.html) from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209)). These types are useful for MV3 projects using a service worker. To add them back to your project, add the following to your project's TSConfig:
-   ```diff
-   {
-     "extends": "./.wxt/tsconfig.json",
-   + "compilerOptions": {
-   +   "lib": ["ESNext", "DOM", "WebWorker"]
-   + }
-   }
-   ```
+- ⚠️ Removed [`"WebWorker"` types](https://www.typescriptlang.org/tsconfig/lib.html) from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209)). These types are useful for MV3 projects using a service worker. To add them back to your project, add the following to your project's TSConfig:
+  ```diff
+  {
+    "extends": "./.wxt/tsconfig.json",
+  + "compilerOptions": {
+  +   "lib": ["ESNext", "DOM", "WebWorker"]
+  + }
+  }
+  ```
 
 ### ❤️ Contributors
 
@@ -1373,7 +1376,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  Use `defineUnlistedScript` to define unlisted scripts ([#167](https://github.com/wxt-dev/wxt/pull/167))
+- ⚠️ Use `defineUnlistedScript` to define unlisted scripts ([#167](https://github.com/wxt-dev/wxt/pull/167))
 
 ### 📖 Documentation
 
@@ -1381,12 +1384,12 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🌊 Types
 
-- ⚠️  Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
+- ⚠️ Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Unlisted scripts must now `export default defineUnlistedScript(...)` ([#167](https://github.com/wxt-dev/wxt/pull/167))
-- ⚠️  Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
+- ⚠️ Unlisted scripts must now `export default defineUnlistedScript(...)` ([#167](https://github.com/wxt-dev/wxt/pull/167))
+- ⚠️ Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
 
 ### ❤️ Contributors
 
@@ -1479,7 +1482,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🩹 Fixes
 
 - Validate transformed manifest correctly ([4b2012c](https://github.com/wxt-dev/wxt/commit/4b2012c))
-- ⚠️  Output content script CSS to `content-scripts/<name>.css` ([#140](https://github.com/wxt-dev/wxt/pull/140))
+- ⚠️ Output content script CSS to `content-scripts/<name>.css` ([#140](https://github.com/wxt-dev/wxt/pull/140))
 - Reorder typescript paths to give priority to `@` and `~` over `@@` and `~~` ([#142](https://github.com/wxt-dev/wxt/pull/142))
 
 ### 🏡 Chore
@@ -1577,7 +1580,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🚀 Enhancements
 
 - Export `ContentScriptContext` from `wxt/client` ([1f448d1](https://github.com/wxt-dev/wxt/commit/1f448d1))
-- ⚠️  Require a function for `vite` configuration ([#121](https://github.com/wxt-dev/wxt/pull/121))
+- ⚠️ Require a function for `vite` configuration ([#121](https://github.com/wxt-dev/wxt/pull/121))
 
 ### 🩹 Fixes
 
@@ -1586,7 +1589,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  The `vite` config option must now be a function. If you were using an object before, change it from `vite: { ... }` to `vite: () => ({ ... })`. ([#121](https://github.com/wxt-dev/wxt/pull/121))
+- ⚠️ The `vite` config option must now be a function. If you were using an object before, change it from `vite: { ... }` to `vite: () => ({ ... })`. ([#121](https://github.com/wxt-dev/wxt/pull/121))
 
 ## v0.5.6
 
@@ -1653,7 +1656,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🩹 Fixes
 
 - **types:** Don't write to files if nothing changes ([#107](https://github.com/wxt-dev/wxt/pull/107))
-- ⚠️  Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
+- ⚠️ Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
 
 ### 📖 Documentation
 
@@ -1673,7 +1676,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
+- ⚠️ Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
 
 ## v0.4.1
 
@@ -1701,7 +1704,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - Allow adding custom content scripts ([b428a62](https://github.com/wxt-dev/wxt/commit/b428a62))
 - Don't overwrite `wxt.config.ts` content scripts, append entrypoints to it ([5f5f1d9](https://github.com/wxt-dev/wxt/commit/5f5f1d9))
-- ⚠️  Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
+- ⚠️ Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
 
 ### 📖 Documentation
 
@@ -1734,7 +1737,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
+- ⚠️ Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
 
 ## v0.3.2
 
@@ -1806,8 +1809,8 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🚀 Enhancements
 
-- ⚠️  Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
-- ⚠️  Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
+- ⚠️ Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
+- ⚠️ Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
 - Windows support ([#50](https://github.com/wxt-dev/wxt/pull/50))
 
 ### 🩹 Fixes
@@ -1826,10 +1829,10 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - Improve checks against `demo/` extension ([9cc464f](https://github.com/wxt-dev/wxt/commit/9cc464f))
 
-#### ⚠️  Breaking Changes
+#### ⚠️ Breaking Changes
 
-- ⚠️  Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
-- ⚠️  Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
+- ⚠️ Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
+- ⚠️ Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
 
 ## v0.2.5
 
