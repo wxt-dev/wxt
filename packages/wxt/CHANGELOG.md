@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.18.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.0...v0.18.1)
+
+### 🩹 Fixes
+
+- `_background` is not defined ([#649](https://github.com/wxt-dev/wxt/pull/649))
+
+### 🏡 Chore
+
+- Add root README back ([ec3dd52](https://github.com/wxt-dev/wxt/commit/ec3dd52))
+
+### 🤖 CI
+
+- Fix sync releases workflow ([dc5b55b](https://github.com/wxt-dev/wxt/commit/dc5b55b))
+
 ## v0.18.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.12...v0.18.0)
