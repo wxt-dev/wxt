@@ -34,6 +34,10 @@ import { importEntrypointFile } from './import-entrypoint';
  * Return entrypoints and their configuration by looking through the project's files.
  */
 export async function findEntrypoints(): Promise<Entrypoint[]> {
+  // Make sure required TSConfig file exists to load dependencies
+  await fs.mkdir(wxt.config.wxtDir, { recursive: true });
+  await fs.writeJson(resolve(wxt.config.wxtDir, 'tsconfig.json'), {});
+
   const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: wxt.config.entrypointsDir,
   });
