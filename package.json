@@ -7,7 +7,7 @@
   },
   "packageManager": "pnpm@8.6.3",
   "scripts": {
-    "check": "pnpm -r run check",
+    "check": "check && pnpm -r run check",
     "test": "vitest",
     "test:coverage": "vitest run --coverage.enabled \"--coverage.include=packages/wxt/src/**\" \"--coverage.exclude=packages/wxt/src/core/utils/testing/**\" \"--coverage.exclude=**/*.d.ts\"",
     "prepare": "simple-git-hooks",
@@ -45,11 +45,16 @@
     "*": "prettier --ignore-unknown --write"
   },
   "changelog": {
-    "excludeAuthors": ["aaronklinker1@gmail.com"]
+    "excludeAuthors": [
+      "aaronklinker1@gmail.com"
+    ]
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search", "search-insights"]
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "search-insights"
+      ]
     }
   }
 }
