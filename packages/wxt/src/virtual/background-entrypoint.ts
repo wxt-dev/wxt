@@ -34,10 +34,12 @@ if (import.meta.env.COMMAND === 'serve') {
   });
 }
 
+let result;
+
 try {
-  const res = definition.main();
+  result = definition.main();
   // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
-  if (res instanceof Promise) {
+  if (result instanceof Promise) {
     console.warn(
       "The background's main() function return a promise, but it must be synchronous",
     );
@@ -46,3 +48,9 @@ try {
   logger.error('The background crashed on startup!');
   throw err;
 }
+
+// Return the main function's result to the background when executed via the
+// scripting API. Default export causes the IIFE to return a value.
+// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
+// Tested on both Chrome and Firefox
+export default result;

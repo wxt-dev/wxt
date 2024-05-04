@@ -294,9 +294,10 @@ describe('Output Directory Structure', () => {
           warn: (...args) => print(console.warn, ...args),
           error: (...args) => print(console.error, ...args)
         };
+        var result;
         try {
-          const res = definition.main();
-          if (res instanceof Promise) {
+          result = definition.main();
+          if (result instanceof Promise) {
             console.warn(
               "The background's main() function return a promise, but it must be synchronous"
             );
@@ -352,7 +353,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        (function() {
+        var _background = function() {
           "use strict";
           function defineBackground(arg) {
             if (typeof arg === "function")
@@ -379,9 +380,10 @@ describe('Output Directory Structure', () => {
             warn: (...args) => print(console.warn, ...args),
             error: (...args) => print(console.error, ...args)
           };
+          var result;
           try {
-            const res = definition.main();
-            if (res instanceof Promise) {
+            result = definition.main();
+            if (result instanceof Promise) {
               console.warn(
                 "The background's main() function return a promise, but it must be synchronous"
               );
@@ -390,7 +392,9 @@ describe('Output Directory Structure', () => {
             logger.error("The background crashed on startup!");
             throw err;
           }
-        })();
+          var background_entrypoint_default = result;
+          return background_entrypoint_default;
+        }();
         _background;
         "
       `);
