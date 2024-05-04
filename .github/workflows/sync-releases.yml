@@ -20,3 +20,4 @@ jobs:
           node-version: 18
           cache: pnpm
       - run: pnpm sync-releases all --token ${{ secrets.GITHUB_TOKEN }}
+        working-directory: packages/wxt
