@@ -88,7 +88,7 @@
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "vitest",
     "test:e2e": "vitest -r e2e",
-    "test:e2e:2": "vitest --config e2e/vitest.config.ts"
+    "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",

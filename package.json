@@ -15,8 +15,7 @@
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
     "docs:build": "pnpm -s docs:gen && vitepress build docs",
-    "docs:preview": "pnpm -s docs:gen && vitepress preview docs",
-    "sync-releases": "pnpx changelogen@latest gh release"
+    "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.1.1",
