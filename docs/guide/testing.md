@@ -22,4 +22,4 @@ If you want to try to use a different framework for unit tests, you will need to
 - **Global Variables**: If you consume them, manually define globals provided by WXT (like `import.meta.env.BROWSER`) by adding them to the global scope before accessing them (`import.meta.env.BROWSER = "chrome"`)
 - **Import paths**: If you use the `@/` or `~/` path aliases, add them to your test environment
 
-[Here's how Vitest is configured](https://github.com/wxt-dev/wxt/blob/main/src/testing/wxt-vitest-plugin.ts) for reference.
+[Here's how Vitest is configured](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/src/testing/wxt-vitest-plugin.ts) for reference.
