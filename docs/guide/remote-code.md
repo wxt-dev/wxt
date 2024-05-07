@@ -1,10 +1,10 @@
 # Remote Code
 
-WXT will automatically download and bundle imports with the `url:` prefix so the extension does not depend of remote code, [a requirement from Google for MV3](https://developer.chrome.com/docs/extensions/migrating/improve-security/#remove-remote-code).
+WXT will automatically download and bundle imports with the `url:` prefix so the extension does not depend on remote code, [a requirement from Google for MV3](https://developer.chrome.com/docs/extensions/migrating/improve-security/#remove-remote-code).
 
 ## Google Analytics
 
-For example, you can import google analytics:
+For example, you can import Google Analytics:
 
 ```ts
 // utils/google-analytics.ts
