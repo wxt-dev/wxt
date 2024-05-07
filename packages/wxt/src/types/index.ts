@@ -927,6 +927,10 @@ export interface ExtensionRunnerConfig {
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#start-url
    */
   startUrls?: string[];
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#keep-profile-changes
+   */
+  keepProfileChanges?: boolean;
 }
 
 export interface WxtBuilder {
