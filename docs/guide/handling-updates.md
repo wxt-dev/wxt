@@ -84,7 +84,7 @@ To validate this, you can create a third ZIP file with a rare permission like `g
 You can setup a callback that runs after your extension updates like so:
 
 ```ts
-browser.runtime.onInstalled.addEventListener(({ reason }) => {
+browser.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === 'update') {
     // Do something
   }
