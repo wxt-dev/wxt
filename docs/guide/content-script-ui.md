@@ -388,14 +388,14 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
    export default defineContentScript({
      matches: ['<all_urls>'],
 
-     async main(ctx) {
+     main(ctx) {
        // Define the UI
-       const ui = await createIframeUi(ctx, {
+       const ui = createIframeUi(ctx, {
          page: '/example-iframe.html',
          position: 'inline',
          onMount: (wrapper, iframe) => {
            // Add styles to the iframe like width
-           iframe.width = 123;
+           iframe.width = '123';
          },
        });
 
