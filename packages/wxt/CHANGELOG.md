@@ -24,7 +24,7 @@
 - Edoan ([@EdoanR](http://github.com/EdoanR))
 - Linus Norton ([@linusnorton](http://github.com/linusnorton))
 - Jeffrey Zang ([@jeffrey-zang](http://github.com/jeffrey-zang))
-- Emmanuel Ferdman <emmanuelferdman@gmail.com>
+- Emmanuel Ferdman ([@emmanuel-ferdman](https://github.com/emmanuel-ferdman))
 
 ## v0.18.1
 
