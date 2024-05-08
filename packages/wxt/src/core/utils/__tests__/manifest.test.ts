@@ -897,7 +897,7 @@ describe('Manifest Utils', () => {
 
     describe('sidepanel', () => {
       it.each(['chrome', 'safari', 'edge'])(
-        'should include a side_panel ignoring all options for %s',
+        'should include the side_panel and permission, ignoring all options for %s',
         async (browser) => {
           const sidepanel = fakeSidepanelEntrypoint({
             outputDir: outDir,
@@ -909,12 +909,14 @@ describe('Manifest Utils', () => {
               manifestVersion: 3,
               browser,
               outDir,
+              command: 'build',
             },
           });
           const expected = {
             side_panel: {
               default_path: 'sidepanel.html',
             },
+            permissions: ['sidePanel'],
           };
 
           const { manifest: actual } = await generateManifest(

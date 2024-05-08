@@ -347,6 +347,7 @@ function addEntrypoints(
       manifest.side_panel = {
         default_path: page,
       };
+      addPermission(manifest, 'sidePanel');
     } else {
       wxt.logger.warn(
         'Side panel not supported by Chromium using MV2. side_panel.default_path was not added to the manifest',
