@@ -35,6 +35,7 @@ export function createWebExtRunner(): ExtensionRunner {
         console: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
+        keepProfileChanges: wxtUserConfig?.keepProfileChanges,
         ...(wxt.config.browser === 'firefox'
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
