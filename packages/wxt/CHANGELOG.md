@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.18.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.1...v0.18.2)
+
+### 🚀 Enhancements
+
+- **runner:** Add `keepProfileChanges` option ([#655](https://github.com/wxt-dev/wxt/pull/655))
+
+### 🩹 Fixes
+
+- Automatically detect and add "sidePanel" permission ([5fcaf7c](https://github.com/wxt-dev/wxt/commit/5fcaf7c))
+
+### 📖 Documentation
+
+- Fix `wxt-vitest-plugin` reference ([#650](https://github.com/wxt-dev/wxt/pull/650))
+- Fix spelling mistake in remote-code.md ([#652](https://github.com/wxt-dev/wxt/pull/652))
+- Correct event handler name in handling-updates.md ([#653](https://github.com/wxt-dev/wxt/pull/653))
+- Fix iframe typos ([c74e530](https://github.com/wxt-dev/wxt/commit/c74e530))
+
+### ❤️ Contributors
+
+- Edoan ([@EdoanR](http://github.com/EdoanR))
+- Linus Norton ([@linusnorton](http://github.com/linusnorton))
+- Jeffrey Zang ([@jeffrey-zang](http://github.com/jeffrey-zang))
+- Emmanuel Ferdman <emmanuelferdman@gmail.com>
+
 ## v0.18.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.0...v0.18.1)
