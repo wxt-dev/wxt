@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - CHANGELOG.md
+      - packages/wxt/CHANGELOG.md
 
 jobs:
   sync:
