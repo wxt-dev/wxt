@@ -466,23 +466,34 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     addPermission(manifest, permission);
   }
 
-  const csp = new ContentSecurityPolicy(
+  const extensionPagesCsp = new ContentSecurityPolicy(
     manifest.manifest_version === 3
       ? // @ts-expect-error: extension_pages is not typed
         manifest.content_security_policy?.extension_pages ??
-        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" // default CSP for MV3
+        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" // default extension_pages CSP for MV3
       : manifest.content_security_policy ??
         "script-src 'self'; object-src 'self';", // default CSP for MV2
   );
+  const sandboxCsp = new ContentSecurityPolicy(
+    // @ts-expect-error: sandbox is not typed
+    manifest.content_security_policy?.sandbox ??
+      "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';", // default sandbox CSP for MV3
+  );
 
-  if (wxt.server) csp.add('script-src', allowedCsp);
+  if (wxt.server) {
+    extensionPagesCsp.add('script-src', allowedCsp);
+    sandboxCsp.add('script-src', allowedCsp);
+  }
 
   if (manifest.manifest_version === 3) {
     manifest.content_security_policy ??= {};
     // @ts-expect-error: extension_pages is not typed
-    manifest.content_security_policy.extension_pages = csp.toString();
+    manifest.content_security_policy.extension_pages =
+      extensionPagesCsp.toString();
+    // @ts-expect-error: sandbox is not typed
+    manifest.content_security_policy.sandbox = sandboxCsp.toString();
   } else {
-    manifest.content_security_policy = csp.toString();
+    manifest.content_security_policy = extensionPagesCsp.toString();
   }
 }
 

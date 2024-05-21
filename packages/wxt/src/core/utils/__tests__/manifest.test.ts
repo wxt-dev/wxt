@@ -1574,6 +1574,8 @@ describe('Manifest Utils', () => {
           content_security_policy: {
             extension_pages:
               "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';",
+            sandbox:
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';",
           },
           host_permissions: ['http://localhost/*'],
           permissions: ['tabs', 'scripting'],
