@@ -311,8 +311,25 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   logger: mock(),
   reloadConfig: vi.fn(),
   pm: mock(),
-  server: faker.helpers.arrayElement([undefined, mock<WxtDevServer>()]),
+  server: faker.helpers.arrayElement([undefined, fakeWxtDevServer()]),
   builder: mock(),
+}));
+
+export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({
+  currentOutput: fakeBuildOutput(),
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  port: 3000,
+  reloadContentScript: vi.fn(),
+  reloadExtension: vi.fn(),
+  reloadPage: vi.fn(),
+  restart: vi.fn(),
+  restartBrowser: vi.fn(),
+  start: vi.fn(),
+  stop: vi.fn(),
+  transformHtml: vi.fn(),
+  watcher: mock(),
+  ws: mock(),
 }));
 
 export function setFakeWxt(overrides?: DeepPartial<Wxt>) {

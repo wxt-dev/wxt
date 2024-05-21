@@ -10,6 +10,7 @@ import {
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
   fakeSidepanelEntrypoint,
+  fakeWxtDevServer,
   setFakeWxt,
 } from '../testing/fake-objects';
 import { Manifest } from 'webextension-polyfill';
@@ -1494,6 +1495,89 @@ describe('Manifest Utils', () => {
 
         expect(actual.permissions).toEqual(expectedPermissions);
         expect(actual.host_permissions).toBeUndefined();
+      });
+    });
+
+    describe('Dev mode', () => {
+      it('should not add any code for production builds', async () => {
+        setFakeWxt({
+          config: {
+            command: 'build',
+          },
+          server: {
+            hostname: 'localhost',
+            port: 3000,
+            origin: 'http://localhost:3000',
+          },
+        });
+        const output = fakeBuildOutput();
+        const entrypoints: Entrypoint[] = [];
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+        );
+
+        expect(actual.permissions).toBeUndefined();
+        expect(actual.content_security_policy).toBeUndefined();
+      });
+
+      it('should add required permissions for dev mode to function for MV2', async () => {
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            manifestVersion: 2,
+          },
+          server: fakeWxtDevServer({
+            port: 3000,
+            hostname: 'localhost',
+            origin: 'http://localhost:3000',
+          }),
+        });
+        const output = fakeBuildOutput();
+        const entrypoints: Entrypoint[] = [];
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+        );
+
+        expect(actual).toMatchObject({
+          content_security_policy:
+            "script-src 'self' http://localhost:3000; object-src 'self';",
+          permissions: ['http://localhost/*', 'tabs'],
+        });
+      });
+
+      it('should add required permissions for dev mode to function for MV3', async () => {
+        setFakeWxt({
+          config: {
+            command: 'serve',
+            manifestVersion: 3,
+            browser: 'chrome',
+          },
+          server: fakeWxtDevServer({
+            hostname: 'localhost',
+            port: 3000,
+            origin: 'http://localhost:3000',
+          }),
+        });
+        const output = fakeBuildOutput();
+        const entrypoints: Entrypoint[] = [];
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          output,
+        );
+
+        expect(actual).toMatchObject({
+          content_security_policy: {
+            extension_pages:
+              "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';",
+          },
+          host_permissions: ['http://localhost/*'],
+          permissions: ['tabs', 'scripting'],
+        });
       });
     });
   });
