@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.18.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.2...v0.18.3)
+
+### 🩹 Fixes
+
+- Automatically add dev server to sandbox CSP ([#663](https://github.com/wxt-dev/wxt/pull/663))
+- Remove `import * as` imports from entrypoints during build ([#671](https://github.com/wxt-dev/wxt/pull/671))
+- **security:** Upgrade tar to 6.2.1 ([215def7](https://github.com/wxt-dev/wxt/commit/215def7))
+
+### 📖 Documentation
+
+- Add YTBlock to homepage ([#666](https://github.com/wxt-dev/wxt/pull/666))
+
+### 🏡 Chore
+
+- Add missing tests for dev mode CSP ([#662](https://github.com/wxt-dev/wxt/pull/662))
+- Upgrade templates to v0.18 ([3b954cc](https://github.com/wxt-dev/wxt/commit/3b954cc))
+
+### 🤖 CI
+
+- Fix sync-releases workflow trigger ([5d8efef](https://github.com/wxt-dev/wxt/commit/5d8efef))
+
+### ❤️ Contributors
+
+- Edoan ([@EdoanR](http://github.com/EdoanR))
+
 ## v0.18.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.1...v0.18.2)
