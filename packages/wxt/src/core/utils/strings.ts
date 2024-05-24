@@ -19,7 +19,7 @@ export function safeVarName(str: string): string {
  */
 export function removeImportStatements(text: string): string {
   return text.replace(
-    /(import\s?[{\w][\s\S]*?from\s?["'][\s\S]*?["'];?|import\s?["'][\s\S]*?["'];?)/gm,
+    /(import\s?[\s\S]*?from\s?["'][\s\S]*?["'];?|import\s?["'][\s\S]*?["'];?)/gm,
     '',
   );
 }

@@ -50,6 +50,7 @@ import "@/utils/github";
 import '@/utils/github';
 import"@/utils/github"
  import'@/utils/github';
+import * as abc from "@/utils/github"
     `;
       expect(removeImportStatements(imports).trim()).toEqual('');
     });
