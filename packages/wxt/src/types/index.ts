@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
 import type { Manifest, Scripting } from '~/browser';
-import { UnimportOptions } from 'unimport';
+import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -1252,4 +1252,22 @@ export interface WxtPackageManager extends Nypm.PackageManager {
 export interface Dependency {
   name: string;
   version: string;
+}
+
+export type WxtModuleOptions = Record<string, any>;
+
+export interface WxtModuleMetadata {
+  name?: string;
+  configKey?: string;
+  compatibility?: {
+    wxt: string;
+    [packageName: string]: string;
+  };
+}
+
+export interface WxtModule<TOptions extends WxtModuleOptions> {
+  meta?: WxtModuleMetadata;
+  defaults?: Partial<TOptions>;
+  imports?: Import[];
+  setup(moduleOptions: TOptions, wxt: Wxt): void | Promise<void>;
 }

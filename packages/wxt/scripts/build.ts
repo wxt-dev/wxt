@@ -57,6 +57,7 @@ const config: tsup.Options[] = [
       index: 'src/index.ts',
       testing: 'src/testing/index.ts',
       storage: 'src/storage.ts',
+      plugins: 'src/modules.ts',
     },
     format: ['cjs', 'esm'],
     clean: true,

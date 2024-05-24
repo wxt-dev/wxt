@@ -78,6 +78,16 @@
     },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
+    },
+    "./plugins": {
+      "import": {
+        "types": "./dist/plugins.d.ts",
+        "default": "./dist/plugins.js"
+      },
+      "require": {
+        "types": "./dist/plugins.d.cts",
+        "default": "./dist/plugins.cjs"
+      }
     }
   },
   "scripts": {
