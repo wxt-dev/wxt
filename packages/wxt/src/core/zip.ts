@@ -104,15 +104,12 @@ async function zipDir(
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
+      dot: true,
     })
   ).filter((relativePath) => {
     return (
-      wxt.config.zip.includeSources.some((pattern) =>
-        minimatch(relativePath, pattern),
-      ) ||
-      !wxt.config.zip.excludeSources.some((pattern) =>
-        minimatch(relativePath, pattern),
-      )
+      options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
+      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
     );
   });
   const filesToZip = [
