@@ -6,7 +6,6 @@
 import type {
   Entrypoint,
   EntrypointGroup,
-  ResolvedConfig,
   Wxt,
   WxtModule,
   WxtModuleOptions,
@@ -68,15 +67,5 @@ export function mergeViteConfig(
   wxt: Wxt,
   viteConfig: (group: EntrypointGroup) => vite.UserConfig | undefined,
 ): void {
-  throw Error('TODO');
-}
-
-/**
- * Add JS code to a JS entrypoint.
- *
- * @argument wxt The wxt instance provided by the module's setup function.
- * @argument js Code that will be added to the entrypoint. Includes any top-level imports to add,
- */
-export function addJs() {
   throw Error('TODO');
 }

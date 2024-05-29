@@ -10,6 +10,7 @@ import {
   WxtResolvedUnimportOptions,
   Logger,
   WxtCommand,
+  WxtModule,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -76,6 +77,10 @@ export async function resolveConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
+  const modulesDir = path.resolve(
+    srcDir,
+    mergedConfig.entrypointsDir ?? 'modules',
+  );
   if (await isDirMissing(entrypointsDir)) {
     logMissingDir(logger, 'Entrypoints', entrypointsDir);
   }
@@ -128,6 +133,7 @@ export async function resolveConfig(
     command,
     debug,
     entrypointsDir,
+    modulesDir,
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
@@ -160,6 +166,7 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
+    modules: await resolveWxtModules(modulesDir, mergedConfig.modules),
   };
 }
 
@@ -358,4 +365,44 @@ export async function mergeBuilderConfig(
   }
 
   throw Error('Builder not found. Make sure vite is installed.');
+}
+
+export async function resolveWxtModules(
+  modulesDir: string,
+  modules: string[] = [],
+): Promise<WxtModule<any>[]> {
+  // Resolve NPM packages
+  const npmModules = await Promise.all(
+    modules.map(async (moduleId) => {
+      const mod = await import(/* @vite-ignore */ moduleId).catch(
+        () => import(/* @vite-ignore */ `wxt-module-${moduleId}`),
+      );
+      return mod;
+    }),
+  );
+
+  // Resolve local file paths
+  const localModulePaths = await fs.readdir(modulesDir).catch(() => []);
+  const localModules = await Promise.all(
+    localModulePaths.map(async (file) => {
+      const { config } = await loadConfig<WxtModule<any>>({
+        configFile: path.resolve(modulesDir, file),
+        globalRc: false,
+        rcFile: false,
+        packageJson: false,
+        envName: false,
+        dotenv: false,
+      });
+      if (config == null)
+        throw Error(
+          `No config found for ${file}. Did you forget to add a default export?`,
+        );
+      // Add name based on filename
+      config.name ??= file;
+      return config;
+    }),
+  );
+
+  // Execute modules
+  return [...npmModules, ...localModules];
 }

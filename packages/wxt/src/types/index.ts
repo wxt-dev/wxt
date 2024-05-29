@@ -38,6 +38,10 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
+   * @default "${config.srcDir}/modules"
+   */
+  modulesDir?: string;
+  /**
    * A list of entrypoint names (`"popup"`, `"options"`, etc.) to build. Will speed up the build if
    * your extension has lots of entrypoints, and you don't need to build all of them to develop a
    * feature.
@@ -350,6 +354,12 @@ export interface InlineConfig {
    * Project hooks for running logic during the build process.
    */
   hooks?: NestedHooks<WxtHooks>;
+  /**
+   * List of WXT module names to include. Can be the full package name
+   * ("wxt-module-analytics"), or just the suffix ("analytics" would resolve to
+   * "wxt-module-analytics").
+   */
+  modules?: string[];
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -1089,6 +1099,7 @@ export interface ResolvedConfig {
   wxtDir: string;
   typesDir: string;
   entrypointsDir: string;
+  modulesDir: string;
   filterEntrypoints?: Set<string>;
   outBaseDir: string;
   outDir: string;
@@ -1152,6 +1163,7 @@ export interface ResolvedConfig {
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
+  modules: WxtModule<any>[];
 }
 
 export interface FsCache {
@@ -1256,18 +1268,26 @@ export interface Dependency {
 
 export type WxtModuleOptions = Record<string, any>;
 
-export interface WxtModuleMetadata {
-  name?: string;
-  configKey?: string;
-  compatibility?: {
-    wxt: string;
-    [packageName: string]: string;
-  };
-}
+export interface WxtModuleMetadata {}
 
 export interface WxtModule<TOptions extends WxtModuleOptions> {
-  meta?: WxtModuleMetadata;
-  defaults?: Partial<TOptions>;
+  name?: string;
+  /**
+   * Key for users to pass options into your module from their `wxt.config.ts` file.
+   */
+  configKey?: string;
+  /**
+   * Provide a list of imports to add to auto-imports.
+   */
   imports?: Import[];
+  /**
+   * Alternative to adding hooks in setup function with `wxt.hooks`. Hooks are
+   * added before the `setup` function is called.
+   */
+  hooks?: WxtHooks;
+  /**
+   * A custom function that can be used to setup hooks and call module-specific
+   * APIs.
+   */
   setup(moduleOptions: TOptions, wxt: Wxt): void | Promise<void>;
 }

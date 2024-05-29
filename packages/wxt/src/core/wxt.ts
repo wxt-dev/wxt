@@ -45,6 +45,16 @@ export async function registerWxt(
     server,
   };
 
+  // Initialize modules
+  for (const module of config.modules) {
+    if (module.hooks) wxt.hooks.addHooks(module.hooks);
+    await module.setup(
+      // @ts-expect-error: Untyped configKey field
+      module.configKey ? config[module.configKey] : undefined,
+      wxt,
+    );
+  }
+
   // Initialize hooks
   wxt.hooks.addHooks(config.hooks);
   await wxt.hooks.callHook('ready', wxt);
