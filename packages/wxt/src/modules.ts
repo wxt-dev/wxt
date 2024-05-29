@@ -20,25 +20,41 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
 }
 
 /**
- * Adds a TS/JS file as an entrypoint to the project.
+ * Adds a TS/JS file as an entrypoint to the project. This file will be bundled
+ * along with the other entrypoints. To keep builds fast, you should probably use
+ * `copyAssets` instead to copy pre-bundled assets into the output directory.
  *
  * @argument wxt The wxt instance provided by the module's setup function.
  * @argument entrypoint The entrypoint to be bundled along with the extension.
  *
  * @example
- * export default defineWxtPlugin({
- *   setup(wxt) {
- *     addEntrypoint(wxt, {
- *       type: "unlisted-page",
- *       name: "changelog",
- *       inputPath: "wxt-module-changelog/index.html"
- *       outputDir: wxt.config.outputDir,
- *       options: {},
- *     });
- *   }
+ * export default defineWxtModule((_, wxt) => {
+ *   addEntrypoint(wxt, {
+ *     type: "unlisted-page",
+ *     name: "changelog",
+ *     inputPath: "wxt-module-changelog/index.html"
+ *     outputDir: wxt.config.outputDir,
+ *     options: {},
+ *   });
  * });
  */
 export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
+  throw Error('TODO');
+}
+
+/**
+ * Copy files inside a directory into the extension's output directory. The
+ * directory itself is not copied, just the files inside it.
+ *
+ * @argument wxt The wxt instance provided by the module's setup function.
+ * @argument dir The directory to copy.
+ *
+ * @example
+ * export default defineWxtModule((_, wxt) => {
+ *   copyAssets(wxt, "./dist/prebundled");
+ * });
+ */
+export function copyAssets(wxt: Wxt, dir: string): void {
   throw Error('TODO');
 }
 
@@ -53,8 +69,8 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
  *                      bundle the entrypoint group.
  *
  * @example
- * export default defineWxtPlugin({
- *   setup(wxt) {
+ * export default defineWxtModule({
+ *   setup(_, wxt) {
  *     mergeViteConfig(wxt, (group) => ({
  *       build: {
  *         sourceMaps: true,
