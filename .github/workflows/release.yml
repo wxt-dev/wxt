@@ -30,6 +30,7 @@ jobs:
       - name: NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
+          pnpm build
           pnpm publish
         working-directory: packages/wxt
 
