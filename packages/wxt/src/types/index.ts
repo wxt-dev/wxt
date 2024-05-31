@@ -1268,8 +1268,6 @@ export interface Dependency {
 
 export type WxtModuleOptions = Record<string, any>;
 
-export interface WxtModuleMetadata {}
-
 export interface WxtModule<TOptions extends WxtModuleOptions> {
   name?: string;
   /**
