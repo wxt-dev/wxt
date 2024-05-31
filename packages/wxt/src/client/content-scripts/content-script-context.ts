@@ -217,7 +217,7 @@ export class ContentScriptContext implements AbortController {
     // Use postMessage so it get's sent to all the frames of the page.
     window.postMessage(
       {
-        event: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
+        type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
         contentScriptName: this.contentScriptName,
       },
       '*',
