@@ -37,13 +37,13 @@ pnpm build
 
 ```sh
 # Build WXT package, then build demo extension
-cd demo
+cd packages/wxt-demo
 pnpm build
 ```
 
 ```sh
 # Build WXT package, then start the demo extension in dev mode
-cd demo
+cd packages/wxt-demo
 pnpm dev
 ```
 
@@ -75,7 +75,7 @@ To run tests for a specific file, add the filename at the end of the test comman
 pnpm test manifest-contents
 ```
 
-Unit and E2E tests are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
+All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
 
@@ -90,7 +90,7 @@ npm run dev
 npm run build
 ```
 
-Note that templates are hardcoded to a specific version of `wxt` from NPM, they do not use the local version. PR checks will test your changes against the templates, but if you want to manually do it, update the package.json dependency:
+Note that templates are hardcoded to a specific version of `wxt` from NPM, they do not use the local version. PR checks will test your PR's changes against the templates, but if you want to manually do it, update the package.json dependency:
 
 ```diff
   "devDependencies": {
