@@ -27,6 +27,7 @@ const chromeExtensionIds = [
   'mblkhbaakhbhiimkbcnmeciblfhmafna', // ElemSnap - Quick capture of webpage elements and conversion to images,
   'oajalfneblkfiejoadecnmodfpnaeblh', // MS Edge TTS (Text to Speech)
   'nedcanggplmbbgmlpcjiafgjcpdimpea', // YTBlock - Block any content from YouTube™
+  'oadbjpccljkplmhnjekgjamejnbadlne', // demo.fun - Interactive product demos that convert
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
