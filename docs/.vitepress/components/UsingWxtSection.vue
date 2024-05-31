@@ -7,8 +7,6 @@ import useListExtensionDetails, {
 // Add extension IDs here. Order doesn't matter, will be sorted by weekly active users
 // During the transition from chrome.google.com/webstore to
 // chromewebstore.google.com, queue.wxt.dev might return null for your
-// extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
-// can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
@@ -26,7 +24,8 @@ const chromeExtensionIds = [
   'nhclljcpfmmaiojbhhnkpjcfmacfcian', // Facebook Video Controls
   'mblkhbaakhbhiimkbcnmeciblfhmafna', // ElemSnap - Quick capture of webpage elements and conversion to images,
   'oajalfneblkfiejoadecnmodfpnaeblh', // MS Edge TTS (Text to Speech)
-  'nedcanggplmbbgmlpcjiafgjcpdimpea', // YTBlock - Block any content from YouTube™
+  'nedcanggplmbbgmlpcjiafgjcpdimpea', // YTBlock - Block any content from YouTube™,
+  'oadbjpccljkplmhnjekgjamejnbadlne', // Demo.fun - Create interactive product demos
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
