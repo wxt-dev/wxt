@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.18.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.3...v0.18.4)
+
+### 🩹 Fixes
+
+- Allow zipping hidden files in sources by listing them explicitly in `includeSources` ([#674](https://github.com/wxt-dev/wxt/pull/674))
+- Properly invalidate content script context ([#683](https://github.com/wxt-dev/wxt/pull/683))
+
+### 📖 Documentation
+
+- Update contributing guidelines ([8125d74](https://github.com/wxt-dev/wxt/commit/8125d74))
+
+### ❤️ Contributors
+
+- Hujiulong ([@hujiulong](http://github.com/hujiulong))
+
 ## v0.18.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.2...v0.18.3)
