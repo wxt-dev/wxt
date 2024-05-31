@@ -3,7 +3,7 @@
   "entryPointStrategy": "packages",
   "entryPoints": ["../packages/wxt"],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
-  "out": "./api",
+  "out": "./api/reference",
   "githubPages": false,
   "excludePrivate": true,
   "excludeProtected": true,
