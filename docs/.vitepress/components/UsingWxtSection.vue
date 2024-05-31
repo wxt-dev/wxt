@@ -52,90 +52,56 @@ function getStoreUrl(extension: ChromeExtension) {
 </script>
 
 <template>
-  <section class="vp-doc">
-    <div class="container">
-      <h2 id="whos-using-wxt">Who's Using WXT?</h2>
-      <p>
-        Battle tested and ready for production. Explore chrome extensions made
-        with WXT.
-      </p>
-      <p v-if="isLoading" style="text-align: center; opacity: 50%">
-        Loading...
-      </p>
-      <p
-        v-else-if="err || sortedExtensions.length === 0"
-        style="text-align: center; opacity: 50%"
-      >
-        Failed to load extension details.
-      </p>
-      <ul v-else>
-        <li
-          v-for="extension of sortedExtensions"
-          :key="extension.id"
-          class="relative"
-        >
-          <img
-            :src="extension.iconUrl"
-            :alt="`${extension.name} icon`"
-            referrerpolicy="no-referrer"
-          />
-          <div class="relative">
-            <a
-              :href="getStoreUrl(extension)"
-              target="_blank"
-              :title="extension.name"
-              class="extension-name"
-              >{{ extension.name }}</a
-            >
-            <p class="description" :title="extension.shortDescription">
-              {{ extension.shortDescription }}
-            </p>
-          </div>
-          <p class="user-count">
-            <span>{{ extension.weeklyActiveUsers.toLocaleString() }} users</span
-            ><template v-if="extension.rating != null"
-              >,
-              <span>{{ extension.rating }} stars</span>
-            </template>
-          </p>
-        </li>
-      </ul>
-      <p class="centered pr">
+  <p v-if="isLoading" style="text-align: center; opacity: 50%">Loading...</p>
+  <p
+    v-else-if="err || sortedExtensions.length === 0"
+    style="text-align: center; opacity: 50%"
+  >
+    Failed to load extension details.
+  </p>
+  <ul v-else>
+    <li
+      v-for="extension of sortedExtensions"
+      :key="extension.id"
+      class="relative"
+    >
+      <img
+        :src="extension.iconUrl"
+        :alt="`${extension.name} icon`"
+        referrerpolicy="no-referrer"
+      />
+      <div class="relative">
         <a
-          href="https://github.com/wxt-dev/wxt/edit/main/docs/.vitepress/components/UsingWxtSection.vue"
+          :href="getStoreUrl(extension)"
           target="_blank"
-          >Open a PR</a
+          :title="extension.name"
+          class="extension-name"
+          >{{ extension.name }}</a
         >
-        to add your extension to the list!
+        <p class="description" :title="extension.shortDescription">
+          {{ extension.shortDescription }}
+        </p>
+      </div>
+      <p class="user-count">
+        <span>{{ extension.weeklyActiveUsers.toLocaleString() }} users</span
+        ><template v-if="extension.rating != null"
+          >,
+          <span>{{ extension.rating }} stars</span>
+        </template>
       </p>
-    </div>
-  </section>
+    </li>
+  </ul>
+  <p class="centered pr">
+    <a
+      href="https://github.com/wxt-dev/wxt/edit/main/docs/.vitepress/components/UsingWxtSection.vue"
+      target="_blank"
+      >Open a PR</a
+    >
+    to add your extension to the list!
+  </p>
 </template>
 
 <style scoped>
-.vp-doc {
-  padding: 0 24px;
-}
-
-@media (min-width: 640px) {
-  .vp-doc {
-    padding: 0 48px;
-  }
-}
-
-@media (min-width: 960px) {
-  .vp-doc {
-    padding: 0 64px;
-  }
-}
-
-.container {
-  max-width: 1152px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
 li img {
   width: 116px;
   height: 116px;
