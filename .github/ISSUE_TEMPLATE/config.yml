@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Chat
+    url: https://discord.gg/ZFsZqGery9
+    about: Ask questions and discuss with other WXT users in real time.
+  - name: Questions & Discussions
+    url: https://github.com/wxt-dev/wxt/discussions
+    about: Use GitHub discussions for message-board style questions and discussions.
