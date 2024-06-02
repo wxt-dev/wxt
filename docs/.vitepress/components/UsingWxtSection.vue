@@ -28,6 +28,7 @@ const chromeExtensionIds = [
   'oajalfneblkfiejoadecnmodfpnaeblh', // MS Edge TTS (Text to Speech)
   'nedcanggplmbbgmlpcjiafgjcpdimpea', // YTBlock - Block any content from YouTube™
   'oadbjpccljkplmhnjekgjamejnbadlne', // demo.fun - Interactive product demos that convert
+  'iopdafdcollfgaoffingmahpffckmjni', // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
