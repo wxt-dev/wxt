@@ -181,7 +181,7 @@ bun zip:firefox
 Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
 
 :::warning
-If you use a `.env` files, they can effect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
+If you use a `.env` files, they can effect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/reference/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
 
 See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 :::

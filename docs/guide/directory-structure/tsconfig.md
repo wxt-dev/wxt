@@ -1,0 +1,3 @@
+# `<root>/tsconfig.json`
+
+TODO

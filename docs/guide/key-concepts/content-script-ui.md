@@ -155,20 +155,20 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/wxt/client/functions/createIntegratedUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/client/functions/createIntegratedUi) for the complete list of options.
 
-You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) property. Usually, you'll want to leave it as `"manifest"`, the default, so the UI inherits its style from the website's CSS.
+You can control how CSS is injected for an integrated content script UI with the [`cssInjectionMode`](/api/reference/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) property. Usually, you'll want to leave it as `"manifest"`, the default, so the UI inherits its style from the website's CSS.
 
 ## Shadow Root
 
 Often in web extensions, you don't want your content script's CSS affecting the page, or vise-versa. The [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) API is ideal for this.
 
-WXT's [`createShadowRootUi`](/api/wxt/client/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated CSS. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
+WXT's [`createShadowRootUi`](/api/reference/wxt/client/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs with isolated CSS. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
 
 To use `createShadowRootUi`, follow these steps:
 
 1. Import your CSS file at the top of your content script
-2. Set [`cssInjectionMode: "ui"`](/api/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) inside `defineContentScript`
+2. Set [`cssInjectionMode: "ui"`](/api/reference/wxt/interfaces/BaseContentScriptEntrypointOptions#cssinjectionmode) inside `defineContentScript`
 3. Define your UI with `createShadowRootUi()`
 4. Mount the UI so it is visible to users
 
@@ -341,7 +341,7 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/wxt/client/functions/createShadowRootUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/client/functions/createShadowRootUi) for the complete list of options.
 
 :::info TailwindCSS
 `createShadowRootUi` supports TailwindCSS out of the box! When importing the styles, just import the main CSS file containing the `@tailwind` directives, and everything will just work :+1:.
@@ -351,7 +351,7 @@ See the [API Reference](/api/wxt/client/functions/createShadowRootUi) for the co
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
 
-WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/createIframeUi), which simplifies setting up the IFrame.
+WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi), which simplifies setting up the IFrame.
 
 1. Create an HTML page that will be loaded into your IFrame
    ```html
@@ -405,4 +405,4 @@ WXT provides a helper function, [`createIframeUi`](/api/wxt/client/functions/cre
    });
    ```
 
-See the [API Reference](/api/wxt/client/functions/createIframeUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/client/functions/createIframeUi) for the complete list of options.

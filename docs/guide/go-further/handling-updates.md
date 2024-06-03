@@ -41,7 +41,7 @@ The `ctx` also provides other convenient APIs for stopping your content script w
    });
    ```
 
-Other WXT APIs require a `ctx` object so they can clean themselves up. For example, [`createIntegratedUi`](/guide/content-script-ui#integrated), [`createShadowRootUi`](/guide/content-script-ui#shadow-root), and [`createIframeUi`](/guide/content-script-ui#iframe) automatically unmount and stop a UI when the script is invalidated.
+Other WXT APIs require a `ctx` object so they can clean themselves up. For example, [`createIntegratedUi`](/guide/key-concepts/content-script-ui#integrated), [`createShadowRootUi`](/guide/key-concepts/content-script-ui#shadow-root), and [`createIframeUi`](/guide/key-concepts/content-script-ui#iframe) automatically unmount and stop a UI when the script is invalidated.
 
 :::warning
 When working with content scripts, **you should always use the `ctx` object to stop any async or future work.**

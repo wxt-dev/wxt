@@ -104,4 +104,4 @@ export default defineContentScript({
 });
 ```
 
-See [Content Script UI](/guide/content-script-ui) for more info on creating UIs and including CSS in content scripts.
+See [Content Script UI](/guide/key-concepts/content-script-ui) for more info on creating UIs and including CSS in content scripts.

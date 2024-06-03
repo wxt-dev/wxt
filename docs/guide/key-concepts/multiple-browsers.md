@@ -33,7 +33,7 @@ By default, it will build for `chrome`. When excluding the [manifest version fla
 | Any other string |            3             |
 
 :::tip
-To configure which browser is opened when running dev mode via `wxt -b <browser>`, see the [Development docs](/guide/development#configure-browser-startup) docs.
+To configure which browser is opened when running dev mode via `wxt -b <browser>`, see the [`web-ext.config.ts` docs](/guide/directory-structure/web-ext-config).
 :::
 
 ## Target Manifest Version

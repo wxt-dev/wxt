@@ -15,7 +15,7 @@ export default defineConfig({
 ```
 
 :::info
-For more information on configuring WXT via the `wxt.config.ts` file, read the dedicated [`wxt.config.ts` guide](/guide/directory-structure/wxt-config-file).
+For more information on configuring WXT via the `wxt.config.ts` file, read the dedicated [`wxt.config.ts` guide](/guide/directory-structure/wxt-config).
 :::
 
 ## Manifest.json
@@ -53,5 +53,5 @@ import.meta.env.VITE_OAUTH_CLIENT_ID;
 :::
 
 :::info
-For more information on using .env files, read the dedicated [`.env` guide](/guide/directory-structure/env-file).
+For more information on using .env files, read the dedicated [`.env` guide](/guide/directory-structure/env).
 :::

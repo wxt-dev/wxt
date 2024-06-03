@@ -2,22 +2,18 @@
 
 WXT uses the same tool as Nuxt for auto-imports, [`unimport`](https://github.com/unjs/unimport).
 
-:::info Testing
-To setup your test environment for auto-imports, see [Testing](/guide/testing).
-:::
-
 ## WXT Auto-imports
 
 Some WXT APIs can be used without importing them:
 
-- [`browser`](/api/wxt/browser/variables/browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
-- [`defineContentScript`](/api/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`
-- [`defineBackground`](/api/wxt/sandbox/functions/defineBackground) from `wxt/sandbox`
-- [`defineUnlistedScript`](/api/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
-- [`createIntegratedUi`](/api/wxt/client/functions/createIntegratedUi) from `wxt/client`
-- [`createShadowRootUi`](/api/wxt/client/functions/createShadowRootUi) from `wxt/client`
-- [`createIframeUi`](/api/wxt/client/functions/createIframeUi) from `wxt/client`
-- [`fakeBrowser`](/api/wxt/testing/variables/fakeBrowser) from `wxt/testing`
+- [`browser`](/api/reference/wxt/browser/variables/browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
+- [`defineContentScript`](/api/reference/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`
+- [`defineBackground`](/api/reference/wxt/sandbox/functions/defineBackground) from `wxt/sandbox`
+- [`defineUnlistedScript`](/api/reference/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
+- [`createIntegratedUi`](/api/reference/wxt/client/functions/createIntegratedUi) from `wxt/client`
+- [`createShadowRootUi`](/api/reference/wxt/client/functions/createShadowRootUi) from `wxt/client`
+- [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi) from `wxt/client`
+- [`fakeBrowser`](/api/reference/wxt/testing/variables/fakeBrowser) from `wxt/testing`
 
 And more!
 
@@ -43,7 +39,7 @@ Alternatively, you could add the directory to the list of auto-import directorie
 
 For TypeScript to work, you need to run the `wxt prepare` command. This will ensure types are generated for auto-imports.
 
-This should be added to your `postinstall` script:
+This should be added to your `postinstall` script so your editor has everything it needs to report type errors after installing dependencies:
 
 ```json
 // package.json
@@ -70,6 +66,8 @@ export default defineConfig({
   },
 });
 ```
+
+## Disabling Auto-imports
 
 To disable auto-imports, set `imports: false`
 

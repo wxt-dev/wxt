@@ -33,7 +33,7 @@ For production builds, none of the above modifications will be applied, and you'
 
 ## Configure Browser Startup
 
-WXT uses [`web-ext` by Mozilla](https://github.com/mozilla/web-ext) to automatically open a browser with the extension installed. You can configure the runner's behavior via the [`runner`](/api/wxt/interfaces/InlineConfig#runner) option, or in a separate gitignored file, `web-ext.config.ts`.
+WXT uses [`web-ext` by Mozilla](https://github.com/mozilla/web-ext) to automatically open a browser with the extension installed. You can configure the runner's behavior via the [`runner`](/api/reference/wxt/interfaces/InlineConfig#runner) option, or in a separate gitignored file, `web-ext.config.ts`.
 
 :::code-group
 
@@ -59,7 +59,7 @@ export default defineRunnerConfig({
 
 ### Browser Binaries
 
-`web-ext`'s browser discovery is very limited. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
+`web-ext`'s browser discovery is very limited. By default, it only guesses at where Chrome and Firefox are installed. If you've customized your install locations, you may need to tell `web-ext` where the binaries/executables are located using the [`binaries` option](/api/reference/wxt/interfaces/ExtensionRunnerConfig#binaries). For other Chromium based browsers, like Edge or Opera, you'll need to explicitly list them in the `binaries` option as well, otherwise they will open in Chrome by default.
 
 ```ts
 // ~/web-ext.config.ts
@@ -93,7 +93,7 @@ export default defineRunnerConfig({
 });
 ```
 
-For a full list of options, see the [API Reference](/api/wxt/interfaces/ExtensionRunnerConfig).
+For a full list of options, see the [API Reference](/api/reference/wxt/interfaces/ExtensionRunnerConfig).
 
 ## Reload the Extension
 

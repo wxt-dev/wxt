@@ -22,7 +22,7 @@ export default defineConfig({
 });
 ```
 
-More info on permissions [here](/guide/manifest#permissions).
+More info on permissions [here](/guide/key-concepts/manifest#permissions).
 :::
 
 [[toc]]
@@ -54,7 +54,7 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
-For a full list of methods available, see the [API reference](/api/wxt/storage/interfaces/WxtStorage).
+For a full list of methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorage).
 
 ## Watchers
 
@@ -137,7 +137,7 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 });
 ```
 
-For a full list of properties and methods available, see the [API reference](/api/wxt/storage/interfaces/WxtStorageItem).
+For a full list of properties and methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorageItem).
 
 ### Versioning
 

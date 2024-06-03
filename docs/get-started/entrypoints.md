@@ -22,7 +22,7 @@ Some entrypoint filesname patterns are reserved by WXT and effect how the manife
 - `*.content.ts` adds a content script
 - ...
 
-> For a full list of recognized filenames, see the the [Entrypoints Directory guide](/guide/directory-structure/entrypoints).
+> For a full list of recognized filenames, see the the [Entrypoints Directory guide](/guide/directory-structure/entrypoints/background).
 
 Any other files, whether JS, CSS, or HTML, is considered "unlisted". Unlisted files, like `injected.ts` from above, are just bundled to the output directory and not added to the manifest. You can still access or load them at runtime.
 
@@ -56,5 +56,5 @@ export default defineContentScript({
 ```
 
 :::info
-All options for each entrypoint type is listed in the [entrypoints directory docs](/guide/project-structure/entrypoints).
+All options for each entrypoint type is listed in the [entrypoints directory docs](/guide/directory-structure/entrypoints/background).
 :::

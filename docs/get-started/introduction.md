@@ -44,4 +44,4 @@ See [Publishing](./publishing) for more info around production builds.
 
 Most of these docs assume you have a basic understanding of how to write a chrome or web extension.
 
-If you've never written a web extension before or need a refresher, read WXT's [Extension Bootcamp](/guide/boot-camp) to get the basics down.
+If you've never written a web extension before or need a refresher, follow Google's ["Hello, World!" tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) to understand the basics.

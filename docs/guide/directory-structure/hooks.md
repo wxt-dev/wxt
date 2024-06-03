@@ -1,0 +1,3 @@
+# `<srcDir>/hooks`
+
+TODO
