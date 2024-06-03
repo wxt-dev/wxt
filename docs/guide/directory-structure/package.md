@@ -1,3 +1,5 @@
 # `<root>/package.json`
 
-TODO
+:::warning 🚧 Under construction
+These docs will be coming soon!
+:::
