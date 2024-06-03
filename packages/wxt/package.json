@@ -139,7 +139,7 @@
     "@types/node": "^20.10.3",
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
-    "execa": "^8.0.1",
+    "execa": "^9.1.0",
     "extract-zip": "^2.0.1",
     "happy-dom": "^13.3.8",
     "lodash.merge": "^4.6.2",
