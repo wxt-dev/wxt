@@ -150,8 +150,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       nypm:
-        specifier: ^0.3.6
-        version: 0.3.6
+        specifier: ^0.3.8
+        version: 0.3.8
       open:
         specifier: ^10.1.0
         version: 10.1.0
@@ -4165,17 +4165,6 @@ packages:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
     dependencies:
       boolbase: 1.0.0
-    dev: false
-
-  /nypm@0.3.6:
-    resolution: {integrity: sha512-2CATJh3pd6CyNfU5VZM7qSwFu0ieyabkEdnogE30Obn1czrmOYiZ8DOZLe1yBdLKWoyD3Mcy2maUs+0MR3yVjQ==}
-    engines: {node: ^14.16.0 || >=16.10.0}
-    hasBin: true
-    dependencies:
-      citty: 0.1.6
-      execa: 8.0.1
-      pathe: 1.1.2
-      ufo: 1.4.0
     dev: false
 
   /nypm@0.3.8:
