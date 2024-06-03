@@ -1,3 +1,0 @@
-# `<srcDir>/modules`
-
-TODO

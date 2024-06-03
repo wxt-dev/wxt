@@ -177,9 +177,11 @@ export default defineConfig({
               items: [
                 { text: 'Testing', link: 'testing' },
                 { text: 'ES Modules', link: 'es-modules' },
-                { text: 'Remote Code', link: 'remote-code' },
-                { text: 'Vite', link: 'vite' },
+                { text: 'Debugging', link: 'debugging' },
                 { text: 'Handling Updates', link: 'handling-updates' },
+                { text: 'Vite', link: 'vite' },
+                { text: 'Custom Events', link: 'custom-events' },
+                { text: 'Remote Code', link: 'remote-code' },
                 {
                   text: 'Entrypoint Side Effects',
                   link: 'entrypoint-side-effects',
