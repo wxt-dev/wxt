@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      vite:
-        specifier: 5.2.12
-        version: 5.2.12
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.1.1
@@ -5784,6 +5780,7 @@ packages:
       rollup: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@5.2.8(@types/node@20.10.3):
     resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
