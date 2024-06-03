@@ -1,4 +1,4 @@
-## Entrypoint Side Effects
+# Entrypoint Side Effects
 
 You cannot use imported variables outside the `main` function in JS entrypoints. This includes options, as shown below:
 
