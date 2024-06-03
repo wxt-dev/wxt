@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      vite:
-        specifier: 5.2.8
-        version: 5.2.8(@types/node@20.10.3)
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.1.1
