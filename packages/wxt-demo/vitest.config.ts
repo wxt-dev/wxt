@@ -6,5 +6,6 @@ export default defineProject({
     mockReset: true,
     restoreMocks: true,
   },
+  // @ts-expect-error
   plugins: [WxtVitest()],
 });

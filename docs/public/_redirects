@@ -2,8 +2,8 @@
 # https://docs.netlify.com/routing/redirects/
 
 # Old URLs -> New URLs
-/config.html                    /api/wxt/interfaces/InlineConfig.html
-/api/config.html                /api/wxt/interfaces/InlineConfig.html
+/config.html                    /api/reference/wxt/interfaces/InlineConfig.html
+/api/config.html                /api/reference/wxt/interfaces/InlineConfig.html
 /entrypoints                    /entrypoints/background.html
 /get-started/assets.html        /guide/assets.html
 /get-started/build-targets.html /guide/multiple-browsers.html

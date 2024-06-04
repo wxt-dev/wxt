@@ -70,29 +70,22 @@ features:
     linkText: Read docs
 ---
 
-<section class="vp-doc" style="padding: 0 48px">
-  <div class="container">
-    <h2>Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First</h2>
-    <p>
-      WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
-    </p>
-    <div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
-      <video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94" controls></video>
-      <br />
-      <small>
-        And who doesn't appreciate a beautiful CLI?
-      </small>
-    </div>
-  </div>
-</section>
+## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
+
+WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
+
+<div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
+  <video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94" controls></video>
+  <br />
+  <small>
+    And who doesn't appreciate a beautiful CLI?
+  </small>
+</div>
+
+## Who's Using WXT?
+
+Battle tested and ready for production. Explore chrome extensions made with WXT.
 
 <ClientOnly>
   <UsingWxtSection />
 </ClientOnly>
-
-<style scoped>
-.container {
-  margin: 0 auto;
-  max-width: 1152px;
-}
-</style>
