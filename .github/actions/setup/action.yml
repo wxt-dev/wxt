@@ -4,9 +4,7 @@ runs:
   using: composite
   steps:
     - name: Setup PNPM
-      uses: pnpm/action-setup@v3
-      with:
-        version: 8
+      uses: pnpm/action-setup@v4
     - name: Setup NodeJS
       uses: actions/setup-node@v4
       with:
