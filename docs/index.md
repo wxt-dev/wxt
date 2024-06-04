@@ -22,22 +22,20 @@ features:
   - icon: 🌐
     title: Supported Browsers
     details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
-    link: /guide/multiple-browsers
+    link: /guide/key-concepts/web-extension-polyfill
     linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
     details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
-    link: /guide/multiple-browsers#target-manifest-version
+    link: /guide/key-concepts/manifest
     linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
     details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
-    link: /guide/development.html
-    linkText: Learn more
   - icon: 📂
     title: File Based Entrypoints
     details: Manifest is generated based on files in the project with inline configuration.
-    link: /guide/entrypoints
+    link: /get-started/entrypoints
     linkText: See project structure
   - icon: 🚔
     title: TypeScript
@@ -45,7 +43,7 @@ features:
   - icon: 🦾
     title: Auto-imports
     details: Nuxt-like auto-imports to speed up development.
-    link: /guide/auto-imports
+    link: /guide/key-concepts/auto-imports
     linkText: Read docs
   - icon: 🤖
     title: Automated Publishing
@@ -53,12 +51,12 @@ features:
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
-    link: /guide/configuration#frontend-frameworks
+    link: /guide/key-concepts/frontend-frameworks
     linkText: Add a framework
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Get started quickly with several awesome project templates.
-    link: /guide/installation#bootstrap-project
+    link: /get-started/installation#bootstrap-project
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
@@ -66,7 +64,7 @@ features:
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
-    link: /guide/remote-code
+    link: /guide/go-further/remote-code
     linkText: Read docs
 ---
 
