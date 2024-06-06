@@ -90,7 +90,7 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
       // "XXX is not defined" - usually due to WXT removing imports
       const variableName = err.message.replace(' is not defined', '');
       throw Error(
-        `${filePath}: Cannot use imported variable "${variableName}" outside the main function. See https://wxt.dev/guide/entrypoints.html#side-effects`,
+        `${filePath}: Cannot use imported variable "${variableName}" outside the main function. See https://wxt.dev/guide/go-further/entrypoint-side-effects.html`,
         { cause: err },
       );
     } else {
