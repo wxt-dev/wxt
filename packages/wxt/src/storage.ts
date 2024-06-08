@@ -13,13 +13,13 @@ import { toArray } from './core/utils/arrays';
 export const storage = createStorage();
 
 function createStorage(): WxtStorage {
-  const drivers: Record<string, WxtStorageDriver> = {
+  const drivers: Record<StorageArea, WxtStorageDriver> = {
     local: createDriver('local'),
     session: createDriver('session'),
     sync: createDriver('sync'),
     managed: createDriver('managed'),
   };
-  const getDriver = (area: string) => {
+  const getDriver = (area: StorageArea) => {
     const driver = drivers[area];
     if (driver == null) {
       const areaNames = Object.keys(drivers).join(', ');
@@ -27,7 +27,7 @@ function createStorage(): WxtStorage {
     }
     return driver;
   };
-  const resolveKey = (key: string) => {
+  const resolveKey = (key: StorageItemKey) => {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex);
     const driverKey = key.substring(deliminatorIndex + 1);
@@ -249,7 +249,7 @@ function createStorage(): WxtStorage {
         driver.unwatch();
       });
     },
-    defineItem: (key: string, opts?: WxtStorageItemOptions<any>) => {
+    defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
       const { driver, driverKey } = resolveKey(key);
 
       const { version: targetVersion = 1, migrations = {} } = opts ?? {};
@@ -344,7 +344,7 @@ function createStorage(): WxtStorage {
 }
 
 function createDriver(
-  storageArea: 'local' | 'session' | 'sync' | 'managed',
+  storageArea: StorageArea,
 ): WxtStorageDriver {
   const getStorageArea = () => {
     if (browser.runtime == null) {
@@ -438,7 +438,7 @@ export interface WxtStorage {
    * @example
    * await storage.getItem<number>("local:installDate");
    */
-  getItem<T>(key: string, opts?: GetItemOptions<T>): Promise<T | null>;
+  getItem<T>(key: StorageItemKey, opts?: GetItemOptions<T>): Promise<T | null>;
   /**
    * Get multiple items from storage. The return order is guaranteed to be the same as the order
    * requested.
@@ -447,8 +447,8 @@ export interface WxtStorage {
    * await storage.getItems(["local:installDate", "session:someCounter"]);
    */
   getItems(
-    keys: Array<string | { key: string; options?: GetItemOptions<any> }>,
-  ): Promise<Array<{ key: string; value: any }>>;
+    keys: Array<StorageItemKey | { key: StorageItemKey; options?: GetItemOptions<any> }>,
+  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
   /**
    * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
    * is not an object, it returns an empty object.
@@ -456,7 +456,7 @@ export interface WxtStorage {
    * @example
    * await storage.getMeta("local:installDate");
    */
-  getMeta<T extends Record<string, unknown>>(key: string): Promise<T>;
+  getMeta<T extends Record<string, unknown>>(key: StorageItemKey): Promise<T>;
   /**
    * Set a value in storage. Setting a value to `null` or `undefined` is equivalent to calling
    * `removeItem`.
@@ -464,7 +464,7 @@ export interface WxtStorage {
    * @example
    * await storage.setItem<number>("local:installDate", Date.now());
    */
-  setItem<T>(key: string, value: T | null): Promise<void>;
+  setItem<T>(key: StorageItemKey, value: T | null): Promise<void>;
   /**
    * Set multiple values in storage. If a value is set to `null` or `undefined`, the key is removed.
    *
@@ -474,7 +474,7 @@ export interface WxtStorage {
    *   { key: "session:someCounter, value: 5 },
    * ]);
    */
-  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
+  setItems(values: Array<{ key: StorageItemKey; value: any }>): Promise<void>;
   /**
    * Sets metadata properties. If some properties are already set, but are not included in the
    * `properties` parameter, they will not be removed.
@@ -483,7 +483,7 @@ export interface WxtStorage {
    * await storage.setMeta("local:installDate", { appVersion });
    */
   setMeta<T extends Record<string, unknown>>(
-    key: string,
+    key: StorageItemKey,
     properties: T | null,
   ): Promise<void>;
   /**
@@ -492,12 +492,12 @@ export interface WxtStorage {
    * @example
    * await storage.removeItem("local:installDate");
    */
-  removeItem(key: string, opts?: RemoveItemOptions): Promise<void>;
+  removeItem(key: StorageItemKey, opts?: RemoveItemOptions): Promise<void>;
   /**
    * Remove a list of keys from storage.
    */
   removeItems(
-    keys: Array<string | { key: string; options?: RemoveItemOptions }>,
+    keys: Array<StorageItemKey | { key: StorageItemKey; options?: RemoveItemOptions }>,
   ): Promise<void>;
   /**
    * Remove the entire metadata for a key, or specific properties by name.
@@ -525,7 +525,7 @@ export interface WxtStorage {
   /**
    * Watch for changes to a specific key in storage.
    */
-  watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
+  watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
   /**
    * Remove all watch listeners.
    */
@@ -537,10 +537,10 @@ export interface WxtStorage {
    * Read full docs: https://wxt.dev/guide/storage.html#defining-storage-items
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: string,
+    key: StorageItemKey,
   ): WxtStorageItem<TValue | null, TMetadata>;
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: string,
+    key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
 }
@@ -599,6 +599,9 @@ export interface WxtStorageItem<
    */
   migrate(): Promise<void>;
 }
+
+export type StorageArea = "local" | "session" | "sync" | "managed";
+export type StorageItemKey = `${StorageArea}:${string}`
 
 export interface GetItemOptions<T> {
   /**
