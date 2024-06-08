@@ -29,7 +29,7 @@ function createStorage(): WxtStorage {
   };
   const resolveKey = (key: StorageItemKey) => {
     const deliminatorIndex = key.indexOf(':');
-    const driverArea = key.substring(0, deliminatorIndex);
+    const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
     const driverKey = key.substring(deliminatorIndex + 1);
     if (driverKey == null)
       throw Error(
@@ -126,10 +126,10 @@ function createStorage(): WxtStorage {
       return await getItem(driver, driverKey, opts);
     },
     getItems: async (keys) => {
-      const areaToKeyMap = new Map<string, string[]>();
+      const areaToKeyMap = new Map<StorageArea, string[]>();
       const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
       keys.forEach((key) => {
-        let keyStr: string;
+        let keyStr: StorageItemKey;
         let opts: GetItemOptions<any> | undefined;
         if (typeof key === 'string') {
           keyStr = key;
@@ -147,7 +147,7 @@ function createStorage(): WxtStorage {
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
           return driverResults.map((driverResult) => {
-            const key = `${driverArea}:${driverResult.key}`;
+            const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
             const value = getValueOrDefault(
               driverResult.value,
               keyToOptsMap.get(key)?.defaultValue,
@@ -168,7 +168,7 @@ function createStorage(): WxtStorage {
     },
     setItems: async (values) => {
       const areaToKeyValueMap = new Map<
-        string,
+        StorageArea,
         Array<{ key: string; value: any }>
       >();
       values.forEach(({ key, value }) => {
@@ -197,9 +197,9 @@ function createStorage(): WxtStorage {
       await removeItem(driver, driverKey, opts);
     },
     removeItems: async (keys) => {
-      const areaToKeysMap = new Map<string, string[]>();
+      const areaToKeysMap = new Map<StorageArea, string[]>();
       keys.forEach((key) => {
-        let keyStr: string;
+        let keyStr: StorageItemKey;
         let opts: RemoveItemOptions | undefined;
         if (typeof key === 'string') {
           keyStr = key;
@@ -343,9 +343,7 @@ function createStorage(): WxtStorage {
   return storage;
 }
 
-function createDriver(
-  storageArea: StorageArea,
-): WxtStorageDriver {
+function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const getStorageArea = () => {
     if (browser.runtime == null) {
       throw Error(
@@ -447,7 +445,9 @@ export interface WxtStorage {
    * await storage.getItems(["local:installDate", "session:someCounter"]);
    */
   getItems(
-    keys: Array<StorageItemKey | { key: StorageItemKey; options?: GetItemOptions<any> }>,
+    keys: Array<
+      StorageItemKey | { key: StorageItemKey; options?: GetItemOptions<any> }
+    >,
   ): Promise<Array<{ key: StorageItemKey; value: any }>>;
   /**
    * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
@@ -497,7 +497,9 @@ export interface WxtStorage {
    * Remove a list of keys from storage.
    */
   removeItems(
-    keys: Array<StorageItemKey | { key: StorageItemKey; options?: RemoveItemOptions }>,
+    keys: Array<
+      StorageItemKey | { key: StorageItemKey; options?: RemoveItemOptions }
+    >,
   ): Promise<void>;
   /**
    * Remove the entire metadata for a key, or specific properties by name.
@@ -509,19 +511,22 @@ export interface WxtStorage {
    * // Remove only specific the "v" field
    * await storage.removeMeta("local:installDate", "v")
    */
-  removeMeta(key: string, properties?: string | string[]): Promise<void>;
+  removeMeta(
+    key: StorageItemKey,
+    properties?: string | string[],
+  ): Promise<void>;
   /**
    * Return all the items in storage.
    */
   snapshot(
-    base: string,
+    base: StorageArea,
     opts?: SnapshotOptions,
   ): Promise<Record<string, unknown>>;
   /**
    * Restores the results of `snapshot`. If new properties have been saved since the snapshot, they are
    * not overridden. Only values existing in the snapshot are overridden.
    */
-  restoreSnapshot(base: string, data: any): Promise<void>;
+  restoreSnapshot(base: StorageArea, data: any): Promise<void>;
   /**
    * Watch for changes to a specific key in storage.
    */
@@ -600,8 +605,8 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
-export type StorageArea = "local" | "session" | "sync" | "managed";
-export type StorageItemKey = `${StorageArea}:${string}`
+export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
+export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
