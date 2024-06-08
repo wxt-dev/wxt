@@ -42,7 +42,7 @@ Lets go over a few approaches:
    (browser.action ?? browser.browserAction).setBadgeColor('red');
    ```
 
-2. **Check the browser**: WXT provides environment variables about which browser is being targetted.
+2. **Check the browser**: WXT provides environment variables about which browser is being targeted.
    ```ts
    if (!import.meta.env.SAFARI) {
      // Safari doesn't implement `onStartup` correctly, so we need a custom solution
@@ -51,7 +51,7 @@ Lets go over a few approaches:
      browser.runtime.onStartup.addListener(...)
    }
    ```
-3. **Check the manifest version**: WXT provides environment variables about which manifest version is being targetted.
+3. **Check the manifest version**: WXT provides environment variables about which manifest version is being targeted.
    ```ts
    if (import.meta.env.MANIFEST_VERSION === 3) {
      // MV3 only code...

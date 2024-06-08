@@ -76,3 +76,27 @@ export default defineConfig({
   imports: false,
 });
 ```
+
+## ESLint
+
+ESLint doesn't understand auto-imports; it thinks all auto-imported variables are undeclared globals and will report lint errors for each. To fix this, extend the ESLint file generated inside the `.wxt` directory:
+
+```js
+// .eslintrc.js
+module.exports = {
+  extends: ['./.wxt/eslintrc-auto-import.json'],
+};
+```
+
+By default, this file will be generated when ESLint is a direct dependency. If ESLint is a subdependency or your project is a monorepo, it may not be generated automatically. In this case, you can tell WXT to generate it:
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  imports: {
+    eslintrc: {
+      enabled: true,
+    },
+  },
+});
+```

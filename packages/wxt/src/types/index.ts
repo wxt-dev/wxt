@@ -1203,7 +1203,11 @@ export interface ResolvedEslintrc {
 
 export type WxtUnimportOptions = Partial<UnimportOptions> & {
   /**
-   * When eslint is installed,
+   * When using ESLint, auto-imported variables are linted as "undeclared
+   * globals". This option lets you configure a base eslintrc that, when
+   * extended, fixes these lint errors.
+   *
+   * See <https://wxt.dev/guide/key-concepts/auto-imports.html#eslint>
    */
   eslintrc?: Eslintrc;
 };
