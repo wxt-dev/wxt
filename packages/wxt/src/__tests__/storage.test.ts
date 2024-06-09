@@ -849,13 +849,15 @@ describe('Storage Utils', () => {
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
+    });
+  });
 
-      it('should not accept keys without a valid storage area prefix', () => {
-        // @ts-expect-error: Test passes if there is a type error here
-        storage.getItem('test');
-        // @ts-expect-error
-        storage.getItem('loca:test');
-      });
+  describe('types', () => {
+    it('should not accept keys without a valid storage area prefix', async () => {
+      // @ts-expect-error: Test passes if there is a type error here
+      await storage.getItem('test').catch(() => {});
+      // @ts-expect-error
+      await storage.getItem('loca:test').catch(() => {});
     });
   });
 });
