@@ -39,7 +39,11 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * });
  */
 export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
-  throw Error('TODO');
+  wxt.hooks.addHooks({
+    'entrypoints:resolved': (wxt, entrypoints) => {
+      entrypoints.push(entrypoint);
+    },
+  });
 }
 
 /**

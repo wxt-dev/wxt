@@ -12,7 +12,7 @@ import {
   WxtCommand,
   WxtModule,
 } from '~/types';
-import path from 'node:path';
+import path, { basename, extname } from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
@@ -20,6 +20,7 @@ import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
+import glob from 'fast-glob';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -128,6 +129,16 @@ export async function resolveConfig(
     };
   }
 
+  const modules = await resolveWxtModules(modulesDir, mergedConfig.modules);
+  const moduleOptions = modules.reduce<Record<string, any>>((map, module) => {
+    if (module.configKey) {
+      map[module.configKey] =
+        // @ts-expect-error
+        mergedConfig[module.configKey];
+    }
+    return map;
+  }, {});
+
   return {
     browser,
     command,
@@ -166,7 +177,8 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
-    modules: await resolveWxtModules(modulesDir, mergedConfig.modules),
+    modules,
+    ...moduleOptions,
   };
 }
 
@@ -382,7 +394,10 @@ export async function resolveWxtModules(
   );
 
   // Resolve local file paths
-  const localModulePaths = await fs.readdir(modulesDir).catch(() => []);
+  const localModulePaths = await glob(['*.[tj]s', '*/index.[tj]s'], {
+    cwd: modulesDir,
+    onlyFiles: true,
+  }).catch(() => []);
   const localModules = await Promise.all(
     localModulePaths.map(async (file) => {
       const { config } = await loadConfig<WxtModule<any>>({
