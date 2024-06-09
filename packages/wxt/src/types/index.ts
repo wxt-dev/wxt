@@ -691,7 +691,7 @@ export interface BaseEntrypoint {
    */
   inputPath: string;
   /**
-   * Absolute path to the entrypoint's output directory. Can be the`InternalConfg.outDir` or a
+   * Absolute path to the entrypoint's output directory. Can be `wxt.config.outDir` or a
    * subdirectory of it.
    */
   outputDir: string;
