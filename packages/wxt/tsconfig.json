@@ -5,5 +5,5 @@
       "~/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules", "src/virtual", "e2e/dist"]
+  "exclude": ["node_modules", "src/virtual", "e2e/dist", "dist"]
 }
