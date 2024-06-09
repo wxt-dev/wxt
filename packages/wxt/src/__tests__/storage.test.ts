@@ -61,7 +61,7 @@ describe('Storage Utils', () => {
             { key: `${storageArea}:count`, value: 234 },
             { key: `${storageArea}:installDate`, value: null },
             { key: `${storageArea}:otherValue`, value: 345 },
-          ];
+          ] as const;
           const params = [
             expected[0].key,
             expected[1].key,
@@ -99,7 +99,7 @@ describe('Storage Utils', () => {
 
       describe('setItem', () => {
         it('should set the value in the correct storage area', async () => {
-          const key = `${storageArea}:count`;
+          const key = `${storageArea}:count` as const;
           const value = 321;
 
           await storage.setItem(key, value);
@@ -122,8 +122,8 @@ describe('Storage Utils', () => {
       describe('setItems', () => {
         it('should set multiple items in storage', async () => {
           const expected = [
-            { key: `${storageArea}:count`, value: 234 },
-            { key: `${storageArea}:installDate`, value: null },
+            { key: `${storageArea}:count` as const, value: 234 },
+            { key: `${storageArea}:installDate` as const, value: null },
           ];
           await fakeBrowser.storage[storageArea].set({
             count: 123,
@@ -212,9 +212,9 @@ describe('Storage Utils', () => {
 
       describe('removeItems', () => {
         it('should remove multiple items', async () => {
-          const key1 = `${storageArea}:one`;
-          const key2 = `${storageArea}:two`;
-          const key3 = `${storageArea}:three`;
+          const key1 = `${storageArea}:one` as const;
+          const key2 = `${storageArea}:two` as const;
+          const key3 = `${storageArea}:three` as const;
           await fakeBrowser.storage[storageArea].set({
             ['one']: '1',
             ['two']: null,
@@ -849,6 +849,15 @@ describe('Storage Utils', () => {
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
+    });
+  });
+
+  describe('types', () => {
+    it('should not accept keys without a valid storage area prefix', async () => {
+      // @ts-expect-error: Test passes if there is a type error here
+      await storage.getItem('test').catch(() => {});
+      // @ts-expect-error
+      await storage.getItem('loca:test').catch(() => {});
     });
   });
 });
