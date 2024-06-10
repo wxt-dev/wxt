@@ -116,7 +116,7 @@ export default defineConfig({
           ]),
           menuItem('hooks/', 'hooks'),
           menuItem('modules/', 'modules'),
-          menuGroup('public/', 'public', [
+          menuItem('public/', 'public/', [
             menuItem('_locales/', 'public/locales'),
           ]),
           menuItem('utils/', 'utils'),

@@ -47,7 +47,14 @@ export function menuItems(items: SidebarItem[]) {
   };
 }
 
-export function menuItem(text: string, link: string): SidebarItem {
+export function menuItem(
+  text: string,
+  link: string,
+  items?: SidebarItem[],
+): SidebarItem {
+  if (items) {
+    return { text, link, items };
+  }
   return { text, link };
 }
 
