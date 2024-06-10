@@ -3,12 +3,12 @@ import { HeadConfig } from 'vitepress/types/shared';
 export function meta(
   property: string,
   content: string,
-  useName = false,
+  options?: { useName: boolean },
 ): HeadConfig {
   return [
     'meta',
     {
-      [useName ? 'name' : 'property']: property,
+      [options?.useName ? 'name' : 'property']: property,
       content,
     },
   ];

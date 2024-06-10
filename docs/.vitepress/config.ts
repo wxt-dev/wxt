@@ -36,7 +36,7 @@ export default defineConfig({
     meta('og:image', ogImage),
     meta('og:url', ogUrl),
     meta('og:description', description),
-    meta('twitter:card', 'summary_large_image', true),
+    meta('twitter:card', 'summary_large_image', { useName: true }),
     script('https://umami.aklinker1.io/script.js', {
       'data-website-id': 'c1840c18-a12c-4a45-a848-55ae85ef7915',
       async: '',
