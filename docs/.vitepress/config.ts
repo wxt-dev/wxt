@@ -1,22 +1,16 @@
-import { DefaultTheme, defineConfig } from 'vitepress';
+import { defineConfig } from 'vitepress';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
-
-const filteredTypedocSidebar = typedocSidebar.filter(
-  (item) => item.text !== 'API',
-);
-// Typedoc's markdown theme adds collapse: true to all our items, event ones without any children,
-// so they need to be removed.
-function removeCollapsedWithNoItems(items: DefaultTheme.SidebarItem[]) {
-  for (const item of items) {
-    if (item.items) removeCollapsedWithNoItems(item.items);
-    else delete item.collapsed;
-  }
-}
-removeCollapsedWithNoItems(filteredTypedocSidebar);
+import {
+  menuGroup,
+  menuItem,
+  menuRoot,
+  navItem,
+  prepareTypedocSidebar,
+} from './utils/menus';
+import { meta, script } from './utils/head';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
-
 const description =
   "WXT provides the best developer experience, making it quick, easy, and fun to develop chrome extensions for all browsers. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
 const ogTitle = `${title}${titleSuffix}`;
@@ -37,20 +31,16 @@ export default defineConfig({
   },
 
   head: [
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: ogTitle }],
-    ['meta', { property: 'og:image', content: ogImage }],
-    ['meta', { property: 'og:url', content: ogUrl }],
-    ['meta', { property: 'og:description', content: description }],
-    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    [
-      'script',
-      {
-        async: '',
-        'data-website-id': 'c1840c18-a12c-4a45-a848-55ae85ef7915',
-        src: 'https://umami.aklinker1.io/script.js',
-      },
-    ],
+    meta('og:type', 'website'),
+    meta('og:title', ogTitle),
+    meta('og:image', ogImage),
+    meta('og:url', ogUrl),
+    meta('og:description', description),
+    meta('twitter:card', 'summary_large_image', true),
+    script('https://umami.aklinker1.io/script.js', {
+      'data-website-id': 'c1840c18-a12c-4a45-a848-55ae85ef7915',
+      async: '',
+    }),
   ],
 
   themeConfig: {
@@ -59,170 +49,116 @@ export default defineConfig({
       src: '/logo.svg',
       alt: 'WXT logo',
     },
+
     editLink: {
       pattern: 'https://github.com/wxt-dev/wxt/edit/main/docs/:path',
     },
+
     search: {
       provider: 'local',
-    },
-
-    nav: [
-      { text: 'Get Started', link: '/get-started/introduction' },
-      { text: 'Guide', link: '/guide/key-concepts/manifest' },
-      { text: 'Examples', link: '/examples' },
-      { text: 'API', link: '/api/reference/wxt' },
-    ],
-
-    sidebar: {
-      '/get-started/': [
-        {
-          text: 'Get Started',
-          base: '/get-started/',
-          items: [
-            { text: 'Introduction', link: 'introduction' },
-            { text: 'Installation', link: 'installation' },
-            { text: 'Configuration', link: 'configuration' },
-            { text: 'Entrypoints', link: 'entrypoints' },
-            { text: 'Assets', link: 'assets' },
-            { text: 'Testing', link: 'testing' },
-            { text: 'Publishing', link: 'publishing' },
-            { text: 'Migrate to WXT', link: 'migrate-to-wxt' },
-            { text: 'Compare', link: 'compare' },
-          ],
-        },
-      ],
-      '/guide/': [
-        {
-          items: [
-            {
-              text: 'Key Concepts',
-              collapsed: true,
-              base: '/guide/key-concepts/',
-              items: [
-                { text: 'Manifest', link: 'manifest' },
-                { text: 'Auto-imports', link: 'auto-imports' },
-                {
-                  text: 'Web Extension Polyfill',
-                  link: 'web-extension-polyfill',
-                },
-                { text: 'Frontend Frameworks', link: 'frontend-frameworks' },
-                { text: 'Content Script UI', link: 'content-script-ui' },
-              ],
-            },
-            {
-              text: 'Directory Structure',
-              collapsed: true,
-              base: '/guide/directory-structure/',
-              items: [
-                // Folders
-                { text: '.output/', link: 'output' },
-                { text: '.wxt/', link: 'wxt' },
-                { text: 'assets/', link: 'assets' },
-                { text: 'components/', link: 'components' },
-                { text: 'composables/', link: 'composables' },
-                {
-                  text: 'entrypoints/',
-                  base: '/guide/directory-structure/entrypoints/',
-                  collapsed: true,
-                  items: [
-                    { text: 'background', link: 'background.md' },
-                    { text: 'bookmarks', link: 'bookmarks.md' },
-                    { text: '*.content.ts', link: 'content-scripts.md' },
-                    { text: '*.css', link: 'css.md' },
-                    { text: 'devtools', link: 'devtools.md' },
-                    { text: 'history', link: 'history.md' },
-                    { text: 'newtab', link: 'newtab.md' },
-                    { text: 'options', link: 'options.md' },
-                    { text: 'popup', link: 'popup.md' },
-                    { text: 'sandbox', link: 'sandbox.md' },
-                    { text: 'sidepanel', link: 'sidepanel.md' },
-                    { text: '*.html', link: 'unlisted-pages.md' },
-                    {
-                      text: '*.ts',
-                      link: 'unlisted-scripts.md',
-                    },
-                  ],
-                },
-                { text: 'hooks/', link: 'hooks' },
-                { text: 'modules/', link: 'modules' },
-                {
-                  text: 'public/',
-                  link: 'public',
-                  items: [{ text: '_locales/', link: 'public/locales' }],
-                },
-                { text: 'utils/', link: 'modules' },
-                // Files
-                { text: '.env', link: 'env' },
-                { text: 'package.json', link: 'package' },
-                { text: 'tsconfig.json', link: 'tsconfig' },
-                { text: 'web-ext.config.ts', link: 'web-ext-config' },
-                { text: 'wxt.config.ts', link: 'wxt-config' },
-              ],
-            },
-            {
-              text: 'Extension APIs',
-              collapsed: true,
-              base: '/guide/extension-apis/',
-              items: [
-                { text: 'Storage', link: 'storage' },
-                { text: 'Messaging', link: 'messaging' },
-                { text: 'Scripting', link: 'scripting' },
-                { text: 'Others', link: 'others' },
-              ],
-            },
-            {
-              text: 'Go Further',
-              collapsed: true,
-              base: '/guide/go-further/',
-              items: [
-                { text: 'Testing', link: 'testing' },
-                { text: 'ES Modules', link: 'es-modules' },
-                { text: 'Debugging', link: 'debugging' },
-                { text: 'Handling Updates', link: 'handling-updates' },
-                { text: 'Vite', link: 'vite' },
-                { text: 'Custom Events', link: 'custom-events' },
-                { text: 'Remote Code', link: 'remote-code' },
-                {
-                  text: 'Entrypoint Side Effects',
-                  link: 'entrypoint-side-effects',
-                },
-                { text: 'How WXT Works', link: 'how-wxt-works' },
-              ],
-            },
-          ],
-        },
-      ],
-      '/api/': [
-        {
-          items: [
-            {
-              text: 'CLI',
-              collapsed: true,
-              base: '/api/cli/',
-              items: [
-                { text: 'wxt', link: 'wxt.md' },
-                { text: 'wxt build', link: 'wxt-build.md' },
-                { text: 'wxt zip', link: 'wxt-zip.md' },
-                { text: 'wxt prepare', link: 'wxt-prepare.md' },
-                { text: 'wxt clean', link: 'wxt-clean.md' },
-                { text: 'wxt init', link: 'wxt-init.md' },
-                { text: 'wxt submit', link: 'wxt-submit.md' },
-                { text: 'wxt submit init', link: 'wxt-submit-init.md' },
-              ],
-            },
-            {
-              text: 'API Reference',
-              collapsed: true,
-              items: filteredTypedocSidebar,
-            },
-          ],
-        },
-      ],
     },
 
     socialLinks: [
       { icon: 'discord', link: 'https://discord.gg/ZFsZqGery9' },
       { icon: 'github', link: 'https://github.com/wxt-dev/wxt' },
     ],
+
+    nav: [
+      navItem('Get Started', '/get-started/introduction'),
+      navItem('Guide', '/guide/key-concepts/manifest'),
+      navItem('API', '/api/reference/wxt'),
+      navItem('Examples', '/examples'),
+    ],
+
+    sidebar: {
+      '/get-started/': menuRoot([
+        menuGroup('Get Started', '/get-started/', [
+          menuItem('Introduction', 'introduction'),
+          menuItem('Installation', 'installation'),
+          menuItem('Configuration', 'configuration'),
+          menuItem('Entrypoints', 'entrypoints'),
+          menuItem('Assets', 'assets'),
+          menuItem('Testing', 'testing'),
+          menuItem('Publishing', 'publishing'),
+          menuItem('Migrate to WXT', 'migrate-to-wxt'),
+          menuItem('Compare', 'compare'),
+        ]),
+      ]),
+      '/guide/': menuRoot([
+        menuGroup('Key Concepts', '/guide/key-concepts/', [
+          menuItem('Manifest', 'manifest'),
+          menuItem('Auto-imports', 'auto-imports'),
+          menuItem('Web Extension Polyfill', 'web-extension-polyfill'),
+          menuItem('Frontend Frameworks', 'frontend-frameworks'),
+          menuItem('Content Script UI', 'content-script-ui'),
+        ]),
+        menuGroup('Directory Structure', '/guide/directory-structure/', [
+          // Folders
+          menuItem('.output/', 'output'),
+          menuItem('.wxt/', 'wxt'),
+          menuItem('assets/', 'assets'),
+          menuItem('components/', 'components'),
+          menuItem('composables/', 'composables'),
+          menuGroup('entrypoints/', '/guide/directory-structure/entrypoints/', [
+            menuItem('background', 'background.md'),
+            menuItem('bookmarks', 'bookmarks.md'),
+            menuItem('*.content.ts', 'content-scripts.md'),
+            menuItem('*.css', 'css.md'),
+            menuItem('devtools', 'devtools.md'),
+            menuItem('history', 'history.md'),
+            menuItem('newtab', 'newtab.md'),
+            menuItem('options', 'options.md'),
+            menuItem('popup', 'popup.md'),
+            menuItem('sandbox', 'sandbox.md'),
+            menuItem('sidepanel', 'sidepanel.md'),
+            menuItem('*.html', 'unlisted-pages.md'),
+            menuItem('*.ts', 'unlisted-scripts.md'),
+          ]),
+          menuItem('hooks/', 'hooks'),
+          menuItem('modules/', 'modules'),
+          menuGroup('public/', 'public', [
+            menuItem('_locales/', 'public/locales'),
+          ]),
+          menuItem('utils/', 'modules'),
+
+          // Files
+          menuItem('.env', 'env'),
+          menuItem('package.json', 'package'),
+          menuItem('tsconfig.json', 'tsconfig'),
+          menuItem('web-ext.config.ts', 'web-ext-config'),
+          menuItem('wxt.config.ts', 'wxt-config'),
+        ]),
+        menuGroup('Extension APIs', '/guide/extension-apis/', [
+          menuItem('Storage', 'storage'),
+          menuItem('Messaging', 'messaging'),
+          menuItem('Scripting', 'scripting'),
+          menuItem('Others', 'others'),
+        ]),
+        menuGroup('Go Further', '/guide/go-further/', [
+          menuItem('Testing', 'testing'),
+          menuItem('ES Modules', 'es-modules'),
+          menuItem('Debugging', 'debugging'),
+          menuItem('Handling Updates', 'handling-updates'),
+          menuItem('Vite', 'vite'),
+          menuItem('Custom Events', 'custom-events'),
+          menuItem('Remote Code', 'remote-code'),
+          menuItem('Entrypoint Side Effects', 'entrypoint-side-effects'),
+          menuItem('How WXT Works', 'how-wxt-works'),
+        ]),
+      ]),
+      '/api/': menuRoot([
+        menuGroup('CLI', '/api/cli/', [
+          menuItem('wxt', 'wxt.md'),
+          menuItem('wxt build', 'wxt-build.md'),
+          menuItem('wxt zip', 'wxt-zip.md'),
+          menuItem('wxt prepare', 'wxt-prepare.md'),
+          menuItem('wxt clean', 'wxt-clean.md'),
+          menuItem('wxt init', 'wxt-init.md'),
+          menuItem('wxt submit', 'wxt-submit.md'),
+          menuItem('wxt submit init', 'wxt-submit-init.md'),
+        ]),
+        menuGroup('API Reference', prepareTypedocSidebar(typedocSidebar)),
+      ]),
+    },
   },
 });
