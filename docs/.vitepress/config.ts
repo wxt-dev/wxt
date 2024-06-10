@@ -119,7 +119,7 @@ export default defineConfig({
           menuGroup('public/', 'public', [
             menuItem('_locales/', 'public/locales'),
           ]),
-          menuItem('utils/', 'modules'),
+          menuItem('utils/', 'utils'),
 
           // Files
           menuItem('.env', 'env'),
