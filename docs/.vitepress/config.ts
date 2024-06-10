@@ -115,7 +115,6 @@ export default defineConfig({
             menuItem('*.ts', 'unlisted-scripts.md'),
           ]),
           menuItem('hooks/', 'hooks'),
-          menuItem('modules/', 'modules'),
           menuItem('public/', 'public/', [
             menuItem('_locales/', 'public/locales'),
           ]),
