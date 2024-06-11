@@ -384,10 +384,11 @@ export async function resolveWxtModules(
   // Resolve NPM packages
   const npmModules = await Promise.all(
     modules.map(async (moduleId) => {
-      const mod = await import(/* @vite-ignore */ moduleId).catch(
-        () => import(/* @vite-ignore */ `wxt-module-${moduleId}`),
-      );
-      return mod;
+      const mod = await import(/* @vite-ignore */ moduleId);
+      if (mod.default == null) {
+        throw Error('Module missing default export: ' + moduleId);
+      }
+      return mod.default;
     }),
   );
 
