@@ -1186,6 +1186,14 @@ export interface ResolvedConfig {
   };
   hooks: NestedHooks<WxtHooks>;
   modules: WxtModule<any>[];
+  /**
+   * An array of string to import plugins from. These paths should be
+   * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
+   *
+   * @example
+   * ["@wxtjs/module-vue/plugin", "wxt-module-google-analytics/plugin"]
+   */
+  plugins: string[];
 }
 
 export interface FsCache {

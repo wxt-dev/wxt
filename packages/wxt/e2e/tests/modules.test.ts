@@ -40,6 +40,8 @@ describe('Module Helpers', () => {
     });
   });
 
+  describe.todo('imports');
+
   describe('addEntrypoint', () => {
     it('should add a custom entrypoint to be bundled the project', async () => {
       const project = new TestProject();
@@ -146,6 +148,112 @@ describe('Module Helpers', () => {
       await expect(
         readFile(project.resolvePath('.output/chrome-mv3/user.txt'), 'utf8'),
       ).resolves.toBe('from-user');
+    });
+  });
+
+  describe.only('addWxtPlugin', () => {
+    function addPluginModule(project: TestProject) {
+      const expectedText = 'Hello from plugin!';
+      const pluginPath = project.addFile(
+        'modules/test/client-plugin.ts',
+        `
+          export default () => {
+            console.log("${expectedText}")
+          }
+        `,
+      );
+      project.addFile(
+        'modules/test.ts',
+        `
+          import { defineWxtModule, addWxtPlugin } from 'wxt/modules';
+
+          export default defineWxtModule((wxt) => {
+            addWxtPlugin(wxt, "${pluginPath}");
+          });
+        `,
+      );
+      return expectedText;
+    }
+
+    it('should include the plugin in the background', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {})',
+      );
+      const expectedText = addPluginModule(project);
+
+      await project.build({
+        experimental: {
+          // reduce build output when comparing test failures
+          includeBrowserPolyfill: false,
+        },
+      });
+
+      await expect(project.serializeOutput()).resolves.toContain(expectedText);
+    });
+
+    it('should include the plugin in HTML entrypoints', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/popup/index.html',
+        `
+          <html>
+            <body></body>
+          </html>
+        `,
+      );
+      const expectedText = addPluginModule(project);
+
+      await project.build({
+        experimental: {
+          // reduce build output when comparing test failures
+          includeBrowserPolyfill: false,
+        },
+      });
+
+      await expect(project.serializeOutput()).resolves.toContain(expectedText);
+    });
+
+    it.only('should include the plugin in content scripts', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.ts',
+        `
+          export default defineContentScript({
+            matches: ["*://*/*"],
+            main: () => {},
+          })
+        `,
+      );
+      const expectedText = addPluginModule(project);
+
+      await project.build({
+        experimental: {
+          // reduce build output when comparing test failures
+          includeBrowserPolyfill: false,
+        },
+      });
+
+      await expect(project.serializeOutput()).resolves.toContain(expectedText);
+    });
+
+    it('should include the plugin in unlisted scripts', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/unlisted.ts',
+        'export default defineUnlistedScript(() => {})',
+      );
+      const expectedText = addPluginModule(project);
+
+      await project.build({
+        experimental: {
+          // reduce build output when comparing test failures
+          includeBrowserPolyfill: false,
+        },
+      });
+
+      await expect(project.serializeOutput()).resolves.toContain(expectedText);
     });
   });
 });

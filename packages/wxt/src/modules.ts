@@ -99,3 +99,21 @@ export function addViteConfig(
       );
   });
 }
+
+/**
+ * Add a runtime plugin to the project. In each entrypoint, before executing
+ * the `main` function, plugins are executed.
+ *
+ * @argument wxt The wxt instance provided by the module's setup function.
+ * @argument plugin An import from an NPM module, or an absolute file path to the file to load at runtime.
+ *
+ * @example
+ * export default defineWxtModule((wxt) => {
+ *   addWxtPlugin(wxt, "wxt-module-analytics/client-plugin");
+ * });
+ */
+export function addWxtPlugin(wxt: Wxt, plugin: string) {
+  wxt.hooks.hook('ready', (wxt) => {
+    wxt.config.plugins.push(plugin);
+  });
+}

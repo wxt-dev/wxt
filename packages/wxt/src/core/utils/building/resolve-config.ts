@@ -178,6 +178,7 @@ export async function resolveConfig(
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
     modules,
+    plugins: [],
     ...moduleOptions,
   };
 }

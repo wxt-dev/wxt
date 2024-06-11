@@ -37,3 +37,7 @@ declare module 'wxt/client' {
 declare module 'wxt/testing' {
   export const fakeBrowser: import('webextension-polyfill').Browser;
 }
+
+declare module 'virtual:wxt-plugins' {
+  export function initPlugins(): void;
+}

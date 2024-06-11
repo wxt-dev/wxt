@@ -24,7 +24,10 @@ const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
-  external: virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+  external: [
+    ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+    'virtual:wxt-plugins',
+  ],
 } satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {

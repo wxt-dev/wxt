@@ -1,8 +1,10 @@
 import definition from 'virtual:user-unlisted-script-entrypoint';
 import { logger } from '../sandbox/utils/logger';
+import { initPlugins } from 'virtual:wxt-plugins';
 
 const result = (async () => {
   try {
+    initPlugins();
     return await definition.main();
   } catch (err) {
     logger.error(
