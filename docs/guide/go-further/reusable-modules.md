@@ -147,6 +147,37 @@ export default defineWxtModule({
 
 Refer to the [API reference](/api/reference/wxt/modules/#functions) for the full list of the utilities.
 
+## Plugins
+
+Whereas modules are executed at build-time, plugins are executed at runtime. As of now, the only way to add a plugin is with the `addWxtPlugin` helper.
+
+Here's a minimal example to execute something at runtime.
+
+:::code-group
+
+```ts [modules/example/index.ts]
+import { defineWxtModule, addWxtPlugin } from 'wxt/modules';
+import { resolve } from 'node:path';
+
+export default defineWxtModule((wxt) => {
+  addWxtPlugin(wxt, resolve(__dirname, 'plugin.ts'));
+});
+```
+
+```ts [modules/example/plugin.ts]
+import { defineWxtPlugin } from 'wxt/sandbox';
+
+export default defineWxtPlugin(() => {
+  console.log('Executing plugin!');
+});
+```
+
+:::
+
+:::warning Async Plugins
+Unlike modules, **_plugins cannot be async_**!! If you need to do some async work and expose that result to the rest of the extension, wrap it in an object and handle awaiting the promise internally.
+:::
+
 ## Publishing to NPM
 
 :::warning 🚧 Under construction

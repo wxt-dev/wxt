@@ -1339,3 +1339,5 @@ export interface ResolvedPublicFile {
    */
   relativeDest: string;
 }
+
+export type WxtPlugin = () => void;

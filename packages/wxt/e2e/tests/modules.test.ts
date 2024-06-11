@@ -155,9 +155,9 @@ describe('Module Helpers', () => {
       const pluginPath = project.addFile(
         'modules/test/client-plugin.ts',
         `
-          export default () => {
+          export default defineWxtPlugin(() => {
             console.log("${expectedText}")
-          }
+          })
         `,
       );
       project.addFile(
