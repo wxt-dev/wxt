@@ -24,7 +24,7 @@ There are two ways to add a module to your project:
    });
    ```
 
-2. **NPM package**: By convention, any package on NPM that starts with `@wxtjs/module-*` or `wxt-module-*` can be installed and included in your project:
+2. **NPM package**: By convention, any package on NPM that starts with `@wxt-dev/module-*` or `wxt-module-*` can be installed and included in your project:
    ```ts
    // wxt.config.ts
    export default defineConfig({

@@ -1191,7 +1191,7 @@ export interface ResolvedConfig {
    * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
    *
    * @example
-   * ["@wxtjs/module-vue/plugin", "wxt-module-google-analytics/plugin"]
+   * ["@wxt-dev/module-vue/plugin", "wxt-module-google-analytics/plugin"]
    */
   plugins: string[];
 }
