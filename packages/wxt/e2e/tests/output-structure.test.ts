@@ -5,20 +5,26 @@ describe('Output Directory Structure', () => {
   it('should not output hidden files and directories that start with "."', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/.DS_Store');
-    project.addFile('entrypoints/.hidden1/index.html');
-    project.addFile('entrypoints/.hidden2.html');
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/.hidden1/index.html', '<html></html>');
+    project.addFile('entrypoints/.hidden2.html', '<html></html>');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
 
     await project.build();
 
     expect(await project.serializeOutput()).toMatchInlineSnapshot(`
-      ".output/chrome-mv3/manifest.json
+      ".output/chrome-mv3/chunks/unlisted-DPbbfBKe.js
+      ----------------------------------------
+      (function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))n(e);new MutationObserver(e=>{for(const r of e)if(r.type==="childList")for(const o of r.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&n(o)}).observe(document,{childList:!0,subtree:!0});function s(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?r.credentials="include":e.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function n(e){if(e.ep)return;e.ep=!0;const r=s(e);fetch(e.href,r)}})();try{}catch(i){console.error("[wxt] Failed to initialize plugins",i)}
+
+      ================================================================================
+      .output/chrome-mv3/manifest.json
       ----------------------------------------
       {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0"}
       ================================================================================
       .output/chrome-mv3/unlisted.html
       ----------------------------------------
-      "
+      <html><head>  <script type="module" crossorigin src="/chunks/unlisted-DPbbfBKe.js"></script>
+      </head></html>"
     `);
   });
 
@@ -159,7 +165,7 @@ describe('Output Directory Structure', () => {
     );
     project.addFile('entrypoints/popup.html', '<html></html>');
     project.addFile(
-      'entrypoints/overlay.content.html',
+      'entrypoints/overlay.content.ts',
       `export default defineContentScript({
         matches: [],
         main() {},
@@ -216,7 +222,7 @@ describe('Output Directory Structure', () => {
 
   it("should output to a custom directory when overriding 'outDir'", async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
     project.setConfigFileConfig({
       outDir: 'dist',
     });
@@ -272,7 +278,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        import { l as logHello } from "./chunks/log-BsZv2eRn.js";
+        import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
         function defineBackground(arg) {
           if (typeof arg === "function")
             return { main: arg };
@@ -296,6 +302,7 @@ describe('Output Directory Structure', () => {
         };
         var result;
         try {
+          initPlugins();
           result = definition.main();
           if (result instanceof Promise) {
             console.warn(
@@ -370,6 +377,8 @@ describe('Output Directory Structure', () => {
             }
           });
           _background;
+          function initPlugins() {
+          }
           chrome;
           function print(method, ...args) {
             return;
@@ -382,6 +391,7 @@ describe('Output Directory Structure', () => {
           };
           var result;
           try {
+            initPlugins();
             result = definition.main();
             if (result instanceof Promise) {
               console.warn(

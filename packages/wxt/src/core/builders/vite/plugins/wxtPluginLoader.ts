@@ -46,6 +46,10 @@ try {
         const script = document.createElement('script');
         script.type = 'module';
         script.src = 'virtual:wxt-html-plugins';
+        if (document.head == null) {
+          const newHead = document.createElement('head');
+          document.documentElement.prepend(newHead);
+        }
         document.head.prepend(script);
         return document.toString();
       },

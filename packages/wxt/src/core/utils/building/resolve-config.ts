@@ -78,10 +78,7 @@ export async function resolveConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
-  const modulesDir = path.resolve(
-    srcDir,
-    mergedConfig.entrypointsDir ?? 'modules',
-  );
+  const modulesDir = path.resolve(srcDir, mergedConfig.modulesDir ?? 'modules');
   if (await isDirMissing(entrypointsDir)) {
     logMissingDir(logger, 'Entrypoints', entrypointsDir);
   }

@@ -24,7 +24,7 @@ If you plan on using the page in an iframe, don't forget to add the page to [`we
 Pages are accessible at `'/<name>.html'`:
 
 ```ts
-const url = browser.runtime.getURL('/<name>.html');
+const url = browser.runtime.getURL('/<name>.html', '<html></html>');
 
 console.log(url); // "chrome-extension://<id>/<name>.html"
 ```

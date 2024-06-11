@@ -40,7 +40,7 @@ describe('User Config', () => {
     });
     project.addFile(
       'entries/background.ts',
-      `export default defineBackground(() => console.log('Hello background'));`,
+      `export default defineBackground(() => {});`,
     );
 
     await project.build();
@@ -61,7 +61,7 @@ describe('User Config', () => {
 
   it('should merge inline and user config based manifests', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
     project.addFile(
       'wxt.config.ts',
       `import { defineConfig } from 'wxt';
