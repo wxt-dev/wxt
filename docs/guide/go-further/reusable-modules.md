@@ -150,7 +150,7 @@ Refer to the [API reference](/api/reference/wxt/modules/#functions) for the full
 
 ## Plugins
 
-Whereas modules are executed at build-time, plugins are executed at runtime. As of now, the only way to add a plugin is with the `addWxtPlugin` helper.
+Whereas modules are executed at build-time, plugins are executed at runtime. As of now, the only way to add a plugin is with the `addWxtPlugin` helper inside a module.
 
 Here's a minimal example to execute something at runtime.
 
