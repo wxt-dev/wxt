@@ -84,7 +84,7 @@ export class TestProject {
 
   async build(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    await build({ ...config, root: this.root });
+    return await build({ ...config, root: this.root });
   }
 
   async zip(config: InlineConfig = {}) {

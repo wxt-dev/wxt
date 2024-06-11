@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
 import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import { readFile } from 'fs-extra';
 
 describe('Module Helpers', () => {
   describe('options', () => {
@@ -23,7 +24,7 @@ describe('Module Helpers', () => {
 
           export default defineWxtModule({
             configKey: "example",
-            setup: async (options, wxt) => {
+            setup: async (wxt, options) => {
               reportOptions(options);
             },
           })
@@ -64,7 +65,7 @@ describe('Module Helpers', () => {
         `
           import { defineWxtModule, addEntrypoint } from 'wxt/modules';
 
-          export default defineWxtModule((_, wxt) => {
+          export default defineWxtModule((wxt) => {
             addEntrypoint(wxt, ${JSON.stringify(entrypoint)})
           })
         `,
@@ -78,6 +79,73 @@ describe('Module Helpers', () => {
       expect(await project.fileExists('.output/chrome-mv3/injected.js')).toBe(
         true,
       );
+    });
+  });
+
+  describe('addPublicAssets', () => {
+    it('should add public assets', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {})',
+      );
+
+      project.addFile('modules/test/public/module.txt');
+      const dir = project.resolvePath('modules/test/public');
+      project.addFile(
+        'modules/test/index.ts',
+        `
+          import { defineWxtModule, addPublicAssets } from 'wxt/modules'
+          import { resolve } from 'node:path'
+
+          export default defineWxtModule((wxt) => {
+            addPublicAssets(wxt, "${dir}")
+          })
+        `,
+      );
+
+      const res = await project.build();
+
+      expect(res.publicAssets).toContainEqual({
+        type: 'asset',
+        fileName: 'module.txt',
+      });
+      await expect(
+        project.fileExists('.output/chrome-mv3/module.txt'),
+      ).resolves.toBe(true);
+    });
+
+    it("should not overwrite the user's public files", async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {})',
+      );
+
+      project.addFile('public/user.txt', 'from-user');
+      project.addFile('modules/test/public/user.txt', 'from-module');
+      const dir = project.resolvePath('modules/test/public');
+      project.addFile(
+        'modules/test/index.ts',
+        `
+          import { defineWxtModule, addPublicAssets } from 'wxt/modules'
+          import { resolve } from 'node:path'
+
+          export default defineWxtModule((wxt) => {
+            addPublicAssets(wxt, "${dir}")
+          })
+        `,
+      );
+
+      const res = await project.build();
+
+      expect(res.publicAssets).toContainEqual({
+        type: 'asset',
+        fileName: 'user.txt',
+      });
+      await expect(
+        readFile(project.resolvePath('.output/chrome-mv3/user.txt'), 'utf8'),
+      ).resolves.toBe('from-user');
     });
   });
 });

@@ -1065,6 +1065,13 @@ export interface WxtHooks {
    * @param entrypoints The list of groups to build in each build step
    */
   'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
+  /**
+   * Called when public assets are found. You can modify the `files` list by
+   * reference to add or remove public files.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of files that will be copied into the output directory
+   */
+  'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
 }
 
 export interface Wxt {
@@ -1096,16 +1103,31 @@ export interface ResolvedConfig {
   root: string;
   srcDir: string;
   publicDir: string;
+  /**
+   * Absolute path pointing to `.wxt` directory in project root.
+   * @example
+   * "/path/to/project/.wxt"
+   */
   wxtDir: string;
   typesDir: string;
   entrypointsDir: string;
   modulesDir: string;
   filterEntrypoints?: Set<string>;
+  /**
+   * Absolute path to the `.output` directory
+   * @example
+   * "/path/to/project/.output"
+   */
   outBaseDir: string;
+  /**
+   * Absolute path to the target output directory.
+   * @example
+   * "/path/to/project/.output/chrome-mv3"
+   */
   outDir: string;
   debug: boolean;
   /**
-   * Directory pointing to `node_modules/wxt`, wherever WXT is installed.
+   * Absolute path pointing to the `node_modules/wxt` directory, wherever WXT is installed.
    */
   wxtModuleDir: string;
   mode: string;
@@ -1287,5 +1309,20 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
    * A custom function that can be used to setup hooks and call module-specific
    * APIs.
    */
-  setup(moduleOptions: TOptions, wxt: Wxt): void | Promise<void>;
+  setup(wxt: Wxt, moduleOptions: TOptions): void | Promise<void>;
+}
+
+export interface ResolvedPublicFile {
+  /**
+   * The absolute path to the file that will be copied to the output directory.
+   * @example
+   * "/path/to/any/file.css"
+   */
+  absoluteSrc: string;
+  /**
+   * The relative path in the output directory to copy the file to.
+   * @example
+   * "content-scripts/base-styles.css"
+   */
+  relativeDest: string;
 }

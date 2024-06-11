@@ -12,7 +12,7 @@ import {
   WxtCommand,
   WxtModule,
 } from '~/types';
-import path, { basename, extname } from 'node:path';
+import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';

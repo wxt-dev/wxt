@@ -1,4 +1,9 @@
-import { BuildOutput, BuildStepOutput, EntrypointGroup } from '~/types';
+import {
+  BuildOutput,
+  BuildStepOutput,
+  EntrypointGroup,
+  ResolvedPublicFile,
+} from '~/types';
 import { getPublicFiles } from '~/core/utils/fs';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
@@ -32,19 +37,22 @@ export async function buildEntrypoints(
 }
 
 async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
-  const files = await getPublicFiles();
+  const files = (await getPublicFiles()).map<ResolvedPublicFile>((file) => ({
+    absoluteSrc: resolve(wxt.config.publicDir, file),
+    relativeDest: file,
+  }));
+  await wxt.hooks.callHook('build:publicAssets', wxt, files);
   if (files.length === 0) return [];
 
   const publicAssets: BuildOutput['publicAssets'] = [];
-  for (const file of files) {
-    const srcPath = resolve(wxt.config.publicDir, file);
-    const outPath = resolve(wxt.config.outDir, file);
+  for (const { absoluteSrc, relativeDest } of files) {
+    const absoluteDest = resolve(wxt.config.outDir, relativeDest);
 
-    await fs.ensureDir(dirname(outPath));
-    await fs.copyFile(srcPath, outPath);
+    await fs.ensureDir(dirname(absoluteDest));
+    await fs.copyFile(absoluteSrc, absoluteDest);
     publicAssets.push({
       type: 'asset',
-      fileName: file,
+      fileName: relativeDest,
     });
   }
 

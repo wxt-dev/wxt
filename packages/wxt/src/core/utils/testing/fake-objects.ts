@@ -238,6 +238,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     browser,
     command,
     entrypointsDir: fakeDir(),
+    modulesDir: fakeDir(),
+    modules: [],
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
     imports: {

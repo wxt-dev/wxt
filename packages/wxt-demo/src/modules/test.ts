@@ -1,5 +1,5 @@
 import { defineWxtModule } from 'wxt/modules';
 
-export default defineWxtModule((_, wxt) => {
+export default defineWxtModule((wxt) => {
   wxt.logger.info('TEST MODULE');
 });

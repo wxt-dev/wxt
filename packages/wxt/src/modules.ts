@@ -11,6 +11,8 @@ import type {
   WxtModuleOptions,
 } from './types';
 import * as vite from 'vite';
+import glob from 'fast-glob';
+import { resolve } from 'node:path';
 
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModule<TOptions>['setup'],
@@ -28,7 +30,7 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * @argument entrypoint The entrypoint to be bundled along with the extension.
  *
  * @example
- * export default defineWxtModule((_, wxt) => {
+ * export default defineWxtModule((wxt, options) => {
  *   addEntrypoint(wxt, {
  *     type: "unlisted-page",
  *     name: "changelog",
@@ -39,27 +41,35 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * });
  */
 export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
-  wxt.hooks.addHooks({
-    'entrypoints:resolved': (wxt, entrypoints) => {
-      entrypoints.push(entrypoint);
-    },
+  wxt.hooks.hook('entrypoints:resolved', (wxt, entrypoints) => {
+    entrypoints.push(entrypoint);
   });
 }
 
 /**
- * Copy files inside a directory into the extension's output directory. The
- * directory itself is not copied, just the files inside it.
+ * Copy files inside a directory (as if it were the public directory) into the
+ * extension's output directory. The directory itself is not copied, just the
+ * files inside it. If a filename matches an existing one, it is ignored.
  *
  * @argument wxt The wxt instance provided by the module's setup function.
  * @argument dir The directory to copy.
  *
  * @example
- * export default defineWxtModule((_, wxt) => {
- *   copyAssets(wxt, "./dist/prebundled");
+ * export default defineWxtModule((wxt, options) => {
+ *   addPublicAssets(wxt, "./dist/prebundled");
  * });
  */
-export function copyAssets(wxt: Wxt, dir: string): void {
-  throw Error('TODO');
+export function addPublicAssets(wxt: Wxt, dir: string): void {
+  wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
+    const moreFiles = await glob('**/*', { cwd: dir });
+    if (moreFiles.length === 0) {
+      wxt.logger.warn('No files to copy in', dir);
+      return;
+    }
+    moreFiles.forEach((file) => {
+      files.unshift({ absoluteSrc: resolve(dir, file), relativeDest: file });
+    });
+  });
 }
 
 /**
@@ -73,14 +83,12 @@ export function copyAssets(wxt: Wxt, dir: string): void {
  *                      bundle the entrypoint group.
  *
  * @example
- * export default defineWxtModule({
- *   setup(_, wxt) {
- *     mergeViteConfig(wxt, (group) => ({
- *       build: {
- *         sourceMaps: true,
- *       },
- *     });
- *   }
+ * export default defineWxtModule((wxt, options) => {
+ *   mergeViteConfig(wxt, (group) => ({
+ *     build: {
+ *       sourceMaps: true,
+ *     },
+ *   });
  * });
  */
 export function mergeViteConfig(
