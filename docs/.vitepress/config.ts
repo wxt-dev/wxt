@@ -140,6 +140,7 @@ export default defineConfig({
           menuItem('Handling Updates', 'handling-updates'),
           menuItem('Vite', 'vite'),
           menuItem('Custom Events', 'custom-events'),
+          menuItem('Reusable Modules', 'reusable-modules'),
           menuItem('Remote Code', 'remote-code'),
           menuItem('Entrypoint Side Effects', 'entrypoint-side-effects'),
           menuItem('How WXT Works', 'how-wxt-works'),

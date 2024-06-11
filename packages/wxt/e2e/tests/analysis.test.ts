@@ -17,8 +17,8 @@ describe('Analysis', () => {
 
   it('should output a stats.html with no part files by default', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile(
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
@@ -38,8 +38,8 @@ describe('Analysis', () => {
 
   it('should save part files when requested', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile(
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
@@ -59,8 +59,8 @@ describe('Analysis', () => {
 
   it('should support customizing the stats output directory', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile(
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
@@ -78,8 +78,8 @@ describe('Analysis', () => {
 
   it('should place artifacts next to the custom output file', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile(
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
@@ -100,8 +100,8 @@ describe('Analysis', () => {
 
   it('should open the stats in the browser when requested', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile(
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',

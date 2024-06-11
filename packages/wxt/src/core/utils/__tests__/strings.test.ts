@@ -48,6 +48,7 @@ import{ registerGithubService, createGithubApi }from "@/utils/github";
 import GitHub from "@/utils/github";
 import "@/utils/github";
 import '@/utils/github';
+import * as abc from "@/utils/github"
 import"@/utils/github"
  import'@/utils/github';
 import * as abc from "@/utils/github"

@@ -24,7 +24,10 @@ const preset = {
   dts: true,
   silent: true,
   sourcemap: false,
-  external: virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+  external: [
+    ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+    'virtual:wxt-plugins',
+  ],
 } satisfies tsup.Options;
 
 function spinnerPMap(configs: tsup.Options[]) {
@@ -57,6 +60,7 @@ const config: tsup.Options[] = [
       index: 'src/index.ts',
       testing: 'src/testing/index.ts',
       storage: 'src/storage.ts',
+      modules: 'src/modules.ts',
     },
     format: ['cjs', 'esm'],
     clean: true,

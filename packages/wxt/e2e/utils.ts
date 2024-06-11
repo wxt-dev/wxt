@@ -71,10 +71,12 @@ export class TestProject {
    *
    * @param filename Filename relative to the project's root.
    * @param content File content.
+   * @returns The absolute path to the file that was added.
    */
   addFile(filename: string, content?: string) {
     this.files.push([filename, content ?? '']);
     if (filename === 'wxt.config.ts') this.config = {};
+    return this.resolvePath(filename);
   }
 
   async prepare(config: InlineConfig = {}) {
@@ -84,7 +86,7 @@ export class TestProject {
 
   async build(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    await build({ ...config, root: this.root });
+    return await build({ ...config, root: this.root });
   }
 
   async zip(config: InlineConfig = {}) {

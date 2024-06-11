@@ -10,6 +10,7 @@ import {
   WxtResolvedUnimportOptions,
   Logger,
   WxtCommand,
+  WxtModule,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -19,6 +20,7 @@ import { NullablyRequired } from '../types';
 import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
+import glob from 'fast-glob';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -76,6 +78,7 @@ export async function resolveConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
+  const modulesDir = path.resolve(srcDir, mergedConfig.modulesDir ?? 'modules');
   if (await isDirMissing(entrypointsDir)) {
     logMissingDir(logger, 'Entrypoints', entrypointsDir);
   }
@@ -123,11 +126,22 @@ export async function resolveConfig(
     };
   }
 
+  const modules = await resolveWxtModules(modulesDir, mergedConfig.modules);
+  const moduleOptions = modules.reduce<Record<string, any>>((map, module) => {
+    if (module.configKey) {
+      map[module.configKey] =
+        // @ts-expect-error
+        mergedConfig[module.configKey];
+    }
+    return map;
+  }, {});
+
   return {
     browser,
     command,
     debug,
     entrypointsDir,
+    modulesDir,
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
@@ -160,6 +174,9 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
+    modules,
+    plugins: [],
+    ...moduleOptions,
   };
 }
 
@@ -358,4 +375,48 @@ export async function mergeBuilderConfig(
   }
 
   throw Error('Builder not found. Make sure vite is installed.');
+}
+
+export async function resolveWxtModules(
+  modulesDir: string,
+  modules: string[] = [],
+): Promise<WxtModule<any>[]> {
+  // Resolve NPM packages
+  const npmModules = await Promise.all(
+    modules.map(async (moduleId) => {
+      const mod = await import(/* @vite-ignore */ moduleId);
+      if (mod.default == null) {
+        throw Error('Module missing default export: ' + moduleId);
+      }
+      return mod.default;
+    }),
+  );
+
+  // Resolve local file paths
+  const localModulePaths = await glob(['*.[tj]s', '*/index.[tj]s'], {
+    cwd: modulesDir,
+    onlyFiles: true,
+  }).catch(() => []);
+  const localModules = await Promise.all(
+    localModulePaths.map(async (file) => {
+      const { config } = await loadConfig<WxtModule<any>>({
+        configFile: path.resolve(modulesDir, file),
+        globalRc: false,
+        rcFile: false,
+        packageJson: false,
+        envName: false,
+        dotenv: false,
+      });
+      if (config == null)
+        throw Error(
+          `No config found for ${file}. Did you forget to add a default export?`,
+        );
+      // Add name based on filename
+      config.name ??= file;
+      return config;
+    }),
+  );
+
+  // Execute modules
+  return [...npmModules, ...localModules];
 }

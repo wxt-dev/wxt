@@ -4,7 +4,7 @@ import { TestProject } from '../utils';
 describe('TypeScript Project', () => {
   it('should generate defined constants correctly', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
 
     await project.prepare();
 
@@ -34,9 +34,9 @@ describe('TypeScript Project', () => {
 
   it('should augment the types for browser.runtime.getURL', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html');
-    project.addFile('entrypoints/options.html');
-    project.addFile('entrypoints/sandbox.html');
+    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html></html>');
+    project.addFile('entrypoints/sandbox.html', '<html></html>');
 
     await project.prepare();
 
@@ -64,7 +64,7 @@ describe('TypeScript Project', () => {
 
   it('should augment the types for browser.i18n.getMessage', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
     project.addFile(
       'public/_locales/en/messages.json',
       JSON.stringify({
@@ -223,7 +223,7 @@ describe('TypeScript Project', () => {
 
   it('should reference all the required types in a single declaration file', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
 
     await project.prepare();
 
@@ -243,7 +243,7 @@ describe('TypeScript Project', () => {
 
   it('should generate a TSConfig file for the project', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html');
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
 
     await project.prepare();
 
@@ -284,7 +284,7 @@ describe('TypeScript Project', () => {
 
   it('should generate correct path aliases for a custom srcDir', async () => {
     const project = new TestProject();
-    project.addFile('src/entrypoints/unlisted.html');
+    project.addFile('src/entrypoints/unlisted.html', '<html></html>');
     project.setConfigFileConfig({
       srcDir: 'src',
     });
@@ -328,7 +328,7 @@ describe('TypeScript Project', () => {
 
   it('should add additional path aliases listed in the alias config, preventing defaults from being overridden', async () => {
     const project = new TestProject();
-    project.addFile('src/entrypoints/unlisted.html');
+    project.addFile('src/entrypoints/unlisted.html', '<html></html>');
     project.setConfigFileConfig({
       srcDir: 'src',
       alias: {

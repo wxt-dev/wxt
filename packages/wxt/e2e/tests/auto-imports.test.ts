@@ -27,6 +27,7 @@ describe('Auto Imports', () => {
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/sandbox')['defineContentScript']
             const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
+            const defineWxtPlugin: typeof import('wxt/sandbox')['defineWxtPlugin']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
             const storage: typeof import('wxt/storage')['storage']
           }
@@ -124,6 +125,7 @@ describe('Auto Imports', () => {
               "defineConfig": true,
               "defineContentScript": true,
               "defineUnlistedScript": true,
+              "defineWxtPlugin": true,
               "fakeBrowser": true,
               "storage": true
             }
@@ -163,6 +165,7 @@ describe('Auto Imports', () => {
               "defineConfig": "readonly",
               "defineContentScript": "readonly",
               "defineUnlistedScript": "readonly",
+              "defineWxtPlugin": "readonly",
               "fakeBrowser": "readonly",
               "storage": "readonly"
             }

@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
 import type { Manifest, Scripting } from '~/browser';
-import { UnimportOptions } from 'unimport';
+import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -37,6 +37,10 @@ export interface InlineConfig {
    * @default "${config.srcDir}/entrypoints"
    */
   entrypointsDir?: string;
+  /**
+   * @default "${config.srcDir}/modules"
+   */
+  modulesDir?: string;
   /**
    * A list of entrypoint names (`"popup"`, `"options"`, etc.) to build. Will speed up the build if
    * your extension has lots of entrypoints, and you don't need to build all of them to develop a
@@ -350,6 +354,12 @@ export interface InlineConfig {
    * Project hooks for running logic during the build process.
    */
   hooks?: NestedHooks<WxtHooks>;
+  /**
+   * List of WXT module names to include. Can be the full package name
+   * ("wxt-module-analytics"), or just the suffix ("analytics" would resolve to
+   * "wxt-module-analytics").
+   */
+  modules?: string[];
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -681,7 +691,7 @@ export interface BaseEntrypoint {
    */
   inputPath: string;
   /**
-   * Absolute path to the entrypoint's output directory. Can be the`InternalConfg.outDir` or a
+   * Absolute path to the entrypoint's output directory. Can be `wxt.config.outDir` or a
    * subdirectory of it.
    */
   outputDir: string;
@@ -1055,6 +1065,13 @@ export interface WxtHooks {
    * @param entrypoints The list of groups to build in each build step
    */
   'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
+  /**
+   * Called when public assets are found. You can modify the `files` list by
+   * reference to add or remove public files.
+   * @param wxt The configured WXT object
+   * @param entrypoints The list of files that will be copied into the output directory
+   */
+  'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
 }
 
 export interface Wxt {
@@ -1086,15 +1103,31 @@ export interface ResolvedConfig {
   root: string;
   srcDir: string;
   publicDir: string;
+  /**
+   * Absolute path pointing to `.wxt` directory in project root.
+   * @example
+   * "/path/to/project/.wxt"
+   */
   wxtDir: string;
   typesDir: string;
   entrypointsDir: string;
+  modulesDir: string;
   filterEntrypoints?: Set<string>;
+  /**
+   * Absolute path to the `.output` directory
+   * @example
+   * "/path/to/project/.output"
+   */
   outBaseDir: string;
+  /**
+   * Absolute path to the target output directory.
+   * @example
+   * "/path/to/project/.output/chrome-mv3"
+   */
   outDir: string;
   debug: boolean;
   /**
-   * Directory pointing to `node_modules/wxt`, wherever WXT is installed.
+   * Absolute path pointing to the `node_modules/wxt` directory, wherever WXT is installed.
    */
   wxtModuleDir: string;
   mode: string;
@@ -1152,6 +1185,15 @@ export interface ResolvedConfig {
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
+  modules: WxtModule<any>[];
+  /**
+   * An array of string to import plugins from. These paths should be
+   * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
+   *
+   * @example
+   * ["@wxt-dev/module-vue/plugin", "wxt-module-google-analytics/plugin"]
+   */
+  plugins: string[];
 }
 
 export interface FsCache {
@@ -1253,3 +1295,49 @@ export interface Dependency {
   name: string;
   version: string;
 }
+
+export type WxtModuleOptions = Record<string, any>;
+
+export type WxtModuleSetup<TOptions extends WxtModuleOptions> = (
+  wxt: Wxt,
+  moduleOptions: TOptions,
+) => void | Promise<void>;
+
+export interface WxtModule<TOptions extends WxtModuleOptions> {
+  name?: string;
+  /**
+   * Key for users to pass options into your module from their `wxt.config.ts` file.
+   */
+  configKey?: string;
+  /**
+   * Provide a list of imports to add to auto-imports.
+   */
+  imports?: Import[];
+  /**
+   * Alternative to adding hooks in setup function with `wxt.hooks`. Hooks are
+   * added before the `setup` function is called.
+   */
+  hooks?: WxtHooks;
+  /**
+   * A custom function that can be used to setup hooks and call module-specific
+   * APIs.
+   */
+  setup?: WxtModuleSetup<TOptions>;
+}
+
+export interface ResolvedPublicFile {
+  /**
+   * The absolute path to the file that will be copied to the output directory.
+   * @example
+   * "/path/to/any/file.css"
+   */
+  absoluteSrc: string;
+  /**
+   * The relative path in the output directory to copy the file to.
+   * @example
+   * "content-scripts/base-styles.css"
+   */
+  relativeDest: string;
+}
+
+export type WxtPlugin = () => void;

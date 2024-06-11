@@ -1,4 +1,5 @@
 import definition from 'virtual:user-background-entrypoint';
+import { initPlugins } from 'virtual:wxt-plugins';
 import { setupWebSocket } from './utils/setup-web-socket';
 import { logger } from '../sandbox/utils/logger';
 import { browser } from 'wxt/browser';
@@ -37,6 +38,7 @@ if (import.meta.env.COMMAND === 'serve') {
 let result;
 
 try {
+  initPlugins();
   result = definition.main();
   // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
   if (result instanceof Promise) {

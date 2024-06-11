@@ -1,8 +1,10 @@
 import definition from 'virtual:user-content-script-main-world-entrypoint';
 import { logger } from '../sandbox/utils/logger';
+import { initPlugins } from 'virtual:wxt-plugins';
 
 const result = (async () => {
   try {
+    initPlugins();
     const { main } = definition;
     return await main();
   } catch (err) {
