@@ -17,11 +17,15 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
 
 /**
  * Adds a TS/JS file as an entrypoint to the project. This file will be bundled
- * along with the other entrypoints. To keep builds fast, you should probably use
- * `copyAssets` instead to copy pre-bundled assets into the output directory.
+ * along with the other entrypoints.
+
+ * If you're publishing the module to NPM, you should probably pre-build the
+ * entrypoint and use `addPublicAssets` instead to copy pre-bundled assets into
+ * the output directory. This will speed up project builds since it just has to
+ * copy some files instead of bundling them.
  *
- * @argument wxt The wxt instance provided by the module's setup function.
- * @argument entrypoint The entrypoint to be bundled along with the extension.
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param entrypoint The entrypoint to be bundled along with the extension.
  *
  * @example
  * export default defineWxtModule((wxt, options) => {
@@ -45,8 +49,8 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
  * extension's output directory. The directory itself is not copied, just the
  * files inside it. If a filename matches an existing one, it is ignored.
  *
- * @argument wxt The wxt instance provided by the module's setup function.
- * @argument dir The directory to copy.
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param dir The directory to copy.
  *
  * @example
  * export default defineWxtModule((wxt, options) => {
@@ -71,9 +75,9 @@ export function addPublicAssets(wxt: Wxt, dir: string): void {
  * up individual builds. Config in the project's `wxt.config.ts` file takes
  * precedence over any config added by this function.
  *
- * @argument wxt The wxt instance provided by the module's setup function.
- * @argument viteConfig A function that returns the vite config the module is
-                        adding. Same format as `vite` in `wxt.config.ts`.
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param viteConfig A function that returns the vite config the module is
+                     adding. Same format as `vite` in `wxt.config.ts`.
  *
  * @example
  * export default defineWxtModule((wxt, options) => {
@@ -104,8 +108,9 @@ export function addViteConfig(
  * Add a runtime plugin to the project. In each entrypoint, before executing
  * the `main` function, plugins are executed.
  *
- * @argument wxt The wxt instance provided by the module's setup function.
- * @argument plugin An import from an NPM module, or an absolute file path to the file to load at runtime.
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param plugin An import from an NPM module, or an absolute file path to the
+ *               file to load at runtime.
  *
  * @example
  * export default defineWxtModule((wxt) => {

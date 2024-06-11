@@ -304,6 +304,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     },
     hooks: {},
     vite: () => ({}),
+    plugins: [],
   };
 });
 
