@@ -3,13 +3,7 @@
  *
  * @module wxt/modules
  */
-import type {
-  Entrypoint,
-  EntrypointGroup,
-  Wxt,
-  WxtModule,
-  WxtModuleOptions,
-} from './types';
+import type { Entrypoint, Wxt, WxtModule, WxtModuleOptions } from './types';
 import * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
@@ -74,26 +68,34 @@ export function addPublicAssets(wxt: Wxt, dir: string): void {
 
 /**
  * Merge additional vite config for one or more entrypoint "groups" that make
- * up individual builds.
+ * up individual builds. Config in the project's `wxt.config.ts` file takes
+ * precedence over any config added by this function.
  *
  * @argument wxt The wxt instance provided by the module's setup function.
- * @argument viteConfig A callback function taking the entrypoints that will be
- *                      built as the first argument and returns additional Vite
- *                      config that will be merged into the config used to
- *                      bundle the entrypoint group.
+ * @argument viteConfig A function that returns the vite config the module is
+                        adding. Same format as `vite` in `wxt.config.ts`.
  *
  * @example
  * export default defineWxtModule((wxt, options) => {
- *   mergeViteConfig(wxt, (group) => ({
+ *   addViteConfig(wxt, () => ({
  *     build: {
  *       sourceMaps: true,
  *     },
  *   });
  * });
  */
-export function mergeViteConfig(
+export function addViteConfig(
   wxt: Wxt,
-  viteConfig: (group: EntrypointGroup) => vite.UserConfig | undefined,
+  viteConfig: (env: vite.ConfigEnv) => vite.UserConfig | undefined,
 ): void {
-  throw Error('TODO');
+  wxt.hooks.hook('ready', (wxt) => {
+    const userVite = wxt.config.vite;
+    wxt.config.vite = (env) =>
+      vite.mergeConfig(
+        // Use config added by module as base
+        viteConfig(env) ?? {},
+        // Overwrite module config with user config
+        userVite(env),
+      );
+  });
 }
