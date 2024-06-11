@@ -255,7 +255,7 @@ describe('Module Helpers', () => {
     });
   });
 
-  describe.only('imports', () => {
+  describe('imports', () => {
     it('should add auto-imports', async () => {
       const expectedText = 'customImport!';
       const project = new TestProject();
