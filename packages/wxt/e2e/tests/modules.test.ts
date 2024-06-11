@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
 import type { GenericEntrypoint, InlineConfig } from '../../src/types';
 import { readFile } from 'fs-extra';
+import { normalizePath } from '~/core/utils/paths';
 
 describe('Module Helpers', () => {
   describe('options', () => {
@@ -99,7 +100,7 @@ describe('Module Helpers', () => {
           import { resolve } from 'node:path'
 
           export default defineWxtModule((wxt) => {
-            addPublicAssets(wxt, "${dir}")
+            addPublicAssets(wxt, "${normalizePath(dir)}")
           })
         `,
       );
@@ -132,7 +133,7 @@ describe('Module Helpers', () => {
           import { resolve } from 'node:path'
 
           export default defineWxtModule((wxt) => {
-            addPublicAssets(wxt, "${dir}")
+            addPublicAssets(wxt, "${normalizePath(dir)}")
           })
         `,
       );
@@ -166,7 +167,7 @@ describe('Module Helpers', () => {
           import { defineWxtModule, addWxtPlugin } from 'wxt/modules';
 
           export default defineWxtModule((wxt) => {
-            addWxtPlugin(wxt, "${pluginPath}");
+            addWxtPlugin(wxt, "${normalizePath(pluginPath)}");
           });
         `,
       );
@@ -277,7 +278,7 @@ describe('Module Helpers', () => {
 
         export default defineWxtModule({
           imports: [
-            { name: 'customImport', from: '${utils}' },
+            { name: 'customImport', from: '${normalizePath(utils)}' },
           ],
         })`,
       );
