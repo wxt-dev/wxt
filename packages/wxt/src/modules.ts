@@ -3,13 +3,19 @@
  *
  * @module wxt/modules
  */
-import type { Entrypoint, Wxt, WxtModule, WxtModuleOptions } from './types';
+import type {
+  Entrypoint,
+  Wxt,
+  WxtModule,
+  WxtModuleOptions,
+  WxtModuleSetup,
+} from './types';
 import * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
 
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
-  module: WxtModule<TOptions> | WxtModule<TOptions>['setup'],
+  module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,
 ): WxtModule<TOptions> {
   if (typeof module === 'function') return { setup: module };
   return module;

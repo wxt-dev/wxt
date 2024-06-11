@@ -40,8 +40,6 @@ describe('Module Helpers', () => {
     });
   });
 
-  describe.todo('imports');
-
   describe('addEntrypoint', () => {
     it('should add a custom entrypoint to be bundled the project', async () => {
       const project = new TestProject();
@@ -151,7 +149,7 @@ describe('Module Helpers', () => {
     });
   });
 
-  describe.only('addWxtPlugin', () => {
+  describe('addWxtPlugin', () => {
     function addPluginModule(project: TestProject) {
       const expectedText = 'Hello from plugin!';
       const pluginPath = project.addFile(
@@ -215,7 +213,7 @@ describe('Module Helpers', () => {
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
     });
 
-    it.only('should include the plugin in content scripts', async () => {
+    it('should include the plugin in content scripts', async () => {
       const project = new TestProject();
       project.addFile(
         'entrypoints/content.ts',
@@ -252,6 +250,39 @@ describe('Module Helpers', () => {
           includeBrowserPolyfill: false,
         },
       });
+
+      await expect(project.serializeOutput()).resolves.toContain(expectedText);
+    });
+  });
+
+  describe.only('imports', () => {
+    it('should add auto-imports', async () => {
+      const expectedText = 'customImport!';
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        `export default defineBackground(() => {
+          customImport();
+        });`,
+      );
+      const utils = project.addFile(
+        'custom.ts',
+        `export function customImport() {
+          console.log("${expectedText}")
+        }`,
+      );
+      project.addFile(
+        'modules/test.ts',
+        `import { defineWxtModule } from 'wxt/modules';
+
+        export default defineWxtModule({
+          imports: [
+            { name: 'customImport', from: '${utils}' },
+          ],
+        })`,
+      );
+
+      await project.build();
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
     });

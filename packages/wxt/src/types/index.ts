@@ -1298,6 +1298,11 @@ export interface Dependency {
 
 export type WxtModuleOptions = Record<string, any>;
 
+export type WxtModuleSetup<TOptions extends WxtModuleOptions> = (
+  wxt: Wxt,
+  moduleOptions: TOptions,
+) => void | Promise<void>;
+
 export interface WxtModule<TOptions extends WxtModuleOptions> {
   name?: string;
   /**
@@ -1317,7 +1322,7 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
    * A custom function that can be used to setup hooks and call module-specific
    * APIs.
    */
-  setup(wxt: Wxt, moduleOptions: TOptions): void | Promise<void>;
+  setup?: WxtModuleSetup<TOptions>;
 }
 
 export interface ResolvedPublicFile {
