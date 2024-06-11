@@ -114,7 +114,6 @@ describe('Zipping', () => {
       browser: 'firefox',
     });
     await extract(sourcesZip, { dir: unzipDir });
-    console.log(unzipDir); // TODO: Remove log
     expect(await project.fileExists(unzipDir, '.env')).toBe(false);
   });
 
