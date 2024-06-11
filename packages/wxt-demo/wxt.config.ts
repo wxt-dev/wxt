@@ -21,4 +21,9 @@ export default defineConfig({
   experimental: {
     viteRuntime: true,
   },
+  example: {
+    a: 'a',
+    // @ts-expect-error: c is not defined, this should error out
+    c: 'c',
+  },
 });
