@@ -1,5 +1,6 @@
 import { parseHTML } from 'linkedom';
 import type * as vite from 'vite';
+import { normalizePath } from '~/core/utils/paths';
 import { ResolvedConfig } from '~/types';
 
 /**
@@ -21,7 +22,10 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
       if (id === resolvedVirtualModuleId) {
         // Import and init all plugins
         const imports = config.plugins
-          .map((plugin, i) => `import initPlugin${i} from '${plugin}';`)
+          .map(
+            (plugin, i) =>
+              `import initPlugin${i} from '${normalizePath(plugin)}';`,
+          )
           .join('\n');
         const initCalls = config.plugins
           .map((_, i) => `  initPlugin${i}();`)
