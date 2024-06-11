@@ -14,9 +14,10 @@ What's more, these modules can be shared on NPM and re-used between projects!
 
 There are two ways to add a module to your project:
 
-1. **Local file**: Any file present in the `modules/` directory will be trea
+1. **Local file**: Any file present in the `modules/` directory will be treated as a module and loaded at build-time by WXT. You can use `modules/*.ts` or `modules/*/index.ts`, similar to entrypoints.
 
    ```ts
+   // modules/example.ts
    import { defineWxtModule } from 'wxt/modules';
 
    export default defineWxtModule((wxt) => {
