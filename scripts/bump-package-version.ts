@@ -49,7 +49,11 @@ const newVersion: string = updatedPkgJson.version;
 consola.info('Bump:', { currentVersion, bumpType, newVersion });
 
 // Generate changelog
-const versionChangelog = await generateMarkDown(commits, config);
+const versionChangelog = await generateMarkDown(commits, {
+  ...config,
+  from: currentVersion,
+  to: newVersion,
+});
 const versionChangelogBody = versionChangelog
   .split('\n')
   .slice(1)
