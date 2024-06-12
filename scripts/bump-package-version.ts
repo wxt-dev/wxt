@@ -30,6 +30,7 @@ const config = await loadChangelogConfig(process.cwd());
 consola.info('Config:', config);
 const rawCommits = await listCommitsInDir(pkgDir, prevTag);
 const commits = parseCommits(rawCommits, config);
+consola.info(commits);
 
 // Bump version
 let bumpType = determineSemverChange(commits, config) ?? 'patch';
@@ -49,18 +50,15 @@ consola.info('Bump:', { currentVersion, bumpType, newVersion });
 
 // Generate changelog
 const versionChangelog = await generateMarkDown(commits, config);
-console.log({ versionChangelog });
 const versionChangelogBody = versionChangelog
   .split('\n')
   .slice(1)
   .join('\n')
   .trim();
-console.log({ versionChangelogBody });
 const { releases: prevReleases } = await fs
   .readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
-console.log(prevReleases);
 const allReleases = [
   {
     version: newVersion,
