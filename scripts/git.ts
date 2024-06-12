@@ -1,5 +1,26 @@
 import { RawGitCommit, getGitDiff } from 'changelogen';
 import { consola } from 'consola';
+import fs from 'fs-extra';
+
+export async function grabPackageDetails(pkg: string) {
+  const pkgDir = `packages/${pkg}`;
+  const pkgJsonPath = `${pkgDir}/package.json`;
+  const pkgJson = await fs.readJson(pkgJsonPath);
+  const currentVersion: string = pkgJson.version;
+  return {
+    pkgDir,
+    pkgJsonPath,
+    changelogPath: `${pkgDir}/CHANGELOG.md`,
+    pkgJson,
+    pkgName: pkgJson.name,
+    currentVersion,
+    prevTag: getPkgTag(pkg, currentVersion),
+  };
+}
+
+export function getPkgTag(pkg: string, version: string | undefined) {
+  return `${pkg}-v${version}`;
+}
 
 export async function listCommitsInDir(
   dir: string,

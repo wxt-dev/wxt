@@ -6,7 +6,7 @@ import {
   parseChangelogMarkdown,
 } from 'changelogen';
 import { execa } from 'execa';
-import { listCommitsInDir } from './git';
+import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 import { consola } from 'consola';
 import fs from 'fs-extra';
 
@@ -16,13 +16,8 @@ if (pkg == null) {
     'Package name missing. Usage: tsx bump-package-version.ts <package-name>',
   );
 }
-const pkgDir = `packages/${pkg}`;
-const pkgJsonPath = `${pkgDir}/package.json`;
-const changelogPath = `${pkgDir}/CHANGELOG.md`;
-const pkgJson = await fs.readJson(pkgJsonPath);
-const pkgName: string = pkgJson.name;
-const currentVersion: string = pkgJson.version;
-const prevTag = `${pkg}-v${currentVersion}`;
+const { pkgDir, pkgName, currentVersion, prevTag, changelogPath, pkgJsonPath } =
+  await grabPackageDetails(pkg);
 consola.info('Bumping:', { pkg, pkgDir, pkgName, currentVersion });
 
 // Get commits
@@ -86,5 +81,5 @@ await execa('git', [
   '-m',
   `chore(release): ${pkgName} v${newVersion}`,
 ]);
-await execa('git', ['tag', `${pkg}-v${newVersion}`]);
+await execa('git', ['tag', getPkgTag(pkg, newVersion)]);
 consola.success('Committed version and changelog');
