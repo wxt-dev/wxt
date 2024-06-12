@@ -16,7 +16,6 @@ export default defineProject({
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 120e3,
   },
-  // @ts-expect-error
   plugins: [RandomSeed()],
   resolve: {
     alias: {
