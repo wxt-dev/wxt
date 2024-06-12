@@ -1,11 +1,13 @@
 name: Sync Releases
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - packages/wxt/CHANGELOG.md
+    inputs:
+      package:
+        description: Package to sync
+        default: wxt
+        type: choice
+        options:
+          - wxt
 
 jobs:
   sync:
@@ -17,5 +19,6 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
-      - run: pnpm sync-releases all --token ${{ secrets.GITHUB_TOKEN }}
-        working-directory: packages/wxt
+      - run: pnpm tsx scripts/sync-releases.ts ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
