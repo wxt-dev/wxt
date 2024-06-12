@@ -1,6 +1,13 @@
 name: Release
 on:
   workflow_dispatch:
+    inputs:
+      package:
+        description: Package to release
+        default: wxt
+        type: choice
+        options:
+          - wxt
 
 jobs:
   validate:
@@ -22,18 +29,18 @@ jobs:
         run: |
           git config user.email "github-actions@users.noreply.github.com"
           git config user.name "GitHub Actions"
-          pnpx changelogen@latest --release
+          pnpm tsx scripts/bump-package-version.ts ${{ inputs.package }}
           git push
           git push --tags
-        working-directory: packages/wxt
 
       - name: NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
           pnpm build
           pnpm publish
-        working-directory: packages/wxt
+        working-directory: packages/${{ inputs.package }}
 
       - name: GitHub Release
-        run: pnpx changelogen@latest gh release --token ${{ secrets.GITHUB_TOKEN }}
-        working-directory: packages/wxt
+        run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

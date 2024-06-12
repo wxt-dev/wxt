@@ -11,6 +11,9 @@ importers:
       '@aklinker1/check':
         specifier: ^1.1.1
         version: 1.2.0(typescript@5.3.3)
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
       '@vitest/coverage-v8':
         specifier: ^1.0.1
         version: 1.2.2(vitest@1.5.3)
@@ -23,6 +26,9 @@ importers:
       execa:
         specifier: ^9.1.0
         version: 9.1.0
+      fs-extra:
+        specifier: ^11.1.1
+        version: 11.2.0
       lint-staged:
         specifier: ^15.2.0
         version: 15.2.2
@@ -61,7 +67,7 @@ importers:
         version: 1.3.1(typescript@5.3.3)(vitest@1.5.3)
       vitest-plugin-random-seed:
         specifier: ^1.0.2
-        version: 1.0.2(vite@5.2.8)
+        version: 1.0.2(vite@5.2.12)
       vue:
         specifier: ^3.3.10
         version: 3.4.21(typescript@5.3.3)
@@ -3021,7 +3027,6 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: false
 
   /fs-extra@9.0.1:
     resolution: {integrity: sha512-h2iAoN838FqAFJY2/qVpzFXy+EBxfVE220PalAqQLDVsFOHLJrZvut5puAbCdNv6WJk+B8ihI+k0c7JK5erwqQ==}
@@ -3820,7 +3825,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.11
-    dev: false
 
   /jszip@3.10.1:
     resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
@@ -5660,7 +5664,6 @@ packages:
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: false
 
   /unplugin@1.5.0:
     resolution: {integrity: sha512-9ZdRwbh/4gcm1JTOkp9lAkIDrtOyOxgHmY7cjuwI8L/2RTikMcVG25GsZwNAgRuap3iDw2jeq7eoqtAsz5rW3A==}
@@ -5810,6 +5813,7 @@ packages:
       rollup: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: false
 
   /vitepress@1.2.2(typescript@5.3.3):
     resolution: {integrity: sha512-uZ3nXR5NY4nYj3RJWCo5jev9qlNZAQo5SUXu1U0QSUx84cUm/o7hCTDVjZ4njVSVui+PsV1oAbdQOg8ygbaf4w==}
@@ -5878,12 +5882,12 @@ packages:
       vitest: 1.5.3
     dev: true
 
-  /vitest-plugin-random-seed@1.0.2(vite@5.2.8):
+  /vitest-plugin-random-seed@1.0.2(vite@5.2.12):
     resolution: {integrity: sha512-Kt5QHmx7I1p2WShsmgJSK/L8hNPZpyNu85zSml5yv/fHDe7gJspcKc7kNYrLVVwZdGcqcZxyHAeH503szzQ95g==}
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.2.8(@types/node@20.10.3)
+      vite: 5.2.12
     dev: true
 
   /vitest@1.5.3:

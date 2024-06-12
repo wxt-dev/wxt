@@ -1,5 +1,75 @@
 # Changelog
 
+## v0.18.6
+
+## v0.18.4...monorepo-package-releases
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.4...monorepo-package-releases)
+
+### 🚀 Enhancements
+
+- Module system ([#672](https://github.com/wxt-dev/wxt/pull/672))
+
+### 🩹 Fixes
+
+- To fix the issue with Entrypoint Side Effects link errors ([#705](https://github.com/wxt-dev/wxt/pull/705))
+- **storage:** Add storage area typing for storage keys ([#708](https://github.com/wxt-dev/wxt/pull/708))
+
+### 📖 Documentation
+
+- Restructure wxt.dev ([#701](https://github.com/wxt-dev/wxt/pull/701))
+- Add eslintrc info to auto-imports page ([454b076](https://github.com/wxt-dev/wxt/commit/454b076))
+
+### 🏡 Chore
+
+- **deps:** Bump linkedom from 0.16.8 to 0.18.2 ([#690](https://github.com/wxt-dev/wxt/pull/690))
+- **deps:** Bump nypm from 0.3.6 to 0.3.8 ([#692](https://github.com/wxt-dev/wxt/pull/692))
+- **deps-dev:** Bump tsx from 4.7.0 to 4.11.2 ([#699](https://github.com/wxt-dev/wxt/pull/699))
+- **deps-dev:** Bump execa from 8.0.1 to 9.1.0 ([#691](https://github.com/wxt-dev/wxt/pull/691))
+- Fix flakey TS config ([a257217](https://github.com/wxt-dev/wxt/commit/a257217))
+- Remove log in tests ([eb3b9bc](https://github.com/wxt-dev/wxt/commit/eb3b9bc))
+
+### ❤️ Contributors
+
+- TheOnlyTails ([@TheOnlyTails](http://github.com/TheOnlyTails))
+- Rxliuli ([@rxliuli](http://github.com/rxliuli))
+
+## v0.18.5
+
+
+
+## v0.18.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.4...monorepo-package-releases)
+
+### 🚀 Enhancements
+
+- Module system ([#672](https://github.com/wxt-dev/wxt/pull/672))
+
+### 🩹 Fixes
+
+- To fix the issue with Entrypoint Side Effects link errors ([#705](https://github.com/wxt-dev/wxt/pull/705))
+- **storage:** Add storage area typing for storage keys ([#708](https://github.com/wxt-dev/wxt/pull/708))
+
+### 📖 Documentation
+
+- Restructure wxt.dev ([#701](https://github.com/wxt-dev/wxt/pull/701))
+- Add eslintrc info to auto-imports page ([454b076](https://github.com/wxt-dev/wxt/commit/454b076))
+
+### 🏡 Chore
+
+- **deps:** Bump linkedom from 0.16.8 to 0.18.2 ([#690](https://github.com/wxt-dev/wxt/pull/690))
+- **deps:** Bump nypm from 0.3.6 to 0.3.8 ([#692](https://github.com/wxt-dev/wxt/pull/692))
+- **deps-dev:** Bump tsx from 4.7.0 to 4.11.2 ([#699](https://github.com/wxt-dev/wxt/pull/699))
+- **deps-dev:** Bump execa from 8.0.1 to 9.1.0 ([#691](https://github.com/wxt-dev/wxt/pull/691))
+- Fix flakey TS config ([a257217](https://github.com/wxt-dev/wxt/commit/a257217))
+- Remove log in tests ([eb3b9bc](https://github.com/wxt-dev/wxt/commit/eb3b9bc))
+
+### ❤️ Contributors
+
+- TheOnlyTails ([@TheOnlyTails](http://github.com/TheOnlyTails))
+- Rxliuli ([@rxliuli](http://github.com/rxliuli))
+
 ## v0.18.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.18.3...v0.18.4)
