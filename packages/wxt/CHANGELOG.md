@@ -2,7 +2,7 @@
 
 ## v0.18.5
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/0.18.4...0.18.5)
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.4...wxt-v0.18.5)
 
 ### 🚀 Enhancements
 
