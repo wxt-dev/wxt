@@ -27,14 +27,18 @@ config.tokens.github = process.env.GITHUB_TOKEN;
 // Update releases
 for (const release of releases) {
   const tag = getPkgTag(pkg, release.version);
-  const existing = await getGithubReleaseByTag(config, tag);
-  if (existing.body !== release.body) {
-    await updateGithubRelease(config, existing.id!, {
-      tag_name: tag,
-      name: `${pkgName} v${release.version}`,
-      body: release.body,
-    });
+  try {
+    const existing = await getGithubReleaseByTag(config, tag);
+    if (existing.body !== release.body) {
+      await updateGithubRelease(config, existing.id!, {
+        tag_name: tag,
+        name: `${pkgName} v${release.version}`,
+        body: release.body,
+      });
+    }
+    consola.success(`Synced \`${tag}\``);
+  } catch (err) {
+    consola.fail(`\`${tag}\``, err);
   }
-  consola.success(`Synced \`${tag}\``);
 }
 consola.success('Done');
