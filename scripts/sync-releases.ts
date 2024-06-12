@@ -17,9 +17,10 @@ if (pkg == null) {
 
 // Update
 const { changelogPath, pkgName } = await grabPackageDetails(pkg);
-const { releases } = parseChangelogMarkdown(
-  await fs.readFile(changelogPath, 'utf8'),
-);
+const { releases } = await fs
+  .readFile(changelogPath, 'utf8')
+  .then(parseChangelogMarkdown)
+  .catch(() => ({ releases: [] }));
 const config = await loadChangelogConfig(process.cwd());
 config.tokens.github = process.env.GITHUB_TOKEN;
 

@@ -25,7 +25,6 @@ const config = await loadChangelogConfig(process.cwd());
 consola.info('Config:', config);
 const rawCommits = await listCommitsInDir(pkgDir, prevTag);
 const commits = parseCommits(rawCommits, config);
-consola.info(JSON.stringify(commits[0], null, 2));
 
 // Bump version
 let bumpType = determineSemverChange(commits, config) ?? 'patch';
