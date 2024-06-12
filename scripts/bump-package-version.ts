@@ -49,6 +49,13 @@ consola.info('Bump:', { currentVersion, bumpType, newVersion });
 
 // Generate changelog
 const versionChangelog = await generateMarkDown(commits, config);
+console.log({ versionChangelog });
+const versionChangelogBody = versionChangelog
+  .split('\n')
+  .slice(1)
+  .join('\n')
+  .trim();
+console.log({ versionChangelogBody });
 const { releases: prevReleases } = await fs
   .readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
@@ -56,8 +63,8 @@ const { releases: prevReleases } = await fs
 console.log(prevReleases);
 const allReleases = [
   {
-    version: `${currentVersion}...${newVersion}`,
-    body: versionChangelog,
+    version: newVersion,
+    body: versionChangelogBody,
   },
   ...prevReleases,
 ];
