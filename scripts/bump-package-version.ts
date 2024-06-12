@@ -5,7 +5,7 @@ import {
   generateMarkDown,
   parseChangelogMarkdown,
 } from 'changelogen';
-import { execaCommand } from 'execa';
+import { execa } from 'execa';
 import { listCommitsInDir } from './git';
 import { consola } from 'consola';
 import fs from 'fs-extra';
@@ -22,16 +22,17 @@ const changelogPath = `${pkgDir}/CHANGELOG.md`;
 const pkgJson = await fs.readJson(pkgJsonPath);
 const pkgName: string = pkgJson.name;
 const currentVersion: string = pkgJson.version;
+const prevTag = `${pkg}-v${currentVersion}`;
 consola.info('Bumping:', { pkg, pkgDir, pkgName, currentVersion });
 
 // Get commits
 const config = await loadChangelogConfig(process.cwd());
 consola.info('Config:', config);
-const rawCommits = await listCommitsInDir(pkgDir);
+const rawCommits = await listCommitsInDir(pkgDir, prevTag);
 const commits = parseCommits(rawCommits, config);
 
 // Bump version
-let bumpType = determineSemverChange(commits, config);
+let bumpType = determineSemverChange(commits, config) ?? 'patch';
 if (currentVersion.startsWith('0.')) {
   if (bumpType === 'major') {
     bumpType = 'minor';
@@ -39,7 +40,7 @@ if (currentVersion.startsWith('0.')) {
     bumpType = 'patch';
   }
 }
-await execaCommand(`pnpm version ${bumpType}`, {
+await execa('pnpm', ['version', bumpType], {
   cwd: pkgDir,
 });
 const updatedPkgJson = await fs.readJson(pkgJsonPath);
@@ -52,9 +53,10 @@ const { releases: prevReleases } = await fs
   .readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
+console.log(prevReleases);
 const allReleases = [
   {
-    version: newVersion,
+    version: `${currentVersion}...${newVersion}`,
     body: versionChangelog,
   },
   ...prevReleases,
@@ -69,8 +71,11 @@ await fs.writeFile(changelogPath, newChangelog, 'utf8');
 consola.success('Updated changelog');
 
 // Commit changes
-await execaCommand(`git add ${pkgJsonPath} ${changelogPath}`);
-await execaCommand(
-  `git commit -m "chore(release): \\\`${pkgName}\\\` v${newVersion}"`,
-);
-await execaCommand(`git tag ${pkg}-v${newVersion}`);
+await execa('git', ['add', pkgJsonPath, changelogPath]);
+await execa('git', [
+  'commit',
+  '-m',
+  `chore(release): ${pkgName} v${newVersion}`,
+]);
+await execa('git', ['tag', `${pkg}-v${newVersion}`]);
+consola.success('Committed version and changelog');

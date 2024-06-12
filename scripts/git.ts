@@ -1,8 +1,10 @@
-import { RawGitCommit, getGitDiff, getLastGitTag } from 'changelogen';
+import { RawGitCommit, getGitDiff } from 'changelogen';
 import { consola } from 'consola';
 
-export async function listCommitsInDir(dir: string): Promise<RawGitCommit[]> {
-  const lastTag = await getLastGitTag();
+export async function listCommitsInDir(
+  dir: string,
+  lastTag: string,
+): Promise<RawGitCommit[]> {
   consola.info('Listing commits:', { lastTag, dir });
   const commits = await getGitDiff(lastTag);
   consola.info('All commits:', commits.length);
