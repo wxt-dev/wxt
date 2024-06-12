@@ -40,13 +40,14 @@ await execa('pnpm', ['version', bumpType], {
 });
 const updatedPkgJson = await fs.readJson(pkgJsonPath);
 const newVersion: string = updatedPkgJson.version;
+const newTag = getPkgTag(pkg, newVersion);
 consola.info('Bump:', { currentVersion, bumpType, newVersion });
 
 // Generate changelog
 const versionChangelog = await generateMarkDown(commits, {
   ...config,
-  from: currentVersion,
-  to: newVersion,
+  from: prevTag,
+  to: newTag,
 });
 const versionChangelogBody = versionChangelog
   .split('\n')
@@ -80,5 +81,5 @@ await execa('git', [
   '-m',
   `chore(release): ${pkgName} v${newVersion}`,
 ]);
-await execa('git', ['tag', getPkgTag(pkg, newVersion)]);
+await execa('git', ['tag', newTag]);
 consola.success('Committed version and changelog');
