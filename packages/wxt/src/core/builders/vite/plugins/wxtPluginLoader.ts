@@ -49,7 +49,10 @@ try {
         const { document } = parseHTML(html);
         const script = document.createElement('script');
         script.type = 'module';
-        script.src = 'virtual:wxt-html-plugins';
+        script.src =
+          config.command === 'serve'
+            ? `http://${config.dev.server?.hostname}:${config.dev.server?.port}/@id/${virtualHtmlModuleId}`
+            : virtualHtmlModuleId;
         if (document.head == null) {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
