@@ -14,6 +14,9 @@ import * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
 
+// Re-export to prevent TS2742 type errors
+export { WxtModule };
+
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,
 ): WxtModule<TOptions> {
