@@ -1300,7 +1300,7 @@ export type WxtModuleOptions = Record<string, any>;
 
 export type WxtModuleSetup<TOptions extends WxtModuleOptions> = (
   wxt: Wxt,
-  moduleOptions: TOptions,
+  moduleOptions?: TOptions,
 ) => void | Promise<void>;
 
 export interface WxtModule<TOptions extends WxtModuleOptions> {
