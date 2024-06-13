@@ -15,11 +15,11 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "solid-js": "^1.8.7"
+    "solid-js": "^1.8.17"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
-    "vite-plugin-solid": "^2.8.0",
-    "wxt": "^0.18.0"
+    "vite-plugin-solid": "^2.10.2",
+    "wxt": "^0.18.6"
   }
 }
