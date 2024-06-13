@@ -32,7 +32,6 @@ export default defineWxtModule<VueModuleOptions>({
       }
     });
 
-    // Add vue preset to auto-imports
     addImportPreset(wxt, 'vue');
   },
 });

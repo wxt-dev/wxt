@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "pnpm -s build-deps && unbuild",
-    "check": "check",
+    "check": "pnpm -s build-deps && check",
     "build-deps": "pnpm -ws build-deps @wxt-dev/module-vue"
   },
   "peerDependencies": {
