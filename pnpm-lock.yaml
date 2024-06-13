@@ -23,12 +23,21 @@ importers:
       consola:
         specifier: ^3.2.3
         version: 3.2.3
+      dependency-graph:
+        specifier: ^1.0.0
+        version: 1.0.0
       execa:
         specifier: ^9.1.0
         version: 9.1.0
+      fast-glob:
+        specifier: ^3.3.1
+        version: 3.3.2
       fs-extra:
         specifier: ^11.1.1
         version: 11.2.0
+      hasha:
+        specifier: ^6.0.0
+        version: 6.0.0
       lint-staged:
         specifier: ^15.2.0
         version: 15.2.2
@@ -74,6 +83,11 @@ importers:
       wxt:
         specifier: workspace:*
         version: link:packages/wxt
+      yaml:
+        specifier: ^2.4.5
+        version: 2.4.5
+
+  packages/storage: {}
 
   packages/wxt:
     dependencies:
@@ -2218,7 +2232,7 @@ packages:
       scule: 1.3.0
       semver: 7.5.4
       std-env: 3.6.0
-      yaml: 2.3.4
+      yaml: 2.4.5
     dev: true
 
   /check-error@1.0.3:
@@ -2577,6 +2591,11 @@ packages:
 
   /defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
+
+  /dependency-graph@1.0.0:
+    resolution: {integrity: sha512-cW3gggJ28HZ/LExwxP2B++aiKxhJXMSIt9K48FOXQkm+vuG5gyatXnLsONRJdzO/7VfjDIiaOOa/bs4l464Lwg==}
+    engines: {node: '>=4'}
+    dev: true
 
   /dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -3336,6 +3355,14 @@ packages:
     engines: {node: '>= 0.4.0'}
     dependencies:
       function-bind: 1.1.1
+    dev: true
+
+  /hasha@6.0.0:
+    resolution: {integrity: sha512-MLydoyGp9QJcjlhE5lsLHXYpWayjjWqkavzju2ZWD2tYa1CgmML1K1gWAu22BLFa2eZ0OfvJ/DlfoVjaD54U2Q==}
+    engines: {node: '>=18'}
+    dependencies:
+      is-stream: 3.0.0
+      type-fest: 4.20.0
     dev: true
 
   /highlight.js@10.7.3:
@@ -4635,7 +4662,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.1.0
-      yaml: 2.3.4
+      yaml: 2.4.5
     dev: true
 
   /postcss@8.4.38:
@@ -5558,6 +5585,11 @@ packages:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
 
+  /type-fest@4.20.0:
+    resolution: {integrity: sha512-MBh+PHUHHisjXf4tlx0CFWoMdjx8zCMLJHOjnV1prABYZFHqtFOyauCIK2/7w4oIfwkF8iNhLtnJEfVY2vn3iw==}
+    engines: {node: '>=16'}
+    dev: true
+
   /typed-array-length@1.0.4:
     resolution: {integrity: sha512-KjZypGq+I/H7HI5HlOoGHkWUUGq+Q0TPhQurLbyrVrvnKTBgzLhIJ7j6J/XTQOi0d1RjyZ0wdas8bKs2p0x3Ng==}
     dependencies:
@@ -6231,6 +6263,12 @@ packages:
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
+    dev: true
+
+  /yaml@2.4.5:
+    resolution: {integrity: sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==}
+    engines: {node: '>= 14'}
+    hasBin: true
     dev: true
 
   /yargs-parser@20.2.9:
