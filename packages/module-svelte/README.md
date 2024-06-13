@@ -10,7 +10,7 @@ This plugin makes a few changes:
 ## Usage
 
 ```sh
-pnpm i -D @wxt-dev/module-svelte
+pnpm i -D svelte @wxt-dev/module-svelte
 ```
 
 Then add the module to your config:
