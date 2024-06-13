@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.18.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.5...wxt-v0.18.6)
+
+### 🚀 Enhancements
+
+- **modules:** Add new `addImportPreset` helper function ([#720](https://github.com/wxt-dev/wxt/pull/720))
+
+### 🩹 Fixes
+
+- **types:** Module `options` param is optional, but types did not reflect that ([#719](https://github.com/wxt-dev/wxt/pull/719))
+- **modules:** Re-export `WxtModule` type from `wxt/modules` to prevent TS2742 ([#721](https://github.com/wxt-dev/wxt/pull/721))
+- **modules:** Add modules to TS project so type augmentation works ([#722](https://github.com/wxt-dev/wxt/pull/722))
+
+### 🏡 Chore
+
+- **dev-deps:** Upgrade typescript to 5.4 ([#718](https://github.com/wxt-dev/wxt/pull/718))
+
 ## v0.18.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.4...wxt-v0.18.5)
