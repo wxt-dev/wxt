@@ -12,6 +12,7 @@ This plugin makes a few changes:
 ## Usage
 
 ```sh
+pnpm i vue
 pnpm i -D @wxt-dev/module-vue
 ```
 
