@@ -13,7 +13,7 @@ import type {
 import * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
-import type { BuiltinPresetName, UnimportOptions } from 'unimport';
+import type { UnimportOptions } from 'unimport';
 
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,
