@@ -11,6 +11,7 @@ import {
   Logger,
   WxtCommand,
   WxtModule,
+  WxtModuleWithMetadata,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
@@ -380,15 +381,19 @@ export async function mergeBuilderConfig(
 export async function resolveWxtModules(
   modulesDir: string,
   modules: string[] = [],
-): Promise<WxtModule<any>[]> {
-  // Resolve NPM packages
-  const npmModules = await Promise.all(
+): Promise<WxtModuleWithMetadata<any>[]> {
+  // Resolve node_modules modules
+  const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
       const mod = await import(/* @vite-ignore */ moduleId);
       if (mod.default == null) {
         throw Error('Module missing default export: ' + moduleId);
       }
-      return mod.default;
+      return {
+        ...mod.default,
+        type: 'node_module',
+        path: moduleId,
+      };
     }),
   );
 
@@ -397,10 +402,11 @@ export async function resolveWxtModules(
     cwd: modulesDir,
     onlyFiles: true,
   }).catch(() => []);
-  const localModules = await Promise.all(
+  const localModules = await Promise.all<WxtModuleWithMetadata<any>>(
     localModulePaths.map(async (file) => {
+      const absolutePath = normalizePath(path.resolve(modulesDir, file));
       const { config } = await loadConfig<WxtModule<any>>({
-        configFile: path.resolve(modulesDir, file),
+        configFile: absolutePath,
         globalRc: false,
         rcFile: false,
         packageJson: false,
@@ -413,10 +419,12 @@ export async function resolveWxtModules(
         );
       // Add name based on filename
       config.name ??= file;
-      return config;
+      return {
+        ...config,
+        type: 'local',
+        path: absolutePath,
+      };
     }),
   );
-
-  // Execute modules
   return [...npmModules, ...localModules];
 }

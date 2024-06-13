@@ -204,6 +204,16 @@ async function writeMainDeclarationFile(references: string[]): Promise<string> {
         (ref) =>
           `/// <reference types="./${normalizePath(relative(dir, ref))}" />`,
       ),
+
+      // Add references to modules installed from NPM to the TS project so
+      // their type augmentation can update InlineConfig correctly. Local
+      // modules defined in <root>/modules are already apart of the project, so
+      // we don't need to add them.
+      ...wxt.config.modules
+        .filter(
+          (module) => module.type === 'node_module' && module.configKey != null,
+        )
+        .map((module) => `/// <reference types="${module.path}" />`),
     ].join('\n') + '\n',
   );
   return filePath;
