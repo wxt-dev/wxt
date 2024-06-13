@@ -22,7 +22,6 @@ import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
-import Module from 'node:module';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
