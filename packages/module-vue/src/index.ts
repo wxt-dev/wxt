@@ -1,9 +1,6 @@
-import type { WxtModule } from 'wxt';
-import { addViteConfig, defineWxtModule } from 'wxt/modules';
+import 'wxt';
+import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 import vue, { Options as ViteOptions } from '@vitejs/plugin-vue';
-
-// @ts-ignore - required for unbuild to work for now...
-let _: WxtModule<any> | undefined;
 
 export default defineWxtModule<VueModuleOptions>({
   name: '@wxt-dev/module-vue',
@@ -17,7 +14,7 @@ export default defineWxtModule<VueModuleOptions>({
       plugins: [vue(vite)],
       build: {
         // Fixes known issue: https://github.com/wxt-dev/wxt/pull/607
-        sourcemap: command !== 'serve',
+        sourcemap: false,
       },
     }));
 
@@ -36,14 +33,7 @@ export default defineWxtModule<VueModuleOptions>({
     });
 
     // Add vue preset to auto-imports
-    wxt.hooks.hook('ready', (wxt) => {
-      if (!wxt.config.imports) return;
-
-      wxt.config.imports.presets ??= [];
-      if (wxt.config.imports.presets.includes('vue')) return;
-
-      wxt.config.imports.presets.push('vue');
-    });
+    addImportPreset(wxt, 'vue');
   },
 });
 
