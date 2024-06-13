@@ -213,7 +213,7 @@ async function writeMainDeclarationFile(references: string[]): Promise<string> {
         .filter(
           (module) => module.type === 'node_module' && module.configKey != null,
         )
-        .map((module) => `/// <reference types="${module.path}" />`),
+        .map((module) => `/// <reference types="${module.id}" />`),
     ].join('\n') + '\n',
   );
   return filePath;

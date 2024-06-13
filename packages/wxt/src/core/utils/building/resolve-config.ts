@@ -22,6 +22,7 @@ import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
+import Module from 'node:module';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -385,14 +386,16 @@ export async function resolveWxtModules(
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      const mod = await import(/* @vite-ignore */ moduleId);
+      const mod: { default: WxtModule<any> } = await import(
+        /* @vite-ignore */ moduleId
+      );
       if (mod.default == null) {
         throw Error('Module missing default export: ' + moduleId);
       }
       return {
         ...mod.default,
         type: 'node_module',
-        path: moduleId,
+        id: moduleId,
       };
     }),
   );
@@ -422,7 +425,7 @@ export async function resolveWxtModules(
       return {
         ...config,
         type: 'local',
-        path: absolutePath,
+        id: absolutePath,
       };
     }),
   );

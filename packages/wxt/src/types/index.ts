@@ -1328,7 +1328,7 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
 export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
   extends WxtModule<TOptions> {
   type: 'local' | 'node_module';
-  path: string;
+  id: string;
 }
 
 export interface ResolvedPublicFile {
