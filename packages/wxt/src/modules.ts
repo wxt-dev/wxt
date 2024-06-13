@@ -13,6 +13,7 @@ import type {
 import * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
+import type { BuiltinPresetName, UnimportOptions } from 'unimport';
 
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,
@@ -123,8 +124,50 @@ export function addViteConfig(
  *   addWxtPlugin(wxt, "wxt-module-analytics/client-plugin");
  * });
  */
-export function addWxtPlugin(wxt: Wxt, plugin: string) {
+export function addWxtPlugin(wxt: Wxt, plugin: string): void {
   wxt.hooks.hook('ready', (wxt) => {
     wxt.config.plugins.push(plugin);
+  });
+}
+
+/**
+ * Add an Unimport preset ([built-in](https://github.com/unjs/unimport?tab=readme-ov-file#built-in-presets),
+ * [custom](https://github.com/unjs/unimport?tab=readme-ov-file#custom-presets),
+ * or [auto-scanned](https://github.com/unjs/unimport?tab=readme-ov-file#exports-auto-scan)),
+ * to the project's list of auto-imported utilities.
+ *
+ * Some things to note:
+ * - This function will only de-duplicate built-in preset names. It will not
+ *   stop you adding duplicate custom or auto-scanned presets.
+ * - If the project has disabled imports, this function has no effect.
+ *
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param preset The preset to add to the project.
+ *
+ * @example
+ * export default defineWxtModule((wxt) => {
+ *   // Built-in preset:
+ *   addImportPreset(wxt, "vue");
+ *   // Custom preset:
+ *   addImportPreset(wxt, {
+ *     from: "vue",
+ *     imports: ["ref", "reactive", ...],
+ *   });
+ *   // Auto-scanned preset:
+ *   addImportPreset(wxt, { package: "vue" });
+ * });
+ */
+export function addImportPreset(
+  wxt: Wxt,
+  preset: UnimportOptions['presets'][0],
+): void {
+  wxt.hooks.hook('ready', (wxt) => {
+    if (!wxt.config.imports) return;
+
+    wxt.config.imports.presets ??= [];
+    // De-dupelicate built-in named presets
+    if (wxt.config.imports.presets.includes(preset)) return;
+
+    wxt.config.imports.presets.push(preset);
   });
 }

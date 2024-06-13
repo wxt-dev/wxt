@@ -1,5 +1,5 @@
 import { fakeWxt } from '~/core/utils/testing/fake-objects';
-import { addViteConfig } from '../modules';
+import { addImportPreset, addViteConfig } from '../modules';
 import { describe, it, expect } from 'vitest';
 import { createHooks } from 'hookable';
 
@@ -35,6 +35,52 @@ describe('Module Utilities', () => {
       const actual: any = wxt.config.vite(wxt.config.env);
 
       expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('addImportPreset', () => {
+    it('should add the import to the config', async () => {
+      const preset = 'vue';
+      const wxt = fakeWxt({ hooks: createHooks() });
+
+      addImportPreset(wxt, preset);
+      await wxt.hooks.callHook('ready', wxt);
+
+      expect(wxt.config.imports && wxt.config.imports.presets).toContain(
+        preset,
+      );
+    });
+
+    it('should not add duplicate presets', async () => {
+      const preset = 'vue';
+      const wxt = fakeWxt({
+        hooks: createHooks(),
+        config: {
+          imports: {
+            presets: ['vue', 'react'],
+          },
+        },
+      });
+
+      addImportPreset(wxt, preset);
+      await wxt.hooks.callHook('ready', wxt);
+
+      expect(wxt.config.imports && wxt.config.imports.presets).toHaveLength(2);
+    });
+
+    it("should not enable imports if they've been disabled", async () => {
+      const preset = 'vue';
+      const wxt = fakeWxt({
+        hooks: createHooks(),
+        config: {
+          imports: false,
+        },
+      });
+
+      addImportPreset(wxt, preset);
+      await wxt.hooks.callHook('ready', wxt);
+
+      expect(wxt.config.imports).toBe(false);
     });
   });
 });
