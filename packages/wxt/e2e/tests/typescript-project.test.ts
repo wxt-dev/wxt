@@ -375,4 +375,9 @@ describe('TypeScript Project', () => {
       }"
     `);
   });
+
+  // TODO: Once a module has been published, use it here for testing - local files are never added to the .wxt/wxt.d.ts file
+  it.todo(
+    'should add modules from NPM to the TS project if they have a configKey',
+  );
 });
