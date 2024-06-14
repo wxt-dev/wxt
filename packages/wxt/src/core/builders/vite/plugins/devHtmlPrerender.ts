@@ -4,10 +4,9 @@ import { getEntrypointName } from '~/core/utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
 import { normalizePath } from '~/core/utils/paths';
-import { murmurHash } from 'ohash';
 
-// Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
-const inlineScriptContents: Record<number, string> = {};
+// Cache the preamble script for all devHtmlPrerender plugins, not just one
+let reactRefreshPreamble = '';
 
 /**
  * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
@@ -21,9 +20,8 @@ export function devHtmlPrerender(
     config.wxtModuleDir,
     'dist/virtual/reload-html.js',
   );
-
-  const virtualInlineScript = 'virtual:wxt-inline-script';
-  const resolvedVirtualInlineScript = '\0' + virtualInlineScript;
+  const virtualReactRefreshId = '@wxt/virtual-react-refresh';
+  const resolvedVirtualReactRefreshId = '\0' + virtualReactRefreshId;
 
   return [
     {
@@ -78,22 +76,22 @@ export function devHtmlPrerender(
         const serverHtml = await server.transformHtml(url, html, originalUrl);
         const { document } = parseHTML(serverHtml);
 
-        // Replace inline script with virtual module served via dev server.
-        // Extension CSP blocks inline scripts, so that's why we're pulling them
-        // out.
-        const inlineScripts = document.querySelectorAll('script:not([src])');
-        inlineScripts.forEach((script) => {
-          // Save the text content for later
-          const textContent = script.textContent ?? '';
-          const hash = murmurHash(textContent);
-          inlineScriptContents[hash] = textContent;
+        // React pages include a preamble as an unsafe-inline type="module" script to enable fast refresh, as shown here:
+        // https://github.com/wxt-dev/wxt/issues/157#issuecomment-1756497616
+        // Since unsafe-inline scripts are blocked by MV3 CSPs, we need to virtualize it.
+        const reactRefreshScript = Array.from(
+          document.querySelectorAll('script[type=module]'),
+        ).find((script) => script.innerHTML.includes('@react-refresh'));
+        if (reactRefreshScript) {
+          // Save preamble to serve from server
+          reactRefreshPreamble = reactRefreshScript.innerHTML;
 
           // Replace unsafe inline script
           const virtualScript = document.createElement('script');
           virtualScript.type = 'module';
-          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${hash}`;
-          script.replaceWith(virtualScript);
-        });
+          virtualScript.src = `${server.origin}/${virtualReactRefreshId}`;
+          reactRefreshScript.replaceWith(virtualScript);
+        }
 
         // Change /@vite/client -> http://localhost:3000/@vite/client
         const viteClientScript = document.querySelector<HTMLScriptElement>(
@@ -114,25 +112,18 @@ export function devHtmlPrerender(
       name: 'wxt:virtualize-react-refresh',
       apply: 'serve',
       resolveId(id) {
-        // Resolve inline scripts
-        if (id.startsWith(virtualInlineScript)) {
-          return '\0' + id;
+        if (id === `/${virtualReactRefreshId}`) {
+          return resolvedVirtualReactRefreshId;
         }
-
-        // Ignore chunks during HTML file pre-rendering
+        // Ignore chunk contents when pre-rendering
         if (id.startsWith('/chunks/')) {
           return '\0noop';
         }
       },
       load(id) {
-        // Resolve virtualized inline scripts
-        if (id.startsWith(resolvedVirtualInlineScript)) {
-          // id="virtual:wxt-inline-script?<hash>"
-          const hash = Number(id.substring(id.indexOf('?') + 1));
-          return inlineScriptContents[hash];
+        if (id === resolvedVirtualReactRefreshId) {
+          return reactRefreshPreamble;
         }
-
-        // Ignore chunks during HTML file pre-rendering
         if (id === '\0noop') {
           return '';
         }

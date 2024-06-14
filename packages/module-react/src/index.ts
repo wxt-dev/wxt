@@ -17,7 +17,7 @@ export default defineWxtModule<ReactModuleOptions>({
 });
 
 export interface ReactModuleOptions {
-  vite?: Partial<PluginOptions>;
+  vite?: PluginOptions;
 }
 
 declare module 'wxt' {
