@@ -10,9 +10,6 @@ export default defineWxtModule<SolidModuleOptions>({
 
     addViteConfig(wxt, () => ({
       plugins: [solid(vite)],
-      build: {
-        target: 'esnext',
-      },
     }));
 
     addImportPreset(wxt, 'solid-js');
