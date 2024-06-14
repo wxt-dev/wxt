@@ -1,28 +1,59 @@
 # Frontend Frameworks
 
-WXT supports all frontend frameworks with a Vite plugin:
+## Built-in Modules
 
-- `@vitejs/plugin-vue`
-- `@vitejs/plugin-react`
-- `@vitejs/plugin-react-swc`
-- And more!
+WXT has preconfigured modules for 4 frameworks:
 
-Just add the vite plugin to your config and you're good to go! Use the framework in HTML pages or content scripts, it will just work 👍
+- [`@wxt-dev/module-react`](https://github.com/wxt-dev/wxt/tree/main/packages/module-react)
+- [`@wxt-dev/module-vue`](https://github.com/wxt-dev/wxt/tree/main/packages/module-vue)
+- [`@wxt-dev/module-svelte`](https://github.com/wxt-dev/wxt/tree/main/packages/module-svelte)
+- [`@wxt-dev/module-solid`](https://github.com/wxt-dev/wxt/tree/main/packages/module-solid)
+
+Install the module for your framework, then add it to your config:
 
 :::code-group
 
-```ts [Vue]
+```ts [React]
 import { defineConfig } from 'wxt';
-import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-  vite: () => ({
-    plugins: [vue()],
-  }),
+  modules: ['@wxt-dev/module-react'],
 });
 ```
 
-```ts [React]
+```ts [Vue]
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  modules: ['@wxt-dev/module-vue'],
+});
+```
+
+```ts [Svelte]
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  modules: ['@wxt-dev/module-svelte'],
+});
+```
+
+```ts [Solid]
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  modules: ['@wxt-dev/module-solid'],
+});
+```
+
+:::
+
+## Adding Vite Plugins
+
+If your framework doesn't have an official WXT module, no worries! WXT supports any framework with a Vite plugin.
+
+Just add the Vite plugin to your config and you're good to go! Use the framework in HTML pages or content scripts, it will just work 👍
+
+```ts
 import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react';
 
@@ -33,18 +64,7 @@ export default defineConfig({
 });
 ```
 
-```ts [Svelte]
-import { defineConfig } from 'wxt';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-
-export default defineConfig({
-  vite: () => ({
-    plugins: [svelte()],
-  }),
-});
-```
-
-:::
+The WXT modules just simplify the configuration and add auto-imports. They're not much different than the above.
 
 ## Multiple Apps
 
@@ -84,9 +104,9 @@ Lots of frameworks come with routers for building a multi-page app using the URL
 
 Instead, you need to configure the router to run in "hash" mode, where the routing information is apart of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`)
 
-Refer to your router's docs for information about "hash" mode and how to enable it. Here's a non-extensive list of a few popular routers:
+Refer to your router's docs for information about hash mode and how to enable it. Here's a non-extensive list of a few popular routers:
 
-- [React](https://reactrouter.com/en/main/routers/create-hash-router)
-- [Vue](https://router.vuejs.org/guide/essentials/history-mode.html#Hash-Mode)
-- [Svelte](https://www.npmjs.com/package/svelte-spa-router#hash-based-routing)
-- [Solid](https://github.com/solidjs/solid-router?tab=readme-ov-file#hash-mode-router)
+- [`react-router`](https://reactrouter.com/en/main/routers/create-hash-router)
+- [`vue-router`](https://router.vuejs.org/guide/essentials/history-mode.html#Hash-Mode)
+- [`svelte-spa-router`](https://www.npmjs.com/package/svelte-spa-router#hash-based-routing)
+- [`solid-router`](https://github.com/solidjs/solid-router?tab=readme-ov-file#hash-mode-router)
