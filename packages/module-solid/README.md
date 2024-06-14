@@ -10,7 +10,7 @@ This plugin makes a few changes:
 ## Usage
 
 ```sh
-pnpm i solid
+pnpm i solid-js
 pnpm i -D @wxt-dev/module-solid
 ```
 
