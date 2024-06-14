@@ -14,8 +14,8 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
+    "@wxt-dev/module-svelte": "^1.0.0",
     "svelte": "^4.2.18",
     "svelte-check": "^3.8.0",
     "tslib": "^2.6.3",
