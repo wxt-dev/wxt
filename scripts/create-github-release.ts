@@ -30,6 +30,6 @@ await createGithubRelease(config, {
   name: `${pkgName} v${currentVersion}`,
   body: releases[0].body,
   // @ts-expect-error: Not typed in changelogen, but present: https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
-  make_latest: pkg === 'wxt',
+  make_latest: String(pkg === 'wxt'),
 });
 consola.success('Created release');
