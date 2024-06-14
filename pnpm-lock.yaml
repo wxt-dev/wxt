@@ -170,9 +170,6 @@ importers:
       unbuild:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.4.5)
-      vue:
-        specifier: ^3.4.27
-        version: 3.4.27(typescript@5.4.5)
       wxt:
         specifier: workspace:*
         version: link:../wxt
