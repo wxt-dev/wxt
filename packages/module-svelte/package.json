@@ -26,7 +26,6 @@
     "build-deps": "pnpm -ws build-deps @wxt-dev/module-svelte"
   },
   "peerDependencies": {
-    "svelte": "^4.2.18",
     "wxt": ">=0.18.5"
   },
   "dependencies": {
@@ -37,7 +36,6 @@
     "publint": "^0.2.8",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "svelte": "^4.2.18",
     "wxt": "workspace:*"
   }
 }
