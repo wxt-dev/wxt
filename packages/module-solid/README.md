@@ -4,7 +4,7 @@ Enables the use of [SolidJS](https://www.solidjs.com/) in your web extension, in
 
 This plugin makes a few changes:
 
-1. Adds `vite-plugin-solid` to vite
+1. Adds `vite-plugin-solid` to and sets `build.target: esnext` in the vite config
 2. Adds the [`solid-js` preset](https://github.com/unjs/unimport/blob/main/src/presets/solid.ts) to auto-imports
 
 ## Usage
