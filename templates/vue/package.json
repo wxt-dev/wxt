@@ -18,7 +18,7 @@
     "vue": "^3.4.27"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
+    "@wxt-dev/module-vue": "^1.0.0",
     "typescript": "^5.4.5",
     "vue-tsc": "^2.0.21",
     "wxt": "^0.18.6"

@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "typescript": "^5.4.5",
-    "vite-plugin-solid": "^2.10.2",
+    "@wxt-dev/module-solid": "^1.0.0",
     "wxt": "^0.18.6"
   }
 }
