@@ -1,17 +1,17 @@
-# `@wxt-dev/module-svelte`
+# `@wxt-dev/module-react`
 
-Enables the use of [Svelte](https://svelte.dev/) in your web extension, in HTML pages and content scripts.
+Enables the use of [React](https://react.dev/) in your web extension, in HTML pages and content scripts.
 
 This plugin makes a few changes:
 
-1. Adds `@sveltejs/vite-plugin-svelte` to vite
-2. Adds the [`svelte` preset](https://github.com/unjs/unimport/blob/main/src/presets/vue.ts) to auto-imports
+1. Adds `@vitejs/plugin-react` to vite
+2. Adds the [`react` preset](https://github.com/unjs/unimport/blob/main/src/presets/react.ts) to auto-imports
 
 ## Usage
 
 ```sh
-pnpm i svelte
-pnpm i -D @wxt-dev/module-svelte
+pnpm i react react-dom
+pnpm i -D @wxt-dev/module-react
 ```
 
 Then add the module to your config:
@@ -20,10 +20,10 @@ Then add the module to your config:
 // wxt.config.ts
 export default defineConfig({
   // Required
-  modules: ['@wxt-dev/module-svelte'],
+  modules: ['@wxt-dev/module-react'],
 
   // Optional: Pass options to the module:
-  svelte: {
+  react: {
     vite: {
       // ...
     },
