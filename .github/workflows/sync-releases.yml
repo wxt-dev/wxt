@@ -8,6 +8,10 @@ on:
         type: choice
         options:
           - wxt
+          - module-react
+          - module-vue
+          - module-svelte
+          - module-solid
 
 jobs:
   sync:
