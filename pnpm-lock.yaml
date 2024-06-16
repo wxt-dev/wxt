@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@aklinker1/buildc':
+        specifier: ^1.0.0
+        version: 1.0.0(typescript@5.4.5)
       '@aklinker1/check':
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.4.5)
@@ -17,9 +20,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^1.6.0
         version: 1.6.0(vitest@1.6.0)
-      buildc:
-        specifier: ^0.2.0
-        version: 0.2.0(typescript@5.4.5)
       changelogen:
         specifier: ^0.5.5
         version: 0.5.5
@@ -376,6 +376,22 @@ importers:
         version: link:../wxt
 
 packages:
+
+  /@aklinker1/buildc@1.0.0(typescript@5.4.5):
+    resolution: {integrity: sha512-G3hV2iHTwiGWnejX6maWBOIuyjkGkCvQfGXngCbXTZGtxgRfIQjHzEZve0LCv2LedD9rRAsw4s8OU6H3XzIlrQ==}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
+    dependencies:
+      cac: 6.7.14
+      consola: 3.2.3
+      dependency-graph: 1.0.0
+      fast-glob: 3.3.2
+      fs-extra: 11.2.0
+      ohash: 1.1.3
+      typescript: 5.4.5
+      yaml: 2.4.5
+    dev: true
 
   /@aklinker1/check@1.3.1(typescript@5.4.5):
     resolution: {integrity: sha512-EALKJzoojytjC6cYLIjRjC+nNpVdqSWYjJm8FTUtWneemKDs+Q46PaMyEx2EYTRbj4fO0OXj9igABwbpp/vV4g==}
@@ -2518,22 +2534,6 @@ packages:
       base64-js: 1.5.1
       ieee754: 1.2.1
     dev: false
-
-  /buildc@0.2.0(typescript@5.4.5):
-    resolution: {integrity: sha512-GbmHADWlNAb9mFIoI9wSYBDIrI00ap/V/L9whTwX/If8mYtUSlrV/KZd84m+tMznL4i3RMsOshBglUm25WszNg==}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-    dependencies:
-      cac: 6.7.14
-      consola: 3.2.3
-      dependency-graph: 1.0.0
-      fast-glob: 3.3.2
-      fs-extra: 11.2.0
-      ohash: 1.1.3
-      typescript: 5.4.5
-      yaml: 2.4.5
-    dev: true
 
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}

@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm -r --sequential build
+      - run: pnpm buildc all
   build-demo:
     runs-on: ubuntu-22.04
     steps:
