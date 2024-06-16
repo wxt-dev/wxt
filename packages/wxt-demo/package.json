@@ -26,5 +26,8 @@
     "sass": "^1.77.5",
     "typescript": "^5.4.5",
     "wxt": "workspace:*"
+  },
+  "buildc": {
+    "outDir": ".output/chrome-mv3"
   }
 }
