@@ -15,13 +15,13 @@
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
     "docs:build": "pnpm -s docs:gen && vitepress build docs",
-    "docs:preview": "pnpm -s docs:gen && vitepress preview docs",
-    "build-deps": "pnpm tsx scripts/build-deps.ts"
+    "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.3.1",
     "@types/fs-extra": "^11.0.4",
     "@vitest/coverage-v8": "^1.6.0",
+    "buildc": "^0.2.0",
     "changelogen": "^0.5.5",
     "consola": "^3.2.3",
     "dependency-graph": "^1.0.0",
