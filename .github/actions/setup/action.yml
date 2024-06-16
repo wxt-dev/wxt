@@ -13,5 +13,3 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: pnpm install
-      env:
-        DEBUG: '1'
