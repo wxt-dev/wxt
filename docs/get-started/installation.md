@@ -15,7 +15,14 @@ npx wxt@latest init <project-name>
 ```
 
 ```sh [bun]
-bunx wxt@latest init <project-name>
+# The "wxt init" command currently fails when ran with bunx.
+# Use NPX as a workaround, and select "bun" as your package
+# manager. To stay up to date with this issue, follow
+# https://github.com/wxt-dev/wxt/issues/707
+#
+# bunx wxt@latest init <project-name>
+
+npx wxt@latest init <project-name>
 ```
 
 :::
@@ -96,7 +103,6 @@ pnpm dev
 ```
 
 :::tip 🎉&ensp;Well done!
-
 The dev command will build the extension for development, open the browser, and reload the different parts of the extension when you save changes.
 :::
 
