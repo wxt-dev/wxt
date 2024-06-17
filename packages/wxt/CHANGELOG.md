@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.18.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.6...wxt-v0.18.7)
+
+### 🩹 Fixes
+
+- **dev:** Fix CSP error loading HTML plugins ([#723](https://github.com/wxt-dev/wxt/pull/723))
+- Generalize react-refresh preamble logic to virtualize all inline scripts ([#728](https://github.com/wxt-dev/wxt/pull/728))
+- **zip:** Revert dotfile changes from #674 ([#742](https://github.com/wxt-dev/wxt/pull/742), [#674](https://github.com/wxt-dev/wxt/issues/674))
+
+### 🏡 Chore
+
+- **deps:** Upgrade and sync all dependencies ([#725](https://github.com/wxt-dev/wxt/pull/725))
+- Extract build cache script to NPM package ([#737](https://github.com/wxt-dev/wxt/pull/737))
+
 ## v0.18.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.5...wxt-v0.18.6)
