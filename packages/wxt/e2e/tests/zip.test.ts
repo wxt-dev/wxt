@@ -119,7 +119,7 @@ describe('Zipping', () => {
   });
 
   // TODO: Fix #738 and re-enable
-  it.only('should allow zipping hidden files into sources when explicitly listed', async () => {
+  it.skip('should allow zipping hidden files into sources when explicitly listed', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
