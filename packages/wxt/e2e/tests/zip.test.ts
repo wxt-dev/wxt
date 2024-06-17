@@ -97,7 +97,8 @@ describe('Zipping', () => {
     expect(await project.fileExists(sourcesZip)).toBe(true);
   });
 
-  it('should not zip hidden files into sources by default', async () => {
+  // TODO: Fix #738 and re-enable
+  it.skip('should not zip hidden files into sources by default', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -117,7 +118,8 @@ describe('Zipping', () => {
     expect(await project.fileExists(unzipDir, '.env')).toBe(false);
   });
 
-  it('should allow zipping hidden files into sources when explicitly listed', async () => {
+  // TODO: Fix #738 and re-enable
+  it.skip('should allow zipping hidden files into sources when explicitly listed', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',

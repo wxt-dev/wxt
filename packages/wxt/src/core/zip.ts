@@ -104,7 +104,8 @@ async function zipDir(
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
-      dot: true,
+      // TODO: Fix #738
+      // dot: true,
     })
   ).filter((relativePath) => {
     return (
