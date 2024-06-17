@@ -4,18 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm -s build-deps && wxt",
-    "build": "pnpm -s build-deps && wxt build",
-    "build:all": "pnpm -s build-deps && run-s -s 'build:all:*'",
+    "dev": "buildc -- wxt",
+    "build": "buildc --deps-only -- wxt build",
+    "build:all": "buildc --deps-only -- run-s -s 'build:all:*'",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "test": "pnpm -s build-deps && vitest",
-    "zip": "pnpm -s build-deps && wxt zip",
-    "check": "pnpm -s build-deps && check",
-    "postinstall": "pnpm -s build-deps && wxt prepare",
-    "build-deps": "pnpm -sw build-deps wxt-demo"
+    "test": "buildc --deps-only -- vitest",
+    "zip": "buildc --deps-only -- wxt zip",
+    "check": "buildc --deps-only -- check",
+    "postinstall": "buildc --deps-only -- wxt prepare"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -27,5 +26,8 @@
     "sass": "^1.77.5",
     "typescript": "^5.4.5",
     "wxt": "workspace:*"
+  },
+  "buildc": {
+    "outDir": ".output/chrome-mv3"
   }
 }

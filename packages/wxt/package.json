@@ -92,12 +92,12 @@
   },
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
-    "build": "tsx scripts/build.ts",
-    "check": "run-s -c check:*",
+    "build": "buildc -- tsx scripts/build.ts",
+    "check": "buildc --deps-only -- run-s -c check:*",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
-    "test": "vitest",
-    "test:e2e": "vitest -r e2e",
+    "test": "buildc --deps-only -- vitest",
+    "test:e2e": "buildc --deps-only -- vitest -r e2e",
     "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {

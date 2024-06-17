@@ -21,9 +21,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm -s build-deps && unbuild",
-    "check": "pnpm -s build-deps && check",
-    "build-deps": "pnpm -ws build-deps @wxt-dev/module-vue"
+    "build": "buildc -- unbuild",
+    "check": "buildc --deps-only -- check"
   },
   "peerDependencies": {
     "wxt": ">=0.18.5"
