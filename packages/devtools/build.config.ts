@@ -1,21 +1,22 @@
 import { defineBuildConfig } from 'unbuild';
 import { build } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { resolve } from 'node:path';
 
 // Build module and plugin
 export default defineBuildConfig({
   entries: [
     {
-      input: 'modules/devtools/index.ts',
-      srcDir: 'modules/devtools',
-      distDir: 'dist',
+      input: 'index.ts',
       format: 'esm',
     },
     {
-      input: 'modules/devtools/plugin/index.ts',
+      input: 'plugin/index.ts',
       format: 'esm',
     },
   ],
+  outDir: resolve(__dirname, 'dist'),
+  rootDir: 'modules/devtools',
   rollup: {
     emitCJS: true,
   },
