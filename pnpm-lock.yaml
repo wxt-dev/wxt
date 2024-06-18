@@ -95,6 +95,9 @@ importers:
       '@types/chrome':
         specifier: ^0.0.268
         version: 0.0.268
+      '@vitejs/plugin-vue':
+        specifier: ^5.0.5
+        version: 5.0.5(vite@5.3.0)(vue@3.4.29)
       '@wxt-dev/module-vue':
         specifier: workspace:*
         version: link:../module-vue
