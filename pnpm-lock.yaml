@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@aklinker1/buildc':
-        specifier: ^1.0.6
-        version: 1.0.6(typescript@5.4.5)
+        specifier: ^1.0.7
+        version: 1.0.7(typescript@5.4.5)
       '@aklinker1/check':
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.4.5)
@@ -377,8 +377,8 @@ importers:
 
 packages:
 
-  /@aklinker1/buildc@1.0.6(typescript@5.4.5):
-    resolution: {integrity: sha512-yVNU92gJEc3VG1/z+ftjppobcKgBElv6pjCDiA69r0Ls3cmt84gzg2UlxG1SDT8VquCFvylFTAUwl0PINlYQcA==}
+  /@aklinker1/buildc@1.0.7(typescript@5.4.5):
+    resolution: {integrity: sha512-8njwYe/uxeeyqfj1ryOOwWolNaoJpVjFMoR8muNezo4D6IL6NBNN2XNhqaCShlDBjHM5NG7mdsd/5rueqsKReg==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
