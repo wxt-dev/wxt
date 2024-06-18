@@ -78,7 +78,6 @@ export default defineConfig({
           menuItem('Configuration', 'configuration'),
           menuItem('Entrypoints', 'entrypoints'),
           menuItem('Assets', 'assets'),
-          menuItem('Testing', 'testing'),
           menuItem('Publishing', 'publishing'),
           menuItem('Migrate to WXT', 'migrate-to-wxt'),
           menuItem('Compare', 'compare'),
