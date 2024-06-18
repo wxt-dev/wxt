@@ -49,7 +49,7 @@
   ],
   "buildc": {
     "include": [
-      "src/**",
+      "src/**./*",
       "package.json",
       "build.config.ts",
       "tsconfig.json"

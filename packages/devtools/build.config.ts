@@ -1,6 +1,7 @@
 import { defineBuildConfig } from 'unbuild';
 import { build } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import unocss from 'unocss/vite';
 import { resolve } from 'node:path';
 
 // Build module and plugin
@@ -30,7 +31,7 @@ async function prebuildUi() {
   // Prebuild the UI so it doesn't have to be built during the extension
   await build({
     root: 'modules/devtools',
-    plugins: [vue()],
+    plugins: [vue(), unocss()],
     build: {
       emptyOutDir: false,
       rollupOptions: {
