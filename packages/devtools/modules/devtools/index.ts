@@ -13,7 +13,7 @@ import {
 } from 'wxt/modules';
 import { resolve } from 'node:path';
 
-/** `true` when developing the module, `false` when consumed as an NPM module */
+/** `true` when consumed as an NPM module, not defined while developing this plugin */
 declare const __IS_PRODUCTION__: boolean;
 
 export default defineWxtModule<DevtoolsModuleOptions>({

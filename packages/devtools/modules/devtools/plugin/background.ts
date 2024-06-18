@@ -12,9 +12,6 @@ export function initBackground() {
   chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
     if (menuItemId === openMenuItemId) showDevtoolsPopup();
   });
-  // setTimeout(() => {
-  //   showDevtoolsPopup();
-  // });
 }
 
 async function showDevtoolsPopup() {
