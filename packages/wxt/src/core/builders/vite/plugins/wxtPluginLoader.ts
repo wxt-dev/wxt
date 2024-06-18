@@ -46,13 +46,19 @@ try {
       // Use "pre" so the new script is added before vite bundles all the scripts
       order: 'pre',
       handler(html, _ctx) {
-        const { document } = parseHTML(html);
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src =
+        const src =
           config.command === 'serve'
             ? `http://${config.dev.server?.hostname}:${config.dev.server?.port}/@id/${virtualHtmlModuleId}`
             : virtualHtmlModuleId;
+
+        const { document } = parseHTML(html);
+        const existing = document.querySelector(`script[src='${src}']`);
+        if (existing) return;
+
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = src;
+
         if (document.head == null) {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
