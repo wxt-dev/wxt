@@ -1,9 +1,3 @@
-//
-// THIS FILE IS ONLY USED FOR DEVELOPMENT.
-// It enables HMR and other nice things for the UI. The module shipped by NPM
-// is located at `./prod.ts`
-//
-
 import 'wxt';
 import {
   addEntrypoint,

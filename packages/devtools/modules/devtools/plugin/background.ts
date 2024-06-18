@@ -1,7 +1,12 @@
 export function initBackground() {
   console.log('Initializing WXT devtools in background');
+  setupContextMenuItem();
+}
 
-  // Adding menu item
+/**
+ * Add a context menu item to open devtools.
+ */
+function setupContextMenuItem() {
   const openMenuItemId = 'open-wxt-devtools';
   chrome.contextMenus.remove(openMenuItemId, () => chrome.runtime.lastError);
   chrome.contextMenus.create({
