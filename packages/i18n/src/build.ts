@@ -1,0 +1,207 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { parseYAML, parseJSON5, parseTOML } from 'confbox';
+import { dirname, extname } from 'node:path';
+
+//
+// TYPES
+//
+
+export interface ChromeMessage {
+  message: string;
+  description?: string;
+  placeholders?: Record<string, { content: string; example?: string }>;
+}
+
+export interface ParsedBaseMessage {
+  key: string;
+}
+
+export interface ParsedChromeMessage extends ParsedBaseMessage, ChromeMessage {
+  type: 'chrome';
+}
+export interface ParsedSimpleMessage extends ParsedBaseMessage {
+  type: 'simple';
+  message: string;
+}
+export interface ParsedPluralMessage extends ParsedBaseMessage {
+  type: 'plural';
+  plurals: { [count: string]: string };
+}
+
+export type ParsedMessage =
+  | ParsedChromeMessage
+  | ParsedSimpleMessage
+  | ParsedPluralMessage;
+
+export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
+
+//
+// CONSTANTS
+//
+
+const EXT_FORMATS_MAP: Record<string, MessageFormat> = {
+  json: 'JSON5',
+  jsonc: 'JSON5',
+  json5: 'JSON5',
+  yaml: 'YAML',
+  yml: 'YAML',
+  toml: 'TOML',
+};
+
+const PARSERS: Record<MessageFormat, (text: string) => any> = {
+  YAML: parseYAML,
+  JSON5: parseJSON5,
+  TOML: parseTOML,
+};
+
+const ALLOWED_CHROME_MESSAGE_KEYS: Set<string> = new Set<keyof ChromeMessage>([
+  'description',
+  'message',
+  'placeholders',
+]);
+
+//
+// PARSING
+//
+
+/**
+ * Parse a messages file, extract the messages. Supports JSON, JSON5, and YAML.
+ */
+export async function parseMessagesFile(
+  file: string,
+): Promise<ParsedMessage[]> {
+  const text = await readFile(file, 'utf8');
+  const ext = extname(file).toLowerCase();
+  return parseMessagesText(text, EXT_FORMATS_MAP[ext] ?? 'JSON5');
+}
+
+/**
+ * Parse a string, extracting the messages. Supports JSON, JSON5, and YAML.
+ */
+export function parseMessagesText(
+  text: string,
+  format: 'JSON5' | 'YAML' | 'TOML',
+): ParsedMessage[] {
+  return parseMessagesObject(PARSERS[format](text));
+}
+
+/**
+ * Given the JS object form of a raw messages file, extract the messages.
+ */
+export function parseMessagesObject(object: any): ParsedMessage[] {
+  return _parseMessagesObject([], object);
+}
+
+function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
+  switch (typeof object) {
+    case 'string':
+    case 'bigint':
+    case 'boolean':
+    case 'number':
+    case 'symbol':
+      return [{ type: 'simple', key: path.join('.'), message: String(object) }];
+    case 'object':
+      if (Array.isArray(object))
+        return object.flatMap((item, i) =>
+          _parseMessagesObject(path.concat(String(i)), item),
+        );
+      if (isPluralMessage(object))
+        return [{ key: path.join('.'), type: 'plural', plurals: object }];
+      if (isChromeMessage(object))
+        return [{ key: path.join('.'), type: 'chrome', ...object }];
+      return Object.entries(object).flatMap(([key, value]) =>
+        _parseMessagesObject(path.concat(key), value),
+      );
+    default:
+      throw Error(`"Could not parse object of type "${typeof object}"`);
+  }
+}
+
+function isPluralMessage(object: any): object is Record<number | 'n', string> {
+  return Object.keys(object).every(
+    (key) => key === 'n' || isFinite(Number(key)),
+  );
+}
+
+function isChromeMessage(object: any): object is ChromeMessage {
+  return Object.keys(object).every((key) =>
+    ALLOWED_CHROME_MESSAGE_KEYS.has(key),
+  );
+}
+
+//
+// OUTPUT
+//
+
+export function generateDtsText(
+  messages: ParsedMessage[],
+  interfaceName: string,
+): string {
+  const overloads: string[] = messages.map((message) => {
+    // TODO: detect substitutions, don't always include it
+    if (message.type === 'plural') {
+      return `/**
+ * ${JSON.stringify(message.plurals)
+   .split('\n')
+   .map((line) => ' * ' + line)
+   .join('\n')}
+ */
+t(key: "${message.key}", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+    }
+    return `/**
+ * "${message.message}"
+ */
+t(key: "${message.key}", sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+  });
+
+  return `interface ${interfaceName} {
+${overloads.join('\n')}
+}
+`;
+}
+
+export async function generateDtsFile(
+  outFile: string,
+  messages: ParsedMessage[],
+  interfaceName: string,
+): Promise<void> {
+  const text = generateDtsText(messages, interfaceName);
+  await mkdir(dirname(outFile), { recursive: true });
+  await writeFile(outFile, text, 'utf8');
+}
+
+export function generateChromeMessages(
+  messages: ParsedMessage[],
+): ChromeMessage[] {
+  return messages.map<ChromeMessage>((message) => {
+    switch (message.type) {
+      case 'chrome':
+        return {
+          message: message.message,
+          description: message.description,
+          placeholders: message.placeholders,
+        };
+      case 'plural':
+        return {
+          message: Object.values(message.plurals).join(' | '),
+        };
+      case 'simple':
+        return {
+          message: message.message,
+        };
+    }
+  });
+}
+
+export function generateChromeMessageText(messages: ParsedMessage[]): string {
+  const raw = generateChromeMessages(messages);
+  return JSON.stringify(raw, null, 2);
+}
+
+export async function generateChromeMessageFile(
+  file: string,
+  messages: ParsedMessage[],
+): Promise<void> {
+  const text = generateChromeMessageText(messages);
+  await writeFile(file, text, 'utf8');
+}

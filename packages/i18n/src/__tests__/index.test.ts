@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createI18n } from './index';
+import { createI18n } from '../index';
 
 const getMessageMock = vi.fn();
 
