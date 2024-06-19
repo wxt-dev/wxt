@@ -9,12 +9,12 @@ import { reloadContentScript } from './utils/reload-content-scripts';
 if (import.meta.env.COMMAND === 'serve') {
   try {
     const ws = getDevServerWebSocket();
-    ws.addWxtEventListener('wxt:reload-extension', () =>
-      browser.runtime.reload(),
-    );
-    ws.addWxtEventListener('wxt:reload-content-script', (event) =>
-      reloadContentScript(event.detail),
-    );
+    ws.addWxtEventListener('wxt:reload-extension', () => {
+      browser.runtime.reload();
+    });
+    ws.addWxtEventListener('wxt:reload-content-script', (event) => {
+      reloadContentScript(event.detail);
+    });
 
     if (import.meta.env.MANIFEST_VERSION === 3) {
       // Tell the server the background script is loaded and ready to go
