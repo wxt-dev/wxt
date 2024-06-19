@@ -111,7 +111,6 @@ export function detectDevChanges(
     };
   }
 
-  console.log(1, unchangedOutput);
   return {
     type: 'extension-reload',
     cachedOutput: unchangedOutput,
