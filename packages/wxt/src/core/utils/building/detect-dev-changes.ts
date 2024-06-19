@@ -50,7 +50,6 @@ export function detectDevChanges(
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
-  console.log({ changedSteps });
   if (changedSteps.size === 0) {
     const hasPublicChange = some(changedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
