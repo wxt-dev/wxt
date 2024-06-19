@@ -1,6 +1,6 @@
 import definition from 'virtual:user-background-entrypoint';
 import { initPlugins } from 'virtual:wxt-plugins';
-import { getDevServerWebSocket } from '../sandbox/dev-server-websocket';
+import { setupWebSocket } from './utils/setup-web-socket';
 import { logger } from '../sandbox/utils/logger';
 import { browser } from 'wxt/browser';
 import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
@@ -8,19 +8,18 @@ import { reloadContentScript } from './utils/reload-content-scripts';
 
 if (import.meta.env.COMMAND === 'serve') {
   try {
-    const ws = getDevServerWebSocket();
-    ws.addWxtEventListener('wxt:reload-extension', () =>
-      browser.runtime.reload(),
-    );
-    ws.addWxtEventListener('wxt:reload-content-script', (event) =>
-      reloadContentScript(event.detail),
-    );
+    const ws = setupWebSocket((message) => {
+      if (message.event === 'wxt:reload-extension') browser.runtime.reload();
+      if (message.event === 'wxt:reload-content-script' && message.data != null)
+        reloadContentScript(message.data);
+    });
 
     if (import.meta.env.MANIFEST_VERSION === 3) {
       // Tell the server the background script is loaded and ready to go
-      ws.addEventListener('open', () =>
-        ws.sendCustom('wxt:background-initialized'),
-      );
+      ws.addEventListener('open', () => {
+        const msg = { type: 'custom', event: 'wxt:background-initialized' };
+        ws.send(JSON.stringify(msg));
+      });
 
       // Web Socket will disconnect if the service worker is killed
       keepServiceWorkerAlive();
