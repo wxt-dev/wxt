@@ -78,7 +78,6 @@ export async function createServer(
       transformHtml(url, html, originalUrl) {
         return builderServer.transformHtml(url, html, originalUrl);
       },
-
       reloadContentScript(payload) {
         server.ws.send('wxt:reload-content-script', payload);
       },
