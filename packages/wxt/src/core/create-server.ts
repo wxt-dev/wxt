@@ -153,6 +153,7 @@ function createFileReloader(server: WxtDevServer) {
 
     // Here, "path" is a non-normalized path (ie: C:\\users\\... instead of C:/users/...)
     if (path.startsWith(wxt.config.outBaseDir)) return;
+    if (path.startsWith(wxt.config.wxtDir)) return;
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
