@@ -22,11 +22,6 @@ export interface WxtWebSocket extends WebSocket {
     callback?: (event: CustomEvent<string>) => void,
     options?: AddEventListenerOptions | boolean,
   ): void;
-  addWxtEventListener(
-    type: 'wxt:translations-update',
-    callback?: (event: CustomEvent<Record<string, any>>) => void,
-    options?: AddEventListenerOptions | boolean,
-  ): void;
   sendCustom(event: string, payload?: any): void;
 }
 
