@@ -29,6 +29,7 @@ const chromeExtensionIds = [
   'nedcanggplmbbgmlpcjiafgjcpdimpea', // YTBlock - Block any content from YouTube™
   'oadbjpccljkplmhnjekgjamejnbadlne', // demo.fun - Interactive product demos that convert
   'iopdafdcollfgaoffingmahpffckmjni', // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
+  'khjdmjcmpolknpccmaaipmidphjokhdf', // WorkFlowy MultiFlow
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
