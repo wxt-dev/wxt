@@ -2,7 +2,6 @@ import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
-  OutputAsset,
   OutputFile,
 } from '~/types';
 import { every, some } from '~/core/utils/arrays';
@@ -123,8 +122,8 @@ export function detectDevChanges(
 function findEffectedSteps(
   changedFile: string,
   currentOutput: BuildOutput,
-): DetectedChange[] {
-  const changes: DetectedChange[] = [];
+): BuildStepOutput[] {
+  const changes: BuildStepOutput[] = [];
   const changedPath = normalizePath(changedFile);
 
   const isChunkEffected = (chunk: OutputFile): boolean =>
@@ -195,10 +194,3 @@ interface ContentScriptReload extends RebuildChange {
   type: 'content-script-reload';
   changedSteps: BuildStepOutput[];
 }
-
-/**
- * When figuring out what needs reloaded, this stores the step that was changed, or the public
- * directory asset that was changed. It doesn't know what type of change is required yet. Just an
- * intermediate type.
- */
-type DetectedChange = BuildStepOutput;
