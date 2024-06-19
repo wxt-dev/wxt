@@ -69,7 +69,7 @@ const config: tsup.Options[] = [
   {
     ...preset,
     entry: {
-      browser: 'src/browser/index.ts',
+      browser: 'src/browser.ts',
       sandbox: 'src/sandbox/index.ts',
       client: 'src/client/index.ts',
     },

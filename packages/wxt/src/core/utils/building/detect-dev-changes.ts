@@ -45,6 +45,17 @@ export function detectDevChanges(
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 
+  const hasPublicChange = some(changedFiles, (file) =>
+    file.startsWith(wxt.config.publicDir),
+  );
+  if (hasPublicChange) {
+    return {
+      type: 'extension-reload',
+      rebuildGroups: [],
+      cachedOutput: currentOutput,
+    };
+  }
+
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
       findEffectedSteps(changedFile, currentOutput),

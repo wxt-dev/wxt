@@ -1,15 +1,22 @@
 /**
  * @module wxt/browser
  */
-import originalBrowser from 'webextension-polyfill';
-import type { AugmentedBrowser } from './types';
-import { modifyI18n } from './i18n';
+import originalBrowser, { Browser, Runtime, I18n } from 'webextension-polyfill';
 
-export * from './types';
+export interface AugmentedBrowser extends Browser {
+  runtime: WxtRuntime;
+  i18n: WxtI18n;
+}
 
-const browser: AugmentedBrowser = originalBrowser;
-browser.i18n = modifyI18n(browser, browser.i18n);
-export { browser };
+export interface WxtRuntime extends Runtime.Static {
+  // Overriden per-project
+}
+
+export interface WxtI18n extends I18n.Static {
+  // Overriden per-project
+}
+
+export const browser: AugmentedBrowser = originalBrowser;
 
 // re-export all the types from webextension-polyfill
 // Because webextension-polyfill uses a weird namespace with "import export", there isn't a good way

@@ -500,6 +500,11 @@ export interface WxtDevServer
    * Grab the latest runner config and restart the browser.
    */
   restartBrowser: () => void;
+  /**
+   * Tell the extension that translations were updated, sending all the latest
+   * translations to it.
+   */
+  updateTranslations: (locales: Record<string, any>) => void;
 }
 
 export interface ReloadContentScriptPayload {

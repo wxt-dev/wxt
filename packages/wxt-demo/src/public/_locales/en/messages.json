@@ -1,6 +1,6 @@
 {
   "prompt_for_name": {
-    "message": "What's your name?",
+    "message": "What's your name 2?",
     "description": "Ask for the user's name"
   },
   "hello": {

@@ -1,5 +1,5 @@
 import { logger } from '../sandbox/utils/logger';
-import { getDevServerWebSocket } from '../sandbox';
+import { getDevServerWebSocket } from '../sandbox/dev-server-websocket';
 
 if (import.meta.env.COMMAND === 'serve') {
   try {

@@ -78,6 +78,9 @@ export async function createServer(
       transformHtml(url, html, originalUrl) {
         return builderServer.transformHtml(url, html, originalUrl);
       },
+      updateTranslations(payload) {
+        server.ws.send('wxt:locales-changed', payload);
+      },
       reloadContentScript(payload) {
         server.ws.send('wxt:reload-content-script', payload);
       },
