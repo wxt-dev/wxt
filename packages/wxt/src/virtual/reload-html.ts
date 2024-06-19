@@ -1,16 +1,12 @@
 import { logger } from '../sandbox/utils/logger';
-import { setupWebSocket } from './utils/setup-web-socket';
+import { getDevServerWebSocket } from '../sandbox/dev-server-websocket';
 
 if (import.meta.env.COMMAND === 'serve') {
   try {
-    setupWebSocket((message) => {
-      if (message.event === 'wxt:reload-page') {
-        // We need to remove the initial slash from the path to compare correctly
-        // "popup.html" === "/popup.html".substring(1)
-        if (message.data === location.pathname.substring(1)) {
-          location.reload();
-        }
-      }
+    const ws = getDevServerWebSocket();
+    ws.addWxtEventListener('wxt:reload-page', (event) => {
+      // "popup.html" === "/popup.html".substring(1)
+      if (event.detail === location.pathname.substring(1)) location.reload();
     });
   } catch (err) {
     logger.error('Failed to setup web socket connection with dev server', err);
