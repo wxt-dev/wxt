@@ -55,11 +55,6 @@ export function detectDevChanges(
     const hasPublicChange = some(changedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
     );
-    console.log({
-      hasPublicChange,
-      changedFiles,
-      publicDir: wxt.config.publicDir,
-    });
     if (hasPublicChange) {
       return {
         type: 'extension-reload',
