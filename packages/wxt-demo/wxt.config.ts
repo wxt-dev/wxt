@@ -21,6 +21,9 @@ export default defineConfig({
   experimental: {
     viteRuntime: true,
   },
+  runner: {
+    startUrls: ['https://duckduckgo.com'],
+  },
   example: {
     a: 'a',
     // @ts-expect-error: c is not defined, this should error out

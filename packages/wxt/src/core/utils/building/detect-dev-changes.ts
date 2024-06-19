@@ -2,7 +2,6 @@ import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
-  OutputAsset,
   OutputFile,
 } from '~/types';
 import { every, some } from '~/core/utils/arrays';
@@ -50,12 +49,25 @@ export function detectDevChanges(
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
-  if (changedSteps.size === 0) return { type: 'no-change' };
+  if (changedSteps.size === 0) {
+    const hasPublicChange = some(changedFiles, (file) =>
+      file.startsWith(wxt.config.publicDir),
+    );
+    if (hasPublicChange) {
+      return {
+        type: 'extension-reload',
+        rebuildGroups: [],
+        cachedOutput: currentOutput,
+      };
+    } else {
+      return { type: 'no-change' };
+    }
+  }
 
   const unchangedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
     steps: [],
-    publicAssets: [],
+    publicAssets: [...currentOutput.publicAssets],
   };
   const changedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
@@ -68,13 +80,6 @@ export function detectDevChanges(
       changedOutput.steps.push(step);
     } else {
       unchangedOutput.steps.push(step);
-    }
-  }
-  for (const asset of currentOutput.publicAssets) {
-    if (changedSteps.has(asset)) {
-      changedOutput.publicAssets.push(asset);
-    } else {
-      unchangedOutput.publicAssets.push(asset);
     }
   }
 
@@ -117,8 +122,8 @@ export function detectDevChanges(
 function findEffectedSteps(
   changedFile: string,
   currentOutput: BuildOutput,
-): DetectedChange[] {
-  const changes: DetectedChange[] = [];
+): BuildStepOutput[] {
+  const changes: BuildStepOutput[] = [];
   const changedPath = normalizePath(changedFile);
 
   const isChunkEffected = (chunk: OutputFile): boolean =>
@@ -134,11 +139,6 @@ function findEffectedSteps(
     const effectedChunk = step.chunks.find((chunk) => isChunkEffected(chunk));
     if (effectedChunk) changes.push(step);
   }
-
-  const effectedAsset = currentOutput.publicAssets.find((chunk) =>
-    isChunkEffected(chunk),
-  );
-  if (effectedAsset) changes.push(effectedAsset);
 
   return changes;
 }
@@ -194,10 +194,3 @@ interface ContentScriptReload extends RebuildChange {
   type: 'content-script-reload';
   changedSteps: BuildStepOutput[];
 }
-
-/**
- * When figuring out what needs reloaded, this stores the step that was changed, or the public
- * directory asset that was changed. It doesn't know what type of change is required yet. Just an
- * intermediate type.
- */
-type DetectedChange = BuildStepOutput | OutputAsset;

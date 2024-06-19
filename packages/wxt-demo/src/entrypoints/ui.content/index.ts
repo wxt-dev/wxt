@@ -13,7 +13,7 @@ export default defineContentScript({
       anchor: 'form[role=search]',
       onMount: (container) => {
         const app = document.createElement('div');
-        app.textContent = 'Custom content script UI';
+        app.textContent = browser.i18n.getMessage('prompt_for_name');
         container.append(app);
       },
     });
