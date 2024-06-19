@@ -45,23 +45,25 @@ export function detectDevChanges(
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 
-  const hasPublicChange = some(changedFiles, (file) =>
-    file.startsWith(wxt.config.publicDir),
-  );
-  if (hasPublicChange) {
-    return {
-      type: 'extension-reload',
-      rebuildGroups: [],
-      cachedOutput: currentOutput,
-    };
-  }
-
   const changedSteps = new Set(
     changedFiles.flatMap((changedFile) =>
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
-  if (changedSteps.size === 0) return { type: 'no-change' };
+  if (changedSteps.size === 0) {
+    const hasPublicChange = some(changedFiles, (file) =>
+      file.startsWith(wxt.config.publicDir),
+    );
+    if (hasPublicChange) {
+      return {
+        type: 'extension-reload',
+        rebuildGroups: [],
+        cachedOutput: currentOutput,
+      };
+    } else {
+      return { type: 'no-change' };
+    }
+  }
 
   const unchangedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
