@@ -50,10 +50,16 @@ export function detectDevChanges(
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
+  console.log({ changedSteps });
   if (changedSteps.size === 0) {
     const hasPublicChange = some(changedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
     );
+    console.log({
+      hasPublicChange,
+      changedFiles,
+      publicDir: wxt.config.publicDir,
+    });
     if (hasPublicChange) {
       return {
         type: 'extension-reload',
@@ -68,7 +74,7 @@ export function detectDevChanges(
   const unchangedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
     steps: [],
-    publicAssets: [],
+    publicAssets: [...currentOutput.publicAssets],
   };
   const changedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
@@ -81,13 +87,6 @@ export function detectDevChanges(
       changedOutput.steps.push(step);
     } else {
       unchangedOutput.steps.push(step);
-    }
-  }
-  for (const asset of currentOutput.publicAssets) {
-    if (changedSteps.has(asset)) {
-      changedOutput.publicAssets.push(asset);
-    } else {
-      unchangedOutput.publicAssets.push(asset);
     }
   }
 
@@ -117,6 +116,7 @@ export function detectDevChanges(
     };
   }
 
+  console.log(1, unchangedOutput);
   return {
     type: 'extension-reload',
     cachedOutput: unchangedOutput,
@@ -147,11 +147,6 @@ function findEffectedSteps(
     const effectedChunk = step.chunks.find((chunk) => isChunkEffected(chunk));
     if (effectedChunk) changes.push(step);
   }
-
-  const effectedAsset = currentOutput.publicAssets.find((chunk) =>
-    isChunkEffected(chunk),
-  );
-  if (effectedAsset) changes.push(effectedAsset);
 
   return changes;
 }
@@ -213,4 +208,4 @@ interface ContentScriptReload extends RebuildChange {
  * directory asset that was changed. It doesn't know what type of change is required yet. Just an
  * intermediate type.
  */
-type DetectedChange = BuildStepOutput | OutputAsset;
+type DetectedChange = BuildStepOutput;

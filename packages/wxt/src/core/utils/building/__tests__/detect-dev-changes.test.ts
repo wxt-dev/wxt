@@ -100,6 +100,11 @@ describe('Detect Dev Changes', () => {
   describe('Public Assets', () => {
     it("should return 'extension-reload' without any groups to rebuild when the changed file is a public asset", () => {
       const changes = ['/root/src/public/image.svg'];
+      setFakeWxt({
+        config: {
+          publicDir: '/root/src/public',
+        },
+      });
       const asset1 = fakeOutputAsset({
         fileName: 'image.svg',
       });
@@ -114,10 +119,7 @@ describe('Detect Dev Changes', () => {
       const expected: DevModeChange = {
         type: 'extension-reload',
         rebuildGroups: [],
-        cachedOutput: {
-          ...currentOutput,
-          publicAssets: [asset2],
-        },
+        cachedOutput: currentOutput,
       };
 
       const actual = detectDevChanges(changes, currentOutput);
