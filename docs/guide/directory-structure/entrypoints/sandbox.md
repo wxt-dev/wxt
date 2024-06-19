@@ -12,8 +12,8 @@ Firefox does not support sandboxed pages.
   :patterns="[
     ['sandbox.html', 'sandbox.html'],
     ['sandbox/index.html', 'sandbox.html'],
-    ['<name>.sandbox.html', '<name>.html` '],
-    ['<name>.sandbox/index.html', '<name>.html` '],
+    ['<name>.sandbox.html', '<name>.html'],
+    ['<name>.sandbox/index.html', '<name>.html'],
   ]"
 />
 
