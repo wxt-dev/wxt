@@ -34,6 +34,11 @@ let ws: WxtWebSocket | undefined;
  *                  it's structure is what we expect.
  */
 export function getDevServerWebSocket(): WxtWebSocket {
+  if (import.meta.env.COMMAND !== 'serve')
+    throw Error(
+      'Must be running WXT dev command to connect to call getDevServerWebSocket()',
+    );
+
   if (ws == null) {
     const serverUrl = `${__DEV_SERVER_PROTOCOL__}//${__DEV_SERVER_HOSTNAME__}:${__DEV_SERVER_PORT__}`;
     logger.debug('Connecting to dev server @', serverUrl);
