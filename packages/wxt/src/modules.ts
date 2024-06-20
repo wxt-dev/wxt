@@ -104,13 +104,11 @@ export function addViteConfig(
 ): void {
   wxt.hooks.hook('ready', (wxt) => {
     const userVite = wxt.config.vite;
-    wxt.config.vite = (env) =>
-      vite.mergeConfig(
-        // Use config added by module as base
-        viteConfig(env) ?? {},
-        // Overwrite module config with user config
-        userVite(env),
-      );
+    wxt.config.vite = async (env) => {
+      const fromUser = await userVite(env);
+      const fromModule = viteConfig(env) ?? {};
+      return vite.mergeConfig(fromModule, fromUser);
+    };
   });
 }
 
