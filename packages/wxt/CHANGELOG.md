@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.18.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.7...wxt-v0.18.8)
+
+### 🚀 Enhancements
+
+- **dev:** Reload extension when public files change ([#752](https://github.com/wxt-dev/wxt/pull/752))
+
+### 🩹 Fixes
+
+- Don't load plugins twice in HTML pages ([#746](https://github.com/wxt-dev/wxt/pull/746))
+- Ignore .wxt file changes in dev ([#755](https://github.com/wxt-dev/wxt/pull/755))
+- **modules:** `addViteConfig` ignored user vite config ([#760](https://github.com/wxt-dev/wxt/pull/760))
+
+### 🏡 Chore
+
+- Refactor client web socket util ([#753](https://github.com/wxt-dev/wxt/pull/753))
+- Add E2E test for `addImportPreset` ([9fc6408](https://github.com/wxt-dev/wxt/commit/9fc6408))
+
 ## v0.18.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.6...wxt-v0.18.7)
