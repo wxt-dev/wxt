@@ -16,7 +16,7 @@ describe('Module Utilities', () => {
       wxt.config.vite = () => Promise.resolve(userConfig);
       addViteConfig(wxt, () => moduleConfig);
       await wxt.hooks.callHook('ready', wxt);
-      const actual: any = wxt.config.vite(wxt.config.env);
+      const actual = await wxt.config.vite(wxt.config.env);
 
       expect(actual).toEqual(expected);
     });
@@ -32,7 +32,7 @@ describe('Module Utilities', () => {
       wxt.config.vite = () => userConfig;
       addViteConfig(wxt, () => moduleConfig);
       await wxt.hooks.callHook('ready', wxt);
-      const actual: any = wxt.config.vite(wxt.config.env);
+      const actual = await wxt.config.vite(wxt.config.env);
 
       expect(actual).toEqual(expected);
     });
