@@ -41,7 +41,6 @@ describe('findEntrypoints', () => {
   beforeEach(() => {
     setFakeWxt({ config });
     importEntrypointMock = vi.mocked(wxt.builder.importEntrypoint);
-    importEntrypointMock.one = 1;
   });
 
   it.each<[string, string, PopupEntrypoint]>([
