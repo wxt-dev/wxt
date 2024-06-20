@@ -14,7 +14,6 @@ export function createI18n<T extends I18n = I18n>(): T {
       case 'undefined':
         break;
       default:
-        console.error(args);
         throw Error(
           'Second parameter must be a number or an array, got ' +
             typeof args[0],

@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseYAML, parseJSON5, parseTOML } from 'confbox';
+import { parseYAML, parseJSON5, parseTOML, stringifyYAML } from 'confbox';
 import { dirname, extname } from 'node:path';
 
 //
@@ -40,12 +40,12 @@ export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
 //
 
 const EXT_FORMATS_MAP: Record<string, MessageFormat> = {
-  json: 'JSON5',
-  jsonc: 'JSON5',
-  json5: 'JSON5',
-  yaml: 'YAML',
-  yml: 'YAML',
-  toml: 'TOML',
+  '.json': 'JSON5',
+  '.jsonc': 'JSON5',
+  '.json5': 'JSON5',
+  '.yaml': 'YAML',
+  '.yml': 'YAML',
+  '.toml': 'TOML',
 };
 
 const PARSERS: Record<MessageFormat, (text: string) => any> = {
@@ -140,18 +140,18 @@ export function generateDtsText(
   const overloads: string[] = messages.map((message) => {
     // TODO: detect substitutions, don't always include it
     if (message.type === 'plural') {
-      return `/**
- * ${JSON.stringify(message.plurals)
-   .split('\n')
-   .map((line) => ' * ' + line)
-   .join('\n')}
- */
-t(key: "${message.key}", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+      return `  /**
+${stringifyYAML(message.plurals, { forceQuotes: true, quotingType: '"' })
+  .split('\n')
+  .map((line) => '   * ' + line)
+  .join('\n')}
+   */
+  t(key: "${message.key}", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string`;
     }
-    return `/**
- * "${message.message}"
- */
-t(key: "${message.key}", sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+    return `  /**
+   * "${message.message}"
+   */
+  t(key: "${message.key}", sub?: import("@wxt-dev/i18n").Substitution[]): string`;
   });
 
   return `interface ${interfaceName} {
@@ -193,15 +193,15 @@ export function generateChromeMessages(
   });
 }
 
-export function generateChromeMessageText(messages: ParsedMessage[]): string {
+export function generateChromeMessagesText(messages: ParsedMessage[]): string {
   const raw = generateChromeMessages(messages);
   return JSON.stringify(raw, null, 2);
 }
 
-export async function generateChromeMessageFile(
+export async function generateChromeMessagesFile(
   file: string,
   messages: ParsedMessage[],
 ): Promise<void> {
-  const text = generateChromeMessageText(messages);
+  const text = generateChromeMessagesText(messages);
   await writeFile(file, text, 'utf8');
 }
