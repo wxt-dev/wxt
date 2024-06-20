@@ -317,14 +317,17 @@ export interface InlineConfig {
      */
     includeBrowserPolyfill?: boolean;
     /**
-     * When set to `true`, use the Vite Runtime API to load entrypoint options instead of the default, `jiti`.
+     * Method used to import entrypoint files during the build process to extract their options.
      *
-     * Lets you use imported variables and leverage your Vite config to add support for non-standard APIs/syntax.
+     * - "jiti": Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
+     * - "vite-runtime" (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+     * - "vite-node" (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
      *
-     * @experimental Early access to try out the feature before it becomes the default.
-     * @default false
+     * @see {@link https://wxt.dev/guide/go-further/entrypoint-side-effects.html|Entrypoint Side-effect Docs}
+     *
+     * @default "jiti"
      */
-    viteRuntime?: boolean;
+    entrypointImporter?: 'jiti' | 'vite-runtime' | 'vite-node';
   };
   /**
    * Config effecting dev mode only.
@@ -1174,7 +1177,7 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {
     includeBrowserPolyfill: boolean;
-    viteRuntime: boolean;
+    entrypointImporter: 'jiti' | 'vite-runtime' | 'vite-node';
   };
   dev: {
     /** Only defined during dev command */

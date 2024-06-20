@@ -291,6 +291,9 @@ importers:
       vite:
         specifier: ^5.3.0
         version: 5.3.0(@types/node@20.14.2)
+      vite-node:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.14.2)
       web-ext-run:
         specifier: ^0.2.0
         version: 0.2.0
@@ -741,6 +744,7 @@ packages:
   /@babel/highlight@7.24.7:
     resolution: {integrity: sha512-EStJpq4OuY8xYfhGVXngigBJRWxftKX9ksiGDnmlY3o7B/V7KIAc9X4oiK87uPJSc/vs5L869bem5fhZa8caZw==}
     engines: {node: '>=6.9.0'}
+    requiresBuild: true
     dependencies:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
@@ -7028,7 +7032,7 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-node@1.6.0:
+  /vite-node@1.6.0(@types/node@20.14.2):
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -7047,7 +7051,6 @@ packages:
       - sugarss
       - supports-color
       - terser
-    dev: true
 
   /vite-plugin-solid@2.10.2(solid-js@1.8.17)(vite@5.3.0):
     resolution: {integrity: sha512-AOEtwMe2baBSXMXdo+BUwECC8IFHcKS6WQV/1NEd+Q7vHPap5fmIhLcAzr+DUJ04/KHx/1UBU0l1/GWP+rMAPQ==}
@@ -7235,7 +7238,7 @@ packages:
       tinybench: 2.5.1
       tinypool: 0.8.4
       vite: 5.3.0(@types/node@20.14.2)
-      vite-node: 1.6.0
+      vite-node: 1.6.0(@types/node@20.14.2)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less

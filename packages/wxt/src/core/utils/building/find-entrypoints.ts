@@ -28,7 +28,6 @@ import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
-import { importEntrypointFile } from './import-entrypoint';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -290,7 +289,7 @@ async function getUnlistedScriptEntrypoint({
   skipped,
 }: EntrypointInfo): Promise<GenericEntrypoint> {
   const defaultExport =
-    await importEntrypoint<UnlistedScriptDefinition>(inputPath);
+    await wxt.builder.importEntrypoint<UnlistedScriptDefinition>(inputPath);
   if (defaultExport == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
@@ -315,7 +314,7 @@ async function getBackgroundEntrypoint({
   let options: Omit<BackgroundDefinition, 'main'> = {};
   if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
     const defaultExport =
-      await importEntrypoint<BackgroundDefinition>(inputPath);
+      await wxt.builder.importEntrypoint<BackgroundDefinition>(inputPath);
     if (defaultExport == null) {
       throw Error(
         `${name}: Default export not found, did you forget to call "export default defineBackground(...)"?`,
@@ -344,8 +343,15 @@ async function getContentScriptEntrypoint({
   name,
   skipped,
 }: EntrypointInfo): Promise<ContentScriptEntrypoint> {
-  const { main: _, ...options } =
-    await importEntrypoint<ContentScriptDefinition>(inputPath);
+  const defaultExport =
+    await wxt.builder.importEntrypoint<ContentScriptDefinition>(inputPath);
+  if (defaultExport == null) {
+    throw Error(
+      `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
+    );
+  }
+
+  const { main: _, ...options } = defaultExport;
   if (options == null) {
     throw Error(
       `${name}: Default export not found, did you forget to call "export default defineContentScript(...)"?`,
@@ -488,9 +494,3 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
 };
 
 const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';
-
-function importEntrypoint<T>(path: string) {
-  return wxt.config.experimental.viteRuntime
-    ? wxt.builder.importEntrypoint<T>(path)
-    : importEntrypointFile<T>(path);
-}
