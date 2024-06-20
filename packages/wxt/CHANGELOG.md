@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.18.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.8...wxt-v0.18.9)
+
+### 🚀 Enhancements
+
+- **experimental:** Replace `viteRuntime` option with `entrypointImporter` option, and implement `vite-node` importer ([#761](https://github.com/wxt-dev/wxt/pull/761))
+
 ## v0.18.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.7...wxt-v0.18.8)
