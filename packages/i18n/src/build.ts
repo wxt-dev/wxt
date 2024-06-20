@@ -207,5 +207,5 @@ export async function generateChromeMessagesFile(
   messages: ParsedMessage[],
 ): Promise<void> {
   const text = generateChromeMessagesText(messages);
-  await writeFile(file, text, 'utf8');
+  await writeFile(file, text + '\n', 'utf8');
 }
