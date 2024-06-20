@@ -1,0 +1,649 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Built Tools > Parse and generate: json 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: json 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
+
+exports[`Built Tools > Parse and generate: json5 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: json5 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
+
+exports[`Built Tools > Parse and generate: jsonc 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: jsonc 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
+
+exports[`Built Tools > Parse and generate: toml 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: toml 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
+
+exports[`Built Tools > Parse and generate: yaml 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: yaml 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
+
+exports[`Built Tools > Parse and generate: yml 1`] = `
+"[
+  {
+    "message": "example"
+  },
+  {
+    "message": "Hello $1"
+  },
+  {
+    "message": "This is nested"
+  },
+  {
+    "message": "test 1"
+  },
+  {
+    "message": "test 2",
+    "description": "test"
+  },
+  {
+    "message": "Hello $NAME$, please visit $URL$",
+    "description": "Label and link to a URL",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      },
+      "name": {
+        "content": "$1",
+        "example": "Aaron"
+      }
+    }
+  },
+  {
+    "message": "Visit: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "https://wxt.dev"
+      }
+    }
+  },
+  {
+    "message": "Zero items | One item | $1 items"
+  },
+  {
+    "message": "One item | $1 items"
+  },
+  {
+    "message": "$1 items"
+  },
+  {
+    "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
+  }
+]"
+`;
+
+exports[`Built Tools > Parse and generate: yml 2`] = `
+"interface TestI18n {
+  /**
+   * "example"
+   */
+  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $1"
+   */
+  t(key: "sub", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "This is nested"
+   */
+  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 1"
+   */
+  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "test 2"
+   */
+  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Hello $NAME$, please visit $URL$"
+   */
+  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Visit: $URL$"
+   */
+  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "0": "Zero items"
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural0", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "One item"
+   * "n": "$1 items"
+   */
+  t(key: "plural1", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "n": "$1 items"
+   */
+  t(key: "pluralN", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "1": "Hello $2, I have one problem"
+   * "n": "Hello $2, I have $1 problems"
+   */
+  t(key: "pluralSub", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string
+}
+"
+`;
