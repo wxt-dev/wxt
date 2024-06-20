@@ -99,16 +99,16 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
     case 'boolean':
     case 'number':
     case 'symbol':
-      return [{ type: 'simple', key: path.join('.'), message: String(object) }];
+      return [{ type: 'simple', key: path.join('_'), message: String(object) }];
     case 'object':
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item),
         );
       if (isPluralMessage(object))
-        return [{ key: path.join('.'), type: 'plural', plurals: object }];
+        return [{ key: path.join('_'), type: 'plural', plurals: object }];
       if (isChromeMessage(object))
-        return [{ key: path.join('.'), type: 'chrome', ...object }];
+        return [{ key: path.join('_'), type: 'chrome', ...object }];
       return Object.entries(object).flatMap(([key, value]) =>
         _parseMessagesObject(path.concat(key), value),
       );
@@ -172,25 +172,29 @@ export async function generateDtsFile(
 
 export function generateChromeMessages(
   messages: ParsedMessage[],
-): ChromeMessage[] {
-  return messages.map<ChromeMessage>((message) => {
+): Record<string, ChromeMessage> {
+  return messages.reduce<Record<string, ChromeMessage>>((acc, message) => {
     switch (message.type) {
       case 'chrome':
-        return {
+        acc[message.key] = {
           message: message.message,
           description: message.description,
           placeholders: message.placeholders,
         };
+        break;
       case 'plural':
-        return {
+        acc[message.key] = {
           message: Object.values(message.plurals).join(' | '),
         };
+        break;
       case 'simple':
-        return {
+        acc[message.key] = {
           message: message.message,
         };
+        break;
     }
-  });
+    return acc;
+  }, {});
 }
 
 export function generateChromeMessagesText(messages: ParsedMessage[]): string {

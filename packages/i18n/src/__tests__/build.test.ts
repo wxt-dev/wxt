@@ -31,6 +31,7 @@ describe('Built Tools', () => {
       sub: 'Hello $1',
       nested: {
         example: 'This is nested',
+        array: ['One', 'Two'],
         chrome1: {
           message: 'test 1',
         },

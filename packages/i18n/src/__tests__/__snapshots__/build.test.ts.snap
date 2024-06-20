@@ -1,24 +1,30 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Built Tools > Parse and generate: json 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -31,7 +37,7 @@ exports[`Built Tools > Parse and generate: json 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -39,19 +45,19 @@ exports[`Built Tools > Parse and generate: json 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: json 2`] = `
@@ -67,23 +73,31 @@ exports[`Built Tools > Parse and generate: json 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
@@ -109,24 +123,30 @@ exports[`Built Tools > Parse and generate: json 2`] = `
 `;
 
 exports[`Built Tools > Parse and generate: json5 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -139,7 +159,7 @@ exports[`Built Tools > Parse and generate: json5 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -147,19 +167,19 @@ exports[`Built Tools > Parse and generate: json5 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: json5 2`] = `
@@ -175,23 +195,31 @@ exports[`Built Tools > Parse and generate: json5 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
@@ -217,24 +245,30 @@ exports[`Built Tools > Parse and generate: json5 2`] = `
 `;
 
 exports[`Built Tools > Parse and generate: jsonc 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -247,7 +281,7 @@ exports[`Built Tools > Parse and generate: jsonc 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -255,19 +289,19 @@ exports[`Built Tools > Parse and generate: jsonc 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: jsonc 2`] = `
@@ -283,23 +317,31 @@ exports[`Built Tools > Parse and generate: jsonc 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
@@ -325,24 +367,30 @@ exports[`Built Tools > Parse and generate: jsonc 2`] = `
 `;
 
 exports[`Built Tools > Parse and generate: toml 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -355,7 +403,7 @@ exports[`Built Tools > Parse and generate: toml 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -363,19 +411,19 @@ exports[`Built Tools > Parse and generate: toml 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: toml 2`] = `
@@ -391,23 +439,31 @@ exports[`Built Tools > Parse and generate: toml 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
@@ -433,24 +489,30 @@ exports[`Built Tools > Parse and generate: toml 2`] = `
 `;
 
 exports[`Built Tools > Parse and generate: yaml 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -463,7 +525,7 @@ exports[`Built Tools > Parse and generate: yaml 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -471,19 +533,19 @@ exports[`Built Tools > Parse and generate: yaml 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: yaml 2`] = `
@@ -499,23 +561,31 @@ exports[`Built Tools > Parse and generate: yaml 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
@@ -541,24 +611,30 @@ exports[`Built Tools > Parse and generate: yaml 2`] = `
 `;
 
 exports[`Built Tools > Parse and generate: yml 1`] = `
-"[
-  {
+"{
+  "simple": {
     "message": "example"
   },
-  {
+  "sub": {
     "message": "Hello $1"
   },
-  {
+  "nested_example": {
     "message": "This is nested"
   },
-  {
+  "nested_array_0": {
+    "message": "One"
+  },
+  "nested_array_1": {
+    "message": "Two"
+  },
+  "nested_chrome1": {
     "message": "test 1"
   },
-  {
+  "nested_chrome2": {
     "message": "test 2",
     "description": "test"
   },
-  {
+  "nested_chrome3": {
     "message": "Hello $NAME$, please visit $URL$",
     "description": "Label and link to a URL",
     "placeholders": {
@@ -571,7 +647,7 @@ exports[`Built Tools > Parse and generate: yml 1`] = `
       }
     }
   },
-  {
+  "nested_chrome4": {
     "message": "Visit: $URL$",
     "placeholders": {
       "url": {
@@ -579,19 +655,19 @@ exports[`Built Tools > Parse and generate: yml 1`] = `
       }
     }
   },
-  {
+  "plural0": {
     "message": "Zero items | One item | $1 items"
   },
-  {
+  "plural1": {
     "message": "One item | $1 items"
   },
-  {
+  "pluralN": {
     "message": "$1 items"
   },
-  {
+  "pluralSub": {
     "message": "Hello $2, I have one problem | Hello $2, I have $1 problems"
   }
-]"
+}"
 `;
 
 exports[`Built Tools > Parse and generate: yml 2`] = `
@@ -607,23 +683,31 @@ exports[`Built Tools > Parse and generate: yml 2`] = `
   /**
    * "This is nested"
    */
-  t(key: "nested.example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_example", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "One"
+   */
+  t(key: "nested_array_0", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  /**
+   * "Two"
+   */
+  t(key: "nested_array_1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 1"
    */
-  t(key: "nested.chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome1", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "test 2"
    */
-  t(key: "nested.chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome2", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Hello $NAME$, please visit $URL$"
    */
-  t(key: "nested.chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome3", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "Visit: $URL$"
    */
-  t(key: "nested.chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
+  t(key: "nested_chrome4", sub?: import("@wxt-dev/i18n").Substitution[]): string
   /**
    * "0": "Zero items"
    * "1": "One item"
