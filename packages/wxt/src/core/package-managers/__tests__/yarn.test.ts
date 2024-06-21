@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { yarn } from '../yarn';
 
-const cwd = path.resolve(__dirname, 'fixtures/yarn-project');
-
 describe('Yarn Package Management Utils', () => {
   describe('listDependencies', () => {
+    const cwd = path.resolve(__dirname, 'fixtures/simple-yarn-project');
+
     it('should list direct dependencies', async () => {
       const actual = await yarn.listDependencies({ cwd });
       expect(actual).toEqual([
