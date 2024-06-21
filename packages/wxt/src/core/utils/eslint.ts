@@ -11,10 +11,6 @@ export async function getEslintVersion(): Promise<string[]> {
     const eslintPackageJson = await fs.readJson(packageJsonPath);
     return eslintPackageJson.version?.split('.') ?? [];
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-
-    throw new Error('Could not get ESLint version.');
+    return [];
   }
 }
