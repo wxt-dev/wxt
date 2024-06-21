@@ -16,6 +16,7 @@ import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
 import { wxt } from '../../wxt';
+import { getEslintVersion } from '~/core/utils/eslint';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -31,7 +32,8 @@ export async function generateTypesDir(
     const unimport = createUnimport(wxt.config.imports);
     references.push(await writeImportsDeclarationFile(unimport));
     if (wxt.config.imports.eslintrc.enabled) {
-      await writeImportsEslintFile(unimport, wxt.config.imports);
+      const eslintVersion = await getEslintVersion();
+      await writeImportsEslintFile(unimport, wxt.config.imports, eslintVersion);
     }
   }
 
@@ -62,7 +64,9 @@ async function writeImportsDeclarationFile(unimport: Unimport) {
 async function writeImportsEslintFile(
   unimport: Unimport,
   options: WxtResolvedUnimportOptions,
+  eslintVersion: string[],
 ) {
+  const majorEslintVersion = parseInt(eslintVersion?.[0] ?? '');
   const globals: Record<string, EslintGlobalsPropValue> = {};
   const eslintrc = { globals };
 
@@ -73,7 +77,26 @@ async function writeImportsEslintFile(
     .forEach((name) => {
       eslintrc.globals[name] = options.eslintrc.globalsPropValue;
     });
-  await fs.writeJson(options.eslintrc.filePath, eslintrc, { spaces: 2 });
+
+  const jsonFilePath = options.eslintrc.filePath;
+  await fs.writeJson(jsonFilePath, eslintrc, { spaces: 2 });
+
+  await writeEslintNineFile(majorEslintVersion, jsonFilePath);
+}
+
+async function writeEslintNineFile(
+  majorEslintVersion: number,
+  jsonFilePath: string,
+) {
+  if (majorEslintVersion >= 9) {
+    let outputPath = path.dirname(jsonFilePath);
+    let jsFileName = path.basename(jsonFilePath, '.json') + '.js';
+    const indexFilePath = path.join(outputPath, jsFileName);
+    const indexFileContent = `'use strict';
+module.exports = require('./${path.basename(jsonFilePath)}');
+`;
+    await fs.writeFile(indexFilePath, indexFileContent);
+  }
 }
 
 async function writePathsDeclarationFile(
