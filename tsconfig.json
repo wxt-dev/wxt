@@ -1,9 +1,4 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "paths": {
-      "~/*": ["./src/*"]
-    }
-  },
-  "exclude": ["dist", "demo", "e2e/dist", "templates", "src/virtual"]
+  "exclude": ["packages", "templates", "node_modules"]
 }

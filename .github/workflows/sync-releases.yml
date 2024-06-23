@@ -1,22 +1,24 @@
 name: Sync Releases
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - CHANGELOG.md
+    inputs:
+      package:
+        description: Package to sync
+        default: wxt
+        type: choice
+        options:
+          - wxt
+          - module-react
+          - module-vue
+          - module-svelte
+          - module-solid
 
 jobs:
   sync:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: pnpm
-      - run: pnpm sync-releases all --token ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup
+      - run: pnpm tsx scripts/sync-releases.ts ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

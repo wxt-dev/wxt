@@ -1,0 +1,40 @@
+{
+  "name": "@wxt-dev/module-vue",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "buildc -- unbuild",
+    "check": "buildc --deps-only -- check"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.18.6"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.0.5"
+  },
+  "devDependencies": {
+    "@aklinker1/check": "^1.3.1",
+    "publint": "^0.2.8",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0",
+    "wxt": "workspace:*"
+  }
+}

@@ -1,14 +1,9 @@
 {
-  "entryPoints": [
-    "../src",
-    "../src/client",
-    "../src/browser.ts",
-    "../src/sandbox",
-    "../src/storage.ts",
-    "../src/testing"
-  ],
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["../packages/wxt"],
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
-  "out": "./api",
+  "out": "./api/reference",
   "githubPages": false,
   "excludePrivate": true,
   "excludeProtected": true,

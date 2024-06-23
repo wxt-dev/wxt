@@ -1,0 +1,9 @@
+{
+  "name": "pnpm-ls",
+  "dependencies": {
+    "mime-types": "2.1.35"
+  },
+  "devDependencies": {
+    "flatten": "1.0.3"
+  }
+}

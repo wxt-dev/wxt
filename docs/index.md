@@ -13,31 +13,29 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/installation
+      link: /get-started/installation
     - theme: alt
       text: Learn More
-      link: /guide/introduction
+      link: /get-started/introduction
 
 features:
   - icon: 🌐
     title: Supported Browsers
     details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
-    link: /guide/multiple-browsers
+    link: /guide/key-concepts/web-extension-polyfill
     linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
     details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
-    link: /guide/multiple-browsers#target-manifest-version
+    link: /guide/key-concepts/manifest
     linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
     details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
-    link: /guide/development.html
-    linkText: Learn more
   - icon: 📂
     title: File Based Entrypoints
     details: Manifest is generated based on files in the project with inline configuration.
-    link: /guide/entrypoints
+    link: /get-started/entrypoints
     linkText: See project structure
   - icon: 🚔
     title: TypeScript
@@ -45,7 +43,7 @@ features:
   - icon: 🦾
     title: Auto-imports
     details: Nuxt-like auto-imports to speed up development.
-    link: /guide/auto-imports
+    link: /guide/key-concepts/auto-imports
     linkText: Read docs
   - icon: 🤖
     title: Automated Publishing
@@ -53,12 +51,12 @@ features:
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
-    link: /guide/configuration#frontend-frameworks
+    link: /guide/key-concepts/frontend-frameworks
     linkText: Add a framework
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Get started quickly with several awesome project templates.
-    link: /guide/installation#bootstrap-project
+    link: /get-started/installation#bootstrap-project
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
@@ -66,33 +64,26 @@ features:
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
-    link: /guide/remote-code
+    link: /guide/go-further/remote-code
     linkText: Read docs
 ---
 
-<section class="vp-doc">
-  <div class="container">
-    <h2>Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First</h2>
-    <p>
-      WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
-    </p>
-    <div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
-      <video src="https://github.com/wxt-dev/wxt/assets/10101283/b32e6766-ec11-45a4-9677-226ee4718e1c" controls></video>
-      <br />
-      <small>
-        And who doesn't appreciate a beautiful CLI?
-      </small>
-    </div>
-  </div>
-</section>
+## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
+
+WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
+
+<div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
+  <video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94" controls></video>
+  <br />
+  <small>
+    And who doesn't appreciate a beautiful CLI?
+  </small>
+</div>
+
+## Who's Using WXT?
+
+Battle tested and ready for production. Explore chrome extensions made with WXT.
 
 <ClientOnly>
   <UsingWxtSection />
 </ClientOnly>
-
-<style scoped>
-.container {
-  margin: 0 auto;
-  max-width: 1152px;
-}
-</style>

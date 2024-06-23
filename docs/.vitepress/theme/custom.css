@@ -72,6 +72,45 @@
 .vp-doc .no-vertical-dividers td {
   border: none;
 }
+
 .vp-doc .no-vertical-dividers tr {
   border: 1px solid var(--vp-c-divider);
+}
+
+body {
+  overflow-y: scroll;
+}
+
+.VPSidebar {
+  user-select: none;
+}
+
+.VPSidebarItem.level-0.collapsible {
+  padding-bottom: 0.5rem;
+}
+
+.VPSidebarItem.level-0.collapsible .items {
+  /*border-left: 1px solid var(--vp-c-divider);*/
+}
+
+.VPSidebarItem.level-1 {
+  padding-left: 0.75rem;
+}
+
+.VPSidebar .group + .group {
+  border-top: none;
+  padding-top: 0;
+}
+
+.VPSidebarItem .badge {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.3em 0.4em 0.2em;
+  border-radius: 1rem;
+  font-size: 0.75em;
+  line-height: 1;
+  margin-left: 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+  background-color: var(--vp-c-default-2);
 }

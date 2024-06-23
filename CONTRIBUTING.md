@@ -37,13 +37,13 @@ pnpm build
 
 ```sh
 # Build WXT package, then build demo extension
-cd demo
+cd packages/wxt-demo
 pnpm build
 ```
 
 ```sh
 # Build WXT package, then start the demo extension in dev mode
-cd demo
+cd packages/wxt-demo
 pnpm dev
 ```
 
@@ -75,7 +75,7 @@ To run tests for a specific file, add the filename at the end of the test comman
 pnpm test manifest-contents
 ```
 
-Unit and E2E tests are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
+All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
 
@@ -90,7 +90,7 @@ npm run dev
 npm run build
 ```
 
-Note that templates are hardcoded to a specific version of `wxt` from NPM, they do not use the local version. PR checks will test your changes against the templates, but if you want to manually do it, update the package.json dependency:
+Note that templates are hardcoded to a specific version of `wxt` from NPM, they do not use the local version. PR checks will test your PR's changes against the templates, but if you want to manually do it, update the package.json dependency:
 
 ```diff
   "devDependencies": {
@@ -112,3 +112,20 @@ cp -r templates/vanilla templates/<new-template-name>
 ```
 
 That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.
+
+## Releasing Updates
+
+Releases are done with GitHub actions:
+
+- Use the [Release workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml) to release a single package in the monorepo. This automatically detects the version change with conventional commits, builds and uploads the package to NPM, and creates a GitHub release.
+- Use the [Sync Releases workflow](https://github.com/wxt-dev/wxt/actions/workflows/sync-releases.yml) to sync the GitHub releases with changes to the changelog. To change a release, update the `CHANGELOG.md` file and run the workflow. It will sync the releases of a single package in the monorepo.
+
+## Upgrading Dependencies
+
+Use [`taze`](https://www.npmjs.com/package/taze) to upgrade dependencies throughout the entire monorepo.
+
+```ts
+pnpm dlx taze -r
+```
+
+Configuration is in [`taze.config.ts`](./taze.config.ts).
