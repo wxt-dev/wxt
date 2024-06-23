@@ -1035,6 +1035,23 @@ export interface WxtHooks {
    */
   ready: (wxt: Wxt) => HookResult;
   /**
+   * Called before WXT writes .wxt/tsconfig.json and .wxt/wxt.d.ts, allowing
+   * addition of custom references and declarations in wxt.d.ts, or directly
+   * modifying the options in `tsconfig.json`.
+   *
+   * @example
+   * wxt.hooks.hook("prepare:types", (wxt, entries) => {
+   *   // Add a file, ".wxt/types/example.d.ts", that defines a global
+   *   // variable called "example" in the TS project.
+   *   entries.push({
+   *     path: "types/example.d.ts",
+   *     textContent: "declare const a: string;",
+   *     tsReference: true,
+   *   });
+   * })
+   */
+  'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
    * Called before the build is started in both dev mode and build mode.
    *
    * @param wxt The configured WXT object
@@ -1350,3 +1367,30 @@ export interface ResolvedPublicFile {
 }
 
 export type WxtPlugin = () => void;
+
+export type WxtDirEntry = WxtDirTypeReferenceEntry | WxtDirFileEntry;
+
+/**
+ * Represents type reference to a node module to be added to `.wxt/wxt.d.ts` file
+ */
+export interface WxtDirTypeReferenceEntry {
+  module: string;
+}
+
+/**
+ * Represents a file to be written to the project's `.wxt/` directory.
+ */
+export interface WxtDirFileEntry {
+  /**
+   * Path relative to the `.wxt/` directory. So "tsconfig.json" would resolve to ".wxt/tsconfig.json".
+   */
+  path: string;
+  /**
+   * The text that will be written to the file.
+   */
+  text: string;
+  /**
+   * Set to `true` to add a reference to this file in `.wxt/wxt.d.ts`.
+   */
+  tsReference?: boolean;
+}
