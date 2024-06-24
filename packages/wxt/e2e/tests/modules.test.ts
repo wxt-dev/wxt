@@ -101,7 +101,13 @@ describe('Module Helpers', () => {
 
           export default defineWxtModule((wxt) => {
             addPublicAssets(wxt, "${normalizePath(dir)}")
-          })
+            wxt.hooks.hook("build:publicAssets", (_, assets) => {
+              assets.push({
+                relativeDest: "example/generated.txt",
+                contents: "",
+              });
+            });
+          });
         `,
       );
 
@@ -113,6 +119,9 @@ describe('Module Helpers', () => {
       });
       await expect(
         project.fileExists('.output/chrome-mv3/module.txt'),
+      ).resolves.toBe(true);
+      await expect(
+        project.fileExists('.output/chrome-mv3/example/generated.txt'),
       ).resolves.toBe(true);
     });
 
