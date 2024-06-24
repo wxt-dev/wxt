@@ -438,6 +438,9 @@ importers:
 
   packages/wxt-demo:
     dependencies:
+      '@wxt-dev/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       react:
         specifier: ^18.3.1
         version: 18.3.1

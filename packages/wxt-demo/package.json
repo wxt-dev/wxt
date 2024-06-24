@@ -17,6 +17,7 @@
     "postinstall": "buildc --deps-only -- wxt prepare"
   },
   "dependencies": {
+    "@wxt-dev/i18n": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
