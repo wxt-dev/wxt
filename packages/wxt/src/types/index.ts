@@ -1351,19 +1351,31 @@ export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
   id: string;
 }
 
-export interface ResolvedPublicFile {
-  /**
-   * The absolute path to the file that will be copied to the output directory.
-   * @example
-   * "/path/to/any/file.css"
-   */
-  absoluteSrc: string;
+export type ResolvedPublicFile = CopiedPublicFile | GeneratedPublicFile;
+
+export interface ResolvedBasePublicFile {
   /**
    * The relative path in the output directory to copy the file to.
    * @example
    * "content-scripts/base-styles.css"
    */
   relativeDest: string;
+}
+
+export interface CopiedPublicFile extends ResolvedBasePublicFile {
+  /**
+   * The absolute path to the file that will be copied to the output directory.
+   * @example
+   * "/path/to/any/file.css"
+   */
+  absoluteSrc: string;
+}
+
+export interface GeneratedPublicFile extends ResolvedBasePublicFile {
+  /**
+   * Text to write to the file.
+   */
+  contents: string;
 }
 
 export type WxtPlugin = () => void;

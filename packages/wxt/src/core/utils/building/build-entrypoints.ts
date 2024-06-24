@@ -45,14 +45,18 @@ async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
   if (files.length === 0) return [];
 
   const publicAssets: BuildOutput['publicAssets'] = [];
-  for (const { absoluteSrc, relativeDest } of files) {
-    const absoluteDest = resolve(wxt.config.outDir, relativeDest);
+  for (const file of files) {
+    const absoluteDest = resolve(wxt.config.outDir, file.relativeDest);
 
     await fs.ensureDir(dirname(absoluteDest));
-    await fs.copyFile(absoluteSrc, absoluteDest);
+    if ('absoluteSrc' in file) {
+      await fs.copyFile(file.absoluteSrc, absoluteDest);
+    } else {
+      await fs.writeFile(absoluteDest, file.contents, 'utf8');
+    }
     publicAssets.push({
       type: 'asset',
-      fileName: relativeDest,
+      fileName: file.relativeDest,
     });
   }
 
