@@ -63,7 +63,7 @@ export async function generateTypesDir(
   entries.push(await getTsConfigEntry());
 
   // Let modules add more entries
-  wxt.hooks.callHook('prepare:types', wxt, entries);
+  await wxt.hooks.callHook('prepare:types', wxt, entries);
 
   // Add main declaration file, not editable
   entries.push(getMainDeclarationEntry(entries));
