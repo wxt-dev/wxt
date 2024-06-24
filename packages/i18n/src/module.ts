@@ -1,19 +1,27 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
 import {
-  generateDtsFile,
   generateChromeMessagesText,
   parseMessagesFile,
-  generateChromeMessagesFile,
+  generateDtsText,
 } from './build';
 import glob from 'fast-glob';
-import { basename, extname, resolve, join } from 'node:path';
+import { basename, extname, join } from 'node:path';
 
 export default defineWxtModule({
   name: 'wxt-builtin-i18n',
   configKey: 'i18n',
 
   setup(wxt) {
+    if (wxt.config.manifest.default_locale == null) {
+      wxt.logger.info('`[i18n]` Skipped, no `default_locale` in manifest');
+      return;
+    }
+
+    wxt.logger.info(
+      '`[i18n]` Default locale: ' + wxt.config.manifest.default_locale,
+    );
+
     const getLocalizationFiles = async () => {
       const files = await glob('locales/*', {
         cwd: wxt.config.srcDir,
@@ -25,26 +33,32 @@ export default defineWxtModule({
       }));
     };
 
-    wxt.hooks.hook('prepare:types', async (wxt) => {
+    wxt.hooks.hook('prepare:types', async (wxt, entries) => {
       const files = await getLocalizationFiles();
-      const outputFiles = await Promise.all(
-        files.map(async ({ file, locale }) => ({
-          path: resolve(wxt.config.outDir, '_locales', locale, 'messages.json'),
-          text: generateChromeMessagesText(await parseMessagesFile(file)),
-        })),
+
+      await Promise.all(
+        files.map(async ({ file, locale }) => {
+          if (locale !== wxt.config.manifest.default_locale) return;
+
+          const messages = await parseMessagesFile(file);
+          entries.push({
+            path: 'types/wxt-i18n.d.ts',
+            text: generateDtsText(messages, 'WxtI18n'),
+            tsReference: true,
+          });
+        }),
       );
     });
 
-    wxt.hooks.hook('build:publicAssets', async (wxt, assets) => {
+    wxt.hooks.hook('build:publicAssets', async (_, assets) => {
       const files = await getLocalizationFiles();
       await Promise.all(
         files.map(async ({ file, locale }) => {
           const messages = await parseMessagesFile(file);
           assets.push({
-            absoluteSrc: file,
+            contents: generateChromeMessagesText(messages),
             relativeDest: join('_locales', locale, 'messages.json'),
           });
-          await generateChromeMessagesFile();
         }),
       );
     });

@@ -1,5 +1,3 @@
-import messages from '~/public/_locales/en/messages.json';
-
 export default defineBackground({
   // type: 'module',
 
@@ -12,7 +10,6 @@ export default defineBackground({
       chrome: import.meta.env.CHROME,
       firefox: import.meta.env.FIREFOX,
       manifestVersion: import.meta.env.MANIFEST_VERSION,
-      messages,
     });
 
     console.log(useAppConfig());

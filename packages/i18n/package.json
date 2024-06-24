@@ -9,7 +9,8 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "confbox": "^0.1.7"
+    "confbox": "^0.1.7",
+    "fast-glob": "^3.3.2"
   },
   "peerDependencies": {
     "wxt": ">=0.18.7"

@@ -154,7 +154,7 @@ ${stringifyYAML(message.plurals, { forceQuotes: true, quotingType: '"' })
   t(key: "${message.key}", sub?: import("@wxt-dev/i18n").Substitution[]): string`;
   });
 
-  return `interface ${interfaceName} {
+  return `declare interface ${interfaceName} {
 ${overloads.join('\n')}
 }
 `;
