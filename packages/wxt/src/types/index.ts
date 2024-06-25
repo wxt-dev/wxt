@@ -1205,7 +1205,8 @@ export interface ResolvedConfig {
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
-  modules: WxtModuleWithMetadata<any>[];
+  builtinModules: WxtModule<any>[];
+  userModules: WxtModuleWithMetadata<any>[];
   /**
    * An array of string to import plugins from. These paths should be
    * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
