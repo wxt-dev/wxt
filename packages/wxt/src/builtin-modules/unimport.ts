@@ -30,8 +30,8 @@ export default defineWxtModule({
       wxt.config.userModules.forEach(addModuleImports);
     });
 
-    // Create unimport instance after READY so any modifications to the config
-    // inside "ready" are applied.
+    // Create unimport instance AFTER "ready" so any modifications to the
+    // config inside "ready" are applied.
     wxt.hooks.afterEach((event) => {
       if (event.name === 'ready') {
         unimport = createUnimport(options);
