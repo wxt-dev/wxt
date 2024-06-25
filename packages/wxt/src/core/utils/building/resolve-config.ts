@@ -7,7 +7,6 @@ import {
   UserManifestFn,
   UserManifest,
   ExtensionRunnerConfig,
-  WxtResolvedUnimportOptions,
   Logger,
   WxtCommand,
   WxtModule,
@@ -18,10 +17,10 @@ import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
-import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
+import { builtinModules } from '~/builtin-modules';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -146,7 +145,6 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(wxtDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -283,51 +281,6 @@ function resolveAnalysisConfig(
   };
 }
 
-async function getUnimportOptions(
-  wxtDir: string,
-  logger: Logger,
-  config: InlineConfig,
-): Promise<WxtResolvedUnimportOptions | false> {
-  if (config.imports === false) return false;
-
-  const enabledConfig = config.imports?.eslintrc?.enabled;
-  let enabled: boolean;
-  switch (enabledConfig) {
-    case undefined:
-    case 'auto':
-      enabled = await isModuleInstalled('eslint');
-      break;
-    default:
-      enabled = enabledConfig;
-  }
-
-  const defaultOptions: WxtResolvedUnimportOptions = {
-    debugLog: logger.debug,
-    imports: [
-      { name: 'defineConfig', from: 'wxt' },
-      { name: 'fakeBrowser', from: 'wxt/testing' },
-    ],
-    presets: [
-      { package: 'wxt/client' },
-      { package: 'wxt/browser' },
-      { package: 'wxt/sandbox' },
-      { package: 'wxt/storage' },
-    ],
-    warn: logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
-    eslintrc: {
-      enabled,
-      filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
-      globalsPropValue: true,
-    },
-  };
-
-  return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
-    config.imports ?? {},
-    defaultOptions,
-  );
-}
-
 /**
  * Returns the path to `node_modules/wxt`.
  */
@@ -424,9 +377,9 @@ export async function resolveWxtModules(
       return {
         ...config,
         type: 'local',
-        id: absolutePath,
+        file: absolutePath,
       };
     }),
   );
-  return [...npmModules, ...localModules];
+  return [...builtinModules, ...npmModules, ...localModules];
 }

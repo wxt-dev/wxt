@@ -1156,7 +1156,6 @@ export interface ResolvedConfig {
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
   logger: Logger;
-  imports: false | WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
   runnerConfig: C12ResolvedConfig<ExtensionRunnerConfig>;
@@ -1316,14 +1315,12 @@ export interface Dependency {
   version: string;
 }
 
-export type WxtModuleOptions = Record<string, any>;
-
-export type WxtModuleSetup<TOptions extends WxtModuleOptions> = (
+export type WxtModuleSetup<TOptions> = (
   wxt: Wxt,
   moduleOptions?: TOptions,
 ) => void | Promise<void>;
 
-export interface WxtModule<TOptions extends WxtModuleOptions> {
+export interface WxtModule<TOptions> {
   name?: string;
   /**
    * Key for users to pass options into your module from their `wxt.config.ts` file.
@@ -1345,11 +1342,20 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
-  extends WxtModule<TOptions> {
-  type: 'local' | 'node_module';
-  id: string;
-}
+export type WxtModuleWithMetadata<TOptions> = WxtModule<TOptions> &
+  (
+    | {
+        type: 'local';
+        file: string;
+      }
+    | {
+        type: 'node_module';
+        id: string;
+      }
+    | {
+        type: 'built-in';
+      }
+  );
 
 export type ResolvedPublicFile = CopiedPublicFile | GeneratedPublicFile;
 

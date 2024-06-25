@@ -1,5 +1,4 @@
 import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
-import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
 import { relative, resolve } from 'node:path';
 import { removeProjectImportStatements } from '~/core/utils/strings';
@@ -28,16 +27,9 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
   // JITI & Babel uses normalized paths.
   const normalPath = normalizePath(path);
 
-  const unimport = createUnimport({
-    ...wxt.config.imports,
-    // Only allow specific imports, not all from the project
-    dirs: [],
-  });
-  await unimport.init();
-
   const text = await fs.readFile(path, 'utf-8');
   const textNoImports = removeProjectImportStatements(text);
-  const { code } = await unimport.injectImports(textNoImports);
+  const { code } = await wxt.unimport.injectImports(textNoImports);
   wxt.logger.debug(
     ['Text:', text, 'No imports:', textNoImports, 'Code:', code].join('\n'),
   );
