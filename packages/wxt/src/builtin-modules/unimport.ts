@@ -38,12 +38,11 @@ export default defineWxtModule({
       }
     });
 
-    wxt.hooks.hook('build:before', async () => {
-      await unimport.init();
-    });
-
     // Generate types
     wxt.hooks.hook('prepare:types', async (_, entries) => {
+      // Update cache before each rebuild
+      await unimport.init();
+
       entries.push(await getImportsDeclarationEntry(unimport));
 
       if (!options.eslintrc.enabled) return;
@@ -88,7 +87,7 @@ async function getImportsDeclarationEntry(
   unimport: Unimport,
 ): Promise<WxtDirFileEntry> {
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
-  await unimport.scanImportsFromDir();
+  await unimport.init();
 
   return {
     path: 'types/imports.d.ts',
