@@ -5,11 +5,13 @@ import {
   WxtCommand,
   WxtDevServer,
   WxtHooks,
+  WxtModule,
 } from '~/types';
 import { resolveConfig } from './utils/building';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';
+import { builtinModules } from '~/builtin-modules';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -46,14 +48,16 @@ export async function registerWxt(
   };
 
   // Initialize modules
-  for (const module of config.modules) {
+  const initModule = async (module: WxtModule<any>) => {
     if (module.hooks) wxt.hooks.addHooks(module.hooks);
     await module.setup?.(
       wxt,
       // @ts-expect-error: Untyped configKey field
       module.configKey ? config[module.configKey] : undefined,
     );
-  }
+  };
+  for (const builtinModule of builtinModules) await initModule(builtinModule);
+  for (const userModule of config.userModules) await initModule(userModule);
 
   // Initialize hooks
   wxt.hooks.addHooks(config.hooks);

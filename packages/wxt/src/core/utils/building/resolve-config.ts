@@ -128,15 +128,21 @@ export async function resolveConfig(
     };
   }
 
-  const modules = await resolveWxtModules(modulesDir, mergedConfig.modules);
-  const moduleOptions = modules.reduce<Record<string, any>>((map, module) => {
-    if (module.configKey) {
-      map[module.configKey] =
-        // @ts-expect-error
-        mergedConfig[module.configKey];
-    }
-    return map;
-  }, {});
+  const userModules = await resolveWxtUserModules(
+    modulesDir,
+    mergedConfig.modules,
+  );
+  const moduleOptions = userModules.reduce<Record<string, any>>(
+    (map, module) => {
+      if (module.configKey) {
+        map[module.configKey] =
+          // @ts-expect-error
+          mergedConfig[module.configKey];
+      }
+      return map;
+    },
+    {},
+  );
 
   return {
     browser,
@@ -176,7 +182,8 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
-    modules,
+    builtinModules,
+    userModules,
     plugins: [],
     ...moduleOptions,
   };
@@ -383,7 +390,7 @@ export async function mergeBuilderConfig(
   throw Error('Builder not found. Make sure vite is installed.');
 }
 
-export async function resolveWxtModules(
+export async function resolveWxtUserModules(
   modulesDir: string,
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {
@@ -429,9 +436,9 @@ export async function resolveWxtModules(
       return {
         ...config,
         type: 'local',
-        file: absolutePath,
+        id: absolutePath,
       };
     }),
   );
-  return [...builtinModules, ...npmModules, ...localModules];
+  return [...npmModules, ...localModules];
 }

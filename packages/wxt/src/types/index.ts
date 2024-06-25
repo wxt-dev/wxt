@@ -1205,7 +1205,8 @@ export interface ResolvedConfig {
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
-  modules: WxtModuleWithMetadata<any>[];
+  builtinModules: WxtModule<any>[];
+  userModules: WxtModuleWithMetadata<any>[];
   /**
    * An array of string to import plugins from. These paths should be
    * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
@@ -1345,21 +1346,11 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export type WxtModuleWithMetadata<TOptions extends WxtModuleOptions> =
-  WxtModule<TOptions> &
-    (
-      | {
-          type: 'local';
-          file: string;
-        }
-      | {
-          type: 'node_module';
-          id: string;
-        }
-      | {
-          type: 'built-in';
-        }
-    );
+export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
+  extends WxtModule<TOptions> {
+  type: 'local' | 'node_module';
+  id: string;
+}
 
 export type ResolvedPublicFile = CopiedPublicFile | GeneratedPublicFile;
 

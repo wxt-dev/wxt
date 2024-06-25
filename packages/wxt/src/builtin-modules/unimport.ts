@@ -3,6 +3,7 @@ import type {
   EslintGlobalsPropValue,
   Wxt,
   WxtDirFileEntry,
+  WxtModule,
   WxtResolvedUnimportOptions,
 } from '~/types';
 import { type Unimport, createUnimport } from 'unimport';
@@ -17,14 +18,17 @@ export default defineWxtModule({
 
     let unimport: Unimport;
 
-    // Add module imports to config
+    // Add user module imports to config
     wxt.hooks.hook('ready', () => {
-      wxt.config.modules.forEach((module) => {
+      const addModuleImports = (module: WxtModule<any>) => {
         if (!module.imports) return;
 
         options.imports ??= [];
         options.imports.push(...module.imports);
-      });
+      };
+
+      wxt.config.builtinModules.forEach(addModuleImports);
+      wxt.config.userModules.forEach(addModuleImports);
     });
 
     // Create unimport instance after READY so any modifications to the config
