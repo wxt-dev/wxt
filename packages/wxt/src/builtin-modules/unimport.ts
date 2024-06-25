@@ -10,7 +10,7 @@ import { Plugin } from 'vite';
 import { extname } from 'node:path';
 
 export default defineWxtModule({
-  name: 'wxt-builtin:unimport',
+  name: 'wxt:built-in:unimport',
   setup(wxt) {
     const options = wxt.config.imports;
     if (options === false) return;
