@@ -162,13 +162,11 @@ export function addImportPreset(
   wxt: Wxt,
   preset: UnimportOptions['presets'][0],
 ): void {
-  wxt.hooks.hook('ready', (wxt) => {
-    if (!wxt.config.imports) return;
+  if (wxt.config.imports === false) return;
 
-    wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
-    if (wxt.config.imports.presets.includes(preset)) return;
+  wxt.config.imports.presets ??= [];
+  // De-dupelicate built-in named presets
+  if (wxt.config.imports.presets.includes(preset)) return;
 
-    wxt.config.imports.presets.push(preset);
-  });
+  wxt.config.imports.presets.push(preset);
 }

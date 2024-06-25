@@ -22,6 +22,7 @@ import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
+import { builtinModules } from '~/builtin-modules';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -146,7 +147,7 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(wxtDir, logger, mergedConfig),
+    imports: await getUnimportOptions(wxtDir, srcDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -285,20 +286,21 @@ function resolveAnalysisConfig(
 
 async function getUnimportOptions(
   wxtDir: string,
+  srcDir: string,
   logger: Logger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
 
-  const enabledConfig = config.imports?.eslintrc?.enabled;
-  let enabled: boolean;
-  switch (enabledConfig) {
+  const rawEslintEnabled = config.imports?.eslintrc?.enabled;
+  let eslintEnabled: boolean;
+  switch (rawEslintEnabled) {
     case undefined:
     case 'auto':
-      enabled = await isModuleInstalled('eslint');
+      eslintEnabled = await isModuleInstalled('eslint');
       break;
     default:
-      enabled = enabledConfig;
+      eslintEnabled = rawEslintEnabled;
   }
 
   const defaultOptions: WxtResolvedUnimportOptions = {
@@ -315,8 +317,11 @@ async function getUnimportOptions(
     ],
     warn: logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],
+    dirsScanOptions: {
+      cwd: srcDir,
+    },
     eslintrc: {
-      enabled,
+      enabled: eslintEnabled,
       filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
       globalsPropValue: true,
     },
@@ -424,9 +429,9 @@ export async function resolveWxtModules(
       return {
         ...config,
         type: 'local',
-        id: absolutePath,
+        file: absolutePath,
       };
     }),
   );
-  return [...npmModules, ...localModules];
+  return [...builtinModules, ...npmModules, ...localModules];
 }

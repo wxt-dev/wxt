@@ -48,10 +48,6 @@ export async function registerWxt(
   // Initialize modules
   for (const module of config.modules) {
     if (module.hooks) wxt.hooks.addHooks(module.hooks);
-    if (wxt.config.imports !== false && module.imports) {
-      wxt.config.imports.imports ??= [];
-      wxt.config.imports.imports.push(...module.imports);
-    }
     await module.setup?.(
       wxt,
       // @ts-expect-error: Untyped configKey field

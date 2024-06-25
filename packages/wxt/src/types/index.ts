@@ -1345,11 +1345,21 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
-  extends WxtModule<TOptions> {
-  type: 'local' | 'node_module';
-  id: string;
-}
+export type WxtModuleWithMetadata<TOptions extends WxtModuleOptions> =
+  WxtModule<TOptions> &
+    (
+      | {
+          type: 'local';
+          file: string;
+        }
+      | {
+          type: 'node_module';
+          id: string;
+        }
+      | {
+          type: 'built-in';
+        }
+    );
 
 export type ResolvedPublicFile = CopiedPublicFile | GeneratedPublicFile;
 
