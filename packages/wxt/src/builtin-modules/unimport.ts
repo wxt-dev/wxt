@@ -39,6 +39,10 @@ export default defineWxtModule({
       }
     });
 
+    wxt.hooks.hook('build:before', async () => {
+      await unimport.init();
+    });
+
     // Generate types
     wxt.hooks.hook('prepare:types', async (wxt, entries) => {
       entries.push(await getImportsDeclarationEntry(wxt, unimport));
