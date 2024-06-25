@@ -1,7 +1,6 @@
 import { addViteConfig, defineWxtModule } from '~/modules';
 import type {
   EslintGlobalsPropValue,
-  Wxt,
   WxtDirFileEntry,
   WxtModule,
   WxtResolvedUnimportOptions,
@@ -44,8 +43,8 @@ export default defineWxtModule({
     });
 
     // Generate types
-    wxt.hooks.hook('prepare:types', async (wxt, entries) => {
-      entries.push(await getImportsDeclarationEntry(wxt, unimport));
+    wxt.hooks.hook('prepare:types', async (_, entries) => {
+      entries.push(await getImportsDeclarationEntry(unimport));
 
       if (!options.eslintrc.enabled) return;
       entries.push(await getImportsEslintEntry(unimport, options));
@@ -86,11 +85,10 @@ export function vitePlugin(unimport: Unimport): Plugin {
 }
 
 async function getImportsDeclarationEntry(
-  wxt: Wxt,
   unimport: Unimport,
 ): Promise<WxtDirFileEntry> {
   // Load project imports into unimport memory so they are output via generateTypeDeclarations
-  await unimport.scanImportsFromDir(undefined, { cwd: wxt.config.srcDir });
+  await unimport.scanImportsFromDir();
 
   return {
     path: 'types/imports.d.ts',
