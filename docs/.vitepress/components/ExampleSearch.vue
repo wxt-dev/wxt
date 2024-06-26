@@ -127,7 +127,6 @@ const filteredExamples = computed(() => {
 
 .search-box {
   padding: 20px;
-  font-size: 16px;
   width: 100%;
   display: flex;
 }
@@ -135,6 +134,7 @@ const filteredExamples = computed(() => {
 .search-box input {
   min-width: 0;
   flex: 1;
+  font-size: 16px;
 }
 
 .divide-x {
