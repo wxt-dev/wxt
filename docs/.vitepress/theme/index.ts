@@ -10,7 +10,6 @@ export default {
   enhanceApp(ctx) {
     ctx.app.component('Icon', Icon);
     ctx.app.component('EntrypointPatterns', EntrypointPatterns);
-    ctx.app.component('EntrypointPatterns', EntrypointPatterns);
     ctx.app.component('UsingWxtSection', UsingWxtSection);
     ctx.app.component('ExampleSearch', ExampleSearch);
   },

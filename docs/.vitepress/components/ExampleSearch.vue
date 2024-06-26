@@ -1,24 +1,14 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed, toRaw } from 'vue';
+import { ref, onMounted, computed, toRaw, Ref } from 'vue';
+import ExampleSearchFilterByItem from './ExampleSearchFilterByItem.vue';
+import ExampleSearchResult from './ExampleSearchResult.vue';
+import { ExamplesMetadata, KeySelectedObject } from '../utils/types';
 
 const props = defineProps<{
   tag?: string;
 }>();
 
-const exampleMetadata = ref<{
-  examples: Array<{
-    name: string;
-    description?: string;
-    url: string;
-    searchText: string;
-    apis: string[];
-    permissions: string[];
-    packages: string[];
-  }>;
-  allApis: string[];
-  allPermissions: string[];
-  allPackages: string[];
-}>();
+const exampleMetadata = ref<ExamplesMetadata>();
 onMounted(async () => {
   const res = await fetch(
     'https://raw.githubusercontent.com/wxt-dev/examples/main/metadata.json',
@@ -27,51 +17,47 @@ onMounted(async () => {
 });
 
 const searchText = ref('');
-const selectedPackages = ref<Record<string, boolean | undefined>>({});
-function togglePackage(pkg: string) {
-  selectedPackages.value = {
-    ...toRaw(selectedPackages.value),
-    [pkg]: !selectedPackages.value[pkg],
-  };
-}
+const selectedApis = ref<KeySelectedObject>({});
+const selectedPermissions = ref<KeySelectedObject>({});
+const selectedPackages = ref<KeySelectedObject>({});
 
-const selectedApis = ref<Record<string, boolean | undefined>>({});
-function toggleApi(api: string) {
-  selectedApis.value = {
-    ...toRaw(selectedApis.value),
-    [api]: !selectedApis.value[api],
-  };
+function useRequiredItems(selectedItems: Ref<KeySelectedObject>) {
+  return computed(() =>
+    Array.from(
+      Object.entries(toRaw(selectedItems.value)).reduce(
+        (set, [pkg, checked]) => {
+          if (checked) set.add(pkg);
+          return set;
+        },
+        new Set<string>(),
+      ),
+    ),
+  );
 }
+const requiredApis = useRequiredItems(selectedApis);
+const requiredPermissions = useRequiredItems(selectedPermissions);
+const requiredPackages = useRequiredItems(selectedPackages);
 
-const selectedPermissions = ref<Record<string, boolean | undefined>>({});
-function togglePermission(permission: string) {
-  selectedPermissions.value = {
-    ...toRaw(selectedPermissions.value),
-    [permission]: !selectedPermissions.value[permission],
-  };
+function doesExampleMatchSelected(
+  exampleItems: string[],
+  requiredItems: Ref<string[]>,
+) {
+  const exampleItemsSet = new Set(exampleItems);
+  return !requiredItems.value.find((item) => !exampleItemsSet.has(item));
 }
 
 const filteredExamples = computed(() => {
   const text = searchText.value.toLowerCase();
-  const getRequired = (hash: Record<string, boolean | undefined>) =>
-    Object.entries(toRaw(hash)).reduce((set, [pkg, checked]) => {
-      if (checked) set.add(pkg);
-      return set;
-    }, new Set<string>());
-  const requiredPackages = [...getRequired(selectedPackages.value)];
-  const requiredApis = [...getRequired(selectedApis.value)];
-  const requiredPermissions = [...getRequired(selectedPermissions.value)];
   return exampleMetadata.value.examples.filter((example) => {
     const matchesText = example.searchText.toLowerCase().includes(text);
-    const exampleApis = new Set(example.apis);
-    const matchesApis = !requiredApis.find((api) => !exampleApis.has(api));
-    const examplePermissions = new Set(example.permissions);
-    const matchesPermissions = !requiredPermissions.find(
-      (api) => !examplePermissions.has(api),
+    const matchesApis = doesExampleMatchSelected(example.apis, requiredApis);
+    const matchesPermissions = doesExampleMatchSelected(
+      example.permissions,
+      requiredPermissions,
     );
-    const examplePackages = new Set(example.packages);
-    const matchesPackages = !requiredPackages.find(
-      (api) => !examplePackages.has(api),
+    const matchesPackages = doesExampleMatchSelected(
+      example.packages,
+      requiredPackages,
     );
     return matchesText && matchesApis && matchesPermissions && matchesPackages;
   });
@@ -84,68 +70,40 @@ const filteredExamples = computed(() => {
       <input v-model="searchText" placeholder="Search for an example..." />
       <div class="divide-y" />
       <div class="checkbox-col-container">
-        <div class="checkbox-col">
-          <div class="header">Filter by APIs</div>
-          <p v-for="api in exampleMetadata?.allApis">
-            <input
-              type="checkbox"
-              :checked="selectedApis[api]"
-              @input="toggleApi(api)"
-            />
-            <span>{{ api }}</span>
-          </p>
-        </div>
+        <ExampleSearchFilterByItem
+          label="APIs"
+          :items="exampleMetadata?.allApis"
+          v-model="selectedApis"
+        />
         <div class="divide-x" />
-        <div class="checkbox-col">
-          <div class="header">Filter by Permissions</div>
-          <p v-for="permission in exampleMetadata?.allPermissions">
-            <input
-              type="checkbox"
-              :checked="selectedPermissions[permission]"
-              @input="togglePermission(permission)"
-            />
-            <span>{{ permission }}</span>
-          </p>
-        </div>
+        <ExampleSearchFilterByItem
+          label="Permissions"
+          :items="exampleMetadata?.allPermissions"
+          v-model="selectedPermissions"
+        />
         <div class="divide-x" />
-        <div class="checkbox-col">
-          <div class="header">Filter by Packages</div>
-          <p v-for="pkg in exampleMetadata?.allPackages">
-            <input
-              type="checkbox"
-              :checked="selectedPackages[pkg]"
-              @input="togglePackage(pkg)"
-            />
-            <span>{{ pkg }}</span>
-          </p>
-        </div>
+        <ExampleSearchFilterByItem
+          label="Packages"
+          :items="exampleMetadata?.allPackages"
+          v-model="selectedPackages"
+        />
       </div>
     </div>
     <p v-if="exampleMetadata == null">Loading examples...</p>
     <template v-else>
-      <div class="search-results">
-        <div v-for="example of filteredExamples">
-          <a class="example" :href="example.url" target="_blank">
-            <p class="name">{{ example.name }}</p>
-            <p class="description">{{ example.description }}</p>
-          </a>
-        </div>
-      </div>
+      <ul class="search-results">
+        <ExampleSearchResult
+          v-for="example of filteredExamples"
+          :key="example.name"
+          :example
+        />
+      </ul>
       <p v-if="filteredExamples.length === 0">No matching examples</p>
     </template>
   </div>
 </template>
 
 <style scoped>
-div,
-p,
-a {
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-  text-decoration: none;
-}
-
 .search-box {
   background: var(--vp-custom-block-info-bg);
   border-radius: 16px;
@@ -205,27 +163,5 @@ span {
 }
 a {
   background-color: red;
-}
-.example {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background: var(--vp-custom-block-info-bg);
-  border-radius: 8px;
-  color: var(--vp-c-text-1) !important;
-}
-.example:hover {
-  outline: 2px solid var(--vp-c-brand-2);
-}
-.example .name {
-  font-size: 16px;
-  font-weight: 500;
-  padding-bottom: 8px;
-}
-.example .description {
-  opacity: 70%;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 120%;
 }
 </style>

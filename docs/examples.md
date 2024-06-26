@@ -1,10 +1,19 @@
-# Examples
+---
+layout: page
+---
 
-<br/>
-<br/>
+<style>
+.examples-container {
+  padding: 32px;
+}
+</style>
 
-<ExampleSearch />
+<div class="examples-container">
+  <div class="vp-doc">
+    <h1>Examples</h1>
+  </div>
 
-<br/>
+  <br />
 
-> Full code available at [`github.com/wxt-dev/examples`](https://github.com/wxt-dev/examples)
+  <ExampleSearch />
+</div>
