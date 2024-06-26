@@ -126,9 +126,10 @@ cli
 cli
   .command('clean [root]', 'clean generated files and caches')
   .alias('cleanup')
+  .option('-c, --config <file>', 'use specified config file')
   .action(
     wrapAction(async (root, flags) => {
-      await clean(root);
+      await clean({ root, configFile: flags.config, debug: flags.debug });
     }),
   );
 
