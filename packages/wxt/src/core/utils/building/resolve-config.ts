@@ -253,6 +253,8 @@ function resolveZipConfig(
       // Tests
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
+      // Output directory
+      `${mergedConfig.outDir ?? '.output'}/**`,
       // From user
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
