@@ -46,6 +46,8 @@ function doesExampleMatchSelected(
   return !requiredItems.value.find((item) => !exampleItemsSet.has(item));
 }
 
+const filtersVisible = ref(window.innerWidth > 640);
+
 const filteredExamples = computed(() => {
   const text = searchText.value.toLowerCase();
   return exampleMetadata.value.examples.filter((example) => {
@@ -66,29 +68,42 @@ const filteredExamples = computed(() => {
 
 <template>
   <div>
-    <div class="search-box">
-      <input v-model="searchText" placeholder="Search for an example..." />
-      <div class="divide-y" />
-      <div class="checkbox-col-container">
-        <ExampleSearchFilterByItem
-          label="APIs"
-          :items="exampleMetadata?.allApis"
-          v-model="selectedApis"
-        />
-        <div class="divide-x" />
-        <ExampleSearchFilterByItem
-          label="Permissions"
-          :items="exampleMetadata?.allPermissions"
-          v-model="selectedPermissions"
-        />
-        <div class="divide-x" />
-        <ExampleSearchFilterByItem
-          label="Packages"
-          :items="exampleMetadata?.allPackages"
-          v-model="selectedPackages"
-        />
+    <div class="box">
+      <div class="search-box">
+        <input v-model="searchText" placeholder="Search for an example..." />
+        <button class="filter-btn" @click="filtersVisible = !filtersVisible">
+          {{ filtersVisible ? 'Hide' : 'Show' }} Filters
+        </button>
       </div>
+
+      <template v-if="filtersVisible">
+        <div class="divide-y" />
+        <div class="filter-box">
+          <div class="checkbox-col-container">
+            <ExampleSearchFilterByItem
+              label="APIs"
+              :items="exampleMetadata?.allApis"
+              v-model="selectedApis"
+            />
+            <div class="divide-x" />
+            <ExampleSearchFilterByItem
+              label="Permissions"
+              :items="exampleMetadata?.allPermissions"
+              v-model="selectedPermissions"
+            />
+            <div class="divide-x" />
+            <ExampleSearchFilterByItem
+              label="Packages"
+              :items="exampleMetadata?.allPackages"
+              v-model="selectedPackages"
+            />
+          </div>
+        </div>
+      </template>
     </div>
+
+    <br />
+
     <p v-if="exampleMetadata == null">Loading examples...</p>
     <template v-else>
       <ul class="search-results">
@@ -104,24 +119,34 @@ const filteredExamples = computed(() => {
 </template>
 
 <style scoped>
-.search-box {
+.box {
   background: var(--vp-custom-block-info-bg);
   border-radius: 16px;
-  margin-bottom: 32px;
+  overflow: hidden;
 }
-.search-box input {
+
+.search-box {
   padding: 20px;
   font-size: 16px;
   width: 100%;
+  display: flex;
 }
-.divide-y {
-  height: 2px;
-  background: var(--vp-c-bg);
+
+.search-box input {
+  min-width: 0;
+  flex: 1;
 }
+
 .divide-x {
   width: 2px;
   background: var(--vp-c-bg);
 }
+
+.divide-y {
+  height: 2px;
+  background: var(--vp-c-bg);
+}
+
 .checkbox-col {
   flex: 1;
   padding: 16px;
@@ -132,11 +157,17 @@ const filteredExamples = computed(() => {
   font-size: 14px;
   gap: 4px;
 }
+
+.filter-btn {
+  color: var(--vp-c-brand-1);
+}
+
 .checkbox-col .header {
   font-size: 12px;
   font-weight: bold;
   opacity: 50%;
 }
+
 .checkbox-col p {
   display: flex;
   gap: 4px;
@@ -145,22 +176,42 @@ const filteredExamples = computed(() => {
   overflow-wrap: anywhere;
   line-height: 140%;
 }
+
 span {
   padding-top: 1px;
 }
+
 .checkbox-col input[type='checkbox'] {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
+
 .checkbox-col-container {
   display: flex;
 }
+
 .search-results {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
 }
+@media only screen and (min-width: 640px) {
+  .search-results {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (min-width: 1024px) {
+  .search-results {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media only screen and (min-width: 1280px) {
+  .search-results {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 a {
   background-color: red;
 }

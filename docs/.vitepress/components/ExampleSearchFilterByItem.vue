@@ -54,7 +54,7 @@ ul {
   padding-bottom: 16px;
 }
 .header {
-  padding: 8px 16px 0px 16px;
+  padding: 8px 16px 4px 16px;
   font-size: 12px;
   font-weight: bold;
   position: sticky;

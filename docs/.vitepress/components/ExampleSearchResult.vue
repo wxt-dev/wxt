@@ -46,7 +46,7 @@ a:hover {
   white-space: nowrap;
 }
 .description {
-  height: 54px;
+  height: 53px;
   opacity: 70%;
   font-size: 14px;
   font-weight: normal;
