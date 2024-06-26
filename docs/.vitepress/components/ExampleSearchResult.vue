@@ -11,6 +11,7 @@ const props = defineProps<{
     <a class="example" :href="example.url" target="_blank">
       <p class="name">{{ example.name }}</p>
       <p class="description">{{ example.description }}</p>
+      <p class="link">Open &rarr;</p>
     </a>
   </li>
 </template>
@@ -56,5 +57,16 @@ a:hover {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.link {
+  opacity: 0;
+  transition: 250ms;
+  color: var(--vp-c-brand-2);
+  font-weight: bold;
+  text-align: right;
+}
+a:hover .link {
+  opacity: 100%;
 }
 </style>
