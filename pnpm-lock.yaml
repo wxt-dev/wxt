@@ -73,7 +73,7 @@ importers:
         version: 1.2.3(typescript@5.4.5)
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0
+        version: 1.6.0(@types/node@20.14.2)
       vitest-mock-extended:
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.4.5)(vitest@1.6.0)
@@ -89,6 +89,43 @@ importers:
       yaml:
         specifier: ^2.4.5
         version: 2.4.5
+
+  packages/i18n:
+    dependencies:
+      confbox:
+        specifier: ^0.1.7
+        version: 0.1.7
+      fast-glob:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@aklinker1/check':
+        specifier: ^1.3.1
+        version: 1.3.1(typescript@5.4.5)
+      '@types/chrome':
+        specifier: ^0.0.268
+        version: 0.0.268
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.2
+      publint:
+        specifier: ^0.2.8
+        version: 0.2.8
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      unbuild:
+        specifier: ^2.0.0
+        version: 2.0.0(typescript@5.4.5)
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.14.2)
+      vitest-plugin-random-seed:
+        specifier: ^1.1.0
+        version: 1.1.0(vite@5.3.0)
+      wxt:
+        specifier: workspace:*
+        version: link:../wxt
 
   packages/module-react:
     dependencies:
@@ -355,6 +392,9 @@ importers:
 
   packages/wxt-demo:
     dependencies:
+      '@wxt-dev/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1881,14 +1921,35 @@ packages:
       '@babel/types': 7.24.7
     dev: false
 
+  /@types/chrome@0.0.268:
+    resolution: {integrity: sha512-7N1QH9buudSJ7sI8Pe4mBHJr5oZ48s0hcanI9w3wgijAlv1OZNUZve9JR4x42dn5lJ5Sm87V1JNfnoh10EnQlA==}
+    dependencies:
+      '@types/filesystem': 0.0.36
+      '@types/har-format': 1.2.15
+    dev: true
+
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  /@types/filesystem@0.0.36:
+    resolution: {integrity: sha512-vPDXOZuannb9FZdxgHnqSwAG/jvdGM8Wq+6N4D/d80z+D4HWH+bItqsZaVRQykAn6WEVeEkLm2oQigyHtgb0RA==}
+    dependencies:
+      '@types/filewriter': 0.0.33
+    dev: true
+
+  /@types/filewriter@0.0.33:
+    resolution: {integrity: sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==}
+    dev: true
 
   /@types/fs-extra@11.0.4:
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
     dependencies:
       '@types/jsonfile': 6.1.3
-      '@types/node': 20.10.3
+      '@types/node': 20.14.2
+    dev: true
+
+  /@types/har-format@1.2.15:
+    resolution: {integrity: sha512-RpQH4rXLuvTXKR0zqHq3go0RVXYv/YVqv4TnPH95VbwUxZdQlK1EtcMvQvMpDngHbt13Csh9Z4qT9AbkiQH5BA==}
     dev: true
 
   /@types/http-cache-semantics@4.0.1:
@@ -1932,12 +1993,6 @@ packages:
 
   /@types/natural-compare@1.4.3:
     resolution: {integrity: sha512-XCAxy+Gg6+S6VagwzcknnvCKujj/bVv1q+GFuCrFEelqaZPqJoC+FeXLwc2dp+oLP7qDZQ4ZfQiTJQ9sIUmlLw==}
-    dev: true
-
-  /@types/node@20.10.3:
-    resolution: {integrity: sha512-XJavIpZqiXID5Yxnxv3RUDKTN5b81ddNC3ecsA0SoFXz/QU8OGBwZGMomiq0zw+uuqbL/krztv/DINAQ/EV4gg==}
-    dependencies:
-      undici-types: 5.26.5
     dev: true
 
   /@types/node@20.14.2:
@@ -2036,7 +2091,7 @@ packages:
       std-env: 3.6.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0
+      vitest: 1.6.0(@types/node@20.14.2)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2583,7 +2638,7 @@ packages:
     resolution: {integrity: sha512-0SsG7UDhoRWcuSvKWHaXmu5uNjDCDN3nkQLRL4Q42IlFy+ze58FcCoI3uPwINXinkz7ZinbhEgyzYFw9u9ZV8g==}
     dependencies:
       chokidar: 3.6.0
-      confbox: 0.1.3
+      confbox: 0.1.7
       defu: 6.1.4
       dotenv: 16.4.5
       giget: 1.2.3
@@ -2907,10 +2962,6 @@ packages:
       readable-stream: 2.3.8
       typedarray: 0.0.6
     dev: false
-
-  /confbox@0.1.3:
-    resolution: {integrity: sha512-eH3ZxAihl1PhKfpr4VfEN6/vUd87fmgb6JkldHgg/YR6aEBhW63qUDgzP2Y6WM0UumdsYp5H3kibalXAdHfbgg==}
-    dev: true
 
   /confbox@0.1.7:
     resolution: {integrity: sha512-uJcB/FKZtBMCJpK8MQji6bJHgu1tixKPxRLeGkNzBoOZzpnZUJm0jm2/sBDWcuBx1dYgxV4JU+g5hmNxCyAmdA==}
@@ -7184,7 +7235,7 @@ packages:
     dependencies:
       ts-essentials: 9.3.2(typescript@5.4.5)
       typescript: 5.4.5
-      vitest: 1.6.0
+      vitest: 1.6.0(@types/node@20.14.2)
     dev: true
 
   /vitest-plugin-random-seed@1.1.0(vite@5.3.0):
@@ -7195,7 +7246,7 @@ packages:
       vite: 5.3.0(@types/node@20.14.2)
     dev: true
 
-  /vitest@1.6.0:
+  /vitest@1.6.0(@types/node@20.14.2):
     resolution: {integrity: sha512-H5r/dN06swuFnzNFhq/dnz37bPXnq8xB2xB5JOVk8K09rUtoeNN+LHWkoQ0A/i3hvbUKKcCei9KpbxqHMLhLLA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -7220,6 +7271,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
+      '@types/node': 20.14.2
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
       '@vitest/snapshot': 1.6.0
