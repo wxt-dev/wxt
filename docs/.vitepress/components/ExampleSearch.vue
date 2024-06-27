@@ -46,8 +46,6 @@ function doesExampleMatchSelected(
   return !requiredItems.value.find((item) => !exampleItemsSet.has(item));
 }
 
-const filtersVisible = ref(window.innerWidth > 640);
-
 const filteredExamples = computed(() => {
   const text = searchText.value.toLowerCase();
   return exampleMetadata.value.examples.filter((example) => {
@@ -67,84 +65,99 @@ const filteredExamples = computed(() => {
 </script>
 
 <template>
-  <div>
-    <div class="box">
-      <div class="search-box">
-        <input v-model="searchText" placeholder="Search for an example..." />
-        <button class="filter-btn" @click="filtersVisible = !filtersVisible">
-          {{ filtersVisible ? 'Hide' : 'Show' }} Filters
-        </button>
-      </div>
-
-      <template v-if="filtersVisible">
-        <div class="divide-y" />
-        <div class="filter-box">
-          <div class="checkbox-col-container">
-            <ExampleSearchFilterByItem
-              label="APIs"
-              :items="exampleMetadata?.allApis"
-              v-model="selectedApis"
-            />
-            <div class="divide-x" />
-            <ExampleSearchFilterByItem
-              label="Permissions"
-              :items="exampleMetadata?.allPermissions"
-              v-model="selectedPermissions"
-            />
-            <div class="divide-x" />
-            <ExampleSearchFilterByItem
-              label="Packages"
-              :items="exampleMetadata?.allPackages"
-              v-model="selectedPackages"
-            />
-          </div>
-        </div>
-      </template>
+  <div class="example-layout">
+    <div class="search">
+      <input v-model="searchText" placeholder="Search for an example..." />
     </div>
 
-    <br />
+    <div class="filters">
+      <ExampleSearchFilterByItem
+        label="APIs"
+        :items="exampleMetadata?.allApis"
+        v-model="selectedApis"
+      />
+      <ExampleSearchFilterByItem
+        label="Permissions"
+        :items="exampleMetadata?.allPermissions"
+        v-model="selectedPermissions"
+      />
+      <ExampleSearchFilterByItem
+        label="Packages"
+        :items="exampleMetadata?.allPackages"
+        v-model="selectedPackages"
+      />
+    </div>
 
-    <p v-if="exampleMetadata == null">Loading examples...</p>
-    <template v-else>
-      <ul class="search-results">
-        <ExampleSearchResult
-          v-for="example of filteredExamples"
-          :key="example.name"
-          :example
-        />
-      </ul>
-      <p v-if="filteredExamples.length === 0">No matching examples</p>
-    </template>
+    <div class="results">
+      <p v-if="exampleMetadata == null">Loading examples...</p>
+      <template v-else>
+        <ul class="search-results">
+          <ExampleSearchResult
+            v-for="example of filteredExamples"
+            :key="example.name"
+            :example
+          />
+        </ul>
+        <p v-if="filteredExamples.length === 0">No matching examples</p>
+      </template>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.example-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+    'search'
+    'results';
+  gap: 16px;
+}
+@media only screen and (min-width: 720px) {
+  .example-layout {
+    grid-template-columns: 256px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'filters search'
+      'filters results';
+  }
+}
+.search {
+  grid-area: search;
+  background: var(--vp-c-bg-soft);
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  border-radius: 16px;
+}
+.filters {
+  display: none;
+  grid-area: filters;
+}
+@media only screen and (min-width: 720px) {
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: 16px;
+    overflow: hidden;
+    align-self: flex-start;
+  }
+}
+.results {
+  grid-area: results;
+}
+
 .box {
-  background: var(--vp-custom-block-info-bg);
   border-radius: 16px;
   overflow: hidden;
 }
 
-.search-box {
-  padding: 20px;
-  width: 100%;
-  display: flex;
-}
-
-.search-box input {
+.search input {
   min-width: 0;
   flex: 1;
   font-size: 16px;
-}
-
-.divide-x {
-  width: 2px;
-  background: var(--vp-c-bg);
-}
-
-.divide-y {
-  height: 2px;
-  background: var(--vp-c-bg);
 }
 
 .checkbox-col {
@@ -196,7 +209,7 @@ span {
   grid-template-columns: repeat(1, 1fr);
   gap: 16px;
 }
-@media only screen and (min-width: 640px) {
+@media only screen and (min-width: 800px) {
   .search-results {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -204,11 +217,6 @@ span {
 @media only screen and (min-width: 1024px) {
   .search-results {
     grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media only screen and (min-width: 1280px) {
-  .search-results {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 

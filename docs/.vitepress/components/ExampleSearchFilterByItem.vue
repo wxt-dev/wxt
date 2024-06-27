@@ -24,49 +24,62 @@ function toggleItem(pkg: string) {
 </script>
 
 <template>
-  <ul>
-    <li class="header">
+  <div class="filter-container">
+    <p class="header">
       <span>Filter by {{ label }}</span> <span v-if="count">({{ count }})</span>
-    </li>
-    <li v-for="item in items">
-      <label :title="item">
-        <input
-          type="checkbox"
-          :checked="selectedItems[item]"
-          @input="toggleItem(item)"
-        />
-        <span>{{ item }}</span>
-      </label>
-    </li>
-  </ul>
+    </p>
+    <div class="scroll-container">
+      <ul>
+        <li v-for="item in items">
+          <label :title="item">
+            <input
+              type="checkbox"
+              :checked="selectedItems[item]"
+              @input="toggleItem(item)"
+            />
+            <span>{{ item }}</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-ul {
-  position: relative;
-  flex: 1;
+.filter-container {
+  height: 300px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  max-height: 200px;
-  font-size: 14px;
-  gap: 4px;
-  padding-bottom: 16px;
+  background: var(--vp-c-bg-soft);
 }
+
+.scroll-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-container ul {
+  position: absolute;
+  overflow-y: auto;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: small;
+  padding: 8px 16px 16px 16px;
+}
+
 .header {
-  padding: 8px 16px 4px 16px;
+  padding: 8px 16px;
   font-size: 12px;
   font-weight: bold;
-  position: sticky;
-  top: 0;
-  left: 0;
-  background: var(--vp-custom-block-info-bg);
-}
-.header span {
   opacity: 50%;
 }
 label {
-  margin: 0 16px;
   display: flex;
   gap: 4px;
   align-items: flex-start;

@@ -8,7 +8,7 @@ const props = defineProps<{
 
 <template>
   <li>
-    <a class="example" :href="example.url" target="_blank">
+    <a :href="example.url" target="_blank">
       <p class="name">{{ example.name }}</p>
       <p class="description">{{ example.description }}</p>
       <p class="link">Open &rarr;</p>
@@ -24,8 +24,8 @@ a {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  background: var(--vp-custom-block-info-bg);
-  border-radius: 8px;
+  border: 2px solid var(--vp-c-bg-soft);
+  border-radius: 16px;
   color: var(--vp-c-text-1) !important;
   gap: 8px;
 }
