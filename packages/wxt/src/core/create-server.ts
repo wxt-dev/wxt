@@ -20,7 +20,6 @@ import {
   findEntrypoints,
 } from '~/core/utils/building';
 import { createExtensionRunner } from '~/core/runners';
-import { consola } from 'consola';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
@@ -201,21 +200,21 @@ function createFileReloader(server: WxtDevServer) {
         switch (changes.type) {
           case 'extension-reload':
             server.reloadExtension();
-            consola.success(`Reloaded extension`);
+            wxt.logger.success(`Reloaded extension`);
             break;
           case 'html-reload':
             const { reloadedNames } = reloadHtmlPages(
               changes.rebuildGroups,
               server,
             );
-            consola.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
+            wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
             break;
           case 'content-script-reload':
             reloadContentScripts(changes.changedSteps, server);
             const rebuiltNames = changes.rebuildGroups
               .flat()
               .map((entry) => entry.name);
-            consola.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
+            wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
             break;
         }
       } catch (err) {
