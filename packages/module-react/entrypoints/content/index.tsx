@@ -14,7 +14,7 @@ export default defineContentScript({
 
 function createUi(ctx: ContentScriptContext) {
   return createShadowRootUi(ctx, {
-    name: 'solid-ui',
+    name: 'react-ui',
     position: 'inline',
     append: 'first',
     onMount(container) {
