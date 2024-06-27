@@ -124,6 +124,9 @@ importers:
       publint:
         specifier: ^0.2.8
         version: 0.2.8
+      solid-js:
+        specifier: ^1.8.17
+        version: 1.8.17
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -6176,12 +6179,10 @@ packages:
       seroval: ^1.0
     dependencies:
       seroval: 1.0.7
-    dev: false
 
   /seroval@1.0.7:
     resolution: {integrity: sha512-n6ZMQX5q0Vn19Zq7CIKNIo7E75gPkGCFUEqDpa8jgwpYr/vScjqnQ6H09t1uIiZ0ZSK0ypEGvrYK2bhBGWsGdw==}
     engines: {node: '>=10'}
-    dev: false
 
   /set-value@4.1.0:
     resolution: {integrity: sha512-zTEg4HL0RwVrqcWs3ztF+x1vkxfm0lP+MQQFPiMJTKVceBwEV0A569Ou8l9IYQG8jOZdMVI1hGsc0tmeD2o/Lw==}
@@ -6308,7 +6309,6 @@ packages:
       csstype: 3.1.3
       seroval: 1.0.7
       seroval-plugins: 1.0.7(seroval@1.0.7)
-    dev: false
 
   /solid-refresh@0.6.3(solid-js@1.8.17):
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
