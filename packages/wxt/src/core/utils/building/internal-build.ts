@@ -15,7 +15,6 @@ import {
   ValidationResults,
   validateEntrypoints,
 } from '../validation';
-import consola from 'consola';
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
