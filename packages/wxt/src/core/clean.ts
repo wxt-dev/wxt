@@ -13,7 +13,24 @@ import { registerWxt, wxt } from './wxt';
  * @example
  * await clean();
  */
-export async function clean(config?: InlineConfig) {
+export async function clean(config?: InlineConfig): Promise<void>;
+/**
+ * Remove generated/temp files from the directory.
+ *
+ * @deprecated
+ *
+ * @param root The directory to look for generated/temp files in. Defaults to `process.cwd()`. Can be relative to `process.cwd()` or absolute.
+ *
+ * @example
+ * await clean();
+ */
+export async function clean(root?: string): Promise<void>;
+
+export async function clean(config?: string | InlineConfig) {
+  if (typeof config === 'string') {
+    config = { root: config };
+  }
+
   await registerWxt('build', config);
   wxt.logger.info('Cleaning Project');
 
