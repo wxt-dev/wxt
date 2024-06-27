@@ -239,7 +239,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     command,
     entrypointsDir: fakeDir(),
     modulesDir: fakeDir(),
-    modules: [],
+    builtinModules: [],
+    userModules: [],
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
     imports: {
@@ -297,7 +298,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     alias: {},
     experimental: {
       includeBrowserPolyfill: true,
-      viteRuntime: false,
+      entrypointImporter: 'jiti',
     },
     dev: {
       reloadCommand: 'Alt+R',

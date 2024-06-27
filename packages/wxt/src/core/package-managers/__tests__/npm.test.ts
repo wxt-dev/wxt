@@ -4,15 +4,14 @@ import { npm } from '../npm';
 import { execaCommand } from 'execa';
 import { exists } from 'fs-extra';
 
-const cwd = path.resolve(__dirname, 'fixtures/npm-project');
-
 describe('NPM Package Management Utils', () => {
-  beforeAll(async () => {
-    // NPM needs the modules installed for 'npm ls' to work
-    await execaCommand('npm i', { cwd });
-  }, 60e3);
-
   describe('listDependencies', () => {
+    const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
+    beforeAll(async () => {
+      // NPM needs the modules installed for 'npm ls' to work
+      await execaCommand('npm i', { cwd });
+    }, 60e3);
+
     it('should list direct dependencies', async () => {
       const actual = await npm.listDependencies({ cwd });
       expect(actual).toEqual([
@@ -32,6 +31,8 @@ describe('NPM Package Management Utils', () => {
   });
 
   describe('downloadDependency', () => {
+    const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
+
     it('should download the dependency as a tarball', async () => {
       const downloadDir = path.resolve(cwd, 'dist');
       const id = 'mime-db@1.52.0';

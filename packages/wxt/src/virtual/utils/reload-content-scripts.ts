@@ -1,16 +1,7 @@
 import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
 import { MatchPattern } from 'wxt/sandbox';
-
-interface ContentScript {
-  matches: string[];
-  js?: string[];
-  css?: string[];
-}
-interface ReloadContentScriptPayload {
-  registration?: 'manifest' | 'runtime';
-  contentScript: ContentScript;
-}
+import type { ReloadContentScriptPayload } from '../../sandbox/dev-server-websocket';
 
 export function reloadContentScript(payload: ReloadContentScriptPayload) {
   const manifest = browser.runtime.getManifest();
@@ -31,6 +22,8 @@ export async function reloadContentScriptMv3({
     await reloadManifestContentScriptMv3(contentScript);
   }
 }
+
+type ContentScript = ReloadContentScriptPayload['contentScript'];
 
 export async function reloadManifestContentScriptMv3(
   contentScript: ContentScript,

@@ -22,6 +22,7 @@ import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
+import { builtinModules } from '~/builtin-modules';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -127,15 +128,21 @@ export async function resolveConfig(
     };
   }
 
-  const modules = await resolveWxtModules(modulesDir, mergedConfig.modules);
-  const moduleOptions = modules.reduce<Record<string, any>>((map, module) => {
-    if (module.configKey) {
-      map[module.configKey] =
-        // @ts-expect-error
-        mergedConfig[module.configKey];
-    }
-    return map;
-  }, {});
+  const userModules = await resolveWxtUserModules(
+    modulesDir,
+    mergedConfig.modules,
+  );
+  const moduleOptions = userModules.reduce<Record<string, any>>(
+    (map, module) => {
+      if (module.configKey) {
+        map[module.configKey] =
+          // @ts-expect-error
+          mergedConfig[module.configKey];
+      }
+      return map;
+    },
+    {},
+  );
 
   return {
     browser,
@@ -146,7 +153,7 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(wxtDir, logger, mergedConfig),
+    imports: await getUnimportOptions(wxtDir, srcDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -167,7 +174,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {
       includeBrowserPolyfill: true,
-      viteRuntime: false,
+      entrypointImporter: 'jiti' as const,
     }),
     dev: {
       server: devServerConfig,
@@ -175,7 +182,8 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
-    modules,
+    builtinModules,
+    userModules,
     plugins: [],
     ...moduleOptions,
   };
@@ -285,20 +293,21 @@ function resolveAnalysisConfig(
 
 async function getUnimportOptions(
   wxtDir: string,
+  srcDir: string,
   logger: Logger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
 
-  const enabledConfig = config.imports?.eslintrc?.enabled;
-  let enabled: boolean;
-  switch (enabledConfig) {
+  const rawEslintEnabled = config.imports?.eslintrc?.enabled;
+  let eslintEnabled: boolean;
+  switch (rawEslintEnabled) {
     case undefined:
     case 'auto':
-      enabled = await isModuleInstalled('eslint');
+      eslintEnabled = await isModuleInstalled('eslint');
       break;
     default:
-      enabled = enabledConfig;
+      eslintEnabled = rawEslintEnabled;
   }
 
   const defaultOptions: WxtResolvedUnimportOptions = {
@@ -315,8 +324,11 @@ async function getUnimportOptions(
     ],
     warn: logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],
+    dirsScanOptions: {
+      cwd: srcDir,
+    },
     eslintrc: {
-      enabled,
+      enabled: eslintEnabled,
       filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
       globalsPropValue: true,
     },
@@ -378,7 +390,7 @@ export async function mergeBuilderConfig(
   throw Error('Builder not found. Make sure vite is installed.');
 }
 
-export async function resolveWxtModules(
+export async function resolveWxtUserModules(
   modulesDir: string,
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {

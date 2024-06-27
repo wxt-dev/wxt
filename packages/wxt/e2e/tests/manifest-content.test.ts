@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 
-describe.each([true, false])(
+describe.each(['jiti', 'vite-runtime', 'vite-node'] as const)(
   'Manifest Content (Vite runtime? %s)',
-  (viteRuntime) => {
+  (entrypointImporter) => {
     it.each([
       { browser: undefined, outDir: 'chrome-mv3', expected: undefined },
       { browser: 'chrome', outDir: 'chrome-mv3', expected: undefined },
@@ -24,7 +24,7 @@ describe.each([true, false])(
           main: () => {},
         })`,
         );
-        await project.build({ browser, experimental: { viteRuntime } });
+        await project.build({ browser, experimental: { entrypointImporter } });
 
         const safariManifest = await project.getOutputManifest(
           `.output/${outDir}/manifest.json`,

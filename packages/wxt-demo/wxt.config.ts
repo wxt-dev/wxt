@@ -19,7 +19,10 @@ export default defineConfig({
     open: true,
   },
   experimental: {
-    viteRuntime: true,
+    entrypointImporter: 'vite-node',
+  },
+  runner: {
+    startUrls: ['https://duckduckgo.com'],
   },
   example: {
     a: 'a',

@@ -101,7 +101,13 @@ describe('Module Helpers', () => {
 
           export default defineWxtModule((wxt) => {
             addPublicAssets(wxt, "${normalizePath(dir)}")
-          })
+            wxt.hooks.hook("build:publicAssets", (_, assets) => {
+              assets.push({
+                relativeDest: "example/generated.txt",
+                contents: "",
+              });
+            });
+          });
         `,
       );
 
@@ -113,6 +119,9 @@ describe('Module Helpers', () => {
       });
       await expect(
         project.fileExists('.output/chrome-mv3/module.txt'),
+      ).resolves.toBe(true);
+      await expect(
+        project.fileExists('.output/chrome-mv3/example/generated.txt'),
       ).resolves.toBe(true);
     });
 
@@ -286,6 +295,30 @@ describe('Module Helpers', () => {
       await project.build();
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
+    });
+
+    it('should add preset', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        `export default defineBackground(() => {
+            customImport();
+          });`,
+      );
+      project.addFile(
+        'modules/test.ts',
+        `import { defineWxtModule, addImportPreset } from 'wxt/modules';
+
+        export default defineWxtModule((wxt) => {
+          addImportPreset(wxt, "vue");
+        })`,
+      );
+
+      await project.build();
+
+      await expect(
+        project.serializeFile('.wxt/types/imports.d.ts'),
+      ).resolves.toContain("const ref: typeof import('vue')['ref']");
     });
   });
 });

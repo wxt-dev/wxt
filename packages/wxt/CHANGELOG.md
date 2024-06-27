@@ -1,5 +1,50 @@
 # Changelog
 
+## v0.18.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.9...wxt-v0.18.10)
+
+### 🚀 Enhancements
+
+- Add `prepare:types` hook to extend `.wxt/` directory generation ([#767](https://github.com/wxt-dev/wxt/pull/767))
+- **modules:** Allow adding generated public files ([#769](https://github.com/wxt-dev/wxt/pull/769))
+
+### 🩹 Fixes
+
+- Await `prepare:types` hook ([b29d49c](https://github.com/wxt-dev/wxt/commit/b29d49c))
+
+### 🏡 Chore
+
+- Refactor package manager test fixtures ([39f6c29](https://github.com/wxt-dev/wxt/commit/39f6c29))
+- Consolidate `unimport` code into a built-in module ([#771](https://github.com/wxt-dev/wxt/pull/771))
+
+## v0.18.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.8...wxt-v0.18.9)
+
+### 🚀 Enhancements
+
+- **experimental:** Replace `viteRuntime` option with `entrypointImporter` option, and implement `vite-node` importer ([#761](https://github.com/wxt-dev/wxt/pull/761))
+
+## v0.18.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.7...wxt-v0.18.8)
+
+### 🚀 Enhancements
+
+- **dev:** Reload extension when public files change ([#752](https://github.com/wxt-dev/wxt/pull/752))
+
+### 🩹 Fixes
+
+- Don't load plugins twice in HTML pages ([#746](https://github.com/wxt-dev/wxt/pull/746))
+- Ignore .wxt file changes in dev ([#755](https://github.com/wxt-dev/wxt/pull/755))
+- **modules:** `addViteConfig` ignored user vite config ([#760](https://github.com/wxt-dev/wxt/pull/760))
+
+### 🏡 Chore
+
+- Refactor client web socket util ([#753](https://github.com/wxt-dev/wxt/pull/753))
+- Add E2E test for `addImportPreset` ([9fc6408](https://github.com/wxt-dev/wxt/commit/9fc6408))
+
 ## v0.18.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.6...wxt-v0.18.7)
