@@ -54,8 +54,8 @@ importers:
         specifier: ^2.11.1
         version: 2.11.1
       tsx:
-        specifier: ^4.15.8
-        version: 4.15.8
+        specifier: 4.15.7
+        version: 4.15.7
       typedoc:
         specifier: ^0.25.4
         version: 0.25.4(typescript@5.5.2)
@@ -362,8 +362,8 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.5.2)
       tsx:
-        specifier: ^4.15.8
-        version: 4.15.8
+        specifier: 4.15.7
+        version: 4.15.7
       typescript:
         specifier: ^5.5.2
         version: 5.5.2
@@ -6803,8 +6803,8 @@ packages:
       - ts-node
     dev: true
 
-  /tsx@4.15.8:
-    resolution: {integrity: sha512-B8dMlbbkZPW0GQ7wafyy2TGXyoGYW0IURfWkM1h/WzgG5lxxRoeDU2VbMURmmjwGaCsoKROVTLmQQPe/s2TnLw==}
+  /tsx@4.15.7:
+    resolution: {integrity: sha512-u3H0iSFDZM3za+VxkZ1kywdCeHCn+8/qHQS1MNoO2sONDgD95HlWtt8aB23OzeTmFP9IU4/8bZUdg58Uu5J4cg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
