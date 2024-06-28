@@ -167,7 +167,7 @@ export async function resolveConfig(
     srcDir,
     typesDir,
     wxtDir,
-    zip: resolveZipConfig(root, mergedConfig),
+    zip: resolveZipConfig(root, outBaseDir, mergedConfig),
     transformManifest: mergedConfig.transformManifest,
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
@@ -241,6 +241,7 @@ async function mergeInlineConfig(
 
 function resolveZipConfig(
   root: string,
+  outBaseDir: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
@@ -261,6 +262,8 @@ function resolveZipConfig(
       // Tests
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
+      // Output directory
+      `${path.relative(root, outBaseDir)}/**`,
       // From user
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
