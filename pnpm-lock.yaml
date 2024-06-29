@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@aklinker1/buildc':
-        specifier: 1.0.10
+        specifier: ^1.0.10
         version: 1.0.10(typescript@5.4.5)
       '@aklinker1/check':
         specifier: ^1.3.1
