@@ -29,9 +29,4 @@ export default defineConfig({
     // @ts-expect-error: c is not defined, this should error out
     c: 'c',
   },
-  imports: {
-    eslintrc: {
-      enabled: true,
-    },
-  },
 });
