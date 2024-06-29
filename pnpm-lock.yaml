@@ -2024,17 +2024,6 @@ packages:
       - supports-color
     dev: false
 
-  /@vitejs/plugin-vue@5.0.5(vite@5.3.0)(vue@3.4.31):
-    resolution: {integrity: sha512-LOjm7XeIimLBZyzinBQ6OSm3UBCNVCpLkxGC0oWmm2YPzVZoxMsdvNVimLTBzpAnR9hl/yn1SHGuRfe6/Td9rQ==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    peerDependencies:
-      vite: ^5.0.0
-      vue: ^3.2.25
-    dependencies:
-      vite: 5.3.0
-      vue: 3.4.31(typescript@5.5.2)
-    dev: true
-
   /@vitejs/plugin-vue@5.0.5(vite@5.3.2)(vue@3.4.31):
     resolution: {integrity: sha512-LOjm7XeIimLBZyzinBQ6OSm3UBCNVCpLkxGC0oWmm2YPzVZoxMsdvNVimLTBzpAnR9hl/yn1SHGuRfe6/Td9rQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -2042,9 +2031,8 @@ packages:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.3.2(@types/node@20.14.9)
+      vite: 5.3.2
       vue: 3.4.31(typescript@5.5.2)
-    dev: false
 
   /@vitest/coverage-v8@1.6.0(vitest@1.6.0):
     resolution: {integrity: sha512-KvapcbMY/8GYIG0rlwwOKCVNRc0OL20rrhFkg/CHNzncV03TE2XWvO5w9uZYoxNiMEBacAJt3unSOiZ7svePew==}
@@ -7072,6 +7060,27 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
+  /vite-node@1.6.0:
+    resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    dependencies:
+      cac: 6.7.14
+      debug: 4.3.4
+      pathe: 1.1.2
+      picocolors: 1.0.1
+      vite: 5.3.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: true
+
   /vite-node@1.6.0(@types/node@20.14.9):
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -7091,6 +7100,7 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: false
 
   /vite-plugin-solid@2.10.2(solid-js@1.8.17)(vite@5.3.2):
     resolution: {integrity: sha512-AOEtwMe2baBSXMXdo+BUwECC8IFHcKS6WQV/1NEd+Q7vHPap5fmIhLcAzr+DUJ04/KHx/1UBU0l1/GWP+rMAPQ==}
@@ -7114,8 +7124,8 @@ packages:
       - supports-color
     dev: false
 
-  /vite@5.3.0:
-    resolution: {integrity: sha512-hA6vAVK977NyW1Qw+fLvqSo7xDPej7von7C3DwwqPRmnnnK36XEBC/J3j1V5lP8fbt7y0TgTKJbpNGSwM+Bdeg==}
+  /vite@5.3.2:
+    resolution: {integrity: sha512-6lA7OBHBlXUxiJxbO5aAY2fsHHzDr1q7DvXYnyZycRs2Dz+dXBWuhpWHvmljTRTpQC2uvGmUFFkSHF2vGo90MA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -7147,7 +7157,6 @@ packages:
       rollup: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vite@5.3.2(@types/node@20.14.9):
     resolution: {integrity: sha512-6lA7OBHBlXUxiJxbO5aAY2fsHHzDr1q7DvXYnyZycRs2Dz+dXBWuhpWHvmljTRTpQC2uvGmUFFkSHF2vGo90MA==}
@@ -7183,6 +7192,7 @@ packages:
       rollup: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: false
 
   /vitefu@0.2.5(vite@5.3.2):
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
@@ -7212,7 +7222,7 @@ packages:
       '@shikijs/core': 1.6.2
       '@shikijs/transformers': 1.6.2
       '@types/markdown-it': 14.1.1
-      '@vitejs/plugin-vue': 5.0.5(vite@5.3.0)(vue@3.4.31)
+      '@vitejs/plugin-vue': 5.0.5(vite@5.3.2)(vue@3.4.31)
       '@vue/devtools-api': 7.2.1(vue@3.4.31)
       '@vue/shared': 3.4.27
       '@vueuse/core': 10.10.0(vue@3.4.31)
@@ -7221,7 +7231,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.3.0
       shiki: 1.6.2
-      vite: 5.3.0
+      vite: 5.3.2
       vue: 3.4.31(typescript@5.5.2)
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -7267,7 +7277,7 @@ packages:
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.3.2(@types/node@20.14.9)
+      vite: 5.3.2
     dev: true
 
   /vitest@1.6.0:
@@ -7312,8 +7322,8 @@ packages:
       strip-literal: 2.1.0
       tinybench: 2.5.1
       tinypool: 0.8.4
-      vite: 5.3.0
-      vite-node: 1.6.0(@types/node@20.14.9)
+      vite: 5.3.2
+      vite-node: 1.6.0
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
