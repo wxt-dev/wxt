@@ -54,10 +54,15 @@
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search", "search-insights"]
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "search-insights"
+      ]
     }
   },
   "changelog": {
-    "excludeAuthors": ["aaronklinker1@gmail.com"]
+    "excludeAuthors": [
+      "aaronklinker1@gmail.com"
+    ]
   }
 }
