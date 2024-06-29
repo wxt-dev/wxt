@@ -78,17 +78,15 @@ async function writeImportsEslintFile(
   const jsonFilePath = options.eslintrc.filePath;
   await fs.writeJson(jsonFilePath, eslintrc, { spaces: 2 });
 
-  await writeEslintNineFile(jsonFilePath);
-}
-
-async function writeEslintNineFile(jsonFilePath: string) {
   const eslintVersion = await getEslintVersion();
   const majorEslintVersion = parseInt(eslintVersion?.[0] ?? '');
 
-  if (majorEslintVersion < 9) {
-    return;
+  if (majorEslintVersion >= 9) {
+    await writeEslintNineFile(jsonFilePath);
   }
+}
 
+async function writeEslintNineFile(jsonFilePath: string) {
   let outputPath = path.dirname(jsonFilePath);
   let jsFileName = path.basename(jsonFilePath, '.json') + '.js';
   const indexFilePath = path.join(outputPath, jsFileName);
