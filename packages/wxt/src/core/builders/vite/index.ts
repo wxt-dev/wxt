@@ -244,7 +244,10 @@ export async function createViteBuilder(
           const config = vite.mergeConfig(baseConfig, envConfig);
           const server = await vite.createServer(config);
           await server.pluginContainer.buildStart({});
-          const node = new ViteNodeServer(server);
+          const node = new ViteNodeServer(
+            // @ts-ignore: Some weird type error...
+            server,
+          );
           installSourcemapsSupport({
             getSourceMap: (source) => node.getSourceMap(source),
           });

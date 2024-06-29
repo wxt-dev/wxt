@@ -19,8 +19,7 @@ export const bun: WxtPackageManagerImpl = {
         .slice(1) // Skip the first line, is not a dependency
         .map((line) => line.trim())
         .map((line) => /.* (@?\S+)@(\S+)$/.exec(line))
-        // @ts-expect-error: Filtering to known non-null matches
-        .filter<RegExpExecArray>((match) => !!match)
+        .filter((match) => !!match)
         .map(([_, name, version]) => ({ name, version })),
     );
   },
