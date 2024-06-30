@@ -1035,6 +1035,23 @@ export interface WxtHooks {
    */
   ready: (wxt: Wxt) => HookResult;
   /**
+   * Called before WXT writes .wxt/tsconfig.json and .wxt/wxt.d.ts, allowing
+   * addition of custom references and declarations in wxt.d.ts, or directly
+   * modifying the options in `tsconfig.json`.
+   *
+   * @example
+   * wxt.hooks.hook("prepare:types", (wxt, entries) => {
+   *   // Add a file, ".wxt/types/example.d.ts", that defines a global
+   *   // variable called "example" in the TS project.
+   *   entries.push({
+   *     path: "types/example.d.ts",
+   *     textContent: "declare const a: string;",
+   *     tsReference: true,
+   *   });
+   * })
+   */
+  'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
    * Called before the build is started in both dev mode and build mode.
    *
    * @param wxt The configured WXT object
@@ -1188,7 +1205,8 @@ export interface ResolvedConfig {
     reloadCommand: string | false;
   };
   hooks: NestedHooks<WxtHooks>;
-  modules: WxtModuleWithMetadata<any>[];
+  builtinModules: WxtModule<any>[];
+  userModules: WxtModuleWithMetadata<any>[];
   /**
    * An array of string to import plugins from. These paths should be
    * resolvable by vite, and they should `export default defineWxtPlugin(...)`.
@@ -1220,13 +1238,15 @@ export interface Eslintrc {
   /**
    * When true, generates a file that can be used by ESLint to know which variables are valid globals.
    *
-   * - `'auto'`: Check if eslint is installed, and if it is, generate the helper file
-   * - `true`: Generate the helper file
-   * - `false`: Don't generate the file
+   * - `false`: Don't generate the file.
+   * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible config file.
+   * - `true`: Same as `8`.
+   * - `8`: Generate a config file compatible with ESLint 8.
+   * - `9`: Generate a config file compatible with ESLint 9.
    *
    * @default 'auto'
    */
-  enabled?: boolean | 'auto';
+  enabled?: false | true | 'auto' | 8 | 9;
   /**
    * File path to save the generated eslint config.
    *
@@ -1240,7 +1260,8 @@ export interface Eslintrc {
 }
 
 export interface ResolvedEslintrc {
-  enabled: boolean;
+  /** False if disabled, otherwise the major version of ESLint installed */
+  enabled: false | 8 | 9;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;
@@ -1334,13 +1355,9 @@ export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
   id: string;
 }
 
-export interface ResolvedPublicFile {
-  /**
-   * The absolute path to the file that will be copied to the output directory.
-   * @example
-   * "/path/to/any/file.css"
-   */
-  absoluteSrc: string;
+export type ResolvedPublicFile = CopiedPublicFile | GeneratedPublicFile;
+
+export interface ResolvedBasePublicFile {
   /**
    * The relative path in the output directory to copy the file to.
    * @example
@@ -1349,4 +1366,47 @@ export interface ResolvedPublicFile {
   relativeDest: string;
 }
 
+export interface CopiedPublicFile extends ResolvedBasePublicFile {
+  /**
+   * The absolute path to the file that will be copied to the output directory.
+   * @example
+   * "/path/to/any/file.css"
+   */
+  absoluteSrc: string;
+}
+
+export interface GeneratedPublicFile extends ResolvedBasePublicFile {
+  /**
+   * Text to write to the file.
+   */
+  contents: string;
+}
+
 export type WxtPlugin = () => void;
+
+export type WxtDirEntry = WxtDirTypeReferenceEntry | WxtDirFileEntry;
+
+/**
+ * Represents type reference to a node module to be added to `.wxt/wxt.d.ts` file
+ */
+export interface WxtDirTypeReferenceEntry {
+  module: string;
+}
+
+/**
+ * Represents a file to be written to the project's `.wxt/` directory.
+ */
+export interface WxtDirFileEntry {
+  /**
+   * Path relative to the `.wxt/` directory. So "tsconfig.json" would resolve to ".wxt/tsconfig.json".
+   */
+  path: string;
+  /**
+   * The text that will be written to the file.
+   */
+  text: string;
+  /**
+   * Set to `true` to add a reference to this file in `.wxt/wxt.d.ts`.
+   */
+  tsReference?: boolean;
+}

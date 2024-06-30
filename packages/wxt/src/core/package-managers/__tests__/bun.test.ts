@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { bun } from '../bun';
 
-const cwd = path.resolve(__dirname, 'fixtures/bun-project');
-
 describe.skipIf(() => process.platform === 'win32')(
   'Bun Package Management Utils',
   () => {
     describe('listDependencies', () => {
+      const cwd = path.resolve(__dirname, 'fixtures/simple-bun-project');
+
       it('should list direct dependencies', async () => {
         const actual = await bun.listDependencies({ cwd });
         expect(actual).toEqual([

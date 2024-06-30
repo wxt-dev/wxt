@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.18.9",
+  "version": "0.18.10",
   "description": "Next gen framework for developing web extensions",
   "repository": {
     "type": "git",
@@ -124,12 +124,12 @@
     "jiti": "^1.21.6",
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
-    "linkedom": "^0.18.3",
+    "linkedom": "^0.18.4",
     "magicast": "^0.3.4",
-    "minimatch": "^9.0.4",
+    "minimatch": "^9.0.5",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
-    "nypm": "^0.3.8",
+    "nypm": "^0.3.9",
     "ohash": "^1.1.3",
     "open": "^10.1.0",
     "ora": "^7.0.1",
@@ -137,7 +137,7 @@
     "prompts": "^2.4.2",
     "publish-browser-extension": "^2.1.3",
     "unimport": "^3.7.2",
-    "vite": "^5.3.0",
+    "vite": "^5.3.2",
     "vite-node": "^1.6.0",
     "web-ext-run": "^0.2.0",
     "webextension-polyfill": "^0.10.0"
@@ -149,17 +149,17 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/natural-compare": "^1.4.3",
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.14.9",
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
-    "execa": "^9.2.0",
+    "execa": "^9.3.0",
     "extract-zip": "^2.0.1",
     "happy-dom": "^13.10.1",
     "lodash.merge": "^4.6.2",
     "p-map": "^7.0.2",
     "publint": "^0.2.8",
     "tsup": "^8.1.0",
-    "tsx": "^4.15.4",
-    "typescript": "^5.4.5"
+    "tsx": "4.15.7",
+    "typescript": "^5.5.2"
   }
 }

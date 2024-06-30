@@ -12,16 +12,20 @@ import {
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
+  ResolvedEslintrc,
+  WxtUnimportOptions,
+  Eslintrc,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
-import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
+import { builtinModules } from '~/builtin-modules';
+import { getEslintVersion } from '../eslint';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -127,15 +131,21 @@ export async function resolveConfig(
     };
   }
 
-  const modules = await resolveWxtModules(modulesDir, mergedConfig.modules);
-  const moduleOptions = modules.reduce<Record<string, any>>((map, module) => {
-    if (module.configKey) {
-      map[module.configKey] =
-        // @ts-expect-error
-        mergedConfig[module.configKey];
-    }
-    return map;
-  }, {});
+  const userModules = await resolveWxtUserModules(
+    modulesDir,
+    mergedConfig.modules,
+  );
+  const moduleOptions = userModules.reduce<Record<string, any>>(
+    (map, module) => {
+      if (module.configKey) {
+        map[module.configKey] =
+          // @ts-expect-error
+          mergedConfig[module.configKey];
+      }
+      return map;
+    },
+    {},
+  );
 
   return {
     browser,
@@ -146,7 +156,7 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(wxtDir, logger, mergedConfig),
+    imports: await getUnimportOptions(wxtDir, srcDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -160,7 +170,7 @@ export async function resolveConfig(
     srcDir,
     typesDir,
     wxtDir,
-    zip: resolveZipConfig(root, mergedConfig),
+    zip: resolveZipConfig(root, outBaseDir, mergedConfig),
     transformManifest: mergedConfig.transformManifest,
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
@@ -175,7 +185,8 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
-    modules,
+    builtinModules,
+    userModules,
     plugins: [],
     ...moduleOptions,
   };
@@ -233,6 +244,7 @@ async function mergeInlineConfig(
 
 function resolveZipConfig(
   root: string,
+  outBaseDir: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
@@ -253,6 +265,8 @@ function resolveZipConfig(
       // Tests
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
+      // Output directory
+      `${path.relative(root, outBaseDir)}/**`,
       // From user
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
@@ -285,21 +299,11 @@ function resolveAnalysisConfig(
 
 async function getUnimportOptions(
   wxtDir: string,
+  srcDir: string,
   logger: Logger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
-
-  const enabledConfig = config.imports?.eslintrc?.enabled;
-  let enabled: boolean;
-  switch (enabledConfig) {
-    case undefined:
-    case 'auto':
-      enabled = await isModuleInstalled('eslint');
-      break;
-    default:
-      enabled = enabledConfig;
-  }
 
   const defaultOptions: WxtResolvedUnimportOptions = {
     debugLog: logger.debug,
@@ -315,17 +319,48 @@ async function getUnimportOptions(
     ],
     warn: logger.warn,
     dirs: ['components', 'composables', 'hooks', 'utils'],
-    eslintrc: {
-      enabled,
-      filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
-      globalsPropValue: true,
+    dirsScanOptions: {
+      cwd: srcDir,
     },
+    eslintrc: await getUnimportEslintOptions(wxtDir, config.imports?.eslintrc),
   };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
     config.imports ?? {},
     defaultOptions,
   );
+}
+
+async function getUnimportEslintOptions(
+  wxtDir: string,
+  options: Eslintrc | undefined,
+): Promise<ResolvedEslintrc> {
+  const rawEslintEnabled = options?.enabled ?? 'auto';
+  let eslintEnabled: ResolvedEslintrc['enabled'];
+  switch (rawEslintEnabled) {
+    case 'auto':
+      const version = await getEslintVersion();
+      let major = parseInt(version[0]);
+      if (major < 8) major = 8;
+      else if (major > 9) major = 9;
+
+      eslintEnabled = isNaN(major) ? 8 : major;
+      break;
+    case true:
+      eslintEnabled = 8;
+      break;
+    default:
+      eslintEnabled = rawEslintEnabled;
+  }
+
+  return {
+    enabled: eslintEnabled,
+    filePath: path.resolve(
+      wxtDir,
+      eslintEnabled === 9 ? 'eslint-unimport.mjs' : 'eslintrc-auto-import.json',
+    ),
+    globalsPropValue: true,
+  };
 }
 
 /**
@@ -378,7 +413,7 @@ export async function mergeBuilderConfig(
   throw Error('Builder not found. Make sure vite is installed.');
 }
 
-export async function resolveWxtModules(
+export async function resolveWxtUserModules(
   modulesDir: string,
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {

@@ -345,14 +345,32 @@ describe('CLI', () => {
       mockArgv('clean');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith(undefined);
+      expect(cleanMock).toBeCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('clean', 'path/to/root');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith('path/to/root');
+      expect(cleanMock).toBeCalledWith({ root: 'path/to/root' });
+    });
+
+    it('should respect a custom config file', async () => {
+      mockArgv('clean', '-c', './path/to/config.ts');
+      await importCli();
+
+      expect(cleanMock).toBeCalledWith({
+        configFile: './path/to/config.ts',
+      });
+    });
+
+    it('should respect passing --debug', async () => {
+      mockArgv('clean', '--debug');
+      await importCli();
+
+      expect(cleanMock).toBeCalledWith({
+        debug: true,
+      });
     });
   });
 

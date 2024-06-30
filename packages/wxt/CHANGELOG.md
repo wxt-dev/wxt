@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.18.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.9...wxt-v0.18.10)
+
+### 🚀 Enhancements
+
+- Add `prepare:types` hook to extend `.wxt/` directory generation ([#767](https://github.com/wxt-dev/wxt/pull/767))
+- **modules:** Allow adding generated public files ([#769](https://github.com/wxt-dev/wxt/pull/769))
+
+### 🩹 Fixes
+
+- Await `prepare:types` hook ([b29d49c](https://github.com/wxt-dev/wxt/commit/b29d49c))
+
+### 🏡 Chore
+
+- Refactor package manager test fixtures ([39f6c29](https://github.com/wxt-dev/wxt/commit/39f6c29))
+- Consolidate `unimport` code into a built-in module ([#771](https://github.com/wxt-dev/wxt/pull/771))
+
 ## v0.18.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.8...wxt-v0.18.9)

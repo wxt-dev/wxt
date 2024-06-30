@@ -113,4 +113,4 @@ You're ready to build your web extension!
 - Read the rest of the "Get Started" pages for a high-overview of what WXT can do
 - Read the [Guide](/guide/key-concepts/manifest) to learn in-depth about each feature WXT supports
 - [Configure WXT](./configuration) by creating a `wxt.config.ts` file
-- Checkout [example projects](https://github.com/wxt-dev/wxt-examples) to see how to perform common tasks with WXT
+- Checkout [example projects](https://github.com/wxt-dev/examples) to see how to perform common tasks with WXT

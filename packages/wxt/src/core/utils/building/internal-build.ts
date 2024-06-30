@@ -15,7 +15,6 @@ import {
   ValidationResults,
   validateEntrypoints,
 } from '../validation';
-import consola from 'consola';
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
@@ -134,12 +133,12 @@ function printValidationResults({
   }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
-    consola.log(relative(cwd, entrypoint.inputPath));
+    wxt.logger.log(relative(cwd, entrypoint.inputPath));
     console.log();
     errors.forEach((err) => {
       const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
       const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
-      consola.log(`  - ${type} ${err.message} ${recieved}`);
+      wxt.logger.log(`  - ${type} ${err.message} ${recieved}`);
     });
     console.log();
   });
