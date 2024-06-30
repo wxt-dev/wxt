@@ -13,7 +13,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
-  WxtUnimportOptions,
   Eslintrc,
 } from '~/types';
 import path from 'node:path';
@@ -341,10 +340,10 @@ async function getUnimportEslintOptions(
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
-      if (major < 8) major = 8;
-      else if (major > 9) major = 9;
-
-      eslintEnabled = isNaN(major) ? 8 : major;
+      if (major <= 8) eslintEnabled = 8;
+      else if (major >= 9) eslintEnabled = 9;
+      // NaN
+      else eslintEnabled = 8;
       break;
     case true:
       eslintEnabled = 8;

@@ -11,7 +11,6 @@ import path from 'node:path';
 import { Message, parseI18nMessages } from '~/core/utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
 import { wxt } from '../../wxt';
-import { getEslintVersion } from '~/core/utils/eslint';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
