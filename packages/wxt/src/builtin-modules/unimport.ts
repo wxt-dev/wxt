@@ -126,7 +126,7 @@ export function getEslint8ConfigEntry(
 ): WxtDirFileEntry {
   return {
     path: options.eslintrc.filePath,
-    text: JSON.stringify({ globals }, null, 2),
+    text: JSON.stringify({ globals }, null, 2) + '\n',
   };
 }
 

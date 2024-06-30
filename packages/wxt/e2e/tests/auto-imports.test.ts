@@ -96,7 +96,7 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('should output the globals list for ESLint to consume', async () => {
+    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -108,30 +108,43 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.serializeFile('.wxt/eslintrc-auto-import.json'))
-        .toMatchInlineSnapshot(`
-          ".wxt/eslintrc-auto-import.json
-          ----------------------------------------
-          {
-            "globals": {
-              "ContentScriptContext": true,
-              "InvalidMatchPattern": true,
-              "MatchPattern": true,
-              "browser": true,
-              "createIframeUi": true,
-              "createIntegratedUi": true,
-              "createShadowRootUi": true,
-              "defineBackground": true,
-              "defineConfig": true,
-              "defineContentScript": true,
-              "defineUnlistedScript": true,
-              "defineWxtPlugin": true,
-              "fakeBrowser": true,
-              "storage": true
-            }
-          }
-          "
-        `);
+      expect(
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+      ).toMatchSnapshot();
+    });
+
+    it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 8,
+          },
+        },
+      });
+
+      expect(
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+      ).toMatchSnapshot();
+    });
+
+    it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 9,
+          },
+        },
+      });
+
+      expect(
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+      ).toMatchSnapshot();
     });
 
     it('should allow customizing the output', async () => {
@@ -148,30 +161,7 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.serializeFile('example.json'))
-        .toMatchInlineSnapshot(`
-          "example.json
-          ----------------------------------------
-          {
-            "globals": {
-              "ContentScriptContext": "readonly",
-              "InvalidMatchPattern": "readonly",
-              "MatchPattern": "readonly",
-              "browser": "readonly",
-              "createIframeUi": "readonly",
-              "createIntegratedUi": "readonly",
-              "createShadowRootUi": "readonly",
-              "defineBackground": "readonly",
-              "defineConfig": "readonly",
-              "defineContentScript": "readonly",
-              "defineUnlistedScript": "readonly",
-              "defineWxtPlugin": "readonly",
-              "fakeBrowser": "readonly",
-              "storage": "readonly"
-            }
-          }
-          "
-        `);
+      expect(await project.serializeFile('example.json')).toMatchSnapshot();
     });
   });
 });

@@ -357,7 +357,9 @@ async function getUnimportEslintOptions(
     enabled: eslintEnabled,
     filePath: path.resolve(
       wxtDir,
-      eslintEnabled === 9 ? 'eslint-unimport.mjs' : 'eslintrc-auto-import.json',
+      eslintEnabled === 9
+        ? 'eslint-auto-imports.mjs'
+        : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };

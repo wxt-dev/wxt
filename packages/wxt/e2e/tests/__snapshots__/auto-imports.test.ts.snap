@@ -1,0 +1,102 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Auto Imports > eslintrc > "enabled: 8" should output a JSON config file compatible with ESlint 8 1`] = `
+".wxt/eslintrc-auto-import.json
+----------------------------------------
+{
+  "globals": {
+    "ContentScriptContext": true,
+    "InvalidMatchPattern": true,
+    "MatchPattern": true,
+    "browser": true,
+    "createIframeUi": true,
+    "createIntegratedUi": true,
+    "createShadowRootUi": true,
+    "defineBackground": true,
+    "defineConfig": true,
+    "defineContentScript": true,
+    "defineUnlistedScript": true,
+    "defineWxtPlugin": true,
+    "fakeBrowser": true,
+    "storage": true
+  }
+}
+"
+`;
+
+exports[`Auto Imports > eslintrc > "enabled: 9" should output a flat config file compatible with ESlint 9 1`] = `
+".wxt/eslint-auto-imports.mjs
+----------------------------------------
+const globals = {
+  "ContentScriptContext": true,
+  "InvalidMatchPattern": true,
+  "MatchPattern": true,
+  "browser": true,
+  "createIframeUi": true,
+  "createIntegratedUi": true,
+  "createShadowRootUi": true,
+  "defineBackground": true,
+  "defineConfig": true,
+  "defineContentScript": true,
+  "defineUnlistedScript": true,
+  "defineWxtPlugin": true,
+  "fakeBrowser": true,
+  "storage": true
+}
+
+export default {
+  languageOptions: {
+    globals,
+    sourceType: "module",
+  },
+};
+"
+`;
+
+exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config file compatible with ESlint 8 1`] = `
+".wxt/eslintrc-auto-import.json
+----------------------------------------
+{
+  "globals": {
+    "ContentScriptContext": true,
+    "InvalidMatchPattern": true,
+    "MatchPattern": true,
+    "browser": true,
+    "createIframeUi": true,
+    "createIntegratedUi": true,
+    "createShadowRootUi": true,
+    "defineBackground": true,
+    "defineConfig": true,
+    "defineContentScript": true,
+    "defineUnlistedScript": true,
+    "defineWxtPlugin": true,
+    "fakeBrowser": true,
+    "storage": true
+  }
+}
+"
+`;
+
+exports[`Auto Imports > eslintrc > should allow customizing the output 1`] = `
+"example.json
+----------------------------------------
+{
+  "globals": {
+    "ContentScriptContext": "readonly",
+    "InvalidMatchPattern": "readonly",
+    "MatchPattern": "readonly",
+    "browser": "readonly",
+    "createIframeUi": "readonly",
+    "createIntegratedUi": "readonly",
+    "createShadowRootUi": "readonly",
+    "defineBackground": "readonly",
+    "defineConfig": "readonly",
+    "defineContentScript": "readonly",
+    "defineUnlistedScript": "readonly",
+    "defineWxtPlugin": "readonly",
+    "fakeBrowser": "readonly",
+    "storage": "readonly"
+  }
+}
+"
+`;

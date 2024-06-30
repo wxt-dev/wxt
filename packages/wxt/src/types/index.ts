@@ -1250,7 +1250,9 @@ export interface Eslintrc {
   /**
    * File path to save the generated eslint config.
    *
-   * @default './.wxt/eslintrc-auto-import.json'
+   * Default depends on version of ESLint used:
+   * - 9 and above: './.wxt/eslint-auto-imports.mjs'
+   * - 8 and below: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /**
