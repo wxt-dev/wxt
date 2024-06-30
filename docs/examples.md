@@ -1,7 +1,19 @@
-# Examples
+---
+layout: page
+---
 
-Simple walkthroughs to accomplish common tasks or patterns with WXT.
+<style>
+.examples-container {
+  padding: 32px;
+}
+</style>
 
-<ExampleList />
+<div class="examples-container">
+  <div class="vp-doc">
+    <h1>Examples</h1>
+  </div>
 
-> Full code available at [`wxt-dev/examples`](https://github.com/wxt-dev/examples)
+  <br />
+
+  <ExampleSearch />
+</div>

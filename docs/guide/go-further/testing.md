@@ -6,7 +6,9 @@ WXT officially supports [Vitest](https://vitest.dev/) for unit tests and either 
 
 For details setting up each testing framework, see the official examples:
 
-<ExampleList tag="testing" />
+- [Vitest](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-vitest#readme)
+- [Playwright](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-playwright#readme)
+- [Puppeteer](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-puppeteer#readme)
 
 ### Unofficial Frameworks
 
