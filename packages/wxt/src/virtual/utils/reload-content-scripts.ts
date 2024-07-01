@@ -81,7 +81,15 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
     if (!url) return false;
     return !!matchPatterns.find((pattern) => pattern.includes(url));
   });
-  await Promise.all(matchingTabs.map((tab) => browser.tabs.reload(tab.id)));
+  await Promise.all(
+    matchingTabs.map(async (tab) => {
+      try {
+        await browser.tabs.reload(tab.id);
+      } catch (err) {
+        logger.warn('Failed to reload tab:', err);
+      }
+    }),
+  );
 }
 
 export async function reloadContentScriptMv2(
