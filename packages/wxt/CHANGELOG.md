@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.18.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.10...wxt-v0.18.11)
+
+### 🚀 Enhancements
+
+- Add eslint 9 config support ([#762](https://github.com/wxt-dev/wxt/pull/762))
+
+### 🩹 Fixes
+
+- Respect custom `outDir` when cleaning and zipping ([#774](https://github.com/wxt-dev/wxt/pull/774))
+- **dev:** Catch error when attempting to reload a tab in a saved tab group ([#786](https://github.com/wxt-dev/wxt/pull/786))
+
+### 🏡 Chore
+
+- Replace consola with wxt.logger ([#776](https://github.com/wxt-dev/wxt/pull/776))
+- **deps:** Upgrade non-major deps ([#778](https://github.com/wxt-dev/wxt/pull/778))
+
+### ❤️ Contributors
+
+- KnightYoshi ([@KnightYoshi](http://github.com/KnightYoshi))
+- Asakura Mizu ([@AsakuraMizu](http://github.com/AsakuraMizu))
+
 ## v0.18.10
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.9...wxt-v0.18.10)
