@@ -24,7 +24,7 @@
     "dev": "wxt",
     "check": "buildc --deps-only -- check",
     "build": "buildc -- unbuild",
-    "prepare": "echo \"prepare\" && buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6"
