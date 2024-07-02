@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-solid-v1.1.0...module-solid-v1.1.1)
+
+### 🩹 Fixes
+
+- Use `prepare` instead of `postinstall` for local dev setup ([#788](https://github.com/wxt-dev/wxt/pull/788))
+
 ## v1.1.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-solid-v1.0.1...module-solid-v1.1.0)
