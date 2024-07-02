@@ -55,6 +55,13 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
           wxt.config.wxtModuleDir,
           'dist/virtual/mock-browser.js',
         ),
+        // TODO: Resolve this virtual module to some file with
+        // `export default {}` instead of this hack of using another file with
+        // a default export.
+        'virtual:app-config': resolve(
+          wxt.config.wxtModuleDir,
+          'dist/virtual/mock-browser.js',
+        ),
       },
       // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
       // respect the custom transform function when using it's native bun option.

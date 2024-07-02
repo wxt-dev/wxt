@@ -12,13 +12,15 @@ exports[`Auto Imports > eslintrc > "enabled: 8" should output a JSON config file
     "createIframeUi": true,
     "createIntegratedUi": true,
     "createShadowRootUi": true,
+    "defineAppConfig": true,
     "defineBackground": true,
     "defineConfig": true,
     "defineContentScript": true,
     "defineUnlistedScript": true,
     "defineWxtPlugin": true,
     "fakeBrowser": true,
-    "storage": true
+    "storage": true,
+    "useAppConfig": true
   }
 }
 "
@@ -35,13 +37,15 @@ const globals = {
   "createIframeUi": true,
   "createIntegratedUi": true,
   "createShadowRootUi": true,
+  "defineAppConfig": true,
   "defineBackground": true,
   "defineConfig": true,
   "defineContentScript": true,
   "defineUnlistedScript": true,
   "defineWxtPlugin": true,
   "fakeBrowser": true,
-  "storage": true
+  "storage": true,
+  "useAppConfig": true
 }
 
 export default {
@@ -65,13 +69,15 @@ exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config f
     "createIframeUi": true,
     "createIntegratedUi": true,
     "createShadowRootUi": true,
+    "defineAppConfig": true,
     "defineBackground": true,
     "defineConfig": true,
     "defineContentScript": true,
     "defineUnlistedScript": true,
     "defineWxtPlugin": true,
     "fakeBrowser": true,
-    "storage": true
+    "storage": true,
+    "useAppConfig": true
   }
 }
 "
@@ -89,13 +95,15 @@ exports[`Auto Imports > eslintrc > should allow customizing the output 1`] = `
     "createIframeUi": "readonly",
     "createIntegratedUi": "readonly",
     "createShadowRootUi": "readonly",
+    "defineAppConfig": "readonly",
     "defineBackground": "readonly",
     "defineConfig": "readonly",
     "defineContentScript": "readonly",
     "defineUnlistedScript": "readonly",
     "defineWxtPlugin": "readonly",
     "fakeBrowser": "readonly",
-    "storage": "readonly"
+    "storage": "readonly",
+    "useAppConfig": "readonly"
   }
 }
 "
