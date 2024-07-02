@@ -121,6 +121,7 @@ export default defineConfig({
 
           // Files
           menuItem('.env', 'env'),
+          menuItem('app.config.ts', 'app-config'),
           menuItem('package.json', 'package'),
           menuItem('tsconfig.json', 'tsconfig'),
           menuItem('web-ext.config.ts', 'web-ext-config'),
