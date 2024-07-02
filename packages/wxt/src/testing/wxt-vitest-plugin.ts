@@ -4,6 +4,7 @@ import {
   tsconfigPaths,
   globals,
   webextensionPolyfillMock,
+  resolveAppConfig,
 } from '../core/builders/vite/plugins';
 import { resolveConfig } from '~/core/utils/building';
 import { InlineConfig } from '../types';
@@ -32,6 +33,7 @@ export function WxtVitest(inlineConfig?: InlineConfig): vite.PluginOption {
       globals(config),
       download(config),
       tsconfigPaths(config),
+      resolveAppConfig(config),
     ];
     if (config.imports !== false) {
       const unimport = createUnimport(config.imports);
