@@ -133,16 +133,22 @@ async function zipDir(
     }
   }
   await options?.additionalWork?.(archive);
-  const buffer = await archive.generateAsync({
-    type: 'base64',
-    ...(wxt.config.zip.compressionLevel === 0
-      ? { compression: 'STORE' }
-      : {
-          compression: 'DEFLATE',
-          compressionOptions: { level: wxt.config.zip.compressionLevel },
-        }),
-  });
-  await fs.writeFile(outputPath, buffer, 'base64');
+
+  await new Promise<void>((resolve, reject) =>
+    archive
+      .generateNodeStream({
+        type: 'nodebuffer',
+        ...(wxt.config.zip.compressionLevel === 0
+          ? { compression: 'STORE' }
+          : {
+              compression: 'DEFLATE',
+              compressionOptions: { level: wxt.config.zip.compressionLevel },
+            }),
+      })
+      .pipe(fs.createWriteStream(outputPath))
+      .on('error', reject)
+      .on('close', resolve),
+  );
 }
 
 async function downloadPrivatePackages() {
