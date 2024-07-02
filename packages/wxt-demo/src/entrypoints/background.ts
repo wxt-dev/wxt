@@ -15,6 +15,8 @@ export default defineBackground({
       messages,
     });
 
+    console.log(useAppConfig());
+
     // @ts-expect-error: should only accept entrypoints or public assets
     browser.runtime.getURL('/');
     browser.runtime.getURL('/background.js');

@@ -24,6 +24,7 @@ describe('Auto Imports', () => {
             const createIframeUi: typeof import('wxt/client')['createIframeUi']
             const createIntegratedUi: typeof import('wxt/client')['createIntegratedUi']
             const createShadowRootUi: typeof import('wxt/client')['createShadowRootUi']
+            const defineAppConfig: typeof import('wxt/sandbox')['defineAppConfig']
             const defineBackground: typeof import('wxt/sandbox')['defineBackground']
             const defineConfig: typeof import('wxt')['defineConfig']
             const defineContentScript: typeof import('wxt/sandbox')['defineContentScript']
@@ -31,6 +32,7 @@ describe('Auto Imports', () => {
             const defineWxtPlugin: typeof import('wxt/sandbox')['defineWxtPlugin']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
             const storage: typeof import('wxt/storage')['storage']
+            const useAppConfig: typeof import('wxt/client')['useAppConfig']
           }
           "
         `);

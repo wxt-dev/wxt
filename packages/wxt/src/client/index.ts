@@ -4,3 +4,4 @@
  * @module wxt/client
  */
 export * from './content-scripts';
+export * from './app-config';

@@ -14,3 +14,4 @@ export * from './entrypointGroupGlobals';
 export * from './defineImportMeta';
 export * from './removeEntrypointMainFunction';
 export * from './wxtPluginLoader';
+export * from './resolveAppConfig';
