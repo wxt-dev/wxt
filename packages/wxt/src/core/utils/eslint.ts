@@ -6,6 +6,7 @@ export async function getEslintVersion(): Promise<string[]> {
     const { ESLint } = require('eslint');
     return ESLint.version?.split('.') ?? [];
   } catch (error) {
+    console.warn(error);
     return [];
   }
 }

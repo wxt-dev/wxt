@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { execaCommand } from 'execa';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -162,6 +163,121 @@ describe('Auto Imports', () => {
       });
 
       expect(await project.serializeFile('example.json')).toMatchSnapshot();
+    });
+
+    describe('Actual linting results', () => {
+      async function runEslint(
+        project: TestProject,
+        version: boolean | 'auto' | 8 | 9,
+      ) {
+        project.addFile(
+          'entrypoints/background.js',
+          `export default defineBackground(() => {})`,
+        );
+        await project.prepare({
+          imports: { eslintrc: { enabled: version } },
+        });
+        return await execaCommand('pnpm eslint entrypoints/background.js', {
+          cwd: project.root,
+        });
+      }
+
+      describe('ESLint 9', () => {
+        it('should have lint errors when not extending generated config', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              '@eslint/js': '9.5.0',
+              eslint: '9.5.0',
+            },
+          });
+          project.addFile(
+            'eslint.config.mjs',
+            `
+            import eslint from "@eslint/js";
+
+            export default [
+              eslint.configs.recommended,
+            ];
+            `,
+          );
+
+          await expect(runEslint(project, 9)).rejects.toMatchObject({
+            message: expect.stringContaining(
+              "'defineBackground' is not defined",
+            ),
+          });
+        });
+
+        it('should not have any lint errors when configured', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              '@eslint/js': '9.5.0',
+              eslint: '9.5.0',
+            },
+          });
+          project.addFile(
+            'eslint.config.mjs',
+            `
+            import eslint from "@eslint/js";
+            import autoImports from "./.wxt/eslint-auto-imports.mjs";
+
+            export default [
+              eslint.configs.recommended,
+              autoImports,
+            ];
+            `,
+          );
+          const res = await runEslint(project, 9);
+
+          expect(res).toBeDefined();
+        });
+      });
+
+      describe('ESLint 8', () => {
+        it('should have lint errors when not extending generated config', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              eslint: '8.57.0',
+            },
+          });
+          project.addFile(
+            '.eslintrc',
+            JSON.stringify({
+              parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+              env: { es6: true },
+              extends: ['eslint:recommended'],
+            }),
+          );
+
+          await expect(runEslint(project, 8)).rejects.toMatchObject({
+            message: expect.stringContaining(
+              "'defineBackground' is not defined",
+            ),
+          });
+        });
+
+        it('should not have any lint errors when configured', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              eslint: '8.57.0',
+            },
+          });
+          project.addFile(
+            '.eslintrc',
+            JSON.stringify({
+              parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+              env: { es6: true },
+              extends: [
+                'eslint:recommended',
+                './.wxt/eslintrc-auto-import.json',
+              ],
+            }),
+          );
+          const res = await runEslint(project, 8);
+
+          expect(res).toBeDefined();
+        });
+      });
     });
   });
 });
