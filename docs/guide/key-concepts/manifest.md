@@ -25,7 +25,7 @@ Here's an example `wxt.config.ts` file:
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
-  mainfest: {
+  manifest: {
     action: {
       default_title: 'Some Title',
     },
