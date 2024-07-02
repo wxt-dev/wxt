@@ -84,6 +84,33 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
 
+  packages/analytics:
+    devDependencies:
+      '@aklinker1/check':
+        specifier: ^1.3.1
+        version: 1.4.5(typescript@5.5.4)
+      '@types/chrome':
+        specifier: ^0.0.268
+        version: 0.0.268
+      prettier:
+        specifier: ^3.3.2
+        version: 3.3.3
+      publint:
+        specifier: ^0.2.8
+        version: 0.2.9
+      typescript:
+        specifier: ^5.5.2
+        version: 5.5.4
+      unbuild:
+        specifier: ^2.0.0
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
+      wxt:
+        specifier: ^0.18.10
+        version: 0.18.15(@types/node@20.14.12)(rollup@4.19.0)(sass@1.77.8)
+
   packages/auto-icons:
     dependencies:
       defu:
@@ -1913,6 +1940,9 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
+  async-mutex@0.4.1:
+    resolution: {integrity: sha512-WfoBo4E/TbCX1G95XTjbWTE3X2XLG0m1Xbv2cwOtuPdyH9CZvnaA5nCt1ucjaKEgW2A5IF71hxrRhr83Je5xjA==}
+
   async-mutex@0.5.0:
     resolution: {integrity: sha512-1A94B18jkJ3DYq284ohPxoXbfTA5HsQ7/Mf4DEhcyLx3Bz27Rh59iScbB6EPiP+B+joue6YCxcMXSbFC1tZKwA==}
 
@@ -3553,6 +3583,10 @@ packages:
     resolution: {integrity: sha512-ERAyNnZOfqM+Ao3RAvIXkYh5joP220yf59gVe2X/cI6SiCxIdi4c9HZKZD8R6q/RDXEje1THBju6iExiSsgJaQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  ora@7.0.1:
+    resolution: {integrity: sha512-0TUxTiFJWv+JnjWm4o9yvuskpEJLXTcng8MJuKd+SzAzp2o+OP3HWqNhB4OdJRt1Vsd9/mR0oyaEYlOnL7XIRw==}
+    engines: {node: '>=16'}
+
   ora@8.1.0:
     resolution: {integrity: sha512-GQEkNkH/GHOhPFXcqZs3IDahXEQcQxsSjEkK4KvEEST4t7eNzoMjxTzef+EZ+JluDEV+Raoi3WQ2CflnRdSVnQ==}
     engines: {node: '>=18'}
@@ -4279,6 +4313,10 @@ packages:
     resolution: {integrity: sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==}
     engines: {node: '>=12'}
 
+  string-width@6.1.0:
+    resolution: {integrity: sha512-k01swCJAgQmuADB0YIc+7TuatfNvTBVOoaUWJjTB9R4VJzR5vNWzf5t42ESVZFPS8xTySF7CAdV4t/aaIm3UnQ==}
+    engines: {node: '>=16'}
+
   string-width@7.2.0:
     resolution: {integrity: sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==}
     engines: {node: '>=18'}
@@ -4742,6 +4780,9 @@ packages:
     resolution: {integrity: sha512-5D11VcjdGkA1/xax5UWL0YeAbDySKHzWFe6EpsoPNUMw5Uk9tKk9p6GUOfcaI5N7sINKfBMZYNsTBiu5dzJB9A==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
 
+  webextension-polyfill@0.10.0:
+    resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
+
   webextension-polyfill@0.12.0:
     resolution: {integrity: sha512-97TBmpoWJEE+3nFBQ4VocyCdLKfw54rFaJ6EVQYLBCXqCIpLSZkwGgASpv4oPt9gdKCJ80RJlcmNzNn008Ag6Q==}
 
@@ -4824,6 +4865,10 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  wxt@0.18.15:
+    resolution: {integrity: sha512-rzFLinUyugBsoC+mJZFMIQILrA4OUk/XG0mAW30zF3pqegIwawrEx5JXFXg/D1XW6//uew/FLTm12t3mcpbw+Q==}
+    hasBin: true
 
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
@@ -6172,6 +6217,10 @@ snapshots:
   assertion-error@1.1.0: {}
 
   assertion-error@2.0.1: {}
+
+  async-mutex@0.4.1:
+    dependencies:
+      tslib: 2.6.0
 
   async-mutex@0.5.0:
     dependencies:
@@ -8008,6 +8057,18 @@ snapshots:
       strip-ansi: 7.1.0
       wcwidth: 1.0.1
 
+  ora@7.0.1:
+    dependencies:
+      chalk: 5.3.0
+      cli-cursor: 4.0.0
+      cli-spinners: 2.9.2
+      is-interactive: 2.0.0
+      is-unicode-supported: 1.3.0
+      log-symbols: 5.1.0
+      stdin-discarder: 0.1.0
+      string-width: 6.1.0
+      strip-ansi: 7.1.0
+
   ora@8.1.0:
     dependencies:
       chalk: 5.3.0
@@ -8770,6 +8831,12 @@ snapshots:
       emoji-regex: 9.2.2
       strip-ansi: 7.1.0
 
+  string-width@6.1.0:
+    dependencies:
+      eastasianwidth: 0.2.0
+      emoji-regex: 10.3.0
+      strip-ansi: 7.1.0
+
   string-width@7.2.0:
     dependencies:
       emoji-regex: 10.3.0
@@ -9354,6 +9421,8 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  webextension-polyfill@0.10.0: {}
+
   webextension-polyfill@0.12.0: {}
 
   webidl-conversions@7.0.0: {}
@@ -9435,6 +9504,61 @@ snapshots:
       typedarray-to-buffer: 3.1.5
 
   ws@8.18.0: {}
+
+  wxt@0.18.15(@types/node@20.14.12)(rollup@4.19.0)(sass@1.77.8):
+    dependencies:
+      '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.19.0)
+      '@types/webextension-polyfill': 0.10.7
+      '@webext-core/fake-browser': 1.3.1
+      '@webext-core/isolated-element': 1.1.2
+      '@webext-core/match-patterns': 1.0.3
+      async-mutex: 0.4.1
+      c12: 1.11.1(magicast@0.3.4)
+      cac: 6.7.14
+      chokidar: 3.6.0
+      ci-info: 4.0.0
+      defu: 6.1.4
+      dequal: 2.0.3
+      esbuild: 0.19.12
+      fast-glob: 3.3.2
+      filesize: 10.1.4
+      fs-extra: 11.2.0
+      get-port: 7.1.0
+      giget: 1.2.3
+      hookable: 5.5.3
+      is-wsl: 3.1.0
+      jiti: 1.21.6
+      json5: 2.2.3
+      jszip: 3.10.1
+      linkedom: 0.18.4
+      magicast: 0.3.4
+      minimatch: 9.0.5
+      natural-compare: 1.4.0
+      normalize-path: 3.0.0
+      nypm: 0.3.9
+      ohash: 1.1.3
+      open: 10.1.0
+      ora: 7.0.1
+      picocolors: 1.0.1
+      prompts: 2.4.2
+      publish-browser-extension: 2.1.3
+      unimport: 3.11.1(rollup@4.19.0)
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
+      vite-node: 1.6.0(@types/node@20.14.12)(sass@1.77.8)
+      web-ext-run: 0.2.1
+      webextension-polyfill: 0.10.0
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - less
+      - lightningcss
+      - rollup
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - utf-8-validate
 
   xdg-basedir@5.1.0: {}
 
