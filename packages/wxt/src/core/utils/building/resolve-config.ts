@@ -12,17 +12,19 @@ import {
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
+  ResolvedEslintrc,
+  Eslintrc,
 } from '~/types';
 import path from 'node:path';
 import { createFsCache } from '~/core/utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
-import { isModuleInstalled } from '../package';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
 import { builtinModules } from '~/builtin-modules';
+import { getEslintVersion } from '../eslint';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -302,17 +304,6 @@ async function getUnimportOptions(
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
 
-  const rawEslintEnabled = config.imports?.eslintrc?.enabled;
-  let eslintEnabled: boolean;
-  switch (rawEslintEnabled) {
-    case undefined:
-    case 'auto':
-      eslintEnabled = await isModuleInstalled('eslint');
-      break;
-    default:
-      eslintEnabled = rawEslintEnabled;
-  }
-
   const defaultOptions: WxtResolvedUnimportOptions = {
     debugLog: logger.debug,
     imports: [
@@ -330,17 +321,47 @@ async function getUnimportOptions(
     dirsScanOptions: {
       cwd: srcDir,
     },
-    eslintrc: {
-      enabled: eslintEnabled,
-      filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
-      globalsPropValue: true,
-    },
+    eslintrc: await getUnimportEslintOptions(wxtDir, config.imports?.eslintrc),
   };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
     config.imports ?? {},
     defaultOptions,
   );
+}
+
+async function getUnimportEslintOptions(
+  wxtDir: string,
+  options: Eslintrc | undefined,
+): Promise<ResolvedEslintrc> {
+  const rawEslintEnabled = options?.enabled ?? 'auto';
+  let eslintEnabled: ResolvedEslintrc['enabled'];
+  switch (rawEslintEnabled) {
+    case 'auto':
+      const version = await getEslintVersion();
+      let major = parseInt(version[0]);
+      if (major <= 8) eslintEnabled = 8;
+      else if (major >= 9) eslintEnabled = 9;
+      // NaN
+      else eslintEnabled = 8;
+      break;
+    case true:
+      eslintEnabled = 8;
+      break;
+    default:
+      eslintEnabled = rawEslintEnabled;
+  }
+
+  return {
+    enabled: eslintEnabled,
+    filePath: path.resolve(
+      wxtDir,
+      eslintEnabled === 9
+        ? 'eslint-auto-imports.mjs'
+        : 'eslintrc-auto-import.json',
+    ),
+    globalsPropValue: true,
+  };
 }
 
 /**

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { execaCommand } from 'execa';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -96,7 +97,7 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('should output the globals list for ESLint to consume', async () => {
+    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -108,30 +109,43 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.serializeFile('.wxt/eslintrc-auto-import.json'))
-        .toMatchInlineSnapshot(`
-          ".wxt/eslintrc-auto-import.json
-          ----------------------------------------
-          {
-            "globals": {
-              "ContentScriptContext": true,
-              "InvalidMatchPattern": true,
-              "MatchPattern": true,
-              "browser": true,
-              "createIframeUi": true,
-              "createIntegratedUi": true,
-              "createShadowRootUi": true,
-              "defineBackground": true,
-              "defineConfig": true,
-              "defineContentScript": true,
-              "defineUnlistedScript": true,
-              "defineWxtPlugin": true,
-              "fakeBrowser": true,
-              "storage": true
-            }
-          }
-          "
-        `);
+      expect(
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+      ).toMatchSnapshot();
+    });
+
+    it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 8,
+          },
+        },
+      });
+
+      expect(
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+      ).toMatchSnapshot();
+    });
+
+    it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 9,
+          },
+        },
+      });
+
+      expect(
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+      ).toMatchSnapshot();
     });
 
     it('should allow customizing the output', async () => {
@@ -148,30 +162,122 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.serializeFile('example.json'))
-        .toMatchInlineSnapshot(`
-          "example.json
-          ----------------------------------------
-          {
-            "globals": {
-              "ContentScriptContext": "readonly",
-              "InvalidMatchPattern": "readonly",
-              "MatchPattern": "readonly",
-              "browser": "readonly",
-              "createIframeUi": "readonly",
-              "createIntegratedUi": "readonly",
-              "createShadowRootUi": "readonly",
-              "defineBackground": "readonly",
-              "defineConfig": "readonly",
-              "defineContentScript": "readonly",
-              "defineUnlistedScript": "readonly",
-              "defineWxtPlugin": "readonly",
-              "fakeBrowser": "readonly",
-              "storage": "readonly"
-            }
-          }
-          "
-        `);
+      expect(await project.serializeFile('example.json')).toMatchSnapshot();
+    });
+
+    describe('Actual linting results', () => {
+      async function runEslint(
+        project: TestProject,
+        version: boolean | 'auto' | 8 | 9,
+      ) {
+        project.addFile(
+          'entrypoints/background.js',
+          `export default defineBackground(() => {})`,
+        );
+        await project.prepare({
+          imports: { eslintrc: { enabled: version } },
+        });
+        return await execaCommand('pnpm eslint entrypoints/background.js', {
+          cwd: project.root,
+        });
+      }
+
+      describe('ESLint 9', () => {
+        it('should have lint errors when not extending generated config', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              '@eslint/js': '9.5.0',
+              eslint: '9.5.0',
+            },
+          });
+          project.addFile(
+            'eslint.config.mjs',
+            `
+            import eslint from "@eslint/js";
+
+            export default [
+              eslint.configs.recommended,
+            ];
+            `,
+          );
+
+          await expect(runEslint(project, 9)).rejects.toMatchObject({
+            message: expect.stringContaining(
+              "'defineBackground' is not defined",
+            ),
+          });
+        });
+
+        it('should not have any lint errors when configured', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              '@eslint/js': '9.5.0',
+              eslint: '9.5.0',
+            },
+          });
+          project.addFile(
+            'eslint.config.mjs',
+            `
+            import eslint from "@eslint/js";
+            import autoImports from "./.wxt/eslint-auto-imports.mjs";
+
+            export default [
+              eslint.configs.recommended,
+              autoImports,
+            ];
+            `,
+          );
+          const res = await runEslint(project, 9);
+
+          expect(res).toBeDefined();
+        });
+      });
+
+      describe('ESLint 8', () => {
+        it('should have lint errors when not extending generated config', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              eslint: '8.57.0',
+            },
+          });
+          project.addFile(
+            '.eslintrc',
+            JSON.stringify({
+              parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+              env: { es6: true },
+              extends: ['eslint:recommended'],
+            }),
+          );
+
+          await expect(runEslint(project, 8)).rejects.toMatchObject({
+            message: expect.stringContaining(
+              "'defineBackground' is not defined",
+            ),
+          });
+        });
+
+        it('should not have any lint errors when configured', async () => {
+          const project = new TestProject({
+            devDependencies: {
+              eslint: '8.57.0',
+            },
+          });
+          project.addFile(
+            '.eslintrc',
+            JSON.stringify({
+              parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+              env: { es6: true },
+              extends: [
+                'eslint:recommended',
+                './.wxt/eslintrc-auto-import.json',
+              ],
+            }),
+          );
+          const res = await runEslint(project, 8);
+
+          expect(res).toBeDefined();
+        });
+      });
     });
   });
 });

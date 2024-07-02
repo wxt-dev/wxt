@@ -1238,17 +1238,21 @@ export interface Eslintrc {
   /**
    * When true, generates a file that can be used by ESLint to know which variables are valid globals.
    *
-   * - `'auto'`: Check if eslint is installed, and if it is, generate the helper file
-   * - `true`: Generate the helper file
-   * - `false`: Don't generate the file
+   * - `false`: Don't generate the file.
+   * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible config file.
+   * - `true`: Same as `8`.
+   * - `8`: Generate a config file compatible with ESLint 8.
+   * - `9`: Generate a config file compatible with ESLint 9.
    *
    * @default 'auto'
    */
-  enabled?: boolean | 'auto';
+  enabled?: false | true | 'auto' | 8 | 9;
   /**
    * File path to save the generated eslint config.
    *
-   * @default './.wxt/eslintrc-auto-import.json'
+   * Default depends on version of ESLint used:
+   * - 9 and above: './.wxt/eslint-auto-imports.mjs'
+   * - 8 and below: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /**
@@ -1258,7 +1262,8 @@ export interface Eslintrc {
 }
 
 export interface ResolvedEslintrc {
-  enabled: boolean;
+  /** False if disabled, otherwise the major version of ESLint installed */
+  enabled: false | 8 | 9;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;

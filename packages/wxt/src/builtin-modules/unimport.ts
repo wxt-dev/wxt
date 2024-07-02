@@ -45,8 +45,10 @@ export default defineWxtModule({
 
       entries.push(await getImportsDeclarationEntry(unimport));
 
-      if (!options.eslintrc.enabled) return;
-      entries.push(await getImportsEslintEntry(unimport, options));
+      if (options.eslintrc.enabled === false) return;
+      entries.push(
+        await getEslintConfigEntry(unimport, options.eslintrc.enabled, options),
+      );
     });
 
     // Add vite plugin
@@ -100,23 +102,48 @@ async function getImportsDeclarationEntry(
   };
 }
 
-async function getImportsEslintEntry(
+async function getEslintConfigEntry(
   unimport: Unimport,
+  version: 8 | 9,
   options: WxtResolvedUnimportOptions,
 ): Promise<WxtDirFileEntry> {
-  const globals: Record<string, EslintGlobalsPropValue> = {};
-  const eslintrc = { globals };
-
-  (await unimport.getImports())
+  const globals = (await unimport.getImports())
     .map((i) => i.as ?? i.name)
     .filter(Boolean)
     .sort()
-    .forEach((name) => {
-      eslintrc.globals[name] = options.eslintrc.globalsPropValue;
-    });
+    .reduce<Record<string, EslintGlobalsPropValue>>((globals, name) => {
+      globals[name] = options.eslintrc.globalsPropValue;
+      return globals;
+    }, {});
 
+  if (version <= 8) return getEslint8ConfigEntry(options, globals);
+  else return getEslint9ConfigEntry(options, globals);
+}
+
+export function getEslint8ConfigEntry(
+  options: WxtResolvedUnimportOptions,
+  globals: Record<string, EslintGlobalsPropValue>,
+): WxtDirFileEntry {
   return {
     path: options.eslintrc.filePath,
-    text: JSON.stringify(eslintrc, null, 2) + '\n',
+    text: JSON.stringify({ globals }, null, 2) + '\n',
+  };
+}
+
+export function getEslint9ConfigEntry(
+  options: WxtResolvedUnimportOptions,
+  globals: Record<string, EslintGlobalsPropValue>,
+): WxtDirFileEntry {
+  return {
+    path: options.eslintrc.filePath,
+    text: `const globals = ${JSON.stringify(globals, null, 2)}
+
+export default {
+  languageOptions: {
+    globals,
+    sourceType: "module",
+  },
+};
+`,
   };
 }
