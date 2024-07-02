@@ -27,6 +27,7 @@ const preset = {
   external: [
     ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
     'virtual:wxt-plugins',
+    'virtual:app-config',
   ],
 } satisfies tsup.Options;
 
