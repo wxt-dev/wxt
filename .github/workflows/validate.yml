@@ -48,6 +48,7 @@ jobs:
   template:
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         template:
           - react
