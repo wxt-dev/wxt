@@ -18,7 +18,7 @@ export const googleAnalytics4 =
       if (options.apiSecret)
         url.searchParams.set('api_secret', options.apiSecret);
       if (options.measurementId)
-        url.searchParams.set('measurement_id', options.apiSecret);
+        url.searchParams.set('measurement_id', options.measurementId);
 
       await fetch(url.href, {
         method: 'POST',
