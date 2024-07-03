@@ -1,12 +1,5 @@
 import { googleAnalytics } from './modules/analytics/providers/google-analytics';
-import { AnalyticsConfig } from './modules/analytics/types';
-
-interface AppConfig {
-  analytics: AnalyticsConfig;
-}
-function defineAppConfig(config: AppConfig): AppConfig {
-  return config;
-}
+import { umami } from './modules/analytics/providers/umami';
 
 export default defineAppConfig({
   analytics: {
@@ -14,6 +7,10 @@ export default defineAppConfig({
       googleAnalytics({
         apiSecret: '...',
         measurementId: '...',
+      }),
+      umami({
+        hostname: '...',
+        website: '...',
       }),
     ],
     debug: true,

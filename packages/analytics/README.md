@@ -1,65 +1,79 @@
-<!--
-Get your module up and running quickly.
+# WXT Analytics
 
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new WXT module
-- GitHub Username: your-org
-- Config key: myModule
-- Types: MyModule
--->
+Add analytics, like google analytics, to your WXT extension.
 
-# My Module
+## Supported Analytics Services
 
-My new WXT module for doing amazing things.
-
-## Features
-
-<!-- Highlight some of the features your module provide here -->
-
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- Google Analytics (Measurement Protocol)
+- Umami
 
 ## Installation
 
-Install the module to your WXT extension with one command:
+Install the NPM package:
 
 ```bash
-pnpm i my-module
+pnpm i @wxt-dev/analytics
 ```
 
 Then add the module to your `wxt.config.ts` file:
 
 ```ts
 export default defineConfig({
-  modules: ['my-module'],
+  modules: ['@wxt-dev/analytics'],
 });
 ```
 
-That's it! You can now use My Module in your WXT extension ✨
+Create an `app.config.ts` file and fill out the required config:
 
-## Contribution
-
-<details>
-  <summary>Local development</summary>
-
-```bash
-# Install dependencies
-pnpm install
-
-# Generate type stubs
-pnpm wxt prepare
-
-# Develop test extension
-pnpm dev
-
-# Build the test extension
-pnpm dev:build
-
-# Run prettier, publint, and type checks
-pnpm check
+```ts
+// <srcDir>/app.config.ts
+export default defineAppConfig({
+  analytics: {
+    debug: true,
+    providers: [
+      // ...
+    ],
+  },
+});
 ```
 
-</details>
+## Providers
+
+### Google Analytics (Measurement Protocol)
+
+Follow [Google's documentation](https://developer.chrome.com/docs/extensions/how-to/integrate/google-analytics-4#setup-credentials) to obtain your credentials:
+
+```ts
+import { googleAnalytics4 } from '@wxt-dev/analytics/providers/google-analytics-4';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      googleAnalytics4({
+        apiSecret: '...',
+        measurementId: '...',
+      }),
+    ],
+  },
+});
+```
+
+> [Why use the Measurement Protocol instead of GTag?](https://developer.chrome.com/docs/extensions/how-to/integrate/google-analytics-4#measurement-protocol)
+
+### Umami
+
+```ts
+import { umami } from '@wxt-dev/analytics/providers/umami';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      umami({
+        baseUrl: 'https://your-domain.com',
+        websiteId: '...',
+        hostname: '...',
+      }),
+    ],
+  },
+});
+```

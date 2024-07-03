@@ -1,8 +1,8 @@
 {
-  "name": "my-module",
-  "version": "1.0.0",
-  "description": "My new WXT module",
-  "repository": "your-org/my-module",
+  "name": "@wxt-dev/analytics",
+  "version": "0.1.0",
+  "description": "Add analytics to your web extension",
+  "repository": "wxt-dev/wxt",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -38,7 +38,6 @@
     "publint": "^0.2.8",
     "typescript": "^5.5.2",
     "unbuild": "^2.0.0",
-    "vite": "^5.3.1",
     "wxt": "^0.18.10"
   }
 }

@@ -6,7 +6,4 @@ export default defineConfig({
       'process.env.NPM': 'false',
     },
   }),
-  myModule: {
-    example: 'options',
-  },
 });

@@ -1,10 +1,12 @@
 export interface Analytics {
   /** Report a page change */
-  page: (url: string | URL) => void;
+  page: (url: string) => void;
   /** Report a custom event */
-  track: (eventName: string, eventProperties: string) => void;
+  track: (eventName: string, eventProperties: Record<string, string>) => void;
   /** Save information about the user */
   identify: (userId: string, userProperties?: Record<string, string>) => void;
+  /** Automatically setup and track user interactions, returning a function to remove any listeners that were setup. */
+  autoTrack: (root: Document | ShadowRoot | Element) => () => void;
 }
 
 export interface AnalyticsConfig {
@@ -25,26 +27,31 @@ export type AnalyticsProvider = (
   /** Upload a custom event */
   track: (event: AnalyticsTrackEvent) => Promise<void>;
   /** Upload or save information about the user */
-  identify: (event: AnalyticsIdentifyEvent) => Promise<void>;
+  identify: (event: BaseAnalyticsEvent) => Promise<void>;
 };
 
 export interface BaseAnalyticsEvent {
   /** Identifier of the session the event was fired from */
-  sessionId: string;
+  sessionId: number;
   /** `Date.now()` of when the event was reported */
-  time: number;
+  timestamp: number;
+  user: {
+    id: string;
+    properties: Record<string, string>;
+  };
 }
 
 export interface AnalyticsPageViewEvent extends BaseAnalyticsEvent {
-  url: string;
-  sessionId: string;
-  title: string;
-  location: string;
+  page: {
+    url: string;
+    title?: string;
+    location?: string;
+  };
 }
 
 export interface AnalyticsTrackEvent extends BaseAnalyticsEvent {
-  eventName: string;
-  eventProperties: Record<string, string>;
+  event: {
+    name: string;
+    properties?: Record<string, string>;
+  };
 }
-
-export interface AnalyticsIdentifyEvent extends BaseAnalyticsEvent {}
