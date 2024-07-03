@@ -30,6 +30,7 @@ const chromeExtensionIds = [
   'oadbjpccljkplmhnjekgjamejnbadlne', // demo.fun - Interactive product demos that convert
   'iopdafdcollfgaoffingmahpffckmjni', // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
   'khjdmjcmpolknpccmaaipmidphjokhdf', // WorkFlowy MultiFlow
+  'fencadnndhdeggodopebjgdfdlhcimfk', // 香草布丁🌿🍮- https://github.com/Xdy1579883916/vanilla-pudding
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
