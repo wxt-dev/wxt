@@ -79,9 +79,7 @@ export default defineConfig({
 
 ## ESLint
 
-By default, ESLint thinks auto-imported variables are not defined. You have to add them to the `globals` config so it knows these variables exist at runtime.
-
-WXT generates a config file containing the globals you can extend! By default, WXT will attempt to detect if ESLint is installed in your project and generate the config file if so. If the config file isn't being generated automatically, you can manually tell WXT to generate it:
+ESLint doesn't know about the auto-imported variables unless they are explicitly defined in the `globals` config. By default, WXT will generate the config if it detects ESLint is installed in your project. If the config isn't generated automatically, you can manually tell WXT to generate it.
 
 ```ts
 // wxt.config.ts
