@@ -7,7 +7,7 @@ export interface GoogleAnalyticsProviderOptions {
   measurementId: string;
 }
 
-export const googleAnalytics =
+export const googleAnalytics4 =
   (options: GoogleAnalyticsProviderOptions): AnalyticsProvider =>
   (_, config) => {
     const sendEvent = async (data: SendEventData): Promise<void> => {

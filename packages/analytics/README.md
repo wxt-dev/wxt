@@ -2,7 +2,7 @@
 
 Add analytics, like google analytics, to your WXT extension.
 
-## Supported Analytics Services
+## Supported Analytics Providers
 
 - Google Analytics (Measurement Protocol)
 - Umami
