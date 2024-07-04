@@ -10,7 +10,6 @@ import useListExtensionDetails, {
 // extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
 // can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
-  'bnacincmbaknlbegecpioobkfgejlojp', // MaxFocus: Link Preview
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -32,6 +31,7 @@ const chromeExtensionIds = [
   'iopdafdcollfgaoffingmahpffckmjni', // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
   'khjdmjcmpolknpccmaaipmidphjokhdf', // WorkFlowy MultiFlow
   'fencadnndhdeggodopebjgdfdlhcimfk', // 香草布丁🌿🍮- https://github.com/Xdy1579883916/vanilla-pudding
+  'bnacincmbaknlbegecpioobkfgejlojp', // MaxFocus: Link Preview
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
