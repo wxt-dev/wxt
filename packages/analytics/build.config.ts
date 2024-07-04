@@ -5,7 +5,12 @@ import { resolve } from 'node:path';
 export default defineBuildConfig({
   rootDir: 'modules/analytics',
   outDir: resolve(__dirname, 'dist'),
-  entries: ['index.ts', 'client.ts'],
+  entries: [
+    'index.ts',
+    'client.ts',
+    'providers/google-analytics-4.ts',
+    'providers/umami.ts',
+  ],
   replace: {
     'process.env.NPM': 'true',
   },

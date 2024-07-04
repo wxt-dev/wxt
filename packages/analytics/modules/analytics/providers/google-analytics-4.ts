@@ -1,4 +1,4 @@
-import type { AnalyticsProvider } from '../types';
+import type { AnalyticsProvider, BaseAnalyticsEvent } from '../types';
 
 const DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
 
@@ -10,7 +10,11 @@ export interface GoogleAnalyticsProviderOptions {
 export const googleAnalytics4 =
   (options: GoogleAnalyticsProviderOptions): AnalyticsProvider =>
   (_, config) => {
-    const sendEvent = async (data: SendEventData): Promise<void> => {
+    const send = async (
+      data: BaseAnalyticsEvent,
+      eventName: string,
+      eventProperties: Record<string, string | undefined> | undefined,
+    ): Promise<void> => {
       const url = new URL(
         config?.debug ? '/debug/mp/collect' : '/mp/collect',
         'https://www.google-analytics.com',
@@ -20,6 +24,18 @@ export const googleAnalytics4 =
       if (options.measurementId)
         url.searchParams.set('measurement_id', options.measurementId);
 
+      const userProperties = {
+        language: data.meta.language,
+        screen: data.meta.screen,
+        ...data.user.properties,
+      };
+      const mappedUserProperties = Object.fromEntries(
+        Object.entries(userProperties).map(([name, value]) => [
+          name,
+          value == null ? undefined : { value },
+        ]),
+      );
+
       await fetch(url.href, {
         method: 'POST',
         body: JSON.stringify({
@@ -28,14 +44,14 @@ export const googleAnalytics4 =
             ad_user_data: 'DENIED',
             ad_personalization: 'DENIED',
           },
-          user_properties: data.user.properties,
+          user_properties: mappedUserProperties,
           events: [
             {
-              name: data.event.name,
+              name: eventName,
               params: {
-                session_id: data.sessionId,
+                session_id: data.meta.sessionId,
                 engagement_time_msec: DEFAULT_ENGAGEMENT_TIME_IN_MSEC,
-                ...data.event.properties,
+                ...eventProperties,
               },
             },
           ],
@@ -45,34 +61,11 @@ export const googleAnalytics4 =
 
     return {
       identify: () => Promise.resolve(), // No-op, user data uploaded in page/track
-      page: (event) => {
-        const properties: Record<string, string> = {};
-        if (event.page.title) properties.page_title = event.page.title;
-        if (event.page.location) properties.page_location = event.page.location;
-        return sendEvent({
-          ...event,
-          event: { name: 'page_view', properties },
-        });
-      },
-      track: (event) =>
-        sendEvent({
-          ...event,
-          event: {
-            name: event.event.name,
-            properties: event.event.properties,
-          },
+      page: (event) =>
+        send(event, 'page_view', {
+          page_title: event.page.title,
+          page_location: event.page.location,
         }),
+      track: (event) => send(event, event.event.name, event.event.properties),
     };
   };
-
-export interface SendEventData {
-  sessionId: number;
-  user: {
-    id: string;
-    properties: Record<string, string>;
-  };
-  event: {
-    name: string;
-    properties?: Record<string, string>;
-  };
-}

@@ -23,5 +23,12 @@ export default defineWxtModule({
       wxt,
       resolve(__dirname, process.env.NPM ? 'client.mjs' : 'client.ts'),
     );
+
+    wxt.hooks.hook('build:manifestGenerated', (_, manifest) => {
+      manifest.permissions ??= [];
+      if (!manifest.permissions.includes('storage')) {
+        manifest.permissions.push('storage');
+      }
+    });
   },
 });
