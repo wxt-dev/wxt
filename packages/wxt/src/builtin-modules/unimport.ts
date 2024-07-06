@@ -139,6 +139,7 @@ export function getEslint9ConfigEntry(
     text: `const globals = ${JSON.stringify(globals, null, 2)}
 
 export default {
+  name: "wxt/auto-imports",
   languageOptions: {
     globals,
     sourceType: "module",
