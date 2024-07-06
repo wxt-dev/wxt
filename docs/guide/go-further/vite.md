@@ -18,9 +18,7 @@ export default defineConfig({
 
 ## Using Plugins
 
-Plugins can be passed into the `vite` configuration in you `wxt.config.ts` file, just like any other option.
-
-All plugins should work in WXT, but it is worth pointing out that since WXT orchestrates multiple vite builds to bundle an extension, plugins will be executed multiple times if necessary.
+Plugins can be passed into the `vite` configuration in your `wxt.config.ts` file, just like any other option.
 
 ```ts
 import { defineConfig } from 'wxt';
@@ -33,3 +31,11 @@ export default defineConfig({
   }),
 });
 ```
+
+:::info
+There are caveats with vite plugins due to the way WXT implement vite builds:
+- plugins may not work out of the box
+- plugins may be executed multiple times
+
+If you encounter issues, please open a GitHub issue for the vite plugin.
+:::
