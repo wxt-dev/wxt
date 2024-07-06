@@ -32,10 +32,6 @@ export default defineConfig({
 });
 ```
 
-:::info
-There are caveats with vite plugins due to the way WXT implement vite builds:
-- plugins may not work out of the box
-- plugins may be executed multiple times
-
-If you encounter issues, please open a GitHub issue for the vite plugin.
+:::warning UNEXPECTED BEHAVIOR
+Due to the way WXT implements vite builds, the plugin may not work as expected. You may open a [GitHub issue](https://github.com/wxt-dev/wxt/issues) to report this problem.
 :::
