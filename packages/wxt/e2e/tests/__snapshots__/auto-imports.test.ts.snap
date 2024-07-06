@@ -49,6 +49,7 @@ const globals = {
 }
 
 export default {
+  name: "wxt/auto-imports",
   languageOptions: {
     globals,
     sourceType: "module",
