@@ -33,7 +33,7 @@ export default defineConfig({
 ```
 
 :::warning UNEXPECTED BEHAVIOR
-Due to the way WXT implements Vite's bundling, the plugin may not work as expected. Search [GitHub issues](https://github.com/wxt-dev/wxt/issues) for the implementation of your specific plugin.
+Due to the way WXT orchestrates Vite builds, some plugins may not work as expected. Search [GitHub issues](https://github.com/wxt-dev/wxt/issues?q=is%3Aissue+label%3A%22vite+plugin%22) if you run into issues with a specific plugin.
 
-If one doesn't exist, you may open a [new issue](https://github.com/wxt-dev/wxt/issues/new/choose).
+If one doesn't exist, please open a [new issue](https://github.com/wxt-dev/wxt/issues/new/choose)!
 :::
