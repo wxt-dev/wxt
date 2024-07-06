@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img style="vertical-align:middle" width="44" src="./docs/public/hero-logo.svg" alt="WXT Logo">
+  <img style="vertical-align:middle" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
   <span>WXT</span>
 </h1>
 
@@ -22,22 +22,22 @@
 </p>
 
 <p align="center">
-  <a href="https://wxt.dev" target="_blank">Get Started</a>
-  &bull;
-  <a href="https://wxt.dev/guide/installation.html" target="_blank">Installation</a>
+  <a href="https://wxt.dev/guide/installation.html" target="_blank">Get Started</a>
   &bull;
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
   &bull;
   <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
   &bull;
+  <a href="https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md" target="_blank">Changelog</a>
+  &bull;
   <a href="https://discord.gg/ZFsZqGery9" target="_blank">Discord</a>
 </p>
 
-![Example CLI Output](./docs/assets/cli-output.png)
+![Example CLI Output](https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/assets/cli-output.png)
 
 ## Demo
 
-https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94
+<video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94"></video>
 
 ## Quick Start
 
