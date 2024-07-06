@@ -22,13 +22,13 @@
 </p>
 
 <p align="center">
-  <a href="https://wxt.dev" target="_blank">Get Started</a>
-  &bull;
-  <a href="https://wxt.dev/guide/installation.html" target="_blank">Installation</a>
+  <a href="https://wxt.dev/guide/installation.html" target="_blank">Get Started</a>
   &bull;
   <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
   &bull;
   <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
+  &bull;
+  <a href="https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md" target="_blank">Changelog</a>
   &bull;
   <a href="https://discord.gg/ZFsZqGery9" target="_blank">Discord</a>
 </p>
