@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img style="vertical-align:middle" width="44" src="./docs/public/hero-logo.svg" alt="WXT Logo">
+  <img style="vertical-align:middle" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
   <span>WXT</span>
 </h1>
 
@@ -33,7 +33,7 @@
   <a href="https://discord.gg/ZFsZqGery9" target="_blank">Discord</a>
 </p>
 
-![Example CLI Output](./docs/assets/cli-output.png)
+![Example CLI Output](https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/assets/cli-output.png)
 
 ## Demo
 
