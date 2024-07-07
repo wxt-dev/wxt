@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.18.11",
+  "version": "0.18.12",
   "description": "Next gen framework for developing web extensions",
   "repository": {
     "type": "git",

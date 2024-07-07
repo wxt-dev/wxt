@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.18.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.11...wxt-v0.18.12)
+
+### 🚀 Enhancements
+
+- Support runtime config in `app.config.ts` ([#792](https://github.com/wxt-dev/wxt/pull/792))
+
+### 🔥 Performance
+
+- Create zip using streams ([#793](https://github.com/wxt-dev/wxt/pull/793))
+
+### 🩹 Fixes
+
+- Add missing name to ESLint v9 autoImports config ([#801](https://github.com/wxt-dev/wxt/pull/801))
+
+### 📖 Documentation
+
+- Update README ([#802](https://github.com/wxt-dev/wxt/pull/802))
+
+### 🏡 Chore
+
+- **deps:** Upgrade `web-ext-run` (0.2.0 to 0.2.1) ([#804](https://github.com/wxt-dev/wxt/pull/804))
+
+### ❤️ Contributors
+
+- Ntnyq ([@ntnyq](http://github.com/ntnyq))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.18.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.10...wxt-v0.18.11)
