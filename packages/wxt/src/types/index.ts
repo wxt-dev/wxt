@@ -925,6 +925,10 @@ export interface ExtensionRunnerConfig {
    */
   chromiumPref?: string;
   /**
+   * By default, chrome opens a random port for debugging. Set this value to use a specific port.
+   */
+  chromiumPort?: number;
+  /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
   firefoxPrefs?: Record<string, string>;
