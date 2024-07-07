@@ -17,7 +17,7 @@ In WXT, you create an entrypoint by adding a file to the `entrypoints/` director
 
 Some entrypoint filesname patterns are reserved by WXT and effect how the manifest is generated.
 
-- `popup` adds a `action` to the manifest
+- `popup` adds an `action` to the manifest
 - `background` adds a background script/service worker
 - `*.content.ts` adds a content script
 - ...
