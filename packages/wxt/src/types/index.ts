@@ -338,6 +338,12 @@ export interface InlineConfig {
        * Port to run the dev server on. Defaults to the first open port from 3000 to 3010.
        */
       port?: number;
+      /**
+       * Hostname to run the dev server on.
+       *
+       * @default "localhost"
+       */
+      hostname?: string;
     };
     /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added during dev mode to

@@ -126,7 +126,7 @@ export async function resolveConfig(
     }
     devServerConfig = {
       port,
-      hostname: 'localhost',
+      hostname: mergedConfig.dev?.server?.hostname ?? 'localhost',
     };
   }
 
