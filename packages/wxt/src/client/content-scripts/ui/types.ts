@@ -194,7 +194,7 @@ export type ContentScriptPositioningOptions =
 
 export interface ContentScriptAnchoredOptions {
   /**
-   * A CSS selector, element, or function that returns one of the two. Along with `append`, the
+   * A CSS selector, XPath expression, element, or function that returns one of the two. Along with `append`, the
    * `anchor` dictates where in the page the UI will be added.
    */
   anchor?:
