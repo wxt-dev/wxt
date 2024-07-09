@@ -2,7 +2,11 @@
   "name": "@wxt-dev/analytics",
   "version": "0.1.0",
   "description": "Add analytics to your web extension",
-  "repository": "wxt-dev/wxt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/analytics"
+  },
   "license": "MIT",
   "type": "module",
   "exports": {
