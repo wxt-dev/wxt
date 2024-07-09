@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.18.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.12...wxt-v0.18.13)
+
+### 🚀 Enhancements
+
+- **config:** `dev.server.hostname` ([#807](https://github.com/wxt-dev/wxt/pull/807))
+- Add XPath support to getAnchor() ([#813](https://github.com/wxt-dev/wxt/pull/813))
+
+### 🩹 Fixes
+
+- Add debug logs for vite builder ([#816](https://github.com/wxt-dev/wxt/pull/816))
+
+### ❤️ Contributors
+
+- Ayub Kokabi ([@sir-kokabi](http://github.com/sir-kokabi))
+
 ## v0.18.12
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.11...wxt-v0.18.12)
