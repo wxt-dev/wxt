@@ -1,4 +1,5 @@
 import { defineWxtPlugin } from 'wxt/sandbox';
+import { useAppConfig } from 'wxt/client';
 import {
   Analytics,
   AnalyticsConfig,
