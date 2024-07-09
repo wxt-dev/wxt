@@ -1,15 +1,23 @@
 import { defineWxtPlugin } from 'wxt/sandbox';
-import { storage } from 'wxt/storage';
 import { useAppConfig } from 'wxt/client';
-import { browser } from 'wxt/browser';
 import {
   Analytics,
   AnalyticsConfig,
   AnalyticsPageViewEvent,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
+  AnalyticsStorageItemConfig,
 } from './types';
 import uaParser from 'ua-parser-js';
+
+const defineStorageItem = <T>(
+  key: string,
+  defaultValue?: NonNullable<T>,
+): AnalyticsStorageItemConfig<T> => ({
+  getValue: async () =>
+    (await chrome.storage.local.get(key))[key] ?? defaultValue,
+  setValue: (newValue) => chrome.storage.local.set({ [key]: newValue }),
+});
 
 export let analytics: Analytics;
 const ANALYTICS_PORT = 'wxt-analytics';
@@ -31,7 +39,7 @@ export default <any>defineWxtPlugin(() => {
 });
 
 function createAnalyticsForwarder(): Analytics {
-  const port = browser.runtime.connect({ name: ANALYTICS_PORT });
+  const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
   const getMetadata = (): ForwardMetadata => ({
     sessionId,
@@ -92,27 +100,25 @@ function createBackgroundAnalytics(): Analytics {
 
   // User properties storage
   const userIdStorage =
-    config?.userId ?? storage.defineItem<string>('local:wxt-analytics:user-id');
+    config?.userId ?? defineStorageItem<string>('local:wxt-analytics:user-id');
   const userPropertiesStorage =
     config?.userProperties ??
-    storage.defineItem<Record<string, string>>(
+    defineStorageItem<Record<string, string>>(
       'local:wxt-analytics:user-properties',
-      { defaultValue: {} },
+      {},
     );
   const enabled =
     config?.enabled ??
-    storage.defineItem<boolean>('local:wxt-analytics:enabled', {
-      defaultValue: false,
-    });
+    defineStorageItem<boolean>('local:wxt-analytics:enabled', false);
 
   // Cached values
-  const platformInfo = browser.runtime.getPlatformInfo();
+  const platformInfo = chrome.runtime.getPlatformInfo();
   const userAgent = uaParser();
   let userId = Promise.resolve(userIdStorage.getValue()).then(
     (id) => id ?? globalThis.crypto.randomUUID(),
   );
   let userProperties = userPropertiesStorage.getValue();
-  const manifest = browser.runtime.getManifest();
+  const manifest = chrome.runtime.getManifest();
 
   const getBaseEvent = async (
     meta: ForwardMetadata = {
