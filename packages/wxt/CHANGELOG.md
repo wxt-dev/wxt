@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.18.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.13...wxt-v0.18.14)
+
+### 🩹 Fixes
+
+- **modules:** Add types from all wxt node_modules, not just ones with config ([#817](https://github.com/wxt-dev/wxt/pull/817))
+
 ## v0.18.13
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.12...wxt-v0.18.13)
