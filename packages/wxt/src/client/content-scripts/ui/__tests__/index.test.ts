@@ -252,6 +252,24 @@ describe('Content Script UIs', () => {
           document.querySelector('#parent > div[data-wxt-integrated]'),
         ).not.toBeNull();
       });
+
+      it('should append the element using an XPath string', () => {
+        vi.stubGlobal('XPathResult', { FIRST_ORDERED_NODE_TYPE: 9 });
+        document.evaluate = vi.fn().mockReturnValue({
+          singleNodeValue: document.querySelector('#three'),
+        });
+
+        const ui = createIntegratedUi(ctx, {
+          position: 'inline',
+          onMount: appendTestApp,
+          anchor: '//p[@id="three"]',
+        });
+        ui.mount();
+
+        expect(
+          document.querySelector('#three > div[data-wxt-integrated]'),
+        ).not.toBeNull();
+      });
     });
 
     describe('Element', () => {

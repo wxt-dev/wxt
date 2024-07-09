@@ -199,8 +199,25 @@ function getAnchor(options: ContentScriptAnchoredOptions): Element | undefined {
 
   let resolved =
     typeof options.anchor === 'function' ? options.anchor() : options.anchor;
-  if (typeof resolved === 'string')
-    return document.querySelector<Element>(resolved) ?? undefined;
+
+  if (typeof resolved === 'string') {
+    // If the string is an XPath expression (starts with '//' or '/')
+    if (resolved.startsWith('/')) {
+      // Evaluate the XPath and return the first ordered node
+      const result = document.evaluate(
+        resolved,
+        document,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+        null,
+      );
+      return (result.singleNodeValue as Element) ?? undefined;
+    } else {
+      // If the string is a CSS selector, query the document and return the element
+      return document.querySelector<Element>(resolved) ?? undefined;
+    }
+  }
+
   return resolved ?? undefined;
 }
 
