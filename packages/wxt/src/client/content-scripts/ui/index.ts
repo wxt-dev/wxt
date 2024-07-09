@@ -202,7 +202,7 @@ function getAnchor(options: ContentScriptAnchoredOptions): Element | undefined {
 
   if (typeof resolved === 'string') {
     // If the string is an XPath expression (starts with '//' or '/')
-    if (resolved.startsWith('//') || resolved.startsWith('/')) {
+    if (resolved.startsWith('/')) {
       // Evaluate the XPath and return the first ordered node
       const result = document.evaluate(
         resolved,
