@@ -30,8 +30,7 @@ export async function generateTypesDir(
   // in <root>/modules are already apart of the project, so we don't need to
   // add them.
   wxt.config.userModules.forEach((module) => {
-    if (module.type === 'node_module' && module.configKey != null)
-      entries.push({ module: module.id });
+    if (module.type === 'node_module') entries.push({ module: module.id });
   });
 
   // browser.runtime.getURL
