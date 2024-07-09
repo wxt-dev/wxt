@@ -1,8 +1,9 @@
 import 'wxt';
 import 'wxt/sandbox';
 import { addWxtPlugin, defineWxtModule } from 'wxt/modules';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
 import { AnalyticsConfig } from './types';
+import { fileURLToPath } from 'url';
 
 declare module 'wxt/sandbox' {
   export interface WxtAppConfig {
@@ -10,9 +11,11 @@ declare module 'wxt/sandbox' {
   }
 }
 
+const _dirname = dirname(fileURLToPath(import.meta.url));
+
 const pluginId = process.env.NPM
   ? '@wxt-dev/analytics/client'
-  : resolve(__dirname, 'client.ts');
+  : resolve(_dirname, 'client.ts');
 
 export default defineWxtModule({
   name: 'analytics',
@@ -21,7 +24,7 @@ export default defineWxtModule({
     // Add a plugin
     addWxtPlugin(
       wxt,
-      resolve(__dirname, process.env.NPM ? 'client.mjs' : 'client.ts'),
+      resolve(_dirname, process.env.NPM ? 'client.mjs' : 'client.ts'),
     );
 
     wxt.hooks.hook('build:manifestGenerated', (_, manifest) => {
