@@ -228,11 +228,17 @@ async function mergeInlineConfig(
     inlineConfig.transformManifest?.(manifest);
   };
 
+  const merged = defu(inlineConfig, userConfig);
+
   // Builders
-  const builderConfig = await mergeBuilderConfig(inlineConfig, userConfig);
+  const builderConfig = await mergeBuilderConfig(
+    merged.logger ?? consola,
+    inlineConfig,
+    userConfig,
+  );
 
   return {
-    ...defu(inlineConfig, userConfig),
+    ...merged,
     // Custom merge values
     transformManifest,
     imports,
@@ -397,10 +403,13 @@ const COMMAND_MODES: Record<WxtCommand, string> = {
 };
 
 export async function mergeBuilderConfig(
+  logger: Logger,
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
 ): Promise<Pick<InlineConfig, 'vite'>> {
-  const vite = await import('vite').catch(() => void 0);
+  const vite = await import('vite').catch((err) => {
+    logger.debug('Failed to import vite:', err);
+  });
   if (vite) {
     return {
       vite: async (env) => {
