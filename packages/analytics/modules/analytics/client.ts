@@ -1,4 +1,5 @@
 import { defineWxtPlugin } from 'wxt/sandbox';
+import { storage } from 'wxt/storage';
 import { useAppConfig } from 'wxt/client';
 import {
   Analytics,
@@ -8,6 +9,7 @@ import {
   BaseAnalyticsEvent,
 } from './types';
 import uaParser from 'ua-parser-js';
+import { browser } from 'wxt/browser';
 
 export let analytics: Analytics;
 const ANALYTICS_PORT = 'wxt-analytics';

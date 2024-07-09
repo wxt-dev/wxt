@@ -1,3 +1,4 @@
+import { defineAppConfig } from 'wxt/sandbox';
 import { googleAnalytics4 } from './modules/analytics/providers/google-analytics-4';
 import { umami } from './modules/analytics/providers/umami';
 

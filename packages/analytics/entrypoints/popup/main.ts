@@ -1,3 +1,5 @@
+import { analytics } from '@/modules/analytics/client';
+
 declare const enabledCheckbox: HTMLInputElement;
 
 analytics.autoTrack(document);
