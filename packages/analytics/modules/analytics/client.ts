@@ -1,6 +1,7 @@
 import { defineWxtPlugin } from 'wxt/sandbox';
 import { storage } from 'wxt/storage';
 import { useAppConfig } from 'wxt/client';
+import { browser } from 'wxt/browser';
 import {
   Analytics,
   AnalyticsConfig,
@@ -9,7 +10,6 @@ import {
   BaseAnalyticsEvent,
 } from './types';
 import uaParser from 'ua-parser-js';
-import { browser } from 'wxt/browser';
 
 export let analytics: Analytics;
 const ANALYTICS_PORT = 'wxt-analytics';
@@ -86,7 +86,9 @@ function createAnalyticsForwarder(): Analytics {
  * background, and for reporting forwarded events from the other contexts.
  */
 function createBackgroundAnalytics(): Analytics {
-  const config = useAppConfig().analytics as AnalyticsConfig | undefined;
+  const config = (useAppConfig() as any).analytics as
+    | AnalyticsConfig
+    | undefined;
 
   // User properties storage
   const userIdStorage =
