@@ -229,7 +229,7 @@ The `manifest` option can also be set equal to a function, letting you use logic
 ```ts
 // wxt.config.ts
 export default defineConfig({
-  manifest: ({ manifestVersion, browser, mode, comamnd }) => {
+  manifest: ({ manifestVersion, browser, mode, command }) => {
     return { ... }
   }
 })
