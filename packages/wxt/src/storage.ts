@@ -548,6 +548,16 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
+
+  /**
+   * Define a constant value in storage.
+   *
+   * Read full docs: https://wxt.dev/guide/storage.html#defining-storage-constants
+   */
+  defineConstant<TValue>(
+    key: StorageItemKey,
+    initValue: () => TValue | Promise<TValue>,
+  ): WxtStorageConstant<TValue>;
 }
 
 interface WxtStorageDriver {
@@ -605,12 +615,19 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
+export interface WxtStorageConstant<TValue> {
+  getValue(): Promise<TValue>;
+}
+
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
 export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
    * Value returned from `getValue` when it would otherwise return null.
+   *
+   * This value is not set in storage! The return value just defaults to this
+   * when a value isn't found in storage.
    */
   defaultValue?: T;
 }
