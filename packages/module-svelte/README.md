@@ -5,7 +5,7 @@ Enables the use of [Svelte](https://svelte.dev/) in your web extension, in HTML 
 This plugin makes a few changes:
 
 1. Adds `@sveltejs/vite-plugin-svelte` to vite
-2. Adds the [`svelte` preset](https://github.com/unjs/unimport/blob/main/src/presets/vue.ts) to auto-imports
+2. Adds the [`svelte` preset](https://github.com/unjs/unimport/blob/main/src/presets/svelte.ts) to auto-imports
 
 ## Usage
 
