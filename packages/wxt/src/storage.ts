@@ -9,6 +9,7 @@ import { Storage, browser } from '~/browser';
 import { dequal } from 'dequal/lite';
 import { logger } from './sandbox/utils/logger';
 import { toArray } from './core/utils/arrays';
+import { Mutex } from 'async-mutex';
 
 export const storage = createStorage();
 
@@ -339,6 +340,20 @@ function createStorage(): WxtStorage {
         migrate,
       };
     },
+    defineConstant: (key, init) => {
+      const mutex = new Mutex();
+      return {
+        getValue: () =>
+          mutex.runExclusive(async () => {
+            const value = await storage.getItem<any>(key);
+            if (value) return value;
+
+            const newValue = await init();
+            await storage.setItem(key, newValue);
+            return newValue;
+          }),
+      };
+    },
   };
   return storage;
 }
@@ -556,7 +571,7 @@ export interface WxtStorage {
    */
   defineConstant<TValue>(
     key: StorageItemKey,
-    initValue: () => TValue | Promise<TValue>,
+    init: () => TValue | Promise<TValue>,
   ): WxtStorageConstant<TValue>;
 }
 
