@@ -279,3 +279,27 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 ### Running Migrations
 
 As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.
+
+## Defining Constant Items
+
+As an alternative to `storage.defineItem`, you can use `storage.defineConstantItem` to define constant values in storage like user IDs, that never change once generated once.
+
+```ts
+// utils/storage.ts
+export const installDate = storage.defineConstant<string>(
+  'local:install-date',
+  () => new Date().getTime(),
+);
+```
+
+By default, constant values in storage are initialized lazily - the value isn't generated and saved to storage until you call `init` or `getValue` for the first time.
+
+```ts
+browser.runtime.onInstall.addListener(({ reason }) => {
+  if (reason === 'install') {
+    installDate.init();
+  }
+});
+```
+
+> `init` is just an alias for `getValue` without awaiting the promise for the value. In cases like this, it makes your code easier to read, but isn't necessary.
