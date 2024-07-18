@@ -852,6 +852,35 @@ describe('Storage Utils', () => {
     });
   });
 
+  describe('defineConstant', () => {
+    it('should only call init once (per JS context) when calling getValue successively, avoiding race conditions', async () => {
+      const expected = 1;
+      const init = vi
+        .fn()
+        .mockResolvedValueOnce(expected)
+        .mockResolvedValue('not' + expected);
+      const constant = storage.defineConstant('local:test', init);
+
+      const p1 = constant.getValue();
+      const p2 = constant.getValue();
+
+      await expect(p1).resolves.toBe(expected);
+      await expect(p2).resolves.toBe(expected);
+
+      expect(init).toBeCalledTimes(1);
+    });
+
+    it('should only set the initialized value in storage once getValue has been called', async () => {
+      const expected = 1;
+      const init = vi.fn().mockReturnValue(expected);
+      const constant = storage.defineConstant('local:test', init);
+
+      await expect(storage.getItem('local:test')).resolves.toBeNull();
+      await constant.getValue();
+      await expect(storage.getItem('local:test')).resolves.toBe(expected);
+    });
+  });
+
   describe('types', () => {
     it('should not accept keys without a valid storage area prefix', async () => {
       // @ts-expect-error: Test passes if there is a type error here
