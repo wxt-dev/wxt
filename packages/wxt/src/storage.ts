@@ -341,17 +341,21 @@ function createStorage(): WxtStorage {
       };
     },
     defineConstant: (key, init) => {
-      const mutex = new Mutex();
-      return {
-        getValue: () =>
-          mutex.runExclusive(async () => {
-            const value = await storage.getItem<any>(key);
-            if (value) return value;
+      const getterMutex = new Mutex();
+      const getValue = () =>
+        getterMutex.runExclusive(async () => {
+          const value = await storage.getItem<any>(key);
+          if (value) return value;
 
-            const newValue = await init();
-            await storage.setItem(key, newValue);
-            return newValue;
-          }),
+          const newValue = await init();
+          await storage.setItem(key, newValue);
+          return newValue;
+        });
+      return {
+        getValue,
+        init: async () => {
+          await getValue();
+        },
       };
     },
   };
@@ -631,7 +635,16 @@ export interface WxtStorageItem<
 }
 
 export interface WxtStorageConstant<TValue> {
+  /**
+   * Get's the "constant" value from storage or initializes it and saves it to storage before removing.
+   */
   getValue(): Promise<TValue>;
+  /**
+   * Ensures the value in storage is initialized, but doesn't return the value.
+   * An alias for `getValue` which is easier to read in different
+   * circumstances.
+   */
+  init(): Promise<void>;
 }
 
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';

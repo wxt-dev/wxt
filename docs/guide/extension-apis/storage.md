@@ -282,7 +282,7 @@ As soon as `storage.defineItem` is called, WXT checks if migrations need to be r
 
 ## Defining Constant Items
 
-As an alternative to `storage.defineItem`, you can use `storage.defineConstantItem` to define constant values in storage like user IDs, that never change once generated once.
+As alternative to `storage.defineItem`, `storage.defineConstant` is used to define constant values that **_never change_** once generated, like user IDs.
 
 ```ts
 // utils/storage.ts
@@ -290,6 +290,12 @@ export const installDate = storage.defineConstant<string>(
   'local:install-date',
   () => new Date().getTime(),
 );
+```
+
+Then you can get the constant from storage like so:
+
+```ts
+await installDate.getValue();
 ```
 
 By default, constant values in storage are initialized lazily - the value isn't generated and saved to storage until you call `init` or `getValue` for the first time.
@@ -302,4 +308,8 @@ browser.runtime.onInstall.addListener(({ reason }) => {
 });
 ```
 
-> `init` is just an alias for `getValue` without awaiting the promise for the value. In cases like this, it makes your code easier to read, but isn't necessary.
+`init` is just an alias for `getValue` without a return value. In cases like this, it makes your code easier to read, defining a specific place where you want the constant initialized.
+
+:::info
+If you never call `init`, the value will be initialized when you call `getValue` for the first time.
+:::
