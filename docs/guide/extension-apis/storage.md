@@ -323,3 +323,18 @@ browser.runtime.onInstall.addListener(({ reason }) => {
 :::info
 You don't have to call `init`! If you never do, the value will be initialized when you call `getValue` for the first time.
 :::
+
+### Race Conditions
+
+It's important to understand the potential for race conditions when using `storage.defineConstant`. WXT handles the race condition within a single JS context when calling `getValue` twice in a row - the value will only be initialized once.
+
+However, if your extension, in quick succession, calls `getValue` once in the background and once in another JS context, like a content script, **_WXT doesn't attempt to handle this race condition_**.
+
+In this case, on first install and the first time you call `getValue`, you may notice that the background and content script have different values. Next time you call `getValue`, the constant will have synced and the same value will be returned. But for that fraction of a second, you may notice two values.
+
+Realistically though, this race condition is rare or impossible to happen:
+
+1. The storage API is so fast it's nearly synchronous, so the timeframe for a race condition like this is very small
+2. Since the background starts up before any other context, if you call `init` inside the `main` function or the `onInstall` callback, the value will likely be set before another context starts up.
+
+This is why WXT has chosen not to handle this case.
