@@ -318,7 +318,7 @@ browser.runtime.onInstall.addListener(({ reason }) => {
 });
 ```
 
-`init` is just an alias for `getValue` without a return value. In cases like this, it makes your code easier to read, defining a specific place where you expect the constant to be initialized.
+`init` is just an alias for `getValue` without a return value. As shown above, `init` can make your code easier to read, defining a specific place where you expect the constant to be initialized, like when the extension is installed.
 
 :::info
 You don't have to call `init`! If you never do, the value will be initialized when you call `getValue` for the first time.
@@ -328,9 +328,9 @@ You don't have to call `init`! If you never do, the value will be initialized wh
 
 It's important to understand the potential for race conditions when using `storage.defineConstant`. WXT handles the race condition within a single JS context when calling `getValue` twice in a row - the value will only be initialized once.
 
-However, if your extension, in quick succession, calls `getValue` once in the background and once in another JS context, like a content script, **_WXT doesn't attempt to handle this race condition_**.
+However, if your extension, in quick succession, calls `getValue` once in the background and once in another JS context, like a content script, **_the value may be initialzed twice to two values_**.
 
-In this case, on first install and the first time you call `getValue`, you may notice that the background and content script have different values. Next time you call `getValue`, the constant will have synced and the same value will be returned. But for that fraction of a second, you may notice two values.
+When this happens, on first install and the first time you call `getValue`, you may notice that the background and content script have different values. Next time you call `getValue`, the constant will have synced and the same value will be returned. But for that fraction of a second, you may notice two values.
 
 Realistically though, this race condition is rare or impossible to happen:
 
