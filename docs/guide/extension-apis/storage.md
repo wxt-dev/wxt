@@ -282,7 +282,7 @@ As soon as `storage.defineItem` is called, WXT checks if migrations need to be r
 
 ## Defining Constant Items
 
-As alternative to `storage.defineItem`, `storage.defineConstant` is used to define constant values that **_never change_** once generated, like user IDs.
+Am alternative to `storage.defineItem`, `storage.defineConstant` is used to define constant values that **_never change_** once generated, like user IDs.
 
 ```ts
 // utils/storage.ts
