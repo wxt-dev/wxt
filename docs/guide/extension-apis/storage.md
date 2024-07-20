@@ -286,30 +286,40 @@ Am alternative to `storage.defineItem`, `storage.defineConstant` is used to defi
 
 ```ts
 // utils/storage.ts
-export const installDate = storage.defineConstant<string>(
+export const userId = storage.defineConstant<string>('local:user-id', () =>
+  globalThis.crypto.randomUUID(),
+);
+
+export const installDate = storage.defineConstant<number>(
   'local:install-date',
   () => new Date().getTime(),
+);
+
+export const originalAppVersion = storage.defineConstant<string>(
+  'local:original-manifest-version',
+  () => browser.runtime.getManifest().version,
 );
 ```
 
 Then you can get the constant from storage like so:
 
 ```ts
-await installDate.getValue();
+await userId.getValue();
 ```
 
-By default, constant values in storage are initialized lazily - the value isn't generated and saved to storage until you call `init` or `getValue` for the first time.
+By default, constant values in storage are initialized lazily - the value isn't generated and saved to storage until you call `getValue` or `init` for the first time.
 
 ```ts
 browser.runtime.onInstall.addListener(({ reason }) => {
   if (reason === 'install') {
     installDate.init();
+    originalAppVersion.init();
   }
 });
 ```
 
-`init` is just an alias for `getValue` without a return value. In cases like this, it makes your code easier to read, defining a specific place where you want the constant initialized.
+`init` is just an alias for `getValue` without a return value. In cases like this, it makes your code easier to read, defining a specific place where you expect the constant to be initialized.
 
 :::info
-If you never call `init`, the value will be initialized when you call `getValue` for the first time.
+You don't have to call `init`! If you never do, the value will be initialized when you call `getValue` for the first time.
 :::
