@@ -25,7 +25,7 @@ In general, you'll need to:
 &ensp;<input type="checkbox" /> Convert custom import syntax to be compatible with Vite<br />
 &ensp;<input type="checkbox" /> Add a default export to JS entrypoints<br />
 &ensp;<input type="checkbox" /> Use the `browser` global instead of `chrome`<br />
-&ensp;<input type="checkbox" /> Compare final `manifest.json` files, making sure permissions and host permissions are unchanged<br />
+&ensp;<input type="checkbox" /> Compare final `manifest.json` files, making sure permissions and host permissions are unchanged. Use [Google's update testing tool](https://github.com/GoogleChromeLabs/extension-update-testing-tool) if your extension is already live on the Chrome Web Store<br />
 &ensp;<input type="checkbox" /> Extension output by `wxt build` works the same way as before the migration<br />
 
 Every project is different, so there's no one-solution-fits-all to migrating your project. Just make sure `wxt dev` runs, `wxt build` results in a working extension, and the list of permissions in the `manifest.json` hasn't changed. If all that looks good, you've finished migrating your extension!

@@ -147,6 +147,31 @@ export default defineConfig({
 });
 ```
 
+### Host Permissions
+
+[Host Permissions](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions#host-permissions) must be listed in the manifest config.
+
+```ts
+export default defineConfig({
+  manifest: {
+    host_permissions: ['*://*.google.com/*'],
+  },
+});
+```
+
+:::warning
+If you use host permissions and target both MV2 and MV3, make sure to only include the required host permissions for each version:
+
+```ts
+export default defineConfig({
+  manifest: ({ manifestVersion }) => ({
+    host_permissions: manifestVersion === 2 ? [...] : [...],
+  }),
+});
+```
+
+:::
+
 ## Localization
 
 Similar to the icon, the [`_locales` directory](https://developer.chrome.com/docs/extensions/reference/i18n/) should be placed inside the the WXT's [`public` directory](/guide/directory-structure/public/).
