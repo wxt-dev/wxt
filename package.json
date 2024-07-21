@@ -9,6 +9,7 @@
   "scripts": {
     "check": "check && pnpm -r --sequential run check",
     "test": "pnpm -r --sequential run test run",
+    "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
     "prepublish": "pnpm -s build",
     "docs:gen": "typedoc --options docs/typedoc.json",
