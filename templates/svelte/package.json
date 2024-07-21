@@ -19,7 +19,7 @@
     "svelte": "^4.2.18",
     "svelte-check": "^3.8.4",
     "tslib": "^2.6.3",
-    "typescript": "^5.5.2",
-    "wxt": "^0.18.10"
+    "typescript": "^5.5.3",
+    "wxt": "^0.18.15"
   }
 }
