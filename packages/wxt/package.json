@@ -97,7 +97,7 @@
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:e2e": "buildc --deps-only -- vitest -r e2e",
+    "test:coverage": "pnpm -s test --coverage",
     "sync-releases": "pnpx changelogen@latest gh release",
     "prepack": "pnpm build"
   },
@@ -160,6 +160,8 @@
     "publint": "^0.2.9",
     "tsup": "^8.2.1",
     "tsx": "4.15.7",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.0",
+    "vitest-plugin-random-seed": "^1.1.0"
   }
 }
