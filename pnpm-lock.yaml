@@ -362,7 +362,7 @@ importers:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
-        specifier: ^2.0.0
+        specifier: ^2.0.3
         version: 2.0.3(@types/node@20.14.11)(happy-dom@14.12.3)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
@@ -390,7 +390,7 @@ importers:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
-        specifier: ^2.0.0
+        specifier: ^2.0.3
         version: 2.0.3(sass@1.77.8)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
