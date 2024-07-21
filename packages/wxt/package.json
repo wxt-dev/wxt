@@ -127,7 +127,7 @@
     "jszip": "^3.10.1",
     "linkedom": "^0.18.4",
     "magicast": "^0.3.4",
-    "minimatch": "^9.0.5",
+    "minimatch": "^10.0.1",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
     "nypm": "^0.3.9",
