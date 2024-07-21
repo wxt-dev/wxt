@@ -114,7 +114,7 @@
     "ci-info": "^4.0.0",
     "defu": "^6.1.4",
     "dequal": "^2.0.3",
-    "esbuild": "^0.19.12",
+    "esbuild": "^0.23.0",
     "fast-glob": "^3.3.2",
     "filesize": "^10.1.4",
     "fs-extra": "^11.2.0",
