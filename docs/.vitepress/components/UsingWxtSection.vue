@@ -10,7 +10,6 @@ import useListExtensionDetails, {
 // extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
 // can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
-  'npcnninnjghigjfiecefheeibomjpkak'  // Respond Easy
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -35,6 +34,7 @@ const chromeExtensionIds = [
   'bnacincmbaknlbegecpioobkfgejlojp', // MaxFocus: Link Preview
   'bcpgdpedphodjcjlminjbdeejccjbimp', // 汇率转换-中文版本
   'loeilaonggnalkaiiaepbegccilkmjjp', // Currency Converter Plus
+  'npcnninnjghigjfiecefheeibomjpkak', // Respond Easy
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
