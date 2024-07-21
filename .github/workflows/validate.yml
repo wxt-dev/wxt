@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm test run
+      - run: pnpm test
   template:
     runs-on: ubuntu-22.04
     strategy:
