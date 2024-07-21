@@ -13,6 +13,15 @@ export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
 
   return {
     name: 'wxt:resolve-app-config',
+    config() {
+      return {
+        optimizeDeps: {
+          // Prevent ESBuild from attempting to resolve the virtual module
+          // while optimizing WXT.
+          exclude: [virtualModuleId],
+        },
+      };
+    },
     async resolveId(id) {
       if (id !== virtualModuleId) return;
 
