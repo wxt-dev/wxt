@@ -195,9 +195,9 @@ async function resolveManifestConfig(
   env: ConfigEnv,
   manifest: UserManifest | Promise<UserManifest> | UserManifestFn | undefined,
 ): Promise<UserManifest> {
-  return await (typeof manifest === 'function'
-    ? manifest(env)
-    : manifest ?? {});
+  return typeof manifest === 'function'
+    ? await manifest(env)
+    : await (manifest ?? {});
 }
 
 /**

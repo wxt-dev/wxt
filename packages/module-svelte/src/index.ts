@@ -14,6 +14,7 @@ export default defineWxtModule<SvelteModuleOptions>({
 
     addViteConfig(wxt, () => ({
       plugins: [
+        // @ts-expect-error: Vite version mismatch
         svelte({
           // Using a svelte.config.js file causes a segmentation fault when importing the file
           configFile: false,
