@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - uses: oven-sh/setup-bun@v2
-      - name: pnpm test:coverage
+      - name: pnpm test -- --coverage
         run: pnpm test:coverage --reporter=default --reporter=hanging-process
       - uses: codecov/codecov-action@v4
         env:

@@ -8,6 +8,10 @@ export default defineConfig({
     restoreMocks: true,
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 120e3,
+    coverage: {
+      include: ['src/**'],
+      exclude: ['**/dist', '**/__tests__', 'src/utils/testing'],
+    },
   },
   server: {
     watch: {
