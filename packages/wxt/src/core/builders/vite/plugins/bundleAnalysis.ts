@@ -6,13 +6,14 @@ import path from 'node:path';
 let increment = 0;
 
 export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
+  // @ts-expect-error: Vite version mismatch
   return visualizer({
     template: 'raw-data',
     filename: path.resolve(
       config.analysis.outputDir,
       `${config.analysis.outputName}-${increment++}.json`,
     ),
-  }) as vite.Plugin;
+  });
 }
 
 /**
