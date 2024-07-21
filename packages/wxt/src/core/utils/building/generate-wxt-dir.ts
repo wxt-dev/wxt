@@ -127,14 +127,14 @@ declare module "wxt/browser" {
 }
 `;
 
+  const defaultLocalePath = path.resolve(
+    wxt.config.publicDir,
+    '_locales',
+    defaultLocale ?? '',
+    'messages.json',
+  );
   let messages: Message[];
-  if (defaultLocale) {
-    const defaultLocalePath = path.resolve(
-      wxt.config.publicDir,
-      '_locales',
-      defaultLocale,
-      'messages.json',
-    );
+  if (await fs.exists(defaultLocalePath)) {
     const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
     messages = parseI18nMessages(content);
   } else {
