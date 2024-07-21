@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.18.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.14...wxt-v0.18.15)
+
+### 🩹 Fixes
+
+- Don't throw error if localization file is missing ([#832](https://github.com/wxt-dev/wxt/pull/832))
+- Build latest version of package before packing ([88a1244](https://github.com/wxt-dev/wxt/commit/88a1244))
+- Externalize app config during dependency optimization ([#833](https://github.com/wxt-dev/wxt/pull/833))
+
+### 📖 Documentation
+
+- Fix links to Guide pages ([#821](https://github.com/wxt-dev/wxt/pull/821))
+
+### ❤️ Contributors
+
+- Eetann ([@eetann](http://github.com/eetann))
+
 ## v0.18.14
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.13...wxt-v0.18.14)
