@@ -2,6 +2,7 @@ import { defineProject } from 'vitest/config';
 import path from 'node:path';
 import RandomSeed from 'vitest-plugin-random-seed';
 import fs from 'fs-extra';
+import * as vite from 'vite';
 
 // Clear e2e test projects
 await fs.rm(path.resolve(__dirname, 'e2e/dist'), {
