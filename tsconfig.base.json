@@ -10,7 +10,6 @@
     /* Type Checking */
     "strict": true,
     "lib": ["DOM", "WebWorker", "ESNext"],
-    "types": ["vitest-plugin-random-seed/types"],
 
     /* Linting */
     "noUnusedLocals": true,
