@@ -95,7 +95,7 @@ Usually, this means each entrypoint should be a directory with it's own files in
           ├ App.vue
           ├ main.ts
           ├ style.css
-          └ rotuer.ts
+          └ router.ts
 ```
 
 ## Configuring Routers
