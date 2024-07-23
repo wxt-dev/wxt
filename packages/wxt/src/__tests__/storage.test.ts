@@ -10,7 +10,13 @@ import { WxtStorageItem, storage } from '~/storage';
 async function waitForMigrations() {
   return new Promise((res) => setTimeout(res));
 }
-
+/**
+ * Same as `waitForMigrations`, the fake browser being synchronous means the
+ * `init` logic is finished by the next task in the event queue.
+ */
+async function waitForInit() {
+  return new Promise((res) => setTimeout(res));
+}
 describe('Storage Utils', () => {
   beforeEach(() => {
     fakeBrowser.reset();
@@ -813,20 +819,102 @@ describe('Storage Utils', () => {
       });
     });
 
-    describe('defaultValue', () => {
-      it('should return the default value when provided', () => {
-        const defaultValue = 123;
-        const item = storage.defineItem(`local:test`, {
-          defaultValue,
+    describe.each(['fallback', 'defaultValue'] as const)(
+      '%s option',
+      (fallbackKey) => {
+        it('should return the default value when provided', () => {
+          const fallback = 123;
+          const item = storage.defineItem(`local:test`, {
+            [fallbackKey]: fallback,
+          });
+
+          expect(item.fallback).toBe(fallback);
+          expect(item.defaultValue).toBe(fallback);
         });
 
-        expect(item.defaultValue).toBe(defaultValue);
+        it('should return null when not provided', () => {
+          const item = storage.defineItem<number>(`local:test`);
+
+          expect(item.fallback).toBeNull();
+          expect(item.defaultValue).toBeNull();
+        });
+      },
+    );
+
+    describe('init option', () => {
+      // it('should only call init once (per JS context) when calling getValue successively, avoiding race conditions', async () => {
+      //   const expected = 1;
+
+      //   const item = storage.defineItem('local:test', { init });
+
+      //   await waitForInit();
+
+      //   const p1 = item.reInit();
+      //   const p2 = item.reInit();
+
+      //   await expect(p1).resolves.toBe(expected);
+      //   await expect(p2).resolves.toBe(expected);
+
+      //   expect(init).toBeCalledTimes(1);
+      // });
+
+      it('should call init only once when multiple reInit calls are made concurrently', async () => {
+        const expected = 1;
+        const init = vi.fn().mockResolvedValue(expected);
+
+        //first call
+        const item = storage.defineItem('local:test', { init });
+        //second call
+        const reInitResults = await Promise.all([
+          item.reInit(true),
+          item.reInit(true),
+        ]);
+        expect(reInitResults[0]).toBe(expected);
+        expect(reInitResults[1]).toBe(expected);
+        expect(init).toHaveBeenCalledTimes(2);
       });
 
-      it('should return null when not provided', () => {
-        const item = storage.defineItem<number>(`local:test`);
+      it('should initialize the value in storage immediately', async () => {
+        const expected = 1;
+        const init = vi.fn().mockResolvedValue(expected);
+        const item = storage.defineItem('local:test', { init });
+        const item2 = storage.defineItem('local:test2', { init: expected });
 
-        expect(item.defaultValue).toBeNull();
+        await waitForInit();
+
+        expect(await item.getValue()).toBe(expected);
+        expect(await item2.getValue()).toBe(expected);
+        expect(init).toHaveBeenCalled();
+      });
+
+      it('should call init again if reInit is called with force', async () => {
+        const expected = 1;
+        const init = vi.fn().mockResolvedValue(expected);
+        const item = storage.defineItem<typeof init | number>('local:test', {
+          init,
+        });
+
+        await waitForInit();
+        await item.setValue(2);
+
+        await item.reInit(true);
+        expect(init).toHaveBeenCalledTimes(2);
+        expect(await item.getValue()).toBe(expected);
+      });
+
+      it('should not call init again if reInit is called without force and value is set', async () => {
+        const expected = 1;
+        const init = vi.fn().mockResolvedValue(2);
+        const item = storage.defineItem<typeof init | number>('local:test', {
+          init,
+        });
+
+        await waitForInit();
+        await item.setValue(expected);
+
+        await item.reInit(false);
+        expect(init).toHaveBeenCalledTimes(1);
+        expect(await item.getValue()).toBe(expected);
       });
     });
 

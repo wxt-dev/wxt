@@ -308,20 +308,18 @@ function createStorage(): WxtStorage {
 
       const initMutex = new Mutex();
 
-      const initializeValue = (force = false) =>
-        initMutex.runExclusive(async () => {
+      const initializeValue = async (force = false) => {
+        return initMutex.runExclusive(async () => {
           if (!init) return;
           if (!force) {
             const currentValue = await getItem(driver, driverKey, opts);
             if (currentValue) return;
           }
-          let initValue = init;
-          if (typeof init === 'function') {
-            initValue = await init();
-          }
+          let initValue = typeof init === 'function' ? await init() : init;
           await driver.setItem(driverKey, initValue);
           return initValue;
         });
+      };
 
       // Initialize the value once migrations have finished
       migrationsDone.then(() => initializeValue());
@@ -638,7 +636,7 @@ export interface WxtStorageItem<
    *
    * @param force If true, the initialization will occur even if the storage item already contains a value. Defaults to `true`.
    */
-  reInit(force?: boolean): Promise<void>;
+  reInit(force?: boolean): Promise<TValue>;
 }
 
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
