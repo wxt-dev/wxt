@@ -302,11 +302,15 @@ function createStorage(): WxtStorage {
               logger.error(`Migration failed for ${key}`, err);
             });
 
-      const getDefaultValue = () => opts?.defaultValue ?? null;
+      const getFallbackValue = () =>
+        opts?.fallback ?? opts?.defaultValue ?? null;
 
       return {
         get defaultValue() {
-          return getDefaultValue();
+          return getFallbackValue();
+        },
+        get fallback() {
+          return getFallbackValue();
         },
         getValue: async () => {
           await migrationsDone;
@@ -334,7 +338,7 @@ function createStorage(): WxtStorage {
         },
         watch: (cb) =>
           watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
+            cb(newValue ?? getFallbackValue(), oldValue ?? getFallbackValue()),
           ),
         migrate,
       };
@@ -567,7 +571,11 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  /**
+   * @deprecated Use `fallback` instead.
+   */
   defaultValue: TValue;
+  fallback: TValue;
   /**
    * Get the latest value from storage.
    */
@@ -633,7 +641,15 @@ export interface SnapshotOptions {
 }
 
 export interface WxtStorageItemOptions<T> {
-  defaultValue: T;
+  /**
+   * Value returned from `getValue` when it would otherwise return null.
+   * @deprecated Use `fallback` instead.
+   */
+  defaultValue?: T;
+  /**
+   * Value returned from `getValue` when it would otherwise return null.
+   */
+  fallback?: T;
   /**
    * Provide a version number for the storage item to enable migrations. When changing the version
    * in the future, migration functions will be ran on application startup.
