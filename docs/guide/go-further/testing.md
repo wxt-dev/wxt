@@ -19,7 +19,7 @@ There are other options for unit tests however, like [Jest](https://jestjs.io/),
 If you want to try to use a different framework for unit tests, you will need to configure the environment manually:
 
 - **Auto-imports**: Add `unimport` to your test environment or disable them by setting `imports: false` in your `wxt.config.ts` file
-- **`browser` mock**: Mock the `webextension-polyfill` module globally with `wxt/dist/virtual/mock-browser.js`
+- **`browser` mock**: Mock the `webextension-polyfill` module globally with `wxt/dist/virtual/mock-browser.mjs`
 - **[Remote Code Bundling](/guide/go-further/remote-code)**: If you use it, configure your environment to handle the `url:` module prefix
 - **Global Variables**: If you consume them, manually define globals provided by WXT (like `import.meta.env.BROWSER`) by adding them to the global scope before accessing them (`import.meta.env.BROWSER = "chrome"`)
 - **Import paths**: If you use the `@/` or `~/` path aliases, add them to your test environment

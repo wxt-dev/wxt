@@ -19,7 +19,7 @@ export function devHtmlPrerender(
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = resolve(
     config.wxtModuleDir,
-    'dist/virtual/reload-html.js',
+    'dist/virtual/reload-html.mjs',
   );
 
   const virtualInlineScript = 'virtual:wxt-inline-script';

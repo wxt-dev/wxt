@@ -346,9 +346,6 @@ importers:
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
-      mkdist:
-        specifier: ^1.5.4
-        version: 1.5.4(typescript@5.5.3)
       p-map:
         specifier: ^7.0.2
         version: 7.0.2

@@ -374,12 +374,11 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 async function resolveWxtModuleDir() {
-  const requireResolve =
-    require?.resolve ??
-    (await import('node:module')).default.createRequire(import.meta.url)
-      .resolve;
+  const require = (await import('node:module')).default.createRequire(
+    import.meta.url,
+  );
   // require.resolve returns the wxt/dist/index file, not the package's root directory, which we want to return
-  return path.resolve(requireResolve('wxt'), '../..');
+  return path.resolve(require.resolve('wxt'), '../..');
 }
 
 async function isDirMissing(dir: string) {

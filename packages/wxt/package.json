@@ -35,19 +35,19 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs"
+      "default": "./dist/index.mjs"
     },
     "./client": {
       "types": "./dist/client/index.d.ts",
-      "import": "./dist/client/index.mjs"
+      "default": "./dist/client/index.mjs"
     },
     "./sandbox": {
       "types": "./dist/sandbox/index.d.ts",
-      "import": "./dist/sandbox/index.mjs"
+      "default": "./dist/sandbox/index.mjs"
     },
     "./browser": {
       "types": "./dist/browser.d.ts",
-      "import": "./dist/browser.mjs"
+      "default": "./dist/browser.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
@@ -130,7 +130,6 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^14.12.3",
     "lodash.merge": "^4.6.2",
-    "mkdist": "^1.5.4",
     "p-map": "^7.0.2",
     "publint": "^0.2.9",
     "tsx": "4.15.7",
