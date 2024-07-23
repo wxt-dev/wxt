@@ -4,22 +4,19 @@ import {
   InlineConfig,
   ServerInfo,
   WxtDevServer,
-} from '~/types';
-import {
-  getEntrypointBundlePath,
-  isHtmlEntrypoint,
-} from '~/core/utils/entrypoints';
+} from '../types';
+import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import {
   getContentScriptCssFiles,
   getContentScriptsCssMap,
-} from '~/core/utils/manifest';
+} from './utils/manifest';
 import {
   internalBuild,
   detectDevChanges,
   rebuild,
   findEntrypoints,
-} from '~/core/utils/building';
-import { createExtensionRunner } from '~/core/runners';
+} from './utils/building';
+import { createExtensionRunner } from './runners';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';

@@ -1,4 +1,4 @@
-import { ContentScriptEntrypoint, Entrypoint } from '~/types';
+import { ContentScriptEntrypoint, Entrypoint } from '../../types';
 
 export function validateEntrypoints(
   entrypoints: Entrypoint[],

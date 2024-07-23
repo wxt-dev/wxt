@@ -1,4 +1,4 @@
-import { BuildOutput, InlineConfig } from '~/types';
+import { BuildOutput, InlineConfig } from '../types';
 import { internalBuild } from './utils/building';
 import { registerWxt } from './wxt';
 

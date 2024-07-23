@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
-import { InlineConfig } from '~/types';
+import { InlineConfig } from '../../src/types';
 
 describe('User Config', () => {
   // Root directory is tested with all tests.

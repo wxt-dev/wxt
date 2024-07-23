@@ -1,8 +1,8 @@
-import type { Manifest } from '~/browser';
-import { BuildOutput, Entrypoint, EntrypointGroup } from '~/types';
+import type { Manifest } from '../../../browser';
+import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
-import { generateManifest, writeManifest } from '~/core/utils/manifest';
+import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
 
 /**

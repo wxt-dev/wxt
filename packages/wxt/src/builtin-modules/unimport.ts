@@ -1,10 +1,10 @@
-import { addViteConfig, defineWxtModule } from '~/modules';
+import { addViteConfig, defineWxtModule } from '../modules';
 import type {
   EslintGlobalsPropValue,
   WxtDirFileEntry,
   WxtModule,
   WxtResolvedUnimportOptions,
-} from '~/types';
+} from '../types';
 import { type Unimport, createUnimport } from 'unimport';
 import { Plugin } from 'vite';
 import { extname } from 'node:path';

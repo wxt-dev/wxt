@@ -1,5 +1,5 @@
-import { InlineConfig } from '~/types';
-import { findEntrypoints, generateTypesDir } from '~/core/utils/building';
+import { InlineConfig } from '../types';
+import { findEntrypoints, generateTypesDir } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 
 export async function prepare(config: InlineConfig) {

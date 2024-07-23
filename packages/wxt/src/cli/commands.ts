@@ -1,5 +1,5 @@
 import cac from 'cac';
-import { build, clean, createServer, initialize, prepare, zip } from '~/core';
+import { build, clean, createServer, initialize, prepare, zip } from '../core';
 import {
   createAliasedCommand,
   getArrayFromFlags,

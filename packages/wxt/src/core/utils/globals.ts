@@ -1,4 +1,4 @@
-import { ResolvedConfig } from '~/types';
+import { ResolvedConfig } from '../../types';
 
 export function getGlobals(
   config: ResolvedConfig,

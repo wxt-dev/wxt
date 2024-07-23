@@ -3,7 +3,7 @@ import {
   PerBrowserOption,
   ResolvedPerBrowserOptions,
   TargetBrowser,
-} from '~/types';
+} from '../../types';
 import path, { relative, resolve } from 'node:path';
 import { normalizePath } from './paths';
 

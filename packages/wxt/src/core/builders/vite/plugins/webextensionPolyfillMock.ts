@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type * as vite from 'vite';
-import { ResolvedConfig } from '~/types';
+import { ResolvedConfig } from '../../../../types';
 
 /**
  * Mock `webextension-polyfill` by inlining all dependencies that import it and adding a custom

@@ -1,15 +1,15 @@
-import { Entrypoint, WxtDirEntry, WxtDirFileEntry } from '~/types';
+import { Entrypoint, WxtDirEntry, WxtDirFileEntry } from '../../../types';
 import fs from 'fs-extra';
 import { dirname, relative, resolve } from 'node:path';
 import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
-} from '~/core/utils/entrypoints';
-import { getEntrypointGlobals, getGlobals } from '~/core/utils/globals';
-import { normalizePath } from '~/core/utils/paths';
+} from '../../utils/entrypoints';
+import { getEntrypointGlobals, getGlobals } from '../../utils/globals';
+import { normalizePath } from '../../utils/paths';
 import path from 'node:path';
-import { Message, parseI18nMessages } from '~/core/utils/i18n';
-import { writeFileIfDifferent, getPublicFiles } from '~/core/utils/fs';
+import { Message, parseI18nMessages } from '../../utils/i18n';
+import { writeFileIfDifferent, getPublicFiles } from '../../utils/fs';
 import { wxt } from '../../wxt';
 
 /**

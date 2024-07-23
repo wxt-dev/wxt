@@ -1,5 +1,5 @@
 import dns from 'node:dns';
-import { ResolvedConfig } from '~/types';
+import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
 
 function isOffline(): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { ExtensionRunner } from '~/types';
+import { ExtensionRunner } from '../../types';
 import { relative } from 'node:path';
 import { wxt } from '../wxt';
 

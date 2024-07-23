@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { DevModeChange, detectDevChanges } from '~/core/utils/building';
+import { DevModeChange, detectDevChanges } from '../../../utils/building';
 import {
   fakeBackgroundEntrypoint,
   fakeContentScriptEntrypoint,
@@ -12,8 +12,8 @@ import {
   fakeOutputChunk,
   fakeWxt,
   setFakeWxt,
-} from '~/core/utils/testing/fake-objects';
-import { BuildOutput, BuildStepOutput } from '~/types';
+} from '../../../utils/testing/fake-objects';
+import { BuildOutput, BuildStepOutput } from '../../../../types';
 import { setWxtForTesting } from '../../../wxt';
 
 describe('Detect Dev Changes', () => {

@@ -8,7 +8,7 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   SidepanelEntrypoint,
-} from '~/types';
+} from '../../../../types';
 import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
@@ -16,9 +16,9 @@ import glob from 'fast-glob';
 import {
   fakeResolvedConfig,
   setFakeWxt,
-} from '~/core/utils/testing/fake-objects';
-import { unnormalizePath } from '~/core/utils/paths';
-import { wxt } from '~/core/wxt';
+} from '../../../utils/testing/fake-objects';
+import { unnormalizePath } from '../../../utils/paths';
+import { wxt } from '../../../wxt';
 
 vi.mock('fast-glob');
 const globMock = vi.mocked(glob);

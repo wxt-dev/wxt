@@ -1,23 +1,21 @@
 import { defineBuildConfig } from 'unbuild';
-import { virtualEntrypointModuleNames } from '~/core/utils/virtual-modules';
-import { resolve } from 'node:path';
+
+const basePattern = ['**/*', '!**/__tests__', '!**/*.md'];
 
 export default defineBuildConfig({
-  clean: true,
   entries: [
     {
       builder: 'mkdist',
       input: 'src',
+      declaration: true,
+      pattern: [...basePattern, '!virtual'],
+      addRelativeDeclarationExtensions: true,
+    },
+    {
+      builder: 'mkdist',
+      input: 'src/virtual',
+      outDir: 'dist/virtual',
+      pattern: basePattern,
     },
   ],
-  alias: {
-    '~': resolve('src'),
-  },
-  externals: [
-    ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
-    'virtual:wxt-plugins',
-    'virtual:app-config',
-  ],
-  sourcemap: false,
-  declaration: true,
 });

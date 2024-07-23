@@ -19,7 +19,7 @@ import {
   ContentScriptEntrypoint,
   Entrypoint,
   OutputAsset,
-} from '~/types';
+} from '../../../types';
 import { wxt } from '../../wxt';
 
 const outDir = '/output';

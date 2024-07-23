@@ -8,7 +8,7 @@ import {
   PackageManager,
   PackageManagerName,
 } from 'nypm';
-import { WxtPackageManager } from '~/types';
+import { WxtPackageManager } from '../../types';
 import { bun } from './bun';
 import { WxtPackageManagerImpl } from './types';
 import { yarn } from './yarn';

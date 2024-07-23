@@ -1,4 +1,4 @@
-import { browser } from '~/browser';
+import { browser } from '../../../browser';
 import { ContentScriptContext } from '..';
 import {
   ContentScriptAnchoredOptions,
@@ -10,7 +10,7 @@ import {
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
 } from './types';
-import { logger } from '~/sandbox/utils/logger';
+import { logger } from '../../../sandbox/utils/logger';
 import { createIsolatedElement } from '@webext-core/isolated-element';
 export * from './types';
 

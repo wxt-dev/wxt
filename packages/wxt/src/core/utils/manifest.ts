@@ -1,4 +1,4 @@
-import type { Manifest } from '~/browser';
+import type { Manifest } from '../../browser';
 import {
   Entrypoint,
   BackgroundEntrypoint,
@@ -7,7 +7,7 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   SidepanelEntrypoint,
-} from '~/types';
+} from '../../types';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';

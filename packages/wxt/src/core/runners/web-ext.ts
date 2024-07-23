@@ -1,5 +1,5 @@
 import type { WebExtRunInstance } from 'web-ext-run';
-import { ExtensionRunner } from '~/types';
+import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';

@@ -1,4 +1,4 @@
-import { ExtensionRunnerConfig } from '~/types';
+import { ExtensionRunnerConfig } from '../types';
 
 export function defineRunnerConfig(
   config: ExtensionRunnerConfig,

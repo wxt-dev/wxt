@@ -30,76 +30,50 @@
     "wxt": "./bin/wxt.mjs",
     "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.js"
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.mjs"
     },
     "./sandbox": {
-      "types": "./dist/sandbox.d.ts",
-      "import": "./dist/sandbox.js"
+      "types": "./dist/sandbox/index.d.ts",
+      "import": "./dist/sandbox/index.mjs"
     },
     "./browser": {
       "types": "./dist/browser.d.ts",
-      "import": "./dist/browser.js"
+      "import": "./dist/browser.mjs"
     },
     "./testing": {
-      "import": {
-        "types": "./dist/testing.d.ts",
-        "default": "./dist/testing.js"
-      },
-      "require": {
-        "types": "./dist/testing.d.cts",
-        "default": "./dist/testing.cjs"
-      }
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.mjs"
     },
     "./storage": {
-      "import": {
-        "types": "./dist/storage.d.ts",
-        "default": "./dist/storage.js"
-      },
-      "require": {
-        "types": "./dist/storage.d.cts",
-        "default": "./dist/storage.cjs"
-      }
+      "types": "./dist/storage.d.ts",
+      "default": "./dist/storage.mjs"
     },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
     },
     "./modules": {
-      "import": {
-        "types": "./dist/modules.d.ts",
-        "default": "./dist/modules.js"
-      },
-      "require": {
-        "types": "./dist/modules.d.cts",
-        "default": "./dist/modules.cjs"
-      }
+      "types": "./dist/modules.d.ts",
+      "default": "./dist/modules.mjs"
     }
   },
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
-    "build": "buildc -- mkdist -d",
+    "build": "buildc -- unbuild",
     "check": "buildc --deps-only -- run-s -c check:*",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "pnpm test -- run --coverage",
-    "sync-releases": "pnpx changelogen@latest gh release",
-    "prepack": "pnpm build"
+    "sync-releases": "pnpx changelogen@latest gh release"
   },
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
@@ -161,6 +135,7 @@
     "publint": "^0.2.9",
     "tsx": "4.15.7",
     "typescript": "^5.5.3",
+    "unbuild": "^2.0.0",
     "vitest": "^2.0.3",
     "vitest-plugin-random-seed": "^1.1.0"
   }

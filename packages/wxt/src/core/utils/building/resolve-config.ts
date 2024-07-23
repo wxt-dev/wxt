@@ -14,16 +14,16 @@ import {
   WxtModuleWithMetadata,
   ResolvedEslintrc,
   Eslintrc,
-} from '~/types';
+} from '../../../types';
 import path from 'node:path';
-import { createFsCache } from '~/core/utils/cache';
+import { createFsCache } from '../../utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
-import { builtinModules } from '~/builtin-modules';
+import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
 
 /**

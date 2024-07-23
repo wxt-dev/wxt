@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Entrypoint } from '~/types';
+import { Entrypoint } from '../../../../types';
 import { groupEntrypoints } from '../group-entrypoints';
 import {
   fakeBackgroundEntrypoint,

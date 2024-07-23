@@ -1,10 +1,10 @@
 import { Plugin } from 'vite';
-import { ResolvedConfig } from '~/types';
-import { normalizePath } from '~/core/utils/paths';
+import { ResolvedConfig } from '../../../../types';
+import { normalizePath } from '../../../utils/paths';
 import {
   VirtualModuleId,
   virtualModuleNames,
-} from '~/core/utils/virtual-modules';
+} from '../../../utils/virtual-modules';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 

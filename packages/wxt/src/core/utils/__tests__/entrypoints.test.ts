@@ -3,8 +3,8 @@ import {
   getEntrypointName,
   getEntrypointOutputFile,
   resolvePerBrowserOption,
-} from '~/core/utils/entrypoints';
-import { Entrypoint } from '~/types';
+} from '../entrypoints';
+import { Entrypoint } from '../../../types';
 import { resolve } from 'path';
 
 describe('Entrypoint Utils', () => {

@@ -2,7 +2,7 @@ import path from 'node:path';
 import glob from 'fast-glob';
 import fs from 'fs-extra';
 import pc from 'picocolors';
-import { InlineConfig } from '~/types';
+import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
 
 /**

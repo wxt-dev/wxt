@@ -1,10 +1,10 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build } from '~/core/build';
-import { createServer } from '~/core/create-server';
-import { zip } from '~/core/zip';
-import { prepare } from '~/core/prepare';
-import { clean } from '~/core/clean';
-import { initialize } from '~/core/initialize';
+import { build } from '../../core/build';
+import { createServer } from '../../core/create-server';
+import { zip } from '../../core/zip';
+import { prepare } from '../../core/prepare';
+import { clean } from '../../core/clean';
+import { initialize } from '../../core/initialize';
 import { mock } from 'vitest-mock-extended';
 import consola from 'consola';
 
@@ -35,7 +35,7 @@ function mockArgv(...args: string[]) {
 }
 
 async function importCli() {
-  await import('~/cli');
+  await import('../../cli');
 }
 
 describe('CLI', () => {

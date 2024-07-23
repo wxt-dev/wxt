@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { TestProject } from '../utils';
+import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 import { execaCommand } from 'execa';
 import glob from 'fast-glob';
 import { mkdir, writeJson } from 'fs-extra';
-import { WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {

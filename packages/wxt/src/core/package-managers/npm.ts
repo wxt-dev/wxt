@@ -1,4 +1,4 @@
-import { Dependency } from '~/types';
+import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import path from 'node:path';
 import { ensureDir } from 'fs-extra';

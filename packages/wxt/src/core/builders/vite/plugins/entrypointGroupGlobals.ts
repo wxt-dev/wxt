@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
-import { EntrypointGroup } from '~/types';
-import { getEntrypointGlobals } from '~/core/utils/globals';
+import { EntrypointGroup } from '../../../../types';
+import { getEntrypointGlobals } from '../../../utils/globals';
 
 /**
  * Define a set of global variables specific to an entrypoint.
