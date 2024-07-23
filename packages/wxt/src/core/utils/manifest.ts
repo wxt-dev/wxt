@@ -469,10 +469,10 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   const extensionPagesCsp = new ContentSecurityPolicy(
     manifest.manifest_version === 3
       ? // @ts-expect-error: extension_pages is not typed
-        (manifest.content_security_policy?.extension_pages ??
-        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';") // default extension_pages CSP for MV3
-      : (manifest.content_security_policy ??
-        "script-src 'self'; object-src 'self';"), // default CSP for MV2
+        manifest.content_security_policy?.extension_pages ??
+        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" // default extension_pages CSP for MV3
+      : manifest.content_security_policy ??
+        "script-src 'self'; object-src 'self';", // default CSP for MV2
   );
   const sandboxCsp = new ContentSecurityPolicy(
     // @ts-expect-error: sandbox is not typed

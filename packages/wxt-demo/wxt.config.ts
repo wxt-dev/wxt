@@ -20,6 +20,7 @@ export default defineConfig({
   },
   experimental: {
     entrypointImporter: 'vite-node',
+    extensionApi: 'chrome',
   },
   runner: {
     startUrls: ['https://duckduckgo.com'],

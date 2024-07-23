@@ -22,5 +22,5 @@ export function getUniqueEventName(eventName: string): string {
       ? 'build'
       : import.meta.env.ENTRYPOINT;
 
-  return `${browser.runtime.id}:${entrypointName}:${eventName}`;
+  return `${browser?.runtime?.id}:${entrypointName}:${eventName}`;
 }

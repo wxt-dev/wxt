@@ -13,9 +13,9 @@ export function resolveExtensionApi(config: ResolvedConfig): vite.Plugin {
 
       return {
         resolve: {
-          alias: {
-            'wxt/browser': 'wxt/browser/chrome',
-          },
+          alias: [
+            { find: /^wxt\/browser$/, replacement: 'wxt/browser/chrome' },
+          ],
         },
       };
     },

@@ -15,6 +15,9 @@ export interface WxtI18n {
   // Overriden per-project
 }
 
-const browser: AugmentedBrowser =
+export const browser: AugmentedBrowser =
   // @ts-expect-error
-  globalThis.browser?.runtime?.id == null ? chrome : browser;
+  globalThis.browser?.runtime?.id == null
+    ? globalThis.chrome
+    : // @ts-expect-error
+      globalThis.browser;

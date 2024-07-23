@@ -29,6 +29,8 @@ export function webextensionPolyfillMock(
               config.wxtModuleDir,
               'dist/virtual/mock-browser',
             ),
+            'wxt/browser': 'wxt/testing',
+            'wxt/browser/chrome': 'wxt/testing',
           },
         },
         ssr: {
