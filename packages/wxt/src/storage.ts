@@ -593,7 +593,7 @@ export interface WxtStorageItem<
   TMetadata extends Record<string, unknown>,
 > {
   /**
-   * @deprecated Use `fallback` instead
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue: TValue;
   /**
@@ -642,7 +642,7 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
-   * @deprecated Use `fallback` instead.
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue?: T;
   /**
@@ -670,7 +670,7 @@ export interface SnapshotOptions {
 
 export interface WxtStorageItemOptions<T> {
   /**
-   * @deprecated Use `fallback` instead.
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue?: T;
   /**

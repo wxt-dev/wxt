@@ -121,7 +121,7 @@ Storage items contain the same APIs as the `storage` variable, but you can confi
 const showChangelogOnUpdate = storage.defineItem<boolean>(
   'local:showChangelogOnUpdate',
   {
-    defaultValue: true,
+    fallback: true,
   },
 );
 ```
@@ -153,7 +153,7 @@ type IgnoredWebsiteV1 = string;
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV1[]>(
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 1,
   },
 );
@@ -173,7 +173,7 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV1[]>( // [!code
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 1, // [!code --]
     version: 2, // [!code ++]
     migrations: { // [!code ++]
@@ -205,7 +205,7 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 2, // [!code --]
     version: 3, // [!code ++]
     migrations: {
@@ -242,7 +242,7 @@ Lets look at the same ignored websites example from before, but start with an un
 export const ignoredWebsites = storage.defineItem<string[]>(
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
   },
 );
 ```
@@ -262,7 +262,7 @@ export const ignoredWebsites = storage.defineItem<string[]>( // [!code --]
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 2, // [!code ++]
     migrations: { // [!code ++]
       // Ran when migrating from v1 to v2 // [!code ++]
