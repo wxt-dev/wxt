@@ -1,6 +1,7 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from '~/browser';
+import { sleep } from '~/core/utils/time';
 import { WxtStorageItem, storage } from '~/storage';
 
 /**
@@ -8,6 +9,14 @@ import { WxtStorageItem, storage } from '~/storage';
  * calls within a single tick of the event loop, ie: a timeout of 0.
  */
 async function waitForMigrations() {
+  return new Promise((res) => setTimeout(res));
+}
+
+/**
+ * Same as `waitForMigrations`, the fake browser being synchronous means the
+ * `init` logic is finished by the next task in the event queue.
+ */
+async function waitForInit() {
   return new Promise((res) => setTimeout(res));
 }
 
@@ -813,20 +822,56 @@ describe('Storage Utils', () => {
       });
     });
 
-    describe('defaultValue', () => {
-      it('should return the default value when provided', () => {
-        const defaultValue = 123;
-        const item = storage.defineItem(`local:test`, {
-          defaultValue,
+    describe.each(['fallback', 'defaultValue'] as const)(
+      '%s option',
+      (fallbackKey) => {
+        it('should return the default value when provided', () => {
+          const fallback = 123;
+          const item = storage.defineItem(`local:test`, {
+            [fallbackKey]: fallback,
+          });
+
+          expect(item.fallback).toBe(fallback);
+          expect(item.defaultValue).toBe(fallback);
         });
 
-        expect(item.defaultValue).toBe(defaultValue);
+        it('should return null when not provided', () => {
+          const item = storage.defineItem<number>(`local:test`);
+
+          expect(item.fallback).toBeNull();
+          expect(item.defaultValue).toBeNull();
+        });
+      },
+    );
+
+    describe('init option', () => {
+      it('should only call init once (per JS context) when calling getValue successively, avoiding race conditions', async () => {
+        const expected = 1;
+        const init = vi
+          .fn()
+          .mockResolvedValueOnce(expected)
+          .mockResolvedValue('not' + expected);
+        const item = storage.defineItem('local:test', { init });
+
+        await waitForInit();
+
+        const p1 = item.getValue();
+        const p2 = item.getValue();
+
+        await expect(p1).resolves.toBe(expected);
+        await expect(p2).resolves.toBe(expected);
+
+        expect(init).toBeCalledTimes(1);
       });
 
-      it('should return null when not provided', () => {
-        const item = storage.defineItem<number>(`local:test`);
+      it('should initialize the value in storage immediately', async () => {
+        const expected = 1;
+        const init = vi.fn().mockReturnValue(expected);
+        storage.defineItem('local:test', { init });
 
-        expect(item.defaultValue).toBeNull();
+        await waitForInit();
+
+        await expect(storage.getItem('local:test')).resolves.toBe(expected);
       });
     });
 
@@ -849,35 +894,6 @@ describe('Storage Utils', () => {
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
-    });
-  });
-
-  describe('defineConstant', () => {
-    it('should only call init once (per JS context) when calling getValue successively, avoiding race conditions', async () => {
-      const expected = 1;
-      const init = vi
-        .fn()
-        .mockResolvedValueOnce(expected)
-        .mockResolvedValue('not' + expected);
-      const constant = storage.defineConstant('local:test', init);
-
-      const p1 = constant.getValue();
-      const p2 = constant.getValue();
-
-      await expect(p1).resolves.toBe(expected);
-      await expect(p2).resolves.toBe(expected);
-
-      expect(init).toBeCalledTimes(1);
-    });
-
-    it('should only set the initialized value in storage once getValue has been called', async () => {
-      const expected = 1;
-      const init = vi.fn().mockReturnValue(expected);
-      const constant = storage.defineConstant('local:test', init);
-
-      await expect(storage.getItem('local:test')).resolves.toBeNull();
-      await constant.getValue();
-      await expect(storage.getItem('local:test')).resolves.toBe(expected);
     });
   });
 

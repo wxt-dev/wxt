@@ -44,8 +44,8 @@ function createStorage(): WxtStorage {
     };
   };
   const getMetaKey = (key: string) => key + '$';
-  const getValueOrDefault = (value: any, defaultValue: any) =>
-    value ?? defaultValue ?? null;
+  const getValueOrFallback = (value: any, fallback: any) =>
+    value ?? fallback ?? null;
   const getMetaValue = (properties: any) =>
     typeof properties === 'object' && !Array.isArray(properties)
       ? properties
@@ -57,7 +57,7 @@ function createStorage(): WxtStorage {
     opts: GetItemOptions<any> | undefined,
   ) => {
     const res = await driver.getItem<any>(driverKey);
-    return getValueOrDefault(res, opts?.defaultValue);
+    return getValueOrFallback(res, opts?.fallback ?? opts?.defaultValue);
   };
   const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
     const metaKey = getMetaKey(driverKey);
@@ -149,9 +149,10 @@ function createStorage(): WxtStorage {
           const driverResults = await drivers[driverArea].getItems(keys);
           return driverResults.map((driverResult) => {
             const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
-            const value = getValueOrDefault(
+            const opts = keyToOptsMap.get(key);
+            const value = getValueOrFallback(
               driverResult.value,
-              keyToOptsMap.get(key)?.defaultValue,
+              opts?.fallback ?? opts?.defaultValue,
             );
             return { key, value };
           });
@@ -303,15 +304,37 @@ function createStorage(): WxtStorage {
               logger.error(`Migration failed for ${key}`, err);
             });
 
-      const getDefaultValue = () => opts?.defaultValue ?? null;
+      const initMutex = new Mutex();
+
+      const getFallback = () => opts?.fallback ?? opts?.defaultValue ?? null;
+
+      const getOrInitValue = () =>
+        initMutex.runExclusive(async () => {
+          const value = await driver.getItem<any>(driverKey);
+          if (value != null) return value;
+
+          const newValue = await opts?.init?.();
+          await driver.setItem<any>(driverKey, newValue);
+          return newValue;
+        });
+
+      // Initialize the value once migrations have finished
+      migrationsDone.then(getOrInitValue);
 
       return {
         get defaultValue() {
-          return getDefaultValue();
+          return getFallback();
+        },
+        get fallback() {
+          return getFallback();
         },
         getValue: async () => {
           await migrationsDone;
-          return await getItem(driver, driverKey, opts);
+          if (opts?.init) {
+            return await getOrInitValue();
+          } else {
+            return await getItem(driver, driverKey, opts);
+          }
         },
         getMeta: async () => {
           await migrationsDone;
@@ -335,27 +358,9 @@ function createStorage(): WxtStorage {
         },
         watch: (cb) =>
           watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
+            cb(newValue ?? getFallback(), oldValue ?? getFallback()),
           ),
         migrate,
-      };
-    },
-    defineConstant: (key, init) => {
-      const getterMutex = new Mutex();
-      const getValue = () =>
-        getterMutex.runExclusive(async () => {
-          const value = await storage.getItem<any>(key);
-          if (value) return value;
-
-          const newValue = await init();
-          await storage.setItem(key, newValue);
-          return newValue;
-        });
-      return {
-        getValue,
-        init: async () => {
-          await getValue();
-        },
       };
     },
   };
@@ -567,16 +572,6 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
-
-  /**
-   * Define a constant value in storage.
-   *
-   * Read full docs: https://wxt.dev/guide/storage.html#defining-storage-constants
-   */
-  defineConstant<TValue>(
-    key: StorageItemKey,
-    init: () => TValue | Promise<TValue>,
-  ): WxtStorageConstant<TValue>;
 }
 
 interface WxtStorageDriver {
@@ -596,7 +591,14 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  /**
+   * @deprecated Use `fallback` instead
+   */
   defaultValue: TValue;
+  /**
+   * The value provided by the `fallback` option.
+   */
+  fallback: TValue;
   /**
    * Get the latest value from storage.
    */
@@ -634,30 +636,18 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
-export interface WxtStorageConstant<TValue> {
-  /**
-   * Get's the "constant" value from storage or initializes it and saves it to storage before removing.
-   */
-  getValue(): Promise<TValue>;
-  /**
-   * Ensures the value in storage is initialized, but doesn't return the value.
-   * An alias for `getValue` which is easier to read in different
-   * circumstances.
-   */
-  init(): Promise<void>;
-}
-
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
 export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
-   * Value returned from `getValue` when it would otherwise return null.
-   *
-   * This value is not set in storage! The return value just defaults to this
-   * when a value isn't found in storage.
+   * @deprecated Use `fallback` instead.
    */
   defaultValue?: T;
+  /**
+   * Default value returned when `getItem` would otherwise return `null`.
+   */
+  fallback?: T;
 }
 
 export interface RemoveItemOptions {
@@ -678,7 +668,21 @@ export interface SnapshotOptions {
 }
 
 export interface WxtStorageItemOptions<T> {
-  defaultValue: T;
+  /**
+   * @deprecated Use `fallback` instead.
+   */
+  defaultValue?: T;
+  /**
+   * Default value returned when `getValue` would otherwise return `null`.
+   */
+  fallback?: T;
+  /**
+   * If passed, a value in storage will be initialized immediately after
+   * defining the storage item. This function returns the value that will be
+   * saved to storage during the initialization process if a value doesn't
+   * already exist.
+   */
+  init?: () => T | Promise<T>;
   /**
    * Provide a version number for the storage item to enable migrations. When changing the version
    * in the future, migration functions will be ran on application startup.
