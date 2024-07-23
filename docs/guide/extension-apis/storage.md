@@ -280,61 +280,34 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.
 
-## Defining Constant Items
+### Default Values
 
-An alternative to `storage.defineItem`, `storage.defineConstant` defines values in storage that **_never change_** once generated, like user IDs.
+With `storage.defineItem`, there are multiple ways of defining default values:
 
-```ts
-// utils/storage.ts
-export const userId = storage.defineConstant<string>('local:user-id', () =>
-  globalThis.crypto.randomUUID(),
-);
+1. `fallback` - Return this value from `getValue` instead of `null` if the value is missing.
 
-export const installDate = storage.defineConstant<number>(
-  'local:install-date',
-  () => new Date().getTime(),
-);
+   This option is great for providing default values for settings:
 
-export const originalAppVersion = storage.defineConstant<string>(
-  'local:original-manifest-version',
-  () => browser.runtime.getManifest().version,
-);
-```
+   ```ts
+   const theme = storage.defineItem('local:theme', {
+     fallback: 'dark',
+   });
+   const allowEditing = storage.defineItem('local:allow-editing', {
+     fallback: true,
+   });
+   ```
 
-Then you can get the constant from storage like so:
+2. `init` - Initialize and save a value in storage if it is not already saved.
 
-```ts
-await userId.getValue();
-```
+   This is great for values that need to be initialized or set once:
 
-By default, constant values in storage are initialized lazily - the value isn't generated and saved to storage until you call `getValue` or `init` for the first time.
+   ```ts
+   const userId = storage.defineItem('local:user-id', {
+     init: () => globalThis.crypto.randomUUID(),
+   });
+   const installDate = storage.defineItem('local:install-date', {
+     init: () => new Date().getTime(),
+   });
+   ```
 
-```ts
-browser.runtime.onInstall.addListener(({ reason }) => {
-  if (reason === 'install') {
-    installDate.init();
-    originalAppVersion.init();
-  }
-});
-```
-
-`init` is just an alias for `getValue` without a return value. As shown above, `init` can make your code easier to read, defining a specific place where you expect the constant to be initialized, like when the extension is installed.
-
-:::info
-You don't have to call `init`! If you never do, the value will be initialized when you call `getValue` for the first time.
-:::
-
-### Race Conditions
-
-It's important to understand the potential for race conditions when using `storage.defineConstant`. WXT handles the race condition within a single JS context when calling `getValue` twice in a row - the value will only be initialized once.
-
-However, if your extension, in quick succession, calls `getValue` once in the background and once in another JS context, like a content script, **_the value may be initialzed twice to two values_**.
-
-When this happens, on first install and the first time you call `getValue`, you may notice that the background and content script have different values. Next time you call `getValue`, the constant will have synced and the same value will be returned. But for that fraction of a second, you may notice two values.
-
-Realistically though, this race condition is rare or impossible to happen:
-
-1. The storage API is so fast it's nearly synchronous, so the timeframe for a race condition like this is very small
-2. Since the background starts up before any other context, if you call `init` inside the `main` function or the `onInstall` callback, the value will likely be set before another context starts up.
-
-This is why WXT has chosen not to handle this case.
+   The value is initialized in storage immediately.
