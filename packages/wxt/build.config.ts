@@ -7,15 +7,14 @@ export default defineBuildConfig({
     {
       builder: 'mkdist',
       input: 'src',
-      declaration: true,
       pattern: [...basePattern, '!virtual'],
-      addRelativeDeclarationExtensions: true,
+      declaration: true,
     },
     {
       builder: 'mkdist',
       input: 'src/virtual',
-      outDir: 'dist/virtual',
       pattern: basePattern,
+      outDir: 'dist/virtual',
     },
   ],
 });
