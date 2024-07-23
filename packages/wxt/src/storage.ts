@@ -311,9 +311,10 @@ function createStorage(): WxtStorage {
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
           const value = await driver.getItem<any>(driverKey);
-          if (value != null) return value;
+          // Don't init value if it already exists or the init function isn't provided
+          if (value != null || opts?.init == null) return value;
 
-          const newValue = await opts?.init?.();
+          const newValue = await opts.init();
           await driver.setItem<any>(driverKey, newValue);
           return newValue;
         });
