@@ -34,6 +34,7 @@ const chromeExtensionIds = [
   'bnacincmbaknlbegecpioobkfgejlojp', // MaxFocus: Link Preview
   'bcpgdpedphodjcjlminjbdeejccjbimp', // 汇率转换-中文版本
   'loeilaonggnalkaiiaepbegccilkmjjp', // Currency Converter Plus
+  'npcnninnjghigjfiecefheeibomjpkak', // Respond Easy
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
