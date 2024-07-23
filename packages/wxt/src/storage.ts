@@ -9,6 +9,7 @@ import { Storage, browser } from '~/browser';
 import { dequal } from 'dequal/lite';
 import { logger } from './sandbox/utils/logger';
 import { toArray } from './core/utils/arrays';
+import { Mutex } from 'async-mutex';
 
 export const storage = createStorage();
 
@@ -305,20 +306,25 @@ function createStorage(): WxtStorage {
       const getFallbackValue = () =>
         opts?.fallback ?? opts?.defaultValue ?? null;
 
-      const initializeValue = async (force = false) => {
-        if (!init) return;
-        if (!force) {
-          const currentValue = await getItem(driver, driverKey, opts);
-          if (currentValue) return;
-        }
-        let initialValue = init;
-        if (typeof init === 'function') {
-          initialValue = await init();
-        }
-        await setItem(driver, driverKey, initialValue);
-      };
+      const initMutex = new Mutex();
 
-      initializeValue();
+      const initializeValue = (force = false) =>
+        initMutex.runExclusive(async () => {
+          if (!init) return;
+          if (!force) {
+            const currentValue = await getItem(driver, driverKey, opts);
+            if (currentValue) return;
+          }
+          let initValue = init;
+          if (typeof init === 'function') {
+            initValue = await init();
+          }
+          await driver.setItem(driverKey, initValue);
+          return initValue;
+        });
+
+      // Initialize the value once migrations have finished
+      migrationsDone.then(() => initializeValue());
 
       return {
         get defaultValue() {
