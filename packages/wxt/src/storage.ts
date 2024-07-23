@@ -252,7 +252,7 @@ function createStorage(): WxtStorage {
     defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
       const { driver, driverKey } = resolveKey(key);
 
-      const { version: targetVersion = 1, migrations = {} } = opts ?? {};
+      const { version: targetVersion = 1, migrations = {}, init } = opts ?? {};
       if (targetVersion < 1) {
         throw Error(
           'Storage item version cannot be less than 1. Initial versions should be set to 1, not 0.',
@@ -305,6 +305,21 @@ function createStorage(): WxtStorage {
       const getFallbackValue = () =>
         opts?.fallback ?? opts?.defaultValue ?? null;
 
+      const initializeValue = async (force = false) => {
+        if (!init) return;
+        if (!force) {
+          const currentValue = await getItem(driver, driverKey, opts);
+          if (currentValue) return;
+        }
+        let initialValue = init;
+        if (typeof init === 'function') {
+          initialValue = await init();
+        }
+        await setItem(driver, driverKey, initialValue);
+      };
+
+      initializeValue();
+
       return {
         get defaultValue() {
           return getFallbackValue();
@@ -341,6 +356,7 @@ function createStorage(): WxtStorage {
             cb(newValue ?? getFallbackValue(), oldValue ?? getFallbackValue()),
           ),
         migrate,
+        reInit: (force = true) => initializeValue(force),
       };
     },
   };
@@ -611,6 +627,12 @@ export interface WxtStorageItem<
    * manually.
    */
   migrate(): Promise<void>;
+  /**
+   * Manually reinitialize the storage with the `init` function or value. This is useful if you want to reset the storage item to its initial state.
+   *
+   * @param force If true, the initialization will occur even if the storage item already contains a value. Defaults to `true`.
+   */
+  reInit(force?: boolean): Promise<void>;
 }
 
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
@@ -642,14 +664,18 @@ export interface SnapshotOptions {
 
 export interface WxtStorageItemOptions<T> {
   /**
-   * Value returned from `getValue` when it would otherwise return null.
+   * Value returned when `getValue` would otherwise return `null`.
    * @deprecated Use `fallback` instead.
    */
   defaultValue?: T;
   /**
-   * Value returned from `getValue` when it would otherwise return null.
+   * Value returned when `getValue` would otherwise return `null`.
    */
   fallback?: T;
+  /**
+   * A function or static value used to set the initial value of the storage item if it does not already exist.
+   */
+  init?: (() => Promise<T>) | T;
   /**
    * Provide a version number for the storage item to enable migrations. When changing the version
    * in the future, migration functions will be ran on application startup.
