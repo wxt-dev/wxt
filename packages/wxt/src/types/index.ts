@@ -297,25 +297,12 @@ export interface InlineConfig {
    */
   experimental?: {
     /**
-     * Whether to use [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill)
-     * when importing `browser` from `wxt/browser`.
+     * Which extension API to use. To switch to `"chrome"`, make sure to
+     * install the `@types/chrome` package.
      *
-     * When set to `false`, WXT will export the chrome global instead of the polyfill from
-     * `wxt/browser`.
-     *
-     * You should use `browser` to access the web extension APIs.
-     *
-     * @experimental This option will remain experimental until Manifest V2 is dead.
-     *
-     * @default true
-     * @example
-     * export default defineConfig({
-     *   experimental: {
-     *     includeBrowserPolyfill: false
-     *   }
-     * })
+     * @default "webextension-polyfill"
      */
-    includeBrowserPolyfill?: boolean;
+    extensionApi?: 'webextension-polyfill' | 'chrome';
     /**
      * Method used to import entrypoint files during the build process to extract their options.
      *
@@ -1203,7 +1190,7 @@ export interface ResolvedConfig {
    */
   alias: Record<string, string>;
   experimental: {
-    includeBrowserPolyfill: boolean;
+    extensionApi: 'webextension-polyfill' | 'chrome';
     entrypointImporter: 'jiti' | 'vite-runtime' | 'vite-node';
   };
   dev: {

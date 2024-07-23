@@ -194,7 +194,7 @@ describe('Module Helpers', () => {
       await project.build({
         experimental: {
           // reduce build output when comparing test failures
-          includeBrowserPolyfill: false,
+          extensionApi: 'chrome',
         },
       });
 
@@ -216,7 +216,7 @@ describe('Module Helpers', () => {
       await project.build({
         experimental: {
           // reduce build output when comparing test failures
-          includeBrowserPolyfill: false,
+          extensionApi: 'chrome',
         },
       });
 
@@ -239,7 +239,7 @@ describe('Module Helpers', () => {
       await project.build({
         experimental: {
           // reduce build output when comparing test failures
-          includeBrowserPolyfill: false,
+          extensionApi: 'chrome',
         },
       });
 
@@ -257,7 +257,7 @@ describe('Module Helpers', () => {
       await project.build({
         experimental: {
           // reduce build output when comparing test failures
-          includeBrowserPolyfill: false,
+          extensionApi: 'chrome',
         },
       });
 

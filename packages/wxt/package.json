@@ -138,5 +138,13 @@
     "unbuild": "^2.0.0",
     "vitest": "^2.0.3",
     "vitest-plugin-random-seed": "^1.1.0"
+  },
+  "peerDependencies": {
+    "@types/chrome": "*"
+  },
+  "peerDependenciesMeta": {
+    "@types/chrome": {
+      "optional": true
+    }
   }
 }

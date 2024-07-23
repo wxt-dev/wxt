@@ -264,7 +264,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       experimental: {
         // Simplify the build output for comparison
-        includeBrowserPolyfill: false,
+        extensionApi: 'chrome',
       },
       vite: () => ({
         build: {
@@ -345,7 +345,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       experimental: {
         // Simplify the build output for comparison
-        includeBrowserPolyfill: false,
+        extensionApi: 'chrome',
       },
       vite: () => ({
         build: {

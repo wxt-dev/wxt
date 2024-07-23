@@ -9,7 +9,7 @@ export * from './cssEntrypoints';
 export * from './bundleAnalysis';
 export * from './globals';
 export * from './webextensionPolyfillMock';
-export * from './excludeBrowserPolyfill';
+export * from './resolveExtensionApi';
 export * from './entrypointGroupGlobals';
 export * from './defineImportMeta';
 export * from './removeEntrypointMainFunction';

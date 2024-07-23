@@ -175,7 +175,7 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {
-      includeBrowserPolyfill: true,
+      extensionApi: 'webextension-polyfill' as const,
       entrypointImporter: 'jiti' as const,
     }),
     dev: {

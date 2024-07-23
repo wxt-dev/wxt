@@ -102,7 +102,7 @@ describe('User Config', () => {
     const withPolyfill = await buildBackground();
     const withoutPolyfill = await buildBackground({
       experimental: {
-        includeBrowserPolyfill: false,
+        extensionApi: 'chrome',
       },
     });
     expect(withoutPolyfill).not.toBe(withPolyfill);
