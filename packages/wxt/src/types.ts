@@ -2,7 +2,7 @@ import type * as vite from 'vite';
 import type { Manifest, Scripting } from 'wxt/browser';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
-import { ContentScriptContext } from '../client/content-scripts/content-script-context';
+import type { ContentScriptContext } from './client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
