@@ -53,10 +53,6 @@
       "types": "./dist/browser/chrome.d.ts",
       "import": "./dist/browser/chrome.mjs"
     },
-    "./browser/webextension-polyfill": {
-      "types": "./dist/browser/webextension-polyfill.d.ts",
-      "import": "./dist/browser/webextension-polyfill.mjs"
-    },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
       "default": "./dist/testing/index.mjs"
