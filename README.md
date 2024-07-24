@@ -18,7 +18,7 @@
   <br/>
   <span>⚡</span>
   <br/>
-  <q><i>It's like Nuxt, but for Chrome Extensions</i></q>
+  <q><i>It's like Nuxt, but for Web Extensions</i></q>
 </p>
 
 <p align="center">
@@ -62,6 +62,7 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
 - ⬇️ Download and bundle remote URL imports
+- 📦 Modular architecture with [modules](https://wxt.dev/guide/go-further/reusable-modules.html#overview)
 
 ## Contributors
 
