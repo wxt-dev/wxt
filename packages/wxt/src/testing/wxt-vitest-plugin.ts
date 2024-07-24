@@ -3,7 +3,7 @@ import {
   download,
   tsconfigPaths,
   globals,
-  webextensionPolyfillMock,
+  extensionApiMock,
   resolveAppConfig,
 } from '../core/builders/vite/plugins';
 import { resolveConfig } from '../core/utils/building';
@@ -26,20 +26,23 @@ import { createUnimport } from 'unimport';
  *
  * @param inlineConfig Customize WXT's config for testing. Any config specified here overrides the config from your `wxt.config.ts` file.
  */
-export function WxtVitest(inlineConfig?: InlineConfig): vite.PluginOption {
-  return resolveConfig(inlineConfig ?? {}, 'serve').then(async (config) => {
-    const plugins = [
-      webextensionPolyfillMock(config),
-      globals(config),
-      download(config),
-      tsconfigPaths(config),
-      resolveAppConfig(config),
-    ];
-    if (config.imports !== false) {
-      const unimport = createUnimport(config.imports);
-      await unimport.init();
-      plugins.push(unimportPlugin(unimport));
-    }
-    return plugins;
-  });
+export async function WxtVitest(
+  inlineConfig?: InlineConfig,
+): Promise<vite.PluginOption[]> {
+  const config = await resolveConfig(inlineConfig ?? {}, 'serve');
+
+  const plugins: vite.PluginOption[] = [
+    globals(config),
+    download(config),
+    tsconfigPaths(config),
+    resolveAppConfig(config),
+    extensionApiMock(config),
+  ];
+  if (config.imports !== false) {
+    const unimport = createUnimport(config.imports);
+    await unimport.init();
+    plugins.push(unimportPlugin(unimport));
+  }
+
+  return plugins;
 }

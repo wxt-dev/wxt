@@ -1,4 +1,4 @@
-import { browser } from '../../../browser';
+import { browser } from 'wxt/browser';
 import { ContentScriptContext } from '..';
 import {
   ContentScriptAnchoredOptions,

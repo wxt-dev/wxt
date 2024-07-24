@@ -5,7 +5,7 @@
  *
  * @module wxt/storage
  */
-import { Storage, browser } from './browser';
+import { Storage, browser } from 'wxt/browser';
 import { dequal } from 'dequal/lite';
 import { logger } from './sandbox/utils/logger';
 import { toArray } from './core/utils/arrays';

@@ -1,4 +1,4 @@
-import type { Manifest } from '../../../browser';
+import type { Manifest } from 'wxt/browser';
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
 import { generateTypesDir } from './generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';

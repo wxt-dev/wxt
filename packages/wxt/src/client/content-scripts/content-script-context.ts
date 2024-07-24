@@ -1,5 +1,5 @@
 import { ContentScriptDefinition } from '../../types';
-import { browser } from '../../browser';
+import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
 import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
 import { createLocationWatcher } from './location-watcher';

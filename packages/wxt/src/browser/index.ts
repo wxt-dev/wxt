@@ -1,6 +1,9 @@
 /**
+ * Includes the `browser` API and types when using `extensionApi: 'webextension-polyfill'` (the default).
+ *
  * @module wxt/browser
  */
+
 import originalBrowser, { Browser, Runtime, I18n } from 'webextension-polyfill';
 
 export interface AugmentedBrowser extends Browser {

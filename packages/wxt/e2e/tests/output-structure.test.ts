@@ -262,10 +262,9 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      experimental: {
-        // Simplify the build output for comparison
-        includeBrowserPolyfill: false,
-      },
+      // Simplify the build output for comparison
+      extensionApi: 'chrome',
+
       vite: () => ({
         build: {
           // Make output for snapshot readible
@@ -278,6 +277,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
+        var _a, _b;
         import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
         function defineBackground(arg) {
           if (typeof arg === "function") return { main: arg };
@@ -289,7 +289,11 @@ describe('Output Directory Structure', () => {
             logHello("background");
           }
         });
-        chrome;
+        // @ts-expect-error
+        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) == null ? globalThis.chrome : (
+          // @ts-expect-error
+          globalThis.browser
+        );
         function print(method, ...args) {
           return;
         }
@@ -343,10 +347,9 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      experimental: {
-        // Simplify the build output for comparison
-        includeBrowserPolyfill: false,
-      },
+      // Simplify the build output for comparison
+      extensionApi: 'chrome',
+
       vite: () => ({
         build: {
           // Make output for snapshot readible
@@ -361,6 +364,7 @@ describe('Output Directory Structure', () => {
         ----------------------------------------
         var _background = function() {
           "use strict";
+          var _a, _b;
           function defineBackground(arg) {
             if (typeof arg === "function") return { main: arg };
             return arg;
@@ -377,7 +381,11 @@ describe('Output Directory Structure', () => {
           _background;
           function initPlugins() {
           }
-          chrome;
+          // @ts-expect-error
+          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) == null ? globalThis.chrome : (
+            // @ts-expect-error
+            globalThis.browser
+          );
           function print(method, ...args) {
             return;
           }

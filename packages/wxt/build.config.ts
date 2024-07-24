@@ -13,7 +13,7 @@ export default defineBuildConfig([
       {
         builder: 'mkdist',
         input: 'src',
-        pattern: ['**/*', '!**/__tests__', '!**/*.md', '!virtual'],
+        pattern: ['**/*', '!**/__tests__', '!**/*.md', '!virtual', '!@types'],
         declaration: true,
       },
     ],

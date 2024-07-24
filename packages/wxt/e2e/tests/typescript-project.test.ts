@@ -53,7 +53,7 @@ describe('TypeScript Project', () => {
           | "/popup.html"
           | "/sandbox.html"
         type HtmlPublicPath = Extract<PublicPath, \`\${string}.html\`>
-        export interface WxtRuntime extends Runtime.Static {
+        export interface WxtRuntime {
           getURL(path: PublicPath): string;
           getURL(path: \`\${HtmlPublicPath}\${string}\`): string;
         }

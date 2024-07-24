@@ -88,7 +88,7 @@ describe('User Config', () => {
     `);
   });
 
-  it('should exclude the polyfill when the experimental setting is set to false', async () => {
+  it('should exclude the polyfill when extensionApi="chrome"', async () => {
     const buildBackground = async (config?: InlineConfig) => {
       const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
       const projectWithPolyfill = new TestProject();
@@ -101,9 +101,7 @@ describe('User Config', () => {
 
     const withPolyfill = await buildBackground();
     const withoutPolyfill = await buildBackground({
-      experimental: {
-        includeBrowserPolyfill: false,
-      },
+      extensionApi: 'chrome',
     });
     expect(withoutPolyfill).not.toBe(withPolyfill);
   });

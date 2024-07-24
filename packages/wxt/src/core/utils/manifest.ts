@@ -1,4 +1,4 @@
-import type { Manifest } from '../../browser';
+import type { Manifest } from 'wxt/browser';
 import {
   Entrypoint,
   BackgroundEntrypoint,

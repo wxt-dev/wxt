@@ -1,8 +1,8 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from '../browser';
+import type { Manifest, Scripting } from 'wxt/browser';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
-import { ContentScriptContext } from '../client/content-scripts/content-script-context';
+import type { ContentScriptContext } from './client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
@@ -293,35 +293,24 @@ export interface InlineConfig {
    */
   alias?: Record<string, string>;
   /**
+   * Which extension API to use.
+   *
+   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
+   * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
+   *
+   * @default "webextension-polyfill"
+   */
+  extensionApi?: 'webextension-polyfill' | 'chrome';
+  /**
    * Experimental settings - use with caution.
    */
   experimental?: {
     /**
-     * Whether to use [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill)
-     * when importing `browser` from `wxt/browser`.
-     *
-     * When set to `false`, WXT will export the chrome global instead of the polyfill from
-     * `wxt/browser`.
-     *
-     * You should use `browser` to access the web extension APIs.
-     *
-     * @experimental This option will remain experimental until Manifest V2 is dead.
-     *
-     * @default true
-     * @example
-     * export default defineConfig({
-     *   experimental: {
-     *     includeBrowserPolyfill: false
-     *   }
-     * })
-     */
-    includeBrowserPolyfill?: boolean;
-    /**
      * Method used to import entrypoint files during the build process to extract their options.
      *
-     * - "jiti": Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
-     * - "vite-runtime" (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-     * - "vite-node" (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+     * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
+     * - `"vite-runtime"` (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+     * - `"vite-node"` (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
      *
      * @see {@link https://wxt.dev/guide/go-further/entrypoint-side-effects.html|Entrypoint Side-effect Docs}
      *
@@ -1202,8 +1191,9 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
+  extensionApi: 'webextension-polyfill' | 'chrome';
+  browserModule: 'wxt/browser' | 'wxt/browser/chrome';
   experimental: {
-    includeBrowserPolyfill: boolean;
     entrypointImporter: 'jiti' | 'vite-runtime' | 'vite-node';
   };
   dev: {
