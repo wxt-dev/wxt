@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
-import { ResolvedConfig } from '~/types';
-import { getGlobals } from '~/core/utils/globals';
+import { ResolvedConfig } from '../../../../types';
+import { getGlobals } from '../../../utils/globals';
 
 export function globals(config: ResolvedConfig): vite.PluginOption {
   return {

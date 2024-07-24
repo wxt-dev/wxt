@@ -1,4 +1,4 @@
-import { Dependency } from '~/types';
+import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import { dedupeDependencies, npm } from './npm';
 

@@ -14,16 +14,16 @@ import {
   WxtModuleWithMetadata,
   ResolvedEslintrc,
   Eslintrc,
-} from '~/types';
+} from '../../../types';
 import path from 'node:path';
-import { createFsCache } from '~/core/utils/cache';
+import { createFsCache } from '../../utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from '../types';
 import fs from 'fs-extra';
 import { normalizePath } from '../paths';
 import glob from 'fast-glob';
-import { builtinModules } from '~/builtin-modules';
+import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
 
 /**
@@ -317,7 +317,13 @@ async function getUnimportOptions(
       { name: 'fakeBrowser', from: 'wxt/testing' },
     ],
     presets: [
-      { package: 'wxt/client' },
+      {
+        package: 'wxt/client',
+        // There seems to be a bug in unimport that thinks "options" is an
+        // export from wxt/client, but it doesn't actually exist... so it's
+        // ignored.
+        ignore: ['options'],
+      },
       { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
@@ -374,11 +380,19 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 async function resolveWxtModuleDir() {
+  // TODO: Use this once we're fully running in ESM, see https://github.com/wxt-dev/wxt/issues/277
+  // const url = import.meta.resolve('wxt', import.meta.url);
+  // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
+  // directory, which we want to return from this function.
+  // return path.resolve(fileURLToPath(url), '../..');
+
   const requireResolve =
-    require?.resolve ??
+    globalThis.require?.resolve ??
     (await import('node:module')).default.createRequire(import.meta.url)
       .resolve;
-  // require.resolve returns the wxt/dist/index file, not the package's root directory, which we want to return
+
+  // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
+  // directory, which we want to return from this function.
   return path.resolve(requireResolve('wxt'), '../..');
 }
 

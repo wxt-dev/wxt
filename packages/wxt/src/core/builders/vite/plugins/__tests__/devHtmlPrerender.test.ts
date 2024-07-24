@@ -4,8 +4,8 @@ import { pointToDevServer } from '../devHtmlPrerender';
 import {
   fakeDevServer,
   fakeResolvedConfig,
-} from '~/core/utils/testing/fake-objects';
-import { normalizePath } from '~/core/utils/paths';
+} from '../../../../utils/testing/fake-objects';
+import { normalizePath } from '../../../../utils/paths';
 import { resolve } from 'node:path';
 
 describe('Dev HTML Prerender Plugin', () => {

@@ -1,10 +1,10 @@
 import { Plugin } from 'vite';
-import { ResolvedConfig } from '~/types';
-import { normalizePath } from '~/core/utils/paths';
+import { ResolvedConfig } from '../../../../types';
+import { normalizePath } from '../../../utils/paths';
 import {
   VirtualModuleId,
   virtualModuleNames,
-} from '~/core/utils/virtual-modules';
+} from '../../../utils/virtual-modules';
 import fs from 'fs-extra';
 import { resolve } from 'path';
 
@@ -31,7 +31,7 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
 
         const inputPath = id.replace(resolvedVirtualId, '');
         const template = await fs.readFile(
-          resolve(config.wxtModuleDir, `dist/virtual/${name}.js`),
+          resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
           'utf-8',
         );
         return template.replace(`virtual:user-${name}`, inputPath);

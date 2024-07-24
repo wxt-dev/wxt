@@ -7,20 +7,20 @@ import {
   WxtBuilderServer,
   WxtDevServer,
   WxtHooks,
-} from '~/types';
+} from '../../../types';
 import * as wxtPlugins from './plugins';
 import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
-} from '~/core/utils/entrypoints';
+} from '../../utils/entrypoints';
 import {
   VirtualEntrypointType,
   VirtualModuleId,
-} from '~/core/utils/virtual-modules';
+} from '../../utils/virtual-modules';
 import { Hookable } from 'hookable';
-import { toArray } from '~/core/utils/arrays';
-import { safeVarName } from '~/core/utils/strings';
-import { importEntrypointFile } from '~/core/utils/building';
+import { toArray } from '../../utils/arrays';
+import { safeVarName } from '../../utils/strings';
+import { importEntrypointFile } from '../../utils/building';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';

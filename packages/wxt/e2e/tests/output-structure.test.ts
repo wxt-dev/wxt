@@ -293,13 +293,13 @@ describe('Output Directory Structure', () => {
         function print(method, ...args) {
           return;
         }
-        var logger = {
+        const logger = {
           debug: (...args) => print(console.debug, ...args),
           log: (...args) => print(console.log, ...args),
           warn: (...args) => print(console.warn, ...args),
           error: (...args) => print(console.error, ...args)
         };
-        var result;
+        let result;
         try {
           initPlugins();
           result = definition.main();
@@ -381,13 +381,13 @@ describe('Output Directory Structure', () => {
           function print(method, ...args) {
             return;
           }
-          var logger = {
+          const logger = {
             debug: (...args) => print(console.debug, ...args),
             log: (...args) => print(console.log, ...args),
             warn: (...args) => print(console.warn, ...args),
             error: (...args) => print(console.error, ...args)
           };
-          var result;
+          let result;
           try {
             initPlugins();
             result = definition.main();
@@ -400,8 +400,8 @@ describe('Output Directory Structure', () => {
             logger.error("The background crashed on startup!");
             throw err;
           }
-          var background_entrypoint_default = result;
-          return background_entrypoint_default;
+          const result$1 = result;
+          return result$1;
         }();
         _background;
         "

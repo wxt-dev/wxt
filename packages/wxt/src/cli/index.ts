@@ -1,5 +1,5 @@
 import cli from './commands';
-import { version } from '~/version';
+import { version } from '../version';
 import { isAliasedCommand } from './cli-utils';
 
 // TODO: Remove. See https://github.com/wxt-dev/wxt/issues/277

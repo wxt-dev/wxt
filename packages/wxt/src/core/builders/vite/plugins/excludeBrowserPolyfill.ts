@@ -1,4 +1,4 @@
-import { ResolvedConfig } from '~/types';
+import { ResolvedConfig } from '../../../../types';
 import type * as vite from 'vite';
 
 /**

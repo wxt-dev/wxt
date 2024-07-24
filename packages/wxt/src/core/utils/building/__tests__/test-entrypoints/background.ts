@@ -1,4 +1,4 @@
-import { defineBackground } from '~/sandbox';
+import { defineBackground } from '../../../../../sandbox';
 
 export default defineBackground({
   main() {},

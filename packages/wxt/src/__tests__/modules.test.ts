@@ -1,4 +1,4 @@
-import { fakeWxt } from '~/core/utils/testing/fake-objects';
+import { fakeWxt } from '../core/utils/testing/fake-objects';
 import { addImportPreset, addViteConfig } from '../modules';
 import { describe, it, expect } from 'vitest';
 import { createHooks } from 'hookable';

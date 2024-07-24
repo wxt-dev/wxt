@@ -1,5 +1,5 @@
 import fs, { ensureDir } from 'fs-extra';
-import { FsCache } from '~/types';
+import { FsCache } from '../../types';
 import { dirname, resolve } from 'path';
 import { writeFileIfDifferent } from './fs';
 

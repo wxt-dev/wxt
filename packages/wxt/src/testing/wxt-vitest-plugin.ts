@@ -6,9 +6,9 @@ import {
   webextensionPolyfillMock,
   resolveAppConfig,
 } from '../core/builders/vite/plugins';
-import { resolveConfig } from '~/core/utils/building';
+import { resolveConfig } from '../core/utils/building';
 import { InlineConfig } from '../types';
-import { vitePlugin as unimportPlugin } from '~/builtin-modules/unimport';
+import { vitePlugin as unimportPlugin } from '../builtin-modules/unimport';
 import { createUnimport } from 'unimport';
 
 /**

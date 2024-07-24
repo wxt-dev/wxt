@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineBackground } from '~/sandbox/define-background';
-import { BackgroundDefinition } from '~/types';
+import { defineBackground } from '../define-background';
+import { BackgroundDefinition } from '../../types';
 
 describe('defineBackground', () => {
   it('should return the object definition when given an object', () => {

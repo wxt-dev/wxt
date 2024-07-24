@@ -2,8 +2,8 @@ import createJITI, { TransformOptions as JitiTransformOptions } from 'jiti';
 import { createUnimport } from 'unimport';
 import fs from 'fs-extra';
 import { relative, resolve } from 'node:path';
-import { removeProjectImportStatements } from '~/core/utils/strings';
-import { normalizePath } from '~/core/utils/paths';
+import { removeProjectImportStatements } from '../../utils/strings';
+import { normalizePath } from '../../utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
 import { fileURLToPath } from 'node:url';
 import { wxt } from '../../wxt';
@@ -53,14 +53,14 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
       alias: {
         'webextension-polyfill': resolve(
           wxt.config.wxtModuleDir,
-          'dist/virtual/mock-browser.js',
+          'dist/virtual/mock-browser.mjs',
         ),
         // TODO: Resolve this virtual module to some file with
         // `export default {}` instead of this hack of using another file with
         // a default export.
         'virtual:app-config': resolve(
           wxt.config.wxtModuleDir,
-          'dist/virtual/mock-browser.js',
+          'dist/virtual/mock-browser.mjs',
         ),
       },
       // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not

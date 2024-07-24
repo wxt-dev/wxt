@@ -3,9 +3,9 @@ import {
   BuildStepOutput,
   EntrypointGroup,
   OutputFile,
-} from '~/types';
-import { every, some } from '~/core/utils/arrays';
-import { normalizePath } from '~/core/utils/paths';
+} from '../../../types';
+import { every, some } from '../../utils/arrays';
+import { normalizePath } from '../../utils/paths';
 import { wxt } from '../../wxt';
 
 /**

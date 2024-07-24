@@ -1,10 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vitest-plugin-random-seed/types"],
-    "paths": {
-      "~/*": ["./src/*"]
-    }
+    "types": ["vitest-plugin-random-seed/types"]
   },
   "exclude": ["node_modules", "src/virtual", "e2e/dist", "dist"]
 }

@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../../utils/constants';
 
 /**
  * In dev mode, if there's not a background script listed, we need to add one so that the web socket

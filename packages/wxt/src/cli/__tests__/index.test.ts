@@ -1,29 +1,29 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build } from '~/core/build';
-import { createServer } from '~/core/create-server';
-import { zip } from '~/core/zip';
-import { prepare } from '~/core/prepare';
-import { clean } from '~/core/clean';
-import { initialize } from '~/core/initialize';
+import { build } from '../../core/build';
+import { createServer } from '../../core/create-server';
+import { zip } from '../../core/zip';
+import { prepare } from '../../core/prepare';
+import { clean } from '../../core/clean';
+import { initialize } from '../../core/initialize';
 import { mock } from 'vitest-mock-extended';
 import consola from 'consola';
 
-vi.mock('~/core/build');
+vi.mock('../../core/build');
 const buildMock = vi.mocked(build);
 
-vi.mock('~/core/create-server');
+vi.mock('../../core/create-server');
 const createServerMock = vi.mocked(createServer);
 
-vi.mock('~/core/zip');
+vi.mock('../../core/zip');
 const zipMock = vi.mocked(zip);
 
-vi.mock('~/core/prepare');
+vi.mock('../../core/prepare');
 const prepareMock = vi.mocked(prepare);
 
-vi.mock('~/core/clean');
+vi.mock('../../core/clean');
 const cleanMock = vi.mocked(clean);
 
-vi.mock('~/core/initialize');
+vi.mock('../../core/initialize');
 const initializeMock = vi.mocked(initialize);
 
 consola.wrapConsole();
@@ -35,7 +35,7 @@ function mockArgv(...args: string[]) {
 }
 
 async function importCli() {
-  await import('~/cli');
+  await import('../../cli');
 }
 
 describe('CLI', () => {

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
-    "build": "buildc -- wxt build",
+    "build": "buildc --deps-only -- wxt build",
     "build:all": "buildc --deps-only -- run-s -s 'build:all:*'",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",

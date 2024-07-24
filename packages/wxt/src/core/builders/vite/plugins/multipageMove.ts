@@ -1,9 +1,9 @@
 import type * as vite from 'vite';
-import { Entrypoint, ResolvedConfig } from '~/types';
+import { Entrypoint, ResolvedConfig } from '../../../../types';
 import { dirname, extname, resolve, join } from 'node:path';
-import { getEntrypointBundlePath } from '~/core/utils/entrypoints';
+import { getEntrypointBundlePath } from '../../../utils/entrypoints';
 import fs, { ensureDir } from 'fs-extra';
-import { normalizePath } from '~/core/utils/paths';
+import { normalizePath } from '../../../utils/paths';
 
 /**
  * Ensures the HTML files output by a multipage build are in the correct location. This does two

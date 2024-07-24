@@ -1,10 +1,10 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels } from 'consola';
-import { filterTruthy, toArray } from '~/core/utils/arrays';
-import { printHeader } from '~/core/utils/log';
-import { formatDuration } from '~/core/utils/time';
-import { ValidationError } from '~/core/utils/validation';
-import { registerWxt } from '~/core/wxt';
+import { filterTruthy, toArray } from '../core/utils/arrays';
+import { printHeader } from '../core/utils/log';
+import { formatDuration } from '../core/utils/time';
+import { ValidationError } from '../core/utils/validation';
+import { registerWxt } from '../core/wxt';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.

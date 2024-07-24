@@ -1,4 +1,4 @@
-import { defineContentScript } from '~/sandbox';
+import { defineContentScript } from '../../../../../sandbox';
 import { faker } from '@faker-js/faker';
 
 export default defineContentScript({

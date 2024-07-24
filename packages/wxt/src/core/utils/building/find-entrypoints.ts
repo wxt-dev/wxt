@@ -14,7 +14,7 @@ import {
   OptionsEntrypointOptions,
   SidepanelEntrypoint,
   SidepanelEntrypointOptions,
-} from '~/types';
+} from '../../../types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
@@ -23,9 +23,9 @@ import glob from 'fast-glob';
 import {
   getEntrypointName,
   resolvePerBrowserOptions,
-} from '~/core/utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '~/core/utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '~/core/utils/paths';
+} from '../../utils/entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
+import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 

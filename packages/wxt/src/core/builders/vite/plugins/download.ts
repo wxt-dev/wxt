@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
-import { ResolvedConfig } from '~/types';
-import { fetchCached } from '~/core/utils/network';
+import { ResolvedConfig } from '../../../../types';
+import { fetchCached } from '../../../utils/network';
 
 /**
  * Downloads any URL imports, like Google Analytics, into virtual modules so they are bundled with

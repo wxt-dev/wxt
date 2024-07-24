@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import { Commands, type Manifest } from '~/browser';
+import { Commands, type Manifest } from '../../../browser';
 import {
   FsCache,
   ResolvedConfig,
@@ -22,10 +22,10 @@ import {
   UserManifest,
   Wxt,
   SidepanelEntrypoint,
-} from '~/types';
+} from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
-import { setWxtForTesting } from '~/core/wxt';
+import { setWxtForTesting } from '../../../core/wxt';
 
 faker.seed(import.meta.test.SEED);
 

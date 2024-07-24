@@ -1,6 +1,6 @@
 /**
  * @module wxt
  */
-export * from '~/core';
-export * from '~/types';
-export * from '~/version';
+export * from './core';
+export * from './types';
+export * from './version';

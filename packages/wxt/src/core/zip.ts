@@ -1,12 +1,12 @@
-import { InlineConfig } from '~/types';
+import { InlineConfig } from '../types';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { kebabCaseAlphanumeric } from '~/core/utils/strings';
-import { getPackageJson } from '~/core/utils/package';
+import { kebabCaseAlphanumeric } from './utils/strings';
+import { getPackageJson } from './utils/package';
 import { minimatch } from 'minimatch';
-import { formatDuration } from '~/core/utils/time';
-import { printFileList } from '~/core/utils/log/printFileList';
-import { internalBuild } from '~/core/utils/building';
+import { formatDuration } from './utils/time';
+import { printFileList } from './utils/log/printFileList';
+import { internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';

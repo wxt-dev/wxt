@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ContentSecurityPolicy } from '~/core/utils/content-security-policy';
+import { ContentSecurityPolicy } from '../content-security-policy';
 
 describe('Content Security Policy Builder', () => {
   it('should add values to new directives correctly', () => {

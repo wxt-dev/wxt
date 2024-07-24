@@ -6,12 +6,12 @@ import {
   WxtDevServer,
   WxtHooks,
   WxtModule,
-} from '~/types';
+} from '../types';
 import { resolveConfig } from './utils/building';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';
-import { builtinModules } from '~/builtin-modules';
+import { builtinModules } from '../builtin-modules';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this

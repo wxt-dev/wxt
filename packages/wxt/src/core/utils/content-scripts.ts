@@ -1,5 +1,5 @@
-import type { Manifest, Scripting } from '~/browser';
-import { ContentScriptEntrypoint, ResolvedConfig } from '~/types';
+import type { Manifest, Scripting } from '../../browser';
+import { ContentScriptEntrypoint, ResolvedConfig } from '../../types';
 import { getEntrypointBundlePath } from './entrypoints';
 
 /**

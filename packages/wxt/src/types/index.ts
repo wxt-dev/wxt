@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from '~/browser';
+import type { Manifest, Scripting } from '../browser';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import { ContentScriptContext } from '../client/content-scripts/content-script-context';
