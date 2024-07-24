@@ -89,6 +89,9 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.2.0
       sharp:
         specifier: ^0.33.4
         version: 0.33.4

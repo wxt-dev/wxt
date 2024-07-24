@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "defu": "^6.1.4",
+    "fs-extra": "^11.2.0",
     "sharp": "^0.33.4"
   }
 }
