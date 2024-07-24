@@ -3,7 +3,9 @@
     "src/client/index.ts",
     "src/testing/index.ts",
     "src/sandbox/index.ts",
-    "src/browser.ts",
+    "src/browser/index.ts",
+    "src/browser/chrome.ts",
+    "src/browser/webextension-polyfill.ts",
     "src/index.ts",
     "src/storage.ts",
     "src/modules.ts"

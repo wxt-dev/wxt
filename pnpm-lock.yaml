@@ -7266,7 +7266,7 @@ packages:
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.3.4(@types/node@20.14.11)
+      vite: 5.3.4(sass@1.77.8)
     dev: true
 
   /vitest@2.0.3:
