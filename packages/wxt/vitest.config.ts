@@ -21,7 +21,6 @@ export default defineConfig({
   plugins: [RandomSeed()],
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'),
       'wxt/testing': path.resolve('src/testing'),
       'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
     },
