@@ -14,18 +14,17 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
   return {
     name: 'wxt:extension-api-mock',
     config() {
-      const mockBrowser = path.resolve(
+      const replacement = path.resolve(
         config.wxtModuleDir,
         'dist/virtual/mock-browser',
       );
       return {
         resolve: {
-          alias: {
-            'webextension-polyfill': mockBrowser,
-            'wxt/browser': mockBrowser,
-            'wxt/browser/webextension-polyfill': mockBrowser,
-            'wxt/browser/chrome': mockBrowser,
-          },
+          alias: [
+            { find: 'webextension-polyfill', replacement },
+            // wxt/browser, wxt/browser/...
+            { find: /^wxt\/browser.*/, replacement },
+          ],
         },
         ssr: {
           // Inline all WXT modules so vite processes them so the aliases can

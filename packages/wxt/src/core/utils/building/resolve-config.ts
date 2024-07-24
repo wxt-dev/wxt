@@ -25,6 +25,7 @@ import { normalizePath } from '../paths';
 import glob from 'fast-glob';
 import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
+import { ensureDependencyInstalled } from 'nypm';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -146,6 +147,17 @@ export async function resolveConfig(
     {},
   );
 
+  const experimental = defu(mergedConfig.experimental, {
+    extensionApi: 'webextension-polyfill' as const,
+    entrypointImporter: 'jiti' as const,
+  });
+
+  if (experimental.extensionApi === 'chrome') {
+    await ensureDependencyInstalled('@types/chrome', {
+      dev: true,
+    });
+  }
+
   return {
     browser,
     command,
@@ -174,10 +186,7 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: defu(mergedConfig.experimental, {
-      extensionApi: 'webextension-polyfill' as const,
-      entrypointImporter: 'jiti' as const,
-    }),
+    experimental,
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -324,7 +333,12 @@ async function getUnimportOptions(
         // ignored.
         ignore: ['options'],
       },
-      { package: 'wxt/browser' },
+      {
+        package:
+          config.experimental?.extensionApi === 'chrome'
+            ? 'wxt/browser/chrome'
+            : 'wxt/browser',
+      },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
     ],
