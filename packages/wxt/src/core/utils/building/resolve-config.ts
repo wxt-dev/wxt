@@ -25,7 +25,6 @@ import { normalizePath } from '../paths';
 import glob from 'fast-glob';
 import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
-import { ensureDependencyInstalled } from 'nypm';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -148,11 +147,6 @@ export async function resolveConfig(
   );
 
   const extensionApi = mergedConfig.extensionApi ?? 'webextension-polyfill';
-  if (extensionApi === 'chrome') {
-    await ensureDependencyInstalled('@types/chrome', {
-      dev: true,
-    });
-  }
 
   return {
     browser,

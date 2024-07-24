@@ -6,7 +6,7 @@ WXT uses the same tool as Nuxt for auto-imports, [`unimport`](https://github.com
 
 Some WXT APIs can be used without importing them:
 
-- [`browser`](/api/reference/wxt/browser/variables/browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
+- [`browser`](/api/reference/wxt/browser/#browser) from `wxt/browser`, a small wrapper around `webextension-polyfill`
 - [`defineContentScript`](/api/reference/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`
 - [`defineBackground`](/api/reference/wxt/sandbox/functions/defineBackground) from `wxt/sandbox`
 - [`defineUnlistedScript`](/api/reference/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
