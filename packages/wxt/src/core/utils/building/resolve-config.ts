@@ -25,7 +25,6 @@ import { normalizePath } from '../paths';
 import glob from 'fast-glob';
 import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
-import { fileURLToPath } from 'node:url';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -318,7 +317,13 @@ async function getUnimportOptions(
       { name: 'fakeBrowser', from: 'wxt/testing' },
     ],
     presets: [
-      { package: 'wxt/client' },
+      {
+        package: 'wxt/client',
+        // There seems to be a bug in unimport that thinks "options" is an
+        // export from wxt/client, but it doesn't actually exist... so it's
+        // ignored.
+        ignore: ['options'],
+      },
       { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
