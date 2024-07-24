@@ -46,16 +46,16 @@
       "default": "./dist/sandbox/index.mjs"
     },
     "./browser": {
-      "types": "./dist/browser.d.ts",
-      "default": "./dist/browser.mjs"
+      "types": "./dist/browser/index.d.ts",
+      "default": "./dist/browser/index.mjs"
     },
     "./browser/chrome": {
       "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.js"
+      "import": "./dist/browser/chrome.mjs"
     },
     "./browser/webextension-polyfill": {
       "types": "./dist/browser/webextension-polyfill.d.ts",
-      "import": "./dist/browser/webextension-polyfill.js"
+      "import": "./dist/browser/webextension-polyfill.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",

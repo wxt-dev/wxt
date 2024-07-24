@@ -1,4 +1,4 @@
-import { browser } from '../../browser';
+import { browser } from 'wxt/browser';
 
 export class WxtLocationChangeEvent extends Event {
   static EVENT_NAME = getUniqueEventName('wxt:locationchange');

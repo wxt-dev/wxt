@@ -1,4 +1,4 @@
-import type { Manifest, Scripting } from '../../browser';
+import type { Manifest, Scripting } from 'wxt/browser';
 import { ContentScriptEntrypoint, ResolvedConfig } from '../../types';
 import { getEntrypointBundlePath } from './entrypoints';
 

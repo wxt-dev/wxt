@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import { Commands, type Manifest } from '../../../browser';
+import { Commands, type Manifest } from 'wxt/browser';
 import {
   FsCache,
   ResolvedConfig,
