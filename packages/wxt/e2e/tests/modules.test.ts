@@ -192,10 +192,8 @@ describe('Module Helpers', () => {
       const expectedText = addPluginModule(project);
 
       await project.build({
-        experimental: {
-          // reduce build output when comparing test failures
-          extensionApi: 'chrome',
-        },
+        // reduce build output when comparing test failures
+        extensionApi: 'chrome',
       });
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
@@ -214,10 +212,8 @@ describe('Module Helpers', () => {
       const expectedText = addPluginModule(project);
 
       await project.build({
-        experimental: {
-          // reduce build output when comparing test failures
-          extensionApi: 'chrome',
-        },
+        // reduce build output when comparing test failures
+        extensionApi: 'chrome',
       });
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
@@ -237,10 +233,8 @@ describe('Module Helpers', () => {
       const expectedText = addPluginModule(project);
 
       await project.build({
-        experimental: {
-          // reduce build output when comparing test failures
-          extensionApi: 'chrome',
-        },
+        // reduce build output when comparing test failures
+        extensionApi: 'chrome',
       });
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
@@ -255,10 +249,8 @@ describe('Module Helpers', () => {
       const expectedText = addPluginModule(project);
 
       await project.build({
-        experimental: {
-          // reduce build output when comparing test failures
-          extensionApi: 'chrome',
-        },
+        // reduce build output when comparing test failures
+        extensionApi: 'chrome',
       });
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);

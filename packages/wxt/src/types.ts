@@ -295,8 +295,8 @@ export interface InlineConfig {
   /**
    * Which extension API to use.
    *
-   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill)
-   * - `"chrome"` (experimental): Use the vanilla `browser`/`chrome` globals provided by the browser without any polyfills. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
+   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
+   * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
    *
    * @default "webextension-polyfill"
    */
@@ -308,9 +308,9 @@ export interface InlineConfig {
     /**
      * Method used to import entrypoint files during the build process to extract their options.
      *
-     * - "jiti": Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
-     * - "vite-runtime" (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-     * - "vite-node" (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+     * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
+     * - `"vite-runtime"` (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+     * - `"vite-node"` (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
      *
      * @see {@link https://wxt.dev/guide/go-further/entrypoint-side-effects.html|Entrypoint Side-effect Docs}
      *
@@ -1192,6 +1192,7 @@ export interface ResolvedConfig {
    */
   alias: Record<string, string>;
   extensionApi: 'webextension-polyfill' | 'chrome';
+  browserModule: 'wxt/browser' | 'wxt/browser/chrome';
   experimental: {
     entrypointImporter: 'jiti' | 'vite-runtime' | 'vite-node';
   };

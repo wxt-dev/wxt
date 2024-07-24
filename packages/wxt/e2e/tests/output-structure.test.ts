@@ -262,10 +262,9 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      experimental: {
-        // Simplify the build output for comparison
-        extensionApi: 'chrome',
-      },
+      // Simplify the build output for comparison
+      extensionApi: 'chrome',
+
       vite: () => ({
         build: {
           // Make output for snapshot readible
@@ -343,10 +342,9 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      experimental: {
-        // Simplify the build output for comparison
-        extensionApi: 'chrome',
-      },
+      // Simplify the build output for comparison
+      extensionApi: 'chrome',
+
       vite: () => ({
         build: {
           // Make output for snapshot readible

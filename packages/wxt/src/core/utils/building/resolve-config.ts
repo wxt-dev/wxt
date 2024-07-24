@@ -189,6 +189,8 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     extensionApi,
+    browserModule:
+      extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
     experimental: defu(mergedConfig.experimental, {
       entrypointImporter: 'jiti' as const,
     }),

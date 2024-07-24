@@ -2,6 +2,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
+  extensionApi: 'chrome',
   manifest: {
     permissions: ['storage'],
     default_locale: 'en',
@@ -20,7 +21,6 @@ export default defineConfig({
   },
   experimental: {
     entrypointImporter: 'vite-node',
-    extensionApi: 'chrome',
   },
   runner: {
     startUrls: ['https://duckduckgo.com'],

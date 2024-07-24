@@ -13,7 +13,7 @@ export function resolveExtensionApi(config: ResolvedConfig): vite.Plugin {
     name: 'wxt:resolve-extension-api',
     config() {
       // Only apply the config if we're disabling the polyfill
-      if (config.experimental.extensionApi === 'webextension-polyfill') return;
+      if (config.extensionApi === 'webextension-polyfill') return;
 
       return {
         resolve: {
