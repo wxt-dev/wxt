@@ -8,7 +8,7 @@ export * from './noopBackground';
 export * from './cssEntrypoints';
 export * from './bundleAnalysis';
 export * from './globals';
-export * from './webextensionPolyfillMock';
+export * from './extensionApiMock';
 export * from './resolveExtensionApi';
 export * from './entrypointGroupGlobals';
 export * from './defineImportMeta';

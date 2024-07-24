@@ -1,3 +1,4 @@
-import { fakeBrowser as mockBrowser } from 'wxt/testing';
+import { fakeBrowser } from 'wxt/testing';
 
-export default mockBrowser;
+export const browser = fakeBrowser;
+export default fakeBrowser;

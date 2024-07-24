@@ -218,7 +218,7 @@ export async function createViteBuilder(
           const baseConfig = await getBaseConfig();
           const envConfig: vite.InlineConfig = {
             plugins: [
-              wxtPlugins.webextensionPolyfillMock(wxtConfig),
+              wxtPlugins.extensionApiMock(wxtConfig),
               wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
             ],
           };
@@ -238,7 +238,7 @@ export async function createViteBuilder(
           baseConfig.optimizeDeps.include = [];
           const envConfig: vite.InlineConfig = {
             plugins: [
-              wxtPlugins.webextensionPolyfillMock(wxtConfig),
+              wxtPlugins.extensionApiMock(wxtConfig),
               wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
             ],
           };
