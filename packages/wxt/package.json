@@ -73,7 +73,8 @@
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "pnpm test -- run --coverage",
-    "sync-releases": "pnpx changelogen@latest gh release"
+    "sync-releases": "pnpx changelogen@latest gh release",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",

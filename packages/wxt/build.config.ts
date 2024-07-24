@@ -1,30 +1,33 @@
 import { defineBuildConfig } from 'unbuild';
 import { version } from './package.json';
 import { readFile, writeFile } from 'fs/promises';
-import { virtualEntrypointModuleNames } from './src/core/utils/virtual-modules';
-
-const basePattern = ['**/*', '!**/__tests__', '!**/*.md'];
+import {
+  virtualEntrypointModuleNames,
+  virtualModuleNames,
+} from './src/core/utils/virtual-modules';
 
 export default defineBuildConfig([
+  // Non-virtual modules can be transpiled with mkdist
   {
     entries: [
       {
         builder: 'mkdist',
         input: 'src',
-        pattern: [...basePattern, '!virtual'],
+        pattern: ['**/*', '!**/__tests__', '!**/*.md', '!virtual'],
         declaration: true,
       },
     ],
     hooks: {
       async 'build:done'() {
+        // Replace any template variables in output files
         await replaceVars('dist/version.mjs', { version });
       },
     },
   },
-  {
-    entries: virtualEntrypointModuleNames.map(
-      (moduleName) => `src/virtual/${moduleName}.ts`,
-    ),
+
+  // Virtual modules must be bundled individually
+  ...virtualModuleNames.map((moduleName) => ({
+    entries: [`src/virtual/${moduleName}.ts`],
     externals: [
       ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
       'virtual:wxt-plugins',
@@ -32,8 +35,9 @@ export default defineBuildConfig([
       'wxt/browser',
       'wxt/sandbox',
       'wxt/client',
+      'wxt/testing',
     ],
-  },
+  })),
 ]);
 
 async function replaceVars(file: string, vars: Record<string, string>) {
