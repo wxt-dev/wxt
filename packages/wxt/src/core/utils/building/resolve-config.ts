@@ -147,12 +147,8 @@ export async function resolveConfig(
     {},
   );
 
-  const experimental = defu(mergedConfig.experimental, {
-    extensionApi: 'webextension-polyfill' as const,
-    entrypointImporter: 'jiti' as const,
-  });
-
-  if (experimental.extensionApi === 'chrome') {
+  const extensionApi = mergedConfig.extensionApi ?? 'webextension-polyfill';
+  if (extensionApi === 'chrome') {
     await ensureDependencyInstalled('@types/chrome', {
       dev: true,
     });
@@ -167,7 +163,13 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(wxtDir, srcDir, logger, mergedConfig),
+    imports: await getUnimportOptions(
+      wxtDir,
+      srcDir,
+      logger,
+      extensionApi,
+      mergedConfig,
+    ),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -186,7 +188,10 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental,
+    extensionApi,
+    experimental: defu(mergedConfig.experimental, {
+      entrypointImporter: 'jiti' as const,
+    }),
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -315,6 +320,7 @@ async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
   logger: Logger,
+  extensionApi: ResolvedConfig['extensionApi'],
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
@@ -335,9 +341,7 @@ async function getUnimportOptions(
       },
       {
         package:
-          config.experimental?.extensionApi === 'chrome'
-            ? 'wxt/browser/chrome'
-            : 'wxt/browser',
+          extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
       },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },

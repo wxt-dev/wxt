@@ -380,9 +380,6 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@types/chrome':
-        specifier: ^0.0.268
-        version: 0.0.268
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -7266,7 +7263,7 @@ packages:
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      vite: 5.3.4(sass@1.77.8)
+      vite: 5.3.4(@types/node@20.14.11)
     dev: true
 
   /vitest@2.0.3:

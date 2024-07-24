@@ -296,8 +296,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     transformManifest: () => {},
     userConfigMetadata: {},
     alias: {},
+    extensionApi: 'webextension-polyfill',
     experimental: {
-      extensionApi: 'webextension-polyfill',
       entrypointImporter: 'jiti',
     },
     dev: {
