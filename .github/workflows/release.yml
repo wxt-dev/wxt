@@ -12,6 +12,7 @@ on:
           - module-vue
           - module-svelte
           - module-solid
+          - module-auto-icons
 
 jobs:
   validate:
