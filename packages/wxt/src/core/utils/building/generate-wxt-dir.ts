@@ -84,7 +84,9 @@ async function getPathsDeclarationEntry(
       ),
     )
     .concat(await getPublicFiles());
+
   await wxt.hooks.callHook('prepare:publicPaths', wxt, paths);
+
   const unions = paths
     .map(normalizePath)
     .sort()
