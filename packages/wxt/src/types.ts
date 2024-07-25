@@ -1051,13 +1051,29 @@ export interface WxtHooks {
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
   /**
+   * Called before generating the list of public paths inside
+   * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative
+   * to output directory) WXT doesn't add automatically.
+   *
+   * @param wxt The configured WXT object
+   * @param paths This list of paths TypeScript allows `browser.runtime.getURL` to be called with.
+   *
+   * @example
+   * wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
+   *   paths.push('/icons/128.png');
+   * })
+   */
+  'prepare:publicPaths': (wxt: Wxt, paths: string[]) => HookResult;
+  /**
    * Called before the build is started in both dev mode and build mode.
    *
    * @param wxt The configured WXT object
    */
   'build:before': (wxt: Wxt) => HookResult;
   /**
-   * Called once the build process has finished.
+   * Called once the build process has finished. You can add files to the build
+   * summary here by pushing to `output.publicAssets`.
+   *
    * @param wxt The configured WXT object
    * @param output The results of the build
    */
