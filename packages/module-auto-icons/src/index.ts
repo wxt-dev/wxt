@@ -6,7 +6,7 @@ import sharp from 'sharp';
 import { ensureDir, exists } from 'fs-extra';
 
 export default defineWxtModule<AutoIconsOptions>({
-  name: '@wxt-dev/module-auto-icons',
+  name: '@wxt-dev/auto-icons',
   configKey: 'autoIcons',
   async setup(wxt, options) {
     const parsedOptions = defu(options, {
@@ -53,6 +53,17 @@ export default defineWxtModule<AutoIconsOptions>({
         const resized = image.resize(size);
         ensureDir(resolve(outputFolder, 'icons'));
         await resized.toFile(resolve(outputFolder, `icons/${size}.png`));
+
+        output.publicAssets.push({
+          type: 'asset',
+          fileName: `icons/${size}.png`,
+        });
+      }
+    });
+
+    wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
+      for (const size of parsedOptions.sizes) {
+        paths.push(`icons/${size}.png`);
       }
     });
   },
