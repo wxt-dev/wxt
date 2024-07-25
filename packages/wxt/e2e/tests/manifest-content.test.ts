@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 
-describe.each(['jiti', 'vite-runtime', 'vite-node'] as const)(
+describe.each(['vite-node', 'jiti'] as const)(
   'Manifest Content (Vite runtime? %s)',
   (entrypointImporter) => {
     it.each([

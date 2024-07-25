@@ -299,25 +299,27 @@ export interface InlineConfig {
    * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
    *
    * @default "webextension-polyfill"
+   * @since 0.19.0
    */
   extensionApi?: 'webextension-polyfill' | 'chrome';
   /**
+   * @deprecated Will be removed in v0.20.0, please migrate to using `vite-node`, the new default.
+   *
+   * Method used to import entrypoint files during the build process to extract their options.
+   *
+   * - `"vite-node"` (default as of 0.19.0): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
+   * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
+   *
+   * @see {@link https://wxt.dev/guide/go-further/entrypoint-importers.html|Entrypoint Importers}
+   *
+   * @default "vite-node"
+   * @since 0.19.0
+   */
+  entrypointLoader?: 'vite-node' | 'jiti';
+  /**
    * Experimental settings - use with caution.
    */
-  experimental?: {
-    /**
-     * Method used to import entrypoint files during the build process to extract their options.
-     *
-     * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
-     * - `"vite-runtime"` (unstable): Uses Vite 5.3's new runtime API to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-     * - `"vite-node"` (unstable): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-     *
-     * @see {@link https://wxt.dev/guide/go-further/entrypoint-side-effects.html|Entrypoint Side-effect Docs}
-     *
-     * @default "jiti"
-     */
-    entrypointImporter?: 'jiti' | 'vite-runtime' | 'vite-node';
-  };
+  experimental?: {};
   /**
    * Config effecting dev mode only.
    */
@@ -1209,9 +1211,8 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   extensionApi: 'webextension-polyfill' | 'chrome';
   browserModule: 'wxt/browser' | 'wxt/browser/chrome';
-  experimental: {
-    entrypointImporter: 'jiti' | 'vite-runtime' | 'vite-node';
-  };
+  entrypointLoader: 'vite-node' | 'jiti';
+  experimental: {};
   dev: {
     /** Only defined during dev command */
     server?: {
