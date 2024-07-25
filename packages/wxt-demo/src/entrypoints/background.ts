@@ -20,7 +20,7 @@ export default defineBackground({
     // @ts-expect-error: should only accept entrypoints or public assets
     browser.runtime.getURL('/');
     browser.runtime.getURL('/background.js');
-    browser.runtime.getURL('/icon/128.png');
+    browser.runtime.getURL('/icons/128.png');
     browser.runtime.getURL('/example.html#hash');
     browser.runtime.getURL('/example.html?query=param');
     // @ts-expect-error: should only allow hashes/query params on HTML files

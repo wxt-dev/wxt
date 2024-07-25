@@ -19,9 +19,6 @@ export default defineConfig({
   analysis: {
     open: true,
   },
-  experimental: {
-    entrypointImporter: 'vite-node',
-  },
   runner: {
     startUrls: ['https://duckduckgo.com'],
   },
