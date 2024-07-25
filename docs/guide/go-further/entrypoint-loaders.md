@@ -1,4 +1,33 @@
-# Entrypoint Side Effects
+# Entrypoint Loaders
+
+Because entrypoint options, like content script matches, are listed in the entrypoint's JS file, WXT has to import them during the build process to use those options when generating the manifest.
+
+There are two options for loading your entrypoints:
+
+1. `vite-node` - default as of `v0.19.0`
+2. `jiti` (**DEPRECATED, will be removed in `v0.20.0`**) - Default before `v0.19.0`
+
+## vite-node
+
+```ts
+export default defineConfig({
+  entrypointLoader: 'vite-node', // (or don't include the option at all)
+});
+```
+
+Since 0.19.0, WXT uses `vite-node`, the same tool that powers Vitest and Nuxt, to import your entrypoint files.
+
+There isn't really anything to add here... By default, it should "just work".
+
+## jiti
+
+```ts
+export default defineConfig({
+  entrypointLoader: 'jiti',
+});
+```
+
+The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveot to it's usage: **_module side-effects_**.
 
 You cannot use imported variables outside the `main` function in JS entrypoints. This includes options, as shown below:
 

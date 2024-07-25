@@ -209,26 +209,10 @@ export async function createViteBuilder(
     name: 'Vite',
     version: vite.version,
     async importEntrypoint(path) {
-      switch (wxtConfig.experimental.entrypointImporter) {
+      switch (wxtConfig.entrypointLoader) {
         default:
         case 'jiti': {
           return await importEntrypointFile(path);
-        }
-        case 'vite-runtime': {
-          const baseConfig = await getBaseConfig();
-          const envConfig: vite.InlineConfig = {
-            plugins: [
-              wxtPlugins.extensionApiMock(wxtConfig),
-              wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
-            ],
-          };
-          const config = vite.mergeConfig(baseConfig, envConfig);
-          const server = await vite.createServer(config);
-          await server.listen();
-          const runtime = await vite.createViteRuntime(server, { hmr: false });
-          const module = await runtime.executeUrl(path);
-          await server.close();
-          return module.default;
         }
         case 'vite-node': {
           const baseConfig = await getBaseConfig();

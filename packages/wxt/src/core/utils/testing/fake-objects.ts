@@ -298,9 +298,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     alias: {},
     extensionApi: 'webextension-polyfill',
     browserModule: 'wxt/browser',
-    experimental: {
-      entrypointImporter: 'jiti',
-    },
+    entrypointLoader: 'vite-node',
+    experimental: {},
     dev: {
       reloadCommand: 'Alt+R',
     },
