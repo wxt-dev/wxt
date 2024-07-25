@@ -176,6 +176,8 @@ bun zip:firefox
 
 :::
 
+Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the above commands so that the Firefox team knows how to build your extension.
+
 Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
 
 :::warning
@@ -183,8 +185,6 @@ If you use a `.env` files, they can effect the chunk hashes in the output direct
 
 See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 :::
-
-Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the above commands so that the Firefox team knows how to build your extension.
 
 #### Private Packages
 

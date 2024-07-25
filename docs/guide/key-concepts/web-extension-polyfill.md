@@ -4,7 +4,7 @@
 
 WXT is built on top [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill). The polyfill standardizes much of web extension APIs so they behave the same across different browsers and manifest versions.
 
-Unlike with Chrome Extension development, which uses a `chrome` global, you need to import the `browser` variable from WXT to use the polyfill:
+Unlike with Chrome Extension development, which uses a `chrome` global, you need to import the `browser` variable from WXT to access the extension APIs:
 
 ```ts
 import { browser } from 'wxt/browser';
@@ -80,11 +80,11 @@ WXT uses Vite, so all of Vite's `import.meta.env` variables are also available:
 
 Based on the files in your project, WXT will modify some of the polyfill's types to be type-safe.
 
-For example, `browser.runtime.getURL` will be typed to only allow getting the URL of known files.
+For example, `browser.runtime.getURL` will be typed to only allow getting the URL of known files. `browser.i18n.getMessage` will only allow getting translations of messages defined in your `public/_locales/<default-locale>/messages.json` file.
 
 ## Missing Types
 
-Some newer APIs that Chrome provides are missing types. But don't worry, the APIs are present at runtime! The polyfill only provides types for standard and stable APIs that work on all browsers, so just be careful when you use them.
+Some newer APIs that Chrome provides are missing types. Don't worry, the APIs are present at runtime! The polyfill only provides types for standard and stable APIs that work on all browsers, so just be careful when you use them.
 
 If you're using TypeScript, you can use `@ts-expect-error` to ignore any errors when using an API that doesn't have any types.
 

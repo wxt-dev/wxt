@@ -96,7 +96,7 @@ export default defineConfig({
 
 ### ESLint 9 and above
 
-WXT supports the new "flat config" file format. Just import the generated file and add it to the array of config to extend.
+WXT supports the "flat config" file format introduced in ESLint 9. Just import the generated file and add it to the array of config to extend.
 
 ```js
 // eslint.config.mjs

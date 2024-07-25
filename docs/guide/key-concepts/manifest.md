@@ -102,7 +102,7 @@ If a version is not found, a warning is logged and the version defaults to `"0.0
 }
 ```
 
-### `icons`
+## `icons`
 
 By default, WXT will discover icons in your [`public` directory](/guide/directory-structure/public/) and use them for the [manifest's `icons`](https://developer.chrome.com/docs/extensions/mv3/manifest/icons/).
 
@@ -135,7 +135,7 @@ export default defineConfig({
 });
 ```
 
-### Permissions
+## Permissions
 
 [Permissions](https://developer.chrome.com/docs/extensions/reference/permissions/) must be listed in the manifest config.
 
@@ -147,7 +147,7 @@ export default defineConfig({
 });
 ```
 
-### Host Permissions
+## Host Permissions
 
 [Host Permissions](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions#host-permissions) must be listed in the manifest config.
 

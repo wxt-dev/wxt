@@ -51,7 +51,7 @@ export default defineConfig({
 
 If your framework doesn't have an official WXT module, no worries! WXT supports any framework with a Vite plugin.
 
-Just add the Vite plugin to your config and you're good to go! Use the framework in HTML pages or content scripts, it will just work 👍
+Just add the Vite plugin to your config and you're good to go! Use the framework in HTML pages or content scripts and it will just work 👍
 
 ```ts
 import { defineConfig } from 'wxt';
@@ -102,7 +102,7 @@ Usually, this means each entrypoint should be a directory with it's own files in
 
 Lots of frameworks come with routers for building a multi-page app using the URL's path. Chrome extensions don't don't work like this. Since HTML files are static, `chrome-extension://{id}/popup.html`, there's no way to change the entire path for routing.
 
-Instead, you need to configure the router to run in "hash" mode, where the routing information is apart of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`)
+Instead, you need to configure the router to run in "hash" mode, where the routing information is apart of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`).
 
 Refer to your router's docs for information about hash mode and how to enable it. Here's a non-extensive list of a few popular routers:
 

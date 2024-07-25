@@ -176,7 +176,7 @@ export default defineWxtPlugin(() => {
 :::
 
 :::warning Async Plugins
-Unlike modules, **_plugins cannot be async_**!! If you need to do some async work and expose that result to the rest of the extension, wrap it in an object and handle awaiting the promise internally.
+Unlike modules, **_plugins cannot be async_**!! If you need to do some async work and expose that result to the rest of the extension, store the result's promise synchronously and await it later on.
 :::
 
 ## Publishing to NPM
