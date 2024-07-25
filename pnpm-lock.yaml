@@ -417,6 +417,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@wxt-dev/module-auto-icons':
+        specifier: workspace:*
+        version: link:../module-auto-icons
       sass:
         specifier: ^1.77.8
         version: 1.77.8

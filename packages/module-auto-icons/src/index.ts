@@ -1,6 +1,6 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve } from 'path';
+import { resolve, relative } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
 import { ensureDir, exists } from 'fs-extra';
@@ -16,18 +16,20 @@ export default defineWxtModule<AutoIconsOptions>({
       sizes: [128, 48, 32, 16],
     });
 
-    if (!parsedOptions.enabled) return wxt.logger.warn(`${this.name} disabled`);
+    if (!parsedOptions.enabled)
+      return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
     if (!(await exists(parsedOptions.baseIconsPath))) {
-      return wxt.logger.fatal(
-        `Cannot generate icons, no base icon found at ${parsedOptions.baseIconsPath}`,
+      const relativePath = relative(process.cwd(), parsedOptions.baseIconsPath);
+      return wxt.logger.warn(
+        `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relativePath}`,
       );
     }
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
       if (manifest.icons)
         return wxt.logger.warn(
-          'icons property found in manifest, overwriting with auto-generated icons',
+          '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
         );
 
       manifest.icons = Object.fromEntries(
@@ -35,7 +37,7 @@ export default defineWxtModule<AutoIconsOptions>({
       );
     });
 
-    wxt.hooks.hook('build:done', async (wxt) => {
+    wxt.hooks.hook('build:done', async (wxt, output) => {
       const image = sharp(parsedOptions.baseIconsPath).png();
 
       if (
