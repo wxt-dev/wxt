@@ -185,7 +185,7 @@ export async function resolveConfig(
     extensionApi,
     browserModule:
       extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
-    entrypointLoader: 'vite-node' as const,
+    entrypointLoader: mergedConfig.entrypointLoader ?? 'vite-node',
     experimental: defu(mergedConfig.experimental, {}),
     dev: {
       server: devServerConfig,

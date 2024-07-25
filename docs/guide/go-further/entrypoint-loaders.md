@@ -9,25 +9,21 @@ There are two options for loading your entrypoints:
 
 ## vite-node
 
-```ts
-export default defineConfig({
-  entrypointLoader: 'vite-node', // (or don't include the option at all)
-});
-```
-
 Since 0.19.0, WXT uses `vite-node`, the same tool that powers Vitest and Nuxt, to import your entrypoint files.
 
 There isn't really anything to add here... By default, it should "just work".
 
 ## jiti
 
+The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveot to it's usage: **_module side-effects_**.
+
+To enable `jiti`:
+
 ```ts
 export default defineConfig({
   entrypointLoader: 'jiti',
 });
 ```
-
-The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveot to it's usage: **_module side-effects_**.
 
 You cannot use imported variables outside the `main` function in JS entrypoints. This includes options, as shown below:
 

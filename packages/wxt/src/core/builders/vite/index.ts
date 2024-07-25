@@ -35,7 +35,9 @@ export async function createViteBuilder(
   /**
    * Returns the base vite config shared by all builds based on the inline and user config.
    */
-  const getBaseConfig = async () => {
+  const getBaseConfig = async (baseConfigOptions?: {
+    excludeAnalysisPlugin?: boolean;
+  }) => {
     const config: vite.InlineConfig = await wxtConfig.vite(wxtConfig.env);
 
     config.root = wxtConfig.root;
@@ -71,7 +73,12 @@ export async function createViteBuilder(
       wxtPlugins.wxtPluginLoader(wxtConfig),
       wxtPlugins.resolveAppConfig(wxtConfig),
     );
-    if (wxtConfig.analysis.enabled) {
+    if (
+      wxtConfig.analysis.enabled &&
+      // If included, vite-node entrypoint loader will increment the
+      // bundleAnalysis's internal build index tracker, which we don't want
+      !baseConfigOptions?.excludeAnalysisPlugin
+    ) {
       config.plugins.push(wxtPlugins.bundleAnalysis(wxtConfig));
     }
 
@@ -215,7 +222,9 @@ export async function createViteBuilder(
           return await importEntrypointFile(path);
         }
         case 'vite-node': {
-          const baseConfig = await getBaseConfig();
+          const baseConfig = await getBaseConfig({
+            excludeAnalysisPlugin: true,
+          });
           // Disable dep optimization, as recommended by vite-node's README
           baseConfig.optimizeDeps ??= {};
           baseConfig.optimizeDeps.noDiscovery = true;
