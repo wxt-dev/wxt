@@ -9,6 +9,7 @@ import { Storage, browser } from 'wxt/browser';
 import { dequal } from 'dequal/lite';
 import { logger } from './sandbox/utils/logger';
 import { toArray } from './core/utils/arrays';
+import { Mutex } from 'async-mutex';
 
 export const storage = createStorage();
 
@@ -43,8 +44,8 @@ function createStorage(): WxtStorage {
     };
   };
   const getMetaKey = (key: string) => key + '$';
-  const getValueOrDefault = (value: any, defaultValue: any) =>
-    value ?? defaultValue ?? null;
+  const getValueOrFallback = (value: any, fallback: any) =>
+    value ?? fallback ?? null;
   const getMetaValue = (properties: any) =>
     typeof properties === 'object' && !Array.isArray(properties)
       ? properties
@@ -56,7 +57,7 @@ function createStorage(): WxtStorage {
     opts: GetItemOptions<any> | undefined,
   ) => {
     const res = await driver.getItem<any>(driverKey);
-    return getValueOrDefault(res, opts?.defaultValue);
+    return getValueOrFallback(res, opts?.fallback ?? opts?.defaultValue);
   };
   const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
     const metaKey = getMetaKey(driverKey);
@@ -148,9 +149,10 @@ function createStorage(): WxtStorage {
           const driverResults = await drivers[driverArea].getItems(keys);
           return driverResults.map((driverResult) => {
             const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
-            const value = getValueOrDefault(
+            const opts = keyToOptsMap.get(key);
+            const value = getValueOrFallback(
               driverResult.value,
-              keyToOptsMap.get(key)?.defaultValue,
+              opts?.fallback ?? opts?.defaultValue,
             );
             return { key, value };
           });
@@ -302,15 +304,38 @@ function createStorage(): WxtStorage {
               logger.error(`Migration failed for ${key}`, err);
             });
 
-      const getDefaultValue = () => opts?.defaultValue ?? null;
+      const initMutex = new Mutex();
+
+      const getFallback = () => opts?.fallback ?? opts?.defaultValue ?? null;
+
+      const getOrInitValue = () =>
+        initMutex.runExclusive(async () => {
+          const value = await driver.getItem<any>(driverKey);
+          // Don't init value if it already exists or the init function isn't provided
+          if (value != null || opts?.init == null) return value;
+
+          const newValue = await opts.init();
+          await driver.setItem<any>(driverKey, newValue);
+          return newValue;
+        });
+
+      // Initialize the value once migrations have finished
+      migrationsDone.then(getOrInitValue);
 
       return {
         get defaultValue() {
-          return getDefaultValue();
+          return getFallback();
+        },
+        get fallback() {
+          return getFallback();
         },
         getValue: async () => {
           await migrationsDone;
-          return await getItem(driver, driverKey, opts);
+          if (opts?.init) {
+            return await getOrInitValue();
+          } else {
+            return await getItem(driver, driverKey, opts);
+          }
         },
         getMeta: async () => {
           await migrationsDone;
@@ -334,7 +359,7 @@ function createStorage(): WxtStorage {
         },
         watch: (cb) =>
           watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getDefaultValue(), oldValue ?? getDefaultValue()),
+            cb(newValue ?? getFallback(), oldValue ?? getFallback()),
           ),
         migrate,
       };
@@ -567,7 +592,14 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  /**
+   * @deprecated Renamed to `fallback`, use it instead.
+   */
   defaultValue: TValue;
+  /**
+   * The value provided by the `fallback` option.
+   */
+  fallback: TValue;
   /**
    * Get the latest value from storage.
    */
@@ -610,9 +642,13 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
-   * Value returned from `getValue` when it would otherwise return null.
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue?: T;
+  /**
+   * Default value returned when `getItem` would otherwise return `null`.
+   */
+  fallback?: T;
 }
 
 export interface RemoveItemOptions {
@@ -633,7 +669,21 @@ export interface SnapshotOptions {
 }
 
 export interface WxtStorageItemOptions<T> {
-  defaultValue: T;
+  /**
+   * @deprecated Renamed to `fallback`, use it instead.
+   */
+  defaultValue?: T;
+  /**
+   * Default value returned when `getValue` would otherwise return `null`.
+   */
+  fallback?: T;
+  /**
+   * If passed, a value in storage will be initialized immediately after
+   * defining the storage item. This function returns the value that will be
+   * saved to storage during the initialization process if a value doesn't
+   * already exist.
+   */
+  init?: () => T | Promise<T>;
   /**
    * Provide a version number for the storage item to enable migrations. When changing the version
    * in the future, migration functions will be ran on application startup.

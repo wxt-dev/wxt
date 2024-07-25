@@ -11,6 +11,14 @@ async function waitForMigrations() {
   return new Promise((res) => setTimeout(res));
 }
 
+/**
+ * Same as `waitForMigrations`, the fake browser being synchronous means the
+ * `init` logic is finished by the next task in the event queue.
+ */
+async function waitForInit() {
+  return new Promise((res) => setTimeout(res));
+}
+
 describe('Storage Utils', () => {
   beforeEach(() => {
     fakeBrowser.reset();
@@ -813,20 +821,56 @@ describe('Storage Utils', () => {
       });
     });
 
-    describe('defaultValue', () => {
-      it('should return the default value when provided', () => {
-        const defaultValue = 123;
-        const item = storage.defineItem(`local:test`, {
-          defaultValue,
+    describe.each(['fallback', 'defaultValue'] as const)(
+      '%s option',
+      (fallbackKey) => {
+        it('should return the default value when provided', () => {
+          const fallback = 123;
+          const item = storage.defineItem(`local:test`, {
+            [fallbackKey]: fallback,
+          });
+
+          expect(item.fallback).toBe(fallback);
+          expect(item.defaultValue).toBe(fallback);
         });
 
-        expect(item.defaultValue).toBe(defaultValue);
+        it('should return null when not provided', () => {
+          const item = storage.defineItem<number>(`local:test`);
+
+          expect(item.fallback).toBeNull();
+          expect(item.defaultValue).toBeNull();
+        });
+      },
+    );
+
+    describe('init option', () => {
+      it('should only call init once (per JS context) when calling getValue successively, avoiding race conditions', async () => {
+        const expected = 1;
+        const init = vi
+          .fn()
+          .mockResolvedValueOnce(expected)
+          .mockResolvedValue('not' + expected);
+        const item = storage.defineItem('local:test', { init });
+
+        await waitForInit();
+
+        const p1 = item.getValue();
+        const p2 = item.getValue();
+
+        await expect(p1).resolves.toBe(expected);
+        await expect(p2).resolves.toBe(expected);
+
+        expect(init).toBeCalledTimes(1);
       });
 
-      it('should return null when not provided', () => {
-        const item = storage.defineItem<number>(`local:test`);
+      it('should initialize the value in storage immediately', async () => {
+        const expected = 1;
+        const init = vi.fn().mockReturnValue(expected);
+        storage.defineItem('local:test', { init });
 
-        expect(item.defaultValue).toBeNull();
+        await waitForInit();
+
+        await expect(storage.getItem('local:test')).resolves.toBe(expected);
       });
     });
 

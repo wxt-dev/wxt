@@ -121,7 +121,7 @@ Storage items contain the same APIs as the `storage` variable, but you can confi
 const showChangelogOnUpdate = storage.defineItem<boolean>(
   'local:showChangelogOnUpdate',
   {
-    defaultValue: true,
+    fallback: true,
   },
 );
 ```
@@ -153,7 +153,7 @@ type IgnoredWebsiteV1 = string;
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV1[]>(
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 1,
   },
 );
@@ -173,7 +173,7 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV1[]>( // [!code
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 1, // [!code --]
     version: 2, // [!code ++]
     migrations: { // [!code ++]
@@ -205,7 +205,7 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 2, // [!code --]
     version: 3, // [!code ++]
     migrations: {
@@ -242,7 +242,7 @@ Lets look at the same ignored websites example from before, but start with an un
 export const ignoredWebsites = storage.defineItem<string[]>(
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
   },
 );
 ```
@@ -262,7 +262,7 @@ export const ignoredWebsites = storage.defineItem<string[]>( // [!code --]
 export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code ++]
   'local:ignoredWebsites',
   {
-    defaultValue: [],
+    fallback: [],
     version: 2, // [!code ++]
     migrations: { // [!code ++]
       // Ran when migrating from v1 to v2 // [!code ++]
@@ -279,3 +279,35 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 ### Running Migrations
 
 As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.
+
+### Default Values
+
+With `storage.defineItem`, there are multiple ways of defining default values:
+
+1. `fallback` - Return this value from `getValue` instead of `null` if the value is missing.
+
+   This option is great for providing default values for settings:
+
+   ```ts
+   const theme = storage.defineItem('local:theme', {
+     fallback: 'dark',
+   });
+   const allowEditing = storage.defineItem('local:allow-editing', {
+     fallback: true,
+   });
+   ```
+
+2. `init` - Initialize and save a value in storage if it is not already saved.
+
+   This is great for values that need to be initialized or set once:
+
+   ```ts
+   const userId = storage.defineItem('local:user-id', {
+     init: () => globalThis.crypto.randomUUID(),
+   });
+   const installDate = storage.defineItem('local:install-date', {
+     init: () => new Date().getTime(),
+   });
+   ```
+
+   The value is initialized in storage immediately.
