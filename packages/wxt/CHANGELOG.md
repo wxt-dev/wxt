@@ -298,7 +298,7 @@
 
 ## v0.18.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.12...v0.18.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.17.12...v0.18.0)
 
 ### 🚀 Enhancements
 
@@ -332,12 +332,6 @@
 - **deps-dev:** Bump simple-git-hooks from 2.9.0 to 2.11.1 ([#640](https://github.com/wxt-dev/wxt/pull/640))
 - Refactor repo to a standard monorepo ([#646](https://github.com/wxt-dev/wxt/pull/646))
 - Fix formatting after monorepo refactor ([6ca3767](https://github.com/wxt-dev/wxt/commit/6ca3767))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Automatically move `host_permissions` to `permissions` for MV2 ([#626](https://github.com/wxt-dev/wxt/pull/626))
-
-  Out of an abundance of caution, I've marked this as a breaking change because permission generation has changed. **_If you list `host_permissions` in your `wxt.config.ts`'s manifest and have released your extension_**, double check that your `permissions` and `host_permissions` have not changed for all browsers you target in your `.output/*/manifest.json` files. Permission changes can cause the extension to be disabled on update, and can cause a drop in users, so be sure to double check for differences compared to the previous manifest version.
 
 ### ❤️ Contributors
 
@@ -605,7 +599,7 @@
 
 ## v0.17.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.11...v0.17.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.16.11...v0.17.0)
 
 ### 🚀 Enhancements
 
@@ -619,70 +613,6 @@
 ### 📖 Documentation
 
 - **storage:** Update docs ([91fc41c](https://github.com/wxt-dev/wxt/commit/91fc41c))
-
-#### ⚠️ Breaking Changes
-
-`v0.17.0` introduces several breaking changes to `wxt/storage`.
-
-First, if you were using `defineItem` with versioning and no default value, you will need to add `defaultValue: null` to the options and update the first type parameter:
-
-```ts
-// < 0.17
-const item = storage.defineItem<number>("local:count", {
-  version: ...,
-  migrations: ...,
-})
-
-// >= 0.17
-const item = storage.defineItem<number | null>("local:count", {
-  defaultValue: null,
-  version: ...,
-  migrations: ...,
-})
-```
-
-The `defaultValue` property is now required if passing in the second options argument.
-
-If you exclude the second options argument, it will default to being nullable, as before.
-
-```ts
-const item: WxtStorageItem<number | null> =
-  storage.defineItem<number>('local:count');
-const value: number | null = await item.getValue();
-```
-
-> If you don't use typescript, there aren't any breaking changes, this is just a type change.
-
-For storage items that are not nullable, the `watch` callback types has improved and will use the default value instead of `null` when the value is missing:
-
-```ts
-// >=0.17
-const item = storage.defineItem<number>('local:count', { defaultValue: 0 });
-item.watch((newValue: number | null, oldValue: number | null) => {
-  // ...
-});
-
-// >=0.17
-const item = storage.defineItem<number>('local:count', { defaultValue: 0 });
-item.watch((newValue: number, oldValue: number) => {
-  // ...
-});
-```
-
-You can also access the default value directly off the item:
-
-```ts
-console.log(item.defaultValue); // 0
-```
-
-The second breaking change is that migrations for versioned items only run when the extension is updated. Before, they were ran whenever the storage item was created, in any entrypoint (background, popup, content script, etc). Now, in v0.17, storage items will only run migrations when the `browser.runtime.onInstalled` event is fired with `reason = "update"` in the background. See the updated docs to make sure they run correctly: https://wxt.dev/guide/storage.html#running-migrations. TLDR: you need to import all storage items into the background entrypoint for the `onInstalled` hook to fire properly and thus run the migrations.
-
-To keep the old behavior, call the new `migrate` function to run migrations as soon as an item is defined:
-
-```ts
-const item = storage.defineItem(...);
-item.migrate();
-```
 
 ## v0.16.11
 
@@ -889,7 +819,7 @@ item.migrate();
 
 ## v0.16.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.4...v0.16.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.15.4...v0.16.0)
 
 ### 🚀 Enhancements
 
@@ -904,31 +834,6 @@ item.migrate();
 - **deps-dev:** Bump lint-staged from 15.2.0 to 15.2.1 ([#395](https://github.com/wxt-dev/wxt/pull/395))
 - **deps-dev:** Bump p-map from 7.0.0 to 7.0.1 ([#396](https://github.com/wxt-dev/wxt/pull/396))
 - **deps-dev:** Bump @vitest/coverage-v8 from 1.0.1 to 1.2.2 ([#397](https://github.com/wxt-dev/wxt/pull/397))
-
-#### ⚠️ Breaking Changes
-
-In [#398](https://github.com/wxt-dev/wxt/pull/398), HTML pages' JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes.
-
-- Before:
-  ```
-  .output/
-    <target>/
-      chunks/
-        some-shared-chunk-<hash>.js
-        popup-<hash>.js
-      popup.html
-  ```
-- After:
-  ```
-  .output/
-    <target>/
-      chunks/
-        some-shared-chunk-<hash>.js
-      popup.html
-      popup.js
-  ```
-
-This effects all HTML files, not just the Popup. The hash has been removed, and it's been moved to the root of the build target folder, not inside the `chunks/` directory. Moving files like this has not historically increased review times or triggered in-depth reviews when submitting updates to the stores.
 
 ## v0.15.4
 
@@ -988,7 +893,7 @@ This effects all HTML files, not just the Popup. The hash has been removed, and 
 
 ## v0.15.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.7...v0.15.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.14.7...v0.15.0)
 
 ### 🚀 Enhancements
 
@@ -1007,21 +912,6 @@ This effects all HTML files, not just the Popup. The hash has been removed, and 
 ### 🏡 Chore
 
 - Update contributor docs ([eb758bd](https://github.com/wxt-dev/wxt/commit/eb758bd))
-
-#### ⚠️ Breaking Changes
-
-Renamed `zip.ignoredSources` to `zip.excludeSources` in [#378](https://github.com/wxt-dev/wxt/pull/378)
-
-Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: https://wxt.dev/guide/multiple-browsers.html#runtime
-
-- `__BROWSER__` &rarr; `import.meta.env.BROWSER`
-- `__COMMAND__` &rarr; `import.meta.env.COMMAND`
-- `__MANIFEST_VERSION__` &rarr; `import.meta.env.MANIFEST_VERSION`
-- `__IS_CHROME__` &rarr; `import.meta.env.CHROME`
-- `__IS_FIREFOX__` &rarr; `import.meta.env.FIREFOX`
-- `__IS_SAFARI__` &rarr; `import.meta.env.SAFARI`
-- `__IS_EDGE__` &rarr; `import.meta.env.EDGE`
-- `__IS_OPERA__` &rarr; `import.meta.env.OPERA`
 
 ### ❤️ Contributors
 
@@ -1143,21 +1033,11 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.14.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.5...v0.14.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.13.5...v0.14.0)
 
 ### 🚀 Enhancements
 
 - ⚠️ Refactor content script UI functions and add helper for "integrated" UIs ([#333](https://github.com/wxt-dev/wxt/pull/333))
-
-#### ⚠️ Breaking Changes
-
-`createContentScriptUi` and `createContentScriptIframe`, and some of their options, have been renamed:
-
-- `createContentScriptUi({ ... })` &rarr; `createShadowRootUi({ ... })`
-- `createContentScriptIframe({ ... })` &rarr; `createIframeUi({ ... })`
-- `type: "inline" | "overlay" | "modal"` has been changed to `position: "inline" | "overlay" | "modal"`
-- `onRemove` is now called **_before_** the UI is removed from the DOM, previously it was called after the UI was removed
-- `mount` option has been renamed to `onMount`, to better match the related option, `onRemove`.
 
 ## v0.13.5
 
@@ -1248,15 +1128,11 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.13.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.5...v0.13.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.12.5...v0.13.0)
 
 ### 🚀 Enhancements
 
 - ⚠️ New `wxt/storage` APIs ([#300](https://github.com/wxt-dev/wxt/pull/300))
-
-#### ⚠️ Breaking Changes
-
-- `wxt/storage` no longer relies on [`unstorage`](https://www.npmjs.com/package/unstorage). Some `unstorage` APIs, like `prefixStorage`, have been removed, while others, like `snapshot`, are methods on the new `storage` object. Most of the standard usage remains the same. See https://wxt.dev/guide/storage and https://wxt.dev/api/reference/wxt/storage/ for more details ([#300](https://github.com/wxt-dev/wxt/pull/300))
 
 ## v0.12.5
 
@@ -1305,7 +1181,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.12.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.2...v0.12.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.11.2...v0.12.0)
 
 ### 🚀 Enhancements
 
@@ -1324,17 +1200,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🏡 Chore
 
 - Convert WXT CLI to an ESM binary ([#279](https://github.com/wxt-dev/wxt/pull/279))
-
-#### ⚠️ Breaking Changes
-
-`defineContentScript` and `defineBackground` are now exported from `wxt/sandbox` instead of `wxt/client`. ([#284](https://github.com/wxt-dev/wxt/pull/284))
-
-- If you use auto-imports, no changes are required.
-- If you have disabled auto-imports, you'll need to manually update your import statements:
-  ```diff
-  - import { defineBackground, defineContentScript } from 'wxt/client';
-  + import { defineBackground, defineContentScript } from 'wxt/sandbox';
-  ```
 
 ## v0.11.2
 
@@ -1368,7 +1233,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.11.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.4...v0.11.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.10.4...v0.11.0)
 
 ### 🚀 Enhancements
 
@@ -1382,10 +1247,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - Speed up CI using `pnpm` instead of `npm` ([#259](https://github.com/wxt-dev/wxt/pull/259))
 - Abstract vite from WXT's core logic ([#242](https://github.com/wxt-dev/wxt/pull/242))
-
-#### ⚠️ Breaking Changes
-
-- You will need to update any other Vite plugins to a version that supports Vite 5 ([#261](https://github.com/wxt-dev/wxt/pull/261))
 
 ### ❤️ Contributors
 
@@ -1459,7 +1320,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.10.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.2...v0.10.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.9.2...v0.10.0)
 
 ### 🚀 Enhancements
 
@@ -1532,7 +1393,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.9.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.7...v0.9.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.8.7...v0.9.0)
 
 ### 🩹 Fixes
 
@@ -1546,18 +1407,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🏡 Chore
 
 - Fix Svelte and React template READMEs ([#207](https://github.com/wxt-dev/wxt/pull/207))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Removed [`"WebWorker"` types](https://www.typescriptlang.org/tsconfig/lib.html) from `.wxt/tsconfig.json` ([#209](https://github.com/wxt-dev/wxt/pull/209)). These types are useful for MV3 projects using a service worker. To add them back to your project, add the following to your project's TSConfig:
-  ```diff
-  {
-    "extends": "./.wxt/tsconfig.json",
-  + "compilerOptions": {
-  +   "lib": ["ESNext", "DOM", "WebWorker"]
-  + }
-  }
-  ```
 
 ### ❤️ Contributors
 
@@ -1667,7 +1516,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.8.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.5...v0.8.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.7.5...v0.8.0)
 
 ### 🚀 Enhancements
 
@@ -1679,11 +1528,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### 🌊 Types
 
-- ⚠️ Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Unlisted scripts must now `export default defineUnlistedScript(...)` ([#167](https://github.com/wxt-dev/wxt/pull/167))
 - ⚠️ Rename `BackgroundScriptDefintition` to `BackgroundDefinition` ([446f265](https://github.com/wxt-dev/wxt/commit/446f265))
 
 ### ❤️ Contributors
@@ -1768,7 +1612,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.7.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.6...v0.7.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.6.6...v0.7.0)
 
 ### 🚀 Enhancements
 
@@ -1783,10 +1627,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🏡 Chore
 
 - Store user config metadata in memory ([0591050](https://github.com/wxt-dev/wxt/commit/0591050))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Content script CSS used to be output to `assets/<name>.css`, but is now `content-scripts/<name>.css` to match the docs. ([#140](https://github.com/wxt-dev/wxt/pull/140))
 
 ## v0.6.6
 
@@ -1870,7 +1710,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.6.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.6...v0.6.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.5.6...v0.6.0)
 
 ### 🚀 Enhancements
 
@@ -1881,10 +1721,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - Use the same mode for each build step ([1f6a931](https://github.com/wxt-dev/wxt/commit/1f6a931))
 - Disable dev logs in production ([3f260ee](https://github.com/wxt-dev/wxt/commit/3f260ee))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ The `vite` config option must now be a function. If you were using an object before, change it from `vite: { ... }` to `vite: () => ({ ... })`. ([#121](https://github.com/wxt-dev/wxt/pull/121))
 
 ## v0.5.6
 
@@ -1946,7 +1782,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.5.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.1...v0.5.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.1...v0.5.0)
 
 ### 🩹 Fixes
 
@@ -1969,10 +1805,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 - **deps-dev:** Bump @types/node from 20.5.0 to 20.5.9 ([#110](https://github.com/wxt-dev/wxt/pull/110))
 - Add entrypoints debug log ([dbd84c8](https://github.com/wxt-dev/wxt/commit/dbd84c8))
 
-#### ⚠️ Breaking Changes
-
-- ⚠️ Change default `publicDir` to `<srcDir>/public` ([5f15f9c](https://github.com/wxt-dev/wxt/commit/5f15f9c))
-
 ## v0.4.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/v0.4.0...v0.4.1)
@@ -1987,7 +1819,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.4.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.3.2...v0.4.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.3.2...v0.4.0)
 
 ### 🚀 Enhancements
 
@@ -2029,10 +1861,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 - Fix test watcher restarting indefinitely ([2c7922c](https://github.com/wxt-dev/wxt/commit/2c7922c))
 - Remove explicit icon config from templates ([93bfee0](https://github.com/wxt-dev/wxt/commit/93bfee0))
 - Use import aliases in Vue template ([#104](https://github.com/wxt-dev/wxt/pull/104))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Use relative path aliases inside `.wxt/tsconfig.json` ([#102](https://github.com/wxt-dev/wxt/pull/102))
 
 ## v0.3.2
 
@@ -2100,7 +1928,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.3.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.2.5...v0.3.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.2.5...v0.3.0)
 
 ### 🚀 Enhancements
 
@@ -2123,11 +1951,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 ### 🤖 CI
 
 - Improve checks against `demo/` extension ([9cc464f](https://github.com/wxt-dev/wxt/commit/9cc464f))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Add type safety to `browser.runtime.getURL` ([58a84ec](https://github.com/wxt-dev/wxt/commit/58a84ec))
-- ⚠️ Change default `publicDir` to `<rootDir>/public` ([19c0948](https://github.com/wxt-dev/wxt/commit/19c0948))
 
 ## v0.2.5
 
@@ -2191,7 +2014,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ## v0.2.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.6...v0.2.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/v0.1.6...v0.2.0)
 
 ### 🚀 Enhancements
 
@@ -2208,10 +2031,6 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 - Run `wxt prepare` on `postinstall` ([c1ea9ba](https://github.com/wxt-dev/wxt/commit/c1ea9ba))
 - Don't format lockfile ([5c7e041](https://github.com/wxt-dev/wxt/commit/5c7e041))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️ Rename `defineBackgroundScript` to `defineBackground` ([5b48ae9](https://github.com/wxt-dev/wxt/commit/5b48ae9))
 
 ## v0.1.6
 
