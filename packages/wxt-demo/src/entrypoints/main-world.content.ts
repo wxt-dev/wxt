@@ -1,3 +1,7 @@
+console.log(globalThis);
+
+console.log(document);
+
 export default defineContentScript({
   matches: ['*://*/*'],
   world: 'MAIN',
