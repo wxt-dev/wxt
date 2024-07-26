@@ -28,6 +28,7 @@ import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
 import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
+import { createExtensionEnvironment } from '../environments';
 
 /**
  * Return entrypoints and their configuration by looking through the project's files.
@@ -72,47 +73,50 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
 
   // Import entrypoints to get their config
   let hasBackground = false;
-  const entrypoints: Entrypoint[] = await Promise.all(
-    entrypointInfos.map(async (info): Promise<Entrypoint> => {
-      const { type } = info;
-      switch (type) {
-        case 'popup':
-          return await getPopupEntrypoint(info);
-        case 'sidepanel':
-          return await getSidepanelEntrypoint(info);
-        case 'options':
-          return await getOptionsEntrypoint(info);
-        case 'background':
-          hasBackground = true;
-          return await getBackgroundEntrypoint(info);
-        case 'content-script':
-          return await getContentScriptEntrypoint(info);
-        case 'unlisted-page':
-          return await getUnlistedPageEntrypoint(info);
-        case 'unlisted-script':
-          return await getUnlistedScriptEntrypoint(info);
-        case 'content-script-style':
-          return {
-            ...info,
-            type,
-            outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
-            options: {
-              include: undefined,
-              exclude: undefined,
-            },
-          };
-        default:
-          return {
-            ...info,
-            type,
-            outputDir: wxt.config.outDir,
-            options: {
-              include: undefined,
-              exclude: undefined,
-            },
-          };
-      }
-    }),
+  const env = createExtensionEnvironment();
+  const entrypoints: Entrypoint[] = await env.run(() =>
+    Promise.all(
+      entrypointInfos.map(async (info): Promise<Entrypoint> => {
+        const { type } = info;
+        switch (type) {
+          case 'popup':
+            return await getPopupEntrypoint(info);
+          case 'sidepanel':
+            return await getSidepanelEntrypoint(info);
+          case 'options':
+            return await getOptionsEntrypoint(info);
+          case 'background':
+            hasBackground = true;
+            return await getBackgroundEntrypoint(info);
+          case 'content-script':
+            return await getContentScriptEntrypoint(info);
+          case 'unlisted-page':
+            return await getUnlistedPageEntrypoint(info);
+          case 'unlisted-script':
+            return await getUnlistedScriptEntrypoint(info);
+          case 'content-script-style':
+            return {
+              ...info,
+              type,
+              outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
+              options: {
+                include: undefined,
+                exclude: undefined,
+              },
+            };
+          default:
+            return {
+              ...info,
+              type,
+              outputDir: wxt.config.outDir,
+              options: {
+                include: undefined,
+                exclude: undefined,
+              },
+            };
+        }
+      }),
+    ),
   );
 
   if (wxt.config.command === 'serve' && !hasBackground) {
