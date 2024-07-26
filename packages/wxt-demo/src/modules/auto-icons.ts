@@ -1,3 +1,3 @@
-import autoIcons from '@wxt-dev/module-auto-icons';
+import autoIcons from '@wxt-dev/auto-icons';
 
 export default autoIcons;
