@@ -2,7 +2,7 @@
 
 ## v0.19.0
 
-[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.15...wxt-v0.19.0)
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.15...wxt-v0.19.0)
 
 ### 🚀 Enhancements
 
@@ -35,11 +35,6 @@
 - **deps:** Upgrade `webextension-polyfill` from 0.10 to 0.12 ([#842](https://github.com/wxt-dev/wxt/pull/842))
 - **deps:** Upgrade `minimatch` from 9 to 10 ([#840](https://github.com/wxt-dev/wxt/pull/840))
 - **dev-deps:** Upgrade `happy-dom` from 13 to 14 ([#843](https://github.com/wxt-dev/wxt/pull/843))
-
-#### ⚠️ Breaking Changes
-
-- ⚠️  Use `vite-node` to load entrypoints by default ([#859](https://github.com/wxt-dev/wxt/pull/859))
-- **size:** ⚠️  Switch from `tsup` to `unbuild` for building WXT ([#848](https://github.com/wxt-dev/wxt/pull/848))
 
 ### ❤️ Contributors
 
