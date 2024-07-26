@@ -16,12 +16,11 @@ If there was a major version change, follow the steps below to fix breaking chan
 
 The default entrypoint loader has changed to `vite-node`. If you use any NPM packages that depend on the `webextension-polyfill`, you need to add them to Vite's `ssr.noExternal` option:
 
+<!-- prettier-ignore -->
 ```ts
 export default defineConfig({
-  vite: () => ({
-    // [!code ++]
-    ssr: {
-      // [!code ++]
+  vite: () => ({ // [!code ++]
+    ssr: { // [!code ++]
       noExternal: ['@webext-core/messaging', '@webext-core/proxy-service'], // [!code ++]
     }, // [!code ++]
   }), // [!code ++]
