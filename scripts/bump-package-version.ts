@@ -27,7 +27,8 @@ const rawCommits = await listCommitsInDir(pkgDir, prevTag);
 const commits = parseCommits(rawCommits, config);
 
 // Bump version
-let bumpType = determineSemverChange(commits, config) ?? 'patch';
+const originalBumpType = determineSemverChange(commits, config) ?? 'patch';
+let bumpType = originalBumpType;
 if (currentVersion.startsWith('0.')) {
   if (bumpType === 'major') {
     bumpType = 'minor';
@@ -54,7 +55,7 @@ let versionChangelogBody = versionChangelog
   .slice(1)
   .join('\n')
   .trim();
-if (bumpType === 'major') {
+if (originalBumpType === 'major') {
   versionChangelogBody = versionChangelogBody.replace(
     '[compare changes]',
     `[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes]`,
