@@ -142,7 +142,7 @@ export default defineConfig({
           menuItem('Custom Events', 'custom-events'),
           menuItem('Reusable Modules', 'reusable-modules'),
           menuItem('Remote Code', 'remote-code'),
-          menuItem('Entrypoint Side Effects', 'entrypoint-side-effects'),
+          menuItem('Entrypoint Loaders', 'entrypoint-loaders'),
           menuItem('How WXT Works', 'how-wxt-works'),
         ]),
         menuGroup('Upgrade Guide', '/guide/upgrade-guide/', [

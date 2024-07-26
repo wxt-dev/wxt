@@ -14,37 +14,57 @@ If there was a major version change, follow the steps below to fix breaking chan
 
 ### `vite-node` Entrypoint Loader
 
-The default entrypoint loader has changed to `vite-node`. This change enables:
+The default entrypoint loader has changed to `vite-node`. If you use any NPM packages that depend on the `webextension-polyfill`, you need to add them to Vite's `ssr.noExternal` option:
 
-- Importing variables and using them in the entrypoint options.
+```ts
+export default defineConfig({
+  vite: () => ({
+    // [!code ++]
+    ssr: {
+      // [!code ++]
+      noExternal: ['@webext-core/messaging', '@webext-core/proxy-service'], // [!code ++]
+    }, // [!code ++]
+  }), // [!code ++]
+});
+```
 
-  ```ts
-  // entrypoints/content.ts
-  import { GOOGLE_MATCHES } from '~/utils/constants'
+> [Read the full docs](/guide/go-further/entrypoint-loaders#vite-node) for more information.
 
-  export default defineContentScript({
-    matches: [GOOGLE_MATCHES],
-    main: () => ...,
-  })
-  ```
+:::details This change enables:
 
-- Use Vite-specific APIs like `import.meta.glob` to define entrypoint options.
+Importing variables and using them in the entrypoint options:
 
-  ```ts
-  // entrypoints/content.ts
-  const providers: Record<string, any> = import.meta.glob('../providers/*', {
-    eager: true,
-  });
+```ts
+// entrypoints/content.ts
+import { GOOGLE_MATCHES } from '~/utils/constants'
 
-  export default defineContentScript({
-    matches: Object.values(providers).flatMap(
-      (provider) => provider.default.paths,
-    ),
-    async main() {
-      console.log('Hello content.');
-    },
-  });
-  ```
+export default defineContentScript({
+  matches: [GOOGLE_MATCHES],
+  main: () => ...,
+})
+```
+
+Using Vite-specific APIs like `import.meta.glob` to define entrypoint options:
+
+```ts
+// entrypoints/content.ts
+const providers: Record<string, any> = import.meta.glob('../providers/*', {
+  eager: true,
+});
+
+export default defineContentScript({
+  matches: Object.values(providers).flatMap(
+    (provider) => provider.default.paths,
+  ),
+  async main() {
+    console.log('Hello content.');
+  },
+});
+```
+
+Basically, you can now import and do things outside the `main` function of the entrypoint - you could not do that before. Still though, be careful. It is recommended to avoid running code outside the `main` function to keep your builds fast.
+
+:::
 
 To continue using the old approach, add the following to your `wxt.config.ts` file:
 
