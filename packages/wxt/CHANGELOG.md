@@ -1,5 +1,50 @@
 # Changelog
 
+## v0.19.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.15...wxt-v0.19.0)
+
+### 🚀 Enhancements
+
+- **experimental:** First-class support for excluding `webextension-polyfill` ([#847](https://github.com/wxt-dev/wxt/pull/847))
+- **storage:** `init` option and rename `defaultValue` to `fallback` ([#827](https://github.com/wxt-dev/wxt/pull/827))
+- **hooks:** Add `prepare:publicPaths` hook ([#858](https://github.com/wxt-dev/wxt/pull/858))
+- ⚠️  Use `vite-node` to load entrypoints by default ([#859](https://github.com/wxt-dev/wxt/pull/859))
+
+### 🔥 Performance
+
+- **size:** ⚠️  Switch from `tsup` to `unbuild` for building WXT ([#848](https://github.com/wxt-dev/wxt/pull/848))
+
+### 🩹 Fixes
+
+- Wrong module hook type ([#849](https://github.com/wxt-dev/wxt/pull/849))
+
+### 📖 Documentation
+
+- Update labels in content script UI positioning screenshot ([2b6ff8d](https://github.com/wxt-dev/wxt/commit/2b6ff8d))
+- Add upgrade guide and breaking changes ([#860](https://github.com/wxt-dev/wxt/pull/860))
+
+### 🏡 Chore
+
+- **deps:** Bump all non-major dependencies ([#834](https://github.com/wxt-dev/wxt/pull/834))
+- **dev-deps:** Upgrade `vitest` from 1.6 to 2.0 ([#836](https://github.com/wxt-dev/wxt/pull/836))
+- **deps:** Upgrade `async-mutex` from 0.4.1 to 0.5.0 ([#837](https://github.com/wxt-dev/wxt/pull/837))
+- **deps:** Upgrade `esbuild` from 0.19.12 to 0.23.0 ([#838](https://github.com/wxt-dev/wxt/pull/838))
+- **deps:** Upgrade `vite-node` from 1.6 to 2.0 ([#839](https://github.com/wxt-dev/wxt/pull/839))
+- **deps:** Upgrade `ora` from 7 to 8 ([#841](https://github.com/wxt-dev/wxt/pull/841))
+- **deps:** Upgrade `webextension-polyfill` from 0.10 to 0.12 ([#842](https://github.com/wxt-dev/wxt/pull/842))
+- **deps:** Upgrade `minimatch` from 9 to 10 ([#840](https://github.com/wxt-dev/wxt/pull/840))
+- **dev-deps:** Upgrade `happy-dom` from 13 to 14 ([#843](https://github.com/wxt-dev/wxt/pull/843))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Use `vite-node` to load entrypoints by default ([#859](https://github.com/wxt-dev/wxt/pull/859))
+- **size:** ⚠️  Switch from `tsup` to `unbuild` for building WXT ([#848](https://github.com/wxt-dev/wxt/pull/848))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.18.15
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.14...wxt-v0.18.15)
