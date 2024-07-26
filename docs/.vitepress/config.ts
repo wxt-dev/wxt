@@ -145,6 +145,9 @@ export default defineConfig({
           menuItem('Entrypoint Side Effects', 'entrypoint-side-effects'),
           menuItem('How WXT Works', 'how-wxt-works'),
         ]),
+        menuGroup('Upgrade Guide', '/guide/upgrade-guide/', [
+          menuItem('wxt', 'wxt'),
+        ]),
       ]),
       '/api/': menuRoot([
         menuGroup('CLI', '/api/cli/', [
