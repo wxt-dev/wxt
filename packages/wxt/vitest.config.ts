@@ -18,10 +18,7 @@ export default defineConfig({
       ignored: '**/dist/**',
     },
   },
-  plugins: [
-    // @ts-expect-error: Vite version mismatch
-    RandomSeed(),
-  ],
+  plugins: [RandomSeed()],
   resolve: {
     alias: {
       'wxt/testing': path.resolve('src/testing'),
