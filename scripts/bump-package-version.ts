@@ -49,11 +49,17 @@ const versionChangelog = await generateMarkDown(commits, {
   from: prevTag,
   to: newTag,
 });
-const versionChangelogBody = versionChangelog
+let versionChangelogBody = versionChangelog
   .split('\n')
   .slice(1)
   .join('\n')
   .trim();
+if (bumpType === 'major') {
+  versionChangelogBody = versionChangelogBody.replace(
+    '[compare changes]',
+    `[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes]`,
+  );
+}
 const { releases: prevReleases } = await fs
   .readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
