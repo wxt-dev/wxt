@@ -24,7 +24,6 @@ import { importEntrypointFile } from '../../utils/building';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
-import { createExtensionEnvironment } from '../../utils/environments';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
