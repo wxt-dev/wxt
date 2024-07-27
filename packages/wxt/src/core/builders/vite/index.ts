@@ -230,10 +230,7 @@ export async function createViteBuilder(
           baseConfig.optimizeDeps.noDiscovery = true;
           baseConfig.optimizeDeps.include = [];
           const envConfig: vite.InlineConfig = {
-            plugins: [
-              wxtPlugins.extensionApiMock(wxtConfig),
-              wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
-            ],
+            plugins: [wxtPlugins.removeEntrypointMainFunction(wxtConfig, path)],
           };
           const config = vite.mergeConfig(baseConfig, envConfig);
           const server = await vite.createServer(config);

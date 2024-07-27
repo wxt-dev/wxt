@@ -14,8 +14,11 @@ export function removeEntrypointMainFunction(
   const absPath = normalizePath(resolve(config.root, path));
   return {
     name: 'wxt:remove-entrypoint-main-function',
-    transform(code, id) {
-      if (id === absPath) return removeMainFunctionCode(code);
+    transform: {
+      order: 'pre',
+      handler(code, id) {
+        if (id === absPath) return removeMainFunctionCode(code);
+      },
     },
   };
 }
