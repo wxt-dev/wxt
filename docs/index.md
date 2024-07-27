@@ -53,6 +53,11 @@ features:
     details: Works with any front-end framework with a Vite plugin.
     link: /guide/key-concepts/frontend-frameworks
     linkText: Add a framework
+  - icon: 📦
+    title: Modular Architecture
+    details: Reuse build-time and runtime-code across multiple extensions.
+    link: /guide/go-further/reusable-modules
+    linkText: Read docs
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Get started quickly with several awesome project templates.
