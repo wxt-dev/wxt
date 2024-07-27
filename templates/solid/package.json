@@ -15,11 +15,11 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "solid-js": "^1.8.18"
+    "solid-js": "^1.8.19"
   },
   "devDependencies": {
     "@wxt-dev/module-solid": "^1.1.1",
-    "typescript": "^5.5.3",
-    "wxt": "^0.18.15"
+    "typescript": "^5.5.4",
+    "wxt": "^0.19.1"
   }
 }
