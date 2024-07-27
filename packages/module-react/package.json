@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "buildc --deps-only -- check",
+    "check": "pnpm build && check",
     "build": "buildc -- unbuild",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
@@ -39,7 +39,7 @@
     "publint": "^0.2.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "unbuild": "^2.0.0",
     "wxt": "workspace:*"
   }

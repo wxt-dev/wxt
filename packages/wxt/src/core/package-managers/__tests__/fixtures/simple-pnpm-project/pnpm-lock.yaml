@@ -1,34 +1,41 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  mime-types:
-    specifier: 2.1.35
-    version: 2.1.35
+importers:
 
-devDependencies:
-  flatten:
-    specifier: 1.0.3
-    version: 1.0.3
+  .:
+    dependencies:
+      mime-types:
+        specifier: 2.1.35
+        version: 2.1.35
+    devDependencies:
+      flatten:
+        specifier: 1.0.3
+        version: 1.0.3
 
 packages:
 
-  /flatten@1.0.3:
+  flatten@1.0.3:
     resolution: {integrity: sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==}
     deprecated: flatten is deprecated in favor of utility frameworks such as lodash.
-    dev: true
 
-  /mime-db@1.52.0:
+  mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
-    dev: false
 
-  /mime-types@2.1.35:
+  mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
+
+snapshots:
+
+  flatten@1.0.3: {}
+
+  mime-db@1.52.0: {}
+
+  mime-types@2.1.35:
     dependencies:
       mime-db: 1.52.0
-    dev: false

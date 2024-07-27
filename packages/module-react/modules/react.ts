@@ -9,7 +9,6 @@ export default defineWxtModule<ReactModuleOptions>({
     const { vite } = options ?? {};
 
     addViteConfig(wxt, () => ({
-      // @ts-expect-error: Vite version conflicts
       plugins: [react(vite)],
     }));
 
