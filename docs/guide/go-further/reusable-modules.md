@@ -25,12 +25,12 @@ There are two ways to add a module to your project:
    });
    ```
 
-2. **NPM package**: By convention, any package on NPM that starts with `@wxt-dev/module-*` or `wxt-module-*` can be installed and included in your project:
+2. **NPM package**: Find WXT modules on NPM and include them in your project:
    ```ts
    // wxt.config.ts
    export default defineConfig({
      // Add the module to your project
-     modules: ['wxt-module-example'],
+     modules: ['@wxt-dev/auto-icons'],
    });
    ```
 
@@ -99,9 +99,9 @@ export default defineConfig({
 
 ### Actually Doing Something
 
-The first argument of the setup function, `wxt`, provides full access to the current build's context. You can access the resolved configuration via `wxt.config`, or setup hooks to manipulate the build at different steps of the build process.
+The first argument of the setup function, `wxt`, provides full access to the current build's context. You can access the resolved configuration via `wxt.config`, or setup hooks to manipulate the build at different steps of the build process with `wxt.hooks`.
 
-Here's an example that shows you how to update the `outDir` based on the build mode. It does a good job showing how to access config, set up a hook, and do something when the hook is called.
+Here's an example that updates the `outDir` based on the build mode. It's a very simple example of how to access config and setup a hook.
 
 ```ts
 export default defineWxtModule((wxt) => {
