@@ -5,14 +5,12 @@ export interface Environment {
 
 export function createEnvironment(getGlobals: () => EnvGlobals): Environment {
   const setup = () => {
-    console.log('SETUP');
     const envGlobals = getGlobals();
     const ogGlobals = getOgGlobals(envGlobals);
     applyGlobals(envGlobals);
 
     return () => {
       applyGlobals(ogGlobals);
-      console.log('TEARDOWN');
     };
   };
   const run = async (fn: () => any) => {
