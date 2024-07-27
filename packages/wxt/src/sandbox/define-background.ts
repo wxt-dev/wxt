@@ -7,6 +7,6 @@ export function defineBackground(
 export function defineBackground(
   arg: (() => void) | BackgroundDefinition,
 ): BackgroundDefinition {
-  if (typeof arg === 'function') return { main: arg };
+  if (arg == null || typeof arg === 'function') return { main: arg };
   return arg;
 }

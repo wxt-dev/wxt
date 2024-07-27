@@ -280,7 +280,7 @@ describe('Output Directory Structure', () => {
         var _a, _b;
         import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
         function defineBackground(arg) {
-          if (typeof arg === "function") return { main: arg };
+          if (arg == null || typeof arg === "function") return { main: arg };
           return arg;
         }
         const definition = defineBackground({
@@ -366,7 +366,7 @@ describe('Output Directory Structure', () => {
           "use strict";
           var _a, _b;
           function defineBackground(arg) {
-            if (typeof arg === "function") return { main: arg };
+            if (arg == null || typeof arg === "function") return { main: arg };
             return arg;
           }
           function logHello(name) {
