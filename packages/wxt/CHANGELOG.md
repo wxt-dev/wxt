@@ -8,6 +8,10 @@
 
 - Auto Icons Module ([#851](https://github.com/wxt-dev/wxt/pull/851))
 
+### 🔥 Performance
+
+- Tree-shake unrelated code inside `vite-node` entrypoint loader ([#867](https://github.com/wxt-dev/wxt/pull/867))
+
 ### 🩹 Fixes
 
 - Define web globals when importing entrypoints ([#865](https://github.com/wxt-dev/wxt/pull/865))
