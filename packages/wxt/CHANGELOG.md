@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.19.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.0...wxt-v0.19.1)
+
+### 🚀 Enhancements
+
+- Auto Icons Module ([#851](https://github.com/wxt-dev/wxt/pull/851))
+
+### 🩹 Fixes
+
+- Define web globals when importing entrypoints ([#865](https://github.com/wxt-dev/wxt/pull/865))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.19.0
 
 [⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.18.15...wxt-v0.19.0)
