@@ -9,6 +9,6 @@ export function defineUnlistedScript(
 export function defineUnlistedScript(
   arg: (() => void) | UnlistedScriptDefinition,
 ): UnlistedScriptDefinition {
-  if (typeof arg === 'function') return { main: arg };
+  if (arg == null || typeof arg === 'function') return { main: arg };
   return arg;
 }
