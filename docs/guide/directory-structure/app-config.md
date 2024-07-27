@@ -53,9 +53,9 @@ declare module 'wxt/sandbox' {
 }
 
 export default defineAppConfig({
-  bugReportingDisabled: process.env.VITE_BUG_REPORTING_DISABLED === 'true',
-  apiKey: process.env.VITE_API_KEY,
+  bugReportingDisabled: import.meta.env.VITE_BUG_REPORTING_DISABLED === 'true',
+  apiKey: import.meta.env.VITE_API_KEY,
 });
 ```
 
-> You don't have to do this, you can use `process.env.VITE_*` anywhere in your runtime code, but putting them here consolidates them to one place and defines what variables are expected.
+> You don't have to do this, you can use `import.meta.env.VITE_*` anywhere in your runtime code, but putting them here consolidates them to one place and defines what variables are expected.
