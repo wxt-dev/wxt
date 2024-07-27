@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "buildc --deps-only -- check",
+    "check": "pnpm build && check",
     "build": "buildc -- unbuild",
     "prepare": "buildc --deps-only -- wxt prepare"
   },

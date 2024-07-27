@@ -72,7 +72,7 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
-    "check": "buildc --deps-only -- run-s -c check:*",
+    "check": "pnpm build && run-s -c check:*",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",

@@ -19,7 +19,7 @@ importers:
         version: 11.0.4
       '@vitest/coverage-v8':
         specifier: ^2.0.4
-        version: 2.0.4(vitest@2.0.4)
+        version: 2.0.4(vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8))
       changelogen:
         specifier: ^0.5.5
         version: 0.5.5
@@ -61,19 +61,19 @@ importers:
         version: 0.25.4(typescript@5.5.4)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.23
-        version: 4.0.0-next.23(typedoc@0.25.4)
+        version: 4.0.0-next.23(typedoc@0.25.4(typescript@5.5.4))
       typedoc-vitepress-theme:
         specifier: 1.0.0-next.3
-        version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23)
+        version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.5.4)))
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
       vitepress:
         specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        version: 1.3.1(@algolia/client-search@4.20.0)(@types/node@20.14.12)(@types/react@18.3.3)(postcss@8.4.39)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8)(search-insights@2.15.0)(typescript@5.5.4)
       vitest-mock-extended:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)(vitest@2.0.4)
+        version: 2.0.0(typescript@5.5.4)(vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8))
       vue:
         specifier: ^3.4.34
         version: 3.4.34(typescript@5.5.4)
@@ -107,7 +107,7 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -116,7 +116,7 @@ importers:
     dependencies:
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@5.3.5)
+        version: 4.3.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.3.1
@@ -141,7 +141,7 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -150,7 +150,7 @@ importers:
     dependencies:
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(solid-js@1.8.19)(vite@5.3.5)
+        version: 2.10.2(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.3.1
@@ -166,7 +166,7 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -175,7 +175,7 @@ importers:
     dependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.1
-        version: 3.1.1(svelte@4.2.18)(vite@5.3.5)
+        version: 3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.3.1
@@ -188,7 +188,7 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -197,7 +197,7 @@ importers:
     dependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.1.1
-        version: 5.1.1(vite@5.3.5)(vue@3.4.34)
+        version: 5.1.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.3.1
@@ -210,7 +210,7 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -327,10 +327,10 @@ importers:
         version: 3.9.1(rollup@3.29.4)
       vite:
         specifier: ^5.3.5
-        version: 5.3.5(@types/node@20.14.12)
+        version: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
       vite-node:
         specifier: ^2.0.4
-        version: 2.0.4(@types/node@20.14.12)
+        version: 2.0.4(@types/node@20.14.12)(sass@1.77.8)
       web-ext-run:
         specifier: ^0.2.1
         version: 0.2.1
@@ -391,13 +391,13 @@ importers:
         version: 5.5.4
       unbuild:
         specifier: ^2.0.0
-        version: 2.0.0(typescript@5.5.4)
+        version: 2.0.0(sass@1.77.8)(typescript@5.5.4)
       vitest:
         specifier: ^2.0.4
-        version: 2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)
+        version: 2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
-        version: 1.1.0(vite@5.3.5)
+        version: 1.1.0(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
 
   packages/wxt-demo:
     dependencies:
@@ -428,10 +428,10 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^2.0.4
-        version: 2.0.4(sass@1.77.8)
+        version: 2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
-        version: 1.1.0(vite@5.3.5)
+        version: 1.1.0(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -467,27 +467,18 @@ packages:
     resolution: {integrity: sha512-a/yTUkcO/Vyy+JffmAnTWbr4/90cLzw+CC3bRbhnULr/EM0fGNvM13oQQ14f2moLMcVDyAx/leczLlAOovhSZg==}
     peerDependencies:
       search-insights: '>= 1 < 3'
-    peerDependenciesMeta:
-      search-insights:
-        optional: true
 
   '@algolia/autocomplete-preset-algolia@1.9.3':
     resolution: {integrity: sha512-d4qlt6YmrLMYy95n5TB52wtNDr6EgAIPH81dvvvW8UmuWRgxEtY0NJiPwl/h95JtG2vmRM804M0DSwMCNZlzRA==}
     peerDependencies:
       '@algolia/client-search': '>= 4.9.1 < 6'
       algoliasearch: '>= 4.9.1 < 6'
-    peerDependenciesMeta:
-      '@algolia/client-search':
-        optional: true
 
   '@algolia/autocomplete-shared@1.9.3':
     resolution: {integrity: sha512-Wnm9E4Ye6Rl6sTTqjoymD+l8DjSTHsHboVRYrKgEt8Q7UHm9nYbqhN/i0fhUYA3OAEH7WA8x3jfpnmJm3rKvaQ==}
     peerDependencies:
       '@algolia/client-search': '>= 4.9.1 < 6'
       algoliasearch: '>= 4.9.1 < 6'
-    peerDependenciesMeta:
-      '@algolia/client-search':
-        optional: true
 
   '@algolia/cache-browser-local-storage@4.20.0':
     resolution: {integrity: sha512-uujahcBt4DxduBTvYdwO3sBfHuJvJokiC3BP1+O70fglmE1ShkH8lpXqZBac1rrU3FnNYSUs4pL9lBdTKeRPOQ==}
@@ -3924,6 +3915,9 @@ packages:
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
+  search-insights@2.15.0:
+    resolution: {integrity: sha512-ch2sPCUDD4sbPQdknVl9ALSi9H7VyoeVbsxznYz6QV55jJ8CI3EtwpO1i84keN4+hF5IeHWIeGvc08530JkVXQ==}
+
   semver-diff@4.0.0:
     resolution: {integrity: sha512-0Ju4+6A8iOnpL/Thra7dZsSlOHYAHIeMxfhWQRI1/VLcT3WDBZKKtQt/QkBOsiIN9ZpuvHE6cGZ0x4glCMmfiA==}
     engines: {node: '>=12'}
@@ -4408,34 +4402,6 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite@5.3.4:
-    resolution: {integrity: sha512-Cw+7zL3ZG9/NZBB8C+8QbQZmR54GwqIz+WMI4b3JgdYJvX+ny9AjJXqkGQlDXSXRP9rP0B4tbciRMOVEKulVOA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-
   vite@5.3.5:
     resolution: {integrity: sha512-MdjglKR6AQXQb9JGiS7Rc2wC6uMjcm7Go/NHNO63EwiJXfuk9PgqiP/n5IDJCziMkfw9n4Ubp7lttNwz+8ZVKA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -4726,33 +4692,37 @@ snapshots:
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
-      rollup: 3.29.4
       source-map: 0.7.4
       yargs: 17.7.2
+    optionalDependencies:
+      rollup: 3.29.4
 
-  '@algolia/autocomplete-core@1.9.3(algoliasearch@4.20.0)':
+  '@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)':
     dependencies:
-      '@algolia/autocomplete-plugin-algolia-insights': 1.9.3(algoliasearch@4.20.0)
-      '@algolia/autocomplete-shared': 1.9.3(algoliasearch@4.20.0)
+      '@algolia/autocomplete-plugin-algolia-insights': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)
+      '@algolia/autocomplete-shared': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
     transitivePeerDependencies:
       - '@algolia/client-search'
       - algoliasearch
       - search-insights
 
-  '@algolia/autocomplete-plugin-algolia-insights@1.9.3(algoliasearch@4.20.0)':
+  '@algolia/autocomplete-plugin-algolia-insights@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)':
     dependencies:
-      '@algolia/autocomplete-shared': 1.9.3(algoliasearch@4.20.0)
+      '@algolia/autocomplete-shared': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
+      search-insights: 2.15.0
     transitivePeerDependencies:
       - '@algolia/client-search'
       - algoliasearch
 
-  '@algolia/autocomplete-preset-algolia@1.9.3(algoliasearch@4.20.0)':
+  '@algolia/autocomplete-preset-algolia@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)':
     dependencies:
-      '@algolia/autocomplete-shared': 1.9.3(algoliasearch@4.20.0)
+      '@algolia/autocomplete-shared': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
+      '@algolia/client-search': 4.20.0
       algoliasearch: 4.20.0
 
-  '@algolia/autocomplete-shared@1.9.3(algoliasearch@4.20.0)':
+  '@algolia/autocomplete-shared@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)':
     dependencies:
+      '@algolia/client-search': 4.20.0
       algoliasearch: 4.20.0
 
   '@algolia/cache-browser-local-storage@4.20.0':
@@ -5023,9 +4993,9 @@ snapshots:
 
   '@docsearch/css@3.6.0': {}
 
-  '@docsearch/js@3.6.0':
+  '@docsearch/js@3.6.0(@algolia/client-search@4.20.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.15.0)':
     dependencies:
-      '@docsearch/react': 3.6.0
+      '@docsearch/react': 3.6.0(@algolia/client-search@4.20.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.15.0)
       preact: 10.18.1
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -5034,12 +5004,17 @@ snapshots:
       - react-dom
       - search-insights
 
-  '@docsearch/react@3.6.0':
+  '@docsearch/react@3.6.0(@algolia/client-search@4.20.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.15.0)':
     dependencies:
-      '@algolia/autocomplete-core': 1.9.3(algoliasearch@4.20.0)
-      '@algolia/autocomplete-preset-algolia': 1.9.3(algoliasearch@4.20.0)
+      '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)
+      '@algolia/autocomplete-preset-algolia': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
       '@docsearch/css': 3.6.0
       algoliasearch: 4.20.0
+    optionalDependencies:
+      '@types/react': 18.3.3
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      search-insights: 2.15.0
     transitivePeerDependencies:
       - '@algolia/client-search'
 
@@ -5392,8 +5367,9 @@ snapshots:
 
   '@rollup/plugin-alias@5.1.0(rollup@3.29.4)':
     dependencies:
-      rollup: 3.29.4
       slash: 4.0.0
+    optionalDependencies:
+      rollup: 3.29.4
 
   '@rollup/plugin-commonjs@25.0.8(rollup@3.29.4)':
     dependencies:
@@ -5403,11 +5379,13 @@ snapshots:
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.30.10
+    optionalDependencies:
       rollup: 3.29.4
 
   '@rollup/plugin-json@6.1.0(rollup@3.29.4)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
+    optionalDependencies:
       rollup: 3.29.4
 
   '@rollup/plugin-node-resolve@15.2.3(rollup@3.29.4)':
@@ -5418,12 +5396,14 @@ snapshots:
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.2
+    optionalDependencies:
       rollup: 3.29.4
 
   '@rollup/plugin-replace@5.0.7(rollup@3.29.4)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
       magic-string: 0.30.10
+    optionalDependencies:
       rollup: 3.29.4
 
   '@rollup/pluginutils@5.1.0(rollup@3.29.4)':
@@ -5431,6 +5411,7 @@ snapshots:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
+    optionalDependencies:
       rollup: 3.29.4
 
   '@rollup/rollup-android-arm-eabi@4.19.0':
@@ -5495,26 +5476,26 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1)(svelte@4.2.18)(vite@5.3.5)':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.3.5)
+      '@sveltejs/vite-plugin-svelte': 3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
       debug: 4.3.4
       svelte: 4.2.18
-      vite: 5.3.5
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5)':
+  '@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1)(svelte@4.2.18)(vite@5.3.5)
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 4.2.18
       svelte-hmr: 0.16.0(svelte@4.2.18)
-      vite: 5.3.5
-      vitefu: 0.2.5(vite@5.3.5)
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
+      vitefu: 0.2.5(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     transitivePeerDependencies:
       - supports-color
 
@@ -5633,28 +5614,28 @@ snapshots:
       '@types/node': 20.14.12
     optional: true
 
-  '@vitejs/plugin-react@4.3.1(vite@5.3.5)':
+  '@vitejs/plugin-react@4.3.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.24.7)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.24.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.5
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.0.5(vite@5.3.4)(vue@3.4.34)':
+  '@vitejs/plugin-vue@5.0.5(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))':
     dependencies:
-      vite: 5.3.4
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
       vue: 3.4.34(typescript@5.5.4)
 
-  '@vitejs/plugin-vue@5.1.1(vite@5.3.5)(vue@3.4.34)':
+  '@vitejs/plugin-vue@5.1.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))':
     dependencies:
-      vite: 5.3.5
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
       vue: 3.4.34(typescript@5.5.4)
 
-  '@vitest/coverage-v8@2.0.4(vitest@2.0.4)':
+  '@vitest/coverage-v8@2.0.4(vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -5668,7 +5649,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.4
+      vitest: 2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -5769,7 +5750,7 @@ snapshots:
       '@vue/shared': 3.4.34
       csstype: 3.1.3
 
-  '@vue/server-renderer@3.4.34(vue@3.4.34)':
+  '@vue/server-renderer@3.4.34(vue@3.4.34(typescript@5.5.4))':
     dependencies:
       '@vue/compiler-ssr': 3.4.34
       '@vue/shared': 3.4.34
@@ -5779,31 +5760,32 @@ snapshots:
 
   '@vue/shared@3.4.34': {}
 
-  '@vueuse/core@10.11.0(vue@3.4.34)':
+  '@vueuse/core@10.11.0(vue@3.4.34(typescript@5.5.4))':
     dependencies:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.11.0
-      '@vueuse/shared': 10.11.0(vue@3.4.34)
-      vue-demi: 0.14.8(vue@3.4.34)
+      '@vueuse/shared': 10.11.0(vue@3.4.34(typescript@5.5.4))
+      vue-demi: 0.14.8(vue@3.4.34(typescript@5.5.4))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/integrations@10.11.0(focus-trap@7.5.4)(vue@3.4.34)':
+  '@vueuse/integrations@10.11.0(focus-trap@7.5.4)(vue@3.4.34(typescript@5.5.4))':
     dependencies:
-      '@vueuse/core': 10.11.0(vue@3.4.34)
-      '@vueuse/shared': 10.11.0(vue@3.4.34)
+      '@vueuse/core': 10.11.0(vue@3.4.34(typescript@5.5.4))
+      '@vueuse/shared': 10.11.0(vue@3.4.34(typescript@5.5.4))
+      vue-demi: 0.14.8(vue@3.4.34(typescript@5.5.4))
+    optionalDependencies:
       focus-trap: 7.5.4
-      vue-demi: 0.14.8(vue@3.4.34)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
 
   '@vueuse/metadata@10.11.0': {}
 
-  '@vueuse/shared@10.11.0(vue@3.4.34)':
+  '@vueuse/shared@10.11.0(vue@3.4.34(typescript@5.5.4))':
     dependencies:
-      vue-demi: 0.14.8(vue@3.4.34)
+      vue-demi: 0.14.8(vue@3.4.34(typescript@5.5.4))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -6029,13 +6011,14 @@ snapshots:
       dotenv: 16.4.5
       giget: 1.2.3
       jiti: 1.21.6
-      magicast: 0.3.4
       mlly: 1.7.1
       ohash: 1.1.3
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.1.1
       rc9: 2.1.2
+    optionalDependencies:
+      magicast: 0.3.4
 
   cac@6.7.14: {}
 
@@ -7481,7 +7464,7 @@ snapshots:
 
   mkdirp@3.0.1: {}
 
-  mkdist@1.5.4(typescript@5.5.4):
+  mkdist@1.5.4(sass@1.77.8)(typescript@5.5.4):
     dependencies:
       autoprefixer: 10.4.19(postcss@8.4.39)
       citty: 0.1.6
@@ -7496,6 +7479,8 @@ snapshots:
       postcss: 8.4.39
       postcss-nested: 6.0.1(postcss@8.4.39)
       semver: 7.6.2
+    optionalDependencies:
+      sass: 1.77.8
       typescript: 5.5.4
 
   mlly@1.6.1:
@@ -8222,6 +8207,8 @@ snapshots:
 
   scule@1.3.0: {}
 
+  search-insights@2.15.0: {}
+
   semver-diff@4.0.0:
     dependencies:
       semver: 7.6.2
@@ -8571,7 +8558,7 @@ snapshots:
       is-number: 7.0.0
 
   ts-essentials@10.0.1(typescript@5.5.4):
-    dependencies:
+    optionalDependencies:
       typescript: 5.5.4
 
   tslib@2.6.0: {}
@@ -8603,13 +8590,13 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4):
+  typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.5.4)):
     dependencies:
       typedoc: 0.25.4(typescript@5.5.4)
 
-  typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23):
+  typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.5.4))):
     dependencies:
-      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4)
+      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4(typescript@5.5.4))
 
   typedoc@0.25.4(typescript@5.5.4):
     dependencies:
@@ -8634,7 +8621,7 @@ snapshots:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
 
-  unbuild@2.0.0(typescript@5.5.4):
+  unbuild@2.0.0(sass@1.77.8)(typescript@5.5.4):
     dependencies:
       '@rollup/plugin-alias': 5.1.0(rollup@3.29.4)
       '@rollup/plugin-commonjs': 25.0.8(rollup@3.29.4)
@@ -8651,7 +8638,7 @@ snapshots:
       hookable: 5.5.3
       jiti: 1.21.6
       magic-string: 0.30.10
-      mkdist: 1.5.4(typescript@5.5.4)
+      mkdist: 1.5.4(sass@1.77.8)(typescript@5.5.4)
       mlly: 1.7.1
       pathe: 1.1.2
       pkg-types: 1.1.3
@@ -8659,8 +8646,9 @@ snapshots:
       rollup: 3.29.4
       rollup-plugin-dts: 6.1.1(rollup@3.29.4)(typescript@5.5.4)
       scule: 1.3.0
-      typescript: 5.5.4
       untyped: 1.4.2
+    optionalDependencies:
+      typescript: 5.5.4
     transitivePeerDependencies:
       - sass
       - supports-color
@@ -8749,13 +8737,13 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  vite-node@2.0.4:
+  vite-node@2.0.4(@types/node@20.14.12)(sass@1.77.8):
     dependencies:
       cac: 6.7.14
       debug: 4.3.5
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.3.5
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8766,41 +8754,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@2.0.4(@types/node@20.14.12):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.3.5
-      pathe: 1.1.2
-      tinyrainbow: 1.2.0
-      vite: 5.3.5(@types/node@20.14.12)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vite-node@2.0.4(sass@1.77.8):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.3.5
-      pathe: 1.1.2
-      tinyrainbow: 1.2.0
-      vite: 5.3.5(sass@1.77.8)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vite-plugin-solid@2.10.2(solid-js@1.8.19)(vite@5.3.5):
+  vite-plugin-solid@2.10.2(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)):
     dependencies:
       '@babel/core': 7.24.7
       '@types/babel__core': 7.20.5
@@ -8808,67 +8762,45 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.8.19
       solid-refresh: 0.6.3(solid-js@1.8.19)
-      vite: 5.3.5
-      vitefu: 0.2.5(vite@5.3.5)
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
+      vitefu: 0.2.5(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     transitivePeerDependencies:
       - supports-color
 
-  vite@5.3.4:
+  vite@5.3.5(@types/node@20.14.12)(sass@1.77.8):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.39
       rollup: 4.19.0
     optionalDependencies:
-      fsevents: 2.3.3
-
-  vite@5.3.5:
-    dependencies:
-      esbuild: 0.21.5
-      postcss: 8.4.39
-      rollup: 4.19.0
-    optionalDependencies:
-      fsevents: 2.3.3
-
-  vite@5.3.5(@types/node@20.14.12):
-    dependencies:
       '@types/node': 20.14.12
-      esbuild: 0.21.5
-      postcss: 8.4.39
-      rollup: 4.19.0
-    optionalDependencies:
       fsevents: 2.3.3
-
-  vite@5.3.5(sass@1.77.8):
-    dependencies:
-      esbuild: 0.21.5
-      postcss: 8.4.39
-      rollup: 4.19.0
       sass: 1.77.8
+
+  vitefu@0.2.5(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)):
     optionalDependencies:
-      fsevents: 2.3.3
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
 
-  vitefu@0.2.5(vite@5.3.5):
-    dependencies:
-      vite: 5.3.5
-
-  vitepress@1.3.1(typescript@5.5.4):
+  vitepress@1.3.1(@algolia/client-search@4.20.0)(@types/node@20.14.12)(@types/react@18.3.3)(postcss@8.4.39)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8)(search-insights@2.15.0)(typescript@5.5.4):
     dependencies:
       '@docsearch/css': 3.6.0
-      '@docsearch/js': 3.6.0
+      '@docsearch/js': 3.6.0(@algolia/client-search@4.20.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.15.0)
       '@shikijs/core': 1.10.3
       '@shikijs/transformers': 1.10.3
       '@types/markdown-it': 14.1.1
-      '@vitejs/plugin-vue': 5.0.5(vite@5.3.4)(vue@3.4.34)
+      '@vitejs/plugin-vue': 5.0.5(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
       '@vue/devtools-api': 7.3.6
       '@vue/shared': 3.4.31
-      '@vueuse/core': 10.11.0(vue@3.4.34)
-      '@vueuse/integrations': 10.11.0(focus-trap@7.5.4)(vue@3.4.34)
+      '@vueuse/core': 10.11.0(vue@3.4.34(typescript@5.5.4))
+      '@vueuse/integrations': 10.11.0(focus-trap@7.5.4)(vue@3.4.34(typescript@5.5.4))
       focus-trap: 7.5.4
       mark.js: 8.11.1
       minisearch: 7.0.2
       shiki: 1.10.3
-      vite: 5.3.4
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
       vue: 3.4.34(typescript@5.5.4)
+    optionalDependencies:
+      postcss: 8.4.39
     transitivePeerDependencies:
       - '@algolia/client-search'
       - '@types/node'
@@ -8896,17 +8828,17 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vitest-mock-extended@2.0.0(typescript@5.5.4)(vitest@2.0.4):
+  vitest-mock-extended@2.0.0(typescript@5.5.4)(vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)):
     dependencies:
       ts-essentials: 10.0.1(typescript@5.5.4)
       typescript: 5.5.4
-      vitest: 2.0.4
+      vitest: 2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)
 
-  vitest-plugin-random-seed@1.1.0(vite@5.3.5):
+  vitest-plugin-random-seed@1.1.0(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)):
     dependencies:
-      vite: 5.3.5(@types/node@20.14.12)
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
 
-  vitest@2.0.4:
+  vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.4
@@ -8924,71 +8856,12 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.3.5
-      vite-node: 2.0.4
+      vite: 5.3.5(@types/node@20.14.12)(sass@1.77.8)
+      vite-node: 2.0.4(@types/node@20.14.12)(sass@1.77.8)
       why-is-node-running: 2.3.0
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.0.4(@types/node@20.14.12)(happy-dom@14.12.3):
-    dependencies:
-      '@ampproject/remapping': 2.3.0
+    optionalDependencies:
       '@types/node': 20.14.12
-      '@vitest/expect': 2.0.4
-      '@vitest/pretty-format': 2.0.4
-      '@vitest/runner': 2.0.4
-      '@vitest/snapshot': 2.0.4
-      '@vitest/spy': 2.0.4
-      '@vitest/utils': 2.0.4
-      chai: 5.1.1
-      debug: 4.3.5
-      execa: 8.0.1
       happy-dom: 14.12.3
-      magic-string: 0.30.10
-      pathe: 1.1.2
-      std-env: 3.7.0
-      tinybench: 2.8.0
-      tinypool: 1.0.0
-      tinyrainbow: 1.2.0
-      vite: 5.3.5(@types/node@20.14.12)
-      vite-node: 2.0.4(@types/node@20.14.12)
-      why-is-node-running: 2.3.0
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.0.4(sass@1.77.8):
-    dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@vitest/expect': 2.0.4
-      '@vitest/pretty-format': 2.0.4
-      '@vitest/runner': 2.0.4
-      '@vitest/snapshot': 2.0.4
-      '@vitest/spy': 2.0.4
-      '@vitest/utils': 2.0.4
-      chai: 5.1.1
-      debug: 4.3.5
-      execa: 8.0.1
-      magic-string: 0.30.10
-      pathe: 1.1.2
-      std-env: 3.7.0
-      tinybench: 2.8.0
-      tinypool: 1.0.0
-      tinyrainbow: 1.2.0
-      vite: 5.3.5(sass@1.77.8)
-      vite-node: 2.0.4(sass@1.77.8)
-      why-is-node-running: 2.3.0
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -9002,7 +8875,7 @@ snapshots:
 
   vscode-textmate@8.0.0: {}
 
-  vue-demi@0.14.8(vue@3.4.34):
+  vue-demi@0.14.8(vue@3.4.34(typescript@5.5.4)):
     dependencies:
       vue: 3.4.34(typescript@5.5.4)
 
@@ -9011,8 +8884,9 @@ snapshots:
       '@vue/compiler-dom': 3.4.34
       '@vue/compiler-sfc': 3.4.34
       '@vue/runtime-dom': 3.4.34
-      '@vue/server-renderer': 3.4.34(vue@3.4.34)
+      '@vue/server-renderer': 3.4.34(vue@3.4.34(typescript@5.5.4))
       '@vue/shared': 3.4.34
+    optionalDependencies:
       typescript: 5.5.4
 
   watchpack@2.4.1:

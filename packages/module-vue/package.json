@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "buildc --deps-only -- check"
+    "check": "pnpm build && check"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6"
