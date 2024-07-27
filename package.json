@@ -2,10 +2,9 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.20.3",
-    "pnpm": "^8.6.3"
+    "node": ">=18.20.3"
   },
-  "packageManager": "pnpm@8.15.9",
+  "packageManager": "pnpm@9.6.0",
   "scripts": {
     "check": "check && pnpm -r --sequential run check",
     "test": "pnpm -r --sequential run test run",
