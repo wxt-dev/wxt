@@ -3,7 +3,8 @@ import { ProxifiedModule, parseModule } from 'magicast';
 /**
  * Removes any code used at runtime related to an entrypoint's main function.
  * 1. Removes or clears out `main` function from returned object
- * 2. Removes unused imports
+ * 2. Removes any unused functions/variables outside the definition that aren't being called/used
+ * 3. Removes unused imports
  * 3. Removes value-less, side-effect only imports (like `import "./styles.css"` or `import "webextension-polyfill"`)
  */
 export function removeMainFunctionCode(code: string): {
@@ -12,7 +13,15 @@ export function removeMainFunctionCode(code: string): {
 } {
   const mod = parseModule(code);
   emptyMainFunction(mod);
-  removeUnusedImports(mod);
+  let removedCount = 0;
+  let depth = 0;
+  const maxDepth = 10;
+  do {
+    removedCount = 0;
+    removedCount += removeUnusedTopLevelVariables(mod);
+    removedCount += removeUnusedTopLevelFunctions(mod);
+    removedCount += removeUnusedImports(mod);
+  } while (removedCount > 0 && depth++ <= maxDepth);
   removeSideEffectImports(mod);
   return mod.generate();
 }
@@ -35,32 +44,92 @@ function emptyMainFunction(mod: ProxifiedModule): void {
   }
 }
 
+function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
+  const simpleAst = getSimpleAstJson(mod.$ast);
+  const usedMap = findUsedIdentifiers(simpleAst);
+
+  let deletedCount = 0;
+  const ast = mod.$ast as any;
+  for (let i = ast.body.length - 1; i >= 0; i--) {
+    if (ast.body[i].type === 'VariableDeclaration') {
+      for (let j = ast.body[i].declarations.length - 1; j >= 0; j--) {
+        if (!usedMap.get(ast.body[i].declarations[j].id.name)) {
+          ast.body[i].declarations.splice(j, 1);
+          deletedCount++;
+        }
+      }
+      if (ast.body[i].declarations.length === 0) {
+        ast.body.splice(i, 1);
+      }
+    }
+  }
+  return deletedCount;
+}
+
+function removeUnusedTopLevelFunctions(mod: ProxifiedModule): number {
+  const simpleAst = getSimpleAstJson(mod.$ast);
+  const usedMap = findUsedIdentifiers(simpleAst);
+
+  let deletedCount = 0;
+  const ast = mod.$ast as any;
+  for (let i = ast.body.length - 1; i >= 0; i--) {
+    if (
+      ast.body[i].type === 'FunctionDeclaration' &&
+      !usedMap.get(ast.body[i].id.name)
+    ) {
+      ast.body.splice(i, 1);
+      deletedCount++;
+    }
+  }
+  return deletedCount;
+}
+
+function removeUnusedImports(mod: ProxifiedModule): number {
+  const simpleAst = getSimpleAstJson(mod.$ast);
+  const usedMap = findUsedIdentifiers(simpleAst);
+  const importSymbols = Object.keys(mod.imports);
+
+  let deletedCount = 0;
+  importSymbols.forEach((name) => {
+    if (usedMap.get(name)) return;
+
+    delete mod.imports[name];
+    deletedCount++;
+  });
+  return deletedCount;
+}
+
 // TODO: Do a more complex declaration analysis where shadowed variables are detected and ignored.
 // Right now, this code assumes there are no shadowed variables.
-function removeUnusedImports(mod: ProxifiedModule): void {
-  const importSymbols = Object.keys(mod.imports);
-  const usedMap = new Map(importSymbols.map((sym) => [sym, false]));
-
-  const queue: any[] = [getSimpleAstJson(mod.$ast)];
+function findUsedIdentifiers(simpleAst: any) {
+  const usedMap = new Map<string, boolean>();
+  const queue: any[] = [simpleAst];
   for (const item of queue) {
     if (!item) {
-      continue;
     } else if (Array.isArray(item)) {
       queue.push(...item);
     } else if (item.type === 'ImportDeclaration') {
-      // Exclude looking for identifiers in import statements
+      // Don't look inside imports, identifiers are only used for declaration
       continue;
     } else if (item.type === 'Identifier') {
-      // Only track import usages
-      if (usedMap.has(item.name)) usedMap.set(item.name, true);
+      usedMap.set(item.name, true);
     } else if (typeof item === 'object') {
-      queue.push(Object.values(item));
+      const filterFns: Record<string, (entry: [string, any]) => boolean> = {
+        // Ignore the function declaration's name
+        FunctionDeclaration: ([key]) => key !== 'id',
+        // Ignore object property names
+        ObjectProperty: ([key]) => key !== 'key',
+        // Ignore variable declaration's name
+        VariableDeclarator: ([key]) => key !== 'id',
+      };
+      queue.push(
+        Object.entries(item)
+          .filter(filterFns[item.type] ?? (() => true))
+          .map(([_, value]) => value),
+      );
     }
   }
-
-  for (const [name, used] of usedMap.entries()) {
-    if (!used) delete mod.imports[name];
-  }
+  return usedMap;
 }
 
 function deleteImportAst(
