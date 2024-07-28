@@ -88,5 +88,54 @@ export default defineBackground();`;
 
       expect(actual).toEqual(expected);
     });
+
+    it("should remove any functions delcared outside the main function that aren't used", () => {
+      const input = `
+              function getMatches() {
+                return ["*://*/*"]
+              }
+              function unused1() {}
+              function unused2() {
+                unused1();
+              }
+
+              export default defineContentScript({
+                matches: getMatches(),
+                main: () => {},
+              })
+            `;
+      const expected = `function getMatches() {
+  return ["*://*/*"]
+}
+
+export default defineContentScript({
+  matches: getMatches()
+})`;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should remove any variables delcared outside the main function that aren't used", () => {
+      const input = `
+        const unused1 = "a", matches = ["*://*/*"];
+        let unused2 = unused1 + "b";
+
+        export default defineContentScript({
+          matches,
+          main: () => {}
+        })
+      `;
+      const expected = `const matches = ["*://*/*"];
+
+export default defineContentScript({
+  matches
+})`;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
   });
 });
