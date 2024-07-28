@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.1...wxt-v0.19.2)
+
+### 🩹 Fixes
+
+- Remove unused top-level functions and variables when loading entrypoints with the `vite-node` loader ([#875](https://github.com/wxt-dev/wxt/pull/875))
+- Don't default to dev mode for production builds when using `vite-node` loader ([#877](https://github.com/wxt-dev/wxt/pull/877))
+
+### 📖 Documentation
+
+- Update README and homepage features with WXT modules ([ed07a49](https://github.com/wxt-dev/wxt/commit/ed07a49))
+
+### 🏡 Chore
+
+- **deps:** Upgrade all dependencies ([#869](https://github.com/wxt-dev/wxt/pull/869))
+
 ## v0.19.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.0...wxt-v0.19.1)
