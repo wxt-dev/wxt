@@ -35,6 +35,7 @@ const chromeExtensionIds = [
   'bcpgdpedphodjcjlminjbdeejccjbimp', // 汇率转换-中文版本
   'loeilaonggnalkaiiaepbegccilkmjjp', // Currency Converter Plus
   'npcnninnjghigjfiecefheeibomjpkak', // Respond Easy
+  'cfkdcideecefncbglkhneoflfnmhoicc', // mindful - stay focused on your goals
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
