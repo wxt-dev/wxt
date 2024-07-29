@@ -36,6 +36,7 @@ const chromeExtensionIds = [
   'loeilaonggnalkaiiaepbegccilkmjjp', // Currency Converter Plus
   'npcnninnjghigjfiecefheeibomjpkak', // Respond Easy
   'cfkdcideecefncbglkhneoflfnmhoicc', // mindful - stay focused on your goals
+  'lnhejcpclabmbgpiiomjbhalblnnbffg', // 1Proompt
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
