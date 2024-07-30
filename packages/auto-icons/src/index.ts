@@ -9,20 +9,24 @@ export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
   configKey: 'autoIcons',
   async setup(wxt, options) {
-    const parsedOptions = defu(options, {
-      enabled: true,
-      baseIconsPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
-      grayscaleOnDevelopment: true,
-      sizes: [128, 48, 32, 16],
-    });
+    const parsedOptions = defu<Required<AutoIconsOptions>, AutoIconsOptions[]>(
+      options,
+      {
+        enabled: true,
+        baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
+        grayscaleOnDevelopment: true,
+        sizes: [128, 48, 32, 16],
+      },
+    );
+
+    const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await exists(parsedOptions.baseIconsPath))) {
-      const relativePath = relative(process.cwd(), parsedOptions.baseIconsPath);
+    if (!(await exists(resolvedPath))) {
       return wxt.logger.warn(
-        `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relativePath}`,
+        `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );
     }
 
@@ -38,7 +42,7 @@ export default defineWxtModule<AutoIconsOptions>({
     });
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
-      const image = sharp(parsedOptions.baseIconsPath).png();
+      const image = sharp(resolvedPath).png();
 
       if (
         wxt.config.mode === 'development' &&
@@ -80,6 +84,8 @@ export interface AutoIconsOptions {
   enabled?: boolean;
   /**
    * Path to the image to use.
+   *
+   * Path is relative to the project's src directory.
    * @default "<srcDir>/assets/icon.png"
    */
   baseIconPath?: string;
