@@ -9,14 +9,17 @@ export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
   configKey: 'autoIcons',
   async setup(wxt, options) {
-    const parsedOptions = defu<AutoIconOptioms, AutoIconOptioms>(options, {
-      enabled: true,
-      baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
-      grayscaleOnDevelopment: true,
-      sizes: [128, 48, 32, 16],
-    });
+    const parsedOptions = defu<Required<AutoIconsOptions>, AutoIconsOptions[]>(
+      options,
+      {
+        enabled: true,
+        baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
+        grayscaleOnDevelopment: true,
+        sizes: [128, 48, 32, 16],
+      },
+    );
 
-    const resolvedPath = resolve(process.cwd(), parsedOptions.baseIconPath);
+    const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
@@ -81,6 +84,8 @@ export interface AutoIconsOptions {
   enabled?: boolean;
   /**
    * Path to the image to use.
+   *
+   * Path is relative to the project's root directory.
    * @default "<srcDir>/assets/icon.png"
    */
   baseIconPath?: string;
