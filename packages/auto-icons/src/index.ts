@@ -85,7 +85,7 @@ export interface AutoIconsOptions {
   /**
    * Path to the image to use.
    *
-   * Path is relative to the project's root directory.
+   * Path is relative to the project's src directory.
    * @default "<srcDir>/assets/icon.png"
    */
   baseIconPath?: string;
