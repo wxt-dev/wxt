@@ -9,7 +9,7 @@ export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
   configKey: 'autoIcons',
   async setup(wxt, options) {
-    const parsedOptions = defu(options, {
+    const parsedOptions = defu<AutoIconOptioms, AutoIconOptioms>(options, {
       enabled: true,
       baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
       grayscaleOnDevelopment: true,
