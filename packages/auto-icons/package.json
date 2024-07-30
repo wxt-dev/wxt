@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/auto-icons",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
