@@ -37,6 +37,7 @@ const chromeExtensionIds = [
   'npcnninnjghigjfiecefheeibomjpkak', // Respond Easy
   'cfkdcideecefncbglkhneoflfnmhoicc', // mindful - stay focused on your goals
   'lnhejcpclabmbgpiiomjbhalblnnbffg', // 1Proompt
+  'fonflmjnjbkigocpoommgmhljdpljain', // NiceTab - https://github.com/web-dahuyou/NiceTab
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
