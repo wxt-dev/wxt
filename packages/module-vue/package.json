@@ -1,5 +1,21 @@
 {
   "name": "@wxt-dev/module-vue",
+  "description": "WXT module to enable Vue support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/module-vue"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "wxt",
+    "module",
+    "vue"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs",

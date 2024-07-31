@@ -1,5 +1,21 @@
 {
   "name": "@wxt-dev/module-svelte",
+  "description": "WXT module to enable Svelte support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/module-svelte"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "wxt",
+    "module",
+    "svelte"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs",

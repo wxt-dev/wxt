@@ -1,5 +1,21 @@
 {
   "name": "@wxt-dev/module-solid",
+  "description": "WXT module to enable SolidJS support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/module-solid"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "wxt",
+    "module",
+    "solidjs"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
   "version": "1.1.1",
   "type": "module",
   "main": "./dist/index.cjs",

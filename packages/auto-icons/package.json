@@ -1,5 +1,28 @@
 {
   "name": "@wxt-dev/auto-icons",
+  "description": "WXT module for automatically generating extension icons in different sizes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/auto-icons"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "wxt",
+    "module",
+    "icons",
+    "manifest"
+  ],
+  "author": {
+    "name": "Florian Metz",
+    "email": "me@timeraa.dev"
+  },
+  "contributors": [
+    {
+      "name": "Aaron Klinker",
+      "email": "aaronklinker1+wxt@gmail.com"
+    }
+  ],
+  "license": "MIT",
   "version": "1.0.1",
   "type": "module",
   "module": "./dist/index.mjs",
