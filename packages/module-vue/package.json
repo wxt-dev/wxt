@@ -3,9 +3,10 @@
   "description": "WXT module to enable Vue support",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/module-vue"
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/module-vue"
   },
-  "homepage": "https://wxt.dev",
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-vue/README.md",
   "keywords": [
     "wxt",
     "module",

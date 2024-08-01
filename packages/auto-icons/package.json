@@ -3,9 +3,10 @@
   "description": "WXT module for automatically generating extension icons in different sizes",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wxt-dev/wxt/tree/main/packages/auto-icons"
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/auto-icons"
   },
-  "homepage": "https://wxt.dev",
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/README.md",
   "keywords": [
     "wxt",
     "module",
