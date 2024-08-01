@@ -39,7 +39,7 @@
     "typescript": "^5.5.4",
     "vitepress": "^1.3.1",
     "vitest-mock-extended": "^2.0.0",
-    "vue": "^3.4.34",
+    "vue": "^3.4.35",
     "wxt": "workspace:*",
     "yaml": "^2.5.0"
   },
