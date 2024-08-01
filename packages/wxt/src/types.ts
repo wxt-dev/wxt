@@ -1046,9 +1046,14 @@ export interface WxtHooks {
    *   // variable called "example" in the TS project.
    *   entries.push({
    *     path: "types/example.d.ts",
-   *     textContent: "declare const a: string;",
+   *     text: "declare const a: string;",
    *     tsReference: true,
    *   });
+   *   // use module to add Triple-Slash Directive in .wxt/wxt.d.ts
+   *   // eg: /// <reference types="@types/example" />
+   *   entries.push({
+   *     module: '@types/example'
+   *  });
    * })
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
@@ -1409,6 +1414,10 @@ export type WxtDirEntry = WxtDirTypeReferenceEntry | WxtDirFileEntry;
  * Represents type reference to a node module to be added to `.wxt/wxt.d.ts` file
  */
 export interface WxtDirTypeReferenceEntry {
+  /**
+   * Specifies the module name that will be used in the `/// <reference types="..." />` directive.
+   * This value will be added to the `.wxt/wxt.d.ts` file to include type definitions from the specified module.
+   */
   module: string;
 }
 
