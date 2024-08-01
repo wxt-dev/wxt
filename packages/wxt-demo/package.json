@@ -27,7 +27,7 @@
     "@wxt-dev/auto-icons": "workspace:*",
     "sass": "^1.77.8",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.4",
+    "vitest": "^2.0.5",
     "vitest-plugin-random-seed": "^1.1.0",
     "wxt": "workspace:*"
   },

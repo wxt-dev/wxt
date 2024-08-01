@@ -141,7 +141,7 @@
     "tsx": "4.15.7",
     "typescript": "^5.5.4",
     "unbuild": "^2.0.0",
-    "vitest": "^2.0.4",
+    "vitest": "^2.0.5",
     "vitest-plugin-random-seed": "^1.1.0"
   },
   "peerDependencies": {
