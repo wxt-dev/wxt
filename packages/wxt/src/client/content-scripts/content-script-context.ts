@@ -46,13 +46,13 @@ export class ContentScriptContext implements AbortController {
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
     this.#abortController = new AbortController();
+
     if (this.#isTopFrame) {
+      this.#listenForNewerScripts({ ignoreFirstEvent: true });
       this.#stopOldScripts();
-    }
-    this.setTimeout(() => {
-      // Run on next tick so the listener it adds isn't triggered by stopOldScript
+    } else {
       this.#listenForNewerScripts();
-    });
+    }
   }
 
   get signal() {
@@ -224,12 +224,18 @@ export class ContentScriptContext implements AbortController {
     );
   }
 
-  #listenForNewerScripts() {
+  #listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
+    let isFirst = true;
+
     const cb = (event: MessageEvent) => {
       if (
         event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE &&
         event.data?.contentScriptName === this.contentScriptName
       ) {
+        const wasFirst = isFirst;
+        isFirst = false;
+        if (wasFirst && options?.ignoreFirstEvent) return;
+
         this.notifyInvalidated();
       }
     };
