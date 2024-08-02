@@ -232,8 +232,9 @@ export class ContentScriptContext implements AbortController {
         event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE &&
         event.data?.contentScriptName === this.contentScriptName
       ) {
-        if (isFirst && options?.ignoreFirstEvent) return;
+        const wasFirst = isFirst;
         isFirst = false;
+        if (wasFirst && options?.ignoreFirstEvent) return;
 
         this.notifyInvalidated();
       }
