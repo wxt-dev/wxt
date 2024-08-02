@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.19.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.2...wxt-v0.19.3)
+
+### 🩹 Fixes
+
+- Add `consola` to `wxt` dependencies ([#892](https://github.com/wxt-dev/wxt/pull/892))
+- **content-script-context:** Fix initialization logic for Firefox ([#895](https://github.com/wxt-dev/wxt/pull/895))
+
+### 📖 Documentation
+
+- Improve `prepare:types` hook JSDoc ([#886](https://github.com/wxt-dev/wxt/pull/886))
+
+### ❤️ Contributors
+
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+- Himanshu Patil <himanshupatil744@gmail.com>
+
 ## v0.19.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.1...wxt-v0.19.2)
