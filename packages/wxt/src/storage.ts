@@ -1,7 +1,7 @@
 /**
  * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
- * See [the guide](https://wxt.dev/guide/storage.html) for more information.
+ * See [the guide](https://wxt.dev/guide/extension-apis/storage.html) for more information.
  *
  * @module wxt/storage
  */
@@ -539,7 +539,7 @@ export interface WxtStorage {
   /**
    * Define a storage item with a default value, type, or versioning.
    *
-   * Read full docs: https://wxt.dev/guide/storage.html#defining-storage-items
+   * Read full docs: https://wxt.dev/guide/extension-apis/storage.html#defining-storage-items
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,
