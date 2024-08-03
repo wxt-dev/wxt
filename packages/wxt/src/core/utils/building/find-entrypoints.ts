@@ -36,7 +36,17 @@ import { createExtensionEnvironment } from '../environments';
 export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
   await fs.mkdir(wxt.config.wxtDir, { recursive: true });
-  await fs.writeJson(resolve(wxt.config.wxtDir, 'tsconfig.json'), {});
+  try {
+    await fs.writeJson(
+      resolve(wxt.config.wxtDir, 'tsconfig.json'),
+      {},
+      { flag: 'wx' },
+    );
+  } catch (err) {
+    if (!(err instanceof Error) || !('code' in err) || err.code !== 'EEXIST') {
+      throw err;
+    }
+  }
 
   const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: wxt.config.entrypointsDir,
