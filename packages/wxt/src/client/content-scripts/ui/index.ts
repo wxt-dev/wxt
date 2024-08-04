@@ -62,6 +62,7 @@ export function createIframeUi<TMounted>(
   const wrapper = document.createElement('div');
   wrapper.setAttribute('data-wxt-iframe', '');
   const iframe = document.createElement('iframe');
+  // @ts-expect-error: getURL is defined per-project, but not inside the package
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
 
@@ -258,6 +259,7 @@ function mountUi(
  * Load the CSS for the current entrypoint.
  */
 async function loadCss(): Promise<string> {
+  // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(
     `/content-scripts/${import.meta.env.ENTRYPOINT}.css`,
   );

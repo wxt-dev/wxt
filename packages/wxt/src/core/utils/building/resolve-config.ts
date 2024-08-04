@@ -183,8 +183,6 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     extensionApi,
-    browserModule:
-      extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
     entrypointLoader: mergedConfig.entrypointLoader ?? 'vite-node',
     experimental: defu(mergedConfig.experimental, {}),
     dev: {

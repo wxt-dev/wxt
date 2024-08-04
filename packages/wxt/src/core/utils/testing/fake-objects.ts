@@ -297,7 +297,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     userConfigMetadata: {},
     alias: {},
     extensionApi: 'webextension-polyfill',
-    browserModule: 'wxt/browser',
     entrypointLoader: 'vite-node',
     experimental: {},
     dev: {
