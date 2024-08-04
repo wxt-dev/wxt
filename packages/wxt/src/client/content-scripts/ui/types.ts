@@ -83,7 +83,8 @@ export type IframeContentScriptUiOptions<TMounted> =
      * The path to the HTML page that will be shown in the iframe. This string is passed into
      * `browser.runtime.getURL`.
      */
-    page: PublicPath;
+    // @ts-expect-error: HtmlPublicPath is generated per-project
+    page: import('wxt/browser').HtmlPublicPath;
     /**
      * Callback executed when mounting the UI. Use this function to customize the iframe or wrapper
      * element's appearance. It is called every time `ui.mount()` is called.
