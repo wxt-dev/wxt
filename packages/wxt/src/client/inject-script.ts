@@ -19,6 +19,7 @@ export async function injectScript(
   path: ScriptPublicPath,
   options?: InjectScriptOptions,
 ): Promise<void> {
+  // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
 
