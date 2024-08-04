@@ -34,7 +34,7 @@
 ### ❤️ Contributors
 
 - Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
-- Himanshu Patil <himanshupatil744@gmail.com>
+- Himanshu Patil ([@mehimanshupatil](https://github.com/mehimanshupatil))
 
 ## v0.19.2
 
