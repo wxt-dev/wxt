@@ -31,6 +31,7 @@ describe('Auto Imports', () => {
             const defineUnlistedScript: typeof import('wxt/sandbox')['defineUnlistedScript']
             const defineWxtPlugin: typeof import('wxt/sandbox')['defineWxtPlugin']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
+            const injectScript: typeof import('wxt/client')['injectScript']
             const storage: typeof import('wxt/storage')['storage']
             const useAppConfig: typeof import('wxt/client')['useAppConfig']
           }
