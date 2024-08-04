@@ -1,0 +1,38 @@
+import { browser } from 'wxt/browser';
+
+/**
+ * Inject an unlisted script into the page. Scripts are added to the `<head>`
+ * element or `document.documentElement` if there is no head.
+ *
+ * Make sure to add the injected script to your manifest's
+ * `web_accessible_resources`.
+ */
+export async function injectScript(
+  path: Extract<PublicPath, `${string}.js`>,
+  options?: InjectScriptOptions,
+): Promise<void> {
+  const url = browser.runtime.getURL(path);
+  const script = document.createElement('script');
+
+  if (browser.runtime.getManifest().manifest_version === 2) {
+    // MV2 requires using an inline script
+    script.innerHTML = await fetch(url).then((res) => res.text());
+  } else {
+    // MV3 requires using src
+    script.src = url;
+  }
+
+  if (!options?.keepInDom) {
+    script.onload = () => script.remove();
+  }
+
+  (document.head ?? document.documentElement).append(script);
+}
+
+export interface InjectScriptOptions {
+  /**
+   * By default, the injected script is removed from the DOM after being
+   * injected. To disable this behavior, set this flag to true.
+   */
+  keepInDom?: boolean;
+}
