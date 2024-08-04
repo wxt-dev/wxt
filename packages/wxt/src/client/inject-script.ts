@@ -1,6 +1,14 @@
 import { browser } from 'wxt/browser';
 
+export type ScriptPublicPath = Extract<
+  // @ts-expect-error: PublicPath is generated per-project
+  import('wxt/browser').PublicPath,
+  `${string}.js`
+>;
+
 /**
+ * This function can only be called inside content scripts.
+ *
  * Inject an unlisted script into the page. Scripts are added to the `<head>`
  * element or `document.documentElement` if there is no head.
  *
@@ -8,7 +16,7 @@ import { browser } from 'wxt/browser';
  * `web_accessible_resources`.
  */
 export async function injectScript(
-  path: Extract<PublicPath, `${string}.js`>,
+  path: ScriptPublicPath,
   options?: InjectScriptOptions,
 ): Promise<void> {
   const url = browser.runtime.getURL(path);
