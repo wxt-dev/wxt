@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.19.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.3...wxt-v0.19.4)
+
+### 🚀 Enhancements
+
+- Add `injectScript` helper ([#900](https://github.com/wxt-dev/wxt/pull/900))
+
+### 🩹 Fixes
+
+- Do not clear `.wxt/tsconfig.json` in `findEntrypoints` if it exists ([#898](https://github.com/wxt-dev/wxt/pull/898))
+- **types:** `PublicPath` type resolution with `extensionApi: "chrome"` ([#901](https://github.com/wxt-dev/wxt/pull/901))
+- Fix `createIframeUi` `page` option types ([3a8e613](https://github.com/wxt-dev/wxt/commit/3a8e613))
+
+### ❤️ Contributors
+
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+
 ## v0.19.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.2...wxt-v0.19.3)
