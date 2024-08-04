@@ -99,13 +99,11 @@ async function zipDir(
 ): Promise<void> {
   const archive = new JSZip();
   const files = (
-    await glob('**/*', {
+    await glob(['**/*', ...(options?.include || [])], {
       cwd: directory,
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
-      // TODO: Fix #738
-      // dot: true,
     })
   ).filter((relativePath) => {
     return (

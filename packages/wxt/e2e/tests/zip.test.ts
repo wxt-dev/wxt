@@ -97,8 +97,7 @@ describe('Zipping', () => {
     expect(await project.fileExists(sourcesZip)).toBe(true);
   });
 
-  // TODO: Fix #738 and re-enable
-  it.skip('should not zip hidden files into sources by default', async () => {
+  it('should not zip hidden files into sources by default', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -108,6 +107,7 @@ describe('Zipping', () => {
       'export default defineBackground(() => {});',
     );
     project.addFile('.env');
+    project.addFile('.hidden-dir/file');
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
@@ -116,10 +116,37 @@ describe('Zipping', () => {
     });
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, '.env')).toBe(false);
+    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
   });
 
-  // TODO: Fix #738 and re-enable
-  it.skip('should allow zipping hidden files into sources when explicitly listed', async () => {
+  it('should not zip files inside hidden directories if only the directory is specified', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    project.addFile('.hidden-dir/file');
+    project.addFile('.hidden-dir/nested/file');
+    const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'firefox',
+      zip: {
+        includeSources: ['.hidden-dir'],
+      },
+    });
+    await extract(sourcesZip, { dir: unzipDir });
+    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
+    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file')).toBe(
+      false,
+    );
+  });
+
+  it('should allow zipping hidden files into sources when explicitly listed', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -129,16 +156,26 @@ describe('Zipping', () => {
       'export default defineBackground(() => {});',
     );
     project.addFile('.env');
+    project.addFile('.hidden-dir/file');
+    project.addFile('.hidden-dir/nested/file1');
+    project.addFile('.hidden-dir/nested/file2');
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
     await project.zip({
       browser: 'firefox',
       zip: {
-        includeSources: ['.env'],
+        includeSources: ['.env', '.hidden-dir/file', '.hidden-dir/nested/**'],
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, '.env')).toBe(true);
+    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(true);
+    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file1')).toBe(
+      true,
+    );
+    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file2')).toBe(
+      true,
+    );
   });
 });
