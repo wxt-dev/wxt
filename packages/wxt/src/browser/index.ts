@@ -7,15 +7,15 @@
 import originalBrowser, { Browser, Runtime, I18n } from 'webextension-polyfill';
 
 export interface AugmentedBrowser extends Browser {
-  runtime: WxtRuntime;
-  i18n: WxtI18n;
+  runtime: WxtRuntime & Runtime.Static;
+  i18n: WxtI18n & I18n.Static;
 }
 
-export interface WxtRuntime extends Runtime.Static {
+export interface WxtRuntime {
   // Overriden per-project
 }
 
-export interface WxtI18n extends I18n.Static {
+export interface WxtI18n {
   // Overriden per-project
 }
 

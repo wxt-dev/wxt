@@ -1,4 +1,6 @@
 /// <reference types="chrome" />
+import type { WxtRuntime, WxtI18n } from './index';
+
 /**
  * EXPERIMENTAL
  *
@@ -6,13 +8,6 @@
  *
  * @module wxt/browser/chrome
  */
-
-export interface WxtRuntime {
-  // Overriden per-project
-}
-export interface WxtI18n {
-  // Overriden per-project
-}
 
 export type Chrome = typeof chrome;
 export type WxtBrowser = Omit<Chrome, 'runtime' | 'i18n'> & {
