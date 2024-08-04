@@ -67,6 +67,14 @@
     "./modules": {
       "types": "./dist/modules.d.ts",
       "default": "./dist/modules.mjs"
+    },
+    "./util": {
+      "types": "./dist/util/index.d.ts",
+      "default": "./dist/util/index.mjs"
+    },
+    "./rpc": {
+      "types": "./dist/rpc/index.d.ts",
+      "default": "./dist/rpc/index.mjs"
     }
   },
   "scripts": {
