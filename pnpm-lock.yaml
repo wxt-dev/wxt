@@ -159,6 +159,9 @@ importers:
 
   packages/messaging:
     dependencies:
+      nanoevents:
+        specifier: ^9.0.0
+        version: 9.0.0
       serialize-error:
         specifier: ^11.0.3
         version: 11.0.3
@@ -166,9 +169,6 @@ importers:
       '@aklinker1/check':
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.5.4)
-      nanoevents:
-        specifier: ^9.0.0
-        version: 9.0.0
       publint:
         specifier: ^0.2.9
         version: 0.2.9
