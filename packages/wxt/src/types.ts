@@ -1215,7 +1215,6 @@ export interface ResolvedConfig {
    */
   alias: Record<string, string>;
   extensionApi: 'webextension-polyfill' | 'chrome';
-  browserModule: 'wxt/browser' | 'wxt/browser/chrome';
   entrypointLoader: 'vite-node' | 'jiti';
   experimental: {};
   dev: {
