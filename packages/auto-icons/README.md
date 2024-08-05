@@ -32,7 +32,7 @@ The module can be configured via the `autoIcons` config:
 
 ```ts
 export default defineConfig({
-  module: ['@wxt-dev/auto-icons'],
+  modules: ['@wxt-dev/auto-icons'],
   autoIcons: {
     // ...
   },
