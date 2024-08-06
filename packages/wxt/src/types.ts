@@ -187,7 +187,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "*.map", // Exclude all sourcemaps
+     *   "**\/*.map", // Exclude all sourcemaps
      * ]
      */
     exclude?: string[];
