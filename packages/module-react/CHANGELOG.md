@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.1.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.0...module-react-v1.1.1)
+
+### 🏡 Chore
+
+- **deps:** Bump all non-major dependencies ([#834](https://github.com/wxt-dev/wxt/pull/834))
+- **deps:** Upgrade all dependencies ([#869](https://github.com/wxt-dev/wxt/pull/869))
+- Add more metadata for npm ([#885](https://github.com/wxt-dev/wxt/pull/885))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v1.1.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.0.0...module-react-v1.1.0)
