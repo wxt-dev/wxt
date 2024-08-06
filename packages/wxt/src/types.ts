@@ -182,6 +182,16 @@ export interface InlineConfig {
      */
     excludeSources?: string[];
     /**
+     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to exclude when
+     * zipping the extension.
+     *
+     * @example
+     * [
+     *   "*.map", // Exclude all sourcemaps
+     * ]
+     */
+    exclude?: string[];
+    /**
      * The Firefox review process requires the extension be buildable from source to make reviewing
      * easier. This field allows you to use private packages without exposing your auth tokens.
      *
@@ -1192,6 +1202,7 @@ export interface ResolvedConfig {
     downloadedPackagesDir: string;
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    exclude: string[];
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.

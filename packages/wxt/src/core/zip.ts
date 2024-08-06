@@ -47,7 +47,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
 
   const outZipFilename = applyTemplate(wxt.config.zip.artifactTemplate);
   const outZipPath = path.resolve(wxt.config.outBaseDir, outZipFilename);
-  await zipDir(wxt.config.outDir, outZipPath);
+  await zipDir(wxt.config.outDir, outZipPath, {
+    exclude: wxt.config.zip.exclude,
+  });
   zipFiles.push(outZipPath);
 
   // ZIP sources for Firefox
