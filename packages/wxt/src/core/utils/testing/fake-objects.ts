@@ -286,6 +286,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       artifactTemplate: '{{name}}-{{version}}.zip',
       includeSources: [],
       excludeSources: [],
+      exclude: [],
       sourcesRoot: fakeDir(),
       sourcesTemplate: '{{name}}-sources.zip',
       name: faker.person.firstName().toLowerCase(),
