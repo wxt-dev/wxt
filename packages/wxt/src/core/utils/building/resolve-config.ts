@@ -268,6 +268,7 @@ function resolveZipConfig(
     includeSources: [],
     compressionLevel: 9,
     ...mergedConfig.zip,
+    exclude: mergedConfig.zip?.exclude ?? [],
     excludeSources: [
       '**/node_modules',
       // WXT files
