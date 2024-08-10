@@ -11,6 +11,7 @@
     "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
     "prepublish": "pnpm -s build",
+    "postinstall": "pnpm i --resolution-only",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
     "docs:build": "pnpm -s docs:gen && vitepress build docs",
