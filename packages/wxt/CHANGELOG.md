@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.19.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.4...wxt-v0.19.5)
+
+### 🚀 Enhancements
+
+- Allow zipping hidden files by listing them explicitly in `includeSources` ([#902](https://github.com/wxt-dev/wxt/pull/902))
+- Allow excluding files when zipping ([#906](https://github.com/wxt-dev/wxt/pull/906))
+
+### 🩹 Fixes
+
+- #907 move wxt devDeps execa to dependencies ([#908](https://github.com/wxt-dev/wxt/pull/908), [#907](https://github.com/wxt-dev/wxt/issues/907))
+- Update chromium setting for enabling content script sourcemaps ([e6529e6](https://github.com/wxt-dev/wxt/commit/e6529e6))
+
+### ❤️ Contributors
+
+- 1natsu 
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+
 ## v0.19.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.3...wxt-v0.19.4)
