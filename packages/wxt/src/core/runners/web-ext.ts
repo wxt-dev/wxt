@@ -97,6 +97,9 @@ const DEFAULT_CHROMIUM_PREFS = {
       // and log locations show up properly, see:
       // https://github.com/wxt-dev/wxt/issues/236#issuecomment-1915364520
       skipContentScripts: false,
+      // Was renamed at some point, see:
+      // https://github.com/wxt-dev/wxt/issues/912#issuecomment-2284288171
+      'skip-content-scripts': false,
     },
   },
 };
