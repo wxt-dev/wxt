@@ -126,92 +126,95 @@ describe('TypeScript Project', () => {
         export interface WxtI18n extends I18n.Static {
           /**
            * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
-      Note: You can't use this message in a manifest file.
-           *
+           * Note: You can't use this message in a manifest file.
+           * 
            * "<browser.runtime.id>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@extension_id",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
-           * No message description.
-           *
            * "<browser.i18n.getUiLocale()>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@ui_locale",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Japanese.
-           *
+           * 
            * "<ltr|rtl>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@bidi_dir",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".
-           *
+           * 
            * "<rtl|ltr>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@bidi_reversed_dir",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".
-           *
+           * 
            * "<left|right>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@bidi_start_edge",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".
-           *
+           * 
            * "<right|left>"
            */
-          getMessage(
+      getMessage(
             messageName: "@@bidi_end_edge",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * Ask for the user's name
-           *
+           * 
            * "What's your name?"
            */
-          getMessage(
+      getMessage(
             messageName: "prompt_for_name",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * Greet the user
-           *
+           * 
            * "Hello, $USER$"
            */
-          getMessage(
+      getMessage(
             messageName: "hello",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
           /**
            * Say goodbye to the user
-           *
+           * 
            * "Goodbye, $USER$. Come back to $OUR_SITE$ soon!"
            */
-          getMessage(
+      getMessage(
             messageName: "bye",
+            substitutions?: string | string[],
+            options?: GetMessageOptions,
+          ): string;
+      getMessage(
+            messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "prompt_for_name" | "hello" | "bye",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;

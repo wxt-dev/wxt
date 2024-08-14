@@ -150,18 +150,43 @@ declare module "wxt/browser" {
     messages = parseI18nMessages({});
   }
 
-  const overrides = messages.map((message) => {
-    return `    /**
-     * ${message.description || 'No message description.'}
-     *
-     * "${message.message}"
-     */
-    getMessage(
-      messageName: "${message.name}",
+  const renderGetMessageOverload = (
+    keyType: string,
+    description?: string,
+    translation?: string,
+  ) => {
+    const commentLines: string[] = [];
+    if (description) commentLines.push(...description.split('\n'));
+    if (translation) {
+      if (commentLines.length > 0) commentLines.push('');
+      commentLines.push(`"${translation}"`);
+    }
+    const comment =
+      commentLines.length > 0
+        ? `    /**\n${commentLines.map((line) => `     * ${line}`).join('\n')}\n     */\n`
+        : '';
+    return `${comment}getMessage(
+      messageName: ${keyType},
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;`;
-  });
+  };
+
+  const overrides = [
+    // Generate individual overloads for each message so JSDoc contains description and base translation.
+    ...messages.map((message) =>
+      renderGetMessageOverload(
+        `"${message.name}"`,
+        message.description,
+        message.message,
+      ),
+    ),
+    // Include a final union-based override so TS accepts valid string templates or concatinations
+    // ie: browser.i18n.getMessage(`some_enum_${enumValue}`)
+    renderGetMessageOverload(
+      messages.map((message) => `"${message.name}"`).join(' | '),
+    ),
+  ];
 
   return {
     path: 'types/i18n.d.ts',
