@@ -387,7 +387,7 @@ async function getSidepanelEntrypoint(
   const options = await getHtmlEntrypointOptions<SidepanelEntrypointOptions>(
     info,
     {
-      browserStyle: 'browse_style',
+      browserStyle: 'browser_style',
       exclude: 'exclude',
       include: 'include',
       defaultIcon: 'default_icon',
