@@ -130,7 +130,7 @@ describe('TypeScript Project', () => {
            *
            * "<browser.runtime.id>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@extension_id",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -138,7 +138,7 @@ describe('TypeScript Project', () => {
           /**
            * "<browser.i18n.getUiLocale()>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@ui_locale",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -148,7 +148,7 @@ describe('TypeScript Project', () => {
            *
            * "<ltr|rtl>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@bidi_dir",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -158,7 +158,7 @@ describe('TypeScript Project', () => {
            *
            * "<rtl|ltr>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@bidi_reversed_dir",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -168,7 +168,7 @@ describe('TypeScript Project', () => {
            *
            * "<left|right>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@bidi_start_edge",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -178,7 +178,7 @@ describe('TypeScript Project', () => {
            *
            * "<right|left>"
            */
-      getMessage(
+          getMessage(
             messageName: "@@bidi_end_edge",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -188,7 +188,7 @@ describe('TypeScript Project', () => {
            *
            * "What's your name?"
            */
-      getMessage(
+          getMessage(
             messageName: "prompt_for_name",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -198,7 +198,7 @@ describe('TypeScript Project', () => {
            *
            * "Hello, $USER$"
            */
-      getMessage(
+          getMessage(
             messageName: "hello",
             substitutions?: string | string[],
             options?: GetMessageOptions,
@@ -208,7 +208,7 @@ describe('TypeScript Project', () => {
            *
            * "Goodbye, $USER$. Come back to $OUR_SITE$ soon!"
            */
-      getMessage(
+          getMessage(
             messageName: "bye",
             substitutions?: string | string[],
             options?: GetMessageOptions,
