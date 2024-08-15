@@ -164,7 +164,7 @@ declare module "wxt/browser" {
     const comment =
       commentLines.length > 0
         ? `    /**\n${commentLines.map((line) => `     * ${line}`.trimEnd()).join('\n')}\n     */\n`
-        : '';
+        : '    ';
     return `${comment}getMessage(
       messageName: ${keyType},
       substitutions?: string | string[],
