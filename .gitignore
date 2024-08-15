@@ -21,3 +21,4 @@ docs/api/reference
 stats.html
 .tool-versions
 .cache
+*-stats.txt
