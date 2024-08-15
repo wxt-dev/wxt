@@ -213,7 +213,7 @@ describe('TypeScript Project', () => {
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
-      getMessage(
+          getMessage(
             messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "prompt_for_name" | "hello" | "bye",
             substitutions?: string | string[],
             options?: GetMessageOptions,
