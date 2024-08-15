@@ -126,7 +126,7 @@ describe('TypeScript Project', () => {
         export interface WxtI18n extends I18n.Static {
           /**
            * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
-      Note: You can't use this message in a manifest file.
+           * Note: You can't use this message in a manifest file.
            *
            * "<browser.runtime.id>"
            */
@@ -136,8 +136,6 @@ describe('TypeScript Project', () => {
             options?: GetMessageOptions,
           ): string;
           /**
-           * No message description.
-           *
            * "<browser.i18n.getUiLocale()>"
            */
           getMessage(
@@ -212,6 +210,11 @@ describe('TypeScript Project', () => {
            */
           getMessage(
             messageName: "bye",
+            substitutions?: string | string[],
+            options?: GetMessageOptions,
+          ): string;
+          getMessage(
+            messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "prompt_for_name" | "hello" | "bye",
             substitutions?: string | string[],
             options?: GetMessageOptions,
           ): string;
