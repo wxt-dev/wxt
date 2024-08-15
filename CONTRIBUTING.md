@@ -57,6 +57,21 @@ pnpm test
 pnpm docs:dev
 ```
 
+## Profiling
+
+```sh
+# Build the latest version
+pnpm --filter wxt build
+
+# CD to the demo directory
+cd packages/wxt-demo
+
+# 1. Generate a flamechart with 0x
+pnpm dlx 0x node_modules/wxt/bin/wxt.mjs build
+# 2. Inspect the process with chrome @ chrome://inspect
+pnpm node --inspect node_modules/wxt/bin/wxt.mjs build
+```
+
 ## Updating Docs
 
 Documentation is written with VitePress, and is located in the `docs/` directory.
