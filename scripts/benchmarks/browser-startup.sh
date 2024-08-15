@@ -17,7 +17,7 @@ function benchmark_ref() {
     # Prep
     git checkout $1
     pnpm buildc clean
-    git apply scripts/benchmarks/web-ext.patch
+    git apply scripts/benchmarks/browser-startup.patch
     pnpm i --ignore-scripts
     pnpm -r --filter wxt build
     echo -n "$1 " >> stats.txt
