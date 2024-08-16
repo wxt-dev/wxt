@@ -15,7 +15,7 @@
 
 ### ❤️ Contributors
 
-- 1natsu
+- 1natsu ([@1natsu](https://github.com/1natsu172))
 
 ## v0.19.5
 
@@ -33,7 +33,7 @@
 
 ### ❤️ Contributors
 
-- 1natsu 
+- 1natsu ([@1natsu](https://github.com/1natsu172))
 - Florian Metz ([@Timeraa](http://github.com/Timeraa))
 - Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
 
