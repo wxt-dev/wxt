@@ -145,8 +145,6 @@ function createFileReloader(server: WxtDevServer) {
   const changeQueue: Array<[string, string]> = [];
 
   return async (event: string, path: string) => {
-    await wxt.reloadConfig();
-
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -156,6 +154,8 @@ function createFileReloader(server: WxtDevServer) {
         .splice(0, changeQueue.length)
         .map(([_, file]) => file);
       if (fileChanges.length === 0) return;
+
+      await wxt.reloadConfig();
 
       const changes = detectDevChanges(fileChanges, server.currentOutput);
       if (changes.type === 'no-change') return;
