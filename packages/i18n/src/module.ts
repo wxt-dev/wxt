@@ -11,6 +11,12 @@ import { basename, extname, join } from 'node:path';
 export default defineWxtModule({
   name: 'wxt-builtin-i18n',
   configKey: 'i18n',
+  // imports: [
+  //   {
+  //     from: '@wxt-dev/i18n',
+  //     name: 'i18n',
+  //   },
+  // ],
 
   setup(wxt) {
     if (wxt.config.manifest.default_locale == null) {
@@ -42,8 +48,8 @@ export default defineWxtModule({
 
           const messages = await parseMessagesFile(file);
           entries.push({
-            path: 'types/wxt-i18n.d.ts',
-            text: generateDtsText(messages, 'WxtI18n'),
+            path: 'types/i18n-messages.d.ts',
+            text: generateDtsText(messages),
             tsReference: true,
           });
         }),
@@ -64,3 +70,13 @@ export default defineWxtModule({
     });
   },
 });
+
+export interface I18nModuleOptions {
+  clientId: string;
+}
+
+declare module 'wxt' {
+  export interface InlineConfig {
+    i18n?: I18nModuleOptions;
+  }
+}

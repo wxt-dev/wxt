@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseYAML, parseJSON5, parseTOML, stringifyYAML } from 'confbox';
+import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
+import { applyChromeMessagePlaceholders, getSubstitionCount } from './utils';
 
 //
 // TYPES
@@ -60,17 +61,17 @@ const PREDEFINED_MESSAGES: Record<string, ChromeMessage> = {
   '@@bidi_reversed_dir': {
     message: '<rtl|ltr>',
     description:
-      'If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it\'s "ltr".',
+      'If the `@@bidi_dir` is "ltr", then this is "rtl"; otherwise, it\'s "ltr".',
   },
   '@@bidi_start_edge': {
     message: '<left|right>',
     description:
-      'If the @@bidi_dir is "ltr", then this is "left"; otherwise, it\'s "right".',
+      'If the `@@bidi_dir` is "ltr", then this is "left"; otherwise, it\'s "right".',
   },
   '@@bidi_end_edge': {
     message: '<right|left>',
     description:
-      'If the @@bidi_dir is "ltr", then this is "right"; otherwise, it\'s "left".',
+      'If the `@@bidi_dir` is "ltr", then this is "right"; otherwise, it\'s "left".',
   },
 };
 
@@ -171,28 +172,139 @@ function isChromeMessage(object: any): object is ChromeMessage {
 // OUTPUT
 //
 
-export function generateDtsText(
-  messages: ParsedMessage[],
-  interfaceName: string,
-): string {
-  const overloads: string[] = messages.map((message) => {
-    // TODO: detect substitutions, don't always include it
-    if (message.type === 'plural') {
-      return `  /**
-${stringifyYAML(message.plurals, { forceQuotes: true, quotingType: '"' })
-  .split('\n')
-  .map((line) => '   * ' + line)
-  .join('\n')}
-   */
-  t(key: "${message.key}", count: number, sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+export function generateDtsText(messages: ParsedMessage[]): string {
+  const renderTOverload = ({
+    keyType,
+    sub,
+    n,
+    comment,
+  }: {
+    keyType: string;
+    sub?: boolean | number;
+    n?: boolean;
+    comment?: string[];
+  }) => {
+    let lines = [];
+    if (comment?.length) {
+      lines.push(`  /**`);
+      comment
+        .flatMap((line) => line.split('\n'))
+        .forEach((line) => {
+          lines.push(`   * ${line}`.trimEnd());
+        });
+      lines.push(`   */`);
     }
-    return `  /**
-   * "${message.message}"
-   */
-  t(key: "${message.key}", sub?: import("@wxt-dev/i18n").Substitution[]): string`;
+
+    const args = [`key: ${keyType}`];
+    if (n) args.push('n: number');
+
+    if (sub === true) {
+      args.push(`sub: Substitution[]`);
+    } else if (sub) {
+      const tupleItems = Array.from(
+        { length: sub },
+        (_, i) => `$${i + 1}: Substitution`,
+      );
+      args.push(`sub: [${tupleItems.join(', ')}]`);
+    }
+
+    lines.push(`  t(${args.join(', ')}): string`);
+
+    return lines.join('\n');
+  };
+
+  const overloads: string[] = [];
+  const singularUnions: string[] = [];
+  const singularSubsUnions: string[] = [];
+  const pluralUnions: string[] = [];
+  const pluralSubsUnions: string[] = [];
+
+  messages.forEach((message) => {
+    const sub = getSubstitionCount(message);
+    const keyType = `"${message.key}"`;
+
+    // Track unions
+    const unions =
+      message.type === 'plural'
+        ? sub
+          ? pluralSubsUnions
+          : pluralUnions
+        : sub
+          ? singularSubsUnions
+          : singularUnions;
+    unions.push(keyType);
+
+    // Add individual overloads
+    switch (message.type) {
+      case 'chrome': {
+        const comment = message.description
+          ? [
+              message.description,
+              '',
+              `"${applyChromeMessagePlaceholders(message)}"`,
+            ]
+          : [`"${message.message}"`];
+        overloads.push(renderTOverload({ keyType, comment, sub }));
+        break;
+      }
+      case 'plural': {
+        const comment = Object.entries(message.plurals).map(
+          ([n, value]) => `${n} - "${value}"`,
+        );
+        overloads.push(renderTOverload({ keyType, comment, sub, n: true }));
+        break;
+      }
+      default: {
+        overloads.push(
+          renderTOverload({
+            keyType,
+            comment: [`"${message.message}"`],
+            sub,
+          }),
+        );
+        break;
+      }
+    }
   });
 
-  return `declare interface ${interfaceName} {
+  // Add union-based overloads for string templating and concatination
+  overloads.push('');
+  if (singularUnions.length > 0) {
+    overloads.push(
+      renderTOverload({
+        keyType: singularUnions.join(' | '),
+      }),
+    );
+  }
+  if (singularSubsUnions.length > 0) {
+    overloads.push(
+      renderTOverload({
+        keyType: singularSubsUnions.join(' | '),
+        sub: true,
+      }),
+    );
+  }
+  if (pluralUnions.length > 0) {
+    overloads.push(
+      renderTOverload({
+        keyType: pluralUnions.join(' | '),
+        n: true,
+      }),
+    );
+  }
+  if (pluralSubsUnions.length > 0) {
+    overloads.push(
+      renderTOverload({
+        keyType: pluralSubsUnions.join(' | '),
+        n: true,
+        sub: true,
+      }),
+    );
+  }
+
+  return `import type { Substitution } from "@wxt-dev/i18n"
+
+export interface GeneratedI18n {
 ${overloads.join('\n')}
 }
 `;
@@ -201,9 +313,8 @@ ${overloads.join('\n')}
 export async function generateDtsFile(
   outFile: string,
   messages: ParsedMessage[],
-  interfaceName: string,
 ): Promise<void> {
-  const text = generateDtsText(messages, interfaceName);
+  const text = generateDtsText(messages);
   await mkdir(dirname(outFile), { recursive: true });
   await writeFile(outFile, text, 'utf8');
 }
