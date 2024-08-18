@@ -205,7 +205,7 @@ export function addAlias(wxt: Wxt, alias: string, path: string) {
     const target = resolve(wxt.config.root, path);
     if (wxt.config.alias[alias] != null) {
       wxt.logger.warn(
-        `Tried to add alias (${alias} => ${target}), but one with the same name already exists (${alias} => ${wxt.config.alias}). Skipped.`,
+        `Skipped adding alias (${alias} => ${target}) because an alias with the same name already exists: ${alias} => ${wxt.config.alias[alias]}`,
       );
     }
     wxt.config.alias[alias] = target;
