@@ -1,3 +1,10 @@
+/**
+ * This module contains utils for generating types and `messages.json` files
+ * based on the custom messages file format.
+ *
+ * @module @wxt-dev/i18n/build
+ */
+
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
@@ -126,13 +133,21 @@ export function parseMessagesText(
  * Given the JS object form of a raw messages file, extract the messages.
  */
 export function parseMessagesObject(object: any): ParsedMessage[] {
-  return _parseMessagesObject([], {
-    ...object,
-    ...PREDEFINED_MESSAGES,
-  });
+  return _parseMessagesObject(
+    [],
+    {
+      ...object,
+      ...PREDEFINED_MESSAGES,
+    },
+    0,
+  );
 }
 
-function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
+function _parseMessagesObject(
+  path: string[],
+  object: any,
+  depth: number,
+): ParsedMessage[] {
   switch (typeof object) {
     case 'string':
     case 'bigint':
@@ -153,7 +168,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
     case 'object':
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
-          _parseMessagesObject(path.concat(String(i)), item),
+          _parseMessagesObject(path.concat(String(i)), item, depth + 1),
         );
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
@@ -167,7 +182,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
           },
         ];
       }
-      if (isChromeMessage(object)) {
+      if (depth === 0 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
         const substitutions = getSubstitionCount(message);
         return [
@@ -180,7 +195,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
         ];
       }
       return Object.entries(object).flatMap(([key, value]) =>
-        _parseMessagesObject(path.concat(key), value),
+        _parseMessagesObject(path.concat(key), value, depth + 1),
       );
     default:
       throw Error(`"Could not parse object of type "${typeof object}"`);

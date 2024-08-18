@@ -8,7 +8,7 @@
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/i18n"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/i18n/README.md",
+  "homepage": "http://wxt.dev/guide/i18n/installation.html",
   "keywords": [
     "wxt",
     "module",

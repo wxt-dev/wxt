@@ -1,0 +1,3 @@
+{
+  "entryPoints": ["src/index.ts", "src/build.ts", "src/module.ts"]
+}

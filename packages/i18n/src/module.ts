@@ -1,3 +1,15 @@
+/**
+ * The WXT Module to integrate `@wxt-dev/i18n` into your project.
+ *
+ * ```ts
+ * export default defineConfig({
+ *   modules: ["@wxt-dev/i18n/module"],
+ * });
+ * ```
+ *
+ * @module @wxt-dev/i18n/module
+ */
+
 import 'wxt';
 import { addAlias, defineWxtModule } from 'wxt/modules';
 import {

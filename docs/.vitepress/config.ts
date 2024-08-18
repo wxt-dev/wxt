@@ -148,6 +148,12 @@ export default defineConfig({
         menuGroup('Upgrade Guide', '/guide/upgrade-guide/', [
           menuItem('wxt', 'wxt'),
         ]),
+        menuGroup('@wxt-dev/i18n', '/guide/i18n/', [
+          menuItem('Introduction', 'introduction.md'),
+          menuItem('Installation', 'installation.md'),
+          menuItem('Messages File Format', 'messages-file-format.md'),
+          menuItem('Build Integrations', 'build-integrations.md'),
+        ]),
       ]),
       '/api/': menuRoot([
         menuGroup('CLI', '/api/cli/', [
