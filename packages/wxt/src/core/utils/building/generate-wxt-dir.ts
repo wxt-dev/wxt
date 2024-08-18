@@ -240,7 +240,7 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
   };
   const paths = Object.entries(wxt.config.alias)
     .flatMap(([alias, absolutePath]) => {
-      let aliasPath = getTsconfigPath(absolutePath);
+      const aliasPath = getTsconfigPath(absolutePath);
       return [
         `      "${alias}": ["${aliasPath}"]`,
         `      "${alias}/*": ["${aliasPath}/*"]`,
