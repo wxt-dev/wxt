@@ -3,6 +3,22 @@
   "description": "Localization tools for web extensions",
   "version": "1.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/i18n"
+  },
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/i18n/README.md",
+  "keywords": [
+    "wxt",
+    "module",
+    "i18n"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "buildc -- unbuild",
     "check": "buildc --deps-only -- check",
@@ -14,7 +30,7 @@
     "fast-glob": "^3.3.2"
   },
   "peerDependencies": {
-    "wxt": ">=0.18.7"
+    "wxt": ">=0.19.7"
   },
   "peerDependenciesMeta": {
     "wxt": {
