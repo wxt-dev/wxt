@@ -11,6 +11,9 @@ import { ResolvedConfig } from '../../../../types';
  * `npm list` and inline them automatically.
  */
 export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
+  const virtualSetupModule = 'virtual:wxt-setup';
+  const resolvedVirtualSetupModule = '\0' + virtualSetupModule;
+
   return {
     name: 'wxt:extension-api-mock',
     config() {
@@ -19,6 +22,9 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
         'dist/virtual/mock-browser',
       );
       return {
+        test: {
+          setupFiles: [virtualSetupModule],
+        },
         resolve: {
           alias: [
             { find: 'webextension-polyfill', replacement },
@@ -33,5 +39,19 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
         },
       };
     },
+    resolveId(id) {
+      if (id.endsWith(virtualSetupModule)) return resolvedVirtualSetupModule;
+    },
+    load(id) {
+      if (id === resolvedVirtualSetupModule) return setupTemplate;
+    },
   };
 }
+
+const setupTemplate = `
+  import { vi } from 'vitest';
+  import { fakeBrowser } from 'wxt/testing';
+
+  vi.stubGlobal("chrome", fakeBrowser);
+  vi.stubGlobal("browser", fakeBrowser);
+`;
