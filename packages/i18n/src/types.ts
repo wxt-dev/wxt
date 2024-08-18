@@ -3,8 +3,12 @@ export interface I18nFeatures {
   substitutions: SubstitutionCount;
 }
 
-export type DefaultI18nStructure = {
+export type I18nStructure = {
   [K: string]: I18nFeatures;
+};
+
+export type DefaultI18nStructure = {
+  [K: string]: any;
 };
 
 // prettier-ignore
@@ -20,7 +24,7 @@ export type SubstitutionTuple<T extends SubstitutionCount> =
   : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
   : never
 
-export type TFunction<T extends DefaultI18nStructure> = {
+export type TFunction<T extends I18nStructure> = {
   // Non-plural, no substitutions
   <K extends keyof T>(
     // prettier-ignore
@@ -32,7 +36,7 @@ export type TFunction<T extends DefaultI18nStructure> = {
   <K extends keyof T>(
     // prettier-ignore
     key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: SubstitutionCount } ? P : never; }[keyof T],
-    substitutions: T[K]['substitutions'] extends SubstitutionCount
+    substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
       : never,
     options?: GetMessageOptions,
@@ -51,11 +55,14 @@ export type TFunction<T extends DefaultI18nStructure> = {
     // prettier-ignore
     key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: SubstitutionCount } ? P : never; }[keyof T],
     n: number,
-    substitutions: T[K]['substitutions'] extends SubstitutionCount
+    substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
       : never,
     options?: GetMessageOptions,
   ): string;
+
+  // Fallback for default structure
+  // (key: string, ...args: any[]): string;
 };
 
 export interface I18n<T extends DefaultI18nStructure> {

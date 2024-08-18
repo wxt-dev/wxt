@@ -1,7 +1,12 @@
-import { DefaultI18nStructure, I18n, Substitution } from './types';
+import {
+  I18nStructure,
+  DefaultI18nStructure,
+  I18n,
+  Substitution,
+} from './types';
 
 export function createI18n<
-  T extends DefaultI18nStructure = DefaultI18nStructure,
+  T extends I18nStructure = DefaultI18nStructure,
 >(): I18n<T> {
   const t = (key: string, ...args: any[]) => {
     // Resolve args
