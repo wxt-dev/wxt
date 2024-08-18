@@ -114,6 +114,9 @@ importers:
 
   packages/i18n:
     dependencies:
+      chokidar:
+        specifier: ^3.6.0
+        version: 3.6.0
       confbox:
         specifier: ^0.1.7
         version: 0.1.7
