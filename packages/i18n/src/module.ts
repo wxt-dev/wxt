@@ -12,7 +12,7 @@ import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
 import { writeFile } from 'node:fs/promises';
 
 export default defineWxtModule({
-  name: 'wxt-builtin-i18n',
+  name: '@wxt-dev/i18n',
   imports: [{ from: '#i18n', name: 'i18n' }],
 
   setup(wxt) {
@@ -146,11 +146,3 @@ export { GeneratedI18nStructure }
     });
   },
 });
-
-// export interface I18nModuleOptions {}
-
-// declare module 'wxt' {
-//   export interface InlineConfig {
-//     i18n?: I18nModuleOptions;
-//   }
-// }
