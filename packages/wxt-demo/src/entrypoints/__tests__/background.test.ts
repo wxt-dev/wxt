@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import background from '../background';
 
-browser.i18n.getMessage = () => 'fake-message';
-vi.stubGlobal('chrome', fakeBrowser);
+chrome.i18n.getMessage = () => 'fake-message';
 
 const logMock = vi.fn();
 console.log = logMock;
