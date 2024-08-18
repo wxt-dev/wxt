@@ -60,9 +60,6 @@ export type TFunction<T extends I18nStructure> = {
       : never,
     options?: GetMessageOptions,
   ): string;
-
-  // Fallback for default structure
-  // (key: string, ...args: any[]): string;
 };
 
 export interface I18n<T extends DefaultI18nStructure> {

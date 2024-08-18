@@ -52,7 +52,7 @@ export function createI18n<
       );
     }
     if (!message) {
-      console.warn(`[i18n] Message not found for i18n.t("${key}")`);
+      console.warn(`[i18n] Message not found: "${key}"`);
     }
     if (count == null) return message;
 

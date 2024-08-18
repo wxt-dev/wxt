@@ -173,8 +173,30 @@ export function addImportPreset(
   });
 }
 
-export function addImportAlias(wxt: Wxt, alias: string, path: string) {
+/**
+ * Adds an import alias to the project's TSConfig paths and bundler resolution. Path
+ * can be absolute or relative to the project's root directory.
+ *
+ * @example
+ * import path from 'node:path';
+ *
+ * export default defineWxtModule((wxt) => {
+ *   const i18nPath = path.resolve(wxt.config.wxtDir, "i18n.ts");
+ *
+ *   // Add alias
+ *   addAlias(wxt, "#i18n", i18nPath);
+ *
+ *   // Generate the file
+ *   wxt.hooks.hook("prepare:types", (_, entries) => {
+ *     entries.push({
+ *       path: i18nPath,
+ *       text: `export const i18n = ...`,
+ *     });
+ *   });
+ * });
+ */
+export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('ready', (wxt) => {
-    wxt.config.alias[alias] = resolve(wxt.config.wxtDir, path);
+    wxt.config.alias[alias] = resolve(wxt.config.root, path);
   });
 }

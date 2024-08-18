@@ -1,5 +1,5 @@
 import 'wxt';
-import { addImportAlias, defineWxtModule } from 'wxt/modules';
+import { addAlias, defineWxtModule } from 'wxt/modules';
 import {
   generateChromeMessagesText,
   parseMessagesFile,
@@ -56,13 +56,12 @@ export default defineWxtModule({
         text: `import { createI18n } from '@wxt-dev/i18n';
 
 ${generateTypeText(messages)}
-export const i18n = createI18n<WxtI18nStructure>();
+export const i18n = createI18n<GeneratedI18nStructure>();
 `,
-        tsReference: true,
       });
     });
 
-    addImportAlias(wxt, '#i18n', resolve(wxt.config.wxtDir, sourcePath));
+    addAlias(wxt, '#i18n', resolve(wxt.config.wxtDir, sourcePath));
 
     // Generate _locales/.../messages.json files
 

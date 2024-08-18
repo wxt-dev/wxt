@@ -24,12 +24,12 @@ export default defineBackground({
     browser.runtime.getURL('/icon-128.png?query=param');
 
     // @ts-expect-error: should only accept known message names
-    console.log(i18n.t('test'));
-    console.log(i18n.t('prompt_for_name'));
-    console.log(i18n.t('hello', ['test']));
-    console.log(i18n.t('bye', ['Aaron']));
-    console.log(i18n.t('@@extension_id'));
-    console.log(i18n.t('deep.example'));
+    i18n.t('test');
+    i18n.t('prompt_for_name');
+    i18n.t('hello', ['test']);
+    i18n.t('bye', ['Aaron']);
+    i18n.t('@@extension_id');
+    i18n.t('deep.example');
 
     console.log('WXT MODE:', {
       MODE: import.meta.env.MODE,

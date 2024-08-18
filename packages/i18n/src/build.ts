@@ -215,7 +215,7 @@ export function generateTypeText(messages: ParsedMessage[]): string {
     return `  "${key}": { ${features.join(', ')} };`;
   };
 
-  return `export type WxtI18nStructure = {
+  return `export type GeneratedI18nStructure = {
 ${messages.map(renderMessageEntry).join('\n')}
 }
 `;

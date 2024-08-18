@@ -142,7 +142,7 @@ describe('Built Tools', () => {
       "
     `);
     expect(actualDtsFile).toMatchInlineSnapshot(`
-      "export type WxtI18nStructure = {
+      "export type GeneratedI18nStructure = {
         "simple": { substitutions: 0, plural: false };
         "sub": { substitutions: 1, plural: false };
         "nested.example": { substitutions: 0, plural: false };
@@ -178,7 +178,7 @@ describe('Built Tools', () => {
     const fileText = stringify({
       simple: 'example',
     });
-    const expectedDts = `export type WxtI18nStructure = {
+    const expectedDts = `export type GeneratedI18nStructure = {
   "simple": { substitutions: 0, plural: false };
   "@@extension_id": { substitutions: 0, plural: false };
   "@@ui_locale": { substitutions: 0, plural: false };
