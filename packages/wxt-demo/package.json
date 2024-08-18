@@ -32,6 +32,6 @@
     "wxt": "workspace:*"
   },
   "buildc": {
-    "outDir": ".output/chrome-mv3"
+    "cachable": false
   }
 }
