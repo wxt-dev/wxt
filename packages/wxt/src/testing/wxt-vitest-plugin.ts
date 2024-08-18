@@ -6,10 +6,10 @@ import {
   extensionApiMock,
   resolveAppConfig,
 } from '../core/builders/vite/plugins';
-import { resolveConfig } from '../core/utils/building';
 import { InlineConfig } from '../types';
 import { vitePlugin as unimportPlugin } from '../builtin-modules/unimport';
 import { createUnimport } from 'unimport';
+import { registerWxt, wxt } from '../core/wxt';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT extension, based on the `<root>/wxt.config.ts`
@@ -29,17 +29,17 @@ import { createUnimport } from 'unimport';
 export async function WxtVitest(
   inlineConfig?: InlineConfig,
 ): Promise<vite.PluginOption[]> {
-  const config = await resolveConfig(inlineConfig ?? {}, 'serve');
+  await registerWxt('serve', inlineConfig ?? {});
 
   const plugins: vite.PluginOption[] = [
-    globals(config),
-    download(config),
-    tsconfigPaths(config),
-    resolveAppConfig(config),
-    extensionApiMock(config),
+    globals(wxt.config),
+    download(wxt.config),
+    tsconfigPaths(wxt.config),
+    resolveAppConfig(wxt.config),
+    extensionApiMock(wxt.config),
   ];
-  if (config.imports !== false) {
-    const unimport = createUnimport(config.imports);
+  if (wxt.config.imports !== false) {
+    const unimport = createUnimport(wxt.config.imports);
     await unimport.init();
     plugins.push(unimportPlugin(unimport));
   }
