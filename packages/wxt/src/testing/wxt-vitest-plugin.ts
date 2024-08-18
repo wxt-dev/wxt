@@ -6,12 +6,10 @@ import {
   extensionApiMock,
   resolveAppConfig,
 } from '../core/builders/vite/plugins';
-import { resolveConfig } from '../core/utils/building';
 import { InlineConfig } from '../types';
 import { vitePlugin as unimportPlugin } from '../builtin-modules/unimport';
 import { createUnimport } from 'unimport';
 import { registerWxt, wxt } from '../core/wxt';
-import { fakeBrowser } from '@webext-core/fake-browser';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT extension, based on the `<root>/wxt.config.ts`
