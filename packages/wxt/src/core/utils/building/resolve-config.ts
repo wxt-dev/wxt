@@ -90,9 +90,6 @@ export async function resolveConfig(
     ? new Set(mergedConfig.filterEntrypoints)
     : undefined;
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
-  if (await isDirMissing(publicDir)) {
-    logMissingDir(logger, 'Public', publicDir);
-  }
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
@@ -412,15 +409,12 @@ async function isDirMissing(dir: string) {
   return !(await fs.exists(dir));
 }
 
-const issingDirLogCache = new Set();
 function logMissingDir(logger: Logger, name: string, expected: string) {
-  const message = `${name} directory not found: ./${normalizePath(
-    path.relative(process.cwd(), expected),
-  )}`;
-  if (!issingDirLogCache.has(message)) {
-    logger.debug(message);
-    issingDirLogCache.add(message);
-  }
+  logger.warn(
+    `${name} directory not found: ./${normalizePath(
+      path.relative(process.cwd(), expected),
+    )}`,
+  );
 }
 
 /**
