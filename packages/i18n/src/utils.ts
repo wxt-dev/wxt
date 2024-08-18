@@ -1,4 +1,4 @@
-import { ChromeMessage, ParsedMessage } from './build';
+import { ChromeMessage } from './build';
 
 export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
   if (message.placeholders == null) return message.message;

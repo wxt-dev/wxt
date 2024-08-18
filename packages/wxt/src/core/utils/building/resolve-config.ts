@@ -412,12 +412,15 @@ async function isDirMissing(dir: string) {
   return !(await fs.exists(dir));
 }
 
+const issingDirLogCache = new Set();
 function logMissingDir(logger: Logger, name: string, expected: string) {
-  logger.warn(
-    `${name} directory not found: ./${normalizePath(
-      path.relative(process.cwd(), expected),
-    )}`,
-  );
+  const message = `${name} directory not found: ./${normalizePath(
+    path.relative(process.cwd(), expected),
+  )}`;
+  if (!issingDirLogCache.has(message)) {
+    logger.debug(message);
+    issingDirLogCache.add(message);
+  }
 }
 
 /**
