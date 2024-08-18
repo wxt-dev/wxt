@@ -59,6 +59,11 @@ export async function createViteBuilder(
       config.build.sourcemap = 'inline';
     }
 
+    config.server ??= {};
+    config.server.watch = {
+      ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
+    };
+
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.download(wxtConfig),
@@ -287,9 +292,6 @@ export async function createViteBuilder(
           strictPort: true,
           host: info.hostname,
           origin: info.origin,
-          watch: {
-            ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
-          },
         },
       };
       const baseConfig = await getBaseConfig();
