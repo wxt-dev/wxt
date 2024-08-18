@@ -17,3 +17,5 @@ bye:
     user:
       content: $1
       example: Cira
+deep:
+  example: 'this is deep'

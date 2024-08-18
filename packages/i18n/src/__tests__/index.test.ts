@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createI18n } from '../index';
+import { GetMessageOptions } from '../types';
 
 const getMessageMock = vi.fn();
 
@@ -27,7 +28,7 @@ describe('createI18n', () => {
 
     expect(actual).toBe(expectedValue);
     expect(getMessageMock).toBeCalledTimes(1);
-    expect(getMessageMock).toBeCalledWith(expectedKey);
+    expect(getMessageMock).toBeCalledWith(expectedKey, undefined);
   });
 
   it.each([
@@ -54,64 +55,28 @@ describe('createI18n', () => {
 
       expect(actual).toBe(expected);
       expect(getMessageMock).toBeCalledTimes(1);
-      expect(getMessageMock).toBeCalledWith(key, [String(count)]);
+      expect(getMessageMock).toBeCalledWith(key, [String(count)], undefined);
     },
   );
 
   it('should allow overriding the plural substitutions', () => {
     const i18n = createI18n();
     i18n.t('key', 3, ['custom']);
-    expect(getMessageMock).toBeCalledWith('key', ['custom']);
+    expect(getMessageMock).toBeCalledWith('key', ['custom'], undefined);
   });
 
-  it('should respect the custom t(...) overloads passed into it', () => {
-    interface TestI18n {
-      t(key: 'key1'): string;
-      t(key: 'key2', sub: [string]): string;
-      t(key: 'key3', count: number): string;
-      t(key: 'key4', count: number, sub: [string, number]): string;
-    }
-    const i18n = createI18n<TestI18n>();
-    // @ts-expect-error: Doesn't like my custom overload, but the type is respected properly
-    const tryT: typeof i18n.t = (...args: any[]) => {
-      try {
-        // @ts-expect-error
-        i18n.t(...args);
-      } catch {
-        // ignore runtime errors for this test
-      }
+  it('should pass options into browser.i18n.getMessage', () => {
+    const i18n = createI18n();
+    const options: GetMessageOptions = {
+      escapeLt: true,
     };
 
-    tryT('key1');
-    // @ts-expect-error
-    tryT('not-key1');
-
-    tryT('key2', ['asdf']);
-    // @ts-expect-error
-    tryT('key1', ['asdf']);
-    // @ts-expect-error
-    tryT('key2', []);
-    // @ts-expect-error
-    tryT('key2', [123]);
-
-    tryT('key3', 2);
-    // @ts-expect-error
-    tryT('not-key3', 2);
-    // @ts-expect-error
-    tryT('key3', 'a');
-    // @ts-expect-error
-    tryT('key3', 2, ['a']);
-    // @ts-expect-error
-    tryT('key3', ['a']);
-
-    tryT('key4', 2, ['a', 2]);
-    // @ts-expect-error
-    tryT('key4', 'a', ['a', 2]);
-    // @ts-expect-error
-    tryT('key4', 'a', [2, 'a']);
-    // @ts-expect-error
-    tryT('not-key4', 2, ['a', 2]);
-    // @ts-expect-error
-    tryT('key4', 2, [2]);
+    i18n.t('key', options);
+    i18n.t('key', [''], options);
+    i18n.t('key', 1, options);
+    i18n.t('key', 1, [''], options);
+    getMessageMock.mock.calls.forEach((call) => {
+      expect(call.pop()).toEqual(options);
+    });
   });
 });

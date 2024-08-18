@@ -3,6 +3,7 @@ import {
   DefaultI18nStructure,
   I18n,
   Substitution,
+  GetMessageOptions,
 } from './types';
 
 export function createI18n<
@@ -12,21 +13,24 @@ export function createI18n<
     // Resolve args
     let sub: Substitution[] | undefined;
     let count: number | undefined;
-    switch (typeof args[0]) {
-      case 'number':
-        count = args[0];
-        sub = args[1] ?? [count];
-        break;
-      case 'object':
-        sub = args[0];
-        break;
-      case 'undefined':
-        break;
-      default:
+    let options: GetMessageOptions | undefined;
+    args.forEach((arg, i) => {
+      if (typeof arg === 'number') {
+        count = arg;
+      } else if (Array.isArray(arg)) {
+        sub = arg;
+      } else if (typeof arg === 'object' && arg != null) {
+        options = arg;
+      } else {
         throw Error(
-          'Second parameter must be a number or an array, got ' +
-            typeof args[0],
+          `Unknown argument at index ${i}. Must be a number for pluralization, substitution array, or options object.`,
         );
+      }
+    });
+
+    // Default substitutions to [n]
+    if (count != null && sub == null) {
+      sub = [String(count)];
     }
 
     // Load the localization
@@ -34,9 +38,18 @@ export function createI18n<
     if (sub?.length) {
       // Convert all substitutions to strings
       const stringSubs = sub?.map((sub) => String(sub));
-      message = chrome.i18n.getMessage(key.replaceAll('.', '_'), stringSubs);
+      message = chrome.i18n.getMessage(
+        key.replaceAll('.', '_'),
+        stringSubs,
+        // @ts-ignore - @types/chrome doesn't type the options object, but it's there
+        options,
+      );
     } else {
-      message = chrome.i18n.getMessage(key.replaceAll('.', '_'));
+      message = chrome.i18n.getMessage(
+        key.replaceAll('.', '_'),
+        // @ts-ignore - @types/chrome doesn't type the options object, but it's there
+        options,
+      );
     }
     if (count == null) return message;
 

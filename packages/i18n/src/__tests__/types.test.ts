@@ -1,9 +1,21 @@
-import { describe, it } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vitest';
 import { createI18n } from '..';
+
+const getMessageMock = vi.fn();
+
+vi.stubGlobal('chrome', {
+  i18n: {
+    getMessage: getMessageMock,
+  },
+});
 
 const n: number = 1;
 
 describe('I18n Types', () => {
+  beforeEach(() => {
+    getMessageMock.mockReturnValue('Some text.');
+  });
+
   describe('No type-safety', () => {
     const i18n = createI18n();
 

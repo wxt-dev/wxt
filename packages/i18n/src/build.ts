@@ -14,7 +14,7 @@ export interface ChromeMessage {
 }
 
 export interface ParsedBaseMessage {
-  key: string;
+  key: string[];
   substitutions: number;
 }
 
@@ -144,7 +144,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
       return [
         {
           type: 'simple',
-          key: path.join('_'),
+          key: path,
           substitutions,
           message,
         },
@@ -161,7 +161,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
         return [
           {
             type: 'plural',
-            key: path.join('_'),
+            key: path,
             substitutions,
             plurals: object,
           },
@@ -173,7 +173,7 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
         return [
           {
             type: 'chrome',
-            key: path.join('_'),
+            key: path,
             substitutions,
             ...object,
           },
@@ -205,11 +205,14 @@ function isChromeMessage(object: any): object is ChromeMessage {
 
 export function generateTypeText(messages: ParsedMessage[]): string {
   const renderMessageEntry = (message: ParsedMessage): string => {
+    // Use . for deep keys at runtime and types
+    const key = message.key.join('.');
+
     const features = [
       `substitutions: ${message.substitutions}`,
       `plural: ${message.type === 'plural'}`,
     ];
-    return `  "${message.key}": { ${features.join(', ')} };`;
+    return `  "${key}": { ${features.join(', ')} };`;
   };
 
   return `export type WxtI18nStructure = {
@@ -231,24 +234,26 @@ export function generateChromeMessages(
   messages: ParsedMessage[],
 ): Record<string, ChromeMessage> {
   return messages.reduce<Record<string, ChromeMessage>>((acc, message) => {
+    // Use _ for deep keys in _locales/.../messages.json
+    const key = message.key.join('_');
     // Don't output predefined messages
-    if (PREDEFINED_MESSAGES[message.key]) return acc;
+    if (PREDEFINED_MESSAGES[key]) return acc;
 
     switch (message.type) {
       case 'chrome':
-        acc[message.key] = {
+        acc[key] = {
           message: message.message,
           description: message.description,
           placeholders: message.placeholders,
         };
         break;
       case 'plural':
-        acc[message.key] = {
+        acc[key] = {
           message: Object.values(message.plurals).join(' | '),
         };
         break;
       case 'simple':
-        acc[message.key] = {
+        acc[key] = {
           message: message.message,
         };
         break;

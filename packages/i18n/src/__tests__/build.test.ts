@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   parseMessagesFile,
   generateChromeMessagesFile,
-  generateDtsFile,
+  generateTypeFile,
 } from '../build';
 import {
   stringifyTOML,
@@ -76,7 +76,7 @@ describe('Built Tools', () => {
 
     const messages = await parseMessagesFile(`file.yml`);
     await generateChromeMessagesFile('output.json', messages);
-    await generateDtsFile('output.d.ts', messages);
+    await generateTypeFile('output.d.ts', messages);
     const actualChromeMessagesFile = mockWriteFile.mock.calls[0][1];
     const actualDtsFile = mockWriteFile.mock.calls[1][1];
 
@@ -142,107 +142,26 @@ describe('Built Tools', () => {
       "
     `);
     expect(actualDtsFile).toMatchInlineSnapshot(`
-      "import "@wxt-dev/i18n"
-
-      export interface GeneratedI18n {
-        /**
-         * "example"
-         */
-        t(key: "simple", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "Hello $1"
-         */
-        t(key: "sub", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "This is nested"
-         */
-        t(key: "nested_example", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "One"
-         */
-        t(key: "nested_array_0", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "Two"
-         */
-        t(key: "nested_array_1", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "test 1"
-         */
-        t(key: "nested_chrome1", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * test
-         *
-         * "test 2"
-         */
-        t(key: "nested_chrome2", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * Label and link to a URL
-         *
-         * "Hello $NAME$, please visit $URL$"
-         */
-        t(key: "nested_chrome3", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * "Visit: $URL$"
-         */
-        t(key: "nested_chrome4", sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * 0 - "Zero items"
-         * 1 - "One item"
-         * n - "$1 items"
-         */
-        t(key: "plural0", n: number, sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * 1 - "One item"
-         * n - "$1 items"
-         */
-        t(key: "plural1", n: number, sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * n - "$1 items"
-         */
-        t(key: "pluralN", n: number, sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * 1 - "Hello $2, I have one problem"
-         * n - "Hello $2, I have $1 problems"
-         */
-        t(key: "pluralSub", n: number, sub: import("@wxt-dev/i18n").Substitution[]): string
-        /**
-         * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
-         * Note: You can't use this message in a manifest file.
-         *
-         * "<browser.runtime.id>"
-         */
-        t(key: "@@extension_id"): string
-        /**
-         * "<browser.i18n.getUiLocale()>"
-         */
-        t(key: "@@ui_locale"): string
-        /**
-         * The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Japanese.
-         *
-         * "<ltr|rtl>"
-         */
-        t(key: "@@bidi_dir"): string
-        /**
-         * If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".
-         *
-         * "<rtl|ltr>"
-         */
-        t(key: "@@bidi_reversed_dir"): string
-        /**
-         * If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".
-         *
-         * "<left|right>"
-         */
-        t(key: "@@bidi_start_edge"): string
-        /**
-         * If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".
-         *
-         * "<right|left>"
-         */
-        t(key: "@@bidi_end_edge"): string
-        t(key: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge"): string
-        t(key: "simple" | "sub" | "nested_example" | "nested_array_0" | "nested_array_1" | "nested_chrome1" | "nested_chrome2" | "nested_chrome3" | "nested_chrome4", sub: import("@wxt-dev/i18n").Substitution[]): string
-        t(key: "plural0" | "plural1" | "pluralN" | "pluralSub", n: number, sub: import("@wxt-dev/i18n").Substitution[]): string
+      "export type WxtI18nStructure = {
+        "simple": { substitutions: 0, plural: false };
+        "sub": { substitutions: 1, plural: false };
+        "nested.example": { substitutions: 0, plural: false };
+        "nested.array.0": { substitutions: 0, plural: false };
+        "nested.array.1": { substitutions: 0, plural: false };
+        "nested.chrome1": { substitutions: 0, plural: false };
+        "nested.chrome2": { substitutions: 0, plural: false };
+        "nested.chrome3": { substitutions: 1, plural: false };
+        "nested.chrome4": { substitutions: 0, plural: false };
+        "plural0": { substitutions: 1, plural: true };
+        "plural1": { substitutions: 1, plural: true };
+        "pluralN": { substitutions: 1, plural: true };
+        "pluralSub": { substitutions: 2, plural: true };
+        "@@extension_id": { substitutions: 0, plural: false };
+        "@@ui_locale": { substitutions: 0, plural: false };
+        "@@bidi_dir": { substitutions: 0, plural: false };
+        "@@bidi_reversed_dir": { substitutions: 0, plural: false };
+        "@@bidi_start_edge": { substitutions: 0, plural: false };
+        "@@bidi_end_edge": { substitutions: 0, plural: false };
       }
       "
     `);
@@ -259,11 +178,14 @@ describe('Built Tools', () => {
     const fileText = stringify({
       simple: 'example',
     });
-    const expectedDts = `interface TestI18n {
-  /**
-   * "example"
-   */
-  t(key: "simple", sub?: import("@wxt-dev/i18n").Substitution[]): string
+    const expectedDts = `export type WxtI18nStructure = {
+  "simple": { substitutions: 0, plural: false };
+  "@@extension_id": { substitutions: 0, plural: false };
+  "@@ui_locale": { substitutions: 0, plural: false };
+  "@@bidi_dir": { substitutions: 0, plural: false };
+  "@@bidi_reversed_dir": { substitutions: 0, plural: false };
+  "@@bidi_start_edge": { substitutions: 0, plural: false };
+  "@@bidi_end_edge": { substitutions: 0, plural: false };
 }
 `;
     const expectedChromeMessages =
@@ -273,7 +195,7 @@ describe('Built Tools', () => {
 
     const messages = await parseMessagesFile(`file.${extension}`);
     await generateChromeMessagesFile('output.json', messages);
-    await generateDtsFile('output.d.ts', messages, 'TestI18n');
+    await generateTypeFile('output.d.ts', messages);
 
     expect(mockWriteFile).toBeCalledTimes(2);
     expect(mockWriteFile).toBeCalledWith(
