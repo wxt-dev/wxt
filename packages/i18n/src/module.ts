@@ -37,7 +37,7 @@ export default defineWxtModule({
 
     // Create .wxt/i18n.ts
 
-    const sourcePath = 'i18n.ts';
+    const sourcePath = resolve(wxt.config.wxtDir, 'i18n.ts');
 
     wxt.hooks.hook('prepare:types', async (wxt, entries) => {
       const files = await getLocalizationFiles();
@@ -61,7 +61,7 @@ export const i18n = createI18n<GeneratedI18nStructure>();
       });
     });
 
-    addAlias(wxt, '#i18n', resolve(wxt.config.wxtDir, sourcePath));
+    addAlias(wxt, '#i18n', sourcePath);
 
     // Generate _locales/.../messages.json files
 
