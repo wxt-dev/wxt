@@ -140,9 +140,11 @@ export { GeneratedI18nStructure }
 
     // Reload extension during development
 
-    wxt.hooks.hookOnce('build:done', () => {
-      const watcher = watch(resolve(wxt.config.srcDir, 'locales'));
-      watcher.on('change', updateLocalizations);
-    });
+    if (wxt.config.command === 'serve') {
+      wxt.hooks.hookOnce('build:done', () => {
+        const watcher = watch(resolve(wxt.config.srcDir, 'locales'));
+        watcher.on('change', updateLocalizations);
+      });
+    }
   },
 });
