@@ -25,8 +25,8 @@ export default defineBackground({
 
     // @ts-expect-error: should only accept known message names
     i18n.t('test');
-    i18n.t('prompt_for_name', []);
-    i18n.t('hello', ['Aaron']);
+    i18n.t('prompt_for_name');
+    i18n.t('hello', ['test']);
     i18n.t('bye', ['Aaron']);
     i18n.t('@@extension_id');
 

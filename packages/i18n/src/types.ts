@@ -1,21 +1,24 @@
 export interface I18nFeatures {
   plural: boolean;
-  substitutions: number;
+  substitutions: SubstitutionCount;
 }
 
 export type DefaultI18nStructure = {
   [K: string]: I18nFeatures;
 };
 
-// Helper type to create tuples of specific length
-type Tuple<T, N extends number> = N extends N
-  ? number extends N
-    ? T[]
-    : _TupleOf<T, N, []>
-  : never;
-type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N
-  ? R
-  : _TupleOf<T, N, [T, ...R]>;
+// prettier-ignore
+export type SubstitutionTuple<T extends SubstitutionCount> =
+    T extends 1 ? [$1: Substitution]
+  : T extends 2 ? [$1: Substitution, $2: Substitution]
+  : T extends 3 ? [$1: Substitution, $2: Substitution, $3: Substitution]
+  : T extends 4 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution]
+  : T extends 5 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution]
+  : T extends 6 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution]
+  : T extends 7 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution]
+  : T extends 8 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution]
+  : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
+  : never
 
 export type TFunction<T extends DefaultI18nStructure> = {
   // Non-plural, no substitutions
@@ -26,10 +29,12 @@ export type TFunction<T extends DefaultI18nStructure> = {
   ): string;
 
   // Non-plural with substitutions
-  <K extends keyof T, S extends number>(
+  <K extends keyof T>(
     // prettier-ignore
-    key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: S } ? P : never; }[keyof T],
-    substitutions: Tuple<Substitution, S>,
+    key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: SubstitutionCount } ? P : never; }[keyof T],
+    substitutions: T[K]['substitutions'] extends SubstitutionCount
+      ? SubstitutionTuple<T[K]['substitutions']>
+      : never,
     options?: GetMessageOptions,
   ): string;
 
@@ -42,11 +47,13 @@ export type TFunction<T extends DefaultI18nStructure> = {
   ): string;
 
   // Plural with substitutions
-  <K extends keyof T, S extends number>(
+  <K extends keyof T>(
     // prettier-ignore
-    key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: S } ? P : never; }[keyof T],
+    key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: SubstitutionCount } ? P : never; }[keyof T],
     n: number,
-    substitutions: Tuple<Substitution, S>,
+    substitutions: T[K]['substitutions'] extends SubstitutionCount
+      ? SubstitutionTuple<T[K]['substitutions']>
+      : never,
     options?: GetMessageOptions,
   ): string;
 };
@@ -65,3 +72,5 @@ export interface GetMessageOptions {
    */
   escapeLt?: boolean;
 }
+
+type SubstitutionCount = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
