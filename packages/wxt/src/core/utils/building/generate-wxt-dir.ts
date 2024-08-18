@@ -233,10 +233,14 @@ function getMainDeclarationEntry(references: WxtDirEntry[]): WxtDirFileEntry {
 
 async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
   const dir = wxt.config.wxtDir;
-  const getTsconfigPath = (path: string) => normalizePath(relative(dir, path));
+  const getTsconfigPath = (path: string) => {
+    const res = normalizePath(relative(dir, path));
+    if (res.startsWith('.') || res.startsWith('/')) return res;
+    return './' + res;
+  };
   const paths = Object.entries(wxt.config.alias)
     .flatMap(([alias, absolutePath]) => {
-      const aliasPath = getTsconfigPath(absolutePath);
+      let aliasPath = getTsconfigPath(absolutePath);
       return [
         `      "${alias}": ["${aliasPath}"]`,
         `      "${alias}/*": ["${aliasPath}/*"]`,
