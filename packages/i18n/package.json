@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/i18n",
-  "description": "Localization tools for web extensions",
+  "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
   "version": "1.0.0",
   "type": "module",
   "repository": {
