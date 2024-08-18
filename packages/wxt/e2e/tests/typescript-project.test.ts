@@ -379,6 +379,22 @@ describe('TypeScript Project', () => {
     `);
   });
 
+  it('should start path aliases with "./" for paths inside the .wxt dir', async () => {
+    const project = new TestProject();
+    project.addFile('src/entrypoints/unlisted.html', '<html></html>');
+    project.setConfigFileConfig({
+      srcDir: 'src',
+      alias: {
+        example: '.wxt/example.ts',
+      },
+    });
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/tsconfig.json');
+    expect(output).toContain('./example.ts');
+  });
+
   // TODO: Once a module has been published, use it here for testing - local files are never added to the .wxt/wxt.d.ts file
   it.todo(
     'should add modules from NPM to the TS project if they have a configKey',

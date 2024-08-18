@@ -202,6 +202,12 @@ export function addImportPreset(
  */
 export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('ready', (wxt) => {
-    wxt.config.alias[alias] = resolve(wxt.config.root, path);
+    const target = resolve(wxt.config.root, path);
+    if (wxt.config.alias[alias] != null) {
+      wxt.logger.warn(
+        `Skipped adding alias (${alias} => ${target}) because an alias with the same name already exists: ${alias} => ${wxt.config.alias[alias]}`,
+      );
+    }
+    wxt.config.alias[alias] = target;
   });
 }

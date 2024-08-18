@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.5...wxt-v0.19.6)
+
+### 🔥 Performance
+
+- Ignore non-source code from the file watcher ([#919](https://github.com/wxt-dev/wxt/pull/919))
+
+### 🩹 Fixes
+
+- Typo in sidepanel options (`browse_style` → `browser_style`) ([#914](https://github.com/wxt-dev/wxt/pull/914))
+- **types:** Don't report type errors when using string templates with `browser.i18n.getMessage` ([#916](https://github.com/wxt-dev/wxt/pull/916))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu](https://github.com/1natsu172))
+
 ## v0.19.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.4...wxt-v0.19.5)
@@ -16,7 +33,7 @@
 
 ### ❤️ Contributors
 
-- 1natsu 
+- 1natsu ([@1natsu](https://github.com/1natsu172))
 - Florian Metz ([@Timeraa](http://github.com/Timeraa))
 - Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
 

@@ -287,6 +287,9 @@ export async function createViteBuilder(
           strictPort: true,
           host: info.hostname,
           origin: info.origin,
+          watch: {
+            ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
+          },
         },
       };
       const baseConfig = await getBaseConfig();

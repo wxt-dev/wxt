@@ -35,4 +35,6 @@ Only MV3 support ESM background scripts/service workers. When targeting MV2, the
 
 ## Content Scripts
 
-Coming soon. Follow [Content Script ESM Support #357](https://github.com/wxt-dev/wxt/issues/357) for updates.
+WXT does not include built-in support for ESM content scripts. There are several technical issues that make implementing a generic solution impossible. See [Content Script ESM Support #357](https://github.com/wxt-dev/wxt/issues/357) for details.
+
+Instead, depending on your requirements, you can implement ESM support manually. See the [ESM Content Script UI](https://github.com/wxt-dev/examples/tree/main/examples/esm-content-script-ui) example to get started.
