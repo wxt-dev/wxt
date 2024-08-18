@@ -172,3 +172,9 @@ export function addImportPreset(
     wxt.config.imports.presets.push(preset);
   });
 }
+
+export function addImportAlias(wxt: Wxt, alias: string, path: string) {
+  wxt.hooks.hook('ready', (wxt) => {
+    wxt.config.alias[alias] = resolve(wxt.config.wxtDir, path);
+  });
+}

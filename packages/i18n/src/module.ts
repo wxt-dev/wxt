@@ -1,29 +1,25 @@
 import 'wxt';
-import { defineWxtModule } from 'wxt/modules';
+import { addImportAlias, defineWxtModule } from 'wxt/modules';
 import {
   generateChromeMessagesText,
   parseMessagesFile,
   generateTypeText,
 } from './build';
 import glob from 'fast-glob';
-import { basename, extname, join } from 'node:path';
+import { basename, extname, join, resolve } from 'node:path';
 
 export default defineWxtModule({
   name: 'wxt-builtin-i18n',
   configKey: 'i18n',
-  // imports: [
-  //   {
-  //     from: '@wxt-dev/i18n',
-  //     name: 'i18n',
-  //   },
-  // ],
+  imports: [{ from: '#i18n', name: 'i18n' }],
 
   setup(wxt) {
     if (wxt.config.manifest.default_locale == null) {
-      wxt.logger.info('`[i18n]` Skipped, no `default_locale` in manifest');
+      wxt.logger.warn(
+        `\`[i18n]\` manifest.default_locale not set, \`@wxt-dev/i18n\` disabled.`,
+      );
       return;
     }
-
     wxt.logger.info(
       '`[i18n]` Default locale: ' + wxt.config.manifest.default_locale,
     );
@@ -39,22 +35,36 @@ export default defineWxtModule({
       }));
     };
 
+    // Create .wxt/i18n.ts
+
+    const sourcePath = 'i18n.ts';
+
     wxt.hooks.hook('prepare:types', async (wxt, entries) => {
       const files = await getLocalizationFiles();
+      const defaultLocaleFile = files.find(
+        ({ locale }) => locale === wxt.config.manifest.default_locale,
+      )!;
+      if (defaultLocaleFile == null) {
+        throw Error(
+          `\`[i18n]\` Required localization file does not exist: \`<srcDir>/locales/${wxt.config.manifest.default_locale}.{json|json5|yml|yaml|toml}\``,
+        );
+      }
 
-      await Promise.all(
-        files.map(async ({ file, locale }) => {
-          if (locale !== wxt.config.manifest.default_locale) return;
+      const messages = await parseMessagesFile(defaultLocaleFile.file);
+      entries.push({
+        path: sourcePath,
+        text: `import { createI18n } from '@wxt-dev/i18n';
 
-          const messages = await parseMessagesFile(file);
-          entries.push({
-            path: 'types/i18n-messages.d.ts',
-            text: generateTypeText(messages),
-            tsReference: true,
-          });
-        }),
-      );
+${generateTypeText(messages)}
+export const i18n = createI18n<WxtI18nStructure>();
+`,
+        tsReference: true,
+      });
     });
+
+    addImportAlias(wxt, '#i18n', resolve(wxt.config.wxtDir, sourcePath));
+
+    // Generate _locales/.../messages.json files
 
     wxt.hooks.hook('build:publicAssets', async (_, assets) => {
       const files = await getLocalizationFiles();

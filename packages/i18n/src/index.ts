@@ -51,6 +51,9 @@ export function createI18n<
         options,
       );
     }
+    if (!message) {
+      console.warn(`[i18n] Message not found for i18n.t("${key}")`);
+    }
     if (count == null) return message;
 
     // Apply pluralization
