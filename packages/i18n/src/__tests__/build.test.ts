@@ -76,7 +76,7 @@ describe('Built Tools', () => {
 
     const messages = await parseMessagesFile(`file.yml`);
     await generateChromeMessagesFile('output.json', messages);
-    await generateDtsFile('output.d.ts', messages, 'TestI18n');
+    await generateDtsFile('output.d.ts', messages);
     const actualChromeMessagesFile = mockWriteFile.mock.calls[0][1];
     const actualDtsFile = mockWriteFile.mock.calls[1][1];
 

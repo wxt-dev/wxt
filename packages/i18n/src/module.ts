@@ -3,7 +3,7 @@ import { defineWxtModule } from 'wxt/modules';
 import {
   generateChromeMessagesText,
   parseMessagesFile,
-  generateDtsText,
+  generateTypeText,
 } from './build';
 import glob from 'fast-glob';
 import { basename, extname, join } from 'node:path';
@@ -49,7 +49,7 @@ export default defineWxtModule({
           const messages = await parseMessagesFile(file);
           entries.push({
             path: 'types/i18n-messages.d.ts',
-            text: generateDtsText(messages),
+            text: generateTypeText(messages),
             tsReference: true,
           });
         }),

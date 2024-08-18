@@ -15,6 +15,7 @@ export interface ChromeMessage {
 
 export interface ParsedBaseMessage {
   key: string;
+  substitutions: number;
 }
 
 export interface ParsedChromeMessage extends ParsedBaseMessage, ChromeMessage {
@@ -137,17 +138,47 @@ function _parseMessagesObject(path: string[], object: any): ParsedMessage[] {
     case 'bigint':
     case 'boolean':
     case 'number':
-    case 'symbol':
-      return [{ type: 'simple', key: path.join('_'), message: String(object) }];
+    case 'symbol': {
+      const message = String(object);
+      const substitutions = getSubstitionCount(message);
+      return [
+        {
+          type: 'simple',
+          key: path.join('_'),
+          substitutions,
+          message,
+        },
+      ];
+    }
     case 'object':
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item),
         );
-      if (isPluralMessage(object))
-        return [{ key: path.join('_'), type: 'plural', plurals: object }];
-      if (isChromeMessage(object))
-        return [{ key: path.join('_'), type: 'chrome', ...object }];
+      if (isPluralMessage(object)) {
+        const message = Object.values(object).join('|');
+        const substitutions = getSubstitionCount(message);
+        return [
+          {
+            type: 'plural',
+            key: path.join('_'),
+            substitutions,
+            plurals: object,
+          },
+        ];
+      }
+      if (isChromeMessage(object)) {
+        const message = applyChromeMessagePlaceholders(object);
+        const substitutions = getSubstitionCount(message);
+        return [
+          {
+            type: 'chrome',
+            key: path.join('_'),
+            substitutions,
+            ...object,
+          },
+        ];
+      }
       return Object.entries(object).flatMap(([key, value]) =>
         _parseMessagesObject(path.concat(key), value),
       );
@@ -172,149 +203,26 @@ function isChromeMessage(object: any): object is ChromeMessage {
 // OUTPUT
 //
 
-export function generateDtsText(messages: ParsedMessage[]): string {
-  const renderTOverload = ({
-    keyType,
-    sub,
-    n,
-    comment,
-  }: {
-    keyType: string;
-    sub?: boolean | number;
-    n?: boolean;
-    comment?: string[];
-  }) => {
-    let lines = [];
-    if (comment?.length) {
-      lines.push(`  /**`);
-      comment
-        .flatMap((line) => line.split('\n'))
-        .forEach((line) => {
-          lines.push(`   * ${line}`.trimEnd());
-        });
-      lines.push(`   */`);
-    }
-
-    const args = [`key: ${keyType}`];
-    if (n) args.push('n: number');
-
-    if (sub === true) {
-      args.push(`sub: Substitution[]`);
-    } else if (sub) {
-      const tupleItems = Array.from(
-        { length: sub },
-        (_, i) => `$${i + 1}: Substitution`,
-      );
-      args.push(`sub: [${tupleItems.join(', ')}]`);
-    }
-
-    lines.push(`  t(${args.join(', ')}): string`);
-
-    return lines.join('\n');
+export function generateTypeText(messages: ParsedMessage[]): string {
+  const renderMessageEntry = (message: ParsedMessage): string => {
+    const features = [
+      `substitutions: ${message.substitutions}`,
+      `plural: ${message.type === 'plural'}`,
+    ];
+    return `  "${message.key}": { ${features.join(', ')} };`;
   };
 
-  const overloads: string[] = [];
-  const singularUnions: string[] = [];
-  const singularSubsUnions: string[] = [];
-  const pluralUnions: string[] = [];
-  const pluralSubsUnions: string[] = [];
-
-  messages.forEach((message) => {
-    const sub = getSubstitionCount(message);
-    const keyType = `"${message.key}"`;
-
-    // Track unions
-    const unions =
-      message.type === 'plural'
-        ? sub
-          ? pluralSubsUnions
-          : pluralUnions
-        : sub
-          ? singularSubsUnions
-          : singularUnions;
-    unions.push(keyType);
-
-    // Add individual overloads
-    switch (message.type) {
-      case 'chrome': {
-        const comment = message.description
-          ? [
-              message.description,
-              '',
-              `"${applyChromeMessagePlaceholders(message)}"`,
-            ]
-          : [`"${message.message}"`];
-        overloads.push(renderTOverload({ keyType, comment, sub }));
-        break;
-      }
-      case 'plural': {
-        const comment = Object.entries(message.plurals).map(
-          ([n, value]) => `${n} - "${value}"`,
-        );
-        overloads.push(renderTOverload({ keyType, comment, sub, n: true }));
-        break;
-      }
-      default: {
-        overloads.push(
-          renderTOverload({
-            keyType,
-            comment: [`"${message.message}"`],
-            sub,
-          }),
-        );
-        break;
-      }
-    }
-  });
-
-  // Add union-based overloads for string templating and concatination
-  overloads.push('');
-  if (singularUnions.length > 0) {
-    overloads.push(
-      renderTOverload({
-        keyType: singularUnions.join(' | '),
-      }),
-    );
-  }
-  if (singularSubsUnions.length > 0) {
-    overloads.push(
-      renderTOverload({
-        keyType: singularSubsUnions.join(' | '),
-        sub: true,
-      }),
-    );
-  }
-  if (pluralUnions.length > 0) {
-    overloads.push(
-      renderTOverload({
-        keyType: pluralUnions.join(' | '),
-        n: true,
-      }),
-    );
-  }
-  if (pluralSubsUnions.length > 0) {
-    overloads.push(
-      renderTOverload({
-        keyType: pluralSubsUnions.join(' | '),
-        n: true,
-        sub: true,
-      }),
-    );
-  }
-
-  return `import type { Substitution } from "@wxt-dev/i18n"
-
-export interface GeneratedI18n {
-${overloads.join('\n')}
+  return `export type WxtI18nStructure = {
+${messages.map(renderMessageEntry).join('\n')}
 }
 `;
 }
 
-export async function generateDtsFile(
+export async function generateTypeFile(
   outFile: string,
   messages: ParsedMessage[],
 ): Promise<void> {
-  const text = generateDtsText(messages);
+  const text = generateTypeText(messages);
   await mkdir(dirname(outFile), { recursive: true });
   await writeFile(outFile, text, 'utf8');
 }

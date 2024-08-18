@@ -1,4 +1,8 @@
-export function createI18n<TI18n extends I18n = I18n>(): TI18n {
+import { DefaultI18nStructure, I18n, Substitution } from './types';
+
+export function createI18n<
+  T extends DefaultI18nStructure = DefaultI18nStructure,
+>(): I18n<T> {
   const t = (key: string, ...args: any[]) => {
     // Resolve args
     let sub: Substitution[] | undefined;
@@ -48,30 +52,5 @@ export function createI18n<TI18n extends I18n = I18n>(): TI18n {
     }
   };
 
-  return { t } as TI18n;
+  return { t } as I18n<T>;
 }
-
-export type Substitution = string | number;
-
-export interface I18n {
-  t(key: I18nSimpleMessage): string;
-  t(key: I18nWithSubstitutionsMessage, substitutions: Substitution[]): string;
-  t(key: I18nPluralMessage, count: number): string;
-  t(
-    key: I18nPluralWithSubstitutionsMessage,
-    count: number,
-    substitutions: Substitution[],
-  ): string;
-}
-
-// export type I18nMessages = {
-//   simple: string;
-//   withSubstitutions: string;
-//   plural: string;
-//   pluralWithSubstitutions: string;
-// };
-
-export type I18nSimpleMessage = string;
-export type I18nWithSubstitutionsMessage = string;
-export type I18nPluralMessage = string;
-export type I18nPluralWithSubstitutionsMessage = string;
