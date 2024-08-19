@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.19.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.6...wxt-v0.19.7)
+
+### 🚀 Enhancements
+
+- **testing:** Run WXT modules when setting up test environment ([#926](https://github.com/wxt-dev/wxt/pull/926))
+- **modules:** Add `addAlias` helper ([#928](https://github.com/wxt-dev/wxt/pull/928))
+
+### 🩹 Fixes
+
+- **testing:** Stub `chrome` and `browser` globals with `fakeBrowser` automatically ([#925](https://github.com/wxt-dev/wxt/pull/925))
+- Ensure TSConfig paths start with `../` or  `./` so they are valid ([#927](https://github.com/wxt-dev/wxt/pull/927))
+
+### 📖 Documentation
+
+- Fix module name for `wxt/browser/chrome` ([751706d](https://github.com/wxt-dev/wxt/commit/751706d))
+
+### 🏡 Chore
+
+- Remove warning log for missing public directory ([5f2e1c3](https://github.com/wxt-dev/wxt/commit/5f2e1c3))
+
 ## v0.19.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.5...wxt-v0.19.6)
