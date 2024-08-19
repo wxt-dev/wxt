@@ -130,6 +130,7 @@ export default defineConfig({
         menuGroup('Extension APIs', '/guide/extension-apis/', [
           menuItem('Storage', 'storage'),
           menuItem('Messaging', 'messaging'),
+          menuItem('I18n', 'i18n'),
           menuItem('Scripting', 'scripting'),
           menuItem('Others', 'others'),
         ]),
