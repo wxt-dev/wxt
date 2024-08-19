@@ -25,34 +25,13 @@ describe('Built Tools', () => {
       nested: {
         example: 'This is nested',
         array: ['One', 'Two'],
-        chrome1: {
+        notChrome: {
           message: 'test 1',
         },
-        chrome2: {
-          message: 'test 2',
-          description: 'test',
-        },
-        chrome3: {
-          message: 'Hello $NAME$, please visit $URL$',
-          description: 'Label and link to a URL',
-          placeholders: {
-            url: {
-              content: 'https://wxt.dev',
-            },
-            name: {
-              content: '$1',
-              example: 'Aaron',
-            },
-          },
-        },
-        chrome4: {
-          message: 'Visit: $URL$',
-          placeholders: {
-            url: {
-              content: 'https://wxt.dev',
-            },
-          },
-        },
+      },
+      chrome: {
+        message: 'test 2',
+        description: 'test',
       },
       plural0: {
         0: 'Zero items',
@@ -98,33 +77,12 @@ describe('Built Tools', () => {
         "nested_array_1": {
           "message": "Two"
         },
-        "nested_chrome1": {
+        "nested_notChrome_message": {
           "message": "test 1"
         },
-        "nested_chrome2": {
+        "chrome": {
           "message": "test 2",
           "description": "test"
-        },
-        "nested_chrome3": {
-          "message": "Hello $NAME$, please visit $URL$",
-          "description": "Label and link to a URL",
-          "placeholders": {
-            "url": {
-              "content": "https://wxt.dev"
-            },
-            "name": {
-              "content": "$1",
-              "example": "Aaron"
-            }
-          }
-        },
-        "nested_chrome4": {
-          "message": "Visit: $URL$",
-          "placeholders": {
-            "url": {
-              "content": "https://wxt.dev"
-            }
-          }
         },
         "plural0": {
           "message": "Zero items | One item | $1 items"
@@ -148,10 +106,8 @@ describe('Built Tools', () => {
         "nested.example": { substitutions: 0, plural: false };
         "nested.array.0": { substitutions: 0, plural: false };
         "nested.array.1": { substitutions: 0, plural: false };
-        "nested.chrome1": { substitutions: 0, plural: false };
-        "nested.chrome2": { substitutions: 0, plural: false };
-        "nested.chrome3": { substitutions: 1, plural: false };
-        "nested.chrome4": { substitutions: 0, plural: false };
+        "nested.notChrome.message": { substitutions: 0, plural: false };
+        "chrome": { substitutions: 0, plural: false };
         "plural0": { substitutions: 1, plural: true };
         "plural1": { substitutions: 1, plural: true };
         "pluralN": { substitutions: 1, plural: true };

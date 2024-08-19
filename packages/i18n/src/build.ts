@@ -182,7 +182,7 @@ function _parseMessagesObject(
           },
         ];
       }
-      if (depth === 0 && isChromeMessage(object)) {
+      if (depth === 1 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
         const substitutions = getSubstitionCount(message);
         return [

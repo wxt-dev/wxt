@@ -78,6 +78,7 @@ describe('I18n Types', () => {
 
         i18n.t('plural', n);
         i18n.t('plural', n, { escapeLt: true });
+        i18n.t('plural', n, ['sub']);
         // @ts-expect-error
         i18n.t('plural');
         // @ts-expect-error

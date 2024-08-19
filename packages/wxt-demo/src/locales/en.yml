@@ -19,3 +19,7 @@ bye:
       example: Cira
 deep:
   example: 'this is deep'
+items:
+  0: Zero items
+  1: 1 item
+  n: $1 items
