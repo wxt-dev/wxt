@@ -130,6 +130,7 @@ export default defineConfig({
         menuGroup('Extension APIs', '/guide/extension-apis/', [
           menuItem('Storage', 'storage'),
           menuItem('Messaging', 'messaging'),
+          menuItem('I18n', 'i18n'),
           menuItem('Scripting', 'scripting'),
           menuItem('Others', 'others'),
         ]),
@@ -147,6 +148,13 @@ export default defineConfig({
         ]),
         menuGroup('Upgrade Guide', '/guide/upgrade-guide/', [
           menuItem('wxt', 'wxt'),
+        ]),
+        menuGroup('@wxt-dev/i18n', '/guide/i18n/', [
+          menuItem('Introduction', 'introduction.md'),
+          menuItem('Installation', 'installation.md'),
+          menuItem('Messages File Format', 'messages-file-format.md'),
+          menuItem('Build Integrations', 'build-integrations.md'),
+          menuItem('Editor Support', 'editor-support.md'),
         ]),
       ]),
       '/api/': menuRoot([

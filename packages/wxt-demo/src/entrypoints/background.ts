@@ -1,5 +1,3 @@
-import messages from '~/public/_locales/en/messages.json';
-
 export default defineBackground({
   // type: 'module',
 
@@ -12,7 +10,6 @@ export default defineBackground({
       chrome: import.meta.env.CHROME,
       firefox: import.meta.env.FIREFOX,
       manifestVersion: import.meta.env.MANIFEST_VERSION,
-      messages,
     });
 
     console.log(useAppConfig());
@@ -27,11 +24,14 @@ export default defineBackground({
     browser.runtime.getURL('/icon-128.png?query=param');
 
     // @ts-expect-error: should only accept known message names
-    browser.i18n.getMessage('test');
-    browser.i18n.getMessage('prompt_for_name');
-    browser.i18n.getMessage('hello', 'Aaron');
-    browser.i18n.getMessage('bye', ['Aaron']);
-    browser.i18n.getMessage('@@extension_id');
+    i18n.t('test');
+    i18n.t('prompt_for_name');
+    i18n.t('hello', ['test']);
+    i18n.t('bye', ['Aaron']);
+    i18n.t('@@extension_id');
+    i18n.t('deep.example');
+    i18n.t('items', 0);
+    i18n.t('items', 0, ['one']);
 
     console.log('WXT MODE:', {
       MODE: import.meta.env.MODE,
