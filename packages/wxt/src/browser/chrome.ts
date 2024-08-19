@@ -1,4 +1,7 @@
 /// <reference types="chrome" />
+/**
+ * @module wxt/browser/chrome
+ */
 import type { WxtRuntime, WxtI18n } from './index';
 
 /**
