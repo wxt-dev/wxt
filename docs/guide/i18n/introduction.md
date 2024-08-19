@@ -13,7 +13,7 @@ You don't have to use `wxt` to use this package - it will work in any bundler se
 It also provides several benefits over other non-web extension specific i18n packages:
 
 1. Does not bundle localization files into every entrypoint
-2. Don't need to fetch the localization files asyncronously
+2. Don't need to fetch the localization files asynchronously
 3. Can localize extension name in manifest
 4. Can access localized strings inside CSS files
 

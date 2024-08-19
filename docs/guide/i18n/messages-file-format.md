@@ -1,5 +1,7 @@
 # Messages File Format
 
+You can only use the file format discussed on this page if you have [integrated `@wxt-dev/i18n` into your build process](./build-integrations). If you have not integrated it into your build process, you must use JSON files in the `_locales` directory, like a normal web extension.
+
 [[toc]]
 
 ## File Extensions
