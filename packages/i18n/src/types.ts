@@ -42,10 +42,19 @@ export type TFunction<T extends I18nStructure> = {
     options?: GetMessageOptions,
   ): string;
 
+  // Plural with 1 substitution
+  <K extends keyof T>(
+    // prettier-ignore
+    key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: 1 } ? P : never; }[keyof T],
+    n: number,
+    substitutions?: SubstitutionTuple<1>,
+    options?: GetMessageOptions,
+  ): string;
+
   // Plural without substitutions
   <K extends keyof T>(
     // prettier-ignore
-    key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: 0 } ? P : never; }[keyof T],
+    key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: 0 | 1 } ? P : never; }[keyof T],
     n: number,
     options?: GetMessageOptions,
   ): string;

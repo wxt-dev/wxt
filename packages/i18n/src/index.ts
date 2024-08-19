@@ -18,11 +18,13 @@ export function createI18n<
     let count: number | undefined;
     let options: GetMessageOptions | undefined;
     args.forEach((arg, i) => {
-      if (typeof arg === 'number') {
+      if (arg == null) {
+        // ignore nullish args
+      } else if (typeof arg === 'number') {
         count = arg;
       } else if (Array.isArray(arg)) {
         sub = arg;
-      } else if (typeof arg === 'object' && arg != null) {
+      } else if (typeof arg === 'object') {
         options = arg;
       } else {
         throw Error(

@@ -30,6 +30,7 @@ export default defineBackground({
     i18n.t('bye', ['Aaron']);
     i18n.t('@@extension_id');
     i18n.t('deep.example');
+    i18n.t('items', 0);
     i18n.t('items', 0, ['one']);
 
     console.log('WXT MODE:', {

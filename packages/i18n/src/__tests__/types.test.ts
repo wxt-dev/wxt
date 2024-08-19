@@ -78,14 +78,18 @@ describe('I18n Types', () => {
 
         i18n.t('plural', n);
         i18n.t('plural', n, { escapeLt: true });
-        i18n.t('plural', n, ['sub']);
         // @ts-expect-error
         i18n.t('plural');
         // @ts-expect-error
         i18n.t('plural', []);
         // @ts-expect-error
         i18n.t('plural', ['one']);
+        // @ts-expect-error
+        i18n.t('plural', n, ['sub']);
 
+        i18n.t('pluralSub1', n);
+        i18n.t('pluralSub1', n, { escapeLt: true });
+        i18n.t('pluralSub1', n, undefined, { escapeLt: true });
         i18n.t('pluralSub1', n, ['one']);
         i18n.t('pluralSub1', n, ['one'], { escapeLt: true });
         // @ts-expect-error
@@ -96,8 +100,6 @@ describe('I18n Types', () => {
         i18n.t('pluralSub1', n, []);
         // @ts-expect-error
         i18n.t('pluralSub1', n, ['one', 'two']);
-        // @ts-expect-error
-        i18n.t('pluralSub1', n);
 
         i18n.t('pluralSub2', n, ['one', 'two']);
         i18n.t('pluralSub2', n, ['one', 'two'], { escapeLt: true });
