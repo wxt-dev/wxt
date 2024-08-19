@@ -44,7 +44,7 @@ Because `@wxt-dev/i18n` is based on `browser.i18n`, you define substitutions the
 
 ```yml
 hello: Hello $1!
-order: Thanks for ordering your $1,
+order: Thanks for ordering your $1
 ```
 
 ### Escapting `$`
