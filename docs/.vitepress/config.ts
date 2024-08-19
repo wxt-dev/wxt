@@ -153,6 +153,7 @@ export default defineConfig({
           menuItem('Installation', 'installation.md'),
           menuItem('Messages File Format', 'messages-file-format.md'),
           menuItem('Build Integrations', 'build-integrations.md'),
+          menuItem('Editor Support', 'editor-support.md'),
         ]),
       ]),
       '/api/': menuRoot([

@@ -8,12 +8,14 @@ You don't have to use `wxt` to use this package - it will work in any bundler se
 
 1. Simple messages file format
 2. Plural form support
-3. Integrates with the [I18n Ally VSCode extension](./editor-support#vscode)
+3. Integrates with the [I18n Ally VS Code extension](./editor-support#vscode)
 
 It also provides several benefits over other non-web extension specific i18n packages:
 
 1. Does not bundle localization files into every entrypoint
 2. Don't need to fetch the localization files asyncronously
+3. Can localize extension name in manifest
+4. Can access localized strings inside CSS files
 
 However, it does have one major downside:
 

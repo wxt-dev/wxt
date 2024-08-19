@@ -172,37 +172,9 @@ export default defineConfig({
 
 :::
 
-## Localization
+## Default Locale
 
-Similar to the icon, the [`_locales` directory](https://developer.chrome.com/docs/extensions/reference/i18n/) should be placed inside the the WXT's [`public` directory](/guide/directory-structure/public/).
-
-```
-public/
-└─ _locales/
-   ├─ en/
-   │  └─ messages.json
-   ├─ es/
-   │  └─ messages.json
-   └─ ko/
-      └─ messages.json
-```
-
-Then you'll need to explicitly override the `name` and `description` properties in your config for them to be localized.
-
-```ts
-export default defineConfig({
-  manifest: {
-    name: '__MSG_extName__',
-    description: '__MSG_extDescription__',
-    default_locale: 'en',
-  },
-});
-```
-
-See the official localization examples for more details:
-
-- [I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vanilla-i18n#readme)
-- [Vue I18n](https://github.com/wxt-dev/wxt-examples/tree/main/examples/vue-i18n#readme)
+See the dedicated [I18n docs](/guide/extension-apis/i18n) for setting up localization and a `default_locale`.
 
 ## Actions
 
