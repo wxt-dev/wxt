@@ -85,12 +85,8 @@ body {
   user-select: none;
 }
 
-.VPSidebarItem.level-0.collapsible {
+/* .VPSidebarItem.level-0.collapsible {
   padding-bottom: 0.5rem;
-}
-
-.VPSidebarItem.level-0.collapsible .items {
-  /*border-left: 1px solid var(--vp-c-divider);*/
 }
 
 .VPSidebarItem.level-1 {
@@ -113,4 +109,4 @@ body {
   text-align: center;
   vertical-align: middle;
   background-color: var(--vp-c-default-2);
-}
+} */

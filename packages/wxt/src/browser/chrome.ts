@@ -18,9 +18,11 @@ export type WxtBrowser = Omit<Chrome, 'runtime' | 'i18n'> & {
   i18n: WxtI18n & Omit<Chrome['i18n'], 'getMessage'>;
 };
 
+// #region snippet
 export const browser: WxtBrowser =
   // @ts-expect-error
   globalThis.browser?.runtime?.id == null
     ? globalThis.chrome
     : // @ts-expect-error
       globalThis.browser;
+// #endregion snippet
