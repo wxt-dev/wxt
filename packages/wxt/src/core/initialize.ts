@@ -116,7 +116,7 @@ async function listTemplates(): Promise<Template[]> {
     }>;
 
     return data
-      .map(({ name, path }) => ({ name: name, path }))
+      .map(({ name, path }) => ({ name, path }))
       .sort((l, r) => {
         const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
         const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
