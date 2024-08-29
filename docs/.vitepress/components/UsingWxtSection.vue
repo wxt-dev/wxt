@@ -38,6 +38,7 @@ const chromeExtensionIds = [
   'cfkdcideecefncbglkhneoflfnmhoicc', // mindful - stay focused on your goals
   'lnhejcpclabmbgpiiomjbhalblnnbffg', // 1Proompt
   'fonflmjnjbkigocpoommgmhljdpljain', // NiceTab - https://github.com/web-dahuyou/NiceTab
+  'fcffekbnfcfdemeekijbbmgmkognnmkd', // Draftly for LinkedIn
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
