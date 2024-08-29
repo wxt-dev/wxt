@@ -133,14 +133,7 @@ async function listTemplatesUngh(): Promise<Template[]> {
   return data.files
     .map((item) => item.path.match(/templates\/(.+)\/package\.json/)?.[1])
     .filter((name) => name != null)
-    .map((name) => ({ name: name!, path: `templates/${name}` }))
-    .sort((l, r) => {
-      const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
-      const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
-      const diff = lWeight - rWeight;
-      if (diff !== 0) return diff;
-      return l.name.localeCompare(r.name);
-    });
+    .map((name) => ({ name: name!, path: `templates/${name}` }));
 }
 
 async function listTemplatesGithub(): Promise<Template[]> {
