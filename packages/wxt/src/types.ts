@@ -1379,7 +1379,7 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
    * Alternative to adding hooks in setup function with `wxt.hooks`. Hooks are
    * added before the `setup` function is called.
    */
-  hooks?: Partial<WxtHooks>;
+  hooks?: NestedHooks<WxtHooks>;
   /**
    * A custom function that can be used to setup hooks and call module-specific
    * APIs.
