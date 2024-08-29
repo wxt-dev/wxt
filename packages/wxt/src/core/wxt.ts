@@ -40,6 +40,7 @@ export async function registerWxt(
   wxt = {
     config,
     hooks,
+    hook: hooks.hook.bind(hooks),
     get logger() {
       return config.logger;
     },

@@ -1130,6 +1130,10 @@ export interface Wxt {
   config: ResolvedConfig;
   hooks: Hookable<WxtHooks>;
   /**
+   * Alias for `wxt.hooks.hook(...)`.
+   */
+  hook: Hookable<WxtHooks>['hook'];
+  /**
    * Alias for config.logger
    */
   logger: Logger;
