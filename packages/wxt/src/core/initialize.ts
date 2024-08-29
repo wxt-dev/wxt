@@ -100,25 +100,23 @@ interface Template {
 
 async function listTemplates(): Promise<Template[]> {
   try {
-    const res = await fetch('https://ungh.cc/repos/wxt-dev/wxt/files/main');
+    const res = await fetch(
+      'https://api.github.com/repos/wxt-dev/wxt/contents/templates',
+      { headers: { Accept: 'application/vnd.github+json' } },
+    );
     if (res.status >= 300)
       throw Error(`Request failed with status ${res.status} ${res.statusText}`);
 
-    const data = (await res.json()) as {
-      meta: {
-        sha: string;
-      };
-      files: Array<{
-        path: string;
-        mode: string;
-        sha: string;
-        size: number;
-      }>;
-    };
-    return data.files
-      .map((item) => item.path.match(/templates\/(.+)\/package\.json/)?.[1])
-      .filter((name) => name != null)
-      .map((name) => ({ name: name!, path: `templates/${name}` }))
+    // Schema is Example4 of https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+    const data = (await res.json()) as Array<{
+      name: string;
+      path: string;
+      sha: string;
+      size: number;
+    }>;
+
+    return data
+      .map(({ name, path }) => ({ name: name, path }))
       .sort((l, r) => {
         const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
         const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
