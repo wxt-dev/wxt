@@ -115,15 +115,13 @@ async function listTemplates(): Promise<Template[]> {
       size: number;
     }>;
 
-    return data
-      .map(({ name, path }) => ({ name, path }))
-      .sort((l, r) => {
-        const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
-        const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
-        const diff = lWeight - rWeight;
-        if (diff !== 0) return diff;
-        return l.name.localeCompare(r.name);
-      });
+    return data.sort((l, r) => {
+      const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
+      const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
+      const diff = lWeight - rWeight;
+      if (diff !== 0) return diff;
+      return l.name.localeCompare(r.name);
+    });
   } catch (err) {
     consola.error(err);
     throw Error(`Failed to load templates`);
