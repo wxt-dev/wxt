@@ -48,7 +48,7 @@
     "@vitejs/plugin-vue": "^5.1.1"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.3",
+    "@aklinker1/check": "^1.4.5",
     "publint": "^0.2.9",
     "typescript": "^5.5.4",
     "unbuild": "^2.0.0",

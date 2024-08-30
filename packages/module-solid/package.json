@@ -50,7 +50,7 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.3",
+    "@aklinker1/check": "^1.4.5",
     "publint": "^0.2.9",
     "solid-js": "^1.8.19",
     "typescript": "^5.5.4",
