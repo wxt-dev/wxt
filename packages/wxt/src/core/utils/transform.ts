@@ -162,9 +162,7 @@ function getSimpleAstJson(ast: any): any {
   } else if (typeof ast === 'object') {
     return Object.fromEntries(
       Object.entries(ast)
-        .filter(
-          ([key, value]) => key !== 'loc' && key !== 'start' && key !== 'end',
-        )
+        .filter(([key]) => key !== 'loc' && key !== 'start' && key !== 'end')
         .map(([key, value]) => [key, getSimpleAstJson(value)]),
     );
   } else {

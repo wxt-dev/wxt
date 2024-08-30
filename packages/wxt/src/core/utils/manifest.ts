@@ -272,14 +272,14 @@ function addEntrypoints(
       options.browser_style = popup.options.browserStyle;
     if (manifest.manifest_version === 3) {
       manifest.action = {
-        ...(manifest.action ?? {}),
+        ...manifest.action,
         ...options,
         default_popup,
       };
     } else {
       const key = popup.options.mv2Key ?? 'browser_action';
       manifest[key] = {
-        ...(manifest[key] ?? {}),
+        ...manifest[key],
         ...options,
         default_popup,
       };
@@ -434,8 +434,8 @@ function discoverIcons(
     /^icon@([0-9]+)w\.png$/,                // icon@16w.png
     /^icon@([0-9]+)h\.png$/,                // icon@16h.png
     /^icon@([0-9]+)\.png$/,                 // icon@16.png
-    /^icons?[\/\\]([0-9]+)\.png$/,          // icon/16.png | icons/16.png
-    /^icons?[\/\\]([0-9]+)x[0-9]+\.png$/,   // icon/16x16.png | icons/16x16.png
+    /^icons?[/\\]([0-9]+)\.png$/,          // icon/16.png | icons/16.png
+    /^icons?[/\\]([0-9]+)x[0-9]+\.png$/,   // icon/16x16.png | icons/16x16.png
   ];
   // #endregion snippet
 

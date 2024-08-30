@@ -86,7 +86,7 @@ export async function resolveConfig(
   if (await isDirMissing(entrypointsDir)) {
     logMissingDir(logger, 'Entrypoints', entrypointsDir);
   }
-  const filterEntrypoints = !!mergedConfig.filterEntrypoints?.length
+  const filterEntrypoints = mergedConfig.filterEntrypoints?.length
     ? new Set(mergedConfig.filterEntrypoints)
     : undefined;
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');

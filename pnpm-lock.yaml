@@ -12,8 +12,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(typescript@5.5.4)
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -97,8 +97,11 @@ importers:
         version: 0.33.4
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
+      oxlint:
+        specifier: ^0.9.1
+        version: 0.9.1
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -125,14 +128,17 @@ importers:
         version: 3.3.2
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       '@types/chrome':
         specifier: ^0.0.268
         version: 0.0.268
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.12
+      oxlint:
+        specifier: ^0.9.1
+        version: 0.9.1
       publint:
         specifier: ^0.2.8
         version: 0.2.9
@@ -159,8 +165,8 @@ importers:
         version: 4.3.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -193,8 +199,8 @@ importers:
         version: 2.10.2(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -218,8 +224,8 @@ importers:
         version: 3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -240,8 +246,8 @@ importers:
         version: 5.1.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -385,8 +391,8 @@ importers:
         version: 0.12.0
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.3.1
-        version: 1.3.1(typescript@5.5.4)
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.5.4)
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
@@ -420,6 +426,9 @@ importers:
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
+      oxlint:
+        specifier: ^0.9.1
+        version: 0.9.1
       p-map:
         specifier: ^7.0.2
         version: 7.0.2
@@ -490,8 +499,8 @@ packages:
     peerDependencies:
       typescript: ^5.0.0
 
-  '@aklinker1/check@1.3.1':
-    resolution: {integrity: sha512-EALKJzoojytjC6cYLIjRjC+nNpVdqSWYjJm8FTUtWneemKDs+Q46PaMyEx2EYTRbj4fO0OXj9igABwbpp/vV4g==}
+  '@aklinker1/check@1.4.5':
+    resolution: {integrity: sha512-whVpnpSK4qa4/83q22JAmxwRAEj35qYs8eIH/tX1C6rKbiwx7EL6kQVmSAhCe1NYqzoIWyOgsISdDPyHjC+h2A==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -1337,6 +1346,46 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@oxlint/darwin-arm64@0.9.1':
+    resolution: {integrity: sha512-SzYTggt2eJqMhemijEv9AszSdc8Vv1OBQbmAZpDNPHmwlDzPKEopSrDURwt/Jq56FYsJC/jhzBzrJLXSK55i1A==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@oxlint/darwin-x64@0.9.1':
+    resolution: {integrity: sha512-IDgjpNdtt2XkEcWDIhFyZCkIIonqlBQf3jQ2L1voGQxQFwjl+cP9+hdpFp/m89qGO708MULeegCH+MGq28xWbg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxlint/linux-arm64-gnu@0.9.1':
+    resolution: {integrity: sha512-kEGN/CNdUB11So4c3OpTIJi0YvPgu5i9gvUcWX+CxEkeACRPj8dq7/Rm1FgfIqky6oYY5QjXDioZ+yKt+Xw1rQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@oxlint/linux-arm64-musl@0.9.1':
+    resolution: {integrity: sha512-US5UVB7JDwNuQa2+RZyWzEtgjEOA9wAvwUy8oUmgqomo02cpCrZo3wOQAvAckE5KxJCskr7T6pGW9eA8y3IhsQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@oxlint/linux-x64-gnu@0.9.1':
+    resolution: {integrity: sha512-w2Sz/WevEa6FxDjwwg9xbmpebDmLXO9YCvUUs5K4emKhzh05xEwuXrD2kJuQUdFapiHHQUMTQ5/iBF0NOPb9Uw==}
+    cpu: [x64]
+    os: [linux]
+
+  '@oxlint/linux-x64-musl@0.9.1':
+    resolution: {integrity: sha512-hSukTLTn+wKyJUbR3934bOmWNoDaJv4yJwumE6QqBQZWoFNyd3seiYJLPWD+7aMJx6nOnot8uqjnvYO1QZsccA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@oxlint/win32-arm64@0.9.1':
+    resolution: {integrity: sha512-9Y7RuvnulhZyxLdsDrGRaojxytzcBTGHpl7AxED41G/IXGPOs+dE1q2NFyHWB6Gfzi/MJZ6plXYIOKx/e/3t/g==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@oxlint/win32-x64@0.9.1':
+    resolution: {integrity: sha512-51wrzMDGFyCYZbhSczU9VS7EYe1N0tNlDfdne6VCKgpPPJX0+XLZHybgUFZNYVyf7/W5t1/gpyOTFErVYRP0pw==}
+    cpu: [x64]
+    os: [win32]
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -3508,6 +3557,11 @@ packages:
     resolution: {integrity: sha512-jd0cvB8qQ5uVt0lvCIexBaROw1KyKm5sbulg2fWOHjETisuCzWyt+eTZKEMs8v6HwzoGs8xik26jg7eCM6pS+A==}
     engines: {node: '>= 0.4.0'}
 
+  oxlint@0.9.1:
+    resolution: {integrity: sha512-77v9YVkaVOWguxUttiJ31yfWkG/Yo7kIzY0CrKHxM6p0xiUqN0LVF4IVgjcE6vevyd9bBVphtOgJOJUq4To/+w==}
+    engines: {node: '>=14.*'}
+    hasBin: true
+
   p-cancelable@3.0.0:
     resolution: {integrity: sha512-mlVgR3PGuzlo0MmTdk4cXqXWlwQDLnONTAg6sm62XkMJEiRxN3GL3SffkYvqwonbkJBcrI7Uvv5Zh9yjvn2iUw==}
     engines: {node: '>=12.20'}
@@ -4834,7 +4888,7 @@ snapshots:
       typescript: 5.5.4
       yaml: 2.5.0
 
-  '@aklinker1/check@1.3.1(typescript@5.5.4)':
+  '@aklinker1/check@1.4.5(typescript@5.5.4)':
     dependencies:
       '@antfu/utils': 0.7.7
       ci-info: 4.0.0
@@ -5506,6 +5560,30 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+
+  '@oxlint/darwin-arm64@0.9.1':
+    optional: true
+
+  '@oxlint/darwin-x64@0.9.1':
+    optional: true
+
+  '@oxlint/linux-arm64-gnu@0.9.1':
+    optional: true
+
+  '@oxlint/linux-arm64-musl@0.9.1':
+    optional: true
+
+  '@oxlint/linux-x64-gnu@0.9.1':
+    optional: true
+
+  '@oxlint/linux-x64-musl@0.9.1':
+    optional: true
+
+  '@oxlint/win32-arm64@0.9.1':
+    optional: true
+
+  '@oxlint/win32-x64@0.9.1':
+    optional: true
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -7921,6 +7999,17 @@ snapshots:
       strip-ansi: 7.1.0
 
   os-shim@0.1.3: {}
+
+  oxlint@0.9.1:
+    optionalDependencies:
+      '@oxlint/darwin-arm64': 0.9.1
+      '@oxlint/darwin-x64': 0.9.1
+      '@oxlint/linux-arm64-gnu': 0.9.1
+      '@oxlint/linux-arm64-musl': 0.9.1
+      '@oxlint/linux-x64-gnu': 0.9.1
+      '@oxlint/linux-x64-musl': 0.9.1
+      '@oxlint/win32-arm64': 0.9.1
+      '@oxlint/win32-x64': 0.9.1
 
   p-cancelable@3.0.0: {}
 
