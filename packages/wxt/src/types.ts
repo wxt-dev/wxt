@@ -1130,6 +1130,10 @@ export interface Wxt {
   config: ResolvedConfig;
   hooks: Hookable<WxtHooks>;
   /**
+   * Alias for `wxt.hooks.hook(...)`.
+   */
+  hook: Hookable<WxtHooks>['hook'];
+  /**
    * Alias for config.logger
    */
   logger: Logger;
@@ -1375,7 +1379,7 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
    * Alternative to adding hooks in setup function with `wxt.hooks`. Hooks are
    * added before the `setup` function is called.
    */
-  hooks?: Partial<WxtHooks>;
+  hooks?: NestedHooks<WxtHooks>;
   /**
    * A custom function that can be used to setup hooks and call module-specific
    * APIs.

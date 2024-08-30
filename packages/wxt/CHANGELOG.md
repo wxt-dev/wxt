@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.19.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.7...wxt-v0.19.8)
+
+### 🔥 Performance
+
+- Ignore output directories for all `vite.watcher` ([#924](https://github.com/wxt-dev/wxt/pull/924))
+
+### 🩹 Fixes
+
+- Fallback to GitHub API for listing templates when ungh is down ([#944](https://github.com/wxt-dev/wxt/pull/944))
+
+### 🏡 Chore
+
+- **types:** Cleanup types in wxt/browser/chrome ([#932](https://github.com/wxt-dev/wxt/pull/932))
+
+### ❤️ Contributors
+
+- 1natsu
+
 ## v0.19.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.6...wxt-v0.19.7)
