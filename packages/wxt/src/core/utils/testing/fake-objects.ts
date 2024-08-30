@@ -311,6 +311,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
 
 export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   config: fakeResolvedConfig(),
+  hook: vi.fn(),
   hooks: mock(),
   logger: mock(),
   reloadConfig: vi.fn(),
