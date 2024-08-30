@@ -21,9 +21,10 @@ describe('String utils', () => {
 
   describe('safeVarName', () => {
     it.each([
-      ['Hello world!', '_hello_world'],
+      ['Hello world!', 'helloWorld'],
       ['123', '_123'],
-      ['abc-123', '_abc_123'],
+      ['abc-123', 'abc123'],
+      ['abc-123-xyz', 'abc123Xyz'],
       ['', '_'],
       [' ', '_'],
       ['_', '_'],
