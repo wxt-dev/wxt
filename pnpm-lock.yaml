@@ -12,8 +12,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(typescript@5.5.4)
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -97,8 +97,11 @@ importers:
         version: 0.33.4
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
+      oxlint:
+        specifier: ^0.9.1
+        version: 0.9.1
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -125,8 +128,8 @@ importers:
         version: 3.3.2
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       '@types/chrome':
         specifier: ^0.0.268
         version: 0.0.268
@@ -162,8 +165,8 @@ importers:
         version: 4.3.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -196,8 +199,8 @@ importers:
         version: 2.10.2(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -221,8 +224,8 @@ importers:
         version: 3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -243,8 +246,8 @@ importers:
         version: 5.1.1(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       publint:
         specifier: ^0.2.9
         version: 0.2.9
@@ -388,8 +391,8 @@ importers:
         version: 0.12.0
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.1
-        version: 1.4.1(typescript@5.5.4)
+        specifier: ^1.4.3
+        version: 1.4.3(typescript@5.5.4)
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
@@ -493,8 +496,8 @@ packages:
     peerDependencies:
       typescript: ^5.0.0
 
-  '@aklinker1/check@1.4.1':
-    resolution: {integrity: sha512-ruH4C3ITrs6YiUSpsUnrRnxp85wAy0uTr6DCZVaPL/nHjVA8L3M367gVuwDsJeA8g3vCz+eQmthZRw7/3v+paw==}
+  '@aklinker1/check@1.4.3':
+    resolution: {integrity: sha512-IyUmWti2GWeX0ZVPO8ioy5WggSFOq1vS7MsZTfSnJ6iIrX/YMG46jlqYig3hcfrb3SOgRIlCEVJelmHo6iSKvg==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -4886,7 +4889,7 @@ snapshots:
       typescript: 5.5.4
       yaml: 2.5.0
 
-  '@aklinker1/check@1.4.1(typescript@5.5.4)':
+  '@aklinker1/check@1.4.3(typescript@5.5.4)':
     dependencies:
       '@antfu/utils': 0.7.7
       ci-info: 4.0.0

@@ -125,7 +125,7 @@
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.1",
+    "@aklinker1/check": "^1.4.3",
     "@faker-js/faker": "^8.4.1",
     "@types/chrome": "^0.0.269",
     "@types/fs-extra": "^11.0.4",
