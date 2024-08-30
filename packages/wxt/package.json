@@ -137,6 +137,7 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^14.12.3",
     "lodash.merge": "^4.6.2",
+    "oxlint": "^0.9.1",
     "p-map": "^7.0.2",
     "publint": "^0.2.9",
     "tsx": "4.15.7",
