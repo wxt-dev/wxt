@@ -47,14 +47,16 @@ export async function rebuild(
   const newOutput = await buildEntrypoints(entrypointGroups, spinner);
   const mergedOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [...existingOutput.steps, ...newOutput.steps],
-    publicAssets: [...existingOutput.publicAssets, ...newOutput.publicAssets],
+    // Do not merge existing because all publicAssets copied everytime
+    publicAssets: newOutput.publicAssets,
   };
 
   const { manifest: newManifest, warnings: manifestWarnings } =
     await generateManifest(allEntrypoints, mergedOutput);
+
   const finalOutput: BuildOutput = {
     manifest: newManifest,
-    ...newOutput,
+    ...mergedOutput,
   };
 
   // Write manifest
@@ -64,14 +66,7 @@ export async function rebuild(
   spinner.clear().stop();
 
   return {
-    output: {
-      manifest: newManifest,
-      steps: [...existingOutput.steps, ...finalOutput.steps],
-      publicAssets: [
-        ...existingOutput.publicAssets,
-        ...finalOutput.publicAssets,
-      ],
-    },
+    output: finalOutput,
     manifest: newManifest,
     warnings: manifestWarnings,
   };
