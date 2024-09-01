@@ -1,5 +1,11 @@
-name: Publish Any Commit
-on: [push, pull_request]
+name: Continuous Publish
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
