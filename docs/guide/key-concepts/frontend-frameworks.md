@@ -100,7 +100,7 @@ Usually, this means each entrypoint should be a directory with it's own files in
 
 ## Configuring Routers
 
-Lots of frameworks come with routers for building a multi-page app using the URL's path. Chrome extensions don't don't work like this. Since HTML files are static, `chrome-extension://{id}/popup.html`, there's no way to change the entire path for routing.
+Lots of frameworks come with routers for building a multi-page app using the URL's path. Chrome extensions don't work like this. Since HTML files are static, `chrome-extension://{id}/popup.html`, there's no way to change the entire path for routing.
 
 Instead, you need to configure the router to run in "hash" mode, where the routing information is apart of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`).
 
