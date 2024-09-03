@@ -1041,6 +1041,7 @@ export type HookResult = Promise<void> | void;
 export interface WxtHooks {
   /**
    * Called after WXT initialization, when the WXT instance is ready to work.
+   *
    * @param wxt The configured WXT object
    * @returns Promise
    */
@@ -1049,6 +1050,9 @@ export interface WxtHooks {
    * Called before WXT writes .wxt/tsconfig.json and .wxt/wxt.d.ts, allowing
    * addition of custom references and declarations in wxt.d.ts, or directly
    * modifying the options in `tsconfig.json`.
+   *
+   * @param wxt The configured WXT object
+   * @param entries The list of files that will be generated in the `.wxt` directory, including whether or not they need to be added to the TypeScript project.
    *
    * @example
    * wxt.hooks.hook("prepare:types", (wxt, entries) => {
@@ -1098,6 +1102,7 @@ export interface WxtHooks {
   /**
    * Called once the manifest has been generated. Used to transform the manifest by reference before
    * it is written to the output directory.
+   *
    * @param wxt The configured WXT object
    * @param manifest The manifest that was generated
    */
@@ -1106,13 +1111,31 @@ export interface WxtHooks {
     manifest: Manifest.WebExtensionManifest,
   ) => HookResult;
   /**
-   * Called once all entrypoints have been loaded from the `entrypointsDir`.
+   * Called once entrypoint paths are found, but before they're imported and
+   * their options are resolved.
+   *
+   * You can modify the list of paths to add or remove entrypoints from a
+   * build. Unlike `entrypoints:resolved` hook, you don't need to pass in the
+   * fully resolved entrypoint, just the file path.
+   *
+   * @param wxt The configured WXT object
+   * @param paths The list of paths to entrypoint files.
+   */
+  'entrypoints:detected': (wxt: Wxt, paths: string[]) => HookResult;
+  /**
+   * Called once all entrypoints have been loaded and their options resolved.
+   *
+   * Can be used to add/remove/modify entrypoints that WXT plans on building.
+   * Use this instead of `entrypoints:detected` if you need more control or
+   * more details about the entrypoints.
+   *
    * @param wxt The configured WXT object
    * @param entrypoints The list of entrypoints to be built
    */
   'entrypoints:resolved': (wxt: Wxt, entrypoints: Entrypoint[]) => HookResult;
   /**
    * Called once all entrypoints have been grouped into their build groups.
+   *
    * @param wxt The configured WXT object
    * @param entrypoints The list of groups to build in each build step
    */
@@ -1120,6 +1143,7 @@ export interface WxtHooks {
   /**
    * Called when public assets are found. You can modify the `files` list by
    * reference to add or remove public files.
+   *
    * @param wxt The configured WXT object
    * @param entrypoints The list of files that will be copied into the output directory
    */
