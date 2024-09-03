@@ -832,7 +832,8 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
  */
 export type UserManifest = Partial<
   Omit<
-    Manifest.WebExtensionManifest,
+    chrome.runtime.ManifestV3,
+    | 'action'
     | 'background'
     | 'chrome_url_overrides'
     | 'devtools_page'
@@ -841,7 +842,34 @@ export type UserManifest = Partial<
     | 'options_ui'
     | 'sandbox'
   >
->;
+> & {
+  // Add any Browser-specific or MV2 properties that WXT supports here
+  action?: chrome.runtime.ManifestV3['action'] & {
+    browser_style?: boolean;
+  };
+  browser_action?: chrome.runtime.ManifestV2['browser_action'] & {
+    browser_style?: boolean;
+  };
+  page_action?: chrome.runtime.ManifestV2['page_action'] & {
+    browser_style?: boolean;
+  };
+  browser_specific_settings?: {
+    gecko?: {
+      id?: string;
+      strict_min_version?: string;
+      strict_max_version?: string;
+      update_url?: string;
+    };
+    gecko_android?: {
+      strict_min_version?: string;
+      strict_max_version?: string;
+    };
+    safari?: {
+      strict_min_version?: string;
+      strict_max_version?: string;
+    };
+  };
+};
 
 export type UserManifestFn = (
   env: ConfigEnv,
