@@ -832,7 +832,7 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
  */
 export type UserManifest = Partial<
   Omit<
-    Manifest.WebExtensionManifest,
+    chrome.runtime.ManifestV3,
     | 'background'
     | 'chrome_url_overrides'
     | 'devtools_page'

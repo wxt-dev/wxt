@@ -81,6 +81,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
+    "@types/chrome": "^0.0.269",
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@types/webextension-polyfill": "^0.10.7",
     "@webext-core/fake-browser": "^1.3.1",
@@ -128,7 +129,6 @@
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
     "@faker-js/faker": "^8.4.1",
-    "@types/chrome": "^0.0.269",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/natural-compare": "^1.4.3",
@@ -146,9 +146,6 @@
     "unbuild": "^2.0.0",
     "vitest": "^2.0.4",
     "vitest-plugin-random-seed": "^1.1.0"
-  },
-  "peerDependencies": {
-    "@types/chrome": "*"
   },
   "peerDependenciesMeta": {
     "@types/chrome": {

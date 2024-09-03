@@ -266,6 +266,9 @@ importers:
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
         version: 5.12.0(rollup@4.19.0)
+      '@types/chrome':
+        specifier: ^0.0.269
+        version: 0.0.269
       '@types/webextension-polyfill':
         specifier: ^0.10.7
         version: 0.10.7
@@ -399,9 +402,6 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
-      '@types/chrome':
-        specifier: ^0.0.269
-        version: 0.0.269
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
