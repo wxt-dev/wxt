@@ -86,6 +86,27 @@ WXT no longer ships with Common JS support. If you're using CJS, here's your mig
 
 Vite also provides steps for migrating to ESM. Check them out for more details: https://vitejs.dev/guide/migration#deprecate-cjs-node-api
 
+## v0.18.0 &rarr; v0.18.5
+
+> Marking this retroactively as a breaking change. Documented to help people upgrading.
+
+### New `modules/` Directory
+
+WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/go-further/reusable-modules).
+
+If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
+
+You have two options:
+
+1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     modulesDir: 'wxt-modules', // defaults to "modules"
+   });
+   ```
+2. Rename your `modules` directory to something else.
+
 ## v0.17.0 &rarr; v0.18.0
 
 ### Automatic MV3 `host_permissions` to MV2 `permissions`
