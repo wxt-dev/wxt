@@ -16,6 +16,7 @@ export async function getPackageJson(): Promise<
   } catch (err) {
     wxt.logger.debug(
       `Failed to read package.json at: ${file}. Returning undefined.`,
+      err,
     );
     return {};
   }

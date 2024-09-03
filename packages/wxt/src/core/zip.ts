@@ -1,7 +1,7 @@
 import { InlineConfig } from '../types';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { kebabCaseAlphanumeric } from './utils/strings';
+import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
 import { minimatch } from 'minimatch';
 import { formatDuration } from './utils/time';
@@ -27,9 +27,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
 
   const projectName =
     wxt.config.zip.name ??
-    kebabCaseAlphanumeric(
-      (await getPackageJson())?.name || path.dirname(process.cwd()),
-    );
+    safeFilename((await getPackageJson())?.name || path.dirname(process.cwd()));
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)

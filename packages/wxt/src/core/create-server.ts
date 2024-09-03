@@ -211,7 +211,7 @@ function createFileReloader(server: WxtDevServer) {
             wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
             break;
         }
-      } catch (err) {
+      } catch {
         // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
       }
     });

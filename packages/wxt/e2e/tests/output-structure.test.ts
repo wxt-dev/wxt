@@ -362,7 +362,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        var _background = function() {
+        var background = function() {
           "use strict";
           var _a, _b;
           function defineBackground(arg) {
@@ -372,13 +372,13 @@ describe('Output Directory Structure', () => {
           function logHello(name) {
             console.log(\`Hello \${name}!\`);
           }
-          _background;
+          background;
           const definition = defineBackground({
             main() {
               logHello("background");
             }
           });
-          _background;
+          background;
           function initPlugins() {
           }
           // @ts-expect-error
@@ -411,7 +411,7 @@ describe('Output Directory Structure', () => {
           const result$1 = result;
           return result$1;
         }();
-        _background;
+        background;
         "
       `);
   });
