@@ -34,17 +34,21 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * the output directory. This will speed up project builds since it just has to
  * copy some files instead of bundling them.
  *
+ * To extract entrypoint options from a JS/TS file, use
+ * `wxt.builder.importEntrypoint` (see example).
+ *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param entrypoint The entrypoint to be bundled along with the extension.
  *
  * @example
- * export default defineWxtModule((wxt, options) => {
+ * export default defineWxtModule(async (wxt, options) => {
+ *   const entrypointPath = "/path/to/my-entrypoint.ts";
  *   addEntrypoint(wxt, {
- *     type: "unlisted-page",
- *     name: "changelog",
- *     inputPath: "wxt-module-changelog/index.html"
+ *     type: "content-script",
+ *     name: "some-name",
+ *     inputPath: entrypointPath,
  *     outputDir: wxt.config.outputDir,
- *     options: {},
+ *     options: await wxt.builder.importEntrypoint(entrypointPath),
  *   });
  * });
  */

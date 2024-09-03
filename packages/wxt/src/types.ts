@@ -1107,6 +1107,9 @@ export interface WxtHooks {
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
+   * Use `wxt.builder.importEntrypoint` to load entrypoint options from the
+   * file, or manually define them.
+   *
    * @param wxt The configured WXT object
    * @param entrypoints The list of entrypoints to be built
    */
