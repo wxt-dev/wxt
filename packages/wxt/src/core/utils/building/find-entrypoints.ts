@@ -25,7 +25,7 @@ import {
   resolvePerBrowserOptions,
 } from '../../utils/entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
+import { CSS_EXTENSIONS_PATTERN, normalizePath } from '../../utils/paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { createExtensionEnvironment } from '../environments';
@@ -48,21 +48,24 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     }
   }
 
-  const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
+  const paths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: wxt.config.entrypointsDir,
+    absolute: true,
   });
-  // Ensure consistent output
-  relativePaths.sort();
+  await wxt.hooks.callHook('entrypoints:found', wxt, paths);
+  // Paths added from hook are likely not normalized or absolute - so do both
+  const absolutePaths = paths
+    .map((p) => resolve(wxt.config.root, p))
+    .map(normalizePath);
+  // Ensure consistent output order
+  absolutePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
-  const entrypointInfos: EntrypointInfo[] = relativePaths.reduce<
+  const entrypointInfos: EntrypointInfo[] = absolutePaths.reduce<
     EntrypointInfo[]
-  >((results, relativePath) => {
-    const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
+  >((results, inputPath) => {
     const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
-    const matchingGlob = pathGlobs.find((glob) =>
-      minimatch(relativePath, glob),
-    );
+    const matchingGlob = pathGlobs.find((glob) => minimatch(inputPath, glob));
     if (matchingGlob) {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
       results.push({
@@ -458,53 +461,53 @@ async function getHtmlEntrypointOptions<T extends BaseEntrypointOptions>(
 }
 
 const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
-  'sandbox.html': 'sandbox',
-  'sandbox/index.html': 'sandbox',
-  '*.sandbox.html': 'sandbox',
-  '*.sandbox/index.html': 'sandbox',
+  '**/sandbox.html': 'sandbox',
+  '**/sandbox/index.html': 'sandbox',
+  '**/*.sandbox.html': 'sandbox',
+  '**/*.sandbox/index.html': 'sandbox',
 
-  'bookmarks.html': 'bookmarks',
-  'bookmarks/index.html': 'bookmarks',
+  '**/bookmarks.html': 'bookmarks',
+  '**/bookmarks/index.html': 'bookmarks',
 
-  'history.html': 'history',
-  'history/index.html': 'history',
+  '**/history.html': 'history',
+  '**/history/index.html': 'history',
 
-  'newtab.html': 'newtab',
-  'newtab/index.html': 'newtab',
+  '**/newtab.html': 'newtab',
+  '**/newtab/index.html': 'newtab',
 
-  'sidepanel.html': 'sidepanel',
-  'sidepanel/index.html': 'sidepanel',
-  '*.sidepanel.html': 'sidepanel',
-  '*.sidepanel/index.html': 'sidepanel',
+  '**/sidepanel.html': 'sidepanel',
+  '**/sidepanel/index.html': 'sidepanel',
+  '**/*.sidepanel.html': 'sidepanel',
+  '**/*.sidepanel/index.html': 'sidepanel',
 
-  'devtools.html': 'devtools',
-  'devtools/index.html': 'devtools',
+  '**/devtools.html': 'devtools',
+  '**/devtools/index.html': 'devtools',
 
-  'background.[jt]s': 'background',
-  'background/index.[jt]s': 'background',
+  '**/background.[jt]s': 'background',
+  '**/background/index.[jt]s': 'background',
   [VIRTUAL_NOOP_BACKGROUND_MODULE_ID]: 'background',
 
-  'content.[jt]s?(x)': 'content-script',
-  'content/index.[jt]s?(x)': 'content-script',
-  '*.content.[jt]s?(x)': 'content-script',
-  '*.content/index.[jt]s?(x)': 'content-script',
-  [`content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
-  [`*.content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
-  [`content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
-  [`*.content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  '**/content.[jt]s?(x)': 'content-script',
+  '**/content/index.[jt]s?(x)': 'content-script',
+  '**/*.content.[jt]s?(x)': 'content-script',
+  '**/*.content/index.[jt]s?(x)': 'content-script',
+  [`**/content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`**/*.content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`**/content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`**/*.content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
 
-  'popup.html': 'popup',
-  'popup/index.html': 'popup',
+  '**/popup.html': 'popup',
+  '**/popup/index.html': 'popup',
 
-  'options.html': 'options',
-  'options/index.html': 'options',
+  '**/options.html': 'options',
+  '**/options/index.html': 'options',
 
-  '*.html': 'unlisted-page',
-  '*/index.html': 'unlisted-page',
-  '*.[jt]s?(x)': 'unlisted-script',
-  '*/index.[jt]s?(x)': 'unlisted-script',
-  [`*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
-  [`*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
+  '**/*.html': 'unlisted-page',
+  '**/*/index.html': 'unlisted-page',
+  '**/*.[jt]s?(x)': 'unlisted-script',
+  '**/*/index.[jt]s?(x)': 'unlisted-script',
+  [`**/*.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
+  [`**/*/index.${CSS_EXTENSIONS_PATTERN}`]: 'unlisted-style',
 };
 
 const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';
