@@ -74,6 +74,7 @@ describe('User Config', () => {
     );
 
     await project.build({
+      // Specifically setting an invalid field for the test - it should show up in the snapshot
       manifest: ({ manifestVersion, command }) => ({
         example_customization: [String(manifestVersion), command],
       }),
