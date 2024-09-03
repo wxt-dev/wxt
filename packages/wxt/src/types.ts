@@ -1121,12 +1121,12 @@ export interface WxtHooks {
    * @param wxt The configured WXT object
    * @param paths The list of paths to entrypoint files.
    */
-  'entrypoints:detected': (wxt: Wxt, paths: string[]) => HookResult;
+  'entrypoints:found': (wxt: Wxt, paths: string[]) => HookResult;
   /**
    * Called once all entrypoints have been loaded and their options resolved.
    *
    * Can be used to add/remove/modify entrypoints that WXT plans on building.
-   * Use this instead of `entrypoints:detected` if you need more control or
+   * Use this instead of `entrypoints:found` if you need more control or
    * more details about the entrypoints.
    *
    * @param wxt The configured WXT object
