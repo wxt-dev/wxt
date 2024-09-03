@@ -10,7 +10,7 @@ pnpm i wxt@latest
 
 If there was a major version change, follow the steps below to fix breaking changes.
 
-## v0.18.0 &rarr; v0.19.0
+## v0.18.5 &rarr; v0.19.0
 
 ### `vite-node` Entrypoint Loader
 
