@@ -88,7 +88,7 @@ Vite also provides steps for migrating to ESM. Check them out for more details: 
 
 ## v0.18.0 &rarr; v0.18.5
 
-> Marking this retroactively as a breaking change. Documented to help people upgrading.
+> When this version was released, it was not considered a breaking change... but it should have been.
 
 ### New `modules/` Directory
 
