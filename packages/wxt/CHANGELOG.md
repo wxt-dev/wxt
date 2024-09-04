@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.19.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.8...wxt-v0.19.9)
+
+### 🚀 Enhancements
+
+- **modules:** Add `wxt.hook` alias for `wxt.hooks.hook` ([c5f78d0](https://github.com/wxt-dev/wxt/commit/c5f78d0))
+- Use `@types/chrome` for config manifest type ([#969](https://github.com/wxt-dev/wxt/pull/969))
+
+### 🩹 Fixes
+
+- Allow adding multiple hyphens in an entrypoint name ([#949](https://github.com/wxt-dev/wxt/pull/949))
+- Duplicate `BuildOutput.publicAssets` ([#951](https://github.com/wxt-dev/wxt/pull/951))
+- Properly overload `import.meta.env` with WXT's own environment globals ([#966](https://github.com/wxt-dev/wxt/pull/966))
+
+### 📖 Documentation
+
+- Add docs around `importEntrypoint` to relevant functions ([143b5ac](https://github.com/wxt-dev/wxt/commit/143b5ac))
+
+### 🌊 Types
+
+- **modules:** Use `NestedHooks` instead of `Partial` for hooks object ([0ebb013](https://github.com/wxt-dev/wxt/commit/0ebb013))
+
+### 🏡 Chore
+
+- Fix type error ([#946](https://github.com/wxt-dev/wxt/pull/946))
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- **deps:** Bump ora from 8.0.1 to 8.1.0 ([#961](https://github.com/wxt-dev/wxt/pull/961))
+- **deps:** Bump unimport from 3.9.1 to 3.11.1 ([#960](https://github.com/wxt-dev/wxt/pull/960))
+- **deps:** Bump execa from 9.3.0 to 9.3.1 ([#957](https://github.com/wxt-dev/wxt/pull/957))
+- Cleanup leftover E2E test artifacts ([#968](https://github.com/wxt-dev/wxt/pull/968))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+
 ## v0.19.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.7...wxt-v0.19.8)
