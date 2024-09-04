@@ -1,27 +1,19 @@
-import { rm } from 'fs/promises';
-import { existsSync } from 'fs';
-import consola from 'consola';
+import { exists, rm } from 'fs-extra';
 
-let teardownHappened = false;
+let setupHappened = false;
 
 export async function setup() {
+  if (setupHappened) {
+    throw new Error('setup called twice');
+  }
+
+  setupHappened = true;
+
   // @ts-expect-error
   globalThis.__ENTRYPOINT__ = 'test';
-}
-
-export async function teardown() {
-  if (teardownHappened) {
-    throw new Error('teardown called twice');
-  }
-  teardownHappened = true;
 
   const e2eDistPath = './e2e/dist/';
-  if (existsSync(e2eDistPath)) {
-    try {
-      await rm(e2eDistPath, { recursive: true, force: true });
-      consola.info(`cleaned up ${e2eDistPath}`);
-    } catch (error) {
-      consola.error(error);
-    }
+  if (await exists(e2eDistPath)) {
+    await rm(e2eDistPath, { recursive: true, force: true });
   }
 }
