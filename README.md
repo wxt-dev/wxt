@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img style="vertical-align:middle" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
+  <img align="top" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
   <span>WXT</span>
 </h1>
 
