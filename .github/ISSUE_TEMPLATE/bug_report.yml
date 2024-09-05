@@ -64,7 +64,7 @@ body:
       options:
         - label: Read the [Contributing Guidelines](https://github.com/wxt-dev/wxt/blob/main/CONTRIBUTING.md).
           required: true
-        - label: Read the [docs](https://wxt.dev/guide/installation.html).
+        - label: Read the [docs](https://wxt.dev/guide/installation).
           required: true
         - label: Check that there isn't [already an issue](https://github.com/wxt-dev/wxt/issues) that reports the same bug to avoid creating a duplicate.
           required: true

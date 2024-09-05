@@ -1,7 +1,7 @@
 /**
  * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
- * See [the guide](https://wxt.dev/guide/extension-apis/storage.html) for more information.
+ * See [the guide](https://wxt.dev/guide/extension-apis/storage) for more information.
  *
  * @module wxt/storage
  */
@@ -375,7 +375,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
         [
           "'wxt/storage' must be loaded in a web extension environment",
           '\n - If thrown during a build, see https://github.com/wxt-dev/wxt/issues/371',
-          " - If thrown during tests, mock 'wxt/browser' correctly. See https://wxt.dev/guide/go-further/testing.html\n",
+          " - If thrown during tests, mock 'wxt/browser' correctly. See https://wxt.dev/guide/go-further/testing\n",
         ].join('\n'),
       );
     }
@@ -564,7 +564,7 @@ export interface WxtStorage {
   /**
    * Define a storage item with a default value, type, or versioning.
    *
-   * Read full docs: https://wxt.dev/guide/extension-apis/storage.html#defining-storage-items
+   * Read full docs: https://wxt.dev/guide/extension-apis/storage#defining-storage-items
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,

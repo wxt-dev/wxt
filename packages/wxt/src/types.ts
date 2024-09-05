@@ -891,7 +891,7 @@ export interface ConfigEnv {
   browser: TargetBrowser;
   /**
    * Manifest version passed in from the CLI via the `--mv2` or `--mv3` flags. When not passed, it depends on the target browser. See
-   * [the guide](https://wxt.dev/guide/key-concepts/multiple-browsers.html#target-manifest-version) for more
+   * [the guide](https://wxt.dev/guide/key-concepts/multiple-browsers#target-manifest-version) for more
    * details.
    */
   manifestVersion: 2 | 3;
