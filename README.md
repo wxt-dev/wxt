@@ -4,13 +4,13 @@
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm version" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="downloads" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="NPM" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="license | MIT" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="overage" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
 </p>
 
 <p align="center">
