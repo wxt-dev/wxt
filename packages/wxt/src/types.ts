@@ -830,9 +830,8 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
  * Manifest customization available in the `wxt.config.ts` file. You cannot configure entrypoints
  * here, they are configured inline.
  */
-export type UserManifest = Partial<
-  Omit<
-    chrome.runtime.ManifestV3,
+export type UserManifest = {
+  [key in keyof chrome.runtime.ManifestV3 as key extends
     | 'action'
     | 'background'
     | 'chrome_url_overrides'
@@ -841,8 +840,9 @@ export type UserManifest = Partial<
     | 'options_page'
     | 'options_ui'
     | 'sandbox'
-  >
-> & {
+    ? never
+    : key]?: chrome.runtime.ManifestV3[key];
+} & {
   // Add any Browser-specific or MV2 properties that WXT supports here
   action?: chrome.runtime.ManifestV3['action'] & {
     browser_style?: boolean;
