@@ -10,7 +10,7 @@
   <span> </span>
   <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="license | MIT" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="overage" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="coverage" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
 </p>
 
 <p align="center">
