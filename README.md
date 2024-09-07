@@ -33,7 +33,7 @@
   <a href="https://discord.gg/ZFsZqGery9" target="_blank">Discord</a>
 </p>
 
-![Example CLI Output](docs/assets/cli-output.png)
+![Example CLI Output](https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/assets/cli-output.png)
 
 ## Demo
 
