@@ -839,7 +839,9 @@ export type UserManifest = {
     | 'manifest_version'
     | 'options_page'
     | 'options_ui'
+    | 'permissions'
     | 'sandbox'
+    | 'web_accessible_resources'
     ? never
     : key]?: chrome.runtime.ManifestV3[key];
 } & {
@@ -869,6 +871,13 @@ export type UserManifest = {
       strict_max_version?: string;
     };
   };
+  permissions?: (
+    | chrome.runtime.ManifestPermissions
+    | (string & Record<never, never>)
+  )[];
+  web_accessible_resources?:
+    | string[]
+    | chrome.runtime.ManifestV3['web_accessible_resources'];
 };
 
 export type UserManifestFn = (
