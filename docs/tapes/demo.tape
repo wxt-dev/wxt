@@ -31,6 +31,7 @@ Env PS1 "\e[0;32m●\e[0m "
 
 
 # ===== Preparation =====
+# Steps to prepare the recording environment, ensuring a clean and isolated setup.
 
 Hide
 # Create a temporary folder for demo
