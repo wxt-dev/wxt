@@ -41,7 +41,7 @@ Show
 
 # ===== Actions =====
 
-Type "pnpm dlx wxt@latest init ." Sleep 1s Enter
+Type 'pnpm dlx wxt@latest init .' Sleep 1s Enter
 Sleep 3.25s
 Down@750ms Enter@750ms # Select `vue` template
 Sleep 1.25s
