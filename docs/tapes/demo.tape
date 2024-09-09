@@ -33,6 +33,7 @@ Env PS1 "\e[0;32m●\e[0m "
 # ===== Preparation =====
 
 Hide
+# Create a temporary folder for demo
 Type 'vhs_sandbox="$(mktemp -d)"' Enter
 Type 'cd "$vhs_sandbox"' Enter
 Type 'clear' Enter
@@ -52,5 +53,6 @@ Sleep 5s
 # ===== Cleaning =====
 
 Hide
+# Delete the temporary folder
 Type 'rm -rf "$vhs_sandbox"' Enter
 Show
