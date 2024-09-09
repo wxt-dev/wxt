@@ -1,9 +1,9 @@
 name: vhs
 on:
-  workflow_dispatch:
   push:
     paths:
-      - docs/tapes/*.tape
+      - 'docs/tapes/*.tape'
+  workflow_dispatch:
 jobs:
   vhs:
     runs-on: ubuntu-latest
