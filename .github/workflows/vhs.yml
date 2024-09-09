@@ -1,5 +1,6 @@
 name: vhs
 on:
+  workflow_dispatch:
   push:
     paths:
       - docs/tapes/*.tape
