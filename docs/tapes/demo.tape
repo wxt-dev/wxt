@@ -1,6 +1,6 @@
 # VHS documentation
 #
-# You can view all VHS documentation on the command line with `vhs manual`
+# You can view all VHS documentation on the command line with `vhs manual`.
 # Or see https://github.com/charmbracelet/vhs#vhs-command-reference
 
 # Output file
