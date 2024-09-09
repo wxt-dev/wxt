@@ -38,5 +38,6 @@ jobs:
           commit_user_name: vhs-action 📼
           commit_user_email: actions@github.com
           commit_author: vhs-action 📼 <actions@github.com>
+          branch: ${{ github.head_ref || github.ref_name }}
           # https://github.com/charmbracelet/vhs#output
-          file_pattern: 'docs/public/*.{gif,mp4,webm,png}'
+          file_pattern: 'docs/public/*.gif'
