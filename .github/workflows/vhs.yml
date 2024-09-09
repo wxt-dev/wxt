@@ -1,0 +1,24 @@
+name: vhs
+on:
+  push:
+    paths:
+      - docs/tapes/*.tape
+jobs:
+  vhs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: charmbracelet/vhs-action@v1
+        with:
+          path: 'docs/tapes/*.tape'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: Update generated VHS GIF
+          branch: main
+          commit_user_name: vhs-action 📼
+          commit_user_email: actions@github.com
+          commit_author: vhs-action 📼 <actions@github.com>
+          # https://github.com/charmbracelet/vhs#output
+          file_pattern: '*.{gif,mp4,webm,png}'
