@@ -39,6 +39,7 @@ Type 'cd "$vhs_sandbox"' Enter
 Type 'clear' Enter
 Show
 
+
 # ===== Actions =====
 
 Type 'pnpm dlx wxt@latest init .' Sleep 1s Enter
@@ -47,6 +48,7 @@ Down@750ms Enter@750ms # Select `vue` template
 Sleep 1.25s
 Down@750ms Enter@750ms # Select `pnpm` as a package manager
 Sleep 5s
+
 
 # ===== Cleaning =====
 
