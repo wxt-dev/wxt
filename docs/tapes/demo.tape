@@ -3,7 +3,6 @@
 # You can view all VHS documentation on the command line with `vhs manual`
 # Or see https://github.com/charmbracelet/vhs#vhs-command-reference
 
-
 # Output file
 Output docs/public/demo.gif
 
@@ -15,8 +14,8 @@ Require pnpm
 Set Width 1400
 Set Height 800
 
-# The higher the frequency, the smoother the video. `60` FPS max
-Set Framerate 60
+# The maximum FPS for GIF is `50` FPS.
+Set Framerate 50
 
 # Terminal theme with WXT brand colors
 # Based on the standard charmbracelet/vhs theme:
