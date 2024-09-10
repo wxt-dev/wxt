@@ -967,7 +967,7 @@ export interface ExtensionRunnerConfig {
    *   }
    * }
    */
-  chromiumPref?: string;
+  chromiumPref?: Record<string, any>;
   /**
    * By default, chrome opens a random port for debugging. Set this value to use a specific port.
    */
