@@ -9,22 +9,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm -r build
-
-      - run: pnpx pkg-pr-new publish './packages/*'
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm buildc all
+      - run: pnpx pkg-pr-new publish --compact './packages/*'
