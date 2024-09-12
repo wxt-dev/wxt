@@ -1,3 +1,4 @@
+import { debounce } from 'perfect-debounce';
 import {
   BuildStepOutput,
   EntrypointGroup,
@@ -130,7 +131,9 @@ export async function createServer(
   });
 
   // Listen for file changes and reload different parts of the extension accordingly
-  const reloadOnChange = createFileReloader(server);
+  const reloadOnChange = debounce(createFileReloader(server), 3e2, {
+    leading: true,
+  });
   server.watcher.on('all', reloadOnChange);
 
   return server;
