@@ -37,4 +37,4 @@ jobs:
         with:
           commit_message: "docs: Update `wxt init` GIF"
           # https://github.com/charmbracelet/vhs#output
-          file_pattern: 'docs/public/*.gif'
+          file_pattern: 'docs/assets/*.gif'
