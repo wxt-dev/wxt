@@ -35,10 +35,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit_message: Update generated VHS GIF
-          commit_user_name: vhs-action 📼
-          commit_user_email: actions@github.com
-          commit_author: vhs-action 📼 <actions@github.com>
-          branch: ${{ github.head_ref || github.ref_name }}
+          commit_message: "docs: Update `wxt init` GIF"
           # https://github.com/charmbracelet/vhs#output
           file_pattern: 'docs/public/*.gif'
