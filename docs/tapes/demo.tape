@@ -37,6 +37,7 @@ Hide
 # Create a temporary folder for demo
 Type 'vhs_sandbox="$(mktemp -d)"' Enter
 Type 'cd "$vhs_sandbox"' Enter
+Type 'pnpm store add wxt@latest' Enter
 Type 'clear' Enter
 Show
 
