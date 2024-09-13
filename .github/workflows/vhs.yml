@@ -23,9 +23,10 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      # NOTE: This function does not work, possibly because `pnpm` is running in the vhs sandbox
-      # - name: Install dependencies
-      #   run: pnpm store add wxt@latest
+      - name: Install dependencies
+        run: |
+          pnpm store add wxt@latest
+          pnpm dlx wxt@latest --version
         
       - uses: charmbracelet/vhs-action@v2.1.0
         with:
