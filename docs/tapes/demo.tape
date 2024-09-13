@@ -37,10 +37,6 @@ Hide
 # Create a temporary folder for demo
 Type 'vhs_sandbox="$(mktemp -d)"' Enter
 Type 'cd "$vhs_sandbox"' Enter
-Type 'pnpm store add wxt@latest' Enter
-
-# Ensure that `wxt@latest` is pre-installed to avoid showing installation during the demo
-Type 'pnpm dlx wxt@latest --version' Enter # Pre-install step to cache it
 Type 'clear' Enter
 Show
 
