@@ -131,10 +131,14 @@ export async function createServer(
   });
 
   // Listen for file changes and reload different parts of the extension accordingly
-  const reloadOnChange = debounce(createFileReloader(server), 3e2, {
-    leading: true,
-    trailing: false,
-  });
+  const reloadOnChange = debounce(
+    createFileReloader(server),
+    wxt.config.env.watchDebounce,
+    {
+      leading: true,
+      trailing: false,
+    },
+  );
   server.watcher.on('all', reloadOnChange);
 
   return server;

@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
+    "@dotenvx/dotenvx": "^1.14.1",
     "@types/chrome": "^0.0.269",
     "@types/webextension-polyfill": "^0.10.7",
     "@webext-core/fake-browser": "^1.3.1",

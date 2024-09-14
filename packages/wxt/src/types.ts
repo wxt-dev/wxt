@@ -904,6 +904,10 @@ export interface ConfigEnv {
    * details.
    */
   manifestVersion: 2 | 3;
+  /**
+   * WatchDebounce passed in from `.env.wxt` via the `WXT_WATCH_DEBOUNCE`. Which can suppress cases where dev server reloads are oversensitive.
+   */
+  watchDebounce: number;
 }
 
 export type WxtCommand = 'build' | 'serve';
