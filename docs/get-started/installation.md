@@ -27,7 +27,7 @@ npx wxt@latest init <project-name>
 
 ### Demo
 
-![wxt init demo](/assets/demo.gif)
+![wxt init demo](/assets/init-demo.gif)
 
 :::
 

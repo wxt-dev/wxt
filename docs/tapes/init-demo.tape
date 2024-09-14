@@ -4,7 +4,7 @@
 # Or see https://github.com/charmbracelet/vhs#vhs-command-reference
 
 # Output file
-Output docs/assets/demo.gif
+Output docs/assets/init-demo.gif
 
 # The tools we will use
 Require pnpm

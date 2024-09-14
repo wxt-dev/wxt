@@ -9,33 +9,21 @@ jobs:
   vhs:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4.0.3
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install dependencies
+          install: 'false'
+      - name: Preinstall WXT
         run: |
           pnpm store add wxt@latest
           pnpm dlx wxt@latest --version
-        
       - uses: charmbracelet/vhs-action@v2.1.0
         with:
-          path: 'docs/tapes/demo.tape'
-
+          path: 'docs/tapes/init-demo.tape'
       - uses: stefanzweifel/git-auto-commit-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit_message: "docs: Update `wxt init` GIF"
+          commit_message: 'docs: Update `wxt init` GIF'
           # https://github.com/charmbracelet/vhs#output
           file_pattern: 'docs/assets/*.gif'
