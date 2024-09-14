@@ -25,6 +25,10 @@ npx wxt@latest init <project-name>
 npx wxt@latest init <project-name>
 ```
 
+### Demo
+
+![wxt init demo](/assets/init-demo.gif)
+
 :::
 
 There are several starting templates available.
