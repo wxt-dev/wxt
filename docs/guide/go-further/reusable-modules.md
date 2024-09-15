@@ -139,7 +139,7 @@ export default defineWxtModule({
       name: 'changelog',
       // Point to the "modules/changelog.html" file
       inputPath: resolve(__dirname, 'changelog.html'),
-      outputDir: wxt.config.outputDir,
+      outputDir: wxt.config.outDir,
       options: {},
     });
   },
