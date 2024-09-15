@@ -47,7 +47,7 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  *     type: "content-script",
  *     name: "some-name",
  *     inputPath: entrypointPath,
- *     outputDir: wxt.config.outputDir,
+ *     outputDir: wxt.config.outDir,
  *     options: await wxt.builder.importEntrypoint(entrypointPath),
  *   });
  * });
