@@ -39,6 +39,7 @@ const chromeExtensionIds = [
   'lnhejcpclabmbgpiiomjbhalblnnbffg', // 1Proompt
   'fonflmjnjbkigocpoommgmhljdpljain', // NiceTab - https://github.com/web-dahuyou/NiceTab
   'fcffekbnfcfdemeekijbbmgmkognnmkd', // Draftly for LinkedIn
+  'nkndldfehcidpejfkokbeghpnlbppdmo', // YouTube Summarized - Summarize any YouTube video
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
