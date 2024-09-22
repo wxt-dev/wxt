@@ -12,7 +12,6 @@ import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';
 import { builtinModules } from '../builtin-modules';
-import { loadEnv } from './utils/env';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
