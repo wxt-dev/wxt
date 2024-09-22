@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.19.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.9...wxt-v0.19.10)
+
+### 🔥 Performance
+
+- Reduce hypersensitive onChange of watcher ([#978](https://github.com/wxt-dev/wxt/pull/978))
+
+### 🩹 Fixes
+
+- Fix config manifest type ([#973](https://github.com/wxt-dev/wxt/pull/973))
+
+### 📖 Documentation
+
+- Examples reference outDir vs. outputDir ([#982](https://github.com/wxt-dev/wxt/pull/982))
+- Improved docs and links ([#970](https://github.com/wxt-dev/wxt/pull/970))
+
+### 🌊 Types
+
+- Fix `ExtensionRunnerConfig.chromiumPref` type ([fda1e18](https://github.com/wxt-dev/wxt/commit/fda1e18))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+- The-syndrome <meltdown-syndrome@proton.me>
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+
 ## v0.19.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.8...wxt-v0.19.9)
