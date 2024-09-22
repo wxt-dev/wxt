@@ -564,7 +564,7 @@ export interface WxtStorage {
   /**
    * Define a storage item with a default value, type, or versioning.
    *
-   * Read full docs: https://wxt.dev/guide/extension-apis/storage#defining-storage-items.html
+   * Read full docs: https://wxt.dev/guide/extension-apis/storage.html#defining-storage-items
    */
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,

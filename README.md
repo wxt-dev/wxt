@@ -43,10 +43,6 @@ https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84
 
 Bootstrap a new project:
 
-```sh
-pnpm dlx wxt@latest init <project-name>
-```
-
 <!-- automd:pm-x version="latest" name="wxt" args="init" -->
 
 ```sh
