@@ -131,14 +131,7 @@ export async function createServer(
   });
 
   // Listen for file changes and reload different parts of the extension accordingly
-  const reloadOnChange = debounce(
-    createFileReloader(server),
-    wxt.config.env.watchDebounce,
-    {
-      leading: true,
-      trailing: false,
-    },
-  );
+  const reloadOnChange = createFileReloader(server);
   server.watcher.on('all', reloadOnChange);
 
   return server;
@@ -152,7 +145,7 @@ function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
-  return async (event: string, path: string) => {
+  const cb = async (event: string, path: string) => {
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -224,6 +217,11 @@ function createFileReloader(server: WxtDevServer) {
       }
     });
   };
+
+  return debounce(cb, wxt.config.dev.server!.watchDebounce, {
+    leading: true,
+    trailing: false,
+  });
 }
 
 /**

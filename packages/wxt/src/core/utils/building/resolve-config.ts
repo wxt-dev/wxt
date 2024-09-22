@@ -26,6 +26,7 @@ import glob from 'fast-glob';
 import { builtinModules } from '../../../builtin-modules';
 import { getEslintVersion } from '../eslint';
 import { safeStringToNumber } from '../number';
+import { loadEnv } from '../env';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -71,14 +72,14 @@ export async function resolveConfig(
     mergedConfig.manifestVersion ??
     (browser === 'firefox' || browser === 'safari' ? 2 : 3);
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
-  const watchDebounce =
-    safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 8e2;
+
+  loadEnv(mode);
+
   const env: ConfigEnv = {
     browser,
     command,
     manifestVersion,
     mode,
-    watchDebounce,
   };
 
   const root = path.resolve(
@@ -133,6 +134,7 @@ export async function resolveConfig(
     devServerConfig = {
       port,
       hostname: mergedConfig.dev?.server?.hostname ?? 'localhost',
+      watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }
 

@@ -1,4 +1,3 @@
-import { config as loadDotenv } from '@dotenvx/dotenvx';
 import {
   InlineConfig,
   ResolvedConfig,
@@ -13,6 +12,7 @@ import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';
 import { builtinModules } from '../builtin-modules';
+import { loadEnv } from './utils/env';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -31,8 +31,6 @@ export async function registerWxt(
   // Default NODE_ENV environment variable before other packages, like vite, do it
   // See https://github.com/wxt-dev/wxt/issues/873#issuecomment-2254555523
   process.env.NODE_ENV ??= command === 'serve' ? 'development' : 'production';
-
-  loadDotenv({ path: ['.env.wxt', '.env'], quiet: true });
 
   const hooks = createHooks<WxtHooks>();
   const config = await resolveConfig(inlineConfig, command);
