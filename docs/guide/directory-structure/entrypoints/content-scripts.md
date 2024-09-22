@@ -24,7 +24,7 @@ export default defineContentScript({
   excludeMatches: undefined | [],
   includeGlobs: undefined | [],
   excludeGlobs: undefined | [],
-  allFrames: undefined | [],
+  allFrames: undefined | true | false,
   runAt: undefined | 'document_start' | 'document_end' | 'document_idle',
   matchAboutBlank: undefined | true | false,
   matchOriginAsFallback: undefined | true | false,
