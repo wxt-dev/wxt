@@ -22,11 +22,11 @@
 </p>
 
 <p align="center">
-  <a href="https://wxt.dev/guide/installation" target="_blank">Get Started</a>
+  <a href="https://wxt.dev/guide/installation.html" target="_blank">Get Started</a>
   &bull;
-  <a href="https://wxt.dev/api/config" target="_blank">Configuration</a>
+  <a href="https://wxt.dev/api/config.html" target="_blank">Configuration</a>
   &bull;
-  <a href="https://wxt.dev/examples" target="_blank">Examples</a>
+  <a href="https://wxt.dev/examples.html" target="_blank">Examples</a>
   &bull;
   <a href="https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md" target="_blank">Changelog</a>
   &bull;
@@ -47,7 +47,22 @@ Bootstrap a new project:
 pnpm dlx wxt@latest init <project-name>
 ```
 
-Or see the [installation guide](https://wxt.dev/guide/installation) to get started with WXT.
+<!-- automd:pm-x version="latest" name="wxt" args="init" -->
+
+```sh
+# npm
+npx wxt@latest init
+
+# pnpm
+pnpm dlx wxt@latest init
+
+# bun
+bunx wxt@latest init
+```
+
+<!-- /automd -->
+
+Or see the [installation guide](https://wxt.dev/guide/installation.html) to get started with WXT.
 
 ## Features
 
@@ -59,13 +74,20 @@ Or see the [installation guide](https://wxt.dev/guide/installation) to get start
 - 🦾 Auto-imports
 - 🤖 Automated publishing
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
-- 📦 Modular architecture with [WXT modules](https://wxt.dev/guide/go-further/reusable-modules#overview)
+- 📦 Modular architecture with [WXT modules](https://wxt.dev/guide/go-further/reusable-modules.html#overview)
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
 - ⬇️ Download and bundle remote URL imports
 
 ## Contributors
 
+<!-- automd:contributors author="aklinker1" license="MIT" github="wxt-dev/wxt" -->
+
+Published under the [MIT](https://github.com/wxt-dev/wxt/blob/main/LICENSE) license.
+Made by [@aklinker1](https://github.com/aklinker1) and [community](https://github.com/wxt-dev/wxt/graphs/contributors) 💛
+<br><br>
 <a href="https://github.com/wxt-dev/wxt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=wxt-dev/wxt" />
+<img src="https://contrib.rocks/image?repo=wxt-dev/wxt" />
 </a>
+
+<!-- /automd -->

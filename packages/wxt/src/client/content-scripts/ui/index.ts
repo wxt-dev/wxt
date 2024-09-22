@@ -17,7 +17,7 @@ export * from './types';
 /**
  * Create a content script UI without any isolation.
  *
- * @see https://wxt.dev/guide/key-concepts/content-script-ui#integrated
+ * @see https://wxt.dev/guide/key-concepts/content-script-ui.html#integrated
  */
 export function createIntegratedUi<TMounted>(
   ctx: ContentScriptContext,
@@ -53,7 +53,7 @@ export function createIntegratedUi<TMounted>(
 /**
  * Create a content script UI using an iframe.
  *
- * @see https://wxt.dev/guide/key-concepts/content-script-ui#iframe
+ * @see https://wxt.dev/guide/key-concepts/content-script-ui.html#iframe
  */
 export function createIframeUi<TMounted>(
   ctx: ContentScriptContext,
@@ -96,7 +96,7 @@ export function createIframeUi<TMounted>(
  *
  * > This function is async because it has to load the CSS via a network call.
  *
- * @see https://wxt.dev/guide/key-concepts/content-script-ui#shadowroot
+ * @see https://wxt.dev/guide/key-concepts/content-script-ui.html#shadowroot
  */
 export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,

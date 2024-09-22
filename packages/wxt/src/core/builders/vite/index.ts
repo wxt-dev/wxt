@@ -91,7 +91,7 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build#library-mode).
+   * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     const entry = getRollupEntry(entrypoint);
@@ -156,7 +156,7 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build#multi-page-app).
+   * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
     const htmlEntrypoints = new Set(
@@ -192,7 +192,7 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building a sinlge CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build#multi-page-app).
+   * Return the basic config for building a sinlge CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     return {
