@@ -1277,6 +1277,25 @@ export interface ResolvedConfig {
     server?: {
       port: number;
       hostname: string;
+      /**
+       * The milliseconds to debounce when a file is saved before reloading.
+       * The only way to set this option is to set the `WXT_WATCH_DEBOUNCE`
+       * environment variable, either globally (like in `.bashrc` file) or
+       * per-project (in `.env` file).
+       *
+       * For example:
+       * ```
+       * # ~/.zshrc
+       * export WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * or
+       * ```
+       * # .env
+       * WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * @default 800
+       */
+      watchDebounce: number;
     };
     reloadCommand: string | false;
   };
