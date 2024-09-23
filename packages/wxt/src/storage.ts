@@ -947,11 +947,11 @@ export interface SnapshotOptions {
 
 export interface WxtStorageItemOptions<T> {
   /**
-   * @deprecated Renamed to fallback, use it instead.
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue?: T;
   /**
-   * Default value returned when getValue would otherwise return null.
+   * Default value returned when `getValue` would otherwise return `null`.
    */
   fallback?: T;
   /**
