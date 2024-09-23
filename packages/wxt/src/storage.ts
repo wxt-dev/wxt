@@ -324,6 +324,7 @@ function createStorage(): WxtStorage {
 
       return {
         storageArea: driverArea,
+        storageKey: driverKey,
         get defaultValue() {
           return getFallback();
         },
@@ -366,29 +367,189 @@ function createStorage(): WxtStorage {
       };
     },
     getItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
-      keys: T,
+      items: T,
     ) => {
-      let returnObj: Record<string, any> = {};
+      const returnObj: Record<string, any> = {};
 
-      //* Efficiently use driver.getItems for all keys
-      const keyToDriverAreaMap = new Map<StorageArea, string[]>();
-      Object.entries(keys).forEach(([key, item]) => {
-        const keys = keyToDriverAreaMap.get(item.storageArea) ?? [];
-        keys.push(key);
-        keyToDriverAreaMap.set(item.storageArea, keys);
+      const areaToItemListMap = new Map<
+        StorageArea,
+        Array<{ key: string; storageKey: string; fallback: any }>
+      >();
+      Object.entries(items).forEach(([key, item]) => {
+        const list = areaToItemListMap.get(item.storageArea) ?? [];
+        list.push({
+          key,
+          storageKey: item.storageKey,
+          fallback: item.fallback,
+        });
+        areaToItemListMap.set(item.storageArea, list);
       });
 
-      for (const [storageArea, itemKeys] of keyToDriverAreaMap.entries()) {
+      for (const [storageArea, itemList] of areaToItemListMap.entries()) {
         const driver = getDriver(storageArea);
-        const results = await driver.getItems(itemKeys);
-        results.forEach(({ key, value }) => {
-          returnObj[key] = getValueOrFallback(value, keys[key].fallback);
+        const storageKeys = itemList.map((item) => item.storageKey);
+        const results = await driver.getItems(storageKeys);
+        const valueMap = results.reduce<Record<string, any>>(
+          (map, { key, value }) => {
+            map[key] = value;
+            return map;
+          },
+          {},
+        );
+
+        itemList.forEach(({ key, storageKey, fallback }) => {
+          const value = valueMap[storageKey];
+          returnObj[key] = getValueOrFallback(value, fallback);
         });
       }
 
       return returnObj as {
         [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>>;
       };
+    },
+    getStorageItemMetas: async <
+      T extends Record<string, WxtStorageItem<any, any>>,
+    >(
+      items: T,
+    ) => {
+      const returnObj: Record<string, any> = {};
+
+      // Efficiently use driver.getItems for all meta keys
+      const areaToItemListMap = new Map<
+        StorageArea,
+        Array<{ key: string; storageKey: string }>
+      >();
+      Object.entries(items).forEach(([key, item]) => {
+        const list = areaToItemListMap.get(item.storageArea) ?? [];
+        list.push({ key, storageKey: item.storageKey });
+        areaToItemListMap.set(item.storageArea, list);
+      });
+
+      for (const [storageArea, itemList] of areaToItemListMap.entries()) {
+        const driver = getDriver(storageArea);
+        const metaKeys = itemList.map((item) => getMetaKey(item.storageKey));
+        const results = await driver.getItems(metaKeys);
+        const valueMap = results.reduce<Record<string, any>>(
+          (map, { key, value }) => {
+            map[key] = value;
+            return map;
+          },
+          {},
+        );
+
+        itemList.forEach(({ key, storageKey }) => {
+          const metaKey = getMetaKey(storageKey);
+          const value = valueMap[metaKey];
+          returnObj[key] = getMetaValue(value);
+        });
+      }
+
+      return returnObj as {
+        [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>>;
+      };
+    },
+    deleteStorageItemValues: async <
+      T extends Record<string, WxtStorageItem<any, any>>,
+    >(
+      items: T,
+      opts?: RemoveItemOptions,
+    ) => {
+      const areaToKeysMap = new Map<StorageArea, string[]>();
+      const areaToMetaKeysMap = new Map<StorageArea, string[]>();
+      Object.values(items).forEach((item) => {
+        const keys = areaToKeysMap.get(item.storageArea) ?? [];
+        keys.push(item.storageKey);
+        areaToKeysMap.set(item.storageArea, keys);
+        if (opts?.removeMeta) {
+          const metaKeys = areaToMetaKeysMap.get(item.storageArea) ?? [];
+          metaKeys.push(getMetaKey(item.storageKey));
+          areaToMetaKeysMap.set(item.storageArea, metaKeys);
+        }
+      });
+
+      await Promise.all(
+        Array.from(areaToKeysMap.entries()).map(async ([storageArea, keys]) => {
+          const driver = getDriver(storageArea);
+          await driver.removeItems(keys);
+        }),
+      );
+
+      if (opts?.removeMeta) {
+        await Promise.all(
+          Array.from(areaToMetaKeysMap.entries()).map(
+            async ([storageArea, keys]) => {
+              const driver = getDriver(storageArea);
+              await driver.removeItems(keys);
+            },
+          ),
+        );
+      }
+    },
+    setStorageItemValues: async <
+      T extends Record<string, WxtStorageItem<any, any>>,
+    >(
+      items: T,
+      values: { [K in keyof T]: any },
+    ) => {
+      const areaToValuesMap = new Map<
+        StorageArea,
+        Array<{ key: string; value: any }>
+      >();
+      Object.entries(items).forEach(([key, item]) => {
+        const list = areaToValuesMap.get(item.storageArea) ?? [];
+        list.push({ key: item.storageKey, value: values[key] });
+        areaToValuesMap.set(item.storageArea, list);
+      });
+
+      await Promise.all(
+        Array.from(areaToValuesMap.entries()).map(
+          async ([storageArea, values]) => {
+            const driver = getDriver(storageArea);
+            await driver.setItems(values);
+          },
+        ),
+      );
+    },
+    setStorageItemMetas: async <
+      T extends Record<string, WxtStorageItem<any, any>>,
+    >(
+      items: T,
+      metas: { [K in keyof T]: NullablePartial<any> },
+    ) => {
+      const areaToMetaUpdatesMap = new Map<
+        StorageArea,
+        Array<{ key: string; properties: any }>
+      >();
+      Object.entries(items).forEach(([key, item]) => {
+        const list = areaToMetaUpdatesMap.get(item.storageArea) ?? [];
+        list.push({ key: item.storageKey, properties: metas[key] });
+        areaToMetaUpdatesMap.set(item.storageArea, list);
+      });
+
+      await Promise.all(
+        Array.from(areaToMetaUpdatesMap.entries()).map(
+          async ([storageArea, updates]) => {
+            const driver = getDriver(storageArea);
+            const metaUpdates = [];
+            for (const { key, properties } of updates) {
+              const metaKey = getMetaKey(key);
+              const existingFields = getMetaValue(
+                await driver.getItem(metaKey),
+              );
+              const newFields = { ...existingFields };
+              Object.entries(properties).forEach(([key, value]) => {
+                if (value == null) {
+                  delete newFields[key];
+                } else {
+                  newFields[key] = value;
+                }
+              });
+              metaUpdates.push({ key: metaKey, value: newFields });
+            }
+            await driver.setItems(metaUpdates);
+          },
+        ),
+      );
     },
   };
   return storage;
@@ -599,9 +760,88 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
+
+  /**
+   * Get the values of multiple storage items.
+   *
+   * @param items - The storage items to get the values of.
+   * @returns An object with the values of the storage items.
+   *
+   * @example
+   * const storage = await storage.getItemValues({
+   *   "local:installDate": storage.defineItem("local:installDate"),
+   *   "session:someCounter": storage.defineItem("session:someCounter"),
+   * });
+   */
   getItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
-    keys: T,
+    items: T,
   ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>> }>;
+  /**
+   * Get the metadata of multiple storage items.
+   *
+   * @param items - The storage items to get the metadata of.
+   * @returns An object with the metadata of the storage items.
+   *
+   * @example
+   * const storage = await storage.getItemValues({
+   *   "local:installDate": storage.defineItem("local:installDate"),
+   *   "session:someCounter": storage.defineItem("session:someCounter"),
+   * });
+   * const metadata = await storage.getStorageItemMetas(storage);
+   */
+  getStorageItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
+    items: T,
+  ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>> }>;
+  /**
+   * Delete the values of multiple storage items.
+   *
+   * @param items - The storage items to delete the values of.
+   * @param opts - Options to delete the metadata of the storage items.
+   *
+   * @example
+   * await storage.deleteStorageItemValues({
+   *   "local:installDate": storage.defineItem("local:installDate"),
+   *   "session:someCounter": storage.defineItem("session:someCounter"),
+   * });
+   */
+  deleteStorageItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
+    items: T,
+    opts?: RemoveItemOptions,
+  ): Promise<void>;
+  /**
+   * Set the values of multiple storage items.
+   *
+   * @param items - The storage items to set the values of.
+   * @param values - The values to set.
+   *
+   * @example
+   * await storage.setStorageItemValues({
+   *   "local:installDate": storage.defineItem("local:installDate"),
+   *   "session:someCounter": storage.defineItem("session:someCounter"),
+   * });
+   */
+  setStorageItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
+    items: T,
+    values: { [K in keyof T]: any },
+  ): Promise<void>;
+  /**
+   * Set the metadata of multiple storage items.
+   *
+   * @param items - The storage items to set the metadata of.
+   * @param metas - The metadata to set.
+   *
+   * @example
+   * await storage.setStorageItemMetas({
+   *   "local:installDate": storage.defineItem("local:installDate"),
+   *   "session:someCounter": storage.defineItem("session:someCounter"),
+   * });
+   */
+  setStorageItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
+    items: T,
+    metas: {
+      [K in keyof T]: NullablePartial<Awaited<ReturnType<T[K]['getMeta']>>>;
+    },
+  ): Promise<void>;
 }
 
 interface WxtStorageDriver {
@@ -626,11 +866,15 @@ export interface WxtStorageItem<
    */
   storageArea: StorageArea;
   /**
-   * @deprecated Renamed to `fallback`, use it instead.
+   * The storage key used internally.
+   */
+  storageKey: string;
+  /**
+   * @deprecated Renamed to fallback, use it instead.
    */
   defaultValue: TValue;
   /**
-   * The value provided by the `fallback` option.
+   * The value provided by the fallback option.
    */
   fallback: TValue;
   /**
@@ -675,11 +919,11 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
-   * @deprecated Renamed to `fallback`, use it instead.
+   * @deprecated Renamed to fallback, use it instead.
    */
   defaultValue?: T;
   /**
-   * Default value returned when `getItem` would otherwise return `null`.
+   * Default value returned when getItem would otherwise return null.
    */
   fallback?: T;
 }
@@ -703,11 +947,11 @@ export interface SnapshotOptions {
 
 export interface WxtStorageItemOptions<T> {
   /**
-   * @deprecated Renamed to `fallback`, use it instead.
+   * @deprecated Renamed to fallback, use it instead.
    */
   defaultValue?: T;
   /**
-   * Default value returned when `getValue` would otherwise return `null`.
+   * Default value returned when getValue would otherwise return null.
    */
   fallback?: T;
   /**
@@ -729,7 +973,7 @@ export interface WxtStorageItemOptions<T> {
 }
 
 /**
- * Same as `Partial`, but includes `| null`. It makes all the properties of an object optional and
+ * Same as Partial, but includes | null. It makes all the properties of an object optional and
  * nullable.
  */
 export type NullablePartial<T> = {
