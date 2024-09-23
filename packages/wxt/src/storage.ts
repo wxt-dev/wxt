@@ -874,7 +874,7 @@ export interface WxtStorageItem<
    */
   defaultValue: TValue;
   /**
-   * The value provided by the fallback option.
+   * The value provided by the `fallback` option.
    */
   fallback: TValue;
   /**
@@ -919,11 +919,11 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /**
-   * @deprecated Renamed to fallback, use it instead.
+   * @deprecated Renamed to `fallback`, use it instead.
    */
   defaultValue?: T;
   /**
-   * Default value returned when getItem would otherwise return null.
+   * Default value returned when `getItem` would otherwise return `null`.
    */
   fallback?: T;
 }
@@ -973,7 +973,7 @@ export interface WxtStorageItemOptions<T> {
 }
 
 /**
- * Same as Partial, but includes | null. It makes all the properties of an object optional and
+ * Same as `Partial`, but includes `| null`. It makes all the properties of an object optional and
  * nullable.
  */
 export type NullablePartial<T> = {
