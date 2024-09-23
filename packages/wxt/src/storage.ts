@@ -252,7 +252,7 @@ function createStorage(): WxtStorage {
       });
     },
     defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
-      const { driver, driverKey } = resolveKey(key);
+      const { driver, driverKey, driverArea } = resolveKey(key);
 
       const { version: targetVersion = 1, migrations = {} } = opts ?? {};
       if (targetVersion < 1) {
@@ -323,6 +323,7 @@ function createStorage(): WxtStorage {
       migrationsDone.then(getOrInitValue);
 
       return {
+        storageArea: driverArea,
         get defaultValue() {
           return getFallback();
         },
@@ -362,6 +363,31 @@ function createStorage(): WxtStorage {
             cb(newValue ?? getFallback(), oldValue ?? getFallback()),
           ),
         migrate,
+      };
+    },
+    getItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
+      keys: T,
+    ) => {
+      let returnObj: Record<string, any> = {};
+
+      //* Efficiently use driver.getItems for all keys
+      const keyToDriverAreaMap = new Map<StorageArea, string[]>();
+      Object.entries(keys).forEach(([key, item]) => {
+        const keys = keyToDriverAreaMap.get(item.storageArea) ?? [];
+        keys.push(key);
+        keyToDriverAreaMap.set(item.storageArea, keys);
+      });
+
+      for (const [storageArea, itemKeys] of keyToDriverAreaMap.entries()) {
+        const driver = getDriver(storageArea);
+        const results = await driver.getItems(itemKeys);
+        results.forEach(({ key, value }) => {
+          returnObj[key] = getValueOrFallback(value, keys[key].fallback);
+        });
+      }
+
+      return returnObj as {
+        [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>>;
       };
     },
   };
@@ -573,6 +599,9 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
+  getItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
+    keys: T,
+  ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>> }>;
 }
 
 interface WxtStorageDriver {
@@ -592,6 +621,10 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  /**
+   * The storage area used to get and set the value.
+   */
+  storageArea: StorageArea;
   /**
    * @deprecated Renamed to `fallback`, use it instead.
    */
