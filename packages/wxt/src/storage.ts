@@ -407,9 +407,7 @@ function createStorage(): WxtStorage {
         [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>>;
       };
     },
-    getStorageItemMetas: async <
-      T extends Record<string, WxtStorageItem<any, any>>,
-    >(
+    getItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
       items: T,
     ) => {
       const returnObj: Record<string, any> = {};
@@ -448,7 +446,7 @@ function createStorage(): WxtStorage {
         [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>>;
       };
     },
-    deleteStorageItemValues: async <
+    deleteItemValues: async <
       T extends Record<string, WxtStorageItem<any, any>>,
     >(
       items: T,
@@ -485,9 +483,7 @@ function createStorage(): WxtStorage {
         );
       }
     },
-    setStorageItemValues: async <
-      T extends Record<string, WxtStorageItem<any, any>>,
-    >(
+    setItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
       items: T,
       values: { [K in keyof T]: any },
     ) => {
@@ -510,9 +506,7 @@ function createStorage(): WxtStorage {
         ),
       );
     },
-    setStorageItemMetas: async <
-      T extends Record<string, WxtStorageItem<any, any>>,
-    >(
+    setItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
       items: T,
       metas: { [K in keyof T]: NullablePartial<any> },
     ) => {
@@ -789,7 +783,7 @@ export interface WxtStorage {
    * });
    * const metadata = await storage.getStorageItemMetas(storage);
    */
-  getStorageItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
+  getItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
     items: T,
   ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>> }>;
   /**
@@ -804,7 +798,7 @@ export interface WxtStorage {
    *   "session:someCounter": storage.defineItem("session:someCounter"),
    * });
    */
-  deleteStorageItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
+  deleteItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
     items: T,
     opts?: RemoveItemOptions,
   ): Promise<void>;
@@ -820,7 +814,7 @@ export interface WxtStorage {
    *   "session:someCounter": storage.defineItem("session:someCounter"),
    * });
    */
-  setStorageItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
+  setItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
     items: T,
     values: { [K in keyof T]: any },
   ): Promise<void>;
@@ -836,7 +830,7 @@ export interface WxtStorage {
    *   "session:someCounter": storage.defineItem("session:someCounter"),
    * });
    */
-  setStorageItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
+  setItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
     items: T,
     metas: {
       [K in keyof T]: NullablePartial<Awaited<ReturnType<T[K]['getMeta']>>>;

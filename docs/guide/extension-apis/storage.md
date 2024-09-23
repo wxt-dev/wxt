@@ -144,10 +144,10 @@ For a full list of properties and methods available, see the [API reference](/ap
 When dealing with multiple storage items, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods to handle bulk operations on defined storage items:
 
 - **`getItemValues`**: Retrieve values of multiple storage items.
-- **`getStorageItemMetas`**: Retrieve metadata for multiple storage items.
-- **`setStorageItemValues`**: Set values for multiple storage items.
-- **`setStorageItemMetas`**: Update metadata for multiple storage items.
-- **`deleteStorageItemValues`**: Remove values (and optionally metadata) of multiple storage items.
+- **`getItemMetas`**: Retrieve metadata for multiple storage items.
+- **`setItemValues`**: Set values for multiple storage items.
+- **`setItemMetas`**: Update metadata for multiple storage items.
+- **`deleteItemValues`**: Remove values (and optionally metadata) of multiple storage items.
 
 #### Getting Values of Multiple Storage Items
 
@@ -173,10 +173,10 @@ console.log(values);
 
 #### Getting Metadata of Multiple Storage Items
 
-Similarly, you can retrieve the metadata of multiple storage items using `getStorageItemMetas`:
+Similarly, you can retrieve the metadata of multiple storage items using `getItemMetas`:
 
 ```ts
-const metas = await storage.getStorageItemMetas({ item1, item2, item3 });
+const metas = await storage.getItemMetas({ item1, item2, item3 });
 
 console.log(metas);
 // Output:
@@ -192,7 +192,7 @@ console.log(metas);
 You can set values for multiple storage items in a single operation using `setStorageItemValues`:
 
 ```ts
-await storage.setStorageItemValues(
+await storage.setItemValues(
   { item1, item2, item3 },
   { item1: 'new value', item2: 42, item3: true },
 );
@@ -203,7 +203,7 @@ await storage.setStorageItemValues(
 To update metadata for multiple storage items, use `setStorageItemMetas`:
 
 ```ts
-await storage.setStorageItemMetas(
+await storage.setItemMetas(
   { item1, item2 },
   {
     item1: { lastModified: Date.now() },
@@ -214,10 +214,10 @@ await storage.setStorageItemMetas(
 
 #### Deleting Values of Multiple Storage Items
 
-You can remove the values (and optionally metadata) of multiple storage items efficiently using `deleteStorageItemValues`:
+You can remove the values (and optionally metadata) of multiple storage items efficiently using `deleteItemValues`:
 
 ```ts
-await storage.deleteStorageItemValues({ item1, item2 }, { removeMeta: true });
+await storage.deleteItemValues({ item1, item2 }, { removeMeta: true });
 ```
 
 ### Versioning
