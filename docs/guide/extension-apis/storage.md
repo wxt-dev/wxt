@@ -58,7 +58,7 @@ For a full list of methods available, see the [API reference](/api/reference/wxt
 
 ## Watchers
 
-To listen for storage changes, use the `storage.watch` function. It lets you setup a listener for a single key:
+To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key:
 
 ```ts
 const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
@@ -103,7 +103,7 @@ You can remove all metadata associated with a key, or just specific properties:
 // Remove all properties
 await storage.removeMeta('local:preference');
 
-// Remove one property
+// Remove only the "lastModified" property
 await storage.removeMeta('local:preference', 'lastModified');
 
 // Remove multiple properties
@@ -138,6 +138,87 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 ```
 
 For a full list of properties and methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorageItem).
+
+### Bulk Operations on Storage Items
+
+When dealing with multiple storage items, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods to handle bulk operations on defined storage items:
+
+- **`getItemValues`**: Retrieve values of multiple storage items.
+- **`getStorageItemMetas`**: Retrieve metadata for multiple storage items.
+- **`setStorageItemValues`**: Set values for multiple storage items.
+- **`setStorageItemMetas`**: Update metadata for multiple storage items.
+- **`deleteStorageItemValues`**: Remove values (and optionally metadata) of multiple storage items.
+
+#### Getting Values of Multiple Storage Items
+
+You can retrieve the values of multiple storage items in a single call using `getItemValues`:
+
+```ts
+const item1 = storage.defineItem<string>('local:item1', {
+  fallback: 'default1',
+});
+const item2 = storage.defineItem<number>('local:item2', { fallback: 0 });
+const item3 = storage.defineItem<boolean>('local:item3', { fallback: false });
+
+const values = await storage.getItemValues({ item1, item2, item3 });
+
+console.log(values);
+// Output:
+// {
+//   item1: 'default1',
+//   item2: 0,
+//   item3: false
+// }
+```
+
+#### Getting Metadata of Multiple Storage Items
+
+Similarly, you can retrieve the metadata of multiple storage items using `getStorageItemMetas`:
+
+```ts
+const metas = await storage.getStorageItemMetas({ item1, item2, item3 });
+
+console.log(metas);
+// Output:
+// {
+//   item1: { ...metadata of item1 },
+//   item2: { ...metadata of item2 },
+//   item3: { ...metadata of item3 }
+// }
+```
+
+#### Setting Values of Multiple Storage Items
+
+You can set values for multiple storage items in a single operation using `setStorageItemValues`:
+
+```ts
+await storage.setStorageItemValues(
+  { item1, item2, item3 },
+  { item1: 'new value', item2: 42, item3: true },
+);
+```
+
+#### Setting Metadata of Multiple Storage Items
+
+To update metadata for multiple storage items, use `setStorageItemMetas`:
+
+```ts
+await storage.setStorageItemMetas(
+  { item1, item2 },
+  {
+    item1: { lastModified: Date.now() },
+    item2: { version: 2 },
+  },
+);
+```
+
+#### Deleting Values of Multiple Storage Items
+
+You can remove the values (and optionally metadata) of multiple storage items efficiently using `deleteStorageItemValues`:
+
+```ts
+await storage.deleteStorageItemValues({ item1, item2 }, { removeMeta: true });
+```
 
 ### Versioning
 
@@ -228,13 +309,13 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code
 Internally, this uses a metadata property called `v` to track the value's current version.
 :::
 
-In this case, we thought that the ignored website list might change in the future, and were able to setup a versioned storage item from the start.
+In this case, we thought that the ignored website list might change in the future, and were able to set up a versioned storage item from the start.
 
-Realistically, you won't know a item needs versioned until you need to change it's schema. Thankfully, it's simple to add versioning to an unversioned storage item.
+Realistically, you won't know an item needs versioning until you need to change its schema. Thankfully, it's simple to add versioning to an unversioned storage item.
 
 When a previous version isn't found, WXT assumes the version was `1`. That means you just need to set `version: 2` and add a migration for `2`, and it will just work!
 
-Lets look at the same ignored websites example from before, but start with an unversioned item this time:
+Let's look at the same ignored websites example from before, but start with an unversioned item this time:
 
 :::code-group
 
@@ -278,13 +359,13 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 ### Running Migrations
 
-As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.
+As soon as `storage.defineItem` is called, WXT checks if migrations need to be run, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc.) will automatically wait for the migration process to finish before actually reading or writing values.
 
 ### Default Values
 
 With `storage.defineItem`, there are multiple ways of defining default values:
 
-1. `fallback` - Return this value from `getValue` instead of `null` if the value is missing.
+1. **`fallback`** - Return this value from `getValue` instead of `null` if the value is missing.
 
    This option is great for providing default values for settings:
 
@@ -297,7 +378,7 @@ With `storage.defineItem`, there are multiple ways of defining default values:
    });
    ```
 
-2. `init` - Initialize and save a value in storage if it is not already saved.
+2. **`init`** - Initialize and save a value in storage if it is not already saved.
 
    This is great for values that need to be initialized or set once:
 
