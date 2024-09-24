@@ -189,7 +189,7 @@ console.log(metas);
 
 #### Setting Values of Multiple Storage Items
 
-You can set values for multiple storage items in a single operation using `setStorageItemValues`:
+You can set values for multiple storage items in a single operation using `setItemValues`:
 
 ```ts
 await storage.setItemValues(
@@ -200,7 +200,7 @@ await storage.setItemValues(
 
 #### Setting Metadata of Multiple Storage Items
 
-To update metadata for multiple storage items, use `setStorageItemMetas`:
+To update metadata for multiple storage items, use `setStorageItemMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
 
 ```ts
 await storage.setItemMetas(
