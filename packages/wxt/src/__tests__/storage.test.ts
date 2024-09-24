@@ -38,7 +38,7 @@ describe('Storage Utils', () => {
           expect(actual).toBe(expected);
         });
 
-        it('should return the value if multiple : are use in the key', async () => {
+        it('should return the value if multiple : are used in the key', async () => {
           const expected = 'value';
           await fakeBrowser.storage[storageArea].set({ 'some:key': expected });
 
@@ -892,6 +892,243 @@ describe('Storage Utils', () => {
           defaultValue: null,
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+      });
+    });
+  });
+
+  describe('Batch Item Operations', () => {
+    beforeEach(() => {
+      fakeBrowser.reset();
+      storage.unwatch();
+    });
+
+    describe('getItemValues', () => {
+      it('should get the values of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number>('local:item1');
+        const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3', {
+          defaultValue: false,
+        });
+
+        await item1.setValue(42);
+        await item2.setValue('hello');
+        // item3 not set, should get default value
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const values = await storage.getItemValues({
+          item1,
+          item2,
+          item3,
+        });
+
+        expect(values).toEqual({
+          item1: 42,
+          item2: 'hello',
+          item3: false,
+        });
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return default values if items are missing', async () => {
+        const item1 = storage.defineItem<number>('local:item1', {
+          defaultValue: 0,
+        });
+        const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3', {
+          defaultValue: true,
+        });
+
+        // Set only item2
+        await item2.setValue('world');
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const values = await storage.getItemValues({
+          item1,
+          item2,
+          item3,
+        });
+
+        expect(values).toEqual({
+          item1: 0,
+          item2: 'world',
+          item3: true,
+        });
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('getItemMetas', () => {
+      it('should get the metadata of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+        const item3 = storage.defineItem<boolean, { flag: boolean }>(
+          'local:item3',
+        );
+
+        await item1.setMeta({ v: 1 });
+        await item2.setMeta({ date: 1234567890 });
+        // item3 has no meta
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const metas = await storage.getItemMetas({
+          item1,
+          item2,
+          item3,
+        });
+
+        expect(metas).toEqual({
+          item1: { v: 1 },
+          item2: { date: 1234567890 },
+          item3: {},
+        });
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('setItemValues', () => {
+      it('should set the values of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number>('local:item1');
+        const item2 = storage.defineItem<string>('session:item2');
+
+        const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
+        const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
+
+        await storage.setItemValues(
+          {
+            item1,
+            item2,
+          },
+          {
+            item1: 100,
+            item2: 'test',
+          },
+        );
+
+        const value1 = await item1.getValue();
+        const value2 = await item2.getValue();
+
+        expect(value1).toBe(100);
+        expect(value2).toBe('test');
+
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('setItemMetas', () => {
+      it('should set the metadata of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+
+        const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
+        const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
+
+        await storage.setItemMetas(
+          {
+            item1,
+            item2,
+          },
+          {
+            item1: { v: 2 },
+            item2: { date: 456 },
+          },
+        );
+
+        const meta1 = await item1.getMeta();
+        const meta2 = await item2.getMeta();
+
+        expect(meta1).toEqual({ v: 2 });
+        expect(meta2).toEqual({ date: 456 });
+
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('deleteItemValues', () => {
+      it('should delete the values of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number>('local:item1');
+        const item2 = storage.defineItem<string>('session:item2');
+
+        await item1.setValue(100);
+        await item2.setValue('test');
+
+        const localRemoveSpy = vi.spyOn(fakeBrowser.storage.local, 'remove');
+        const sessionRemoveSpy = vi.spyOn(
+          fakeBrowser.storage.session,
+          'remove',
+        );
+
+        await storage.deleteItemValues({
+          item1,
+          item2,
+        });
+
+        const value1 = await item1.getValue();
+        const value2 = await item2.getValue();
+
+        expect(value1).toBeNull();
+        expect(value2).toBeNull();
+
+        expect(localRemoveSpy).toHaveBeenCalledTimes(2);
+        expect(sessionRemoveSpy).toHaveBeenCalledTimes(2);
+      });
+
+      it('should not delete metadata when removeMeta option is true', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+
+        await item1.setValue(100);
+        await item1.setMeta({ v: 1 });
+        await item2.setValue('test');
+        await item2.setMeta({ date: 123 });
+
+        const localRemoveSpy = vi.spyOn(fakeBrowser.storage.local, 'remove');
+        const sessionRemoveSpy = vi.spyOn(
+          fakeBrowser.storage.session,
+          'remove',
+        );
+
+        await storage.deleteItemValues(
+          {
+            item1,
+            item2,
+          },
+          { removeMeta: false },
+        );
+
+        const value1 = await item1.getValue();
+        const meta1 = await item1.getMeta();
+        const value2 = await item2.getValue();
+        const meta2 = await item2.getMeta();
+
+        expect(value1).toBeNull();
+        expect(meta1).toEqual({ v: 1 });
+        expect(value2).toBeNull();
+        expect(meta2).toEqual({
+          date: 123,
+        });
+
+        expect(localRemoveSpy).toHaveBeenCalledTimes(1);
+        expect(sessionRemoveSpy).toHaveBeenCalledTimes(1);
       });
     });
   });

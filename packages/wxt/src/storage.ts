@@ -438,7 +438,7 @@ function createStorage(): WxtStorage {
         itemList.forEach(({ key, storageKey }) => {
           const metaKey = getMetaKey(storageKey);
           const value = valueMap[metaKey];
-          returnObj[key] = getMetaValue(value);
+          returnObj[key] = getMetaValue(value) ?? {};
         });
       }
 
@@ -450,7 +450,7 @@ function createStorage(): WxtStorage {
       T extends Record<string, WxtStorageItem<any, any>>,
     >(
       items: T,
-      opts?: RemoveItemOptions,
+      opts: RemoveItemOptions = { removeMeta: true },
     ) => {
       const areaToKeysMap = new Map<StorageArea, string[]>();
       const areaToMetaKeysMap = new Map<StorageArea, string[]>();
