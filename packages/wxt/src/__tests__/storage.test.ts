@@ -907,7 +907,7 @@ describe('Storage Utils', () => {
         const item1 = storage.defineItem<number>('local:item1');
         const item2 = storage.defineItem<string>('session:item2');
         const item3 = storage.defineItem<boolean>('local:item3', {
-          defaultValue: false,
+          fallback: false,
         });
 
         await item1.setValue(42);
@@ -935,11 +935,11 @@ describe('Storage Utils', () => {
 
       it('should return default values if items are missing', async () => {
         const item1 = storage.defineItem<number>('local:item1', {
-          defaultValue: 0,
+          fallback: 0,
         });
         const item2 = storage.defineItem<string>('session:item2');
         const item3 = storage.defineItem<boolean>('local:item3', {
-          defaultValue: true,
+          fallback: true,
         });
 
         // Set only item2
