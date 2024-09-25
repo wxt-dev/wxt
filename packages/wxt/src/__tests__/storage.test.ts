@@ -1085,7 +1085,7 @@ describe('Storage Utils', () => {
         expect(sessionRemoveSpy).toHaveBeenCalledTimes(2);
       });
 
-      it('should not delete metadata when removeMeta option is true', async () => {
+      it('should not delete metadata when removeMeta option is false', async () => {
         const item1 = storage.defineItem<number, { v: number }>('local:item1');
         const item2 = storage.defineItem<string, { date: number }>(
           'session:item2',
