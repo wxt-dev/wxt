@@ -4,6 +4,12 @@ import { WxtHooks } from '../../src/types';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
+  'zip:start': vi.fn(),
+  'zip:extension:start': vi.fn(),
+  'zip:extension:done': vi.fn(),
+  'zip:sources:start': vi.fn(),
+  'zip:sources:done': vi.fn(),
+  'zip:done': vi.fn(),
   'prepare:types': vi.fn(),
   'prepare:publicPaths': vi.fn(),
   'build:before': vi.fn(),
@@ -43,6 +49,12 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': false,
@@ -64,6 +76,12 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -81,10 +99,16 @@ describe('Hooks', () => {
     const project = new TestProject();
     project.addFile('entrypoints/popup.html', '<html></html>');
 
-    await project.zip({ hooks });
+    await project.zip({ hooks, browser: 'firefox' });
 
     expectHooksToBeCalled({
       ready: true,
+      'zip:start': true,
+      'zip:extension:start': true,
+      'zip:extension:done': true,
+      'zip:sources:start': true,
+      'zip:sources:done': true,
+      'zip:done': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -112,6 +136,12 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
