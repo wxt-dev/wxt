@@ -420,7 +420,7 @@ export interface WxtHooks {
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
 
   /**
-   * Called before the zip process starts.
+   * Called after building the extension, right before WXT begins zipping files.
    * @param wxt The configured WXT object
    */
   'zip:start': (wxt: Wxt) => HookResult;
