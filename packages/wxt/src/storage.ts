@@ -524,12 +524,15 @@ function createStorage(): WxtStorage {
         Array.from(areaToMetaUpdatesMap.entries()).map(
           async ([storageArea, updates]) => {
             const driver = getDriver(storageArea);
-            const metaUpdates = [];
-            for (const { key, properties } of updates) {
+            const metaKeys = updates.map(({ key }) => getMetaKey(key));
+            const existingMetas = await driver.getItems(metaKeys);
+            const existingMetaMap = new Map(
+              existingMetas.map(({ key, value }) => [key, getMetaValue(value)]),
+            );
+
+            const metaUpdates = updates.map(({ key, properties }) => {
               const metaKey = getMetaKey(key);
-              const existingFields = getMetaValue(
-                await driver.getItem(metaKey),
-              );
+              const existingFields = existingMetaMap.get(metaKey) ?? {};
               const newFields = { ...existingFields };
               Object.entries(properties).forEach(([key, value]) => {
                 if (value == null) {
@@ -538,8 +541,9 @@ function createStorage(): WxtStorage {
                   newFields[key] = value;
                 }
               });
-              metaUpdates.push({ key: metaKey, value: newFields });
-            }
+              return { key: metaKey, value: newFields };
+            });
+
             await driver.setItems(metaUpdates);
           },
         ),
