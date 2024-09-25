@@ -897,11 +897,6 @@ describe('Storage Utils', () => {
   });
 
   describe('Batch Item Operations', () => {
-    beforeEach(() => {
-      fakeBrowser.reset();
-      storage.unwatch();
-    });
-
     describe('getItemValues', () => {
       it('should get the values of multiple storage items efficiently', async () => {
         const item1 = storage.defineItem<number>('local:item1');
