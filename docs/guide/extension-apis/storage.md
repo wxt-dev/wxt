@@ -200,7 +200,7 @@ await storage.setItemValues(
 
 #### Setting Metadata of Multiple Storage Items
 
-To update metadata for multiple storage items, use `setStorageItemMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
+To update metadata for multiple storage items, use `setItemMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
 
 ```ts
 await storage.setItemMetas(
