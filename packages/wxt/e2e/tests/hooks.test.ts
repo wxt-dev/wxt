@@ -4,12 +4,6 @@ import { WxtHooks } from '../../src/types';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
-  'zip:start': vi.fn(),
-  'zip:extension:start': vi.fn(),
-  'zip:extension:done': vi.fn(),
-  'zip:sources:start': vi.fn(),
-  'zip:sources:done': vi.fn(),
-  'zip:done': vi.fn(),
   'prepare:types': vi.fn(),
   'prepare:publicPaths': vi.fn(),
   'build:before': vi.fn(),
@@ -20,6 +14,12 @@ const hooks: WxtHooks = {
   'entrypoints:grouped': vi.fn(),
   'vite:build:extendConfig': vi.fn(),
   'vite:devServer:extendConfig': vi.fn(),
+  'zip:start': vi.fn(),
+  'zip:extension:start': vi.fn(),
+  'zip:extension:done': vi.fn(),
+  'zip:sources:start': vi.fn(),
+  'zip:sources:done': vi.fn(),
+  'zip:done': vi.fn(),
 };
 
 function expectHooksToBeCalled(
@@ -49,12 +49,6 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
-      'zip:start': false,
-      'zip:extension:start': false,
-      'zip:extension:done': false,
-      'zip:sources:start': false,
-      'zip:sources:done': false,
-      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': false,
@@ -65,6 +59,12 @@ describe('Hooks', () => {
       'entrypoints:resolved': true,
       'vite:build:extendConfig': false,
       'vite:devServer:extendConfig': false,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
     });
   });
 
@@ -103,12 +103,6 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
-      'zip:start': true,
-      'zip:extension:start': true,
-      'zip:extension:done': true,
-      'zip:sources:start': true,
-      'zip:sources:done': true,
-      'zip:done': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -119,6 +113,12 @@ describe('Hooks', () => {
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 1,
       'vite:devServer:extendConfig': false,
+      'zip:start': true,
+      'zip:extension:start': true,
+      'zip:extension:done': true,
+      'zip:sources:start': true,
+      'zip:sources:done': true,
+      'zip:done': true,
     });
   });
 
@@ -136,12 +136,6 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
-      'zip:start': false,
-      'zip:extension:start': false,
-      'zip:extension:done': false,
-      'zip:sources:start': false,
-      'zip:sources:done': false,
-      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -152,6 +146,12 @@ describe('Hooks', () => {
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 2,
       'vite:devServer:extendConfig': 1,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
     });
   });
 });
