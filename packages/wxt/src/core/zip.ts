@@ -19,8 +19,8 @@ import { normalizePath } from './utils/paths';
  */
 export async function zip(config?: InlineConfig): Promise<string[]> {
   await registerWxt('build', config);
-  await wxt.hooks.callHook('zip:start', wxt);
   const output = await internalBuild();
+  await wxt.hooks.callHook('zip:start', wxt);
 
   const start = Date.now();
   wxt.logger.info('Zipping extension...');
