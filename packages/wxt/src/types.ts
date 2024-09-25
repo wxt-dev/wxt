@@ -1115,7 +1115,6 @@ export interface ServerInfo {
 export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
-  test: (wxt: Wxt) => HookResult;
   /**
    * Called after WXT initialization, when the WXT instance is ready to work.
    * @param wxt The configured WXT object
