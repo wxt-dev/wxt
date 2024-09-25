@@ -998,6 +998,7 @@ describe('Storage Utils', () => {
       it('should set the values of multiple storage items efficiently', async () => {
         const item1 = storage.defineItem<number>('local:item1');
         const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3');
 
         const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
         const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
@@ -1006,18 +1007,22 @@ describe('Storage Utils', () => {
           {
             item1,
             item2,
+            item3,
           },
           {
             item1: 100,
             item2: 'test',
+            item3: true,
           },
         );
 
         const value1 = await item1.getValue();
         const value2 = await item2.getValue();
+        const value3 = await item3.getValue();
 
         expect(value1).toBe(100);
         expect(value2).toBe('test');
+        expect(value3).toBe(true);
 
         expect(localSetSpy).toHaveBeenCalledTimes(1);
         expect(sessionSetSpy).toHaveBeenCalledTimes(1);
@@ -1030,7 +1035,15 @@ describe('Storage Utils', () => {
         const item2 = storage.defineItem<string, { date: number }>(
           'session:item2',
         );
+        const item3 = storage.defineItem<boolean, { flag: boolean }>(
+          'local:item3',
+        );
 
+        await item1.setMeta({ v: 1 });
+        await item2.setMeta({ date: 123 });
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
         const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
         const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
 
@@ -1038,21 +1051,31 @@ describe('Storage Utils', () => {
           {
             item1,
             item2,
+            item3,
           },
           {
             item1: { v: 2 },
             item2: { date: 456 },
+            item3: { flag: true },
           },
         );
 
-        const meta1 = await item1.getMeta();
-        const meta2 = await item2.getMeta();
-
-        expect(meta1).toEqual({ v: 2 });
-        expect(meta2).toEqual({ date: 456 });
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
 
         expect(localSetSpy).toHaveBeenCalledTimes(1);
         expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+
+        expect(localGetSpy).toHaveBeenCalledWith(['item1$', 'item3$']);
+        expect(sessionGetSpy).toHaveBeenCalledWith(['item2$']);
+
+        const meta1 = await item1.getMeta();
+        const meta2 = await item2.getMeta();
+        const meta3 = await item3.getMeta();
+
+        expect(meta1).toEqual({ v: 2 });
+        expect(meta2).toEqual({ date: 456 });
+        expect(meta3).toEqual({ flag: true });
       });
     });
 
@@ -1063,6 +1086,8 @@ describe('Storage Utils', () => {
 
         await item1.setValue(100);
         await item2.setValue('test');
+        await item1.setMeta({ v: 1 });
+        await item2.setMeta({ date: 123 });
 
         const localRemoveSpy = vi.spyOn(fakeBrowser.storage.local, 'remove');
         const sessionRemoveSpy = vi.spyOn(
@@ -1077,9 +1102,13 @@ describe('Storage Utils', () => {
 
         const value1 = await item1.getValue();
         const value2 = await item2.getValue();
+        const value1Meta = await item1.getMeta();
+        const value2Meta = await item2.getMeta();
 
         expect(value1).toBeNull();
         expect(value2).toBeNull();
+        expect(value1Meta).toEqual({});
+        expect(value2Meta).toEqual({});
 
         expect(localRemoveSpy).toHaveBeenCalledTimes(2);
         expect(sessionRemoveSpy).toHaveBeenCalledTimes(2);
