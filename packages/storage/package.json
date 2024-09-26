@@ -21,8 +21,7 @@
     "publint": "^0.2.8",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^2.1.1",
-    "vitest-plugin-random-seed": "^1.1.0"
+    "vitest": "^2.1.1"
   },
   "repository": {
     "type": "git",
