@@ -16,11 +16,12 @@
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
     "@types/chrome": "^0.0.268",
+    "@webext-core/fake-browser": "^1.3.1",
     "oxlint": "^0.9.1",
     "publint": "^0.2.8",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^1.6.0",
+    "vitest": "^2.1.1",
     "vitest-plugin-random-seed": "^1.1.0"
   },
   "repository": {
