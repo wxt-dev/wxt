@@ -76,12 +76,6 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
-      'zip:start': false,
-      'zip:extension:start': false,
-      'zip:extension:done': false,
-      'zip:sources:start': false,
-      'zip:sources:done': false,
-      'zip:done': false,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -92,10 +86,43 @@ describe('Hooks', () => {
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 1,
       'vite:devServer:extendConfig': false,
+      'zip:start': false,
+      'zip:extension:start': false,
+      'zip:extension:done': false,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': false,
     });
   });
 
   it('zip should call hooks', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/popup.html', '<html></html>');
+
+    await project.zip({ hooks });
+
+    expectHooksToBeCalled({
+      ready: true,
+      'prepare:types': true,
+      'prepare:publicPaths': true,
+      'build:before': true,
+      'build:done': true,
+      'build:publicAssets': true,
+      'build:manifestGenerated': true,
+      'entrypoints:grouped': true,
+      'entrypoints:resolved': true,
+      'vite:build:extendConfig': 1,
+      'vite:devServer:extendConfig': false,
+      'zip:start': true,
+      'zip:extension:start': true,
+      'zip:extension:done': true,
+      'zip:sources:start': false,
+      'zip:sources:done': false,
+      'zip:done': true,
+    });
+  });
+
+  it('zip -b firefox should call hooks', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/popup.html', '<html></html>');
 
