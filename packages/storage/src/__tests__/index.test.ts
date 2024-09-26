@@ -19,7 +19,7 @@ async function waitForInit() {
   return new Promise((res) => setTimeout(res));
 }
 
-describe('Storage Utils', () => {
+describe('Storage', () => {
   beforeEach(() => {
     fakeBrowser.reset();
     storage.unwatch();
