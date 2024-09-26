@@ -294,9 +294,6 @@ importers:
       vitest:
         specifier: ^2.1.1
         version: 2.1.1(@types/node@20.14.12)(happy-dom@14.12.3)(sass@1.77.8)
-      vitest-plugin-random-seed:
-        specifier: ^1.1.0
-        version: 1.1.0(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8))
 
   packages/wxt:
     dependencies:
