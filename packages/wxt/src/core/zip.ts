@@ -20,6 +20,7 @@ import { normalizePath } from './utils/paths';
 export async function zip(config?: InlineConfig): Promise<string[]> {
   await registerWxt('build', config);
   const output = await internalBuild();
+  await wxt.hooks.callHook('zip:start', wxt);
 
   const start = Date.now();
   wxt.logger.info('Zipping extension...');
@@ -42,17 +43,18 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   await fs.ensureDir(wxt.config.outBaseDir);
 
   // ZIP output directory
-
+  await wxt.hooks.callHook('zip:extension:start', wxt);
   const outZipFilename = applyTemplate(wxt.config.zip.artifactTemplate);
   const outZipPath = path.resolve(wxt.config.outBaseDir, outZipFilename);
   await zipDir(wxt.config.outDir, outZipPath, {
     exclude: wxt.config.zip.exclude,
   });
   zipFiles.push(outZipPath);
+  await wxt.hooks.callHook('zip:extension:done', wxt, outZipPath);
 
   // ZIP sources for Firefox
-
   if (wxt.config.browser === 'firefox') {
+    await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
@@ -71,6 +73,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       additionalFiles: downloadedPackages,
     });
     zipFiles.push(sourcesZipPath);
+    await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
   }
 
   await printFileList(
@@ -80,8 +83,11 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     zipFiles,
   );
 
+  await wxt.hooks.callHook('zip:done', wxt, zipFiles);
+
   return zipFiles;
 }
+
 async function zipDir(
   directory: string,
   outputPath: string,
