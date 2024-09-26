@@ -14,19 +14,19 @@ import {
   WxtModuleWithMetadata,
   ResolvedEslintrc,
   Eslintrc,
-} from '../../../types';
+} from '../types';
 import path from 'node:path';
-import { createFsCache } from '../../utils/cache';
+import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullablyRequired } from '../types';
+import { NullablyRequired } from './utils/types';
 import fs from 'fs-extra';
-import { normalizePath } from '../paths';
+import { normalizePath } from './utils/paths';
 import glob from 'fast-glob';
-import { builtinModules } from '../../../builtin-modules';
-import { getEslintVersion } from '../eslint';
-import { safeStringToNumber } from '../number';
-import { loadEnv } from '../env';
+import { builtinModules } from '../builtin-modules';
+import { getEslintVersion } from './utils/eslint';
+import { safeStringToNumber } from './utils/number';
+import { loadEnv } from './utils/env';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any

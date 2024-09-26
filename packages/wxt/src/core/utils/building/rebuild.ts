@@ -1,6 +1,6 @@
 import type { Manifest } from 'wxt/browser';
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
-import { generateTypesDir } from './generate-wxt-dir';
+import { generateWxtDir } from '../../generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
@@ -37,7 +37,7 @@ export async function rebuild(
   const spinner = ora(`Preparing...`).start();
 
   // Update types directory with new files and types
-  await generateTypesDir(allEntrypoints).catch((err) => {
+  await generateWxtDir(allEntrypoints).catch((err) => {
     wxt.logger.warn('Failed to update .wxt directory:', err);
     // Throw the error if doing a regular build, don't for dev mode.
     if (wxt.config.command === 'build') throw err;
