@@ -1,0 +1,61 @@
+{
+  "name": "@wxt-dev/storage",
+  "description": "Wrapper around chrome.storage APIs for web extensions",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "buildc -- unbuild",
+    "check": "buildc --deps-only -- check",
+    "test": "buildc --deps-only -- vitest"
+  },
+  "dependencies": {
+    "async-mutex": "^0.5.0",
+    "dequal": "^2.0.3"
+  },
+  "devDependencies": {
+    "@aklinker1/check": "^1.4.5",
+    "@types/chrome": "^0.0.268",
+    "oxlint": "^0.9.1",
+    "publint": "^0.2.8",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0",
+    "vitest": "^1.6.0",
+    "vitest-plugin-random-seed": "^1.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/storage"
+  },
+  "homepage": "https://wxt.dev/guide/extension-apis/storage.html",
+  "keywords": [
+    "wxt",
+    "storage",
+    "web-extension",
+    "chrome-extension",
+    "extension"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}
