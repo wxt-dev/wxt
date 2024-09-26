@@ -387,9 +387,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       throw Error(`"browser.storage.${storageArea}" is undefined`);
     return area;
   };
-  const watchListeners = new Set<
-    (changes: chrome.storage.StorageChange) => void
-  >();
+  const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
   return {
     getItem: async (key) => {
       const res = await getStorageArea().get(key);
@@ -429,9 +427,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
     watch(key, cb) {
-      const listener = (changes: {
-        [key: string]: chrome.storage.StorageChange;
-      }) => {
+      const listener = (changes: StorageAreaChanges) => {
         const change = changes[key];
         if (change == null) return;
         if (dequal(change.newValue, change.oldValue)) return;
@@ -693,6 +689,10 @@ export interface WxtStorageItemOptions<T> {
    */
   migrations?: Record<number, (oldValue: any) => any>;
 }
+
+export type StorageAreaChanges = {
+  [key: string]: chrome.storage.StorageChange;
+};
 
 /**
  * Same as `Partial`, but includes `| null`. It makes all the properties of an object optional and
