@@ -418,45 +418,6 @@ export interface WxtHooks {
    * @param viteConfig The config that will be used to build the entrypoints. Can be updated by reference.
    */
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
-
-  /**
-   * Called after building the extension, right before WXT begins zipping files.
-   * @param wxt The configured WXT object
-   */
-  'zip:start': (wxt: Wxt) => HookResult;
-
-  /**
-   * Called before zipping the extension files.
-   * @param wxt The configured WXT object
-   */
-  'zip:extension:start': (wxt: Wxt) => HookResult;
-
-  /**
-   * Called after zipping the extension files.
-   * @param wxt The configured WXT object
-   * @param zipPath The path to the created extension zip file
-   */
-  'zip:extension:done': (wxt: Wxt, zipPath: string) => HookResult;
-
-  /**
-   * Called before zipping the source files (for Firefox).
-   * @param wxt The configured WXT object
-   */
-  'zip:sources:start': (wxt: Wxt) => HookResult;
-
-  /**
-   * Called after zipping the source files (for Firefox).
-   * @param wxt The configured WXT object
-   * @param zipPath The path to the created sources zip file
-   */
-  'zip:sources:done': (wxt: Wxt, zipPath: string) => HookResult;
-
-  /**
-   * Called after the entire zip process is complete.
-   * @param wxt The configured WXT object
-   * @param zipFiles An array of paths to all created zip files
-   */
-  'zip:done': (wxt: Wxt, zipFiles: string[]) => HookResult;
 }
 
 export interface BuildOutput {
