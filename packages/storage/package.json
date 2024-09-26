@@ -7,7 +7,8 @@
   "scripts": {
     "build": "buildc -- unbuild",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "pnpm -s test --coverage"
   },
   "dependencies": {
     "async-mutex": "^0.5.0",
