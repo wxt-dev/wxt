@@ -542,8 +542,8 @@ To use `injectScript`, we need two entrypoints, one content script and one unlis
 <!-- prettier-ignore -->
 ```html
 📂 entrypoints/
-   example.content.ts
-   example-main-world.ts
+   📄 example.content.ts
+   📄 example-main-world.ts
 ```
 
 ```ts

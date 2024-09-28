@@ -12,11 +12,11 @@ Here's an example set of entrypoints:
 ```html
 📂 entrypoints/
    📂 popup/
-      index.html
-      main.ts
-      style.css
-   background.ts
-   content.ts
+      📄 index.html
+      📄 main.ts
+      📄 style.css
+   📄 background.ts
+   📄 content.ts
 ```
 
 [[toc]]
@@ -54,14 +54,14 @@ An entrypoint can be defined as a single file or directory with an `index` file 
 <!-- prettier-ignore -->
 ```html [Single File]
 📂 entrypoints/
-   background.ts
+   📄 background.ts
 ```
 
 <!-- prettier-ignore -->
 ```html [Directory]
 📂 entrypoints/
    📂 background/
-      index.ts
+      📄 index.ts
 ```
 
 :::

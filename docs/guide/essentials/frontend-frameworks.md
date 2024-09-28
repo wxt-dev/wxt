@@ -74,12 +74,19 @@ Usually, this means each entrypoint should be a directory with it's own files in
 
 <!-- prettier-ignore -->
 ```html
-📂 {srcDir}/ 📂 assets/ <------------------ Put shared assets here 📄
-tailwind.css 📂 components/ 📄 Button.tsx 📂 entrypoints/ 📂 options/ <---------
-Use a folder with an index.html file in it 📁 pages/ <--------- A good place to
-put your router pages if you have them 📄 index.html 📄 App.tsx 📄 main.tsx
-<--------- Create and mount your app here 📄 style.css <--------- Have
-entrypoint-specific styles to apply? 📄 router.ts
+📂 {srcDir}/
+   📂 assets/          <---------- Put shared assets here
+      📄 tailwind.css
+   📂 components/
+      📄 Button.tsx
+   📂 entrypoints/
+      📂 options/       <--------- Use a folder with an index.html file in it
+         📁 pages/      <--------- A good place to put your router pages if you have them
+         📄 index.html
+         📄 App.tsx
+         📄 main.tsx    <--------- Create and mount your app here
+         📄 style.css   <--------- Have entrypoint-specific styles to apply?
+         📄 router.ts
 ```
 
 ## Configuring Routers

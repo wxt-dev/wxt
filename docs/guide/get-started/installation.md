@@ -118,6 +118,6 @@ Once you've ran the `dev` command, continue to [Next Steps](#next-steps)!
 
 ## Next Steps
 
-- Read the [Core Concepts](/guide/core-concepts/project-structure) to learn the basics of your new project
-- Configure automatic browser startup during dev mode: [Configuration > Browser Startup](/guide/config/browser-startup)
+- Keep reading on about WXT's [Project Structure](/guide/essentials/project-structure) and other essential concepts to learn
+- Configure [automatic browser startup](/guide/config/browser-startup) during dev mode
 - Explore [WXT's example library](/examples) to see how to use specific APIs or perform common tasks

@@ -4,10 +4,24 @@ WXT follows a strict project structure. By default, it's a flat folder structure
 
 <!-- prettier-ignore -->
 ```html
-📂 {rootDir}/ 📁 .output/ 📁 .wxt/ 📁 assets/ 📁 components/ 📁 composables/ 📁
-entrypoints/ 📁 hooks/ 📁 modules/ 📁 public/ 📁 utils/ 📄 .env 📄 .env.publish
-📄 app.config.ts 📄 package.json 📄 tsconfig.json 📄 web-ext.config.ts 📄
-wxt.config.ts
+📂 {rootDir}/
+   📁 .output/
+   📁 .wxt/
+   📁 assets/
+   📁 components/
+   📁 composables/
+   📁 entrypoints/
+   📁 hooks/
+   📁 modules/
+   📁 public/
+   📁 utils/
+   📄 .env
+   📄 .env.publish
+   📄 app.config.ts
+   📄 package.json
+   📄 tsconfig.json
+   📄 web-ext.config.ts
+   📄 wxt.config.ts
 ```
 
 Here's a brief summary of each of these files and directories:
@@ -43,10 +57,25 @@ After enabling it, your project structure should look like this:
 
 <!-- prettier-ignore -->
 ```html
-📂 {rootDir}/ 📁 .output/ 📁 .wxt/ 📂 src/ 📁 assets/ 📁 components/ 📁
-composables/ 📁 entrypoints/ 📁 hooks/ 📁 modules/ 📁 public/ 📁 utils/ 📄
-app.config.ts 📄 .env 📄 .env.publish 📄 package.json 📄 tsconfig.json 📄
-web-ext.config.ts 📄 wxt.config.ts
+📂 {rootDir}/
+📁 .output/
+📁 .wxt/
+📂 src/
+   📁 assets/
+   📁 components/
+   📁 composables/
+   📁 entrypoints/
+   📁 hooks/
+   📁 modules/
+   📁 public/
+   📁 utils/
+   📄 app.config.ts
+📄 .env
+📄 .env.publish
+📄 package.json
+📄 tsconfig.json
+📄 web-ext.config.ts
+📄 wxt.config.ts
 ```
 
 You can configure some other project folders as well. See the [wxt.config.ts file](/guide/config/wxt#directories) docs for more details.
