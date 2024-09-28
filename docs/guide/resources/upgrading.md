@@ -10,7 +10,7 @@ pnpm i wxt@latest
 
 If there was a major version change, follow the steps below to fix breaking changes.
 
-## v0.18.0 &rarr; v0.19.0
+## v0.18.5 &rarr; v0.19.0
 
 ### `vite-node` Entrypoint Loader
 
@@ -85,6 +85,48 @@ WXT no longer ships with Common JS support. If you're using CJS, here's your mig
 2. Change the file extension of any `.js` files that use CJS syntax to `.cjs`, or update them to use EMS syntax.
 
 Vite also provides steps for migrating to ESM. Check them out for more details: https://vitejs.dev/guide/migration#deprecate-cjs-node-api
+
+## v0.18.0 &rarr; v0.18.5
+
+> When this version was released, it was not considered a breaking change... but it should have been.
+
+### New `modules/` Directory
+
+WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/go-further/reusable-modules).
+
+If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
+
+You have two options:
+
+1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     modulesDir: 'wxt-modules', // defaults to "modules"
+   });
+   ```
+2. Rename your `modules` directory to something else.
+
+## v0.18.0 &rarr; v0.18.5
+
+> When this version was released, it was not considered a breaking change... but it should have been.
+
+### New `modules/` Directory
+
+WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/go-further/reusable-modules).
+
+If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
+
+You have two options:
+
+1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     modulesDir: 'wxt-modules', // defaults to "modules"
+   });
+   ```
+2. Rename your `modules` directory to something else.
 
 ## v0.17.0 &rarr; v0.18.0
 

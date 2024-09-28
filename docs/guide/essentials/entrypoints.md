@@ -8,7 +8,8 @@ All files inside the `entrypoints/` directory are built by WXT and bundled into 
 
 Here's an example set of entrypoints:
 
-```sh
+<!-- prettier-ignore -->
+```html
 📂 entrypoints/
    📂 popup/
       index.html
@@ -50,12 +51,14 @@ An entrypoint can be defined as a single file or directory with an `index` file 
 
 :::code-group
 
-```sh [Single File]
+<!-- prettier-ignore -->
+```html [Single File]
 📂 entrypoints/
    background.ts
 ```
 
-```sh [Directory]
+<!-- prettier-ignore -->
+```html [Directory]
 📂 entrypoints/
    📂 background/
       index.ts
@@ -178,7 +181,7 @@ export default defineContentScript({
   excludeMatches: undefined | [],
   includeGlobs: undefined | [],
   excludeGlobs: undefined | [],
-  allFrames: undefined | [],
+  allFrames: undefined | true | false,
   runAt: undefined | 'document_start' | 'document_end' | 'document_idle',
   matchAboutBlank: undefined | true | false,
   matchOriginAsFallback: undefined | true | false,

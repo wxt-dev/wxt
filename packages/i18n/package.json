@@ -38,9 +38,10 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.3.1",
+    "@aklinker1/check": "^1.4.5",
     "@types/chrome": "^0.0.268",
     "@types/node": "^20.14.2",
+    "oxlint": "^0.9.1",
     "publint": "^0.2.8",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",

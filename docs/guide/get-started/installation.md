@@ -35,6 +35,10 @@ npx wxt@latest init
 <small style="opacity: 50%">All templates use TypeScript by default. To use JavaScript, change the file extensions.</small>
 :::
 
+### Demo
+
+![wxt init demo](/assets/init-demo.gif)
+
 Once you've ran the `dev` command, continue to [Next Steps](#next-steps)!
 
 ## From Scratch

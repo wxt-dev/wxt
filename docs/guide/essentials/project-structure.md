@@ -2,6 +2,7 @@
 
 WXT follows a strict project structure. By default, it's a flat folder structure that looks like this:
 
+<!-- prettier-ignore -->
 ```html
 📂 {rootDir}/ 📁 .output/ 📁 .wxt/ 📁 assets/ 📁 components/ 📁 composables/ 📁
 entrypoints/ 📁 hooks/ 📁 modules/ 📁 public/ 📁 utils/ 📄 .env 📄 .env.publish
@@ -40,6 +41,7 @@ export default defineConfig({
 
 After enabling it, your project structure should look like this:
 
+<!-- prettier-ignore -->
 ```html
 📂 {rootDir}/ 📁 .output/ 📁 .wxt/ 📂 src/ 📁 assets/ 📁 components/ 📁
 composables/ 📁 entrypoints/ 📁 hooks/ 📁 modules/ 📁 public/ 📁 utils/ 📄

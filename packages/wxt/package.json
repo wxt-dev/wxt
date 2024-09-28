@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.19.7",
+  "version": "0.19.10",
   "description": "Next gen framework for developing web extensions",
   "repository": {
     "type": "git",
@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
+    "@types/chrome": "^0.0.269",
     "@types/webextension-polyfill": "^0.10.7",
     "@webext-core/fake-browser": "^1.3.1",
     "@webext-core/isolated-element": "^1.1.2",
@@ -94,8 +95,9 @@
     "consola": "^3.2.3",
     "defu": "^6.1.4",
     "dequal": "^2.0.3",
+    "dotenv": "^16.4.5",
     "esbuild": "^0.23.0",
-    "execa": "^9.3.0",
+    "execa": "^9.3.1",
     "fast-glob": "^3.3.2",
     "filesize": "^10.1.4",
     "fs-extra": "^11.2.0",
@@ -114,20 +116,21 @@
     "nypm": "^0.3.9",
     "ohash": "^1.1.3",
     "open": "^10.1.0",
-    "ora": "^8.0.1",
+    "ora": "^8.1.0",
+    "perfect-debounce": "^1.0.0",
     "picocolors": "^1.0.1",
     "prompts": "^2.4.2",
     "publish-browser-extension": "^2.1.3",
-    "unimport": "^3.9.1",
+    "scule": "^1.3.0",
+    "unimport": "^3.11.1",
     "vite": "^5.3.5",
     "vite-node": "^2.0.4",
     "web-ext-run": "^0.2.1",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.3.1",
+    "@aklinker1/check": "^1.4.5",
     "@faker-js/faker": "^8.4.1",
-    "@types/chrome": "^0.0.269",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/natural-compare": "^1.4.3",
@@ -137,6 +140,7 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^14.12.3",
     "lodash.merge": "^4.6.2",
+    "oxlint": "^0.9.1",
     "p-map": "^7.0.2",
     "publint": "^0.2.9",
     "tsx": "4.15.7",
@@ -144,9 +148,6 @@
     "unbuild": "^2.0.0",
     "vitest": "^2.0.4",
     "vitest-plugin-random-seed": "^1.1.0"
-  },
-  "peerDependencies": {
-    "@types/chrome": "*"
   },
   "peerDependenciesMeta": {
     "@types/chrome": {

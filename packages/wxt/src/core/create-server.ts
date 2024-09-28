@@ -1,3 +1,4 @@
+import { debounce } from 'perfect-debounce';
 import {
   BuildStepOutput,
   EntrypointGroup,
@@ -144,7 +145,7 @@ function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
-  return async (event: string, path: string) => {
+  const cb = async (event: string, path: string) => {
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -211,11 +212,16 @@ function createFileReloader(server: WxtDevServer) {
             wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
             break;
         }
-      } catch (err) {
+      } catch {
         // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
       }
     });
   };
+
+  return debounce(cb, wxt.config.dev.server!.watchDebounce, {
+    leading: true,
+    trailing: false,
+  });
 }
 
 /**

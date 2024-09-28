@@ -539,7 +539,8 @@ Instead, WXT recommends injecting a script into the main world manually using it
 
 To use `injectScript`, we need two entrypoints, one content script and one unlisted script:
 
-```sh
+<!-- prettier-ignore -->
+```html
 📂 entrypoints/
    example.content.ts
    example-main-world.ts

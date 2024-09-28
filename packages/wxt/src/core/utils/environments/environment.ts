@@ -42,7 +42,7 @@ export function applyGlobals(globals: EnvGlobals): void {
     try {
       // @ts-expect-error: Untyped key on globalThis
       globalThis[key] = envValue;
-    } catch (err) {
+    } catch {
       // ignore any globals that can't be set
     }
   });

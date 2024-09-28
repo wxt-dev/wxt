@@ -830,18 +830,55 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
  * Manifest customization available in the `wxt.config.ts` file. You cannot configure entrypoints
  * here, they are configured inline.
  */
-export type UserManifest = Partial<
-  Omit<
-    Manifest.WebExtensionManifest,
+export type UserManifest = {
+  [key in keyof chrome.runtime.ManifestV3 as key extends
+    | 'action'
     | 'background'
     | 'chrome_url_overrides'
     | 'devtools_page'
     | 'manifest_version'
     | 'options_page'
     | 'options_ui'
+    | 'permissions'
     | 'sandbox'
-  >
->;
+    | 'web_accessible_resources'
+    ? never
+    : key]?: chrome.runtime.ManifestV3[key];
+} & {
+  // Add any Browser-specific or MV2 properties that WXT supports here
+  action?: chrome.runtime.ManifestV3['action'] & {
+    browser_style?: boolean;
+  };
+  browser_action?: chrome.runtime.ManifestV2['browser_action'] & {
+    browser_style?: boolean;
+  };
+  page_action?: chrome.runtime.ManifestV2['page_action'] & {
+    browser_style?: boolean;
+  };
+  browser_specific_settings?: {
+    gecko?: {
+      id?: string;
+      strict_min_version?: string;
+      strict_max_version?: string;
+      update_url?: string;
+    };
+    gecko_android?: {
+      strict_min_version?: string;
+      strict_max_version?: string;
+    };
+    safari?: {
+      strict_min_version?: string;
+      strict_max_version?: string;
+    };
+  };
+  permissions?: (
+    | chrome.runtime.ManifestPermissions
+    | (string & Record<never, never>)
+  )[];
+  web_accessible_resources?:
+    | string[]
+    | chrome.runtime.ManifestV3['web_accessible_resources'];
+};
 
 export type UserManifestFn = (
   env: ConfigEnv,
@@ -930,7 +967,7 @@ export interface ExtensionRunnerConfig {
    *   }
    * }
    */
-  chromiumPref?: string;
+  chromiumPref?: Record<string, any>;
   /**
    * By default, chrome opens a random port for debugging. Set this value to use a specific port.
    */
@@ -1107,6 +1144,9 @@ export interface WxtHooks {
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
+   * Use `wxt.builder.importEntrypoint` to load entrypoint options from the
+   * file, or manually define them.
+   *
    * @param wxt The configured WXT object
    * @param entrypoints The list of entrypoints to be built
    */
@@ -1124,11 +1164,53 @@ export interface WxtHooks {
    * @param entrypoints The list of files that will be copied into the output directory
    */
   'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
+  /**
+   * Called before the zip process starts.
+   * @param wxt The configured WXT object
+   */
+  'zip:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called before zipping the extension files.
+   * @param wxt The configured WXT object
+   */
+  'zip:extension:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called after zipping the extension files.
+   * @param wxt The configured WXT object
+   * @param zipPath The path to the created extension zip file
+   */
+  'zip:extension:done': (wxt: Wxt, zipPath: string) => HookResult;
+
+  /**
+   * Called before zipping the source files (for Firefox).
+   * @param wxt The configured WXT object
+   */
+  'zip:sources:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called after zipping the source files (for Firefox).
+   * @param wxt The configured WXT object
+   * @param zipPath The path to the created sources zip file
+   */
+  'zip:sources:done': (wxt: Wxt, zipPath: string) => HookResult;
+
+  /**
+   * Called after the entire zip process is complete.
+   * @param wxt The configured WXT object
+   * @param zipFiles An array of paths to all created zip files
+   */
+  'zip:done': (wxt: Wxt, zipFiles: string[]) => HookResult;
 }
 
 export interface Wxt {
   config: ResolvedConfig;
   hooks: Hookable<WxtHooks>;
+  /**
+   * Alias for `wxt.hooks.hook(...)`.
+   */
+  hook: Hookable<WxtHooks>['hook'];
   /**
    * Alias for config.logger
    */
@@ -1233,6 +1315,25 @@ export interface ResolvedConfig {
     server?: {
       port: number;
       hostname: string;
+      /**
+       * The milliseconds to debounce when a file is saved before reloading.
+       * The only way to set this option is to set the `WXT_WATCH_DEBOUNCE`
+       * environment variable, either globally (like in `.bashrc` file) or
+       * per-project (in `.env` file).
+       *
+       * For example:
+       * ```
+       * # ~/.zshrc
+       * export WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * or
+       * ```
+       * # .env
+       * WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * @default 800
+       */
+      watchDebounce: number;
     };
     reloadCommand: string | false;
   };
@@ -1375,7 +1476,7 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
    * Alternative to adding hooks in setup function with `wxt.hooks`. Hooks are
    * added before the `setup` function is called.
    */
-  hooks?: Partial<WxtHooks>;
+  hooks?: NestedHooks<WxtHooks>;
   /**
    * A custom function that can be used to setup hooks and call module-specific
    * APIs.

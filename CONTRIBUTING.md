@@ -1,6 +1,6 @@
 # Contributing
 
-Everyone is welcome to contribute to WXT!
+Everyone is welcome to contribute to **WXT**!
 
 If you are changing the docs or fixing a bug, feel free to fork and open a PR.
 
@@ -139,7 +139,7 @@ Releases are done with GitHub actions:
 
 Use [`taze`](https://www.npmjs.com/package/taze) to upgrade dependencies throughout the entire monorepo.
 
-```ts
+```sh
 pnpm dlx taze -r
 ```
 

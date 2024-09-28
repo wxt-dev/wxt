@@ -7,7 +7,8 @@ When `permissions`/`host_permissions` change during an update, depending on what
 You can test if your permission changes will result in a disabled extension:
 
 - Chromium: Use [Google's Extension Update Testing tool](https://github.com/GoogleChromeLabs/extension-update-testing-tool)
-- Firefox/Safari: Everyone breaks something in production eventually... 🫡 Good luck soldier
+- Firefox: See their [Test Permission Requests](https://extensionworkshop.com/documentation/develop/test-permission-requests/) page
+- Safari: Everyone breaks something in production eventually... 🫡 Good luck soldier
 
 ## Update Event
 

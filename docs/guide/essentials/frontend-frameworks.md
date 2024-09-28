@@ -72,6 +72,7 @@ Since web extensions usually contain multiple UIs accross multiple entrypoints (
 
 Usually, this means each entrypoint should be a directory with it's own files inside it. Here's the recommended folder structure:
 
+<!-- prettier-ignore -->
 ```html
 📂 {srcDir}/ 📂 assets/ <------------------ Put shared assets here 📄
 tailwind.css 📂 components/ 📄 Button.tsx 📂 entrypoints/ 📂 options/ <---------

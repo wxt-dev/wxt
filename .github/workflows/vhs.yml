@@ -1,0 +1,29 @@
+name: vhs
+on:
+  push:
+    paths:
+      - 'docs/tapes/*.tape'
+  workflow_dispatch:
+
+jobs:
+  vhs:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          install: 'false'
+      - name: Preinstall WXT
+        run: |
+          pnpm store add wxt@latest
+          pnpm dlx wxt@latest --version
+      - uses: charmbracelet/vhs-action@v2.1.0
+        with:
+          path: 'docs/tapes/init-demo.tape'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'docs: Update `wxt init` GIF'
+          # https://github.com/charmbracelet/vhs#output
+          file_pattern: 'docs/assets/*.gif'

@@ -1,5 +1,89 @@
 # Changelog
 
+## v0.19.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.9...wxt-v0.19.10)
+
+### 🔥 Performance
+
+- Reduce hypersensitive onChange of watcher ([#978](https://github.com/wxt-dev/wxt/pull/978))
+
+### 🩹 Fixes
+
+- Fix config manifest type ([#973](https://github.com/wxt-dev/wxt/pull/973))
+
+### 📖 Documentation
+
+- Examples reference outDir vs. outputDir ([#982](https://github.com/wxt-dev/wxt/pull/982))
+- Improved docs and links ([#970](https://github.com/wxt-dev/wxt/pull/970))
+
+### 🌊 Types
+
+- Fix `ExtensionRunnerConfig.chromiumPref` type ([fda1e18](https://github.com/wxt-dev/wxt/commit/fda1e18))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+- The-syndrome <meltdown-syndrome@proton.me>
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+
+## v0.19.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.8...wxt-v0.19.9)
+
+### 🚀 Enhancements
+
+- **modules:** Add `wxt.hook` alias for `wxt.hooks.hook` ([c5f78d0](https://github.com/wxt-dev/wxt/commit/c5f78d0))
+- Use `@types/chrome` for config manifest type ([#969](https://github.com/wxt-dev/wxt/pull/969))
+
+### 🩹 Fixes
+
+- Allow adding multiple hyphens in an entrypoint name ([#949](https://github.com/wxt-dev/wxt/pull/949))
+- Duplicate `BuildOutput.publicAssets` ([#951](https://github.com/wxt-dev/wxt/pull/951))
+- Properly overload `import.meta.env` with WXT's own environment globals ([#966](https://github.com/wxt-dev/wxt/pull/966))
+
+### 📖 Documentation
+
+- Add docs around `importEntrypoint` to relevant functions ([143b5ac](https://github.com/wxt-dev/wxt/commit/143b5ac))
+
+### 🌊 Types
+
+- **modules:** Use `NestedHooks` instead of `Partial` for hooks object ([0ebb013](https://github.com/wxt-dev/wxt/commit/0ebb013))
+
+### 🏡 Chore
+
+- Fix type error ([#946](https://github.com/wxt-dev/wxt/pull/946))
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- **deps:** Bump ora from 8.0.1 to 8.1.0 ([#961](https://github.com/wxt-dev/wxt/pull/961))
+- **deps:** Bump unimport from 3.9.1 to 3.11.1 ([#960](https://github.com/wxt-dev/wxt/pull/960))
+- **deps:** Bump execa from 9.3.0 to 9.3.1 ([#957](https://github.com/wxt-dev/wxt/pull/957))
+- Cleanup leftover E2E test artifacts ([#968](https://github.com/wxt-dev/wxt/pull/968))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+
+## v0.19.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.7...wxt-v0.19.8)
+
+### 🔥 Performance
+
+- Ignore output directories for all `vite.watcher` ([#924](https://github.com/wxt-dev/wxt/pull/924))
+
+### 🩹 Fixes
+
+- Fallback to GitHub API for listing templates when ungh is down ([#944](https://github.com/wxt-dev/wxt/pull/944))
+
+### 🏡 Chore
+
+- **types:** Cleanup types in wxt/browser/chrome ([#932](https://github.com/wxt-dev/wxt/pull/932))
+
+### ❤️ Contributors
+
+- 1natsu
+
 ## v0.19.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.6...wxt-v0.19.7)
