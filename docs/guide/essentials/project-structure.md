@@ -41,7 +41,7 @@ Here's a brief summary of each of these files and directories:
 - `package.json`: The standard file used by your package manager
 - `tsconfig.json`: Config telling TypeScript how to behave
 - `web-ext.config.ts`: Configure [Browser Startup](/guide/essentials/config/browser-startup)
-- `wxt.config.ts`: The [main config file](/guide/essentials/config/wxt) for WXT projects
+- `wxt.config.ts`: The main config file for WXT projects
 
 ## Adding a `src/` Directory
 
@@ -78,8 +78,6 @@ After enabling it, your project structure should look like this:
 📄 web-ext.config.ts
 📄 wxt.config.ts
 ```
-
-You can configure some other project folders as well. See the [wxt.config.ts file](/guide/essentials/config/wxt#directories) docs for more details.
 
 ## Customizing Other Directories
 

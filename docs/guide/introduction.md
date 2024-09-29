@@ -23,4 +23,4 @@ You should also be aware of [Chrome's extension docs](https://developer.chrome.c
 
 <br/>
 
-Alright, got a basic understanding of how web extensions are structured? Do you know how to access the extension APIs? Then continue to the [Installation page](/guide/get-started/installation) to create your first WXT extension.
+Alright, got a basic understanding of how web extensions are structured? Do you know how to access the extension APIs? Then continue to the [Installation page](/guide/installation) to create your first WXT extension.

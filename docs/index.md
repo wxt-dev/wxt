@@ -56,7 +56,7 @@ features:
   - icon: 📦
     title: Modular Architecture
     details: Reuse build-time and runtime-code across multiple extensions.
-    link: /guide/go-further/reusable-modules
+    link: /guide/essentials/wxt-modules
     linkText: Read docs
   - icon: 🖍️
     title: Bootstrap a New Project

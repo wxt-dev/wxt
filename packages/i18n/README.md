@@ -1,13 +1,13 @@
 # `@wxt-dev/i18n`
 
 > [!IMPORTANT]
-> You don't have to use `wxt` to use this package - it will work in any bundler setup. See [Installation without WXT](./installation#without-wxt) for more details.
+> You don't have to use `wxt` to use this package - it will work in any bundler setup. See [Installation without WXT](#without-wxt) for more details.
 
 `@wxt-dev/i18n` is a simple, type-safe wrapper around the `browser.i18n` APIs. It provides several benefits over the standard API:
 
 1. Simple messages file format
 2. Plural form support
-3. Integrates with the [I18n Ally VS Code extension](./editor-support#vscode)
+3. Integrates with the [I18n Ally VS Code extension](#vscode)
 
 It also provides several benefits over other non-web extension specific i18n packages:
 
@@ -84,7 +84,7 @@ And you're done! Using WXT, you get type-safety out of the box.
    > 2. Simple messages file format
    > 3. Type safety
    >
-   > See [Build Integrations](./build-integrations) to set it up.
+   > See [Build Integrations](#build-integrations) to set it up.
 
 3. Create the `i18n` object, export it, and use it wherever you want!
 
@@ -99,7 +99,7 @@ And you're done! Using WXT, you get type-safety out of the box.
 ## Messages File Format
 
 > [!DANGER]
-> You can only use the file format discussed on this page if you have [integrated `@wxt-dev/i18n` into your build process](./build-integrations). If you have not integrated it into your build process, you must use JSON files in the `_locales` directory, like a normal web extension.
+> You can only use the file format discussed on this page if you have [integrated `@wxt-dev/i18n` into your build process](#build-integrations). If you have not integrated it into your build process, you must use JSON files in the `_locales` directory, like a normal web extension.
 
 ### File Extensions
 
@@ -255,7 +255,7 @@ To use the custom messages file format, you'll need to use `@wxt-dev/i18n/build`
 
 ### WXT
 
-See [Installation with WXT](./installation#with-wxt).
+See [Installation with WXT](#with-wxt).
 
 But TLDR, all you need is:
 

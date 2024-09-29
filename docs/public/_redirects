@@ -51,7 +51,7 @@
 /guide/key-concepts/web-extension-polyfill.html               /TODO
 /guide/key-concepts/frontend-frameworks.html                  /TODO
 /guide/key-concepts/multiple-browsers.html                    /TODO
-/guide/go-further/entrypoint-loaders.html                     /TODO
+/guide/go-further/entrypoint-loaders.html                     /guide/essentials/config/entrypoint-loaders.html
 /guide/go-further/es-modules.html                             /TODO
 /guide/go-further/handling-updates.html                       /TODO
 /guide/go-further/custom-events.html                          /TODO
@@ -60,7 +60,7 @@
 /guide/go-further/vite.html                                   /TODO
 /guide/go-further/testing.html                                /TODO
 /guide/go-further/how-wxt-works.html                          /TODO
-/guide/go-further/reusable-modules.html                       /TODO
+/guide/go-further/reusable-modules.html                       /guide/essentials/wxt-modules.html
 /guide/extension-apis/messaging.html                          /TODO
 /guide/extension-apis/i18n.html                               /TODO
 /guide/extension-apis/storage.html                            /TODO

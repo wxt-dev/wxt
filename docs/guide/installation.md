@@ -1,6 +1,6 @@
 # Installation
 
-Bootstrap a new project, start from scratch, or [migrate an existing project](./migrate).
+Bootstrap a new project, start from scratch, or [migrate an existing project](/guide/resources/migrate).
 
 [[toc]]
 

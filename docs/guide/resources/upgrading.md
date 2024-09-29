@@ -27,7 +27,7 @@ export default defineConfig({
 });
 ```
 
-> [Read the full docs](/guide/go-further/entrypoint-loaders#vite-node) for more information.
+> [Read the full docs](/guide/essentials/config/entrypoint-loaders#vite-node) for more information.
 
 :::details This change enables:
 
@@ -92,7 +92,7 @@ Vite also provides steps for migrating to ESM. Check them out for more details: 
 
 ### New `modules/` Directory
 
-WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/go-further/reusable-modules).
+WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/essentials/wxt-modules).
 
 If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
 
@@ -113,7 +113,7 @@ You have two options:
 
 ### New `modules/` Directory
 
-WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/go-further/reusable-modules).
+WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/essentials/wxt-modules).
 
 If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
 
