@@ -897,7 +897,7 @@ describe('Storage Utils', () => {
   });
 
   describe('Batch Item Operations', () => {
-    describe('getItemValues', () => {
+    describe('getItems', () => {
       it('should get the values of multiple storage items efficiently', async () => {
         const item1 = storage.defineItem<number>('local:item1');
         const item2 = storage.defineItem<string>('session:item2');
@@ -912,11 +912,7 @@ describe('Storage Utils', () => {
         const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
         const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
 
-        const values = await storage.getItemValues({
-          item1,
-          item2,
-          item3,
-        });
+        const values = await storage.getItems([item1, item2, item3]);
 
         expect(values).toEqual({
           item1: 42,
@@ -943,11 +939,7 @@ describe('Storage Utils', () => {
         const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
         const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
 
-        const values = await storage.getItemValues({
-          item1,
-          item2,
-          item3,
-        });
+        const values = await storage.getItems([item1, item2, item3]);
 
         expect(values).toEqual({
           item1: 0,

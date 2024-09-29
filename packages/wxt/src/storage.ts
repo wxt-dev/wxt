@@ -129,19 +129,33 @@ function createStorage(): WxtStorage {
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
       const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
+      const itemMap = new Map<string, WxtStorageItem<any, any>>();
+
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
         let opts: GetItemOptions<any> | undefined;
+        let item: WxtStorageItem<any, any> | undefined;
+
         if (typeof key === 'string') {
           keyStr = key;
-        } else {
+        } else if ('key' in key) {
           keyStr = key.key;
           opts = key.options;
+        } else {
+          // This is a WxtStorageItem
+          item = key;
+          keyStr = `${item.storageArea}:${item.storageKey}` as StorageItemKey;
+          opts = { fallback: item.fallback };
         }
+
         const { driverArea, driverKey } = resolveKey(keyStr);
-        const keys = areaToKeyMap.get(driverArea) ?? [];
-        areaToKeyMap.set(driverArea, keys.concat(driverKey));
+        const areaKeys = areaToKeyMap.get(driverArea) ?? [];
+        areaKeys.push(driverKey);
+        areaToKeyMap.set(driverArea, areaKeys);
         keyToOptsMap.set(keyStr, opts);
+        if (item) {
+          itemMap.set(keyStr, item);
+        }
       });
 
       const results = await Promise.all(
@@ -158,7 +172,27 @@ function createStorage(): WxtStorage {
           });
         }),
       );
-      return results.flat();
+
+      const flatResults = results.flat();
+
+      if (itemMap.size > 0) {
+        // If WxtStorageItems were passed, return an object
+        const returnObj: Record<string, any> = {};
+        flatResults.forEach(({ key, value }) => {
+          const item = itemMap.get(key);
+          if (item) {
+            const itemKey = keys.find((k) => k === item) as WxtStorageItem<
+              any,
+              any
+            >;
+            returnObj[itemKey.storageKey] = value;
+          }
+        });
+        return returnObj;
+      } else {
+        // Otherwise, return the array of results (original behavior)
+        return flatResults;
+      }
     },
     getMeta: async (key) => {
       const { driver, driverKey } = resolveKey(key);
@@ -364,47 +398,6 @@ function createStorage(): WxtStorage {
             cb(newValue ?? getFallback(), oldValue ?? getFallback()),
           ),
         migrate,
-      };
-    },
-    getItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
-      items: T,
-    ) => {
-      const returnObj: Record<string, any> = {};
-
-      const areaToItemListMap = new Map<
-        StorageArea,
-        Array<{ key: string; storageKey: string; fallback: any }>
-      >();
-      Object.entries(items).forEach(([key, item]) => {
-        const list = areaToItemListMap.get(item.storageArea) ?? [];
-        list.push({
-          key,
-          storageKey: item.storageKey,
-          fallback: item.fallback,
-        });
-        areaToItemListMap.set(item.storageArea, list);
-      });
-
-      for (const [storageArea, itemList] of areaToItemListMap.entries()) {
-        const driver = getDriver(storageArea);
-        const storageKeys = itemList.map((item) => item.storageKey);
-        const results = await driver.getItems(storageKeys);
-        const valueMap = results.reduce<Record<string, any>>(
-          (map, { key, value }) => {
-            map[key] = value;
-            return map;
-          },
-          {},
-        );
-
-        itemList.forEach(({ key, storageKey, fallback }) => {
-          const value = valueMap[storageKey];
-          returnObj[key] = getValueOrFallback(value, fallback);
-        });
-      }
-
-      return returnObj as {
-        [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>>;
       };
     },
     getItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
@@ -656,9 +649,11 @@ export interface WxtStorage {
    */
   getItems(
     keys: Array<
-      StorageItemKey | { key: StorageItemKey; options?: GetItemOptions<any> }
+      | StorageItemKey
+      | { key: StorageItemKey; options?: GetItemOptions<any> }
+      | WxtStorageItem<any, any>
     >,
-  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
+  ): Promise<Array<{ key: StorageItemKey; value: any }> | Record<string, any>>;
   /**
    * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
    * is not an object, it returns an empty object.
@@ -759,21 +754,6 @@ export interface WxtStorage {
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
 
-  /**
-   * Get the values of multiple storage items.
-   *
-   * @param items - The storage items to get the values of.
-   * @returns An object with the values of the storage items.
-   *
-   * @example
-   * const storage = await storage.getItemValues({
-   *   "local:installDate": storage.defineItem("local:installDate"),
-   *   "session:someCounter": storage.defineItem("session:someCounter"),
-   * });
-   */
-  getItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
-    items: T,
-  ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getValue']>> }>;
   /**
    * Get the metadata of multiple storage items.
    *
