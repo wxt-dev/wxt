@@ -58,11 +58,22 @@ For a full list of methods available, see the [API reference](/api/reference/wxt
 
 ## Watchers
 
-To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key:
+To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key or multiple keys:
 
 ```ts
+// Watch a single key
 const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
   console.log('Count changed:', { newCount, oldCount });
+});
+
+// Watch multiple keys
+const unwatchMultiple = storage.watch({
+  'local:counter1': (newCount1, oldCount1) => {
+    console.log('Counter 1 changed:', { newCount1, oldCount1 });
+  },
+  'local:counter2': (newCount2, oldCount2) => {
+    console.log('Counter 2 changed:', { newCount2, oldCount2 });
+  },
 });
 ```
 
@@ -143,15 +154,15 @@ For a full list of properties and methods available, see the [API reference](/ap
 
 When dealing with multiple storage items, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods to handle bulk operations on defined storage items:
 
-- **`getItemValues`**: Retrieve values of multiple storage items.
+- **`getItems`**: Retrieve values of multiple storage items or keys.
 - **`getItemMetas`**: Retrieve metadata for multiple storage items.
 - **`setItemValues`**: Set values for multiple storage items.
 - **`setItemMetas`**: Update metadata for multiple storage items.
 - **`deleteItemValues`**: Remove values (and optionally metadata) of multiple storage items.
 
-#### Getting Values of Multiple Storage Items
+#### Getting Values of Multiple Storage Items or Keys
 
-You can retrieve the values of multiple storage items in a single call using `getItemValues`:
+You can retrieve the values of multiple storage items or keys in a single call using `getItems`:
 
 ```ts
 const item1 = storage.defineItem<string>('local:item1', {
@@ -160,7 +171,8 @@ const item1 = storage.defineItem<string>('local:item1', {
 const item2 = storage.defineItem<number>('local:item2', { fallback: 0 });
 const item3 = storage.defineItem<boolean>('local:item3', { fallback: false });
 
-const values = await storage.getItemValues({ item1, item2, item3 });
+// Using defined storage items
+const values = await storage.getItems([item1, item2, item3]);
 
 console.log(values);
 // Output:
@@ -169,7 +181,24 @@ console.log(values);
 //   item2: 0,
 //   item3: false
 // }
+
+// Using keys directly
+const keyValues = await storage.getItems([
+  'local:item1',
+  'local:item2',
+  'local:item3',
+]);
+
+console.log(keyValues);
+// Output:
+// [
+//   { key: 'local:item1', value: 'default1' },
+//   { key: 'local:item2', value: 0 },
+//   { key: 'local:item3', value: false }
+// ]
 ```
+
+The `getItems` function can handle both storage items and direct keys. When using storage items, it returns an object with the item keys as properties. When using direct keys, it returns an array of key-value pairs.
 
 #### Getting Metadata of Multiple Storage Items
 
