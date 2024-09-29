@@ -29,7 +29,7 @@ export default defineAppConfig({
 ```
 
 :::warning
-This file is commited to the repo, so don't put any secrets here. Instead, use [Environment Variables](#environment variables)
+This file is commited to the repo, so don't put any secrets here. Instead, use [Environment Variables](#environment-variables)
 :::
 
 To access runtime config, WXT provides the `useAppConfig` function:
@@ -62,13 +62,13 @@ You can use them in the `app.config.ts` file.
 declare module 'wxt/sandbox' {
   export interface WxtAppConfig {
     apiKey?: string;
-    skipTutorial: boolean;
+    skipWelcome: boolean;
   }
 }
 
 export default defineAppConfig({
   apiKey: import.meta.env.VITE_API_KEY,
-  skipTutorial: import.meta.env.VITE_SKIP_WELCOME === 'true',
+  skipWelcome: import.meta.env.VITE_SKIP_WELCOME === 'true',
 });
 ```
 

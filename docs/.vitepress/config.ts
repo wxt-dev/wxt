@@ -66,7 +66,7 @@ export default defineConfig({
     ],
 
     nav: [
-      navItem('Guide', '/guide/get-started/installation'),
+      navItem('Guide', '/guide/installation'),
       navItem('Examples', '/examples'),
       navItem('API', '/api/reference/wxt'),
       navItem('---', [
@@ -89,7 +89,7 @@ export default defineConfig({
 
     sidebar: {
       '/guide/': menuRoot([
-        menuGroup('Get Started', '/guide/get-started/', [
+        menuGroup('Get Started', '/guide/', [
           menuItem('Introduction', 'introduction.md'),
           menuItem('Installation', 'installation.md'),
         ]),
@@ -100,12 +100,14 @@ export default defineConfig({
             'Configuration',
             '/guide/essentials/config/',
             [
-              menuItem('wxt.config.ts', 'wxt.md'),
               menuItem('Manifest', 'manifest.md'),
               menuItem('Browser Startup', 'browser-startup.md'),
+              menuItem('Auto-imports', 'auto-imports.md'),
+              menuItem('Vite', 'vite.md'),
               menuItem('Runtime Config', 'runtime.md'),
               menuItem('TypeScript', 'typescript.md'),
-              menuItem('Vite', 'vite.md'),
+              menuItem('Hooks', 'hooks.md'),
+              menuItem('Entrypoint Loaders', 'entrypoint-loaders.md'),
             ],
             true,
           ),

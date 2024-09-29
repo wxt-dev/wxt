@@ -163,7 +163,7 @@ export default defineBackground({
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
-See [Content Script UI](/guide/content-scripts/ui) for more info on creating UIs and including CSS in content scripts.
+See [Content Script UI](/guide/essentials/content-scripts) for more info on creating UIs and including CSS in content scripts.
 
 <EntrypointPatterns
   :patterns="[
@@ -440,7 +440,7 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
 
 Follow Vite's guide to setup your preprocessor of choice: https://vitejs.dev/guide/features.html#css-pre-processors
 
-CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/building/content-scripts#css) docs.
+CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/essentials/content-scripts#css) docs.
 
 <EntrypointPatterns
   :patterns="[

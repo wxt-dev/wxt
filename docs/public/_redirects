@@ -44,7 +44,7 @@
 /guide/i18n/messages-file-format.html                         /TODO
 /guide/i18n/editor-support.html                               /TODO
 /guide/i18n/installation.html                                 /TODO
-/guide/key-concepts/content-script-ui.html                    /guide/content-scripts/ui.html
+/guide/key-concepts/content-script-ui.html                    /guide/essentials/content-scripts.html#ui
 /guide/key-concepts/manifest.html                             /TODO
 /guide/key-concepts/wxt-submit.html                           /TODO
 /guide/key-concepts/auto-imports.html                         /TODO

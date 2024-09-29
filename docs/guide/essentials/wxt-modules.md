@@ -22,7 +22,7 @@ There are two ways to add a module to your project:
      modules/
        my-module.ts
    ```
-   > To learn more about writing your own modules, read the [Writing Modules](/guide/wxt-modules/writing-modules) docs.
+   > To learn more about writing your own modules, read the [Writing Modules](/guide/essentials/wxt-modules) docs.
 
 ## Module Options
 
@@ -31,7 +31,7 @@ WXT modules may require or allow setting custom options to change their behavior
 1. **Build-time**: Any config used during the build process, like feature flags
 2. **Runtime**: Any config accessed at runtime, like callback functions
 
-Build-time options is placed in your `wxt.config.ts`, while runtime options is placed in the [`app.config.ts` file](/guide/config/runtime). Refer to each module's documentation about what options are required and where they should be placed.
+Build-time options is placed in your `wxt.config.ts`, while runtime options is placed in the [`app.config.ts` file](/guide/essentials/config/runtime). Refer to each module's documentation about what options are required and where they should be placed.
 
 If you use TypeScript, modules augment WXT's types so you will get type errors if options are missing or incorrect.
 

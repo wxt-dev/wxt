@@ -35,19 +35,20 @@ Here's a brief summary of each of these files and directories:
 - `hooks/`: Auto-imported by default, contains hooks for React and Solid
 - `public/`: Contains any files you want to copy into the output folder as-is, without being processed by WXT
 - `utils/`: Auto-imported by default, contains generic utilities used throughout your project
-- `.env`: Contains [Environment Variables](/guide/config/runtime#environment-variables)
-- `.env.publish`: Contains Environment Variables for [publishing](/guide/production/publishing)
-- `app.config.ts`: Contains [Runtime Config](/guide/config/runtime)
+- `.env`: Contains [Environment Variables](/guide/essentials/config/runtime#environment-variables)
+- `.env.publish`: Contains Environment Variables for [publishing](/guide/essentials/publishing)
+- `app.config.ts`: Contains [Runtime Config](/guide/essentials/config/runtime)
 - `package.json`: The standard file used by your package manager
 - `tsconfig.json`: Config telling TypeScript how to behave
-- `web-ext.config.ts`: Configure [Browser Startup](/guide/config/browser-startup)
-- `wxt.config.ts`: The [main config file](/guide/config/wxt) for WXT projects
+- `web-ext.config.ts`: Configure [Browser Startup](/guide/essentials/config/browser-startup)
+- `wxt.config.ts`: The [main config file](/guide/essentials/config/wxt) for WXT projects
 
 ## Adding a `src/` Directory
 
 Many developers like having a `src/` directory to separate source code from configuration files. You can enable it inside the `wxt.config.ts` file:
 
 ```ts
+// wxt.config.ts
 export default defineConfig({
   srcDir: 'src',
 });
@@ -78,4 +79,25 @@ After enabling it, your project structure should look like this:
 📄 wxt.config.ts
 ```
 
-You can configure some other project folders as well. See the [wxt.config.ts file](/guide/config/wxt#directories) docs for more details.
+You can configure some other project folders as well. See the [wxt.config.ts file](/guide/essentials/config/wxt#directories) docs for more details.
+
+## Customizing Other Directories
+
+You can configure the following directories:
+
+<!-- prettier-ignore -->
+```ts
+// wxt.config.ts
+export default defineConfig({
+  // Relative to project root
+  srcDir: "src",             // default: "."
+  outDir: "dist",            // default: ".output"
+
+  // Relative to srcDir
+  entrypointsDir: "entries", // default: "entrtypoints"
+  modulesDir: "wxt-modules", // default: "modules"
+  publicDir: "static",       // default: "public"
+})
+```
+
+You can use absolute or relative paths.

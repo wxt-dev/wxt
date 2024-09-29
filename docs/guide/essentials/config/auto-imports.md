@@ -1,42 +1,4 @@
----
-outline: deep
----
-
-# wxt.config.ts
-
-> See the [API Reference](/api/reference/wxt/interfaces/InlineConfig) for all options. This page only discusses the setup and a few features.
-
-The `wxt.config.ts` file contains the main build configuration for your project. Here's what it looks like:
-
-```ts
-import { defineConfig } from 'wxt';
-
-export default defineConfig({
-  // Config goes here
-});
-```
-
-## Directories
-
-You can configure the following directories:
-
-<!-- prettier-ignore -->
-```ts
-export default defineConfig({
-  // Relative to project root
-  srcDir: "src",             // default: "."
-  outDir: "dist",            // default: ".output"
-
-  // Relative to srcDir
-  entrypointsDir: "entries", // default: "entrtypoints"
-  modulesDir: "wxt-modules", // default: "modules"
-  publicDir: "static",       // default: "public"
-})
-```
-
-You can use absolute or relative paths.
-
-## Auto-imports
+# Auto-imports
 
 WXT uses [`unimport`](https://www.npmjs.com/package/unimport), the same tool as Nuxt, to setup auto-imports.
 
@@ -68,9 +30,9 @@ WXT also adds some project directories as auto-import sources automatically:
 - `<srcDir>/hooks/*`
 - `<srcDir>/utils/*`
 
-All named and default exports from files in these directories are available anywhere else in your project without having to import them.
+All named and default exports from files in these directories are available everywhere else in your project without having to import them.
 
-### TypeScript
+## TypeScript
 
 For TypeScript and your editor to recognize auto-imported variables, you need to run the [`wxt prepare` command](/api/cli/wxt-prepare).
 
@@ -85,7 +47,7 @@ Add this command to your `postinstall` script so your editor has everything it n
 }
 ```
 
-### ESLint
+## ESLint
 
 ESLint doesn't know about the auto-imported variables unless they are explicitly defined in the ESLint's `globals`. By default, WXT will generate the config if it detects ESLint is installed in your project. If the config isn't generated automatically, you can manually tell WXT to generate it.
 
@@ -139,7 +101,7 @@ export default {
 
 :::
 
-### Disabling Auto-imports
+## Disabling Auto-imports
 
 Not all developers like auto-imports. To disable them, set `imports` to `false`.
 
@@ -148,25 +110,3 @@ export default defineConfig({
   imports: false, // [!code ++]
 });
 ```
-
-## Hooks
-
-WXT includes an in-depth system that let's you hook into the build process and make changes.
-
-Here's an example hook that modifies the `manifest.json` file before it is written to the output directory:
-
-```ts
-export default defineConfig({
-  hooks: {
-    'build:manifestGenerated': (wxt, manifest) => {
-      if (wxt.config.mode === 'development') {
-        manifest.title += ' (DEV)';
-      }
-    },
-  },
-});
-```
-
-> Most hooks provide the `wxt` object as the first argument. If contains the resolved config and other info about the current build.
-
-Putting one-off hooks like this in your config file is simple, but if you find yourself writing lots of hooks, you should extract them into [WXT Modules](/guide/wxt-modules/writing-modules) instead.

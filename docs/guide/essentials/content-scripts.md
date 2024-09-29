@@ -4,8 +4,6 @@ outline: deep
 
 # Content Scripts
 
-To add a content script, refer to [Entrypoint Types > Content Script](/guide/entrypoint-types/content-script). This page discusses the nuonces of writing content scripts with WXT.
-
 ## Context
 
 The first argument to a content script's `main` function is it's "context".

@@ -28,7 +28,7 @@ export default defineConfig({
 
 ### MV2 and MV3 Compatibility
 
-When adding properties to the manifest, when possible, always define the property in it's MV3 format. When targetting MV2, WXT will automatically convert these properties to their MV2 format.
+When adding properties to the manifest, always define the property in it's MV3 format when possible. When targetting MV2, WXT will automatically convert these properties to their MV2 format.
 
 For example, for this config:
 
@@ -191,8 +191,6 @@ export default defineConfig({
 
 ## Default Locale
 
-> See [Extension APIs > I18n](/guide/extension-apis/i18n) for a full guide on internationalizing your extension.
-
 ```ts
 export default defineConfig({
   manifest: {
@@ -203,27 +201,32 @@ export default defineConfig({
 });
 ```
 
+> See [I18n docs](/guide/essentials/i18n) for a full guide on internationalizing your extension.
+
 ## Actions
 
-In MV2, you had two options: [`browser_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action) and [`page_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/page_action). In MV3, they were merged into a single [`action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action) API.
+In MV2, you have two options: [`browser_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action) and [`page_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/page_action). In MV3, they were merged into a single [`action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action) API.
 
 By default, whenever an `action` is generated, WXT falls back to `browser_action` when targetting MV2.
 
 ### Action With Popup
 
-To generate a manifest where a UI appears after clicking the icon, just create a [Popup entrypoint](/guide/entrypoint-types/popup).
-export default defineConfig({
-hooks: {
-build: {
-manifestGenerated(manifest) {
-// Update the manifest variable by reference
-manifest.name = 'Overriden name';
-},
-},
-},
-});
+To generate a manifest where a UI appears after clicking the icon, just create a [Popup entrypoint](/guide/essentials/entrypoints#popup).
 
-If you want to use a page_action for MV2, add the following meta tag to the HTML document's head:
+```ts
+export default defineConfig({
+  hooks: {
+    build: {
+      manifestGenerated(manifest) {
+        // Update the manifest variable by reference
+        manifest.name = 'Overriden name';
+      },
+    },
+  },
+});
+```
+
+If you want to use a `page_action` for MV2, add the following meta tag to the HTML document's head:
 
 ```html
 <meta name="manifest.type" content="page_action" />
@@ -233,7 +236,7 @@ If you want to use a page_action for MV2, add the following meta tag to the HTML
 
 If you want to use the `activeTab` permission or the `browser.action.onClicked` event, but don't want to show a popup:
 
-1. Delete the [Popup entrypoint](/guide/entrypoint-types/popup) if it exists
+1. Delete the [Popup entrypoint](/guide/essentials/entrypoints#popup) if it exists
 2. Add the `action` key to your manifest:
    ```ts
    export default defineConfig({

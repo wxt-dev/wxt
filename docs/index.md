@@ -13,10 +13,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/get-started/installation
+      link: /guide/installation
     - theme: alt
       text: Learn More
-      link: /guide/get-started/introduction
+      link: /guide/introduction
 
 features:
   - icon: 🌐
