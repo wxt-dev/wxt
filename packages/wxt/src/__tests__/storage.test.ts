@@ -1,7 +1,7 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from 'wxt/browser';
-import { WxtStorageItem, storage } from '../storage';
+import { Unwatch, WxtStorageItem, storage } from '../storage';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained
@@ -383,6 +383,56 @@ describe('Storage Utils', () => {
           await storage.setItem(`${storageArea}:key`, '123');
 
           expect(cb).not.toBeCalled();
+        });
+
+        it('should watch multiple keys when passed an object', async () => {
+          const cb1 = vi.fn();
+          const cb2 = vi.fn();
+          const watchers = {
+            'local:key1': cb1,
+            'session:key2': cb2,
+          };
+
+          const unwatchers = storage.watch(watchers);
+
+          await storage.setItem('local:key1', 'value1');
+          await storage.setItem('session:key2', 'value2');
+
+          expect(cb1).toBeCalledTimes(1);
+          expect(cb1).toBeCalledWith('value1', null);
+          expect(cb2).toBeCalledTimes(1);
+          expect(cb2).toBeCalledWith('value2', null);
+
+          await storage.setItem('local:key1', 'new value1');
+          expect(cb1).toBeCalledTimes(2);
+          expect(cb2).toBeCalledTimes(1); // Still 1, not called again
+
+          // Test unwatching
+          Object.values(unwatchers).forEach((unwatch) => unwatch());
+          await storage.setItem('local:key1', 'newer value1');
+          await storage.setItem('session:key2', 'new value2');
+
+          expect(cb1).toBeCalledTimes(2); // Still 2, not called again
+          expect(cb2).toBeCalledTimes(1); // Still 1, not called again
+
+          expectTypeOf(unwatchers).toEqualTypeOf<{
+            'local:key1': Unwatch;
+            'session:key2': Unwatch;
+          }>();
+        });
+
+        it('should return a single unwatch function when watching a single key', () => {
+          const cb = vi.fn();
+          const unwatch = storage.watch('local:key', cb);
+
+          expectTypeOf(unwatch).toEqualTypeOf<Unwatch>();
+        });
+
+        it('should throw an error when invalid arguments are passed', () => {
+          // @ts-expect-error: Testing invalid input
+          expect(() => storage.watch(123)).toThrow(
+            'Invalid arguments for watch method',
+          );
         });
       });
 

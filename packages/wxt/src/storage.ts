@@ -276,10 +276,26 @@ function createStorage(): WxtStorage {
       const driver = getDriver(base);
       await driver.restoreSnapshot(data);
     },
-    watch: (key, cb) => {
-      const { driver, driverKey } = resolveKey(key);
-      return watch(driver, driverKey, cb);
-    },
+    watch: ((
+      keyOrWatchers:
+        | StorageItemKey
+        | Record<StorageItemKey, WatchCallback<any>>,
+      cb?: WatchCallback<any>,
+    ): any => {
+      if (typeof keyOrWatchers === 'string' && cb) {
+        const { driver, driverKey } = resolveKey(keyOrWatchers);
+        return watch(driver, driverKey, cb);
+      } else if (typeof keyOrWatchers === 'object') {
+        const unwatchers: Record<StorageItemKey, Unwatch> = {};
+        Object.entries(keyOrWatchers).forEach(([key, watchCb]) => {
+          const { driver, driverKey } = resolveKey(key as StorageItemKey);
+          unwatchers[key as StorageItemKey] = watch(driver, driverKey, watchCb);
+        });
+        return unwatchers;
+      } else {
+        throw new Error('Invalid arguments for watch method');
+      }
+    }) as WxtStorage['watch'],
     unwatch() {
       Object.values(drivers).forEach((driver) => {
         driver.unwatch();
@@ -733,9 +749,14 @@ export interface WxtStorage {
    */
   restoreSnapshot(base: StorageArea, data: any): Promise<void>;
   /**
-   * Watch for changes to a specific key in storage.
+   * Watch for changes to specific keys in storage.
    */
-  watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
+  watch: {
+    <T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
+    <T extends Record<StorageItemKey, WatchCallback<any>>>(
+      watchers: T,
+    ): { [K in keyof T]: Unwatch };
+  };
   /**
    * Remove all watch listeners.
    */
