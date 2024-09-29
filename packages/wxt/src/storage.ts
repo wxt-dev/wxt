@@ -443,7 +443,7 @@ function createStorage(): WxtStorage {
       T extends Record<string, WxtStorageItem<any, any>>,
     >(
       items: T,
-      opts: RemoveItemOptions = { removeMeta: true },
+      opts: RemoveItemOptions = { removeMeta: false },
     ) => {
       const areaToKeysMap = new Map<StorageArea, string[]>();
       const areaToMetaKeysMap = new Map<StorageArea, string[]>();
@@ -774,7 +774,7 @@ export interface WxtStorage {
    * Delete the values of multiple storage items.
    *
    * @param items - The storage items to delete the values of.
-   * @param opts - Options to delete the metadata of the storage items.
+   * @param opts - Options to delete the metadata of the storage items. Defaults to `false`.
    *
    * @example
    * await storage.deleteStorageItemValues({

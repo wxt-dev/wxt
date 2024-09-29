@@ -1087,10 +1087,13 @@ describe('Storage Utils', () => {
           'remove',
         );
 
-        await storage.deleteItemValues({
-          item1,
-          item2,
-        });
+        await storage.deleteItemValues(
+          {
+            item1,
+            item2,
+          },
+          { removeMeta: true },
+        );
 
         const value1 = await item1.getValue();
         const value2 = await item2.getValue();
@@ -1123,13 +1126,10 @@ describe('Storage Utils', () => {
           'remove',
         );
 
-        await storage.deleteItemValues(
-          {
-            item1,
-            item2,
-          },
-          { removeMeta: false },
-        );
+        await storage.deleteItemValues({
+          item1,
+          item2,
+        });
 
         const value1 = await item1.getValue();
         const meta1 = await item1.getMeta();
