@@ -1,7 +1,6 @@
 # `@wxt-dev/i18n`
 
-> [!IMPORTANT]
-> You don't have to use `wxt` to use this package - it will work in any bundler setup. See [Installation without WXT](#without-wxt) for more details.
+[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/i18n/CHANGELOG.md)
 
 `@wxt-dev/i18n` is a simple, type-safe wrapper around the `browser.i18n` APIs. It provides several benefits over the standard API:
 
@@ -18,6 +17,9 @@ It also provides several benefits over other non-web extension specific i18n pac
 However, it does have one major downside:
 
 1. Like the `browser.i18n` API, to change the language, users must change the browser's language
+
+> [!IMPORTANT]
+> You don't have to use `wxt` to use this package - it will work in any bundler setup. See [Installation without WXT](#without-wxt) for more details.
 
 ## Installation
 

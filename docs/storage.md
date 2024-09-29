@@ -2,7 +2,9 @@
 outline: deep
 ---
 
-# `wxt/storage` API
+# WXT Storage
+
+[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md)
 
 WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `storage` auto-import from `wxt/storage` or import it manually to get started:
 
@@ -21,8 +23,6 @@ import { storage } from 'wxt/storage';
 >   },
 > });
 > ```
-
-[[toc]]
 
 ## Basic Usage
 

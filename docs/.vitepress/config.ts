@@ -10,6 +10,7 @@ import {
 import { meta, script } from './utils/head';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
+import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -69,7 +70,7 @@ export default defineConfig({
       navItem('Guide', '/guide/installation'),
       navItem('Examples', '/examples'),
       navItem('API', '/api/reference/wxt'),
-      navItem('---', [
+      navItem(`v${wxtVersion}`, [
         navItem('wxt', [
           navItem(`v${wxtVersion}`, '/'),
           navItem(
@@ -77,12 +78,10 @@ export default defineConfig({
             'https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md',
           ),
         ]),
-        navItem('@wxt-dev/i18n', [
-          navItem(`v${i18nVersion}`, '/i18n'),
-          navItem(
-            `Changelog`,
-            'https://github.com/wxt-dev/wxt/blob/main/packages/i18n/CHANGELOG.md',
-          ),
+        navItem('Other Packages', [
+          navItem(`wxt/storage — ${wxtVersion}`, '/storage'),
+          navItem(`@wxt-dev/auto-icons — ${autoIconsVersion}`, '/auto-icons'),
+          navItem(`@wxt-dev/i18n — ${i18nVersion}`, '/i18n'),
         ]),
       ]),
     ],
