@@ -58,22 +58,11 @@ For a full list of methods available, see the [API reference](/api/reference/wxt
 
 ## Watchers
 
-To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key or multiple keys:
+To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key:
 
 ```ts
-// Watch a single key
 const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
   console.log('Count changed:', { newCount, oldCount });
-});
-
-// Watch multiple keys
-const unwatchMultiple = storage.watch({
-  'local:counter1': (newCount1, oldCount1) => {
-    console.log('Counter 1 changed:', { newCount1, oldCount1 });
-  },
-  'local:counter2': (newCount2, oldCount2) => {
-    console.log('Counter 2 changed:', { newCount2, oldCount2 });
-  },
 });
 ```
 

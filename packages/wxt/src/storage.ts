@@ -266,33 +266,17 @@ function createStorage(): WxtStorage {
       const driver = getDriver(base);
       await driver.restoreSnapshot(data);
     },
-    watch: ((
-      keyOrWatchers:
-        | StorageItemKey
-        | Record<StorageItemKey, WatchCallback<any>>,
-      cb?: WatchCallback<any>,
-    ): any => {
-      if (typeof keyOrWatchers === 'string' && cb) {
-        const { driver, driverKey } = resolveKey(keyOrWatchers);
-        return watch(driver, driverKey, cb);
-      } else if (typeof keyOrWatchers === 'object') {
-        const unwatchers: Record<StorageItemKey, Unwatch> = {};
-        Object.entries(keyOrWatchers).forEach(([key, watchCb]) => {
-          const { driver, driverKey } = resolveKey(key as StorageItemKey);
-          unwatchers[key as StorageItemKey] = watch(driver, driverKey, watchCb);
-        });
-        return unwatchers;
-      } else {
-        throw new Error('Invalid arguments for watch method');
-      }
-    }) as WxtStorage['watch'],
+    watch: (key, cb) => {
+      const { driver, driverKey } = resolveKey(key);
+      return watch(driver, driverKey, cb);
+    },
     unwatch() {
       Object.values(drivers).forEach((driver) => {
         driver.unwatch();
       });
     },
     defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
-      const { driver, driverKey, driverArea } = resolveKey(key);
+      const { driver, driverKey } = resolveKey(key);
 
       const { version: targetVersion = 1, migrations = {} } = opts ?? {};
       if (targetVersion < 1) {
@@ -710,14 +694,9 @@ export interface WxtStorage {
    */
   restoreSnapshot(base: StorageArea, data: any): Promise<void>;
   /**
-   * Watch for changes to specific keys in storage.
+   * Watch for changes to a specific key in storage.
    */
-  watch: {
-    <T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
-    <T extends Record<StorageItemKey, WatchCallback<any>>>(
-      watchers: T,
-    ): { [K in keyof T]: Unwatch };
-  };
+  watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
   /**
    * Remove all watch listeners.
    */
