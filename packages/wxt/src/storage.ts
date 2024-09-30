@@ -461,10 +461,15 @@ export interface WxtStorage {
    * @example
    * await storage.getItem<number>("local:installDate");
    */
-  getItem<T, O extends GetItemOptions<T> = GetItemOptions<T>>(
+  getItem<
+    TValue,
+    TOptions extends GetItemOptions<TValue> = GetItemOptions<TValue>,
+  >(
     key: StorageItemKey,
-    opts?: O,
-  ): Promise<O extends { fallback: infer F } ? F : T | null>;
+    opts?: TOptions,
+  ): Promise<
+    TOptions extends { fallback: infer TFallback } ? TFallback : TValue | null
+  >;
   /**
    * Get multiple items from storage. The return order is guaranteed to be the same as the order
    * requested.
