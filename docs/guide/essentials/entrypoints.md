@@ -4,7 +4,7 @@ outline: deep
 
 # Entrypoints
 
-All files inside the `entrypoints/` directory are built by WXT and bundled into the `.output` directory. They can be HTML, JS, CSS, or any variant of those file types supported by Vite (Pug, TS, JSX, SCSS, etc).
+WXT uses the files inside the `entrypoints/` directory as inputs when bundling your extension. They can be HTML, JS, CSS, or any variant of those file types supported by Vite (Pug, TS, JSX, SCSS, etc).
 
 Here's an example set of entrypoints:
 
