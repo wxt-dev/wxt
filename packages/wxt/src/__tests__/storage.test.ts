@@ -909,7 +909,7 @@ describe('Storage Utils', () => {
       expectTypeOf(res).toBeNullable();
     });
 
-    it('should return a nullable type when getItem is called without a fallback', async () => {
+    it('should return a non-null type when getItem is called with a fallback', async () => {
       const res = await storage.getItem<string>('local:test', {
         fallback: 'test',
       });
