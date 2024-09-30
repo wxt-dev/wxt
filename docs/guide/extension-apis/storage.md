@@ -158,7 +158,7 @@ When dealing with multiple storage items, you can perform bulk operations to imp
 - **`getItemMetas`**: Retrieve metadata for multiple storage items.
 - **`setItemValues`**: Set values for multiple storage items.
 - **`setItemMetas`**: Update metadata for multiple storage items.
-- **`deleteItemValues`**: Remove values (and optionally metadata) of multiple storage items.
+- **`removeItems`**: Remove values (and optionally metadata) of multiple storage items.
 
 #### Getting Values of Multiple Storage Items or Keys
 
@@ -176,11 +176,11 @@ const values = await storage.getItems([item1, item2, item3]);
 
 console.log(values);
 // Output:
-// {
-//   item1: 'default1',
-//   item2: 0,
-//   item3: false
-// }
+// [
+//   { key: 'local:item1', value: 'default1' },
+//   { key: 'local:item2', value: 0 },
+//   { key: 'local:item3', value: false }
+// ]
 
 // Using keys directly
 const keyValues = await storage.getItems([
@@ -198,7 +198,7 @@ console.log(keyValues);
 // ]
 ```
 
-The `getItems` function can handle both storage items and direct keys. When using storage items, it returns an object with the item keys as properties. When using direct keys, it returns an array of key-value pairs.
+The `getItems` function can handle both storage items and direct keys. It returns an array of key-value pairs.
 
 #### Getting Metadata of Multiple Storage Items
 
@@ -209,11 +209,11 @@ const metas = await storage.getItemMetas({ item1, item2, item3 });
 
 console.log(metas);
 // Output:
-// {
-//   item1: { ...metadata of item1 },
-//   item2: { ...metadata of item2 },
-//   item3: { ...metadata of item3 }
-// }
+// [
+//   { key: 'item1', value: { ...metadata of item1 } },
+//   { key: 'item2', value: { ...metadata of item2 } },
+//   { key: 'item3', value: { ...metadata of item3 } }
+// ]
 ```
 
 #### Setting Values of Multiple Storage Items
@@ -241,12 +241,16 @@ await storage.setItemMetas(
 );
 ```
 
-#### Deleting Values of Multiple Storage Items
+#### Removing Values of Multiple Storage Items
 
-You can remove the values (and optionally metadata) of multiple storage items efficiently using `deleteItemValues`:
+You can remove the values (and optionally metadata) of multiple storage items efficiently using `removeItems`:
 
 ```ts
-await storage.deleteItemValues({ item1, item2 }, { removeMeta: true });
+await storage.removeItems([
+  item1,
+  item2,
+  { key: 'local:item3', options: { removeMeta: true } },
+]);
 ```
 
 ### Versioning

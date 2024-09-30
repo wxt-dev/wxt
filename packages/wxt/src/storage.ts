@@ -129,70 +129,50 @@ function createStorage(): WxtStorage {
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
       const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
-      const itemMap = new Map<string, WxtStorageItem<any, any>>();
+      const orderedKeys: StorageItemKey[] = [];
 
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
         let opts: GetItemOptions<any> | undefined;
-        let item: WxtStorageItem<any, any> | undefined;
-
         if (typeof key === 'string') {
+          // key: string
           keyStr = key;
-        } else if ('key' in key) {
+        } else if ('getValue' in key) {
+          // key: WxtStorageItem
+          keyStr = key.key;
+          opts = { fallback: key.fallback };
+        } else {
+          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
-        } else {
-          // This is a WxtStorageItem
-          item = key;
-          keyStr = `${item.storageArea}:${item.storageKey}` as StorageItemKey;
-          opts = { fallback: item.fallback };
         }
-
+        orderedKeys.push(keyStr);
         const { driverArea, driverKey } = resolveKey(keyStr);
         const areaKeys = areaToKeyMap.get(driverArea) ?? [];
-        areaKeys.push(driverKey);
-        areaToKeyMap.set(driverArea, areaKeys);
+        areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
         keyToOptsMap.set(keyStr, opts);
-        if (item) {
-          itemMap.set(keyStr, item);
-        }
       });
 
-      const results = await Promise.all(
+      const resultsMap = new Map<StorageItemKey, any>();
+      await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
-          return driverResults.map((driverResult) => {
+          driverResults.forEach((driverResult) => {
             const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
             const opts = keyToOptsMap.get(key);
             const value = getValueOrFallback(
               driverResult.value,
               opts?.fallback ?? opts?.defaultValue,
             );
-            return { key, value };
+            resultsMap.set(key, value);
           });
         }),
       );
 
-      const flatResults = results.flat();
-
-      if (itemMap.size > 0) {
-        // If WxtStorageItems were passed, return an object
-        const returnObj: Record<string, any> = {};
-        flatResults.forEach(({ key, value }) => {
-          const item = itemMap.get(key);
-          if (item) {
-            const itemKey = keys.find((k) => k === item) as WxtStorageItem<
-              any,
-              any
-            >;
-            returnObj[itemKey.storageKey] = value;
-          }
-        });
-        return returnObj;
-      } else {
-        // Otherwise, return the array of results (original behavior)
-        return flatResults;
-      }
+      return orderedKeys.map((key) => ({
+        key,
+        value: resultsMap.get(key),
+      }));
     },
     getMeta: async (key) => {
       const { driver, driverKey } = resolveKey(key);
@@ -238,8 +218,18 @@ function createStorage(): WxtStorage {
         let keyStr: StorageItemKey;
         let opts: RemoveItemOptions | undefined;
         if (typeof key === 'string') {
+          // key: string
           keyStr = key;
+        } else if ('getValue' in key) {
+          // key: WxtStorageItem
+          console.log(key);
+          keyStr = key.key;
+        } else if ('item' in key) {
+          // key: { item, options }
+          keyStr = key.item.key;
+          opts = key.options;
         } else {
+          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
         }
@@ -373,8 +363,7 @@ function createStorage(): WxtStorage {
       migrationsDone.then(getOrInitValue);
 
       return {
-        storageArea: driverArea,
-        storageKey: driverKey,
+        key,
         get defaultValue() {
           return getFallback();
         },
@@ -418,19 +407,22 @@ function createStorage(): WxtStorage {
     },
     getItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
       items: T,
-    ) => {
-      const returnObj: Record<string, any> = {};
-
-      // Efficiently use driver.getItems for all meta keys
+    ): Promise<Array<{ key: keyof T; value: any }>> => {
       const areaToItemListMap = new Map<
         StorageArea,
-        Array<{ key: string; storageKey: string }>
+        Array<{ key: keyof T; storageKey: string }>
       >();
+      const orderedKeys: Array<keyof T> = [];
+
       Object.entries(items).forEach(([key, item]) => {
-        const list = areaToItemListMap.get(item.storageArea) ?? [];
-        list.push({ key, storageKey: item.storageKey });
-        areaToItemListMap.set(item.storageArea, list);
+        orderedKeys.push(key as keyof T);
+        const [storageArea] = item.key.split(':') as [StorageArea, string];
+        const list = areaToItemListMap.get(storageArea) ?? [];
+        list.push({ key: key as keyof T, storageKey: item.key.split(':')[1] });
+        areaToItemListMap.set(storageArea, list);
       });
+
+      const resultsMap = new Map<keyof T, any>();
 
       for (const [storageArea, itemList] of areaToItemListMap.entries()) {
         const driver = getDriver(storageArea);
@@ -447,50 +439,14 @@ function createStorage(): WxtStorage {
         itemList.forEach(({ key, storageKey }) => {
           const metaKey = getMetaKey(storageKey);
           const value = valueMap[metaKey];
-          returnObj[key] = getMetaValue(value) ?? {};
+          resultsMap.set(key, getMetaValue(value) ?? {});
         });
       }
 
-      return returnObj as {
-        [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>>;
-      };
-    },
-    deleteItemValues: async <
-      T extends Record<string, WxtStorageItem<any, any>>,
-    >(
-      items: T,
-      opts: RemoveItemOptions = { removeMeta: false },
-    ) => {
-      const areaToKeysMap = new Map<StorageArea, string[]>();
-      const areaToMetaKeysMap = new Map<StorageArea, string[]>();
-      Object.values(items).forEach((item) => {
-        const keys = areaToKeysMap.get(item.storageArea) ?? [];
-        keys.push(item.storageKey);
-        areaToKeysMap.set(item.storageArea, keys);
-        if (opts?.removeMeta) {
-          const metaKeys = areaToMetaKeysMap.get(item.storageArea) ?? [];
-          metaKeys.push(getMetaKey(item.storageKey));
-          areaToMetaKeysMap.set(item.storageArea, metaKeys);
-        }
-      });
-
-      await Promise.all(
-        Array.from(areaToKeysMap.entries()).map(async ([storageArea, keys]) => {
-          const driver = getDriver(storageArea);
-          await driver.removeItems(keys);
-        }),
-      );
-
-      if (opts?.removeMeta) {
-        await Promise.all(
-          Array.from(areaToMetaKeysMap.entries()).map(
-            async ([storageArea, keys]) => {
-              const driver = getDriver(storageArea);
-              await driver.removeItems(keys);
-            },
-          ),
-        );
-      }
+      return orderedKeys.map((key) => ({
+        key,
+        value: resultsMap.get(key),
+      }));
     },
     setItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
       items: T,
@@ -501,9 +457,10 @@ function createStorage(): WxtStorage {
         Array<{ key: string; value: any }>
       >();
       Object.entries(items).forEach(([key, item]) => {
-        const list = areaToValuesMap.get(item.storageArea) ?? [];
-        list.push({ key: item.storageKey, value: values[key] });
-        areaToValuesMap.set(item.storageArea, list);
+        const { driverArea, driverKey } = resolveKey(item.key);
+        const list = areaToValuesMap.get(driverArea) ?? [];
+        list.push({ key: driverKey, value: values[key] });
+        areaToValuesMap.set(driverArea, list);
       });
 
       await Promise.all(
@@ -524,9 +481,10 @@ function createStorage(): WxtStorage {
         Array<{ key: string; properties: any }>
       >();
       Object.entries(items).forEach(([key, item]) => {
-        const list = areaToMetaUpdatesMap.get(item.storageArea) ?? [];
-        list.push({ key: item.storageKey, properties: metas[key] });
-        areaToMetaUpdatesMap.set(item.storageArea, list);
+        const { driverArea, driverKey } = resolveKey(item.key);
+        const list = areaToMetaUpdatesMap.get(driverArea) ?? [];
+        list.push({ key: driverKey, properties: metas[key] });
+        areaToMetaUpdatesMap.set(driverArea, list);
       });
 
       await Promise.all(
@@ -666,10 +624,10 @@ export interface WxtStorage {
   getItems(
     keys: Array<
       | StorageItemKey
-      | { key: StorageItemKey; options?: GetItemOptions<any> }
       | WxtStorageItem<any, any>
+      | { key: StorageItemKey; options?: GetItemOptions<any> }
     >,
-  ): Promise<Array<{ key: StorageItemKey; value: any }> | Record<string, any>>;
+  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
   /**
    * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
    * is not an object, it returns an empty object.
@@ -719,7 +677,10 @@ export interface WxtStorage {
    */
   removeItems(
     keys: Array<
-      StorageItemKey | { key: StorageItemKey; options?: RemoveItemOptions }
+      | StorageItemKey
+      | WxtStorageItem<any, any>
+      | { key: StorageItemKey; options?: RemoveItemOptions }
+      | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
     >,
   ): Promise<void>;
   /**
@@ -790,23 +751,7 @@ export interface WxtStorage {
    */
   getItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
     items: T,
-  ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]['getMeta']>> }>;
-  /**
-   * Delete the values of multiple storage items.
-   *
-   * @param items - The storage items to delete the values of.
-   * @param opts - Options to delete the metadata of the storage items. Defaults to `false`.
-   *
-   * @example
-   * await storage.deleteStorageItemValues({
-   *   "local:installDate": storage.defineItem("local:installDate"),
-   *   "session:someCounter": storage.defineItem("session:someCounter"),
-   * });
-   */
-  deleteItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
-    items: T,
-    opts?: RemoveItemOptions,
-  ): Promise<void>;
+  ): Promise<Array<{ key: keyof T; value: any }>>;
   /**
    * Set the values of multiple storage items.
    *
@@ -861,13 +806,9 @@ export interface WxtStorageItem<
   TMetadata extends Record<string, unknown>,
 > {
   /**
-   * The storage area used to get and set the value.
+   * The storage key passed when creating the storage item.
    */
-  storageArea: StorageArea;
-  /**
-   * The storage key used internally.
-   */
-  storageKey: string;
+  key: StorageItemKey;
   /**
    * @deprecated Renamed to fallback, use it instead.
    */
