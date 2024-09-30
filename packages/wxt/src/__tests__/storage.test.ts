@@ -1,7 +1,7 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from 'wxt/browser';
-import { Unwatch, WxtStorageItem, storage } from '../storage';
+import { WxtStorageItem, storage } from '../storage';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained
@@ -503,13 +503,6 @@ describe('Storage Utils', () => {
           await storage.setItem(`${storageArea}:key`, '123');
 
           expect(cb).not.toBeCalled();
-        });
-
-        it('should return a single unwatch function when watching a single key', () => {
-          const cb = vi.fn();
-          const unwatch = storage.watch('local:key', cb);
-
-          expectTypeOf(unwatch).toEqualTypeOf<Unwatch>();
         });
       });
 
