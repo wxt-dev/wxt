@@ -7,7 +7,7 @@ import {
   WxtHooks,
   WxtModule,
 } from '../types';
-import { resolveConfig } from './utils/building';
+import { resolveConfig } from './resolve-config';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';

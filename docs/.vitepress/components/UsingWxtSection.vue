@@ -40,6 +40,10 @@ const chromeExtensionIds = [
   'fonflmjnjbkigocpoommgmhljdpljain', // NiceTab - https://github.com/web-dahuyou/NiceTab
   'fcffekbnfcfdemeekijbbmgmkognnmkd', // Draftly for LinkedIn
   'nkndldfehcidpejfkokbeghpnlbppdmo', // YouTube Summarized - Summarize any YouTube video
+  'dbichmdlbjdeplpkhcejgkakobjbjalc', // 社媒助手 - https://github.com/iszhouhua/social-media-copilot
+  'opepfpjeogkbgeigkbepobceinnfmjdd', // Dofollow Links for SEO
+  'pdnenlnelpdomajfejgapbdpmjkfpjkp', // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
+  'jobnhifpphkgoelnhnopgkdhbdkiadmj', // discord message translator
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
