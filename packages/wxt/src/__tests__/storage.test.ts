@@ -903,5 +903,17 @@ describe('Storage Utils', () => {
       // @ts-expect-error
       await storage.getItem('loca:test').catch(() => {});
     });
+
+    it('should return a nullable type when getItem is called without a fallback', async () => {
+      const res = await storage.getItem<string>('local:test');
+      expectTypeOf(res).toBeNullable();
+    });
+
+    it('should return a nullable type when getItem is called without a fallback', async () => {
+      const res = await storage.getItem<string>('local:test', {
+        fallback: 'test',
+      });
+      expectTypeOf(res).not.toBeNullable();
+    });
   });
 });
