@@ -269,6 +269,7 @@ function resolveZipConfig(
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
+    alwaysBuildSourcesZip: false,
     ...mergedConfig.zip,
     exclude: mergedConfig.zip?.exclude ?? [],
     excludeSources: [

@@ -50,9 +50,12 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   });
   zipFiles.push(outZipPath);
 
-  // ZIP sources for Firefox
-
-  if (wxt.config.browser === 'firefox') {
+  // ZIP sources for Firefox or Opera, or when explicitly requested
+  if (
+    wxt.config.browser === 'firefox' ||
+    wxt.config.browser === 'opera' ||
+    config?.zip?.alwaysBuildSourcesZip
+  ) {
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);

@@ -178,4 +178,64 @@ describe('Zipping', () => {
       true,
     );
   });
+
+  it('should create sources zip for Opera browser', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'opera',
+    });
+
+    expect(await project.fileExists(sourcesZip)).toBe(true);
+  });
+
+  it('should create sources zip when alwaysBuildSourcesZip is true, regardless of browser', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'chrome',
+      zip: {
+        alwaysBuildSourcesZip: true,
+      },
+    });
+
+    expect(await project.fileExists(sourcesZip)).toBe(true);
+  });
+
+  it('should not create sources zip for Chrome when alwaysBuildSourcesZip is false', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'chrome',
+      zip: {
+        alwaysBuildSourcesZip: false,
+      },
+    });
+
+    expect(await project.fileExists(sourcesZip)).toBe(false);
+  });
 });

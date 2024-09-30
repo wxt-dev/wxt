@@ -95,6 +95,7 @@ cli
   .option('-b, --browser <browser>', 'specify a browser')
   .option('--mv3', 'target manifest v3')
   .option('--mv2', 'target manifest v2')
+  .option('--sources', 'always create sources zip instead of auto detecting')
   .action(
     wrapAction(async (root, flags) => {
       await zip({
@@ -104,6 +105,13 @@ cli
         manifestVersion: flags.mv3 ? 3 : flags.mv2 ? 2 : undefined,
         configFile: flags.config,
         debug: flags.debug,
+        ...(flags.sources
+          ? {
+              zip: {
+                alwaysBuildSourcesZip: true,
+              },
+            }
+          : {}),
       });
     }),
   );

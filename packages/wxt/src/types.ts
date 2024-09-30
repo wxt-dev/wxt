@@ -131,6 +131,12 @@ export interface InlineConfig {
      */
     artifactTemplate?: string;
     /**
+     * Set to `true` to always create a sources zip, even when the browser is not Firefox or Opera.
+     *
+     * @default false
+     */
+    alwaysBuildSourcesZip?: boolean;
+    /**
      * Configure the filename output when zipping files.
      *
      * Available template variables:
@@ -1247,6 +1253,7 @@ export interface ResolvedConfig {
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
+    alwaysBuildSourcesZip: boolean;
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.
