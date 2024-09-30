@@ -133,8 +133,14 @@ function createStorage(): WxtStorage {
         let keyStr: StorageItemKey;
         let opts: GetItemOptions<any> | undefined;
         if (typeof key === 'string') {
+          // key: string
           keyStr = key;
+        } else if ('getValue' in key) {
+          // key: WxtStorageItem
+          keyStr = key.key;
+          opts = { fallback: key.fallback };
         } else {
+          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
         }
@@ -204,8 +210,17 @@ function createStorage(): WxtStorage {
         let keyStr: StorageItemKey;
         let opts: RemoveItemOptions | undefined;
         if (typeof key === 'string') {
+          // key: string
           keyStr = key;
+        } else if ('getValue' in key) {
+          // key: WxtStorageItem
+          keyStr = key.key;
+        } else if ('item' in key) {
+          // key: { item, options }
+          keyStr = key.item.key;
+          opts = key.options;
         } else {
+          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
         }
@@ -323,6 +338,7 @@ function createStorage(): WxtStorage {
       migrationsDone.then(getOrInitValue);
 
       return {
+        key,
         get defaultValue() {
           return getFallback();
         },
@@ -471,7 +487,9 @@ export interface WxtStorage {
    */
   getItems(
     keys: Array<
-      StorageItemKey | { key: StorageItemKey; options?: GetItemOptions<any> }
+      | StorageItemKey
+      | WxtStorageItem<any, any>
+      | { key: StorageItemKey; options?: GetItemOptions<any> }
     >,
   ): Promise<Array<{ key: StorageItemKey; value: any }>>;
   /**
@@ -523,7 +541,10 @@ export interface WxtStorage {
    */
   removeItems(
     keys: Array<
-      StorageItemKey | { key: StorageItemKey; options?: RemoveItemOptions }
+      | StorageItemKey
+      | WxtStorageItem<any, any>
+      | { key: StorageItemKey; options?: RemoveItemOptions }
+      | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
     >,
   ): Promise<void>;
   /**
@@ -592,6 +613,10 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
 > {
+  /**
+   * The storage key passed when creating the storage item.
+   */
+  key: StorageItemKey;
   /**
    * @deprecated Renamed to `fallback`, use it instead.
    */
