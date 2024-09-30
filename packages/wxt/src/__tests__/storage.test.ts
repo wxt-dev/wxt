@@ -1294,4 +1294,68 @@ describe('Storage Utils', () => {
       await storage.getItem('loca:test').catch(() => {});
     });
   });
+
+  describe('Error Handling', () => {
+    it('should throw an error when using an invalid storage area', async () => {
+      // @ts-expect-error: Test passes if there is a type error here
+      await expect(storage.getItem('invalidArea:key')).rejects.toThrow(
+        'Invalid area',
+      );
+    });
+
+    it('should throw an error when defining an item with an invalid version', () => {
+      expect(() => storage.defineItem('local:key', { version: 0 })).toThrow(
+        'Storage item version cannot be less than 1',
+      );
+    });
+
+    it('should handle errors in migration functions', async () => {
+      const item = storage.defineItem<number>('local:key', {
+        version: 2,
+        migrations: {
+          2: () => {
+            throw new Error('Migration error');
+          },
+        },
+      });
+
+      await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
+
+      await expect(item.migrate()).rejects.toThrow('Migration error');
+    });
+  });
+
+  describe('Init Function', () => {
+    it('should call init function only once when getValue is called multiple times', async () => {
+      const init = vi.fn().mockResolvedValue(42);
+      const item = storage.defineItem<number>('local:key', { init });
+
+      await item.getValue();
+      await item.getValue();
+
+      expect(init).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call init function if value already exists', async () => {
+      const init = vi.fn().mockResolvedValue(42);
+      const item = storage.defineItem<number>('local:key', { init });
+
+      await fakeBrowser.storage.local.set({ key: 10 });
+      const value = await item.getValue();
+
+      expect(value).toBe(10);
+      expect(init).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Concurrency', () => {
+    it('should handle concurrent setValue operations correctly', async () => {
+      const item = storage.defineItem<number>('local:key');
+
+      await Promise.all([item.setValue(1), item.setValue(2), item.setValue(3)]);
+
+      const value = await item.getValue();
+      expect(value).toBe(3);
+    });
+  });
 });
