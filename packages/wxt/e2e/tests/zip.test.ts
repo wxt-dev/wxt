@@ -211,7 +211,7 @@ describe('Zipping', () => {
     await project.zip({
       browser: 'chrome',
       zip: {
-        alwaysBuildSourcesZip: true,
+        zipSources: true,
       },
     });
 
@@ -232,7 +232,7 @@ describe('Zipping', () => {
     await project.zip({
       browser: 'chrome',
       zip: {
-        alwaysBuildSourcesZip: false,
+        zipSources: false,
       },
     });
 

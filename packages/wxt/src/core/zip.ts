@@ -53,11 +53,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   await wxt.hooks.callHook('zip:extension:done', wxt, outZipPath);
 
   // ZIP sources for Firefox or Opera, or when explicitly requested
-  if (
-    wxt.config.browser === 'firefox' ||
-    wxt.config.browser === 'opera' ||
-    config?.zip?.alwaysBuildSourcesZip
-  ) {
+  if (wxt.config.zip.zipSources) {
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();

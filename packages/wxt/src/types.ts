@@ -135,7 +135,7 @@ export interface InlineConfig {
      *
      * @default false
      */
-    alwaysBuildSourcesZip?: boolean;
+    zipSources?: boolean;
     /**
      * Configure the filename output when zipping files.
      *
@@ -1291,7 +1291,7 @@ export interface ResolvedConfig {
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
-    alwaysBuildSourcesZip: boolean;
+    zipSources: boolean;
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.

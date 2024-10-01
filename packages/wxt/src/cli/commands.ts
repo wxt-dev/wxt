@@ -108,7 +108,7 @@ cli
         ...(flags.sources
           ? {
               zip: {
-                alwaysBuildSourcesZip: true,
+                zipSources: true,
               },
             }
           : {}),
