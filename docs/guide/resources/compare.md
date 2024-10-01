@@ -4,6 +4,10 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 
 ## Overview
 
+- ✅ - Full support
+- 🟡 - Partial support
+- ❌ - No support
+
 | Features                                                |       WXT        |     Plasmo      |      CRXJS       |
 | ------------------------------------------------------- | :--------------: | :-------------: | :--------------: |
 | Supports all browsers                                   |        ✅        |       ✅        | 🟡 <sup>10</sup> |

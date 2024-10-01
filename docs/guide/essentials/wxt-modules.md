@@ -31,7 +31,7 @@ WXT modules may require or allow setting custom options to change their behavior
 1. **Build-time**: Any config used during the build process, like feature flags
 2. **Runtime**: Any config accessed at runtime, like callback functions
 
-Build-time options is placed in your `wxt.config.ts`, while runtime options is placed in the [`app.config.ts` file](/guide/essentials/config/runtime). Refer to each module's documentation about what options are required and where they should be placed.
+Build-time options are placed in your `wxt.config.ts`, while runtime options is placed in the [`app.config.ts` file](/guide/essentials/config/runtime). Refer to each module's documentation about what options are required and where they should be placed.
 
 If you use TypeScript, modules augment WXT's types so you will get type errors if options are missing or incorrect.
 
@@ -147,10 +147,10 @@ export default defineWxtModule({
     });
 
     wxt.hook('build:manifestGenerated', (_, manifest) => {
-      manifest.web_accessible_resouces ??= [];
-      manifest.web_accessible_resouces.push({
+      manifest.web_accessible_resources ??= [];
+      manifest.web_accessible_resources.push({
         matches: ['*://*'],
-        resouces: [generatedFilePath],
+        resources: [generatedFilePath],
       });
     });
   },
@@ -222,7 +222,7 @@ export default defineWxtModule({
         text: `
           // Declare global types, perform type augmentation, etc
         `,
-        // IMPORTANT - without this line your declaration file will not be apart of the TS project:
+        // IMPORTANT - without this line your declaration file will not be a part of the TS project:
         tsReference: true,
       });
     });

@@ -58,7 +58,7 @@ Ignoring WXT itself (it's added automatically for you), there are three packages
 
 ## jiti
 
-The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveot to it's usage: **_module side-effects_**.
+The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveat to its usage: **_module side-effects_**.
 
 To enable `jiti`:
 

@@ -15,7 +15,7 @@ export default defineContentScript({
 });
 ```
 
-This object is responsible for tracking whether or not the content script's context is "invalidated". Most browsers, by default, do not stop content scripts if the extension is uninstalled, updated, or disabled. When this happens, content scripts start reproting this error:
+This object is responsible for tracking whether or not the content script's context is "invalidated". Most browsers, by default, do not stop content scripts if the extension is uninstalled, updated, or disabled. When this happens, content scripts start reporting this error:
 
 ```
 Error: Extension context invalidated.
@@ -73,7 +73,7 @@ export default defineContentScript({
 To create a standalone content script that only includes a CSS file:
 
 1. Create the CSS file: `entrypoints/example.content.css`
-2. Use the `build:manfiestGenerated` hook to add the content script to the manifest:
+2. Use the `build:manifestGenerated` hook to add the content script to the manifest:
    ```ts
    // wxt.config.ts
    export default defineConfig({
@@ -456,7 +456,7 @@ If you don't need to run your UI in the same frame as the content script, you ca
 
 WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi), which simplifies setting up the IFrame.
 
-1. Create an HTML page that will be loaded into your IFrame
+1. Create an HTML page that will be loaded into your IFrame:
    ```html
    <!-- entrypoints/example-iframe.html -->
    <!doctype html>
@@ -471,7 +471,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/fun
      </body>
    </html>
    ```
-1. Add the page to the manifest's `web_accessible_resources`
+1. Add the page to the manifest's `web_accessible_resources`:
    ```ts
    // wxt.config.ts
    export default defineConfig({
@@ -485,7 +485,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/fun
      },
    });
    ```
-1. Create and mount the IFrame
+1. Create and mount the IFrame:
 
    ```ts
    export default defineContentScript({
@@ -523,7 +523,7 @@ export default defineContentScript({
 });
 ```
 
-However, this approach has several notible drawbacks:
+However, this approach has several notable drawbacks:
 
 - Doesn't support MV2
 - `world: "MAIN"` is only supported by Chromium browsers

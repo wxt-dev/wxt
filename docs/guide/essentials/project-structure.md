@@ -92,7 +92,7 @@ export default defineConfig({
   outDir: "dist",            // default: ".output"
 
   // Relative to srcDir
-  entrypointsDir: "entries", // default: "entrtypoints"
+  entrypointsDir: "entries", // default: "entrypoints"
   modulesDir: "wxt-modules", // default: "modules"
   publicDir: "static",       // default: "public"
 })

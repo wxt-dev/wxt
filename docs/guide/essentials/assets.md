@@ -56,7 +56,7 @@ img.src = imageUrl;
 
 ## Inside Content Scripts
 
-Assets inside content scripts are a little different. By default, when you import an asset, it returns just the path to the asset. This is because WXT assumes you're loading assets from the same hostname.
+Assets inside content scripts are a little different. By default, when you import an asset, it returns just the path to the asset. This is because Vite assumes you're loading assets from the same hostname.
 
 But, inside content scripts, the hostname is whatever the tab is set to. So if you try to fetch the asset, manually or as an `<img>`'s `src`, it will be loaded from the tab's website, not your extension.
 
@@ -77,4 +77,6 @@ export default defineContentScript({
 
 ## WASM
 
-TODO
+:::warning 🚧 Under construction
+These docs will be coming soon!
+:::

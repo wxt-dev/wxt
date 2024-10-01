@@ -1,6 +1,6 @@
-# Targetting Different Browsers
+# Targeting Different Browsers
 
-When building an extension with WXT, you can create multiple builds of your extension targetting different browsers and manifest versions.
+When building an extension with WXT, you can create multiple builds of your extension targeting different browsers and manifest versions.
 
 ## Target a Browser
 
@@ -12,18 +12,18 @@ wxt -b firefox
 wxt -b custom
 ```
 
-Targetting a browser has several effects:
+Targeting a browser has several effects:
 
 1. During development, when passing `firefox`, WXT will automatically open Firefox with the extension installed. For all other browsers, it will open Chrome/Chromium
 2. Changes build-time constants provided by WXT:
-   - `import.meta.env.BROWSER`: A string, the targetted browser
+   - `import.meta.env.BROWSER`: A string, the targeted browser
    - `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.BROWSER === "chrome"`
    - `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.BROWSER === "firefox"`
    - `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.BROWSER === "edge"`
    - `import.meta.env.SAFARI`: A boolean equivalent to `import.meta.env.BROWSER === "safari"`
    - `import.meta.env.OPERA`: A boolean equivalent to `import.meta.env.BROWSER === "opera"`
 
-## Target a Manfifest Version
+## Target a Manifest Version
 
 To target specific manifest versions, use the `--mv2` or `--mv3` CLI flags.
 

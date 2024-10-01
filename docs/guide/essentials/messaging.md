@@ -2,11 +2,11 @@
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/messaging) • [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#communicating_with_background_scripts)
 
-The vanilla APIs for sending messages are difficult to use, but possible. Read the docs linked above to learn more.
+Read the docs linked above to learn more about using the vanilla messaging APIs.
 
 ## Alternatives
 
-Instead of using the APIs directly, it's recommended to install an NPM package that wraps around the vanilla APIs.
+The vanilla APIs are difficult to use and are a pain point to many new extension developers. For this reason, WXT recommends installing an NPM package that wraps around the vanilla APIs.
 
 Here are some popular messaging libraries that support all browsers and work with WXT:
 

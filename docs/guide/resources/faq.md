@@ -4,6 +4,8 @@ outline: false
 
 # FAQ
 
+Commonly asked questions about how to use WXT or why it behaves the way it does.
+
 [[toc]]
 
 ---

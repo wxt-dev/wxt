@@ -28,7 +28,7 @@ For web extensions, there are two types of entrypoints:
 - **Listed**: Referenced in the `manifest.json`
 - **Unlisted**: Not referenced in the `manifest.json`
 
-Throughout the rest of WXT's documentation, listed files are refered to by name. For example:
+Throughout the rest of WXT's documentation, listed files are referred to by name. For example:
 
 - Popup
 - Options

@@ -36,7 +36,7 @@ wxt zip -b firefox
 
 Then run the `wxt submit` command, passing in all the ZIP files you want to release. In this case, we'll do a release for all 3 major stores: Chrome Web Store, Edge Addons, and Firefox Addons Store.
 
-If it's your first time running the command or you recently made changes to the release process, you'll want to test your secrets by passing the `--dry-run` flag:
+If it's your first time running the command or you recently made changes to the release process, you'll want to test your secrets by passing the `--dry-run` flag.
 
 ```sh
 wxt submit --dry-run \
@@ -175,7 +175,7 @@ Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the abov
 Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
 
 :::warning
-If you use a `.env` files, they can effect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/reference/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
+If you use a `.env` files, they can affect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/reference/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
 
 See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 :::

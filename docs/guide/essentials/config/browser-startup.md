@@ -12,7 +12,7 @@ During development WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package
 
 You can configure browser startup in 3 places:
 
-1. `<rootDir>/web-ext.config.ts`: Ignored from version control, this file lets you configure your own options without effectint other developers
+1. `<rootDir>/web-ext.config.ts`: Ignored from version control, this file lets you configure your own options without affecting other developers
 
    ```ts
    import { defineRunnerConfig } from 'wxt';
@@ -49,26 +49,13 @@ Right now, Chromium based browsers are the only browsers that support overriding
 
 To persist data, set the `--user-data-dir` flag:
 
-:::code-group
-
-```ts [Mac/Linux]
+```ts
 export default defineRunnerConfig({
   chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
 });
 ```
 
-```ts [Windows]
-// WARNING: This doesn't seem to work on windows, chrome doesn't respect the
-// --user-data-dir. If you figure out a way to do this, please share so we can
-// update these docs.
-export default defineRunnerConfig({
-  chromiumArgs: ['--user-data-dir=.\\.wxt\\chrome-data'],
-});
-```
-
-:::
-
-Now, next timne you run the `dev` script, a persistent profile will be created in `.wxt/chrome-data/{profile-name}`. With a persistent profile, you can install devtools extensions to help with development, allow the browser to remember logins, etc, without worrying about the profile being reset the next time you run the `dev` script.
+Now, next time you run the `dev` script, a persistent profile will be created in `.wxt/chrome-data/{profile-name}`. With a persistent profile, you can install devtools extensions to help with development, allow the browser to remember logins, etc, without worrying about the profile being reset the next time you run the `dev` script.
 
 ### Disable Opening Browser
 

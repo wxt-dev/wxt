@@ -39,7 +39,7 @@ npx wxt@latest init
 
 ![wxt init demo](/assets/init-demo.gif)
 
-Once you've ran the `dev` command, continue to [Next Steps](#next-steps)!
+Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 
 ## From Scratch
 
@@ -99,7 +99,7 @@ Once you've ran the `dev` command, continue to [Next Steps](#next-steps)!
      }
    }
    ```
-5. Run your extension in dev mode!
+5. Run your extension in dev mode
    :::code-group
    ```sh [PNPM]
    pnpm dev

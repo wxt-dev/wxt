@@ -2,7 +2,7 @@
 
 WXT uses [Vite](https://vitejs.dev/) under the hood to bundle your extension. As such, all of [Vite's features](https://vitejs.dev/guide/features.html) are available when using WXT.
 
-WXT orchastrates several different Vite builds to bundle your extension. For more info, read [How WXT Works](/guide/resources/how-wxt-works).
+WXT orchestrates several different Vite builds to bundle your extension. For more info, read [How WXT Works](/guide/resources/how-wxt-works).
 
 ## Change Vite Config
 

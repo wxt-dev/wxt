@@ -8,7 +8,9 @@ To upgrade WXT to the latest version... just install it!
 pnpm i wxt@latest
 ```
 
-If there was a major version change, follow the steps below to fix breaking changes.
+Listed below are all the breaking changes you should address when upgrading to a new version of WXT.
+
+Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`, are considered major and have breaking changes. Once v1 is released, only major version bumps will have breaking changes.
 
 ## v0.18.5 &rarr; v0.19.0
 

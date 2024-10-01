@@ -29,7 +29,7 @@ export default defineAppConfig({
 ```
 
 :::warning
-This file is commited to the repo, so don't put any secrets here. Instead, use [Environment Variables](#environment-variables)
+This file is committed to the repo, so don't put any secrets here. Instead, use [Environment Variables](#environment-variables)
 :::
 
 To access runtime config, WXT provides the `useAppConfig` function:
@@ -75,5 +75,5 @@ export default defineAppConfig({
 This has several advantages:
 
 - Define what environment variables are use at runtime in a single file
-- Convert strings to nicer type, like booleans or arrays
+- Convert strings to nicer types, like booleans or arrays
 - Provide default values if an environment variable is not provided

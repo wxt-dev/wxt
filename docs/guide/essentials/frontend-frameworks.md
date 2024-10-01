@@ -68,7 +68,7 @@ export default defineConfig({
 
 ## Multiple Apps
 
-Since web extensions usually contain multiple UIs accross multiple entrypoints (popup, options, changelog, side panel, content scripts, etc), you'll need to create individual app instances, one per entyrypoint.
+Since web extensions usually contain multiple UIs across multiple entrypoints (popup, options, changelog, side panel, content scripts, etc), you'll need to create individual app instances, one per entrypoint.
 
 Usually, this means each entrypoint should be a directory with it's own files inside it. Here's the recommended folder structure:
 
@@ -85,7 +85,7 @@ Usually, this means each entrypoint should be a directory with it's own files in
          📄 index.html
          📄 App.tsx
          📄 main.tsx    <--------- Create and mount your app here
-         📄 style.css   <--------- Have entrypoint-specific styles to apply?
+         📄 style.css   <--------- Entrypoint-specific styles
          📄 router.ts
 ```
 
@@ -93,7 +93,7 @@ Usually, this means each entrypoint should be a directory with it's own files in
 
 All frameworks come with routers for building a multi-page app using the URL's path... But web extensions don't work like this. Since HTML files are static, `chrome-extension://{id}/popup.html`, there's no way to change the entire path for routing.
 
-Instead, you need to configure the router to run in "hash" mode, where the routing information is apart of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`).
+Instead, you need to configure the router to run in "hash" mode, where the routing information is a part of the URL's hash, not the path (ie: `popup.html#/` and `popup.html#/account/settings`).
 
 Refer to your router's docs for information about hash mode and how to enable it. Here's a non-extensive list of a few popular routers:
 

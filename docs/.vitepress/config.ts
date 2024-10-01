@@ -134,15 +134,6 @@ export default defineConfig({
           menuItem('How WXT Works', 'how-wxt-works.md'),
         ]),
       ]),
-      '/i18n/': menuRoot([
-        menuGroup('@wxt-dev/i18n', '/i18n/', [
-          menuItem('Introduction', 'introduction.md'),
-          menuItem('Installation', 'installation.md'),
-          menuItem('Messages File Format', 'messages-file-format.md'),
-          menuItem('Build Integrations', 'build-integrations.md'),
-          menuItem('Editor Support', 'editor-support.md'),
-        ]),
-      ]),
       '/api/': menuRoot([
         menuGroup(
           'CLI Reference',

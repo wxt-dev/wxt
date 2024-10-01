@@ -2,7 +2,7 @@
 
 In WXT, there is no `manifest.json` file in your source code. Instead, WXT generates it during the build process based off files in your project.
 
-## Manfiest Config
+## Manifest Config
 
 To manually add a property to the `manifest.json` output during builds, use the `manifest` config inside `wxt.config.ts`:
 
@@ -28,7 +28,7 @@ export default defineConfig({
 
 ### MV2 and MV3 Compatibility
 
-When adding properties to the manifest, always define the property in it's MV3 format when possible. When targetting MV2, WXT will automatically convert these properties to their MV2 format.
+When adding properties to the manifest, always define the property in it's MV3 format when possible. When targeting MV2, WXT will automatically convert these properties to their MV2 format.
 
 For example, for this config:
 
@@ -81,7 +81,7 @@ WXT will generate the following manifests:
 
 :::
 
-You can also specify properties specific to a single manifest version, and they will be stripped out when targetting the other manifest version.
+You can also specify properties specific to a single manifest version, and they will be stripped out when targeting the other manifest version.
 
 ## Name
 
@@ -207,7 +207,7 @@ export default defineConfig({
 
 In MV2, you have two options: [`browser_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action) and [`page_action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/page_action). In MV3, they were merged into a single [`action`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action) API.
 
-By default, whenever an `action` is generated, WXT falls back to `browser_action` when targetting MV2.
+By default, whenever an `action` is generated, WXT falls back to `browser_action` when targeting MV2.
 
 ### Action With Popup
 

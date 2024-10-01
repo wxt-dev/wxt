@@ -26,7 +26,7 @@ To specify custom compiler options, add them in `<rootDir>/tsconfig.json`:
 {
   "extends": ".wxt/tsconfig.json",
   "compilerOptions": {
-    "jsx": "perserve",
+    "jsx": "preserve/",
   },
 }
 ```
