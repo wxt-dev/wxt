@@ -71,7 +71,7 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 🦾 Auto-imports
 - 🤖 Automated publishing
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
-- 📦 Modular architecture with [WXT modules](https://wxt.dev/guide/essentials/wxt-modules.html#overview)
+- 📦 [Module system](https://wxt.dev/guide/essentials/wxt-modules.html#overview) for reusing code between extensions
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
 - ⬇️ Download and bundle remote URL imports

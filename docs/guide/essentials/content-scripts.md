@@ -564,7 +564,7 @@ export default defineContentScript(async () => {
 
 `injectScript` returns a promise, that when resolved, means the script has been evaluated by the browser and you can start communicating with it.
 
-:::warning Warning: `run_at` Caveots
+:::warning Warning: `run_at` Caveat
 For MV3, `injectScript` is synchronous and the injected script will be evaluated at the same time as your the content script's `run_at`.
 
 However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
