@@ -109,7 +109,7 @@
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
     "linkedom": "^0.18.4",
-    "magicast": "^0.3.4",
+    "magicast": "^0.3.5",
     "minimatch": "^10.0.1",
     "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
