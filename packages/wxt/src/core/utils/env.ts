@@ -5,6 +5,6 @@ import { config } from 'dotenv';
  */
 export function loadEnv(mode: string) {
   return config({
-    path: [`.env`, `.env.local`, `.env.${mode}`, `.env.${mode}.local`],
+    path: [`.env.${mode}.local`, `.env.${mode}`, `.env.local`, `.env`],
   });
 }
