@@ -17,7 +17,9 @@ Or if you're in a monorepo, you may not want to extend the config. If you don't 
 /// <reference types="./.wxt/wxt.d.ts" />
 ```
 
-Additionally, if you need to specify custom compiler options, you should add them in `<rootDir>/tsconfig.json`, NOT `<rootDir>/.wxt/tsconfig.json`.
+## Compiler Options
+
+To specify custom compiler options, add them in `<rootDir>/tsconfig.json`:
 
 ```jsonc
 // <rootDir>/tsconfig.json
@@ -31,16 +33,33 @@ Additionally, if you need to specify custom compiler options, you should add the
 
 ## TSConfig Paths
 
-`<rootDir>/.wxt/tsconfig.json` includes a default set of path aliases. To add your own, DO NOT add them to either `tsconfig.json` by hand.
+WXT provides a default set of path aliases.
 
-Instead, use the [`alias` config](/api/reference/wxt/interfaces/InlineConfig#alias) in `wxt.config.ts`. This will add your custom aliases to the generated `<rootDir>/.wxt/tsconfig.json` file next time you run `wxt prepare`.
+| Alias | To            | Example                                         |
+| ----- | ------------- | ----------------------------------------------- |
+| `~~`  | `<rootDir>/*` | `import "~~/scripts"`                           |
+| `@@`  | `<rootDir>/*` | `import "@@/scripts"`                           |
+| `~`   | `<srcDir>/*`  | `import { toLowerCase } from "~/utils/strings"` |
+| `@`   | `<srcDir>/*`  | `import { toLowerCase } from "@/utils/strings"` |
+
+To add your own, DO NOT add them to your `tsconfig.json`! Instead, use the [`alias` option](/api/reference/wxt/interfaces/InlineConfig#alias) in `wxt.config.ts`.
+
+This will add your custom aliases to `<rootDir>/.wxt/tsconfig.json` next time you run `wxt prepare`. It also adds your alias to the bundler so it can resolve imports
 
 ```ts
 import { resolve } from 'node:path';
 
 export default defineConfig({
   alias: {
+    // Directory:
     testing: resolve('utils/testing'),
+    // File:
+    strings: resolve('utils/strings.ts'),
   },
 });
+```
+
+```ts
+import { fakeTab } from 'testing/fake-objects';
+import { toLowerCase } from 'strings';
 ```
