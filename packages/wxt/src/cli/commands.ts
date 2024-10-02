@@ -98,7 +98,6 @@ cli
   .option('--sources', 'always create sources zip')
   .action(
     wrapAction(async (root, flags) => {
-      console.log(flags);
       await zip({
         root,
         mode: flags.mode,
