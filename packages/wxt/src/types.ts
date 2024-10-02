@@ -131,6 +131,16 @@ export interface InlineConfig {
      */
     artifactTemplate?: string;
     /**
+     * When zipping the extension, also zip sources.
+     *
+     * - `undefined`: zip sources if the target browser is "firefox" or "opera"
+     * - `true`: always zip sources
+     * - `false`: never zip sources
+     *
+     * @default undefined
+     */
+    zipSources?: boolean;
+    /**
      * Configure the filename output when zipping files.
      *
      * Available template variables:
@@ -1285,6 +1295,10 @@ export interface ResolvedConfig {
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
+    /**
+     * If true, when zipping the extension, also zip the sources.
+     */
+    zipSources: boolean;
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.
