@@ -197,7 +197,7 @@ describe('Zipping', () => {
     expect(await project.fileExists(sourcesZip)).toBe(true);
   });
 
-  it('should create sources zip when alwaysBuildSourcesZip is true, regardless of browser', async () => {
+  it('should create sources zip when sourcesZip is true, regardless of browser', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -218,7 +218,7 @@ describe('Zipping', () => {
     expect(await project.fileExists(sourcesZip)).toBe(true);
   });
 
-  it('should not create sources zip for Chrome when alwaysBuildSourcesZip is false', async () => {
+  it('should not create sources zip for Firefox when sourcesZip is false', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -230,7 +230,7 @@ describe('Zipping', () => {
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
     await project.zip({
-      browser: 'chrome',
+      browser: 'firefox',
       zip: {
         zipSources: false,
       },

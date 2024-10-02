@@ -131,9 +131,13 @@ export interface InlineConfig {
      */
     artifactTemplate?: string;
     /**
-     * Set to `true` to always create a sources zip, even when the browser is not Firefox or Opera.
+     * When zipping the extension, also zip sources.
      *
-     * @default false
+     * - `undefined`: zip sources if the target browser is "firefox" or "opera"
+     * - `true`: always zip sources
+     * - `false`: never zip sources
+     *
+     * @default undefined
      */
     zipSources?: boolean;
     /**
@@ -1291,6 +1295,9 @@ export interface ResolvedConfig {
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
+    /**
+     * If true, when zipping the extension, also zip the sources.
+     */
     zipSources: boolean;
   };
   /**

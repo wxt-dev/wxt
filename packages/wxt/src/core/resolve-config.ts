@@ -179,7 +179,7 @@ export async function resolveConfig(
     srcDir,
     typesDir,
     wxtDir,
-    zip: resolveZipConfig(root, outBaseDir, mergedConfig),
+    zip: resolveZipConfig(root, browser, outBaseDir, mergedConfig),
     transformManifest: mergedConfig.transformManifest,
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
@@ -258,6 +258,7 @@ async function mergeInlineConfig(
 
 function resolveZipConfig(
   root: string,
+  browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
 ): NullablyRequired<ResolvedConfig['zip']> {
@@ -269,10 +270,9 @@ function resolveZipConfig(
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
-    zipSources: ['firefox', 'opera'].includes(mergedConfig.browser ?? '')
-      ? true
-      : false,
     ...mergedConfig.zip,
+    zipSources:
+      mergedConfig.zip?.zipSources ?? ['firefox', 'opera'].includes(browser),
     exclude: mergedConfig.zip?.exclude ?? [],
     excludeSources: [
       '**/node_modules',
