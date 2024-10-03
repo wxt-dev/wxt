@@ -97,7 +97,7 @@
     "dequal": "^2.0.3",
     "dotenv": "^16.4.5",
     "esbuild": "^0.24.0",
-    "execa": "^9.3.1",
+    "execa": "^9.4.0",
     "fast-glob": "^3.3.2",
     "filesize": "^10.1.4",
     "fs-extra": "^11.2.0",
