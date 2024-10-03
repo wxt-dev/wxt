@@ -25,7 +25,7 @@ Just like with Vite, depending on the `--mode` you pass, different dotenv files 
 
 ## Get Mode at Runtime
 
-You can access the current mode in your extension via `import.meta.env`:
+You can access the current mode in your extension using `import.meta.env.MODE`:
 
 ```ts
 switch (import.meta.env.MODE) {
