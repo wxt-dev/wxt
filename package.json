@@ -21,7 +21,7 @@
     "@aklinker1/check": "^1.4.5",
     "@types/fs-extra": "^11.0.4",
     "@vitest/coverage-v8": "^2.0.4",
-    "changelogen": "^0.5.5",
+    "changelogen": "^0.5.7",
     "consola": "^3.2.3",
     "dependency-graph": "^1.0.0",
     "execa": "^9.3.1",
