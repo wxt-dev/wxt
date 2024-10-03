@@ -11,13 +11,17 @@ export type AugmentedBrowser = Omit<Browser, 'runtime' | 'i18n'> & {
   i18n: WxtI18n & Omit<Browser['i18n'], 'getMessage'>;
 };
 
-export interface WxtRuntime {
-  // Overriden per-project
-}
+/**
+ * This interface is empty because it is generated per-project when running `wxt prepare`. See:
+ * - `.wxt/types/paths.d.ts`
+ */
+export interface WxtRuntime {}
 
-export interface WxtI18n {
-  // Overriden per-project
-}
+/**
+ * This interface is empty because it is generated per-project when running `wxt prepare`. See:
+ * - `.wxt/types/i18n.d.ts`
+ */
+export interface WxtI18n {}
 
 export const browser: AugmentedBrowser = originalBrowser;
 

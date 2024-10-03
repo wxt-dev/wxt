@@ -23,12 +23,12 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.269",
-    "@types/react": "^18.3.3",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "@wxt-dev/auto-icons": "workspace:*",
-    "sass": "^1.77.8",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.4",
+    "sass": "^1.79.4",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.2",
     "vitest-plugin-random-seed": "^1.1.0",
     "wxt": "workspace:*"
   },
