@@ -28,7 +28,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
 
   const projectName =
     wxt.config.zip.name ??
-    safeFilename((await getPackageJson())?.name || path.dirname(process.cwd()));
+    safeFilename(
+      (await getPackageJson())?.name || path.basename(process.cwd()),
+    );
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
