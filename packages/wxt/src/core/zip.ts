@@ -169,6 +169,16 @@ async function downloadPrivatePackages() {
     );
 
     for (const pkg of downloadPackages) {
+      const protocol = pkg.version.split(':')[0];
+      const isDownloadable = !['file', 'patch'].includes(protocol);
+
+      if (!isDownloadable) {
+        wxt.logger.warn(
+          `Skipping package download: ${pkg.name}@${pkg.version}`,
+        );
+        continue;
+      }
+
       wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
       const id = `${pkg.name}@${pkg.version}`;
       const tgzPath = await wxt.pm.downloadDependency(
@@ -176,7 +186,10 @@ async function downloadPrivatePackages() {
         wxt.config.zip.downloadedPackagesDir,
       );
       files.push(tgzPath);
-      overrides[id] = tgzPath;
+
+      // removes version strings that may cause issues with Yarn Berry
+      const overrideKey = id.replace(/@(npm|workspace):.*$/, '');
+      overrides[overrideKey] = tgzPath;
     }
   }
 
