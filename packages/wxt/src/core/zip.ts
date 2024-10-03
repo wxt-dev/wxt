@@ -198,7 +198,7 @@ function addOverridesToPackageJson(
   };
   Object.entries(overrides).forEach(([key, absolutePath]) => {
     newPackage[wxt.pm.overridesKey][key] =
-      'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
+      'file:./' + normalizePath(path.relative(packageJsonDir, absolutePath));
   });
   return JSON.stringify(newPackage, null, 2);
 }
