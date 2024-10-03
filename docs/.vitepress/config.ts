@@ -104,6 +104,7 @@ export default defineConfig({
               menuItem('Auto-imports', 'auto-imports.md'),
               menuItem('Vite', 'vite.md'),
               menuItem('Runtime Config', 'runtime.md'),
+              menuItem('Build Mode', 'build-mode.md'),
               menuItem('TypeScript', 'typescript.md'),
               menuItem('Hooks', 'hooks.md'),
               menuItem('Entrypoint Loaders', 'entrypoint-loaders.md'),
