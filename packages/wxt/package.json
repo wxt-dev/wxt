@@ -134,7 +134,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/natural-compare": "^1.4.3",
-    "@types/node": "^20.14.12",
+    "@types/node": "^22.7.4",
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
     "extract-zip": "^2.0.1",

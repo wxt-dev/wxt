@@ -40,7 +40,7 @@
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
     "@types/chrome": "^0.0.268",
-    "@types/node": "^20.14.2",
+    "@types/node": "^22.7.4",
     "oxlint": "^0.9.1",
     "publint": "^0.2.8",
     "typescript": "^5.4.5",
