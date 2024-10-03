@@ -22,7 +22,7 @@
 
 - Florian Metz ([@Timeraa](http://github.com/Timeraa))
 - Gurvir Singh ([@baraich](http://github.com/baraich))
-- Mezannic <mezannic@gmail.com>
+- Mezannic ([@mezannic](http://github.com/mezannic))
 - Aaron ([@aklinker1](http://github.com/aklinker1))
 
 ## v0.19.10
