@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { test, expect } from 'vitest';
 import spawn from 'nano-spawn';
-import { test } from 'vitest';
 import {
   NpmListDependency,
   NpmListProject,
