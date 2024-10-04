@@ -37,14 +37,15 @@ export default {
 };
 
 async function getHelp(command: string): Promise<string> {
-  const res = await spawn('pnpm', [command, '--help'], {
+  const args = command.split(' ');
+  const res = await spawn(args[0], [...args.slice(1), '--help'], {
     cwd: 'packages/wxt',
   });
   return res.stdout;
 }
 
 function getWxtHelp(command: string): Promise<string> {
-  return getHelp(`-s wxt ${command}`.trim());
+  return getHelp(`pnpm -s wxt ${command}`.trim());
 }
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
