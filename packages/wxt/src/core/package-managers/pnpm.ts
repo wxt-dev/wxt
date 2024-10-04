@@ -19,8 +19,8 @@ export const pnpm: WxtPackageManagerImpl = {
     ) {
       args.push('--ignore-workspace');
     }
-    const { execa } = await import('execa');
-    const res = await execa('pnpm', args, { cwd: options?.cwd });
+    const { default: spawn } = await import('nano-spawn');
+    const res = await spawn('pnpm', args, { cwd: options?.cwd });
     const projects: NpmListProject[] = JSON.parse(res.stdout);
 
     return flattenNpmListOutput(projects);

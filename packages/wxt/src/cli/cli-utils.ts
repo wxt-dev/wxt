@@ -87,8 +87,8 @@ export function createAliasedCommand(
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
-        const { execa } = await import('execa');
-        await execa(bin, args, {
+        const { default: spawn } = await import('nano-spawn');
+        await spawn(bin, args, {
           stdio: 'inherit',
         });
       } catch {

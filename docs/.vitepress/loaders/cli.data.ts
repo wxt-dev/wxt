@@ -1,6 +1,6 @@
-import { resolve, join } from 'node:path';
+import { resolve } from 'node:path';
 import consola from 'consola';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
 const cliDirGlob = resolve(cliDir, '**');
@@ -37,7 +37,7 @@ export default {
 };
 
 async function getHelp(command: string): Promise<string> {
-  const res = await execaCommand(command + ' --help', {
+  const res = await spawn('pnpm', [command, '--help'], {
     cwd: 'packages/wxt',
   });
   return res.stdout;

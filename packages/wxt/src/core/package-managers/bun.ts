@@ -11,8 +11,8 @@ export const bun: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--all');
     }
-    const { execa } = await import('execa');
-    const res = await execa('bun', args, { cwd: options?.cwd });
+    const { default: spawn } = await import('nano-spawn');
+    const res = await spawn('bun', args, { cwd: options?.cwd });
     return dedupeDependencies(
       res.stdout
         .split('\n')

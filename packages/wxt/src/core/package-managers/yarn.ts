@@ -12,8 +12,8 @@ export const yarn: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
-    const { execa } = await import('execa');
-    const res = await execa('yarn', args, { cwd: options?.cwd });
+    const { default: spawn } = await import('nano-spawn');
+    const res = await spawn('yarn', args, { cwd: options?.cwd });
     const tree = res.stdout
       .split('\n')
       .map<JsonLine>((line) => JSON.parse(line))
