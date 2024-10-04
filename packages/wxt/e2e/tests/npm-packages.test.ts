@@ -9,7 +9,7 @@ import {
 // Tests to ensure the total size of the WXT module is as small as possible
 // https://pkg-size.dev/wxt
 
-test('Only one version of esbuild should be installed (each version is ~10mb of node_modules)', async () => {
+test('Only one version of esbuild should be installed (each version is ~20mb of node_modules)', async () => {
   const { stdout } = await spawn('pnpm', [
     'why',
     'esbuild',
