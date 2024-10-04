@@ -22,13 +22,9 @@ describe('I18n Types', () => {
     describe('t', () => {
       it('should allow passing any combination of arguments', () => {
         i18n.t('any');
-        i18n.t('any', { escapeLt: true });
         i18n.t('any', ['one']);
-        i18n.t('any', ['one'], { escapeLt: true });
         i18n.t('any', ['one', 'two']);
-        i18n.t('any', ['one', 'two'], { escapeLt: true });
         i18n.t('any', n, ['one', 'two']);
-        i18n.t('any', n, ['one', 'two'], { escapeLt: true });
       });
     });
   });
@@ -46,7 +42,6 @@ describe('I18n Types', () => {
     describe('t', () => {
       it('should only allow passing valid combinations of arguments', () => {
         i18n.t('simple');
-        i18n.t('simple', { escapeLt: true });
         // @ts-expect-error
         i18n.t('simple', []);
         // @ts-expect-error
@@ -55,7 +50,6 @@ describe('I18n Types', () => {
         i18n.t('simple', n);
 
         i18n.t('simpleSub1', ['one']);
-        i18n.t('simpleSub1', ['one'], { escapeLt: true });
         // @ts-expect-error
         i18n.t('simpleSub1');
         // @ts-expect-error
@@ -66,7 +60,6 @@ describe('I18n Types', () => {
         i18n.t('simpleSub1', n);
 
         i18n.t('simpleSub2', ['one', 'two']);
-        i18n.t('simpleSub2', ['one', 'two'], { escapeLt: true });
         // @ts-expect-error
         i18n.t('simpleSub2');
         // @ts-expect-error
@@ -77,7 +70,6 @@ describe('I18n Types', () => {
         i18n.t('simpleSub2', n);
 
         i18n.t('plural', n);
-        i18n.t('plural', n, { escapeLt: true });
         // @ts-expect-error
         i18n.t('plural');
         // @ts-expect-error
@@ -88,10 +80,8 @@ describe('I18n Types', () => {
         i18n.t('plural', n, ['sub']);
 
         i18n.t('pluralSub1', n);
-        i18n.t('pluralSub1', n, { escapeLt: true });
-        i18n.t('pluralSub1', n, undefined, { escapeLt: true });
+        i18n.t('pluralSub1', n, undefined);
         i18n.t('pluralSub1', n, ['one']);
-        i18n.t('pluralSub1', n, ['one'], { escapeLt: true });
         // @ts-expect-error
         i18n.t('pluralSub1');
         // @ts-expect-error
@@ -102,7 +92,6 @@ describe('I18n Types', () => {
         i18n.t('pluralSub1', n, ['one', 'two']);
 
         i18n.t('pluralSub2', n, ['one', 'two']);
-        i18n.t('pluralSub2', n, ['one', 'two'], { escapeLt: true });
         // @ts-expect-error
         i18n.t('pluralSub2');
         // @ts-expect-error

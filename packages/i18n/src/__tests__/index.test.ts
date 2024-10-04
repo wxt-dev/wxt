@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createI18n } from '../index';
-import { GetMessageOptions } from '../types';
 
 const getMessageMock = vi.fn();
 
@@ -63,20 +62,5 @@ describe('createI18n', () => {
     const i18n = createI18n();
     i18n.t('key', 3, ['custom']);
     expect(getMessageMock).toBeCalledWith('key', ['custom'], undefined);
-  });
-
-  it('should pass options into browser.i18n.getMessage', () => {
-    const i18n = createI18n();
-    const options: GetMessageOptions = {
-      escapeLt: true,
-    };
-
-    i18n.t('key', options);
-    i18n.t('key', [''], options);
-    i18n.t('key', 1, options);
-    i18n.t('key', 1, [''], options);
-    getMessageMock.mock.calls.forEach((call) => {
-      expect(call.pop()).toEqual(options);
-    });
   });
 });
