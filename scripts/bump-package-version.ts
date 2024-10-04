@@ -5,7 +5,7 @@ import {
   generateMarkDown,
   parseChangelogMarkdown,
 } from 'changelogen';
-import { execa } from 'execa';
+import spawn from 'nano-spawn';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 import { consola } from 'consola';
 import fs from 'fs-extra';
@@ -36,7 +36,7 @@ if (currentVersion.startsWith('0.')) {
     bumpType = 'patch';
   }
 }
-await execa('pnpm', ['version', bumpType], {
+await spawn('pnpm', ['version', bumpType], {
   cwd: pkgDir,
 });
 const updatedPkgJson = await fs.readJson(pkgJsonPath);
@@ -82,11 +82,11 @@ await fs.writeFile(changelogPath, newChangelog, 'utf8');
 consola.success('Updated changelog');
 
 // Commit changes
-await execa('git', ['add', pkgJsonPath, changelogPath]);
-await execa('git', [
+await spawn('git', ['add', pkgJsonPath, changelogPath]);
+await spawn('git', [
   'commit',
   '-m',
   `chore(release): ${pkgName} v${newVersion}`,
 ]);
-await execa('git', ['tag', newTag]);
+await spawn('git', ['tag', newTag]);
 consola.success('Committed version and changelog');

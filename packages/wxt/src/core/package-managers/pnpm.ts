@@ -1,5 +1,6 @@
 import { NpmListProject, flattenNpmListOutput, npm } from './npm';
 import { WxtPackageManagerImpl } from './types';
+import spawn from 'nano-spawn';
 
 export const pnpm: WxtPackageManagerImpl = {
   overridesKey: 'resolutions', // "pnpm.overrides" has a higher priority, but I don't want to deal with nesting
@@ -19,8 +20,7 @@ export const pnpm: WxtPackageManagerImpl = {
     ) {
       args.push('--ignore-workspace');
     }
-    const { execa } = await import('execa');
-    const res = await execa('pnpm', args, { cwd: options?.cwd });
+    const res = await spawn('pnpm', args, { cwd: options?.cwd });
     const projects: NpmListProject[] = JSON.parse(res.stdout);
 
     return flattenNpmListOutput(projects);
