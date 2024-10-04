@@ -40,7 +40,9 @@ Here's specific steps for other popular frameworks/build tools.
 ### Plasmo
 
 1. Install `wxt`
-2. Move entrypoints into `entrypoints/` directory, merging the named exports used to configure your JS entrypoints into WXT's default export
+2. Move entrypoints into `entrypoints/` directory
+   - For JS entrypoints, merge the named exports used to configure your JS entrypoints into WXT's default export
+   - For HTML entrypoints, you cannot use JSX/Vue/Svelte files directly, you need to create an HTML file and manually create and mount your app. Refer to the [React](https://github.com/wxt-dev/wxt/tree/main/templates/react/entrypoints/popup), [Vue](https://github.com/wxt-dev/wxt/tree/main/templates/vue/entrypoints/popup), and [Svelte](https://github.com/wxt-dev/wxt/tree/main/templates/svelte/src/entrypoints/popup) templates as an example.
 3. Move public `assets/*` into the `public/` directory
 4. If you use CSUI, migrate to WXT's `createContentScriptUi`
 5. Convert Plasmo's custom import resolutions to Vite's
