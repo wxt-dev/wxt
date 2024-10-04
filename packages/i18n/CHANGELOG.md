@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.0
+
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.1...i18n-v0.2.0)
+
+### 🩹 Fixes
+
+- ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.0...i18n-v0.1.1)
