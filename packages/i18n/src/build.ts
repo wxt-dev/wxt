@@ -166,6 +166,11 @@ function _parseMessagesObject(
       ];
     }
     case 'object':
+      if ([null, undefined].includes(object)) {
+        throw new Error(
+          `While parsing the @wxt-dev/i18n package has found that one of the values in one of your translation files is null or undefined. You may have wanted this value to be transalted from the original please test as necessary`,
+        );
+      }
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item, depth + 1),
