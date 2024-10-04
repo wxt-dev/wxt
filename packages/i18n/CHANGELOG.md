@@ -2,15 +2,18 @@
 
 ## v0.2.0
 
-[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.1...i18n-v0.2.0)
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.1...i18n-v0.2.0)
 
 ### 🩹 Fixes
 
 - ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
 
-#### ⚠️ Breaking Changes
+To upgrade, if you were passing a final `options` argument, remove it. If you used the third argument to escape `<` symbol... You'll need to do it yourself:
 
-- ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
+```diff
+- i18n.t("someKey", ["sub1"], { escapeLt: true });
++ i18n.t("someKey", ["sub1"]).replaceAll("<", "&lt;");
+```
 
 ### ❤️ Contributors
 
