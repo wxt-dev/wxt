@@ -27,7 +27,7 @@ describe('createI18n', () => {
 
     expect(actual).toBe(expectedValue);
     expect(getMessageMock).toBeCalledTimes(1);
-    expect(getMessageMock).toBeCalledWith(expectedKey, undefined);
+    expect(getMessageMock).toBeCalledWith(expectedKey);
   });
 
   it.each([
@@ -54,13 +54,13 @@ describe('createI18n', () => {
 
       expect(actual).toBe(expected);
       expect(getMessageMock).toBeCalledTimes(1);
-      expect(getMessageMock).toBeCalledWith(key, [String(count)], undefined);
+      expect(getMessageMock).toBeCalledWith(key, [String(count)]);
     },
   );
 
   it('should allow overriding the plural substitutions', () => {
     const i18n = createI18n();
     i18n.t('key', 3, ['custom']);
-    expect(getMessageMock).toBeCalledWith('key', ['custom'], undefined);
+    expect(getMessageMock).toBeCalledWith('key', ['custom']);
   });
 });
