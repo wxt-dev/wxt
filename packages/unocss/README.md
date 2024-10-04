@@ -7,10 +7,10 @@ Allows for simple UnoCSS usage in your project.
 Install the package:
 
 ```sh
-npm i --save-dev @wxt-dev/unocss
-pnpm i -D @wxt-dev/unocss
-yarn add --dev @wxt-dev/unocss
-bun i -D @wxt-dev/unocss
+npm i --save-dev @wxt-dev/unocss unocss
+pnpm i -D @wxt-dev/unocss unocss
+yarn add --dev @wxt-dev/unocss unocss
+bun i -D @wxt-dev/unocss unocss
 ```
 
 Add the module to `wxt.config.ts`:
