@@ -1,0 +1,55 @@
+{
+  "name": "@wxt-dev/unocss",
+  "description": "UnoCSS integration for WXT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/unocss"
+  },
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/unocss/README.md",
+  "keywords": [
+    "wxt",
+    "module",
+    "unocss",
+    "css"
+  ],
+  "author": {
+    "name": "Florian Metz",
+    "email": "me@timeraa.dev"
+  },
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "buildc -- unbuild",
+    "check": "pnpm build && check"
+  },
+  "peerDependencies": {
+    "unocss": ">=0.60.0",
+    "wxt": ">=0.19.0"
+  },
+  "devDependencies": {
+    "@aklinker1/check": "^1.4.5",
+    "oxlint": "^0.9.9",
+    "publint": "^0.2.11",
+    "typescript": "^5.6.2",
+    "unbuild": "^2.0.0",
+    "unocss": "^0.63.3",
+    "wxt": "workspace:*"
+  },
+  "dependencies": {
+    "defu": "^6.1.4",
+    "fast-glob": "^3.3.2"
+  }
+}
