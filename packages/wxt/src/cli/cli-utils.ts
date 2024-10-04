@@ -5,6 +5,7 @@ import { printHeader } from '../core/utils/log';
 import { formatDuration } from '../core/utils/time';
 import { ValidationError } from '../core/utils/validation';
 import { registerWxt } from '../core/wxt';
+import spawn from 'nano-spawn';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
@@ -87,7 +88,6 @@ export function createAliasedCommand(
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
-        const { default: spawn } = await import('nano-spawn');
         await spawn(bin, args, {
           stdio: 'inherit',
         });

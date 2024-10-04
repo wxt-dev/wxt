@@ -12,7 +12,7 @@ describe('Init command', () => {
       'pnpm',
       ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
       {
-        env: { ...process.env, CI: 'true' },
+        env: { CI: 'true' },
         stdio: 'ignore',
         cwd: WXT_PACKAGE_DIR,
       },
@@ -59,7 +59,7 @@ describe('Init command', () => {
         'pnpm',
         ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
         {
-          env: { ...process.env, CI: 'true' },
+          env: { CI: 'true' },
           stdio: 'ignore',
           cwd: WXT_PACKAGE_DIR,
         },
