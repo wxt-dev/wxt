@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { pnpm } from '../pnpm';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
@@ -10,7 +10,7 @@ describe('PNPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await execaCommand('pnpm i --ignore-workspace', { cwd });
+      await spawn('pnpm', ['i', '--ignore-workspace'], { cwd });
     });
 
     it('should list direct dependencies', async () => {

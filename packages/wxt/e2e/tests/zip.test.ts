@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import extract from 'extract-zip';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 import { readFile, writeFile } from 'fs-extra';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
@@ -41,13 +41,15 @@ describe('Zipping', () => {
 
     // Build zipped extension
     await expect(
-      execaCommand('pnpm i --ignore-workspace --frozen-lockfile false', {
+      spawn('pnpm', ['i', '--ignore-workspace', '--frozen-lockfile', 'false'], {
         cwd: unzipDir,
       }),
-    ).resolves.toMatchObject({ exitCode: 0 });
+    ).resolves.not.toHaveProperty('exitCode');
     await expect(
-      execaCommand('pnpm wxt build -b firefox', { cwd: unzipDir }),
-    ).resolves.toMatchObject({ exitCode: 0 });
+      spawn('pnpm', ['wxt', 'build', '-b', 'firefox'], {
+        cwd: unzipDir,
+      }),
+    ).resolves.not.toHaveProperty('exitCode');
 
     await expect(project.fileExists(unzipDir, '.output')).resolves.toBe(true);
     expect(
