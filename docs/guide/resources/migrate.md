@@ -18,7 +18,7 @@ pnpm dlx wxt@latest init example-wxt --template vanilla
 In general, you'll need to:
 
 &ensp;<input type="checkbox" /> Install `wxt`<br />
-&ensp;<input type="checkbox" /> [Extend `.wxt/tsconfig.json`](/guide/essentials/config/typescript.html#typescript-configuration) in your project's `tsconfig.json`
+&ensp;<input type="checkbox" /> [Extend `.wxt/tsconfig.json`](/guide/essentials/config/typescript.html#typescript-configuration) in your project's `tsconfig.json`<br />
 &ensp;<input type="checkbox" /> Update/create `package.json` scripts to use `wxt` (don't forget about `postinstall`)<br />
 &ensp;<input type="checkbox" /> Move entrypoints into `entrypoints/` directory<br />
 &ensp;<input type="checkbox" /> Move assets into either the `assets/` or `public/` directories<br />

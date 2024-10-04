@@ -1,6 +1,6 @@
 # Build Modes
 
-Because WXT is powered by Vite, supports [modes](https://vite.dev/guide/env-and-mode.html#modes) in the same way.
+Because WXT is powered by Vite, it supports [modes](https://vite.dev/guide/env-and-mode.html#modes) in the same way.
 
 When running any dev or build commands, pass the `--mode` flag:
 
@@ -11,17 +11,6 @@ wxt zip --mode testing
 ```
 
 By default, `--mode` is `development` for the dev command and `production` for all other commands (build, zip, etc).
-
-## Dotenv Files
-
-Just like with Vite, depending on the `--mode` you pass, different dotenv files are loaded:
-
-```
-.env                # loaded in all cases
-.env.local          # loaded in all cases, ignored by git
-.env.[mode]         # only loaded in specified mode
-.env.[mode].local   # only loaded in specified mode, ignored by git
-```
 
 ## Get Mode at Runtime
 
@@ -38,15 +27,3 @@ switch (import.meta.env.MODE) {
   // ...
 }
 ```
-
-## `NODE_ENV` vs Mode
-
-Just like Vite, you can also set `NODE_ENV` before running a command:
-
-```sh
-NODE_ENV=development wxt zip
-```
-
-It's important to note that `NODE_ENV` is completely unrelated to modes. It corresponds with the `import.meta.env.DEV` and `import.meta.env.PROD`, not `import.meta.env.MODE`.
-
-[Vite's docs](https://vite.dev/guide/env-and-mode.html#node-env-and-modes) go into much more detail about this difference. WXT behaves the same way as Vite.

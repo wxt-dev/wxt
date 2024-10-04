@@ -1,6 +1,6 @@
 # Hooks
 
-WXT includes an in-depth system that lets you hook into the build process and make changes.
+WXT includes a system that lets you hook into the build process and make changes.
 
 Here's an example hook that modifies the `manifest.json` file before it is written to the output directory:
 

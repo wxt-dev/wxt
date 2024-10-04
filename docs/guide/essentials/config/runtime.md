@@ -2,14 +2,12 @@
 
 There are two ways to configure runtime behavior:
 
-- `app.config.ts`
+- App Config File
 - Environment Variables
 
-## `app.config.ts`
+## App Config File
 
-:::warning
-This API is still a WIP, with more features coming soon!
-:::
+> This API is still a WIP, with more features coming soon!
 
 Define runtime configuration in a single place, `<srcDir>/app.config.ts`:
 
@@ -42,21 +40,60 @@ console.log(useAppConfig()); // { theme: "dark" }
 
 ## Environment Variables
 
-WXT supports environment variables through [Vite](https://vitejs.dev/guide/env-and-mode.html#env-variables). You can create `.env` and `.env.*` files just like you would with Vite:
+WXT provides some custom environment variables based on the current command:
+
+| Usage                              | Type      | Description                                          |
+| ---------------------------------- | --------- | ---------------------------------------------------- |
+| `import.meta.env.MANIFEST_VERSION` | `2 │ 3`   | The target manifest version                          |
+| `import.meta.env.BROWSER`          | `string`  | The target browser                                   |
+| `import.meta.env.CHROME`           | `boolean` | Shortcut for `import.meta.env.BROWSER === "chrome"`  |
+| `import.meta.env.FIREFOX`          | `boolean` | Shortcut for `import.meta.env.BROWSER === "firefox"` |
+| `import.meta.env.SAFARI`           | `boolean` | Shortcut for `import.meta.env.BROWSER === "safari"`  |
+| `import.meta.env.EDGE`             | `boolean` | Shortcut for `import.meta.env.BROWSER === "edge"`    |
+| `import.meta.env.OPERA`            | `boolean` | Shortcut for `import.meta.env.BROWSER === "opera"`   |
+
+You can also access all of [Vite's environment variables](https://vite.dev/guide/env-and-mode.html#env-variables):
+
+| Usage                  | Type      | Description                                                                 |
+| ---------------------- | --------- | --------------------------------------------------------------------------- |
+| `import.meta.env.MODE` | `string`  | The [mode](/guide/essentials/config/build-mode) the extension is running in |
+| `import.meta.env.PROD` | `boolean` | When `NODE_ENV='production'`                                                |
+| `import.meta.env.DEV`  | `boolean` | Opposite of `import.meta.env.PROD`                                          |
+
+:::details Other Vite Environment Variables
+Vite provides two other environment variables, but they aren't useful in WXT projects:
+
+- `import.meta.env.BASE_URL`: Use `browser.runtime.getURL` instead.
+- `import.meta.env.SSR`: Always `false`.
+  :::
+
+### Dotenv Files
+
+WXT supports [dotenv files the same way as Vite](https://vite.dev/guide/env-and-mode.html#env-files). Create any of the following files:
 
 ```
+.env
+.env.local
+.env.[mode]
+.env.[mode].local
+```
+
+And any environment variables listed inside them will be available at runtime:
+
+```sh
+# .env
 VITE_API_KEY=...
 ```
-
-Then access them at runtime via `import.meta.env`:
 
 ```ts
 await fetch(`/some-api?apiKey=${import.meta.env.VITE_API_KEY}`);
 ```
 
-### `app.config.ts` Integration
+Remember to prefix any environment variables with `VITE_`, otherwise they won't be available at runtime, as per [Vite's convention](https://vite.dev/guide/env-and-mode.html#env-files).
 
-You can use them in the `app.config.ts` file.
+## Environment Variables in App Config
+
+You can use environment variables in the `app.config.ts` file.
 
 ```ts
 declare module 'wxt/sandbox' {
@@ -74,6 +111,6 @@ export default defineAppConfig({
 
 This has several advantages:
 
-- Define what environment variables are use at runtime in a single file
-- Convert strings to nicer types, like booleans or arrays
+- Define all expected environment variables in a single file
+- Convert strings to other types, like booleans or arrays
 - Provide default values if an environment variable is not provided

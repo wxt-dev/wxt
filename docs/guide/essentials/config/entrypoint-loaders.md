@@ -1,6 +1,22 @@
 # Entrypoint Loaders
 
-Because entrypoint options, like content script `matches`, are listed in the entrypoint's JS file, WXT has to import them during the build process to use those options when generating the manifest.
+To generate the manifest and other files at build-time, WXT must import each entrypoint to get their options, like content script `matches`. For HTML files, this is easy. For JS/TS entrypoints, the process is more complicated.
+
+When loading your JS/TS entrypoints, they are imported into a NodeJS environment, not the `browser` environment that they normally run in. This can lead to issues commonly seen when running browser-only code in a NodeJS environment, like missing global variables.
+
+WXT does several pre-processing steps to try and prevent errors during this process:
+
+1. Use `linkedom` to make a small set of browser globals (`window`, `document`, etc) available.
+2. Use `@webext-core/fake-browser` to create a fake version of the `chrome` and `browser` globals expected by extensions.
+3. Pre-process the JS/TS code, stripping out the `main` function then tree-shaking unused code from the file
+
+However, this process is not perfect. It doesn't setup all the globals found in the browser and the APIs may behave differently. As such, **_you should avoid using browser or extension APIs outside the `main` function of your entrypoints!_**
+
+:::tip
+If you're running into errors while importing entrypoints, run `wxt prepare --debug` to see more details about this process. When debugging, WXT will print out the pre-processed code to help you identify issues.
+:::
+
+Once the environment has been polyfilled and your code pre-processed, it's up the entrypoint loader to import your code, extracting the options from the default export.
 
 There are two options for loading your entrypoints:
 
@@ -9,56 +25,9 @@ There are two options for loading your entrypoints:
 
 ## vite-node
 
-Since 0.19.0, WXT uses `vite-node`, the same tool that powers Vitest and Nuxt, to import your entrypoint files.
-
-If you use any runtime packages that depend on `webextension-polyfill`, you need to add them to [Vite's `ssr.noExternal` option](https://vitejs.dev/config/ssr-options#ssr-noexternal):
-
-```ts
-export default defineConfig({
-  vite: () => ({
-    ssr: {
-      noExternal: ['@webext-core/messaging', '@webext-core/proxy-service'],
-    },
-  }),
-});
-```
-
-:::details Why?
-This tells Vite it needs process these module's, letting WXT properly disable the polyfill in the NodeJS environment so it doesn't cause any build errors like this:
-
-```
-ERROR This script should only be loaded in a browser extension
-```
-
-:::
-
-To get a list of installed packages that use on `webextension-polyfill`, run your package manager's `list` command. Here's an example with PNPM:
-
-```sh
-$ pnpm why webextension-polyfill
-
-dependencies:
-@webext-core/messaging 1.4.0
-└── webextension-polyfill 0.10.0
-@webext-core/proxy-service 1.2.0
-├─┬ @webext-core/messaging 1.4.0 peer
-│ └── webextension-polyfill 0.10.0
-└── webextension-polyfill 0.12.0 peer
-
-devDependencies:
-@wxt-dev/module-vue 1.0.0
-└─┬ wxt 0.19.0-alpha1 peer
-  └── webextension-polyfill 0.12.0
-webextension-polyfill 0.12.0
-wxt 0.19.0-alpha1
-└── webextension-polyfill 0.12.0
-```
-
-Ignoring WXT itself (it's added automatically for you), there are three packages that depend on the polyfill: `@wxt-dev/module-vue`, `@webext-core/messaging`, and `@webext-core/proxy-service`. Since the vue module is a build dependency, with no runtime code, you don't have to add it. That means for this case, you need to add `@webext-core/messaging`, and `@webext-core/proxy-service`, as shown in the original code snippet.
+Since 0.19.0, WXT uses `vite-node`, the same tool that powers Vitest and Nuxt, to import your entrypoint files. It re-uses the same vite config used when building your extension, making it the most stable entrypoint loader.
 
 ## jiti
-
-The original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, there is one main caveat to its usage: **_module side-effects_**.
 
 To enable `jiti`:
 
@@ -68,7 +37,9 @@ export default defineConfig({
 });
 ```
 
-You cannot use imported variables outside the `main` function in JS entrypoints. This includes options, as shown below:
+This is the original method WXT used to import TS files. However, because it doesn't support vite plugins like `vite-node`, it does one additional pre-processing step: It removes **_ALL_** imports from your code.
+
+That means you cannot use imported variables outside the `main` function in JS entrypoints, like for content script `matches` or other options:
 
 ```ts
 // entrypoints/content.ts
@@ -90,22 +61,10 @@ WXT 0.14.1
 ℹ Building chrome-mv3 for production with Vite 5.0.5
 ✖ Command failed after 360 ms
 
-[8:55:54 AM]  ERROR  entrypoints/content.ts: Cannot use imported variable "GOOGLE_MATCHES" before main function. See https://wxt.dev/guide/entrypoints.html#side-effects
+[8:55:54 AM]  ERROR  entrypoints/content.ts: Cannot use imported variable "GOOGLE_MATCHES" before main function.
 ```
 
-This throws an error because WXT needs to import each entrypoint during the build process to extract its definition (containing the `match`, `runAt`, `include`/`exclude`, etc.) to render the `manifest.json` correctly. Before loading an entrypoint, a transformation is applied to remove all imports. This prevents imported modules (local or NPM) with side-effects from running during the build process, potentially throwing an error.
-
-:::details Why?
-
-When importing your entrypoint to get its definition, the file is imported in a **_node environment_**, and doesn't have access to the `window`, `chrome`, or `browser` globals a web extension usually has access to. If WXT doesn't remove all the imports from the file, the imported modules could try and access one of these variables, throwing an error.
-
-:::
-
-:::warning
-See [`wxt-dev/wxt#336`](https://github.com/wxt-dev/wxt/issues/336) to track the status of this bug.
-:::
-
-Usually, this error occurs when you try to extract options into a shared file or try to run code outside the `main` function. To fix the example from above, use literal values when defining an entrypoint instead of importing them:
+Usually, this error occurs when you try to extract options into a shared file or when running code outside the `main` function. To fix the example from above, use literal values when defining an entrypoint instead of importing them:
 
 ```ts
 import { GOOGLE_MATCHES } from '~/utils/match-patterns'; // [!code --]
