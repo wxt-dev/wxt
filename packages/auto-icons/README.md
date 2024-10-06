@@ -1,5 +1,7 @@
 # WXT Auto Icons
 
+[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/CHANGELOG.md)
+
 ## Features
 
 - Generate extension icons with the correct sizes

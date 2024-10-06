@@ -13,29 +13,29 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /get-started/installation
+      link: /guide/installation
     - theme: alt
       text: Learn More
-      link: /get-started/introduction
+      link: /guide/introduction
 
 features:
   - icon: 🌐
     title: Supported Browsers
     details: WXT will build extensions for Chrome, Firefox, Edge, Safari, and any Chromium based browser.
-    link: /guide/key-concepts/web-extension-polyfill
+    link: /guide/essentials/target-different-browsers
     linkText: Read docs
   - icon: ✅
     title: MV2 and MV3
     details: Build Manifest V2 or V3 extensions for any browser using the same codebase.
-    link: /guide/key-concepts/manifest
+    link: /guide/essentials/config/manifest
     linkText: Read docs
   - icon: ⚡
     title: Fast Dev Mode
-    details: Lighting fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
+    details: Lightning fast HMR for UI development and fast reloads for content/background scripts enables faster iterations.
   - icon: 📂
     title: File Based Entrypoints
     details: Manifest is generated based on files in the project with inline configuration.
-    link: /get-started/entrypoints
+    link: /guide/essentials/project-structure
     linkText: See project structure
   - icon: 🚔
     title: TypeScript
@@ -43,7 +43,7 @@ features:
   - icon: 🦾
     title: Auto-imports
     details: Nuxt-like auto-imports to speed up development.
-    link: /guide/key-concepts/auto-imports
+    link: /guide/essentials/config/auto-imports
     linkText: Read docs
   - icon: 🤖
     title: Automated Publishing
@@ -51,17 +51,17 @@ features:
   - icon: 🎨
     title: Frontend Framework Agnostic
     details: Works with any front-end framework with a Vite plugin.
-    link: /guide/key-concepts/frontend-frameworks
+    link: /guide/essentials/frontend-frameworks
     linkText: Add a framework
   - icon: 📦
-    title: Modular Architecture
+    title: Module System
     details: Reuse build-time and runtime-code across multiple extensions.
-    link: /guide/go-further/reusable-modules
+    link: /guide/essentials/wxt-modules
     linkText: Read docs
   - icon: 🖍️
     title: Bootstrap a New Project
     details: Get started quickly with several awesome project templates.
-    link: /get-started/installation#bootstrap-project
+    link: /guide/installation#bootstrap-project
     linkText: See templates
   - icon: 📏
     title: Bundle Analysis
@@ -69,13 +69,13 @@ features:
   - icon: ⬇️
     title: Bundle Remote Code
     details: Downloads and bundles remote code imported from URLs.
-    link: /guide/go-further/remote-code
+    link: /guide/essentials/remote-code
     linkText: Read docs
 ---
 
 ## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
 
-WXT's simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
+WXT simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
 
 <div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
   <video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94" controls></video>

@@ -85,23 +85,6 @@ body {
   user-select: none;
 }
 
-.VPSidebarItem.level-0.collapsible {
-  padding-bottom: 0.5rem;
-}
-
-.VPSidebarItem.level-0.collapsible .items {
-  /*border-left: 1px solid var(--vp-c-divider);*/
-}
-
-.VPSidebarItem.level-1 {
-  padding-left: 0.75rem;
-}
-
-.VPSidebar .group + .group {
-  border-top: none;
-  padding-top: 0;
-}
-
 .VPSidebarItem .badge {
   display: inline-block;
   min-width: 1.6em;

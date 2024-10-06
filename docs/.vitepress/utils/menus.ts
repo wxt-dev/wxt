@@ -2,9 +2,20 @@ import { DefaultTheme } from 'vitepress';
 
 type SidebarItem = DefaultTheme.SidebarItem;
 type NavItem = DefaultTheme.NavItem;
+type NavItemWithLink = DefaultTheme.NavItemWithLink;
+type NavItemWithChildren = DefaultTheme.NavItemWithChildren;
+type NavItemChildren = DefaultTheme.NavItemChildren;
 
-export function navItem(text: string, link: string): NavItem {
-  return { text, link };
+export function navItem(text: string): NavItemChildren;
+export function navItem(text: string, link: string): NavItemChildren;
+export function navItem(text: string, items: any[]): NavItemWithChildren;
+export function navItem(text: string, arg2?: unknown): any {
+  if (typeof arg2 === 'string') {
+    return { text, link: arg2 };
+  } else if (Array.isArray(arg2)) {
+    return { text, items: arg2 };
+  }
+  return { text };
 }
 
 export function menuRoot(items: SidebarItem[]) {
@@ -14,31 +25,39 @@ export function menuRoot(items: SidebarItem[]) {
   });
 }
 
-export function menuGroup(text: string, items: SidebarItem[]): SidebarItem;
+export function menuGroup(
+  text: string,
+  items: SidebarItem[],
+  collapsable?: boolean,
+): SidebarItem;
 export function menuGroup(
   text: string,
   base: string,
   items: SidebarItem[],
+  collapsable?: boolean,
 ): SidebarItem;
 export function menuGroup(
   text: string,
   a: string | SidebarItem[],
-  b?: SidebarItem[],
+  b?: SidebarItem[] | boolean,
+  c?: boolean,
 ): SidebarItem {
-  const collapsed = true;
-  if (typeof a === 'string') {
+  if (typeof a === 'string' && Array.isArray(b)) {
     return {
       text,
       base: a,
       items: b,
-      collapsed,
+      collapsed: c,
     };
   }
-  return {
-    text,
-    items: a,
-    collapsed,
-  };
+  if (typeof a !== 'string' && !Array.isArray(b))
+    return {
+      text,
+      items: a,
+      collapsed: b,
+    };
+
+  throw Error('Unknown overload');
 }
 
 export function menuItems(items: SidebarItem[]) {
