@@ -44,6 +44,7 @@ const chromeExtensionIds = [
   'opepfpjeogkbgeigkbepobceinnfmjdd', // Dofollow Links for SEO
   'pdnenlnelpdomajfejgapbdpmjkfpjkp', // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
   'jobnhifpphkgoelnhnopgkdhbdkiadmj', // discord message translator
+  'ncokhechhpjgjonhjnlaneglmdkfkcbj', // Habit Tracker app widget for daily habit tracking
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
