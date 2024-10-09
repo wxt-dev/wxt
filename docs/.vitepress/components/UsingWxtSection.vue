@@ -45,6 +45,7 @@ const chromeExtensionIds = [
   'pdnenlnelpdomajfejgapbdpmjkfpjkp', // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
   'jobnhifpphkgoelnhnopgkdhbdkiadmj', // discord message translator
   'ncokhechhpjgjonhjnlaneglmdkfkcbj', // Habit Tracker app widget for daily habit tracking
+  'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
