@@ -46,6 +46,7 @@ const chromeExtensionIds = [
   'jobnhifpphkgoelnhnopgkdhbdkiadmj', // discord message translator
   'ncokhechhpjgjonhjnlaneglmdkfkcbj', // Habit Tracker app widget for daily habit tracking
   'lnjaiaapbakfhlbjenjkhffcdpoompki', // Catppuccin for GitHub File Explorer Icons
+  'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
