@@ -47,6 +47,7 @@ const chromeExtensionIds = [
   'ncokhechhpjgjonhjnlaneglmdkfkcbj', // Habit Tracker app widget for daily habit tracking
   'lnjaiaapbakfhlbjenjkhffcdpoompki', // Catppuccin for GitHub File Explorer Icons
   'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
+  'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
