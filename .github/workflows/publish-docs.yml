@@ -12,6 +12,8 @@ on:
 
 jobs:
   publish:
+    # Only run if it's the upstream repository, not forks
+    if: github.repository == 'wxt-dev/wxt'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
