@@ -8,14 +8,14 @@ const props = defineProps<{
   <table class="no-vertical-dividers">
     <thead>
       <tr>
-        <th>Input Pattern</th>
+        <th style="width: 100%">Filename</th>
         <th></th>
         <th>Output Path</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="pattern of patterns">
-        <td style="white-space: nowrap">
+        <td style="white-space: nowrap; padding-right: 8px">
           <code>entrypoints/{{ pattern[0] }}</code>
         </td>
         <td style="padding: 6px; opacity: 50%">
@@ -31,7 +31,7 @@ const props = defineProps<{
             />
           </svg>
         </td>
-        <td style="white-space: nowrap">
+        <td style="white-space: nowrap; padding-left: 8px">
           <code>/{{ pattern[1] }}</code>
         </td>
       </tr>

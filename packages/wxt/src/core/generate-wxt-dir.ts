@@ -22,7 +22,7 @@ export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
 
   // Add references to modules installed from NPM to the TS project so their
   // type augmentation can update InlineConfig correctly. Local modules defined
-  // in <root>/modules are already apart of the project, so we don't need to
+  // in <root>/modules are already a part of the project, so we don't need to
   // add them.
   wxt.config.userModules.forEach((module) => {
     if (module.type === 'node_module') entries.push({ module: module.id });
