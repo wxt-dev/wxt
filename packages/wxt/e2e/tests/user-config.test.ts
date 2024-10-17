@@ -130,4 +130,31 @@ describe('User Config', () => {
       await project.fileExists('.custom-output/chrome-mv3/background.js'),
     ).toBe(true);
   });
+
+  it('should respect outDirTemplate', async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({
+      srcDir: 'src',
+      outDirTemplate:
+        'test-{{browser}}-mv{{manifestVersion}}-{{mode}}{{modeSuffix}}-{{command}}',
+    });
+    project.addFile(
+      'src/entrypoints/background.ts',
+      `export default defineBackground(
+        () => console.log('Hello background'),
+      );`,
+    );
+
+    await project.build();
+
+    expect(
+      await project.fileExists('.output/test-chrome-mv3-production-build'),
+    ).toBe(true);
+
+    await project.build({ mode: 'development' });
+
+    expect(
+      await project.fileExists('.output/test-chrome-mv3-development-dev-build'),
+    ).toBe(true);
+  });
 });
