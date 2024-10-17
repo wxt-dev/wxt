@@ -38,7 +38,7 @@ describe('Storage Utils', () => {
           expect(actual).toBe(expected);
         });
 
-        it('should return the value if multiple : are use in the key', async () => {
+        it('should return the value if multiple : are used in the key', async () => {
           const expected = 'value';
           await fakeBrowser.storage[storageArea].set({ 'some:key': expected });
 
@@ -64,27 +64,87 @@ describe('Storage Utils', () => {
       });
 
       describe('getItems', () => {
-        it('should return an array of values', async () => {
-          const expected = [
-            { key: `${storageArea}:count`, value: 234 },
-            { key: `${storageArea}:installDate`, value: null },
-            { key: `${storageArea}:otherValue`, value: 345 },
-          ] as const;
-          const params = [
-            expected[0].key,
-            expected[1].key,
-            {
-              key: expected[2].key,
-              options: { defaultValue: expected[2].value },
-            },
-          ];
-          await fakeBrowser.storage[storageArea].set({
-            count: expected[0].value,
+        it('should return an array of values for different input types', async () => {
+          const item1 = storage.defineItem<number>(`${storageArea}:count`, {
+            fallback: 0,
+          });
+          const item2Key = `${storageArea}:installDate` as const;
+          const item3 = storage.defineItem<string>(`${storageArea}:name`, {
+            fallback: 'default',
           });
 
-          const actual = await storage.getItems(params);
+          await fakeBrowser.storage[storageArea].set({
+            count: 234,
+            name: 'test',
+          });
 
-          expect(actual).toEqual(expected);
+          const actual = await storage.getItems([
+            item1,
+            item2Key,
+            { key: item3.key, options: { fallback: 'custom' } },
+          ]);
+
+          expect(actual).toEqual([
+            { key: `${storageArea}:count`, value: 234 },
+            { key: item2Key, value: null },
+            { key: `${storageArea}:name`, value: 'test' },
+          ]);
+        });
+
+        it('should use fallback values correctly', async () => {
+          const item1 = storage.defineItem<number>(`${storageArea}:count`, {
+            fallback: 0,
+          });
+          const item2 = storage.defineItem<string>(`${storageArea}:name`);
+
+          const actual = await storage.getItems([
+            item1,
+            { key: item2.key, options: { fallback: 'custom' } },
+          ]);
+
+          expect(actual).toEqual([
+            { key: `${storageArea}:count`, value: 0 },
+            { key: `${storageArea}:name`, value: 'custom' },
+          ]);
+        });
+
+        it('should handle multiple storage areas efficiently', async () => {
+          const localItem = storage.defineItem<number>('local:count', {
+            fallback: 0,
+          });
+          const sessionItem = storage.defineItem<string>('session:name', {
+            fallback: 'default',
+          });
+
+          await fakeBrowser.storage.local.set({ count: 123 });
+          await fakeBrowser.storage.session.set({ name: 'test' });
+
+          const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+          const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+          const actual = await storage.getItems([localItem, sessionItem]);
+
+          expect(actual).toEqual([
+            { key: 'local:count', value: 123 },
+            { key: 'session:name', value: 'test' },
+          ]);
+
+          expect(localGetSpy).toHaveBeenCalledTimes(1);
+          expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should return null for non-existent items without fallback', async () => {
+          const item1Key = `${storageArea}:nonexistent` as const;
+          const item2 = storage.defineItem<number>(
+            `${storageArea}:alsoNonexistent`,
+          );
+
+          const actual = await storage.getItems([item1Key, item2]);
+
+          expect(actual).toEqual([
+            { key: item1Key, value: null },
+            { key: `${storageArea}:alsoNonexistent`, value: null },
+          ]);
         });
       });
 
@@ -242,6 +302,66 @@ describe('Storage Utils', () => {
           expect(await storage.getMeta(key2)).toEqual({ v: 1 });
           expect(await storage.getItem(key3)).toBeNull();
           expect(await storage.getMeta(key3)).toEqual({});
+        });
+
+        it('should remove items using WxtStorageItem objects', async () => {
+          const item1 = storage.defineItem('local:item1');
+          const item2 = storage.defineItem('session:item2');
+
+          await item1.setValue('value1');
+          await item2.setValue('value2');
+
+          await storage.removeItems([item1, item2]);
+
+          expect(await item1.getValue()).toBeNull();
+          expect(await item2.getValue()).toBeNull();
+        });
+
+        it('should remove items using { item: WxtStorageItem, options?: RemoveItemOptions } objects', async () => {
+          const item1 = storage.defineItem('local:item1');
+          const item2 = storage.defineItem('session:item2');
+
+          await item1.setValue('value1');
+          await item1.setMeta({ v: 1 });
+          await item2.setValue('value2');
+          await item2.setMeta({ v: 1 });
+
+          await storage.removeItems([
+            { item: item1, options: { removeMeta: true } },
+            { item: item2, options: { removeMeta: false } },
+          ]);
+
+          expect(await item1.getValue()).toBeNull();
+          expect(await item1.getMeta()).toEqual({});
+          expect(await item2.getValue()).toBeNull();
+          expect(await item2.getMeta()).toEqual({ v: 1 });
+        });
+
+        it('should handle a mix of different input types', async () => {
+          const item1 = storage.defineItem('local:item1');
+          const item2 = storage.defineItem('session:item2');
+          const item3 = storage.defineItem('local:item3');
+
+          await item1.setValue('value1');
+          await item2.setValue('value2');
+          await item3.setValue('value3');
+
+          await storage.removeItems([
+            'local:item1',
+            item2,
+            { key: 'local:item3', options: { removeMeta: true } },
+          ]);
+
+          expect(await storage.getItem('local:item1')).toBeNull();
+          expect(await item2.getValue()).toBeNull();
+          expect(await item3.getValue()).toBeNull();
+          expect(await item3.getMeta()).toEqual({});
+        });
+
+        it('should not throw an error when removing non-existent items', async () => {
+          const item = storage.defineItem('local:non_existent');
+
+          await expect(storage.removeItems([item])).resolves.not.toThrow();
         });
       });
 
@@ -896,6 +1016,226 @@ describe('Storage Utils', () => {
     });
   });
 
+  describe('Batch Item Operations', () => {
+    describe('getItems', () => {
+      it('should get the values of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number>('local:item1');
+        const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3', {
+          fallback: false,
+        });
+
+        await item1.setValue(42);
+        await item2.setValue('hello');
+        // item3 not set, should get default value
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const values = await storage.getItems([item1, item2, item3]);
+
+        expect(values).toEqual([
+          {
+            key: 'local:item1',
+            value: 42,
+          },
+          {
+            key: 'session:item2',
+            value: 'hello',
+          },
+          {
+            key: 'local:item3',
+            value: false,
+          },
+        ]);
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return default values if items are missing', async () => {
+        const item1 = storage.defineItem<number>('local:item1', {
+          fallback: 0,
+        });
+        const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3', {
+          fallback: true,
+        });
+
+        // Set only item2
+        await item2.setValue('world');
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const values = await storage.getItems([item1, item2, item3]);
+        console.log(values);
+
+        expect(values).toEqual([
+          {
+            key: 'local:item1',
+            value: 0,
+          },
+          {
+            key: 'session:item2',
+            value: 'world',
+          },
+          {
+            key: 'local:item3',
+            value: true,
+          },
+        ]);
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('getItemMetas', () => {
+      it('should get the metadata of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+        const item3 = storage.defineItem<boolean, { flag: boolean }>(
+          'local:item3',
+        );
+
+        await item1.setMeta({ v: 1 });
+        await item2.setMeta({ date: 1234567890 });
+        // item3 has no meta
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+
+        const metas = await storage.getItemMetas({
+          item1,
+          item2,
+          item3,
+        });
+
+        expect(metas).toEqual([
+          { key: 'item1', value: { v: 1 } },
+          { key: 'item2', value: { date: 1234567890 } },
+          { key: 'item3', value: {} },
+        ]);
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should maintain the order of input items', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+        const item3 = storage.defineItem<boolean, { flag: boolean }>(
+          'local:item3',
+        );
+
+        await item1.setMeta({ v: 1 });
+        await item3.setMeta({ flag: true });
+
+        const metas = await storage.getItemMetas({
+          item3,
+          item1,
+          item2,
+        });
+
+        expect(metas).toEqual([
+          { key: 'item3', value: { flag: true } },
+          { key: 'item1', value: { v: 1 } },
+          { key: 'item2', value: {} },
+        ]);
+      });
+    });
+
+    describe('setItemValues', () => {
+      it('should set the values of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number>('local:item1');
+        const item2 = storage.defineItem<string>('session:item2');
+        const item3 = storage.defineItem<boolean>('local:item3');
+
+        const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
+        const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
+
+        await storage.setItemValues(
+          {
+            item1,
+            item2,
+            item3,
+          },
+          {
+            item1: 100,
+            item2: 'test',
+            item3: true,
+          },
+        );
+
+        const value1 = await item1.getValue();
+        const value2 = await item2.getValue();
+        const value3 = await item3.getValue();
+
+        expect(value1).toBe(100);
+        expect(value2).toBe('test');
+        expect(value3).toBe(true);
+
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('setItemMetas', () => {
+      it('should set the metadata of multiple storage items efficiently', async () => {
+        const item1 = storage.defineItem<number, { v: number }>('local:item1');
+        const item2 = storage.defineItem<string, { date: number }>(
+          'session:item2',
+        );
+        const item3 = storage.defineItem<boolean, { flag: boolean }>(
+          'local:item3',
+        );
+
+        await item1.setMeta({ v: 1 });
+        await item2.setMeta({ date: 123 });
+
+        const localGetSpy = vi.spyOn(fakeBrowser.storage.local, 'get');
+        const sessionGetSpy = vi.spyOn(fakeBrowser.storage.session, 'get');
+        const localSetSpy = vi.spyOn(fakeBrowser.storage.local, 'set');
+        const sessionSetSpy = vi.spyOn(fakeBrowser.storage.session, 'set');
+
+        await storage.setItemMetas(
+          {
+            item1,
+            item2,
+            item3,
+          },
+          {
+            item1: { v: 2 },
+            item2: { date: 456 },
+            item3: { flag: true },
+          },
+        );
+
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+
+        expect(localGetSpy).toHaveBeenCalledWith(['item1$', 'item3$']);
+        expect(sessionGetSpy).toHaveBeenCalledWith(['item2$']);
+
+        const meta1 = await item1.getMeta();
+        const meta2 = await item2.getMeta();
+        const meta3 = await item3.getMeta();
+
+        expect(meta1).toEqual({ v: 2 });
+        expect(meta2).toEqual({ date: 456 });
+        expect(meta3).toEqual({ flag: true });
+      });
+    });
+  });
+
   describe('types', () => {
     it('should not accept keys without a valid storage area prefix', async () => {
       // @ts-expect-error: Test passes if there is a type error here
@@ -921,6 +1261,70 @@ describe('Storage Utils', () => {
         fallback: 'test',
       });
       expectTypeOf(res).not.toBeNullable();
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should throw an error when using an invalid storage area', async () => {
+      // @ts-expect-error: Test passes if there is a type error here
+      await expect(storage.getItem('invalidArea:key')).rejects.toThrow(
+        'Invalid area',
+      );
+    });
+
+    it('should throw an error when defining an item with an invalid version', () => {
+      expect(() => storage.defineItem('local:key', { version: 0 })).toThrow(
+        'Storage item version cannot be less than 1',
+      );
+    });
+
+    it('should handle errors in migration functions', async () => {
+      const item = storage.defineItem<number>('local:key', {
+        version: 2,
+        migrations: {
+          2: () => {
+            throw new Error('Migration error');
+          },
+        },
+      });
+
+      await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
+
+      await expect(item.migrate()).rejects.toThrow('Migration error');
+    });
+  });
+
+  describe('Init Function', () => {
+    it('should call init function only once when getValue is called multiple times', async () => {
+      const init = vi.fn().mockResolvedValue(42);
+      const item = storage.defineItem<number>('local:key', { init });
+
+      await item.getValue();
+      await item.getValue();
+
+      expect(init).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call init function if value already exists', async () => {
+      const init = vi.fn().mockResolvedValue(42);
+      const item = storage.defineItem<number>('local:key', { init });
+
+      await fakeBrowser.storage.local.set({ key: 10 });
+      const value = await item.getValue();
+
+      expect(value).toBe(10);
+      expect(init).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Concurrency', () => {
+    it('should handle concurrent setValue operations correctly', async () => {
+      const item = storage.defineItem<number>('local:key');
+
+      await Promise.all([item.setValue(1), item.setValue(2), item.setValue(3)]);
+
+      const value = await item.getValue();
+      expect(value).toBe(3);
     });
   });
 });
