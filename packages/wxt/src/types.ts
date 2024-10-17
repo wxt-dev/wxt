@@ -54,6 +54,19 @@ export interface InlineConfig {
    */
   outDir?: string;
   /**
+   * Template string for customizing the output directory structure.
+   * Available variables:
+   * - {{browser}}: The target browser (e.g., 'chrome', 'firefox')
+   * - {{manifestVersion}}: The manifest version (e.g., 2 or 3)
+   * - {{mode}}: The build mode (e.g., 'development', 'production')
+   * - {{modeSuffix}}: A suffix based on the mode ('-dev' for development, '' for production)
+   * - {{command}}: The WXT command being run (e.g., 'build', 'serve')
+   *
+   * @example ".output/{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
+   * @default `{{browser}}-mv{{manifestVersion}}`
+   */
+  outDirTemplate?: string;
+  /**
    * > Only available when using the JS API. Not available in `wxt.config.ts` files
    *
    * Path to `wxt.config.ts` file or `false` to disable config file discovery.
