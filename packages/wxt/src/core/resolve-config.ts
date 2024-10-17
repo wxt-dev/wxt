@@ -99,17 +99,17 @@ export async function resolveConfig(
   let outDirTemplate =
     mergedConfig.outDirTemplate ?? `${browser}-mv${manifestVersion}`;
   //* Resolve all variables in the template
-  outDirTemplate = outDirTemplate.replace('{{browser}}', browser);
-  outDirTemplate = outDirTemplate.replace(
+  outDirTemplate = outDirTemplate.replaceAll('{{browser}}', browser);
+  outDirTemplate = outDirTemplate.replaceAll(
     '{{manifestVersion}}',
     manifestVersion.toString(),
   );
-  outDirTemplate = outDirTemplate.replace(
+  outDirTemplate = outDirTemplate.replaceAll(
     '{{modeSuffix}}',
     `${mode === 'production' ? '' : mode === 'development' ? '-dev' : '-${mode}'}`,
   );
-  outDirTemplate = outDirTemplate.replace('{{mode}}', mode);
-  outDirTemplate = outDirTemplate.replace('{{command}}', command);
+  outDirTemplate = outDirTemplate.replaceAll('{{mode}}', mode);
+  outDirTemplate = outDirTemplate.replaceAll('{{command}}', command);
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
