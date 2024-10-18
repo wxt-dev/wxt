@@ -97,14 +97,16 @@ export async function resolveConfig(
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const modeSuffixes: Record<string, string | undefined> = {
-    production: "",
-    development: "-dev",
+    production: '',
+    development: '-dev',
   };
-  const outDirTemplate = (mergedConfig.outDirTemplate ?? `${browser}-mv${manifestVersion}`)
+  const outDirTemplate = (
+    mergedConfig.outDirTemplate ?? `${browser}-mv${manifestVersion}`
+  )
     // Resolve all variables in the template
     .replaceAll('{{browser}}', browser)
     .replaceAll('{{manifestVersion}}', manifestVersion.toString())
-    .replaceAll('{{modeSuffix}}', `-${modeSuffixes[mode] ?? mode}`)
+    .replaceAll('{{modeSuffix}}', modeSuffixes[mode] ?? `-${mode}`)
     .replaceAll('{{mode}}', mode)
     .replaceAll('{{command}}', command);
 

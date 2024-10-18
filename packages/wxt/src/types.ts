@@ -56,14 +56,14 @@ export interface InlineConfig {
   /**
    * Template string for customizing the output directory structure.
    * Available variables:
-   * - {{browser}}: The target browser (e.g., 'chrome', 'firefox')
-   * - {{manifestVersion}}: The manifest version (e.g., 2 or 3)
-   * - {{mode}}: The build mode (e.g., 'development', 'production')
-   * - {{modeSuffix}}: A suffix based on the mode ('-dev' for development, '' for production)
-   * - {{command}}: The WXT command being run (e.g., 'build', 'serve')
+   * - <span v-pre>`{{browser}}`</span>: The target browser (e.g., 'chrome', 'firefox')
+   * - <span v-pre>`{{manifestVersion}}`</span>: The manifest version (e.g., 2 or 3)
+   * - <span v-pre>`{{mode}}`</span>: The build mode (e.g., 'development', 'production')
+   * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
+   * - <span v-pre>`{{command}}`</span>: The WXT command being run (e.g., 'build', 'serve')
    *
    * @example "{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
-   * @default `{{browser}}-mv{{manifestVersion}}`
+   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}"`</span>
    */
   outDirTemplate?: string;
   /**
@@ -75,7 +75,7 @@ export interface InlineConfig {
    */
   configFile?: string | false;
   /**
-   * Set to `true` to show debug logs. Overriden by the command line `--debug` option.
+   * Set to `true` to show debug logs. Overridden by the command line `--debug` option.
    *
    * @default false
    */
@@ -1247,7 +1247,7 @@ export interface Wxt {
    */
   pm: WxtPackageManager;
   /**
-   * If the dev server was started, it will be availble.
+   * If the dev server was started, it will be available.
    */
   server?: WxtDevServer;
   /**
