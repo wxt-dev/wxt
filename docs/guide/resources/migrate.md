@@ -47,7 +47,8 @@ Here's specific steps for other popular frameworks/build tools.
 4. If you use CSUI, migrate to WXT's `createContentScriptUi`
 5. Convert Plasmo's custom import resolutions to Vite's
 6. If importing remote code via a URL, add a `url:` prefix so it works with WXT
-7. Compare your output `manifest.json` files from before the migration to after the migration. They should have the same content. If not, tweak your entrypoints and config to get as close as possible.
+7. Replace your [Plasmo tags](https://docs.plasmo.com/framework/workflows/build#with-a-custom-tag) (`--tag`) with [WXT build modes](/guide/essentials/config/build-mode) (`--mode`)
+8. Compare your output `manifest.json` files from before the migration to after the migration. They should have the same content. If not, tweak your entrypoints and config to get as close as possible.
 
 ### `vite-plugin-web-extension`
 
