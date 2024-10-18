@@ -28,7 +28,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
 
   const projectName =
     wxt.config.zip.name ??
-    safeFilename((await getPackageJson())?.name || path.dirname(process.cwd()));
+    safeFilename(
+      (await getPackageJson())?.name || path.basename(process.cwd()),
+    );
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
@@ -52,8 +54,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   zipFiles.push(outZipPath);
   await wxt.hooks.callHook('zip:extension:done', wxt, outZipPath);
 
-  // ZIP sources for Firefox
-  if (wxt.config.browser === 'firefox') {
+  if (wxt.config.zip.zipSources) {
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();

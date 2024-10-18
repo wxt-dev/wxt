@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.19.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.10...wxt-v0.19.11)
+
+### 🚀 Enhancements
+
+- **zip:** Hooks ([#993](https://github.com/wxt-dev/wxt/pull/993))
+- **zip:** `wxt zip --sources` and auto sources for opera ([#1014](https://github.com/wxt-dev/wxt/pull/1014))
+
+### 🩹 Fixes
+
+- Reverse env files priority ([#1016](https://github.com/wxt-dev/wxt/pull/1016))
+- #1005 fixed, by updating type-definations to getItem method. ([#1007](https://github.com/wxt-dev/wxt/pull/1007), [#1005](https://github.com/wxt-dev/wxt/issues/1005))
+
+### 🏡 Chore
+
+- Move some files around ([#996](https://github.com/wxt-dev/wxt/pull/996))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Gurvir Singh ([@baraich](http://github.com/baraich))
+- Mezannic ([@mezannic](http://github.com/mezannic))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.10
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.9...wxt-v0.19.10)

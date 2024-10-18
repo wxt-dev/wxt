@@ -11,9 +11,6 @@
     "strict": true,
     "lib": ["DOM", "WebWorker", "ESNext"],
 
-    /* Linting */
-    "noUnusedLocals": true,
-
     /* Completeness */
     "skipLibCheck": true
   }

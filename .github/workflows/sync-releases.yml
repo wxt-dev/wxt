@@ -12,6 +12,8 @@ on:
           - module-vue
           - module-svelte
           - module-solid
+          - auto-icons
+          - i18n
 
 jobs:
   sync:

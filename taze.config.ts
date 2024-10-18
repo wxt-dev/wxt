@@ -1,4 +1,11 @@
 // https://github.com/antfu-collective/taze?tab=readme-ov-file#config-file
 export default {
-  exclude: ['typedoc', 'typedoc-plugin-markdown', 'typedoc-vitepress-theme'],
+  exclude: [
+    // Very touchy, don't change:
+    'typedoc',
+    'typedoc-plugin-markdown',
+    'typedoc-vitepress-theme',
+    // Manually manage version so a single version is used:
+    'esbuild',
+  ],
 };

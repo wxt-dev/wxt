@@ -166,6 +166,11 @@ function _parseMessagesObject(
       ];
     }
     case 'object':
+      if ([null, undefined].includes(object)) {
+        throw new Error(
+          `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
+        );
+      }
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item, depth + 1),
