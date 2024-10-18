@@ -5,7 +5,7 @@
   "description": "Next gen framework for developing web extensions",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wxt-dev/wxt"
+    "url": "git+https://github.com/wxt-dev/wxt.git"
   },
   "homepage": "https://wxt.dev",
   "keywords": [
@@ -72,7 +72,7 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
-    "check": "pnpm build && run-s -c check:*",
+    "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
@@ -111,7 +111,6 @@
     "magicast": "^0.3.5",
     "minimatch": "^10.0.1",
     "nano-spawn": "^0.1.0",
-    "natural-compare": "^1.4.0",
     "normalize-path": "^3.0.0",
     "nypm": "^0.3.12",
     "ohash": "^1.1.4",
@@ -133,7 +132,6 @@
     "@faker-js/faker": "^8.4.1",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
-    "@types/natural-compare": "^1.4.3",
     "@types/node": "^20.16.10",
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
@@ -141,7 +139,6 @@
     "happy-dom": "^14.12.3",
     "lodash.merge": "^4.6.2",
     "oxlint": "^0.9.9",
-    "p-map": "^7.0.2",
     "publint": "^0.2.11",
     "tsx": "4.15.7",
     "typescript": "^5.6.2",
