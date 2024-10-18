@@ -48,6 +48,7 @@ const chromeExtensionIds = [
   'lnjaiaapbakfhlbjenjkhffcdpoompki', // Catppuccin for GitHub File Explorer Icons
   'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
   'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
+  'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
