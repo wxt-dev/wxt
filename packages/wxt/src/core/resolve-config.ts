@@ -96,7 +96,21 @@ export async function resolveConfig(
   const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
-  const outDir = path.resolve(outBaseDir, `${browser}-mv${manifestVersion}`);
+  const modeSuffixes: Record<string, string | undefined> = {
+    production: '',
+    development: '-dev',
+  };
+  const outDirTemplate = (
+    mergedConfig.outDirTemplate ?? `${browser}-mv${manifestVersion}`
+  )
+    // Resolve all variables in the template
+    .replaceAll('{{browser}}', browser)
+    .replaceAll('{{manifestVersion}}', manifestVersion.toString())
+    .replaceAll('{{modeSuffix}}', modeSuffixes[mode] ?? `-${mode}`)
+    .replaceAll('{{mode}}', mode)
+    .replaceAll('{{command}}', command);
+
+  const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
 
   const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
