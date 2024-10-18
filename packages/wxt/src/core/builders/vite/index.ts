@@ -44,6 +44,7 @@ export async function createViteBuilder(
     config.configFile = false;
     config.logLevel = 'warn';
     config.mode = wxtConfig.mode;
+    config.envPrefix ??= ['VITE_', 'WXT_'];
 
     config.build ??= {};
     config.publicDir = wxtConfig.publicDir;

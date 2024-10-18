@@ -15,14 +15,14 @@ And any environment variables listed inside them will be available at runtime:
 
 ```sh
 # .env
-VITE_API_KEY=...
+WXT_API_KEY=...
 ```
 
 ```ts
-await fetch(`/some-api?apiKey=${import.meta.env.VITE_API_KEY}`);
+await fetch(`/some-api?apiKey=${import.meta.env.WXT_API_KEY}`);
 ```
 
-Remember to prefix any environment variables with `VITE_`, otherwise they won't be available at runtime, as per [Vite's convention](https://vite.dev/guide/env-and-mode.html#env-files).
+Remember to prefix any environment variables with `WXT_` or `VITE_`, otherwise they won't be available at runtime, as per [Vite's convention](https://vite.dev/guide/env-and-mode.html#env-files).
 
 ## Built-in Environment Variables
 

@@ -44,8 +44,8 @@ declare module 'wxt/sandbox' {
 }
 
 export default defineAppConfig({
-  apiKey: import.meta.env.VITE_API_KEY,
-  skipWelcome: import.meta.env.VITE_SKIP_WELCOME === 'true',
+  apiKey: import.meta.env.WXT_API_KEY,
+  skipWelcome: import.meta.env.WXT_SKIP_WELCOME === 'true',
 });
 ```
 
