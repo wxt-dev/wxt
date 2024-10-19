@@ -46,8 +46,8 @@
       "default": "./dist/sandbox/index.mjs"
     },
     "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",

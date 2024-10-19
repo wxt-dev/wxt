@@ -20,7 +20,7 @@ With auto-imports enabled, you don't even need to import this variable from `wxt
 
 The `browser` variable WXT provides is a simple export of the `browser` or `chrome` globals provided by the browser at runtime:
 
-<<< @/../packages/wxt/src/browser/index.ts#snippet
+<<< @/../packages/wxt/src/browser.ts#snippet
 
 This means you can use the promise-styled API for both MV2 and MV3, and it will work across all browsers (Chromium, Firefox, Safari, etc).
 
