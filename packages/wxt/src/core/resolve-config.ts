@@ -494,6 +494,8 @@ export async function resolveWxtUserModules(
     cwd: modulesDir,
     onlyFiles: true,
   }).catch(() => []);
+  // Sort modules to ensure a consistent execution order
+  localModulePaths.sort();
   const localModules = await Promise.all<WxtModuleWithMetadata<any>>(
     localModulePaths.map(async (file) => {
       const absolutePath = normalizePath(path.resolve(modulesDir, file));
