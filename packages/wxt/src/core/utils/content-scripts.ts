@@ -1,6 +1,7 @@
-import type { Manifest, Scripting } from 'wxt/browser';
+import type { Browser } from '@wxt-dev/browser';
 import { ContentScriptEntrypoint, ResolvedConfig } from '../../types';
 import { getEntrypointBundlePath } from './entrypoints';
+import { ManifestContentScript } from './types';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -22,13 +23,14 @@ export function hashContentScriptOptions(
     if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
   });
 
-  const withDefaults: Manifest.ContentScript = {
+  const withDefaults: ManifestContentScript = {
     exclude_globs: [],
     exclude_matches: [],
     include_globs: [],
     match_about_blank: false,
     run_at: 'document_idle',
     all_frames: false,
+    // @ts-expect-error: Untyped
     match_origin_as_fallback: false,
     world: 'ISOLATED',
     ...simplifiedOptions,
@@ -49,7 +51,7 @@ export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): Manifest.ContentScript {
+): ManifestContentScript {
   return {
     matches: options.matches ?? [],
     all_frames: options.allFrames,
@@ -61,6 +63,7 @@ export function mapWxtOptionsToContentScript(
     css,
     js,
 
+    // @ts-expect-error: Untyped
     match_origin_as_fallback: options.matchOriginAsFallback,
     world: options.world,
   };
@@ -70,7 +73,7 @@ export function mapWxtOptionsToRegisteredContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): Omit<Scripting.RegisteredContentScript, 'id'> {
+): Omit<Browser.scripting.RegisteredContentScript, 'id'> {
   return {
     allFrames: options.allFrames,
     excludeMatches: options.excludeMatches,

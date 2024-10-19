@@ -47,12 +47,8 @@
       "default": "./dist/sandbox/index.mjs"
     },
     "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
-    },
-    "./browser/chrome": {
-      "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.mjs"
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
@@ -84,11 +80,10 @@
   "dependencies": {
     "@1natsu/wait-element": "catalog:",
     "@aklinker1/rollup-plugin-visualizer": "catalog:",
-    "@types/chrome": "catalog:",
-    "@types/webextension-polyfill": "catalog:",
     "@webext-core/fake-browser": "catalog:",
     "@webext-core/isolated-element": "catalog:",
     "@webext-core/match-patterns": "catalog:",
+    "@wxt-dev/browser": "workspace:*",
     "@wxt-dev/storage": "workspace:^1.0.0",
     "async-mutex": "catalog:",
     "c12": "catalog:",
@@ -128,8 +123,7 @@
     "unimport": "catalog:",
     "vite": "catalog:",
     "vite-node": "catalog:",
-    "web-ext-run": "catalog:",
-    "webextension-polyfill": "catalog:"
+    "web-ext-run": "catalog:"
   },
   "devDependencies": {
     "@aklinker1/check": "catalog:",
@@ -149,9 +143,5 @@
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:"
   },
-  "peerDependenciesMeta": {
-    "@types/chrome": {
-      "optional": true
-    }
-  }
+  "peerDependenciesMeta": {}
 }

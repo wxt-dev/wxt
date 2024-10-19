@@ -13,7 +13,6 @@ import {
   fakeWxtDevServer,
   setFakeWxt,
 } from '../testing/fake-objects';
-import { Manifest } from 'webextension-polyfill';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
@@ -22,6 +21,7 @@ import {
 } from '../../../types';
 import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
+import type { Browser } from '@wxt-dev/browser';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';
@@ -58,7 +58,7 @@ describe('Manifest Utils', () => {
             outDir,
           },
         });
-        const expected: Partial<Manifest.WebExtensionManifest> = {
+        const expected: Partial<Browser.runtime.Manifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
