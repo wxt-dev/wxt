@@ -326,16 +326,6 @@ export interface InlineConfig {
    */
   alias?: Record<string, string>;
   /**
-   * Which extension API to use.
-   *
-   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
-   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   *
-   * @default "chrome"
-   * @since 0.19.0
-   */
-  extensionApi?: 'chrome' | 'webextension-polyfill';
-  /**
    * @deprecated Will be removed in v0.20.0, please migrate to using `vite-node`, the new default.
    *
    * Method used to import entrypoint files during the build process to extract their options.
@@ -1334,7 +1324,6 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
-  extensionApi: 'webextension-polyfill' | 'chrome';
   entrypointLoader: 'vite-node' | 'jiti';
   experimental: {};
   dev: {

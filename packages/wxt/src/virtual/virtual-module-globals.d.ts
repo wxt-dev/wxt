@@ -20,10 +20,6 @@ declare module 'virtual:user-unlisted-script-entrypoint' {
   export default definition;
 }
 
-declare module 'wxt/browser' {
-  export const browser: import('webextension-polyfill').Browser;
-}
-
 declare module 'virtual:wxt-plugins' {
   export function initPlugins(): void;
 }

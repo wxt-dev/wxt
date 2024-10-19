@@ -67,28 +67,3 @@ Alternatively, if you're trying to use similar APIs under different names (to su
   //
 });
 ```
-
-## Webextension Polyfill
-
-WXT provides the option to use the [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill) to make the extension API consistent between browsers:
-
-```ts
-// wxt.config.ts
-export default defineConfig({
-  extensionApi: 'webextension-polyfill',
-});
-```
-
-:::warning
-After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, the polyfill isn't really doing anything useful anymore. WXT will be removing support for the polyfill in the future, it's recommended you migrate to `extensionApi: "chrome"`.
-:::
-
-To access types, you should import the relevant namespace from `wxt/browser`:
-
-```ts
-import { Runtime } from 'wxt/browser';
-
-function handleMessage(message: any, sender: Runtime.Sender) {
-  // ...
-}
-```

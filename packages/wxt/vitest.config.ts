@@ -22,7 +22,6 @@ export default defineConfig({
   resolve: {
     alias: {
       'wxt/testing': path.resolve('src/testing'),
-      'webextension-polyfill': path.resolve('src/virtual/mock-browser'),
     },
   },
 });
