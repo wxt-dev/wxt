@@ -327,20 +327,6 @@ export interface InlineConfig {
    */
   alias?: Record<string, string>;
   /**
-   * @deprecated Will be removed in v0.20.0, please migrate to using `vite-node`, the new default.
-   *
-   * Method used to import entrypoint files during the build process to extract their options.
-   *
-   * - `"vite-node"` (default as of 0.19.0): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-   * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
-   *
-   * @see {@link https://wxt.dev/guide/go-further/entrypoint-importers.html|Entrypoint Importers}
-   *
-   * @default "vite-node"
-   * @since 0.19.0
-   */
-  entrypointLoader?: 'vite-node' | 'jiti';
-  /**
    * Experimental settings - use with caution.
    */
   experimental?: {};
@@ -1368,7 +1354,6 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
-  entrypointLoader: 'vite-node' | 'jiti';
   experimental: {};
   dev: {
     /** Only defined during dev command */
