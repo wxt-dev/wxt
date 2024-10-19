@@ -192,7 +192,6 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    entrypointLoader: mergedConfig.entrypointLoader ?? 'vite-node',
     experimental: defu(mergedConfig.experimental, {}),
     dev: {
       server: devServerConfig,
