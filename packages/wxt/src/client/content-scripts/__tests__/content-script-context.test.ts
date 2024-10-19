@@ -16,7 +16,7 @@ describe('Content Script Context', () => {
     const onInvalidated = vi.fn();
 
     ctx.onInvalidated(onInvalidated);
-    // @ts-expect-error
+    // @ts-ignore
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 
