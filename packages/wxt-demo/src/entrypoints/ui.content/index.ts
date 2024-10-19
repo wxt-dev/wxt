@@ -20,6 +20,6 @@ export default defineContentScript({
     });
     ui.mount();
 
-    // setTimeout(ui.remove, 5000);
+    setTimeout(ui.remove, 5000);
   },
 });
