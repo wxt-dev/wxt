@@ -39,11 +39,12 @@
 # https://github.com/wxt-dev/wxt/issues/704
 # Generated via `pnpm docs:build && find docs/.vitepress/dist -type f -name "*.html"`
 
-/guide/i18n/build-integrations.html                           /i18n#build-integrations
-/guide/i18n/introduction.html                                 /i18n
-/guide/i18n/messages-file-format.html                         /i18n#messages-file-format
-/guide/i18n/editor-support.html                               /i18n#editor-support
-/guide/i18n/installation.html                                 /i18n#installation
+/guide/i18n/build-integrations.html                           /i18n.html#build-integrations
+/guide/i18n/introduction.html                                 /i18n.html
+/guide/i18n/messages-file-format.html                         /i18n.html#messages-file-format
+/guide/i18n/editor-support.html                               /i18n.html#editor-support
+/guide/i18n/installation.html                                 /i18n.html#installation
+/guide/i18n/installation                                      /i18n.html#installation
 /guide/key-concepts/content-script-ui.html                    /guide/essentials/content-scripts.html#ui
 /guide/key-concepts/manifest.html                             /guide/essentials/config/manifest.html
 /guide/key-concepts/wxt-submit.html                           /api/cli/wxt-submit.html
