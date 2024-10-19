@@ -1,6 +1,6 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve } from 'node:path';
+import { resolve, extname } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
 import { ensureDir } from 'fs-extra';
@@ -86,20 +86,28 @@ export default defineWxtModule<AutoIconsOptions>({
     });
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
-      const image = sharp(resolvedPath).toFormat('png').png();
+      let image: sharp.Sharp;
+
+      if (extname(resolvedPath).toLowerCase() === '.png') {
+        // If the file is already PNG, just read it without conversion
+        image = sharp(resolvedPath).png();
+      } else {
+        // If it's not PNG, convert it
+        image = sharp(resolvedPath).toFormat('png').png();
+      }
 
       if (
         wxt.config.mode === 'development' &&
         parsedOptions.grayscaleOnDevelopment
       ) {
-        image.grayscale();
+        image = image.grayscale();
       }
 
       const outputFolder = wxt.config.outDir;
 
       for (const size of parsedOptions.sizes) {
-        const resized = image.resize(size);
-        ensureDir(resolve(outputFolder, 'icons'));
+        const resized = image.clone().resize(size);
+        await ensureDir(resolve(outputFolder, 'icons'));
         await resized.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({
