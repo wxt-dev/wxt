@@ -238,6 +238,7 @@ describe('TypeScript Project', () => {
       /// <reference types="./types/paths.d.ts" />
       /// <reference types="./types/i18n.d.ts" />
       /// <reference types="./types/globals.d.ts" />
+      /// <reference types="@types/chrome" />
       /// <reference types="./types/imports.d.ts" />
       "
     `);
