@@ -4,7 +4,7 @@
 
 Different browsers provide different global variables for accessing the extension APIs (chrome provides `chrome`, firefox provides `browser`, etc).
 
-WXT simplifies merges these two into a unified API accessed through the `browser` variable.
+WXT merges these two into a unified API accessed through the `browser` variable.
 
 ```ts
 import { browser } from 'wxt/browser';
@@ -20,7 +20,7 @@ With auto-imports enabled, you don't even need to import this variable from `wxt
 
 The `browser` variable WXT provides is a simple export of the `browser` or `chrome` globals provided by the browser at runtime:
 
-<<< @/../packages/wxt/src/browser/chrome.ts#snippet
+<<< @/../packages/wxt/src/browser/index.ts#snippet
 
 This means you can use the promise-styled API for both MV2 and MV3, and it will work across all browsers (Chromium, Firefox, Safari, etc).
 
@@ -34,32 +34,9 @@ function handleMessage(message: any, sender: browser.runtime.Sender) {
 }
 ```
 
-## Webextension Polyfill
-
-WXT provides the option to use the [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill) to make the extension API consistent between browsers:
-
-```ts
-// wxt.config.ts
-export default defineConfig({
-  extensionApi: 'webextension-polyfill',
-});
-```
-
-> After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, the polyfill isn't really doing anything useful anymore. WXT will be removing support for the polyfill in the future, it's recommended you migrate to `extensionApi: "chrome"`.
-
-To access types, you should import the relevant namespace from `wxt/browser`:
-
-```ts
-import { Runtime } from 'wxt/browser';
-
-function handleMessage(message: any, sender: Runtime.Sender) {
-  // ...
-}
-```
-
 ## Feature Detection
 
-Depending on the manifest version and browser, some APIs are not available at runtime. If an API is not available, it will be `undefined`.
+Depending on the manifest version, browser, and permissions, some APIs are not available at runtime. If an API is not available, it will be `undefined`.
 
 :::warning
 Types will not help you here. The types WXT provides for `browser` assume all APIs exist. You are responsible for knowing whether an API is available or not.
@@ -89,4 +66,29 @@ Alternatively, if you're trying to use similar APIs under different names (to su
 (browser.action ?? browser.browser_action).onClicked.addListener(() => {
   //
 });
+```
+
+## Webextension Polyfill
+
+WXT provides the option to use the [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill) to make the extension API consistent between browsers:
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  extensionApi: 'webextension-polyfill',
+});
+```
+
+:::warning
+After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, the polyfill isn't really doing anything useful anymore. WXT will be removing support for the polyfill in the future, it's recommended you migrate to `extensionApi: "chrome"`.
+:::
+
+To access types, you should import the relevant namespace from `wxt/browser`:
+
+```ts
+import { Runtime } from 'wxt/browser';
+
+function handleMessage(message: any, sender: Runtime.Sender) {
+  // ...
+}
 ```
