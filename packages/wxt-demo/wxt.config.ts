@@ -13,6 +13,9 @@ export default defineConfig({
       },
     ],
   },
+  autoIcons: {
+    grayscaleOnDevelopment: false,
+  },
   zip: {
     downloadPackages: ['sass'],
   },

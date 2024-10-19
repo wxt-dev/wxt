@@ -1,9 +1,27 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve, relative } from 'node:path';
+import { resolve } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
-import { ensureDir, exists } from 'fs-extra';
+import { ensureDir } from 'fs-extra';
+import glob from 'fast-glob';
+
+const extensionNames = [
+  'png',
+  'svg',
+  'webp',
+  'jpg',
+  'jpeg',
+  'jpe',
+  'jfif',
+  'tif',
+  'heif',
+  'heic',
+  'avif',
+  'tiff',
+  'ico',
+  'bmp',
+];
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -13,22 +31,33 @@ export default defineWxtModule<AutoIconsOptions>({
       options,
       {
         enabled: true,
-        baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
+        baseIconPath: '{assets,public}',
         grayscaleOnDevelopment: true,
         sizes: [128, 48, 32, 16],
+        iconName: 'icon',
       },
     );
-
-    const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await exists(resolvedPath))) {
+    // Create glob pattern based on iconName and extensionNames
+    const iconGlobPattern = `${parsedOptions.baseIconPath}/${parsedOptions.iconName}.{${extensionNames.join(',')}}`;
+
+    // Find matching icon files
+    const iconFiles = await glob(iconGlobPattern, {
+      cwd: wxt.config.srcDir,
+      absolute: true,
+    });
+
+    if (iconFiles.length === 0) {
       return wxt.logger.warn(
-        `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
+        `\`[auto-icons]\` Skipping icon generation, no base icon found matching ${iconGlobPattern}`,
       );
     }
+
+    // Use the first matching icon file
+    const resolvedPath = iconFiles[0];
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
       if (manifest.icons)
@@ -42,7 +71,7 @@ export default defineWxtModule<AutoIconsOptions>({
     });
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
-      const image = sharp(resolvedPath).png();
+      const image = sharp(resolvedPath).toFormat('png').png();
 
       if (
         wxt.config.mode === 'development' &&
@@ -83,10 +112,10 @@ export interface AutoIconsOptions {
    */
   enabled?: boolean;
   /**
-   * Path to the image to use.
+   * Base path for icon search.
    *
    * Path is relative to the project's src directory.
-   * @default "<srcDir>/assets/icon.png"
+   * @default "{assets,public}"
    */
   baseIconPath?: string;
   /**
@@ -99,6 +128,11 @@ export interface AutoIconsOptions {
    * @default [128, 48, 32, 16]
    */
   sizes?: number[];
+  /**
+   * Name of the icon file to use
+   * @default "icon"
+   */
+  iconName?: string;
 }
 
 declare module 'wxt' {
