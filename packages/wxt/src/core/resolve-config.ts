@@ -354,7 +354,9 @@ async function getUnimportOptions(
       },
       {
         package:
-          extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
+          extensionApi === 'webextension-polyfill'
+            ? 'wxt/browser/webextension-polyfill'
+            : 'wxt/browser',
       },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },

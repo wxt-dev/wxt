@@ -12,13 +12,16 @@ export function resolveExtensionApi(config: ResolvedConfig): vite.Plugin {
   return {
     name: 'wxt:resolve-extension-api',
     config() {
-      // Only apply the config if we're disabling the polyfill
-      if (config.extensionApi === 'webextension-polyfill') return;
+      // Only apply the config if we're not using the chrome API
+      if (config.extensionApi === 'chrome') return;
 
       return {
         resolve: {
           alias: [
-            { find: /^wxt\/browser$/, replacement: 'wxt/browser/chrome' },
+            {
+              find: /^wxt\/browser$/,
+              replacement: 'wxt/browser/webextension-polyfill',
+            },
           ],
         },
       };
