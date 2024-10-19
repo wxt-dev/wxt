@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -180,7 +180,7 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await execaCommand('pnpm eslint entrypoints/background.js', {
+        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
           cwd: project.root,
         });
       }
@@ -205,7 +205,8 @@ describe('Auto Imports', () => {
           );
 
           await expect(runEslint(project, 9)).rejects.toMatchObject({
-            message: expect.stringContaining(
+            exitCode: 1,
+            stdout: expect.stringContaining(
               "'defineBackground' is not defined",
             ),
           });
@@ -253,7 +254,8 @@ describe('Auto Imports', () => {
           );
 
           await expect(runEslint(project, 8)).rejects.toMatchObject({
-            message: expect.stringContaining(
+            exitCode: 1,
+            stdout: expect.stringContaining(
               "'defineBackground' is not defined",
             ),
           });

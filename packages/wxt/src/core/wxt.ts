@@ -12,6 +12,7 @@ import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
 import { createViteBuilder } from './builders/vite';
 import { builtinModules } from '../builtin-modules';
+import { relative } from 'path';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is used everywhere, this
@@ -66,6 +67,20 @@ export async function registerWxt(
 
   // Initialize hooks
   wxt.hooks.addHooks(config.hooks);
+  if (wxt.config.debug) {
+    const order = [
+      ...builtinModules.map((module) => module.name),
+      ...config.userModules.map((module) =>
+        relative(wxt.config.root, module.id),
+      ),
+      'wxt.config.ts > hooks',
+    ];
+    wxt.logger.debug('Hook execution order:');
+    order.forEach((name, i) => {
+      wxt.logger.debug(`  ${i + 1}. ${name}`);
+    });
+  }
+
   await wxt.hooks.callHook('ready', wxt);
 }
 

@@ -44,6 +44,11 @@ const chromeExtensionIds = [
   'opepfpjeogkbgeigkbepobceinnfmjdd', // Dofollow Links for SEO
   'pdnenlnelpdomajfejgapbdpmjkfpjkp', // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
   'jobnhifpphkgoelnhnopgkdhbdkiadmj', // discord message translator
+  'ncokhechhpjgjonhjnlaneglmdkfkcbj', // Habit Tracker app widget for daily habit tracking
+  'lnjaiaapbakfhlbjenjkhffcdpoompki', // Catppuccin for GitHub File Explorer Icons
+  'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
+  'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
+  'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

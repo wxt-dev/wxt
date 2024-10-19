@@ -2,13 +2,13 @@ import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import path from 'node:path';
 import { ensureDir } from 'fs-extra';
+import spawn from 'nano-spawn';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
   async downloadDependency(id, downloadDir) {
     await ensureDir(downloadDir);
-    const { execa } = await import('execa');
-    const res = await execa('npm', ['pack', id, '--json'], {
+    const res = await spawn('npm', ['pack', id, '--json'], {
       cwd: downloadDir,
     });
     const packed: PackedDependency[] = JSON.parse(res.stdout);
@@ -19,8 +19,7 @@ export const npm: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
-    const { execa } = await import('execa');
-    const res = await execa('npm', args, { cwd: options?.cwd });
+    const res = await spawn('npm', args, { cwd: options?.cwd });
     const project: NpmListProject = JSON.parse(res.stdout);
 
     return flattenNpmListOutput([project]);

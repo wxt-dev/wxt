@@ -1,7 +1,7 @@
 import { dirname, relative, resolve } from 'path';
 import fs, { mkdir } from 'fs-extra';
 import glob from 'fast-glob';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 import {
   InlineConfig,
   UserConfig,
@@ -119,7 +119,7 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await execaCommand('pnpm --ignore-workspace i --ignore-scripts', {
+    await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
       cwd: this.root,
     });
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
