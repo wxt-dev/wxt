@@ -7,7 +7,7 @@ export default defineWxtModule<UnoCSSOptions>({
   name: '@wxt-dev/unocss',
   configKey: 'unocss',
   async setup(wxt, options) {
-    const parsedOptions = defu<Required<UnoCSSOptions>, UnoCSSOptions[]>(
+    const resolvedOptions = defu<Required<UnoCSSOptions>, UnoCSSOptions[]>(
       options,
       {
         enabled: true,
@@ -16,10 +16,16 @@ export default defineWxtModule<UnoCSSOptions>({
       },
     );
 
-    if (!parsedOptions.enabled)
+    if (!resolvedOptions.enabled)
       return wxt.logger.warn(`\`[unocss]\` ${this.name} disabled`);
 
-    const excludedEntrypoints = new Set(parsedOptions.excludeEntrypoints);
+    const excludedEntrypoints = new Set(resolvedOptions.excludeEntrypoints);
+    if (wxt.config.debug) {
+      wxt.logger.debug(
+        `\`[unocss]\` Excluded entrypoints:`,
+        [...excludedEntrypoints].join(', '),
+      );
+    }
 
     wxt.hooks.hook('vite:devServer:extendConfig', (config) => {
       config.plugins?.push(UnoCSS());
@@ -27,7 +33,7 @@ export default defineWxtModule<UnoCSSOptions>({
 
     wxt.hooks.hook('vite:build:extendConfig', async (entries, config) => {
       if (entries.every((entry) => excludedEntrypoints.has(entry.name))) return;
-      config.plugins?.push(UnoCSS());
+      config.plugins?.push(UnoCSS(resolvedOptions.configOrPath));
     });
   },
 });
