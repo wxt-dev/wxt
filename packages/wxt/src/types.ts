@@ -62,8 +62,8 @@ export interface InlineConfig {
    * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
    * - <span v-pre>`{{command}}`</span>: The WXT command being run (e.g., 'build', 'serve')
    *
-   * @example "{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
-   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}"`</span>
+   * @example "{{browser}}-mv{{manifestVersion}}"
+   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"`</span>
    */
   outDirTemplate?: string;
   /**
