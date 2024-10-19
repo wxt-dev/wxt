@@ -1,6 +1,7 @@
 {
   "name": "@wxt-dev/unocss",
   "description": "UnoCSS integration for WXT",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
@@ -18,7 +19,6 @@
     "email": "me@timeraa.dev"
   },
   "license": "MIT",
-  "version": "1.0.0",
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
