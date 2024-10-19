@@ -296,7 +296,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     transformManifest: () => {},
     userConfigMetadata: {},
     alias: {},
-    entrypointLoader: 'vite-node',
     experimental: {},
     dev: {
       reloadCommand: 'Alt+R',
