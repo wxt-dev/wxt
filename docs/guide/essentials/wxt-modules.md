@@ -35,6 +35,10 @@ Build-time options are placed in your `wxt.config.ts`, while runtime options is 
 
 If you use TypeScript, modules augment WXT's types so you will get type errors if options are missing or incorrect.
 
+## Execution Order
+
+Modules are loaded in the same order as hooks are executed. Refer to the [Hooks documentation](/guide/essentials/config/hooks#execution-order) for more details.
+
 ## Writing Modules
 
 Here's what a basic WXT module looks like:
