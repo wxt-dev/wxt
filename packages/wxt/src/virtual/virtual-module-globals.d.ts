@@ -1,3 +1,4 @@
+/// <reference types="chrome" />
 // Types required to make the virtual modules happy.
 
 declare module 'virtual:user-background-entrypoint' {
@@ -18,6 +19,10 @@ declare module 'virtual:user-content-script-main-world-entrypoint' {
 declare module 'virtual:user-unlisted-script-entrypoint' {
   const definition: import('wxt').UnlistedScriptDefinition;
   export default definition;
+}
+
+declare module 'wxt/browser' {
+  export const browser: chrome;
 }
 
 declare module 'virtual:wxt-plugins' {
