@@ -144,9 +144,6 @@ catalogs:
     is-wsl:
       specifier: ^3.1.0
       version: 3.1.0
-    jiti:
-      specifier: ^2.4.2
-      version: 2.4.2
     json5:
       specifier: ^2.2.3
       version: 2.2.3
@@ -761,9 +758,6 @@ importers:
       is-wsl:
         specifier: 'catalog:'
         version: 3.1.0
-      jiti:
-        specifier: 'catalog:'
-        version: 2.4.2
       json5:
         specifier: 'catalog:'
         version: 2.2.3
