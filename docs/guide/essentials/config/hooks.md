@@ -45,8 +45,11 @@ To see the order for your project, run `wxt prepare --debug` flag and search for
 Changing execution order is simple:
 
 - Prefix your user modules with a number (lower numbers are loaded first):
+  <!-- prettier-ignore -->
   ```html
-  📁 modules/ 📄 0.my-module.ts 📄 1.another-module.ts
+  📁 modules/
+     📄 0.my-module.ts
+     📄 1.another-module.ts
   ```
 - If you need to run an NPM module after user modules, just make it a user module and prefix the filename with a number!
   ```ts
