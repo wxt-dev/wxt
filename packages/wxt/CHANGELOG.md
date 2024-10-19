@@ -1,5 +1,45 @@
 # Changelog
 
+## v0.19.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.11...wxt-v0.19.12)
+
+### 🚀 Enhancements
+
+- Add support for `WXT_` environment variable prefix ([#1076](https://github.com/wxt-dev/wxt/pull/1076))
+- **config:** Add `outDirTemplate` for customizing output directory structure ([#1074](https://github.com/wxt-dev/wxt/pull/1074))
+
+### 🔥 Performance
+
+- Replace `execa` with `nano-spawn` for smaller package size ([#1042](https://github.com/wxt-dev/wxt/pull/1042))
+- Downgrade `esbuild` so a single version is shared between sub-dependencies ([#1045](https://github.com/wxt-dev/wxt/pull/1045))
+
+### 🩹 Fixes
+
+- Use directory name when `zip.name` and `package.json#name` are not provided ([#1028](https://github.com/wxt-dev/wxt/pull/1028))
+- Ensure consistent hook execution order and add docs ([#1081](https://github.com/wxt-dev/wxt/pull/1081))
+
+### 📖 Documentation
+
+- Rewrite and restructure the documentation website ([#933](https://github.com/wxt-dev/wxt/pull/933))
+
+### 🏡 Chore
+
+- Remove email from changelog ([#1027](https://github.com/wxt-dev/wxt/pull/1027))
+- **deps:** Bump magicast from 0.3.4 to 0.3.5 ([#1017](https://github.com/wxt-dev/wxt/pull/1017))
+- **deps:** Bump esbuild from 0.23.0 to 0.24.0 ([#1018](https://github.com/wxt-dev/wxt/pull/1018))
+- **deps:** Bump linkedom from 0.18.4 to 0.18.5 ([#1034](https://github.com/wxt-dev/wxt/pull/1034))
+- **deps:** Bump execa from 9.3.1 to 9.4.0 ([#1031](https://github.com/wxt-dev/wxt/pull/1031))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+- Shrink down on dependencies ([#1050](https://github.com/wxt-dev/wxt/pull/1050))
+- Enable `extensionApi: chrome` in template projects ([#1083](https://github.com/wxt-dev/wxt/pull/1083))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Mezannic ([@mezannic](http://github.com/mezannic))
+
 ## v0.19.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.10...wxt-v0.19.11)
