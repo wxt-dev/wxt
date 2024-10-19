@@ -88,24 +88,6 @@ describe('User Config', () => {
     `);
   });
 
-  it('should exclude the polyfill when extensionApi="chrome"', async () => {
-    const buildBackground = async (config?: InlineConfig) => {
-      const background = `export default defineBackground(() => console.log(browser.runtime.id));`;
-      const projectWithPolyfill = new TestProject();
-      projectWithPolyfill.addFile('entrypoints/background.ts', background);
-      await projectWithPolyfill.build(config);
-      return await projectWithPolyfill.serializeFile(
-        '.output/chrome-mv3/background.js',
-      );
-    };
-
-    const withPolyfill = await buildBackground();
-    const withoutPolyfill = await buildBackground({
-      extensionApi: 'chrome',
-    });
-    expect(withoutPolyfill).not.toBe(withPolyfill);
-  });
-
   it('should respect changing config files', async () => {
     const project = new TestProject();
     project.addFile(

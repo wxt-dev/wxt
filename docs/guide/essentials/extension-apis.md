@@ -22,7 +22,7 @@ The `browser` variable WXT provides is a simple export of the `browser` or `chro
 
 <<< @/../packages/wxt/src/browser.ts#snippet
 
-This means you can use the promise-styled API for both MV2 and MV3, and it will work across all browsers (Chromium, Firefox, Safari, etc).
+This means you can use the promise-style API for both MV2 and MV3, and it will work across all browsers (Chromium, Firefox, Safari, etc).
 
 ## Accessing Types
 

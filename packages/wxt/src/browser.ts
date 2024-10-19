@@ -1,9 +1,5 @@
 /// <reference types="chrome" />
 /**
- * EXPERIMENTAL
- *
- * Includes the `chrome` API and types when using `extensionApi: 'chrome'` (the default).
- *
  * @module wxt/browser
  */
 

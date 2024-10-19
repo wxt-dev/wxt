@@ -4,7 +4,7 @@ import { ResolvedConfig } from '../../../../types';
 /**
  * Stub the global `chrome` and `browser` variables with a fake version of the extension APIs.
  */
-export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
+export function extensionApiMock(): vite.PluginOption {
   const virtualSetupModule = 'virtual:wxt-setup';
   const resolvedVirtualSetupModule = '\0' + virtualSetupModule;
 
