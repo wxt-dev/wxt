@@ -20,7 +20,6 @@ import {
 import { Hookable } from 'hookable';
 import { toArray } from '../../utils/arrays';
 import { safeVarName } from '../../utils/strings';
-import { importEntrypointFile } from '../../utils/building';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
@@ -221,50 +220,42 @@ export async function createViteBuilder(
     name: 'Vite',
     version: vite.version,
     async importEntrypoint(path) {
-      switch (wxtConfig.entrypointLoader) {
-        default:
-        case 'jiti': {
-          return await importEntrypointFile(path);
-        }
-        case 'vite-node': {
-          const baseConfig = await getBaseConfig({
-            excludeAnalysisPlugin: true,
-          });
-          // Disable dep optimization, as recommended by vite-node's README
-          baseConfig.optimizeDeps ??= {};
-          baseConfig.optimizeDeps.noDiscovery = true;
-          baseConfig.optimizeDeps.include = [];
-          const envConfig: vite.InlineConfig = {
-            plugins: [wxtPlugins.removeEntrypointMainFunction(wxtConfig, path)],
-          };
-          const config = vite.mergeConfig(baseConfig, envConfig);
-          const server = await vite.createServer(config);
-          await server.pluginContainer.buildStart({});
-          const node = new ViteNodeServer(
-            // @ts-ignore: Some weird type error...
-            server,
-          );
-          installSourcemapsSupport({
-            getSourceMap: (source) => node.getSourceMap(source),
-          });
-          const runner = new ViteNodeRunner({
-            root: server.config.root,
-            base: server.config.base,
-            // when having the server and runner in a different context,
-            // you will need to handle the communication between them
-            // and pass to this function
-            fetchModule(id) {
-              return node.fetchModule(id);
-            },
-            resolveId(id, importer) {
-              return node.resolveId(id, importer);
-            },
-          });
-          const res = await runner.executeFile(path);
-          await server.close();
-          return res.default;
-        }
-      }
+      const baseConfig = await getBaseConfig({
+        excludeAnalysisPlugin: true,
+      });
+      // Disable dep optimization, as recommended by vite-node's README
+      baseConfig.optimizeDeps ??= {};
+      baseConfig.optimizeDeps.noDiscovery = true;
+      baseConfig.optimizeDeps.include = [];
+      const envConfig: vite.InlineConfig = {
+        plugins: [wxtPlugins.removeEntrypointMainFunction(wxtConfig, path)],
+      };
+      const config = vite.mergeConfig(baseConfig, envConfig);
+      const server = await vite.createServer(config);
+      await server.pluginContainer.buildStart({});
+      const node = new ViteNodeServer(
+        // @ts-ignore: Some weird type error...
+        server,
+      );
+      installSourcemapsSupport({
+        getSourceMap: (source) => node.getSourceMap(source),
+      });
+      const runner = new ViteNodeRunner({
+        root: server.config.root,
+        base: server.config.base,
+        // when having the server and runner in a different context,
+        // you will need to handle the communication between them
+        // and pass to this function
+        fetchModule(id) {
+          return node.fetchModule(id);
+        },
+        resolveId(id, importer) {
+          return node.resolveId(id, importer);
+        },
+      });
+      const res = await runner.executeFile(path);
+      await server.close();
+      return res.default;
     },
     async build(group) {
       let entryConfig;
