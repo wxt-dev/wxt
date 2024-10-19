@@ -104,13 +104,15 @@ export async function resolveConfig(
     production: '',
     development: '-dev',
   };
+  const modeSuffix = modeSuffixes[mode] ?? `-${mode}`;
   const outDirTemplate = (
-    mergedConfig.outDirTemplate ?? `${browser}-mv${manifestVersion}`
+    mergedConfig.outDirTemplate ??
+    `${browser}-mv${manifestVersion}${modeSuffix}`
   )
     // Resolve all variables in the template
     .replaceAll('{{browser}}', browser)
     .replaceAll('{{manifestVersion}}', manifestVersion.toString())
-    .replaceAll('{{modeSuffix}}', modeSuffixes[mode] ?? `-${mode}`)
+    .replaceAll('{{modeSuffix}}', modeSuffix)
     .replaceAll('{{mode}}', mode)
     .replaceAll('{{command}}', command);
 
