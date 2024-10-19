@@ -54,6 +54,19 @@ export interface InlineConfig {
    */
   outDir?: string;
   /**
+   * Template string for customizing the output directory structure.
+   * Available variables:
+   * - <span v-pre>`{{browser}}`</span>: The target browser (e.g., 'chrome', 'firefox')
+   * - <span v-pre>`{{manifestVersion}}`</span>: The manifest version (e.g., 2 or 3)
+   * - <span v-pre>`{{mode}}`</span>: The build mode (e.g., 'development', 'production')
+   * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
+   * - <span v-pre>`{{command}}`</span>: The WXT command being run (e.g., 'build', 'serve')
+   *
+   * @example "{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
+   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}"`</span>
+   */
+  outDirTemplate?: string;
+  /**
    * > Only available when using the JS API. Not available in `wxt.config.ts` files
    *
    * Path to `wxt.config.ts` file or `false` to disable config file discovery.
@@ -62,7 +75,7 @@ export interface InlineConfig {
    */
   configFile?: string | false;
   /**
-   * Set to `true` to show debug logs. Overriden by the command line `--debug` option.
+   * Set to `true` to show debug logs. Overridden by the command line `--debug` option.
    *
    * @default false
    */
@@ -316,7 +329,7 @@ export interface InlineConfig {
    * Which extension API to use.
    *
    * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
+   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
    *
    * @default "webextension-polyfill"
    * @since 0.19.0
@@ -1234,7 +1247,7 @@ export interface Wxt {
    */
   pm: WxtPackageManager;
   /**
-   * If the dev server was started, it will be availble.
+   * If the dev server was started, it will be available.
    */
   server?: WxtDevServer;
   /**

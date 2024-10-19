@@ -1,5 +1,44 @@
 # Changelog
 
+## v0.2.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.0...i18n-v0.2.1)
+
+### 🩹 Fixes
+
+- Add missing "type" keyword to type export in generated file ([22b5294](https://github.com/wxt-dev/wxt/commit/22b5294))
+
+### 📖 Documentation
+
+- Rewrite and restructure the documentation website ([#933](https://github.com/wxt-dev/wxt/pull/933))
+
+### 🏡 Chore
+
+- Fix typo in internal function name ([21894d2](https://github.com/wxt-dev/wxt/commit/21894d2))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.2.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.1...i18n-v0.2.0)
+
+### 🩹 Fixes
+
+- ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
+
+To upgrade, if you were passing a final `options` argument, remove it. If you used the third argument to escape `<` symbol... You'll need to do it yourself:
+
+```diff
+- i18n.t("someKey", ["sub1"], { escapeLt: true });
++ i18n.t("someKey", ["sub1"]).replaceAll("<", "&lt;");
+```
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.1.0...i18n-v0.1.1)

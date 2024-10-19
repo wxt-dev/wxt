@@ -29,7 +29,6 @@ export type TFunction<T extends I18nStructure> = {
   <K extends keyof T>(
     // prettier-ignore
     key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: 0 } ? P : never; }[keyof T],
-    options?: GetMessageOptions,
   ): string;
 
   // Non-plural with substitutions
@@ -39,7 +38,6 @@ export type TFunction<T extends I18nStructure> = {
     substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
       : never,
-    options?: GetMessageOptions,
   ): string;
 
   // Plural with 1 substitution
@@ -48,7 +46,6 @@ export type TFunction<T extends I18nStructure> = {
     key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: 1 } ? P : never; }[keyof T],
     n: number,
     substitutions?: SubstitutionTuple<1>,
-    options?: GetMessageOptions,
   ): string;
 
   // Plural without substitutions
@@ -56,7 +53,6 @@ export type TFunction<T extends I18nStructure> = {
     // prettier-ignore
     key: K & { [P in keyof T]: T[P] extends { plural: true; substitutions: 0 | 1 } ? P : never; }[keyof T],
     n: number,
-    options?: GetMessageOptions,
   ): string;
 
   // Plural with substitutions
@@ -67,7 +63,6 @@ export type TFunction<T extends I18nStructure> = {
     substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
       : never,
-    options?: GetMessageOptions,
   ): string;
 };
 
@@ -76,14 +71,5 @@ export interface I18n<T extends DefaultI18nStructure> {
 }
 
 export type Substitution = string | number;
-
-export interface GetMessageOptions {
-  /**
-   * Escape `<` in translation to `&lt;`. This applies only to the message itself, not to the placeholders. Developers might want to use this if the translation is used in an HTML context. Closure Templates used with Closure Compiler generate this automatically.
-   *
-   * See https://developer.chrome.com/docs/extensions/reference/api/i18n#type-getMessage-options
-   */
-  escapeLt?: boolean;
-}
 
 type SubstitutionCount = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
