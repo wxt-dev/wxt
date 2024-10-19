@@ -329,7 +329,7 @@ export interface InlineConfig {
    * Which extension API to use.
    *
    * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
+   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
    *
    * @default "webextension-polyfill"
    * @since 0.19.0
