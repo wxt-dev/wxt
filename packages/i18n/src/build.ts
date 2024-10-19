@@ -8,7 +8,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
-import { applyChromeMessagePlaceholders, getSubstitionCount } from './utils';
+import { applyChromeMessagePlaceholders, getSubstitutionCount } from './utils';
 
 //
 // TYPES
@@ -155,7 +155,7 @@ function _parseMessagesObject(
     case 'number':
     case 'symbol': {
       const message = String(object);
-      const substitutions = getSubstitionCount(message);
+      const substitutions = getSubstitutionCount(message);
       return [
         {
           type: 'simple',
@@ -177,7 +177,7 @@ function _parseMessagesObject(
         );
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
-        const substitutions = getSubstitionCount(message);
+        const substitutions = getSubstitutionCount(message);
         return [
           {
             type: 'plural',
@@ -189,7 +189,7 @@ function _parseMessagesObject(
       }
       if (depth === 1 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
-        const substitutions = getSubstitionCount(message);
+        const substitutions = getSubstitutionCount(message);
         return [
           {
             type: 'chrome',
