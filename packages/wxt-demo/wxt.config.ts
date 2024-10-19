@@ -2,7 +2,6 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
-  extensionApi: 'chrome',
   manifest: {
     permissions: ['storage'],
     default_locale: 'en',

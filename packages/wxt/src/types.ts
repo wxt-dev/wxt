@@ -1,5 +1,4 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from 'wxt/browser';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './client/content-scripts/content-script-context';
@@ -8,6 +7,7 @@ import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
+import { ManifestContentScript } from './core/utils/types';
 
 export interface InlineConfig {
   /**
@@ -267,7 +267,7 @@ export interface InlineConfig {
    *   }
    * })
    */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
+  transformManifest?: (manifest: chrome.runtime.Manifest) => void;
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
@@ -325,16 +325,6 @@ export interface InlineConfig {
    * }
    */
   alias?: Record<string, string>;
-  /**
-   * Which extension API to use.
-   *
-   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
-   *
-   * @default "webextension-polyfill"
-   * @since 0.19.0
-   */
-  extensionApi?: 'webextension-polyfill' | 'chrome';
   /**
    * @deprecated Will be removed in v0.20.0, please migrate to using `vite-node`, the new default.
    *
@@ -444,7 +434,7 @@ export interface WxtHooks {
 }
 
 export interface BuildOutput {
-  manifest: Manifest.WebExtensionManifest;
+  manifest: chrome.runtime.Manifest;
   publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
 }
@@ -537,7 +527,7 @@ export interface WxtDevServer
 
 export interface ReloadContentScriptPayload {
   registration?: BaseContentScriptEntrypointOptions['registration'];
-  contentScript: Omit<Scripting.RegisteredContentScript, 'id'>;
+  contentScript: Omit<chrome.scripting.RegisteredContentScript, 'id'>;
 }
 
 export type TargetBrowser = string;
@@ -588,39 +578,39 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
 
 export interface BaseContentScriptEntrypointOptions
   extends BaseEntrypointOptions {
-  matches: PerBrowserOption<Manifest.ContentScript['matches']>;
+  matches: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
    */
-  runAt?: PerBrowserOption<Manifest.ContentScript['run_at']>;
+  runAt?: PerBrowserOption<chrome.scripting.RegisteredContentScript['runAt']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
   matchAboutBlank?: PerBrowserOption<
-    Manifest.ContentScript['match_about_blank']
+    ManifestContentScript['match_about_blank']
   >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeMatches?: PerBrowserOption<Manifest.ContentScript['exclude_matches']>;
+  excludeMatches?: PerBrowserOption<ManifestContentScript['exclude_matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  includeGlobs?: PerBrowserOption<Manifest.ContentScript['include_globs']>;
+  includeGlobs?: PerBrowserOption<ManifestContentScript['include_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeGlobs?: PerBrowserOption<Manifest.ContentScript['exclude_globs']>;
+  excludeGlobs?: PerBrowserOption<ManifestContentScript['exclude_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  allFrames?: PerBrowserOption<Manifest.ContentScript['all_frames']>;
+  allFrames?: PerBrowserOption<ManifestContentScript['all_frames']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
@@ -1163,7 +1153,7 @@ export interface WxtHooks {
    */
   'build:manifestGenerated': (
     wxt: Wxt,
-    manifest: Manifest.WebExtensionManifest,
+    manifest: chrome.runtime.Manifest,
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
@@ -1316,7 +1306,7 @@ export interface ResolvedConfig {
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.
    */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
+  transformManifest?: (manifest: chrome.runtime.Manifest) => void;
   analysis: {
     enabled: boolean;
     open: boolean;
@@ -1334,7 +1324,6 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
-  extensionApi: 'webextension-polyfill' | 'chrome';
   entrypointLoader: 'vite-node' | 'jiti';
   experimental: {};
   dev: {

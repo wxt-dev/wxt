@@ -1,12 +1,19 @@
 /// <reference types="chrome" />
 /**
- * EXPERIMENTAL
- *
- * Includes the `chrome` API and types when using `extensionApi: 'chrome'`.
- *
- * @module wxt/browser/chrome
+ * @module wxt/browser
  */
-import type { WxtRuntime, WxtI18n } from './index';
+
+/**
+ * This interface is empty because it is generated per-project when running `wxt prepare`. See:
+ * - `.wxt/types/paths.d.ts`
+ */
+export interface WxtRuntime {}
+
+/**
+ * This interface is empty because it is generated per-project when running `wxt prepare`. See:
+ * - `.wxt/types/i18n.d.ts`
+ */
+export interface WxtI18n {}
 
 export type WxtBrowser = Omit<typeof chrome, 'runtime' | 'i18n'> & {
   runtime: WxtRuntime & Omit<(typeof chrome)['runtime'], 'getURL'>;

@@ -5,7 +5,7 @@
  *
  * @module wxt/storage
  */
-import { Storage, browser } from 'wxt/browser';
+import { browser } from 'wxt/browser';
 import { dequal } from 'dequal/lite';
 import { logger } from './sandbox/utils/logger';
 import { toArray } from './core/utils/arrays';
@@ -391,7 +391,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     return area;
   };
   const watchListeners = new Set<
-    (changes: Storage.StorageAreaOnChangedChangesType) => void
+    (changes: Record<string, chrome.storage.StorageChange>) => void
   >();
   return {
     getItem: async (key) => {
@@ -432,7 +432,9 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
     watch(key, cb) {
-      const listener = (changes: Storage.StorageAreaOnChangedChangesType) => {
+      const listener = (
+        changes: Record<string, chrome.storage.StorageChange>,
+      ) => {
         const change = changes[key];
         if (change == null) return;
         if (dequal(change.newValue, change.oldValue)) return;
@@ -646,7 +648,7 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
-export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
+export type StorageArea = chrome.storage.AreaName;
 export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
