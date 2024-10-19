@@ -56,8 +56,23 @@ export default defineWxtModule<AutoIconsOptions>({
       );
     }
 
-    // Use the first matching icon file
-    const resolvedPath = iconFiles[0];
+    // Prioritize the icon from the assets directory if multiple icons are found
+    let resolvedPath: string;
+    if (iconFiles.length > 1) {
+      const assetsIcon = iconFiles.find((file) => file.includes('/assets/'));
+      resolvedPath = assetsIcon || iconFiles[0];
+      if (assetsIcon) {
+        wxt.logger.info(
+          `\`[auto-icons]\` Multiple icons found. Using icon from assets directory: ${assetsIcon}`,
+        );
+      } else {
+        wxt.logger.info(
+          `\`[auto-icons]\` Multiple icons found. Using first icon: ${iconFiles[0]}`,
+        );
+      }
+    } else {
+      resolvedPath = iconFiles[0];
+    }
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
       if (manifest.icons)
