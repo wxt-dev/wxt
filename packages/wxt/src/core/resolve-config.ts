@@ -171,8 +171,6 @@ export async function resolveConfig(
     {},
   );
 
-  const extensionApi = mergedConfig.extensionApi ?? 'webextension-polyfill';
-
   return {
     browser,
     command,
@@ -182,13 +180,7 @@ export async function resolveConfig(
     filterEntrypoints,
     env,
     fsCache: createFsCache(wxtDir),
-    imports: await getUnimportOptions(
-      wxtDir,
-      srcDir,
-      logger,
-      extensionApi,
-      mergedConfig,
-    ),
+    imports: await getUnimportOptions(wxtDir, srcDir, logger, mergedConfig),
     logger,
     manifest: await resolveManifestConfig(env, mergedConfig.manifest),
     manifestVersion,
@@ -207,7 +199,6 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    extensionApi,
     entrypointLoader: mergedConfig.entrypointLoader ?? 'vite-node',
     experimental: defu(mergedConfig.experimental, {}),
     dev: {
@@ -342,7 +333,6 @@ async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
   logger: Logger,
-  extensionApi: ResolvedConfig['extensionApi'],
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions | false> {
   if (config.imports === false) return false;
@@ -361,10 +351,7 @@ async function getUnimportOptions(
         // ignored.
         ignore: ['options'],
       },
-      {
-        package:
-          extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
-      },
+      { package: 'wxt/browser' },
       { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
     ],

@@ -262,9 +262,6 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      // Simplify the build output for comparison
-      extensionApi: 'chrome',
-
       vite: () => ({
         build: {
           // Make output for snapshot readible
@@ -289,11 +286,7 @@ describe('Output Directory Structure', () => {
             logHello("background");
           }
         });
-        // @ts-expect-error
-        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) == null ? globalThis.chrome : (
-          // @ts-expect-error
-          globalThis.browser
-        );
+        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
         function print(method, ...args) {
           return;
         }
@@ -347,9 +340,6 @@ describe('Output Directory Structure', () => {
     project.addFile('entrypoints/popup/main.ts', `logHello('popup')`);
 
     await project.build({
-      // Simplify the build output for comparison
-      extensionApi: 'chrome',
-
       vite: () => ({
         build: {
           // Make output for snapshot readible
@@ -381,11 +371,7 @@ describe('Output Directory Structure', () => {
           background;
           function initPlugins() {
           }
-          // @ts-expect-error
-          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) == null ? globalThis.chrome : (
-            // @ts-expect-error
-            globalThis.browser
-          );
+          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
           function print(method, ...args) {
             return;
           }

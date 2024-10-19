@@ -83,7 +83,6 @@ export async function createViteBuilder(
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
-      wxtPlugins.resolveExtensionApi(wxtConfig),
       wxtPlugins.defineImportMeta(),
       wxtPlugins.wxtPluginLoader(wxtConfig),
       wxtPlugins.resolveAppConfig(wxtConfig),
