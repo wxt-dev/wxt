@@ -6,7 +6,7 @@
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/unocss"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/unocss/README.md",
+  "homepage": "http://wxt.dev/guide/unocss.html",
   "keywords": [
     "wxt",
     "module",
@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "pnpm build && check"
+    "check": "buildc --deps-only -- check"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",

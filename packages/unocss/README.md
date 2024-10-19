@@ -1,6 +1,6 @@
 # WXT UnoCSS
 
-Allows for simple UnoCSS usage in your project.
+Use UnoCSS in your WXT extension!
 
 ## Usage
 

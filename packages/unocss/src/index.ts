@@ -2,8 +2,6 @@ import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
 import defu from 'defu';
 import UnoCSS from 'unocss/vite';
-import { resolve } from 'node:path';
-import { globSync } from 'fast-glob';
 
 export default defineWxtModule<UnoCSSOptions>({
   name: '@wxt-dev/unocss',
@@ -13,30 +11,22 @@ export default defineWxtModule<UnoCSSOptions>({
       options,
       {
         enabled: true,
-        entrypoints: ['entrypoints/**/*.ts'],
+        excludeEntrypoints: ['background'],
+        configOrPath: undefined,
       },
     );
 
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[unocss]\` ${this.name} disabled`);
 
-    const parsedEntrypoints = parsedOptions.entrypoints.map((entrypoint) =>
-      resolve(wxt.config.srcDir, entrypoint),
-    );
+    const excludedEntrypoints = new Set(parsedOptions.excludeEntrypoints);
 
     wxt.hooks.hook('vite:devServer:extendConfig', (config) => {
       config.plugins?.push(UnoCSS());
     });
 
-    wxt.hooks.hook('vite:build:extendConfig', (entries, config) => {
-      const entrypoint = entries.find((f) =>
-        parsedEntrypoints.some((entrypoint) =>
-          globSync(entrypoint).some((path) => f.inputPath.endsWith(path)),
-        ),
-      );
-
-      if (!entrypoint) return;
-
+    wxt.hooks.hook('vite:build:extendConfig', async (entries, config) => {
+      if (entries.every((entry) => excludedEntrypoints.has(entry.name))) return;
       config.plugins?.push(UnoCSS());
     });
   },
@@ -45,17 +35,24 @@ export default defineWxtModule<UnoCSSOptions>({
 /**
  * Options for the UnoCSS module
  */
-export interface UnoCSSOptions {
+export interface UnoCSSOptions<Theme extends object = object> {
   /**
    * Enable UnoCSS
    * @default true
    */
   enabled?: boolean;
   /**
-   * Entrypoints to use UnoCSS for
-   * @default <srcDir>/entrypoints/**\/*.ts
+   * List of entrypoint names that UnoCSS is not used in. By default, the UnoCSS
+   * vite plugin is added to all build steps, but this option is used to exclude
+   * it from specific builds.
+   * @example ["popup", "options"]
+   * @default []
    */
-  entrypoints?: string[];
+  excludeEntrypoints?: string[];
+  /**
+   * The path to your `unocss.config.ts` file, relative to <rootDir>, or inline configuration.
+   */
+  configOrPath?: Parameters<typeof UnoCSS<Theme>>[0];
 }
 
 declare module 'wxt' {
