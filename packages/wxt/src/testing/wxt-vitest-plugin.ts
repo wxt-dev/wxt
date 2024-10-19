@@ -36,7 +36,7 @@ export async function WxtVitest(
     download(wxt.config),
     tsconfigPaths(wxt.config),
     resolveAppConfig(wxt.config),
-    extensionApiMock(),
+    extensionApiMock(wxt.config),
   ];
   if (wxt.config.imports !== false) {
     const unimport = createUnimport(wxt.config.imports);
