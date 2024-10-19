@@ -6,23 +6,6 @@ import sharp from 'sharp';
 import { ensureDir } from 'fs-extra';
 import glob from 'fast-glob';
 
-const extensionNames = [
-  'png',
-  'svg',
-  'webp',
-  'jpg',
-  'jpeg',
-  'jpe',
-  'jfif',
-  'tif',
-  'heif',
-  'heic',
-  'avif',
-  'tiff',
-  'ico',
-  'bmp',
-];
-
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
   configKey: 'autoIcons',
@@ -35,6 +18,22 @@ export default defineWxtModule<AutoIconsOptions>({
         grayscaleOnDevelopment: true,
         sizes: [128, 48, 32, 16],
         iconName: 'icon',
+        extensionNames: [
+          'png',
+          'svg',
+          'webp',
+          'jpg',
+          'jpeg',
+          'jpe',
+          'jfif',
+          'tif',
+          'heif',
+          'heic',
+          'avif',
+          'tiff',
+          'ico',
+          'bmp',
+        ],
       },
     );
 
@@ -42,7 +41,7 @@ export default defineWxtModule<AutoIconsOptions>({
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
     // Create glob pattern based on iconName and extensionNames
-    const iconGlobPattern = `${parsedOptions.baseIconPath}/${parsedOptions.iconName}.{${extensionNames.join(',')}}`;
+    const iconGlobPattern = `${parsedOptions.baseIconPath}/${parsedOptions.iconName}.{${parsedOptions.extensionNames.join(',')}}`;
 
     // Find matching icon files
     const iconFiles = await glob(iconGlobPattern, {
@@ -156,6 +155,11 @@ export interface AutoIconsOptions {
    * @default "icon"
    */
   iconName?: string;
+  /**
+   * Extension names to search for
+   * @default ["png", "svg", "webp", "jpg", "jpeg", "jpe", "jfif", "tif", "heif", "heic", "avif", "tiff", "ico", "bmp"]
+   */
+  extensionNames?: string[];
 }
 
 declare module 'wxt' {
