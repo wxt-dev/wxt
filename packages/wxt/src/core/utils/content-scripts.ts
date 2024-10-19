@@ -1,6 +1,6 @@
-import type { Manifest, Scripting } from 'wxt/browser';
 import { ContentScriptEntrypoint, ResolvedConfig } from '../../types';
 import { getEntrypointBundlePath } from './entrypoints';
+import { ManifestContentScript } from './types';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts options.
@@ -22,7 +22,7 @@ export function hashContentScriptOptions(
     if (simplifiedOptions[key] == null) delete simplifiedOptions[key];
   });
 
-  const withDefaults: Manifest.ContentScript = {
+  const withDefaults: ManifestContentScript = {
     exclude_globs: [],
     exclude_matches: [],
     include_globs: [],
@@ -50,7 +50,7 @@ export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): Manifest.ContentScript {
+): ManifestContentScript {
   return {
     matches: options.matches,
     all_frames: options.allFrames,
@@ -72,7 +72,7 @@ export function mapWxtOptionsToRegisteredContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): Omit<Scripting.RegisteredContentScript, 'id'> {
+): Omit<chrome.scripting.RegisteredContentScript, 'id'> {
   return {
     allFrames: options.allFrames,
     excludeMatches: options.excludeMatches,
@@ -80,7 +80,6 @@ export function mapWxtOptionsToRegisteredContentScript(
     runAt: options.runAt,
     js,
     css,
-    // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
     world: options.world,
   };
 }

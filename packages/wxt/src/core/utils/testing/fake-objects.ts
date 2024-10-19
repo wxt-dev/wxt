@@ -4,7 +4,6 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import { Commands, type Manifest } from 'wxt/browser';
 import {
   FsCache,
   ResolvedConfig,
@@ -207,13 +206,11 @@ export function fakeOutputFile(): OutputFile {
   return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
 }
 
-export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(
-  () => ({
-    manifest_version: faker.helpers.arrayElement([2, 3]),
-    name: faker.string.alphanumeric(),
-    version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
-  }),
-);
+export const fakeManifest = fakeObjectCreator<chrome.runtime.Manifest>(() => ({
+  manifest_version: faker.helpers.arrayElement([2, 3]),
+  name: faker.string.alphanumeric(),
+  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+}));
 
 export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
   name: faker.string.alphanumeric(),
@@ -355,13 +352,17 @@ export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
   entrypoints: fakeArray(fakeEntrypoint),
 }));
 
-export const fakeManifestCommand = fakeObjectCreator<Commands.Command>(() => ({
-  description: faker.string.sample(),
-  shortcut: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int({
-    min: 0,
-    max: 9,
-  })}`,
-}));
+export const fakeManifestCommand = fakeObjectCreator<chrome.commands.Command>(
+  () => ({
+    description: faker.string.sample(),
+    shortcut: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int(
+      {
+        min: 0,
+        max: 9,
+      },
+    )}`,
+  }),
+);
 
 export const fakeDevServer = fakeObjectCreator<WxtDevServer>(() => ({
   hostname: 'localhost',

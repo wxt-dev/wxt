@@ -162,7 +162,7 @@ export async function resolveConfig(
     {},
   );
 
-  const extensionApi = mergedConfig.extensionApi ?? 'webextension-polyfill';
+  const extensionApi = mergedConfig.extensionApi ?? 'chrome';
 
   return {
     browser,

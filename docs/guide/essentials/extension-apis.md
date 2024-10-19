@@ -4,21 +4,48 @@
 
 Different browsers provide different global variables for accessing the extension APIs (chrome provides `chrome`, firefox provides `browser`, etc).
 
-WXT simplifies this - always use `browser`:
+WXT simplifies merges these two into a unified API accessed through the `browser` variable.
 
 ```ts
+import { browser } from 'wxt/browser';
+
 browser.action.onClicked.addListener(() => {
   // ...
 });
 ```
 
-Other than that, refer to Chrome and Mozilla's documentation for how to use specific APIs. Everything a normal extension can do, WXT can do as well, just via `browser` instead of `chrome`.
+:::tip
+With auto-imports enabled, you don't even need to import this variable from `wxt/browser`!
+:::
+
+The `browser` variable WXT provides is a simple export of the `browser` or `chrome` globals provided by the browser at runtime:
+
+<<< @/../packages/wxt/src/browser/chrome.ts#snippet
+
+This means you can use the promise-styled API for both MV2 and MV3, and it will work across all browsers (Chromium, Firefox, Safari, etc).
+
+## Accessing Types
+
+All types can be accessed via WXT's `browser` object:
+
+```ts
+function handleMessage(message: any, sender: browser.runtime.Sender) {
+  // ...
+}
+```
 
 ## Webextension Polyfill
 
-> Since `v0.1.0`
+WXT provides the option to use the [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill) to make the extension API consistent between browsers:
 
-By default, WXT uses the [`webextension-polyfill` by Mozilla](https://www.npmjs.com/package/webextension-polyfill) to make the extension API consistent between browsers.
+```ts
+// wxt.config.ts
+export default defineConfig({
+  extensionApi: 'webextension-polyfill',
+});
+```
+
+> After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, the polyfill isn't really doing anything useful anymore. WXT will be removing support for the polyfill in the future, it's recommended you migrate to `extensionApi: "chrome"`.
 
 To access types, you should import the relevant namespace from `wxt/browser`:
 
@@ -26,33 +53,6 @@ To access types, you should import the relevant namespace from `wxt/browser`:
 import { Runtime } from 'wxt/browser';
 
 function handleMessage(message: any, sender: Runtime.Sender) {
-  // ...
-}
-```
-
-### Disabling the polyfill
-
-> Since `v0.19.0`
-
-After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, the polyfill isn't really doing anything useful anymore.
-
-You can disable it with a single line:
-
-```ts
-// wxt.config.ts
-export default defineConfig({
-  extensionApi: 'chrome',
-});
-```
-
-This will change `wxt/browser` to simply export the `browser` or `chrome` globals based on browser at runtime:
-
-<<< @/../packages/wxt/src/browser/chrome.ts#snippet
-
-Accessing types is a little different with the polyfill disabled. They do not need to be imported; they're available on the `browser` object itself:
-
-```ts
-function handleMessage(message: any, sender: browser.runtime.Sender) {
   // ...
 }
 ```
