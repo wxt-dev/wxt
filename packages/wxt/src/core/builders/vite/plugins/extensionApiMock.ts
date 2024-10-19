@@ -1,5 +1,4 @@
 import type * as vite from 'vite';
-import { ResolvedConfig } from '../../../../types';
 
 /**
  * Stub the global `chrome` and `browser` variables with a fake version of the extension APIs.
