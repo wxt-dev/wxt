@@ -103,7 +103,6 @@
     "hookable": "catalog:",
     "import-meta-resolve": "catalog:",
     "is-wsl": "catalog:",
-    "jiti": "catalog:",
     "json5": "catalog:",
     "jszip": "catalog:",
     "linkedom": "catalog:",
