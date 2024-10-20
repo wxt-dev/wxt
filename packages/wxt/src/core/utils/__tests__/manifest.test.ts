@@ -1589,23 +1589,18 @@ describe('Manifest Utils', () => {
         const buildOutput = fakeBuildOutput();
 
         // Setup WXT for Firefox and serve command
-        // setFakeWxt({
-        //   config: {
-        //     browser: 'firefox',
-        //     command: 'serve',
-        //     manifest:{
-        //       content_security_policy: {
-        //         extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
-        //       }
-        //     }
-        //   },
-        // });
-        wxt.config.browser = 'firefox';
-        wxt.config.command = 'serve';
-        wxt.config.manifest.content_security_policy = {
-          extension_pages:
-            "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
-        };
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            command: 'serve',
+            manifest: {
+              content_security_policy: {
+                extension_pages:
+                  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+              },
+            },
+          },
+        });
 
         const manifestWithExtensionPages = {
           content_security_policy: {
