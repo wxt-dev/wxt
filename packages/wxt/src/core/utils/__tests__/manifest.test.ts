@@ -1108,33 +1108,6 @@ describe('Manifest Utils', () => {
       });
     });
 
-    describe('content_security_policy', () => {
-      it('should convert content_security_policy.extension_pages to a string for Firefox MV3 in serve mode', async () => {
-        setFakeWxt({
-          config: {
-            manifestVersion: 3,
-            browser: 'firefox',
-            command: 'serve',
-            manifest: {
-              content_security_policy: {
-                extension_pages:
-                  "script-src 'self'; object-src 'self'; img-src 'self' blob: data: unsafe-eval",
-              },
-            },
-          },
-        });
-
-        const { manifest: actual } = await generateManifest(
-          [],
-          fakeBuildOutput(),
-        );
-
-        expect(actual.content_security_policy).toEqual(
-          "script-src 'self'; object-src 'self'; img-src 'self' blob: data: unsafe-eval;",
-        );
-      });
-    });
-
     describe('transformManifest option', () => {
       it("should call the transformManifest option after the manifest is generated, but before it's returned", async () => {
         const entrypoints: Entrypoint[] = [];
@@ -1607,6 +1580,49 @@ describe('Manifest Utils', () => {
           host_permissions: ['http://localhost/*'],
           permissions: ['tabs', 'scripting'],
         });
+      });
+    });
+
+    describe('Dev mode CSP for Firefox', () => {
+      it('should set manifest.content_security_policy to manifest.content_security_policy.extension_pages for Firefox in serve mode', async () => {
+        const entrypoints: Entrypoint[] = [];
+        const buildOutput = fakeBuildOutput();
+
+        // Setup WXT for Firefox and serve command
+        // setFakeWxt({
+        //   config: {
+        //     browser: 'firefox',
+        //     command: 'serve',
+        //     manifest:{
+        //       content_security_policy: {
+        //         extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+        //       }
+        //     }
+        //   },
+        // });
+        wxt.config.browser = 'firefox';
+        wxt.config.command = 'serve';
+        wxt.config.manifest.content_security_policy = {
+          extension_pages:
+            "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+        };
+
+        const manifestWithExtensionPages = {
+          content_security_policy: {
+            extension_pages:
+              "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+          },
+        };
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+        );
+
+        // Assert the content_security_policy is set correctly
+        expect(actual.content_security_policy).toEqual(
+          manifestWithExtensionPages.content_security_policy.extension_pages,
+        );
       });
     });
   });

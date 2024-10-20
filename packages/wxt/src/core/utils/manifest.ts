@@ -124,19 +124,6 @@ export async function generateManifest(
     validateMv3WebAccessbileResources(manifest);
   }
 
-  // @ts-ignore
-  if (
-    wxt.config.browser === 'firefox' &&
-    wxt.config.command === 'serve' &&
-    // @ts-ignore
-    manifest.content_security_policy.extension_pages
-  ) {
-    // @ts-ignore
-    manifest.content_security_policy =
-      // @ts-ignore
-      manifest.content_security_policy.extension_pages;
-  }
-
   stripKeys(manifest);
 
   if (manifest.name == null)
@@ -479,6 +466,17 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     addPermission(manifest, permission);
   }
 
+  let shouldHandleFirefoxFallBack =
+    wxt.config.browser === 'firefox' &&
+    wxt.config.command === 'serve' &&
+    // @ts-ignore
+    manifest.content_security_policy?.extension_pages;
+  if (shouldHandleFirefoxFallBack) {
+    // @ts-ignore
+    manifest.content_security_policy =
+      // @ts-ignore
+      manifest.content_security_policy.extension_pages;
+  }
   const extensionPagesCsp = new ContentSecurityPolicy(
     manifest.manifest_version === 3
       ? // @ts-expect-error: extension_pages is not typed
@@ -498,7 +496,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     sandboxCsp.add('script-src', allowedCsp);
   }
 
-  if (manifest.manifest_version === 3) {
+  if (manifest.manifest_version === 3 && !shouldHandleFirefoxFallBack) {
     manifest.content_security_policy ??= {};
     // @ts-expect-error: extension_pages is not typed
     manifest.content_security_policy.extension_pages =
