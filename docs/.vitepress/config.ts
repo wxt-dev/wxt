@@ -36,6 +36,13 @@ export default defineConfig({
     hostname: 'https://wxt.dev',
   },
 
+  async buildEnd(site) {
+    const { default: blogDataLoader } = await import('./loaders/blog.data');
+    console.log({ blogDataLoader });
+    const posts = await blogDataLoader.load();
+    console.log(posts);
+  },
+
   head: [
     meta('og:type', 'website'),
     meta('og:title', ogTitle),
@@ -79,6 +86,7 @@ export default defineConfig({
       navItem('Guide', '/guide/installation'),
       navItem('Examples', '/examples'),
       navItem('API', '/api/reference/wxt'),
+      navItem('Blog', '/blog'),
       navItem(`v${wxtVersion}`, [
         navItem('wxt', [
           navItem(`v${wxtVersion}`, '/'),
