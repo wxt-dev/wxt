@@ -19,7 +19,7 @@ export class ContentSecurityPolicy {
         // @ts-ignore
         sections = csp.extension_pages
           .split(';')
-          .map((section) => section.trim());
+          .map((section: string) => section.trim());
       } else {
         sections = csp.split(';').map((section) => section.trim());
       }
