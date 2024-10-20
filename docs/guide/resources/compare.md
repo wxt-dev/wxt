@@ -44,8 +44,8 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 [^1]: Either MV2 or MV3, not both.
 [^2]: File based.
 [^3]: Only React, Vue, and Svelte.
-[^4]: `.html` `.ts` `.tsx`.
-[^5]: `.html` `.ts` `.tsx` `.vue` `.svelte`.
+[^4]: `.html`, `.ts`, `.tsx`.
+[^5]: `.html`, `.ts`, `.tsx`, `.vue`, `.svelte`.
 [^6]: React only.
 [^7]: Reloads entire extension.
 [^8]: ESM-style loaders run asynchronously.
