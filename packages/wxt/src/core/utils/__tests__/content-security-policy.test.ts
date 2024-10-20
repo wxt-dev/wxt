@@ -37,12 +37,4 @@ describe('Content Security Policy Builder', () => {
       "default-src 'self'; script-src 'self'; object-src 'self';",
     );
   });
-
-  it('should handle when csp is an object with extension_pages property', () => {
-    const csp = new ContentSecurityPolicy({
-      extension_pages: "default-src 'self';",
-    });
-
-    expect(csp.toString()).toEqual("default-src 'self';");
-  });
 });

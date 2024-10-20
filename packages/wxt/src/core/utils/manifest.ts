@@ -124,6 +124,17 @@ export async function generateManifest(
     validateMv3WebAccessbileResources(manifest);
   }
 
+  // @ts-ignore
+  if (
+    wxt.config.browser === 'firefox' &&
+    wxt.config.command === 'serve' &&
+    manifest.content_security_policy.extension_pages
+  ) {
+    // @ts-ignore
+    manifest.content_security_policy =
+      manifest.content_security_policy.extension_pages;
+  }
+
   stripKeys(manifest);
 
   if (manifest.name == null)

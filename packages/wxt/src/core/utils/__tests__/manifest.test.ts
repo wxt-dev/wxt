@@ -1108,6 +1108,33 @@ describe('Manifest Utils', () => {
       });
     });
 
+    describe('content_security_policy', () => {
+      it('should convert content_security_policy.extension_pages to a string for Firefox MV3 in serve mode', async () => {
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'firefox',
+            command: 'serve',
+            manifest: {
+              content_security_policy: {
+                extension_pages:
+                  "script-src 'self'; object-src 'self'; img-src 'self' blob: data: unsafe-eval",
+              },
+            },
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [],
+          fakeBuildOutput(),
+        );
+
+        expect(actual.content_security_policy).toEqual(
+          "script-src 'self'; object-src 'self'; img-src 'self' blob: data: unsafe-eval;",
+        );
+      });
+    });
+
     describe('transformManifest option', () => {
       it("should call the transformManifest option after the manifest is generated, but before it's returned", async () => {
         const entrypoints: Entrypoint[] = [];

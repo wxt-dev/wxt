@@ -12,17 +12,9 @@ export class ContentSecurityPolicy {
 
   data: Record<string, string[]>;
 
-  constructor(csp?: string | object) {
+  constructor(csp?: string) {
     if (csp) {
-      let sections: string[];
-      if (typeof csp === 'object') {
-        // @ts-ignore
-        sections = csp.extension_pages
-          .split(';')
-          .map((section: string) => section.trim());
-      } else {
-        sections = csp.split(';').map((section) => section.trim());
-      }
+      const sections = csp.split(';').map((section) => section.trim());
       this.data = sections.reduce<Record<string, string[]>>((data, section) => {
         const [key, ...values] = section.split(' ').map((item) => item.trim());
         if (key) data[key] = values;
