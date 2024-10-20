@@ -128,10 +128,12 @@ export async function generateManifest(
   if (
     wxt.config.browser === 'firefox' &&
     wxt.config.command === 'serve' &&
+    // @ts-ignore
     manifest.content_security_policy.extension_pages
   ) {
     // @ts-ignore
     manifest.content_security_policy =
+      // @ts-ignore
       manifest.content_security_policy.extension_pages;
   }
 
