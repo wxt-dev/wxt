@@ -86,13 +86,17 @@ export default defineWxtModule<AutoIconsOptions>({
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
       let image: sharp.Sharp;
+      const fileExtension = extname(resolvedPath).toLowerCase();
 
-      if (extname(resolvedPath).toLowerCase() === '.png') {
+      if (fileExtension === '.png') {
         // If the file is already PNG, just read it without conversion
         image = sharp(resolvedPath).png();
       } else {
-        // If it's not PNG, convert it
+        // If it's not PNG, convert it and log a warning
         image = sharp(resolvedPath).toFormat('png').png();
+        wxt.logger.warn(
+          `\`[auto-icons]\` Input file is not a PNG (${fileExtension}). For best results with transparency, consider using a .PNG file.`,
+        );
       }
 
       if (
