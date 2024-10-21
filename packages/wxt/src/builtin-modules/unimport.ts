@@ -46,9 +46,11 @@ export default defineWxtModule({
       entries.push(await getImportsDeclarationEntry(unimport));
 
       if (options.eslintrc.enabled === false) return;
-      entries.push(
-        await getEslintConfigEntry(unimport, options.eslintrc.enabled, options),
-      );
+      if (options.eslintrc.enabled !== undefined) {
+        entries.push(
+          await getEslintConfigEntry(unimport, options.eslintrc.enabled, options),
+        );
+      }
     });
 
     // Add vite plugin

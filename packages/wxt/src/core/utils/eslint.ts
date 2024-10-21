@@ -1,12 +1,12 @@
-export async function getEslintVersion(): Promise<string[]> {
+export async function getEslintVersion(): Promise<string[] | undefined> {
   try {
     const require = (await import('node:module')).default.createRequire(
       import.meta.url,
     );
     const { ESLint } = require('eslint');
-    return ESLint.version?.split('.') ?? [];
+    return ESLint.version?.split('.') ?? undefined;
   } catch {
-    // Return an empty version when there's an error importing ESLint
-    return [];
+    // Return undefined when there's an error importing ESLint
+    return undefined;
   }
 }
