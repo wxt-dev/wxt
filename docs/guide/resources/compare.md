@@ -8,50 +8,48 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 - 🟡 - Partial support
 - ❌ - No support
 
-| Features                                                |       WXT        |     Plasmo      |      CRXJS       |
-| ------------------------------------------------------- | :--------------: | :-------------: | :--------------: |
-| Supports all browsers                                   |        ✅        |       ✅        | 🟡 <sup>10</sup> |
-| MV2 Support                                             |        ✅        |       ✅        | 🟡 <sup>1</sup>  |
-| MV3 Support                                             |        ✅        |       ✅        | 🟡 <sup>1</sup>  |
-| Create Extension ZIPs                                   |        ✅        |       ✅        |        ❌        |
-| Create Firefox Sources ZIP                              |        ✅        |       ❌        |        ❌        |
-| First-class TypeScript support                          |        ✅        |       ✅        |        ✅        |
-| Entrypoint discovery                                    | ✅ <sup>2</sup>  | ✅ <sup>2</sup> |        ❌        |
-| Inline entrypoint config                                |        ✅        |       ✅        | ❌ <sup>9</sup>  |
-| Auto-imports                                            |        ✅        |       ❌        |        ❌        |
-| Reusable module system                                  |        ✅        |       ❌        |        ❌        |
-| Supports all frontend frameworks                        |        ✅        | 🟡 <sup>3</sup> |        ✅        |
-| Framework specific entrypoints (like `Popup.tsx`)       | 🟡 <sup>4</sup>  | ✅ <sup>5</sup> |        ❌        |
-| Automated publishing                                    |        ✅        |       ✅        |        ❌        |
-| Remote Code Bundling (Google Analytics)                 |        ✅        |       ✅        |        ❌        |
-| Unlisted HTML Pages                                     |        ✅        |       ✅        |        ✅        |
-| Unlisted Scripts                                        |        ✅        |       ❌        |        ❌        |
-| ESM Content Scripts                                     | ❌ <sup>12</sup> |       ❌        |        ✅        |
-| <strong style="opacity: 50%">Dev Mode</strong>          |                  |                 |
-| `.env` Files                                            |        ✅        |       ✅        |        ✅        |
-| Opens browser with extension installed                  |        ✅        |       ❌        |        ❌        |
-| HMR for UIs                                             |        ✅        | 🟡 <sup>6</sup> |        ✅        |
-| Reload HTML Files on Change                             |        ✅        | 🟡 <sup>7</sup> |        ✅        |
-| Reload Content Scripts on Change                        |        ✅        | 🟡 <sup>7</sup> |        ✅        |
-| Reload Background on Change                             | 🟡 <sup>7</sup>  | 🟡 <sup>7</sup> | 🟡 <sup>7</sup>  |
-| Respects Content Script `run_at`                        |        ✅        |       ✅        | ❌ <sup>8</sup>  |
-| <strong style="opacity: 50%">Built-in Wrappers</strong> |                  |                 |                  |
-| Storage                                                 |        ✅        |       ✅        | ❌ <sup>11</sup> |
-| Messaging                                               | ❌ <sup>11</sup> |       ✅        | ❌ <sup>11</sup> |
-| Content Script UI                                       |        ✅        |       ✅        | ❌ <sup>11</sup> |
-| I18n                                                    |        ✅        |       ❌        |        ❌        |
+| Features                                                |   WXT   | Plasmo |  CRXJS  |
+| ------------------------------------------------------- | :-----: | :----: | :-----: |
+| Supports all browsers                                   |   ✅    |   ✅   | 🟡[^10] |
+| MV2 Support                                             |   ✅    |   ✅   | 🟡[^1]  |
+| MV3 Support                                             |   ✅    |   ✅   | 🟡[^1]  |
+| Create Extension ZIPs                                   |   ✅    |   ✅   |   ❌    |
+| Create Firefox Sources ZIP                              |   ✅    |   ❌   |   ❌    |
+| First-class TypeScript support                          |   ✅    |   ✅   |   ✅    |
+| Entrypoint discovery                                    | ✅[^2]  | ✅[^2] |   ❌    |
+| Inline entrypoint config                                |   ✅    |   ✅   | ❌[^9]  |
+| Auto-imports                                            |   ✅    |   ❌   |   ❌    |
+| Reusable module system                                  |   ✅    |   ❌   |   ❌    |
+| Supports all frontend frameworks                        |   ✅    | 🟡[^3] |   ✅    |
+| Framework specific entrypoints (like `Popup.tsx`)       | 🟡[^4]  | ✅[^5] |   ❌    |
+| Automated publishing                                    |   ✅    |   ✅   |   ❌    |
+| Remote Code Bundling (Google Analytics)                 |   ✅    |   ✅   |   ❌    |
+| Unlisted HTML Pages                                     |   ✅    |   ✅   |   ✅    |
+| Unlisted Scripts                                        |   ✅    |   ❌   |   ❌    |
+| ESM Content Scripts                                     | ❌[^12] |   ❌   |   ✅    |
+| <strong style="opacity: 50%">Dev Mode</strong>          |         |        |         |
+| `.env` Files                                            |   ✅    |   ✅   |   ✅    |
+| Opens browser with extension installed                  |   ✅    |   ❌   |   ❌    |
+| HMR for UIs                                             |   ✅    | 🟡[^6] |   ✅    |
+| Reload HTML Files on Change                             |   ✅    | 🟡[^7] |   ✅    |
+| Reload Content Scripts on Change                        |   ✅    | 🟡[^7] |   ✅    |
+| Reload Background on Change                             | 🟡[^7]  | 🟡[^7] | 🟡[^7]  |
+| Respects Content Script `run_at`                        |   ✅    |   ✅   | ❌[^8]  |
+| <strong style="opacity: 50%">Built-in Wrappers</strong> |         |        |         |
+| Storage                                                 |   ✅    |   ✅   | ❌[^11] |
+| Messaging                                               | ❌[^11] |   ✅   | ❌[^11] |
+| Content Script UI                                       |   ✅    |   ✅   | ❌[^11] |
+| I18n                                                    |   ✅    |   ❌   |   ❌    |
 
-<small>
-  <sup>1</sup>: Either MV2 or MV3, not both.
-  <br/><sup>2</sup>: File based.
-  <br/><sup>3</sup>: Only React, Vue, and Svelte.
-  <br/><sup>4</sup>: <code>.html</code> <code>.ts</code> <code>.tsx</code>.
-  <br/><sup>5</sup>: <code>.html</code> <code>.ts</code> <code>.tsx</code>. <code>.vue</code> <code>.svelte</code>.
-  <br/><sup>6</sup>: React only.
-  <br/><sup>7</sup>: Reloads entire extension.
-  <br/><sup>8</sup>: ESM-style loaders run asynchronously.
-  <br/><sup>9</sup>: Entrypoint options all configured in <code>manifest.json</code>.
-  <br/><sup>10</sup>: As of <code>v2.0.0-beta.23</code>, but v2 stable hasn't been released yet.
-  <br/><sup>11</sup>: There is no built-in wrapper around this API. However, you can still access the standard APIs via <code>chrome</code>/<code>browser</code> globals or use any 3rd party NPM package.
-  <br/><sup>12</sup>: WIP, moving very slowly. Follow <a href="https://github.com/wxt-dev/wxt/issues/357" target="_blank"><code>wxt-dev/wxt#357</code></a> for updates.
-</small>
+[^1]: Either MV2 or MV3, not both.
+[^2]: File based.
+[^3]: Only React, Vue, and Svelte.
+[^4]: `.html`, `.ts`, `.tsx`.
+[^5]: `.html`, `.ts`, `.tsx`, `.vue`, `.svelte`.
+[^6]: React only.
+[^7]: Reloads entire extension.
+[^8]: ESM-style loaders run asynchronously.
+[^9]: Entrypoint options all configured in `manifest.json`.
+[^10]: As of `v2.0.0-beta.23`, but v2 stable hasn't been released yet.
+[^11]: There is no built-in wrapper around this API. However, you can still access the standard APIs via `chrome`/`browser` globals or use any 3rd party NPM package.
+[^12]: WIP, moving very slowly. Follow [wxt-dev/wxt#357](https://github.com/wxt-dev/wxt/issues/357) for updates.
