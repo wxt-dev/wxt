@@ -84,7 +84,7 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
   await Promise.all(
     matchingTabs.map(async (tab) => {
       try {
-        await browser.tabs.reload(tab.id);
+        await browser.tabs.reload(tab.id!);
       } catch (err) {
         logger.warn('Failed to reload tab:', err);
       }

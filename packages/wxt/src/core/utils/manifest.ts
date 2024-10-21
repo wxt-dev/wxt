@@ -1,4 +1,3 @@
-import type { Manifest } from 'wxt/browser';
 import {
   Entrypoint,
   BackgroundEntrypoint,
@@ -21,12 +20,13 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { ManifestV3WebAccessibleResource } from './types';
 
 /**
  * Writes the manifest to the output directory and the build output.
  */
 export async function writeManifest(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
   output: BuildOutput,
 ): Promise<void> {
   const str =
@@ -49,7 +49,7 @@ export async function writeManifest(
 export async function generateManifest(
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Promise<{ manifest: Manifest.WebExtensionManifest; warnings: any[][] }> {
+): Promise<{ manifest: chrome.runtime.Manifest; warnings: any[][] }> {
   const warnings: any[][] = [];
   const pkg = await getPackageJson();
 
@@ -65,7 +65,7 @@ export async function generateManifest(
   }
   const version = wxt.config.manifest.version ?? simplifyVersion(versionName);
 
-  const baseManifest: Manifest.WebExtensionManifest = {
+  const baseManifest: chrome.runtime.Manifest = {
     manifest_version: wxt.config.manifestVersion,
     name: pkg?.name,
     description: pkg?.description,
@@ -75,10 +75,7 @@ export async function generateManifest(
   };
   const userManifest = wxt.config.manifest;
 
-  let manifest = defu(
-    userManifest,
-    baseManifest,
-  ) as Manifest.WebExtensionManifest;
+  let manifest = defu(userManifest, baseManifest) as chrome.runtime.Manifest;
 
   // Add reload command in dev mode
   if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
@@ -121,7 +118,7 @@ export async function generateManifest(
   }
 
   if (wxt.config.manifestVersion === 3) {
-    validateMv3WebAccessbileResources(manifest);
+    validateMv3WebAccessibleResources(manifest);
   }
 
   stripKeys(manifest);
@@ -143,7 +140,7 @@ export async function generateManifest(
 }
 
 /**
- * Removes suffixes from the version, like X.Y.Z-alpha1 (which brosers don't allow), so it's a
+ * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't allow), so it's a
  * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
  */
 function simplifyVersion(versionName: string): string {
@@ -161,7 +158,7 @@ function simplifyVersion(versionName: string): string {
 }
 
 function addEntrypoints(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): void {
@@ -223,7 +220,6 @@ function addEntrypoints(
       );
     } else {
       manifest.chrome_url_overrides ??= {};
-      // @ts-expect-error: bookmarks is untyped in webextension-polyfill, but supported by chrome
       manifest.chrome_url_overrides.bookmarks = getEntrypointBundlePath(
         bookmarks,
         wxt.config.outDir,
@@ -239,7 +235,6 @@ function addEntrypoints(
       );
     } else {
       manifest.chrome_url_overrides ??= {};
-      // @ts-expect-error: history is untyped in webextension-polyfill, but supported by chrome
       manifest.chrome_url_overrides.history = getEntrypointBundlePath(
         history,
         wxt.config.outDir,
@@ -263,12 +258,13 @@ function addEntrypoints(
       wxt.config.outDir,
       '.html',
     );
-    const options: Manifest.ActionManifest = {};
+    const options: chrome.runtime.ManifestAction = {};
     if (popup.options.defaultIcon)
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
     if (popup.options.browserStyle)
+      // @ts-expect-error: Not typed by @types/chrome, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
     if (manifest.manifest_version === 3) {
       manifest.action = {
@@ -298,6 +294,7 @@ function addEntrypoints(
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
       open_in_tab: options.options.openInTab,
+      // @ts-expect-error: Not typed by @types/chrome, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
           ? options.options.browserStyle
@@ -316,7 +313,6 @@ function addEntrypoints(
         'Sandboxed pages not supported by Firefox. sandbox.pages was not added to the manifest',
       );
     } else {
-      // @ts-expect-error: sandbox not typed
       manifest.sandbox = {
         pages: sandboxes.map((entry) =>
           getEntrypointBundlePath(entry, wxt.config.outDir, '.html'),
@@ -343,7 +339,6 @@ function addEntrypoints(
         open_at_install: defaultSidepanel.options.openAtInstall,
       };
     } else if (wxt.config.manifestVersion === 3) {
-      // @ts-expect-error: Untyped
       manifest.side_panel = {
         default_path: page,
       };
@@ -424,7 +419,7 @@ function addEntrypoints(
 
 function discoverIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Manifest.WebExtensionManifest['icons'] {
+): chrome.runtime.Manifest['icons'] {
   const icons: [string, string][] = [];
   // prettier-ignore
   // #region snippet
@@ -456,7 +451,7 @@ function discoverIcons(
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
 }
 
-function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
+function addDevModeCsp(manifest: chrome.runtime.Manifest): void {
   const permission = `http://${wxt.server?.hostname ?? ''}/*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
@@ -468,8 +463,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
 
   const extensionPagesCsp = new ContentSecurityPolicy(
     manifest.manifest_version === 3
-      ? // @ts-expect-error: extension_pages is not typed
-        (manifest.content_security_policy?.extension_pages ??
+      ? (manifest.content_security_policy?.extension_pages ??
         "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';") // default extension_pages CSP for MV3
       : (manifest.content_security_policy ??
         "script-src 'self'; object-src 'self';"), // default CSP for MV2
@@ -487,17 +481,15 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
 
   if (manifest.manifest_version === 3) {
     manifest.content_security_policy ??= {};
-    // @ts-expect-error: extension_pages is not typed
     manifest.content_security_policy.extension_pages =
       extensionPagesCsp.toString();
-    // @ts-expect-error: sandbox is not typed
     manifest.content_security_policy.sandbox = sandboxCsp.toString();
   } else {
     manifest.content_security_policy = extensionPagesCsp.toString();
   }
 }
 
-function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
+function addDevModePermissions(manifest: chrome.runtime.Manifest) {
   // For reloading the page
   addPermission(manifest, 'tabs');
 
@@ -541,8 +533,7 @@ export function getContentScriptCssWebAccessibleResources(
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
 ): any[] {
-  const resources: Manifest.WebExtensionManifestWebAccessibleResourcesC2ItemType[] =
-    [];
+  const resources: ManifestV3WebAccessibleResource[] = [];
 
   contentScripts.forEach((script) => {
     if (script.options.cssInjectionMode !== 'ui') return;
@@ -581,16 +572,18 @@ export function getContentScriptsCssMap(
 }
 
 function addPermission(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
   permission: string,
 ): void {
   manifest.permissions ??= [];
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
   if (manifest.permissions.includes(permission)) return;
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
   manifest.permissions.push(permission);
 }
 
 function addHostPermission(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
   hostPermission: string,
 ): void {
   manifest.host_permissions ??= [];
@@ -613,10 +606,10 @@ export function stripPathFromMatchPattern(pattern: string) {
 /**
  * Converts all MV3 web accessible resources to their MV2 forms. MV3 web accessible resources are
  * generated in this file, and may be defined by the user in their manifest. In both cases, when
- * targetting MV2, automatically convert their definitions down to the basic MV2 array.
+ * targeting MV2, automatically convert their definitions down to the basic MV2 array.
  */
 export function convertWebAccessibleResourcesToMv2(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
 
@@ -631,17 +624,17 @@ export function convertWebAccessibleResourcesToMv2(
 }
 
 function moveHostPermissionsToPermissions(
-  manifest: Manifest.WebExtensionManifest,
+  manifest: chrome.runtime.Manifest,
 ): void {
   if (!manifest.host_permissions?.length) return;
 
-  manifest.host_permissions.forEach((permission) =>
+  manifest.host_permissions.forEach((permission: string) =>
     addPermission(manifest, permission),
   );
   delete manifest.host_permissions;
 }
 
-function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
+function convertActionToMv2(manifest: chrome.runtime.Manifest): void {
   if (
     manifest.action == null ||
     manifest.browser_action != null ||
@@ -655,8 +648,8 @@ function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
 /**
  * Make sure all resources are in MV3 format. If not, add a wanring
  */
-export function validateMv3WebAccessbileResources(
-  manifest: Manifest.WebExtensionManifest,
+function validateMv3WebAccessibleResources(
+  manifest: chrome.runtime.Manifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
 
@@ -675,7 +668,7 @@ export function validateMv3WebAccessbileResources(
 /**
  * Remove keys from the manifest based on the build target.
  */
-function stripKeys(manifest: Manifest.WebExtensionManifest): void {
+function stripKeys(manifest: chrome.runtime.Manifest): void {
   let keysToRemove: string[] = [];
   if (wxt.config.manifestVersion === 2) {
     keysToRemove.push(...mv3OnlyKeys);
@@ -686,7 +679,7 @@ function stripKeys(manifest: Manifest.WebExtensionManifest): void {
   }
 
   keysToRemove.forEach((key) => {
-    delete manifest[key as keyof Manifest.WebExtensionManifest];
+    delete manifest[key as keyof chrome.runtime.Manifest];
   });
 }
 

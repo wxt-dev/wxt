@@ -13,7 +13,6 @@ import {
   fakeWxtDevServer,
   setFakeWxt,
 } from '../testing/fake-objects';
-import { Manifest } from 'webextension-polyfill';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
@@ -56,7 +55,7 @@ describe('Manifest Utils', () => {
             outDir,
           },
         });
-        const expected: Partial<Manifest.WebExtensionManifest> = {
+        const expected: Partial<chrome.runtime.Manifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
