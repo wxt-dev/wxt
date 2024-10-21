@@ -376,17 +376,16 @@ async function getUnimportOptions(
 async function getUnimportEslintOptions(
   wxtDir: string,
   options: Eslintrc | undefined,
-): Promise<ResolvedEslintrc> {
+): Promise<ResolvedEslintrc | undefined> {
   const rawEslintEnabled = options?.enabled ?? 'auto';
-  let eslintEnabled: ResolvedEslintrc['enabled'];
+  let eslintEnabled: ResolvedEslintrc['enabled'] | undefined;
   switch (rawEslintEnabled) {
     case 'auto':
       const version = await getEslintVersion();
+      if (!version) return undefined;
       let major = parseInt(version[0]);
       if (major <= 8) eslintEnabled = 8;
       else if (major >= 9) eslintEnabled = 9;
-      // NaN
-      else eslintEnabled = 8;
       break;
     case true:
       eslintEnabled = 8;
@@ -394,6 +393,8 @@ async function getUnimportEslintOptions(
     default:
       eslintEnabled = rawEslintEnabled;
   }
+
+  if (!eslintEnabled) return undefined;
 
   return {
     enabled: eslintEnabled,

@@ -380,6 +380,17 @@ describe('CLI', () => {
         debug: true,
       });
     });
+
+    it('should not generate ESLint config when eslint is not installed', async () => {
+      mockArgv('prepare');
+      await importCli();
+
+      expect(prepareMock).toBeCalledWith({
+        imports: {
+          eslintrc: undefined,
+        },
+      });
+    });
   });
 
   describe('clean', () => {
