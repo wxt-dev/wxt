@@ -1582,6 +1582,44 @@ describe('Manifest Utils', () => {
         });
       });
     });
+
+    describe('Dev mode CSP for Firefox', () => {
+      it('should set manifest.content_security_policy to manifest.content_security_policy.extension_pages for Firefox in serve mode', async () => {
+        const entrypoints: Entrypoint[] = [];
+        const buildOutput = fakeBuildOutput();
+
+        // Setup WXT for Firefox and serve command
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            command: 'serve',
+            manifest: {
+              content_security_policy: {
+                extension_pages:
+                  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+              },
+            },
+          },
+        });
+
+        const manifestWithExtensionPages = {
+          content_security_policy: {
+            extension_pages:
+              "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+          },
+        };
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+        );
+
+        // Assert the content_security_policy is set correctly
+        expect(actual.content_security_policy).toEqual(
+          manifestWithExtensionPages.content_security_policy.extension_pages,
+        );
+      });
+    });
   });
 
   describe('stripPathFromMatchPattern', () => {
