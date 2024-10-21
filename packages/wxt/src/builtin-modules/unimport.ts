@@ -45,12 +45,10 @@ export default defineWxtModule({
 
       entries.push(await getImportsDeclarationEntry(unimport));
 
-      if (options.eslintrc.enabled === false) return;
-      if (options.eslintrc.enabled !== undefined) {
-        entries.push(
-          await getEslintConfigEntry(unimport, options.eslintrc.enabled, options),
-        );
-      }
+      if (options.eslintrc?.enabled === false) return;
+      entries.push(
+        await getEslintConfigEntry(unimport, options.eslintrc?.enabled, options),
+      );
     });
 
     // Add vite plugin
@@ -106,7 +104,7 @@ async function getImportsDeclarationEntry(
 
 async function getEslintConfigEntry(
   unimport: Unimport,
-  version: 8 | 9,
+  version: 8 | 9 | undefined,
   options: WxtResolvedUnimportOptions,
 ): Promise<WxtDirFileEntry> {
   const globals = (await unimport.getImports())
@@ -114,11 +112,11 @@ async function getEslintConfigEntry(
     .filter(Boolean)
     .sort()
     .reduce<Record<string, EslintGlobalsPropValue>>((globals, name) => {
-      globals[name] = options.eslintrc.globalsPropValue;
+      globals[name] = options.eslintrc?.globalsPropValue;
       return globals;
     }, {});
 
-  if (version <= 8) return getEslint8ConfigEntry(options, globals);
+  if (version === undefined || version <= 8) return getEslint8ConfigEntry(options, globals);
   else return getEslint9ConfigEntry(options, globals);
 }
 
