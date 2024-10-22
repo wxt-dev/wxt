@@ -67,6 +67,7 @@ function createBackgroundAnalytics(
       referrer: undefined,
       screen: undefined,
       url: location.href,
+      title: undefined,
     },
   ): Promise<BaseAnalyticsEvent> => {
     const platform = await platformInfo;
@@ -127,9 +128,9 @@ function createBackgroundAnalytics(
       const event: AnalyticsPageViewEvent = {
         ...baseEvent,
         page: {
-          url: globalThis.location?.href,
+          url: forwardMeta?.url ?? globalThis.location?.href,
           location,
-          title: globalThis.document?.title,
+          title: forwardMeta?.title ?? globalThis.document?.title,
         },
       };
       if (config?.debug) console.debug('[analytics] page', event);
@@ -202,6 +203,7 @@ function createFrontendAnalytics(
       ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
       : undefined,
     url: location.href,
+    title: document.title || undefined,
   });
 
   const methodForwarder =
@@ -261,6 +263,7 @@ interface ForwardMetadata {
   language: string | undefined;
   referrer: string | undefined;
   url: string | undefined;
+  title: string | undefined;
 }
 
 function defineStorageItem<T>(
