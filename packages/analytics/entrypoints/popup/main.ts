@@ -1,4 +1,4 @@
-import { analytics } from '@/modules/analytics/client';
+import { analytics } from '#analytics';
 
 declare const enabledCheckbox: HTMLInputElement;
 

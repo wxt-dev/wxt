@@ -56,7 +56,7 @@ export type AnalyticsProvider = (
 };
 
 export interface BaseAnalyticsEvent {
-  meta: EventMetadata;
+  meta: AnalyticsEventMetadata;
   user: {
     id: string;
     properties: Record<string, string | undefined>;

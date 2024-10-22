@@ -4,7 +4,7 @@
   "description": "Add analytics to your web extension",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wxt-dev/wxt.git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/analytics"
   },
   "license": "MIT",
