@@ -4,7 +4,7 @@ When building an extension with WXT, you can create multiple builds of your exte
 
 ## Target a Browser
 
-Use the `-b` CLI flag to create a separate build of your extension for a specific browser. By default, `chrome` is targetted.
+Use the `-b` CLI flag to create a separate build of your extension for a specific browser. By default, `chrome` is targeted.
 
 ```sh
 wxt            # same as: wxt -b chrome
@@ -12,36 +12,44 @@ wxt -b firefox
 wxt -b custom
 ```
 
-Targeting a browser has several effects:
+During development, if you target Firefox, Firefox will open. All other strings open Chrome by default. To customize which browsers open, see [Set Browser Binaries](/guide/essentials/config/browser-startup#set-browser-binaries).
 
-1. During development, when passing `firefox`, WXT will automatically open Firefox with the extension installed. For all other browsers, it will open Chrome/Chromium
-2. Changes build-time constants provided by WXT:
-   - `import.meta.env.BROWSER`: A string, the targeted browser
-   - `import.meta.env.CHROME`: A boolean equivalent to `import.meta.env.BROWSER === "chrome"`
-   - `import.meta.env.FIREFOX`: A boolean equivalent to `import.meta.env.BROWSER === "firefox"`
-   - `import.meta.env.EDGE`: A boolean equivalent to `import.meta.env.BROWSER === "edge"`
-   - `import.meta.env.SAFARI`: A boolean equivalent to `import.meta.env.BROWSER === "safari"`
-   - `import.meta.env.OPERA`: A boolean equivalent to `import.meta.env.BROWSER === "opera"`
+Additionally, WXT defines several constants you can use at runtime to detect which browser is in use:
+
+```ts
+if (import.meta.env.BROWSER === 'firefox') {
+  console.log('Do something only in Firefox builds');
+}
+if (import.meta.env.FIREFOX) {
+  // Shorthand, equivalent to the if-statement above
+}
+```
+
+Read about [Built-in Environment Variables](/guide/essentials/config/environment-variables.html#built-in-environment-variables) for more details.
 
 ## Target a Manifest Version
 
 To target specific manifest versions, use the `--mv2` or `--mv3` CLI flags.
 
 :::tip Default Manifest Version
-By default, WXT will target MV2 for Safari and Firefox and MV3 for all other browers.
+By default, WXT will target MV2 for Safari and Firefox and MV3 for all other browsers.
 :::
 
-To get the target manifest version at runtime, use the built-time constant provided by WXT:
+Similar to the browser, you can get the target manifest version at runtime using the [built-in environment variable](/guide/essentials/config/environment-variables.html#built-in-environment-variables):
 
-- `import.meta.env.MANIFEST_VERSION`: A number, either `2` or `3`
+```ts
+if (import.meta.env.MANIFEST_VERSION === 2) {
+  console.log('Do something only in MV2 builds');
+}
+```
 
 ## Filtering Entrypoints
 
-Every entrypoint can be included or excluded when targetting specific browsers via the `include` and `exclude` options.
+Every entrypoint can be included or excluded when targeting specific browsers via the `include` and `exclude` options.
 
 Here are some examples:
 
-- Content script only built when targetting `firefox`:
+- Content script only built when targeting `firefox`:
 
   ```ts
   export default defineContentScript({
