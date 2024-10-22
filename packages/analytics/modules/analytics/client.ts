@@ -122,13 +122,13 @@ function createBackgroundAnalytics(
         );
       }
     },
-    page: async (url: string, forwardMeta?: ForwardMetadata) => {
+    page: async (location: string, forwardMeta?: ForwardMetadata) => {
       const baseEvent = await getBaseEvent(forwardMeta);
       const event: AnalyticsPageViewEvent = {
         ...baseEvent,
         page: {
-          url,
-          location: globalThis.location?.href,
+          url: globalThis.location?.href,
+          location,
           title: globalThis.document?.title,
         },
       };
