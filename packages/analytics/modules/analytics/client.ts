@@ -11,7 +11,7 @@ import type {
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
-  if (globalThis.chrome?.runtime?.id)
+  if (typeof chrome === 'undefined' || !chrome?.runtime?.id)
     throw Error(
       'Cannot use WXT analytics in contexts without access to the browser.runtime APIs',
     );
