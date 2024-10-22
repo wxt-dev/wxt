@@ -1,9 +1,8 @@
 import 'wxt';
 import 'wxt/sandbox';
-import { addWxtPlugin, defineWxtModule } from 'wxt/modules';
-import { resolve, dirname } from 'node:path';
-import { AnalyticsConfig } from './types';
-import { fileURLToPath } from 'url';
+import { addAlias, defineWxtModule } from 'wxt/modules';
+import { resolve } from 'node:path';
+import type { AnalyticsConfig } from './types';
 
 declare module 'wxt/sandbox' {
   export interface WxtAppConfig {
@@ -11,27 +10,34 @@ declare module 'wxt/sandbox' {
   }
 }
 
-const _dirname = dirname(fileURLToPath(import.meta.url));
-
-const pluginId = process.env.NPM
-  ? '@wxt-dev/analytics/client'
-  : resolve(_dirname, 'client.ts');
-
 export default defineWxtModule({
   name: 'analytics',
-  imports: [{ name: 'analytics', from: pluginId }],
+  imports: [{ name: 'analytics', from: '#analytics' }],
   setup(wxt) {
-    // Add a plugin
-    addWxtPlugin(
-      wxt,
-      resolve(_dirname, process.env.NPM ? 'client.mjs' : 'client.ts'),
-    );
-
-    wxt.hooks.hook('build:manifestGenerated', (_, manifest) => {
+    // Add required permissions
+    wxt.hook('build:manifestGenerated', (_, manifest) => {
       manifest.permissions ??= [];
       if (!manifest.permissions.includes('storage')) {
         manifest.permissions.push('storage');
       }
+    });
+
+    // Generate #analytics module
+    const analyticsModulePath = resolve(
+      wxt.config.wxtDir,
+      'analytics/index.ts',
+    );
+    const analyticsModuleCode = `
+      import { createAnalytics } from '@wxt-dev/analytics/client';
+
+      export const analytics = createAnalytics(useAppConfig().analytics);
+    `;
+    addAlias(wxt, '#analytics', analyticsModulePath);
+    wxt.hook('prepare:types', async (_, entries) => {
+      entries.push({
+        path: analyticsModulePath,
+        text: analyticsModuleCode,
+      });
     });
   },
 });

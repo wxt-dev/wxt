@@ -27,18 +27,18 @@ export interface AnalyticsConfig {
   /**
    * Configure how the enabled flag is persisted
    */
-  enabled?: AnalyticsStorageItemConfig<boolean>;
+  enabled?: AnalyticsStorageItem<boolean>;
   /**
    * Configure how the user Id is persisted
    */
-  userId?: AnalyticsStorageItemConfig<string>;
+  userId?: AnalyticsStorageItem<string>;
   /**
    * Configure how user properties are persisted
    */
-  userProperties?: AnalyticsStorageItemConfig<Record<string, string>>;
+  userProperties?: AnalyticsStorageItem<Record<string, string>>;
 }
 
-export interface AnalyticsStorageItemConfig<T> {
+export interface AnalyticsStorageItem<T> {
   getValue: () => T | Promise<T>;
   setValue?: (newValue: T) => void | Promise<void>;
 }
@@ -62,13 +62,13 @@ export interface BaseAnalyticsEvent {
     /** `Date.now()` of when the event was reported */
     timestamp: number;
     /** `"1920x1080"` */
-    screen?: string;
+    screen: string | undefined;
     /** `document.referrer` */
-    referrer?: string;
+    referrer: string | undefined;
     /** `navigator.language` */
-    language?: string;
+    language: string | undefined;
     /** `location.href` */
-    url?: string;
+    url: string | undefined;
   };
   user: {
     id: string;
@@ -78,8 +78,8 @@ export interface BaseAnalyticsEvent {
 
 export interface AnalyticsPageInfo {
   url: string;
-  title?: string;
-  location?: string;
+  title: string | undefined;
+  location: string | undefined;
 }
 
 export interface AnalyticsPageViewEvent extends BaseAnalyticsEvent {

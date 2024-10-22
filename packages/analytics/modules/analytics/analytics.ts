@@ -1,94 +1,33 @@
-import { defineWxtPlugin } from 'wxt/sandbox';
-import { useAppConfig } from 'wxt/client';
-import { storage } from 'wxt/storage';
-import {
+import { UAParser } from 'ua-parser-js';
+import type {
   Analytics,
   AnalyticsConfig,
   AnalyticsPageViewEvent,
+  AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
 } from './types';
-import uaParser from 'ua-parser-js';
 
-export let analytics: Analytics;
-const ANALYTICS_PORT = 'wxt-analytics';
-const interactiveTags = new Set(['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']);
-const interactiveRoles = new Set([
-  'button',
-  'link',
-  'checkbox',
-  'menuitem',
-  'tab',
-  'radio',
-]);
+const ANALYTICS_PORT = '@wxt-dev/analytics';
 
-export default <any>defineWxtPlugin(() => {
-  const isBackground = globalThis.window == null; // TODO: Support MV2
-  analytics = isBackground
-    ? createBackgroundAnalytics()
-    : createAnalyticsForwarder();
-});
+export function createAnalytics(config: AnalyticsConfig): Analytics {
+  if (globalThis.chrome?.runtime?.id)
+    throw Error(
+      'Cannot use WXT analytics in contexts without access to the browser.runtime APIs',
+    );
 
-function createAnalyticsForwarder(): Analytics {
-  const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
-  const sessionId = Date.now();
-  const getMetadata = (): ForwardMetadata => ({
-    sessionId,
-    timestamp: Date.now(),
-    language: navigator.language,
-    referrer: globalThis.document?.referrer || undefined,
-    screen: globalThis.window
-      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
-      : undefined,
-    url: location.href,
-  });
+  // TODO: This only works for standard WXT extensions, add a more generic
+  // background script detector that works with non-WXT projects.
+  if (location.pathname === '/background.js')
+    return createBackgroundAnalytics(config);
 
-  const methodForwarder =
-    (fn: string) =>
-    (...args: any[]) =>
-      port.postMessage({ fn, args: [...args, getMetadata()] });
-
-  const analytics: Analytics = {
-    identify: methodForwarder('identify'),
-    page: methodForwarder('page'),
-    track: methodForwarder('track'),
-    setEnabled: methodForwarder('setEnabled'),
-    autoTrack: (root) => {
-      const onClick = (event: Event) => {
-        const element = event.target as any;
-        if (
-          !element ||
-          (!interactiveTags.has(element.tagName) &&
-            !interactiveRoles.has(element.getAttribute('role')))
-        )
-          return;
-
-        void analytics.track('click', {
-          tagName: element.tagName?.toLowerCase(),
-          id: element.id || undefined,
-          className: element.className || undefined,
-          textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
-          href: element.href,
-        });
-      };
-      root.addEventListener('click', onClick, { capture: true, passive: true });
-      return () => {
-        root.removeEventListener('click', onClick);
-      };
-    },
-  };
-  return analytics;
+  return createFrontendAnalytics();
 }
 
 /**
- * Background analytics is responsible for reporting events triggered in the
- * background, and for reporting forwarded events from the other contexts.
+ * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
  */
-function createBackgroundAnalytics(): Analytics {
-  const config = (useAppConfig() as any).analytics as
-    | AnalyticsConfig
-    | undefined;
-
+function createBackgroundAnalytics(config: AnalyticsConfig): Analytics {
   // User properties storage
   const userIdStorage =
     config?.userId ?? defineStorageItem<string>('local:wxt-analytics:user-id');
@@ -104,7 +43,7 @@ function createBackgroundAnalytics(): Analytics {
 
   // Cached values
   const platformInfo = chrome.runtime.getPlatformInfo();
-  const userAgent = uaParser();
+  const userAgent = UAParser();
   let userId = Promise.resolve(userIdStorage.getValue()).then(
     (id) => id ?? globalThis.crypto.randomUUID(),
   );
@@ -131,6 +70,7 @@ function createBackgroundAnalytics(): Analytics {
         screen: meta.screen,
         referrer: meta.referrer,
         language: meta.language,
+        url: meta.url,
       },
       user: {
         id: await userId,
@@ -177,7 +117,11 @@ function createBackgroundAnalytics(): Analytics {
       const baseEvent = await getBaseEvent(forwardMeta);
       const event: AnalyticsPageViewEvent = {
         ...baseEvent,
-        page: { url },
+        page: {
+          url,
+          location: globalThis.location?.href,
+          title: globalThis.document?.title,
+        },
       };
       if (config?.debug) console.debug('[analytics] page', event);
       if (await enabled.getValue()) {
@@ -232,6 +176,60 @@ function createBackgroundAnalytics(): Analytics {
   return analytics;
 }
 
+/**
+ * Creates an analytics client for non-background contexts.
+ */
+function createFrontendAnalytics(): Analytics {
+  const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
+  const sessionId = Date.now();
+  const getMetadata = (): ForwardMetadata => ({
+    sessionId,
+    timestamp: Date.now(),
+    language: navigator.language,
+    referrer: globalThis.document?.referrer || undefined,
+    screen: globalThis.window
+      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
+      : undefined,
+    url: location.href,
+  });
+
+  const methodForwarder =
+    (fn: string) =>
+    (...args: any[]) =>
+      port.postMessage({ fn, args: [...args, getMetadata()] });
+
+  const analytics: Analytics = {
+    identify: methodForwarder('identify'),
+    page: methodForwarder('page'),
+    track: methodForwarder('track'),
+    setEnabled: methodForwarder('setEnabled'),
+    autoTrack: (root) => {
+      const onClick = (event: Event) => {
+        const element = event.target as any;
+        if (
+          !element ||
+          (!INTERACTIVE_TAGS.has(element.tagName) &&
+            !INTERACTIVE_ROLES.has(element.getAttribute('role')))
+        )
+          return;
+
+        void analytics.track('click', {
+          tagName: element.tagName?.toLowerCase(),
+          id: element.id || undefined,
+          className: element.className || undefined,
+          textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
+          href: element.href,
+        });
+      };
+      root.addEventListener('click', onClick, { capture: true, passive: true });
+      return () => {
+        root.removeEventListener('click', onClick);
+      };
+    },
+  };
+  return analytics;
+}
+
 interface ForwardMetadata {
   sessionId: number | undefined;
   timestamp: number;
@@ -240,3 +238,30 @@ interface ForwardMetadata {
   referrer: string | undefined;
   url: string | undefined;
 }
+
+function defineStorageItem<T>(
+  key: string,
+  defaultValue?: NonNullable<T>,
+): AnalyticsStorageItem<T> {
+  return {
+    getValue: async () =>
+      (await chrome.storage.local.get(key))[key] ?? defaultValue,
+    setValue: (newValue) => chrome.storage.local.set({ [key]: newValue }),
+  };
+}
+
+const INTERACTIVE_TAGS = new Set([
+  'A',
+  'BUTTON',
+  'INPUT',
+  'SELECT',
+  'TEXTAREA',
+]);
+const INTERACTIVE_ROLES = new Set([
+  'button',
+  'link',
+  'checkbox',
+  'menuitem',
+  'tab',
+  'radio',
+]);
