@@ -49,6 +49,7 @@ const chromeExtensionIds = [
   'cpaedhbidlpnbdfegakhiamfpndhjpgf', // WebChat: Chat with anyone on any website
   'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
   'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
+  'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
