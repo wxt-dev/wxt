@@ -4,8 +4,8 @@ Add analytics, like google analytics, to your WXT extension.
 
 ## Supported Analytics Providers
 
-- Google Analytics (Measurement Protocol)
-- Umami
+- [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
+- [Umami](#umami)
 
 ## Installation
 
@@ -49,7 +49,7 @@ await analytics.identify('some-user-id');
 
 ## Providers
 
-### Google Analytics (Measurement Protocol)
+### Google Analytics 4 (Measurement Protocol)
 
 Follow [Google's documentation](https://developer.chrome.com/docs/extensions/how-to/integrate/google-analytics-4#setup-credentials) to obtain your credentials:
 

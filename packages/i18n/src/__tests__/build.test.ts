@@ -161,4 +161,17 @@ describe('Built Tools', () => {
     );
     expect(mockWriteFile).toBeCalledWith('output.d.ts', expectedDts, 'utf8');
   });
+
+  it('should throw an error if messages file contains null or undefined', async () => {
+    const invalidFileContent = stringifyYAML({
+      simple: 'example',
+      invalidField: null,
+    });
+
+    mockReadFile.mockResolvedValue(invalidFileContent);
+
+    await expect(parseMessagesFile('invalid.yml')).rejects.toThrowError(
+      'Messages file should not contain `null` (found at "invalidField")',
+    );
+  });
 });

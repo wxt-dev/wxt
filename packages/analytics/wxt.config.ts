@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   // Unimport doesn't look for imports in node_modules, so when developing a
-  // node module, we need to disable this.
+  // WXT module, we need to disable this to simplify the build process
   imports: false,
 
   manifest: {
@@ -10,7 +10,7 @@ export default defineConfig({
   },
   vite: () => ({
     define: {
-      'process.env.NPM': 'false',
+      __PACKAGED__: 'false',
     },
   }),
 });

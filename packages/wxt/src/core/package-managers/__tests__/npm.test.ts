@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { npm } from '../npm';
-import { execaCommand } from 'execa';
+import spawn from 'nano-spawn';
 import { exists } from 'fs-extra';
 
 describe('NPM Package Management Utils', () => {
@@ -9,7 +9,7 @@ describe('NPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
     beforeAll(async () => {
       // NPM needs the modules installed for 'npm ls' to work
-      await execaCommand('npm i', { cwd });
+      await spawn('npm', ['i'], { cwd });
     }, 60e3);
 
     it('should list direct dependencies', async () => {

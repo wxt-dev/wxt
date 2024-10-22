@@ -6,7 +6,9 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: '/' # Location of package manifests
+    directories:
+      - /
+      - packages/*
     schedule:
       interval: 'monthly'
   - package-ecosystem: 'github-actions'

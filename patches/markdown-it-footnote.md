@@ -1,0 +1,1 @@
+Removed sub-ids from rendered links. When you link to the same footnote multiple times, the link would look like `[3.2]` instead of just `[3]`. Didn't like how that looked, so this patch removes that function.

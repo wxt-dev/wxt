@@ -12,7 +12,7 @@ export default defineBuildConfig({
     'providers/umami.ts',
   ],
   replace: {
-    'process.env.NPM': 'true',
+    __PACKAGED__: 'true',
   },
   declaration: true,
 });

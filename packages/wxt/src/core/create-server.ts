@@ -1,3 +1,4 @@
+import { debounce } from 'perfect-debounce';
 import {
   BuildStepOutput,
   EntrypointGroup,
@@ -144,7 +145,7 @@ function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
-  return async (event: string, path: string) => {
+  const cb = async (event: string, path: string) => {
     changeQueue.push([event, path]);
 
     await fileChangedMutex.runExclusive(async () => {
@@ -216,6 +217,11 @@ function createFileReloader(server: WxtDevServer) {
       }
     });
   };
+
+  return debounce(cb, wxt.config.dev.server!.watchDebounce, {
+    leading: true,
+    trailing: false,
+  });
 }
 
 /**

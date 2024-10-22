@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createI18n } from '../index';
-import { GetMessageOptions } from '../types';
 
 const getMessageMock = vi.fn();
 
@@ -28,7 +27,7 @@ describe('createI18n', () => {
 
     expect(actual).toBe(expectedValue);
     expect(getMessageMock).toBeCalledTimes(1);
-    expect(getMessageMock).toBeCalledWith(expectedKey, undefined);
+    expect(getMessageMock).toBeCalledWith(expectedKey);
   });
 
   it.each([
@@ -55,28 +54,13 @@ describe('createI18n', () => {
 
       expect(actual).toBe(expected);
       expect(getMessageMock).toBeCalledTimes(1);
-      expect(getMessageMock).toBeCalledWith(key, [String(count)], undefined);
+      expect(getMessageMock).toBeCalledWith(key, [String(count)]);
     },
   );
 
   it('should allow overriding the plural substitutions', () => {
     const i18n = createI18n();
     i18n.t('key', 3, ['custom']);
-    expect(getMessageMock).toBeCalledWith('key', ['custom'], undefined);
-  });
-
-  it('should pass options into browser.i18n.getMessage', () => {
-    const i18n = createI18n();
-    const options: GetMessageOptions = {
-      escapeLt: true,
-    };
-
-    i18n.t('key', options);
-    i18n.t('key', [''], options);
-    i18n.t('key', 1, options);
-    i18n.t('key', 1, [''], options);
-    getMessageMock.mock.calls.forEach((call) => {
-      expect(call.pop()).toEqual(options);
-    });
+    expect(getMessageMock).toBeCalledWith('key', ['custom']);
   });
 });

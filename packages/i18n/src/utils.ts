@@ -11,7 +11,7 @@ export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
   );
 }
 
-export function getSubstitionCount(message: string): number {
+export function getSubstitutionCount(message: string): number {
   return (
     1 +
     Array.from({ length: MAX_SUBSTITUTIONS }).findLastIndex((_, i) =>

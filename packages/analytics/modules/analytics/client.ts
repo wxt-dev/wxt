@@ -1,23 +1,14 @@
 import { defineWxtPlugin } from 'wxt/sandbox';
 import { useAppConfig } from 'wxt/client';
+import { storage } from 'wxt/storage';
 import {
   Analytics,
   AnalyticsConfig,
   AnalyticsPageViewEvent,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
-  AnalyticsStorageItemConfig,
 } from './types';
 import uaParser from 'ua-parser-js';
-
-const defineStorageItem = <T>(
-  key: string,
-  defaultValue?: NonNullable<T>,
-): AnalyticsStorageItemConfig<T> => ({
-  getValue: async () =>
-    (await chrome.storage.local.get(key))[key] ?? defaultValue,
-  setValue: (newValue) => chrome.storage.local.set({ [key]: newValue }),
-});
 
 export let analytics: Analytics;
 const ANALYTICS_PORT = 'wxt-analytics';

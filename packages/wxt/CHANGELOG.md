@@ -1,5 +1,115 @@
 # Changelog
 
+## v0.19.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.12...wxt-v0.19.13)
+
+### 🚀 Enhancements
+
+- **env:** Load env from `.env.[browser]` variants ([#1078](https://github.com/wxt-dev/wxt/pull/1078))
+
+### 🩹 Fixes
+
+- Don't use `#private` member variables in `ContentScriptContext` ([#1103](https://github.com/wxt-dev/wxt/pull/1103))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Craig Slusher ([@sleekslush](http://github.com/sleekslush))
+
+## v0.19.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.11...wxt-v0.19.12)
+
+### 🚀 Enhancements
+
+- Add support for `WXT_` environment variable prefix ([#1076](https://github.com/wxt-dev/wxt/pull/1076))
+- **config:** Add `outDirTemplate` for customizing output directory structure ([#1074](https://github.com/wxt-dev/wxt/pull/1074))
+
+### 🔥 Performance
+
+- Replace `execa` with `nano-spawn` for smaller package size ([#1042](https://github.com/wxt-dev/wxt/pull/1042))
+- Downgrade `esbuild` so a single version is shared between sub-dependencies ([#1045](https://github.com/wxt-dev/wxt/pull/1045))
+
+### 🩹 Fixes
+
+- Use directory name when `zip.name` and `package.json#name` are not provided ([#1028](https://github.com/wxt-dev/wxt/pull/1028))
+- Ensure consistent hook execution order and add docs ([#1081](https://github.com/wxt-dev/wxt/pull/1081))
+
+### 📖 Documentation
+
+- Rewrite and restructure the documentation website ([#933](https://github.com/wxt-dev/wxt/pull/933))
+
+### 🏡 Chore
+
+- Remove email from changelog ([#1027](https://github.com/wxt-dev/wxt/pull/1027))
+- **deps:** Bump magicast from 0.3.4 to 0.3.5 ([#1017](https://github.com/wxt-dev/wxt/pull/1017))
+- **deps:** Bump esbuild from 0.23.0 to 0.24.0 ([#1018](https://github.com/wxt-dev/wxt/pull/1018))
+- **deps:** Bump linkedom from 0.18.4 to 0.18.5 ([#1034](https://github.com/wxt-dev/wxt/pull/1034))
+- **deps:** Bump execa from 9.3.1 to 9.4.0 ([#1031](https://github.com/wxt-dev/wxt/pull/1031))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+- Shrink down on dependencies ([#1050](https://github.com/wxt-dev/wxt/pull/1050))
+- Enable `extensionApi: chrome` in template projects ([#1083](https://github.com/wxt-dev/wxt/pull/1083))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Mezannic ([@mezannic](http://github.com/mezannic))
+
+## v0.19.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.10...wxt-v0.19.11)
+
+### 🚀 Enhancements
+
+- **zip:** Hooks ([#993](https://github.com/wxt-dev/wxt/pull/993))
+- **zip:** `wxt zip --sources` and auto sources for opera ([#1014](https://github.com/wxt-dev/wxt/pull/1014))
+
+### 🩹 Fixes
+
+- Reverse env files priority ([#1016](https://github.com/wxt-dev/wxt/pull/1016))
+- #1005 fixed, by updating type-definations to getItem method. ([#1007](https://github.com/wxt-dev/wxt/pull/1007), [#1005](https://github.com/wxt-dev/wxt/issues/1005))
+
+### 🏡 Chore
+
+- Move some files around ([#996](https://github.com/wxt-dev/wxt/pull/996))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Gurvir Singh ([@baraich](http://github.com/baraich))
+- Mezannic ([@mezannic](http://github.com/mezannic))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.19.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.9...wxt-v0.19.10)
+
+### 🔥 Performance
+
+- Reduce hypersensitive onChange of watcher ([#978](https://github.com/wxt-dev/wxt/pull/978))
+
+### 🩹 Fixes
+
+- Fix config manifest type ([#973](https://github.com/wxt-dev/wxt/pull/973))
+
+### 📖 Documentation
+
+- Examples reference outDir vs. outputDir ([#982](https://github.com/wxt-dev/wxt/pull/982))
+- Improved docs and links ([#970](https://github.com/wxt-dev/wxt/pull/970))
+
+### 🌊 Types
+
+- Fix `ExtensionRunnerConfig.chromiumPref` type ([fda1e18](https://github.com/wxt-dev/wxt/commit/fda1e18))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+- The-syndrome <meltdown-syndrome@proton.me>
+- Hikiko4ern ([@hikiko4ern](http://github.com/hikiko4ern))
+
 ## v0.19.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.8...wxt-v0.19.9)

@@ -54,6 +54,19 @@ export interface InlineConfig {
    */
   outDir?: string;
   /**
+   * Template string for customizing the output directory structure.
+   * Available variables:
+   * - <span v-pre>`{{browser}}`</span>: The target browser (e.g., 'chrome', 'firefox')
+   * - <span v-pre>`{{manifestVersion}}`</span>: The manifest version (e.g., 2 or 3)
+   * - <span v-pre>`{{mode}}`</span>: The build mode (e.g., 'development', 'production')
+   * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
+   * - <span v-pre>`{{command}}`</span>: The WXT command being run (e.g., 'build', 'serve')
+   *
+   * @example "{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
+   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}"`</span>
+   */
+  outDirTemplate?: string;
+  /**
    * > Only available when using the JS API. Not available in `wxt.config.ts` files
    *
    * Path to `wxt.config.ts` file or `false` to disable config file discovery.
@@ -62,7 +75,7 @@ export interface InlineConfig {
    */
   configFile?: string | false;
   /**
-   * Set to `true` to show debug logs. Overriden by the command line `--debug` option.
+   * Set to `true` to show debug logs. Overridden by the command line `--debug` option.
    *
    * @default false
    */
@@ -130,6 +143,16 @@ export interface InlineConfig {
      * @default "{{name}}-{{version}}-{{browser}}.zip"
      */
     artifactTemplate?: string;
+    /**
+     * When zipping the extension, also zip sources.
+     *
+     * - `undefined`: zip sources if the target browser is "firefox" or "opera"
+     * - `true`: always zip sources
+     * - `false`: never zip sources
+     *
+     * @default undefined
+     */
+    zipSources?: boolean;
     /**
      * Configure the filename output when zipping files.
      *
@@ -306,7 +329,7 @@ export interface InlineConfig {
    * Which extension API to use.
    *
    * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   * - `"chrome"` (unstable): Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome), make sure to install the package or types won't work.
+   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
    *
    * @default "webextension-polyfill"
    * @since 0.19.0
@@ -1164,6 +1187,44 @@ export interface WxtHooks {
    * @param entrypoints The list of files that will be copied into the output directory
    */
   'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
+  /**
+   * Called before the zip process starts.
+   * @param wxt The configured WXT object
+   */
+  'zip:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called before zipping the extension files.
+   * @param wxt The configured WXT object
+   */
+  'zip:extension:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called after zipping the extension files.
+   * @param wxt The configured WXT object
+   * @param zipPath The path to the created extension zip file
+   */
+  'zip:extension:done': (wxt: Wxt, zipPath: string) => HookResult;
+
+  /**
+   * Called before zipping the source files (for Firefox).
+   * @param wxt The configured WXT object
+   */
+  'zip:sources:start': (wxt: Wxt) => HookResult;
+
+  /**
+   * Called after zipping the source files (for Firefox).
+   * @param wxt The configured WXT object
+   * @param zipPath The path to the created sources zip file
+   */
+  'zip:sources:done': (wxt: Wxt, zipPath: string) => HookResult;
+
+  /**
+   * Called after the entire zip process is complete.
+   * @param wxt The configured WXT object
+   * @param zipFiles An array of paths to all created zip files
+   */
+  'zip:done': (wxt: Wxt, zipFiles: string[]) => HookResult;
 }
 
 export interface Wxt {
@@ -1186,7 +1247,7 @@ export interface Wxt {
    */
   pm: WxtPackageManager;
   /**
-   * If the dev server was started, it will be availble.
+   * If the dev server was started, it will be available.
    */
   server?: WxtDevServer;
   /**
@@ -1247,6 +1308,10 @@ export interface ResolvedConfig {
     downloadPackages: string[];
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
+    /**
+     * If true, when zipping the extension, also zip the sources.
+     */
+    zipSources: boolean;
   };
   /**
    * @deprecated Use `build:manifestGenerated` hook instead.
@@ -1277,6 +1342,25 @@ export interface ResolvedConfig {
     server?: {
       port: number;
       hostname: string;
+      /**
+       * The milliseconds to debounce when a file is saved before reloading.
+       * The only way to set this option is to set the `WXT_WATCH_DEBOUNCE`
+       * environment variable, either globally (like in `.bashrc` file) or
+       * per-project (in `.env` file).
+       *
+       * For example:
+       * ```
+       * # ~/.zshrc
+       * export WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * or
+       * ```
+       * # .env
+       * WXT_WATCH_DEBOUNCE=1000
+       * ```
+       * @default 800
+       */
+      watchDebounce: number;
     };
     reloadCommand: string | false;
   };

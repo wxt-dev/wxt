@@ -1,6 +1,7 @@
 import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import { dedupeDependencies, npm } from './npm';
+import spawn from 'nano-spawn';
 
 export const yarn: WxtPackageManagerImpl = {
   overridesKey: 'resolutions',
@@ -12,8 +13,7 @@ export const yarn: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
-    const { execa } = await import('execa');
-    const res = await execa('yarn', args, { cwd: options?.cwd });
+    const res = await spawn('yarn', args, { cwd: options?.cwd });
     const tree = res.stdout
       .split('\n')
       .map<JsonLine>((line) => JSON.parse(line))

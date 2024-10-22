@@ -1,16 +1,16 @@
 <h1 align="center">
-  <img style="vertical-align:middle" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
+  <img align="top" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo">
   <span>WXT</span>
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm version" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="npm" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://www.npmjs.com/package/wxt" target="_blank"><img alt="downloads" src="https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="NPM" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE" target="_blank"><img alt="license | MIT" src="https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048"></a>
   <span> </span>
-  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
+  <a href="https://codecov.io/github/wxt-dev/wxt" target="_blank"><img alt="coverage" src="https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048"></a>
 </p>
 
 <p align="center">
@@ -43,9 +43,20 @@ https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84
 
 Bootstrap a new project:
 
+<!-- automd:pm-x version="latest" name="wxt" args="init" -->
+
 ```sh
-pnpm dlx wxt@latest init <project-name>
+# npm
+npx wxt@latest init
+
+# pnpm
+pnpm dlx wxt@latest init
+
+# bun
+bunx wxt@latest init
 ```
+
+<!-- /automd -->
 
 Or see the [installation guide](https://wxt.dev/guide/installation.html) to get started with WXT.
 
@@ -59,13 +70,20 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 🦾 Auto-imports
 - 🤖 Automated publishing
 - 🎨 Frontend framework agnostic: works with Vue, React, Svelte, etc
-- 📦 Modular architecture with [WXT modules](https://wxt.dev/guide/go-further/reusable-modules.html#overview)
+- 📦 [Module system](https://wxt.dev/guide/essentials/wxt-modules.html#overview) for reusing code between extensions
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
 - ⬇️ Download and bundle remote URL imports
 
 ## Contributors
 
+<!-- automd:contributors author="aklinker1" license="MIT" github="wxt-dev/wxt" -->
+
+Published under the [MIT](https://github.com/wxt-dev/wxt/blob/main/LICENSE) license.
+Made by [@aklinker1](https://github.com/aklinker1) and [community](https://github.com/wxt-dev/wxt/graphs/contributors) 💛
+<br><br>
 <a href="https://github.com/wxt-dev/wxt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=wxt-dev/wxt" />
+<img src="https://contrib.rocks/image?repo=wxt-dev/wxt" />
 </a>
+
+<!-- /automd -->

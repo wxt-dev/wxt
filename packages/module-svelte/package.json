@@ -45,12 +45,12 @@
     "wxt": ">=0.18.6"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.1.1"
+    "@sveltejs/vite-plugin-svelte": "^3.1.2"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "publint": "^0.2.9",
-    "typescript": "^5.5.4",
+    "publint": "^0.2.11",
+    "typescript": "^5.6.2",
     "unbuild": "^2.0.0",
     "wxt": "workspace:*"
   }

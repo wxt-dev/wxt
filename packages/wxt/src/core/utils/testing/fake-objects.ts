@@ -293,6 +293,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       downloadedPackagesDir: fakeDir(),
       downloadPackages: [],
       compressionLevel: 9,
+      zipSources: false,
     },
     transformManifest: () => {},
     userConfigMetadata: {},
