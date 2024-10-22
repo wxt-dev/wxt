@@ -44,4 +44,4 @@ export default defineConfig({
 });
 ```
 
-Options have JSDocs available in your editor, or you can read them in the source code: [`UnoCSSOptions`](./src/index.ts).
+Options have JSDocs available in your editor, or you can read them in the source code: [`UnoCSSOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/src/index.ts).
