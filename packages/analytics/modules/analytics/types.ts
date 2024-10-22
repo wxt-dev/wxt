@@ -56,24 +56,28 @@ export type AnalyticsProvider = (
 };
 
 export interface BaseAnalyticsEvent {
-  meta: {
-    /** Identifier of the session the event was fired from */
-    sessionId: number | undefined;
-    /** `Date.now()` of when the event was reported */
-    timestamp: number;
-    /** `"1920x1080"` */
-    screen: string | undefined;
-    /** `document.referrer` */
-    referrer: string | undefined;
-    /** `navigator.language` */
-    language: string | undefined;
-    /** `location.href` */
-    url: string | undefined;
-  };
+  meta: EventMetadata;
   user: {
     id: string;
     properties: Record<string, string | undefined>;
   };
+}
+
+export interface AnalyticsEventMetadata {
+  /** Identifier of the session the event was fired from */
+  sessionId: number | undefined;
+  /** `Date.now()` of when the event was reported */
+  timestamp: number;
+  /** `"1920x1080"` */
+  screen: string | undefined;
+  /** `document.referrer` */
+  referrer: string | undefined;
+  /** `navigator.language` */
+  language: string | undefined;
+  /** `location.href` */
+  url: string | undefined;
+  /** `document.title` */
+  title: string | undefined;
 }
 
 export interface AnalyticsPageInfo {

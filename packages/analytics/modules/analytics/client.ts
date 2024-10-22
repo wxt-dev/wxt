@@ -6,6 +6,7 @@ import type {
   AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
+  AnalyticsEventMetadata,
 } from './types';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
@@ -26,7 +27,7 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (location.pathname === '/background.js')
     return createBackgroundAnalytics(config);
 
-  return createFrontendAnalytics(config);
+  return createFrontendAnalytics();
 }
 
 /**
@@ -57,29 +58,24 @@ function createBackgroundAnalytics(
   let userProperties = userPropertiesStorage.getValue();
   const manifest = chrome.runtime.getManifest();
 
+  const getBackgroundMeta = () => ({
+    timestamp: Date.now(),
+    // Don't track sessions for the background, it can be running
+    // indefinitely, and will inflate session duration stats.
+    sessionId: undefined,
+    language: navigator.language,
+    referrer: undefined,
+    screen: undefined,
+    url: location.href,
+    title: undefined,
+  });
+
   const getBaseEvent = async (
-    meta: ForwardMetadata = {
-      timestamp: Date.now(),
-      // Don't track sessions for the background, it can be running
-      // indefinitely, and will inflate session duration stats.
-      sessionId: undefined,
-      language: navigator.language,
-      referrer: undefined,
-      screen: undefined,
-      url: location.href,
-      title: undefined,
-    },
+    meta: AnalyticsEventMetadata,
   ): Promise<BaseAnalyticsEvent> => {
     const platform = await platformInfo;
     return {
-      meta: {
-        sessionId: meta.sessionId,
-        timestamp: meta.timestamp,
-        screen: meta.screen,
-        referrer: meta.referrer,
-        language: meta.language,
-        url: meta.url,
-      },
+      meta,
       user: {
         id: await userId,
         properties: {
@@ -100,7 +96,7 @@ function createBackgroundAnalytics(
     identify: async (
       newUserId: string,
       newUserProperties: Record<string, string> = {},
-      forwardMeta?: ForwardMetadata,
+      meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
       // Update in-memory cache for all providers
       userId = Promise.resolve(newUserId);
@@ -111,7 +107,7 @@ function createBackgroundAnalytics(
         userPropertiesStorage.setValue?.(newUserProperties),
       ]);
       // Notify providers
-      const event = await getBaseEvent(forwardMeta);
+      const event = await getBaseEvent(meta);
       if (config?.debug) console.debug('[analytics] identify', event);
       if (await enabled.getValue()) {
         await Promise.allSettled(
@@ -123,14 +119,17 @@ function createBackgroundAnalytics(
         );
       }
     },
-    page: async (location: string, forwardMeta?: ForwardMetadata) => {
-      const baseEvent = await getBaseEvent(forwardMeta);
+    page: async (
+      location: string,
+      meta: AnalyticsEventMetadata = getBackgroundMeta(),
+    ) => {
+      const baseEvent = await getBaseEvent(meta);
       const event: AnalyticsPageViewEvent = {
         ...baseEvent,
         page: {
-          url: forwardMeta?.url ?? globalThis.location?.href,
+          url: meta?.url ?? globalThis.location?.href,
           location,
-          title: forwardMeta?.title ?? globalThis.document?.title,
+          title: meta?.title ?? globalThis.document?.title,
         },
       };
       if (config?.debug) console.debug('[analytics] page', event);
@@ -145,9 +144,9 @@ function createBackgroundAnalytics(
     track: async (
       eventName: string,
       eventProperties?: Record<string, string>,
-      forwardMeta?: ForwardMetadata,
+      meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
-      const baseEvent = await getBaseEvent(forwardMeta);
+      const baseEvent = await getBaseEvent(meta);
       const event: AnalyticsTrackEvent = {
         ...baseEvent,
         event: { name: eventName, properties: eventProperties },
@@ -189,12 +188,10 @@ function createBackgroundAnalytics(
 /**
  * Creates an analytics client for non-background contexts.
  */
-function createFrontendAnalytics(
-  config: AnalyticsConfig | undefined,
-): Analytics {
+function createFrontendAnalytics(): Analytics {
   const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
-  const getMetadata = (): ForwardMetadata => ({
+  const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
@@ -209,13 +206,7 @@ function createFrontendAnalytics(
   const methodForwarder =
     (fn: string) =>
     (...args: any[]) => {
-      if (config?.debug) {
-        console.debug(
-          `[analytics] Sending ${fn} to background for upload`,
-          ...args,
-        );
-      }
-      port.postMessage({ fn, args: [...args, getMetadata()] });
+      port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
     };
 
   const analytics: Analytics = {
@@ -224,14 +215,8 @@ function createFrontendAnalytics(
     track: methodForwarder('track'),
     setEnabled: methodForwarder('setEnabled'),
     autoTrack: (root) => {
-      if (config?.debug) {
-        console.debug('[analytics] autoTrack() called!');
-      }
       const onClick = (event: Event) => {
         const element = event.target as any;
-        if (config?.debug) {
-          console.debug('[analytics] autoTrack() element clicked', element);
-        }
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&
@@ -254,16 +239,6 @@ function createFrontendAnalytics(
     },
   };
   return analytics;
-}
-
-interface ForwardMetadata {
-  sessionId: number | undefined;
-  timestamp: number;
-  screen: string | undefined;
-  language: string | undefined;
-  referrer: string | undefined;
-  url: string | undefined;
-  title: string | undefined;
 }
 
 function defineStorageItem<T>(
