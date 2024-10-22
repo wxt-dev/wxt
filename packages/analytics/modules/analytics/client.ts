@@ -26,20 +26,22 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (location.pathname === '/background.js')
     return createBackgroundAnalytics(config);
 
-  return createFrontendAnalytics();
+  return createFrontendAnalytics(config);
 }
 
 /**
  * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
  */
-function createBackgroundAnalytics(config?: AnalyticsConfig): Analytics {
+function createBackgroundAnalytics(
+  config: AnalyticsConfig | undefined,
+): Analytics {
   // User properties storage
   const userIdStorage =
-    config?.userId ?? defineStorageItem<string>('local:wxt-analytics:user-id');
+    config?.userId ?? defineStorageItem<string>('wxt-analytics:user-id');
   const userPropertiesStorage =
     config?.userProperties ??
     defineStorageItem<Record<string, string>>(
-      'local:wxt-analytics:user-properties',
+      'wxt-analytics:user-properties',
       {},
     );
   const enabled =
@@ -184,7 +186,9 @@ function createBackgroundAnalytics(config?: AnalyticsConfig): Analytics {
 /**
  * Creates an analytics client for non-background contexts.
  */
-function createFrontendAnalytics(): Analytics {
+function createFrontendAnalytics(
+  config: AnalyticsConfig | undefined,
+): Analytics {
   const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
   const getMetadata = (): ForwardMetadata => ({
@@ -200,8 +204,15 @@ function createFrontendAnalytics(): Analytics {
 
   const methodForwarder =
     (fn: string) =>
-    (...args: any[]) =>
+    (...args: any[]) => {
+      if (config?.debug) {
+        console.debug(
+          `[analytics] Sending ${fn} to background for upload`,
+          ...args,
+        );
+      }
       port.postMessage({ fn, args: [...args, getMetadata()] });
+    };
 
   const analytics: Analytics = {
     identify: methodForwarder('identify'),
@@ -209,8 +220,14 @@ function createFrontendAnalytics(): Analytics {
     track: methodForwarder('track'),
     setEnabled: methodForwarder('setEnabled'),
     autoTrack: (root) => {
+      if (config?.debug) {
+        console.debug('[analytics] autoTrack() called!');
+      }
       const onClick = (event: Event) => {
         const element = event.target as any;
+        if (config?.debug) {
+          console.debug('[analytics] autoTrack() element clicked', element);
+        }
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&

@@ -2,7 +2,7 @@ export interface Analytics {
   /** Report a page change */
   page: (url: string) => void;
   /** Report a custom event */
-  track: (eventName: string, eventProperties: Record<string, string>) => void;
+  track: (eventName: string, eventProperties?: Record<string, string>) => void;
   /** Save information about the user */
   identify: (userId: string, userProperties?: Record<string, string>) => void;
   /** Automatically setup and track user interactions, returning a function to remove any listeners that were setup. */
@@ -25,7 +25,7 @@ export interface AnalyticsConfig {
    */
   version?: string;
   /**
-   * Configure how the enabled flag is persisted
+   * Configure how the enabled flag is persisted. Defaults to using `""` in local extension storage.
    */
   enabled?: AnalyticsStorageItem<boolean>;
   /**
