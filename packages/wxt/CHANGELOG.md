@@ -14,8 +14,8 @@
 
 ### ❤️ Contributors
 
-- Craig Slusher <cslush@gmail.com>
-- Aaron <aaronklinker1@gmail.com>
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Craig Slusher ([@sleekslush](http://github.com/sleekslush))
 
 ## v0.19.12
 
