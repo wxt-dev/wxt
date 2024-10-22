@@ -8,6 +8,7 @@ import {
   prepareTypedocSidebar,
 } from './utils/menus';
 import { meta, script } from './utils/head';
+import footnote from 'markdown-it-footnote';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
@@ -46,6 +47,12 @@ export default defineConfig({
       async: '',
     }),
   ],
+
+  markdown: {
+    config: (md) => {
+      md.use(footnote);
+    },
+  },
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
