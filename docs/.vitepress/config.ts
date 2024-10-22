@@ -11,6 +11,7 @@ import { meta, script } from './utils/head';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
+import footnote from 'markdown-it-footnote';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -45,6 +46,12 @@ export default defineConfig({
       async: '',
     }),
   ],
+
+  markdown: {
+    config: (md) => {
+      md.use(footnote);
+    },
+  },
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
