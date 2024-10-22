@@ -28,9 +28,10 @@ export default defineWxtModule({
       'analytics/index.ts',
     );
     const analyticsModuleCode = `
-      import { createAnalytics } from '@wxt-dev/analytics/client';
+import { createAnalytics } from '@wxt-dev/analytics/client';
+import { useAppConfig } from 'wxt/client';
 
-      export const analytics = createAnalytics(useAppConfig().analytics);
+export const analytics = createAnalytics(useAppConfig().analytics);
     `;
     addAlias(wxt, '#analytics', analyticsModulePath);
     wxt.hook('prepare:types', async (_, entries) => {
