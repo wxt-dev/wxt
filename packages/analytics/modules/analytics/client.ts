@@ -117,7 +117,9 @@ function createBackgroundAnalytics(
           providers.map((provider) => provider.identify(event)),
         );
       } else if (config?.debug) {
-        console.debug('[analytics] Disabled, identify() not called');
+        console.debug(
+          '[analytics] Analytics disabled, identify() not uploaded',
+        );
       }
     },
     page: async (url: string, forwardMeta?: ForwardMetadata) => {
@@ -136,7 +138,7 @@ function createBackgroundAnalytics(
           providers.map((provider) => provider.page(event)),
         );
       } else if (config?.debug) {
-        console.debug('[analytics] Disabled, page() not called');
+        console.debug('[analytics] Analytics disabled, page() not uploaded');
       }
     },
     track: async (
@@ -155,7 +157,7 @@ function createBackgroundAnalytics(
           providers.map((provider) => provider.track(event)),
         );
       } else if (config?.debug) {
-        console.debug('[analytics] Disabled, track() not called');
+        console.debug('[analytics] Analytics disabled, track() not uploaded');
       }
     },
     setEnabled: async (newEnabled) => {
