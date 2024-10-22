@@ -10,11 +10,16 @@ import type {
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
-export function createAnalytics(config: AnalyticsConfig): Analytics {
+export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (globalThis.chrome?.runtime?.id)
     throw Error(
       'Cannot use WXT analytics in contexts without access to the browser.runtime APIs',
     );
+  if (config == null) {
+    console.warn(
+      "[@wxt-dev/analytics] Config not provided to createAnalytics. If you're using WXT, add the 'analytics' property to '<srcDir>/app.config.ts'.",
+    );
+  }
 
   // TODO: This only works for standard WXT extensions, add a more generic
   // background script detector that works with non-WXT projects.
@@ -27,7 +32,7 @@ export function createAnalytics(config: AnalyticsConfig): Analytics {
 /**
  * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
  */
-function createBackgroundAnalytics(config: AnalyticsConfig): Analytics {
+function createBackgroundAnalytics(config?: AnalyticsConfig): Analytics {
   // User properties storage
   const userIdStorage =
     config?.userId ?? defineStorageItem<string>('local:wxt-analytics:user-id');

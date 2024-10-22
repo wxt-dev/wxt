@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Add analytics to your web extension",
   "repository": {
     "type": "git",
