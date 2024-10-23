@@ -98,6 +98,21 @@ And you're done! Using WXT, you get type-safety out of the box.
    i18n.t('helloWorld'); // "Hello world!";
    ```
 
+## Configuration
+
+The module can be configured via the `i18n` config:
+
+```ts
+export default defineConfig({
+  modules: ['@wxt-dev/i18n'],
+  i18n: {
+    // ...
+  },
+});
+```
+
+Options have JSDocs available in your editor, or you can read them in the source code: [`I18nOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/i18n/src/module.ts).
+
 ## Messages File Format
 
 > [!DANGER]
