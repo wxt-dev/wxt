@@ -240,11 +240,11 @@ A key is treated as "verbose" when it is:
 {
   "appName": {
     "message": "GitHub - Better Line Counts",
-    "description": "The app's name, should not be translated",
+    "description": "The app's name, should not be translated"
   },
   "ok": "OK",
   "deleteConfirmation": {
-    "title": "Delete XYZ?"
+    "title": "Delete XYZ?",
     "message": "You cannot undo this action once taken."
   }
 }
@@ -304,7 +304,7 @@ const messages = {
   // ...
 };
 
-// Generate JSON files for the browser
+// Generate JSON files for the extension
 await generateChromeMessagesFile('dist/_locales/en/messages.json', messages.en);
 await generateChromeMessagesFile('dist/_locales/de/messages.json', messages.de);
 // ...

@@ -96,7 +96,7 @@ export function createIframeUi<TMounted>(
  *
  * > This function is async because it has to load the CSS via a network call.
  *
- * @see https://wxt.dev/guide/essentials/content-scripts.html#shadowroot
+ * @see https://wxt.dev/guide/essentials/content-scripts.html#shadow-root
  */
 export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
