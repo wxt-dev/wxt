@@ -296,9 +296,6 @@ importers:
       '@types/chrome':
         specifier: ^0.0.269
         version: 0.0.269
-      '@types/webextension-polyfill':
-        specifier: ^0.10.7
-        version: 0.10.7
       '@webext-core/fake-browser':
         specifier: ^1.3.1
         version: 1.3.1
@@ -359,9 +356,6 @@ importers:
       is-wsl:
         specifier: ^3.1.0
         version: 3.1.0
-      jiti:
-        specifier: ^1.21.6
-        version: 1.21.6
       json5:
         specifier: ^2.2.3
         version: 2.2.3
@@ -422,9 +416,6 @@ importers:
       web-ext-run:
         specifier: ^0.2.1
         version: 0.2.1
-      webextension-polyfill:
-        specifier: ^0.12.0
-        version: 0.12.0
     devDependencies:
       '@aklinker1/check':
         specifier: ^1.4.5
@@ -1790,9 +1781,6 @@ packages:
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
-
-  '@types/webextension-polyfill@0.10.7':
-    resolution: {integrity: sha512-10ql7A0qzBmFB+F+qAke/nP1PIonS0TXZAOMVOxEUsm+lGSW6uwVcISFNa0I4Oyj0884TZVWGGMIWeXOVSNFHw==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -4773,9 +4761,6 @@ packages:
     resolution: {integrity: sha512-5D11VcjdGkA1/xax5UWL0YeAbDySKHzWFe6EpsoPNUMw5Uk9tKk9p6GUOfcaI5N7sINKfBMZYNsTBiu5dzJB9A==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
 
-  webextension-polyfill@0.12.0:
-    resolution: {integrity: sha512-97TBmpoWJEE+3nFBQ4VocyCdLKfw54rFaJ6EVQYLBCXqCIpLSZkwGgASpv4oPt9gdKCJ80RJlcmNzNn008Ag6Q==}
-
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
@@ -6034,8 +6019,6 @@ snapshots:
   '@types/unist@3.0.2': {}
 
   '@types/web-bluetooth@0.0.20': {}
-
-  '@types/webextension-polyfill@0.10.7': {}
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -9381,8 +9364,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  webextension-polyfill@0.12.0: {}
 
   webidl-conversions@7.0.0: {}
 
