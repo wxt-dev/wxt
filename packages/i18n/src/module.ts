@@ -158,7 +158,9 @@ export { type GeneratedI18nStructure }
     if (wxt.config.command === 'serve') {
       wxt.hooks.hookOnce('build:done', () => {
         const watcher = watch(localesDir);
-        watcher.on('change', updateLocalizations);
+        watcher.on('change', (path) => {
+          updateLocalizations(path).catch(wxt.logger.error);
+        });
       });
     }
   },
