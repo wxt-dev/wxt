@@ -228,7 +228,7 @@ async function getPopupEntrypoint(
   const options = await getHtmlEntrypointOptions<PopupEntrypointOptions>(
     info,
     {
-      browserStyle: 'browse_style',
+      browserStyle: 'browser_style',
       exclude: 'exclude',
       include: 'include',
       defaultIcon: 'default_icon',
@@ -262,7 +262,7 @@ async function getOptionsEntrypoint(
   const options = await getHtmlEntrypointOptions<OptionsEntrypointOptions>(
     info,
     {
-      browserStyle: 'browse_style',
+      browserStyle: 'browser_style',
       chromeStyle: 'chrome_style',
       exclude: 'exclude',
       include: 'include',
