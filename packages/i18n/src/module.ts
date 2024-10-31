@@ -23,11 +23,11 @@ import { watch } from 'chokidar';
 import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
 import { writeFile } from 'node:fs/promises';
 
-export default defineWxtModule({
+export default defineWxtModule<I18nOptions>({
   name: '@wxt-dev/i18n',
+  configKey: 'i18n',
   imports: [{ from: '#i18n', name: 'i18n' }],
-
-  setup(wxt) {
+  setup(wxt, options) {
     if (wxt.config.manifest.default_locale == null) {
       wxt.logger.warn(
         `\`[i18n]\` manifest.default_locale not set, \`@wxt-dev/i18n\` disabled.`,
@@ -38,9 +38,12 @@ export default defineWxtModule({
       '`[i18n]` Default locale: ' + wxt.config.manifest.default_locale,
     );
 
+    const { localesDir = resolve(wxt.config.srcDir, 'locales') } =
+      options ?? {};
+
     const getLocalizationFiles = async () => {
-      const files = await glob('locales/*', {
-        cwd: wxt.config.srcDir,
+      const files = await glob('*.{json,json5,yml,yaml,toml}', {
+        cwd: localesDir,
         absolute: true,
       });
       return files.map((file) => ({
@@ -71,7 +74,7 @@ export default defineWxtModule({
       )!;
       if (defaultLocaleFile == null) {
         throw Error(
-          `\`[i18n]\` Required localization file does not exist: \`<srcDir>/locales/${wxt.config.manifest.default_locale}.{json|json5|yml|yaml|toml}\``,
+          `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|yml|yaml|toml}\``,
         );
       }
 
@@ -128,7 +131,7 @@ import type { GeneratedI18nStructure } from './structure';
 
 export const i18n = createI18n<GeneratedI18nStructure>();
 
-export { GeneratedI18nStructure }
+export { type GeneratedI18nStructure }
 `,
       });
     });
@@ -154,9 +157,28 @@ export { GeneratedI18nStructure }
 
     if (wxt.config.command === 'serve') {
       wxt.hooks.hookOnce('build:done', () => {
-        const watcher = watch(resolve(wxt.config.srcDir, 'locales'));
-        watcher.on('change', updateLocalizations);
+        const watcher = watch(localesDir);
+        watcher.on('change', (path) => {
+          updateLocalizations(path).catch(wxt.logger.error);
+        });
       });
     }
   },
 });
+
+/**
+ * Options for the i18n module
+ */
+export interface I18nOptions {
+  /**
+   * Directory containing files that define the translations.
+   * @default "${config.srcDir}/locales"
+   */
+  localesDir?: string;
+}
+
+declare module 'wxt' {
+  export interface InlineConfig {
+    i18n?: I18nOptions;
+  }
+}

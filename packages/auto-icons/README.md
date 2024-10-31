@@ -1,5 +1,7 @@
 # WXT Auto Icons
 
+[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/CHANGELOG.md)
+
 ## Features
 
 - Generate extension icons with the correct sizes
@@ -39,4 +41,4 @@ export default defineConfig({
 });
 ```
 
-Options have JSDocs available in your editor, or you can read them in the source code: [`AutoIconsOptions`](./src/index.ts).
+Options have JSDocs available in your editor, or you can read them in the source code: [`AutoIconsOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/src/index.ts).

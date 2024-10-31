@@ -237,7 +237,9 @@ describe('CLI', () => {
       mockArgv('zip');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({});
+      expect(zipMock).toBeCalledWith({
+        zip: {},
+      });
     });
 
     it('should respect passing a custom root', async () => {
@@ -246,6 +248,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         root: 'path/to/root',
+        zip: {},
       });
     });
 
@@ -255,6 +258,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         configFile: './path/to/config.ts',
+        zip: {},
       });
     });
 
@@ -264,6 +268,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         mode: 'development',
+        zip: {},
       });
     });
 
@@ -273,6 +278,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         browser: 'firefox',
+        zip: {},
       });
     });
 
@@ -282,6 +288,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         manifestVersion: 2,
+        zip: {},
       });
     });
 
@@ -291,6 +298,7 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         manifestVersion: 3,
+        zip: {},
       });
     });
 
@@ -300,6 +308,40 @@ describe('CLI', () => {
 
       expect(zipMock).toBeCalledWith({
         debug: true,
+        zip: {},
+      });
+    });
+
+    it('should pass undefined for zipSources when --sources is not passed', async () => {
+      mockArgv('zip');
+      await importCli();
+
+      expect(zipMock).toBeCalledWith({
+        zip: {
+          zipSources: undefined,
+        },
+      });
+    });
+
+    it('should pass true for zipSources when --sources is passed', async () => {
+      mockArgv('zip', '--sources');
+      await importCli();
+
+      expect(zipMock).toBeCalledWith({
+        zip: {
+          zipSources: true,
+        },
+      });
+    });
+
+    it('should pass false for zipSources when --sources=false is passed', async () => {
+      mockArgv('zip', '--sources=false');
+      await importCli();
+
+      expect(zipMock).toBeCalledWith({
+        zip: {
+          zipSources: false,
+        },
       });
     });
   });

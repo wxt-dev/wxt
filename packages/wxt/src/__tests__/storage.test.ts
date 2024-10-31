@@ -1367,5 +1367,24 @@ describe('Storage Utils', () => {
         });
       });
     });
+
+    it('should return a nullable type when getItem is called without a fallback', async () => {
+      const res = await storage.getItem<string>('local:test');
+      expectTypeOf(res).toBeNullable();
+    });
+
+    it('should return a non-null type when getItem is called with a fallback', async () => {
+      const res = await storage.getItem('local:test', {
+        fallback: 'test',
+      });
+      expectTypeOf(res).not.toBeNullable();
+    });
+
+    it('should return a non-null type when getItem is called with a fallback and the first type parameter is passed', async () => {
+      const res = await storage.getItem<string>('local:test', {
+        fallback: 'test',
+      });
+      expectTypeOf(res).not.toBeNullable();
+    });
   });
 });

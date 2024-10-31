@@ -1,4 +1,5 @@
 import { defineConfig } from 'wxt';
+import { presetUno } from 'unocss';
 
 export default defineConfig({
   srcDir: 'src',
@@ -26,5 +27,33 @@ export default defineConfig({
     a: 'a',
     // @ts-expect-error: c is not defined, this should error out
     c: 'c',
+  },
+  unocss: {
+    excludeEntrypoints: [
+      'example',
+      'iframe-src',
+      'injected',
+      'example-tsx',
+      'example-2',
+      'iframe',
+      'location-change',
+      'main-world',
+      'sandbox',
+      'sidepanel',
+      'unlisted',
+    ],
+    configOrPath: {
+      content: {
+        pipeline: {
+          include: [
+            // the default
+            /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
+            // include js/ts files
+            'src/entrypoints/**/*.{js,ts}',
+          ],
+        },
+      },
+      presets: [presetUno()],
+    },
   },
 });

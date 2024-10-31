@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- run-s -s 'build:all:*'",
+    "build:all": "buildc --deps-only -- pnpm run --reporter-hide-prefix /^build:all:.*/",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
@@ -23,12 +23,14 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.269",
-    "@types/react": "^18.3.3",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "@wxt-dev/auto-icons": "workspace:*",
-    "sass": "^1.77.8",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.4",
+    "@wxt-dev/unocss": "workspace:*",
+    "sass": "^1.79.4",
+    "typescript": "^5.6.2",
+    "unocss": "^0.63.3",
+    "vitest": "^2.1.2",
     "vitest-plugin-random-seed": "^1.1.0",
     "wxt": "workspace:*"
   },

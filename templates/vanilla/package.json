@@ -15,7 +15,8 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
-    "wxt": "^0.19.1"
+    "@types/chrome": "^0.0.269",
+    "typescript": "^5.6.2",
+    "wxt": "^0.19.11"
   }
 }

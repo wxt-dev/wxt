@@ -37,30 +37,30 @@ import { createLocationWatcher } from './location-watcher';
 export class ContentScriptContext implements AbortController {
   private static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
 
-  #isTopFrame = window.self === window.top;
-  #abortController: AbortController;
-  #locationWatcher = createLocationWatcher(this);
+  private isTopFrame = window.self === window.top;
+  private abortController: AbortController;
+  private locationWatcher = createLocationWatcher(this);
 
   constructor(
     private readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
-    this.#abortController = new AbortController();
+    this.abortController = new AbortController();
 
-    if (this.#isTopFrame) {
-      this.#listenForNewerScripts({ ignoreFirstEvent: true });
-      this.#stopOldScripts();
+    if (this.isTopFrame) {
+      this.listenForNewerScripts({ ignoreFirstEvent: true });
+      this.stopOldScripts();
     } else {
-      this.#listenForNewerScripts();
+      this.listenForNewerScripts();
     }
   }
 
   get signal() {
-    return this.#abortController.signal;
+    return this.abortController.signal;
   }
 
   abort(reason?: any): void {
-    return this.#abortController.abort(reason);
+    return this.abortController.abort(reason);
   }
 
   get isInvalid(): boolean {
@@ -188,7 +188,7 @@ export class ContentScriptContext implements AbortController {
   ) {
     if (type === 'wxt:locationchange') {
       // Start the location watcher when adding the event for the first time
-      if (this.isValid) this.#locationWatcher.run();
+      if (this.isValid) this.locationWatcher.run();
     }
 
     target.addEventListener?.(
@@ -213,7 +213,7 @@ export class ContentScriptContext implements AbortController {
     );
   }
 
-  #stopOldScripts() {
+  stopOldScripts() {
     // Use postMessage so it get's sent to all the frames of the page.
     window.postMessage(
       {
@@ -224,7 +224,7 @@ export class ContentScriptContext implements AbortController {
     );
   }
 
-  #listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
+  listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
     let isFirst = true;
 
     const cb = (event: MessageEvent) => {
