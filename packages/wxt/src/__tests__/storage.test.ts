@@ -1331,7 +1331,7 @@ describe('Storage Utils', () => {
     });
 
     describe('setMetas', () => {
-      it.only('should set metadata efficiently', async () => {
+      it('should set metadata efficiently', async () => {
         const item1 = storage.defineItem<number, { v: number }>('local:one');
         const item2 = storage.defineItem<string, { v: number }>('session:two');
         const item3 = storage.defineItem<boolean, { v: number }>('local:three');

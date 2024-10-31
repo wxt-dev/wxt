@@ -20,6 +20,7 @@ describe('Auto Imports', () => {
             const ContentScriptContext: typeof import('wxt/client')['ContentScriptContext']
             const InvalidMatchPattern: typeof import('wxt/sandbox')['InvalidMatchPattern']
             const MatchPattern: typeof import('wxt/sandbox')['MatchPattern']
+            const MigrationError: typeof import('wxt/storage')['MigrationError']
             const browser: typeof import('wxt/browser')['browser']
             const createIframeUi: typeof import('wxt/client')['createIframeUi']
             const createIntegratedUi: typeof import('wxt/client')['createIntegratedUi']
