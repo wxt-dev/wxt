@@ -48,5 +48,9 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "async-mutex": "^0.5.0",
+    "dequal": "^2.0.3"
+  }
 }

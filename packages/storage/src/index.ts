@@ -1,14 +1,10 @@
+/// <reference types="chrome" />
 /**
  * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
- * See [the guide](https://wxt.dev/guide/extension-apis/storage.html) for more information.
- *
- * @module wxt/storage
+ * See [the guide](https://wxt.dev/storage.html) for more information.
  */
-import { Storage, browser } from 'wxt/browser';
 import { dequal } from 'dequal/lite';
-import { logger } from './sandbox/utils/logger';
-import { toArray } from './core/utils/arrays';
 import { Mutex } from 'async-mutex';
 
 export const storage = createStorage();
@@ -109,7 +105,7 @@ function createStorage(): WxtStorage {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      toArray(properties).forEach((field) => delete newFields[field]);
+      [properties].flat().forEach((field) => delete newFields[field]);
       await driver.setItem(metaKey, newFields);
     }
   };
@@ -200,7 +196,7 @@ function createStorage(): WxtStorage {
       const resultsMap: Record<string, any> = {};
       await Promise.all(
         Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
-          const areaRes = await browser.storage[area as StorageArea].get(
+          const areaRes = await chrome.storage[area as StorageArea].get(
             keys.map((key) => key.driverMetaKey),
           );
           keys.forEach((key) => {
@@ -372,8 +368,8 @@ function createStorage(): WxtStorage {
           );
         }
 
-        logger.debug(
-          `Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
+        console.debug(
+          `[@wxt-dev/storage] Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
         );
         const migrationsToRun = Array.from(
           { length: targetVersion - currentVersion },
@@ -395,8 +391,8 @@ function createStorage(): WxtStorage {
           { key: driverKey, value: migratedValue },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
-        logger.debug(
-          `Storage migration completed for ${key} v${targetVersion}`,
+        console.debug(
+          `[@wxt-dev/storage] Storage migration completed for ${key} v${targetVersion}`,
           { migratedValue },
         );
       };
@@ -404,7 +400,10 @@ function createStorage(): WxtStorage {
         opts?.migrations == null
           ? Promise.resolve()
           : migrate().catch((err) => {
-              logger.error(`Migration failed for ${key}`, err);
+              console.error(
+                `[@wxt-dev/storage] Migration failed for ${key}`,
+                err,
+              );
             });
 
       const initMutex = new Mutex();
@@ -474,7 +473,7 @@ function createStorage(): WxtStorage {
 
 function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const getStorageArea = () => {
-    if (browser.runtime == null) {
+    if (chrome.runtime == null) {
       throw Error(
         [
           "'wxt/storage' must be loaded in a web extension environment",
@@ -483,20 +482,18 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
         ].join('\n'),
       );
     }
-    if (browser.storage == null) {
+    if (chrome.storage == null) {
       throw Error(
         "You must add the 'storage' permission to your manifest to use 'wxt/storage'",
       );
     }
 
-    const area = browser.storage[storageArea];
+    const area = chrome.storage[storageArea];
     if (area == null)
-      throw Error(`"browser.storage.${storageArea}" is undefined`);
+      throw Error(`"chrome.storage.${storageArea}" is undefined`);
     return area;
   };
-  const watchListeners = new Set<
-    (changes: Storage.StorageAreaOnChangedChangesType) => void
-  >();
+  const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
   return {
     getItem: async (key) => {
       const res = await getStorageArea().get(key);
@@ -536,7 +533,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
     watch(key, cb) {
-      const listener = (changes: Storage.StorageAreaOnChangedChangesType) => {
+      const listener = (changes: StorageAreaChanges) => {
         const change = changes[key];
         if (change == null) return;
         if (dequal(change.newValue, change.oldValue)) return;
@@ -842,11 +839,15 @@ export interface WxtStorageItemOptions<T> {
   migrations?: Record<number, (oldValue: any) => any>;
 }
 
+export type StorageAreaChanges = {
+  [key: string]: chrome.storage.StorageChange;
+};
+
 /**
  * Same as `Partial`, but includes `| null`. It makes all the properties of an object optional and
  * nullable.
  */
-export type NullablePartial<T> = {
+type NullablePartial<T> = {
   [key in keyof T]+?: T[key] | undefined | null;
 };
 /**

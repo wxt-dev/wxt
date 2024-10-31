@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "verbatimModuleSyntax": true,
     "types": ["chrome"]
   },
   "exclude": ["node_modules/**", "dist/**"]
