@@ -175,8 +175,6 @@ describe('Storage Utils', () => {
         });
       });
 
-      // TODO: getMetas?
-
       describe('setItem', () => {
         it('should set the value in the correct storage area', async () => {
           const key = `${storageArea}:count` as const;

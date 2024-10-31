@@ -600,8 +600,8 @@ export interface WxtStorage {
   /**
    * Get the metadata of multiple storage items.
    *
-   * @param items - The storage keys or items to get the metadata of.
-   * @returns An object with the metadata of the storage items.
+   * @param items List of keys or items to get the metadata of.
+   * @returns An array containing storage keys and their metadata.
    */
   getMetas(
     keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
