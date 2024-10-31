@@ -257,6 +257,33 @@ importers:
         specifier: workspace:*
         version: link:../wxt
 
+  packages/storage:
+    devDependencies:
+      '@aklinker1/check':
+        specifier: ^1.4.5
+        version: 1.4.5(typescript@5.6.2)
+      '@types/chrome':
+        specifier: ^0.0.268
+        version: 0.0.268
+      '@webext-core/fake-browser':
+        specifier: ^1.3.1
+        version: 1.3.1
+      oxlint:
+        specifier: ^0.9.9
+        version: 0.9.9
+      publint:
+        specifier: ^0.2.11
+        version: 0.2.11
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+      unbuild:
+        specifier: ^2.0.0
+        version: 2.0.0(sass@1.79.4)(typescript@5.6.2)
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.2(@types/node@20.16.10)(happy-dom@14.12.3)(sass@1.79.4)
+
   packages/unocss:
     dependencies:
       defu:
