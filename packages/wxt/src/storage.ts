@@ -44,6 +44,14 @@ function createStorage(): WxtStorage {
     };
   };
   const getMetaKey = (key: string) => key + '$';
+  const mergeMeta = (oldMeta: any, newMeta: any): any => {
+    const newFields = { ...oldMeta };
+    Object.entries(newMeta).forEach(([key, value]) => {
+      if (value == null) delete newFields[key];
+      else newFields[key] = value;
+    });
+    return newFields;
+  };
   const getValueOrFallback = (value: any, fallback: any) =>
     value ?? fallback ?? null;
   const getMetaValue = (properties: any) =>
@@ -78,15 +86,7 @@ function createStorage(): WxtStorage {
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    const newFields = { ...existingFields };
-    Object.entries(properties).forEach(([key, value]) => {
-      if (value == null) {
-        delete newFields[key];
-      } else {
-        newFields[key] = value;
-      }
-    });
-    await driver.setItem(metaKey, newFields);
+    await driver.setItem(metaKey, mergeMeta(existingFields, properties));
   };
   const removeItem = async (
     driver: WxtStorageDriver,
@@ -178,42 +178,117 @@ function createStorage(): WxtStorage {
       const { driver, driverKey } = resolveKey(key);
       return await getMeta(driver, driverKey);
     },
+    getMetas: async (args) => {
+      const keys = args.map((arg) => {
+        const key = typeof arg === 'string' ? arg : arg.key;
+        const { driverArea, driverKey } = resolveKey(key);
+        return {
+          key,
+          driverArea,
+          driverKey,
+          driverMetaKey: getMetaKey(driverKey),
+        };
+      });
+      const areaToDriverMetaKeysMap = keys.reduce<
+        Partial<Record<StorageArea, (typeof keys)[number][]>>
+      >((map, key) => {
+        map[key.driverArea] ??= [];
+        map[key.driverArea]!.push(key);
+        return map;
+      }, {});
+
+      const resultsMap: Record<string, any> = {};
+      await Promise.all(
+        Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
+          const areaRes = await browser.storage[area as StorageArea].get(
+            keys.map((key) => key.driverMetaKey),
+          );
+          keys.forEach((key) => {
+            resultsMap[key.key] = areaRes[key.driverMetaKey] ?? {};
+          });
+        }),
+      );
+
+      return keys.map((key) => ({
+        key: key.key,
+        meta: resultsMap[key.key],
+      }));
+    },
     setItem: async (key, value) => {
       const { driver, driverKey } = resolveKey(key);
       await setItem(driver, driverKey, value);
     },
-    setItems: async (values) => {
-      const areaToKeyValueMap = new Map<
-        StorageArea,
-        Array<{ key: string; value: any }>
-      >();
-      values.forEach(({ key, value }) => {
-        const { driverArea, driverKey } = resolveKey(key);
-        const values = areaToKeyValueMap.get(driverArea) ?? [];
-        areaToKeyValueMap.set(
-          driverArea,
-          values.concat({ key: driverKey, value }),
+    setItems: async (items) => {
+      const areaToKeyValueMap: Partial<
+        Record<StorageArea, Array<{ key: string; value: any }>>
+      > = {};
+      items.forEach((item) => {
+        const { driverArea, driverKey } = resolveKey(
+          'key' in item ? item.key : item.item.key,
         );
+        areaToKeyValueMap[driverArea] ??= [];
+        areaToKeyValueMap[driverArea].push({
+          key: driverKey,
+          value: item.value,
+        });
       });
       await Promise.all(
-        Array.from(areaToKeyValueMap.entries()).map(
-          async ([driverArea, values]) => {
-            const driver = getDriver(driverArea);
-            await driver.setItems(values);
-          },
-        ),
+        Object.entries(areaToKeyValueMap).map(async ([driverArea, values]) => {
+          const driver = getDriver(driverArea as StorageArea);
+          await driver.setItems(values);
+        }),
       );
     },
     setMeta: async (key, properties) => {
       const { driver, driverKey } = resolveKey(key);
       await setMeta(driver, driverKey, properties);
     },
+    setMetas: async (items) => {
+      const areaToMetaUpdatesMap: Partial<
+        Record<StorageArea, { key: string; properties: any }[]>
+      > = {};
+      items.forEach((item) => {
+        const { driverArea, driverKey } = resolveKey(
+          'key' in item ? item.key : item.item.key,
+        );
+        areaToMetaUpdatesMap[driverArea] ??= [];
+        areaToMetaUpdatesMap[driverArea].push({
+          key: driverKey,
+          properties: item.meta,
+        });
+      });
+
+      await Promise.all(
+        Object.entries(areaToMetaUpdatesMap).map(
+          async ([storageArea, updates]) => {
+            const driver = getDriver(storageArea as StorageArea);
+            const metaKeys = updates.map(({ key }) => getMetaKey(key));
+            console.log(storageArea, metaKeys);
+            const existingMetas = await driver.getItems(metaKeys);
+            const existingMetaMap = Object.fromEntries(
+              existingMetas.map(({ key, value }) => [key, getMetaValue(value)]),
+            );
+
+            const metaUpdates = updates.map(({ key, properties }) => {
+              const metaKey = getMetaKey(key);
+              return {
+                key: metaKey,
+                value: mergeMeta(existingMetaMap[metaKey] ?? {}, properties),
+              };
+            });
+
+            await driver.setItems(metaUpdates);
+          },
+        ),
+      );
+    },
     removeItem: async (key, opts) => {
       const { driver, driverKey } = resolveKey(key);
       await removeItem(driver, driverKey, opts);
     },
     removeItems: async (keys) => {
-      const areaToKeysMap = new Map<StorageArea, string[]>();
+      const areaToKeysMap: Partial<Record<StorageArea, string[]>> = {};
+
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
         let opts: RemoveItemOptions | undefined;
@@ -222,7 +297,6 @@ function createStorage(): WxtStorage {
           keyStr = key;
         } else if ('getValue' in key) {
           // key: WxtStorageItem
-          console.log(key);
           keyStr = key.key;
         } else if ('item' in key) {
           // key: { item, options }
@@ -234,17 +308,16 @@ function createStorage(): WxtStorage {
           opts = key.options;
         }
         const { driverArea, driverKey } = resolveKey(keyStr);
-        const areaKeys = areaToKeysMap.get(driverArea) ?? [];
-        areaKeys.push(driverKey);
+        areaToKeysMap[driverArea] ??= [];
+        areaToKeysMap[driverArea].push(driverKey);
         if (opts?.removeMeta) {
-          areaKeys.push(getMetaKey(driverKey));
+          areaToKeysMap[driverArea].push(getMetaKey(driverKey));
         }
-        areaToKeysMap.set(driverArea, areaKeys);
       });
 
       await Promise.all(
-        Array.from(areaToKeysMap.entries()).map(async ([driverArea, keys]) => {
-          const driver = getDriver(driverArea);
+        Object.entries(areaToKeysMap).map(async ([driverArea, keys]) => {
+          const driver = getDriver(driverArea as StorageArea);
           await driver.removeItems(keys);
         }),
       );
@@ -308,9 +381,15 @@ function createStorage(): WxtStorage {
         );
         let migratedValue = value;
         for (const migrateToVersion of migrationsToRun) {
-          migratedValue =
-            (await migrations?.[migrateToVersion]?.(migratedValue)) ??
-            migratedValue;
+          try {
+            migratedValue =
+              (await migrations?.[migrateToVersion]?.(migratedValue)) ??
+              migratedValue;
+          } catch (err) {
+            throw Error(`v${migrateToVersion} migration failed for "${key}"`, {
+              cause: err,
+            });
+          }
         }
         await driver.setItems([
           { key: driverKey, value: migratedValue },
@@ -388,117 +467,6 @@ function createStorage(): WxtStorage {
           ),
         migrate,
       };
-    },
-    getItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
-      items: T,
-    ): Promise<Array<{ key: keyof T; value: any }>> => {
-      const areaToItemListMap = new Map<
-        StorageArea,
-        Array<{ key: keyof T; storageKey: string }>
-      >();
-      const orderedKeys: Array<keyof T> = [];
-
-      Object.entries(items).forEach(([key, item]) => {
-        orderedKeys.push(key as keyof T);
-        const [storageArea] = item.key.split(':') as [StorageArea, string];
-        const list = areaToItemListMap.get(storageArea) ?? [];
-        list.push({ key: key as keyof T, storageKey: item.key.split(':')[1] });
-        areaToItemListMap.set(storageArea, list);
-      });
-
-      const resultsMap = new Map<keyof T, any>();
-
-      for (const [storageArea, itemList] of areaToItemListMap.entries()) {
-        const driver = getDriver(storageArea);
-        const metaKeys = itemList.map((item) => getMetaKey(item.storageKey));
-        const results = await driver.getItems(metaKeys);
-        const valueMap = results.reduce<Record<string, any>>(
-          (map, { key, value }) => {
-            map[key] = value;
-            return map;
-          },
-          {},
-        );
-
-        itemList.forEach(({ key, storageKey }) => {
-          const metaKey = getMetaKey(storageKey);
-          const value = valueMap[metaKey];
-          resultsMap.set(key, getMetaValue(value) ?? {});
-        });
-      }
-
-      return orderedKeys.map((key) => ({
-        key,
-        value: resultsMap.get(key),
-      }));
-    },
-    setItemValues: async <T extends Record<string, WxtStorageItem<any, any>>>(
-      items: T,
-      values: { [K in keyof T]: any },
-    ) => {
-      const areaToValuesMap = new Map<
-        StorageArea,
-        Array<{ key: string; value: any }>
-      >();
-      Object.entries(items).forEach(([key, item]) => {
-        const { driverArea, driverKey } = resolveKey(item.key);
-        const list = areaToValuesMap.get(driverArea) ?? [];
-        list.push({ key: driverKey, value: values[key] });
-        areaToValuesMap.set(driverArea, list);
-      });
-
-      await Promise.all(
-        Array.from(areaToValuesMap.entries()).map(
-          async ([storageArea, values]) => {
-            const driver = getDriver(storageArea);
-            await driver.setItems(values);
-          },
-        ),
-      );
-    },
-    setItemMetas: async <T extends Record<string, WxtStorageItem<any, any>>>(
-      items: T,
-      metas: { [K in keyof T]: NullablePartial<any> },
-    ) => {
-      const areaToMetaUpdatesMap = new Map<
-        StorageArea,
-        Array<{ key: string; properties: any }>
-      >();
-      Object.entries(items).forEach(([key, item]) => {
-        const { driverArea, driverKey } = resolveKey(item.key);
-        const list = areaToMetaUpdatesMap.get(driverArea) ?? [];
-        list.push({ key: driverKey, properties: metas[key] });
-        areaToMetaUpdatesMap.set(driverArea, list);
-      });
-
-      await Promise.all(
-        Array.from(areaToMetaUpdatesMap.entries()).map(
-          async ([storageArea, updates]) => {
-            const driver = getDriver(storageArea);
-            const metaKeys = updates.map(({ key }) => getMetaKey(key));
-            const existingMetas = await driver.getItems(metaKeys);
-            const existingMetaMap = new Map(
-              existingMetas.map(({ key, value }) => [key, getMetaValue(value)]),
-            );
-
-            const metaUpdates = updates.map(({ key, properties }) => {
-              const metaKey = getMetaKey(key);
-              const existingFields = existingMetaMap.get(metaKey) ?? {};
-              const newFields = { ...existingFields };
-              Object.entries(properties).forEach(([key, value]) => {
-                if (value == null) {
-                  delete newFields[key];
-                } else {
-                  newFields[key] = value;
-                }
-              });
-              return { key: metaKey, value: newFields };
-            });
-
-            await driver.setItems(metaUpdates);
-          },
-        ),
-      );
     },
   };
   return storage;
@@ -621,6 +589,15 @@ export interface WxtStorage {
    */
   getMeta<T extends Record<string, unknown>>(key: StorageItemKey): Promise<T>;
   /**
+   * Get the metadata of multiple storage items.
+   *
+   * @param items - The storage keys or items to get the metadata of.
+   * @returns An object with the metadata of the storage items.
+   */
+  getMetas(
+    keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
+  ): Promise<Array<{ key: StorageItemKey; meta: any }>>;
+  /**
    * Set a value in storage. Setting a value to `null` or `undefined` is equivalent to calling
    * `removeItem`.
    *
@@ -637,7 +614,12 @@ export interface WxtStorage {
    *   { key: "session:someCounter, value: 5 },
    * ]);
    */
-  setItems(values: Array<{ key: StorageItemKey; value: any }>): Promise<void>;
+  setItems(
+    values: Array<
+      | { key: StorageItemKey; value: any }
+      | { item: WxtStorageItem<any, any>; value: any }
+    >,
+  ): Promise<void>;
   /**
    * Sets metadata properties. If some properties are already set, but are not included in the
    * `properties` parameter, they will not be removed.
@@ -648,6 +630,17 @@ export interface WxtStorage {
   setMeta<T extends Record<string, unknown>>(
     key: StorageItemKey,
     properties: T | null,
+  ): Promise<void>;
+  /**
+   * Set the metadata of multiple storage items.
+   *
+   * @param items List of storage keys or items and metadata to set for each.
+   */
+  setMetas(
+    metas: Array<
+      | { key: StorageItemKey; meta: Record<string, any> }
+      | { item: WxtStorageItem<any, any>; meta: Record<string, any> }
+    >,
   ): Promise<void>;
   /**
    * Removes an item from storage.
@@ -714,57 +707,6 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue, TMetadata>;
-
-  /**
-   * Get the metadata of multiple storage items.
-   *
-   * @param items - The storage items to get the metadata of.
-   * @returns An object with the metadata of the storage items.
-   *
-   * @example
-   * const storage = await storage.getItemValues({
-   *   "local:installDate": storage.defineItem("local:installDate"),
-   *   "session:someCounter": storage.defineItem("session:someCounter"),
-   * });
-   * const metadata = await storage.getStorageItemMetas(storage);
-   */
-  getItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
-    items: T,
-  ): Promise<Array<{ key: keyof T; value: any }>>;
-  /**
-   * Set the values of multiple storage items.
-   *
-   * @param items - The storage items to set the values of.
-   * @param values - The values to set.
-   *
-   * @example
-   * await storage.setStorageItemValues({
-   *   "local:installDate": storage.defineItem("local:installDate"),
-   *   "session:someCounter": storage.defineItem("session:someCounter"),
-   * });
-   */
-  setItemValues<T extends Record<string, WxtStorageItem<any, any>>>(
-    items: T,
-    values: { [K in keyof T]: any },
-  ): Promise<void>;
-  /**
-   * Set the metadata of multiple storage items.
-   *
-   * @param items - The storage items to set the metadata of.
-   * @param metas - The metadata to set.
-   *
-   * @example
-   * await storage.setStorageItemMetas({
-   *   "local:installDate": storage.defineItem("local:installDate"),
-   *   "session:someCounter": storage.defineItem("session:someCounter"),
-   * });
-   */
-  setItemMetas<T extends Record<string, WxtStorageItem<any, any>>>(
-    items: T,
-    metas: {
-      [K in keyof T]: NullablePartial<Awaited<ReturnType<T[K]['getMeta']>>>;
-    },
-  ): Promise<void>;
 }
 
 interface WxtStorageDriver {
@@ -906,3 +848,13 @@ export type WatchCallback<T> = (newValue: T, oldValue: T) => void;
  * Call to remove a watch listener
  */
 export type Unwatch = () => void;
+
+export class MigrationError extends Error {
+  constructor(
+    public key: string,
+    public version: number,
+    options?: ErrorOptions,
+  ) {
+    super(`v${version} migration failed for "${key}"`, options);
+  }
+}

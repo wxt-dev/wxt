@@ -144,9 +144,9 @@ For a full list of properties and methods available, see the [API reference](/ap
 When dealing with multiple storage items, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods to handle bulk operations on defined storage items:
 
 - **`getItems`**: Retrieve values of multiple storage items or keys.
-- **`getItemMetas`**: Retrieve metadata for multiple storage items.
-- **`setItemValues`**: Set values for multiple storage items.
-- **`setItemMetas`**: Update metadata for multiple storage items.
+- **`getMetas`**: Retrieve metadata for multiple storage items.
+- **`setItems`**: Set values for multiple storage items.
+- **`setMetas`**: Update metadata for multiple storage items.
 - **`removeItems`**: Remove values (and optionally metadata) of multiple storage items.
 
 #### Getting Values of Multiple Storage Items or Keys
@@ -191,10 +191,10 @@ The `getItems` function can handle both storage items and direct keys. It return
 
 #### Getting Metadata of Multiple Storage Items
 
-Similarly, you can retrieve the metadata of multiple storage items using `getItemMetas`:
+Similarly, you can retrieve the metadata of multiple storage items using `getMetas`:
 
 ```ts
-const metas = await storage.getItemMetas({ item1, item2, item3 });
+const metas = await storage.getMetas({ item1, item2, item3 });
 
 console.log(metas);
 // Output:
@@ -207,10 +207,10 @@ console.log(metas);
 
 #### Setting Values of Multiple Storage Items
 
-You can set values for multiple storage items in a single operation using `setItemValues`:
+You can set values for multiple storage items in a single operation using `setItems`:
 
 ```ts
-await storage.setItemValues(
+await storage.setItems(
   { item1, item2, item3 },
   { item1: 'new value', item2: 42, item3: true },
 );
@@ -218,10 +218,10 @@ await storage.setItemValues(
 
 #### Setting Metadata of Multiple Storage Items
 
-To update metadata for multiple storage items, use `setItemMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
+To update metadata for multiple storage items, use `setMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
 
 ```ts
-await storage.setItemMetas(
+await storage.setMetas(
   { item1, item2 },
   {
     item1: { lastModified: Date.now() },
