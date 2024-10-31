@@ -28,6 +28,10 @@
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest"
   },
+  "dependencies": {
+    "async-mutex": "^0.5.0",
+    "dequal": "^2.0.3"
+  },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
     "@types/chrome": "^0.0.268",
@@ -48,9 +52,5 @@
   },
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "async-mutex": "^0.5.0",
-    "dequal": "^2.0.3"
-  }
+  ]
 }
