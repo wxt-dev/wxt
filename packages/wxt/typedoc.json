@@ -6,7 +6,6 @@
     "src/browser/index.ts",
     "src/browser/chrome.ts",
     "src/index.ts",
-    "src/storage.ts",
     "src/modules.ts"
   ]
 }
