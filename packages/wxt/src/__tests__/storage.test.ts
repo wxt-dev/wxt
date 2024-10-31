@@ -2,7 +2,6 @@ import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { browser } from 'wxt/browser';
 import { MigrationError, WxtStorageItem, storage } from '../storage';
-import { sleep } from '../core/utils/time';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained

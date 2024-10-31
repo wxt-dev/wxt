@@ -139,109 +139,6 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 
 For a full list of properties and methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorageItem).
 
-### Bulk Operations on Storage Items
-
-When dealing with multiple storage items, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods to handle bulk operations on defined storage items:
-
-- **`getItems`**: Retrieve values of multiple storage items or keys.
-- **`getMetas`**: Retrieve metadata for multiple storage items.
-- **`setItems`**: Set values for multiple storage items.
-- **`setMetas`**: Update metadata for multiple storage items.
-- **`removeItems`**: Remove values (and optionally metadata) of multiple storage items.
-
-#### Getting Values of Multiple Storage Items or Keys
-
-You can retrieve the values of multiple storage items or keys in a single call using `getItems`:
-
-```ts
-const item1 = storage.defineItem<string>('local:item1', {
-  fallback: 'default1',
-});
-const item2 = storage.defineItem<number>('local:item2', { fallback: 0 });
-const item3 = storage.defineItem<boolean>('local:item3', { fallback: false });
-
-// Using defined storage items
-const values = await storage.getItems([item1, item2, item3]);
-
-console.log(values);
-// Output:
-// [
-//   { key: 'local:item1', value: 'default1' },
-//   { key: 'local:item2', value: 0 },
-//   { key: 'local:item3', value: false }
-// ]
-
-// Using keys directly
-const keyValues = await storage.getItems([
-  'local:item1',
-  'local:item2',
-  'local:item3',
-]);
-
-console.log(keyValues);
-// Output:
-// [
-//   { key: 'local:item1', value: 'default1' },
-//   { key: 'local:item2', value: 0 },
-//   { key: 'local:item3', value: false }
-// ]
-```
-
-The `getItems` function can handle both storage items and direct keys. It returns an array of key-value pairs.
-
-#### Getting Metadata of Multiple Storage Items
-
-Similarly, you can retrieve the metadata of multiple storage items using `getMetas`:
-
-```ts
-const metas = await storage.getMetas({ item1, item2, item3 });
-
-console.log(metas);
-// Output:
-// [
-//   { key: 'item1', value: { ...metadata of item1 } },
-//   { key: 'item2', value: { ...metadata of item2 } },
-//   { key: 'item3', value: { ...metadata of item3 } }
-// ]
-```
-
-#### Setting Values of Multiple Storage Items
-
-You can set values for multiple storage items in a single operation using `setItems`:
-
-```ts
-await storage.setItems(
-  { item1, item2, item3 },
-  { item1: 'new value', item2: 42, item3: true },
-);
-```
-
-#### Setting Metadata of Multiple Storage Items
-
-To update metadata for multiple storage items, use `setMetas`. Similar to `setMeta`, this overwrites the provided metadata keys for each item, leaving others untouched:
-
-```ts
-await storage.setMetas(
-  { item1, item2 },
-  {
-    item1: { lastModified: Date.now() },
-    item2: { version: 2 },
-  },
-);
-```
-
-#### Removing Values of Multiple Storage Items
-
-You can remove the values (and optionally metadata) of multiple storage items efficiently using `removeItems`:
-
-```ts
-await storage.removeItems([
-  item1,
-  item2,
-  { key: 'local:item3', options: { removeMeta: true } },
-]);
-```
-
 ### Versioning
 
 You can add versioning to storage items if you expect them to grow or change over time. When defining the first version of an item, start with version 1.
@@ -414,3 +311,26 @@ With `storage.defineItem`, there are multiple ways of defining default values:
    ```
 
    The value is initialized in storage immediately.
+
+## Bulk Operations
+
+When getting or setting multiple values in storage, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods for performing bulk operations:
+
+- **`getItems`** - Get multiple values at once.
+- **`getMetas`** - Get metadata for multiple items at once.
+- **`setItems`** - Set multiple values at once.
+- **`setMetas`** - Set metadata for multiple items at once.
+- **`removeItems`** - Remove multiple values (and optionally metadata) at once.
+
+All these APIs support both string keys and defined storage items:
+
+```ts
+const userId = storage.defineItem('local:userId');
+
+await storage.setItems([
+  { key: 'local:installDate', value: Date.now() },
+  { item: userId, value: generateUserId() },
+]);
+```
+
+Refer to the [API Reference](/api/reference/wxt/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.
