@@ -40,11 +40,12 @@ export default defineAppConfig({
 Then use the `analytics` import to report events:
 
 ```ts
-import { analytics } from '@wxt-dev/analytics';
+import { analytics } from '#analytics';
 
 await analytics.track('some-event');
 await analytics.page();
 await analytics.identify('some-user-id');
+analytics.autoTrack(document.body);
 ```
 
 ## Providers
