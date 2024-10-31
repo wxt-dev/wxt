@@ -5,7 +5,7 @@ WXT is a modern, open-source framework for building web extensions. Inspired by 
 - Provide an awesome [DX](https://about.gitlab.com/topics/devops/what-is-developer-experience/)
 - Provide first-class support for all major browsers
 
-Check out the [comparison](/guide/resources/compare) to see how WXT compares to other tools for building web extnesions.
+Check out the [comparison](/guide/resources/compare) to see how WXT compares to other tools for building web extensions.
 
 ## Prerequisites
 

@@ -26,6 +26,7 @@
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
     "lint-staged": "^15.2.10",
+    "markdown-it-footnote": "^4.0.0",
     "nano-spawn": "^0.1.0",
     "prettier": "^3.3.3",
     "simple-git-hooks": "^2.11.1",
@@ -51,6 +52,9 @@
         "@algolia/client-search",
         "search-insights"
       ]
+    },
+    "patchedDependencies": {
+      "markdown-it-footnote": "patches/markdown-it-footnote.patch"
     }
   }
 }

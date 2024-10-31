@@ -9,6 +9,10 @@ WXT supports [dotenv files the same way as Vite](https://vite.dev/guide/env-and-
 .env.local
 .env.[mode]
 .env.[mode].local
+.env.[browser]
+.env.[browser].local
+.env.[mode].[browser]
+.env.[mode].[browser].local
 ```
 
 And any environment variables listed inside them will be available at runtime:
@@ -52,3 +56,26 @@ Vite provides two other environment variables, but they aren't useful in WXT pro
 - `import.meta.env.BASE_URL`: Use `browser.runtime.getURL` instead.
 - `import.meta.env.SSR`: Always `false`.
   :::
+
+## Manifest
+
+To use environment variables in the manifest, you need to use the function syntax:
+
+```ts
+export default defineConfig({
+  extensionApi: 'chrome',
+  modules: ['@wxt-dev/module-vue'],
+  manifest: { // [!code --]
+    oauth2: { // [!code --]
+      client_id: import.meta.env.WXT_APP_CLIENT_ID // [!code --]
+    } // [!code --]
+  } // [!code --]
+  manifest: () => ({ // [!code ++]
+    oauth2: { // [!code ++]
+      client_id: import.meta.env.WXT_APP_CLIENT_ID // [!code ++]
+    } // [!code ++]
+  }), // [!code ++]
+});
+```
+
+WXT can't load your `.env` files until after the config file has been loaded. So by using the function syntax for `manifest`, it defers creating the object until after the `.env` files are loaded into the process.

@@ -8,9 +8,11 @@ import {
   prepareTypedocSidebar,
 } from './utils/menus';
 import { meta, script } from './utils/head';
+import footnote from 'markdown-it-footnote';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
+import { version as unocssVersion } from '../../packages/unocss/package.json';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -45,6 +47,12 @@ export default defineConfig({
       async: '',
     }),
   ],
+
+  markdown: {
+    config: (md) => {
+      md.use(footnote);
+    },
+  },
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -82,6 +90,7 @@ export default defineConfig({
           navItem(`wxt/storage — ${wxtVersion}`, '/storage'),
           navItem(`@wxt-dev/auto-icons — ${autoIconsVersion}`, '/auto-icons'),
           navItem(`@wxt-dev/i18n — ${i18nVersion}`, '/i18n'),
+          navItem(`@wxt-dev/unocss — ${unocssVersion}`, '/unocss'),
         ]),
       ]),
     ],

@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/i18n",
   "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "type": "module",
   "repository": {
     "type": "git",

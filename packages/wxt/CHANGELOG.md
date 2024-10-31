@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.12...wxt-v0.19.13)
+
+### 🚀 Enhancements
+
+- **env:** Load env from `.env.[browser]` variants ([#1078](https://github.com/wxt-dev/wxt/pull/1078))
+
+### 🩹 Fixes
+
+- Don't use `#private` member variables in `ContentScriptContext` ([#1103](https://github.com/wxt-dev/wxt/pull/1103))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Craig Slusher ([@sleekslush](http://github.com/sleekslush))
+
 ## v0.19.12
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.11...wxt-v0.19.12)
