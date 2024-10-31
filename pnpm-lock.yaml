@@ -342,6 +342,9 @@ importers:
       '@webext-core/match-patterns':
         specifier: ^1.0.3
         version: 1.0.3
+      '@wxt-dev/storage':
+        specifier: workspace:^1.0.0
+        version: link:../storage
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
