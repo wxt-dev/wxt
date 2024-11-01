@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "publint": "^0.2.11",
+    "publint": "^0.2.12",
     "solid-js": "^1.9.1",
     "typescript": "^5.6.2",
     "unbuild": "^2.0.0",

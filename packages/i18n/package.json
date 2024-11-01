@@ -42,7 +42,7 @@
     "@types/chrome": "^0.0.268",
     "@types/node": "^20.16.10",
     "oxlint": "^0.9.9",
-    "publint": "^0.2.11",
+    "publint": "^0.2.12",
     "typescript": "^5.6.2",
     "unbuild": "^2.0.0",
     "vitest": "^2.0.0",
