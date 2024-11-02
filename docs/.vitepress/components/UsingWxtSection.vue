@@ -50,6 +50,7 @@ const chromeExtensionIds = [
   'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
   'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
   'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
+  'nmldnjcblcihmegipecakhmnieiofmgl', // Keyword Rank Checker
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
