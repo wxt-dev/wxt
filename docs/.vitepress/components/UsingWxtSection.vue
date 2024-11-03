@@ -50,6 +50,7 @@ const chromeExtensionIds = [
   'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
   'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
   'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
+  'gppllamhaciichleihemgilcpledblpn', // YouTube Simple View - Hide distractions & more
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
