@@ -239,6 +239,7 @@ export default defineContentScript({
       onMount: (container) => {
         // Render your app to the UI container
         const unmount = render(() => <div>...</div>, container);
+        return unmount;
       },
       onRemove: (unmount) => {
         // Unmount the app when the UI is removed
