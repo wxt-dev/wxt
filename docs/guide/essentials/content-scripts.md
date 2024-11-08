@@ -602,7 +602,7 @@ export default defineContentScript({
   matches: ['*://*.youtube.com/*'],
   main(ctx) {
     ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl }) => {
-      if (watchPattern.matches(newUrl)) mainWatch(ctx);
+      if (watchPattern.includes(newUrl)) mainWatch(ctx);
     });
   },
 });
