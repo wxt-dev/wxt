@@ -158,7 +158,7 @@ describe('User Config', () => {
     ).toBe(true);
   });
 
-  it.only('should throw error when config file not exist', async () => {
+  it('should throw error when config file not exist', async () => {
     const project = new TestProject();
     project.addFile(
       'src/entrypoints/background.ts',
@@ -167,6 +167,8 @@ describe('User Config', () => {
       );`,
     );
 
-    await expect(project.build({ configFile: 'foo.config.ts' })).rejects.toThrowError(/not found/)
+    await expect(
+      project.build({ configFile: 'foo.config.ts' }),
+    ).rejects.toThrowError(/not found/);
   });
 });
