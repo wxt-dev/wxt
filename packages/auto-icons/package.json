@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "oxlint": "^0.9.9",
-    "publint": "^0.2.11",
-    "typescript": "^5.6.2",
+    "oxlint": "^0.9.10",
+    "publint": "^0.2.12",
+    "typescript": "^5.6.3",
     "unbuild": "^2.0.0",
     "wxt": "workspace:*"
   },
