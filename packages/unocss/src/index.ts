@@ -28,7 +28,7 @@ export default defineWxtModule<UnoCSSOptions>({
     }
 
     wxt.hooks.hook('vite:devServer:extendConfig', (config) => {
-      config.plugins?.push(UnoCSS());
+      config.plugins?.push(UnoCSS(resolvedOptions.configOrPath));
     });
 
     wxt.hooks.hook('vite:build:extendConfig', async (entries, config) => {
