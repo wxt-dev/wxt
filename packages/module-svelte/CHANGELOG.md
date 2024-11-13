@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.0.0
+
+[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v1.0.1...module-svelte-v2.0.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Svelte 5 support ([#1104](https://github.com/wxt-dev/wxt/pull/1104))
+
+### 🏡 Chore
+
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Svelte 5 support ([#1104](https://github.com/wxt-dev/wxt/pull/1104))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v1.0.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v1.0.0...module-svelte-v1.0.1)
