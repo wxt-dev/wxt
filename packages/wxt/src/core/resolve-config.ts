@@ -53,6 +53,9 @@ export async function resolveConfig(
         esmResolve: true,
       },
     });
+    if (inlineConfig.configFile && metadata.layers?.length === 0) {
+      throw Error(`Config file "${inlineConfig.configFile}" not found`);
+    }
     userConfig = loadedConfig ?? {};
     userConfigMetadata = metadata;
   }
