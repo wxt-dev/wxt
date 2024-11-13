@@ -129,7 +129,7 @@
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.2.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.17.6",
