@@ -10,7 +10,6 @@ import useListExtensionDetails, {
 // extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
 // can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
-  'pccbghdfdnnkkbcdcibchpbffdgednkf', // Propbar - Property Data Enhancer
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -51,6 +50,7 @@ const chromeExtensionIds = [
   'fcphghnknhkimeagdglkljinmpbagone', // YouTube Auto HD + FPS
   'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
   'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
+  'pccbghdfdnnkkbcdcibchpbffdgednkf', // Propbar - Property Data Enhancer
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
