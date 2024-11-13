@@ -18,7 +18,7 @@
     "solid-js": "^1.9.3"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.269",
+    "@types/chrome": "^0.0.280",
     "@wxt-dev/module-solid": "^1.1.2",
     "typescript": "^5.6.3",
     "wxt": "^0.19.13"

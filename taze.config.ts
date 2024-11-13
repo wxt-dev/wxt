@@ -7,5 +7,7 @@ export default {
     'typedoc-vitepress-theme',
     // Manually manage version so a single version is used:
     'esbuild',
+    // Maintained manually to match min-node version
+    '@types/node',
   ],
 };
