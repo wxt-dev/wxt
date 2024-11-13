@@ -500,7 +500,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   return {
     getItem: async (key) => {
       const res = await getStorageArea().get(key);
-      return res[key];
+      return res[key] as any;
     },
     getItems: async (keys) => {
       const result = await getStorageArea().get(keys);
@@ -537,7 +537,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     },
     watch(key, cb) {
       const listener = (changes: Storage.StorageAreaOnChangedChangesType) => {
-        const change = changes[key];
+        const change = changes[key] as { newValue: any; oldValue: any };
         if (change == null) return;
         if (dequal(change.newValue, change.oldValue)) return;
         cb(change.newValue ?? null, change.oldValue ?? null);
