@@ -80,7 +80,6 @@ export type {
   Theme,
   TopSites,
   Types,
-  Urlbar,
   UserScripts,
   WebNavigation,
   WebRequest,
