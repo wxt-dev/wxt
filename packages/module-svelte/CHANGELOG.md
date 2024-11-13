@@ -15,7 +15,9 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Svelte 5 support ([#1104](https://github.com/wxt-dev/wxt/pull/1104))
+Upgraded `@sveltejs/vite-plugin-svelte` from v3 to v4. This drops support for Svelte 4 and below. To continue using older versions of Svelte, use v1 of this module.
+
+To upgrade to svelte 5, just install `svelte@5`.
 
 ### ❤️ Contributors
 
