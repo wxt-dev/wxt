@@ -37,11 +37,11 @@ To get the target manifest version at runtime, use the built-time constant provi
 
 ## Filtering Entrypoints
 
-Every entrypoint can be included or excluded when targetting specific browsers via the `include` and `exclude` options.
+Every entrypoint can be included or excluded when targeting specific browsers via the `include` and `exclude` options.
 
 Here are some examples:
 
-- Content script only built when targetting `firefox`:
+- Content script only built when targeting `firefox`:
 
   ```ts
   export default defineContentScript({

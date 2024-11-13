@@ -1587,6 +1587,10 @@ describe('Manifest Utils', () => {
       it('should set manifest.content_security_policy to manifest.content_security_policy.extension_pages for Firefox in serve mode', async () => {
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
+        const inputCsp =
+          "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+        const expectedCsp =
+          "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
 
         // Setup WXT for Firefox and serve command
         setFakeWxt({
@@ -1595,29 +1599,18 @@ describe('Manifest Utils', () => {
             command: 'serve',
             manifest: {
               content_security_policy: {
-                extension_pages:
-                  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+                extension_pages: inputCsp,
               },
             },
           },
         });
-
-        const manifestWithExtensionPages = {
-          content_security_policy: {
-            extension_pages:
-              "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
-          },
-        };
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
           buildOutput,
         );
 
-        // Assert the content_security_policy is set correctly
-        expect(actual.content_security_policy).toEqual(
-          manifestWithExtensionPages.content_security_policy.extension_pages,
-        );
+        expect(actual.content_security_policy).toEqual(expectedCsp);
       });
     });
   });
