@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.19.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.13...wxt-v0.19.14)
+
+### 🚀 Enhancements
+
+- **storage:** Support storage items in batch functions ([#990](https://github.com/wxt-dev/wxt/pull/990))
+- Automatically disable 'Show warning about Self-XSS when pasing code' in new chrome ([#1159](https://github.com/wxt-dev/wxt/pull/1159))
+
+### 🩹 Fixes
+
+- Throw when config file does not exist ([#1156](https://github.com/wxt-dev/wxt/pull/1156))
+
+### 📖 Documentation
+
+- Cleanup typos and broken links ([bb5ea34](https://github.com/wxt-dev/wxt/commit/bb5ea34))
+- Fix typo in `popup` and `options` EntrypointOptions ([#1121](https://github.com/wxt-dev/wxt/pull/1121))
+
+### 🏡 Chore
+
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+- **deps:** Bump dev and non-breaking major dependencies ([#1167](https://github.com/wxt-dev/wxt/pull/1167))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Rxliuli ([@rxliuli](http://github.com/rxliuli))
+- Kongmoumou ([@kongmoumou](http://github.com/kongmoumou))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Bread Grocery <breadgrocery@gmail.com>
+
 ## v0.19.13
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.12...wxt-v0.19.13)
