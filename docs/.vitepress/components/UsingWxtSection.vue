@@ -52,6 +52,7 @@ const chromeExtensionIds = [
   'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
   'nmldnjcblcihmegipecakhmnieiofmgl', // Keyword Rank Checker
   'gppllamhaciichleihemgilcpledblpn', // YouTube Simple View - Hide distractions & more
+  'pccbghdfdnnkkbcdcibchpbffdgednkf', // Propbar - Property Data Enhancer
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
