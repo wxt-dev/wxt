@@ -51,6 +51,7 @@ const chromeExtensionIds = [
   'lpomjgbicdemjkgmbnkjncgdebogkhlb', // MultiViewer Companion
   'ggiafipgeeaaahnjamgpjcgkdpanhddg', // Sync Watch - Watch videos together on any site
   'nmldnjcblcihmegipecakhmnieiofmgl', // Keyword Rank Checker
+  'gppllamhaciichleihemgilcpledblpn', // YouTube Simple View - Hide distractions & more
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
