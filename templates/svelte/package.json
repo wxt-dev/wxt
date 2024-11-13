@@ -15,13 +15,13 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.269",
     "@tsconfig/svelte": "^5.0.4",
+    "@types/chrome": "^0.0.269",
     "@wxt-dev/module-svelte": "^1.0.1",
     "svelte": "^4.2.19",
     "svelte-check": "^3.8.6",
-    "tslib": "^2.7.0",
-    "typescript": "^5.6.2",
-    "wxt": "^0.19.11"
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3",
+    "wxt": "^0.19.13"
   }
 }
