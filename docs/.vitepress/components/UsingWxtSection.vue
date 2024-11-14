@@ -53,6 +53,7 @@ const chromeExtensionIds = [
   'nmldnjcblcihmegipecakhmnieiofmgl', // Keyword Rank Checker
   'gppllamhaciichleihemgilcpledblpn', // YouTube Simple View - Hide distractions & more
   'pccbghdfdnnkkbcdcibchpbffdgednkf', // Propbar - Property Data Enhancer
+  'lfknakglefggmdkjdfhhofkjnnolffkh', // Text Search Pro - Search by case and whole-word match!
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
