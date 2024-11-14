@@ -2,9 +2,7 @@ import { debounce } from 'perfect-debounce';
 import {
   BuildStepOutput,
   EntrypointGroup,
-  ExtensionRunner,
   InlineConfig,
-  ResolvedConfig,
   ServerInfo,
   Wxt,
   WxtDevServer,
