@@ -3,7 +3,6 @@ import {
   BuildStepOutput,
   Entrypoint,
   ResolvedConfig,
-  ServerInfo,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
@@ -29,7 +28,7 @@ import { installSourcemapsSupport } from 'vite-node/source-map';
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
   hooks: Hookable<WxtHooks>,
-  getDevServer?: () => WxtDevServer | undefined,
+  getWxtDevServer?: () => WxtDevServer | undefined,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
@@ -66,14 +65,14 @@ export async function createViteBuilder(
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
 
-    const devServer = getDevServer?.();
+    const server = getWxtDevServer?.();
 
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.download(wxtConfig),
-      wxtPlugins.devHtmlPrerender(wxtConfig, devServer),
+      wxtPlugins.devHtmlPrerender(wxtConfig, server),
       wxtPlugins.resolveVirtualModules(wxtConfig),
-      wxtPlugins.devServerGlobals(wxtConfig, devServer),
+      wxtPlugins.devServerGlobals(wxtConfig, server),
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
