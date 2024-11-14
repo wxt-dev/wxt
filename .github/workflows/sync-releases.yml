@@ -7,13 +7,14 @@ on:
         default: wxt
         type: choice
         options:
-          - wxt
-          - module-react
-          - module-vue
-          - module-svelte
-          - module-solid
           - auto-icons
           - i18n
+          - module-react
+          - module-solid
+          - module-svelte
+          - module-vue
+          - storage
+          - wxt
 
 jobs:
   sync:

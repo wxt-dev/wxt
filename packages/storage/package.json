@@ -1,0 +1,56 @@
+{
+  "name": "@wxt-dev/storage",
+  "description": "Web extension storage API provided by WXT, supports all browsers.",
+  "version": "1.0.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/storage"
+  },
+  "homepage": "https://wxt.dev/storage.html",
+  "keywords": [
+    "wxt",
+    "storage",
+    "extension",
+    "addon",
+    "chrome",
+    "firefox",
+    "edge"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "buildc -- unbuild",
+    "check": "buildc --deps-only -- check",
+    "test": "buildc --deps-only -- vitest"
+  },
+  "dependencies": {
+    "async-mutex": "^0.5.0",
+    "dequal": "^2.0.3"
+  },
+  "devDependencies": {
+    "@aklinker1/check": "^1.4.5",
+    "@types/chrome": "^0.0.268",
+    "@webext-core/fake-browser": "^1.3.1",
+    "oxlint": "^0.9.9",
+    "publint": "^0.2.11",
+    "typescript": "^5.6.2",
+    "unbuild": "^2.0.0",
+    "vitest": "^2.0.0"
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}
