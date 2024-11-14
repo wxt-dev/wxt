@@ -78,7 +78,8 @@ async function getPathsDeclarationEntry(
         isHtmlEntrypoint(entry) ? '.html' : '.js',
       ),
     )
-    .concat([...(await getPublicFiles()), '']);
+    .concat([''])
+    .concat(await getPublicFiles());
 
   await wxt.hooks.callHook('prepare:publicPaths', wxt, paths);
 
