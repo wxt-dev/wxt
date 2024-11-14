@@ -14,7 +14,6 @@ export default defineBackground({
 
     console.log(useAppConfig());
 
-    // @ts-expect-error: should only accept entrypoints or public assets
     browser.runtime.getURL('/');
     browser.runtime.getURL('/background.js');
     browser.runtime.getURL('/icons/128.png');
