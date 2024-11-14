@@ -46,7 +46,7 @@ export async function createServer(
 }
 
 /**
- * Called during WXT singleton registration when we create the server
+ * Called during WXT singleton registration before initializing WXT modules and hooks.
  */
 async function createServerInternal(
   wxt: Omit<Wxt, 'server'>,
