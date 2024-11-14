@@ -3,6 +3,7 @@
  * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
  * See [the guide](https://wxt.dev/storage.html) for more information.
+ * @module @wxt-dev/storage
  */
 import { dequal } from 'dequal/lite';
 import { Mutex } from 'async-mutex';
