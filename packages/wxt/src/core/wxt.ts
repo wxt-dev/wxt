@@ -56,7 +56,7 @@ export async function registerWxt(
 }
 
 export async function initWxtModules() {
-  // Call setup function
+  // Call setup function and add hooks
   for (const mod of builtinModules) await initWxtModule(mod);
   for (const mod of wxt.config.userModules) await initWxtModule(mod);
 
