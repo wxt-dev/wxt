@@ -43,14 +43,14 @@ import {
 export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  await registerWxt('serve', inlineConfig, (wxt) => createServerInternal(wxt));
+  await registerWxt('serve', inlineConfig, createServerInternal);
   return wxt.server!;
 }
 
 /**
  * Called during WXT singleton registration when we create the server
  */
-export async function createServerInternal(
+async function createServerInternal(
   wxt: Omit<Wxt, 'server'>,
 ): Promise<WxtDevServer> {
   const getServerInfo = (): ServerInfo => {
