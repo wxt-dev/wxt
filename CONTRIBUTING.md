@@ -32,6 +32,7 @@ Here are some helpful commands:
 
 ```sh
 # Build WXT package
+cd packages/wxt
 pnpm build
 ```
 

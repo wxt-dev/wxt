@@ -239,6 +239,7 @@ export default defineContentScript({
       onMount: (container) => {
         // Render your app to the UI container
         const unmount = render(() => <div>...</div>, container);
+        return unmount;
       },
       onRemove: (unmount) => {
         // Unmount the app when the UI is removed
@@ -602,7 +603,7 @@ export default defineContentScript({
   matches: ['*://*.youtube.com/*'],
   main(ctx) {
     ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl }) => {
-      if (watchPattern.matches(newUrl)) mainWatch(ctx);
+      if (watchPattern.includes(newUrl)) mainWatch(ctx);
     });
   },
 });

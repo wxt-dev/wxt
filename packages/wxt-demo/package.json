@@ -22,15 +22,15 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.269",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
+    "@types/chrome": "^0.0.280",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
-    "sass": "^1.79.4",
-    "typescript": "^5.6.2",
-    "unocss": "^0.63.3",
-    "vitest": "^2.1.2",
+    "sass": "^1.80.7",
+    "typescript": "^5.6.3",
+    "unocss": "^0.64.0",
+    "vitest": "^2.1.4",
     "vitest-plugin-random-seed": "^1.1.0",
     "wxt": "workspace:*"
   },

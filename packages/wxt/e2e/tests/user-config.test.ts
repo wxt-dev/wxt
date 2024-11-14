@@ -157,4 +157,18 @@ describe('User Config', () => {
       await project.fileExists('.output/test-chrome-mv3-development-dev-build'),
     ).toBe(true);
   });
+
+  it('should throw error when config file not exist', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'src/entrypoints/background.ts',
+      `export default defineBackground(
+        () => console.log('Hello background'),
+      );`,
+    );
+
+    await expect(
+      project.build({ configFile: 'foo.config.ts' }),
+    ).rejects.toThrowError(/not found/);
+  });
 });
