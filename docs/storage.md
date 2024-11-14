@@ -6,23 +6,47 @@ outline: deep
 
 [Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md)
 
-WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `storage` auto-import from `wxt/storage` or import it manually to get started:
+A simplified wrapper around the extension storage APIs.
+
+## Installation
+
+### With WXT
+
+This module is built-in to WXT, so you don't need to install anything.
 
 ```ts
 import { storage } from 'wxt/storage';
 ```
 
-> [!IMPORTANT]
-> To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
->
-> ```ts
-> // wxt.config.ts
-> export default defineConfig({
->   manifest: {
->     permissions: ['storage'],
->   },
-> });
-> ```
+If you use auto-imports, `storage` is auto-imported for you, so you don't even need to import it!
+
+### Without WXT
+
+Install the NPM package:
+
+```sh
+npm i @wxt-dev/storage
+pnpm add @wxt-dev/storage
+yarn add @wxt-dev/storage
+bun add @wxt-dev/storage
+```
+
+```ts
+import { storage } from '@wxt-dev/storage';
+```
+
+## Storage Permission
+
+To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  manifest: {
+    permissions: ['storage'],
+  },
+});
+```
 
 ## Basic Usage
 
@@ -51,7 +75,7 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
-For a full list of methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorage).
+For a full list of methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage).
 
 ## Watchers
 
@@ -134,7 +158,7 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 });
 ```
 
-For a full list of properties and methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorageItem).
+For a full list of properties and methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorageItem).
 
 ### Versioning
 
@@ -330,4 +354,4 @@ await storage.setItems([
 ]);
 ```
 
-Refer to the [API Reference](/api/reference/wxt/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.
+Refer to the [API Reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.

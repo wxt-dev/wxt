@@ -4,6 +4,9 @@ inputs:
   install:
     default: 'true'
     description: Whether or not to run 'pnpm install'
+  installArgs:
+    default: ''
+    description: Additional args to append to "pnpm install"
 runs:
   using: composite
   steps:
@@ -17,4 +20,4 @@ runs:
     - name: Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: pnpm install
+      run: pnpm install ${{ inputs.installArgs }}

@@ -1,7 +1,6 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
-import { browser } from 'wxt/browser';
-import { MigrationError, WxtStorageItem, storage } from '../storage';
+import { MigrationError, type WxtStorageItem, storage } from '../index';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained
@@ -223,7 +222,7 @@ describe('Storage Utils', () => {
       describe('setMeta', () => {
         it('should set metadata at key+$', async () => {
           const existing = { v: 1 };
-          await browser.storage[storageArea].set({ count$: existing });
+          await chrome.storage[storageArea].set({ count$: existing });
           const newValues = {
             date: Date.now(),
           };
@@ -239,7 +238,7 @@ describe('Storage Utils', () => {
           'should remove any properties set to %s',
           async (version) => {
             const existing = { v: 1 };
-            await browser.storage[storageArea].set({ count$: existing });
+            await chrome.storage[storageArea].set({ count$: existing });
             const expected = {};
 
             await storage.setMeta(`${storageArea}:count`, { v: version });
@@ -1163,7 +1162,7 @@ describe('Storage Utils', () => {
 
         await item.removeValue();
         // Make sure it's actually blank before running the test
-        expect(await browser.storage.local.get()).toEqual({});
+        expect(await chrome.storage.local.get()).toEqual({});
         init.mockClear();
 
         const [value1, value2] = await Promise.all([
