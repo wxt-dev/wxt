@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.19.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.14...wxt-v0.19.15)
+
+### 🚀 Enhancements
+
+- Extract `wxt/storage` to its own package, `@wxt-dev/storage` ([#1129](https://github.com/wxt-dev/wxt/pull/1129))
+
+### 🩹 Fixes
+
+- Add "/" to `PublicPath` and `browser.runtime.getURL` ([#1171](https://github.com/wxt-dev/wxt/pull/1171))
+- Add extension ID to event used to invalidate `ContentScriptContext` ([#1175](https://github.com/wxt-dev/wxt/pull/1175))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Nishu ([@nishu-murmu](http://github.com/nishu-murmu))
+
 ## v0.19.14
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.13...wxt-v0.19.14)
