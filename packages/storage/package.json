@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/storage",
-  "description": "Web extension storage API used by WXT, supports all browsers.",
+  "description": "Web extension storage API provided by WXT, supports all browsers.",
   "version": "1.0.0",
   "type": "module",
   "repository": {

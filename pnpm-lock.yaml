@@ -366,9 +366,6 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
-      dequal:
-        specifier: ^2.0.3
-        version: 2.0.3
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
