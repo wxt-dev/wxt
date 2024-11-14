@@ -1239,7 +1239,7 @@ export interface Wxt {
    */
   logger: Logger;
   /**
-   * Reload config file and update the `config` field with the result.
+   * Reload config file and update `wxt.config` with the result.
    */
   reloadConfig: () => Promise<void>;
   /**

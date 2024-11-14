@@ -2,8 +2,11 @@ import { debounce } from 'perfect-debounce';
 import {
   BuildStepOutput,
   EntrypointGroup,
+  ExtensionRunner,
   InlineConfig,
+  ResolvedConfig,
   ServerInfo,
+  Wxt,
   WxtDevServer,
 } from '../types';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
@@ -21,7 +24,7 @@ import { createExtensionRunner } from './runners';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
-import { registerWxt, wxt } from './wxt';
+import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
 import {
   getContentScriptJs,
@@ -40,63 +43,105 @@ import {
 export async function createServer(
   inlineConfig?: InlineConfig,
 ): Promise<WxtDevServer> {
-  await registerWxt('serve', inlineConfig, async (config) => {
-    const { port, hostname } = config.dev.server!;
-    const serverInfo: ServerInfo = {
+  await registerWxt('serve', inlineConfig, (wxt) => createServerInternal(wxt));
+  return wxt.server!;
+}
+
+/**
+ * Called during WXT singleton registration when we create the server
+ */
+export async function createServerInternal(
+  wxt: Omit<Wxt, 'server'>,
+): Promise<WxtDevServer> {
+  const getServerInfo = (): ServerInfo => {
+    const { port, hostname } = wxt.config.dev.server!;
+    return {
       port,
       hostname,
       origin: `http://${hostname}:${port}`,
     };
+  };
 
-    // Server instance must be created first so its reference can be added to the internal config used
-    // to pre-render entrypoints
-    const server: WxtDevServer = {
-      ...serverInfo,
-      get watcher() {
-        return builderServer.watcher;
-      },
-      get ws() {
-        return builderServer.ws;
-      },
-      currentOutput: undefined,
-      async start() {
-        await builderServer.listen();
-        wxt.logger.success(`Started dev server @ ${serverInfo.origin}`);
-        await buildAndOpenBrowser();
-      },
-      async stop() {
-        await runner.closeBrowser();
-        await builderServer.close();
-      },
-      async restart() {
-        await closeAndRecreateRunner();
-        await buildAndOpenBrowser();
-      },
-      transformHtml(url, html, originalUrl) {
-        return builderServer.transformHtml(url, html, originalUrl);
-      },
-      reloadContentScript(payload) {
-        server.ws.send('wxt:reload-content-script', payload);
-      },
-      reloadPage(path) {
-        server.ws.send('wxt:reload-page', path);
-      },
-      reloadExtension() {
-        server.ws.send('wxt:reload-extension');
-      },
-      async restartBrowser() {
-        await closeAndRecreateRunner();
-        await runner.openBrowser();
-      },
-    };
-    return server;
-  });
-
-  const server = wxt.server!;
   let [runner, builderServer] = await Promise.all([
     createExtensionRunner(),
-    wxt.builder.createServer(server),
+    wxt.builder.createServer(getServerInfo()),
   ]);
+
+  // Used to track if modules need to be re-initialized
+  let wasStopped = false;
+
+  // Server instance must be created first so its reference can be added to the internal config used
+  // to pre-render entrypoints
+  const server: WxtDevServer = {
+    get hostname() {
+      return getServerInfo().hostname;
+    },
+    get port() {
+      return getServerInfo().port;
+    },
+    get origin() {
+      return getServerInfo().origin;
+    },
+    get watcher() {
+      return builderServer.watcher;
+    },
+    get ws() {
+      return builderServer.ws;
+    },
+    currentOutput: undefined,
+    async start() {
+      if (wasStopped) {
+        await wxt.reloadConfig();
+        runner = await createExtensionRunner();
+        builderServer = await wxt.builder.createServer(getServerInfo());
+        await initWxtModules();
+      }
+
+      await builderServer.listen();
+      wxt.logger.success(`Started dev server @ ${server.origin}`);
+      await buildAndOpenBrowser();
+
+      // Register content scripts for the first time after the background starts up since they're not
+      // listed in the manifest
+      server.ws.on('wxt:background-initialized', () => {
+        if (server.currentOutput == null) return;
+        reloadContentScripts(server.currentOutput.steps, server);
+      });
+
+      // Listen for file changes and reload different parts of the extension accordingly
+      const reloadOnChange = createFileReloader(server);
+      server.watcher.on('all', reloadOnChange);
+    },
+    async stop() {
+      wasStopped = true;
+      await runner.closeBrowser();
+      await builderServer.close();
+      deinitWxtModules();
+      server.currentOutput = undefined;
+    },
+    async restart() {
+      await server.stop();
+      await server.start();
+    },
+    transformHtml(url, html, originalUrl) {
+      return builderServer.transformHtml(url, html, originalUrl);
+    },
+    reloadContentScript(payload) {
+      server.ws.send('wxt:reload-content-script', payload);
+    },
+    reloadPage(path) {
+      server.ws.send('wxt:reload-page', path);
+    },
+    reloadExtension() {
+      server.ws.send('wxt:reload-extension');
+    },
+    async restartBrowser() {
+      await runner.closeBrowser();
+      await wxt.reloadConfig();
+      runner = await createExtensionRunner();
+      await runner.openBrowser();
+    },
+  };
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
@@ -113,26 +158,6 @@ export async function createServer(
     // Open browser after everything is ready to go.
     await runner.openBrowser();
   };
-
-  /**
-   * Stops the previous runner, grabs the latest config, and recreates the runner.
-   */
-  const closeAndRecreateRunner = async () => {
-    await runner.closeBrowser();
-    await wxt.reloadConfig();
-    runner = await createExtensionRunner();
-  };
-
-  // Register content scripts for the first time after the background starts up since they're not
-  // listed in the manifest
-  server.ws.on('wxt:background-initialized', () => {
-    if (server.currentOutput == null) return;
-    reloadContentScripts(server.currentOutput.steps, server);
-  });
-
-  // Listen for file changes and reload different parts of the extension accordingly
-  const reloadOnChange = createFileReloader(server);
-  server.watcher.on('all', reloadOnChange);
 
   return server;
 }

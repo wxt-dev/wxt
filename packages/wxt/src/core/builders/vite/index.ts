@@ -3,6 +3,7 @@ import {
   BuildStepOutput,
   Entrypoint,
   ResolvedConfig,
+  ServerInfo,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
@@ -28,7 +29,7 @@ import { installSourcemapsSupport } from 'vite-node/source-map';
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
   hooks: Hookable<WxtHooks>,
-  server?: WxtDevServer,
+  getDevServer?: () => WxtDevServer | undefined,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
@@ -65,12 +66,14 @@ export async function createViteBuilder(
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
 
+    const devServer = getDevServer?.();
+
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.download(wxtConfig),
-      wxtPlugins.devHtmlPrerender(wxtConfig, server),
+      wxtPlugins.devHtmlPrerender(wxtConfig, devServer),
       wxtPlugins.resolveVirtualModules(wxtConfig),
-      wxtPlugins.devServerGlobals(wxtConfig, server),
+      wxtPlugins.devServerGlobals(wxtConfig, devServer),
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
@@ -193,7 +196,7 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building a sinlge CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building a single CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     return {
