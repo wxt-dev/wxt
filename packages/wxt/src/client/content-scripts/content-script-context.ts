@@ -35,7 +35,9 @@ import { createLocationWatcher } from './location-watcher';
  * ```
  */
 export class ContentScriptContext implements AbortController {
-  private static SCRIPT_STARTED_MESSAGE_TYPE = 'wxt:content-script-started';
+  private static SCRIPT_STARTED_MESSAGE_TYPE = getUniqueEventName(
+    'wxt:content-script-started',
+  );
 
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
