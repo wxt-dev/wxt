@@ -27,7 +27,7 @@ import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
-import { checkPort, getPort } from 'get-port-please';
+import { getPort } from 'get-port-please';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
