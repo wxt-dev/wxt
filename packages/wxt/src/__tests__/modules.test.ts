@@ -15,7 +15,7 @@ describe('Module Utilities', () => {
 
       wxt.config.vite = () => Promise.resolve(userConfig);
       addViteConfig(wxt, () => moduleConfig);
-      await wxt.hooks.callHook('ready', wxt);
+      await wxt.hooks.callHook('config:resolved', wxt);
       const actual = await wxt.config.vite(wxt.config.env);
 
       expect(actual).toEqual(expected);
@@ -31,7 +31,7 @@ describe('Module Utilities', () => {
 
       wxt.config.vite = () => userConfig;
       addViteConfig(wxt, () => moduleConfig);
-      await wxt.hooks.callHook('ready', wxt);
+      await wxt.hooks.callHook('config:resolved', wxt);
       const actual = await wxt.config.vite(wxt.config.env);
 
       expect(actual).toEqual(expected);
@@ -44,7 +44,7 @@ describe('Module Utilities', () => {
       const wxt = fakeWxt({ hooks: createHooks() });
 
       addImportPreset(wxt, preset);
-      await wxt.hooks.callHook('ready', wxt);
+      await wxt.hooks.callHook('config:resolved', wxt);
 
       expect(wxt.config.imports && wxt.config.imports.presets).toContain(
         preset,
@@ -63,7 +63,7 @@ describe('Module Utilities', () => {
       });
 
       addImportPreset(wxt, preset);
-      await wxt.hooks.callHook('ready', wxt);
+      await wxt.hooks.callHook('config:resolved', wxt);
 
       expect(wxt.config.imports && wxt.config.imports.presets).toHaveLength(2);
     });
@@ -78,7 +78,7 @@ describe('Module Utilities', () => {
       });
 
       addImportPreset(wxt, preset);
-      await wxt.hooks.callHook('ready', wxt);
+      await wxt.hooks.callHook('config:resolved', wxt);
 
       expect(wxt.config.imports).toBe(false);
     });
