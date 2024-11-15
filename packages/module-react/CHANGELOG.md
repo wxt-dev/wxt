@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.1...module-react-v1.1.2)
+
+### 🩹 Fixes
+
+- Use `config:resolved` hook to update config instead of `ready` ([#1178](https://github.com/wxt-dev/wxt/pull/1178))
+
+### 🏡 Chore
+
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v1.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.0...module-react-v1.1.1)
