@@ -15,7 +15,7 @@ export default defineWxtModule<ReactModuleOptions>({
     addImportPreset(wxt, 'react');
 
     // Enable auto-imports for JSX files
-    wxt.hooks.hook('config:resolved', (wxt) => {
+    wxt.hooks.hook('ready', (wxt) => {
       if (wxt.config.imports === false) return;
 
       wxt.config.imports.dirsScanOptions ??= {};
