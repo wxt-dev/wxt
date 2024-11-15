@@ -28,7 +28,7 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
 /**
  * Adds a TS/JS file as an entrypoint to the project. This file will be bundled
  * along with the other entrypoints.
-
+ *
  * If you're publishing the module to NPM, you should probably pre-build the
  * entrypoint and use `addPublicAssets` instead to copy pre-bundled assets into
  * the output directory. This will speed up project builds since it just has to
@@ -53,7 +53,7 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * });
  */
 export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
-  wxt.hooks.hook('entrypoints:resolved', (wxt, entrypoints) => {
+  wxt.hooks.hook('entrypoints:resolved', (_, entrypoints) => {
     entrypoints.push(entrypoint);
   });
 }
@@ -106,7 +106,7 @@ export function addViteConfig(
   wxt: Wxt,
   viteConfig: (env: vite.ConfigEnv) => vite.UserConfig | undefined,
 ): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
       const fromUser = await userVite(env);
@@ -130,7 +130,7 @@ export function addViteConfig(
  * });
  */
 export function addWxtPlugin(wxt: Wxt, plugin: string): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     wxt.config.plugins.push(plugin);
   });
 }
@@ -166,7 +166,7 @@ export function addImportPreset(
   wxt: Wxt,
   preset: UnimportOptions['presets'][0],
 ): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     if (!wxt.config.imports) return;
 
     wxt.config.imports.presets ??= [];
@@ -205,12 +205,13 @@ export function addImportPreset(
  * });
  */
 export function addAlias(wxt: Wxt, alias: string, path: string) {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     const target = resolve(wxt.config.root, path);
-    if (wxt.config.alias[alias] != null) {
+    if (wxt.config.alias[alias] != null && wxt.config.alias[alias] !== target) {
       wxt.logger.warn(
         `Skipped adding alias (${alias} => ${target}) because an alias with the same name already exists: ${alias} => ${wxt.config.alias[alias]}`,
       );
+      return;
     }
     wxt.config.alias[alias] = target;
   });
