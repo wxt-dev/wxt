@@ -27,7 +27,7 @@ import {
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '../../../core/wxt';
-import { Hookable, Hooks } from 'hookable';
+import { Hookable } from 'hookable';
 
 faker.seed(import.meta.test.SEED);
 
