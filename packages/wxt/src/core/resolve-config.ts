@@ -27,6 +27,7 @@ import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
+import { getPort } from 'get-port-please';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -139,8 +140,7 @@ export async function resolveConfig(
   if (command === 'serve') {
     let port = mergedConfig.dev?.server?.port;
     if (port == null || !isFinite(port)) {
-      const { default: getPort, portNumbers } = await import('get-port');
-      port = await getPort({ port: portNumbers(3000, 3010) });
+      port = await getPort({ portRange: [3000, 3010] });
     }
     devServerConfig = {
       port,
