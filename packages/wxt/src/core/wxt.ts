@@ -82,7 +82,7 @@ export async function registerWxt(
     });
   }
 
-  await wxt.hooks.callHook('config:resolved', wxt);
+  await wxt.hooks.callHook('ready', wxt);
   await wxt.hooks.callHook('config:resolved', wxt);
 }
 
