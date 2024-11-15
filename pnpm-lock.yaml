@@ -329,7 +329,7 @@ importers:
     dependencies:
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
-        version: 5.12.0(rollup@3.29.4)
+        version: 5.12.0(rollup@4.24.0)
       '@types/chrome':
         specifier: ^0.0.280
         version: 0.0.280
@@ -449,7 +449,7 @@ importers:
         version: 1.3.0
       unimport:
         specifier: ^3.13.1
-        version: 3.13.1(rollup@3.29.4)(webpack-sources@3.2.3)
+        version: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
       vite:
         specifier: ^5.4.11
         version: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
@@ -5124,14 +5124,14 @@ snapshots:
       citty: 0.1.6
       typescript: 5.6.3
 
-  '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@3.29.4)':
+  '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@4.24.0)':
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
     optionalDependencies:
-      rollup: 3.29.4
+      rollup: 4.24.0
 
   '@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)':
     dependencies:
@@ -6093,13 +6093,13 @@ snapshots:
     optionalDependencies:
       rollup: 3.29.4
 
-  '@rollup/pluginutils@5.1.2(rollup@3.29.4)':
+  '@rollup/pluginutils@5.1.2(rollup@4.24.0)':
     dependencies:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
     optionalDependencies:
-      rollup: 3.29.4
+      rollup: 4.24.0
 
   '@rollup/pluginutils@5.1.3(rollup@4.24.0)':
     dependencies:
@@ -9363,9 +9363,9 @@ snapshots:
 
   undici-types@6.19.8: {}
 
-  unimport@3.13.1(rollup@3.29.4)(webpack-sources@3.2.3):
+  unimport@3.13.1(rollup@4.24.0)(webpack-sources@3.2.3):
     dependencies:
-      '@rollup/pluginutils': 5.1.2(rollup@3.29.4)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       acorn: 8.12.1
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
