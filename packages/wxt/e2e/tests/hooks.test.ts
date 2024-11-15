@@ -4,6 +4,7 @@ import { WxtHooks } from '../../src/types';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
+  'config:resolved': vi.fn(),
   'prepare:types': vi.fn(),
   'prepare:publicPaths': vi.fn(),
   'build:before': vi.fn(),
@@ -49,6 +50,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': false,
@@ -76,6 +78,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -103,6 +106,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -130,6 +134,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -163,6 +168,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,

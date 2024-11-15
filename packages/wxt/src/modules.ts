@@ -106,7 +106,7 @@ export function addViteConfig(
   wxt: Wxt,
   viteConfig: (env: vite.ConfigEnv) => vite.UserConfig | undefined,
 ): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
       const fromUser = await userVite(env);
@@ -130,7 +130,7 @@ export function addViteConfig(
  * });
  */
 export function addWxtPlugin(wxt: Wxt, plugin: string): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     wxt.config.plugins.push(plugin);
   });
 }
@@ -166,7 +166,7 @@ export function addImportPreset(
   wxt: Wxt,
   preset: UnimportOptions['presets'][0],
 ): void {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     if (!wxt.config.imports) return;
 
     wxt.config.imports.presets ??= [];
@@ -205,7 +205,7 @@ export function addImportPreset(
  * });
  */
 export function addAlias(wxt: Wxt, alias: string, path: string) {
-  wxt.hooks.hook('ready', (wxt) => {
+  wxt.hooks.hook('config:resolved', (wxt) => {
     const target = resolve(wxt.config.root, path);
     if (wxt.config.alias[alias] != null) {
       wxt.logger.warn(

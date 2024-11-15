@@ -1100,11 +1100,15 @@ export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
   /**
-   * Called after WXT initialization, when the WXT instance is ready to work.
+   * Called only one time after WXT initialization, when the WXT instance is ready to work.
    * @param wxt The configured WXT object
-   * @returns Promise
    */
   ready: (wxt: Wxt) => HookResult;
+  /**
+   * Called whenever config is loaded or reloaded. Use this hook to modify config by modifying `wxt.config`.
+   * @param wxt The configured WXT object
+   */
+  'config:resolved': (wxt: Wxt) => HookResult;
   /**
    * Called before WXT writes .wxt/tsconfig.json and .wxt/wxt.d.ts, allowing
    * addition of custom references and declarations in wxt.d.ts, or directly

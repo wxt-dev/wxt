@@ -19,7 +19,7 @@ export default defineWxtModule<VueModuleOptions>({
     }));
 
     // Enable auto-imports in template files
-    wxt.hooks.hook('ready', (wxt) => {
+    wxt.hooks.hook('config:resolved', (wxt) => {
       if (!wxt.config.imports) return;
 
       wxt.config.imports.addons ??= {};

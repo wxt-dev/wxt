@@ -47,6 +47,7 @@ export async function registerWxt(
     },
     async reloadConfig() {
       wxt.config = await resolveConfig(inlineConfig, command);
+      await wxt.hooks.callHook('config:resolved', wxt);
     },
     pm,
     builder,
@@ -82,6 +83,7 @@ export async function registerWxt(
   }
 
   await wxt.hooks.callHook('ready', wxt);
+  await wxt.hooks.callHook('config:resolved', wxt);
 }
 
 /**
