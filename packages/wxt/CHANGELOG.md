@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.16
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.15...wxt-v0.19.16)
+
+### 🚀 Enhancements
+
+- **hooks:** Add new `config:resolved` hook ([#1177](https://github.com/wxt-dev/wxt/pull/1177))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.15
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.14...wxt-v0.19.15)
