@@ -22,12 +22,10 @@ import {
   UserManifest,
   Wxt,
   SidepanelEntrypoint,
-  WxtHooks,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '../../../core/wxt';
-import { Hookable } from 'hookable';
 
 faker.seed(import.meta.test.SEED);
 
@@ -312,19 +310,16 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
   };
 });
 
-export const fakeWxt = fakeObjectCreator<Wxt>(() => {
-  const hooks = mock<Hookable<WxtHooks>>();
-  return {
-    config: fakeResolvedConfig(),
-    hook: hooks.hook,
-    hooks,
-    logger: mock(),
-    reloadConfig: vi.fn(),
-    pm: mock(),
-    server: faker.helpers.arrayElement([undefined, fakeWxtDevServer()]),
-    builder: mock(),
-  };
-});
+export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
+  config: fakeResolvedConfig(),
+  hook: vi.fn(),
+  hooks: mock(),
+  logger: mock(),
+  reloadConfig: vi.fn(),
+  pm: mock(),
+  server: faker.helpers.arrayElement([undefined, fakeWxtDevServer()]),
+  builder: mock(),
+}));
 
 export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({
   currentOutput: fakeBuildOutput(),
