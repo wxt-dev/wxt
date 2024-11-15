@@ -28,7 +28,6 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
-import { sleep } from './utils/time';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -120,7 +119,6 @@ async function createServerInternal(
     },
     async restart() {
       await server.stop();
-      await sleep(5000);
       await server.start();
     },
     transformHtml(url, html, originalUrl) {
