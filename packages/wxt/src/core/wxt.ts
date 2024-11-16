@@ -45,6 +45,8 @@ export async function registerWxt(
   };
 
   await initWxtModules();
+
+  await wxt.hooks.callHook('ready', wxt);
 }
 
 export async function initWxtModules() {
@@ -70,7 +72,6 @@ export async function initWxtModules() {
     });
   }
 
-  await wxt.hooks.callHook('ready', wxt);
   await wxt.hooks.callHook('config:resolved', wxt);
 }
 

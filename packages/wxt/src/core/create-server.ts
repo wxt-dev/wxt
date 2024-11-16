@@ -42,7 +42,9 @@ export async function createServer(
 ): Promise<WxtDevServer> {
   await registerWxt('serve', inlineConfig);
 
-  return (wxt.server = await createServerInternal());
+  wxt.server = await createServerInternal();
+  await wxt.hooks.callHook('server:created', wxt, wxt.server);
+  return wxt.server;
 }
 
 async function createServerInternal(): Promise<WxtDevServer> {
@@ -92,6 +94,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       await builderServer.listen();
       wxt.logger.success(`Started dev server @ ${server.origin}`);
+      await wxt.hooks.callHook('server:started', wxt, server);
+
       await buildAndOpenBrowser();
 
       // Register content scripts for the first time after the background starts up since they're not
@@ -109,6 +113,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
       wasStopped = true;
       await runner.closeBrowser();
       await builderServer.close();
+      await wxt.hooks.callHook('server:closed', wxt, server);
+
       deinitWxtModules();
       server.currentOutput = undefined;
     },
