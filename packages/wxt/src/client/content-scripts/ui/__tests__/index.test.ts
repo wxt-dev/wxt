@@ -483,26 +483,25 @@ describe('Content Script UIs', () => {
 
   describe('auto mount', () => {
     it.todo(
-      '動的にアンカーが追加されたらマウントし、アンカーが削除されたらアンマウントすること',
+      'should mount when an anchor is dynamically added and unmount when an anchor is removed',
       async () => {},
     );
-    it.todo(
-      'anchorの型がElementで設定されているときはthrowされること',
-      async () => {},
-    );
+    it.todo('should throw when anchor is set as type Element', async () => {});
+
     describe('options', () => {
       it.todo(
-        'onceオプションがtrueなら、1度きりのオートマウントをすること',
+        'should auto-mount only once when the once option is true',
         async () => {},
       );
     });
+
     describe('StopAutoMount', () => {
       it.todo(
-        'StopAutoMountをコールするとオートマウントが停止すること',
+        'should stop auto-mounting when StopAutoMount is called',
         async () => {},
       );
       it.todo(
-        'removeがコールされたらもStopAutoMountもコールされること',
+        'should call StopAutoMount when `ui.remove` is called',
         async () => {},
       );
     });
