@@ -27,6 +27,7 @@ import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
+import { getPort } from 'get-port-please';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -137,14 +138,19 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
+    const hostname = mergedConfig.dev?.server?.hostname ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
     if (port == null || !isFinite(port)) {
-      const { default: getPort, portNumbers } = await import('get-port');
-      port = await getPort({ port: portNumbers(3000, 3010) });
+      port = await getPort({
+        port: 3000,
+        portRange: [3001, 3010],
+        // Passing host required for Mac, unsure of Windows/Linux
+        host: hostname,
+      });
     }
     devServerConfig = {
       port,
-      hostname: mergedConfig.dev?.server?.hostname ?? 'localhost',
+      hostname,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }

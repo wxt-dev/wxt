@@ -100,7 +100,7 @@
     "fast-glob": "^3.3.2",
     "filesize": "^10.1.6",
     "fs-extra": "^11.2.0",
-    "get-port": "^7.1.0",
+    "get-port-please": "^3.1.2",
     "giget": "^1.2.3",
     "hookable": "^5.5.3",
     "is-wsl": "^3.1.0",
