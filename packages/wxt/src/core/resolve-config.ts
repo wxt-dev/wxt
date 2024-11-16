@@ -6,7 +6,7 @@ import {
   ConfigEnv,
   UserManifestFn,
   UserManifest,
-  ExtensionRunnerConfig,
+  WebExtRunnerConfig,
   WxtResolvedUnimportOptions,
   Logger,
   WxtCommand,
@@ -115,13 +115,13 @@ export async function resolveConfig(
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
 
-  const runnerConfig = await loadConfig<ExtensionRunnerConfig>({
+  const runnerConfig = await loadConfig<WebExtRunnerConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
     rcFile: '.webextrc',
-    overrides: inlineConfig.runner,
-    defaults: userConfig.runner,
+    overrides: inlineConfig.webExtRunner ?? inlineConfig.runner,
+    defaults: userConfig.webExtRunner ?? userConfig.runner,
   });
   // Make sure alias are absolute
   const alias = Object.fromEntries(
