@@ -107,8 +107,6 @@ export async function generateManifest(
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
 
-  // TODO: Remove in v1
-  wxt.config.transformManifest?.(manifest);
   await wxt.hooks.callHook('build:manifestGenerated', wxt, manifest);
 
   if (wxt.config.manifestVersion === 2) {
