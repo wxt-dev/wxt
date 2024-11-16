@@ -482,15 +482,29 @@ describe('Content Script UIs', () => {
   });
 
   describe('auto mount', () => {
-    it.todo('アンカーを待ってマウントすること', async () => {});
-    it.todo('アンカーがなくなったらアンマウントすること', async () => {});
     it.todo(
-      'アンカーがなくなった後アンカーを発見したら再びマウントすること',
+      '動的にアンカーが追加されたらマウントし、アンカーが削除されたらアンマウントすること',
       async () => {},
     );
     it.todo(
-      '明示的なアンマウントによってオートマウントがabortされること',
+      'anchorの型がElementで設定されているときはthrowされること',
       async () => {},
     );
+    describe('options', () => {
+      it.todo(
+        'onceオプションがtrueなら、1度きりのオートマウントをすること',
+        async () => {},
+      );
+    });
+    describe('StopAutoMount', () => {
+      it.todo(
+        'StopAutoMountをコールするとオートマウントが停止すること',
+        async () => {},
+      );
+      it.todo(
+        'removeがコールされたらもStopAutoMountもコールされること',
+        async () => {},
+      );
+    });
   });
 });
