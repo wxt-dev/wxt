@@ -202,7 +202,6 @@ export async function resolveConfig(
     typesDir,
     wxtDir,
     zip: resolveZipConfig(root, browser, outBaseDir, mergedConfig),
-    transformManifest: mergedConfig.transformManifest,
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
@@ -251,12 +250,6 @@ async function mergeInlineConfig(
     return defu(inline, user);
   };
 
-  // Merge transformManifest option
-  const transformManifest: InlineConfig['transformManifest'] = (manifest) => {
-    userConfig.transformManifest?.(manifest);
-    inlineConfig.transformManifest?.(manifest);
-  };
-
   const merged = defu(inlineConfig, userConfig);
 
   // Builders
@@ -269,7 +262,6 @@ async function mergeInlineConfig(
   return {
     ...merged,
     // Custom merge values
-    transformManifest,
     imports,
     manifest,
     ...builderConfig,
