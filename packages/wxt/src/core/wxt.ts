@@ -1,11 +1,4 @@
-import {
-  InlineConfig,
-  Wxt,
-  WxtCommand,
-  WxtDevServer,
-  WxtHooks,
-  WxtModule,
-} from '../types';
+import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
 import { resolveConfig } from './resolve-config';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';

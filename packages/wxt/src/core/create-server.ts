@@ -4,7 +4,6 @@ import {
   EntrypointGroup,
   InlineConfig,
   ServerInfo,
-  Wxt,
   WxtDevServer,
 } from '../types';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
@@ -43,9 +42,7 @@ export async function createServer(
 ): Promise<WxtDevServer> {
   await registerWxt('serve', inlineConfig);
 
-  wxt.server = await createServerInternal();
-
-  return wxt.server;
+  return (wxt.server = await createServerInternal());
 }
 
 async function createServerInternal(): Promise<WxtDevServer> {
