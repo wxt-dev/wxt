@@ -8,7 +8,7 @@ export function defineRunnerConfig(config: WebExtConfig): WebExtConfig {
   consola.warn(
     'defineRunnerConfig is deprecated, replace it with defineWebExtConfig',
   );
-  return config;
+  return defineWebExtConfig(config);
 }
 
 /**
