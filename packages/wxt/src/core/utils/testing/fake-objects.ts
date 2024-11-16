@@ -294,7 +294,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       compressionLevel: 9,
       zipSources: false,
     },
-    transformManifest: () => {},
     userConfigMetadata: {},
     alias: {},
     experimental: {},
