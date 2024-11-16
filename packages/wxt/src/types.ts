@@ -1100,7 +1100,8 @@ export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
   /**
-   * Called only one time after WXT initialization, when the WXT instance is ready to work.
+   * Called after WXT modules are initialized, when the WXT instance is ready to
+   * be used. `wxt.server` isn't available yet, use `server:created` to get it.
    * @param wxt The configured WXT object
    */
   ready: (wxt: Wxt) => HookResult;
@@ -1196,39 +1197,52 @@ export interface WxtHooks {
    * @param wxt The configured WXT object
    */
   'zip:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called before zipping the extension files.
    * @param wxt The configured WXT object
    */
   'zip:extension:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called after zipping the extension files.
    * @param wxt The configured WXT object
    * @param zipPath The path to the created extension zip file
    */
   'zip:extension:done': (wxt: Wxt, zipPath: string) => HookResult;
-
   /**
    * Called before zipping the source files (for Firefox).
    * @param wxt The configured WXT object
    */
   'zip:sources:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called after zipping the source files (for Firefox).
    * @param wxt The configured WXT object
    * @param zipPath The path to the created sources zip file
    */
   'zip:sources:done': (wxt: Wxt, zipPath: string) => HookResult;
-
   /**
    * Called after the entire zip process is complete.
    * @param wxt The configured WXT object
    * @param zipFiles An array of paths to all created zip files
    */
   'zip:done': (wxt: Wxt, zipFiles: string[]) => HookResult;
+  /**
+   * Called when the dev server is created (and `wxt.server` is assigned). Server has not been started yet.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:created': (wxt: Wxt, server: WxtDevServer) => HookResult;
+  /**
+   * Called when the dev server is started.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:started': (wxt: Wxt, server: WxtDevServer) => HookResult;
+  /**
+   * Called when the dev server is stopped.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:closed': (wxt: Wxt, server: WxtDevServer) => HookResult;
 }
 
 export interface Wxt {
