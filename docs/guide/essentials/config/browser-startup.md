@@ -4,7 +4,7 @@ outline: deep
 
 # Browser Startup
 
-> See the [API Reference](/api/reference/wxt/interfaces/WebExtRunnerConfig) for a full list of config.
+> See the [API Reference](/api/reference/wxt/interfaces/WebExtConfig) for a full list of config.
 
 During development WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 

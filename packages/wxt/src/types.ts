@@ -127,11 +127,11 @@ export interface InlineConfig {
   /**
    * Configure browser startup. Option set here can be overridden in a `web-ext.config.ts` file.
    */
-  webExtRunner?: WebExtRunnerConfig;
+  webExt?: WebExtConfig;
   /**
-   * @deprecated Use `webExtRunner` instead.
+   * @deprecated Use `webExt` instead. Same option, just renamed.
    */
-  runner?: WebExtRunnerConfig;
+  runner?: WebExtConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
@@ -914,7 +914,7 @@ export type WxtCommand = 'build' | 'serve';
 /**
  * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the browser.
  */
-export interface WebExtRunnerConfig {
+export interface WebExtConfig {
   /**
    * Whether or not to open the browser with the extension installed in dev mode.
    *
@@ -1276,7 +1276,7 @@ export interface ResolvedConfig {
   imports: false | WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  runnerConfig: C12ResolvedConfig<WebExtRunnerConfig>;
+  runnerConfig: C12ResolvedConfig<WebExtConfig>;
   zip: {
     name?: string;
     artifactTemplate: string;

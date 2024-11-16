@@ -1,12 +1,10 @@
 import consola from 'consola';
-import { WebExtRunnerConfig } from '../types';
+import { WebExtConfig } from '../types';
 
 /**
  * @deprecated Use `defineWebExtConfig` instead. Same function, different name.
  */
-export function defineRunnerConfig(
-  config: WebExtRunnerConfig,
-): WebExtRunnerConfig {
+export function defineRunnerConfig(config: WebExtConfig): WebExtConfig {
   consola.warn(
     'defineRunnerConfig is deprecated, replace it with defineWebExtConfig',
   );
@@ -16,8 +14,6 @@ export function defineRunnerConfig(
 /**
  * Configure how [`web-ext`](https://github.com/mozilla/web-ext) starts the browser during development.
  */
-export function defineWebExtConfig(
-  config: WebExtRunnerConfig,
-): WebExtRunnerConfig {
+export function defineWebExtConfig(config: WebExtConfig): WebExtConfig {
   return config;
 }
