@@ -49,9 +49,6 @@ export async function resolveConfig(
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
-      jitiOptions: {
-        esmResolve: true,
-      },
     });
     userConfig = loadedConfig ?? {};
     userConfigMetadata = metadata;
