@@ -253,26 +253,6 @@ export interface InlineConfig {
      */
     compressionLevel?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   };
-
-  /**
-   * @deprecated Use `hooks.build.manifestGenerated` to modify your manifest instead. This option
-   *             will be removed in v1.0
-   *
-   * Transform the final manifest before it's written to the file system. Edit the `manifest`
-   * parameter directly, do not return a new object. Return values are ignored.
-   *
-   * @example
-   * defineConfig({
-   *   // Add a CSS-only content script.
-   *   transformManifest(manifest) {
-   *     manifest.content_scripts.push({
-   *       matches: ["*://google.com/*"],
-   *       css: ["content-scripts/some-example.css"],
-   *     });
-   *   }
-   * })
-   */
-  transformManifest?: (manifest: Browser.runtime.Manifest) => void;
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
@@ -1337,10 +1317,6 @@ export interface ResolvedConfig {
      */
     zipSources: boolean;
   };
-  /**
-   * @deprecated Use `build:manifestGenerated` hook instead.
-   */
-  transformManifest?: (manifest: Browser.runtime.Manifest) => void;
   analysis: {
     enabled: boolean;
     open: boolean;
