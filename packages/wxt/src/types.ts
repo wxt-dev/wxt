@@ -1100,9 +1100,8 @@ export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
   /**
-   * Called only one time after WXT and WXT module initialization, when the WXT
-   * instance is ready to be used. `wxt.server` isn't available yet, use
-   * `server:created` to get it.
+   * Called after WXT modules are initialized, when the WXT instance is ready to
+   * be used. `wxt.server` isn't available yet, use `server:created` to get it.
    * @param wxt The configured WXT object
    */
   ready: (wxt: Wxt) => HookResult;
