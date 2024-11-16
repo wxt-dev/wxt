@@ -83,7 +83,7 @@
     "@webext-core/isolated-element": "^1.1.2",
     "@webext-core/match-patterns": "^1.0.3",
     "async-mutex": "^0.5.0",
-    "c12": "^1.11.2",
+    "c12": "^2.0.1",
     "cac": "^6.7.14",
     "chokidar": "^3.6.0",
     "ci-info": "^4.0.0",
