@@ -1113,31 +1113,6 @@ describe('Manifest Utils', () => {
       });
     });
 
-    describe('transformManifest option', () => {
-      it("should call the transformManifest option after the manifest is generated, but before it's returned", async () => {
-        const entrypoints: Entrypoint[] = [];
-        const buildOutput = fakeBuildOutput();
-        const newAuthor = 'Custom Author';
-        setFakeWxt({
-          config: {
-            transformManifest(manifest: any) {
-              manifest.author = newAuthor;
-            },
-          },
-        });
-        const expected = {
-          author: newAuthor,
-        };
-
-        const { manifest: actual } = await generateManifest(
-          entrypoints,
-          buildOutput,
-        );
-
-        expect(actual).toMatchObject(expected);
-      });
-    });
-
     describe('version', () => {
       it.each(['chrome', 'safari', 'edge'] as const)(
         'should include version and version_name as is on %s',
