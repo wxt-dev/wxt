@@ -25,7 +25,6 @@ export let wxt: Wxt;
 export async function registerWxt(
   command: WxtCommand,
   inlineConfig: InlineConfig = {},
-  getServer?: (wxt: Omit<Wxt, 'server'>) => Promise<WxtDevServer>,
 ): Promise<void> {
   // Default NODE_ENV environment variable before other packages, like vite, do it
   // See https://github.com/wxt-dev/wxt/issues/873#issuecomment-2254555523
@@ -50,7 +49,6 @@ export async function registerWxt(
     builder,
     server: undefined,
   };
-  wxt.server = await getServer?.(wxt);
 
   await initWxtModules();
 }
