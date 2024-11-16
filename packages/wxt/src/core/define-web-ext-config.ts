@@ -6,7 +6,7 @@ import { WebExtConfig } from '../types';
  */
 export function defineRunnerConfig(config: WebExtConfig): WebExtConfig {
   consola.warn(
-    'defineRunnerConfig is deprecated, replace it with defineWebExtConfig',
+    '`defineRunnerConfig` is deprecated, use `defineWebExtConfig` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
   );
   return defineWebExtConfig(config);
 }
