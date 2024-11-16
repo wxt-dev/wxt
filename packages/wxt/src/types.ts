@@ -125,7 +125,7 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
-   * Configure browser startup. Option set here can be overridden in a `web-ext.config.ts` file.
+   * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
    */
   webExt?: WebExtConfig;
   /**
