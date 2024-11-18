@@ -111,7 +111,8 @@ export function createIframeUi<TMounted>(
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
-    stopAutoMount();
+    // TODO: implements
+    // stopAutoMount();
     mounted = undefined;
   };
 
@@ -309,7 +310,9 @@ function autoMountUi<TMounted>(
   },
   options: ContentScriptAnchoredOptions & AutoMountOptions,
 ): StopAutoMount {
-  const { signal, abort } = new AbortController();
+  const abortController = new AbortController();
+  const signal = abortController.signal;
+  const abort = abortController.abort;
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
   const stopAutoMount = () => abort(EXPLICIT_STOP_REASON);
 
@@ -327,7 +330,7 @@ function autoMountUi<TMounted>(
         const _element = await waitElement(resolvedAnchor ?? 'body', {
           customMatcher: () => getAnchor(options) ?? null,
           detector: mountContext.mounted ? removeDetector : mountDetector,
-          signal: signal,
+          signal,
         });
         console.log('waitElement result', _element);
         if (mountContext.mounted) {
