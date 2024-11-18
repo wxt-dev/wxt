@@ -1,6 +1,9 @@
 import { browser } from 'wxt/browser';
 import { waitElement } from '@1natsu/wait-element';
-import { isNotExist } from '@1natsu/wait-element/detectors';
+import {
+  isExist as mountDetector,
+  isNotExist as removeDetector,
+} from '@1natsu/wait-element/detectors';
 import { ContentScriptContext } from '..';
 import {
   AutoMountOptions,
@@ -42,7 +45,7 @@ export function createIntegratedUi<TMounted>(
       throw Error('autoMount is already set.');
     }
     stopAutoMount = autoMountUi(
-      { mount, remove },
+      { mount, remove, mounted },
       {
         ...options,
         ...autoMountOptions,
@@ -296,16 +299,18 @@ function mountUi(
   }
 }
 
-function autoMountUi(
-  mountFunctions: { mount: () => void; remove: () => void },
+function autoMountUi<TMounted>(
+  mountContext: {
+    mount: () => void;
+    remove: () => void;
+    mounted: TMounted | undefined;
+  },
   options: ContentScriptAnchoredOptions & AutoMountOptions,
-  // autoMountOptions?: AutoMountOptions,
 ): StopAutoMount {
-  const ac = new AbortController();
+  const { signal, abort } = new AbortController();
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
-  const stopAutoMount = () => ac.abort(EXPLICIT_STOP_REASON);
+  const stopAutoMount = () => abort(EXPLICIT_STOP_REASON);
 
-  // TODO: recursive and implement remove pattern
   async function observeElement() {
     let resolvedAnchor =
       typeof options.anchor === 'function' ? options.anchor() : options.anchor;
@@ -315,11 +320,27 @@ function autoMountUi(
       );
     }
 
-    const _element = await waitElement(resolvedAnchor ?? 'body', {
-      customMatcher: () => getAnchor(options) ?? null,
-      signal: ac.signal,
-    });
-    mountFunctions.mount();
+    while (!signal.aborted) {
+      try {
+        const _element = await waitElement(resolvedAnchor ?? 'body', {
+          customMatcher: () => getAnchor(options) ?? null,
+          detector: mountContext.mounted ? removeDetector : mountDetector,
+          signal: signal,
+        });
+        console.log('waitElement result', _element);
+        if (mountContext.mounted) {
+          mountContext.remove();
+        } else {
+          mountContext.mount();
+        }
+      } catch (error) {
+        if (signal.aborted && signal.reason === EXPLICIT_STOP_REASON) {
+          break;
+        } else {
+          throw error;
+        }
+      }
+    }
   }
   observeElement();
 
