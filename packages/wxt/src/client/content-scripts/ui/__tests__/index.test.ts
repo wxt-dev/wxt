@@ -1,5 +1,8 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect } from 'vitest';
+import { setTimeout as delay } from 'node:timers/promises';
+import { waitElement } from '@1natsu/wait-element';
+import { isNotExist } from '@1natsu/wait-element/detectors';
 import {
   createIntegratedUi,
   createIframeUi,
@@ -505,37 +508,41 @@ describe('Content Script UIs', () => {
     });
   });
 
-  describe('auto mount', () => {
+  describe.only('auto mount', () => {
     let ui: ContentScriptUi<any>;
     beforeEach(() => {
-      ui.remove();
+      ui?.remove();
     });
-    it.todo(
-      'should mount when an anchor is dynamically added and unmount when an anchor is removed',
-      () => {
-        ui = createIntegratedUi(ctx, {
-          position: 'inline',
-          onMount: appendTestApp,
-          anchor: '#parent > #dynamic-child',
-        });
-        ui.autoMount();
+    it.only('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
+      ui = createIntegratedUi(ctx, {
+        position: 'inline',
+        onMount: appendTestApp,
+        anchor: '#dynamic-child',
+      });
 
-        let dynamicEl;
+      ui.autoMount();
 
-        for (let index = 0; index < 3; index++) {
-          expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
-          expect(ui.mounted).toBeUndefined();
+      let dynamicEl;
 
-          dynamicEl = appendTestElement({ id: '#dynamic-child' });
+      // TODO: nextTickしないとobserveが始まらない でもバグがある
+      for (let index = 0; index < 3; index++) {
+        expect(
+          waitElement('div[data-wxt-integrated]', {
+            detector: isNotExist,
+          }),
+        ).resolves.toBeNull();
+        expect(ui.mounted).toBeUndefined();
 
-          expect(
-            document.querySelector('div[data-wxt-integrated]'),
-          ).not.toBeNull();
+        dynamicEl = appendTestElement({ id: 'dynamic-child' });
 
-          dynamicEl.remove();
-        }
-      },
-    );
+        // TODO: notを外してもエラーにならない 非同期処理が正しくできていない
+        expect(waitElement('div[data-wxt-integrated]')).resolves.not.toBeNull();
+
+        console.log('??', document.body.innerHTML.toString());
+
+        dynamicEl.remove();
+      }
+    });
 
     describe('invalid anchors', () => {
       it.todo('should throw when anchor is set as type Element', () => {
@@ -573,14 +580,14 @@ describe('Content Script UIs', () => {
           expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
           expect(ui.mounted).toBeUndefined();
 
-          dynamicEl = appendTestElement({ id: '#dynamic-child' });
+          dynamicEl = appendTestElement({ id: 'dynamic-child' });
 
           expect(
             document.querySelector('div[data-wxt-integrated]'),
           ).not.toBeNull();
 
           dynamicEl.remove();
-          dynamicEl = appendTestElement({ id: '#dynamic-child' });
+          dynamicEl = appendTestElement({ id: 'dynamic-child' });
 
           expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
         },
@@ -596,7 +603,7 @@ describe('Content Script UIs', () => {
         });
         const stopAutoMount = ui.autoMount();
         stopAutoMount();
-        appendTestElement({ id: '#dynamic-child' });
+        appendTestElement({ id: 'dynamic-child' });
 
         expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
       });
