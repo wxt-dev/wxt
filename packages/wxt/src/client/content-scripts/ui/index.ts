@@ -103,7 +103,8 @@ export function createIframeUi<TMounted>(
     mounted = options.onMount?.(wrapper, iframe);
   };
   const autoMount = () => {
-    autoMountUi();
+    // TODO: implements
+    // autoMountUi();
 
     return stopAutoMount;
   };
@@ -172,7 +173,8 @@ export async function createShadowRootUi<TMounted>(
     mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
   const autoMount = () => {
-    autoMountUi();
+    // TODO: implements
+    // autoMountUi();
 
     return stopAutoMount;
   };
