@@ -567,6 +567,10 @@ describe('Content Script UIs', () => {
     });
 
     describe('StopAutoMount', () => {
+      beforeEach(() => {
+        // TODO: creanup automount
+      });
+
       it.todo('should stop auto-mounting when StopAutoMount is called', () => {
         const ui = createIntegratedUi(ctx, {
           position: 'inline',

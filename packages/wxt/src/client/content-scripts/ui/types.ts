@@ -44,7 +44,7 @@ export interface ContentScriptUi<TMounted> {
   /**
    * Function that automatically mounts or remounts the UI in response to dynamic anchor.
    */
-  autoMount: (options?: { once?: boolean }) => StopAutoMount;
+  autoMount: (options?: AutoMountOptions) => StopAutoMount;
   /**
    * Function that removes the UI from the webpage.
    */
@@ -221,4 +221,5 @@ export interface ContentScriptAnchoredOptions {
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
 }
 
+export type AutoMountOptions = { once?: boolean };
 export type StopAutoMount = () => void;

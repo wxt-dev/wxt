@@ -1,6 +1,9 @@
 import { browser } from 'wxt/browser';
+import { waitElement } from '@1natsu/wait-element';
+import { isNotExist } from '@1natsu/wait-element/detectors';
 import { ContentScriptContext } from '..';
 import {
+  AutoMountOptions,
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
   IframeContentScriptUi,
@@ -9,6 +12,7 @@ import {
   IntegratedContentScriptUiOptions,
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
+  StopAutoMount,
 } from './types';
 import { logger } from '../../../sandbox/utils/logger';
 import { createIsolatedElement } from '@webext-core/isolated-element';
@@ -27,22 +31,33 @@ export function createIntegratedUi<TMounted>(
   wrapper.setAttribute('data-wxt-integrated', '');
 
   let mounted: TMounted | undefined = undefined;
-  let stopAutoMount = () => {
-    throw 'need implement this';
-  };
+  let stopAutoMount: StopAutoMount | undefined = undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper);
   };
-  const autoMount: IntegratedContentScriptUi<TMounted>['autoMount'] = () => {
-    autoMountUi();
-
-    return stopAutoMount;
+  const autoMount = (autoMountOptions?: AutoMountOptions) => {
+    if (stopAutoMount) {
+      throw Error('autoMount is already set.');
+    }
+    stopAutoMount = autoMountUi(
+      { mount, remove },
+      {
+        ...options,
+        ...autoMountOptions,
+      },
+    );
+    return () => {
+      stopAutoMount?.();
+      stopAutoMount = undefined;
+    };
   };
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
+    stopAutoMount?.();
+    stopAutoMount = undefined;
     mounted = undefined;
   };
 
@@ -84,7 +99,7 @@ export function createIframeUi<TMounted>(
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
-  const autoMount: IframeContentScriptUi<TMounted>['autoMount'] = () => {
+  const autoMount = () => {
     autoMountUi();
 
     return stopAutoMount;
@@ -153,7 +168,7 @@ export async function createShadowRootUi<TMounted>(
     // Mount UI inside shadow root
     mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
-  const autoMount: ShadowRootContentScriptUi<TMounted>['autoMount'] = () => {
+  const autoMount = () => {
     autoMountUi();
 
     return stopAutoMount;
@@ -281,8 +296,34 @@ function mountUi(
   }
 }
 
-function autoMountUi() {
-  throw 'TBD';
+function autoMountUi(
+  mountFunctions: { mount: () => void; remove: () => void },
+  options: ContentScriptAnchoredOptions & AutoMountOptions,
+  // autoMountOptions?: AutoMountOptions,
+): StopAutoMount {
+  const ac = new AbortController();
+  const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
+  const stopAutoMount = () => ac.abort(EXPLICIT_STOP_REASON);
+
+  // TODO: recursive and implement remove pattern
+  async function observeElement() {
+    let resolvedAnchor =
+      typeof options.anchor === 'function' ? options.anchor() : options.anchor;
+    if (resolvedAnchor instanceof Element) {
+      throw Error(
+        'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+      );
+    }
+
+    const _element = await waitElement(resolvedAnchor ?? 'body', {
+      customMatcher: () => getAnchor(options) ?? null,
+      signal: ac.signal,
+    });
+    mountFunctions.mount();
+  }
+  observeElement();
+
+  return stopAutoMount;
 }
 
 /**
