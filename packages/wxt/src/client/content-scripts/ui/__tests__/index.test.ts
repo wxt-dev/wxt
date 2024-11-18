@@ -1,6 +1,11 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect } from 'vitest';
-import { createIntegratedUi, createIframeUi, createShadowRootUi } from '..';
+import {
+  createIntegratedUi,
+  createIframeUi,
+  createShadowRootUi,
+  ContentScriptUi,
+} from '..';
 import { ContentScriptContext } from '../../content-script-context';
 
 function appendTestApp(container: HTMLElement) {
@@ -501,10 +506,14 @@ describe('Content Script UIs', () => {
   });
 
   describe('auto mount', () => {
+    let ui: ContentScriptUi<any>;
+    beforeEach(() => {
+      ui.remove();
+    });
     it.todo(
       'should mount when an anchor is dynamically added and unmount when an anchor is removed',
       () => {
-        const ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: '#parent > #dynamic-child',
@@ -527,20 +536,32 @@ describe('Content Script UIs', () => {
         }
       },
     );
-    it.todo('should throw when anchor is set as type Element', () => {
-      const ui = createIntegratedUi(ctx, {
-        position: 'inline',
-        onMount: appendTestApp,
-        anchor: document.documentElement,
+
+    describe('invalid anchors', () => {
+      it.todo('should throw when anchor is set as type Element', () => {
+        ui = createIntegratedUi(ctx, {
+          position: 'inline',
+          onMount: appendTestApp,
+          anchor: document.documentElement,
+        });
+        expect(ui.autoMount()).toThrowError();
       });
-      expect(ui.autoMount()).toThrowError();
+
+      it.todo('should throw when anchor is set as type `() => Element`', () => {
+        ui = createIntegratedUi(ctx, {
+          position: 'inline',
+          onMount: appendTestApp,
+          anchor: () => document.documentElement,
+        });
+        expect(ui.autoMount()).toThrowError();
+      });
     });
 
     describe('options', () => {
       it.todo(
         'should auto-mount only once when the once option is true',
         () => {
-          const ui = createIntegratedUi(ctx, {
+          ui = createIntegratedUi(ctx, {
             position: 'inline',
             onMount: appendTestApp,
             anchor: '#parent > #dynamic-child',
@@ -567,12 +588,8 @@ describe('Content Script UIs', () => {
     });
 
     describe('StopAutoMount', () => {
-      beforeEach(() => {
-        // TODO: creanup automount
-      });
-
       it.todo('should stop auto-mounting when StopAutoMount is called', () => {
-        const ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: '#parent > #dynamic-child',
@@ -584,7 +601,7 @@ describe('Content Script UIs', () => {
         expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
       });
       it.todo('should call StopAutoMount when `ui.remove` is called', () => {
-        const ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: '#parent > #dynamic-child',
