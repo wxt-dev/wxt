@@ -271,7 +271,7 @@ export interface InlineConfig {
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
-     * command line `--analysis` option.
+     * command line `--analyze` option.
      *
      * @default false
      */
