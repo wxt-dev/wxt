@@ -45,7 +45,7 @@ export function createIntegratedUi<TMounted>(
       throw Error('autoMount is already set.');
     }
     stopAutoMount = autoMountUi(
-      { mount, remove, mounted },
+      { mount, remove },
       {
         ...options,
         ...autoMountOptions,
@@ -302,11 +302,10 @@ function mountUi(
   }
 }
 
-function autoMountUi<TMounted>(
+function autoMountUi(
   mountContext: {
     mount: () => void;
     remove: () => void;
-    mounted: TMounted | undefined;
   },
   options: ContentScriptAnchoredOptions & AutoMountOptions,
 ): StopAutoMount {
@@ -316,6 +315,7 @@ function autoMountUi<TMounted>(
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
   const stopAutoMount = () => abort(EXPLICIT_STOP_REASON);
 
+  let isMount = false;
   async function observeElement() {
     let resolvedAnchor =
       typeof options.anchor === 'function' ? options.anchor() : options.anchor;
@@ -329,14 +329,16 @@ function autoMountUi<TMounted>(
       try {
         const _element = await waitElement(resolvedAnchor ?? 'body', {
           customMatcher: () => getAnchor(options) ?? null,
-          detector: mountContext.mounted ? removeDetector : mountDetector,
+          detector: isMount ? removeDetector : mountDetector,
           signal,
         });
         console.log('waitElement result', _element);
-        if (mountContext.mounted) {
+        if (isMount) {
           mountContext.remove();
+          isMount = false;
         } else {
           mountContext.mount();
+          isMount = true;
         }
       } catch (error) {
         if (signal.aborted && signal.reason === EXPLICIT_STOP_REASON) {
