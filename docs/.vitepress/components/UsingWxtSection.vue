@@ -56,6 +56,7 @@ const chromeExtensionIds = [
   'lfknakglefggmdkjdfhhofkjnnolffkh', // Text Search Pro - Search by case and whole-word match!
   'mbenhbocjckkbaojacmaepiameldglij', // Invoice Generator
   'phlfhkmdofajnbhgmbmjkbkdgppgoppb', // Monthly Bill Tracker
+  'macmkmchfoclhpbncclinhjflmdkaoom', // Wandpen - Instantly improve your writing with AI
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
