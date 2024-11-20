@@ -10,6 +10,7 @@ import useListExtensionDetails, {
 // extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
 // can be retrieved from the URL of the item on chromewebstore.google.com
 const chromeExtensionIds = [
+  'macmkmchfoclhpbncclinhjflmdkaoom', // Wandpen - Instantly improve your writing with AI
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
