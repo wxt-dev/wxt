@@ -21,6 +21,9 @@ const hooks: WxtHooks = {
   'zip:sources:start': vi.fn(),
   'zip:sources:done': vi.fn(),
   'zip:done': vi.fn(),
+  'server:created': vi.fn(),
+  'server:started': vi.fn(),
+  'server:closed': vi.fn(),
 };
 
 function expectHooksToBeCalled(
@@ -67,6 +70,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -95,6 +101,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -123,6 +132,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -151,6 +163,9 @@ describe('Hooks', () => {
       'zip:sources:start': true,
       'zip:sources:done': true,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -164,6 +179,7 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
+    expect(hooks['server:closed']).not.toBeCalled();
     await server.stop();
 
     expectHooksToBeCalled({
@@ -185,6 +201,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': 1,
+      'server:started': 1,
+      'server:closed': 1,
     });
   });
 });

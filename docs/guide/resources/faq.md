@@ -18,6 +18,14 @@ To list the content scripts registered during development, open the service work
 await chrome.scripting.getRegisteredContentScripts();
 ```
 
+## How do I disable opening the browser automatically during development?
+
+See https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser
+
+## How do I stay logged into a website during development?
+
+See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
+
 ## My component library doesn't work in content scripts!
 
 Component libraries place their CSS in the document's `<head>` by default. When using `createShadowRoot`, your UI is isolated from the document's styles because it's inside a ShadowRoot.
