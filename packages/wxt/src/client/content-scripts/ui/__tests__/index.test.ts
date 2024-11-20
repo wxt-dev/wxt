@@ -524,23 +524,22 @@ describe('Content Script UIs', () => {
 
       let dynamicEl;
 
-      // TODO: nextTickしないとobserveが始まらない でもバグがある
       for (let index = 0; index < 3; index++) {
-        expect(
-          waitElement('div[data-wxt-integrated]', {
-            detector: isNotExist,
-          }),
-        ).resolves.toBeNull();
-        expect(ui.mounted).toBeUndefined();
+        process.nextTick(async () => {
+          await expect(
+            waitElement('div[data-wxt-integrated]', {
+              detector: isNotExist,
+            }),
+          ).resolves.toBeNull();
+          expect(ui.mounted).toBeUndefined();
 
-        dynamicEl = appendTestElement({ id: 'dynamic-child' });
+          dynamicEl = appendTestElement({ id: 'dynamic-child' });
+          await expect(
+            waitElement('div[data-wxt-integrated]'),
+          ).resolves.not.toBeNull();
 
-        // TODO: notを外してもエラーにならない 非同期処理が正しくできていない
-        expect(waitElement('div[data-wxt-integrated]')).resolves.not.toBeNull();
-
-        console.log('??', document.body.innerHTML.toString());
-
-        dynamicEl.remove();
+          dynamicEl.remove();
+        });
       }
     });
 
