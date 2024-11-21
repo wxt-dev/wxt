@@ -304,10 +304,7 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewportYou are responsible for loading/running these scripts where needed. If necessary, don't forget to add the script and/or any related stylesheets to web_accessible_resources."
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Options Title</title>
     <meta name="manifest.open_in_tab" content="true|false" />
     <meta name="manifest.chrome_style" content="true|false" />
