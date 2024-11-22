@@ -1,6 +1,5 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect } from 'vitest';
-import { setTimeout as delay } from 'node:timers/promises';
 import { waitElement } from '@1natsu/wait-element';
 import { isNotExist } from '@1natsu/wait-element/detectors';
 import {
@@ -508,38 +507,41 @@ describe('Content Script UIs', () => {
     });
   });
 
-  describe.only('auto mount', () => {
+  describe('auto mount', () => {
+    const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
     beforeEach(() => {
       ui?.remove();
     });
     it.only('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
+      expect.hasAssertions();
+
       ui = createIntegratedUi(ctx, {
         position: 'inline',
         onMount: appendTestApp,
-        anchor: '#dynamic-child',
+        anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
       });
-
       ui.autoMount();
 
       let dynamicEl;
 
       for (let index = 0; index < 3; index++) {
-        process.nextTick(async () => {
-          await expect(
-            waitElement('div[data-wxt-integrated]', {
-              detector: isNotExist,
-            }),
-          ).resolves.toBeNull();
-          expect(ui.mounted).toBeUndefined();
+        // await microtasks by floating promise
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
-          dynamicEl = appendTestElement({ id: 'dynamic-child' });
-          await expect(
-            waitElement('div[data-wxt-integrated]'),
-          ).resolves.not.toBeNull();
+        await expect(
+          waitElement('div[data-wxt-integrated]', {
+            detector: isNotExist,
+          }),
+        ).resolves.toBeNull();
 
-          dynamicEl.remove();
-        });
+        dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+
+        await expect(
+          waitElement('div[data-wxt-integrated]'),
+        ).resolves.not.toBeNull();
+
+        dynamicEl.remove();
       }
     });
 
