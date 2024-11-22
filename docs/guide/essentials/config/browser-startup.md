@@ -62,7 +62,8 @@ import { resolve } from 'node:path';
 
 export default defineRunnerConfig({
   // On Windows, the path must be absolute
-  chromiumArgs: [`--user-data-dir="${resolve('.wxt/chrome-data')}"`],
+  chromiumProfile: resolve('.wxt/chrome-data'),
+  keepProfileChanges: true,
 });
 ```
 
