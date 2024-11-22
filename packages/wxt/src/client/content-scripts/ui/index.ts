@@ -319,24 +319,24 @@ function autoMountUi(
     abortController.abort(EXPLICIT_STOP_REASON);
   };
 
-  async function observeElement() {
-    let resolvedAnchor =
-      typeof options.anchor === 'function' ? options.anchor() : options.anchor;
-    if (resolvedAnchor instanceof Element) {
-      throw Error(
-        'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
-      );
-    }
+  let resolvedAnchor =
+    typeof options.anchor === 'function' ? options.anchor() : options.anchor;
+  if (resolvedAnchor instanceof Element) {
+    throw Error(
+      'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+    );
+  }
+
+  async function observeElement(selector: string | null | undefined) {
     let isMount = !!getAnchor(options);
 
     while (!abortController.signal.aborted) {
       try {
-        const _element = await waitElement(resolvedAnchor ?? 'body', {
+        const _element = await waitElement(selector ?? 'body', {
           customMatcher: () => getAnchor(options) ?? null,
           detector: isMount ? removeDetector : mountDetector,
           signal: abortController.signal,
         });
-        console.log('waitElement result', _element);
         if (isMount) {
           uiContext.unmount();
           isMount = false;
@@ -359,7 +359,7 @@ function autoMountUi(
       }
     }
   }
-  observeElement();
+  observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };
 }

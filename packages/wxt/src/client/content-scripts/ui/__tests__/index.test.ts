@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect } from 'vitest';
+import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
 import { waitElement } from '@1natsu/wait-element';
 import { isNotExist } from '@1natsu/wait-element/detectors';
 import {
@@ -507,13 +507,13 @@ describe('Content Script UIs', () => {
     });
   });
 
-  describe('auto mount', () => {
+  describe.only('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
-    beforeEach(() => {
+    afterEach(() => {
       ui?.remove();
     });
-    it.only('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
+    it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
       expect.hasAssertions();
 
       ui = createIntegratedUi(ctx, {
@@ -546,28 +546,33 @@ describe('Content Script UIs', () => {
     });
 
     describe('invalid anchors', () => {
-      it.todo('should throw when anchor is set as type Element', () => {
+      it('should throw when anchor is set as type Element', () => {
         ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: document.documentElement,
         });
-        expect(ui.autoMount()).toThrowError();
+
+        expect(() => ui.autoMount()).toThrowError(
+          'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+        );
       });
 
-      it.todo('should throw when anchor is set as type `() => Element`', () => {
+      it('should throw when anchor is set as type `() => Element`', () => {
         ui = createIntegratedUi(ctx, {
           position: 'inline',
           onMount: appendTestApp,
           anchor: () => document.documentElement,
         });
-        expect(ui.autoMount()).toThrowError();
+        expect(() => ui.autoMount()).toThrowError(
+          'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+        );
       });
     });
 
     describe('options', () => {
       it.todo(
-        'should auto-mount only once when the once option is true',
+        'should auto-mount only once mount and remove when the `once` option is true',
         () => {
           ui = createIntegratedUi(ctx, {
             position: 'inline',
