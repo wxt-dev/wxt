@@ -6,6 +6,7 @@ import {
 } from '@1natsu/wait-element/detectors';
 import { ContentScriptContext } from '..';
 import {
+  AutoMount,
   AutoMountOptions,
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
@@ -15,7 +16,6 @@ import {
   IntegratedContentScriptUiOptions,
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
-  StopAutoMount,
 } from './types';
 import { logger } from '../../../sandbox/utils/logger';
 import { createIsolatedElement } from '@webext-core/isolated-element';
@@ -34,34 +34,37 @@ export function createIntegratedUi<TMounted>(
   wrapper.setAttribute('data-wxt-integrated', '');
 
   let mounted: TMounted | undefined = undefined;
-  let stopAutoMount: StopAutoMount | undefined = undefined;
+  let autoMountInstance: AutoMount | undefined = undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper);
   };
   const autoMount = (autoMountOptions?: AutoMountOptions) => {
-    if (stopAutoMount) {
+    if (autoMountInstance) {
       throw Error('autoMount is already set.');
     }
-    stopAutoMount = autoMountUi(
-      { mount, remove },
+    autoMountInstance = autoMountUi(
+      { mount, unmount, stopAutoMount },
       {
         ...options,
         ...autoMountOptions,
       },
     );
-    return () => {
-      stopAutoMount?.();
-      stopAutoMount = undefined;
-    };
+    return stopAutoMount;
   };
   const remove = () => {
+    unmount();
+    stopAutoMount();
+  };
+  const unmount = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
-    stopAutoMount?.();
-    stopAutoMount = undefined;
     mounted = undefined;
+  };
+  const stopAutoMount = () => {
+    autoMountInstance?.stopAutoMount();
+    autoMountInstance = undefined;
   };
 
   ctx.onInvalidated(remove);
@@ -303,19 +306,19 @@ function mountUi(
 }
 
 function autoMountUi(
-  mountContext: {
+  uiContext: {
     mount: () => void;
-    remove: () => void;
+    unmount: () => void;
+    stopAutoMount: () => void;
   },
   options: ContentScriptAnchoredOptions & AutoMountOptions,
-): StopAutoMount {
+): AutoMount {
   const abortController = new AbortController();
-  const signal = abortController.signal;
-  const abort = abortController.abort;
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
-  const stopAutoMount = () => abort(EXPLICIT_STOP_REASON);
+  const _stopAutoMount = () => {
+    abortController.abort(EXPLICIT_STOP_REASON);
+  };
 
-  let isMount = false;
   async function observeElement() {
     let resolvedAnchor =
       typeof options.anchor === 'function' ? options.anchor() : options.anchor;
@@ -324,24 +327,31 @@ function autoMountUi(
         'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
       );
     }
+    let isMount = !!getAnchor(options);
 
-    while (!signal.aborted) {
+    while (!abortController.signal.aborted) {
       try {
         const _element = await waitElement(resolvedAnchor ?? 'body', {
           customMatcher: () => getAnchor(options) ?? null,
           detector: isMount ? removeDetector : mountDetector,
-          signal,
+          signal: abortController.signal,
         });
         console.log('waitElement result', _element);
         if (isMount) {
-          mountContext.remove();
+          uiContext.unmount();
           isMount = false;
         } else {
-          mountContext.mount();
+          uiContext.mount();
           isMount = true;
+          if (options.once) {
+            uiContext.stopAutoMount();
+          }
         }
       } catch (error) {
-        if (signal.aborted && signal.reason === EXPLICIT_STOP_REASON) {
+        if (
+          abortController.signal.aborted &&
+          abortController.signal.reason === EXPLICIT_STOP_REASON
+        ) {
           break;
         } else {
           throw error;
@@ -351,7 +361,7 @@ function autoMountUi(
   }
   observeElement();
 
-  return stopAutoMount;
+  return { stopAutoMount: _stopAutoMount };
 }
 
 /**

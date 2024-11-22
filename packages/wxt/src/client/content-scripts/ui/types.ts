@@ -223,3 +223,6 @@ export interface ContentScriptAnchoredOptions {
 
 export type AutoMountOptions = { once?: boolean };
 export type StopAutoMount = () => void;
+export interface AutoMount {
+  stopAutoMount: StopAutoMount;
+}
