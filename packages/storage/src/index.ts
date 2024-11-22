@@ -8,6 +8,13 @@
 import { dequal } from 'dequal/lite';
 import { Mutex } from 'async-mutex';
 
+const browser: typeof chrome =
+  // @ts-expect-error
+  globalThis.browser?.runtime?.id == null
+    ? globalThis.chrome
+    : // @ts-expect-error
+      globalThis.browser;
+
 export const storage = createStorage();
 
 function createStorage(): WxtStorage {
@@ -197,7 +204,7 @@ function createStorage(): WxtStorage {
       const resultsMap: Record<string, any> = {};
       await Promise.all(
         Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
-          const areaRes = await chrome.storage[area as StorageArea].get(
+          const areaRes = await browser.storage[area as StorageArea].get(
             keys.map((key) => key.driverMetaKey),
           );
           keys.forEach((key) => {
@@ -474,7 +481,7 @@ function createStorage(): WxtStorage {
 
 function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const getStorageArea = () => {
-    if (chrome.runtime == null) {
+    if (browser.runtime == null) {
       throw Error(
         [
           "'wxt/storage' must be loaded in a web extension environment",
@@ -483,15 +490,15 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
         ].join('\n'),
       );
     }
-    if (chrome.storage == null) {
+    if (browser.storage == null) {
       throw Error(
         "You must add the 'storage' permission to your manifest to use 'wxt/storage'",
       );
     }
 
-    const area = chrome.storage[storageArea];
+    const area = browser.storage[storageArea];
     if (area == null)
-      throw Error(`"chrome.storage.${storageArea}" is undefined`);
+      throw Error(`"browser.storage.${storageArea}" is undefined`);
     return area;
   };
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
