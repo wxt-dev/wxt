@@ -392,10 +392,11 @@ async function getUnimportEslintOptions(
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
+      if (isNaN(major)) eslintEnabled = false;
       if (major <= 8) eslintEnabled = 8;
       else if (major >= 9) eslintEnabled = 9;
       // NaN
-      else eslintEnabled = 8;
+      else eslintEnabled = false;
       break;
     case true:
       eslintEnabled = 8;
