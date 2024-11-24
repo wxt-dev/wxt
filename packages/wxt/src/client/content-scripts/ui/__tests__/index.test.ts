@@ -515,13 +515,14 @@ describe('Content Script UIs', () => {
   describe.only('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
-    afterEach(() => {
+    beforeEach(async () => {
       ui?.remove();
+      await runMicrotasks();
     });
     it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
       const onMount = vi.fn(appendTestApp);
       const onRemove = vi.fn();
-      ui = createIntegratedUi(ctx, {
+      ui = createIntegratedUi(new ContentScriptContext('test'), {
         position: 'inline',
         onMount,
         onRemove,
@@ -551,9 +552,9 @@ describe('Content Script UIs', () => {
       expect(onRemove).toHaveBeenCalledTimes(3);
     });
 
-    describe.skip('invalid anchors', () => {
+    describe('invalid anchors', () => {
       it('should throw when anchor is set as type Element', () => {
-        ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(new ContentScriptContext('test'), {
           position: 'inline',
           onMount: appendTestApp,
           anchor: document.documentElement,
@@ -565,7 +566,7 @@ describe('Content Script UIs', () => {
       });
 
       it('should throw when anchor is set as type `() => Element`', () => {
-        ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(new ContentScriptContext('test'), {
           position: 'inline',
           onMount: appendTestApp,
           anchor: () => document.documentElement,
@@ -576,11 +577,11 @@ describe('Content Script UIs', () => {
       });
     });
 
-    describe.skip('options', () => {
-      it.only('should auto-mount only once mount and remove when the `once` option is true', async () => {
+    describe('options', () => {
+      it('should auto-mount only once mount and remove when the `once` option is true', async () => {
         const onMount = vi.fn(appendTestApp);
         const onRemove = vi.fn();
-        ui = createIntegratedUi(ctx, {
+        ui = createIntegratedUi(new ContentScriptContext('test'), {
           position: 'inline',
           onMount,
           onRemove,
