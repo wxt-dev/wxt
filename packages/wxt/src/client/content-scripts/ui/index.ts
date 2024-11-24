@@ -340,12 +340,12 @@ function autoMountUi(
         if (isMount) {
           uiContext.unmount();
           isMount = false;
-        } else {
-          uiContext.mount();
-          isMount = true;
           if (options.once) {
             uiContext.stopAutoMount();
           }
+        } else {
+          uiContext.mount();
+          isMount = true;
         }
       } catch (error) {
         if (
