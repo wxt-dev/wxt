@@ -54,8 +54,8 @@ export function createIntegratedUi<TMounted>(
     return stopAutoMount;
   };
   const remove = () => {
-    unmount();
     stopAutoMount();
+    unmount();
   };
   const unmount = () => {
     options.onRemove?.(mounted);
@@ -117,8 +117,8 @@ export function createIframeUi<TMounted>(
     return stopAutoMount;
   };
   const remove = () => {
-    unmount();
     stopAutoMount();
+    unmount();
   };
   const unmount = () => {
     options.onRemove?.(mounted);
@@ -199,8 +199,8 @@ export async function createShadowRootUi<TMounted>(
     return stopAutoMount;
   };
   const remove = () => {
-    unmount();
     stopAutoMount();
+    unmount();
   };
   const unmount = () => {
     // Cleanup mounted state
@@ -341,6 +341,7 @@ function autoMountUi(
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
   const _stopAutoMount = () => {
     abortController.abort(EXPLICIT_STOP_REASON);
+    options.onStop?.();
   };
 
   let resolvedAnchor =

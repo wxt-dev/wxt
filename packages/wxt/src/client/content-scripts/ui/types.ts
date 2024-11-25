@@ -221,7 +221,7 @@ export interface ContentScriptAnchoredOptions {
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
 }
 
-export type AutoMountOptions = { once?: boolean };
+export type AutoMountOptions = { once?: boolean; onStop?: () => void };
 export type StopAutoMount = () => void;
 export interface AutoMount {
   stopAutoMount: StopAutoMount;
