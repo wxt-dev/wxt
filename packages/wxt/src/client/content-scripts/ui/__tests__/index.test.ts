@@ -660,7 +660,7 @@ describe('Content Script UIs', () => {
             const stopAutoMount = ui.autoMount();
             stopAutoMount();
 
-            appendTestElement({ id: 'dynamic-child' });
+            appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
 
             await expect
