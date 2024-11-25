@@ -221,8 +221,23 @@ export interface ContentScriptAnchoredOptions {
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
 }
 
-export type AutoMountOptions = { once?: boolean; onStop?: () => void };
+/**
+ *
+ */
+export type AutoMountOptions = {
+  /**
+   * Executes only a once mount and a once unmount.
+   */
+  once?: boolean;
+  /**
+   * The callback triggered when `StopAutoMount` is called.
+   */
+  onStop?: () => void;
+};
 export type StopAutoMount = () => void;
 export interface AutoMount {
+  /**
+   * The observing by AutoMount stops, but the UI is not removed.
+   */
   stopAutoMount: StopAutoMount;
 }

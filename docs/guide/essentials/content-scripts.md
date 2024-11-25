@@ -571,6 +571,44 @@ For MV3, `injectScript` is synchronous and the injected script will be evaluated
 However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
 :::
 
+## Mounting UI to dynamic element
+
+In many cases, you may need to mount a UI to a DOM element that does not exist at the time the web page is initially loaded. To handle this, use the `autoMount` API to automatically mount the UI when the target element appears dynamically and unmount it when the element disappears. In WXT, the `anchor` option is used to target the element, enabling automatic mounting and unmounting based on its appearance and removal.
+
+```ts
+export default defineContentScript({
+  matches: ['<all_urls>'],
+
+  main(ctx) {
+    const ui = createIntegratedUi(ctx, {
+      position: 'inline',
+      // It observes the anchor
+      anchor: '#your-target-dynamic-element',
+      onMount: (container) => {
+        // Append children to the container
+        const app = document.createElement('p');
+        app.textContent = '...';
+        container.append(app);
+      },
+    });
+
+    // Call autoMount to observe anchor element for add/remove.
+    // You can stop it by calling the returned function.
+    const stopAutoMount = ui.autoMount();
+  },
+});
+```
+
+:::tip About the `once` option
+The `once` option executes a once mount and a once unmount.
+:::
+
+:::tip
+When the `ui.remove` is called, `autoMount` also stops.
+:::
+
+See the [API Reference](/api/reference/wxt/client/interfaces/ContentScriptUi.html#automount) for the complete list of options.
+
 ## Dealing with SPAs
 
 It is difficult to write content scripts for SPAs (single page applications) and websites using HTML5 history mode for navigation because content scripts are only ran on full page reloads. SPAs and websites that take advantage of HTML5 history mode **_do not perform a full reload when changing paths_**, and thus your content script isn't going to be ran when you expect it to be.
