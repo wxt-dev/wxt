@@ -519,133 +519,170 @@ describe('Content Script UIs', () => {
       ui?.remove();
       await runMicrotasks();
     });
-    it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
-      const onMount = vi.fn(appendTestApp);
-      const onRemove = vi.fn();
-      ui = createIntegratedUi(new ContentScriptContext('test'), {
-        position: 'inline',
-        onMount,
-        onRemove,
-        anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
-      });
-      ui.autoMount();
 
-      let dynamicEl;
+    describe.each([
+      {
+        name: 'integrated',
+        createUiFunction: createIntegratedUi,
+        uiSelector: 'div[data-wxt-integrated]',
+      },
+      {
+        name: 'iframe',
+        createUiFunction: createIframeUi,
+        uiSelector: 'div[data-wxt-iframe]',
+      },
+      {
+        name: 'shadow-root',
+        createUiFunction: createShadowRootUi,
+        uiSelector: 'test-component[data-wxt-shadow-root]',
+      },
+    ] as const)(
+      'built-in UI type: $name',
+      ({ name, createUiFunction, uiSelector }) => {
+        it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
+          const onMount = vi.fn(appendTestApp);
+          const onRemove = vi.fn();
+          ui = await createUiFunction(ctx, {
+            position: 'inline',
+            onMount,
+            onRemove,
+            anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
+            page: name === 'iframe' ? '/page.html' : undefined,
+            name: 'test-component',
+          });
+          ui.autoMount();
 
-      for (let index = 0; index < 3; index++) {
-        await expect
-          .poll(() => document.querySelector('div[data-wxt-integrated]'))
-          .toBeNull();
+          let dynamicEl;
 
-        dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
-        await runMicrotasks();
+          for (let index = 0; index < 3; index++) {
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .toBeNull();
 
-        await expect
-          .poll(() => document.querySelector('div[data-wxt-integrated]'))
-          .not.toBeNull();
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
 
-        dynamicEl.remove();
-        await runMicrotasks();
-      }
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .not.toBeNull();
 
-      expect(onMount).toHaveBeenCalledTimes(3);
-      expect(onRemove).toHaveBeenCalledTimes(3);
-    });
+            dynamicEl.remove();
+            await runMicrotasks();
+          }
 
-    describe('invalid anchors', () => {
-      it('should throw when anchor is set as type Element', () => {
-        ui = createIntegratedUi(new ContentScriptContext('test'), {
-          position: 'inline',
-          onMount: appendTestApp,
-          anchor: document.documentElement,
+          expect(onMount).toHaveBeenCalledTimes(3);
+          expect(onRemove).toHaveBeenCalledTimes(3);
         });
 
-        expect(() => ui.autoMount()).toThrowError(
-          'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
-        );
-      });
+        describe('invalid anchors', () => {
+          it('should throw when anchor is set as type Element', async () => {
+            ui = await createUiFunction(ctx, {
+              position: 'inline',
+              onMount: appendTestApp,
+              anchor: document.documentElement,
+              page: name === 'iframe' ? '/page.html' : undefined,
+              name: 'test-component',
+            });
 
-      it('should throw when anchor is set as type `() => Element`', () => {
-        ui = createIntegratedUi(new ContentScriptContext('test'), {
-          position: 'inline',
-          onMount: appendTestApp,
-          anchor: () => document.documentElement,
+            expect(() => ui.autoMount()).toThrowError(
+              'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+            );
+          });
+
+          it('should throw when anchor is set as type `() => Element`', async () => {
+            ui = await createUiFunction(ctx, {
+              position: 'inline',
+              onMount: appendTestApp,
+              anchor: () => document.documentElement,
+              page: name === 'iframe' ? '/page.html' : undefined,
+              name: 'test-component',
+            });
+            expect(() => ui.autoMount()).toThrowError(
+              'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+            );
+          });
         });
-        expect(() => ui.autoMount()).toThrowError(
-          'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
-        );
-      });
-    });
 
-    describe('options', () => {
-      it('should auto-mount only once mount and remove when the `once` option is true', async () => {
-        const onMount = vi.fn(appendTestApp);
-        const onRemove = vi.fn();
-        ui = createIntegratedUi(new ContentScriptContext('test'), {
-          position: 'inline',
-          onMount,
-          onRemove,
-          anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
+        describe('options', () => {
+          it('should auto-mount only once mount and remove when the `once` option is true', async () => {
+            const onMount = vi.fn(appendTestApp);
+            const onRemove = vi.fn();
+            ui = await createUiFunction(ctx, {
+              position: 'inline',
+              onMount,
+              onRemove,
+              anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
+              page: name === 'iframe' ? '/page.html' : undefined,
+              name: 'test-component',
+            });
+            ui.autoMount({ once: true });
+
+            let dynamicEl;
+
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .toBeNull();
+
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
+
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .not.toBeNull();
+
+            dynamicEl.remove();
+            await runMicrotasks();
+
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
+
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .toBeNull();
+
+            expect(onMount).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(1);
+          });
         });
-        ui.autoMount({ once: true });
 
-        let dynamicEl;
+        describe('StopAutoMount', () => {
+          it.todo(
+            'should stop auto-mounting when StopAutoMount is called',
+            () => {
+              ui = createIntegratedUi(ctx, {
+                position: 'inline',
+                onMount: appendTestApp,
+                anchor: '#parent > #dynamic-child',
+              });
+              const stopAutoMount = ui.autoMount();
+              stopAutoMount();
+              appendTestElement({ id: 'dynamic-child' });
 
-        await expect
-          .poll(() => document.querySelector('div[data-wxt-integrated]'))
-          .toBeNull();
+              expect(
+                document.querySelector('div[data-wxt-integrated]'),
+              ).toBeNull();
+            },
+          );
+          it.todo(
+            'should call StopAutoMount when `ui.remove` is called',
+            () => {
+              ui = createIntegratedUi(ctx, {
+                position: 'inline',
+                onMount: appendTestApp,
+                anchor: '#parent > #dynamic-child',
+              });
+              const spyAutoMount = vi.fn(ui.autoMount());
+              ui.remove();
+              expect(spyAutoMount).toHaveBeenCalled();
+            },
+          );
 
-        dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
-
-        await runMicrotasks();
-
-        await expect
-          .poll(() => document.querySelector('div[data-wxt-integrated]'))
-          .not.toBeNull();
-
-        dynamicEl.remove();
-        await runMicrotasks();
-
-        dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
-        await runMicrotasks();
-
-        await expect
-          .poll(() => document.querySelector('div[data-wxt-integrated]'))
-          .toBeNull();
-
-        expect(onMount).toHaveBeenCalledTimes(1);
-        expect(onRemove).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('StopAutoMount', () => {
-      it.todo('should stop auto-mounting when StopAutoMount is called', () => {
-        ui = createIntegratedUi(ctx, {
-          position: 'inline',
-          onMount: appendTestApp,
-          anchor: '#parent > #dynamic-child',
+          it.todo(
+            'should allow calling automount again after StopAutoMount is called',
+            async () => {},
+          );
         });
-        const stopAutoMount = ui.autoMount();
-        stopAutoMount();
-        appendTestElement({ id: 'dynamic-child' });
-
-        expect(document.querySelector('div[data-wxt-integrated]')).toBeNull();
-      });
-      it.todo('should call StopAutoMount when `ui.remove` is called', () => {
-        ui = createIntegratedUi(ctx, {
-          position: 'inline',
-          onMount: appendTestApp,
-          anchor: '#parent > #dynamic-child',
-        });
-        const spyAutoMount = vi.fn(ui.autoMount());
-        ui.remove();
-        expect(spyAutoMount).toHaveBeenCalled();
-      });
-
-      it.todo(
-        'should allow calling automount again after StopAutoMount is called',
-        async () => {},
-      );
-    });
+      },
+    );
   });
 });
