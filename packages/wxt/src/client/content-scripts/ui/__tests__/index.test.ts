@@ -515,7 +515,7 @@ describe('Content Script UIs', () => {
   /**
    * Need call runMicrotasks after floating-promise and append/remove dom
    */
-  describe.only('auto mount', () => {
+  describe('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
     beforeEach(async () => {
