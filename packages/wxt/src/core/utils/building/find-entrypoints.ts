@@ -77,10 +77,6 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     return results;
   }, []);
 
-  // Validation
-  preventNoEntrypoints(entrypointInfos);
-  preventDuplicateEntrypointNames(entrypointInfos);
-
   // Import entrypoints to get their config
   let hasBackground = false;
   const env = createExtensionEnvironment();
@@ -174,6 +170,10 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   wxt.logger.debug(`${wxt.config.browser} entrypoints:`, targetEntrypoints);
   await wxt.hooks.callHook('entrypoints:resolved', wxt, targetEntrypoints);
 
+  // Validation
+  preventNoEntrypoints(targetEntrypoints);
+  preventDuplicateEntrypointNames(targetEntrypoints);
+
   return targetEntrypoints;
 }
 
@@ -187,7 +187,7 @@ interface EntrypointInfo {
   skipped: boolean;
 }
 
-function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
+function preventDuplicateEntrypointNames(files: Entrypoint[]) {
   const namesToPaths = files.reduce<Record<string, string[]>>(
     (map, { name, inputPath }) => {
       map[name] ??= [];
@@ -216,7 +216,7 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
   }
 }
 
-function preventNoEntrypoints(files: EntrypointInfo[]) {
+function preventNoEntrypoints(files: Entrypoint[]) {
   if (files.length === 0) {
     throw Error(`No entrypoints found in ${wxt.config.entrypointsDir}`);
   }
