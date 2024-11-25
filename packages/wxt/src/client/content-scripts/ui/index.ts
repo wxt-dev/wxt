@@ -352,24 +352,23 @@ function autoMountUi(
   }
 
   async function observeElement(selector: string | null | undefined) {
-    let isMount = !!getAnchor(options);
+    let isAnchorExist = !!getAnchor(options);
 
     while (!abortController.signal.aborted) {
       try {
-        const _element = await waitElement(selector ?? 'body', {
+        const changedAnchor = await waitElement(selector ?? 'body', {
           customMatcher: () => getAnchor(options) ?? null,
-          detector: isMount ? removeDetector : mountDetector,
+          detector: isAnchorExist ? removeDetector : mountDetector,
           signal: abortController.signal,
         });
-        if (isMount) {
+        isAnchorExist = !!changedAnchor;
+        if (isAnchorExist) {
+          uiCallbacks.mount();
+        } else {
           uiCallbacks.unmount();
-          isMount = false;
           if (options.once) {
             uiCallbacks.stopAutoMount();
           }
-        } else {
-          uiCallbacks.mount();
-          isMount = true;
         }
       } catch (error) {
         if (
