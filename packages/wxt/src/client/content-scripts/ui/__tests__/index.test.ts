@@ -512,6 +512,9 @@ describe('Content Script UIs', () => {
     });
   });
 
+  /**
+   * Need call runMicrotasks after floating-promise and append/remove dom
+   */
   describe.only('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
@@ -550,9 +553,9 @@ describe('Content Script UIs', () => {
             page: name === 'iframe' ? '/page.html' : undefined,
             name: 'test-component',
           });
-          ui.autoMount();
-
           let dynamicEl;
+          ui.autoMount();
+          await runMicrotasks();
 
           for (let index = 0; index < 3; index++) {
             await expect
@@ -561,7 +564,6 @@ describe('Content Script UIs', () => {
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-
             await expect
               .poll(() => document.querySelector(uiSelector))
               .not.toBeNull();
@@ -574,6 +576,49 @@ describe('Content Script UIs', () => {
           expect(onRemove).toHaveBeenCalledTimes(3);
         });
 
+        describe('options', () => {
+          it('should auto-mount only once mount and remove when the `once` option is true', async () => {
+            const onMount = vi.fn(appendTestApp);
+            const onRemove = vi.fn();
+            ui = await createUiFunction(ctx, {
+              position: 'inline',
+              onMount,
+              onRemove,
+              anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
+              page: name === 'iframe' ? '/page.html' : undefined,
+              name: 'test-component',
+            });
+            let dynamicEl;
+            ui.autoMount({ once: true });
+            await runMicrotasks();
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .toBeNull();
+
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .not.toBeNull();
+
+            dynamicEl.remove();
+            await runMicrotasks();
+            expect(onMount).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(1);
+
+            // re-append after once cycle
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
+
+            // expect stop automount
+            await expect
+              .poll(() => document.querySelector(uiSelector))
+              .toBeNull();
+            expect(onMount).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(1);
+          });
+        });
+
         describe('invalid anchors', () => {
           it('should throw when anchor is set as type Element', async () => {
             ui = await createUiFunction(ctx, {
@@ -583,7 +628,6 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-
             expect(() => ui.autoMount()).toThrowError(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
@@ -603,48 +647,6 @@ describe('Content Script UIs', () => {
           });
         });
 
-        describe('options', () => {
-          it('should auto-mount only once mount and remove when the `once` option is true', async () => {
-            const onMount = vi.fn(appendTestApp);
-            const onRemove = vi.fn();
-            ui = await createUiFunction(ctx, {
-              position: 'inline',
-              onMount,
-              onRemove,
-              anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
-              page: name === 'iframe' ? '/page.html' : undefined,
-              name: 'test-component',
-            });
-            ui.autoMount({ once: true });
-
-            let dynamicEl;
-
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
-
-            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
-            await runMicrotasks();
-
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
-
-            dynamicEl.remove();
-            await runMicrotasks();
-
-            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
-            await runMicrotasks();
-
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
-
-            expect(onMount).toHaveBeenCalledTimes(1);
-            expect(onRemove).toHaveBeenCalledTimes(1);
-          });
-        });
-
         describe('StopAutoMount', () => {
           it('should stop auto-mounting when StopAutoMount is called', async () => {
             const onMount = vi.fn(appendTestApp);
@@ -657,18 +659,28 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+            let dynamicEl;
             const stopAutoMount = ui.autoMount();
-            stopAutoMount();
-
-            appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
 
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            await runMicrotasks();
             await expect
               .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+              .not.toBeNull();
 
-            expect(onMount).toHaveBeenCalledTimes(0);
-            expect(onRemove).toHaveBeenCalledTimes(0);
+            dynamicEl.remove();
+            await runMicrotasks();
+            expect(onMount).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(1);
+
+            stopAutoMount();
+
+            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+            dynamicEl.remove();
+            await runMicrotasks();
+            expect(onMount).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(1);
           });
 
           it('should call StopAutoMount when `ui.remove` is called', async () => {
@@ -691,24 +703,18 @@ describe('Content Script UIs', () => {
 
           it('should allow calling automount again after StopAutoMount is called', async () => {
             const onMount = vi.fn(appendTestApp);
-            const onRemove = vi.fn();
             ui = await createUiFunction(ctx, {
               position: 'inline',
               onMount,
-              onRemove,
               anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-
             const stopAutoMount = ui.autoMount();
-
             expect(() => ui.autoMount()).toThrowError(
               'autoMount is already set.',
             );
-
             stopAutoMount();
-
             expect(() => ui.autoMount()).not.toThrowError();
           });
         });
