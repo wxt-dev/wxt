@@ -80,10 +80,20 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Import entrypoints to get their config
   let hasBackground = false;
   const env = createExtensionEnvironment();
-  const entrypoints: Entrypoint[] = await env.run(() =>
-    Promise.all(
-      entrypointInfos.map(async (info): Promise<Entrypoint> => {
+  const entrypoints: Entrypoint[] = await env.run(() => {
+    const res = wxt.builder.importEntrypoints(
+      entrypointInfos
+        .filter(
+          (info) =>
+            info.type === 'content-script' || info.type === 'unlisted-script',
+        )
+        .map((info) => info.inputPath),
+    );
+
+    return Promise.all(
+      entrypointInfos.map(async (info, i): Promise<Entrypoint> => {
         const { type } = info;
+        const defaultExport = res[i];
         switch (type) {
           case 'popup':
             return await getPopupEntrypoint(info);
@@ -122,8 +132,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
             };
         }
       }),
-    ),
-  );
+    );
+  });
 
   if (wxt.config.command === 'serve' && !hasBackground) {
     entrypoints.push(
