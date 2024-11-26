@@ -451,7 +451,7 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
       vite:
-        specifier: ^5.4.11
+        specifier: ^5.0.0 || ^6.0.0
         version: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
       vite-node:
         specifier: ^2.1.4
