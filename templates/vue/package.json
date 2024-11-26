@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/chrome": "^0.0.280",
     "@wxt-dev/module-vue": "^1.0.1",
-    "typescript": "^5.6.3",
+    "typescript": "5.6.3",
     "vue-tsc": "^2.1.10",
     "wxt": "^0.19.13"
   }
