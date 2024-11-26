@@ -5,6 +5,7 @@ import {
   InlineConfig,
   ServerInfo,
   WxtDevServer,
+  KeyboardShortcutWatcher,
 } from '../types';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import {
@@ -109,11 +110,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       const keyboardsShortCuts = createKeyBoardShortCuts(server);
       server.watcher.on('all', reloadOnChange);
-      server.watcher.on('all', keyboardsShortCuts);
+      keyboardsShortCuts.start();
     },
 
     async stop() {
       wasStopped = true;
+      const keyboardsShortCuts = createKeyBoardShortCuts(server);
+      keyboardsShortCuts.stop();
       await runner.closeBrowser();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
@@ -138,10 +141,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
+      const keyboardsShortCuts = createKeyBoardShortCuts(server);
       await runner.closeBrowser();
+      keyboardsShortCuts.stop();
       await wxt.reloadConfig();
       runner = await createExtensionRunner();
       await runner.openBrowser();
+      keyboardsShortCuts.start();
     },
   };
 
@@ -163,24 +169,44 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
   return server;
 }
+var isWatching = false;
 
 /**
  * Function that creates a key board shortcut the extension.
  */
-function createKeyBoardShortCuts(server: WxtDevServer) {
-  process.stdin.setRawMode(true);
-  process.stdin.resume();
-  async function onInput(input: string) {
-    if (input === 'o') {
+export function createKeyBoardShortCuts(
+  server: WxtDevServer,
+): KeyboardShortcutWatcher {
+  let originalRawMode: boolean | undefined;
+
+  const handleInput = (data: Buffer) => {
+    const char = data.toString();
+    if (char === 'o') {
       server.restartBrowser();
     }
-  }
+  };
 
-  process.stdin.on('data', (data) => {
-    const char = data.toString();
-    onInput(char);
-  });
-  return () => {};
+  return {
+    start() {
+      if (isWatching) return;
+      originalRawMode = process.stdin.isRaw;
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+
+      process.stdin.on('data', handleInput);
+      isWatching = true;
+    },
+
+    stop() {
+      if (!isWatching) return;
+      process.stdin.removeListener('data', handleInput);
+      if (originalRawMode !== undefined) {
+        process.stdin.setRawMode(originalRawMode);
+      }
+      process.stdin.pause();
+      isWatching = false;
+    },
+  };
 }
 
 /**
