@@ -29,7 +29,7 @@ img.src = imageUrl;
 
 ## `/public` Directory
 
-Files inside `<srcDir>/public/` are copied into the output folder as-is, without being processed by WXT's bundler.
+Files inside `<rootDir>/public/` are copied into the output folder as-is, without being processed by WXT's bundler.
 
 Here's how you access them:
 
