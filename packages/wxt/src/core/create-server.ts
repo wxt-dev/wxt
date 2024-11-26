@@ -107,8 +107,11 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       // Listen for file changes and reload different parts of the extension accordingly
       const reloadOnChange = createFileReloader(server);
+      const keyboardsShortCuts = createKeyBoardShortCuts(server);
       server.watcher.on('all', reloadOnChange);
+      server.watcher.on('all', keyboardsShortCuts);
     },
+
     async stop() {
       wasStopped = true;
       await runner.closeBrowser();
@@ -159,6 +162,25 @@ async function createServerInternal(): Promise<WxtDevServer> {
   };
 
   return server;
+}
+
+/**
+ * Function that creates a key board shortcut the extension.
+ */
+function createKeyBoardShortCuts(server: WxtDevServer) {
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  async function onInput(input: string) {
+    if (input === 'o') {
+      server.restartBrowser();
+    }
+  }
+
+  process.stdin.on('data', (data) => {
+    const char = data.toString();
+    onInput(char);
+  });
+  return () => {};
 }
 
 /**
@@ -230,6 +252,7 @@ function createFileReloader(server: WxtDevServer) {
             break;
           case 'content-script-reload':
             reloadContentScripts(changes.changedSteps, server);
+
             const rebuiltNames = changes.rebuildGroups
               .flat()
               .map((entry) => entry.name);
