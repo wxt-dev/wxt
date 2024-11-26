@@ -54,6 +54,10 @@ img.src = imageUrl;
 
 :::
 
+:::warning
+Assets in the `public/` directory are **_not_** accessible in content scripts by default. To use a public asset in a content script, you must add it to your manifest's [`web_accessible_resources` array](/api/reference/wxt/type-aliases/UserManifest#web-accessible-resources).
+:::
+
 ## Inside Content Scripts
 
 Assets inside content scripts are a little different. By default, when you import an asset, it returns just the path to the asset. This is because Vite assumes you're loading assets from the same hostname.
