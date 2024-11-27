@@ -1602,6 +1602,11 @@ describe('Manifest Utils', () => {
               },
             },
           },
+          server: fakeWxtDevServer({
+            port: 3000,
+            hostname: 'localhost',
+            origin: 'http://localhost:3000',
+          }),
         });
 
         const { manifest: actual } = await generateManifest(
