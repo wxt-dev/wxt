@@ -1581,10 +1581,8 @@ describe('Manifest Utils', () => {
           permissions: ['tabs', 'scripting'],
         });
       });
-    });
 
-    describe('MV2 dev mode CSP', () => {
-      it('should convert manifest.content_security_policy.extension_pages to manifest.content_security_policy for MV2', async () => {
+      it('should convert MV3 CSP object to MV2 CSP string with localhost for MV2', async () => {
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
         const inputCsp =
