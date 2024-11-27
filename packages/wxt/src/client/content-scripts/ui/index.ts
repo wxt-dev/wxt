@@ -42,7 +42,8 @@ export function createIntegratedUi<TMounted>(
   };
   const autoMount = (autoMountOptions?: AutoMountOptions) => {
     if (autoMountInstance) {
-      throw Error('autoMount is already set.');
+      logger.warn('autoMount is already set.');
+      return stopAutoMount;
     }
     autoMountInstance = autoMountUi(
       { mount, unmount, stopAutoMount },
@@ -105,7 +106,8 @@ export function createIframeUi<TMounted>(
   };
   const autoMount = (autoMountOptions?: AutoMountOptions) => {
     if (autoMountInstance) {
-      throw Error('autoMount is already set.');
+      logger.warn('autoMount is already set.');
+      return stopAutoMount;
     }
     autoMountInstance = autoMountUi(
       { mount, unmount, stopAutoMount },
@@ -187,7 +189,8 @@ export async function createShadowRootUi<TMounted>(
   };
   const autoMount = (autoMountOptions?: AutoMountOptions) => {
     if (autoMountInstance) {
-      throw Error('autoMount is already set.');
+      logger.warn('autoMount is already set.');
+      return stopAutoMount;
     }
     autoMountInstance = autoMountUi(
       { mount, unmount, stopAutoMount },

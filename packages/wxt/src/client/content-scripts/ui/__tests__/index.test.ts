@@ -710,12 +710,19 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            const stopAutoMount = ui.autoMount();
-            expect(() => ui.autoMount()).toThrowError(
-              'autoMount is already set.',
-            );
-            stopAutoMount();
-            expect(() => ui.autoMount()).not.toThrowError();
+            const onStop = vi.fn();
+            const stopAutoMount1 = ui.autoMount({ onStop });
+            const stopAutoMount2 = ui.autoMount({ onStop });
+            expect(stopAutoMount1).toStrictEqual(stopAutoMount2);
+
+            stopAutoMount2();
+            expect(onStop).toBeCalledTimes(1);
+
+            const stopAutoMount3 = ui.autoMount({ onStop });
+            expect(stopAutoMount2).toStrictEqual(stopAutoMount3);
+
+            stopAutoMount3();
+            expect(onStop).toBeCalledTimes(2);
           });
         });
       },
