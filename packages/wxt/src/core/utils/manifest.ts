@@ -493,7 +493,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     server: !!wxt.server,
   });
 
-  if (wxt.server) {
+  if (wxt.config.command === 'serve') {
     extensionPagesCsp.add('script-src', allowedCsp);
     sandboxCsp.add('script-src', allowedCsp);
   }
