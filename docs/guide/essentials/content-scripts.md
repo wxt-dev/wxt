@@ -599,10 +599,6 @@ export default defineContentScript({
 });
 ```
 
-:::tip About the `once` option
-The `once` option executes a once mount and a once unmount.
-:::
-
 :::tip
 When the `ui.remove` is called, `autoMount` also stops.
 :::
