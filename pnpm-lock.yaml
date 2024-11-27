@@ -253,7 +253,7 @@ importers:
     dependencies:
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
-        version: 5.12.0(rollup@3.29.4)
+        version: 5.12.0(rollup@4.24.0)
       '@types/chrome':
         specifier: ^0.0.269
         version: 0.0.269
@@ -269,9 +269,6 @@ importers:
       '@webext-core/match-patterns':
         specifier: ^1.0.3
         version: 1.0.3
-      '@wxt-dev/i18n':
-        specifier: ^0.2.1
-        version: 0.2.1(wxt@0.19.12(@types/node@20.16.10)(rollup@3.29.4)(sass@1.79.4)(webpack-sources@3.2.3))
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
@@ -376,7 +373,7 @@ importers:
         version: 1.3.0
       unimport:
         specifier: ^3.13.1
-        version: 3.13.1(rollup@3.29.4)(webpack-sources@3.2.3)
+        version: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
       vite:
         specifier: ^5.4.8
         version: 5.4.8(@types/node@20.16.10)(sass@1.79.4)
@@ -1891,14 +1888,6 @@ packages:
 
   '@webext-core/match-patterns@1.0.3':
     resolution: {integrity: sha512-NY39ACqCxdKBmHgw361M9pfJma8e4AZo20w9AY+5ZjIj1W2dvXC8J31G5fjfOGbulW9w4WKpT8fPooi0mLkn9A==}
-
-  '@wxt-dev/i18n@0.2.1':
-    resolution: {integrity: sha512-amJS8VzefnLxshmXb2PeQEiOjNAFjohXClL2TkbZKf2487rNtDRDEBs08MLQbnca4qSKfm/OiNdYsi3AksKHog==}
-    peerDependencies:
-      wxt: '>=0.19.7'
-    peerDependenciesMeta:
-      wxt:
-        optional: true
 
   acorn@8.12.1:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
@@ -4628,10 +4617,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  wxt@0.19.12:
-    resolution: {integrity: sha512-2O11MsNNrYOTkDPXoyLGc+KzN9Al0wUh9uGaYtDSr/h6zZYusGolb94pGJQUIQuhoxupCqoNlQET7Q/++VZVWg==}
-    hasBin: true
-
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
     engines: {node: '>=12'}
@@ -4708,14 +4693,14 @@ snapshots:
       citty: 0.1.6
       typescript: 5.6.2
 
-  '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@3.29.4)':
+  '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@4.24.0)':
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
     optionalDependencies:
-      rollup: 3.29.4
+      rollup: 4.24.0
 
   '@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.15.0)':
     dependencies:
@@ -5570,13 +5555,13 @@ snapshots:
     optionalDependencies:
       rollup: 3.29.4
 
-  '@rollup/pluginutils@5.1.2(rollup@3.29.4)':
+  '@rollup/pluginutils@5.1.2(rollup@4.24.0)':
     dependencies:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
     optionalDependencies:
-      rollup: 3.29.4
+      rollup: 4.24.0
 
   '@rollup/rollup-android-arm-eabi@4.24.0':
     optional: true
@@ -5993,14 +5978,6 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
 
   '@webext-core/match-patterns@1.0.3': {}
-
-  '@wxt-dev/i18n@0.2.1(wxt@0.19.12(@types/node@20.16.10)(rollup@3.29.4)(sass@1.79.4)(webpack-sources@3.2.3))':
-    dependencies:
-      chokidar: 3.6.0
-      confbox: 0.1.7
-      fast-glob: 3.3.2
-    optionalDependencies:
-      wxt: 0.19.12(@types/node@20.16.10)(rollup@3.29.4)(sass@1.79.4)(webpack-sources@3.2.3)
 
   acorn@8.12.1: {}
 
@@ -8595,9 +8572,9 @@ snapshots:
 
   undici-types@6.19.8: {}
 
-  unimport@3.13.1(rollup@3.29.4)(webpack-sources@3.2.3):
+  unimport@3.13.1(rollup@4.24.0)(webpack-sources@3.2.3):
     dependencies:
-      '@rollup/pluginutils': 5.1.2(rollup@3.29.4)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       acorn: 8.12.1
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
@@ -8967,69 +8944,6 @@ snapshots:
       typedarray-to-buffer: 3.1.5
 
   ws@8.18.0: {}
-
-  wxt@0.19.12(@types/node@20.16.10)(rollup@3.29.4)(sass@1.79.4)(webpack-sources@3.2.3):
-    dependencies:
-      '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@3.29.4)
-      '@types/chrome': 0.0.269
-      '@types/webextension-polyfill': 0.10.7
-      '@webext-core/fake-browser': 1.3.1
-      '@webext-core/isolated-element': 1.1.2
-      '@webext-core/match-patterns': 1.0.3
-      async-mutex: 0.5.0
-      c12: 1.11.2(magicast@0.3.5)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      ci-info: 4.0.0
-      consola: 3.2.3
-      defu: 6.1.4
-      dequal: 2.0.3
-      dotenv: 16.4.5
-      esbuild: 0.21.5
-      fast-glob: 3.3.2
-      filesize: 10.1.6
-      fs-extra: 11.2.0
-      get-port: 7.1.0
-      giget: 1.2.3
-      hookable: 5.5.3
-      is-wsl: 3.1.0
-      jiti: 1.21.6
-      json5: 2.2.3
-      jszip: 3.10.1
-      linkedom: 0.18.5
-      magicast: 0.3.5
-      minimatch: 10.0.1
-      nano-spawn: 0.1.0
-      normalize-path: 3.0.0
-      nypm: 0.3.12
-      ohash: 1.1.4
-      open: 10.1.0
-      ora: 8.1.0
-      perfect-debounce: 1.0.0
-      picocolors: 1.1.0
-      prompts: 2.4.2
-      publish-browser-extension: 2.2.2
-      scule: 1.3.0
-      unimport: 3.13.1(rollup@3.29.4)(webpack-sources@3.2.3)
-      vite: 5.4.8(@types/node@20.16.10)(sass@1.79.4)
-      vite-node: 2.1.2(@types/node@20.16.10)(sass@1.79.4)
-      web-ext-run: 0.2.1
-      webextension-polyfill: 0.12.0
-    transitivePeerDependencies:
-      - '@types/node'
-      - bufferutil
-      - less
-      - lightningcss
-      - rollup
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - utf-8-validate
-      - webpack-sources
-    optional: true
 
   xdg-basedir@5.1.0: {}
 
