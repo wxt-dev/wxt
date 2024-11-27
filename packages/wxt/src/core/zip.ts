@@ -63,6 +63,26 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       wxt.config.outBaseDir,
       sourcesZipFilename,
     );
+
+    console.log(output.manifest.content_scripts);
+    let dd = output.steps.map(({ entrypoints }: any) => entrypoints);
+    let init_ar = dd
+      .flat(Infinity)
+      .map(({ inputPath }) => inputPath)
+      .map((r) => path.relative(wxt.config.srcDir, r));
+    let df = await glob(['**/*'], {
+      cwd: wxt.config.zip.sourcesRoot,
+      ignore: ['**/node_modules'],
+      onlyFiles: true,
+    });
+    let arr = df.map((r) => path.relative(wxt.config.srcDir, r));
+    console.log(init_ar, arr);
+
+    let exclude_ar = arr
+      .filter((r) => r.includes('entrypoints'))
+      .filter((r) => !init_ar.includes(r));
+    console.log(exclude_ar);
+
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: wxt.config.zip.excludeSources,
@@ -134,6 +154,8 @@ async function zipDir(
       );
     } else {
       const content = await fs.readFile(absolutePath);
+
+      // console.log({file})
       archive.file(file, content);
     }
   }
