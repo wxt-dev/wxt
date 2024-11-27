@@ -490,6 +490,7 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   console.log('addDevModeCsp 2', {
     extensionPagesCsp: extensionPagesCsp.toString(),
     sandboxCsp: sandboxCsp.toString(),
+    server: !!wxt.server,
   });
 
   if (wxt.server) {

@@ -29,11 +29,13 @@ export class ContentSecurityPolicy {
    * Ensure a set of values are listed under a directive.
    */
   add(directive: CspDirective, ...newValues: string[]): ContentSecurityPolicy {
+    console.log('add 1', { directive, newValues, data: this.data });
     const values = this.data[directive] ?? [];
     newValues.forEach((newValue) => {
       if (!values.includes(newValue)) values.push(newValue);
     });
     this.data[directive] = values;
+    console.log('add 2', { directive, newValues, data: this.data });
     return this;
   }
 

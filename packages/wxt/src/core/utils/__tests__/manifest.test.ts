@@ -1602,6 +1602,7 @@ describe('Manifest Utils', () => {
               },
             },
           },
+          server: fakeWxtDevServer(),
         });
 
         const { manifest: actual } = await generateManifest(
