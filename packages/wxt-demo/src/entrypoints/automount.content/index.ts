@@ -12,16 +12,14 @@ export default defineContentScript({
       anchor: 'form[role=search]',
       onMount: (container) => {
         const app = document.createElement('div');
-        app.id = 'automount-anchor';
+        container.id = 'automount-anchor';
         app.classList.add('m-4', 'text-center', 'text-red-500');
         app.textContent = i18n.t('prompt_for_name');
         container.append(app);
         return { container, app };
       },
-      onRemove(mounted) {
-        mounted?.container.remove();
-        mounted?.app.remove();
-        console.log('dynamicUI removed done');
+      onRemove() {
+        console.log('dynamicUI removed');
       },
     });
 
@@ -33,23 +31,19 @@ export default defineContentScript({
         const app = document.createElement('div');
         setTimeout(() => {
           app.id = 'automount-ui';
-          app.classList.add('m-4', 'text-center', 'text-blue-500');
+          app.classList.add('m-0', 'text-center', 'text-blue-500');
           app.textContent = `Hello, I'm automount UI.`;
           container.append(app);
         }, 1000);
         return { container, app };
       },
-      onRemove(mounted) {
-        mounted?.container.remove();
-        mounted?.app.remove();
-        console.log('autoMountUi removed done');
+      onRemove() {
+        console.log('autoMountUi removed');
       },
     });
 
-    let isStoppedAutoMount = false;
     const stopAutoMount = autoMountUi.autoMount({
       onStop: () => {
-        isStoppedAutoMount = true;
         console.log('Auto mount stopped.');
       },
     });
@@ -70,11 +64,6 @@ export default defineContentScript({
         container.append(app);
         return { container, app };
       },
-      onRemove(mounted) {
-        mounted?.container.remove();
-        mounted?.app.remove();
-        console.log('dynamicUI removed done');
-      },
     });
 
     stopAutoMountButton.mount();
@@ -82,7 +71,6 @@ export default defineContentScript({
     setInterval(() => {
       if (dynamicUI.mounted) {
         dynamicUI.remove();
-        isStoppedAutoMount && autoMountUi.remove();
       } else {
         dynamicUI.mount();
       }
