@@ -1584,7 +1584,7 @@ describe('Manifest Utils', () => {
     });
 
     describe('Dev mode CSP for Firefox', () => {
-      it('should set manifest.content_security_policy to manifest.content_security_policy.extension_pages for Firefox in serve mode', async () => {
+      it('should convert manifest.content_security_policy.extension_pages to manifest.content_security_policy for Firefox in serve mode', async () => {
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
         const inputCsp =
