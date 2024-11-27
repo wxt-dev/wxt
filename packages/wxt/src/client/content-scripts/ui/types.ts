@@ -221,9 +221,6 @@ export interface ContentScriptAnchoredOptions {
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
 }
 
-/**
- *
- */
 export type AutoMountOptions = {
   /**
    * When true, only mount and unmount a UI once.
