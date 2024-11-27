@@ -42,7 +42,7 @@ export interface ContentScriptUi<TMounted> {
    */
   mount: () => void;
   /**
-   * Function that automatically mounts or remounts the UI in response to dynamic anchor.
+   * Call `ui.autoMount()` to automatically mount and remove the UI as the anchor is dynamically added/removed by the webpage.
    */
   autoMount: (options?: AutoMountOptions) => StopAutoMount;
   /**
@@ -226,7 +226,7 @@ export interface ContentScriptAnchoredOptions {
  */
 export type AutoMountOptions = {
   /**
-   * Executes only a once mount and a once unmount.
+   * When true, only mount and unmount a UI once.
    */
   once?: boolean;
   /**
@@ -237,7 +237,7 @@ export type AutoMountOptions = {
 export type StopAutoMount = () => void;
 export interface AutoMount {
   /**
-   * The observing by AutoMount stops, but the UI is not removed.
+   * Stop watching the anchor element for changes, but keep the UI mounted.
    */
   stopAutoMount: StopAutoMount;
 }
