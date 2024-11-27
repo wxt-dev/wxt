@@ -80,14 +80,6 @@ export async function generateManifest(
     baseManifest,
   ) as Manifest.WebExtensionManifest;
 
-  // Convert MV2 CSP to MV3, which is assumed for processing. We convert it back later on.
-  console.log('INITIAL CSP', manifest.content_security_policy);
-  if (typeof manifest.content_security_policy === 'string') {
-    manifest.content_security_policy = {
-      extension_pages: manifest.content_security_policy,
-    };
-  }
-
   // Add reload command in dev mode
   if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
     if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
@@ -468,7 +460,6 @@ function discoverIcons(
 function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   const permission = `http://${wxt.server?.hostname ?? ''}/*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
-  console.log('addDevModeCsp 1', { allowedCsp });
 
   if (manifest.manifest_version === 3) {
     addHostPermission(manifest, permission);
@@ -487,20 +478,11 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     // @ts-expect-error: sandbox is not typed
     manifest.content_security_policy?.sandbox ?? DEFAULT_MV3_SANDBOX_CSP,
   );
-  console.log('addDevModeCsp 2', {
-    extensionPagesCsp: extensionPagesCsp.toString(),
-    sandboxCsp: sandboxCsp.toString(),
-    server: !!wxt.server,
-  });
 
   if (wxt.config.command === 'serve') {
     extensionPagesCsp.add('script-src', allowedCsp);
     sandboxCsp.add('script-src', allowedCsp);
   }
-  console.log('addDevModeCsp 3', {
-    extensionPagesCsp: extensionPagesCsp.toString(),
-    sandboxCsp: sandboxCsp.toString(),
-  });
 
   manifest.content_security_policy ??= {};
   // @ts-expect-error: extension_pages is not typed
@@ -508,8 +490,6 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
     extensionPagesCsp.toString();
   // @ts-expect-error: sandbox is not typed
   manifest.content_security_policy.sandbox = sandboxCsp.toString();
-
-  console.log('addDevModeCsp 4', manifest.content_security_policy);
 }
 
 function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
@@ -668,7 +648,6 @@ function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
 }
 
 function convertCspToMv2(manifest: Manifest.WebExtensionManifest): void {
-  console.log('convertCspToMv2 1', manifest.content_security_policy);
   if (
     typeof manifest.content_security_policy === 'string' ||
     manifest.content_security_policy?.extension_pages == null
@@ -677,7 +656,6 @@ function convertCspToMv2(manifest: Manifest.WebExtensionManifest): void {
 
   manifest.content_security_policy =
     manifest.content_security_policy.extension_pages;
-  console.log('convertCspToMv2 2', manifest.content_security_policy);
 }
 
 /**
