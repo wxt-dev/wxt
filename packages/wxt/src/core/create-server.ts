@@ -5,7 +5,6 @@ import {
   InlineConfig,
   ServerInfo,
   WxtDevServer,
-  KeyboardShortcutWatcher,
 } from '../types';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import {
@@ -28,6 +27,7 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
+import { createKeyBoardShortCuts } from './keyboard-shortcuts';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -108,14 +108,12 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       // Listen for file changes and reload different parts of the extension accordingly
       const reloadOnChange = createFileReloader(server);
-      const keyboardsShortCuts = createKeyBoardShortCuts(server);
       server.watcher.on('all', reloadOnChange);
       keyboardsShortCuts.start();
     },
 
     async stop() {
       wasStopped = true;
-      const keyboardsShortCuts = createKeyBoardShortCuts(server);
       keyboardsShortCuts.stop();
       await runner.closeBrowser();
       await builderServer.close();
@@ -141,7 +139,6 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      const keyboardsShortCuts = createKeyBoardShortCuts(server);
       await runner.closeBrowser();
       keyboardsShortCuts.stop();
       await wxt.reloadConfig();
@@ -150,6 +147,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       keyboardsShortCuts.start();
     },
   };
+  const keyboardsShortCuts = createKeyBoardShortCuts(server);
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
@@ -168,45 +166,6 @@ async function createServerInternal(): Promise<WxtDevServer> {
   };
 
   return server;
-}
-var isWatching = false;
-
-/**
- * Function that creates a key board shortcut the extension.
- */
-export function createKeyBoardShortCuts(
-  server: WxtDevServer,
-): KeyboardShortcutWatcher {
-  let originalRawMode: boolean | undefined;
-
-  const handleInput = (data: Buffer) => {
-    const char = data.toString();
-    if (char === 'o') {
-      server.restartBrowser();
-    }
-  };
-
-  return {
-    start() {
-      if (isWatching) return;
-      originalRawMode = process.stdin.isRaw;
-      process.stdin.setRawMode(true);
-      process.stdin.resume();
-
-      process.stdin.on('data', handleInput);
-      isWatching = true;
-    },
-
-    stop() {
-      if (!isWatching) return;
-      process.stdin.removeListener('data', handleInput);
-      if (originalRawMode !== undefined) {
-        process.stdin.setRawMode(originalRawMode);
-      }
-      process.stdin.pause();
-      isWatching = false;
-    },
-  };
 }
 
 /**
