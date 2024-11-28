@@ -12,8 +12,6 @@
 
 - Re-initialize WXT modules correctly during development ([#1176](https://github.com/wxt-dev/wxt/pull/1176))
 - ESLint config being generated when ESLint is not installed. ([#1198](https://github.com/wxt-dev/wxt/pull/1198))
-- Validate entrypoints after hooks have modified them ([54baf21](https://github.com/wxt-dev/wxt/commit/54baf21))
-- Revert "Validate entrypoints after hooks have modified them (54baf21)" ([a2924d8](https://github.com/wxt-dev/wxt/commit/a2924d8))
 - Update `vite` dependency range to support v6 ([#1215](https://github.com/wxt-dev/wxt/pull/1215))
 - Automatically convert MV3 `content_security_policy` to MV2 ([#1168](https://github.com/wxt-dev/wxt/pull/1168))
 - Correctly remove child elements with integrated UI remove ([#1219](https://github.com/wxt-dev/wxt/pull/1219))
@@ -27,7 +25,7 @@
 
 - Aaron ([@aklinker1](http://github.com/aklinker1))
 - 1natsu ([@1natsu172](http://github.com/1natsu172))
-- Nishu <nnmurmu@enacton.com>
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
 - Florian Metz ([@Timeraa](http://github.com/Timeraa))
 
 ## v0.19.16
