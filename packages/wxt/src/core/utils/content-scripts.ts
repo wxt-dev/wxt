@@ -61,7 +61,6 @@ export function mapWxtOptionsToContentScript(
     run_at: options.runAt,
     css,
     js,
-
     // @ts-expect-error: Untyped
     match_origin_as_fallback: options.matchOriginAsFallback,
     world: options.world,
