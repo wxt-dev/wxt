@@ -121,7 +121,7 @@ export async function generateManifest(
   }
 
   if (wxt.config.manifestVersion === 3) {
-    validateMv3WebAccessbileResources(manifest);
+    validateMv3WebAccessibleResources(manifest);
   }
 
   stripKeys(manifest);
@@ -143,7 +143,7 @@ export async function generateManifest(
 }
 
 /**
- * Removes suffixes from the version, like X.Y.Z-alpha1 (which brosers don't allow), so it's a
+ * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't allow), so it's a
  * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
  */
 function simplifyVersion(versionName: string): string {
@@ -362,7 +362,7 @@ function addEntrypoints(
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -405,7 +405,7 @@ function addEntrypoints(
         );
       }
       runtimeContentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -552,7 +552,7 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      matches: script.options.matches.map((matchPattern) =>
+      matches: script.options.matches?.map((matchPattern) =>
         stripPathFromMatchPattern(matchPattern),
       ),
     });
@@ -613,7 +613,7 @@ export function stripPathFromMatchPattern(pattern: string) {
 /**
  * Converts all MV3 web accessible resources to their MV2 forms. MV3 web accessible resources are
  * generated in this file, and may be defined by the user in their manifest. In both cases, when
- * targetting MV2, automatically convert their definitions down to the basic MV2 array.
+ * targeting MV2, automatically convert their definitions down to the basic MV2 array.
  */
 export function convertWebAccessibleResourcesToMv2(
   manifest: Manifest.WebExtensionManifest,
@@ -655,7 +655,7 @@ function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
 /**
  * Make sure all resources are in MV3 format. If not, add a wanring
  */
-export function validateMv3WebAccessbileResources(
+export function validateMv3WebAccessibleResources(
   manifest: Manifest.WebExtensionManifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
