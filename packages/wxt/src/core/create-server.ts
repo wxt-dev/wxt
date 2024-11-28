@@ -27,7 +27,7 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
-import { createKeyBoardShortCuts } from './keyboard-shortcuts';
+import { createKeyboardShortcuts } from './keyboard-shortcuts';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -147,7 +147,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       keyboardsShortCuts.start();
     },
   };
-  const keyboardsShortCuts = createKeyBoardShortCuts(server);
+  const keyboardsShortCuts = createKeyboardShortcuts(server);
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files

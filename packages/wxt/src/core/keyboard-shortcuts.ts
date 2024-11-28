@@ -8,13 +8,20 @@ export interface KeyboardShortcutWatcher {
 /**
  * Function that creates a key board shortcut the extension.
  */
-export function createKeyBoardShortCuts(
+export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {
   let originalRawMode: boolean | undefined;
   let isWatching = false;
+
   const handleInput = (data: Buffer) => {
     const char = data.toString();
+
+    // Handle Ctrl+C (char code 3)
+    if (char === '\u0003') {
+      server.stop();
+      process.exit();
+    }
     if (char === 'o') {
       server.restartBrowser();
     }
