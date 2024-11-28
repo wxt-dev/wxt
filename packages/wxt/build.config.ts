@@ -6,6 +6,10 @@ import {
   virtualModuleNames,
 } from './src/core/utils/virtual-modules';
 
+const replace = {
+  __vite_ssr_import_meta__: 'undefined',
+};
+
 export default defineBuildConfig([
   // Non-virtual modules can be transpiled with mkdist
   {
@@ -15,8 +19,12 @@ export default defineBuildConfig([
         input: 'src',
         pattern: ['**/*', '!**/__tests__', '!**/*.md', '!virtual', '!@types'],
         declaration: true,
+        esbuild: {
+          define: replace,
+        },
       },
     ],
+    replace,
     hooks: {
       async 'build:done'() {
         // Replace any template variables in output files
