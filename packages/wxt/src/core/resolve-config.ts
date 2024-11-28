@@ -27,6 +27,7 @@ import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -393,20 +394,10 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 async function resolveWxtModuleDir() {
-  // TODO: Use this once we're fully running in ESM, see https://github.com/wxt-dev/wxt/issues/277
-  // const url = import.meta.resolve('wxt', import.meta.url);
+  const url = import.meta.resolve('wxt', import.meta.url);
   // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
-  // return path.resolve(fileURLToPath(url), '../..');
-
-  const requireResolve =
-    globalThis.require?.resolve ??
-    (await import('node:module')).default.createRequire(import.meta.url)
-      .resolve;
-
-  // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
-  // directory, which we want to return from this function.
-  return path.resolve(requireResolve('wxt'), '../..');
+  return path.resolve(fileURLToPath(url), '../..');
 }
 
 async function isDirMissing(dir: string) {
