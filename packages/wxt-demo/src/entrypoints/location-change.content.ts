@@ -1,7 +1,6 @@
 export default defineContentScript({
   // Site that uses HTML5 history
   matches: ['*://*.crunchyroll.com/*'],
-  exclude: ['firefox'],
 
   main(ctx) {
     ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl, oldUrl }) => {
