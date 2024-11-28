@@ -29,6 +29,7 @@ export function hashContentScriptOptions(
     match_about_blank: false,
     run_at: 'document_idle',
     all_frames: false,
+    // @ts-expect-error: Untyped
     match_origin_as_fallback: false,
     world: 'ISOLATED',
     ...simplifiedOptions,
@@ -60,7 +61,7 @@ export function mapWxtOptionsToContentScript(
     run_at: options.runAt,
     css,
     js,
-
+    // @ts-expect-error: Untyped
     match_origin_as_fallback: options.matchOriginAsFallback,
     world: options.world,
   };
