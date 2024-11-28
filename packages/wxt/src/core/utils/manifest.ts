@@ -363,7 +363,7 @@ function addEntrypoints(
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -406,7 +406,7 @@ function addEntrypoints(
         );
       }
       runtimeContentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -547,7 +547,7 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      matches: script.options.matches.map((matchPattern) =>
+      matches: script.options.matches?.map((matchPattern) =>
         stripPathFromMatchPattern(matchPattern),
       ),
     });

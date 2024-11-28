@@ -588,7 +588,7 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
 
 export interface BaseContentScriptEntrypointOptions
   extends BaseEntrypointOptions {
-  matches: PerBrowserOption<Manifest.ContentScript['matches']>;
+  matches?: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
