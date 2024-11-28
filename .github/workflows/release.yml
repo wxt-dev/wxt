@@ -13,6 +13,8 @@ on:
           - module-solid
           - module-svelte
           - module-vue
+          - storage
+          - unocss
           - wxt
 
 jobs:

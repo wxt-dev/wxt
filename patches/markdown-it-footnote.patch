@@ -1,0 +1,79 @@
+diff --git a/dist/index.cjs.js b/dist/index.cjs.js
+index 806448c967261a61288f0faa0633a91f77d35968..6812dd84bbbb7176af4115a287677454fa562883 100644
+--- a/dist/index.cjs.js
++++ b/dist/index.cjs.js
+@@ -13,14 +13,14 @@ function render_footnote_anchor_name(tokens, idx, options, env /*, slf */) {
+ }
+ function render_footnote_caption(tokens, idx /*, options, env, slf */) {
+   let n = Number(tokens[idx].meta.id + 1).toString();
+-  if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`;
++  // if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`;
+   return `[${n}]`;
+ }
+ function render_footnote_ref(tokens, idx, options, env, slf) {
+   const id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+   const caption = slf.rules.footnote_caption(tokens, idx, options, env, slf);
+   let refid = id;
+-  if (tokens[idx].meta.subId > 0) refid += `:${tokens[idx].meta.subId}`;
++  // if (tokens[idx].meta.subId > 0) refid += `:${tokens[idx].meta.subId}`;
+   return `<sup class="footnote-ref"><a href="#fn${id}" id="fnref${refid}">${caption}</a></sup>`;
+ }
+ function render_footnote_block_open(tokens, idx, options) {
+@@ -31,7 +31,7 @@ function render_footnote_block_close() {
+ }
+ function render_footnote_open(tokens, idx, options, env, slf) {
+   let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+-  if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`;
++  // if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`;
+   return `<li id="fn${id}" class="footnote-item">`;
+ }
+ function render_footnote_close() {
+@@ -39,7 +39,7 @@ function render_footnote_close() {
+ }
+ function render_footnote_anchor(tokens, idx, options, env, slf) {
+   let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+-  if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`;
++  // if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`;
+ 
+   /* ↩ with escape code to prevent display as Apple Emoji on iOS */
+   return ` <a href="#fnref${id}" class="footnote-backref">\u21a9\uFE0E</a>`;
+diff --git a/index.mjs b/index.mjs
+index 48277ca67206f248b9deb0058e9a7d69dbc07702..718e3e527b2513e4f6f59cba9d4526a36d58f6bc 100644
+--- a/index.mjs
++++ b/index.mjs
+@@ -17,7 +17,7 @@ function render_footnote_anchor_name (tokens, idx, options, env/*, slf */) {
+ function render_footnote_caption (tokens, idx/*, options, env, slf */) {
+   let n = Number(tokens[idx].meta.id + 1).toString()
+ 
+-  if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`
++  // if (tokens[idx].meta.subId > 0) n += `:${tokens[idx].meta.subId}`
+ 
+   return `[${n}]`
+ }
+@@ -27,7 +27,7 @@ function render_footnote_ref (tokens, idx, options, env, slf) {
+   const caption = slf.rules.footnote_caption(tokens, idx, options, env, slf)
+   let refid = id
+ 
+-  if (tokens[idx].meta.subId > 0) refid += `:${tokens[idx].meta.subId}`
++  // if (tokens[idx].meta.subId > 0) refid += `:${tokens[idx].meta.subId}`
+ 
+   return `<sup class="footnote-ref"><a href="#fn${id}" id="fnref${refid}">${caption}</a></sup>`
+ }
+@@ -45,7 +45,7 @@ function render_footnote_block_close () {
+ function render_footnote_open (tokens, idx, options, env, slf) {
+   let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf)
+ 
+-  if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`
++  // if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`
+ 
+   return `<li id="fn${id}" class="footnote-item">`
+ }
+@@ -57,7 +57,7 @@ function render_footnote_close () {
+ function render_footnote_anchor (tokens, idx, options, env, slf) {
+   let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf)
+ 
+-  if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`
++  // if (tokens[idx].meta.subId > 0) id += `:${tokens[idx].meta.subId}`
+ 
+   /* ↩ with escape code to prevent display as Apple Emoji on iOS */
+   return ` <a href="#fnref${id}" class="footnote-backref">\u21a9\uFE0E</a>`

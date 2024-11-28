@@ -27,7 +27,7 @@ import { installSourcemapsSupport } from 'vite-node/source-map';
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
   hooks: Hookable<WxtHooks>,
-  server?: WxtDevServer,
+  getWxtDevServer?: () => WxtDevServer | undefined,
 ): Promise<WxtBuilder> {
   const vite = await import('vite');
 
@@ -63,6 +63,8 @@ export async function createViteBuilder(
     config.server.watch = {
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
+
+    const server = getWxtDevServer?.();
 
     config.plugins ??= [];
     config.plugins.push(
@@ -191,7 +193,7 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building a sinlge CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building a single CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     return {

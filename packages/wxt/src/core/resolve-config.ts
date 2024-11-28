@@ -28,6 +28,7 @@ import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { fileURLToPath } from 'node:url';
+import { getPort } from 'get-port-please';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -51,6 +52,9 @@ export async function resolveConfig(
       cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
     });
+    if (inlineConfig.configFile && metadata.layers?.length === 0) {
+      throw Error(`Config file "${inlineConfig.configFile}" not found`);
+    }
     userConfig = loadedConfig ?? {};
     userConfigMetadata = metadata;
   }
@@ -72,7 +76,7 @@ export async function resolveConfig(
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
-  loadEnv(mode); // Load any environment variables used below
+  loadEnv(mode, browser); // Load any environment variables used below
 
   const root = path.resolve(
     inlineConfig.root ?? userConfig.root ?? process.cwd(),
@@ -139,14 +143,19 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
+    const hostname = mergedConfig.dev?.server?.hostname ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
     if (port == null || !isFinite(port)) {
-      const { default: getPort, portNumbers } = await import('get-port');
-      port = await getPort({ port: portNumbers(3000, 3010) });
+      port = await getPort({
+        port: 3000,
+        portRange: [3001, 3010],
+        // Passing host required for Mac, unsure of Windows/Linux
+        host: hostname,
+      });
     }
     devServerConfig = {
       port,
-      hostname: mergedConfig.dev?.server?.hostname ?? 'localhost',
+      hostname,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }
@@ -366,10 +375,11 @@ async function getUnimportEslintOptions(
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
+      if (isNaN(major)) eslintEnabled = false;
       if (major <= 8) eslintEnabled = 8;
       else if (major >= 9) eslintEnabled = 9;
       // NaN
-      else eslintEnabled = 8;
+      else eslintEnabled = false;
       break;
     case true:
       eslintEnabled = 8;

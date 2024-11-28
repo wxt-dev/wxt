@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.2.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.2...i18n-v0.2.3)
+
+### 🩹 Fixes
+
+- Prevent app crashes from parse errors due to incomplete file saves ([#1114](https://github.com/wxt-dev/wxt/pull/1114))
+
+### 📖 Documentation
+
+- Cleanup typos and broken links ([bb5ea34](https://github.com/wxt-dev/wxt/commit/bb5ea34))
+
+### ❤️ Contributors
+
+- Bread Grocery <breadgrocery@gmail.com>
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.2.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.1...i18n-v0.2.2)
+
+### 🚀 Enhancements
+
+- Add support for configuring the `locales` directory ([#1109](https://github.com/wxt-dev/wxt/pull/1109))
+
+### ❤️ Contributors
+
+- Bread Grocery <breadgrocery@gmail.com>
+
 ## v0.2.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.0...i18n-v0.2.1)

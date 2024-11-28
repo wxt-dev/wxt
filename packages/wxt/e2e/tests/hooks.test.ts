@@ -4,6 +4,7 @@ import { WxtHooks } from '../../src/types';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
+  'config:resolved': vi.fn(),
   'prepare:types': vi.fn(),
   'prepare:publicPaths': vi.fn(),
   'build:before': vi.fn(),
@@ -20,6 +21,9 @@ const hooks: WxtHooks = {
   'zip:sources:start': vi.fn(),
   'zip:sources:done': vi.fn(),
   'zip:done': vi.fn(),
+  'server:created': vi.fn(),
+  'server:started': vi.fn(),
+  'server:closed': vi.fn(),
 };
 
 function expectHooksToBeCalled(
@@ -49,6 +53,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': false,
@@ -65,6 +70,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -76,6 +84,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -92,6 +101,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -103,6 +115,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -119,6 +132,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -130,6 +146,7 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -146,6 +163,9 @@ describe('Hooks', () => {
       'zip:sources:start': true,
       'zip:sources:done': true,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -159,10 +179,12 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
+    expect(hooks['server:closed']).not.toBeCalled();
     await server.stop();
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
@@ -179,6 +201,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': 1,
+      'server:started': 1,
+      'server:closed': 1,
     });
   });
 });

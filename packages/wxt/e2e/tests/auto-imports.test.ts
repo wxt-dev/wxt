@@ -20,6 +20,7 @@ describe('Auto Imports', () => {
             const ContentScriptContext: typeof import('wxt/client')['ContentScriptContext']
             const InvalidMatchPattern: typeof import('wxt/sandbox')['InvalidMatchPattern']
             const MatchPattern: typeof import('wxt/sandbox')['MatchPattern']
+            const MigrationError: typeof import('wxt/storage')['MigrationError']
             const browser: typeof import('wxt/browser')['browser']
             const createIframeUi: typeof import('wxt/client')['createIframeUi']
             const createIntegratedUi: typeof import('wxt/client')['createIntegratedUi']
@@ -151,6 +152,40 @@ describe('Auto Imports', () => {
       expect(
         await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
       ).toMatchSnapshot();
+    });
+
+    it('"enabled: false" should NOT output an ESlint config file', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: false,
+          },
+        },
+      });
+
+      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        false,
+      );
+      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
+    });
+
+    it('should NOT output an ESlint config file by default', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare();
+
+      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        false,
+      );
+      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
     });
 
     it('should allow customizing the output', async () => {

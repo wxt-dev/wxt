@@ -35,7 +35,7 @@ Here's a brief summary of each of these files and directories:
 - `hooks/`: Auto-imported by default, contains hooks for React and Solid
 - `public/`: Contains any files you want to copy into the output folder as-is, without being processed by WXT
 - `utils/`: Auto-imported by default, contains generic utilities used throughout your project
-- `.env`: Contains [Environment Variables](/guide/essentials/config/runtime#environment-variables)
+- `.env`: Contains [Environment Variables](/guide/essentials/config/environment-variables)
 - `.env.publish`: Contains Environment Variables for [publishing](/guide/essentials/publishing)
 - `app.config.ts`: Contains [Runtime Config](/guide/essentials/config/runtime)
 - `package.json`: The standard file used by your package manager

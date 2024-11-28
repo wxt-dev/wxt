@@ -15,12 +15,13 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "vue": "^3.5.11"
+    "vue": "^3.5.12"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.280",
     "@wxt-dev/module-vue": "^1.0.1",
-    "typescript": "^5.6.2",
-    "vue-tsc": "^2.1.6",
-    "wxt": "^0.19.11"
+    "typescript": "5.6.3",
+    "vue-tsc": "^2.1.10",
+    "wxt": "^0.19.13"
   }
 }

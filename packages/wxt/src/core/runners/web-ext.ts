@@ -50,7 +50,10 @@ export function createWebExtRunner(): ExtensionRunner {
                 wxtUserConfig?.chromiumPref,
                 DEFAULT_CHROMIUM_PREFS,
               ),
-              args: wxtUserConfig?.chromiumArgs,
+              args: [
+                '--unsafely-disable-devtools-self-xss-warnings',
+                ...(wxtUserConfig?.chromiumArgs ?? []),
+              ],
             }),
       };
 

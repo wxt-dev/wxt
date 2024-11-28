@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.0.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-vue-v1.0.1...module-vue-v1.0.2)
+
+### 🩹 Fixes
+
+- Use `config:resolved` hook to update config instead of `ready` ([#1178](https://github.com/wxt-dev/wxt/pull/1178))
+
+### 🏡 Chore
+
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- **deps:** Bump @vitejs/plugin-vue from 5.1.1 to 5.1.4 ([#1020](https://github.com/wxt-dev/wxt/pull/1020))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v1.0.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-vue-v1.0.0...module-vue-v1.0.1)

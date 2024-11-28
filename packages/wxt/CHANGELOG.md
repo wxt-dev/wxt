@@ -1,5 +1,123 @@
 # Changelog
 
+## v0.19.16
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.15...wxt-v0.19.16)
+
+### 🚀 Enhancements
+
+- **hooks:** Add new `config:resolved` hook ([#1177](https://github.com/wxt-dev/wxt/pull/1177))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.19.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.14...wxt-v0.19.15)
+
+### 🚀 Enhancements
+
+- Extract `wxt/storage` to its own package, `@wxt-dev/storage` ([#1129](https://github.com/wxt-dev/wxt/pull/1129))
+
+### 🩹 Fixes
+
+- Add "/" to `PublicPath` and `browser.runtime.getURL` ([#1171](https://github.com/wxt-dev/wxt/pull/1171))
+- Add extension ID to event used to invalidate `ContentScriptContext` ([#1175](https://github.com/wxt-dev/wxt/pull/1175))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Nishu ([@nishu-murmu](http://github.com/nishu-murmu))
+
+## v0.19.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.13...wxt-v0.19.14)
+
+### 🚀 Enhancements
+
+- **storage:** Support storage items in batch functions ([#990](https://github.com/wxt-dev/wxt/pull/990))
+- Automatically disable 'Show warning about Self-XSS when pasing code' in new chrome ([#1159](https://github.com/wxt-dev/wxt/pull/1159))
+
+### 🩹 Fixes
+
+- Throw when config file does not exist ([#1156](https://github.com/wxt-dev/wxt/pull/1156))
+
+### 📖 Documentation
+
+- Cleanup typos and broken links ([bb5ea34](https://github.com/wxt-dev/wxt/commit/bb5ea34))
+- Fix typo in `popup` and `options` EntrypointOptions ([#1121](https://github.com/wxt-dev/wxt/pull/1121))
+
+### 🏡 Chore
+
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+- **deps:** Bump dev and non-breaking major dependencies ([#1167](https://github.com/wxt-dev/wxt/pull/1167))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Rxliuli ([@rxliuli](http://github.com/rxliuli))
+- Kongmoumou ([@kongmoumou](http://github.com/kongmoumou))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Bread Grocery <breadgrocery@gmail.com>
+
+## v0.19.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.12...wxt-v0.19.13)
+
+### 🚀 Enhancements
+
+- **env:** Load env from `.env.[browser]` variants ([#1078](https://github.com/wxt-dev/wxt/pull/1078))
+
+### 🩹 Fixes
+
+- Don't use `#private` member variables in `ContentScriptContext` ([#1103](https://github.com/wxt-dev/wxt/pull/1103))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Craig Slusher ([@sleekslush](http://github.com/sleekslush))
+
+## v0.19.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.11...wxt-v0.19.12)
+
+### 🚀 Enhancements
+
+- Add support for `WXT_` environment variable prefix ([#1076](https://github.com/wxt-dev/wxt/pull/1076))
+- **config:** Add `outDirTemplate` for customizing output directory structure ([#1074](https://github.com/wxt-dev/wxt/pull/1074))
+
+### 🔥 Performance
+
+- Replace `execa` with `nano-spawn` for smaller package size ([#1042](https://github.com/wxt-dev/wxt/pull/1042))
+- Downgrade `esbuild` so a single version is shared between sub-dependencies ([#1045](https://github.com/wxt-dev/wxt/pull/1045))
+
+### 🩹 Fixes
+
+- Use directory name when `zip.name` and `package.json#name` are not provided ([#1028](https://github.com/wxt-dev/wxt/pull/1028))
+- Ensure consistent hook execution order and add docs ([#1081](https://github.com/wxt-dev/wxt/pull/1081))
+
+### 📖 Documentation
+
+- Rewrite and restructure the documentation website ([#933](https://github.com/wxt-dev/wxt/pull/933))
+
+### 🏡 Chore
+
+- Remove email from changelog ([#1027](https://github.com/wxt-dev/wxt/pull/1027))
+- **deps:** Bump magicast from 0.3.4 to 0.3.5 ([#1017](https://github.com/wxt-dev/wxt/pull/1017))
+- **deps:** Bump esbuild from 0.23.0 to 0.24.0 ([#1018](https://github.com/wxt-dev/wxt/pull/1018))
+- **deps:** Bump linkedom from 0.18.4 to 0.18.5 ([#1034](https://github.com/wxt-dev/wxt/pull/1034))
+- **deps:** Bump execa from 9.3.1 to 9.4.0 ([#1031](https://github.com/wxt-dev/wxt/pull/1031))
+- Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
+- Shrink down on dependencies ([#1050](https://github.com/wxt-dev/wxt/pull/1050))
+- Enable `extensionApi: chrome` in template projects ([#1083](https://github.com/wxt-dev/wxt/pull/1083))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+- Mezannic ([@mezannic](http://github.com/mezannic))
+
 ## v0.19.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.10...wxt-v0.19.11)

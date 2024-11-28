@@ -75,7 +75,7 @@ import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule({
   setup(wxt) {
-    wxt.hook('ready', () => {
+    wxt.hook('config:resolved', () => {
       wxt.config.outDir = 'dist';
     });
   },

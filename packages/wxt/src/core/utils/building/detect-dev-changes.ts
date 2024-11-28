@@ -26,7 +26,11 @@ import { wxt } from '../../wxt';
  *   - Background script is changed
  *   - Manifest is different
  * - Restart browser
- *   - Config file changed (wxt.config.ts, .env, web-ext.config.ts, etc)
+ *   - web-ext.config.ts (runner config changes)
+ * - Full dev server restart
+ *   - wxt.config.ts (main config file)
+ *   - modules/* (any file related to WXT modules)
+ *   - .env (environment variable changed could effect build)
  */
 export function detectDevChanges(
   changedFiles: string[],
@@ -37,6 +41,11 @@ export function detectDevChanges(
     (file) => file === wxt.config.userConfigMetadata.configFile,
   );
   if (isConfigChange) return { type: 'full-restart' };
+
+  const isWxtModuleChange = some(changedFiles, (file) =>
+    file.startsWith(wxt.config.modulesDir),
+  );
+  if (isWxtModuleChange) return { type: 'full-restart' };
 
   const isRunnerChange = some(
     changedFiles,

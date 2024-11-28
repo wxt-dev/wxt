@@ -1,12 +1,4 @@
-import {
-  InlineConfig,
-  ResolvedConfig,
-  Wxt,
-  WxtCommand,
-  WxtDevServer,
-  WxtHooks,
-  WxtModule,
-} from '../types';
+import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
 import { resolveConfig } from './resolve-config';
 import { createHooks } from 'hookable';
 import { createWxtPackageManager } from './package-managers';
@@ -26,7 +18,6 @@ export let wxt: Wxt;
 export async function registerWxt(
   command: WxtCommand,
   inlineConfig: InlineConfig = {},
-  getServer?: (config: ResolvedConfig) => Promise<WxtDevServer>,
 ): Promise<void> {
   // Default NODE_ENV environment variable before other packages, like vite, do it
   // See https://github.com/wxt-dev/wxt/issues/873#issuecomment-2254555523
@@ -34,8 +25,7 @@ export async function registerWxt(
 
   const hooks = createHooks<WxtHooks>();
   const config = await resolveConfig(inlineConfig, command);
-  const server = await getServer?.(config);
-  const builder = await createViteBuilder(config, hooks, server);
+  const builder = await createViteBuilder(config, hooks, () => wxt.server);
   const pm = await createWxtPackageManager(config.root);
 
   wxt = {
@@ -47,30 +37,29 @@ export async function registerWxt(
     },
     async reloadConfig() {
       wxt.config = await resolveConfig(inlineConfig, command);
+      await wxt.hooks.callHook('config:resolved', wxt);
     },
     pm,
     builder,
-    server,
+    server: undefined,
   };
 
-  // Initialize modules
-  const initModule = async (module: WxtModule<any>) => {
-    if (module.hooks) wxt.hooks.addHooks(module.hooks);
-    await module.setup?.(
-      wxt,
-      // @ts-expect-error: Untyped configKey field
-      module.configKey ? config[module.configKey] : undefined,
-    );
-  };
-  for (const builtinModule of builtinModules) await initModule(builtinModule);
-  for (const userModule of config.userModules) await initModule(userModule);
+  await initWxtModules();
+}
+
+export async function initWxtModules() {
+  // Call setup function and add hooks
+  for (const mod of builtinModules) await initWxtModule(mod);
+  for (const mod of wxt.config.userModules) await initWxtModule(mod);
 
   // Initialize hooks
-  wxt.hooks.addHooks(config.hooks);
+  wxt.hooks.addHooks(wxt.config.hooks);
+
+  // Print order for debugging
   if (wxt.config.debug) {
     const order = [
       ...builtinModules.map((module) => module.name),
-      ...config.userModules.map((module) =>
+      ...wxt.config.userModules.map((module) =>
         relative(wxt.config.root, module.id),
       ),
       'wxt.config.ts > hooks',
@@ -82,6 +71,23 @@ export async function registerWxt(
   }
 
   await wxt.hooks.callHook('ready', wxt);
+  await wxt.hooks.callHook('config:resolved', wxt);
+}
+
+async function initWxtModule(module: WxtModule<any>): Promise<void> {
+  if (module.hooks) wxt.hooks.addHooks(module.hooks);
+  await module.setup?.(
+    wxt,
+    // @ts-expect-error: Untyped configKey field
+    module.configKey ? wxt.config[module.configKey] : undefined,
+  );
+}
+
+/**
+ * Unloads WXT modules.
+ */
+export function deinitWxtModules(): void {
+  wxt.hooks.removeAllHooks();
 }
 
 /**

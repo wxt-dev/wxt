@@ -5,7 +5,7 @@
     "src/sandbox/index.ts",
     "src/browser.ts",
     "src/index.ts",
-    "src/storage.ts",
-    "src/modules.ts"
+    "src/modules.ts",
+    "src/storage.ts"
   ]
 }
