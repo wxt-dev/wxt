@@ -38,7 +38,7 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
-   * @default "${config.srcDir}/modules"
+   * @default "${config.root}/modules"
    */
   modulesDir?: string;
   /**
