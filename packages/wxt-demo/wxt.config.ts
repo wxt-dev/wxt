@@ -12,11 +12,6 @@ export default defineConfig({
       },
     ],
   },
-  imports: {
-    eslintrc: {
-      enabled: 'auto',
-    },
-  },
   zip: {
     downloadPackages: ['sass'],
   },

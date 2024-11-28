@@ -394,7 +394,6 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 async function resolveWxtModuleDir() {
-  console.log(import.meta);
   const url = import.meta.resolve('wxt', import.meta.url);
   // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
