@@ -34,6 +34,7 @@ export function createIntegratedUi<TMounted>(
   };
   const remove = () => {
     options.onRemove?.(mounted);
+    wrapper.replaceChildren();
     wrapper.remove();
     mounted = undefined;
   };
