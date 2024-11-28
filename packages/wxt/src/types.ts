@@ -1,5 +1,4 @@
 import type * as vite from 'vite';
-import type { Manifest, Scripting } from 'wxt/browser';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './client/content-scripts/content-script-context';
@@ -8,6 +7,7 @@ import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
+import { ManifestContentScript } from './core/utils/types';
 
 export interface InlineConfig {
   /**
@@ -38,7 +38,7 @@ export interface InlineConfig {
    */
   entrypointsDir?: string;
   /**
-   * @default "${config.srcDir}/modules"
+   * @default "${config.root}/modules"
    */
   modulesDir?: string;
   /**
@@ -62,8 +62,8 @@ export interface InlineConfig {
    * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
    * - <span v-pre>`{{command}}`</span>: The WXT command being run (e.g., 'build', 'serve')
    *
-   * @example "{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"
-   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}"`</span>
+   * @example "{{browser}}-mv{{manifestVersion}}"
+   * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"`</span>
    */
   outDirTemplate?: string;
   /**
@@ -125,9 +125,13 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
-   * Custom runner options. Options set here can be overridden in a `web-ext.config.ts` file.
+   * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
    */
-  runner?: ExtensionRunnerConfig;
+  webExt?: WebExtConfig;
+  /**
+   * @deprecated Use `webExt` instead. Same option, just renamed.
+   */
+  runner?: WebExtConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
@@ -248,26 +252,6 @@ export interface InlineConfig {
      */
     compressionLevel?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   };
-
-  /**
-   * @deprecated Use `hooks.build.manifestGenerated` to modify your manifest instead. This option
-   *             will be removed in v1.0
-   *
-   * Transform the final manifest before it's written to the file system. Edit the `manifest`
-   * parameter directly, do not return a new object. Return values are ignored.
-   *
-   * @example
-   * defineConfig({
-   *   // Add a CSS-only content script.
-   *   transformManifest(manifest) {
-   *     manifest.content_scripts.push({
-   *       matches: ["*://google.com/*"],
-   *       css: ["content-scripts/some-example.css"],
-   *     });
-   *   }
-   * })
-   */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
@@ -325,30 +309,6 @@ export interface InlineConfig {
    * }
    */
   alias?: Record<string, string>;
-  /**
-   * Which extension API to use.
-   *
-   * - `"webextension-polyfill"`: Use `browser` and types from [`webextension-polyfill`](https://www.npmjs.com/package/webextension-polyfill).
-   * - `"chrome"`: Use the regular `chrome` (or `browser` for Firefox/Safari) globals provided by the browser. Types provided by [`@types/chrome`](https://www.npmjs.com/package/@types/chrome).
-   *
-   * @default "webextension-polyfill"
-   * @since 0.19.0
-   */
-  extensionApi?: 'webextension-polyfill' | 'chrome';
-  /**
-   * @deprecated Will be removed in v0.20.0, please migrate to using `vite-node`, the new default.
-   *
-   * Method used to import entrypoint files during the build process to extract their options.
-   *
-   * - `"vite-node"` (default as of 0.19.0): Uses `vite-node` to import the entrypoints. Automatically includes vite config based on your wxt.config.ts file
-   * - `"jiti"`: Simplest and fastest, but doesn't allow using any imported variables outside the entrypoint's main function
-   *
-   * @see {@link https://wxt.dev/guide/go-further/entrypoint-importers.html|Entrypoint Importers}
-   *
-   * @default "vite-node"
-   * @since 0.19.0
-   */
-  entrypointLoader?: 'vite-node' | 'jiti';
   /**
    * Experimental settings - use with caution.
    */
@@ -444,7 +404,7 @@ export interface WxtHooks {
 }
 
 export interface BuildOutput {
-  manifest: Manifest.WebExtensionManifest;
+  manifest: chrome.runtime.Manifest;
   publicAssets: OutputAsset[];
   steps: BuildStepOutput[];
 }
@@ -537,7 +497,7 @@ export interface WxtDevServer
 
 export interface ReloadContentScriptPayload {
   registration?: BaseContentScriptEntrypointOptions['registration'];
-  contentScript: Omit<Scripting.RegisteredContentScript, 'id'>;
+  contentScript: Omit<chrome.scripting.RegisteredContentScript, 'id'>;
 }
 
 export type TargetBrowser = string;
@@ -588,39 +548,39 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
 
 export interface BaseContentScriptEntrypointOptions
   extends BaseEntrypointOptions {
-  matches?: PerBrowserOption<Manifest.ContentScript['matches']>;
+  matches?: PerBrowserOption<ManifestContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
    */
-  runAt?: PerBrowserOption<Manifest.ContentScript['run_at']>;
+  runAt?: PerBrowserOption<chrome.scripting.RegisteredContentScript['runAt']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
   matchAboutBlank?: PerBrowserOption<
-    Manifest.ContentScript['match_about_blank']
+    ManifestContentScript['match_about_blank']
   >;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeMatches?: PerBrowserOption<Manifest.ContentScript['exclude_matches']>;
+  excludeMatches?: PerBrowserOption<ManifestContentScript['exclude_matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  includeGlobs?: PerBrowserOption<Manifest.ContentScript['include_globs']>;
+  includeGlobs?: PerBrowserOption<ManifestContentScript['include_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default []
    */
-  excludeGlobs?: PerBrowserOption<Manifest.ContentScript['exclude_globs']>;
+  excludeGlobs?: PerBrowserOption<ManifestContentScript['exclude_globs']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
    */
-  allFrames?: PerBrowserOption<Manifest.ContentScript['all_frames']>;
+  allFrames?: PerBrowserOption<ManifestContentScript['all_frames']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default false
@@ -932,9 +892,9 @@ export interface ConfigEnv {
 export type WxtCommand = 'build' | 'serve';
 
 /**
- * Configure how the browser starts up.
+ * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the browser.
  */
-export interface ExtensionRunnerConfig {
+export interface WebExtConfig {
   /**
    * Whether or not to open the browser with the extension installed in dev mode.
    *
@@ -1168,7 +1128,7 @@ export interface WxtHooks {
    */
   'build:manifestGenerated': (
     wxt: Wxt,
-    manifest: Manifest.WebExtensionManifest,
+    manifest: chrome.runtime.Manifest,
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
@@ -1314,7 +1274,7 @@ export interface ResolvedConfig {
   imports: false | WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  runnerConfig: C12ResolvedConfig<ExtensionRunnerConfig>;
+  runnerConfig: C12ResolvedConfig<WebExtConfig>;
   zip: {
     name?: string;
     artifactTemplate: string;
@@ -1331,10 +1291,6 @@ export interface ResolvedConfig {
      */
     zipSources: boolean;
   };
-  /**
-   * @deprecated Use `build:manifestGenerated` hook instead.
-   */
-  transformManifest?: (manifest: Manifest.WebExtensionManifest) => void;
   analysis: {
     enabled: boolean;
     open: boolean;
@@ -1352,8 +1308,6 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
-  extensionApi: 'webextension-polyfill' | 'chrome';
-  entrypointLoader: 'vite-node' | 'jiti';
   experimental: {};
   dev: {
     /** Only defined during dev command */

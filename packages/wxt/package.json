@@ -46,12 +46,8 @@
       "default": "./dist/sandbox/index.mjs"
     },
     "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
-    },
-    "./browser/chrome": {
-      "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.mjs"
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
@@ -83,13 +79,12 @@
   "dependencies": {
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@types/chrome": "^0.0.280",
-    "@types/webextension-polyfill": "^0.12.1",
     "@webext-core/fake-browser": "^1.3.1",
     "@webext-core/isolated-element": "^1.1.2",
     "@webext-core/match-patterns": "^1.0.3",
     "@wxt-dev/storage": "workspace:^1.0.0",
     "async-mutex": "^0.5.0",
-    "c12": "^1.11.2",
+    "c12": "^2.0.1",
     "cac": "^6.7.14",
     "chokidar": "^3.6.0",
     "ci-info": "^4.1.0",
@@ -104,7 +99,6 @@
     "giget": "^1.2.3",
     "hookable": "^5.5.3",
     "is-wsl": "^3.1.0",
-    "jiti": "^1.21.6",
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
     "linkedom": "^0.18.5",
@@ -124,8 +118,7 @@
     "unimport": "^3.13.1",
     "vite": "^5.0.0 || ^6.0.0",
     "vite-node": "^2.1.4",
-    "web-ext-run": "^0.2.1",
-    "webextension-polyfill": "^0.12.0"
+    "web-ext-run": "^0.2.1"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
