@@ -88,14 +88,14 @@ export async function resolveConfig(
     srcDir,
     mergedConfig.entrypointsDir ?? 'entrypoints',
   );
-  const modulesDir = path.resolve(srcDir, mergedConfig.modulesDir ?? 'modules');
   if (await isDirMissing(entrypointsDir)) {
     logMissingDir(logger, 'Entrypoints', entrypointsDir);
   }
+  const modulesDir = path.resolve(root, mergedConfig.modulesDir ?? 'modules');
   const filterEntrypoints = mergedConfig.filterEntrypoints?.length
     ? new Set(mergedConfig.filterEntrypoints)
     : undefined;
-  const publicDir = path.resolve(srcDir, mergedConfig.publicDir ?? 'public');
+  const publicDir = path.resolve(root, mergedConfig.publicDir ?? 'public');
   const typesDir = path.resolve(wxtDir, 'types');
   const outBaseDir = path.resolve(root, mergedConfig.outDir ?? '.output');
   const modeSuffixes: Record<string, string | undefined> = {
