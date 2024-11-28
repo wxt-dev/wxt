@@ -22,7 +22,7 @@ console.log(res); // "Hello John!"
 export default defineContentScript({
   registration: 'runtime',
   main(ctx) {
-    console.log('Script was injected!');
+    console.log('Script was executed!');
     return 'Hello John!';
   },
 });
