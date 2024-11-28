@@ -51,7 +51,7 @@ export function mapWxtOptionsToContentScript(
   css: string[] | undefined,
 ): Manifest.ContentScript {
   return {
-    matches: options.matches,
+    matches: options.matches ?? [],
     all_frames: options.allFrames,
     match_about_blank: options.matchAboutBlank,
     exclude_globs: options.excludeGlobs,

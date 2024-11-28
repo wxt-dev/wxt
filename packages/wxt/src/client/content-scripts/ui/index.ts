@@ -60,6 +60,7 @@ export function createIntegratedUi<TMounted>(
   };
   const unmount = () => {
     options.onRemove?.(mounted);
+    wrapper.replaceChildren();
     wrapper.remove();
     mounted = undefined;
   };

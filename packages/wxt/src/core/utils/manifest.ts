@@ -117,11 +117,12 @@ export async function generateManifest(
   if (wxt.config.manifestVersion === 2) {
     convertWebAccessibleResourcesToMv2(manifest);
     convertActionToMv2(manifest);
+    convertCspToMv2(manifest);
     moveHostPermissionsToPermissions(manifest);
   }
 
   if (wxt.config.manifestVersion === 3) {
-    validateMv3WebAccessbileResources(manifest);
+    validateMv3WebAccessibleResources(manifest);
   }
 
   stripKeys(manifest);
@@ -143,7 +144,7 @@ export async function generateManifest(
 }
 
 /**
- * Removes suffixes from the version, like X.Y.Z-alpha1 (which brosers don't allow), so it's a
+ * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't allow), so it's a
  * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
  */
 function simplifyVersion(versionName: string): string {
@@ -362,7 +363,7 @@ function addEntrypoints(
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -405,7 +406,7 @@ function addEntrypoints(
         );
       }
       runtimeContentScripts.forEach((script) => {
-        script.options.matches.forEach((matchPattern) => {
+        script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -467,34 +468,28 @@ function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   }
 
   const extensionPagesCsp = new ContentSecurityPolicy(
-    manifest.manifest_version === 3
-      ? // @ts-expect-error: extension_pages is not typed
-        (manifest.content_security_policy?.extension_pages ??
-        "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';") // default extension_pages CSP for MV3
-      : (manifest.content_security_policy ??
-        "script-src 'self'; object-src 'self';"), // default CSP for MV2
+    // @ts-expect-error: extension_pages exists, we convert MV2 CSPs to this earlier in the process
+    manifest.content_security_policy?.extension_pages ??
+      (manifest.manifest_version === 3
+        ? DEFAULT_MV3_EXTENSION_PAGES_CSP
+        : DEFAULT_MV2_CSP),
   );
   const sandboxCsp = new ContentSecurityPolicy(
     // @ts-expect-error: sandbox is not typed
-    manifest.content_security_policy?.sandbox ??
-      "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';", // default sandbox CSP for MV3
+    manifest.content_security_policy?.sandbox ?? DEFAULT_MV3_SANDBOX_CSP,
   );
 
-  if (wxt.server) {
+  if (wxt.config.command === 'serve') {
     extensionPagesCsp.add('script-src', allowedCsp);
     sandboxCsp.add('script-src', allowedCsp);
   }
 
-  if (manifest.manifest_version === 3) {
-    manifest.content_security_policy ??= {};
-    // @ts-expect-error: extension_pages is not typed
-    manifest.content_security_policy.extension_pages =
-      extensionPagesCsp.toString();
-    // @ts-expect-error: sandbox is not typed
-    manifest.content_security_policy.sandbox = sandboxCsp.toString();
-  } else {
-    manifest.content_security_policy = extensionPagesCsp.toString();
-  }
+  manifest.content_security_policy ??= {};
+  // @ts-expect-error: extension_pages is not typed
+  manifest.content_security_policy.extension_pages =
+    extensionPagesCsp.toString();
+  // @ts-expect-error: sandbox is not typed
+  manifest.content_security_policy.sandbox = sandboxCsp.toString();
 }
 
 function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
@@ -552,7 +547,7 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      matches: script.options.matches.map((matchPattern) =>
+      matches: script.options.matches?.map((matchPattern) =>
         stripPathFromMatchPattern(matchPattern),
       ),
     });
@@ -613,7 +608,7 @@ export function stripPathFromMatchPattern(pattern: string) {
 /**
  * Converts all MV3 web accessible resources to their MV2 forms. MV3 web accessible resources are
  * generated in this file, and may be defined by the user in their manifest. In both cases, when
- * targetting MV2, automatically convert their definitions down to the basic MV2 array.
+ * targeting MV2, automatically convert their definitions down to the basic MV2 array.
  */
 export function convertWebAccessibleResourcesToMv2(
   manifest: Manifest.WebExtensionManifest,
@@ -652,10 +647,21 @@ function convertActionToMv2(manifest: Manifest.WebExtensionManifest): void {
   manifest.browser_action = manifest.action;
 }
 
+function convertCspToMv2(manifest: Manifest.WebExtensionManifest): void {
+  if (
+    typeof manifest.content_security_policy === 'string' ||
+    manifest.content_security_policy?.extension_pages == null
+  )
+    return;
+
+  manifest.content_security_policy =
+    manifest.content_security_policy.extension_pages;
+}
+
 /**
  * Make sure all resources are in MV3 format. If not, add a wanring
  */
-export function validateMv3WebAccessbileResources(
+export function validateMv3WebAccessibleResources(
   manifest: Manifest.WebExtensionManifest,
 ): void {
   if (manifest.web_accessible_resources == null) return;
@@ -718,3 +724,9 @@ const mv3OnlyKeys = [
   'side_panel',
 ];
 const firefoxMv3OnlyKeys = ['host_permissions'];
+
+const DEFAULT_MV3_EXTENSION_PAGES_CSP =
+  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+const DEFAULT_MV3_SANDBOX_CSP =
+  "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';";
+const DEFAULT_MV2_CSP = "script-src 'self'; object-src 'self';";
