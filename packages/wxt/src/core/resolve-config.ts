@@ -394,6 +394,7 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 async function resolveWxtModuleDir() {
+  console.log(import.meta);
   const url = import.meta.resolve('wxt', import.meta.url);
   // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
@@ -494,4 +495,13 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
+}
+
+// Mock `import.meta.resolve` in tests
+// @ts-expect-error
+if (typeof __vite_ssr_import_meta__ !== 'undefined') {
+  // @ts-expect-error: Untyped global defined by Vitest
+  __vite_ssr_import_meta__.resolve = (path: string) =>
+    // @ts-expect-error: vitestCreateRequire defined in vitest.setup.ts
+    'file://' + vitestCreateRequire(import.meta.url).resolve(path);
 }

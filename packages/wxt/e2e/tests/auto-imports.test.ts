@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 import spawn from 'nano-spawn';
+import { createRequire } from 'node:module';
+
+// @ts-expect-error: Compile global
+__vite_ssr_import_meta__.resolve = (path: string) =>
+  'file://' + createRequire(import.meta.url).resolve(path);
+
+// console.log(__vite_ssr_import_meta__);
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {

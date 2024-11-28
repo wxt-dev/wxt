@@ -15,8 +15,17 @@ export default defineBuildConfig([
         input: 'src',
         pattern: ['**/*', '!**/__tests__', '!**/*.md', '!virtual', '!@types'],
         declaration: true,
+        esbuild: {
+          define: {
+            __vite_ssr_import_meta__: 'undefined',
+          },
+          treeShaking: true,
+        },
       },
     ],
+    replace: {
+      __vite_ssr_import_meta__: 'undefined',
+    },
     hooks: {
       async 'build:done'() {
         // Replace any template variables in output files
