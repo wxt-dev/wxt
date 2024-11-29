@@ -91,7 +91,7 @@ export async function generateManifest(
       ).length >= 4
     ) {
       warnings.push([
-        "Extension already has 4 registered suggested key commands, WXT's reload command is disabled",
+        "Extension already has 4 registered commands with suggested keys, WXT's reload command is disabled",
       ]);
     } else {
       manifest.commands ??= {};
