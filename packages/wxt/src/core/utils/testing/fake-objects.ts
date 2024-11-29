@@ -4,7 +4,7 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import { Commands, type Manifest } from 'wxt/browser';
+import type { Manifest } from 'wxt/browser';
 import {
   FsCache,
   ResolvedConfig,
@@ -355,13 +355,18 @@ export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
   entrypoints: fakeArray(fakeEntrypoint),
 }));
 
-export const fakeManifestCommand = fakeObjectCreator<Commands.Command>(() => ({
-  description: faker.string.sample(),
-  shortcut: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int({
-    min: 0,
-    max: 9,
-  })}`,
-}));
+export const fakeManifestCommand =
+  fakeObjectCreator<Manifest.WebExtensionManifestCommandsType>(() => ({
+    description: faker.string.sample(),
+    suggested_key: {
+      default: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int(
+        {
+          min: 0,
+          max: 9,
+        },
+      )}`,
+    },
+  }));
 
 export const fakeDevServer = fakeObjectCreator<WxtDevServer>(() => ({
   hostname: 'localhost',
