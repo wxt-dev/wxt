@@ -1,3 +1,4 @@
+import readline from 'node:readline';
 import { WxtDevServer } from '../types';
 
 export interface KeyboardShortcutWatcher {
@@ -6,23 +7,16 @@ export interface KeyboardShortcutWatcher {
 }
 
 /**
- * Function that creates a key board shortcut the extension.
+ * Function that creates a keyboard shortcut handler for the extension.
  */
 export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {
-  let originalRawMode: boolean | undefined;
   let isWatching = false;
+  let rl: readline.Interface | null = null;
 
-  const handleInput = (data: Buffer) => {
-    const char = data.toString();
-
-    // Handle Ctrl+C (char code 3)
-    if (char === '\u0003') {
-      server.stop();
-      process.exit();
-    }
-    if (char === 'o') {
+  const handleInput = (line: string) => {
+    if (line.trim() === 'o') {
       server.restartBrowser();
     }
   };
@@ -30,21 +24,25 @@ export function createKeyboardShortcuts(
   return {
     start() {
       if (isWatching) return;
-      originalRawMode = process.stdin.isRaw;
-      process.stdin.setRawMode(true);
-      process.stdin.resume();
 
-      process.stdin.on('data', handleInput);
+      rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+
+      rl.on('line', handleInput);
+
       isWatching = true;
     },
 
     stop() {
       if (!isWatching) return;
-      process.stdin.removeListener('data', handleInput);
-      if (originalRawMode !== undefined) {
-        process.stdin.setRawMode(originalRawMode);
+
+      if (rl) {
+        rl.close();
+        rl = null;
       }
-      process.stdin.pause();
+
       isWatching = false;
     },
   };
