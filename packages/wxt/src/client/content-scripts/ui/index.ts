@@ -149,6 +149,7 @@ export async function createShadowRootUi<TMounted>(
   shadowHost.setAttribute('data-wxt-shadow-root', '');
 
   let mounted: TMounted | undefined;
+
   const mount = () => {
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
@@ -156,6 +157,7 @@ export async function createShadowRootUi<TMounted>(
     // Mount UI inside shadow root
     mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
+
   const remove = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
