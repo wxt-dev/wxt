@@ -8,12 +8,15 @@ import { ContentScriptContext } from '..';
 import {
   AutoMount,
   AutoMountOptions,
+  BaseMountFunctions,
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
+  ContentScriptUiOptions,
   IframeContentScriptUi,
   IframeContentScriptUiOptions,
   IntegratedContentScriptUi,
   IntegratedContentScriptUiOptions,
+  MountFunctions,
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
 } from './types';
@@ -34,40 +37,25 @@ export function createIntegratedUi<TMounted>(
   wrapper.setAttribute('data-wxt-integrated', '');
 
   let mounted: TMounted | undefined = undefined;
-  let autoMountInstance: AutoMount | undefined = undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper);
   };
-  const autoMount = (autoMountOptions?: AutoMountOptions) => {
-    if (autoMountInstance) {
-      logger.warn('autoMount is already set.');
-      return stopAutoMount;
-    }
-    autoMountInstance = autoMountUi(
-      { mount, unmount, stopAutoMount },
-      {
-        ...options,
-        ...autoMountOptions,
-      },
-    );
-    return stopAutoMount;
-  };
   const remove = () => {
-    stopAutoMount();
-    unmount();
-  };
-  const unmount = () => {
     options.onRemove?.(mounted);
     wrapper.replaceChildren();
     wrapper.remove();
     mounted = undefined;
   };
-  const stopAutoMount = () => {
-    autoMountInstance?.stopAutoMount();
-    autoMountInstance = undefined;
-  };
+
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
 
   ctx.onInvalidated(remove);
 
@@ -76,9 +64,7 @@ export function createIntegratedUi<TMounted>(
       return mounted;
     },
     wrapper,
-    mount,
-    autoMount,
-    remove,
+    ...mountFunctions,
   };
 }
 
@@ -99,39 +85,24 @@ export function createIframeUi<TMounted>(
   wrapper.appendChild(iframe);
 
   let mounted: TMounted | undefined = undefined;
-  let autoMountInstance: AutoMount | undefined = undefined;
   const mount = () => {
     applyPosition(wrapper, iframe, options);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
-  const autoMount = (autoMountOptions?: AutoMountOptions) => {
-    if (autoMountInstance) {
-      logger.warn('autoMount is already set.');
-      return stopAutoMount;
-    }
-    autoMountInstance = autoMountUi(
-      { mount, unmount, stopAutoMount },
-      {
-        ...options,
-        ...autoMountOptions,
-      },
-    );
-    return stopAutoMount;
-  };
   const remove = () => {
-    stopAutoMount();
-    unmount();
-  };
-  const unmount = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
     mounted = undefined;
   };
-  const stopAutoMount = () => {
-    autoMountInstance?.stopAutoMount();
-    autoMountInstance = undefined;
-  };
+
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
 
   ctx.onInvalidated(remove);
 
@@ -141,9 +112,7 @@ export function createIframeUi<TMounted>(
     },
     iframe,
     wrapper,
-    mount,
-    autoMount,
-    remove,
+    ...mountFunctions,
   };
 }
 
@@ -180,7 +149,6 @@ export async function createShadowRootUi<TMounted>(
   shadowHost.setAttribute('data-wxt-shadow-root', '');
 
   let mounted: TMounted | undefined;
-  let autoMountInstance: AutoMount | undefined = undefined;
   const mount = () => {
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
@@ -188,25 +156,7 @@ export async function createShadowRootUi<TMounted>(
     // Mount UI inside shadow root
     mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
-  const autoMount = (autoMountOptions?: AutoMountOptions) => {
-    if (autoMountInstance) {
-      logger.warn('autoMount is already set.');
-      return stopAutoMount;
-    }
-    autoMountInstance = autoMountUi(
-      { mount, unmount, stopAutoMount },
-      {
-        ...options,
-        ...autoMountOptions,
-      },
-    );
-    return stopAutoMount;
-  };
   const remove = () => {
-    stopAutoMount();
-    unmount();
-  };
-  const unmount = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
     // Detatch shadow root from DOM
@@ -217,10 +167,14 @@ export async function createShadowRootUi<TMounted>(
     // Clear mounted value
     mounted = undefined;
   };
-  const stopAutoMount = () => {
-    autoMountInstance?.stopAutoMount();
-    autoMountInstance = undefined;
-  };
+
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
 
   ctx.onInvalidated(remove);
 
@@ -228,9 +182,7 @@ export async function createShadowRootUi<TMounted>(
     shadow,
     shadowHost,
     uiContainer,
-    mount,
-    autoMount,
-    remove,
+    ...mountFunctions,
     get mounted() {
       return mounted;
     },
@@ -331,6 +283,50 @@ function mountUi(
       options.append(anchor, root);
       break;
   }
+}
+
+function createMountFunctions<TMounted>(
+  baseFunctions: BaseMountFunctions,
+  options: ContentScriptUiOptions<TMounted>,
+): MountFunctions {
+  let autoMountInstance: AutoMount | undefined = undefined;
+
+  const stopAutoMount = () => {
+    autoMountInstance?.stopAutoMount();
+    autoMountInstance = undefined;
+  };
+
+  const mount = () => {
+    baseFunctions.mount();
+  };
+
+  const unmount = baseFunctions.remove;
+
+  const remove = () => {
+    stopAutoMount();
+    baseFunctions.remove();
+  };
+
+  const autoMount = (autoMountOptions?: AutoMountOptions) => {
+    if (autoMountInstance) {
+      logger.warn('autoMount is already set.');
+      return stopAutoMount;
+    }
+    autoMountInstance = autoMountUi(
+      { mount, unmount, stopAutoMount },
+      {
+        ...options,
+        ...autoMountOptions,
+      },
+    );
+    return stopAutoMount;
+  };
+
+  return {
+    mount,
+    remove,
+    autoMount,
+  };
 }
 
 function autoMountUi(

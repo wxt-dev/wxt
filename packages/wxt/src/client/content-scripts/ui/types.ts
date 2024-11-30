@@ -36,22 +36,7 @@ export interface ShadowRootContentScriptUi<TMounted>
   shadow: ShadowRoot;
 }
 
-export interface ContentScriptUi<TMounted> {
-  /**
-   * Function that mounts or remounts the UI on the page.
-   */
-  mount: () => void;
-  /**
-   * Call `ui.autoMount()` to automatically mount and remove the UI as the anchor is dynamically added/removed by the webpage.
-   */
-  autoMount: (options?: AutoMountOptions) => StopAutoMount;
-  /**
-   * Function that removes the UI from the webpage.
-   */
-  remove: () => void;
-  /**>
-   * Custom data returned from the `options.mount` function.
-   */
+export interface ContentScriptUi<TMounted> extends MountFunctions {
   mounted: TMounted | undefined;
 }
 
@@ -219,6 +204,28 @@ export interface ContentScriptAnchoredOptions {
    * - `(anchor, ui) => void` - Customizable function that let's you add the UI to the DOM
    */
   append?: ContentScriptAppendMode | ((anchor: Element, ui: Element) => void);
+}
+
+export interface BaseMountFunctions {
+  /**
+   * Function that mounts or remounts the UI on the page.
+   */
+  mount: () => void;
+
+  /**
+   * Function that removes the UI from the webpage.
+   */
+  remove: () => void;
+  /**>
+   * Custom data returned from the `options.mount` function.
+   */
+}
+
+export interface MountFunctions extends BaseMountFunctions {
+  /**
+   * Call `ui.autoMount()` to automatically mount and remove the UI as the anchor is dynamically added/removed by the webpage.
+   */
+  autoMount: (options?: AutoMountOptions) => StopAutoMount;
 }
 
 export type AutoMountOptions = {
