@@ -24,6 +24,7 @@ import { importEntrypointFile } from '../../utils/building';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
+import { createExtensionEnvironment } from '../../utils/environments';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -263,7 +264,8 @@ export async function createViteBuilder(
               return node.resolveId(id, importer);
             },
           });
-          const res = await runner.executeFile(path);
+          const env = createExtensionEnvironment();
+          const res = await env.run(() => runner.executeFile(path));
           await server.close();
           return res.default;
         }
