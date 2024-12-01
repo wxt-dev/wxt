@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect } from 'vitest';
+import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest';
 import {
   createIntegratedUi,
   createIframeUi,
@@ -520,6 +520,9 @@ describe('Content Script UIs', () => {
     let ui: ContentScriptUi<any>;
     beforeEach(async () => {
       ui?.remove();
+      await runMicrotasks();
+    });
+    afterEach(async () => {
       await runMicrotasks();
     });
 
