@@ -457,8 +457,8 @@ importers:
         specifier: ^5.0.0 || ^6.0.0
         version: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
       vite-node:
-        specifier: ^2.1.4
-        version: 2.1.4(@types/node@20.17.6)(sass@1.80.7)
+        specifier: ^2.1.6
+        version: 2.1.6(@types/node@20.17.6)(sass@1.80.7)
       web-ext-run:
         specifier: ^0.2.1
         version: 0.2.1
@@ -2837,6 +2837,9 @@ packages:
   error-ex@1.3.2:
     resolution: {integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==}
 
+  es-module-lexer@1.5.4:
+    resolution: {integrity: sha512-MVNK56NiMrOwitFB7cqDwq0CQutbw+0BvLshJSse0MUNU+y1FC3bUS/AQg7oUng+/wKrrki7JfmwtVHkVfPLlw==}
+
   es6-error@4.1.1:
     resolution: {integrity: sha512-Um/+FxMr9CISWh0bi5Zv0iOD+4cFh5qLeks1qhAopKVAJw3drgKbKySikp7wGhDL0HPeaja0P5ULZrxLkniUVg==}
 
@@ -4833,6 +4836,11 @@ packages:
   vite-node@2.1.4:
     resolution: {integrity: sha512-kqa9v+oi4HwkG6g8ufRnb5AeplcRw8jUF6/7/Qz1qRQOXHImG8YnLbB+LLszENwFnoBl9xIf9nVdCFzNd7GQEg==}
     engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+
+  vite-node@2.1.6:
+    resolution: {integrity: sha512-DBfJY0n9JUwnyLxPSSUmEePT21j8JZp/sR9n+/gBwQU6DcQOioPdb8/pibWfXForbirSagZCilseYIwaL3f95A==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
   vite-plugin-solid@2.10.2:
@@ -7345,6 +7353,8 @@ snapshots:
     dependencies:
       is-arrayish: 0.2.1
 
+  es-module-lexer@1.5.4: {}
+
   es6-error@4.1.1: {}
 
   esbuild@0.19.12:
@@ -9523,6 +9533,24 @@ snapshots:
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
+      pathe: 1.1.2
+      vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vite-node@2.1.6(@types/node@20.17.6)(sass@1.80.7):
+    dependencies:
+      cac: 6.7.14
+      debug: 4.3.7
+      es-module-lexer: 1.5.4
       pathe: 1.1.2
       vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
     transitivePeerDependencies:
