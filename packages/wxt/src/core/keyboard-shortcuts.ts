@@ -29,7 +29,7 @@ export function createKeyboardShortcuts(
       rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
-        terminal: false,
+        terminal: false, // Don't intercept ctrl+C, ctrl+Z, etc
       });
 
       rl.on('line', handleInput);
