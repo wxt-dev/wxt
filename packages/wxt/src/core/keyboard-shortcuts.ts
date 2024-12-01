@@ -13,9 +13,10 @@ export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {
   let isWatching = false;
-  let rl: readline.Interface | null = null;
+  let rl: readline.Interface | undefined;
 
   const handleInput = (line: string) => {
+    // Only handle our specific command
     if (line.trim() === 'o') {
       server.restartBrowser();
     }
@@ -28,10 +29,10 @@ export function createKeyboardShortcuts(
       rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
+        terminal: false,
       });
 
       rl.on('line', handleInput);
-
       isWatching = true;
     },
 
@@ -40,7 +41,7 @@ export function createKeyboardShortcuts(
 
       if (rl) {
         rl.close();
-        rl = null;
+        rl = undefined;
       }
 
       isWatching = false;

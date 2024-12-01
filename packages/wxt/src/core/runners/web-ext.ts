@@ -3,6 +3,7 @@ import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import pc from 'picocolors';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -81,7 +82,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const duration = Date.now() - startTime;
       wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
-      wxt.logger.info(`To Reopen browser press o + enter`);
+      wxt.logger.info(`To reopen the browser, press ${pc.bold('o + enter')}`);
     },
 
     async closeBrowser() {
