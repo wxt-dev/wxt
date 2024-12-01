@@ -648,7 +648,7 @@ describe('Content Script UIs', () => {
         });
 
         describe('StopAutoMount', () => {
-          it('should stop auto-mounting when StopAutoMount is called', async () => {
+          it('should stop auto-mounting and remove ui when StopAutoMount is called', async () => {
             const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             ui = await createUiFunction(ctx, {
@@ -680,7 +680,7 @@ describe('Content Script UIs', () => {
             dynamicEl.remove();
             await runMicrotasks();
             expect(onMount).toHaveBeenCalledTimes(1);
-            expect(onRemove).toHaveBeenCalledTimes(1);
+            expect(onRemove).toHaveBeenCalledTimes(2);
           });
 
           it('should call StopAutoMount when `ui.remove` is called', async () => {
