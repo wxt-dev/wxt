@@ -161,7 +161,7 @@ export async function createShadowRootUi<TMounted>(
   const remove = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
-    // Detatch shadow root from DOM
+    // Detach shadow root from DOM
     shadowHost.remove();
     // Remove children from uiContainer
     while (uiContainer.lastChild)

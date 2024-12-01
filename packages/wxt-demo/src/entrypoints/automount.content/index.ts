@@ -29,13 +29,10 @@ export default defineContentScript({
       anchor: '#automount-anchor',
       onMount: (container) => {
         const app = document.createElement('div');
-        setTimeout(() => {
-          app.id = 'automount-ui';
-          app.classList.add('m-0', 'text-center', 'text-blue-500');
-          app.textContent = `Hello, I'm automount UI.`;
-          container.append(app);
-        }, 1000);
-        return { container, app };
+        app.id = 'automount-ui';
+        app.classList.add('m-0', 'text-center', 'text-blue-500');
+        app.textContent = `Hello, I'm automount UI.`;
+        container.append(app);
       },
       onRemove() {
         console.log('autoMountUi removed');

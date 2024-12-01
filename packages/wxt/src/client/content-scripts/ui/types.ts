@@ -216,9 +216,6 @@ export interface BaseMountFunctions {
    * Function that removes the UI from the webpage.
    */
   remove: () => void;
-  /**>
-   * Custom data returned from the `options.mount` function.
-   */
 }
 
 export interface MountFunctions extends BaseMountFunctions {
