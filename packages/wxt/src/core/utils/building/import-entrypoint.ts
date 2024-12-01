@@ -7,6 +7,7 @@ import { normalizePath } from '../../utils/paths';
 import { TransformOptions, transformSync } from 'esbuild';
 import { fileURLToPath } from 'node:url';
 import { wxt } from '../../wxt';
+import { createExtensionEnvironment } from '../environments';
 
 /**
  * Get the value from the default export of a `path`.
@@ -20,7 +21,7 @@ import { wxt } from '../../wxt';
  * This prevents resolving imports of imports, speeding things up and preventing "xxx is not
  * defined" errors.
  *
- * Downside is that code cannot be executed outside of the main fucntion for the entrypoint,
+ * Downside is that code cannot be executed outside of the main function for the entrypoint,
  * otherwise you will see "xxx is not defined" errors for any imports used outside of main function.
  */
 export async function importEntrypointFile<T>(path: string): Promise<T> {
@@ -89,7 +90,8 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
   );
 
   try {
-    const res = await jiti(path);
+    const env = createExtensionEnvironment();
+    const res = await env.run<any>(() => jiti(path));
     return res.default;
   } catch (err) {
     const filePath = relative(wxt.config.root, path);
