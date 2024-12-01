@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
+import { describe, it, beforeEach, vi, expect } from 'vitest';
 import {
   createIntegratedUi,
   createIframeUi,
