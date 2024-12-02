@@ -31,9 +31,12 @@ import { wxt } from '../../wxt';
 import { createExtensionEnvironment } from '../environments';
 
 /**
- * Return entrypoints and their configuration by looking through the project's files.
+ * Return entrypoints and their configuration by looking through the project's files. *//**
+ * @param {string} [allowAllEntryPoints] - If true, all entrypoints are returned.
  */
-export async function findEntrypoints(): Promise<Entrypoint[]> {
+export async function findEntrypoints(
+  allowAllEntryPoints?: boolean,
+): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
   await fs.mkdir(wxt.config.wxtDir, { recursive: true });
   try {
@@ -150,6 +153,27 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
         .map((item) => `${pc.dim('-')} ${pc.cyan(item)}`)
         .join('\n')}`,
     );
+  }
+
+  if (allowAllEntryPoints) {
+    // wxt.config.zip.zipSources = true;
+    wxt.config.zip.excludeSources = entrypoints
+      .map((entry: Entrypoint) => {
+        if (entry.options?.include?.length && entry.options?.exclude?.length) {
+          wxt.logger.warn(
+            `The ${entry.name} entrypoint lists both include and exclude, but only one can be used per entrypoint. Entrypoint ignored.`,
+          );
+          return '';
+        }
+        if (entry.options.exclude?.includes(wxt.config.browser)) {
+          return entry.inputPath;
+        }
+        if (skippedEntrypointNames.includes(entry.name)) {
+          return entry.inputPath;
+        }
+        return '';
+      })
+      .filter(Boolean);
   }
   const targetEntrypoints = entrypoints.filter((entry) => {
     const { include, exclude } = entry.options;

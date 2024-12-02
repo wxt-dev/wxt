@@ -19,7 +19,7 @@ import { normalizePath } from './utils/paths';
  */
 export async function zip(config?: InlineConfig): Promise<string[]> {
   await registerWxt('build', config);
-  const output = await internalBuild();
+  const output = await internalBuild(true);
   await wxt.hooks.callHook('zip:start', wxt);
 
   const start = Date.now();
@@ -113,9 +113,12 @@ async function zipDir(
       onlyFiles: true,
     })
   ).filter((relativePath) => {
+    const relativeExcludePaths = options?.exclude
+      ?.map((excludePath) => path.relative(directory, excludePath))
+      .map((path) => path.replaceAll('\\', '/'));
     return (
       options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
+      !relativeExcludePaths?.some((pattern) => minimatch(relativePath, pattern))
     );
   });
   const filesToZip = [
