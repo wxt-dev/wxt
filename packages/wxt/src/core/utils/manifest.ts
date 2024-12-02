@@ -82,9 +82,16 @@ export async function generateManifest(
 
   // Add reload command in dev mode
   if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
-    if (manifest.commands && Object.keys(manifest.commands).length >= 4) {
+    if (
+      manifest.commands &&
+      // If the following limit is exceeded, Chrome will fail to load the extension.
+      // Error: "Too many commands specified for 'commands': The maximum is 4."
+      Object.values(manifest.commands).filter(
+        (command) => command.suggested_key,
+      ).length >= 4
+    ) {
       warnings.push([
-        "Extension already has 4 registered commands, WXT's reload command is disabled",
+        "Extension already has 4 registered commands with suggested keys, WXT's reload command is disabled",
       ]);
     } else {
       manifest.commands ??= {};
