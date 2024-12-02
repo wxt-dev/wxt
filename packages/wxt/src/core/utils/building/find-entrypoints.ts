@@ -156,24 +156,9 @@ export async function findEntrypoints(
   }
 
   if (allowAllEntryPoints) {
-    // wxt.config.zip.zipSources = true;
-    wxt.config.zip.excludeSources = entrypoints
-      .map((entry: Entrypoint) => {
-        if (entry.options?.include?.length && entry.options?.exclude?.length) {
-          wxt.logger.warn(
-            `The ${entry.name} entrypoint lists both include and exclude, but only one can be used per entrypoint. Entrypoint ignored.`,
-          );
-          return '';
-        }
-        if (entry.options.exclude?.includes(wxt.config.browser)) {
-          return entry.inputPath;
-        }
-        if (skippedEntrypointNames.includes(entry.name)) {
-          return entry.inputPath;
-        }
-        return '';
-      })
-      .filter(Boolean);
+    wxt.config.zip.excludeSources = entrypoints.map((entry: Entrypoint) => {
+      return entry.inputPath;
+    });
   }
   const targetEntrypoints = entrypoints.filter((entry) => {
     const { include, exclude } = entry.options;
