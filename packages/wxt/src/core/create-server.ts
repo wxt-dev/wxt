@@ -109,12 +109,12 @@ async function createServerInternal(): Promise<WxtDevServer> {
       // Listen for file changes and reload different parts of the extension accordingly
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', reloadOnChange);
-      keyboardsShortCuts.start();
+      keyboardShortcuts.start();
     },
 
     async stop() {
       wasStopped = true;
-      keyboardsShortCuts.stop();
+      keyboardShortcuts.stop();
       await runner.closeBrowser();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
@@ -140,14 +140,14 @@ async function createServerInternal(): Promise<WxtDevServer> {
     },
     async restartBrowser() {
       await runner.closeBrowser();
-      keyboardsShortCuts.stop();
+      keyboardShortcuts.stop();
       await wxt.reloadConfig();
       runner = await createExtensionRunner();
       await runner.openBrowser();
-      keyboardsShortCuts.start();
+      keyboardShortcuts.start();
     },
   };
-  const keyboardsShortCuts = createKeyboardShortcuts(server);
+  const keyboardShortcuts = createKeyboardShortcuts(server);
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
