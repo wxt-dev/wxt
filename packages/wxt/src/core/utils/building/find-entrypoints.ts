@@ -250,7 +250,6 @@ async function getOptionsEntrypoint(
     options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped: info.skipped,
   };
 }
 
@@ -268,14 +267,12 @@ async function getUnlistedPageEntrypoint(
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
     options,
-    skipped: info.skipped,
   };
 }
 
 async function getUnlistedScriptEntrypoint({
   inputPath,
   name,
-  skipped,
 }: EntrypointInfo): Promise<GenericEntrypoint> {
   const defaultExport =
     await wxt.builder.importEntrypoint<UnlistedScriptDefinition>(inputPath);
@@ -291,14 +288,12 @@ async function getUnlistedScriptEntrypoint({
     inputPath,
     outputDir: wxt.config.outDir,
     options: resolvePerBrowserOptions(options, wxt.config.browser),
-    skipped,
   };
 }
 
 async function getBackgroundEntrypoint({
   inputPath,
   name,
-  skipped,
 }: EntrypointInfo): Promise<BackgroundEntrypoint> {
   let options: Omit<BackgroundDefinition, 'main'> = {};
   if (inputPath !== VIRTUAL_NOOP_BACKGROUND_MODULE_ID) {
@@ -323,14 +318,12 @@ async function getBackgroundEntrypoint({
     inputPath,
     outputDir: wxt.config.outDir,
     options: resolvePerBrowserOptions(options, wxt.config.browser),
-    skipped,
   };
 }
 
 async function getContentScriptEntrypoint({
   inputPath,
   name,
-  skipped,
 }: EntrypointInfo): Promise<ContentScriptEntrypoint> {
   const defaultExport =
     await wxt.builder.importEntrypoint<ContentScriptDefinition>(inputPath);
@@ -352,7 +345,6 @@ async function getContentScriptEntrypoint({
     inputPath,
     outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
     options: resolvePerBrowserOptions(options, wxt.config.browser),
-    skipped,
   };
 }
 
@@ -384,7 +376,6 @@ async function getSidepanelEntrypoint(
     options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped: info.skipped,
   };
 }
 
