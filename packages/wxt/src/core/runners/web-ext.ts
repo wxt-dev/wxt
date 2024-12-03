@@ -3,7 +3,6 @@ import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
-import pc from 'picocolors';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
