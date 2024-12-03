@@ -171,6 +171,9 @@ describe('groupEntrypoints', () => {
 
   it('should exclude skipped entrypoints from the groups to build', () => {
     const background = fakeBackgroundEntrypoint({
+      options: {
+        type: 'module',
+      },
       skipped: false,
     });
     const popup = fakePopupEntrypoint({
