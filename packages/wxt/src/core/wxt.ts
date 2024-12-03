@@ -38,11 +38,11 @@ export async function registerWxt(
     async reloadConfig() {
       // Prevent changing the server port when resolving config multiple times
       // get-port-please doesn't always return the same port if it was recently closed.
-      if (wxt.config.dev.server?.port) {
-        inlineConfig.dev ??= {};
-        inlineConfig.dev.server ??= {};
-        inlineConfig.dev.server.port = wxt.config.dev.server.port;
-      }
+      // if (wxt.config.dev.server?.port) {
+      //   inlineConfig.dev ??= {};
+      //   inlineConfig.dev.server ??= {};
+      //   inlineConfig.dev.server.port = wxt.config.dev.server.port;
+      // }
 
       wxt.config = await resolveConfig(inlineConfig, command);
       await wxt.hooks.callHook('config:resolved', wxt);
