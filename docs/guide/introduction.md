@@ -9,7 +9,7 @@ Check out the [comparison](/guide/resources/compare) to see how WXT compares to 
 
 ## Prerequisites
 
-These docs assume you have a basic knowledge of how web extensions are structured and how you access the extension APIs.
+These docs assume you have a basic knowledge of how browser extensions are structured and how you access the extension APIs.
 
 :::warning New to extension development?
 If you have never written an extension before, follow Chrome's [Hello World tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) to first **_create an extension without WXT_**, then come back here.
