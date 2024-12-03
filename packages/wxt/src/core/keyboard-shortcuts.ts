@@ -50,11 +50,13 @@ export function createKeyboardShortcuts(
     },
 
     printHelp() {
-      wxt.logger.info(
-        pc.dim(`Press `) +
-          pc.bold('o + enter') +
-          pc.dim(' to reopen the browser'),
-      );
+      if (!wxt.config.runnerConfig.config.disabled) {
+        wxt.logger.info(
+          pc.dim(`Press `) +
+            pc.bold('o + enter') +
+            pc.dim(' to reopen the browser'),
+        );
+      }
     },
   };
 }
