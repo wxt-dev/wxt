@@ -548,20 +548,20 @@ To use `injectScript`, we need two entrypoints, one content script and one unlis
 ```ts
 // entrypoints/example-main-world.ts
 export default defineUnlistedScript(() => {
-  console.log("Hello from main world");
+  console.log('Hello from the main world');
 });
 ```
 
 ```ts
 // entrypoints/example.content.ts
 export default defineContentScript({
-  matches: ["*://*/*"],
+  matches: ['*://*/*'],
   async main() {
-    console.log("Injecting script...");
-    await injectScript("/example-main-world.js", {
+    console.log('Injecting script...');
+    await injectScript('/example-main-world.js', {
       keepInDom: true,
     });
-    console.log("Done!");
+    console.log('Done!');
   },
 });
 ```
