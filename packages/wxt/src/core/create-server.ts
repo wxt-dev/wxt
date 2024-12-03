@@ -110,7 +110,9 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', reloadOnChange);
       keyboardShortcuts.start();
-      keyboardShortcuts.printHelp();
+      if (!wxt.config.runnerConfig.config.disabled) {
+        keyboardShortcuts.printHelp();
+      }
     },
 
     async stop() {
