@@ -175,19 +175,32 @@ export class ContentScriptContext implements AbortController {
    * ctx.addEventListener(document, "visibilitychange", () => {
    *   // ...
    * });
-   * ctx.addEventListener(document, "wxt:locationchange", () => {
+   * ctx.addEventListener(window, "wxt:locationchange", () => {
    *   // ...
    * });
    */
-  addEventListener<
-    TTarget extends EventTarget,
-    TType extends keyof WxtContentScriptEventMap,
-  >(
-    target: TTarget,
+  addEventListener<TType extends keyof WindowEventMap>(
+    target: Window,
     type: TType,
-    handler: (event: WxtContentScriptEventMap[TType]) => void,
+    handler: (event: WindowEventMap[TType]) => void,
     options?: AddEventListenerOptions,
-  ) {
+  ): void;
+  addEventListener<TType extends keyof DocumentEventMap>(
+    target: Document,
+    type: keyof DocumentEventMap,
+    handler: (event: DocumentEventMap[TType]) => void,
+    options?: AddEventListenerOptions,
+  ): void;
+  addEventListener<TTarget extends EventTarget>(
+    target: TTarget,
+    ...params: Parameters<TTarget['addEventListener']>
+  ): void;
+  addEventListener(
+    target: EventTarget,
+    type: string,
+    handler: (event: Event) => void,
+    options?: AddEventListenerOptions,
+  ): void {
     if (type === 'wxt:locationchange') {
       // Start the location watcher when adding the event for the first time
       if (this.isValid) this.locationWatcher.run();
@@ -195,7 +208,6 @@ export class ContentScriptContext implements AbortController {
 
     target.addEventListener?.(
       type.startsWith('wxt:') ? getUniqueEventName(type) : type,
-      // @ts-expect-error: Event don't match, but that's OK, EventTarget doesn't allow custom types in the callback
       handler,
       {
         ...options,
@@ -247,6 +259,10 @@ export class ContentScriptContext implements AbortController {
   }
 }
 
-interface WxtContentScriptEventMap extends WindowEventMap {
+export interface WxtWindowEventMap {
   'wxt:locationchange': WxtLocationChangeEvent;
+}
+
+declare global {
+  interface WindowEventMap extends WxtWindowEventMap {}
 }
