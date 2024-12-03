@@ -110,6 +110,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', reloadOnChange);
       keyboardShortcuts.start();
+      keyboardShortcuts.printHelp();
     },
 
     async stop() {

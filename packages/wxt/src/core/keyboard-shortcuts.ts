@@ -1,9 +1,12 @@
 import readline from 'node:readline';
 import { WxtDevServer } from '../types';
+import { wxt } from './wxt';
+import pc from 'picocolors';
 
 export interface KeyboardShortcutWatcher {
   start(): void;
   stop(): void;
+  printHelp(): void;
 }
 
 /**
@@ -44,6 +47,14 @@ export function createKeyboardShortcuts(
       }
 
       isWatching = false;
+    },
+
+    printHelp() {
+      wxt.logger.info(
+        pc.dim(`Press `) +
+          pc.bold('o + enter') +
+          pc.dim(' to reopen the browser'),
+      );
     },
   };
 }

@@ -82,7 +82,6 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const duration = Date.now() - startTime;
       wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
-      wxt.logger.info(`To reopen the browser, press ${pc.bold('o + enter')}`);
     },
 
     async closeBrowser() {
