@@ -18,7 +18,7 @@ import { version as storageVersion } from '../../packages/storage/package.json';
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
 const description =
-  "WXT provides the best developer experience, making it quick, easy, and fun to develop browser extensions. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
+  "WXT provides the best developer experience, making it quick, easy, and fun to develop web extensions. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
 const ogTitle = `${title}${titleSuffix}`;
 const ogUrl = 'https://wxt.dev';
 const ogImage = 'https://wxt.dev/social-preview.png';
