@@ -179,10 +179,10 @@ export class ContentScriptContext implements AbortController {
    *   // ...
    * });
    */
-  addEventListener<TType extends keyof WindowEventMap>(
+  addEventListener<TType extends keyof WxtWindowEventMap>(
     target: Window,
     type: TType,
-    handler: (event: WindowEventMap[TType]) => void,
+    handler: (event: WxtWindowEventMap[TType]) => void,
     options?: AddEventListenerOptions,
   ): void;
   addEventListener<TType extends keyof DocumentEventMap>(
@@ -259,10 +259,6 @@ export class ContentScriptContext implements AbortController {
   }
 }
 
-export interface WxtWindowEventMap {
+export interface WxtWindowEventMap extends WindowEventMap {
   'wxt:locationchange': WxtLocationChangeEvent;
-}
-
-declare global {
-  interface WindowEventMap extends WxtWindowEventMap {}
 }
