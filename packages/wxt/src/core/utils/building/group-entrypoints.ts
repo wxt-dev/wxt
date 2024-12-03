@@ -1,8 +1,8 @@
 import { Entrypoint, EntrypointGroup } from '../../../types';
 
 /**
- * Entrypoints can be build in groups. HTML pages can all be built together in a single step, while
- * content scripts must be build individually.
+ * Entrypoints are built in groups. HTML pages can all be built together in a single step,
+ * content scripts must be build individually, etc.
  *
  * This function returns the entrypoints put into these types of groups.
  */
@@ -11,6 +11,8 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
   const groups: EntrypointGroup[] = [];
 
   for (const entry of entrypoints) {
+    if (entry.skipped) continue;
+
     let group = ENTRY_TYPE_TO_GROUP_MAP[entry.type];
     if (entry.type === 'background' && entry.options.type === 'module') {
       group = 'esm';
