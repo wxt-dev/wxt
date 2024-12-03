@@ -52,9 +52,7 @@ export function createKeyboardShortcuts(
     printHelp() {
       if (!wxt.config.runnerConfig.config.disabled) {
         wxt.logger.info(
-          pc.dim(`Press `) +
-            pc.bold('o + enter') +
-            pc.dim(' to reopen the browser'),
+          `${pc.dim('Press')} ${pc.bold('o + enter')} ${pc.dim('to reopen the browser')}`,
         );
       }
     },
