@@ -62,7 +62,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       ...skippedEntrypoints.map((entry) =>
         path.relative(wxt.config.zip.sourcesRoot, entry.inputPath),
       ),
-    ];
+    ].map((paths) => paths.replaceAll('\\', '/'));
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
