@@ -30,9 +30,7 @@ import { isCI } from 'ci-info';
  * 3. Prints the summary
  * @param {string} [allowAllEntryPoints] - If true, all entrypoints are returned.
  */
-export async function internalBuild(
-  allowAllEntryPoints?: boolean,
-): Promise<BuildOutput> {
+export async function internalBuild(): Promise<BuildOutput> {
   await wxt.hooks.callHook('build:before', wxt);
 
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
@@ -48,7 +46,7 @@ export async function internalBuild(
   await fs.rm(wxt.config.outDir, { recursive: true, force: true });
   await fs.ensureDir(wxt.config.outDir);
 
-  const entrypoints = await findEntrypoints(allowAllEntryPoints);
+  const entrypoints = await findEntrypoints();
   wxt.logger.debug('Detected entrypoints:', entrypoints);
 
   const validationResults = validateEntrypoints(entrypoints);

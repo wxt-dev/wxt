@@ -31,12 +31,9 @@ import { wxt } from '../../wxt';
 import { createExtensionEnvironment } from '../environments';
 
 /**
- * Return entrypoints and their configuration by looking through the project's files. *//**
- * @param {string} [allowAllEntryPoints] - If true, all entrypoints are returned.
+ * Return entrypoints and their configuration by looking through the project's files.
  */
-export async function findEntrypoints(
-  allowAllEntryPoints?: boolean,
-): Promise<Entrypoint[]> {
+export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
   await fs.mkdir(wxt.config.wxtDir, { recursive: true });
   try {
