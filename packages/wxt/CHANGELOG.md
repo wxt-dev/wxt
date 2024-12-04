@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.19.18
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.17...wxt-v0.19.18)
+
+### 🩹 Fixes
+
+- Correct `dev.reloadCommand` restriction to consider only commands with suggested keys ([#1226](https://github.com/wxt-dev/wxt/pull/1226))
+
+### 🌊 Types
+
+- Add overloads to `ContentScriptContext#addEventListener` for different targets ([#1245](https://github.com/wxt-dev/wxt/pull/1245))
+
+### 🏡 Chore
+
+- Refactor `findEntrypoints` to return all entrypoints with `skipped` set properly ([#1244](https://github.com/wxt-dev/wxt/pull/1244))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Jaguar Zhou ([@aiktb](http://github.com/aiktb))
+
 ## v0.19.17
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.16...wxt-v0.19.17)

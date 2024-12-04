@@ -45,6 +45,7 @@ export interface InlineConfig {
    * A list of entrypoint names (`"popup"`, `"options"`, etc.) to build. Will speed up the build if
    * your extension has lots of entrypoints, and you don't need to build all of them to develop a
    * feature.
+   * If specified, this completely overrides the `include`/`exclude` option provided per-entrypoint.
    */
   filterEntrypoints?: string[];
   /**
@@ -728,7 +729,14 @@ export interface BaseEntrypoint {
    * subdirectory of it.
    */
   outputDir: string;
-  skipped: boolean;
+  /**
+   * When true, the entrypoint will not be built by WXT. Normally this is set
+   * based on the `filterEntrypoints` config or the entrypoint's
+   * `include`/`exclude` options defined inside the file.
+   *
+   * See https://wxt.dev/guide/essentials/target-different-browsers.html#filtering-entrypoints
+   */
+  skipped?: boolean;
 }
 
 export interface GenericEntrypoint extends BaseEntrypoint {
