@@ -154,7 +154,7 @@ describe('Hooks', () => {
       'build:publicAssets': true,
       'build:manifestGenerated': true,
       'entrypoints:grouped': true,
-      'entrypoints:resolved': true,
+      'entrypoints:resolved': 2,
       'vite:build:extendConfig': 1,
       'vite:devServer:extendConfig': false,
       'zip:start': true,
