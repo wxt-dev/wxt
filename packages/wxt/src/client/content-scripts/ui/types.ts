@@ -222,7 +222,7 @@ export interface MountFunctions extends BaseMountFunctions {
   /**
    * Call `ui.autoMount()` to automatically mount and remove the UI as the anchor is dynamically added/removed by the webpage.
    */
-  autoMount: (options?: AutoMountOptions) => StopAutoMount;
+  autoMount: (options?: AutoMountOptions) => void;
 }
 
 export type AutoMountOptions = {

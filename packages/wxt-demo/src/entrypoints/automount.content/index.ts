@@ -39,7 +39,7 @@ export default defineContentScript({
       },
     });
 
-    const stopAutoMount = autoMountUi.autoMount({
+    autoMountUi.autoMount({
       onStop: () => {
         console.log('Auto mount stopped.');
       },
@@ -56,7 +56,7 @@ export default defineContentScript({
         app.textContent = 'Stop auto-mount';
         app.onclick = (e) => {
           e.preventDefault();
-          stopAutoMount();
+          autoMountUi.remove();
         };
         container.append(app);
         return { container, app };

@@ -593,8 +593,7 @@ export default defineContentScript({
     });
 
     // Call autoMount to observe anchor element for add/remove.
-    // You can stop it by calling the returned function.
-    const stopAutoMount = ui.autoMount();
+    ui.autoMount();
   },
 });
 ```

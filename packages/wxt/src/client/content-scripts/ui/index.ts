@@ -297,10 +297,6 @@ function createMountFunctions<TMounted>(
     autoMountInstance?.stopAutoMount();
     autoMountInstance = undefined;
   };
-  const stopAutoMountAndRemove = () => {
-    stopAutoMount();
-    baseFunctions.remove();
-  };
 
   const mount = () => {
     baseFunctions.mount();
@@ -309,13 +305,13 @@ function createMountFunctions<TMounted>(
   const unmount = baseFunctions.remove;
 
   const remove = () => {
-    stopAutoMountAndRemove();
+    stopAutoMount();
+    baseFunctions.remove();
   };
 
   const autoMount = (autoMountOptions?: AutoMountOptions) => {
     if (autoMountInstance) {
       logger.warn('autoMount is already set.');
-      return stopAutoMountAndRemove;
     }
     autoMountInstance = autoMountUi(
       { mount, unmount, stopAutoMount },
@@ -324,7 +320,6 @@ function createMountFunctions<TMounted>(
         ...autoMountOptions,
       },
     );
-    return stopAutoMountAndRemove;
   };
 
   return {

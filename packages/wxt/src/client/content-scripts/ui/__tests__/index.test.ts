@@ -651,7 +651,7 @@ describe('Content Script UIs', () => {
         });
 
         describe('StopAutoMount', () => {
-          it('should stop auto-mounting and remove ui when StopAutoMount is called', async () => {
+          it('should stop auto-mounting and remove ui when `ui.remove` is called', async () => {
             const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             ui = await createUiFunction(ctx, {
@@ -663,7 +663,7 @@ describe('Content Script UIs', () => {
               name: 'test-component',
             });
             let dynamicEl;
-            const stopAutoMount = ui.autoMount();
+            ui.autoMount();
             await runMicrotasks();
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
@@ -677,7 +677,7 @@ describe('Content Script UIs', () => {
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
 
-            stopAutoMount();
+            ui.remove();
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             dynamicEl.remove();
@@ -686,7 +686,7 @@ describe('Content Script UIs', () => {
             expect(onRemove).toHaveBeenCalledTimes(2);
           });
 
-          it('should call StopAutoMount when `ui.remove` is called', async () => {
+          it('should call internal StopAutoMount when `ui.remove` is called', async () => {
             const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             const onStop = vi.fn();
@@ -704,7 +704,7 @@ describe('Content Script UIs', () => {
             expect(onRemove).toHaveBeenCalledTimes(1);
           });
 
-          it('should allow calling automount again after StopAutoMount is called', async () => {
+          it('should allow calling automount again after internal StopAutoMount is called', async () => {
             const onMount = vi.fn(appendTestApp);
             ui = await createUiFunction(ctx, {
               position: 'inline',
@@ -714,17 +714,15 @@ describe('Content Script UIs', () => {
               name: 'test-component',
             });
             const onStop = vi.fn();
-            const stopAutoMount1 = ui.autoMount({ onStop });
-            const stopAutoMount2 = ui.autoMount({ onStop });
-            expect(stopAutoMount1).toStrictEqual(stopAutoMount2);
+            ui.autoMount({ onStop });
+            ui.autoMount({ onStop });
 
-            stopAutoMount2();
+            ui.remove();
             expect(onStop).toBeCalledTimes(1);
 
-            const stopAutoMount3 = ui.autoMount({ onStop });
-            expect(stopAutoMount2).toStrictEqual(stopAutoMount3);
+            ui.autoMount({ onStop });
 
-            stopAutoMount3();
+            ui.remove();
             expect(onStop).toBeCalledTimes(2);
           });
         });
