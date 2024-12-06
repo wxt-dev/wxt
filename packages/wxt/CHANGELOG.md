@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.19.19
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.18...wxt-v0.19.19)
+
+### 🚀 Enhancements
+
+- Keyboard shortcut to reopen the browser without restarting the dev command ([#1211](https://github.com/wxt-dev/wxt/pull/1211))
+
+### 🩹 Fixes
+
+- Prevent changing dev server port when reloading config ([#1241](https://github.com/wxt-dev/wxt/pull/1241))
+- Ensure content scripts are registered immediately in dev mode ([#1253](https://github.com/wxt-dev/wxt/pull/1253))
+- Exclude skipped entrypoints from Firefox sources zip ([#1238](https://github.com/wxt-dev/wxt/pull/1238))
+
+### ❤️ Contributors
+
+- Nishu ([@nishu-murmu](http://github.com/nishu-murmu))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.18
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.17...wxt-v0.19.18)
