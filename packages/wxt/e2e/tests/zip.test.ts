@@ -187,30 +187,19 @@ describe('Zipping', () => {
       version: '1.0.0',
     });
     project.addFile(
-      'entrypoints/main-world.content.ts',
+      'entrypoints/not-firefox.content.ts',
       `export default defineContentScript({
-          matches: ['*://*/*'],
-          exclude: ['firefox'],
-          world: 'MAIN',
-
-          main() {
-            console.log("Hello from content world");
-          },
-});`,
+        matches: ['*://*/*'],
+        exclude: ['firefox'],
+        main() {},
+      });`,
     );
     project.addFile(
-      'entrypoints/location-change.content.ts',
+      'entrypoints/all.content.ts',
       `export default defineContentScript({
-  // Site that uses HTML5 history
-  matches: ['*://*.crunchyroll.com/*'],
-
-  main(ctx) {
-    ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl, oldUrl }) => {
-      console.log('Location changed:', newUrl.href, oldUrl.href);
-    });
-    console.log('Watching for location change...');
-  },
-});
+        matches: ['*://*/*'],
+        main(ctx) {},
+      });
 `,
     );
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
@@ -221,13 +210,10 @@ describe('Zipping', () => {
     });
     await extract(sourcesZip, { dir: unzipDir });
     expect(
-      await project.fileExists(unzipDir, 'entrypoints/main-world.content.ts'),
+      await project.fileExists(unzipDir, 'entrypoints/not-firefox.content.ts'),
     ).toBe(false);
     expect(
-      await project.fileExists(
-        unzipDir,
-        'entrypoints/location-change.content.ts',
-      ),
+      await project.fileExists(unzipDir, 'entrypoints/all.content.ts'),
     ).toBe(true);
   });
 
