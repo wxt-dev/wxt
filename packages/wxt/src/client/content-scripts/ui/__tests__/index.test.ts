@@ -523,6 +523,7 @@ describe('Content Script UIs', () => {
       await runMicrotasks();
     });
     afterEach(async () => {
+      ui?.remove();
       await runMicrotasks();
     });
 
