@@ -98,7 +98,6 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/sandbox/defineWxtPlugin';
             export { MatchPattern, InvalidMatchPattern } from 'wxt/sandbox/match-patterns';
             export { fakeBrowser } from 'wxt/testing';
-            export { startOfDay } from '../utils/time';
           }
           "
         `);

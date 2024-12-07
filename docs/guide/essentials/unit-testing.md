@@ -73,28 +73,31 @@ describe('isLoggedIn', () => {
 
 ### Mocking WXT APIs
 
-First, you need to understand how the `#imports` module works. When WXT (and vitest) sees this import, it breaks replaces the import with multiple imports pointing to `wxt/*`. For example this:
+First, you need to understand how the `#imports` module works. When WXT (and vitest) sees this import during a preprocessing step, the import is replaced with multiple imports pointing to their "real" import path.
+
+For example, this is what your write in your source code:
 
 ```ts
-import { browser, createShadowRootUi } from '#imports';
+// What you write
+import { injectScript, createShadowRootUi } from '#imports';
 ```
 
-becomes:
+But Vitest sees this:
 
 ```ts
-import { browser } from 'wxt/browser';
+import { injectScript } from 'wxt/browser';
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root';
 ```
 
-So, for example, if you wanted to mock `createShadowRootUi`, you need to mock the real import path, not `#imports`.
+So in this case, if you wanted to mock `injectScript`, you need to pass in `"wxt/utils/inject-script"`, not `"#imports"`.
 
 ```ts
-vi.mock("wxt/utils/content-script-ui/shadow-root", () => ({
-  createShadowRootUi: ...
+vi.mock("wxt/utils/inject-script", () => ({
+  injectScript: ...
 }))
 ```
 
-Refer to your project's `.wxt/types/imports-module.d.ts` file to lookup the real import path. If the file doesn't exist, run [`wxt prepare`](/guide/essentials/config/typescript).
+Refer to your project's `.wxt/types/imports-module.d.ts` file to lookup real import paths for `#imports`. If the file doesn't exist, run [`wxt prepare`](/guide/essentials/config/typescript).
 
 ## Other Testing Frameworks
 
