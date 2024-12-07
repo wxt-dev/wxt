@@ -115,4 +115,4 @@ import {
 } from '#imports';
 ```
 
-This is the preferred way of importing WXT APIs. You can even use it if you've disabled auto-imports.
+This is the preferred way of importing WXT APIs, but it's only available if auto-imports are enabled.
