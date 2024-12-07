@@ -14,6 +14,7 @@ export default defineWxtModule({
   name: 'wxt:built-in:unimport',
   setup(wxt) {
     let unimport: Unimport;
+    const isEnabled = () => !wxt.config.imports.disabledByUser;
 
     // Add user module imports to config
     wxt.hooks.hook('config:resolved', () => {
@@ -41,10 +42,17 @@ export default defineWxtModule({
       // Update cache before each rebuild
       await unimport.init();
 
-      entries.push(await getImportsDeclarationEntry(unimport));
+      // Always generate the #import module types
       entries.push(await getImportsModuleEntry(wxt, unimport));
 
+      if (!isEnabled()) return;
+
+      // Only create global types when user has enabled auto-imports
+      entries.push(await getImportsDeclarationEntry(unimport));
+
       if (wxt.config.imports.eslintrc.enabled === false) return;
+
+      // Only generate ESLint config if that feature is enabled
       entries.push(
         await getEslintConfigEntry(
           unimport,
@@ -56,14 +64,14 @@ export default defineWxtModule({
 
     // Add vite plugin
     addViteConfig(wxt, () => ({
-      plugins: [vitePlugin(unimport, wxt.config.imports)],
+      plugins: [vitePlugin(unimport, isEnabled())],
     }));
   },
 });
 
 export function vitePlugin(
   unimport: Unimport,
-  options: WxtResolvedUnimportOptions,
+  autoImportsEnabled: boolean,
 ): Plugin {
   const ENABLED_EXTENSIONS = new Set([
     '.js',
@@ -84,7 +92,7 @@ export function vitePlugin(
 
       const injected = await unimport.injectImports(code, id, {
         // Only auto-import modules if enabled
-        autoImport: !options.disabledByUser,
+        autoImport: autoImportsEnabled,
         // Always resolve the #imports module, even when auto-imports are disabled
         transformVirtualImports: true,
       });
