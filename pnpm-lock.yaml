@@ -331,8 +331,8 @@ importers:
   packages/wxt:
     dependencies:
       '@1natsu/wait-element':
-        specifier: ^4.1.1
-        version: 4.1.1
+        specifier: ^4.1.2
+        version: 4.1.2
       '@aklinker1/rollup-plugin-visualizer':
         specifier: 5.12.0
         version: 5.12.0(rollup@4.24.0)
@@ -569,8 +569,8 @@ importers:
 
 packages:
 
-  '@1natsu/wait-element@4.1.1':
-    resolution: {integrity: sha512-uKM/fRcdTHhajQjlxj1/ShKd3iYcLJ3191/IE+GDili1oVq8m94JO4UNADoemK2z0buPu12jT8ozvl+zLy7Hzg==}
+  '@1natsu/wait-element@4.1.2':
+    resolution: {integrity: sha512-qWxSJD+Q5b8bKOvESFifvfZ92DuMsY+03SBNjTO34ipJLP6mZ9yK4bQz/vlh48aEQXoJfaZBqUwKL5BdI5iiWw==}
 
   '@aklinker1/buildc@1.1.4':
     resolution: {integrity: sha512-3SQ2zVEsX+UWg/mHfp9TqU9OPI8abRGTOadChQB0Aqb4dtIy311pBddndVPuuD4uQfIhKbvPxkzZ0rwvlw52Rw==}
@@ -5122,7 +5122,7 @@ packages:
 
 snapshots:
 
-  '@1natsu/wait-element@4.1.1':
+  '@1natsu/wait-element@4.1.2':
     dependencies:
       defu: 6.1.4
       many-keys-map: 2.0.1
