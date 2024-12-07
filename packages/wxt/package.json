@@ -3,72 +3,6 @@
   "type": "module",
   "version": "0.19.19",
   "description": "Next gen framework for developing web extensions",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wxt-dev/wxt.git"
-  },
-  "homepage": "https://wxt.dev",
-  "keywords": [
-    "vite",
-    "chrome",
-    "web",
-    "extension",
-    "browser",
-    "bundler",
-    "framework"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
-  "files": [
-    "bin",
-    "dist"
-  ],
-  "bin": {
-    "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
-  },
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
-    },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.mjs"
-    },
-    "./sandbox": {
-      "types": "./dist/sandbox/index.d.ts",
-      "default": "./dist/sandbox/index.mjs"
-    },
-    "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
-    },
-    "./browser/chrome": {
-      "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.mjs"
-    },
-    "./testing": {
-      "types": "./dist/testing/index.d.ts",
-      "default": "./dist/testing/index.mjs"
-    },
-    "./storage": {
-      "types": "./dist/storage.d.ts",
-      "default": "./dist/storage.mjs"
-    },
-    "./vite-builder-env": {
-      "types": "./dist/vite-builder-env.d.ts"
-    },
-    "./modules": {
-      "types": "./dist/modules.d.ts",
-      "default": "./dist/modules.mjs"
-    }
-  },
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
@@ -149,6 +83,123 @@
   "peerDependenciesMeta": {
     "@types/chrome": {
       "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "vite",
+    "chrome",
+    "web",
+    "extension",
+    "browser",
+    "bundler",
+    "framework"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "bin": {
+    "wxt": "./bin/wxt.mjs",
+    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.mjs"
+    },
+    "./client/useAppConfig": {
+      "types": "./dist/client/app-config.d.ts",
+      "default": "./dist/client/app-config.mjs"
+    },
+    "./client/injectScript": {
+      "types": "./dist/client/inject-script.d.ts",
+      "default": "./dist/client/inject-script.mjs"
+    },
+    "./client/content-scripts/context": {
+      "types": "./dist/client/content-scripts/content-script-context.d.ts",
+      "default": "./dist/client/content-scripts/content-script-context.mjs"
+    },
+    "./client/content-scripts/ui/types": {
+      "types": "./dist/client/content-scripts/ui/types.d.ts"
+    },
+    "./client/content-scripts/ui/createIntegratedUi": {
+      "types": "./dist/client/content-scripts/ui/create-integrated-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-integrated-ui.mjs"
+    },
+    "./client/content-scripts/ui/createShadowRootUi": {
+      "types": "./dist/client/content-scripts/ui/create-shadow-root-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-shadow-root-ui.mjs"
+    },
+    "./client/content-scripts/ui/createIframeUi": {
+      "types": "./dist/client/content-scripts/ui/create-iframe-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-iframe-ui.mjs"
+    },
+    "./sandbox": {
+      "types": "./dist/sandbox/index.d.ts",
+      "default": "./dist/sandbox/index.mjs"
+    },
+    "./sandbox/defineAppConfig": {
+      "types": "./dist/sandbox/define-app-config.d.ts",
+      "default": "./dist/sandbox/define-app-config.mjs"
+    },
+    "./sandbox/defineBackground": {
+      "types": "./dist/sandbox/define-background.d.ts",
+      "default": "./dist/sandbox/define-background.mjs"
+    },
+    "./sandbox/defineContentScript": {
+      "types": "./dist/sandbox/define-content-script.d.ts",
+      "default": "./dist/sandbox/define-content-script.mjs"
+    },
+    "./sandbox/defineUnlistedScript": {
+      "types": "./dist/sandbox/define-unlisted-script.d.ts",
+      "default": "./dist/sandbox/define-unlisted-script.mjs"
+    },
+    "./sandbox/defineWxtPlugin": {
+      "types": "./dist/sandbox/define-wxt-plugin.d.ts",
+      "default": "./dist/sandbox/define-wxt-plugin.mjs"
+    },
+    "./sandbox/match-patterns": {
+      "types": "./dist/sandbox/match-patterns.d.ts",
+      "default": "./dist/sandbox/match-patterns.mjs"
+    },
+    "./browser": {
+      "types": "./dist/browser/index.d.ts",
+      "default": "./dist/browser/index.mjs"
+    },
+    "./browser/chrome": {
+      "types": "./dist/browser/chrome.d.ts",
+      "import": "./dist/browser/chrome.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.mjs"
+    },
+    "./storage": {
+      "types": "./dist/storage.d.ts",
+      "default": "./dist/storage.mjs"
+    },
+    "./vite-builder-env": {
+      "types": "./dist/vite-builder-env.d.ts"
+    },
+    "./modules": {
+      "types": "./dist/modules.d.ts",
+      "default": "./dist/modules.mjs"
     }
   }
 }

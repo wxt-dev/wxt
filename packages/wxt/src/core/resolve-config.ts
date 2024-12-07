@@ -13,7 +13,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
-  Eslintrc,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -344,36 +343,47 @@ async function getUnimportOptions(
   logger: Logger,
   extensionApi: ResolvedConfig['extensionApi'],
   config: InlineConfig,
-): Promise<WxtResolvedUnimportOptions | false> {
-  if (config.imports === false) return false;
-
+): Promise<WxtResolvedUnimportOptions> {
+  const disabled = config.imports === false;
+  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
   const defaultOptions: WxtResolvedUnimportOptions = {
-    debugLog: logger.debug,
+    // prettier-ignore
     imports: [
-      { name: 'defineConfig', from: 'wxt' },
-      { name: 'fakeBrowser', from: 'wxt/testing' },
+      { name: 'defineConfig',         from: 'wxt' },
+      // wxt/client
+      { name: 'useAppConfig',         from: 'wxt/client/useAppConfig' },
+      { name: 'injectScript',         from: 'wxt/client/injectScript' },
+      { name: 'ContentScriptContext', from: 'wxt/client/content-scripts/context' },
+      { name: 'createIntegratedUi',   from: 'wxt/client/content-scripts/ui/createIntegratedUi' },
+      { name: 'createShadowRootUi',   from: 'wxt/client/content-scripts/ui/createShadowRootUi' },
+      { name: 'createIframeUi',       from: 'wxt/client/content-scripts/ui/createIframeUi' },
+      // wxt/sandbox
+      { name: 'defineAppConfig',      from: 'wxt/sandbox/defineAppConfig' },
+      { name: 'defineBackground',     from: 'wxt/sandbox/defineBackground' },
+      { name: 'defineContentScript',  from: 'wxt/sandbox/defineContentScript' },
+      { name: 'defineUnlistedScript', from: 'wxt/sandbox/defineUnlistedScript' },
+      { name: 'defineWxtPlugin',      from: 'wxt/sandbox/defineWxtPlugin' },
+      { name: 'MatchPattern',         from: 'wxt/sandbox/match-patterns' },
+      { name: 'InvalidMatchPattern',  from: 'wxt/sandbox/match-patterns' },
+      // wxt/testing
+      { name: 'fakeBrowser',          from: 'wxt/testing' },
     ],
     presets: [
-      {
-        package: 'wxt/client',
-        // There seems to be a bug in unimport that thinks "options" is an
-        // export from wxt/client, but it doesn't actually exist... so it's
-        // ignored.
-        ignore: ['options'],
-      },
       {
         package:
           extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
       },
-      { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
     ],
+    virtualImports: ['#imports'],
+    debugLog: logger.debug,
     warn: logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
     dirsScanOptions: {
       cwd: srcDir,
     },
-    eslintrc: await getUnimportEslintOptions(wxtDir, config.imports?.eslintrc),
+    eslintrc,
+    dirs: ['components', 'composables', 'hooks', 'utils'],
+    disabled,
   };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
@@ -384,34 +394,34 @@ async function getUnimportOptions(
 
 async function getUnimportEslintOptions(
   wxtDir: string,
-  options: Eslintrc | undefined,
+  options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
-  const rawEslintEnabled = options?.enabled ?? 'auto';
-  let eslintEnabled: ResolvedEslintrc['enabled'];
-  switch (rawEslintEnabled) {
+  const inlineEnabled =
+    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+
+  let enabled: ResolvedEslintrc['enabled'];
+  switch (inlineEnabled) {
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
-      if (isNaN(major)) eslintEnabled = false;
-      if (major <= 8) eslintEnabled = 8;
-      else if (major >= 9) eslintEnabled = 9;
+      if (isNaN(major)) enabled = false;
+      if (major <= 8) enabled = 8;
+      else if (major >= 9) enabled = 9;
       // NaN
-      else eslintEnabled = false;
+      else enabled = false;
       break;
     case true:
-      eslintEnabled = 8;
+      enabled = 8;
       break;
     default:
-      eslintEnabled = rawEslintEnabled;
+      enabled = inlineEnabled;
   }
 
   return {
-    enabled: eslintEnabled,
+    enabled,
     filePath: path.resolve(
       wxtDir,
-      eslintEnabled === 9
-        ? 'eslint-auto-imports.mjs'
-        : 'eslintrc-auto-import.json',
+      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };

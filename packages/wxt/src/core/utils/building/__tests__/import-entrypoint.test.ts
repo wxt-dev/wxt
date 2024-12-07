@@ -10,7 +10,7 @@ describe('importEntrypointFile', () => {
   beforeEach(() => {
     setFakeWxt({
       config: {
-        imports: false,
+        imports: { disabled: true },
         debug: false,
         // Run inside the demo folder so that wxt is in the node_modules
         // WXT must also be built for these tests to pass
