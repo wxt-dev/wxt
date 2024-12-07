@@ -103,7 +103,7 @@ export default defineConfig({
 });
 ```
 
-## Explicit Imports
+## Explicit Imports (`#imports`)
 
 Anything that is auto-imported can also be imported manually via `#imports`:
 
