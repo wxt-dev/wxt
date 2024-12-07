@@ -1418,7 +1418,7 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
    *
    * You don't need to check this value before modifying the auto-import options. Even if `disabled` is `true`, there's no harm in adding imports to the config - they'll just be ignored.
    */
-  disabled?: boolean;
+  disabled: boolean;
   eslintrc: ResolvedEslintrc;
 };
 
