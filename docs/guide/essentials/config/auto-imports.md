@@ -11,7 +11,7 @@ export default defineConfig({
 });
 ```
 
-By default, WXT automatically setups up auto-imports for all of it's own APIs. WXT also adds some project directories to auto-import from:
+By default, WXT automatically sets up auto-imports for all of it's own APIs. Additionally, some of your project's directories are also setup as auto-import sources:
 
 - `<srcDir>/components/*`
 - `<srcDir>/composables/*`
