@@ -115,4 +115,4 @@ import {
 } from '#imports';
 ```
 
-This is the preferred way of importing WXT APIs, but it's only available if auto-imports are enabled.
+Even if you've disabled auto-imports, you can use `#imports` to safely import all of WXT's APIs
