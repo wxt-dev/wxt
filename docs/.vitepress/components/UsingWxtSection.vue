@@ -5,7 +5,7 @@ import useListExtensionDetails, {
 } from '../composables/useListExtensionDetails';
 
 // Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
-// Change the commit message or PR title "docs: Added "[extension name]" to the homepage"
+// Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
