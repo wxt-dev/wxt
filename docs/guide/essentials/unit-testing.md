@@ -71,6 +71,31 @@ describe('isLoggedIn', () => {
 });
 ```
 
+### Mocking WXT APIs
+
+First, you need to understand how the `#imports` module works. When WXT (and vitest) sees this import, it breaks replaces the import with multiple imports pointing to `wxt/*`. For example this:
+
+```ts
+import { browser, createShadowRootUi } from '#imports';
+```
+
+becomes:
+
+```ts
+import { browser } from 'wxt/browser';
+import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root';
+```
+
+So, for example, if you wanted to mock `createShadowRootUi`, you need to mock the real import path, not `#imports`.
+
+```ts
+vi.mock("wxt/utils/content-script-ui/shadow-root", () => ({
+  createShadowRootUi: ...
+}))
+```
+
+Refer to your project's `.wxt/types/imports-module.d.ts` file to lookup the real import path. If the file doesn't exist, run [`wxt prepare`](/guide/essentials/config/typescript).
+
 ## Other Testing Frameworks
 
 To use a different framework, you will likely have to disable auto-imports, setup import aliases, manually mock the extension APIs, and setup the test environment to support all of WXT's features that you use.
