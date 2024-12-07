@@ -60,6 +60,7 @@ const chromeExtensionIds = [
   'lhmgechokhmdekdpgkkemoeecelcaonm', // YouTube Hider - Remove Comments By Keywords, Usernames & Tools
   'imgheieooppmahcgniieddodaliodeeg', // QA Compass - Record standardized bug reports easily
   'npgghjedpchajflknnbngajkjkdhncdo', // aesthetic Notion, styled
+  'hmdcmlfkchdmnmnmheododdhjedfccka', // Eye Dropper
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
