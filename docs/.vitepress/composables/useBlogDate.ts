@@ -1,8 +1,11 @@
 import { computed, toValue, MaybeRefOrGetter } from 'vue';
 
-const MONTH_FORMATTER = new Intl.DateTimeFormat(navigator.language, {
-  month: 'long',
-});
+const MONTH_FORMATTER = new Intl.DateTimeFormat(
+  globalThis?.navigator?.language,
+  {
+    month: 'long',
+  },
+);
 
 export default function (date: MaybeRefOrGetter<Date | string>) {
   return computed(() => {
