@@ -332,6 +332,7 @@ export async function getUnimportOptions(
   logger: Logger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
+  const disabledByUser = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
   const defaultOptions: WxtResolvedUnimportOptions = {
     // prettier-ignore
@@ -374,10 +375,8 @@ export async function getUnimportOptions(
     },
     eslintrc,
     dirs: ['components', 'composables', 'hooks', 'utils'],
+    disabledByUser,
   };
-
-  if (config.imports === false)
-    return { ...defaultOptions, dirs: [], disabledByUser: true };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
     config.imports ?? {},
@@ -389,45 +388,32 @@ async function getUnimportEslintOptions(
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
-  const globalsPropValue = true;
+  const inlineEnabled =
+    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
 
-  const getFilePath = (eslintEnabled: ResolvedEslintrc['enabled']) =>
-    path.resolve(
-      wxtDir,
-      eslintEnabled === 9
-        ? 'eslint-auto-imports.mjs'
-        : 'eslintrc-auto-import.json',
-    );
-
-  if (options === false)
-    return { globalsPropValue, filePath: getFilePath(false), enabled: false };
-
-  const rawEslintEnabled = options?.eslintrc?.enabled ?? 'auto';
-  let eslintEnabled: ResolvedEslintrc['enabled'];
-  switch (rawEslintEnabled) {
+  let enabled: ResolvedEslintrc['enabled'];
+  switch (inlineEnabled) {
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
-      if (isNaN(major)) eslintEnabled = false;
-      if (major <= 8) eslintEnabled = 8;
-      else if (major >= 9) eslintEnabled = 9;
+      if (isNaN(major)) enabled = false;
+      if (major <= 8) enabled = 8;
+      else if (major >= 9) enabled = 9;
       // NaN
-      else eslintEnabled = false;
+      else enabled = false;
       break;
     case true:
-      eslintEnabled = 8;
+      enabled = 8;
       break;
     default:
-      eslintEnabled = rawEslintEnabled;
+      enabled = inlineEnabled;
   }
 
   return {
-    enabled: eslintEnabled,
+    enabled: enabled,
     filePath: path.resolve(
       wxtDir,
-      eslintEnabled === 9
-        ? 'eslint-auto-imports.mjs'
-        : 'eslintrc-auto-import.json',
+      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };
