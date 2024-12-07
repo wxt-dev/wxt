@@ -335,20 +335,31 @@ async function getUnimportOptions(
 
   const defaultOptions: WxtResolvedUnimportOptions = {
     debugLog: logger.debug,
+    // prettier-ignore
     imports: [
-      { name: 'defineConfig', from: 'wxt' },
-      { name: 'fakeBrowser', from: 'wxt/testing' },
+      { name: 'defineConfig',         from: 'wxt' },
+      // wxt/client
+      { name: 'useAppConfig',         from: 'wxt/client/useAppConfig' },
+      { name: 'injectScript',         from: 'wxt/client/injectScript' },
+      { name: 'ContentScriptContext', from: 'wxt/client/content-scripts/context' },
+      { name: 'createIntegratedUi',   from: 'wxt/client/content-scripts/ui/createIntegratedUi' },
+      { name: 'createShadowRootUi',   from: 'wxt/client/content-scripts/ui/createShadowRootUi' },
+      { name: 'createIframeUi',       from: 'wxt/client/content-scripts/ui/createIframeUi' },
+      // wxt/sandbox
+      { name: 'defineAppConfig',      from: 'wxt/sandbox/defineAppConfig' },
+      { name: 'defineBackground',     from: 'wxt/sandbox/defineBackground' },
+      { name: 'defineContentScript',  from: 'wxt/sandbox/defineContentScript' },
+      { name: 'defineUnlistedScript', from: 'wxt/sandbox/defineUnlistedScript' },
+      { name: 'defineWxtPlugin',      from: 'wxt/sandbox/defineWxtPlugin' },
+      // wxt/testing
+      { name: 'fakeBrowser',          from: 'wxt/testing' },
     ],
+    virtualImports: ['#imports'],
     presets: [
       {
-        package: 'wxt/client',
-        // There seems to be a bug in unimport that thinks "options" is an
-        // export from wxt/client, but it doesn't actually exist... so it's
-        // ignored.
-        ignore: ['options'],
+        package:
+          extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
       },
-      { package: 'wxt/browser' },
-      { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
     ],
     warn: logger.warn,

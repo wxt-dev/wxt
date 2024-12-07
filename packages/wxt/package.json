@@ -128,25 +128,24 @@
       "types": "./dist/client/inject-script.d.ts",
       "default": "./dist/client/inject-script.mjs"
     },
-    "./client/ContentScriptContext": {
-      "types": "./dist/client/content-script-context.d.ts",
-      "default": "./dist/client/content-script-context.mjs"
+    "./client/content-scripts/context": {
+      "types": "./dist/client/content-scripts/content-script-context.d.ts",
+      "default": "./dist/client/content-scripts/content-script-context.mjs"
     },
-    "./client/ui/types": {
-      "types": "./dist/client/ui/types.d.ts",
-      "default": "./dist/client/ui/types.mjs"
+    "./client/content-scripts/ui/types": {
+      "types": "./dist/client/content-scripts/ui/types.d.ts"
     },
-    "./client/ui/createIntegratedUi": {
-      "types": "./dist/client/ui/create-integrated-ui.d.ts",
-      "default": "./dist/client/ui/create-integrated-ui.mjs"
+    "./client/content-scripts/ui/createIntegratedUi": {
+      "types": "./dist/client/content-scripts/ui/create-integrated-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-integrated-ui.mjs"
     },
-    "./client/ui/createShadowRootUi": {
-      "types": "./dist/client/ui/create-shadow-root-ui.d.ts",
-      "default": "./dist/client/ui/create-shadow-root-ui.mjs"
+    "./client/content-scripts/ui/createShadowRootUi": {
+      "types": "./dist/client/content-scripts/ui/create-shadow-root-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-shadow-root-ui.mjs"
     },
-    "./client/ui/createIframeUi": {
-      "types": "./dist/client/ui/create-iframe-ui.d.ts",
-      "default": "./dist/client/ui/create-iframe-ui.mjs"
+    "./client/content-scripts/ui/createIframeUi": {
+      "types": "./dist/client/content-scripts/ui/create-iframe-ui.d.ts",
+      "default": "./dist/client/content-scripts/ui/create-iframe-ui.mjs"
     },
     "./sandbox": {
       "types": "./dist/sandbox/index.d.ts",
