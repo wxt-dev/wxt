@@ -14,6 +14,7 @@ import {
   WxtModuleWithMetadata,
   ResolvedEslintrc,
   Eslintrc,
+  WxtUnimportOptions,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -325,16 +326,14 @@ function resolveAnalysisConfig(
   };
 }
 
-async function getUnimportOptions(
+export async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
   logger: Logger,
   config: InlineConfig,
-): Promise<WxtResolvedUnimportOptions | false> {
-  if (config.imports === false) return false;
-
+): Promise<WxtResolvedUnimportOptions> {
+  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
   const defaultOptions: WxtResolvedUnimportOptions = {
-    debugLog: logger.debug,
     // prettier-ignore
     // #region snippet
     imports: [
@@ -356,9 +355,9 @@ async function getUnimportOptions(
       { name: 'InvalidMatchPattern',  from: 'wxt/sandbox/match-patterns' },
       // wxt/testing
       { name: 'fakeBrowser',          from: 'wxt/testing' },
+      // wxt/storage
+      { name: "*",                    from: 'wxt/storage' },
     ],
-    // #endregion snippet
-    virtualImports: ['#imports'],
     presets: [
       {
         package:
@@ -366,13 +365,19 @@ async function getUnimportOptions(
       },
       { package: 'wxt/storage' },
     ],
+    // #endregion snippet
+    virtualImports: ['#imports'],
+    debugLog: logger.debug,
     warn: logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
     dirsScanOptions: {
       cwd: srcDir,
     },
-    eslintrc: await getUnimportEslintOptions(wxtDir, config.imports?.eslintrc),
+    eslintrc,
+    dirs: ['components', 'composables', 'hooks', 'utils'],
   };
+
+  if (config.imports === false)
+    return { ...defaultOptions, dirs: [], disabledByUser: true };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
     config.imports ?? {},
@@ -382,9 +387,22 @@ async function getUnimportOptions(
 
 async function getUnimportEslintOptions(
   wxtDir: string,
-  options: Eslintrc | undefined,
+  options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
-  const rawEslintEnabled = options?.enabled ?? 'auto';
+  const globalsPropValue = true;
+
+  const getFilePath = (eslintEnabled: ResolvedEslintrc['enabled']) =>
+    path.resolve(
+      wxtDir,
+      eslintEnabled === 9
+        ? 'eslint-auto-imports.mjs'
+        : 'eslintrc-auto-import.json',
+    );
+
+  if (options === false)
+    return { globalsPropValue, filePath: getFilePath(false), enabled: false };
+
+  const rawEslintEnabled = options?.eslintrc?.enabled ?? 'auto';
   let eslintEnabled: ResolvedEslintrc['enabled'];
   switch (rawEslintEnabled) {
     case 'auto':

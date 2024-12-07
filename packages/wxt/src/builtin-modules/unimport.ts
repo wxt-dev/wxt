@@ -13,9 +13,6 @@ import { extname } from 'node:path';
 export default defineWxtModule({
   name: 'wxt:built-in:unimport',
   setup(wxt) {
-    const options = wxt.config.imports;
-    if (options === false) return;
-
     let unimport: Unimport;
 
     // Add user module imports to config
@@ -23,8 +20,8 @@ export default defineWxtModule({
       const addModuleImports = (module: WxtModule<any>) => {
         if (!module.imports) return;
 
-        options.imports ??= [];
-        options.imports.push(...module.imports);
+        wxt.config.imports.imports ??= [];
+        wxt.config.imports.imports.push(...module.imports);
       };
 
       wxt.config.builtinModules.forEach(addModuleImports);
@@ -35,7 +32,7 @@ export default defineWxtModule({
     // config inside "config:resolved" are applied.
     wxt.hooks.afterEach((event) => {
       if (event.name === 'config:resolved') {
-        unimport = createUnimport(options);
+        unimport = createUnimport(wxt.config.imports);
       }
     });
 
@@ -47,20 +44,27 @@ export default defineWxtModule({
       entries.push(await getImportsDeclarationEntry(unimport));
       entries.push(await getImportsModuleEntry(wxt, unimport));
 
-      if (options.eslintrc.enabled === false) return;
+      if (wxt.config.imports.eslintrc.enabled === false) return;
       entries.push(
-        await getEslintConfigEntry(unimport, options.eslintrc.enabled, options),
+        await getEslintConfigEntry(
+          unimport,
+          wxt.config.imports.eslintrc.enabled,
+          wxt.config.imports,
+        ),
       );
     });
 
     // Add vite plugin
     addViteConfig(wxt, () => ({
-      plugins: [vitePlugin(unimport)],
+      plugins: [vitePlugin(unimport, wxt.config.imports)],
     }));
   },
 });
 
-export function vitePlugin(unimport: Unimport): Plugin {
+export function vitePlugin(
+  unimport: Unimport,
+  options: WxtResolvedUnimportOptions,
+): Plugin {
   const ENABLED_EXTENSIONS = new Set([
     '.js',
     '.jsx',
@@ -78,7 +82,12 @@ export function vitePlugin(unimport: Unimport): Plugin {
       // Don't transform non-js files
       if (!ENABLED_EXTENSIONS.has(extname(id))) return;
 
-      const injected = await unimport.injectImports(code, id);
+      const injected = await unimport.injectImports(code, id, {
+        // Only auto-import modules if enabled
+        autoImport: !options.disabledByUser,
+        // Always resolve the #imports module, even when auto-imports are disabled
+        transformVirtualImports: true,
+      });
       return {
         code: injected.code,
         map: injected.s.generateMap({ hires: 'boundary', source: id }),
