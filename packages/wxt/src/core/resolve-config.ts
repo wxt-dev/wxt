@@ -351,6 +351,8 @@ async function getUnimportOptions(
       { name: 'defineContentScript',  from: 'wxt/sandbox/defineContentScript' },
       { name: 'defineUnlistedScript', from: 'wxt/sandbox/defineUnlistedScript' },
       { name: 'defineWxtPlugin',      from: 'wxt/sandbox/defineWxtPlugin' },
+      { name: 'MatchPattern',         from: 'wxt/sandbox/match-patterns' },
+      { name: 'InvalidMatchPattern',  from: 'wxt/sandbox/match-patterns' },
       // wxt/testing
       { name: 'fakeBrowser',          from: 'wxt/testing' },
     ],

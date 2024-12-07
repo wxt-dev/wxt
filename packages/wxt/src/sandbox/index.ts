@@ -8,4 +8,4 @@ export * from './define-background';
 export * from './define-content-script';
 export * from './define-wxt-plugin';
 export * from './define-app-config';
-export * from '@webext-core/match-patterns';
+export * from './match-patterns';

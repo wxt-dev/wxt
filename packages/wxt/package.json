@@ -171,6 +171,10 @@
       "types": "./dist/sandbox/define-wxt-plugin.d.ts",
       "default": "./dist/sandbox/define-wxt-plugin.mjs"
     },
+    "./sandbox/match-patterns": {
+      "types": "./dist/sandbox/match-patterns.d.ts",
+      "default": "./dist/sandbox/match-patterns.mjs"
+    },
     "./browser": {
       "types": "./dist/browser/index.d.ts",
       "default": "./dist/browser/index.mjs"
