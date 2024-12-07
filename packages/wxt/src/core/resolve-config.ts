@@ -13,8 +13,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
-  Eslintrc,
-  WxtUnimportOptions,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -356,8 +354,6 @@ async function getUnimportOptions(
       { name: 'InvalidMatchPattern',  from: 'wxt/sandbox/match-patterns' },
       // wxt/testing
       { name: 'fakeBrowser',          from: 'wxt/testing' },
-      // wxt/storage
-      { name: "*",                    from: 'wxt/storage' },
     ],
     presets: [
       {

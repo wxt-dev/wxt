@@ -73,7 +73,7 @@ describe('Module Utilities', () => {
       const wxt = fakeWxt({
         hooks: createHooks(),
         config: {
-          imports: false,
+          imports: { disabled: true },
         },
       });
 

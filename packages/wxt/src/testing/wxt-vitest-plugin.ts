@@ -40,7 +40,7 @@ export async function WxtVitest(
   ];
   const unimport = createUnimport(wxt.config.imports);
   await unimport.init();
-  plugins.push(unimportPlugin(unimport, wxt.config.imports));
+  plugins.push(unimportPlugin(unimport, !wxt.config.imports.disabled));
 
   return plugins;
 }
