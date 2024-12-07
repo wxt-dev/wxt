@@ -27,6 +27,7 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
+import { createKeyboardShortcuts } from './keyboard-shortcuts';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -96,21 +97,27 @@ async function createServerInternal(): Promise<WxtDevServer> {
       wxt.logger.success(`Started dev server @ ${server.origin}`);
       await wxt.hooks.callHook('server:started', wxt, server);
 
-      await buildAndOpenBrowser();
-
-      // Register content scripts for the first time after the background starts up since they're not
-      // listed in the manifest
+      // Register content scripts for the first time after the background starts
+      // up since they're not listed in the manifest.
+      // Add listener before opening the browser to guarentee it is present when
+      // the extension sends back the initialization message.
       server.ws.on('wxt:background-initialized', () => {
         if (server.currentOutput == null) return;
         reloadContentScripts(server.currentOutput.steps, server);
       });
 
+      await buildAndOpenBrowser();
+
       // Listen for file changes and reload different parts of the extension accordingly
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', reloadOnChange);
+      keyboardShortcuts.start();
+      keyboardShortcuts.printHelp();
     },
+
     async stop() {
       wasStopped = true;
+      keyboardShortcuts.stop();
       await runner.closeBrowser();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
@@ -136,11 +143,14 @@ async function createServerInternal(): Promise<WxtDevServer> {
     },
     async restartBrowser() {
       await runner.closeBrowser();
+      keyboardShortcuts.stop();
       await wxt.reloadConfig();
       runner = await createExtensionRunner();
       await runner.openBrowser();
+      keyboardShortcuts.start();
     },
   };
+  const keyboardShortcuts = createKeyboardShortcuts(server);
 
   const buildAndOpenBrowser = async () => {
     // Build after starting the dev server so it can be used to transform HTML files
@@ -230,6 +240,7 @@ function createFileReloader(server: WxtDevServer) {
             break;
           case 'content-script-reload':
             reloadContentScripts(changes.changedSteps, server);
+
             const rebuiltNames = changes.rebuildGroups
               .flat()
               .map((entry) => entry.name);

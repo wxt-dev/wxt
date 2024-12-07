@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.0.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.0...module-svelte-v2.0.1)
+
+### 🩹 Fixes
+
+- Modify dev `vite.resolve.conditions` to support Vite 6 + Svelte 5 ([#1230](https://github.com/wxt-dev/wxt/pull/1230))
+
+### 🏡 Chore
+
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v2.0.0
 
 [⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v1.0.1...module-svelte-v2.0.0)

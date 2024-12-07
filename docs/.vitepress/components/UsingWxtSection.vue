@@ -59,6 +59,7 @@ const chromeExtensionIds = [
   'macmkmchfoclhpbncclinhjflmdkaoom', // Wandpen - Instantly improve your writing with AI
   'lhmgechokhmdekdpgkkemoeecelcaonm', // YouTube Hider - Remove Comments By Keywords, Usernames & Tools
   'imgheieooppmahcgniieddodaliodeeg', // QA Compass - Record standardized bug reports easily
+  'npgghjedpchajflknnbngajkjkdhncdo', // aesthetic Notion, styled
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

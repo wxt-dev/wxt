@@ -129,7 +129,7 @@ wxt zip
 
 Firefox requires you to upload a ZIP of your source code. This allows them to rebuild your extension and review the code in a readable way. More details can be found in [Firefox's docs](https://extensionworkshop.com/documentation/publish/source-code-submission/).
 
-When running `wxt zip -b firefox`, WXT will zip both your extension and sources. Certain files (such as config files, hidden files, and tests) are automatically excluded from your sources. However, it's important to manually check the ZIP to ensure it only contains the files necessary to rebuild your extension.
+When running `wxt zip -b firefox`, WXT will zip both your extension and sources. Certain files (such as config files, hidden files, tests, and excluded entrypoints) are automatically excluded from your sources. However, it's important to manually check the ZIP to ensure it only contains the files necessary to rebuild your extension.
 
 To customize which files are zipped, add the `zip` option to your config file.
 

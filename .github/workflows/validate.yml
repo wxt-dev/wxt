@@ -36,7 +36,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - name: pnpm test:coverage
         run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   windows-tests:
