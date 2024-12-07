@@ -4,11 +4,8 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
-// Add extension IDs here. Order doesn't matter, will be sorted by weekly active users
-// During the transition from chrome.google.com/webstore to
-// chromewebstore.google.com, queue.wxt.dev might return null for your
-// extension. If it does, use "<slug>/<id>" instead of just the ID. The slug
-// can be retrieved from the URL of the item on chromewebstore.google.com
+// Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
+// Change the commit message or PR title "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
@@ -16,7 +13,7 @@ const chromeExtensionIds = [
   'elfaihghhjjoknimpccccmkioofjjfkf', // StayFree - Website Blocker & Web Analytics
   'okifoaikfmpfcamplcfjkpdnhfodpkil', // Doozy: Ai Made Easy
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
-  'youtube中文配音/oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
+  'oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
   'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
   'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
