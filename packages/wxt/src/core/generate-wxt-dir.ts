@@ -231,17 +231,15 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
     if (res.startsWith('.') || res.startsWith('/')) return res;
     return './' + res;
   };
-  const paths = [
-    `"#imports": ["./imports.ts"]`,
-    ...Object.entries(wxt.config.alias).flatMap(([alias, absolutePath]) => {
+  const paths = Object.entries(wxt.config.alias)
+    .flatMap(([alias, absolutePath]) => {
       const aliasPath = getTsconfigPath(absolutePath);
       return [
         `"${alias}": ["${aliasPath}"]`,
         `"${alias}/*": ["${aliasPath}/*"]`,
       ];
-    }),
-  ]
-    .map((line) => '      ' + line)
+    })
+    .map((line) => `      ${line}`)
     .join(',\n');
 
   const text = `{
