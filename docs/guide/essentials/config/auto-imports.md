@@ -13,15 +13,7 @@ export default defineConfig({
 
 By default, WXT automatically setups up auto-imports for all of it's own APIs:
 
-- [`browser`](/api/reference/wxt/browser/variables/browser) from `wxt/browser`
-- [`defineContentScript`](/api/reference/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`
-- [`defineBackground`](/api/reference/wxt/sandbox/functions/defineBackground) from `wxt/sandbox`
-- [`defineUnlistedScript`](/api/reference/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
-- [`createIntegratedUi`](/api/reference/wxt/client/functions/createIntegratedUi) from `wxt/client`
-- [`createShadowRootUi`](/api/reference/wxt/client/functions/createShadowRootUi) from `wxt/client`
-- [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi) from `wxt/client`
-- [`fakeBrowser`](/api/reference/wxt/testing/variables/fakeBrowser) from `wxt/testing`
-- And more!
+<<< @/../packages/wxt/src/core/resolve-config.ts#snippet
 
 WXT also adds some project directories as auto-import sources automatically:
 
@@ -110,3 +102,17 @@ export default defineConfig({
   imports: false, // [!code ++]
 });
 ```
+
+## Explicit Imports
+
+Anything that is auto-imported can also be imported manually via `#imports`:
+
+```ts
+import {
+  createShadowRootUi,
+  ContentScriptContext,
+  MatchPattern,
+} from '#imports';
+```
+
+This is the preferred way of importing WXT APIs. You can even use it if you've disabled auto-imports.
