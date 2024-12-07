@@ -1414,7 +1414,7 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
 
 export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
   /** Set to `true` when the user disabled auto-imports. We still use unimport for the #imports module, but other features should be disabled. */
-  disabledByUser?: boolean;
+  disabled?: boolean;
   eslintrc: ResolvedEslintrc;
 };
 

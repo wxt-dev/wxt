@@ -14,7 +14,7 @@ export default defineWxtModule({
   name: 'wxt:built-in:unimport',
   setup(wxt) {
     let unimport: Unimport;
-    const isEnabled = () => !wxt.config.imports.disabledByUser;
+    const isEnabled = () => !wxt.config.imports.disabled;
 
     // Add user module imports to config
     wxt.hooks.hook('config:resolved', () => {
