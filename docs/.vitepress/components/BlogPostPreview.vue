@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import BlogTag from './BlogTag.vue';
-import BlogAuthor from './BlogAuthor.vue';
-import { computed } from 'vue';
+import useBlogDate from '../composables/useBlogDate';
 
 const props = defineProps<{
   post: {
@@ -9,90 +7,66 @@ const props = defineProps<{
     description?: string;
     date: Date;
     url: string;
-    tags: string[];
     authors: Array<{ name: string; github: string }>;
   };
 }>();
 
-const monthFormatter = new Intl.DateTimeFormat(navigator.language, {
-  month: 'long',
-});
-const date = computed(
-  () =>
-    `${monthFormatter.format(props.post.date)} ${props.post.date.getDate()}, ${props.post.date.getFullYear()}`,
-);
+const date = useBlogDate(() => props.post.date);
 </script>
 
 <template>
-  <li>
-    <div class="left-column">
-      <p class="date">
-        {{ date }}
-      </p>
-      <ul>
-        <BlogTag v-for="tag of post.tags" :key="tag" :tag />
-      </ul>
-    </div>
-
-    <div class="vertical-divider" />
-
-    <a class="right-column" :href="post.url">
-      <p class="title">{{ post.title }}</p>
-      <p class="description">{{ post.description }}</p>
+  <li class="blog-list-item">
+    <a :href="post.url">
+      <div class="vp-doc">
+        <h3 class="title" v-html="post.title" />
+        <p class="description" v-html="post.description" />
+        <p class="meta">
+          {{ post.authors.map((author) => author.name).join(', ') }}
+          &bull;
+          {{ date }}
+        </p>
+      </div>
     </a>
   </li>
 </template>
 
 <style scoped>
-ul {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  list-style: none;
-}
-ul,
 li {
   padding: 0;
   margin: 0;
 }
 
-li {
-  display: flex;
-  gap: 32px;
+p {
+  margin: 0;
 }
-.date {
-  color: var(--vp-c-text-2);
+h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
-.left-column {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.vertical-divider {
-  width: 1px;
-  background-color: var(--vp-c-default-1);
-}
-.right-column {
-  flex: 1;
-  text-decoration: none;
-  color: var(--vp-c-text);
-  cursor: pointer;
+
+li > a > div {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  margin: 0 -16px;
+  padding: 16px;
+  border-radius: 16px;
 }
-.right-column:hover {
+li > a > div:hover {
+  background: var(--vp-c-default);
+}
+li .title {
   color: var(--vp-c-text);
+  margin-bottom: 12px;
 }
-.right-column .title {
-  font-weight: 600;
-  font-size: 28px;
-  color: var(--vp-c-text);
-}
-.right-column .description {
-  font-weight: 400;
+li .description {
   font-size: 16px;
+  color: var(--vp-c-text-2);
+  margin-bottom: 8px;
+}
+li .meta {
+  font-weight: 400;
+  font-size: 12px;
   color: var(--vp-c-text-2);
 }
 </style>

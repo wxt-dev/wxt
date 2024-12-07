@@ -2,42 +2,25 @@
 import { computed } from 'vue';
 // @ts-expect-error: Vitepress data-loader magic, this import is correct
 import { data } from '../loaders/blog.data';
-import BlogTag from './BlogTag.vue';
 import BlogPostPreview from './BlogPostPreview.vue';
-import { useActiveTag } from '../composables/useActiveTag';
-
-const tags = [
-  ...data.reduce((set, post) => {
-    post.frontmatter.tags?.forEach((tag) => set.add(tag));
-    return set;
-  }, new Set()),
-];
-
-const activeTag = useActiveTag();
 
 const posts = computed(() =>
   data
-    .filter(
-      (post) =>
-        activeTag.value == null ||
-        post.frontmatter.tags.includes(activeTag.value),
-    )
     .map((post) => ({
       ...post,
       ...post.frontmatter,
       date: new Date(post.frontmatter.date),
-    })),
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime()),
 );
 </script>
 
 <template>
   <div class="container">
     <div>
-      <h1>Blog</h1>
-
-      <ul class="tags-list">
-        <BlogTag v-for="tag of tags" :key="tag" :tag="tag" />
-      </ul>
+      <div class="vp-doc">
+        <h1>Blog</h1>
+      </div>
 
       <ul>
         <BlogPostPreview v-for="post of posts" :key="post.url" :post />
@@ -60,23 +43,28 @@ const posts = computed(() =>
 }
 
 h1 {
-  line-height: 100% !important;
-  font-size: 48px;
-  font-weight: 400;
   padding-bottom: 16px;
-}
-
-.tags-list {
-  padding-bottom: 64px;
 }
 
 ul {
   display: flex;
+  flex-direction: column;
   list-style: none;
 }
 ul,
 li {
   padding: 0;
   margin: 0;
+}
+
+ul li {
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--vp-c-default);
+}
+ul li:last-child {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--vp-c-default);
 }
 </style>
