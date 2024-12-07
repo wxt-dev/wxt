@@ -10,17 +10,14 @@ date: 2024-12-06T14:39:00.000Z
 
 WXT v0.20 introduced a new way of manually importing its APIs: **the `#imports` module**. This module was introduced to simplify import statements and provide more visibility into all the APIs WXT provides.
 
+<!-- prettier-ignore -->
 ```ts
 import { browser } from 'wxt/storage'; // [!code --]
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'; // [!code --]
 import { defineContentScript } from 'wxt/utils/define-content-script'; // [!code --]
 import { injectScript } from 'wxt/utils/inject-script'; // [!code --]
-import {
-  // [!code ++]
-  browser, // [!code ++]
-  createShadowRootUi, // [!code ++]
-  defineContentScript, // [!code ++]
-  injectScript, // [!code ++]
+import { // [!code ++]
+  browser, createShadowRootUi, defineContentScript, injectScript // [!code ++]
 } from '#imports'; // [!code ++]
 ```
 
