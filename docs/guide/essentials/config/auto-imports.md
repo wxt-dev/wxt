@@ -11,11 +11,7 @@ export default defineConfig({
 });
 ```
 
-By default, WXT automatically setups up auto-imports for all of it's own APIs:
-
-<<< @/../packages/wxt/src/core/resolve-config.ts#snippet
-
-WXT also adds some project directories as auto-import sources automatically:
+By default, WXT automatically setups up auto-imports for all of it's own APIs. WXT also adds some project directories to auto-import from:
 
 - `<srcDir>/components/*`
 - `<srcDir>/composables/*`
@@ -23,6 +19,8 @@ WXT also adds some project directories as auto-import sources automatically:
 - `<srcDir>/utils/*`
 
 All named and default exports from files in these directories are available everywhere else in your project without having to import them.
+
+To see the complete list of auto-imported APIs, run `wxt prepare` and look at your project's `.wxt/types/imports-module.d.ts` file.
 
 ## TypeScript
 
