@@ -347,13 +347,6 @@ async function getUnlistedScriptEntrypoint(
   { inputPath, name, skipped }: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<GenericEntrypoint> {
-  // TODO: Move into `builder`
-  // if (defaultExport == null) {
-  //   throw Error(
-  //     `${name}: Default export not found, did you forget to call "export default defineUnlistedScript(...)"?`,
-  //   );
-  // }
-  // const { main: _, ...options } = defaultExport;
   return {
     type: 'unlisted-script',
     name,
