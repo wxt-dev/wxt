@@ -83,6 +83,37 @@ importers:
         specifier: workspace:*
         version: link:packages/wxt
 
+  packages/analytics:
+    dependencies:
+      ua-parser-js:
+        specifier: ^1.0.38
+        version: 1.0.39
+    devDependencies:
+      '@aklinker1/check':
+        specifier: ^1.3.1
+        version: 1.4.5(typescript@5.6.2)
+      '@types/chrome':
+        specifier: ^0.0.268
+        version: 0.0.268
+      '@types/ua-parser-js':
+        specifier: ^0.7.39
+        version: 0.7.39
+      prettier:
+        specifier: ^3.3.2
+        version: 3.3.3
+      publint:
+        specifier: ^0.2.8
+        version: 0.2.11
+      typescript:
+        specifier: ^5.5.2
+        version: 5.6.2
+      unbuild:
+        specifier: ^2.0.0
+        version: 2.0.0(sass@1.79.4)(typescript@5.6.2)
+      wxt:
+        specifier: workspace:*
+        version: link:../wxt
+
   packages/auto-icons:
     dependencies:
       defu:
@@ -1960,6 +1991,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/ua-parser-js@0.7.39':
+    resolution: {integrity: sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==}
 
   '@types/unist@3.0.2':
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
@@ -4721,6 +4755,10 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  ua-parser-js@1.0.39:
+    resolution: {integrity: sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==}
+    hasBin: true
+
   ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
 
@@ -6346,6 +6384,8 @@ snapshots:
       csstype: 3.1.3
 
   '@types/resolve@1.20.2': {}
+
+  '@types/ua-parser-js@0.7.39': {}
 
   '@types/unist@3.0.2': {}
 
@@ -9340,6 +9380,8 @@ snapshots:
       typescript: 5.6.3
 
   typescript@5.6.3: {}
+
+  ua-parser-js@1.0.39: {}
 
   ufo@1.5.3: {}
 
