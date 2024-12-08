@@ -6,7 +6,7 @@ import { getPackageJson } from './utils/package';
 import { minimatch } from 'minimatch';
 import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log/printFileList';
-import { internalBuild } from './utils/building';
+import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
@@ -55,6 +55,14 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   await wxt.hooks.callHook('zip:extension:done', wxt, outZipPath);
 
   if (wxt.config.zip.zipSources) {
+    const entrypoints = await findEntrypoints();
+    const skippedEntrypoints = entrypoints.filter((entry) => entry.skipped);
+    const excludeSources = [
+      ...wxt.config.zip.excludeSources,
+      ...skippedEntrypoints.map((entry) =>
+        path.relative(wxt.config.zip.sourcesRoot, entry.inputPath),
+      ),
+    ].map((paths) => paths.replaceAll('\\', '/'));
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
@@ -65,7 +73,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     );
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
-      exclude: wxt.config.zip.excludeSources,
+      exclude: excludeSources,
       transform(absolutePath, zipPath, content) {
         if (zipPath.endsWith('package.json')) {
           return addOverridesToPackageJson(absolutePath, content, overrides);

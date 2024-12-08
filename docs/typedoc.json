@@ -2,11 +2,18 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "packages",
   "entryPoints": ["../packages/wxt"],
-  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-vitepress-theme",
+    "typedoc-plugin-frontmatter"
+  ],
   "out": "./api/reference",
   "githubPages": false,
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
-  "readme": "none"
+  "readme": "none",
+  "frontmatterGlobals": {
+    "editLink": false
+  }
 }

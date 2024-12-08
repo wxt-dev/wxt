@@ -548,16 +548,21 @@ To use `injectScript`, we need two entrypoints, one content script and one unlis
 ```ts
 // entrypoints/example-main-world.ts
 export default defineUnlistedScript(() => {
-  console.log('Hello from the main world!');
+  console.log('Hello from the main world');
 });
 ```
 
 ```ts
 // entrypoints/example.content.ts
-export default defineContentScript(async () => {
-  await injectScript('/example-main-world.js', {
-    keepInDom: true,
-  });
+export default defineContentScript({
+  matches: ['*://*/*'],
+  async main() {
+    console.log('Injecting script...');
+    await injectScript('/example-main-world.js', {
+      keepInDom: true,
+    });
+    console.log('Done!');
+  },
 });
 ```
 
@@ -570,6 +575,39 @@ For MV3, `injectScript` is synchronous and the injected script will be evaluated
 
 However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
 :::
+
+## Mounting UI to dynamic element
+
+In many cases, you may need to mount a UI to a DOM element that does not exist at the time the web page is initially loaded. To handle this, use the `autoMount` API to automatically mount the UI when the target element appears dynamically and unmount it when the element disappears. In WXT, the `anchor` option is used to target the element, enabling automatic mounting and unmounting based on its appearance and removal.
+
+```ts
+export default defineContentScript({
+  matches: ['<all_urls>'],
+
+  main(ctx) {
+    const ui = createIntegratedUi(ctx, {
+      position: 'inline',
+      // It observes the anchor
+      anchor: '#your-target-dynamic-element',
+      onMount: (container) => {
+        // Append children to the container
+        const app = document.createElement('p');
+        app.textContent = '...';
+        container.append(app);
+      },
+    });
+
+    // Call autoMount to observe anchor element for add/remove.
+    ui.autoMount();
+  },
+});
+```
+
+:::tip
+When the `ui.remove` is called, `autoMount` also stops.
+:::
+
+See the [API Reference](/api/reference/wxt/client/interfaces/ContentScriptUi.html#automount) for the complete list of options.
 
 ## Dealing with SPAs
 

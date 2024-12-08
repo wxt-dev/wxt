@@ -62,22 +62,19 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     );
     if (matchingGlob) {
       const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      results.push({
-        name,
-        inputPath,
-        type,
-        skipped:
-          wxt.config.filterEntrypoints != null &&
-          !wxt.config.filterEntrypoints.has(name),
-      });
+      results.push({ name, inputPath, type });
     }
     return results;
   }, []);
 
+  // Validation
+  preventNoEntrypoints(entrypointInfos);
+  preventDuplicateEntrypointNames(entrypointInfos);
+
   // Import entrypoints to get their config
   let hasBackground = false;
   const entrypointOptions = await importEntrypoints(entrypointInfos);
-  const entrypoints: Entrypoint[] = await Promise.all(
+  const entrypointsWithoutSkipped: Entrypoint[] = await Promise.all(
     entrypointInfos.map(async (info): Promise<Entrypoint> => {
       const { type } = info;
       const options = entrypointOptions[info.inputPath] ?? {};
@@ -122,68 +119,47 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   );
 
   if (wxt.config.command === 'serve' && !hasBackground) {
-    entrypoints.push(
+    entrypointsWithoutSkipped.push(
       await getBackgroundEntrypoint(
         {
           inputPath: VIRTUAL_NOOP_BACKGROUND_MODULE_ID,
           name: 'background',
           type: 'background',
-          skipped: false,
         },
         {},
       ),
     );
   }
 
+  // Mark entrypoints as skipped or not
+  const entrypoints = entrypointsWithoutSkipped.map((entry) => ({
+    ...entry,
+    skipped: isEntrypointSkipped(entry),
+  }));
+
   wxt.logger.debug('All entrypoints:', entrypoints);
-  const skippedEntrypointNames = entrypointInfos
+  const skippedEntrypointNames = entrypoints
     .filter((item) => item.skipped)
     .map((item) => item.name);
   if (skippedEntrypointNames.length) {
     wxt.logger.warn(
-      `Filter excluded the following entrypoints:\n${skippedEntrypointNames
-        .map((item) => `${pc.dim('-')} ${pc.cyan(item)}`)
-        .join('\n')}`,
+      [
+        'The following entrypoints have been skipped:',
+        ...skippedEntrypointNames.map(
+          (item) => `${pc.dim('-')} ${pc.cyan(item)}`,
+        ),
+      ].join('\n'),
     );
   }
-  const targetEntrypoints = entrypoints.filter((entry) => {
-    const { include, exclude } = entry.options;
-    if (include?.length && exclude?.length) {
-      wxt.logger.warn(
-        `The ${entry.name} entrypoint lists both include and exclude, but only one can be used per entrypoint. Entrypoint ignored.`,
-      );
-      return false;
-    }
-    if (exclude?.length && !include?.length) {
-      return !exclude.includes(wxt.config.browser);
-    }
-    if (include?.length && !exclude?.length) {
-      return include.includes(wxt.config.browser);
-    }
-    if (skippedEntrypointNames.includes(entry.name)) {
-      return false;
-    }
+  await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
 
-    return true;
-  });
-  wxt.logger.debug(`${wxt.config.browser} entrypoints:`, targetEntrypoints);
-  await wxt.hooks.callHook('entrypoints:resolved', wxt, targetEntrypoints);
-
-  // Validation
-  preventNoEntrypoints(targetEntrypoints);
-  preventDuplicateEntrypointNames(targetEntrypoints);
-
-  return targetEntrypoints;
+  return entrypoints;
 }
 
 interface EntrypointInfo {
   name: string;
   inputPath: string;
   type: Entrypoint['type'];
-  /**
-   * @default false
-   */
-  skipped: boolean;
 }
 
 /** Returns a map of input paths to the file's options. */
@@ -240,7 +216,7 @@ async function importHtmlEntrypoint(
   return res;
 }
 
-function preventDuplicateEntrypointNames(files: Entrypoint[]) {
+function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
   const namesToPaths = files.reduce<Record<string, string[]>>(
     (map, { name, inputPath }) => {
       map[name] ??= [];
@@ -269,7 +245,7 @@ function preventDuplicateEntrypointNames(files: Entrypoint[]) {
   }
 }
 
-function preventNoEntrypoints(files: Entrypoint[]) {
+function preventNoEntrypoints(files: EntrypointInfo[]) {
   if (files.length === 0) {
     throw Error(`No entrypoints found in ${wxt.config.entrypointsDir}`);
   }
@@ -299,7 +275,6 @@ async function getPopupEntrypoint(
     options: stictOptions,
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped: info.skipped,
   };
 }
 
@@ -322,7 +297,6 @@ async function getOptionsEntrypoint(
     ),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped: info.skipped,
   };
 }
 
@@ -339,12 +313,11 @@ async function getUnlistedPageEntrypoint(
       include: options.include,
       exclude: options.exclude,
     },
-    skipped: info.skipped,
   };
 }
 
 async function getUnlistedScriptEntrypoint(
-  { inputPath, name, skipped }: EntrypointInfo,
+  { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<GenericEntrypoint> {
   return {
@@ -359,12 +332,11 @@ async function getUnlistedScriptEntrypoint(
       },
       wxt.config.browser,
     ),
-    skipped,
   };
 }
 
 async function getBackgroundEntrypoint(
-  { inputPath, name, skipped }: EntrypointInfo,
+  { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<BackgroundEntrypoint> {
   const strictOptions: BackgroundEntrypoint['options'] =
@@ -388,12 +360,11 @@ async function getBackgroundEntrypoint(
     inputPath,
     outputDir: wxt.config.outDir,
     options: strictOptions,
-    skipped,
   };
 }
 
 async function getContentScriptEntrypoint(
-  { inputPath, name, skipped }: EntrypointInfo,
+  { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<ContentScriptEntrypoint> {
   return {
@@ -407,7 +378,6 @@ async function getContentScriptEntrypoint(
         | IsolatedWorldContentScriptEntrypointOptions,
       wxt.config.browser,
     ),
-    skipped,
   };
 }
 
@@ -431,8 +401,30 @@ async function getSidepanelEntrypoint(
     ),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    skipped: info.skipped,
   };
+}
+
+function isEntrypointSkipped(entry: Omit<Entrypoint, 'skipped'>): boolean {
+  if (wxt.config.filterEntrypoints != null) {
+    return !wxt.config.filterEntrypoints.has(entry.name);
+  }
+
+  const { include, exclude } = entry.options;
+  if (include?.length && exclude?.length) {
+    wxt.logger.warn(
+      `The ${entry.name} entrypoint lists both include and exclude, but only one can be used per entrypoint. Entrypoint skipped.`,
+    );
+    return true;
+  }
+
+  if (exclude?.length && !include?.length) {
+    return exclude.includes(wxt.config.browser);
+  }
+  if (include?.length && !exclude?.length) {
+    return !include.includes(wxt.config.browser);
+  }
+
+  return false;
 }
 
 const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {

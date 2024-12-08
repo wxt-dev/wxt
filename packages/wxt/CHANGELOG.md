@@ -1,5 +1,73 @@
 # Changelog
 
+## v0.19.19
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.18...wxt-v0.19.19)
+
+### 🚀 Enhancements
+
+- Keyboard shortcut to reopen the browser without restarting the dev command ([#1211](https://github.com/wxt-dev/wxt/pull/1211))
+
+### 🩹 Fixes
+
+- Prevent changing dev server port when reloading config ([#1241](https://github.com/wxt-dev/wxt/pull/1241))
+- Ensure content scripts are registered immediately in dev mode ([#1253](https://github.com/wxt-dev/wxt/pull/1253))
+- Exclude skipped entrypoints from Firefox sources zip ([#1238](https://github.com/wxt-dev/wxt/pull/1238))
+
+### ❤️ Contributors
+
+- Nishu ([@nishu-murmu](http://github.com/nishu-murmu))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.19.18
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.17...wxt-v0.19.18)
+
+### 🩹 Fixes
+
+- Correct `dev.reloadCommand` restriction to consider only commands with suggested keys ([#1226](https://github.com/wxt-dev/wxt/pull/1226))
+
+### 🌊 Types
+
+- Add overloads to `ContentScriptContext#addEventListener` for different targets ([#1245](https://github.com/wxt-dev/wxt/pull/1245))
+
+### 🏡 Chore
+
+- Refactor `findEntrypoints` to return all entrypoints with `skipped` set properly ([#1244](https://github.com/wxt-dev/wxt/pull/1244))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Jaguar Zhou ([@aiktb](http://github.com/aiktb))
+
+## v0.19.17
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.16...wxt-v0.19.17)
+
+### 🚀 Enhancements
+
+- New `server:created`, `server:started`, and `server:closed` hooks ([#1179](https://github.com/wxt-dev/wxt/pull/1179))
+
+### 🩹 Fixes
+
+- Re-initialize WXT modules correctly during development ([#1176](https://github.com/wxt-dev/wxt/pull/1176))
+- ESLint config being generated when ESLint is not installed. ([#1198](https://github.com/wxt-dev/wxt/pull/1198))
+- Update `vite` dependency range to support v6 ([#1215](https://github.com/wxt-dev/wxt/pull/1215))
+- Automatically convert MV3 `content_security_policy` to MV2 ([#1168](https://github.com/wxt-dev/wxt/pull/1168))
+- Correctly remove child elements with integrated UI remove ([#1219](https://github.com/wxt-dev/wxt/pull/1219))
+- Make content script `matches` optional ([#1220](https://github.com/wxt-dev/wxt/pull/1220))
+
+### 📖 Documentation
+
+- Fix analyze typo in type ([#1187](https://github.com/wxt-dev/wxt/pull/1187))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
+- Florian Metz ([@Timeraa](http://github.com/Timeraa))
+
 ## v0.19.16
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.15...wxt-v0.19.16)

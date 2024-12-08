@@ -1,12 +1,22 @@
 import { browser } from 'wxt/browser';
+import { waitElement } from '@1natsu/wait-element';
+import {
+  isExist as mountDetector,
+  isNotExist as removeDetector,
+} from '@1natsu/wait-element/detectors';
 import { ContentScriptContext } from '..';
 import {
+  AutoMount,
+  AutoMountOptions,
+  BaseMountFunctions,
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
+  ContentScriptUiOptions,
   IframeContentScriptUi,
   IframeContentScriptUiOptions,
   IntegratedContentScriptUi,
   IntegratedContentScriptUiOptions,
+  MountFunctions,
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
 } from './types';
@@ -34,9 +44,18 @@ export function createIntegratedUi<TMounted>(
   };
   const remove = () => {
     options.onRemove?.(mounted);
+    wrapper.replaceChildren();
     wrapper.remove();
     mounted = undefined;
   };
+
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
 
   ctx.onInvalidated(remove);
 
@@ -45,8 +64,7 @@ export function createIntegratedUi<TMounted>(
       return mounted;
     },
     wrapper,
-    mount,
-    remove,
+    ...mountFunctions,
   };
 }
 
@@ -78,6 +96,14 @@ export function createIframeUi<TMounted>(
     mounted = undefined;
   };
 
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
+
   ctx.onInvalidated(remove);
 
   return {
@@ -86,8 +112,7 @@ export function createIframeUi<TMounted>(
     },
     iframe,
     wrapper,
-    mount,
-    remove,
+    ...mountFunctions,
   };
 }
 
@@ -136,7 +161,7 @@ export async function createShadowRootUi<TMounted>(
   const remove = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
-    // Detatch shadow root from DOM
+    // Detach shadow root from DOM
     shadowHost.remove();
     // Remove children from uiContainer
     while (uiContainer.lastChild)
@@ -145,14 +170,21 @@ export async function createShadowRootUi<TMounted>(
     mounted = undefined;
   };
 
+  const mountFunctions = createMountFunctions(
+    {
+      mount,
+      remove,
+    },
+    options,
+  );
+
   ctx.onInvalidated(remove);
 
   return {
     shadow,
     shadowHost,
     uiContainer,
-    mount,
-    remove,
+    ...mountFunctions,
     get mounted() {
       return mounted;
     },
@@ -253,6 +285,107 @@ function mountUi(
       options.append(anchor, root);
       break;
   }
+}
+
+function createMountFunctions<TMounted>(
+  baseFunctions: BaseMountFunctions,
+  options: ContentScriptUiOptions<TMounted>,
+): MountFunctions {
+  let autoMountInstance: AutoMount | undefined = undefined;
+
+  const stopAutoMount = () => {
+    autoMountInstance?.stopAutoMount();
+    autoMountInstance = undefined;
+  };
+
+  const mount = () => {
+    baseFunctions.mount();
+  };
+
+  const unmount = baseFunctions.remove;
+
+  const remove = () => {
+    stopAutoMount();
+    baseFunctions.remove();
+  };
+
+  const autoMount = (autoMountOptions?: AutoMountOptions) => {
+    if (autoMountInstance) {
+      logger.warn('autoMount is already set.');
+    }
+    autoMountInstance = autoMountUi(
+      { mount, unmount, stopAutoMount },
+      {
+        ...options,
+        ...autoMountOptions,
+      },
+    );
+  };
+
+  return {
+    mount,
+    remove,
+    autoMount,
+  };
+}
+
+function autoMountUi(
+  uiCallbacks: {
+    mount: () => void;
+    unmount: () => void;
+    stopAutoMount: () => void;
+  },
+  options: ContentScriptAnchoredOptions & AutoMountOptions,
+): AutoMount {
+  const abortController = new AbortController();
+  const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
+  const _stopAutoMount = () => {
+    abortController.abort(EXPLICIT_STOP_REASON);
+    options.onStop?.();
+  };
+
+  let resolvedAnchor =
+    typeof options.anchor === 'function' ? options.anchor() : options.anchor;
+  if (resolvedAnchor instanceof Element) {
+    throw Error(
+      'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
+    );
+  }
+
+  async function observeElement(selector: string | null | undefined) {
+    let isAnchorExist = !!getAnchor(options);
+
+    while (!abortController.signal.aborted) {
+      try {
+        const changedAnchor = await waitElement(selector ?? 'body', {
+          customMatcher: () => getAnchor(options) ?? null,
+          detector: isAnchorExist ? removeDetector : mountDetector,
+          signal: abortController.signal,
+        });
+        isAnchorExist = !!changedAnchor;
+        if (isAnchorExist) {
+          uiCallbacks.mount();
+        } else {
+          uiCallbacks.unmount();
+          if (options.once) {
+            uiCallbacks.stopAutoMount();
+          }
+        }
+      } catch (error) {
+        if (
+          abortController.signal.aborted &&
+          abortController.signal.reason === EXPLICIT_STOP_REASON
+        ) {
+          break;
+        } else {
+          throw error;
+        }
+      }
+    }
+  }
+  observeElement(resolvedAnchor);
+
+  return { stopAutoMount: _stopAutoMount };
 }
 
 /**

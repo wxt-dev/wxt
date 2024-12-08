@@ -12,15 +12,18 @@ When using `browser.scripting.executeScript`, you can execute content scripts or
 // entrypoints/background.ts
 const res = await browser.scripting.executeScript({
   target: { tabId },
-  files: ['injected.js'],
+  files: ['content-scripts/example.js'],
 });
 console.log(res); // "Hello John!"
 ```
 
 ```ts
-// entrypoints/injected.js
-export default defineUnlistedScript(() => {
-  console.log('Script was injected!');
-  return 'Hello John!';
+// entrypoints/example.content.ts
+export default defineContentScript({
+  registration: 'runtime',
+  main(ctx) {
+    console.log('Script was executed!');
+    return 'Hello John!';
+  },
 });
 ```

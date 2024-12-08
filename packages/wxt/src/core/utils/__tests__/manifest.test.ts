@@ -1581,6 +1581,41 @@ describe('Manifest Utils', () => {
           permissions: ['tabs', 'scripting'],
         });
       });
+
+      it('should convert MV3 CSP object to MV2 CSP string with localhost for MV2', async () => {
+        const entrypoints: Entrypoint[] = [];
+        const buildOutput = fakeBuildOutput();
+        const inputCsp =
+          "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+        const expectedCsp =
+          "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
+
+        // Setup WXT for Firefox and serve command
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            command: 'serve',
+            manifestVersion: 2,
+            manifest: {
+              content_security_policy: {
+                extension_pages: inputCsp,
+              },
+            },
+          },
+          server: fakeWxtDevServer({
+            port: 3000,
+            hostname: 'localhost',
+            origin: 'http://localhost:3000',
+          }),
+        });
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+        );
+
+        expect(actual.content_security_policy).toEqual(expectedCsp);
+      });
     });
   });
 

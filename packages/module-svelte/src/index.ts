@@ -12,7 +12,7 @@ export default defineWxtModule<SvelteModuleOptions>({
   setup(wxt, options) {
     const { vite } = options ?? {};
 
-    addViteConfig(wxt, () => ({
+    addViteConfig(wxt, ({ mode }) => ({
       plugins: [
         svelte({
           // Using a svelte.config.js file causes a segmentation fault when importing the file
@@ -21,6 +21,9 @@ export default defineWxtModule<SvelteModuleOptions>({
           ...vite,
         }),
       ],
+      resolve: {
+        conditions: mode === 'development' ? ['browser'] : [],
+      },
     }));
 
     addImportPreset(wxt, 'svelte');
