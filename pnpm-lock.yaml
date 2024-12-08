@@ -34,6 +34,9 @@ importers:
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
+      feed:
+        specifier: ^4.2.2
+        version: 4.2.2
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -2930,6 +2933,10 @@ packages:
       picomatch:
         optional: true
 
+  feed@4.2.2:
+    resolution: {integrity: sha512-u5/sxGfiMfZNtJ3OvQpXcvotFpYkL0n9u9mM2vkui2nGo8b4wvDkJ8gAkYqbA8QpGyFCv3RK0Z+Iv+9veCS9bQ==}
+    engines: {node: '>=0.4.0'}
+
   filesize@10.1.6:
     resolution: {integrity: sha512-sJslQKU2uM33qH5nqewAwVB2QgR6w1aMNsYUp3aN5rMRyXEwJGmZvaWzeJFNTOXWlHQyBFCWrdj3fV/fsTOX8w==}
     engines: {node: '>= 10.4.0'}
@@ -5045,6 +5052,10 @@ packages:
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
     engines: {node: '>=12'}
+
+  xml-js@1.6.11:
+    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
+    hasBin: true
 
   xml2js@0.5.0:
     resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
@@ -7527,6 +7538,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  feed@4.2.2:
+    dependencies:
+      xml-js: 1.6.11
+
   filesize@10.1.6: {}
 
   fill-range@7.1.1:
@@ -9787,6 +9802,10 @@ snapshots:
   ws@8.18.0: {}
 
   xdg-basedir@5.1.0: {}
+
+  xml-js@1.6.11:
+    dependencies:
+      sax: 1.2.4
 
   xml2js@0.5.0:
     dependencies:
