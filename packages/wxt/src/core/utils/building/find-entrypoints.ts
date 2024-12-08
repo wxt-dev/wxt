@@ -103,8 +103,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
             type,
             outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
             options: {
-              include: (options as any).include,
-              exclude: (options as any).exclude,
+              include: options.include,
+              exclude: options.exclude,
             },
           };
         default:
@@ -113,8 +113,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
             type,
             outputDir: wxt.config.outDir,
             options: {
-              include: (options as any).include,
-              exclude: (options as any).exclude,
+              include: options.include,
+              exclude: options.exclude,
             },
           };
       }
@@ -225,15 +225,16 @@ async function importHtmlEntrypoint(
     title: document.title,
   };
 
-  // Non-json5 keys
-  const stringKeys = ['defaultTitle'];
-
   metaTags.forEach((tag) => {
     const name = tag.name;
     if (!name.startsWith('manifest.')) return;
 
     const key = camelCase(name.slice(9));
-    res[key] = stringKeys.includes(key) ? content : JSON5.parse(tag.content);
+    try {
+      res[key] = JSON5.parse(tag.content);
+    } catch {
+      res[key] = tag.content;
+    }
   });
 
   return res;
