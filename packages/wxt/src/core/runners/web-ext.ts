@@ -11,6 +11,9 @@ export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 
   return {
+    canOpen() {
+      return true;
+    },
     async openBrowser() {
       const startTime = Date.now();
 
