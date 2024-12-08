@@ -209,7 +209,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
     }),
     // JS
     wxt.builder
-      .importJsEntrypoints(jsInfos.map((info) => info.inputPath))
+      .importEntrypoints(jsInfos.map((info) => info.inputPath))
       .then((res) => {
         res.forEach((res, i) => {
           resMap[jsInfos[i].inputPath] = res;

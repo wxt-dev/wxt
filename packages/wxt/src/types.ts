@@ -1027,17 +1027,13 @@ export interface WxtBuilder {
    */
   version: string;
   /**
-   * @deprecated Use `importJsEntrypoint` instead. Same function, better name.
+   * TODO
    */
   importEntrypoint<T>(path: string): Promise<T>;
   /**
-   * Import an JS entrypoint file, returning it's options.
-   */
-  importJsEntrypoint<T>(path: string): Promise<T>;
-  /**
    * Import a list of JS entrypoint files, returning their options.
    */
-  importJsEntrypoints(paths: string[]): Promise<Record<string, unknown>[]>;
+  importEntrypoints(paths: string[]): Promise<Record<string, unknown>[]>;
   /**
    * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
    * build process.
