@@ -80,7 +80,7 @@ export function isHtmlEntrypoint(
   entrypoint: Pick<Entrypoint, 'inputPath'>,
 ): boolean {
   const ext = extname(entrypoint.inputPath);
-  return ['html'].includes(ext);
+  return ['.html'].includes(ext);
 }
 
 /**
@@ -92,5 +92,5 @@ export function isJsEntrypoint(
   entrypoint: Pick<Entrypoint, 'inputPath'>,
 ): boolean {
   const ext = extname(entrypoint.inputPath);
-  return ['js', 'jsx', 'ts', 'tsx'].includes(ext);
+  return ['.js', '.jsx', '.ts', '.tsx'].includes(ext);
 }

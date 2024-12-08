@@ -1027,7 +1027,7 @@ export interface WxtBuilder {
    */
   version: string;
   /**
-   * TODO
+   * Import a JS entrypoint file, returning the default export containing the options.
    */
   importEntrypoint<T>(path: string): Promise<T>;
   /**
