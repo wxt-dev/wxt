@@ -4,7 +4,7 @@ import {
   ResolvedPerBrowserOptions,
   TargetBrowser,
 } from '../../types';
-import path, { relative, resolve } from 'node:path';
+import path, { relative, resolve, extname } from 'node:path';
 import { normalizePath } from './paths';
 
 export function getEntrypointName(
@@ -76,6 +76,21 @@ export function resolvePerBrowserOptions<
  *
  * Naively just checking the file extension of the input path.
  */
-export function isHtmlEntrypoint(entrypoint: Entrypoint): boolean {
-  return entrypoint.inputPath.endsWith('.html');
+export function isHtmlEntrypoint(
+  entrypoint: Pick<Entrypoint, 'inputPath'>,
+): boolean {
+  const ext = extname(entrypoint.inputPath);
+  return ['html'].includes(ext);
+}
+
+/**
+ * Returns true when the entrypoint is a JS entrypoint.
+ *
+ * Naively just checking the file extension of the input path.
+ */
+export function isJsEntrypoint(
+  entrypoint: Pick<Entrypoint, 'inputPath'>,
+): boolean {
+  const ext = extname(entrypoint.inputPath);
+  return ['js', 'jsx', 'ts', 'tsx'].includes(ext);
 }
