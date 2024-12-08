@@ -36,11 +36,12 @@ describe('findEntrypoints', () => {
     outDir: resolve('.output'),
     command: 'build',
   });
-  let importEntrypointMock: Mock;
+  let importEntrypointsMock: Mock<typeof wxt.builder.importEntrypoints>;
 
   beforeEach(() => {
     setFakeWxt({ config });
-    importEntrypointMock = vi.mocked(wxt.builder.importEntrypoint);
+    importEntrypointsMock = vi.mocked(wxt.builder.importEntrypoints);
+    importEntrypointsMock.mockResolvedValue([]);
   });
 
   it.each<[string, string, PopupEntrypoint]>([
@@ -210,13 +211,13 @@ describe('findEntrypoints', () => {
         matches: ['<all_urls>'],
       };
       globMock.mockResolvedValueOnce([path]);
-      importEntrypointMock.mockResolvedValue(options);
+      importEntrypointsMock.mockResolvedValue([options]);
 
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointMock).toBeCalledWith(expected.inputPath);
+      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
 
@@ -244,17 +245,17 @@ describe('findEntrypoints', () => {
   ])(
     'should find and load background entrypoint config from %s',
     async (path, expected) => {
-      const options: BackgroundEntrypointOptions = {
+      const options = {
         type: 'module',
-      };
+      } satisfies BackgroundEntrypointOptions;
       globMock.mockResolvedValueOnce([path]);
-      importEntrypointMock.mockResolvedValue(options);
+      importEntrypointsMock.mockResolvedValue([options]);
 
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointMock).toBeCalledWith(expected.inputPath);
+      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
 
@@ -339,11 +340,11 @@ describe('findEntrypoints', () => {
       },
       builder: wxt.builder,
     });
-    const options: BackgroundEntrypointOptions = {
+    const options = {
       type: 'module',
-    };
+    } satisfies BackgroundEntrypointOptions;
     globMock.mockResolvedValueOnce(['background.ts']);
-    importEntrypointMock.mockResolvedValue(options);
+    importEntrypointsMock.mockResolvedValue([options]);
 
     const entrypoints = await findEntrypoints();
 
@@ -357,11 +358,11 @@ describe('findEntrypoints', () => {
       },
       builder: wxt.builder,
     });
-    const options: BackgroundEntrypointOptions = {
+    const options = {
       type: 'module',
-    };
+    } satisfies BackgroundEntrypointOptions;
     globMock.mockResolvedValueOnce(['background.ts']);
-    importEntrypointMock.mockResolvedValue(options);
+    importEntrypointsMock.mockResolvedValue([options]);
 
     const entrypoints = await findEntrypoints();
 
@@ -410,15 +411,15 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
         skipped: false,
       };
-      const options: BaseEntrypointOptions = {};
+      const options = {} satisfies BaseEntrypointOptions;
       globMock.mockResolvedValueOnce([path]);
-      importEntrypointMock.mockResolvedValue(options);
+      importEntrypointsMock.mockResolvedValue([options]);
 
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointMock).toBeCalledWith(expected.inputPath);
+      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
 
@@ -703,9 +704,9 @@ describe('findEntrypoints', () => {
   describe('include option', () => {
     it("should mark the background as skipped when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['background.ts']);
-      importEntrypointMock.mockResolvedValue({
-        include: ['not' + config.browser],
-      });
+      importEntrypointsMock.mockResolvedValue([
+        { include: ['not' + config.browser] },
+      ]);
 
       const entrypoints = await findEntrypoints();
 
@@ -719,9 +720,9 @@ describe('findEntrypoints', () => {
 
     it("should mark content scripts as skipped when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['example.content.ts']);
-      importEntrypointMock.mockResolvedValue({
-        include: ['not' + config.browser],
-      });
+      importEntrypointsMock.mockResolvedValue([
+        { include: ['not' + config.browser] },
+      ]);
 
       const entrypoints = await findEntrypoints();
 
@@ -803,9 +804,7 @@ describe('findEntrypoints', () => {
   describe('exclude option', () => {
     it('should mark the background as skipped when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['background.ts']);
-      importEntrypointMock.mockResolvedValue({
-        exclude: [config.browser],
-      });
+      importEntrypointsMock.mockResolvedValue([{ exclude: [config.browser] }]);
 
       const entrypoints = await findEntrypoints();
 
@@ -819,9 +818,7 @@ describe('findEntrypoints', () => {
 
     it('should mark content scripts as skipped when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['example.content.ts']);
-      importEntrypointMock.mockResolvedValue({
-        exclude: [config.browser],
-      });
+      importEntrypointsMock.mockResolvedValue([{ exclude: [config.browser] }]);
 
       const entrypoints = await findEntrypoints();
 
@@ -914,7 +911,7 @@ describe('findEntrypoints', () => {
         builder: wxt.builder,
       });
 
-      importEntrypointMock.mockResolvedValue({});
+      importEntrypointsMock.mockResolvedValue([{}]);
 
       const entrypoints = await findEntrypoints();
 

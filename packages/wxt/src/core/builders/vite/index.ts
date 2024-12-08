@@ -24,6 +24,8 @@ import { importEntrypointFile } from '../../utils/building';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
+import { createExtensionEnvironment } from '../../utils/environments';
+import { relative } from 'node:path';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -220,52 +222,101 @@ export async function createViteBuilder(
     };
   };
 
+  const createViteNodeImporter = async (paths: string[]) => {
+    const baseConfig = await getBaseConfig({
+      excludeAnalysisPlugin: true,
+    });
+    // Disable dep optimization, as recommended by vite-node's README
+    baseConfig.optimizeDeps ??= {};
+    baseConfig.optimizeDeps.noDiscovery = true;
+    baseConfig.optimizeDeps.include = [];
+    const envConfig: vite.InlineConfig = {
+      plugins: paths.map((path) =>
+        wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
+      ),
+    };
+    const config = vite.mergeConfig(baseConfig, envConfig);
+    const server = await vite.createServer(config);
+    await server.pluginContainer.buildStart({});
+    const node = new ViteNodeServer(
+      // @ts-ignore: Some weird type error...
+      server,
+    );
+    installSourcemapsSupport({
+      getSourceMap: (source) => node.getSourceMap(source),
+    });
+    const runner = new ViteNodeRunner({
+      root: server.config.root,
+      base: server.config.base,
+      // when having the server and runner in a different context,
+      // you will need to handle the communication between them
+      // and pass to this function
+      fetchModule(id) {
+        return node.fetchModule(id);
+      },
+      resolveId(id, importer) {
+        return node.resolveId(id, importer);
+      },
+    });
+    return { runner, server };
+  };
+
+  const requireDefaultExport = (path: string, mod: any) => {
+    const relativePath = relative(wxtConfig.root, path);
+    if (mod?.default == null) {
+      const defineFn = relativePath.includes('.content')
+        ? 'defineContentScript'
+        : relativePath.includes('background')
+          ? 'defineBackground'
+          : 'defineUnlistedScript';
+
+      throw Error(
+        `${relativePath}: Default export not found, did you forget to call "export default ${defineFn}(...)"?`,
+      );
+    }
+  };
+
   return {
     name: 'Vite',
     version: vite.version,
     async importEntrypoint(path) {
+      const env = createExtensionEnvironment();
       switch (wxtConfig.entrypointLoader) {
         default:
         case 'jiti': {
-          return await importEntrypointFile(path);
+          return await env.run(() => importEntrypointFile(path));
         }
         case 'vite-node': {
-          const baseConfig = await getBaseConfig({
-            excludeAnalysisPlugin: true,
-          });
-          // Disable dep optimization, as recommended by vite-node's README
-          baseConfig.optimizeDeps ??= {};
-          baseConfig.optimizeDeps.noDiscovery = true;
-          baseConfig.optimizeDeps.include = [];
-          const envConfig: vite.InlineConfig = {
-            plugins: [wxtPlugins.removeEntrypointMainFunction(wxtConfig, path)],
-          };
-          const config = vite.mergeConfig(baseConfig, envConfig);
-          const server = await vite.createServer(config);
-          await server.pluginContainer.buildStart({});
-          const node = new ViteNodeServer(
-            // @ts-ignore: Some weird type error...
-            server,
-          );
-          installSourcemapsSupport({
-            getSourceMap: (source) => node.getSourceMap(source),
-          });
-          const runner = new ViteNodeRunner({
-            root: server.config.root,
-            base: server.config.base,
-            // when having the server and runner in a different context,
-            // you will need to handle the communication between them
-            // and pass to this function
-            fetchModule(id) {
-              return node.fetchModule(id);
-            },
-            resolveId(id, importer) {
-              return node.resolveId(id, importer);
-            },
-          });
-          const res = await runner.executeFile(path);
+          const { runner, server } = await createViteNodeImporter([path]);
+          const res = await env.run(() => runner.executeFile(path));
           await server.close();
+          requireDefaultExport(path, res);
           return res.default;
+        }
+      }
+    },
+    async importEntrypoints(paths) {
+      const env = createExtensionEnvironment();
+      switch (wxtConfig.entrypointLoader) {
+        default:
+        case 'jiti': {
+          return await env.run(() =>
+            Promise.all(paths.map(importEntrypointFile)),
+          );
+        }
+        case 'vite-node': {
+          const { runner, server } = await createViteNodeImporter(paths);
+          const res = await env.run(() =>
+            Promise.all(
+              paths.map(async (path) => {
+                const mod = await runner.executeFile(path);
+                requireDefaultExport(path, mod);
+                return mod.default;
+              }),
+            ),
+          );
+          await server.close();
+          return res;
         }
       }
     },
