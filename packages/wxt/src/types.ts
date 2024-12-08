@@ -1493,7 +1493,8 @@ export interface WxtPackageManager extends Nypm.PackageManager {
   /**
    * Run `npm ls`, `pnpm ls`, or `bun pm ls`, or `yarn list` and return the results.
    *
-   * WARNING: Yarn always returns all dependencies
+   * WARNING: Yarn Classic always returns all dependencies
+   * WARNING: Yarn Berry prefixes dependency versions with a protocol name (such as `npm:` or `workspace:`)
    */
   listDependencies: (options?: {
     cwd?: string;
