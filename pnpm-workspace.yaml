@@ -48,6 +48,7 @@ catalog:
   esbuild: ^0.25.0
   extract-zip: ^2.0.1
   fast-glob: ^3.3.2
+  feed: ^4.2.2
   filesize: ^10.1.6
   fs-extra: ^11.2.0
   get-port-please: ^3.1.2
