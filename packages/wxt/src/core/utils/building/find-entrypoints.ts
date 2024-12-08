@@ -176,13 +176,14 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
       resMap[info.inputPath] = res;
     }),
     // JS
-    wxt.builder
-      .importEntrypoints(jsInfos.map((info) => info.inputPath))
-      .then((res) => {
-        res.forEach((res, i) => {
-          resMap[jsInfos[i].inputPath] = res;
-        });
-      }),
+    (async () => {
+      const res = await wxt.builder.importEntrypoints(
+        jsInfos.map((info) => info.inputPath),
+      );
+      res.forEach((res, i) => {
+        resMap[jsInfos[i].inputPath] = res;
+      });
+    })(),
     // CSS - never has options
   ]);
 
@@ -198,7 +199,7 @@ async function importHtmlEntrypoint(
 
   const metaTags = document.querySelectorAll('meta');
   const res: Record<string, any> = {
-    title: document.title,
+    title: document.querySelector('title')?.textContent || undefined,
   };
 
   metaTags.forEach((tag) => {
@@ -266,7 +267,7 @@ async function getPopupEntrypoint(
     },
     wxt.config.browser,
   );
-  if (stictOptions.mv2Key !== 'page_action')
+  if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
     stictOptions.mv2Key = 'browser_action';
 
   return {
