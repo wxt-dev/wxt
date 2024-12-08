@@ -99,7 +99,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       // Register content scripts for the first time after the background starts
       // up since they're not listed in the manifest.
-      // Add listener before opening the browser to guarentee it is present when
+      // Add listener before opening the browser to guarantee it is present when
       // the extension sends back the initialization message.
       server.ws.on('wxt:background-initialized', () => {
         if (server.currentOutput == null) return;
@@ -112,7 +112,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', reloadOnChange);
       keyboardShortcuts.start();
-      keyboardShortcuts.printHelp();
+      keyboardShortcuts.printHelp({
+        canReopenBrowser:
+          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+      });
     },
 
     async stop() {

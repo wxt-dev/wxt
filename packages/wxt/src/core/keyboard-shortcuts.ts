@@ -6,7 +6,7 @@ import pc from 'picocolors';
 export interface KeyboardShortcutWatcher {
   start(): void;
   stop(): void;
-  printHelp(): void;
+  printHelp(flags: { canReopenBrowser: boolean }): void;
 }
 
 /**
@@ -49,8 +49,8 @@ export function createKeyboardShortcuts(
       isWatching = false;
     },
 
-    printHelp() {
-      if (!wxt.config.runnerConfig.config.disabled) {
+    printHelp(flags) {
+      if (flags.canReopenBrowser) {
         wxt.logger.info(
           `${pc.dim('Press')} ${pc.bold('o + enter')} ${pc.dim('to reopen the browser')}`,
         );
