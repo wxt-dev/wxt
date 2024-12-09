@@ -20,7 +20,7 @@ In your background script, set `type: "module"`:
 
 ```ts
 export default defineBackground({
-  type: 'module', // !code ++
+  type: 'module', // [!code ++]
   main() {
     // ...
   },
