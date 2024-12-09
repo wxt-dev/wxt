@@ -116,64 +116,56 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.mjs"
     },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.mjs"
+    "./utils/app-config": {
+      "types": "./dist/utils/app-config.d.ts",
+      "default": "./dist/utils/app-config.mjs"
     },
-    "./client/useAppConfig": {
-      "types": "./dist/client/app-config.d.ts",
-      "default": "./dist/client/app-config.mjs"
+    "./utils/inject-script": {
+      "types": "./dist/utils/inject-script.d.ts",
+      "default": "./dist/utils/inject-script.mjs"
     },
-    "./client/injectScript": {
-      "types": "./dist/client/inject-script.d.ts",
-      "default": "./dist/client/inject-script.mjs"
+    "./utils/content-script-context": {
+      "types": "./dist/utils/content-script-context.d.ts",
+      "default": "./dist/utils/content-script-context.mjs"
     },
-    "./client/content-scripts/context": {
-      "types": "./dist/client/content-scripts/content-script-context.d.ts",
-      "default": "./dist/client/content-scripts/content-script-context.mjs"
+    "./utils/content-script-ui/types": {
+      "types": "./dist/utils/content-script-ui/types.d.ts"
     },
-    "./client/content-scripts/ui/types": {
-      "types": "./dist/client/content-scripts/ui/types.d.ts"
+    "./utils/content-script-ui/integrated": {
+      "types": "./dist/utils/content-script-ui/integrated.d.ts",
+      "default": "./dist/utils/content-script-ui/integrated.mjs"
     },
-    "./client/content-scripts/ui/createIntegratedUi": {
-      "types": "./dist/client/content-scripts/ui/create-integrated-ui.d.ts",
-      "default": "./dist/client/content-scripts/ui/create-integrated-ui.mjs"
+    "./utils/content-script-ui/shadow-root": {
+      "types": "./dist/utils/content-script-ui/shadow-root.d.ts",
+      "default": "./dist/utils/content-script-ui/shadow-root.mjs"
     },
-    "./client/content-scripts/ui/createShadowRootUi": {
-      "types": "./dist/client/content-scripts/ui/create-shadow-root-ui.d.ts",
-      "default": "./dist/client/content-scripts/ui/create-shadow-root-ui.mjs"
+    "./utils/content-script-ui/iframe": {
+      "types": "./dist/utils/content-script-ui/iframe.d.ts",
+      "default": "./dist/utils/content-script-ui/iframe.mjs"
     },
-    "./client/content-scripts/ui/createIframeUi": {
-      "types": "./dist/client/content-scripts/ui/create-iframe-ui.d.ts",
-      "default": "./dist/client/content-scripts/ui/create-iframe-ui.mjs"
+    "./utils/define-app-config": {
+      "types": "./dist/utils/define-app-config.d.ts",
+      "default": "./dist/utils/define-app-config.mjs"
     },
-    "./sandbox": {
-      "types": "./dist/sandbox/index.d.ts",
-      "default": "./dist/sandbox/index.mjs"
+    "./utils/define-background": {
+      "types": "./dist/utils/define-background.d.ts",
+      "default": "./dist/utils/define-background.mjs"
     },
-    "./sandbox/defineAppConfig": {
-      "types": "./dist/sandbox/define-app-config.d.ts",
-      "default": "./dist/sandbox/define-app-config.mjs"
+    "./utils/define-content-script": {
+      "types": "./dist/utils/define-content-script.d.ts",
+      "default": "./dist/utils/define-content-script.mjs"
     },
-    "./sandbox/defineBackground": {
-      "types": "./dist/sandbox/define-background.d.ts",
-      "default": "./dist/sandbox/define-background.mjs"
+    "./utils/define-unlisted-script": {
+      "types": "./dist/utils/define-unlisted-script.d.ts",
+      "default": "./dist/utils/define-unlisted-script.mjs"
     },
-    "./sandbox/defineContentScript": {
-      "types": "./dist/sandbox/define-content-script.d.ts",
-      "default": "./dist/sandbox/define-content-script.mjs"
+    "./utils/define-wxt-plugin": {
+      "types": "./dist/utils/define-wxt-plugin.d.ts",
+      "default": "./dist/utils/define-wxt-plugin.mjs"
     },
-    "./sandbox/defineUnlistedScript": {
-      "types": "./dist/sandbox/define-unlisted-script.d.ts",
-      "default": "./dist/sandbox/define-unlisted-script.mjs"
-    },
-    "./sandbox/defineWxtPlugin": {
-      "types": "./dist/sandbox/define-wxt-plugin.d.ts",
-      "default": "./dist/sandbox/define-wxt-plugin.mjs"
-    },
-    "./sandbox/match-patterns": {
-      "types": "./dist/sandbox/match-patterns.d.ts",
-      "default": "./dist/sandbox/match-patterns.mjs"
+    "./utils/match-patterns": {
+      "types": "./dist/utils/match-patterns.d.ts",
+      "default": "./dist/utils/match-patterns.mjs"
     },
     "./browser": {
       "types": "./dist/browser/index.d.ts",
