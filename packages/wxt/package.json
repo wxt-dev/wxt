@@ -129,7 +129,8 @@
       "default": "./dist/utils/content-script-context.mjs"
     },
     "./utils/content-script-ui/types": {
-      "types": "./dist/utils/content-script-ui/types.d.ts"
+      "types": "./dist/utils/content-script-ui/types.d.ts",
+      "default": "./dist/utils/content-script-ui/types.mjs"
     },
     "./utils/content-script-ui/integrated": {
       "types": "./dist/utils/content-script-ui/integrated.d.ts",

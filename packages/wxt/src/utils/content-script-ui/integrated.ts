@@ -1,5 +1,5 @@
 import { ContentScriptContext } from '../content-script-context';
-import {
+import type {
   IntegratedContentScriptUi,
   IntegratedContentScriptUiOptions,
 } from './types';

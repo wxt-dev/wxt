@@ -1,6 +1,9 @@
 import { browser } from 'wxt/browser';
 import { ContentScriptContext } from '../content-script-context';
-import { IframeContentScriptUi, IframeContentScriptUiOptions } from './types';
+import type {
+  IframeContentScriptUi,
+  IframeContentScriptUiOptions,
+} from './types';
 import { applyPosition, mountUi } from './shared';
 
 /**

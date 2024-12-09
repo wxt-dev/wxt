@@ -1,4 +1,4 @@
-import {
+import type {
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
 } from './types';
