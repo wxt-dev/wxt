@@ -168,12 +168,8 @@
       "default": "./dist/utils/match-patterns.mjs"
     },
     "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
-    },
-    "./browser/chrome": {
-      "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.mjs"
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
     },
     "./testing": {
       "types": "./dist/testing/index.d.ts",

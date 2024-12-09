@@ -1,4 +1,4 @@
-import { ContentScriptContext } from '..';
+import { ContentScriptContext } from '../content-script-context';
 import {
   IntegratedContentScriptUi,
   IntegratedContentScriptUiOptions,

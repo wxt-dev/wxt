@@ -333,33 +333,22 @@ async function getUnimportOptions(
   const disabled = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
   const defaultOptions: WxtResolvedUnimportOptions = {
-    // prettier-ignore
-    imports: [
-      { name: 'defineConfig',         from: 'wxt' },
-      // wxt/client
-      { name: 'useAppConfig',         from: 'wxt/client/useAppConfig' },
-      { name: 'injectScript',         from: 'wxt/client/injectScript' },
-      { name: 'ContentScriptContext', from: 'wxt/client/content-scripts/context' },
-      { name: 'createIntegratedUi',   from: 'wxt/client/content-scripts/ui/createIntegratedUi' },
-      { name: 'createShadowRootUi',   from: 'wxt/client/content-scripts/ui/createShadowRootUi' },
-      { name: 'createIframeUi',       from: 'wxt/client/content-scripts/ui/createIframeUi' },
-      // wxt/sandbox
-      { name: 'defineAppConfig',      from: 'wxt/sandbox/defineAppConfig' },
-      { name: 'defineBackground',     from: 'wxt/sandbox/defineBackground' },
-      { name: 'defineContentScript',  from: 'wxt/sandbox/defineContentScript' },
-      { name: 'defineUnlistedScript', from: 'wxt/sandbox/defineUnlistedScript' },
-      { name: 'defineWxtPlugin',      from: 'wxt/sandbox/defineWxtPlugin' },
-      { name: 'MatchPattern',         from: 'wxt/sandbox/match-patterns' },
-      { name: 'InvalidMatchPattern',  from: 'wxt/sandbox/match-patterns' },
-      // wxt/testing
-      { name: 'fakeBrowser',          from: 'wxt/testing' },
-    ],
     presets: [
-      {
-        package:
-          extensionApi === 'chrome' ? 'wxt/browser/chrome' : 'wxt/browser',
-      },
+      { package: 'wxt/browser' },
       { package: 'wxt/storage' },
+      { package: 'wxt/testing' },
+      { package: 'wxt/utils/app-config' },
+      { package: 'wxt/utils/content-script-context' },
+      { package: 'wxt/utils/content-script-ui/iframe' },
+      { package: 'wxt/utils/content-script-ui/integrated' },
+      { package: 'wxt/utils/content-script-ui/shadow-root' },
+      { package: 'wxt/utils/content-script-ui/types' },
+      { package: 'wxt/utils/define-app-config' },
+      { package: 'wxt/utils/define-background' },
+      { package: 'wxt/utils/define-content-script' },
+      { package: 'wxt/utils/define-wxt-plugin' },
+      { package: 'wxt/utils/inject-script' },
+      { package: 'wxt/utils/match-patterns' },
     ],
     virtualImports: ['#imports'],
     debugLog: logger.debug,

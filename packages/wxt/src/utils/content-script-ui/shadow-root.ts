@@ -1,11 +1,11 @@
-import { ContentScriptContext } from '..';
+import { ContentScriptContext } from '../content-script-context';
 import {
   ShadowRootContentScriptUi,
   ShadowRootContentScriptUiOptions,
 } from './types';
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { applyPosition, mountUi } from './shared';
-import { logger } from '../../../sandbox/utils/logger';
+import { logger } from '../internal/logger';
 
 /**
  * Create a content script UI inside a [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
