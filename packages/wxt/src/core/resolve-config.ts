@@ -332,22 +332,26 @@ async function getUnimportOptions(
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  // mlly sometimes picks up things as exports that aren't. That's what this array conatains.
+  const invalidExports = ['options'];
   const defaultOptions: WxtResolvedUnimportOptions = {
+    // prettier-ignore
     presets: [
       { package: 'wxt/browser' },
       { package: 'wxt/storage' },
       { package: 'wxt/testing' },
       { package: 'wxt/utils/app-config' },
       { package: 'wxt/utils/content-script-context' },
-      { package: 'wxt/utils/content-script-ui/iframe' },
-      { package: 'wxt/utils/content-script-ui/integrated' },
-      { package: 'wxt/utils/content-script-ui/shadow-root' },
+      { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },
+      { package: 'wxt/utils/content-script-ui/integrated', ignore: invalidExports },
+      { package: 'wxt/utils/content-script-ui/shadow-root', ignore: invalidExports },
       { package: 'wxt/utils/content-script-ui/types' },
       { package: 'wxt/utils/define-app-config' },
       { package: 'wxt/utils/define-background' },
       { package: 'wxt/utils/define-content-script' },
+      { package: 'wxt/utils/define-unlisted-script' },
       { package: 'wxt/utils/define-wxt-plugin' },
-      { package: 'wxt/utils/inject-script' },
+      { package: 'wxt/utils/inject-script', ignore: invalidExports },
       { package: 'wxt/utils/match-patterns' },
     ],
     virtualImports: ['#imports'],
