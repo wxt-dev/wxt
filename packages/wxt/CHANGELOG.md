@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.19.20
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.19...wxt-v0.19.20)
+
+### 🚀 Enhancements
+
+- `autoMount` content script UIs ([#1210](https://github.com/wxt-dev/wxt/pull/1210))
+
+### 🩹 Fixes
+
+- Only show reopen browser shortcut when it can be done ([#1263](https://github.com/wxt-dev/wxt/pull/1263))
+- Import entrypoint improvements ([#1207](https://github.com/wxt-dev/wxt/pull/1207))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+
 ## v0.19.19
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.18...wxt-v0.19.19)
