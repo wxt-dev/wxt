@@ -7,9 +7,9 @@ export interface WxtAppConfig {}
  *
  * ```ts
  * // app.config.ts
- * import 'wxt/sandbox';
+ * import 'wxt/utils/define-app-config';
  *
- * declare module "wxt/sandbox" {
+ * declare module "wxt/utils/define-app-config" {
  *   export interface WxtAppConfig {
  *     analytics: AnalyticsConfig
  *   }

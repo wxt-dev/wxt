@@ -1,6 +1,8 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect } from 'vitest';
-import { createIntegratedUi, createIframeUi, createShadowRootUi } from '..';
+import { createIntegratedUi } from '../integrated';
+import { createIframeUi } from '../iframe';
+import { createShadowRootUi } from '../shadow-root';
 import { ContentScriptContext } from '../../content-script-context';
 
 function appendTestApp(container: HTMLElement) {

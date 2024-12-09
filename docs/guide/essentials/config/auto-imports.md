@@ -11,19 +11,7 @@ export default defineConfig({
 });
 ```
 
-By default, WXT automatically setups up auto-imports for all of it's own APIs:
-
-- [`browser`](/api/reference/wxt/browser/variables/browser) from `wxt/browser`
-- [`defineContentScript`](/api/reference/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`
-- [`defineBackground`](/api/reference/wxt/sandbox/functions/defineBackground) from `wxt/sandbox`
-- [`defineUnlistedScript`](/api/reference/wxt/sandbox/functions/defineUnlistedScript) from `wxt/sandbox`
-- [`createIntegratedUi`](/api/reference/wxt/client/functions/createIntegratedUi) from `wxt/client`
-- [`createShadowRootUi`](/api/reference/wxt/client/functions/createShadowRootUi) from `wxt/client`
-- [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi) from `wxt/client`
-- [`fakeBrowser`](/api/reference/wxt/testing/variables/fakeBrowser) from `wxt/testing`
-- And more!
-
-WXT also adds some project directories as auto-import sources automatically:
+By default, WXT automatically sets up auto-imports for all of it's own APIs. Additionally, some of your project's directories are also setup as auto-import sources:
 
 - `<srcDir>/components/*`
 - `<srcDir>/composables/*`
@@ -31,6 +19,8 @@ WXT also adds some project directories as auto-import sources automatically:
 - `<srcDir>/utils/*`
 
 All named and default exports from files in these directories are available everywhere else in your project without having to import them.
+
+To see the complete list of auto-imported APIs, run `wxt prepare` and look at your project's `.wxt/types/imports-module.d.ts` file.
 
 ## TypeScript
 
@@ -110,3 +100,17 @@ export default defineConfig({
   imports: false, // [!code ++]
 });
 ```
+
+## Explicit Imports (`#imports`)
+
+Anything that is auto-imported can also be imported manually via `#imports`:
+
+```ts
+import {
+  createShadowRootUi,
+  ContentScriptContext,
+  MatchPattern,
+} from '#imports';
+```
+
+Even if you've disabled auto-imports, you can use `#imports` to import all of WXT's APIs.

@@ -235,10 +235,11 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
     .flatMap(([alias, absolutePath]) => {
       const aliasPath = getTsconfigPath(absolutePath);
       return [
-        `      "${alias}": ["${aliasPath}"]`,
-        `      "${alias}/*": ["${aliasPath}/*"]`,
+        `"${alias}": ["${aliasPath}"]`,
+        `"${alias}/*": ["${aliasPath}/*"]`,
       ];
     })
+    .map((line) => `      ${line}`)
     .join(',\n');
 
   const text = `{
