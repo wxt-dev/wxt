@@ -113,7 +113,7 @@ function getEsbuildOptions(opts: JitiTransformOptions): TransformOptions {
     format: 'cjs',
     loader: isJsx ? 'tsx' : 'ts',
     define: {
-      'import.meta.env.ENTRYPOINT': 'build',
+      'import.meta.env.ENTRYPOINT': '"build"',
     },
     ...(isJsx
       ? {
