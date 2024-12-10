@@ -11,7 +11,7 @@ export default defineConfig({
 });
 ```
 
-By default, WXT automatically sets up auto-imports for all of it's own APIs. Additionally, some of your project's directories are also setup as auto-import sources:
+By default, WXT automatically sets up auto-imports for all of it's own APIs and some of your project directories:
 
 - `<srcDir>/components/*`
 - `<srcDir>/composables/*`
@@ -103,7 +103,7 @@ export default defineConfig({
 
 ## Explicit Imports (`#imports`)
 
-You can import all of WXT's APIs via the `#imports` module:
+You can manually import all of WXT's APIs via the `#imports` module:
 
 ```ts
 import {
