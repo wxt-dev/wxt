@@ -103,7 +103,7 @@ export default defineConfig({
 
 ## Explicit Imports (`#imports`)
 
-Anything that is auto-imported can also be imported manually via `#imports`:
+You can import all of WXT's APIs via the `#imports` module:
 
 ```ts
 import {
@@ -113,4 +113,8 @@ import {
 } from '#imports';
 ```
 
-Even if you've disabled auto-imports, you can use `#imports` to import all of WXT's APIs.
+To learn more about how the `#imports` module works, read the [related blog post](/blog/2024-12-06-using-imports-module).
+
+If you've disabled auto-imports, you can use `#imports` to import all of WXT's APIs from a simple place.
+
+If you are using auto-imports, all auto-importable APIs can be imported manually from `#imports`.
