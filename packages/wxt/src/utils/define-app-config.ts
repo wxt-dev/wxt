@@ -1,3 +1,4 @@
+/** @module wxt/utils/define-app-config */
 export interface WxtAppConfig {}
 
 /**

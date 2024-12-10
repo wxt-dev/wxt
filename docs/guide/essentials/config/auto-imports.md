@@ -20,7 +20,7 @@ By default, WXT automatically sets up auto-imports for all of it's own APIs and 
 
 All named and default exports from files in these directories are available everywhere else in your project without having to import them.
 
-To see the complete list of auto-imported APIs, run `wxt prepare` and look at your project's `.wxt/types/imports-module.d.ts` file.
+To see the complete list of auto-imported APIs, run [`wxt prepare`](/api/cli/wxt-prepare) and look at your project's `.wxt/types/imports-module.d.ts` file.
 
 ## TypeScript
 
@@ -116,5 +116,3 @@ import {
 To learn more about how the `#imports` module works, read the [related blog post](/blog/2024-12-06-using-imports-module).
 
 If you've disabled auto-imports, you can use `#imports` to import all of WXT's APIs from a simple place.
-
-If you are using auto-imports, all auto-importable APIs can be imported manually from `#imports`.

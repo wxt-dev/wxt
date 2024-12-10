@@ -1,5 +1,5 @@
 /**
- * Utilities for creating reusable, build-time modules for WXT.
+ * Utilities for creating [WXT Modules](https://wxt.dev/guide/essentials/wxt-modules.html).
  *
  * @module wxt/modules
  */

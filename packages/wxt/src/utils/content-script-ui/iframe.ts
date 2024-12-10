@@ -1,3 +1,4 @@
+/** @module wxt/utils/content-script-ui/iframe */
 import { browser } from 'wxt/browser';
 import { ContentScriptContext } from '../content-script-context';
 import type {

@@ -1,3 +1,4 @@
+/** @module wxt/utils/content-script-ui/integrated */
 import { ContentScriptContext } from '../content-script-context';
 import type {
   IntegratedContentScriptUi,
