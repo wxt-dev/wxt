@@ -332,14 +332,14 @@ async function getUnimportOptions(
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
-  // mlly sometimes picks up things as exports that aren't. That's what this array conatains.
+  // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
   const defaultOptions: WxtResolvedUnimportOptions = {
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
     // prettier-ignore
     presets: [
       { package: 'wxt/browser' },
       { package: 'wxt/storage' },
-      { package: 'wxt/testing' },
       { package: 'wxt/utils/app-config' },
       { package: 'wxt/utils/content-script-context' },
       { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },
@@ -361,7 +361,7 @@ async function getUnimportOptions(
       cwd: srcDir,
     },
     eslintrc,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
+    dirs: disabled ? [] : ['components', 'composables', 'hooks', 'utils'],
     disabled,
   };
 
