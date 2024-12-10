@@ -22,6 +22,7 @@ import {
   UserManifest,
   Wxt,
   SidepanelEntrypoint,
+  BaseEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
@@ -50,7 +51,7 @@ export function fakeDir(root = process.cwd()): string {
   return resolve(root, faker.string.alphanumeric());
 }
 
-export const fakeEntrypoint = () =>
+export const fakeEntrypoint = (options?: DeepPartial<BaseEntrypoint>) =>
   faker.helpers.arrayElement([
     fakePopupEntrypoint,
     fakeGenericEntrypoint,
@@ -58,7 +59,7 @@ export const fakeEntrypoint = () =>
     fakeBackgroundEntrypoint,
     fakeContentScriptEntrypoint,
     fakeUnlistedScriptEntrypoint,
-  ])();
+  ])(options);
 
 export const fakeContentScriptEntrypoint =
   fakeObjectCreator<ContentScriptEntrypoint>(() => ({

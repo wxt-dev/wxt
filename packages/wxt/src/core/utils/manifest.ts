@@ -47,9 +47,11 @@ export async function writeManifest(
  * Generates the manifest based on the config and entrypoints.
  */
 export async function generateManifest(
-  entrypoints: Entrypoint[],
+  _entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): Promise<{ manifest: Manifest.WebExtensionManifest; warnings: any[][] }> {
+  const entrypoints = _entrypoints.filter((entry) => !entry.skipped);
+
   const warnings: any[][] = [];
   const pkg = await getPackageJson();
 
