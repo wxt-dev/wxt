@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.21
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.20...wxt-v0.19.21)
+
+### 🩹 Fixes
+
+- Exclude skipped entrypoints from manifest ([#1265](https://github.com/wxt-dev/wxt/pull/1265))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.20
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.19...wxt-v0.19.20)
