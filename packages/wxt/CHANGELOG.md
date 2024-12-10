@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.22
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.21...wxt-v0.19.22)
+
+### 🩹 Fixes
+
+- Exclude entire `import.meta.env` object from content script output ([#1267](https://github.com/wxt-dev/wxt/pull/1267))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.21
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.20...wxt-v0.19.21)
