@@ -19,7 +19,14 @@ export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
   options: ShadowRootContentScriptUiOptions<TMounted>,
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
-  const css = [options.css ?? ''];
+  const css: string[] = [];
+
+  if (!options.inheritStyles) {
+    css.push(`/* WXT Shadow Root Reset */ body{all:initial;}`);
+  }
+  if (options.css) {
+    css.push(options.css);
+  }
   if (ctx.options?.cssInjectionMode === 'ui') {
     const entryCss = await loadCss();
     // Replace :root selectors with :host since we're in a shadow root
