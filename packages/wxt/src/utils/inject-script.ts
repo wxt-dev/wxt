@@ -1,3 +1,4 @@
+/** @module wxt/utils/inject-script */
 import { browser } from 'wxt/browser';
 
 export type ScriptPublicPath = Extract<

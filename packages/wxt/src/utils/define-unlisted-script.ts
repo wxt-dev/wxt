@@ -1,3 +1,4 @@
+/** @module wxt/utils/define-unlisted-script */
 import type { UnlistedScriptDefinition } from '../types';
 
 export function defineUnlistedScript(
