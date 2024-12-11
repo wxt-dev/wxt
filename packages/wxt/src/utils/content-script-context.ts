@@ -1,8 +1,12 @@
-import { ContentScriptDefinition } from '../../types';
+/** @module wxt/utils/content-script-context */
+import { ContentScriptDefinition } from '../types';
 import { browser } from 'wxt/browser';
-import { logger } from '../../sandbox/utils/logger';
-import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
-import { createLocationWatcher } from './location-watcher';
+import { logger } from '../utils/internal/logger';
+import {
+  WxtLocationChangeEvent,
+  getUniqueEventName,
+} from './internal/custom-events';
+import { createLocationWatcher } from './internal/location-watcher';
 
 /**
  * Implements [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
@@ -14,7 +18,7 @@ import { createLocationWatcher } from './location-watcher';
  * To create context for testing, you can use the class's constructor:
  *
  * ```ts
- * import { ContentScriptContext } from 'wxt/client';
+ * import { ContentScriptContext } from 'wxt/utils/content-scripts-context';
  *
  * test("storage listener should be removed when context is invalidated", () => {
  *   const ctx = new ContentScriptContext('test');

@@ -240,6 +240,7 @@ describe('TypeScript Project', () => {
       /// <reference types="./types/i18n.d.ts" />
       /// <reference types="./types/globals.d.ts" />
       /// <reference types="@types/chrome" />
+      /// <reference types="./types/imports-module.d.ts" />
       /// <reference types="./types/imports.d.ts" />
       "
     `);

@@ -3,68 +3,7 @@
   "type": "module",
   "version": "0.19.23",
   "description": "Next gen framework for developing web extensions",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wxt-dev/wxt.git"
-  },
-  "homepage": "https://wxt.dev",
-  "keywords": [
-    "vite",
-    "chrome",
-    "web",
-    "extension",
-    "browser",
-    "bundler",
-    "framework"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
   "license": "MIT",
-  "files": [
-    "bin",
-    "dist"
-  ],
-  "bin": {
-    "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
-  },
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
-    },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.mjs"
-    },
-    "./sandbox": {
-      "types": "./dist/sandbox/index.d.ts",
-      "default": "./dist/sandbox/index.mjs"
-    },
-    "./browser": {
-      "types": "./dist/browser.d.ts",
-      "default": "./dist/browser.mjs"
-    },
-    "./testing": {
-      "types": "./dist/testing/index.d.ts",
-      "default": "./dist/testing/index.mjs"
-    },
-    "./storage": {
-      "types": "./dist/storage.d.ts",
-      "default": "./dist/storage.mjs"
-    },
-    "./vite-builder-env": {
-      "types": "./dist/vite-builder-env.d.ts"
-    },
-    "./modules": {
-      "types": "./dist/modules.d.ts",
-      "default": "./dist/modules.mjs"
-    }
-  },
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
@@ -143,6 +82,111 @@
   "peerDependenciesMeta": {
     "@types/chrome": {
       "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "vite",
+    "chrome",
+    "web",
+    "extension",
+    "browser",
+    "bundler",
+    "framework"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "bin": {
+    "wxt": "./bin/wxt.mjs",
+    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./utils/app-config": {
+      "types": "./dist/utils/app-config.d.ts",
+      "default": "./dist/utils/app-config.mjs"
+    },
+    "./utils/inject-script": {
+      "types": "./dist/utils/inject-script.d.ts",
+      "default": "./dist/utils/inject-script.mjs"
+    },
+    "./utils/content-script-context": {
+      "types": "./dist/utils/content-script-context.d.ts",
+      "default": "./dist/utils/content-script-context.mjs"
+    },
+    "./utils/content-script-ui/types": {
+      "types": "./dist/utils/content-script-ui/types.d.ts",
+      "default": "./dist/utils/content-script-ui/types.mjs"
+    },
+    "./utils/content-script-ui/integrated": {
+      "types": "./dist/utils/content-script-ui/integrated.d.ts",
+      "default": "./dist/utils/content-script-ui/integrated.mjs"
+    },
+    "./utils/content-script-ui/shadow-root": {
+      "types": "./dist/utils/content-script-ui/shadow-root.d.ts",
+      "default": "./dist/utils/content-script-ui/shadow-root.mjs"
+    },
+    "./utils/content-script-ui/iframe": {
+      "types": "./dist/utils/content-script-ui/iframe.d.ts",
+      "default": "./dist/utils/content-script-ui/iframe.mjs"
+    },
+    "./utils/define-app-config": {
+      "types": "./dist/utils/define-app-config.d.ts",
+      "default": "./dist/utils/define-app-config.mjs"
+    },
+    "./utils/define-background": {
+      "types": "./dist/utils/define-background.d.ts",
+      "default": "./dist/utils/define-background.mjs"
+    },
+    "./utils/define-content-script": {
+      "types": "./dist/utils/define-content-script.d.ts",
+      "default": "./dist/utils/define-content-script.mjs"
+    },
+    "./utils/define-unlisted-script": {
+      "types": "./dist/utils/define-unlisted-script.d.ts",
+      "default": "./dist/utils/define-unlisted-script.mjs"
+    },
+    "./utils/define-wxt-plugin": {
+      "types": "./dist/utils/define-wxt-plugin.d.ts",
+      "default": "./dist/utils/define-wxt-plugin.mjs"
+    },
+    "./utils/match-patterns": {
+      "types": "./dist/utils/match-patterns.d.ts",
+      "default": "./dist/utils/match-patterns.mjs"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.mjs"
+    },
+    "./storage": {
+      "types": "./dist/storage.d.ts",
+      "default": "./dist/storage.mjs"
+    },
+    "./vite-builder-env": {
+      "types": "./dist/vite-builder-env.d.ts"
+    },
+    "./modules": {
+      "types": "./dist/modules.d.ts",
+      "default": "./dist/modules.mjs"
     }
   }
 }
