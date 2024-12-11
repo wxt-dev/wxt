@@ -14,7 +14,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
-  Eslintrc,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -332,33 +331,40 @@ async function getUnimportOptions(
   srcDir: string,
   logger: Logger,
   config: InlineConfig,
-): Promise<WxtResolvedUnimportOptions | false> {
-  if (config.imports === false) return false;
-
+): Promise<WxtResolvedUnimportOptions> {
+  const disabled = config.imports === false;
+  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  // mlly sometimes picks up things as exports that aren't. That's what this array contains.
+  const invalidExports = ['options'];
   const defaultOptions: WxtResolvedUnimportOptions = {
-    debugLog: logger.debug,
-    imports: [
-      { name: 'defineConfig', from: 'wxt' },
-      { name: 'fakeBrowser', from: 'wxt/testing' },
-    ],
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
+    // prettier-ignore
     presets: [
-      {
-        package: 'wxt/client',
-        // There seems to be a bug in unimport that thinks "options" is an
-        // export from wxt/client, but it doesn't actually exist... so it's
-        // ignored.
-        ignore: ['options'],
-      },
       { package: 'wxt/browser' },
-      { package: 'wxt/sandbox' },
       { package: 'wxt/storage' },
+      { package: 'wxt/utils/app-config' },
+      { package: 'wxt/utils/content-script-context' },
+      { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },
+      { package: 'wxt/utils/content-script-ui/integrated', ignore: invalidExports },
+      { package: 'wxt/utils/content-script-ui/shadow-root', ignore: invalidExports },
+      { package: 'wxt/utils/content-script-ui/types' },
+      { package: 'wxt/utils/define-app-config' },
+      { package: 'wxt/utils/define-background' },
+      { package: 'wxt/utils/define-content-script' },
+      { package: 'wxt/utils/define-unlisted-script' },
+      { package: 'wxt/utils/define-wxt-plugin' },
+      { package: 'wxt/utils/inject-script', ignore: invalidExports },
+      { package: 'wxt/utils/match-patterns' },
     ],
+    virtualImports: ['#imports'],
+    debugLog: logger.debug,
     warn: logger.warn,
-    dirs: ['components', 'composables', 'hooks', 'utils'],
     dirsScanOptions: {
       cwd: srcDir,
     },
-    eslintrc: await getUnimportEslintOptions(wxtDir, config.imports?.eslintrc),
+    eslintrc,
+    dirs: disabled ? [] : ['components', 'composables', 'hooks', 'utils'],
+    disabled,
   };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
@@ -369,34 +375,34 @@ async function getUnimportOptions(
 
 async function getUnimportEslintOptions(
   wxtDir: string,
-  options: Eslintrc | undefined,
+  options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
-  const rawEslintEnabled = options?.enabled ?? 'auto';
-  let eslintEnabled: ResolvedEslintrc['enabled'];
-  switch (rawEslintEnabled) {
+  const inlineEnabled =
+    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+
+  let enabled: ResolvedEslintrc['enabled'];
+  switch (inlineEnabled) {
     case 'auto':
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
-      if (isNaN(major)) eslintEnabled = false;
-      if (major <= 8) eslintEnabled = 8;
-      else if (major >= 9) eslintEnabled = 9;
+      if (isNaN(major)) enabled = false;
+      if (major <= 8) enabled = 8;
+      else if (major >= 9) enabled = 9;
       // NaN
-      else eslintEnabled = false;
+      else enabled = false;
       break;
     case true:
-      eslintEnabled = 8;
+      enabled = 8;
       break;
     default:
-      eslintEnabled = rawEslintEnabled;
+      enabled = inlineEnabled;
   }
 
   return {
-    enabled: eslintEnabled,
+    enabled,
     filePath: path.resolve(
       wxtDir,
-      eslintEnabled === 9
-        ? 'eslint-auto-imports.mjs'
-        : 'eslintrc-auto-import.json',
+      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };

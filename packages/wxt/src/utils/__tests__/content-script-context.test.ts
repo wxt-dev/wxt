@@ -1,7 +1,7 @@
 /** @vitest-environment happy-dom */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ContentScriptContext } from '..';
+import { ContentScriptContext } from '../content-script-context';
 import { fakeBrowser } from '@webext-core/fake-browser';
 
 /**
