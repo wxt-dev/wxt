@@ -1,5 +1,5 @@
 import { defineBuildConfig } from 'unbuild';
-import { version } from './package.json';
+import { version, exports } from './package.json';
 import { readFile, writeFile } from 'fs/promises';
 import {
   virtualEntrypointModuleNames,
@@ -32,10 +32,7 @@ export default defineBuildConfig([
       ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
       'virtual:wxt-plugins',
       'virtual:app-config',
-      'wxt/browser',
-      'wxt/sandbox',
-      'wxt/client',
-      'wxt/testing',
+      ...Object.keys(exports).map((path) => 'wxt' + path.slice(1)), // ./storage => wxt/storage
     ],
   })),
 ]);
