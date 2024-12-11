@@ -127,6 +127,21 @@ export type ShadowRootContentScriptUiOptions<TMounted> =
      */
     isolateEvents?: boolean | string[];
     /**
+     * By default, WXT adds `all: initial` to the shadow root before the rest of
+     * your CSS. This resets any inheritable CSS styles that
+     * [normally pierce the Shadow DOM](https://open-wc.org/guides/knowledge/styling/styles-piercing-shadow-dom/).
+     *
+     * WXT resets everything but:
+     * - **`rem` Units**: they continue to scale based off the webpage's HTML `font-size`.
+     * - **CSS Variables/Custom Properties**: CSS variables defined outside the shadow root can be accessed inside it.
+     * - **`@font-face` Definitions**: Fonts defined outside the shadow root can be used inside it.
+     *
+     * To disable this behavior and inherit styles from the webpage, set `inheritStyles: true`.
+     *
+     * @default false
+     */
+    inheritStyles?: boolean;
+    /**
      * Callback executed when mounting the UI. This function should create and append the UI to the
      * `uiContainer` element. It is called every time `ui.mount()` is called.
      *
