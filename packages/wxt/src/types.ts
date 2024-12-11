@@ -1,7 +1,7 @@
 import type * as vite from 'vite';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
-import type { ContentScriptContext } from './client/content-scripts/content-script-context';
+import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
@@ -1271,7 +1271,7 @@ export interface ResolvedConfig {
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
   logger: Logger;
-  imports: false | WxtResolvedUnimportOptions;
+  imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
   runnerConfig: C12ResolvedConfig<WebExtConfig>;
@@ -1413,6 +1413,12 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
 };
 
 export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
+  /**
+   * Set to `true` when the user disabled auto-imports. We still use unimport for the #imports module, but other features should be disabled.
+   *
+   * You don't need to check this value before modifying the auto-import options. Even if `disabled` is `true`, there's no harm in adding imports to the config - they'll just be ignored.
+   */
+  disabled: boolean;
   eslintrc: ResolvedEslintrc;
 };
 

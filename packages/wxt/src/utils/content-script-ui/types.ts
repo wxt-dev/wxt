@@ -1,3 +1,7 @@
+/**
+ * Shared types for the different `wxt/utils/content-script-ui/*` modules.
+ * @module wxt/utils/content-script-ui/types
+ */
 export interface IntegratedContentScriptUi<TMounted>
   extends ContentScriptUi<TMounted> {
   /**
