@@ -1,4 +1,12 @@
 /**
+ * Contains the `browser` export which you should use to access the extension APIs in your project:
+ * ```ts
+ * import { browser } from 'wxt/browser';
+ *
+ * browser.runtime.onInstalled.addListener(() => {
+ *   // ...
+ * })
+ * ```
  * @module wxt/browser
  */
 import { browser as _browser, type Browser } from '@wxt-dev/browser';

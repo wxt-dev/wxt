@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
-import { logger } from '../../sandbox/utils/logger';
-import { MatchPattern } from 'wxt/sandbox';
-import type { ReloadContentScriptPayload } from '../../sandbox/dev-server-websocket';
+import { logger } from '../../utils/internal/logger';
+import { MatchPattern } from 'wxt/utils/match-patterns';
+import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server-websocket';
 
 export function reloadContentScript(payload: ReloadContentScriptPayload) {
   const manifest = browser.runtime.getManifest();
