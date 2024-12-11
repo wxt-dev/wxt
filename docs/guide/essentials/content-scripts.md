@@ -256,13 +256,13 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/reference/wxt/utils/content-script-ui/functions/createIntegratedUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/integrated/functions/createIntegratedUi) for the complete list of options.
 
 ### Shadow Root
 
 Often in web extensions, you don't want your content script's CSS affecting the page, or vise-versa. The [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) API is ideal for this.
 
-WXT's [`createShadowRootUi`](/api/reference/wxt/utils/content-script-ui/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs whose styles are isolated from the page. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
+WXT's [`createShadowRootUi`](/api/reference/wxt/utils/content-script-ui/shadow-root/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs whose styles are isolated from the page. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
 
 To use `createShadowRootUi`, follow these steps:
 
@@ -445,7 +445,7 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/reference/wxt/utils/content-script-ui/functions/createShadowRootUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/shadow-root/functions/createShadowRootUi) for the complete list of options.
 
 Full examples:
 
@@ -456,7 +456,7 @@ Full examples:
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
 
-WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/content-script-ui/functions/createIframeUi), which simplifies setting up the IFrame.
+WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi), which simplifies setting up the IFrame.
 
 1. Create an HTML page that will be loaded into your IFrame:
    ```html
@@ -510,7 +510,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
    });
    ```
 
-See the [API Reference](/api/reference/wxt/utils/content-script-ui/functions/createIframeUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi) for the complete list of options.
 
 ## Isolated World vs Main World
 
