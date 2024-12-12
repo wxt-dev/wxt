@@ -32,7 +32,7 @@ Here are real projects with unit testing setup. Look at the code and tests to se
 
 ### Example Tests
 
-This example demonstrates that you don't have to mock `browser.storage` (used by `wxt/storage`) in tests - [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/fake-browser/installation) implements storage in-memory so it behaves like it would in a real extension!
+This example demonstrates that you don't have to mock `browser.storage` (used by `wxt/utils/storage`) in tests - [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/fake-browser/installation) implements storage in-memory so it behaves like it would in a real extension!
 
 ```ts
 import { describe, it, expect } from 'vitest';
