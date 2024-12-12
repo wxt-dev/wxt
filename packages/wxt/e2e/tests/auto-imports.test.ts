@@ -20,7 +20,7 @@ describe('Auto Imports', () => {
             const ContentScriptContext: typeof import('wxt/utils/content-script-context')['ContentScriptContext']
             const InvalidMatchPattern: typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']
             const MatchPattern: typeof import('wxt/utils/match-patterns')['MatchPattern']
-            const MigrationError: typeof import('wxt/storage')['MigrationError']
+            const MigrationError: typeof import('wxt/utils/storage')['MigrationError']
             const browser: typeof import('wxt/browser')['browser']
             const createIframeUi: typeof import('wxt/utils/content-script-ui/iframe')['createIframeUi']
             const createIntegratedUi: typeof import('wxt/utils/content-script-ui/integrated')['createIntegratedUi']
@@ -32,7 +32,7 @@ describe('Auto Imports', () => {
             const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin')['defineWxtPlugin']
             const fakeBrowser: typeof import('wxt/testing')['fakeBrowser']
             const injectScript: typeof import('wxt/utils/inject-script')['injectScript']
-            const storage: typeof import('wxt/storage')['storage']
+            const storage: typeof import('wxt/utils/storage')['storage']
             const useAppConfig: typeof import('wxt/utils/app-config')['useAppConfig']
           }
           "
@@ -81,7 +81,7 @@ describe('Auto Imports', () => {
           // Types for the #import virtual module
           declare module '#imports' {
             export { browser } from 'wxt/browser';
-            export { MigrationError, storage } from 'wxt/storage';
+            export { MigrationError, storage } from 'wxt/utils/storage';
             export { useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext } from 'wxt/utils/content-script-context';
             export { createIframeUi } from 'wxt/utils/content-script-ui/iframe';
@@ -165,7 +165,7 @@ describe('Auto Imports', () => {
           // Types for the #import virtual module
           declare module '#imports' {
             export { browser } from 'wxt/browser';
-            export { MigrationError, storage } from 'wxt/storage';
+            export { MigrationError, storage } from 'wxt/utils/storage';
             export { useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext } from 'wxt/utils/content-script-context';
             export { createIframeUi } from 'wxt/utils/content-script-ui/iframe';
