@@ -12,7 +12,7 @@ WXT v0.20 introduced a new way of manually importing its APIs: **the `#imports` 
 
 <!-- prettier-ignore -->
 ```ts
-import { browser } from 'wxt/storage'; // [!code --]
+import { browser } from 'wxt/browser'; // [!code --]
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'; // [!code --]
 import { defineContentScript } from 'wxt/utils/define-content-script'; // [!code --]
 import { injectScript } from 'wxt/utils/inject-script'; // [!code --]
