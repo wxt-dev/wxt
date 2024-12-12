@@ -40,7 +40,7 @@ export default defineBuildConfig([
       ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
       'virtual:wxt-plugins',
       'virtual:app-config',
-      ...Object.keys(exports).map((path) => 'wxt' + path.slice(1)), // ./storage => wxt/storage
+      ...Object.keys(exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
     ],
   })),
 ]);

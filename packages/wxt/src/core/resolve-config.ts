@@ -339,7 +339,7 @@ async function getUnimportOptions(
     // prettier-ignore
     presets: [
       { package: 'wxt/browser' },
-      { package: 'wxt/storage' },
+      { package: 'wxt/utils/storage' },
       { package: 'wxt/utils/app-config' },
       { package: 'wxt/utils/content-script-context' },
       { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },

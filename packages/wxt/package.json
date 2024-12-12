@@ -169,6 +169,10 @@
       "types": "./dist/utils/match-patterns.d.ts",
       "default": "./dist/utils/match-patterns.mjs"
     },
+    "./utils/storage": {
+      "types": "./dist/utils/storage.d.ts",
+      "default": "./dist/utils/storage.mjs"
+    },
     "./browser": {
       "types": "./dist/browser.d.ts",
       "default": "./dist/browser.mjs"
@@ -176,10 +180,6 @@
     "./testing": {
       "types": "./dist/testing/index.d.ts",
       "default": "./dist/testing/index.mjs"
-    },
-    "./storage": {
-      "types": "./dist/storage.d.ts",
-      "default": "./dist/storage.mjs"
     },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
