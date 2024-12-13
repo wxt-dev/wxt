@@ -20,7 +20,7 @@ Set Framerate 50
 # Terminal theme with WXT brand colors (which was taken from the website)
 # Based on the standard charmbracelet/vhs theme:
 # https://github.com/charmbracelet/vhs/blob/88e634f4a10bbe305b6aea9a12b4d8dc3dd7f31c/style.go#L7-L28
-Set Theme {"background": "#1a1b1a", "foreground": "#dddddd", "black": "#282a2e", "brightBlack": "#4d4d4d", "red": "#D74E6F", "brightRed": "#FE5F86", "green": "#67d45e", "brightGreen": "#67d45e", "yellow": "#D3E561", "brightYellow": "#EBFF71", "blue": "#8056FF", "brightBlue": "#9B79FF", "magenta": "#ED61D7", "brightMagenta": "#FF7AEA", "cyan": "#04D7D7", "brightCyan": "#00FEFE", "white": "#bfbfbf", "brightWhite": "#e6e6e6", "indigo": "#5B56E0"}
+Set Theme {"background": "#161618", "foreground": "#dddddd", "black": "#282a2e", "brightBlack": "#4d4d4d", "red": "#D74E6F", "brightRed": "#FE5F86", "green": "#67d45e", "brightGreen": "#67d45e", "yellow": "#D3E561", "brightYellow": "#EBFF71", "blue": "#8056FF", "brightBlue": "#9B79FF", "magenta": "#ED61D7", "brightMagenta": "#FF7AEA", "cyan": "#04D7D7", "brightCyan": "#00FEFE", "white": "#bfbfbf", "brightWhite": "#e6e6e6", "indigo": "#5B56E0"}
 Set FontSize 32
 
 # Terminal settings
