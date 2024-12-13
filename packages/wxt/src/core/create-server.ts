@@ -171,6 +171,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
     await runner.openBrowser();
   };
 
+  builderServer.on?.('close', () => keyboardShortcuts.stop());
+
   return server;
 }
 

@@ -1091,6 +1091,7 @@ export interface WxtBuilderServer {
    * Chokidar file watcher instance.
    */
   watcher: FSWatcher;
+  on?(event: string, callback: () => void): void;
 }
 
 export interface ServerInfo {
