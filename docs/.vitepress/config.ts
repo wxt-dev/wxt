@@ -62,6 +62,16 @@ export default defineConfig({
       alt: 'WXT logo',
     },
 
+    footer: {
+      message: [
+        '<a class="light-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-bg.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
+        '<a class="dark-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-accent.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
+        'Released under the <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE">MIT License</a>.',
+      ].join('<br/>'),
+      copyright:
+        'Copyright © 2023-present <a href="https://github.com/aklinker1">Aaron Klinker</a>',
+    },
+
     editLink: {
       pattern: 'https://github.com/wxt-dev/wxt/edit/main/docs/:path',
     },
