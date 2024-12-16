@@ -76,6 +76,12 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 📏 Bundle analysis
 - ⬇️ Download and bundle remote URL imports
 
+## Sponsors
+
+WXT is a [MIT-licensed](https://github.com/wxt-dev/wxt/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring WXT's development](https://github.com/sponsors/wxt-dev).
+
+<a href="https://github.com/sponsors/wxt-dev"><img alt="WXT Sponsors" src="https://raw.githubusercontent.com/wxt-dev/static/refs/heads/main/sponsorkit/sponsors.svg"></a>
+
 ## Contributors
 
 <!-- automd:contributors author="aklinker1" license="MIT" github="wxt-dev/wxt" -->
