@@ -73,6 +73,12 @@ features:
     linkText: Read docs
 ---
 
+## Sponsors
+
+WXT is a [MIT-licensed](https://github.com/wxt-dev/wxt/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring WXT's development](https://github.com/sponsors/wxt-dev).
+
+<a href="https://github.com/sponsors/wxt-dev"><img alt="WXT Sponsors" src="https://raw.githubusercontent.com/wxt-dev/static/refs/heads/main/sponsorkit/sponsors-wide.svg"></a>
+
 ## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
 
 WXT simplifies the web extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
