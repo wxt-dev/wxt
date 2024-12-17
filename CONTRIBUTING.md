@@ -145,3 +145,24 @@ pnpm dlx taze -r
 ```
 
 Configuration is in [`taze.config.ts`](./taze.config.ts).
+
+## Install Unreleased Versions
+
+This repo uses https://pkg.pr.new to publish versions of all it's packages for almost every commit. You can install them via:
+
+```sh
+npm i https://pkg.pr.new/[package-name]@[ref]
+```
+
+Or use one of the shorthands:
+
+```sh
+# Install the latest build of `wxt` from a PR:
+npm i https://pkg.pr.new/wxt@1283
+
+# Install the latest build of `@wxt-dev/module-react` on the `main` branch
+npm i https://pkg.pr.new/@wxt-dev/module-react@main
+
+# Install `@wxt-dev/storage` from a specific commit:
+npm i https://pkg.pr.new/@wxt-dev/module-react@426f907
+```
