@@ -58,6 +58,7 @@ const chromeExtensionIds = [
   'imgheieooppmahcgniieddodaliodeeg', // QA Compass - Record standardized bug reports easily
   'npgghjedpchajflknnbngajkjkdhncdo', // aesthetic Notion, styled
   'hmdcmlfkchdmnmnmheododdhjedfccka', // Eye Dropper
+  'eihpmapodnppeemkhkbhikmggfojdkjd', // Cursorful - Screen Recorder with Auto Zoom
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
