@@ -53,3 +53,16 @@ body {
   vertical-align: middle;
   background-color: var(--vp-c-default-2);
 }
+
+.light-netlify {
+  display: inline;
+}
+.dark .light-netlify {
+  display: none;
+}
+.dark-netlify {
+  display: none;
+}
+.dark .dark-netlify {
+  display: inline;
+}
