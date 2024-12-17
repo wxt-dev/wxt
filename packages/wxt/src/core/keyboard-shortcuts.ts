@@ -15,7 +15,6 @@ export interface KeyboardShortcutWatcher {
 export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {
-  let isWatching = false;
   let rl: readline.Interface | undefined;
 
   const handleInput = (line: string) => {
@@ -27,7 +26,7 @@ export function createKeyboardShortcuts(
 
   return {
     start() {
-      if (isWatching) return;
+      if (rl) return;
 
       rl = readline.createInterface({
         input: process.stdin,
@@ -35,18 +34,11 @@ export function createKeyboardShortcuts(
       });
 
       rl.on('line', handleInput);
-      isWatching = true;
     },
 
     stop() {
-      if (!isWatching) return;
-
-      if (rl) {
-        rl.close();
-        rl = undefined;
-      }
-
-      isWatching = false;
+      rl?.close();
+      rl = undefined;
     },
 
     printHelp(flags) {
