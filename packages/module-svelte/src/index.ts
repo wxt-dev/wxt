@@ -22,7 +22,7 @@ export default defineWxtModule<SvelteModuleOptions>({
         }),
       ],
       resolve: {
-        conditions: mode === 'development' ? ['browser'] : [],
+        conditions: ['browser', mode],
       },
     }));
 
