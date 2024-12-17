@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.1.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.2...module-react-v1.1.3)
+
+### 🩹 Fixes
+
+- Use react 19 in `@wxt-dev/module-react` and `templates/react` ([#1285](https://github.com/wxt-dev/wxt/pull/1285))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v1.1.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.1...module-react-v1.1.2)
