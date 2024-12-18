@@ -59,6 +59,7 @@ const chromeExtensionIds = [
   'npgghjedpchajflknnbngajkjkdhncdo', // aesthetic Notion, styled
   'hmdcmlfkchdmnmnmheododdhjedfccka', // Eye Dropper
   'eihpmapodnppeemkhkbhikmggfojdkjd', // Cursorful - Screen Recorder with Auto Zoom
+  'ilbikcehnpkmldojkcmlldkoelofnbde', // Strong Password Generator
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
