@@ -59,6 +59,7 @@ const chromeExtensionIds = [
   'npgghjedpchajflknnbngajkjkdhncdo', // aesthetic Notion, styled
   'hmdcmlfkchdmnmnmheododdhjedfccka', // Eye Dropper
   'eihpmapodnppeemkhkbhikmggfojdkjd', // Cursorful - Screen Recorder with Auto Zoom
+  'hjjkgbibknbahijglkffklflidncplkn', // Show IP – Live View of Website IPs for Developers
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
