@@ -3,6 +3,7 @@ import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   Entrypoint,
+  EntrypointInfo,
   GenericEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
@@ -66,6 +67,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     }
     return results;
   }, []);
+
+  await wxt.hooks.callHook('entrypoints:paths', wxt, entrypointInfos);
 
   // Validation
   preventNoEntrypoints(entrypointInfos);
@@ -155,12 +158,6 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   }
 
   return entrypoints;
-}
-
-interface EntrypointInfo {
-  name: string;
-  inputPath: string;
-  type: Entrypoint['type'];
 }
 
 /** Returns a map of input paths to the file's options. */

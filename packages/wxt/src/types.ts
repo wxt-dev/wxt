@@ -789,6 +789,12 @@ export type Entrypoint =
   | OptionsEntrypoint
   | SidepanelEntrypoint;
 
+export interface EntrypointInfo {
+  name: string;
+  inputPath: string;
+  type: Entrypoint['type'];
+}
+
 export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
@@ -1181,6 +1187,15 @@ export interface WxtHooks {
   'build:manifestGenerated': (
     wxt: Wxt,
     manifest: Manifest.WebExtensionManifest,
+  ) => HookResult;
+  /**
+   * Called once the names and paths of all entrypoints have been resolved.
+   * @param wxt
+   * @param entrypointInfos
+   */
+  'entrypoints:paths': (
+    wxt: Wxt,
+    entrypointInfos: EntrypointInfo[],
   ) => HookResult;
   /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
