@@ -137,6 +137,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     skipped: isEntrypointSkipped(entry),
   }));
 
+  await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
+
   wxt.logger.debug('All entrypoints:', entrypoints);
   const skippedEntrypointNames = entrypoints
     .filter((item) => item.skipped)
@@ -151,7 +153,6 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       ].join('\n'),
     );
   }
-  await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
 
   return entrypoints;
 }
