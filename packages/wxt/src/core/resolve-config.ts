@@ -289,7 +289,7 @@ function resolveZipConfig(
   return {
     name: undefined,
     sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    artifactTemplate: mergedConfig.artifactTemplate ?? '{{name}}-{{version}}-{{browser}}.zip',
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
