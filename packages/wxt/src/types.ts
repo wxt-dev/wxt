@@ -791,6 +791,7 @@ export type Entrypoint =
 
 export interface EntrypointInfo {
   name: string;
+  /** Absolute path to the entrypoint file. */
   inputPath: string;
   type: Entrypoint['type'];
 }
@@ -1190,8 +1191,8 @@ export interface WxtHooks {
   ) => HookResult;
   /**
    * Called once the names and paths of all entrypoints have been resolved.
-   * @param wxt
-   * @param infos
+   * @param wxt The configured WXT object
+   * @param infos List of entrypoints found in the project's `entrypoints` directory
    */
   'entrypoints:found': (wxt: Wxt, infos: EntrypointInfo[]) => HookResult;
   /**
