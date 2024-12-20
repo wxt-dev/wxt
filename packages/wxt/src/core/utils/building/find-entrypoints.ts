@@ -68,7 +68,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     return results;
   }, []);
 
-  await wxt.hooks.callHook('entrypoints:paths', wxt, entrypointInfos);
+  await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
 
   // Validation
   preventNoEntrypoints(entrypointInfos);
