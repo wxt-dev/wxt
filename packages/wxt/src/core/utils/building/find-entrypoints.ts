@@ -3,6 +3,7 @@ import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   Entrypoint,
+  EntrypointInfo,
   GenericEntrypoint,
   OptionsEntrypoint,
   PopupEntrypoint,
@@ -66,6 +67,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     }
     return results;
   }, []);
+
+  await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
 
   // Validation
   preventNoEntrypoints(entrypointInfos);
@@ -137,6 +140,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     skipped: isEntrypointSkipped(entry),
   }));
 
+  await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
+
   wxt.logger.debug('All entrypoints:', entrypoints);
   const skippedEntrypointNames = entrypoints
     .filter((item) => item.skipped)
@@ -151,15 +156,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       ].join('\n'),
     );
   }
-  await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
 
   return entrypoints;
-}
-
-interface EntrypointInfo {
-  name: string;
-  inputPath: string;
-  type: Entrypoint['type'];
 }
 
 /** Returns a map of input paths to the file's options. */

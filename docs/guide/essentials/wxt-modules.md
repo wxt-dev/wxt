@@ -167,6 +167,31 @@ This file could then be loaded at runtime:
 const res = await fetch(browser.runtime.getURL('/some-text.txt'));
 ```
 
+#### Add custom entrypoints
+
+Once the existing files under the `entrypoints/` directory have been discovered, the `entrypoints:found` hook can be used to add custom entrypoints.
+
+:::info
+The `entrypoints:found` hook is triggered before validation is carried out on the list of entrypoints. Thus, any custom entrypoints will still be checked for duplicate names and logged during debugging.
+:::
+
+```ts
+import { defineWxtModule } from 'wxt/modules';
+
+export default defineWxtModule({
+  setup(wxt) {
+    wxt.hook('entrypoints:found', (_, entrypointInfos) => {
+      // Add your new entrypoint
+      entrypointInfos.push({
+        name: 'my-custom-script',
+        inputPath: 'path/to/custom-script.js',
+        type: 'content-script',
+      });
+    });
+  },
+});
+```
+
 #### Generate runtime module
 
 Create a file in `.wxt`, add an alias to import it, and add auto-imports for exported variables.
