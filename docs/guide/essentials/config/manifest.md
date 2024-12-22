@@ -156,6 +156,11 @@ Alternatively, you can use [`@wxt-dev/auto-icons`](https://www.npmjs.com/package
 
 > [Chrome docs](https://developer.chrome.com/docs/extensions/reference/permissions/)
 
+Most of the time, you need to manually add permissions to your manifest. Only in a few specific situations are permissions added automatically:
+
+- During development: the `tabs` and `scripting` permissions will be added to enable hot reloading.
+- When a `sidepanel` entrypoint is present: The `sidepanel` permission is added.
+
 ```ts
 export default defineConfig({
   manifest: {
