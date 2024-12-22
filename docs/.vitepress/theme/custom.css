@@ -3,14 +3,14 @@
   --wxt-c-green-1: #0b8a00;
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
-  --wxt-c-green-soft: rgba(#0b8a00 / 0.14);
+  --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
 }
 
 .dark {
   --wxt-c-green-1: #67d45e;
   --wxt-c-green-2: #329929;
   --wxt-c-green-3: #21651b;
-  --wxt-c-green-soft: rgba(#67d45e / 0.14);
+  --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
 }
 
 /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
