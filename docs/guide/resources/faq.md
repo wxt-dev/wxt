@@ -28,7 +28,7 @@ See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
 
 ## My component library doesn't work in content scripts!
 
-Component libraries place their CSS in the document's `<head>` by default. When using `createShadowRoot`, your UI is isolated from the document's styles because it's inside a ShadowRoot.
+Component libraries place their CSS in the document's `<head>` by default. When using `createShadowRootUi`, your UI is isolated from the document's styles because it's inside a ShadowRoot.
 
 To fix this, you need to tell your component library to insert it's CSS inside the shadow root. Here's the docs for a couple of popular libraries:
 
@@ -38,7 +38,7 @@ To fix this, you need to tell your component library to insert it's CSS inside t
 
 > If your library isn't listed above, try searching it's docs/issues for "shadow root", "shadow dom", or "css container".
 
-`createShadowRoot` provides it's own `<head>` element inside the shadow root, so that were you should tell the library to add the CSS. Here's an example with Ant Design:
+`createShadowRootUi` provides it's own `<head>` element inside the shadow root, so that were you should tell the library to add the CSS. Here's an example with Ant Design:
 
 ```tsx
 import { StyleProvider } from '@ant-design/cssinjs'; // [!code ++]
