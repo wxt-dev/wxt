@@ -141,7 +141,7 @@ import { // [!code ++]
 } from '#imports'; // [!code ++]
 ```
 
-> If you want to see where all the efer to the [API reference](/api/reference/wxt) or your project's `.wxt/types/imports-module.d.ts` file if you're curious.
+> If you want to see where all the imports are moved to, refer to the [API reference](/api/reference/wxt/) or your project's `.wxt/types/imports-module.d.ts` file.
 
 When bundled, any imports from `#imports` will be broken up and replace with individual imports to the new submodules.
 
