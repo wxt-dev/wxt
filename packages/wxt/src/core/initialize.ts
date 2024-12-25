@@ -11,7 +11,7 @@ export async function initialize(options: {
   template: string;
   packageManager: string;
 }) {
-  consola.info('Initalizing new project');
+  consola.info('Initializing new project');
 
   const templates = await listTemplates();
   const defaultTemplate = templates.find(
