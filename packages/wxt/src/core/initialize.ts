@@ -44,10 +44,7 @@ export async function initialize(options: {
           { title: pc.red('npm'), value: 'npm' },
           { title: pc.yellow('pnpm'), value: 'pnpm' },
           { title: pc.cyan('yarn'), value: 'yarn' },
-          {
-            title: `${pc.magenta('bun')}${pc.gray(' (experimental)')}`,
-            value: 'bun',
-          },
+          { title: pc.magenta('bun'), value: 'bun' },
         ],
       },
     ],
