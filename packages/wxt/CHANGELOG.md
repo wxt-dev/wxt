@@ -24,7 +24,7 @@
 ### ❤️ Contributors
 
 - Aaron ([@aklinker1](http://github.com/aklinker1))
-- Abhigyan Trips <abhigyantrips@gmail.com>
+- Abhigyan Trips ([@abhigyantrips](http://github.com/abhigyantrips))
 
 ## v0.19.22
 
