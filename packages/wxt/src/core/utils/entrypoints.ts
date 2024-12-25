@@ -6,6 +6,7 @@ import {
 } from '../../types';
 import path, { relative, resolve, extname } from 'node:path';
 import { normalizePath } from './paths';
+import { wxt } from '../wxt';
 
 export function getEntrypointName(
   entrypointsDir: string,
@@ -23,7 +24,22 @@ export function getEntrypointOutputFile(
   entrypoint: Entrypoint,
   ext: string,
 ): string {
-  return resolve(entrypoint.outputDir, `${entrypoint.name}${ext}`);
+  const pattern = wxt.config.entrypointNames[entrypoint.name];
+  if (!pattern)
+    return resolve(entrypoint.outputDir, `${entrypoint.name}${ext}`);
+
+  return resolve(
+    entrypoint.outputDir,
+    pattern
+      .replace(/\[name]/g, entrypoint.name)
+      .replace(/\[hash:(\d+)]/g, (_, length) =>
+        Array(Number(length))
+          .fill(0)
+          .map(() => Math.floor(Math.random() * 16).toString(16))
+          .join(''),
+      )
+      .replace(/\[ext]/g, ext),
+  );
 }
 
 /**

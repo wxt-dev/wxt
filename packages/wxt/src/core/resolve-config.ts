@@ -220,6 +220,7 @@ export async function resolveConfig(
     userModules,
     plugins: [],
     ...moduleOptions,
+    entrypointNames: mergedConfig.entrypointNames ?? {},
   };
 }
 

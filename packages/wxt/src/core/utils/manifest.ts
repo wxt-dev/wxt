@@ -66,13 +66,15 @@ export async function generateManifest(
     );
   }
   const version = wxt.config.manifest.version ?? simplifyVersion(versionName);
+  const { author, name, description, shortName } = pkg;
 
   const baseManifest: Manifest.WebExtensionManifest = {
     manifest_version: wxt.config.manifestVersion,
-    name: pkg?.name,
-    description: pkg?.description,
     version,
-    short_name: pkg?.shortName,
+    author,
+    name,
+    description,
+    short_name: shortName,
     icons: discoverIcons(buildOutput),
   };
   const userManifest = wxt.config.manifest;

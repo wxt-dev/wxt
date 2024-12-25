@@ -394,6 +394,22 @@ export interface InlineConfig {
    * "wxt-module-analytics").
    */
   modules?: string[];
+  /**
+   * User defined names for entrypoints output files.
+   *
+   * The keys are the entrypoint names, and the values are the output file names.
+   *
+   * The following tokens are supported:
+   * - `[name]` - The entrypoint name
+   * - `[hash:length]` - A random hash of the specified length
+   * - `[ext]` - The original extension of the entrypoint
+   *
+   * @example
+   * {
+   *   "background": "[name]-[hash:8][ext] // -> background-f7e9d120.js,
+   * }
+   */
+  entrypointNames: Record<string, string>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -1418,6 +1434,7 @@ export interface ResolvedConfig {
    * ["@wxt-dev/module-vue/plugin", "wxt-module-google-analytics/plugin"]
    */
   plugins: string[];
+  entrypointNames: Record<string, string>;
 }
 
 export interface FsCache {
