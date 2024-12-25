@@ -409,7 +409,7 @@ export interface InlineConfig {
    *   "background": "[name]-[hash:8][ext] // -> background-f7e9d120.js,
    * }
    */
-  entrypointNames: Record<string, string>;
+  entrypointNames?: Record<string, string>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
