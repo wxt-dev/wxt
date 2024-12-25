@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.19.23
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.22...wxt-v0.19.23)
+
+### 🚀 Enhancements
+
+- **hooks:** Move `entrypoints:resolved` before debug logs and add `entrypoints:found` ([#1292](https://github.com/wxt-dev/wxt/pull/1292))
+
+### 🩹 Fixes
+
+- Allow runtime registered content scripts to not have `matches` ([#1306](https://github.com/wxt-dev/wxt/pull/1306))
+- Properly close readline instance on close ([#1278](https://github.com/wxt-dev/wxt/pull/1278))
+
+### 📖 Documentation
+
+- Sync READMEs ([27298b7](https://github.com/wxt-dev/wxt/commit/27298b7))
+
+### 🏡 Chore
+
+- Simplify keyboard shortcuts ([#1284](https://github.com/wxt-dev/wxt/pull/1284))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Abhigyan Trips <abhigyantrips@gmail.com>
+
 ## v0.19.22
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.21...wxt-v0.19.22)
