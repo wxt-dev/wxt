@@ -372,6 +372,9 @@ export async function createViteBuilder(
           },
         },
         watcher: viteServer.watcher,
+        on(event, cb) {
+          viteServer.httpServer?.on(event, cb);
+        },
       };
 
       return server;
