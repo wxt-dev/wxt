@@ -72,9 +72,10 @@ describe('Validation Utils', () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should return an error when content scripts don't have a matches", () => {
+    it('should return an error when "registration: manifest" content scripts don\'t have matches', () => {
       const entrypoint = fakeContentScriptEntrypoint({
         options: {
+          registration: 'manifest',
           // @ts-expect-error
           matches: null,
         },
@@ -83,12 +84,32 @@ describe('Validation Utils', () => {
         errors: [
           {
             type: 'error',
-            message: '`matches` is required',
+            message:
+              '`matches` is required for manifest registered content scripts',
             value: null,
             entrypoint,
           },
         ],
         errorCount: 1,
+        warningCount: 0,
+      };
+
+      const actual = validateEntrypoints([entrypoint]);
+
+      expect(actual).toEqual(expected);
+    });
+
+    it('should allow "registration: runtime" content scripts to not have matches', () => {
+      const entrypoint = fakeContentScriptEntrypoint({
+        options: {
+          registration: 'runtime',
+          // @ts-expect-error
+          matches: null,
+        },
+      });
+      const expected = {
+        errors: [],
+        errorCount: 0,
         warningCount: 0,
       };
 
