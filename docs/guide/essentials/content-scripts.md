@@ -621,7 +621,7 @@ export default defineContentScript({
 When the `ui.remove` is called, `autoMount` also stops.
 :::
 
-See the [API Reference](/api/reference/wxt/client/interfaces/ContentScriptUi.html#automount) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/types/interfaces/ContentScriptUi#automount) for the complete list of options.
 
 ## Dealing with SPAs
 
