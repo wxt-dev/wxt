@@ -31,12 +31,11 @@ WXT no longer uses the `webextension-polyfill` internally and `wxt/browser` uses
 To upgrade, you have two options:
 
 1. **Stop using the polyfill**
-   - No changes required, this is the default behavior of v0.20. Your extension will likely continue to work, but do some manual testing to confirm.
+   - Replace any manual imports from `wxt/browser/chrome` with `wxt/browser`
 2. **Continue using the polyfill**
-   - Install the polyfill, types (if you use typescript), and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
+   - Install the polyfill and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
      ```sh
-     pnpm i webextension-polyfill
-     pnpm i -D @types/webextension-polyfill @wxt-dev/webextension-polyfill
+     pnpm i webextension-polyfill @wxt-dev/webextension-polyfill
      ```
    - Add the WXT module to your config:
      ```ts
@@ -46,7 +45,7 @@ To upgrade, you have two options:
      });
      ```
 
-Additionally, the `extensionApi` config has been removed. Remove it from your `wxt.config.ts` file if present:
+Regardless of your choice, the `extensionApi` config has been removed. Remove it from your `wxt.config.ts` file if present:
 
 ```ts
 // wxt.config.ts
@@ -54,6 +53,21 @@ export default defineConfig({
   extensionApi: 'chrome', // [!code --]
 });
 ```
+
+Additionally, extension API types have changed. `wxt/browser` now uses types from `@types/chrome` instead of `@types/webextension-polyfill`. You will have to migrate any type imports to use `@types/chrome`'s namespace approach:
+
+<!-- prettier-ignore -->
+```ts
+import type { Runtime } from 'wxt/browser'; // [!code --]
+import { browser } from 'wxt/browser'; // [!code ++]
+
+function getMessageSenderUrl(sender: Runtime.MessageSender): string { // [!code --]
+function getMessageSenderUrl(sender: browser.runtime.MessageSender): string { // [!code ++]
+  // ...
+}
+```
+
+`@types/chrome` are more up-to-date, contain less bugs, and don't have any auto-generated names. So even if you continue to use the polyfill, you will need to update your types to use these types.
 
 ### `public/` and `modules/` Directories Moved
 
