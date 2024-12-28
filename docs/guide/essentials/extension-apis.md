@@ -36,6 +36,12 @@ function handleMessage(message: any, sender: Browser.runtime.MessageSender) {
 }
 ```
 
+## Using `webextension-polyfill`
+
+If you want to use the `webextension-polyfill` when importing `browser`, you can do so by installing the `@wxt-dev/webextension-polyfill` package.
+
+See it's [Installation Guide](https://github.com/wxt-dev/wxt/blob/main/packages/webextension-polyfill/README.md) to get started.
+
 ## Feature Detection
 
 Depending on the manifest version, browser, and permissions, some APIs are not available at runtime. If an API is not available, it will be `undefined`.

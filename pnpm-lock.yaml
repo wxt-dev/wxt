@@ -57,6 +57,9 @@ catalogs:
     '@types/ua-parser-js':
       specifier: ^0.7.39
       version: 0.7.39
+    '@types/webextension-polyfill':
+      specifier: ^0.12.1
+      version: 0.12.3
     '@vitejs/plugin-react':
       specifier: ^4.3.4
       version: 4.3.4
@@ -294,6 +297,9 @@ catalogs:
     web-ext-run:
       specifier: ^0.2.1
       version: 0.2.1
+    webextension-polyfill:
+      specifier: ^0.12.0
+      version: 0.12.0
 
 patchedDependencies:
   markdown-it-footnote:
@@ -683,6 +689,30 @@ importers:
       unocss:
         specifier: 'catalog:'
         version: 66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.6)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+      wxt:
+        specifier: workspace:*
+        version: link:../wxt
+
+  packages/webextension-polyfill:
+    devDependencies:
+      '@aklinker1/check':
+        specifier: 'catalog:'
+        version: 1.4.5(typescript@5.6.3)
+      '@types/webextension-polyfill':
+        specifier: 'catalog:'
+        version: 0.12.3
+      publint:
+        specifier: 'catalog:'
+        version: 0.2.12
+      typescript:
+        specifier: 'catalog:'
+        version: 5.6.3
+      unbuild:
+        specifier: 'catalog:'
+        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      webextension-polyfill:
+        specifier: 'catalog:'
+        version: 0.12.0
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -2311,6 +2341,9 @@ packages:
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
+
+  '@types/webextension-polyfill@0.12.3':
+    resolution: {integrity: sha512-F58aDVSeN/MjUGazXo/cPsmR76EvqQhQ1v4x23hFjUX0cfAJYE+JBWwiOGW36/VJGGxoH74sVlRIF3z7SJCKyg==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -5354,6 +5387,9 @@ packages:
     resolution: {integrity: sha512-5D11VcjdGkA1/xax5UWL0YeAbDySKHzWFe6EpsoPNUMw5Uk9tKk9p6GUOfcaI5N7sINKfBMZYNsTBiu5dzJB9A==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
 
+  webextension-polyfill@0.12.0:
+    resolution: {integrity: sha512-97TBmpoWJEE+3nFBQ4VocyCdLKfw54rFaJ6EVQYLBCXqCIpLSZkwGgASpv4oPt9gdKCJ80RJlcmNzNn008Ag6Q==}
+
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
@@ -6653,6 +6689,8 @@ snapshots:
   '@types/unist@3.0.2': {}
 
   '@types/web-bluetooth@0.0.20': {}
+
+  '@types/webextension-polyfill@0.12.3': {}
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -10083,6 +10121,8 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+
+  webextension-polyfill@0.12.0: {}
 
   webidl-conversions@7.0.0: {}
 
