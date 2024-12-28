@@ -1,8 +1,4 @@
 {
   "extends": ["../../tsconfig.base.json", "./.wxt/tsconfig.json"],
-  "compilerOptions": {
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js"
-  },
   "exclude": ["node_modules/**", "dist/**"]
 }
