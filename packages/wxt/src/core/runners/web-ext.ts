@@ -35,7 +35,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const wxtUserConfig = wxt.config.runnerConfig.config;
       const userConfig = {
-        console: wxtUserConfig?.openConsole,
+        browserConsole: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
