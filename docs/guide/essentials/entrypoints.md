@@ -304,14 +304,14 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewportYou are responsible for loading/running these scripts where needed. If necessary, don't forget to add the script and/or any related stylesheets to web_accessible_resources."
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Options Title</title>
+
+    <!-- Customize the manifest options -->
     <meta name="manifest.open_in_tab" content="true|false" />
     <meta name="manifest.chrome_style" content="true|false" />
     <meta name="manifest.browser_style" content="true|false" />
+
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />
@@ -339,7 +339,11 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Set the `action.default_title` in the manifest -->
     <title>Default Popup Title</title>
+
+    <!-- Customize the manifest options -->
     <meta
       name="manifest.default_icon"
       content="{
@@ -350,6 +354,7 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
     />
     <meta name="manifest.type" content="page_action|browser_action" />
     <meta name="manifest.browser_style" content="true|false" />
+
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />
@@ -384,6 +389,7 @@ Firefox does not support sandboxed pages.
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Title</title>
+
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />
@@ -416,6 +422,8 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Default Side Panel Title</title>
+
+    <!-- Customize the manifest options -->
     <meta
       name="manifest.default_icon"
       content="{
@@ -426,6 +434,7 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
     />
     <meta name="manifest.open_at_install" content="true|false" />
     <meta name="manifest.browser_style" content="true|false" />
+
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />
@@ -475,6 +484,7 @@ body {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Title</title>
+
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
     <meta name="manifest.exclude" content="['chrome', ...]" />

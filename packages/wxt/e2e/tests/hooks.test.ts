@@ -4,12 +4,14 @@ import { WxtHooks } from '../../src/types';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
+  'config:resolved': vi.fn(),
   'prepare:types': vi.fn(),
   'prepare:publicPaths': vi.fn(),
   'build:before': vi.fn(),
   'build:done': vi.fn(),
   'build:manifestGenerated': vi.fn(),
   'build:publicAssets': vi.fn(),
+  'entrypoints:found': vi.fn(),
   'entrypoints:resolved': vi.fn(),
   'entrypoints:grouped': vi.fn(),
   'vite:build:extendConfig': vi.fn(),
@@ -20,6 +22,9 @@ const hooks: WxtHooks = {
   'zip:sources:start': vi.fn(),
   'zip:sources:done': vi.fn(),
   'zip:done': vi.fn(),
+  'server:created': vi.fn(),
+  'server:started': vi.fn(),
+  'server:closed': vi.fn(),
 };
 
 function expectHooksToBeCalled(
@@ -49,12 +54,14 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': false,
       'build:done': false,
       'build:publicAssets': false,
       'build:manifestGenerated': false,
+      'entrypoints:found': true,
       'entrypoints:grouped': false,
       'entrypoints:resolved': true,
       'vite:build:extendConfig': false,
@@ -65,6 +72,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -76,12 +86,14 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
       'build:done': true,
       'build:publicAssets': true,
       'build:manifestGenerated': true,
+      'entrypoints:found': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 1,
@@ -92,6 +104,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -103,12 +118,14 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
       'build:done': true,
       'build:publicAssets': true,
       'build:manifestGenerated': true,
+      'entrypoints:found': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 1,
@@ -119,6 +136,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -130,14 +150,16 @@ describe('Hooks', () => {
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
       'build:done': true,
       'build:publicAssets': true,
       'build:manifestGenerated': true,
+      'entrypoints:found': 2,
       'entrypoints:grouped': true,
-      'entrypoints:resolved': true,
+      'entrypoints:resolved': 2,
       'vite:build:extendConfig': 1,
       'vite:devServer:extendConfig': false,
       'zip:start': true,
@@ -146,6 +168,9 @@ describe('Hooks', () => {
       'zip:sources:start': true,
       'zip:sources:done': true,
       'zip:done': true,
+      'server:created': false,
+      'server:started': false,
+      'server:closed': false,
     });
   });
 
@@ -159,16 +184,19 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
+    expect(hooks['server:closed']).not.toBeCalled();
     await server.stop();
 
     expectHooksToBeCalled({
       ready: true,
+      'config:resolved': true,
       'prepare:types': true,
       'prepare:publicPaths': true,
       'build:before': true,
       'build:done': true,
       'build:publicAssets': true,
       'build:manifestGenerated': true,
+      'entrypoints:found': true,
       'entrypoints:grouped': true,
       'entrypoints:resolved': true,
       'vite:build:extendConfig': 2,
@@ -179,6 +207,9 @@ describe('Hooks', () => {
       'zip:sources:start': false,
       'zip:sources:done': false,
       'zip:done': false,
+      'server:created': 1,
+      'server:started': 1,
+      'server:closed': 1,
     });
   });
 });

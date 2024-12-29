@@ -71,6 +71,33 @@ describe('Detect Dev Changes', () => {
     });
   });
 
+  describe('modules/*', () => {
+    it("should return 'full-restart' when one of the changed files is in the WXT modules folder", () => {
+      const modulesDir = '/root/modules';
+      setFakeWxt({
+        config: {
+          modulesDir,
+        },
+      });
+      const changes = [
+        '/root/src/public/image.svg',
+        `${modulesDir}/example.ts`,
+      ];
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [],
+      };
+      const expected: DevModeChange = {
+        type: 'full-restart',
+      };
+
+      const actual = detectDevChanges(changes, currentOutput);
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
   describe('web-ext.config.ts', () => {
     it("should return 'browser-restart' when one of the changed files is the config file", () => {
       const runnerFile = '/root/web-ext.config.ts';

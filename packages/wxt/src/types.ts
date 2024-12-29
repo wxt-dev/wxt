@@ -45,6 +45,7 @@ export interface InlineConfig {
    * A list of entrypoint names (`"popup"`, `"options"`, etc.) to build. Will speed up the build if
    * your extension has lots of entrypoints, and you don't need to build all of them to develop a
    * feature.
+   * If specified, this completely overrides the `include`/`exclude` option provided per-entrypoint.
    */
   filterEntrypoints?: string[];
   /**
@@ -271,7 +272,7 @@ export interface InlineConfig {
   analysis?: {
     /**
      * Explicitly include bundle analysis when running `wxt build`. This can be overridden by the
-     * command line `--analysis` option.
+     * command line `--analyze` option.
      *
      * @default false
      */
@@ -588,7 +589,7 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
 
 export interface BaseContentScriptEntrypointOptions
   extends BaseEntrypointOptions {
-  matches: PerBrowserOption<Manifest.ContentScript['matches']>;
+  matches?: PerBrowserOption<Manifest.ContentScript['matches']>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    * @default "documentIdle"
@@ -728,7 +729,14 @@ export interface BaseEntrypoint {
    * subdirectory of it.
    */
   outputDir: string;
-  skipped: boolean;
+  /**
+   * When true, the entrypoint will not be built by WXT. Normally this is set
+   * based on the `filterEntrypoints` config or the entrypoint's
+   * `include`/`exclude` options defined inside the file.
+   *
+   * See https://wxt.dev/guide/essentials/target-different-browsers.html#filtering-entrypoints
+   */
+  skipped?: boolean;
 }
 
 export interface GenericEntrypoint extends BaseEntrypoint {
@@ -780,6 +788,13 @@ export type Entrypoint =
   | PopupEntrypoint
   | OptionsEntrypoint
   | SidepanelEntrypoint;
+
+export interface EntrypointInfo {
+  name: string;
+  /** Absolute path to the entrypoint file. */
+  inputPath: string;
+  type: Entrypoint['type'];
+}
 
 export type EntrypointGroup = Entrypoint | Entrypoint[];
 
@@ -1027,9 +1042,13 @@ export interface WxtBuilder {
    */
   version: string;
   /**
-   * Import the entrypoint file, returning the default export containing the options.
+   * Import a JS entrypoint file, returning the default export containing the options.
    */
   importEntrypoint<T>(path: string): Promise<T>;
+  /**
+   * Import a list of JS entrypoint files, returning their options.
+   */
+  importEntrypoints(paths: string[]): Promise<Record<string, unknown>[]>;
   /**
    * Build a single entrypoint group. This is effectively one of the multiple "steps" during the
    * build process.
@@ -1079,6 +1098,7 @@ export interface WxtBuilderServer {
    * Chokidar file watcher instance.
    */
   watcher: FSWatcher;
+  on?(event: string, callback: () => void): void;
 }
 
 export interface ServerInfo {
@@ -1100,11 +1120,16 @@ export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
   /**
-   * Called after WXT initialization, when the WXT instance is ready to work.
+   * Called after WXT modules are initialized, when the WXT instance is ready to
+   * be used. `wxt.server` isn't available yet, use `server:created` to get it.
    * @param wxt The configured WXT object
-   * @returns Promise
    */
   ready: (wxt: Wxt) => HookResult;
+  /**
+   * Called whenever config is loaded or reloaded. Use this hook to modify config by modifying `wxt.config`.
+   * @param wxt The configured WXT object
+   */
+  'config:resolved': (wxt: Wxt) => HookResult;
   /**
    * Called before WXT writes .wxt/tsconfig.json and .wxt/wxt.d.ts, allowing
    * addition of custom references and declarations in wxt.d.ts, or directly
@@ -1166,6 +1191,12 @@ export interface WxtHooks {
     manifest: Manifest.WebExtensionManifest,
   ) => HookResult;
   /**
+   * Called once the names and paths of all entrypoints have been resolved.
+   * @param wxt The configured WXT object
+   * @param infos List of entrypoints found in the project's `entrypoints` directory
+   */
+  'entrypoints:found': (wxt: Wxt, infos: EntrypointInfo[]) => HookResult;
+  /**
    * Called once all entrypoints have been loaded from the `entrypointsDir`.
    * Use `wxt.builder.importEntrypoint` to load entrypoint options from the
    * file, or manually define them.
@@ -1192,39 +1223,52 @@ export interface WxtHooks {
    * @param wxt The configured WXT object
    */
   'zip:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called before zipping the extension files.
    * @param wxt The configured WXT object
    */
   'zip:extension:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called after zipping the extension files.
    * @param wxt The configured WXT object
    * @param zipPath The path to the created extension zip file
    */
   'zip:extension:done': (wxt: Wxt, zipPath: string) => HookResult;
-
   /**
    * Called before zipping the source files (for Firefox).
    * @param wxt The configured WXT object
    */
   'zip:sources:start': (wxt: Wxt) => HookResult;
-
   /**
    * Called after zipping the source files (for Firefox).
    * @param wxt The configured WXT object
    * @param zipPath The path to the created sources zip file
    */
   'zip:sources:done': (wxt: Wxt, zipPath: string) => HookResult;
-
   /**
    * Called after the entire zip process is complete.
    * @param wxt The configured WXT object
    * @param zipFiles An array of paths to all created zip files
    */
   'zip:done': (wxt: Wxt, zipFiles: string[]) => HookResult;
+  /**
+   * Called when the dev server is created (and `wxt.server` is assigned). Server has not been started yet.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:created': (wxt: Wxt, server: WxtDevServer) => HookResult;
+  /**
+   * Called when the dev server is started.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:started': (wxt: Wxt, server: WxtDevServer) => HookResult;
+  /**
+   * Called when the dev server is stopped.
+   * @param wxt The configured WXT object
+   * @param server Same as `wxt.server`, the object WXT uses to control the dev server.
+   */
+  'server:closed': (wxt: Wxt, server: WxtDevServer) => HookResult;
 }
 
 export interface Wxt {
@@ -1239,7 +1283,7 @@ export interface Wxt {
    */
   logger: Logger;
   /**
-   * Reload config file and update the `config` field with the result.
+   * Reload config file and update `wxt.config` with the result.
    */
   reloadConfig: () => Promise<void>;
   /**
@@ -1385,6 +1429,8 @@ export interface FsCache {
 export interface ExtensionRunner {
   openBrowser(): Promise<void>;
   closeBrowser(): Promise<void>;
+  /** Whether or not this runner actually opens the browser. */
+  canOpen?(): boolean;
 }
 
 export type EslintGlobalsPropValue =

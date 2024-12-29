@@ -78,6 +78,7 @@ async function getPathsDeclarationEntry(
         isHtmlEntrypoint(entry) ? '.html' : '.js',
       ),
     )
+    .concat([''])
     .concat(await getPublicFiles());
 
   await wxt.hooks.callHook('prepare:publicPaths', wxt, paths);
@@ -176,7 +177,7 @@ declare module "wxt/browser" {
         message.message,
       ),
     ),
-    // Include a final union-based override so TS accepts valid string templates or concatinations
+    // Include a final union-based override so TS accepts valid string templates or concatenations
     // ie: browser.i18n.getMessage(`some_enum_${enumValue}`)
     renderGetMessageOverload(
       messages.map((message) => `"${message.name}"`).join(' | '),

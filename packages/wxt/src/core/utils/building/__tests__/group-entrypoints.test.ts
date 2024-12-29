@@ -152,17 +152,37 @@ describe('groupEntrypoints', () => {
       options: {
         type: 'module',
       },
+      skipped: false,
     });
-    const popup = fakePopupEntrypoint();
+    const popup = fakePopupEntrypoint({
+      skipped: false,
+    });
     const sandbox = fakeGenericEntrypoint({
       inputPath: '/entrypoints/sandbox.html',
       name: 'sandbox',
       type: 'sandbox',
+      skipped: false,
     });
 
     const actual = groupEntrypoints([background, popup, sandbox]);
 
     expect(actual).toEqual([[background, popup], [sandbox]]);
+  });
+
+  it('should exclude skipped entrypoints from the groups to build', () => {
+    const background = fakeBackgroundEntrypoint({
+      options: {
+        type: 'module',
+      },
+      skipped: false,
+    });
+    const popup = fakePopupEntrypoint({
+      skipped: true,
+    });
+
+    const actual = groupEntrypoints([background, popup]);
+
+    expect(actual).toEqual([[background]]);
   });
 
   it.todo(

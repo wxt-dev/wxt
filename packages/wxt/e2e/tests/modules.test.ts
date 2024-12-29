@@ -6,7 +6,7 @@ import { normalizePath } from '../../src/core/utils/paths';
 
 describe('Module Helpers', () => {
   describe('options', () => {
-    it('should recieve the options defined in wxt.config.ts based on the configKey field', async () => {
+    it('should receive the options defined in wxt.config.ts based on the configKey field', async () => {
       const options = { key: '123' };
       const reportOptions = vi.fn();
       vi.stubGlobal('reportOptions', reportOptions);

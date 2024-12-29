@@ -29,7 +29,6 @@ export function hashContentScriptOptions(
     match_about_blank: false,
     run_at: 'document_idle',
     all_frames: false,
-    // @ts-expect-error - not in type
     match_origin_as_fallback: false,
     world: 'ISOLATED',
     ...simplifiedOptions,
@@ -52,7 +51,7 @@ export function mapWxtOptionsToContentScript(
   css: string[] | undefined,
 ): Manifest.ContentScript {
   return {
-    matches: options.matches,
+    matches: options.matches ?? [],
     all_frames: options.allFrames,
     match_about_blank: options.matchAboutBlank,
     exclude_globs: options.excludeGlobs,
@@ -62,7 +61,6 @@ export function mapWxtOptionsToContentScript(
     css,
     js,
 
-    // @ts-expect-error: untyped chrome options
     match_origin_as_fallback: options.matchOriginAsFallback,
     world: options.world,
   };
@@ -80,7 +78,6 @@ export function mapWxtOptionsToRegisteredContentScript(
     runAt: options.runAt,
     js,
     css,
-    // @ts-expect-error: Chrome accepts this, not typed in webextension-polyfill (https://developer.chrome.com/docs/extensions/reference/scripting/#type-RegisteredContentScript)
     world: options.world,
   };
 }

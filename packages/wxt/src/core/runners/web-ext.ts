@@ -11,6 +11,9 @@ export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 
   return {
+    canOpen() {
+      return true;
+    },
     async openBrowser() {
       const startTime = Date.now();
 
@@ -32,7 +35,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const wxtUserConfig = wxt.config.runnerConfig.config;
       const userConfig = {
-        console: wxtUserConfig?.openConsole,
+        browserConsole: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
@@ -50,7 +53,10 @@ export function createWebExtRunner(): ExtensionRunner {
                 wxtUserConfig?.chromiumPref,
                 DEFAULT_CHROMIUM_PREFS,
               ),
-              args: wxtUserConfig?.chromiumArgs,
+              args: [
+                '--unsafely-disable-devtools-self-xss-warnings',
+                ...(wxtUserConfig?.chromiumArgs ?? []),
+              ],
             }),
       };
 

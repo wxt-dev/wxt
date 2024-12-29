@@ -6,23 +6,47 @@ outline: deep
 
 [Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md)
 
-WXT provides a simplified API to replace the `browser.storage.*` APIs. Use the `storage` auto-import from `wxt/storage` or import it manually to get started:
+A simplified wrapper around the extension storage APIs.
+
+## Installation
+
+### With WXT
+
+This module is built-in to WXT, so you don't need to install anything.
 
 ```ts
 import { storage } from 'wxt/storage';
 ```
 
-> [!IMPORTANT]
-> To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
->
-> ```ts
-> // wxt.config.ts
-> export default defineConfig({
->   manifest: {
->     permissions: ['storage'],
->   },
-> });
-> ```
+If you use auto-imports, `storage` is auto-imported for you, so you don't even need to import it!
+
+### Without WXT
+
+Install the NPM package:
+
+```sh
+npm i @wxt-dev/storage
+pnpm add @wxt-dev/storage
+yarn add @wxt-dev/storage
+bun add @wxt-dev/storage
+```
+
+```ts
+import { storage } from '@wxt-dev/storage';
+```
+
+## Storage Permission
+
+To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
+
+```ts
+// wxt.config.ts
+export default defineConfig({
+  manifest: {
+    permissions: ['storage'],
+  },
+});
+```
 
 ## Basic Usage
 
@@ -51,11 +75,11 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
-For a full list of methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorage).
+For a full list of methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage).
 
 ## Watchers
 
-To listen for storage changes, use the `storage.watch` function. It lets you setup a listener for a single key:
+To listen for storage changes, use the `storage.watch` function. It lets you set up a listener for a single key:
 
 ```ts
 const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
@@ -100,7 +124,7 @@ You can remove all metadata associated with a key, or just specific properties:
 // Remove all properties
 await storage.removeMeta('local:preference');
 
-// Remove one property
+// Remove only the "lastModified" property
 await storage.removeMeta('local:preference', 'lastModified');
 
 // Remove multiple properties
@@ -134,7 +158,7 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 });
 ```
 
-For a full list of properties and methods available, see the [API reference](/api/reference/wxt/storage/interfaces/WxtStorageItem).
+For a full list of properties and methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorageItem).
 
 ### Versioning
 
@@ -225,13 +249,13 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code
 Internally, this uses a metadata property called `v` to track the value's current version.
 :::
 
-In this case, we thought that the ignored website list might change in the future, and were able to setup a versioned storage item from the start.
+In this case, we thought that the ignored website list might change in the future, and were able to set up a versioned storage item from the start.
 
-Realistically, you won't know a item needs versioned until you need to change it's schema. Thankfully, it's simple to add versioning to an unversioned storage item.
+Realistically, you won't know an item needs versioning until you need to change its schema. Thankfully, it's simple to add versioning to an unversioned storage item.
 
 When a previous version isn't found, WXT assumes the version was `1`. That means you just need to set `version: 2` and add a migration for `2`, and it will just work!
 
-Lets look at the same ignored websites example from before, but start with an unversioned item this time:
+Let's look at the same ignored websites example from before, but start with an unversioned item this time:
 
 :::code-group
 
@@ -275,13 +299,13 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 ### Running Migrations
 
-As soon as `storage.defineItem` is called, WXT checks if migrations need to be ran, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc) will automatically wait for the migration process to finish before actually reading or writing values.
+As soon as `storage.defineItem` is called, WXT checks if migrations need to be run, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc.) will automatically wait for the migration process to finish before actually reading or writing values.
 
 ### Default Values
 
 With `storage.defineItem`, there are multiple ways of defining default values:
 
-1. `fallback` - Return this value from `getValue` instead of `null` if the value is missing.
+1. **`fallback`** - Return this value from `getValue` instead of `null` if the value is missing.
 
    This option is great for providing default values for settings:
 
@@ -294,7 +318,7 @@ With `storage.defineItem`, there are multiple ways of defining default values:
    });
    ```
 
-2. `init` - Initialize and save a value in storage if it is not already saved.
+2. **`init`** - Initialize and save a value in storage if it is not already saved.
 
    This is great for values that need to be initialized or set once:
 
@@ -308,3 +332,26 @@ With `storage.defineItem`, there are multiple ways of defining default values:
    ```
 
    The value is initialized in storage immediately.
+
+## Bulk Operations
+
+When getting or setting multiple values in storage, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods for performing bulk operations:
+
+- **`getItems`** - Get multiple values at once.
+- **`getMetas`** - Get metadata for multiple items at once.
+- **`setItems`** - Set multiple values at once.
+- **`setMetas`** - Set metadata for multiple items at once.
+- **`removeItems`** - Remove multiple values (and optionally metadata) at once.
+
+All these APIs support both string keys and defined storage items:
+
+```ts
+const userId = storage.defineItem('local:userId');
+
+await storage.setItems([
+  { key: 'local:installDate', value: Date.now() },
+  { item: userId, value: generateUserId() },
+]);
+```
+
+Refer to the [API Reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.

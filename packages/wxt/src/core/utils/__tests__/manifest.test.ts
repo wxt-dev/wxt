@@ -44,6 +44,7 @@ describe('Manifest Utils', () => {
             defaultTitle: 'Default Iitle',
           },
           outputDir: outDir,
+          skipped: false,
         });
 
       it('should include an action for mv3', async () => {
@@ -209,6 +210,7 @@ describe('Manifest Utils', () => {
           chromeStyle: true,
           browserStyle: true,
         },
+        skipped: false,
       });
 
       it('should include a options_ui and chrome_style for chrome', async () => {
@@ -265,6 +267,7 @@ describe('Manifest Utils', () => {
           persistent: true,
           type: 'module',
         },
+        skipped: false,
       });
 
       describe('MV3', () => {
@@ -368,7 +371,7 @@ describe('Manifest Utils', () => {
 
     describe('icons', () => {
       it('should auto-discover icons with the correct name', async () => {
-        const entrypoints = fakeArray(fakeEntrypoint);
+        const entrypoints = fakeArray(() => fakeEntrypoint({ skipped: false }));
         const buildOutput = fakeBuildOutput({
           publicAssets: [
             { type: 'asset', fileName: 'icon-16.png' },
@@ -396,7 +399,7 @@ describe('Manifest Utils', () => {
       });
 
       it('should return undefined when no icons are found', async () => {
-        const entrypoints = fakeArray(fakeEntrypoint);
+        const entrypoints = fakeArray(() => fakeEntrypoint({ skipped: false }));
         const buildOutput = fakeBuildOutput({
           publicAssets: [
             { type: 'asset', fileName: 'logo.png' },
@@ -413,7 +416,7 @@ describe('Manifest Utils', () => {
       });
 
       it('should allow icons to be overwritten from the wxt.config.ts file', async () => {
-        const entrypoints = fakeArray(fakeEntrypoint);
+        const entrypoints = fakeArray(() => fakeEntrypoint({ skipped: false }));
         const buildOutput = fakeBuildOutput({
           publicAssets: [
             { type: 'asset', fileName: 'icon-16.png' },
@@ -837,6 +840,7 @@ describe('Manifest Utils', () => {
             options: {
               registration: 'runtime',
             },
+            skipped: false,
           });
 
           const entrypoints = [cs];
@@ -902,6 +906,7 @@ describe('Manifest Utils', () => {
         async (browser) => {
           const sidepanel = fakeSidepanelEntrypoint({
             outputDir: outDir,
+            skipped: false,
           });
           const buildOutput = fakeBuildOutput();
 
@@ -934,6 +939,7 @@ describe('Manifest Utils', () => {
         async (browser) => {
           const sidepanel = fakeSidepanelEntrypoint({
             outputDir: outDir,
+            skipped: false,
           });
           const buildOutput = fakeBuildOutput();
 
@@ -1581,6 +1587,64 @@ describe('Manifest Utils', () => {
           permissions: ['tabs', 'scripting'],
         });
       });
+
+      it('should convert MV3 CSP object to MV2 CSP string with localhost for MV2', async () => {
+        const entrypoints: Entrypoint[] = [];
+        const buildOutput = fakeBuildOutput();
+        const inputCsp =
+          "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+        const expectedCsp =
+          "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
+
+        // Setup WXT for Firefox and serve command
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            command: 'serve',
+            manifestVersion: 2,
+            manifest: {
+              content_security_policy: {
+                extension_pages: inputCsp,
+              },
+            },
+          },
+          server: fakeWxtDevServer({
+            port: 3000,
+            hostname: 'localhost',
+            origin: 'http://localhost:3000',
+          }),
+        });
+
+        const { manifest: actual } = await generateManifest(
+          entrypoints,
+          buildOutput,
+        );
+
+        expect(actual.content_security_policy).toEqual(expectedCsp);
+      });
+    });
+
+    it('should not add skipped entrypoints to manifest', async () => {
+      const popup = fakePopupEntrypoint({ skipped: true });
+      const content = fakeContentScriptEntrypoint({ skipped: true });
+      const sidePanel = fakeSidepanelEntrypoint({ skipped: true });
+      const buildOutput = fakeBuildOutput();
+
+      setFakeWxt({
+        config: {
+          command: 'build',
+          manifestVersion: 3,
+        },
+      });
+
+      const { manifest } = await generateManifest(
+        [popup, content, sidePanel],
+        buildOutput,
+      );
+
+      expect(manifest.action).toBeUndefined();
+      expect(manifest.sidebar_action).toBeUndefined();
+      expect(manifest.content_scripts).toBeUndefined();
     });
   });
 

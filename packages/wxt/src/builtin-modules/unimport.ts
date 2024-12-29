@@ -18,7 +18,7 @@ export default defineWxtModule({
     let unimport: Unimport;
 
     // Add user module imports to config
-    wxt.hooks.hook('ready', () => {
+    wxt.hooks.hook('config:resolved', () => {
       const addModuleImports = (module: WxtModule<any>) => {
         if (!module.imports) return;
 
@@ -30,10 +30,10 @@ export default defineWxtModule({
       wxt.config.userModules.forEach(addModuleImports);
     });
 
-    // Create unimport instance AFTER "ready" so any modifications to the
-    // config inside "ready" are applied.
+    // Create unimport instance AFTER "config:resolved" so any modifications to the
+    // config inside "config:resolved" are applied.
     wxt.hooks.afterEach((event) => {
-      if (event.name === 'ready') {
+      if (event.name === 'config:resolved') {
         unimport = createUnimport(options);
       }
     });

@@ -112,6 +112,9 @@ function getEsbuildOptions(opts: JitiTransformOptions): TransformOptions {
   return {
     format: 'cjs',
     loader: isJsx ? 'tsx' : 'ts',
+    define: {
+      'import.meta.env.ENTRYPOINT': '"build"',
+    },
     ...(isJsx
       ? {
           // `h` and `Fragment` are undefined, but that's OK because JSX is never evaluated while

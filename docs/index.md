@@ -6,7 +6,7 @@ title: Next-gen Web Extension Framework
 hero:
   name: WXT
   text: Next-gen Web Extension Framework
-  tagline: An open source tool that makes Chrome Extension development faster than ever before.
+  tagline: An open source tool that makes web extension development faster than ever before.
   image:
     src: /hero-logo.svg
     alt: WXT
@@ -73,9 +73,15 @@ features:
     linkText: Read docs
 ---
 
+## Sponsors
+
+WXT is a [MIT-licensed](https://github.com/wxt-dev/wxt/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring WXT's development](https://github.com/sponsors/wxt-dev).
+
+<a href="https://github.com/sponsors/wxt-dev"><img alt="WXT Sponsors" src="https://raw.githubusercontent.com/wxt-dev/static/refs/heads/main/sponsorkit/sponsors-wide.svg"></a>
+
 ## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
 
-WXT simplifies the chrome extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
+WXT simplifies the web extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
 
 <div style="margin: auto; width: 100%; max-width: 900px; text-align: center">
   <video src="https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94" controls></video>
@@ -87,7 +93,7 @@ WXT simplifies the chrome extension development process by providing tools for z
 
 ## Who's Using WXT?
 
-Battle tested and ready for production. Explore chrome extensions made with WXT.
+Battle tested and ready for production. Explore web extensions made with WXT.
 
 <ClientOnly>
   <UsingWxtSection />

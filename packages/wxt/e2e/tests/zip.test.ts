@@ -181,6 +181,42 @@ describe('Zipping', () => {
     );
   });
 
+  it('should exclude skipped entrypoints from respective browser sources zip', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/not-firefox.content.ts',
+      `export default defineContentScript({
+        matches: ['*://*/*'],
+        exclude: ['firefox'],
+        main() {},
+      });`,
+    );
+    project.addFile(
+      'entrypoints/all.content.ts',
+      `export default defineContentScript({
+        matches: ['*://*/*'],
+        main(ctx) {},
+      });
+`,
+    );
+    const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'firefox',
+    });
+    await extract(sourcesZip, { dir: unzipDir });
+    expect(
+      await project.fileExists(unzipDir, 'entrypoints/not-firefox.content.ts'),
+    ).toBe(false);
+    expect(
+      await project.fileExists(unzipDir, 'entrypoints/all.content.ts'),
+    ).toBe(true);
+  });
+
   it.each(['firefox', 'opera'])(
     'should create sources zip for "%s" browser when sourcesZip is undefined',
     async (browser) => {

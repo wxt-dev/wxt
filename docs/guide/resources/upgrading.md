@@ -109,27 +109,6 @@ You have two options:
    ```
 2. Rename your `modules` directory to something else.
 
-## v0.18.0 &rarr; v0.18.5
-
-> When this version was released, it was not considered a breaking change... but it should have been.
-
-### New `modules/` Directory
-
-WXT now recognizes the `modules/` directory as a folder containing [WXT modules](/guide/essentials/wxt-modules).
-
-If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt prepare` and other commands will fail.
-
-You have two options:
-
-1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
-   ```ts
-   // wxt.config.ts
-   export default defineConfig({
-     modulesDir: 'wxt-modules', // defaults to "modules"
-   });
-   ```
-2. Rename your `modules` directory to something else.
-
 ## v0.17.0 &rarr; v0.18.0
 
 ### Automatic MV3 `host_permissions` to MV2 `permissions`

@@ -3,7 +3,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ContentScriptContext } from '..';
 import { fakeBrowser } from '@webext-core/fake-browser';
-import { sleep } from '../../../core/utils/time';
+
+/**
+ * When dispatching events on document/window/etc, they are fired on the next
+ * tick of the event loop. So waiting a timeout of 0 will ensure they've been
+ * fired.
+ */
+function waitForEventsToFire() {
+  return new Promise((res) => setTimeout(res));
+}
 
 describe('Content Script Context', () => {
   beforeEach(() => {
@@ -31,11 +39,11 @@ describe('Content Script Context', () => {
     ctx.onInvalidated(onInvalidated);
 
     // Wait for events to run before next tick next tick
-    await sleep(0);
+    await waitForEventsToFire();
 
     // Create a new context after first is initialized, and wait for it to initialize
     new ContentScriptContext(name);
-    await sleep(0);
+    await waitForEventsToFire();
 
     expect(onInvalidated).toBeCalled();
     expect(ctx.isValid).toBe(false);
@@ -47,13 +55,35 @@ describe('Content Script Context', () => {
     ctx.onInvalidated(onInvalidated);
 
     // Wait for events to run before next tick next tick
-    await sleep(0);
+    await waitForEventsToFire();
 
     // Create a new context after first is initialized, and wait for it to initialize
     new ContentScriptContext('test2');
-    await sleep(0);
+    await waitForEventsToFire();
 
     expect(onInvalidated).not.toBeCalled();
     expect(ctx.isValid).toBe(true);
+  });
+
+  describe('addEventListener', () => {
+    const context = new ContentScriptContext('test');
+    it('should infer types correctly for the window target', () => {
+      context.addEventListener(window, 'DOMContentLoaded', (_) => {});
+      context.addEventListener(window, 'orientationchange', (_) => {});
+      context.addEventListener(window, 'wxt:locationchange', (_) => {});
+      // @ts-expect-error
+      context.addEventListener(window, 'visibilitychange', (_) => {});
+    });
+
+    it('should infer types correctly for the document target', () => {
+      context.addEventListener(document, 'visibilitychange', (_) => {});
+      context.addEventListener(document, 'readystatechange', (_) => {});
+    });
+
+    it('should infer types correctly for HTML element targets', () => {
+      const button = document.createElement('button');
+      context.addEventListener(button, 'click', (_) => {});
+      context.addEventListener(button, 'mouseover', (_) => {});
+    });
   });
 });

@@ -30,10 +30,13 @@ function validateContentScriptEntrypoint(
   definition: ContentScriptEntrypoint,
 ): ValidationResult[] {
   const errors = validateBaseEntrypoint(definition);
-  if (definition.options.matches == null) {
+  if (
+    definition.options.registration !== 'runtime' &&
+    definition.options.matches == null
+  ) {
     errors.push({
       type: 'error',
-      message: '`matches` is required',
+      message: '`matches` is required for manifest registered content scripts',
       value: definition.options.matches,
       entrypoint: definition,
     });

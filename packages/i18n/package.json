@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/i18n",
   "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "type": "module",
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "chokidar": "^3.6.0",
-    "confbox": "^0.1.7",
+    "confbox": "^0.1.8",
     "fast-glob": "^3.3.2"
   },
   "peerDependencies": {
@@ -39,13 +39,13 @@
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "@types/chrome": "^0.0.268",
-    "@types/node": "^20.16.10",
-    "oxlint": "^0.9.9",
-    "publint": "^0.2.11",
-    "typescript": "^5.6.2",
+    "@types/chrome": "^0.0.280",
+    "@types/node": "^20.17.6",
+    "oxlint": "^0.11.1",
+    "publint": "^0.2.12",
+    "typescript": "^5.6.3",
     "unbuild": "^2.0.0",
-    "vitest": "^2.0.0",
+    "vitest": "^2.1.4",
     "vitest-plugin-random-seed": "^1.1.0",
     "wxt": "workspace:*"
   },
