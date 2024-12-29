@@ -169,6 +169,8 @@ export default defineConfig({
 });
 ```
 
+If you've loaded the extension into your browser manually for development, uninstall and re-install it from the new dev output directory.
+
 ### `runner` APIs Renamed
 
 To improve consistency with the `web-ext.config.ts` file, the "runner" APIs have been renamed. You can continue using the old names, but they have been deprecated and will be removed in a future version:
