@@ -416,7 +416,6 @@ async function getUnimportOptions(
             'AutoMount',
           ],
         ),
-        type: true,
       },
       {
         from: 'wxt/utils/define-app-config',
