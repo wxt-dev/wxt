@@ -51,12 +51,11 @@
     "wxt": ">=0.19.23"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.3.1",
+    "@aklinker1/check": "^1.4.5",
     "@types/chrome": "^0.0.268",
     "@types/ua-parser-js": "^0.7.39",
-    "prettier": "^3.3.2",
-    "publint": "^0.2.8",
-    "typescript": "^5.5.2",
+    "publint": "^0.2.12",
+    "typescript": "^5.6.3",
     "unbuild": "^2.0.0",
     "wxt": "workspace:*"
   },
