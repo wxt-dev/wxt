@@ -51,7 +51,7 @@ export type AnalyticsProvider = (
   page: (event: AnalyticsPageViewEvent) => Promise<void>;
   /** Upload a custom event */
   track: (event: AnalyticsTrackEvent) => Promise<void>;
-  /** Upload or save information about the user */
+  /** Upload information about the user */
   identify: (event: BaseAnalyticsEvent) => Promise<void>;
 };
 

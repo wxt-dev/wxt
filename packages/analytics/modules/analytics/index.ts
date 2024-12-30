@@ -27,12 +27,11 @@ export default defineWxtModule({
       wxt.config.wxtDir,
       'analytics/index.ts',
     );
-    const analyticsModuleCode = `
-import { createAnalytics } from '@wxt-dev/analytics';
+    const analyticsModuleCode = `import { createAnalytics } from '@wxt-dev/analytics';
 import { useAppConfig } from 'wxt/client';
 
 export const analytics = createAnalytics(useAppConfig().analytics);
-    `;
+`;
     addAlias(wxt, '#analytics', analyticsModulePath);
     wxt.hook('prepare:types', async (_, entries) => {
       entries.push({

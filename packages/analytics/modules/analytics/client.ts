@@ -7,8 +7,8 @@ import type {
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
   AnalyticsEventMetadata,
+  AnalyticsProvider,
 } from './types';
-export * from './client-utils';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -109,14 +109,14 @@ function createBackgroundAnalytics(
       ]);
       // Notify providers
       const event = await getBaseEvent(meta);
-      if (config?.debug) console.debug('[analytics] identify', event);
+      if (config?.debug) console.debug('[@wxt-dev/analytics] identify', event);
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.identify(event)),
         );
       } else if (config?.debug) {
         console.debug(
-          '[analytics] Analytics disabled, identify() not uploaded',
+          '[@wxt-dev/analytics] Analytics disabled, identify() not uploaded',
         );
       }
     },
@@ -133,13 +133,15 @@ function createBackgroundAnalytics(
           title: meta?.title ?? globalThis.document?.title,
         },
       };
-      if (config?.debug) console.debug('[analytics] page', event);
+      if (config?.debug) console.debug('[@wxt-dev/analytics] page', event);
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.page(event)),
         );
       } else if (config?.debug) {
-        console.debug('[analytics] Analytics disabled, page() not uploaded');
+        console.debug(
+          '[@wxt-dev/analytics] Analytics disabled, page() not uploaded',
+        );
       }
     },
     track: async (
@@ -152,13 +154,15 @@ function createBackgroundAnalytics(
         ...baseEvent,
         event: { name: eventName, properties: eventProperties },
       };
-      if (config?.debug) console.debug('[analytics] track', event);
+      if (config?.debug) console.debug('[@wxt-dev/analytics] track', event);
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.track(event)),
         );
       } else if (config?.debug) {
-        console.debug('[analytics] Analytics disabled, track() not uploaded');
+        console.debug(
+          '[@wxt-dev/analytics] Analytics disabled, track() not uploaded',
+        );
       }
     },
     setEnabled: async (newEnabled) => {
@@ -268,3 +272,17 @@ const INTERACTIVE_ROLES = new Set([
   'tab',
   'radio',
 ]);
+
+export function defineAnalyticsProvider<T = never>(
+  definition: (
+    /** The analytics object. */
+    analytics: Analytics,
+    /** Config passed into the analytics module from `app.config.ts`. */
+    config: AnalyticsConfig,
+    /** Provider options */
+    options: T,
+  ) => ReturnType<AnalyticsProvider>,
+): (options: T) => AnalyticsProvider {
+  return (options) => (analytics, config) =>
+    definition(analytics, config, options);
+}

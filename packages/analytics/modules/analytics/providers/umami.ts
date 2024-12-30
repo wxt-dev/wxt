@@ -1,4 +1,4 @@
-import { defineAnalyticsProvider } from '../client-utils';
+import { defineAnalyticsProvider } from '../client';
 
 export interface UmamiProviderOptions {
   apiUrl: string;
@@ -7,15 +7,22 @@ export interface UmamiProviderOptions {
 }
 
 export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
-  (analytics, config, options) => {
-    const send = (payload: UmamiPayload) =>
-      fetch(`${options.apiUrl}/send`, {
+  (_, config, options) => {
+    const send = (payload: UmamiPayload) => {
+      if (config.debug) {
+        console.warn(
+          '[@wxt-dev/analytics] Debug mode active, skipped uploading event to Umami',
+          payload,
+        );
+      }
+      return fetch(`${options.apiUrl}/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ type: 'event', payload }),
       });
+    };
 
     return {
       identify: () => Promise.resolve(), // No-op, user data uploaded in page/track

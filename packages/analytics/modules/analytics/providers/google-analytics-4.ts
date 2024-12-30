@@ -1,4 +1,4 @@
-import { defineAnalyticsProvider } from '../client-utils';
+import { defineAnalyticsProvider } from '../client';
 import type { BaseAnalyticsEvent } from '../types';
 
 const DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
