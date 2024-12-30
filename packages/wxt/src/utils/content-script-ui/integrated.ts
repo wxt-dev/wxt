@@ -46,6 +46,7 @@ export function createIntegratedUi<TMounted>(
     ...mountFunctions,
   };
 }
+
 /**
  * Shared types for the different `wxt/utils/content-script-ui/*` modules.
  * @module wxt/utils/content-script-ui/types

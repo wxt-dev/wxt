@@ -106,6 +106,7 @@ async function loadCss(): Promise<string> {
     return '';
   }
 }
+
 export interface ShadowRootContentScriptUi<TMounted>
   extends ContentScriptUi<TMounted> {
   /**
