@@ -1,9 +1,6 @@
 /** @module wxt/utils/content-script-ui/integrated */
 import { ContentScriptContext } from '../content-script-context';
-import type {
-  IntegratedContentScriptUi,
-  IntegratedContentScriptUiOptions,
-} from './types';
+import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 
 /**
@@ -49,3 +46,32 @@ export function createIntegratedUi<TMounted>(
     ...mountFunctions,
   };
 }
+
+/**
+ * Shared types for the different `wxt/utils/content-script-ui/*` modules.
+ * @module wxt/utils/content-script-ui/types
+ */
+export interface IntegratedContentScriptUi<TMounted>
+  extends ContentScriptUi<TMounted> {
+  /**
+   * A wrapper div that assists in positioning.
+   */
+  wrapper: HTMLElement;
+}
+
+export type IntegratedContentScriptUiOptions<TMounted> =
+  ContentScriptUiOptions<TMounted> & {
+    /**
+     * Tag used to create the wrapper element.
+     *
+     * @default "div"
+     */
+    tag?: string;
+    /**
+     * Callback executed when mounting the UI. This function should create and append the UI to the
+     * `wrapper` element. It is called every time `ui.mount()` is called.
+     *
+     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     */
+    onMount: (wrapper: HTMLElement) => TMounted;
+  };
