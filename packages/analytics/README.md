@@ -1,6 +1,6 @@
 # WXT Analytics
 
-Add analytics, like google analytics, to your WXT extension.
+Report analytics events from your WXT extension.
 
 ## Supported Analytics Providers
 
@@ -156,3 +156,33 @@ export default defineAppConfig({
 ```
 
 For example `AnalyticsProvider` implementations, see [`./modules/analytics/providers`](https://github.com/wxt-dev/wxt/tree/main/packages/analytics/modules/analytics/providers).
+
+## Usage outside WXT
+
+You can use this package in non-WXT packages:
+
+1. Create an `analytics` instance:
+
+   ```ts
+   // utils/analytics.ts
+   import {} from '@wxt-dev/analytics/client';
+
+   export const analytics = createAnalytics({
+     providers: [
+       // ...
+     ],
+   });
+   ```
+
+2. Import your analytics module in the background. This registers a message listener so the background can perform the network requests.
+   ```ts
+   // background.ts
+   import './utils/analytics';
+   ```
+3. Use your `analytics` instance to report events throughout your extension:
+
+   ```ts
+   import { analytics } from './utils/analytics';
+
+   await analytics.track('some-event');
+   ```
