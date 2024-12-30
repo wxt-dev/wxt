@@ -8,11 +8,12 @@ export default defineBuildConfig({
   entries: [
     'index.ts',
     'client.ts',
+    'types.ts',
     'providers/google-analytics-4.ts',
     'providers/umami.ts',
   ],
   replace: {
-    __PACKAGED__: 'true',
+    'ipmort.meta.env.NPM': 'true',
   },
   declaration: true,
 });

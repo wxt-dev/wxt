@@ -8,6 +8,7 @@ import type {
   BaseAnalyticsEvent,
   AnalyticsEventMetadata,
 } from './types';
+export * from './client-utils';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 

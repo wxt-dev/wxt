@@ -8,9 +8,4 @@ export default defineConfig({
   manifest: {
     name: 'Analytics Demo',
   },
-  vite: () => ({
-    define: {
-      __PACKAGED__: 'false',
-    },
-  }),
 });

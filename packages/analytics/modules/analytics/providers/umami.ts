@@ -1,16 +1,15 @@
-import type { AnalyticsProvider } from '../types';
+import { defineAnalyticsProvider } from '../client-utils';
 
 export interface UmamiProviderOptions {
-  baseUrl: string;
+  apiUrl: string;
   websiteId: string;
-  hostname: string;
+  domain: string;
 }
 
-export const umami =
-  (options: UmamiProviderOptions): AnalyticsProvider =>
-  (analytics, config) => {
+export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
+  (analytics, config, options) => {
     const send = (payload: UmamiPayload) =>
-      fetch(`${options.baseUrl}/api/send`, {
+      fetch(`${options.apiUrl}/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +24,7 @@ export const umami =
           name: 'page_view',
           website: options.websiteId,
           url: event.page.url,
-          hostname: options.hostname,
+          hostname: options.domain,
           language: event.meta.language ?? '',
           referrer: event.meta.referrer ?? '',
           screen: event.meta.screen ?? '',
@@ -39,7 +38,7 @@ export const umami =
           website: options.websiteId,
           url: event.meta.url ?? '/',
           title: '<blank>',
-          hostname: options.hostname,
+          hostname: options.domain,
           language: event.meta.language ?? '',
           referrer: event.meta.referrer ?? '',
           screen: event.meta.screen ?? '',
@@ -50,7 +49,8 @@ export const umami =
         });
       },
     };
-  };
+  },
+);
 
 interface UmamiPayload {
   hostname?: string;
