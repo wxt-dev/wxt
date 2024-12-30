@@ -334,25 +334,124 @@ async function getUnimportOptions(
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
+
+  const defineImportsAndTypes = (imports: string[], typeImports: string[]) => [
+    ...imports,
+    ...typeImports.map((name) => ({ name, type: true })),
+  ];
+
   const defaultOptions: WxtResolvedUnimportOptions = {
     imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
-    // prettier-ignore
     presets: [
-      { package: 'wxt/browser' },
-      { package: 'wxt/utils/storage' },
-      { package: 'wxt/utils/app-config' },
-      { package: 'wxt/utils/content-script-context' },
-      { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/integrated', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/shadow-root', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/types' },
-      { package: 'wxt/utils/define-app-config' },
-      { package: 'wxt/utils/define-background' },
-      { package: 'wxt/utils/define-content-script' },
-      { package: 'wxt/utils/define-unlisted-script' },
-      { package: 'wxt/utils/define-wxt-plugin' },
-      { package: 'wxt/utils/inject-script', ignore: invalidExports },
-      { package: 'wxt/utils/match-patterns' },
+      {
+        from: 'wxt/browser',
+        imports: defineImportsAndTypes(['browser'], []),
+      },
+      {
+        from: 'wxt/utils/storage',
+        imports: defineImportsAndTypes(
+          ['storage'],
+          [
+            'StorageArea',
+            'WxtStorage',
+            'WxtStorageItem',
+            'StorageArea',
+            'StorageItemKey',
+            'StorageAreaChanges',
+            'MigrationError',
+          ],
+        ),
+      },
+      {
+        from: 'wxt/utils/app-config',
+        imports: defineImportsAndTypes(['useAppConfig'], []),
+      },
+      {
+        from: 'wxt/utils/content-script-context',
+        imports: defineImportsAndTypes(
+          ['ContentScriptContext'],
+          ['WxtWindowEventMap'],
+        ),
+      },
+      {
+        from: 'wxt/utils/content-script-ui/iframe',
+        imports: defineImportsAndTypes(
+          ['createIframeUi'],
+          ['IframeContentScriptUi', 'IframeContentScriptUiOptions'],
+        ),
+        ignore: invalidExports,
+      },
+      {
+        from: 'wxt/utils/content-script-ui/integrated',
+        imports: defineImportsAndTypes(
+          ['createIntegratedUi'],
+          ['IntegratedContentScriptUi', 'IntegratedContentScriptUiOptions'],
+        ),
+        ignore: invalidExports,
+      },
+      {
+        from: 'wxt/utils/content-script-ui/shadow-root',
+        imports: defineImportsAndTypes(
+          ['createShadowRootUi'],
+          ['ShadowRootContentScriptUi', 'ShadowRootContentScriptUiOptions'],
+        ),
+        ignore: invalidExports,
+      },
+      {
+        from: 'wxt/utils/content-script-ui/types',
+        imports: defineImportsAndTypes(
+          [],
+          [
+            'ContentScriptUi',
+            'ContentScriptUiOptions',
+            'ContentScriptOverlayAlignment',
+            'ContentScriptAppendMode',
+            'ContentScriptInlinePositioningOptions',
+            'ContentScriptOverlayPositioningOptions',
+            'ContentScriptModalPositioningOptions',
+            'ContentScriptPositioningOptions',
+            'ContentScriptAnchoredOptions',
+            'AutoMountOptions',
+            'StopAutoMount',
+            'AutoMount',
+          ],
+        ),
+      },
+      {
+        from: 'wxt/utils/define-app-config',
+        imports: defineImportsAndTypes(['defineAppConfig'], ['WxtAppConfig']),
+      },
+      {
+        from: 'wxt/utils/define-background',
+        imports: defineImportsAndTypes(['defineBackground'], []),
+      },
+      {
+        from: 'wxt/utils/define-content-script',
+        imports: defineImportsAndTypes(['defineContentScript'], []),
+      },
+      {
+        from: 'wxt/utils/define-unlisted-script',
+        imports: defineImportsAndTypes(['defineUnlistedScript'], []),
+      },
+      {
+        from: 'wxt/utils/define-wxt-plugin',
+        imports: defineImportsAndTypes(['defineWxtPlugin'], []),
+      },
+      {
+        from: 'wxt/utils/inject-script',
+        imports: defineImportsAndTypes(
+          ['injectScript'],
+          ['ScriptPublicPath', 'InjectScriptOptions'],
+        ),
+        ignore: invalidExports,
+      },
+      {
+        from: 'wxt/utils/match-patterns',
+        imports: defineImportsAndTypes(
+          ['InvalidMatchPattern', 'MatchPattern'],
+          [],
+        ),
+      },
     ],
     virtualImports: ['#imports'],
     debugLog: logger.debug,
