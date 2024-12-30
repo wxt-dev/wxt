@@ -48,6 +48,17 @@ await analytics.identify('some-user-id');
 analytics.autoTrack(document.body);
 ```
 
+Finally, you must import the `#analytics` module in your background:
+
+```ts
+// entrypoints/background.ts
+import '#analytics';
+```
+
+This is because the `analytics` object sends events and other data to the background for it perform the HTTP request to upload the data.
+
+This also means to view the network requests in devtools, you must look at the background's devtools.
+
 ## Providers
 
 ### Google Analytics 4 (Measurement Protocol)
