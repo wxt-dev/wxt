@@ -336,23 +336,101 @@ async function getUnimportOptions(
   const invalidExports = ['options'];
   const defaultOptions: WxtResolvedUnimportOptions = {
     imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
-    // prettier-ignore
     presets: [
-      { package: 'wxt/browser' },
-      { package: 'wxt/utils/storage' },
-      { package: 'wxt/utils/app-config' },
-      { package: 'wxt/utils/content-script-context' },
-      { package: 'wxt/utils/content-script-ui/iframe', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/integrated', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/shadow-root', ignore: invalidExports },
-      { package: 'wxt/utils/content-script-ui/types' },
-      { package: 'wxt/utils/define-app-config' },
-      { package: 'wxt/utils/define-background' },
-      { package: 'wxt/utils/define-content-script' },
-      { package: 'wxt/utils/define-unlisted-script' },
-      { package: 'wxt/utils/define-wxt-plugin' },
-      { package: 'wxt/utils/inject-script', ignore: invalidExports },
-      { package: 'wxt/utils/match-patterns' },
+      {
+        package: 'wxt/browser',
+        imports: ['browser'],
+      },
+      {
+        package: 'wxt/utils/storage',
+        imports: [
+          'storage',
+          'StorageArea',
+          'WxtStorage',
+          'WxtStorageItem',
+          'StorageArea',
+          'StorageItemKey',
+          'StorageAreaChanges',
+          'MigrationError',
+        ],
+      },
+      {
+        package: 'wxt/utils/app-config',
+        imports: ['useAppConfig'],
+      },
+      {
+        package: 'wxt/utils/content-script-context',
+        imports: ['ContentScriptContext', 'WxtWindowEventMap'],
+      },
+      {
+        package: 'wxt/utils/content-script-ui/iframe',
+        imports: [
+          'createIframeUi',
+          'IframeContentScriptUi',
+          'IframeContentScriptUiOptions',
+        ],
+      },
+      {
+        package: 'wxt/utils/content-script-ui/integrated',
+        imports: [
+          'createIntegratedUi',
+          'IntegratedContentScriptUi',
+          'IntegratedContentScriptUiOptions',
+        ],
+      },
+      {
+        package: 'wxt/utils/content-script-ui/shadow-root',
+        imports: [
+          'createShadowRootUi',
+          'ShadowRootContentScriptUi',
+          'ShadowRootContentScriptUiOptions',
+        ],
+      },
+      {
+        package: 'wxt/utils/content-script-ui/types',
+        imports: [
+          'ContentScriptUi',
+          'ContentScriptUiOptions',
+          'ContentScriptOverlayAlignment',
+          'ContentScriptAppendMode',
+          'ContentScriptInlinePositioningOptions',
+          'ContentScriptOverlayPositioningOptions',
+          'ContentScriptModalPositioningOptions',
+          'ContentScriptPositioningOptions',
+          'ContentScriptAnchoredOptions',
+          'AutoMountOptions',
+          'StopAutoMount',
+          'AutoMount',
+        ],
+      },
+      {
+        package: 'wxt/utils/define-app-config',
+        imports: ['defineAppConfig', 'WxtAppConfig'],
+      },
+      {
+        package: 'wxt/utils/define-background',
+        imports: ['defineBackground'],
+      },
+      {
+        package: 'wxt/utils/define-content-script',
+        imports: ['defineContentScript'],
+      },
+      {
+        package: 'wxt/utils/define-unlisted-script',
+        imports: ['defineUnlistedScript'],
+      },
+      {
+        package: 'wxt/utils/define-wxt-plugin',
+        imports: ['defineWxtPlugin'],
+      },
+      {
+        package: 'wxt/utils/inject-script',
+        imports: ['ScriptPublicPath', 'injectScript', 'InjectScriptOptions'],
+      },
+      {
+        package: 'wxt/utils/match-patterns',
+        imports: ['InvalidMatchPattern', 'MatchPattern'],
+      },
     ],
     virtualImports: ['#imports'],
     debugLog: logger.debug,
