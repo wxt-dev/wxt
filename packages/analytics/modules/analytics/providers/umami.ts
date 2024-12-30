@@ -10,10 +10,7 @@ export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
   (_, config, options) => {
     const send = (payload: UmamiPayload) => {
       if (config.debug) {
-        console.warn(
-          '[@wxt-dev/analytics] Debug mode active, skipped uploading event to Umami',
-          payload,
-        );
+        console.debug('[@wxt-dev/analytics] Sending event to Umami:', payload);
       }
       return fetch(`${options.apiUrl}/send`, {
         method: 'POST',
@@ -59,6 +56,7 @@ export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
   },
 );
 
+/** @see https://umami.is/docs/api/sending-stats#post-/api/send */
 interface UmamiPayload {
   hostname?: string;
   language?: string;
