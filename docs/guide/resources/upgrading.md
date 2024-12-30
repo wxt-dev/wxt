@@ -171,6 +171,22 @@ export default defineConfig({
 
 If you've loaded the extension into your browser manually for development, uninstall and re-install it from the new dev output directory.
 
+### Internal Auto-import Options Changed
+
+Only relevant if you refer to WXT's built-in `preset`s in the `imports` config in a module or hooks.
+
+Instead of using `package` to auto-detect APIs to auto-import, WXT now uses `from` and `imports` to manually list APIs that are imported.
+
+```ts
+presets: [
+  { package: "wxt/browser" }, // [!code --]
+  { from: "wxt/browser": imports: ["browser"] }, // [!code --]
+  // ...
+]
+```
+
+See [PR #1315 `packages/wxt/src/core/resolve-config.ts` changes](https://github.com/wxt-dev/wxt/pull/1315/files#diff-ff0465c3a486d3ba187204149a25fc8f632c44d65da356dc04c0f2b268a71506) for exact changes made.
+
 ### `runner` APIs Renamed
 
 To improve consistency with the `web-ext.config.ts` file, the "runner" APIs have been renamed. You can continue using the old names, but they have been deprecated and will be removed in a future version:
