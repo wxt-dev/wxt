@@ -18,6 +18,10 @@
       "types": "./dist/module.d.mts",
       "default": "./dist/module.mjs"
     },
+    "./plugin": {
+      "types": "./dist/plugin.d.mts",
+      "default": "./dist/plugin.mjs"
+    },
     "./types": {
       "types": "./dist/types.d.mts"
     },

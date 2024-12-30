@@ -73,7 +73,7 @@ Report analytics events from your web extension extension.
 4. Then use your `analytics` instance to report events:
 
    ```ts
-   import { analytics } from '#analytics';
+   import { analytics } from './utils/analytics';
 
    await analytics.track('some-event');
    await analytics.page();

@@ -8,14 +8,14 @@ export default defineBuildConfig({
   entries: [
     { input: 'index.ts', name: 'module' },
     { input: 'client.ts', name: 'index' },
-    { input: 'plugin.ts', name: 'wxt-plugin' },
+    'background-plugin.ts',
     'types.ts',
     'providers/google-analytics-4.ts',
     'providers/umami.ts',
   ],
   externals: ['#analytics'],
   replace: {
-    'ipmort.meta.env.NPM': 'true',
+    'import.meta.env.NPM': 'true',
   },
   declaration: true,
 });

@@ -1,7 +1,7 @@
 import 'wxt';
 import 'wxt/sandbox';
 import { addAlias, addWxtPlugin, defineWxtModule } from 'wxt/modules';
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
 
 declare module 'wxt/sandbox' {
@@ -14,6 +14,16 @@ export default defineWxtModule({
   name: 'analytics',
   imports: [{ name: 'analytics', from: '#analytics' }],
   setup(wxt) {
+    // Paths
+    const wxtAnalyticsFolder = resolve(wxt.config.wxtDir, 'analytics');
+    const wxtAnalyticsIndex = resolve(wxtAnalyticsFolder, 'index.ts');
+    const clientModuleId = import.meta.env.NPM
+      ? '@wxt-dev/analytics'
+      : resolve(wxt.config.modulesDir, 'analytics/client');
+    const pluginModuleId = import.meta.env.NPM
+      ? '@wxt-dev/analytics/background-plugin'
+      : resolve(wxt.config.modulesDir, 'analytics/background-plugin');
+
     // Add required permissions
     wxt.hook('build:manifestGenerated', (_, manifest) => {
       manifest.permissions ??= [];
@@ -23,23 +33,27 @@ export default defineWxtModule({
     });
 
     // Generate #analytics module
-    const analyticsModulePath = resolve(
-      wxt.config.wxtDir,
-      'analytics/index.ts',
-    );
-    const analyticsModuleCode = `import { createAnalytics } from '@wxt-dev/analytics';
-import { useAppConfig } from 'wxt/client';
-
-export const analytics = createAnalytics(useAppConfig().analytics);
-`;
-    addAlias(wxt, '#analytics', analyticsModulePath);
+    const wxtAnalyticsCode = [
+      `import { createAnalytics } from '${
+        import.meta.env.NPM
+          ? clientModuleId
+          : relative(wxtAnalyticsFolder, clientModuleId)
+      }';`,
+      `import { useAppConfig } from 'wxt/client';`,
+      ``,
+      `export const analytics = createAnalytics(useAppConfig().analytics);`,
+      ``,
+    ].join('\n');
+    addAlias(wxt, '#analytics', wxtAnalyticsIndex);
     wxt.hook('prepare:types', async (_, entries) => {
       entries.push({
-        path: analyticsModulePath,
-        text: analyticsModuleCode,
+        path: wxtAnalyticsIndex,
+        text: wxtAnalyticsCode,
       });
     });
 
-    addWxtPlugin(wxt, '@wxt-dev/analytics/wxt-plugin');
+    // Ensure analytics is initialized in every context, mainly the background.
+    // TODO: Once there's a way to filter which entrypoints a plugin is applied to, only apply this to the background
+    addWxtPlugin(wxt, pluginModuleId);
   },
 });
