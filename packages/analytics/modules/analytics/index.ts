@@ -52,6 +52,23 @@ export default defineWxtModule({
       });
     });
 
+    // Ensure there is a background entrypoint
+    wxt.hook('entrypoints:resolved', (_, entrypoints) => {
+      const hasBackground = entrypoints.find(
+        (entry) => entry.type === 'background',
+      );
+      if (!hasBackground) {
+        entrypoints.push({
+          type: 'background',
+          inputPath: 'virtual:user-background',
+          name: 'background',
+          options: {},
+          outputDir: wxt.config.outDir,
+          skipped: false,
+        });
+      }
+    });
+
     // Ensure analytics is initialized in every context, mainly the background.
     // TODO: Once there's a way to filter which entrypoints a plugin is applied to, only apply this to the background
     addWxtPlugin(wxt, pluginModuleId);
