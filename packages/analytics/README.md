@@ -48,9 +48,11 @@ Report analytics events from your web extension extension.
 
 ## Install Without WXT
 
-You can use this package in non-WXT packages:
-
-1. Create an `analytics` instance:
+1. Install the NPM package:
+   ```bash
+   pnpm i @wxt-dev/analytics
+   ```
+2. Create an `analytics` instance:
 
    ```ts
    // utils/analytics.ts
@@ -63,12 +65,12 @@ You can use this package in non-WXT packages:
    });
    ```
 
-2. Import your analytics module in the background:
+3. Import your analytics module in the background to initialize the message listener:
    ```ts
    // background.ts
    import './utils/analytics';
    ```
-3. Then use your `analytics` instance to report events:
+4. Then use your `analytics` instance to report events:
 
    ```ts
    import { analytics } from '#analytics';

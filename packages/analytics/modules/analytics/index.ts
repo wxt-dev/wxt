@@ -1,6 +1,6 @@
 import 'wxt';
 import 'wxt/sandbox';
-import { addAlias, defineWxtModule } from 'wxt/modules';
+import { addAlias, addWxtPlugin, defineWxtModule } from 'wxt/modules';
 import { resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
 
@@ -28,7 +28,7 @@ export default defineWxtModule({
       'analytics/index.ts',
     );
     const analyticsModuleCode = `
-import { createAnalytics } from '@wxt-dev/analytics/client';
+import { createAnalytics } from '@wxt-dev/analytics';
 import { useAppConfig } from 'wxt/client';
 
 export const analytics = createAnalytics(useAppConfig().analytics);
@@ -40,5 +40,7 @@ export const analytics = createAnalytics(useAppConfig().analytics);
         text: analyticsModuleCode,
       });
     });
+
+    addWxtPlugin(wxt, '@wxt-dev/analytics/wxt-plugin');
   },
 });
