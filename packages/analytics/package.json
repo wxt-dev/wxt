@@ -18,9 +18,9 @@
       "types": "./dist/module.d.mts",
       "default": "./dist/module.mjs"
     },
-    "./plugin": {
-      "types": "./dist/plugin.d.mts",
-      "default": "./dist/plugin.mjs"
+    "./background-plugin": {
+      "types": "./dist/background-plugin.d.mts",
+      "default": "./dist/background-plugin.mjs"
     },
     "./types": {
       "types": "./dist/types.d.mts"
@@ -42,7 +42,7 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
-    "check": "buildc --deps-only -- check",
+    "check": "pnpm build && check",
     "build": "buildc -- unbuild",
     "prepack": "pnpm -s build",
     "prepare": "buildc --deps-only -- wxt prepare"
