@@ -92,10 +92,9 @@ export async function createShadowRootUi<TMounted>(
  * Load the CSS for the current entrypoint.
  */
 async function loadCss(): Promise<string> {
-  // @ts-expect-error: getURL is defined per-project, but not inside the package
-  const url = browser.runtime.getURL(
-    `/content-scripts/${import.meta.env.ENTRYPOINT}.css`,
-  );
+  const url = browser.runtime
+    // @ts-expect-error: getURL is defined per-project, but not inside the package
+    .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
   try {
     const res = await fetch(url);
     return await res.text();
