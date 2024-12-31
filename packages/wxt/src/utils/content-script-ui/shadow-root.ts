@@ -1,4 +1,5 @@
 /** @module wxt/utils/content-script-ui/shadow-root */
+import { browser } from 'wxt/browser';
 import { ContentScriptContext } from '../content-script-context';
 import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 import { createIsolatedElement } from '@webext-core/isolated-element';
@@ -91,10 +92,9 @@ export async function createShadowRootUi<TMounted>(
  * Load the CSS for the current entrypoint.
  */
 async function loadCss(): Promise<string> {
-  // @ts-expect-error: getURL is defined per-project, but not inside the package
-  const url = browser.runtime.getURL(
-    `/content-scripts/${import.meta.env.ENTRYPOINT}.css`,
-  );
+  const url = browser.runtime
+    // @ts-expect-error: getURL is defined per-project, but not inside the package
+    .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
   try {
     const res = await fetch(url);
     return await res.text();
