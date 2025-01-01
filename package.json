@@ -30,7 +30,7 @@
     "nano-spawn": "^0.2.0",
     "prettier": "^3.3.3",
     "simple-git-hooks": "^2.11.1",
-    "tsx": "4.15.7",
+    "tsx": "4.19.2",
     "typedoc": "^0.25.4",
     "typedoc-plugin-frontmatter": "^1.1.0",
     "typedoc-plugin-markdown": "4.0.0-next.23",
