@@ -41,6 +41,8 @@ export default defineRunnerConfig({
 });
 ```
 
+By default, WXT will try to automatically discover where Chrome/Firefox are installed. However, if you have chrome installed in a non-standard location, you need to set it manually as shown above.
+
 ### Persist Data
 
 By default, to keep from modifying your browser's existing profiles, `web-ext` creates a brand new profile every time you run the `dev` script.
