@@ -35,7 +35,7 @@
     "typedoc-plugin-frontmatter": "^1.1.0",
     "typedoc-plugin-markdown": "4.0.0-next.23",
     "typedoc-vitepress-theme": "1.0.0-next.3",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "vitepress": "^1.5.0",
     "vitest-mock-extended": "^2.0.2",
     "vue": "^3.5.12",
