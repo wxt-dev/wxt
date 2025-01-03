@@ -38,10 +38,10 @@ The module can be configured via the `unocss` config:
 export default defineConfig({
   modules: ['@wxt-dev/unocss'],
   unocss: {
-    // Will only apply unocss for popup/main.ts
-    entrypoints: ['popup/main.ts'],
+    // Exclude unocss from running for the background
+    excludeEntrypoints: ['background'],
   },
 });
 ```
 
-Options have JSDocs available in your editor, or you can read them in the source code: [`UnoCSSOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/src/index.ts).
+Options have JSDocs available in your editor, or you can read them in the source code: [`UnoCSSOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/unocss/src/index.ts).
