@@ -38,8 +38,8 @@ The module can be configured via the `unocss` config:
 export default defineConfig({
   modules: ['@wxt-dev/unocss'],
   unocss: {
-    // Exclude unocss apply for popup/main.ts and background
-    excludeEntrypoints: ['popup/main.ts', 'background'],
+    // Exclude unocss from running for the background
+    excludeEntrypoints: ['background'],
   },
 });
 ```
