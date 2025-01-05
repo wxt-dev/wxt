@@ -245,7 +245,7 @@ const ui = createIntegratedUi({
 ui.mount();
 ```
 
-### Enabling/Disabling
+## Enabling/Disabling
 
 By default, **analytics is disabled**. You can configure how the value is stored (and change the default value) via the `enabled` config:
 
