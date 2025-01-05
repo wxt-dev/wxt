@@ -172,3 +172,98 @@ export default defineAppConfig({
 ```
 
 Example `AnalyticsProvider` implementations can be found at [`./modules/analytics/providers`](https://github.com/wxt-dev/wxt/tree/main/packages/analytics/modules/analytics/providers).
+
+## User Properties
+
+User ID and properties are stored in `browser.storage.local`. To change this or customize where these values are stored, use the `userId` and `userProperties` config:
+
+```ts
+// app.config.ts
+import { storage } from 'wxt/storage';
+
+export default defineAppConfig({
+  analytics: {
+    userId: storage.defineItem('local:custom-user-id-key'),
+    userProperties: storage.defineItem('local:custom-user-properties-key'),
+  },
+});
+```
+
+To set the values at runtime, use the `identify` function:
+
+```ts
+await analytics.identify(userId, userProperties);
+```
+
+Alternatively, a common pattern is to use a random string as the user ID. This keeps the actual user information private, while still providing useful metrics in your analytics platform. This can be done very easily using WXT's storage API:
+
+```ts
+// app.config.ts
+import { storage } from 'wxt/storage';
+
+export default defineAppConfig({
+  analytics: {
+    userId: storage.defineItem('local:custom-user-id-key', {
+      init: () => crypto.randomUUID(),
+    }),
+  },
+});
+```
+
+If you aren't using `wxt` or `@wxt-dev/storage`, you can define custom implementations for the `userId` and `userProperties` config:
+
+```ts
+const analytics = createAnalytics({
+  userId: {
+    getValue: () => ...,
+    setValue: (userId) => ...,
+  }
+})
+```
+
+## Auto-track UI events
+
+Call `analytics.autoTrack(container)` to automatically track UI events so you don't have to manually add them. Currently it:
+
+- Tracks clicks to elements inside the `container`
+
+In your extension's HTML pages, you'll want to call it with `document`:
+
+```ts
+analytics.autoTrack(document);
+```
+
+But in content scripts, you usually only care about interactions with your own UI:
+
+```ts
+const ui = createIntegratedUi({
+  // ...
+  onMount(container) {
+    analytics.autoTrack(container);
+  },
+});
+ui.mount();
+```
+
+### Enabling/Disabling
+
+By default, **analytics is disabled**. You can configure how the value is stored (and change the default value) via the `enabled` config:
+
+```ts
+// app.config.ts
+import { storage } from 'wxt/storage';
+
+export default defineAppConfig({
+  analytics: {
+    enabled: storage.defineItem('local:analytics-enabled', {
+      fallback: true,
+    }),
+  },
+});
+```
+
+At runtime, you can call `setEnabled` to change the value:
+
+```ts
+analytics.setEnabled(true);
+```

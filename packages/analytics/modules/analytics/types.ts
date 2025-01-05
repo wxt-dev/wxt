@@ -1,13 +1,13 @@
 export interface Analytics {
-  /** Report a page change */
+  /** Report a page change. */
   page: (url: string) => void;
-  /** Report a custom event */
+  /** Report a custom event. */
   track: (eventName: string, eventProperties?: Record<string, string>) => void;
-  /** Save information about the user */
+  /** Save information about the user. */
   identify: (userId: string, userProperties?: Record<string, string>) => void;
   /** Automatically setup and track user interactions, returning a function to remove any listeners that were setup. */
   autoTrack: (root: Document | ShadowRoot | Element) => () => void;
-  /** Calls `config.enabled.setValue` */
+  /** Calls `config.enabled.setValue`. */
   setEnabled: (enabled: boolean) => void;
 }
 
@@ -21,19 +21,20 @@ export interface AnalyticsConfig {
    */
   debug?: boolean;
   /**
-   * Extension version, defaults to `browser.runtime.getManifest().version`.
+   * Your extension's version, reported alongside events.
+   * @default browser.runtime.getManifest().version`.
    */
   version?: string;
   /**
-   * Configure how the enabled flag is persisted. Defaults to using `""` in local extension storage.
+   * Configure how the enabled flag is persisted. Defaults to using `browser.storage.local`.
    */
   enabled?: AnalyticsStorageItem<boolean>;
   /**
-   * Configure how the user Id is persisted
+   * Configure how the user Id is persisted. Defaults to using `browser.storage.local`.
    */
   userId?: AnalyticsStorageItem<string>;
   /**
-   * Configure how user properties are persisted
+   * Configure how user properties are persisted. Defaults to using `browser.storage.local`.
    */
   userProperties?: AnalyticsStorageItem<Record<string, string>>;
 }
@@ -47,11 +48,11 @@ export type AnalyticsProvider = (
   analytics: Analytics,
   config: AnalyticsConfig,
 ) => {
-  /** Upload a page view event */
+  /** Upload a page view event. */
   page: (event: AnalyticsPageViewEvent) => Promise<void>;
-  /** Upload a custom event */
+  /** Upload a custom event. */
   track: (event: AnalyticsTrackEvent) => Promise<void>;
-  /** Upload information about the user */
+  /** Upload information about the user. */
   identify: (event: BaseAnalyticsEvent) => Promise<void>;
 };
 
@@ -64,11 +65,11 @@ export interface BaseAnalyticsEvent {
 }
 
 export interface AnalyticsEventMetadata {
-  /** Identifier of the session the event was fired from */
+  /** Identifier of the session the event was fired from. */
   sessionId: number | undefined;
-  /** `Date.now()` of when the event was reported */
+  /** `Date.now()` of when the event was reported. */
   timestamp: number;
-  /** `"1920x1080"` */
+  /** Ex: `"1920x1080"`. */
   screen: string | undefined;
   /** `document.referrer` */
   referrer: string | undefined;
