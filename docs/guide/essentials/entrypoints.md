@@ -28,7 +28,7 @@ For web extensions, there are two types of entrypoints:
 - **Listed**: Referenced in the `manifest.json`
 - **Unlisted**: Not referenced in the `manifest.json`
 
-Throughout the rest of WXT's documentation, listed files are referred to by name. For example:
+Throughout the rest of WXT's documentation, listed entrypoints are referred to by name. For example:
 
 - Popup
 - Options
@@ -42,7 +42,7 @@ Some examples of "unlisted" entrypoints:
 - JS files injected by content scripts into the page's main world
 
 :::tip
-Regardless of whether a entrypoint is listed or unlisted, it will still be bundled into your extension and be available at runtime.
+Regardless of whether an entrypoint is listed or unlisted, it will still be bundled into your extension and be available at runtime.
 :::
 
 ## Adding Entrypoints
@@ -72,7 +72,7 @@ Refer to the [Entrypoint Types](#entrypoint-types) section for the full list of 
 
 ## Defining Manifest Options
 
-Most listed entrypoints have options that need to be added to the `manifest.json`. With WXT however, instead of defining the options in a separate file, _you define these options inside the entrypoint file itself_.
+Most listed entrypoints have options that need to be added to the `manifest.json`. However with WXT, instead of defining the options in a separate file, _you define these options inside the entrypoint file itself_.
 
 For example, here's how to define `matches` for content scripts:
 
@@ -84,6 +84,17 @@ export default defineContentScript({
     // ...
   },
 });
+```
+
+For HTML entrypoints, options are configured as `<meta>` tags. For example, to use a `page_action` for your MV2 popup:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="manifest.type" content="page_action" />
+  </head>
+</html>
 ```
 
 > Refer to the [Entrypoint Types](#entrypoint-types) sections for a list of options configurable inside each entrypoint, and how to define them.
