@@ -1,10 +1,17 @@
 # Manifest
 
-In WXT, there is no `manifest.json` file in your source code. Instead, WXT generates it during the build process based off files in your project.
+In WXT, there is no `manifest.json` file in your source code. Instead, WXT generates the manifest from using multiple sources:
 
-## Manifest Config
+- Global options [defined in your `wxt.config.ts` file](#global-options)
+- Entrypoint-specific options [defined in your entrypoints](/guide/essentials/entrypoints#defining-manifest-options)
+- [WXT Modules](/guide/essentials/wxt-modules) added to your project can modify your manifest
+- [Hooks](/guide/essentials/config/hooks) defined in your project can modify your manifest
 
-To manually add a property to the `manifest.json` output during builds, use the `manifest` config inside `wxt.config.ts`:
+Your extension's `manifest.json` will be output to `.output/{target}/manifest.json` when running `wxt build`.
+
+## Global Options
+
+To add a property to your manifest, use the `manifest` config inside your `wxt.config.ts`:
 
 ```ts
 export default defineConfig({
@@ -130,7 +137,7 @@ public/
 └─ icon-128.png
 ```
 
-Specifically, if an icon must match one of these regex to be discovered:
+Specifically, an icon must match one of these regex to be discovered:
 
 <<< @/../packages/wxt/src/core/utils/manifest.ts#snippet
 
@@ -216,22 +223,7 @@ By default, whenever an `action` is generated, WXT falls back to `browser_action
 
 ### Action With Popup
 
-To generate a manifest where a UI appears after clicking the icon, just create a [Popup entrypoint](/guide/essentials/entrypoints#popup).
-
-```ts
-export default defineConfig({
-  hooks: {
-    build: {
-      manifestGenerated(manifest) {
-        // Update the manifest variable by reference
-        manifest.name = 'Overriden name';
-      },
-    },
-  },
-});
-```
-
-If you want to use a `page_action` for MV2, add the following meta tag to the HTML document's head:
+To generate a manifest where a UI appears after clicking the icon, just create a [Popup entrypoint](/guide/essentials/entrypoints#popup). If you want to use a `page_action` for MV2, add the following meta tag to the HTML document's head:
 
 ```html
 <meta name="manifest.type" content="page_action" />
