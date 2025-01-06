@@ -17,7 +17,7 @@ There are two ways to add a module to your project:
    > Searching for ["wxt module"](https://www.npmjs.com/search?q=wxt%20module) on NPM is a good way to find published WXT modules.
 2. **Local**: add a file to your project's `modules/` directory:
    ```
-   <srcDir>/
+   <rootDir>/
      modules/
        my-module.ts
    ```
