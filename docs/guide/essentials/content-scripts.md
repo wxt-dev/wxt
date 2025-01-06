@@ -566,6 +566,20 @@ export default defineContentScript({
 });
 ```
 
+```json
+export default defineConfig({
+  manifest: {
+    // ...
+    web_accessible_resources: [
+      {
+        resources: ["example-main-world.js"],
+        matches: ["*://*/*"],
+      }
+    ]
+  }
+});
+```
+
 `injectScript` works by creating a `script` element on the page pointing to your script. This loads the script into the page's context so it runs in the main world.
 
 `injectScript` returns a promise, that when resolved, means the script has been evaluated by the browser and you can start communicating with it.
