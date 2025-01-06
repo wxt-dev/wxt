@@ -59,24 +59,24 @@ After enabling it, your project structure should look like this:
 <!-- prettier-ignore -->
 ```html
 📂 {rootDir}/
-📁 .output/
-📁 .wxt/
-📂 src/
-   📁 assets/
-   📁 components/
-   📁 composables/
-   📁 entrypoints/
-   📁 hooks/
-   📁 modules/
-   📁 public/
-   📁 utils/
-   📄 app.config.ts
-📄 .env
-📄 .env.publish
-📄 package.json
-📄 tsconfig.json
-📄 web-ext.config.ts
-📄 wxt.config.ts
+   📁 .output/
+   📁 .wxt/
+   📂 src/
+      📁 assets/
+      📁 components/
+      📁 composables/
+      📁 entrypoints/
+      📁 hooks/
+      📁 modules/
+      📁 public/
+      📁 utils/
+      📄 app.config.ts
+   📄 .env
+   📄 .env.publish
+   📄 package.json
+   📄 tsconfig.json
+   📄 web-ext.config.ts
+   📄 wxt.config.ts
 ```
 
 ## Customizing Other Directories
