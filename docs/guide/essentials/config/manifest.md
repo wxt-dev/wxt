@@ -1,6 +1,6 @@
 # Manifest
 
-In WXT, there is no `manifest.json` file in your source code. Instead, WXT generates the manifest from using multiple sources:
+In WXT, there is no `manifest.json` file in your source code. Instead, WXT generates the manifest from multiple sources:
 
 - Global options [defined in your `wxt.config.ts` file](#global-options)
 - Entrypoint-specific options [defined in your entrypoints](/guide/essentials/entrypoints#defining-manifest-options)
