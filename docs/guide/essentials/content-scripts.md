@@ -4,12 +4,14 @@ outline: deep
 
 # Content Scripts
 
+> To create a content script, see [Entrypoint Types](/guide/essentials/entrypoints#content-scripts).
+
 ## Context
 
 The first argument to a content script's `main` function is it's "context".
 
 ```ts
-// entrypoints/content.ts
+// entrypoints/example.content.ts
 export default defineContentScript({
   main(ctx) {},
 });
@@ -62,7 +64,7 @@ In regular web extensions, CSS for content scripts is usually a separate CSS fil
 In WXT, to add CSS to a content script, simply import the CSS file into your JS entrypoint, and WXT will automatically add the bundled CSS output to the `css` array.
 
 ```ts
-// entrypoints/content/index.ts
+// entrypoints/example.content/index.ts
 import './style.css';
 
 export default defineContentScript({
