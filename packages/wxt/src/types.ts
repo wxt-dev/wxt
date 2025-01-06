@@ -916,6 +916,9 @@ export type UserManifest = {
   web_accessible_resources?:
     | string[]
     | chrome.runtime.ManifestV3['web_accessible_resources'];
+} & {
+  // Defines the manifest name, alternatively derived from "<rootDir>/package.json"
+  name?: string
 };
 
 export type UserManifestFn = (
