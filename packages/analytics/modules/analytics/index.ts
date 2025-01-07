@@ -1,6 +1,11 @@
 import 'wxt';
 import 'wxt/sandbox';
-import { addAlias, addWxtPlugin, defineWxtModule } from 'wxt/modules';
+import {
+  addAlias,
+  addViteConfig,
+  addWxtPlugin,
+  defineWxtModule,
+} from 'wxt/modules';
 import { relative, resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
 
@@ -72,5 +77,15 @@ export default defineWxtModule({
     // Ensure analytics is initialized in every context, mainly the background.
     // TODO: Once there's a way to filter which entrypoints a plugin is applied to, only apply this to the background
     addWxtPlugin(wxt, pluginModuleId);
+
+    // Fix issues with dependencies
+    addViteConfig(wxt, () => ({
+      optimizeDeps: {
+        // Ensure the "#analytics" import is processed by vite in the background plugin
+        exclude: ['@wxt-dev/analytics'],
+        // Ensure the CJS subdependency is preprocessed into ESM
+        include: ['@wxt-dev/analytics > ua-parser-js'],
+      },
+    }));
   },
 });
