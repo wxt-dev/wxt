@@ -200,6 +200,7 @@ export default defineContentScript({
 ```ts [Svelte]
 // entrypoints/example-ui.content/index.ts
 import App from './App.svelte';
+import { mount, unmount } from 'svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -210,14 +211,13 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        const app = new App({
+        mount(App, {
           target: container,
         });
-        return app;
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
-        app.$destroy();
+        unmount(app);
       },
     });
 
@@ -381,6 +381,7 @@ export default defineContentScript({
 // 1. Import the style
 import './style.css';
 import App from './App.svelte';
+import { mount, unmount } from 'svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -395,14 +396,13 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        const app = new App({
+        mount(App, {
           target: container,
         });
-        return app;
       },
-      onRemove: (app) => {
+      onRemove: () => {
         // Destroy the app when the UI is removed
-        app?.$destroy();
+        unmount(app);
       },
     });
 
