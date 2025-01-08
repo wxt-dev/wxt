@@ -28,47 +28,137 @@ See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
 
 ## My component library doesn't work in content scripts!
 
-Component libraries place their CSS in the document's `<head>` by default. When using `createShadowRootUi`, your UI is isolated from the document's styles because it's inside a ShadowRoot.
+This is usually caused by one of two things (or both) when using `createShadowRootUi`:
 
-To fix this, you need to tell your component library to insert it's CSS inside the shadow root. Here's the docs for a couple of popular libraries:
+1. Styles are added outside the `ShadowRoot`
 
-- React
-  - Ant Design: [`StyleProvider`](https://ant.design/docs/react/compatible-style#shadow-dom-usage)
-  - Mantine: [`MantineProvider#getRootElement` and `MantineProvider#cssVariablesSelector`](https://mantine.dev/theming/mantine-provider/)
+   :::details
+   Some component libraries manually add CSS to the page by adding a `<style>` or `<link>` element. They place this element in the document's `<head>` by default. This causes your styles to be placed outside the `ShadowRoot` and it's isolation blocks the styles from being applied to your UI.
 
-> If your library isn't listed above, try searching it's docs/issues for "shadow root", "shadow dom", or "css container".
+   When a library does this, **you need to tell the library where to put its styles**. Here's the documentation for a few popular component libraries:
 
-`createShadowRootUi` provides it's own `<head>` element inside the shadow root, so that were you should tell the library to add the CSS. Here's an example with Ant Design:
+   - Ant Design: [`StyleProvider`](https://ant.design/docs/react/compatible-style#shadow-dom-usage)
+   - Mantine: [`MantineProvider#getRootElement` and `MantineProvider#cssVariablesSelector`](https://mantine.dev/theming/mantine-provider/)
 
-```tsx
-import { StyleProvider } from '@ant-design/cssinjs'; // [!code ++]
-import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
+   > If your library isn't listed above, try searching it's docs/issues for "shadow root", "shadow dom", or "css container". Not all libraries support shadow DOMs, you may have to open an issue to request this feature.
 
-const ui = await createShadowRootUi(ctx, {
-  name: 'example-ui',
-  position: 'inline',
-  anchor: 'body',
-  onMount: (container) => { // [!code --]
-  onMount: (container, shadow) => { // [!code ++]
-    const cssContainer = shadow.querySelector("head")!; // [!code ++]
-    const root = ReactDOM.createRoot(container);
-    root.render(
-      <StyleProvider container={cssContainer}> // [!code ++]
-        <App />
-      </StyleProvider> // [!code ++]
-    );
-    return root;
-  },
-  onRemove: (root) => {
-    root?.unmount();
-  },
-});
-```
+   Here's an example of configuring Antd's styles:
 
-Note that this doesn't effect all component libraries, just ones that inject CSS themselves rather than having you import their CSS. This approach is more prevailent in the React community, but not limited to it. That's why only React libraries are listed above. Vuetify, for example, works just fine because you import its CSS - WXT picks up on this and the CSS is added inside the shadow root automatically:
+   ```tsx
+   import { StyleProvider } from '@ant-design/cssinjs';
+   import ReactDOM from 'react-dom/client';
+   import App from './App.tsx';
 
-```ts
-import 'vuetify/styles'; // <-- This line imports the CSS, just like importing a .css file
-import { createVuetify } from 'vuetify';
-```
+   const ui = await create`ShadowRoot`Ui(ctx, {
+     // ...
+     onMount: (container, shadow) => {
+       const cssContainer = shadow.querySelector('head')!;
+       const root = ReactDOM.createRoot(container);
+       root.render(
+         <StyleProvider container={cssContainer}>
+           <App />
+         </StyleProvider>,
+       );
+       return root;
+     },
+   });
+   ```
+
+   :::
+
+2. UI elements are added outside the `ShadowRoot`
+
+   ::::::details
+   This is mostly caused by `Teleport` or `Portal` components that render an element somewhere else in the DOM, usually in the document's `<body>`. This is usually done for dialogs or popover components. This renders the element is outside the `ShadowRoot`, so styles are not applied to it.
+
+   To fix this, **you need to both provide a target to your app AND pass the target to the `Teleport`/`Portal`**.
+
+   First, store the reference to the `ShadowRoot`'s `<body>` element (not the document's `<body>`):
+
+   :::code-group
+
+   ```ts [Vue]
+   import { createApp } from 'vue';
+   import App from './App.vue';
+
+   const ui = await create`ShadowRoot`Ui(ctx, {
+     // ...
+     onMount: (container, shadow) => {
+       const teleportTarget = shadow.querySelector('body')!;
+       const app = createApp(App)
+         .provide('TeleportTarget', teleportTarget)
+         .mount(container);
+       return app;
+     },
+   });
+   ui.mount();
+   ```
+
+   ```tsx [React]
+   // hooks/PortalTargetContext.ts
+   import { createContext } from 'react';
+
+   export const PortalTargetContext = createContext<HTMLElement>();
+
+   // entrypoints/example.content.ts
+   import ReactDOM from 'react-dom/client';
+   import App from './App.tsx';
+   import PortalTargetContext from '~/hooks/PortalTargetContext';
+
+   const ui = await create`ShadowRoot`Ui(ctx, {
+     // ...
+     onMount: (container, shadow) => {
+       const portalTarget = shadow.querySelector('body')!;
+       const root = ReactDOM.createRoot(container);
+       root.render(
+         <PortalTargetContext.Provider value={portalTarget}>
+           <App />
+         </PortalTargetContext.Provider>,
+       );
+       return root;
+     },
+   });
+   ui.mount();
+   ```
+
+   :::
+
+   Then use the reference when teleporting/portaling part of your UI to a different place in the DOM:
+
+   :::code-group
+
+   ```vue [Vue]
+   <script lang="ts" setup>
+   import { Teleport } from 'vue';
+
+   const teleportTarget = inject('TeleportTarget');
+   </script>
+
+   <template>
+     <div>
+       <Teleport :to="teleportTarget">
+         <dialog>My dialog</dialog>
+       </Teleport>
+     </div>
+   </template>
+   ```
+
+   ```tsx [React]
+   import { useContext } from 'react';
+   import { createPortal } from 'react-dom';
+   import PortalTargetContext from '~/hooks/PortalTargetContext';
+
+   const MyComponent = () => {
+     const portalTarget = useContext(PortalTargetContext);
+
+     return <div>{createPortal(<dialog>My dialog</dialog>, portalTarget)}</div>;
+   };
+   ```
+
+   :::
+
+   ::::::
+
+Both issues have the same cause: the library puts something outside the `ShadowRoot`, and the `ShadowRoot`'s isolation prevents CSS from being applied to your UI.
+
+Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
