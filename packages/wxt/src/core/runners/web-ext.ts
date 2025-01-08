@@ -55,6 +55,9 @@ export function createWebExtRunner(): ExtensionRunner {
               ),
               args: [
                 '--unsafely-disable-devtools-self-xss-warnings',
+                ...(wxtUserConfig.openDevtools
+                  ? ['--auto-open-devtools-for-tabs']
+                  : []),
                 ...(wxtUserConfig?.chromiumArgs ?? []),
               ],
             }),
