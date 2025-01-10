@@ -63,6 +63,7 @@ const chromeExtensionIds = [
   'ilbikcehnpkmldojkcmlldkoelofnbde', // Strong Password Generator
   'ocllfkhcdopiafndigclebelbecaiocp', // ZenGram: Mindful Instagram, Your Way
   'odffpjnpocjfcaclnenaaaddghkgijdb', // Blync: Preview Links, Selection Search, AI Assistant
+  'kofbbilhmnkcmibjbioafflgmpkbnmme', // HTML to Markdown - Convert webpages to markdown
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
