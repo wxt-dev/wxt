@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.19.24
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.23...wxt-v0.19.24)
+
+### 🩹 Fixes
+
+- **init:** Remove "experimental" from bun package manager ([b150a52](https://github.com/wxt-dev/wxt/commit/b150a52))
+- **web-ext:** Correctly pass `browserConsole` option to open devtools in Firefox ([#1308](https://github.com/wxt-dev/wxt/pull/1308))
+- `autoMount` not working if anchor is already present ([#1350](https://github.com/wxt-dev/wxt/pull/1350))
+
+### 🏡 Chore
+
+- Fix typo in CLI docs ([028c601](https://github.com/wxt-dev/wxt/commit/028c601))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Paulo Pinto <regularjack@gmail.com>
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.23
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.22...wxt-v0.19.23)
