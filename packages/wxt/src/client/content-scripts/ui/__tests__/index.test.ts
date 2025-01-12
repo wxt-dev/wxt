@@ -546,6 +546,25 @@ describe('Content Script UIs', () => {
     ] as const)(
       'built-in UI type: $name',
       ({ name, createUiFunction, uiSelector }) => {
+        it('should mount if an anchor already exists at the initialization', async () => {
+          const onMount = vi.fn(appendTestApp);
+          ui = await createUiFunction(ctx, {
+            position: 'inline',
+            onMount,
+            anchor: `#parent > #${DYNAMIC_CHILD_ID}`,
+            page: name === 'iframe' ? '/page.html' : undefined,
+            name: 'test-component',
+          });
+
+          appendTestElement({ id: DYNAMIC_CHILD_ID });
+          ui.autoMount();
+          await runMicrotasks();
+
+          await expect
+            .poll(() => document.querySelector(uiSelector))
+            .not.toBeNull();
+        });
+
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
           const onMount = vi.fn(appendTestApp);
           const onRemove = vi.fn();
