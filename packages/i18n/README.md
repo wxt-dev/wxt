@@ -354,6 +354,7 @@ You'll need to configure it the extension so it knows where your localization fi
 # You can check available language ids here: https://code.visualstudio.com/docs/languages/identifiers
 languageIds:
   - typescript
+  - typescriptreact
 
 # Look for t("...")
 usageMatchRegex:
