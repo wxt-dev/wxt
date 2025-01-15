@@ -37,7 +37,7 @@
     "typedoc-vitepress-theme": "1.0.0-next.3",
     "typescript": "^5.6.3",
     "vitepress": "^1.5.0",
-    "vitepress-knowledge": "^0.2.18",
+    "vitepress-knowledge": "^0.3.0",
     "vitest-mock-extended": "^2.0.2",
     "vue": "^3.5.12",
     "wxt": "workspace:*"

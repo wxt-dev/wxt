@@ -74,8 +74,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
       vitepress-knowledge:
-        specifier: ^0.2.18
-        version: 0.2.18(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
+        specifier: ^0.3.0
+        version: 0.3.0(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
       vitest-mock-extended:
         specifier: ^2.0.2
         version: 2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7))
@@ -4972,8 +4972,8 @@ packages:
       vite:
         optional: true
 
-  vitepress-knowledge@0.2.18:
-    resolution: {integrity: sha512-f89661qCf+lBIots+9tzTEIDFOizJDmwaGJadB/gnn0VA1HwzUTmpkX5q8lBk30xvpIFg0m3GAlWmfvb7ciTUg==}
+  vitepress-knowledge@0.3.0:
+    resolution: {integrity: sha512-P3M6u30cV7bgbIFWOvfkyaDHhkk4rrVTzU8Qc8N1iEtn1lCP9Ulk3+PZXVzJ8sf7UEg1ObUMPrWFJd1XjuZJdQ==}
     peerDependencies:
       vitepress: ^1.0.0
 
@@ -9747,7 +9747,7 @@ snapshots:
     optionalDependencies:
       vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
 
-  vitepress-knowledge@0.2.18(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)):
+  vitepress-knowledge@0.3.0(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)):
     dependencies:
       linkedom: 0.18.6
       node-html-markdown: 1.3.0
