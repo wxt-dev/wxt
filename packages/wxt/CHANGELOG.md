@@ -17,7 +17,7 @@
 ### ❤️ Contributors
 
 - 1natsu ([@1natsu172](http://github.com/1natsu172))
-- Paulo Pinto <regularjack@gmail.com>
+- Paulo Pinto ([@psrpinto](https://github.com/psrpinto))
 - Aaron ([@aklinker1](http://github.com/aklinker1))
 
 ## v0.19.23
