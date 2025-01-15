@@ -74,8 +74,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
       vitepress-knowledge:
-        specifier: ^0.2.14
-        version: 0.2.14(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
+        specifier: ^0.2.18
+        version: 0.2.18(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
       vitest-mock-extended:
         specifier: ^2.0.2
         version: 2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7))
@@ -3501,6 +3501,9 @@ packages:
   linkedom@0.18.5:
     resolution: {integrity: sha512-JGLaGGtqtu+eOhYrC1wkWYTBcpVWL4AsnwAtMtgO1Q0gI0PuPJKI0zBBE+a/1BrhOE3Uw8JI/ycByAv5cLrAuQ==}
 
+  linkedom@0.18.6:
+    resolution: {integrity: sha512-6G8euAJ84s7MTXTli5JIOO5tzEpyoUBw2/zcqAunSurbCtC83YcgrK+VTcO8HZ/rdR3eaaZM573FP9rNo1uXIA==}
+
   lint-staged@15.2.10:
     resolution: {integrity: sha512-5dY5t743e1byO19P9I4b3x8HJwalIznL5E1FWYnU6OWw33KxNBSLAc6Cy7F2PsFEO8FKnLwjwm5hx7aMF0jzZg==}
     engines: {node: '>=18.12.0'}
@@ -4969,8 +4972,8 @@ packages:
       vite:
         optional: true
 
-  vitepress-knowledge@0.2.14:
-    resolution: {integrity: sha512-ASoLk4kqRibV3J91+zS1nCdqtPRaRISkF4cn1qC/1NdlaeSjU2WVH0a7GQJCJp5TwiJGon53CZwSM8lI1SJkWA==}
+  vitepress-knowledge@0.2.18:
+    resolution: {integrity: sha512-f89661qCf+lBIots+9tzTEIDFOizJDmwaGJadB/gnn0VA1HwzUTmpkX5q8lBk30xvpIFg0m3GAlWmfvb7ciTUg==}
     peerDependencies:
       vitepress: ^1.0.0
 
@@ -7837,6 +7840,7 @@ snapshots:
     dependencies:
       webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
+    optional: true
 
   has-flag@3.0.0: {}
 
@@ -8140,6 +8144,14 @@ snapshots:
   lines-and-columns@2.0.3: {}
 
   linkedom@0.18.5:
+    dependencies:
+      css-select: 5.1.0
+      cssom: 0.5.0
+      html-escaper: 3.0.3
+      htmlparser2: 9.1.0
+      uhyphen: 0.2.0
+
+  linkedom@0.18.6:
     dependencies:
       css-select: 5.1.0
       cssom: 0.5.0
@@ -9735,9 +9747,9 @@ snapshots:
     optionalDependencies:
       vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
 
-  vitepress-knowledge@0.2.14(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)):
+  vitepress-knowledge@0.2.18(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)):
     dependencies:
-      happy-dom: 16.6.0
+      linkedom: 0.18.6
       node-html-markdown: 1.3.0
       picocolors: 1.1.1
       vitepress: 1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
