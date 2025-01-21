@@ -1,7 +1,6 @@
 import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
 import { MatchPattern } from 'wxt/sandbox';
-import type { ReloadContentScriptPayload } from '../../sandbox/dev-server-websocket';
 
 export function reloadContentScript(payload: ReloadContentScriptPayload) {
   const manifest = browser.runtime.getManifest();
@@ -96,4 +95,13 @@ export async function reloadContentScriptMv2(
   _payload: ReloadContentScriptPayload,
 ) {
   throw Error('TODO: reloadContentScriptMv2');
+}
+
+export interface ReloadContentScriptPayload {
+  registration?: 'manifest' | 'runtime';
+  contentScript: {
+    matches: string[];
+    js?: string[];
+    css?: string[];
+  };
 }

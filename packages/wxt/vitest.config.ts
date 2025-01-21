@@ -18,7 +18,7 @@ export default defineConfig({
       ignored: '**/dist/**',
     },
   },
-  plugins: [RandomSeed()],
+  plugins: [RandomSeed() as any],
   resolve: {
     alias: {
       'wxt/testing': path.resolve('src/testing'),
