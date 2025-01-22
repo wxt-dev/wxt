@@ -2,6 +2,7 @@ import { browser } from 'wxt/browser';
 import { logger } from './sandbox/utils/logger';
 import { MatchPattern } from 'wxt/sandbox';
 
+console.log('HOT', import.meta.hot);
 if (import.meta.hot) {
   import.meta.hot.on('wxt:reload-extension', () => browser.runtime.reload());
   import.meta.hot.on('wxt:reload-content-script', (event) =>
