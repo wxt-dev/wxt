@@ -457,7 +457,7 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
       vite:
-        specifier: ^5.0.0 || ^6.0.0
+        specifier: ^5.0.0 || <=6.0.8
         version: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
       vite-node:
         specifier: ^2.1.4
@@ -7977,7 +7977,7 @@ snapshots:
 
   is-reference@1.2.1:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
 
   is-reference@3.0.2:
     dependencies:
@@ -8831,7 +8831,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.1.1
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
 
   postcss@8.4.47:
     dependencies:
