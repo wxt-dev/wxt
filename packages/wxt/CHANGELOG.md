@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.25
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.24...wxt-v0.19.25)
+
+### 🩹 Fixes
+
+- Drop support for vite 6.0.9+ until websocket fix is finished ([8e2badc](https://github.com/wxt-dev/wxt/commit/8e2badc))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.24
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.23...wxt-v0.19.24)
