@@ -1,10 +1,8 @@
 import definition from 'virtual:user-background-entrypoint';
 import { initPlugins } from 'virtual:wxt-plugins';
 import { logger } from '../sandbox/utils/logger';
-
-if (import.meta.env.COMMAND === 'serve')
-  // @ts-ignore
-  import(/* @vite-ignore */ 'http://localhost:3000/@id/wxt/background-client');
+/* @vite-ignore */
+import 'http://localhost:3000/@id/wxt/background-client';
 
 let result;
 

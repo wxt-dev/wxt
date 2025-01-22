@@ -38,6 +38,7 @@ export default defineBuildConfig([
       'wxt/client',
       'wxt/testing',
       'http://localhost:3000/@id/wxt/background-client',
+      'http://localhost:3000/@vite/client',
     ],
   })),
 ]);
