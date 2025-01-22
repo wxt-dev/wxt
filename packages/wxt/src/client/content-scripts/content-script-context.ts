@@ -42,6 +42,7 @@ export class ContentScriptContext implements AbortController {
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
+  private receivedTimestamps = new Set<number>();
 
   constructor(
     private readonly contentScriptName: string,
@@ -246,6 +247,10 @@ export class ContentScriptContext implements AbortController {
         event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE &&
         event.data?.contentScriptName === this.contentScriptName
       ) {
+        // Deduplicate messages
+        if (this.receivedTimestamps.has(event.timeStamp)) return;
+        this.receivedTimestamps.add(event.timeStamp);
+
         const wasFirst = isFirst;
         isFirst = false;
         if (wasFirst && options?.ignoreFirstEvent) return;
