@@ -67,6 +67,10 @@
     "./modules": {
       "types": "./dist/modules.d.ts",
       "default": "./dist/modules.mjs"
+    },
+    "./background-client": {
+      "types": "./dist/background-client.d.ts",
+      "default": "./dist/background-client.mjs"
     }
   },
   "scripts": {

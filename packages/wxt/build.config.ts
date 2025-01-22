@@ -32,10 +32,12 @@ export default defineBuildConfig([
       ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
       'virtual:wxt-plugins',
       'virtual:app-config',
+      'wxt/background-client',
       'wxt/browser',
       'wxt/sandbox',
       'wxt/client',
       'wxt/testing',
+      'http://localhost:3000/@id/wxt/background-client',
     ],
   })),
 ]);
