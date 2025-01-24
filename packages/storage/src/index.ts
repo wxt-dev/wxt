@@ -326,6 +326,10 @@ function createStorage(): WxtStorage {
         }),
       );
     },
+    clear: async (base) => {
+      const driver = getDriver(base);
+      await driver.clear();
+    },
     removeMeta: async (key, properties) => {
       const { driver, driverKey } = resolveKey(key);
       await removeMeta(driver, driverKey, properties);
@@ -534,6 +538,9 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     removeItems: async (keys) => {
       await getStorageArea().remove(keys);
     },
+    clear: async () => {
+      await getStorageArea().clear();
+    },
     snapshot: async () => {
       return await getStorageArea().get();
     },
@@ -674,6 +681,12 @@ export interface WxtStorage {
       | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
     >,
   ): Promise<void>;
+
+  /**
+   * Removes all items from storage.
+   */
+  clear(base: StorageArea): Promise<void>;
+
   /**
    * Remove the entire metadata for a key, or specific properties by name.
    *
@@ -730,6 +743,7 @@ interface WxtStorageDriver {
   setItems(values: Array<{ key: string; value: any }>): Promise<void>;
   removeItem(key: string): Promise<void>;
   removeItems(keys: string[]): Promise<void>;
+  clear(): Promise<void>;
   snapshot(): Promise<Record<string, unknown>>;
   restoreSnapshot(data: Record<string, unknown>): Promise<void>;
   watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
