@@ -80,16 +80,16 @@ To create a standalone content script that only includes a CSS file:
    // wxt.config.ts
    export default defineConfig({
      hooks: {
-       "build:manifestGenerated": (wxt, manifest) => {
+       'build:manifestGenerated': (wxt, manifest) => {
          manifest.content_scripts ??= [];
          manifest.content_scripts.push({
            // Build extension once to see where your CSS get's written to
-           css: ["content-scripts/example.css"],
-           matches: ["*://*/*"]
-         )
-       }
-     }
-   })
+           css: ['content-scripts/example.css'],
+           matches: ['*://*/*'],
+         });
+       },
+     },
+   });
    ```
 
 ## UI
