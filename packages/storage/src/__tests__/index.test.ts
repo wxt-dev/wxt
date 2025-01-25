@@ -491,16 +491,13 @@ describe('Storage Utils', () => {
 
       describe('clear', () => {
         it('should remove all items', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const item2 = storage.defineItem(`${storageArea}:two`);
           await fakeBrowser.storage[storageArea].set({
             one: 1,
             two: 2,
           });
 
           await storage.clear(storageArea);
-          expect(await item1.getValue()).toBeNull();
-          expect(await item2.getValue()).toBeNull();
+          expect(await fakeBrowser.storage[storageArea].get()).toEqual({});
         });
       });
 
