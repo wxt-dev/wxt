@@ -683,7 +683,7 @@ export interface WxtStorage {
   ): Promise<void>;
 
   /**
-   * Removes all items from storage.
+   * Removes all items from the provided storage area.
    */
   clear(base: StorageArea): Promise<void>;
 
