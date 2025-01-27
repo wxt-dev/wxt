@@ -43,6 +43,7 @@ export class ContentScriptContext implements AbortController {
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
+  private sentMessageIDs = new Set<string>();
   private receivedMessageIDs = new Set<string>();
 
   constructor(
@@ -230,14 +231,31 @@ export class ContentScriptContext implements AbortController {
   }
 
   stopOldScripts() {
+    const uuid = uuidv4();
+    this.sentMessageIDs.add(uuid);
     // Use postMessage so it get's sent to all the frames of the page.
     window.postMessage(
       {
         type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
         contentScriptName: this.contentScriptName,
-        messageId: uuidv4(),
+        messageId: uuid,
       },
       '*',
+    );
+  }
+
+  verifyScriptStartedEvent(event: MessageEvent) {
+    const isScriptStartedEvent =
+      event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE;
+    const isSameContentScript =
+      event.data?.contentScriptName === this.contentScriptName;
+    const isNotDuplicate = !this.receivedMessageIDs.has(event.data?.messageId);
+    const hasValidId = this.sentMessageIDs.has(event.data?.messageId);
+    return (
+      isScriptStartedEvent &&
+      isSameContentScript &&
+      isNotDuplicate &&
+      hasValidId
     );
   }
 
@@ -245,12 +263,7 @@ export class ContentScriptContext implements AbortController {
     let isFirst = true;
 
     const cb = (event: MessageEvent) => {
-      if (
-        event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE &&
-        event.data?.contentScriptName === this.contentScriptName
-      ) {
-        // Deduplicate messages
-        if (this.receivedMessageIDs.has(event.data.messageId)) return;
+      if (this.verifyScriptStartedEvent(event)) {
         this.receivedMessageIDs.add(event.data.messageId);
 
         const wasFirst = isFirst;
