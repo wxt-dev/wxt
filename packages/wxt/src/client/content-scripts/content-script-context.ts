@@ -1,5 +1,6 @@
 import { ContentScriptDefinition } from '../../types';
 import { browser } from 'wxt/browser';
+import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../../sandbox/utils/logger';
 import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
 import { createLocationWatcher } from './location-watcher';
@@ -42,7 +43,7 @@ export class ContentScriptContext implements AbortController {
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
-  private receivedTimestamps = new Set<number>();
+  private receivedMessageIDs = new Set<string>();
 
   constructor(
     private readonly contentScriptName: string,
@@ -234,6 +235,7 @@ export class ContentScriptContext implements AbortController {
       {
         type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
         contentScriptName: this.contentScriptName,
+        messageId: uuidv4(),
       },
       '*',
     );
@@ -248,8 +250,8 @@ export class ContentScriptContext implements AbortController {
         event.data?.contentScriptName === this.contentScriptName
       ) {
         // Deduplicate messages
-        if (this.receivedTimestamps.has(event.timeStamp)) return;
-        this.receivedTimestamps.add(event.timeStamp);
+        if (this.receivedMessageIDs.has(event.data.messageId)) return;
+        this.receivedMessageIDs.add(event.data.messageId);
 
         const wasFirst = isFirst;
         isFirst = false;
