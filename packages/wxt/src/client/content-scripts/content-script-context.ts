@@ -1,6 +1,5 @@
 import { ContentScriptDefinition } from '../../types';
 import { browser } from 'wxt/browser';
-import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../../sandbox/utils/logger';
 import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
 import { createLocationWatcher } from './location-watcher';
@@ -231,14 +230,14 @@ export class ContentScriptContext implements AbortController {
   }
 
   stopOldScripts() {
-    const uuid = uuidv4();
-    this.sentMessageIDs.add(uuid);
+    const messageId = Math.random().toString(36).slice(2);
+    this.sentMessageIDs.add(messageId);
     // Use postMessage so it get's sent to all the frames of the page.
     window.postMessage(
       {
         type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
         contentScriptName: this.contentScriptName,
-        messageId: uuid,
+        messageId,
       },
       '*',
     );
