@@ -42,7 +42,6 @@ export class ContentScriptContext implements AbortController {
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
-  private sentMessageIDs = new Set<string>();
   private receivedMessageIDs = new Set<string>();
 
   constructor(
@@ -230,14 +229,12 @@ export class ContentScriptContext implements AbortController {
   }
 
   stopOldScripts() {
-    const messageId = Math.random().toString(36).slice(2);
-    this.sentMessageIDs.add(messageId);
     // Use postMessage so it get's sent to all the frames of the page.
     window.postMessage(
       {
         type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
         contentScriptName: this.contentScriptName,
-        messageId,
+        messageId: Math.random().toString(36).slice(2),
       },
       '*',
     );
@@ -249,13 +246,7 @@ export class ContentScriptContext implements AbortController {
     const isSameContentScript =
       event.data?.contentScriptName === this.contentScriptName;
     const isNotDuplicate = !this.receivedMessageIDs.has(event.data?.messageId);
-    const hasValidId = this.sentMessageIDs.has(event.data?.messageId);
-    return (
-      isScriptStartedEvent &&
-      isSameContentScript &&
-      isNotDuplicate &&
-      hasValidId
-    );
+    return isScriptStartedEvent && isSameContentScript && isNotDuplicate;
   }
 
   listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
