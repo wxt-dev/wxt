@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.19.26
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.25...wxt-v0.19.26)
+
+### 🩹 Fixes
+
+- **context:** Deduplicate `wxt:content-script-started` ([#1364](https://github.com/wxt-dev/wxt/pull/1364))
+
+### ❤️ Contributors
+
+- Deniz Uğur ([@DenizUgur](http://github.com/DenizUgur))
+
 ## v0.19.25
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.24...wxt-v0.19.25)
