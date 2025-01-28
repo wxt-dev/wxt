@@ -26,7 +26,7 @@ jobs:
       - name: 🛠️ Setup
         uses: ./.github/actions/setup
 
-      - name: 🐋 Login to Docker Hub
+      - name: Login to Docker Registry
         uses: docker/login-action@v3
         with:
           registry: https://${{ secrets.DOCKER_REGISTRY_HOSTNAME }}
