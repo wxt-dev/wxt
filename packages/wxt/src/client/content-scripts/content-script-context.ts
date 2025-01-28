@@ -42,7 +42,7 @@ export class ContentScriptContext implements AbortController {
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
-  private receivedMessageIDs = new Set<string>();
+  private receivedMessageIds = new Set<string>();
 
   constructor(
     private readonly contentScriptName: string,
@@ -245,7 +245,7 @@ export class ContentScriptContext implements AbortController {
       event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE;
     const isSameContentScript =
       event.data?.contentScriptName === this.contentScriptName;
-    const isNotDuplicate = !this.receivedMessageIDs.has(event.data?.messageId);
+    const isNotDuplicate = !this.receivedMessageIds.has(event.data?.messageId);
     return isScriptStartedEvent && isSameContentScript && isNotDuplicate;
   }
 
@@ -254,7 +254,7 @@ export class ContentScriptContext implements AbortController {
 
     const cb = (event: MessageEvent) => {
       if (this.verifyScriptStartedEvent(event)) {
-        this.receivedMessageIDs.add(event.data.messageId);
+        this.receivedMessageIds.add(event.data.messageId);
 
         const wasFirst = isFirst;
         isFirst = false;
