@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: 📥 Checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🛠️ Setup
+      - name: Setup
         uses: ./.github/actions/setup
 
       - name: Login to Docker Registry
@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
-      - name: 📝 Build docs
+      - name: Build docs
         run: |
           pnpm docs:build
           docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}

@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: 📥 Checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🛠️ Setup
+      - name: Setup
         uses: ./.github/actions/setup
 
-      - name: 🛠️ Build
+      - name: Build
         run: pnpm buildc all
 
-      - name: 🚀 Publish
+      - name: Publish
         run: pnpx pkg-pr-new publish --compact './packages/*'
