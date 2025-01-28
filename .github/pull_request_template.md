@@ -1,7 +1,7 @@
 ### Overview
 <!-- Describe your changes and why you made them -->
 
-### Maanual Testing
+### Manual Testing
 <!-- Describe how to test your changes to make sure the PR works as intended -->
 
 ### Related Issue
