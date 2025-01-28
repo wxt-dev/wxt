@@ -1,8 +1,9 @@
-name: Continuous Publish
+name: 🚀 Continuous Publish
 on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
@@ -10,8 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm buildc all
-      - run: pnpx pkg-pr-new publish --compact './packages/*'
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup
+        uses: ./.github/actions/setup
+
+      - name: 🛠️ Build
+        run: pnpm buildc all
+
+      - name: 🚀 Publish
+        run: pnpx pkg-pr-new publish --compact './packages/*'

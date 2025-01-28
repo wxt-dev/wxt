@@ -1,10 +1,14 @@
-name: Validate
+name: ✅ Validate
+
 on:
   workflow_call:
   pull_request:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
 
 jobs:
   checks:
@@ -13,12 +17,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm check
+
   builds:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm buildc all
+
   build-demo:
     runs-on: ubuntu-22.04
     steps:
@@ -28,6 +34,7 @@ jobs:
         working-directory: packages/wxt-demo
       - run: pnpm wxt zip
         working-directory: packages/wxt-demo
+
   tests:
     runs-on: ubuntu-22.04
     steps:
@@ -39,12 +46,14 @@ jobs:
       - uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   windows-tests:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm test
+
   template:
     runs-on: ubuntu-22.04
     strategy:
@@ -56,20 +65,27 @@ jobs:
           - svelte
           - vanilla
           - vue
+
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+
       - run: pnpm pack
         working-directory: packages/wxt
+
       - run: npm i
         working-directory: templates/${{ matrix.template }}
+
       - run: npm i -D ../../packages/wxt/wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
+
       - run: pnpm compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
+
       - run: pnpm check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
+
       - run: pnpm build
         working-directory: templates/${{ matrix.template }}
