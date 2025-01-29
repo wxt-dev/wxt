@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   checks:
+    name: Checks
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +20,7 @@ jobs:
       - run: pnpm check
 
   builds:
+    name: Builds
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +28,7 @@ jobs:
       - run: pnpm buildc all
 
   build-demo:
+    name: Build Demo
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +39,7 @@ jobs:
         working-directory: packages/wxt-demo
 
   tests:
+    name: Tests
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +52,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   windows-tests:
+    name: Windows Tests
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,6 +60,7 @@ jobs:
       - run: pnpm test
 
   template:
+    name: Template
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
