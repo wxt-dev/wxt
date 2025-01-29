@@ -460,7 +460,7 @@ importers:
         specifier: ^5.0.0 || <=6.0.8
         version: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
       vite-node:
-        specifier: ^2.1.4
+        specifier: ^2.1.4 || ^3.0.0
         version: 2.1.4(@types/node@20.17.6)(sass@1.80.7)
       web-ext-run:
         specifier: ^0.2.1
