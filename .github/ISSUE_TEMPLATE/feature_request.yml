@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest an idea for WXT
+labels: [feature]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Feature Request
+
+        Please describe your feature, be clear and concise. If you have a proposal for required type or API changes, list them here.
+
+  - type: textarea
+    id: related-bug
+    attributes:
+      label: Is your feature request related to a bug?
+      description: If so, add a link here. If not, write "N/A"
+      placeholder: "N/A"
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What are the alternatives?
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: Describe alternatives here...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+      placeholder: Add context here...
