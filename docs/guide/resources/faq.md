@@ -39,7 +39,6 @@ This is usually caused by one of two things (or both) when using `createShadowRo
 
    - Ant Design: [`StyleProvider`](https://ant.design/docs/react/compatible-style#shadow-dom-usage)
    - Mantine: [`MantineProvider#getRootElement` and `MantineProvider#cssVariablesSelector`](https://mantine.dev/theming/mantine-provider/)
-   - ShadCN: [See this blog post](https://blog-repo-eto.pages.dev/blog/building-modern-cross-browser-web-extensions-content-scripts-and-ui/#using-radixui-portals-to-move-the-dialog-to-shadow-dom)
 
    > If your library isn't listed above, try searching it's docs/issues for "shadow root", "shadow dom", or "css container". Not all libraries support shadow DOMs, you may have to open an issue to request this feature.
 
@@ -157,6 +156,8 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    ```
 
    :::
+
+   If you use ShadCN, [see this blog post](https://blog-repo-eto.pages.dev/blog/building-modern-cross-browser-web-extensions-content-scripts-and-ui/#using-radixui-portals-to-move-the-dialog-to-shadow-dom).
 
    ::::::
 
