@@ -1,4 +1,4 @@
-name: 🔄 Sync Releases
+name: Sync Releases
 on:
   workflow_dispatch:
     inputs:
@@ -16,10 +16,12 @@ on:
           - storage
           - wxt
 
+permissions:
+  contents: read
+
 jobs:
   sync:
     runs-on: ubuntu-22.04
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
