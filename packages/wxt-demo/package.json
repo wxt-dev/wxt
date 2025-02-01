@@ -27,7 +27,7 @@
     "@types/react-dom": "^19.0.2",
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
-    "sass": "^1.80.7",
+    "sass": "^1.83.4",
     "typescript": "^5.6.3",
     "unocss": "^0.64.0",
     "vitest": "^2.1.4",
