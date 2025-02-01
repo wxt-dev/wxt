@@ -97,7 +97,7 @@
     "consola": "^3.2.3",
     "defu": "^6.1.4",
     "dotenv": "^16.4.5",
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.24.2",
     "fast-glob": "^3.3.2",
     "filesize": "^10.1.6",
     "fs-extra": "^11.2.0",
