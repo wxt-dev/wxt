@@ -6,7 +6,7 @@ This page is dedicated to all the awesome people how have made something for WXT
 
 ## Blog Posts
 
-- [Building Modern Cross Browser Web Extensions](https://blog-repo-eto.pages.dev/blog/building-modern-cross-web-extensions-introduction/) by Aabid ([@aabidk20](https://github.com/aabidk20))
+- [Building Modern Cross Browser Web Extensions](https://aabidk.dev/tags/wxt/) by Aabid ([@aabidk20](https://github.com/aabidk20))
 
 ## NPM Packages
 
