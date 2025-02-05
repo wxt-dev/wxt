@@ -157,7 +157,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
 
    :::
 
-   If you use ShadCN, [see this blog post](https://blog-repo-eto.pages.dev/blog/building-modern-cross-browser-web-extensions-content-scripts-and-ui/#using-radixui-portals-to-move-the-dialog-to-shadow-dom).
+   If you use ShadCN, [see this blog post](https://aabidk.dev/blog/building-modern-cross-browser-web-extensions-content-scripts-and-ui/#using-radixui-portals-to-move-the-dialog-to-shadow-dom).
 
    ::::::
 
