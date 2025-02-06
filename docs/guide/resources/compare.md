@@ -10,6 +10,7 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 
 | Features                                                |   WXT   | Plasmo  |  CRXJS  |
 | ------------------------------------------------------- | :-----: | :-----: | :-----: |
+| Currently Maintained                                    |   ✅    |   ✅    | 🟡 [^m] |
 | Supports all browsers                                   |   ✅    |   ✅    | 🟡 [^j] |
 | MV2 Support                                             |   ✅    |   ✅    | 🟡 [^a] |
 | MV3 Support                                             |   ✅    |   ✅    | 🟡 [^a] |
@@ -64,3 +65,5 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 [^k]: There is no built-in wrapper around this API. However, you can still access the standard APIs via `chrome`/`browser` globals or use any 3rd party NPM package.
 
 [^l]: WIP, moving very slowly. Follow [wxt-dev/wxt#357](https://github.com/wxt-dev/wxt/issues/357) for updates.
+
+[^m]: See https://github.com/crxjs/chrome-extension-tools/discussions/974
