@@ -1,5 +1,5 @@
 import { Plugin } from 'vite';
-import { ResolvedConfig } from '../../../../types';
+import { ResolvedConfig, WxtDevServer } from '../../../../types';
 import { normalizePath } from '../../../utils/paths';
 import {
   VirtualModuleId,
@@ -11,10 +11,13 @@ import { resolve } from 'path';
 /**
  * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual` directory.
  */
-export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
+export function resolveVirtualModules(
+  config: ResolvedConfig,
+  server: WxtDevServer | undefined,
+): Plugin[] {
   return virtualModuleNames.map((name) => {
     const virtualId: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
-    const resolvedVirtualId = '\0' + virtualId;
+    const resolvedVirtualId = 'resolved-' + virtualId;
     return {
       name: `wxt:resolve-virtual-${name}`,
       resolveId(id) {
@@ -29,12 +32,26 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
       async load(id) {
         if (!id.startsWith(resolvedVirtualId)) return;
 
+        let wxtBackgroundClientImport: string = '';
+        if (server && config.command === 'serve') {
+          const wxtBackgroundClientUrl = `http://${server.hostname}:${server.port}/@id/wxt/background-client`;
+          wxtBackgroundClientImport =
+            config.manifestVersion === 2
+              ? `import(/* @vite-ignore */ "${wxtBackgroundClientUrl}")`
+              : `/* @vite-ignore */\nimport "${wxtBackgroundClientUrl}"`;
+        }
+
         const inputPath = id.replace(resolvedVirtualId, '');
         const template = await fs.readFile(
           resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
           'utf-8',
         );
-        return template.replace(`virtual:user-${name}`, inputPath);
+        return template
+          .replace(`virtual:user-${name}`, inputPath)
+          .replace(
+            `__WXT_BACKGROUND_CLIENT_IMPORT__`,
+            wxtBackgroundClientImport,
+          );
       },
     };
   });
