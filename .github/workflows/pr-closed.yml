@@ -1,4 +1,4 @@
-name: 🎉 PR closed
+name: PR closed
 
 on:
   pull_request_target:
