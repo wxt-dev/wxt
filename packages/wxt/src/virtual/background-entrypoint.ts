@@ -1,19 +1,7 @@
 import definition from 'virtual:user-background-entrypoint';
 import { initPlugins } from 'virtual:wxt-plugins';
 import { logger } from '../sandbox/utils/logger';
-
 __WXT_BACKGROUND_CLIENT_IMPORT__;
-
-// Works for MV3 + type:module
-// /* @vite-ignore */
-// import 'http://localhost:3000/@id/wxt/background-client';
-
-// Works for MV2
-// import(
-//   /* @vite-ignore */
-//   // @ts-ignore
-//   'http://localhost:3000/@id/wxt/background-client'
-// );
 
 let result;
 
