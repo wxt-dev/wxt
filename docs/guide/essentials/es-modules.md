@@ -14,7 +14,7 @@ Vite only supports bundling JS from HTML pages as ESM. Ensure you have added `ty
 
 ## Background <Badge type="warning" text="≥0.16.0" />
 
-In your background script, set `type: "module"`:
+By default, your background will be bundled into a single file as IIFE. You can change this by setting `type: "module"` in your background entrypoint:
 
 ```ts
 export default defineBackground({
@@ -24,6 +24,8 @@ export default defineBackground({
   },
 });
 ```
+
+This will change the output format to ESM, enable code-spliting between your background script and HTML pages, and set `"type": "module"` in your manifest.
 
 :::warning
 Only MV3 supports ESM background scripts/service workers. When targeting MV2, the `type` option is ignored and the background is always bundled into a single file as IIFE.
