@@ -116,8 +116,11 @@ export async function generateManifest(
 
   addEntrypoints(manifest, entrypoints, buildOutput);
 
-  if (wxt.config.command === 'serve') addDevModeCsp(manifest);
-  if (wxt.config.command === 'serve') addDevModePermissions(manifest);
+  if (wxt.config.command === 'serve') {
+    addDevModeCsp(manifest);
+    addDevModePermissions(manifest);
+    setDevModeBackgroundToEsm(manifest);
+  }
 
   // TODO: Remove in v1
   wxt.config.transformManifest?.(manifest);
@@ -507,6 +510,15 @@ function addDevModePermissions(manifest: Manifest.WebExtensionManifest) {
 
   // For registering content scripts
   if (wxt.config.manifestVersion === 3) addPermission(manifest, 'scripting');
+}
+
+/** MV3 service worker must by `type: "module"` to connect to dev server. */
+function setDevModeBackgroundToEsm(manifest: Manifest.WebExtensionManifest) {
+  if (wxt.config.manifestVersion === 3) {
+    // Background must be ESM for it to be able to connect to the dev server
+    (manifest as any).background ??= {};
+    (manifest as any).background.type = 'module';
+  }
 }
 
 /**

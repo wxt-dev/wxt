@@ -1,6 +1,7 @@
 /**
  * This file contains all the code required for the background to communicate
  * with the dev server during development:
+ *
  * - Reload extension or parts of extension when files are saved.
  * - Keep MV3 service worker alive indefinitely.
  *
@@ -21,7 +22,7 @@ if (import.meta.hot) {
 
   if (import.meta.env.MANIFEST_VERSION === 3) {
     let backgroundInitialized = false;
-    // Tell the server the background script is loaded and ready to go
+    // Tell the server the background script is loaded and ready to receive events
     import.meta.hot.on('vite:ws:connect', () => {
       if (backgroundInitialized) return;
 
@@ -29,8 +30,15 @@ if (import.meta.hot) {
       backgroundInitialized = true;
     });
 
-    // Web Socket will disconnect if the service worker is killed
-    keepServiceWorkerAlive();
+    // Web Socket will disconnect if the service worker is killed. Supposedly,
+    // just having a web socket connection active should keep the service worker
+    // alive, but when this was originally implemented on older versions of
+    // Chrome, that was not true. So this code has stayed around.
+    // See: https://developer.chrome.com/blog/longer-esw-lifetimes/
+    setInterval(async () => {
+      // Calling an async browser API resets the service worker's timeout
+      await browser.runtime.getPlatformInfo();
+    }, 5e3);
   }
 
   browser.commands.onCommand.addListener((command) => {
@@ -39,17 +47,7 @@ if (import.meta.hot) {
     }
   });
 } else {
-  console.error('[wxt] HMR Context not found');
-}
-
-/**
- * https://developer.chrome.com/blog/longer-esw-lifetimes/
- */
-function keepServiceWorkerAlive() {
-  setInterval(async () => {
-    // Calling an async browser API resets the service worker's timeout
-    await browser.runtime.getPlatformInfo();
-  }, 5e3);
+  console.error('[wxt] HMR context, import.meta.hot, not found');
 }
 
 function reloadContentScript(payload: ReloadContentScriptPayload) {
