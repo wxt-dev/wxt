@@ -1,6 +1,7 @@
 import definition from 'virtual:user-background-entrypoint';
 import { initPlugins } from 'virtual:wxt-plugins';
 import { logger } from '../sandbox/utils/logger';
+console.log('__WXT_BACKGROUND_CLIENT_IMPORT__');
 __WXT_BACKGROUND_CLIENT_IMPORT__;
 
 let result;
