@@ -1,8 +1,18 @@
+/**
+ * This file contains all the code required for the background to communicate
+ * with the dev server during development:
+ * - Reload extension or parts of extension when files are saved.
+ * - Keep MV3 service worker alive indefinitely.
+ *
+ * It is not imported directly (`import "wxt/background-client"`), but from
+ * the dev server (`import "http://localhost:3000/@id/wxt/background-client"`)
+ * to ensure `import.meta.hot` is defined by Vite.
+ */
+
 import { browser } from 'wxt/browser';
 import { logger } from './sandbox/utils/logger';
 import { MatchPattern } from 'wxt/sandbox';
 
-console.log('HOT', import.meta.hot);
 if (import.meta.hot) {
   import.meta.hot.on('wxt:reload-extension', () => browser.runtime.reload());
   import.meta.hot.on('wxt:reload-content-script', (event) =>
