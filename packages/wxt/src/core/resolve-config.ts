@@ -1,4 +1,5 @@
 import { loadConfig } from 'c12';
+import { createRequire } from 'node:module';
 import {
   InlineConfig,
   ResolvedConfig,
@@ -156,6 +157,10 @@ export async function resolveConfig(
   }
 
   const userModules = await resolveWxtUserModules(
+    path.resolve(
+      root,
+      inlineConfig.configFile ? path.dirname(inlineConfig.configFile) : '.',
+    ),
     modulesDir,
     mergedConfig.modules,
   );
@@ -427,14 +432,11 @@ async function resolveWxtModuleDir() {
   // directory, which we want to return from this function.
   // return path.resolve(fileURLToPath(url), '../..');
 
-  const requireResolve =
-    globalThis.require?.resolve ??
-    (await import('node:module')).default.createRequire(import.meta.url)
-      .resolve;
+  const nodeRequire = globalThis.require ?? createRequire(import.meta.url);
 
   // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
-  return path.resolve(requireResolve('wxt'), '../..');
+  return path.resolve(nodeRequire.resolve('wxt'), '../..');
 }
 
 async function isDirMissing(dir: string) {
@@ -479,14 +481,18 @@ export async function mergeBuilderConfig(
 }
 
 export async function resolveWxtUserModules(
+  rootDir: string,
   modulesDir: string,
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {
+  const nodeRequire = createRequire(path.join(rootDir, 'index.js'));
+
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
+      const resolvedModuleId = nodeRequire.resolve(moduleId);
       const mod: { default: WxtModule<any> } = await import(
-        /* @vite-ignore */ moduleId
+        /* @vite-ignore */ resolvedModuleId
       );
       if (mod.default == null) {
         throw Error('Module missing default export: ' + moduleId);
