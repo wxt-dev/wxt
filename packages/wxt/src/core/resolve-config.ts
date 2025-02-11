@@ -85,7 +85,7 @@ export async function resolveConfig(
     inlineConfig.root ?? userConfig.root ?? process.cwd(),
   );
   const wxtDir = path.resolve(root, '.wxt');
-  const wxtModuleDir = await resolveWxtModuleDir();
+  const wxtModuleDir = resolveWxtModuleDir();
   const srcDir = path.resolve(root, mergedConfig.srcDir ?? root);
   const entrypointsDir = path.resolve(
     srcDir,
@@ -425,7 +425,7 @@ async function getUnimportEslintOptions(
 /**
  * Returns the path to `node_modules/wxt`.
  */
-async function resolveWxtModuleDir() {
+function resolveWxtModuleDir() {
   // TODO: Use this once we're fully running in ESM, see https://github.com/wxt-dev/wxt/issues/277
   // const url = import.meta.resolve('wxt', import.meta.url);
   // resolve() returns the "wxt/dist/index.mjs" file, not the package's root
