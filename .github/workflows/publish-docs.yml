@@ -1,4 +1,4 @@
-name: Publish Docs
+name: 📝 Publish Docs
 on:
   push:
     branches:
@@ -10,20 +10,38 @@ on:
         required: true
         default: latest
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     # Only run if it's the upstream repository, not forks
     if: github.repository == 'wxt-dev/wxt'
+    name: Publish Docs
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - uses: docker/login-action@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3
         with:
           registry: https://${{ secrets.DOCKER_REGISTRY_HOSTNAME }}
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-      - run: pnpm docs:build
-      - run: docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
-      - run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
-      - run: curl -X POST -i ${{ secrets.UPDATE_DOCS_WEBHOOK }}
+
+      - name: Build docs
+        run: |
+          pnpm docs:build
+          docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
+
+      - name: Push Image
+        run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
+
+      - name: Deploy
+        run: curl -X POST -i ${{ secrets.UPDATE_DOCS_WEBHOOK }}
