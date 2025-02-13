@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   vhs:
+    name: Create VHS
     runs-on: ubuntu-22.04
     permissions:
       contents: write

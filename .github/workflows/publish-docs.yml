@@ -17,6 +17,7 @@ jobs:
   publish:
     # Only run if it's the upstream repository, not forks
     if: github.repository == 'wxt-dev/wxt'
+    name: Publish Docs
     runs-on: ubuntu-22.04
     permissions:
       contents: write
