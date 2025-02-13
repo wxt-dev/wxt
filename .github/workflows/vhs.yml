@@ -1,19 +1,19 @@
 name: 📼 VHS
-
 on:
   push:
     paths:
       - 'docs/tapes/*.tape'
-
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   vhs:
+    name: Create VHS
     runs-on: ubuntu-22.04
-
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +23,8 @@ jobs:
         with:
           install: false
 
-      - name: Install WXT
+      # This prevents pnpm dlx from downloading WXT in the video
+      - name: Pre-install WXT
         run: |
           pnpm store add wxt@latest
           pnpm dlx wxt@latest --version

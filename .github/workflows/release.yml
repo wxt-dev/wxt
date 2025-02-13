@@ -1,5 +1,4 @@
 name: 🚀 Release
-
 on:
   workflow_dispatch:
     inputs:
@@ -18,17 +17,22 @@ on:
           - unocss
           - wxt
 
+permissions:
+  contents: read
+
 jobs:
   validate:
+    name: Validate
     uses: './.github/workflows/validate.yml'
     secrets: inherit
 
   publish:
+    name: Publish
     runs-on: ubuntu-22.04
-
+    permissions:
+      contents: write
     needs:
       - validate
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4

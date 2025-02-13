@@ -1,5 +1,4 @@
 name: ✅ Validate
-
 on:
   workflow_call:
   pull_request:
@@ -15,39 +14,64 @@ jobs:
     name: Checks
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm check
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Type Check
+        run: pnpm check
 
   builds:
     name: Builds
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm buildc all
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build All Packages
+        run: pnpm buildc all
 
   build-demo:
     name: Build Demo
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm build:all
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build
+        run: pnpm build:all
         working-directory: packages/wxt-demo
-      - run: pnpm wxt zip
+
+      - name: ZIP
+        run: pnpm wxt zip
         working-directory: packages/wxt-demo
 
   tests:
     name: Tests
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - uses: oven-sh/setup-bun@v2
-      - name: pnpm test:coverage
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Run Tests
         run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
-      - uses: codecov/codecov-action@v5
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -55,9 +79,14 @@ jobs:
     name: Windows Tests
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm test
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run Tests
+        run: pnpm test
 
   template:
     name: Template
@@ -71,27 +100,35 @@ jobs:
           - svelte
           - vanilla
           - vue
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - run: pnpm pack
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Pack WXT package
+        run: pnpm pack
         working-directory: packages/wxt
 
-      - run: npm i
+      - name: Install Dependencies
+        run: npm i
         working-directory: templates/${{ matrix.template }}
 
-      - run: npm i -D ../../packages/wxt/wxt-*.tgz
+      - name: Install Packed WXT
+        run: npm i -D ../../packages/wxt/wxt-*.tgz
         working-directory: templates/${{ matrix.template }}
 
-      - run: pnpm compile
+      - name: Type Check Template
+        run: pnpm compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
 
-      - run: pnpm check
+      - name: Type Check Template
+        run: pnpm check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
 
-      - run: pnpm build
+      - name: Build Template
+        run: pnpm build
         working-directory: templates/${{ matrix.template }}

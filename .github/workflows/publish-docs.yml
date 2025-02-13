@@ -1,10 +1,8 @@
 name: 📝 Publish Docs
-
 on:
   push:
     branches:
       - main
-
   workflow_dispatch:
     inputs:
       tag:
@@ -12,13 +10,17 @@ on:
         required: true
         default: latest
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     # Only run if it's the upstream repository, not forks
     if: github.repository == 'wxt-dev/wxt'
-
+    name: Publish Docs
     runs-on: ubuntu-22.04
-
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,5 +40,8 @@ jobs:
           pnpm docs:build
           docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
 
-      - run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
-      - run: curl -X POST -i ${{ secrets.UPDATE_DOCS_WEBHOOK }}
+      - name: Push Image
+        run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
+
+      - name: Deploy
+        run: curl -X POST -i ${{ secrets.UPDATE_DOCS_WEBHOOK }}
