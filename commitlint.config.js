@@ -1,7 +1,7 @@
 /**
  * @type {import('@commitlint/types').UserConfig}
  */
-const config = {
+export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'subject-case': [
@@ -11,5 +11,3 @@ const config = {
     ],
   },
 };
-
-module.exports = config;
