@@ -18,6 +18,8 @@ jobs:
     # Only run if it's the upstream repository, not forks
     if: github.repository == 'wxt-dev/wxt'
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
