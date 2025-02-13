@@ -399,6 +399,9 @@ importers:
       hookable:
         specifier: ^5.5.3
         version: 5.5.3
+      import-meta-resolve:
+        specifier: ^4.1.0
+        version: 4.1.0
       is-wsl:
         specifier: ^3.1.0
         version: 3.1.0
@@ -3205,6 +3208,9 @@ packages:
   import-lazy@4.0.0:
     resolution: {integrity: sha512-rKtvo6a868b5Hu3heneU+L4yEQ4jYKLtjpnPeUdK7h0yzXGmyBTypknlkCvHFBqfX9YlorEiMM6Dnq/5atfHkw==}
     engines: {node: '>=8'}
+
+  import-meta-resolve@4.1.0:
+    resolution: {integrity: sha512-I6fiaX09Xivtk+THaMfAwnA3MVA5Big1WHF1Dfx9hFuvNIWpXnorlkzhcQf6ehrqQiiZECRt1poOAkPmer3ruw==}
 
   importx@0.4.4:
     resolution: {integrity: sha512-Lo1pukzAREqrBnnHC+tj+lreMTAvyxtkKsMxLY8H15M/bvLl54p3YuoTI70Tz7Il0AsgSlD7Lrk/FaApRcBL7w==}
@@ -7860,6 +7866,8 @@ snapshots:
   immutable@5.0.2: {}
 
   import-lazy@4.0.0: {}
+
+  import-meta-resolve@4.1.0: {}
 
   importx@0.4.4:
     dependencies:
