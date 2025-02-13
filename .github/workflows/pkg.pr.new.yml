@@ -1,4 +1,4 @@
-name: Continuous Publish
+name: 🚀 Continuous Publish
 on:
   push:
     branches:

@@ -1,4 +1,4 @@
-name: Validate
+name: ✅ Validate
 on:
   workflow_call:
   pull_request:

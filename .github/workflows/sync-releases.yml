@@ -1,4 +1,4 @@
-name: Sync Releases
+name: 🔄 Sync Releases
 on:
   workflow_dispatch:
     inputs:

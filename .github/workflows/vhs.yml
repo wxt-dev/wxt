@@ -1,4 +1,4 @@
-name: VHS
+name: 📼 VHS
 on:
   push:
     paths:
