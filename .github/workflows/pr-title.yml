@@ -22,5 +22,5 @@ jobs:
       - name: Check PR title with commitlint
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-          HELP_URL: https://github.com/wxt-dev/wxt/blob/main/CONTRIBUTING.md#conventional-pull-request-titles
+          HELP_URL: https://github.com/wxt-dev/wxt/blob/main/CONTRIBUTING.md#conventional-pr-titles
         run: echo "$PR_TITLE" | npx commitlint --help-url $HELP_URL
