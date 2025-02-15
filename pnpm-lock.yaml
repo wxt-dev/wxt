@@ -207,7 +207,7 @@ importers:
         specifier: ^0.2.12
         version: 0.2.12
       solid-js:
-        specifier: ^1.9.3
+        specifier: ^1.9.4
         version: 1.9.4
       typescript:
         specifier: ^5.6.3
@@ -402,6 +402,9 @@ importers:
       hookable:
         specifier: ^5.5.3
         version: 5.5.3
+      import-meta-resolve:
+        specifier: ^4.1.0
+        version: 4.1.0
       is-wsl:
         specifier: ^3.1.0
         version: 3.1.0
@@ -451,8 +454,8 @@ importers:
         specifier: ^2.4.2
         version: 2.4.2
       publish-browser-extension:
-        specifier: ^2.2.2
-        version: 2.3.1
+        specifier: ^2.3.0 || ^3.0.0
+        version: 3.0.0
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -3245,6 +3248,9 @@ packages:
     resolution: {integrity: sha512-rKtvo6a868b5Hu3heneU+L4yEQ4jYKLtjpnPeUdK7h0yzXGmyBTypknlkCvHFBqfX9YlorEiMM6Dnq/5atfHkw==}
     engines: {node: '>=8'}
 
+  import-meta-resolve@4.1.0:
+    resolution: {integrity: sha512-I6fiaX09Xivtk+THaMfAwnA3MVA5Big1WHF1Dfx9hFuvNIWpXnorlkzhcQf6ehrqQiiZECRt1poOAkPmer3ruw==}
+
   importx@0.4.4:
     resolution: {integrity: sha512-Lo1pukzAREqrBnnHC+tj+lreMTAvyxtkKsMxLY8H15M/bvLl54p3YuoTI70Tz7Il0AsgSlD7Lrk/FaApRcBL7w==}
 
@@ -4369,8 +4375,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  publish-browser-extension@2.3.1:
-    resolution: {integrity: sha512-SWWJvy/UnvIypWaX3hw8H9yW2TztydSH8YXbJF5Ri2aeO1oClXNk5MDZP5g4vgjk0RY+4riv10nIdTE+VglNNQ==}
+  publish-browser-extension@3.0.0:
+    resolution: {integrity: sha512-gwjH8mIepNqID2VqKIxzT6lmtvkcc5tcWYzrGSUdkeUFFFSHhGp9xx01EZ7j8wPq50dDe0XU5VNbHMAqr6wWAA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
@@ -4648,10 +4654,6 @@ packages:
   slice-ansi@7.1.0:
     resolution: {integrity: sha512-bSiSngZ/jWeX93BqeIAbImyTbEihizcwNjFoRUIY/T1wWQsfsm2Vw1agPKylXvQTU7iASGdHhyqRlqQzfz+Htg==}
     engines: {node: '>=18'}
-
-  smol-toml@1.3.1:
-    resolution: {integrity: sha512-tEYNll18pPKHroYSmLLrksq233j021G0giwW7P3D24jC54pQ5W5BXMsQ/Mvw1OJCmEYDgY+lrzT+3nNUtoNfXQ==}
-    engines: {node: '>= 18'}
 
   solid-js@1.9.4:
     resolution: {integrity: sha512-ipQl8FJ31bFUoBNScDQTG3BjN6+9Rg+Q+f10bUbnO6EOTTf5NGerJeHc7wyu5I4RMHEl/WwZwUmy/PTRgxxZ8g==}
@@ -8058,6 +8060,8 @@ snapshots:
 
   import-lazy@4.0.0: {}
 
+  import-meta-resolve@4.1.0: {}
+
   importx@0.4.4:
     dependencies:
       bundle-require: 5.0.0(esbuild@0.21.5)
@@ -9270,7 +9274,7 @@ snapshots:
       picocolors: 1.1.1
       sade: 1.8.1
 
-  publish-browser-extension@2.3.1:
+  publish-browser-extension@3.0.0:
     dependencies:
       cac: 6.7.14
       cli-highlight: 2.1.11
@@ -9596,8 +9600,6 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 5.0.0
-
-  smol-toml@1.3.1: {}
 
   solid-js@1.9.4:
     dependencies:
