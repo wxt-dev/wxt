@@ -6,17 +6,19 @@ If you are changing the docs or fixing a bug, feel free to fork and open a PR.
 
 If you want to add a new feature, please create an issue or discussion first so we can decide if the feature is inline with the vision for WXT.
 
-## Conventional Pull Request Titles
+## Conventional Commits
 
-The title of your pull request should follow the [conventional commit format](https://www.conventionalcommits.org/en/v1.0.0/). When a pull request is merged to the main branch, all changes are going to be squashed into a single commit. The message of this commit will be the title of the pull request. And for every release, the commit messages are used to generate the changelog.
+This project uses [Conventional Commit format](https://www.conventionalcommits.org/en/v1.0.0/) to automatically generate a changelog and better understand the changes in the project
 
-Here are some examples of conventional PR titles:
+Here are some examples of conventional commit messages:
 
 - `feat: add new functionality`
 - `fix: correct typos in code`
 - `ci: add GitHub Actions for automated testing`
 
-Generating the changelog based on the commit messages saves time and helps to keep the changelog up-to-date. It also helps to understand the changes in the project.
+## Conventional PR Titles
+
+The title of your pull request should follow the [conventional commit format](#conventional-commits). When a pull request is merged to the main branch, all changes are going to be squashed into a single commit. The message of this commit will be the title of the pull request. And for every release, the commit messages are used to generate the changelog.
 
 ## Setup
 
