@@ -14,7 +14,7 @@ jobs:
         with:
           # Only fetch the config file from the repository
           sparse-checkout-cone-mode: false
-          sparse-checkout: commitlint.config.js
+          sparse-checkout: .commitlintrc.yml
 
       - name: Install dependencies
         run: npm install --global @commitlint/config-conventional commitlint
