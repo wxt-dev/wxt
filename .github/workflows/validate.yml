@@ -20,7 +20,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Type Check
+      - name: Basic Checks
         run: pnpm check
 
   builds:
