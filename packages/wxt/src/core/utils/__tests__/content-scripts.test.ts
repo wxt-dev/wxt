@@ -10,7 +10,6 @@ describe('Content Script Utils', () => {
   describe('hashContentScriptOptions', () => {
     it('should return a string containing all the options with defaults applied', () => {
       const hash = hashContentScriptOptions({ matches: [] });
-      console.log(hash);
 
       expect(hash).toEqual(
         '[["all_frames",false],["exclude_globs",[]],["exclude_matches",[]],["include_globs",[]],["match_about_blank",false],["match_origin_as_fallback",false],["matches",[]],["run_at","document_idle"],["world","ISOLATED"]]',
