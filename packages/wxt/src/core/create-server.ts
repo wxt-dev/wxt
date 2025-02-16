@@ -219,9 +219,9 @@ function createFileReloader(server: WxtDevServer) {
           .join(', ')}`,
       );
 
-      // Rebuild entrypoints on change
-      const allEntrypoints = await findEntrypoints();
       try {
+        // Rebuild entrypoints on change
+        const allEntrypoints = await findEntrypoints();
         const { output: newOutput } = await rebuild(
           allEntrypoints,
           // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
