@@ -16,13 +16,30 @@ img.src = imageUrl;
 ```
 
 ```html [HTML]
-<img src="~/assets/image.png" />
+<!-- In HTML tags, you must use the relative path --->
+<img src="../assets/image.png" />
 ```
 
 ```css [CSS]
 .bg-image {
   background-image: url(~/assets/image.png);
 }
+```
+
+```vue [Vue]
+<script>
+import image from '~/assets/image.png';
+</script>
+
+<template>
+  <img :src="image" />
+</template>
+```
+
+```jsx [JSX]
+import image from '~/assets/image.png';
+
+<img src={image} />;
 ```
 
 :::
@@ -50,6 +67,16 @@ img.src = imageUrl;
 .bg-image {
   background-image: url(/image.png);
 }
+```
+
+```vue [Vue]
+<template>
+  <img src="/image.png" />
+</template>
+```
+
+```jsx [JSX]
+<img src="/image.png" />
 ```
 
 :::
@@ -114,7 +141,7 @@ export default defineConfig({
   manifest: {
     web_accessible_resources: [
       {
-        // We'll use this matches in the cotent script as well
+        // We'll use this matches in the content script as well
         matches: ['*://*.github.com/*'],
         // Use the same path as `relativeDest` from the WXT module
         resources: ['/oxc_parser_wasm_bg.wasm'],
