@@ -28,13 +28,13 @@ export function menuRoot(items: SidebarItem[]) {
 export function menuGroup(
   text: string,
   items: SidebarItem[],
-  collapsable?: boolean,
+  collapsible?: boolean,
 ): SidebarItem;
 export function menuGroup(
   text: string,
   base: string,
   items: SidebarItem[],
-  collapsable?: boolean,
+  collapsible?: boolean,
 ): SidebarItem;
 export function menuGroup(
   text: string,
