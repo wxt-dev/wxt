@@ -355,6 +355,11 @@ function autoMountUi(
   async function observeElement(selector: string | null | undefined) {
     let isAnchorExist = !!getAnchor(options);
 
+    // Mount if anchor exists at initialization.
+    if (isAnchorExist) {
+      uiCallbacks.mount();
+    }
+
     while (!abortController.signal.aborted) {
       try {
         const changedAnchor = await waitElement(selector ?? 'body', {

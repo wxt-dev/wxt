@@ -17,7 +17,7 @@
     "email": "aaronklinker1+wxt@gmail.com"
   },
   "license": "MIT",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -46,7 +46,7 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^4.0.0"
+    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",

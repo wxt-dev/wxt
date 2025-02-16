@@ -489,6 +489,18 @@ describe('Storage Utils', () => {
         });
       });
 
+      describe('clear', () => {
+        it('should remove all items', async () => {
+          await fakeBrowser.storage[storageArea].set({
+            one: 1,
+            two: 2,
+          });
+
+          await storage.clear(storageArea);
+          expect(await fakeBrowser.storage[storageArea].get()).toEqual({});
+        });
+      });
+
       describe('removeMeta', () => {
         it('should remove all metadata', async () => {
           await fakeBrowser.storage[storageArea].set({ count$: { v: 4 } });
