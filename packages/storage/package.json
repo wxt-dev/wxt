@@ -23,6 +23,7 @@
     "email": "aaronklinker1+wxt@gmail.com"
   },
   "license": "MIT",
+  "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
     "build": "buildc -- unbuild",
     "check": "buildc --deps-only -- check",
