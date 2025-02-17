@@ -169,6 +169,6 @@ Both issues have the same fix: tell the library to put elements inside the `Shad
 
 Not yet, but we're working on it. For now, https://wxt.dev hosts pre-aggregated and pre-formatted knowledge files containing all the docs from this website:
 
-- Index listing available knowledge files: https://wxt.dev/.wellknown/knowledge/index.json
+- Index listing available knowledge files: https://wxt.dev/knowledge/index.json
 
 You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!
