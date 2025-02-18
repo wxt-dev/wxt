@@ -5,7 +5,9 @@
 
 # Mark lock files as generated to avoid diffing
 pnpm-lock.yaml linguist-generated
+package-lock.json linguist-generated
+bun.lockb linguist-generated
+yarn.lock linguist-generated
 
 # Exclude templates from language statistics
 templates/**/* linguist-vendored
-
