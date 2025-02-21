@@ -27,6 +27,7 @@ const ogImage = 'https://wxt.dev/social-preview.png';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   extends: knowledge({
+    serverUrl: 'https://knowledge.wxt.dev',
     paths: {
       '/': 'docs',
       '/api/': 'api-reference',
