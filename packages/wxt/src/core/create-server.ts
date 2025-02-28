@@ -109,13 +109,15 @@ async function createServerInternal(): Promise<WxtDevServer> {
       await buildAndOpenBrowser();
 
       // Listen for file changes and reload different parts of the extension accordingly
-      const reloadOnChange = createFileReloader(server);
+      const reloadOnChange = () => {
+        createFileReloader(server);
+        keyboardShortcuts.start();
+        keyboardShortcuts.printHelp({
+          canReopenBrowser:
+            !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+        });
+      };
       server.watcher.on('all', reloadOnChange);
-      keyboardShortcuts.start();
-      keyboardShortcuts.printHelp({
-        canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
-      });
     },
 
     async stop() {
