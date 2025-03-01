@@ -24,7 +24,7 @@
     "@types/fs-extra": "^11.0.4",
     "@vitest/coverage-v8": "^2.1.4",
     "changelogen": "^0.5.7",
-    "consola": "^3.2.3",
+    "consola": "^3.4.0",
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
     "lint-staged": "^15.2.10",

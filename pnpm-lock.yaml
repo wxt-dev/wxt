@@ -35,8 +35,8 @@ importers:
         specifier: ^0.5.7
         version: 0.5.7(magicast@0.3.5)
       consola:
-        specifier: ^3.2.3
-        version: 3.2.3
+        specifier: ^3.4.0
+        version: 3.4.0
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
@@ -379,8 +379,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       consola:
-        specifier: ^3.2.3
-        version: 3.2.3
+        specifier: ^3.4.0
+        version: 3.4.0
       defu:
         specifier: ^6.1.4
         version: 6.1.4
@@ -2662,6 +2662,10 @@ packages:
 
   consola@3.2.3:
     resolution: {integrity: sha512-I5qxpzLv+sJhTVEoLYNcTW+bThDCPsit0vLNKShZx6rLtpilNpmmeTPaeqJb9ZE9dV3DGaeby6Vuhrw38WjeyQ==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+
+  consola@3.4.0:
+    resolution: {integrity: sha512-EiPU8G6dQG0GFHNR8ljnZFki/8a+cQwEQ+7wpxdChl02Q8HXlwEZWD5lqAF8vC2sEC3Tehr8hy7vErz88LHyUA==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
   conventional-changelog-conventionalcommits@7.0.2:
@@ -5243,7 +5247,7 @@ snapshots:
   '@aklinker1/buildc@1.1.4':
     dependencies:
       cac: 6.7.14
-      consola: 3.2.3
+      consola: 3.4.0
       dependency-graph: 1.0.0
       fast-glob: 3.3.2
       fs-extra: 11.2.0
@@ -6554,7 +6558,7 @@ snapshots:
       cac: 6.7.14
       chokidar: 3.6.0
       colorette: 2.0.20
-      consola: 3.2.3
+      consola: 3.4.0
       magic-string: 0.30.12
       pathe: 1.1.2
       perfect-debounce: 1.0.0
@@ -7133,7 +7137,7 @@ snapshots:
     dependencies:
       c12: 1.11.2(magicast@0.3.5)
       colorette: 2.0.20
-      consola: 3.2.3
+      consola: 3.4.0
       convert-gitmoji: 0.1.5
       mri: 1.2.0
       node-fetch-native: 1.6.4
@@ -7189,7 +7193,7 @@ snapshots:
 
   citty@0.1.6:
     dependencies:
-      consola: 3.2.3
+      consola: 3.4.0
 
   cli-boxes@3.0.0: {}
 
@@ -7301,6 +7305,8 @@ snapshots:
       xdg-basedir: 5.1.0
 
   consola@3.2.3: {}
+
+  consola@3.4.0: {}
 
   conventional-changelog-conventionalcommits@7.0.2:
     dependencies:
@@ -7809,7 +7815,7 @@ snapshots:
   giget@1.2.3:
     dependencies:
       citty: 0.1.6
-      consola: 3.2.3
+      consola: 3.4.0
       defu: 6.1.4
       node-fetch-native: 1.6.4
       nypm: 0.3.12
@@ -8583,7 +8589,7 @@ snapshots:
   nypm@0.3.12:
     dependencies:
       citty: 0.1.6
-      consola: 3.2.3
+      consola: 3.4.0
       execa: 8.0.1
       pathe: 1.1.2
       pkg-types: 1.2.0
@@ -8978,7 +8984,7 @@ snapshots:
     dependencies:
       cac: 6.7.14
       cli-highlight: 2.1.11
-      consola: 3.2.3
+      consola: 3.4.0
       dotenv: 16.4.5
       extract-zip: 2.0.1
       formdata-node: 6.0.3
