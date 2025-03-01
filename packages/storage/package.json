@@ -41,7 +41,7 @@
     "publint": "^0.2.11",
     "typescript": "^5.6.2",
     "unbuild": "^2.0.0",
-    "vitest": "^2.0.0"
+    "vitest": "^3.0.7"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
