@@ -140,7 +140,7 @@
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
     "extract-zip": "^2.0.1",
-    "happy-dom": "^15.11.4",
+    "happy-dom": "^17.1.8",
     "lodash.merge": "^4.6.2",
     "oxlint": "^0.11.1",
     "publint": "^0.2.12",
