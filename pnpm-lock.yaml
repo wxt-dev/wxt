@@ -30,7 +30,7 @@ importers:
         version: 11.0.4
       '@vitest/coverage-v8':
         specifier: ^2.1.4
-        version: 2.1.4(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7))
+        version: 2.1.4(vitest@2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7))
       changelogen:
         specifier: ^0.5.7
         version: 0.5.7(magicast@0.3.5)
@@ -84,7 +84,7 @@ importers:
         version: 0.4.0(vitepress@1.5.0(@algolia/client-search@4.20.0)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.4.47)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
       vitest-mock-extended:
         specifier: ^2.0.2
-        version: 2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7))
+        version: 2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7))
       vue:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
@@ -158,7 +158,7 @@ importers:
         version: 2.0.0(sass@1.80.7)(typescript@5.6.3)
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)
+        version: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
         version: 1.1.0(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))
@@ -304,7 +304,7 @@ importers:
         version: 2.0.0(sass@1.80.7)(typescript@5.6.3)
       vitest:
         specifier: ^2.0.0
-        version: 2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)
+        version: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
 
   packages/unocss:
     dependencies:
@@ -509,8 +509,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       happy-dom:
-        specifier: ^15.11.4
-        version: 15.11.4
+        specifier: ^17.1.8
+        version: 17.1.8
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -531,7 +531,7 @@ importers:
         version: 2.0.0(sass@1.80.7)(typescript@5.6.3)
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@types/node@20.17.6)(happy-dom@15.11.4)(sass@1.80.7)
+        version: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
         version: 1.1.0(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))
@@ -574,7 +574,7 @@ importers:
         version: 0.64.0(postcss@8.4.47)(rollup@4.24.0)(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))(vue@3.5.12(typescript@5.6.3))
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)
+        version: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
       vitest-plugin-random-seed:
         specifier: ^1.1.0
         version: 1.1.0(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))
@@ -3163,12 +3163,8 @@ packages:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
     engines: {node: '>=10'}
 
-  happy-dom@15.11.4:
-    resolution: {integrity: sha512-AU6tzh3ADd28vSmXahgLsGyGGihXPGeKH0owDn9lhHolB6vIwEhag//T+TBzDoAcHhmVEwlxwSgtW1KZep+1MA==}
-    engines: {node: '>=18.0.0'}
-
-  happy-dom@16.6.0:
-    resolution: {integrity: sha512-Zz5S9sog8a3p8XYZbO+eI1QMOAvCNnIoyrH8A8MLX+X2mJrzADTy+kdETmc4q+uD9AGAvQYGn96qBAn2RAciKw==}
+  happy-dom@17.1.8:
+    resolution: {integrity: sha512-Yxbq/FG79z1rhAf/iB6YM8wO2JB/JDQBy99RiLSs+2siEAi5J05x9eW1nnASHZJbpldjJE2KuFLsLZ+AzX/IxA==}
     engines: {node: '>=18.0.0'}
 
   has-flag@3.0.0:
@@ -6699,7 +6695,7 @@ snapshots:
       vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
       vue: 3.5.12(typescript@5.6.3)
 
-  '@vitest/coverage-v8@2.1.4(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7))':
+  '@vitest/coverage-v8@2.1.4(vitest@2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -6713,7 +6709,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)
+      vitest: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
     transitivePeerDependencies:
       - supports-color
 
@@ -7889,17 +7885,10 @@ snapshots:
     dependencies:
       duplexer: 0.1.2
 
-  happy-dom@15.11.4:
-    dependencies:
-      entities: 4.5.0
-      webidl-conversions: 7.0.0
-      whatwg-mimetype: 3.0.0
-
-  happy-dom@16.6.0:
+  happy-dom@17.1.8:
     dependencies:
       webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
-    optional: true
 
   has-flag@3.0.0: {}
 
@@ -9851,17 +9840,17 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vitest-mock-extended@2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)):
+  vitest-mock-extended@2.0.2(typescript@5.6.3)(vitest@2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)):
     dependencies:
       ts-essentials: 10.0.1(typescript@5.6.3)
       typescript: 5.6.3
-      vitest: 2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7)
+      vitest: 2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7)
 
   vitest-plugin-random-seed@1.1.0(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7)):
     dependencies:
       vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
 
-  vitest@2.1.4(@types/node@20.17.6)(happy-dom@15.11.4)(sass@1.80.7):
+  vitest@2.1.4(@types/node@20.17.6)(happy-dom@17.1.8)(sass@1.80.7):
     dependencies:
       '@vitest/expect': 2.1.4
       '@vitest/mocker': 2.1.4(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))
@@ -9885,43 +9874,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.17.6
-      happy-dom: 15.11.4
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.1.4(@types/node@20.17.6)(happy-dom@16.6.0)(sass@1.80.7):
-    dependencies:
-      '@vitest/expect': 2.1.4
-      '@vitest/mocker': 2.1.4(vite@5.4.11(@types/node@20.17.6)(sass@1.80.7))
-      '@vitest/pretty-format': 2.1.4
-      '@vitest/runner': 2.1.4
-      '@vitest/snapshot': 2.1.4
-      '@vitest/spy': 2.1.4
-      '@vitest/utils': 2.1.4
-      chai: 5.1.2
-      debug: 4.3.7
-      expect-type: 1.1.0
-      magic-string: 0.30.12
-      pathe: 1.1.2
-      std-env: 3.7.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.1
-      tinypool: 1.0.1
-      tinyrainbow: 1.2.0
-      vite: 5.4.11(@types/node@20.17.6)(sass@1.80.7)
-      vite-node: 2.1.4(@types/node@20.17.6)(sass@1.80.7)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 20.17.6
-      happy-dom: 16.6.0
+      happy-dom: 17.1.8
     transitivePeerDependencies:
       - less
       - lightningcss
