@@ -49,10 +49,10 @@
     "@vitejs/plugin-vue": "^5.2.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
-    "publint": "^0.2.12",
-    "typescript": "^5.6.3",
-    "unbuild": "^2.0.0",
+    "@aklinker1/check": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
     "wxt": "workspace:*"
   }
 }
