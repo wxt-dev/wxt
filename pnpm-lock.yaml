@@ -88,8 +88,8 @@ catalogs:
       specifier: ^0.5.7
       version: 0.5.7
     chokidar:
-      specifier: ^3.6.0
-      version: 3.6.0
+      specifier: ^4.0.3
+      version: 4.0.3
     ci-info:
       specifier: ^4.1.0
       version: 4.1.0
@@ -415,7 +415,7 @@ importers:
     dependencies:
       chokidar:
         specifier: 'catalog:'
-        version: 3.6.0
+        version: 4.0.3
       confbox:
         specifier: 'catalog:'
         version: 0.1.8
@@ -662,7 +662,7 @@ importers:
         version: 6.7.14
       chokidar:
         specifier: 'catalog:'
-        version: 3.6.0
+        version: 4.0.3
       ci-info:
         specifier: 'catalog:'
         version: 4.1.0
@@ -2603,6 +2603,10 @@ packages:
 
   chokidar@4.0.1:
     resolution: {integrity: sha512-n8enUVCED/KVRQlab1hr3MVpcVMvxtZjmEa956u+4YijlmQED223XMSYj2tLuKvr4jcCTzNNMpQDUer72MMmzA==}
+    engines: {node: '>= 14.16.0'}
+
+  chokidar@4.0.3:
+    resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
   chownr@2.0.0:
@@ -6894,6 +6898,10 @@ snapshots:
       fsevents: 2.3.3
 
   chokidar@4.0.1:
+    dependencies:
+      readdirp: 4.0.2
+
+  chokidar@4.0.3:
     dependencies:
       readdirp: 4.0.2
 
