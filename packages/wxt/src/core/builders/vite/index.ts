@@ -67,6 +67,11 @@ export async function createViteBuilder(
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
 
+    // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
+    config.legacy ??= {};
+    // @ts-ignore: Untyped option:
+    config.legacy.skipWebSocketTokenCheck = false;
+
     const server = getWxtDevServer?.();
 
     config.plugins ??= [];
