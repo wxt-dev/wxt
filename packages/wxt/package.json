@@ -144,7 +144,6 @@
     "lodash.merge": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
-    "tsx": "catalog:",
     "typescript": "catalog:",
     "unbuild": "catalog:",
     "vitest": "catalog:",
