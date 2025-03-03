@@ -29,7 +29,7 @@ catalog:
   c12: ^1.11.2
   cac: ^6.7.14
   changelogen: ^0.5.7
-  chokidar: ^3.6.0
+  chokidar: ^4.0.3
   ci-info: ^4.1.0
   confbox: ^0.1.8
   consola: ^3.2.3
