@@ -49,7 +49,7 @@
     "wxt": "workspace:*"
   },
   "dependencies": {
-    "defu": "^6.1.4",
-    "fast-glob": "^3.3.2"
+    "defu": "catalog:",
+    "fast-glob": "catalog:"
   }
 }
