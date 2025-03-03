@@ -30,8 +30,8 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "async-mutex": "^0.5.0",
-    "dequal": "^2.0.3"
+    "async-mutex": "catalog:",
+    "dequal": "catalog:"
   },
   "devDependencies": {
     "@aklinker1/check": "catalog:",

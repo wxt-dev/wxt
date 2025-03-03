@@ -47,7 +47,7 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0"
+    "@sveltejs/vite-plugin-svelte": "catalog:"
   },
   "devDependencies": {
     "@aklinker1/check": "catalog:",
