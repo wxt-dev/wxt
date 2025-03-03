@@ -51,14 +51,14 @@
     "@vitejs/plugin-react": "^4.3.4"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.2",
-    "publint": "^0.2.12",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "typescript": "^5.6.3",
-    "unbuild": "^2.0.0",
+    "@aklinker1/check": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "publint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
     "wxt": "workspace:*"
   }
 }
