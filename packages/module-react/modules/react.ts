@@ -9,7 +9,10 @@ export default defineWxtModule<ReactModuleOptions>({
     const { vite } = options ?? {};
 
     addViteConfig(wxt, () => ({
-      plugins: [react(vite)],
+      plugins: [
+        // @ts-expect-error: Vite version mismatch
+        react(vite),
+      ],
     }));
 
     addImportPreset(wxt, 'react');

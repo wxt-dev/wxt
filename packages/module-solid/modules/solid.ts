@@ -9,7 +9,10 @@ export default defineWxtModule<SolidModuleOptions>({
     const { vite } = options ?? {};
 
     addViteConfig(wxt, () => ({
-      plugins: [solid(vite)],
+      plugins: [
+        // @ts-expect-error: Vite version mismatch
+        solid(vite),
+      ],
       build: {
         target: 'esnext',
       },
