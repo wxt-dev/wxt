@@ -33,7 +33,7 @@ catalog:
   changelogen: ^0.5.7
   chokidar: ^4.0.3
   ci-info: ^4.1.0
-  confbox: ^0.1.8
+  confbox: ^0.2.1
   consola: ^3.2.3
   defu: ^6.1.4
   dequal: ^2.0.3
