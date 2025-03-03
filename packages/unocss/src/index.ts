@@ -28,12 +28,18 @@ export default defineWxtModule<UnoCSSOptions>({
     }
 
     wxt.hooks.hook('vite:devServer:extendConfig', (config) => {
-      config.plugins?.push(UnoCSS(resolvedOptions.configOrPath));
+      config.plugins?.push(
+        // @ts-expect-error: Mismatch vite types
+        UnoCSS(resolvedOptions.configOrPath),
+      );
     });
 
     wxt.hooks.hook('vite:build:extendConfig', async (entries, config) => {
       if (entries.every((entry) => excludedEntrypoints.has(entry.name))) return;
-      config.plugins?.push(UnoCSS(resolvedOptions.configOrPath));
+      config.plugins?.push(
+        // @ts-expect-error: Mismatch vite types
+        UnoCSS(resolvedOptions.configOrPath),
+      );
     });
   },
 });
