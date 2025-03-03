@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   markdown-it-footnote:
-    hash: ue34jdgdx43siqdj557feoepzq
+    hash: 5b74a0001a771ff5df790dd36b6883c4794e1f666b231499edb2d65eae8f4930
     path: patches/markdown-it-footnote.patch
 
 importers:
@@ -48,7 +48,7 @@ importers:
         version: 15.2.10
       markdown-it-footnote:
         specifier: ^4.0.0
-        version: 4.0.0(patch_hash=ue34jdgdx43siqdj557feoepzq)
+        version: 4.0.0(patch_hash=5b74a0001a771ff5df790dd36b6883c4794e1f666b231499edb2d65eae8f4930)
       nano-spawn:
         specifier: ^0.2.0
         version: 0.2.0
@@ -8334,7 +8334,7 @@ snapshots:
 
   mark.js@8.11.1: {}
 
-  markdown-it-footnote@4.0.0(patch_hash=ue34jdgdx43siqdj557feoepzq): {}
+  markdown-it-footnote@4.0.0(patch_hash=5b74a0001a771ff5df790dd36b6883c4794e1f666b231499edb2d65eae8f4930): {}
 
   marked@4.3.0: {}
 
