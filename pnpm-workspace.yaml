@@ -44,7 +44,7 @@ catalog:
   fs-extra: ^11.2.0
   get-port-please: ^3.1.2
   giget: ^1.2.3
-  happy-dom: ^15.11.4
+  happy-dom: ^17.1.8
   hookable: ^5.5.3
   import-meta-resolve: ^4.1.0
   is-wsl: ^3.1.0
