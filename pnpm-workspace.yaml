@@ -1,7 +1,6 @@
 packages:
   - docs
   - packages/*
-
 catalog:
   '@1natsu/wait-element': ^4.1.2
   '@aklinker1/buildc': ^1.1.4
@@ -92,7 +91,7 @@ catalog:
   vite-plugin-solid: ^2.11.6
   vitepress: ^1.5.0
   vitepress-knowledge: ^0.4.0
-  vitest: ^2.1.4p
+  vitest: ^2.1.4
   vitest-mock-extended: ^2.0.2
   vitest-plugin-random-seed: ^1.1.0
   vue: ^3.5.12
