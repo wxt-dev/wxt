@@ -256,7 +256,7 @@ catalogs:
       specifier: ^3.13.1
       version: 3.13.1
     unocss:
-      specifier: ^66.0.0
+      specifier: ^0.64.0 || ^0.65.0 || ^65.0.0 ||^66.0.0
       version: 66.0.0
     vite:
       specifier: ^5.0.0 || <=6.0.8
