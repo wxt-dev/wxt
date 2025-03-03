@@ -6,8 +6,5 @@ export default defineProject({
     mockReset: true,
     restoreMocks: true,
   },
-  plugins: [
-    // @ts-expect-error: Vite version mismatch
-    WxtVitest(),
-  ],
+  plugins: [WxtVitest()],
 });
