@@ -8,7 +8,6 @@ import useListExtensionDetails, {
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
-  'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
   'elfaihghhjjoknimpccccmkioofjjfkf', // StayFree - Website Blocker & Web Analytics
@@ -68,6 +67,7 @@ const chromeExtensionIds = [
   'boecmgggeigllcdocgioijmleimjbfkg', // Walmart WFS Profit Calculator
   'dlnjcbkmomenmieechnmgglgcljhoepd', // Youtube Live Chat Fullscreen
   'keiealdacakpnbbljlmhfgcebmaadieg', // Python Code Runner
+  'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
