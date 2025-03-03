@@ -21,7 +21,8 @@ test('Only one version of esbuild should be installed (each version is ~20mb of 
     if (name === 'esbuild') esbuildVersions.add(meta.version);
   });
 
-  expect([...esbuildVersions]).toHaveLength(1);
+  // TODO: Revert to 1 once vite is upgraded to >6.0.8
+  expect([...esbuildVersions]).toHaveLength(2);
 });
 
 function iterateDependencies(
