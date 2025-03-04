@@ -26,7 +26,10 @@ export function createKeyboardShortcuts(
 
   return {
     start() {
-      if (rl) return;
+      if (rl) {
+        rl.on('line', handleInput);
+        return;
+      }
 
       rl = readline.createInterface({
         input: process.stdin,
@@ -37,8 +40,9 @@ export function createKeyboardShortcuts(
     },
 
     stop() {
-      rl?.close();
-      rl = undefined;
+      if (rl) {
+        rl.removeListener('line', handleInput);
+      }
     },
 
     printHelp(flags) {
