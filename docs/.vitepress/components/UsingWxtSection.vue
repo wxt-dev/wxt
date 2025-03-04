@@ -62,6 +62,12 @@ const chromeExtensionIds = [
   'hjjkgbibknbahijglkffklflidncplkn', // Show IP – Live View of Website IPs for Developers
   'ilbikcehnpkmldojkcmlldkoelofnbde', // Strong Password Generator
   'ocllfkhcdopiafndigclebelbecaiocp', // ZenGram: Mindful Instagram, Your Way
+  'odffpjnpocjfcaclnenaaaddghkgijdb', // Blync: Preview Links, Selection Search, AI Assistant
+  'kofbbilhmnkcmibjbioafflgmpkbnmme', // HTML to Markdown - Convert webpages to markdown
+  'boecmgggeigllcdocgioijmleimjbfkg', // Walmart WFS Profit Calculator
+  'dlnjcbkmomenmieechnmgglgcljhoepd', // Youtube Live Chat Fullscreen
+  'keiealdacakpnbbljlmhfgcebmaadieg', // Python Code Runner
+  'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

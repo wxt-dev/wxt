@@ -1,4 +1,4 @@
-name: Sync Releases
+name: 🔄 Sync Releases
 on:
   workflow_dispatch:
     inputs:
@@ -17,14 +17,25 @@ on:
           - storage
           - wxt
 
+permissions:
+  contents: read
+
 jobs:
   sync:
+    name: Sync Releases
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
           installArgs: --ignore-scripts
-      - run: pnpm tsx scripts/sync-releases.ts ${{ inputs.package }}
+
+      - name: Sync Releases
+        run: pnpm tsx scripts/sync-releases.ts ${{ inputs.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

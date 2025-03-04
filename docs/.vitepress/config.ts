@@ -15,6 +15,7 @@ import { version as autoIconsVersion } from '../../packages/auto-icons/package.j
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
+import knowledge from 'vitepress-knowledge';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -34,6 +35,17 @@ const otherPackages = {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  extends: knowledge({
+    serverUrl: 'https://knowledge.wxt.dev',
+    paths: {
+      '/': 'docs',
+      '/api/': 'api-reference',
+    },
+    pageSelectors: {
+      'examples.md': '#VPContent > .VPPage',
+    },
+  }),
+
   titleTemplate: `:title${titleSuffix}`,
   title: 'WXT',
   description,
@@ -161,6 +173,7 @@ export default defineConfig({
         menuGroup('Resources', '/guide/resources/', [
           menuItem('Compare', 'compare.md'),
           menuItem('FAQ', 'faq.md'),
+          menuItem('Community', 'community.md'),
           menuItem('Upgrading WXT', 'upgrading.md'),
           menuItem('Migrate to WXT', 'migrate.md'),
           menuItem('How WXT Works', 'how-wxt-works.md'),

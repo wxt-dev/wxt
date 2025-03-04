@@ -4,12 +4,14 @@ outline: deep
 
 # Content Scripts
 
+> To create a content script, see [Entrypoint Types](/guide/essentials/entrypoints#content-scripts).
+
 ## Context
 
-The first argument to a content script's `main` function is it's "context".
+The first argument to a content script's `main` function is its "context".
 
 ```ts
-// entrypoints/content.ts
+// entrypoints/example.content.ts
 export default defineContentScript({
   main(ctx) {},
 });
@@ -62,7 +64,7 @@ In regular web extensions, CSS for content scripts is usually a separate CSS fil
 In WXT, to add CSS to a content script, simply import the CSS file into your JS entrypoint, and WXT will automatically add the bundled CSS output to the `css` array.
 
 ```ts
-// entrypoints/content/index.ts
+// entrypoints/example.content/index.ts
 import './style.css';
 
 export default defineContentScript({
@@ -78,16 +80,16 @@ To create a standalone content script that only includes a CSS file:
    // wxt.config.ts
    export default defineConfig({
      hooks: {
-       "build:manifestGenerated": (wxt, manifest) => {
+       'build:manifestGenerated': (wxt, manifest) => {
          manifest.content_scripts ??= [];
          manifest.content_scripts.push({
            // Build extension once to see where your CSS get's written to
-           css: ["content-scripts/example.css"],
-           matches: ["*://*/*"]
-         )
-       }
-     }
-   })
+           css: ['content-scripts/example.css'],
+           matches: ['*://*/*'],
+         });
+       },
+     },
+   });
    ```
 
 ## UI
@@ -198,6 +200,7 @@ export default defineContentScript({
 ```ts [Svelte]
 // entrypoints/example-ui.content/index.ts
 import App from './App.svelte';
+import { mount, unmount } from 'svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -208,14 +211,13 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        const app = new App({
+        mount(App, {
           target: container,
         });
-        return app;
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
-        app.$destroy();
+        unmount(app);
       },
     });
 
@@ -379,6 +381,7 @@ export default defineContentScript({
 // 1. Import the style
 import './style.css';
 import App from './App.svelte';
+import { mount, unmount } from 'svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -393,14 +396,13 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        const app = new App({
+        mount(App, {
           target: container,
         });
-        return app;
       },
-      onRemove: (app) => {
+      onRemove: () => {
         // Destroy the app when the UI is removed
-        app?.$destroy();
+        unmount(app);
       },
     });
 
@@ -563,6 +565,20 @@ export default defineContentScript({
     });
     console.log('Done!');
   },
+});
+```
+
+```json
+export default defineConfig({
+  manifest: {
+    // ...
+    web_accessible_resources: [
+      {
+        resources: ["example-main-world.js"],
+        matches: ["*://*/*"],
+      }
+    ]
+  }
 });
 ```
 

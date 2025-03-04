@@ -1,5 +1,100 @@
 # Changelog
 
+## v0.19.28
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.27...wxt-v0.19.28)
+
+### 🩹 Fixes
+
+- Ignore `manifest.manifest_version` option and warn about incorrect usage ([#1419](https://github.com/wxt-dev/wxt/pull/1419))
+- Resolve wxt modules from the root ([#1417](https://github.com/wxt-dev/wxt/pull/1417))
+- Properly detect and reload changed files when using Vite's `?suffix` imports ([#1432](https://github.com/wxt-dev/wxt/pull/1432))
+- Regression on variable expansion in dotenv files ([#1449](https://github.com/wxt-dev/wxt/pull/1449))
+- Allow vite 6.0.9+ ([#1497](https://github.com/wxt-dev/wxt/pull/1497))
+
+### 📖 Documentation
+
+- Host pre-aggregated LLM knowledge files ([#1355](https://github.com/wxt-dev/wxt/pull/1355))
+
+### 🏡 Chore
+
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- **deps:** Upgrade to Vite 6 and related dependencies ([#1496](https://github.com/wxt-dev/wxt/pull/1496))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Stefan Maric ([@stefanmaric](https://github.com/stefanmaric))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Alec Larson ([@aleclarson](http://github.com/aleclarson))
+
+## v0.19.27
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.26...wxt-v0.19.27)
+
+### 🩹 Fixes
+
+- Allow `vite-node@^3.0.0` ([#1378](https://github.com/wxt-dev/wxt/pull/1378))
+- Use path triple slash directive for types that are referenced via path ([#1407](https://github.com/wxt-dev/wxt/pull/1407))
+- Support `publish-browser-extension` v3.0.0 ([ac92d40](https://github.com/wxt-dev/wxt/commit/ac92d40))
+- Respect `inlineConfig.mode` when setting NODE_ENV ([#1416](https://github.com/wxt-dev/wxt/pull/1416))
+- Auto-import does not work when using `@vitejs/plugin-vue` alone ([#1412](https://github.com/wxt-dev/wxt/pull/1412))
+
+### ❤️ Contributors
+
+- Jaguar Zhou ([@aiktb](http://github.com/aiktb))
+- Alec Larson ([@aleclarson](http://github.com/aleclarson))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- St3h3n <st3h3n@gmail.com>
+- Eli ([@lishaduck](http://github.com/lishaduck))
+
+## v0.19.26
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.25...wxt-v0.19.26)
+
+### 🩹 Fixes
+
+- **context:** Deduplicate `wxt:content-script-started` ([#1364](https://github.com/wxt-dev/wxt/pull/1364))
+
+### ❤️ Contributors
+
+- Deniz Uğur ([@DenizUgur](http://github.com/DenizUgur))
+
+## v0.19.25
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.24...wxt-v0.19.25)
+
+### 🩹 Fixes
+
+- Drop support for vite 6.0.9+ until websocket fix is finished ([8e2badc](https://github.com/wxt-dev/wxt/commit/8e2badc))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
+## v0.19.24
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.23...wxt-v0.19.24)
+
+### 🩹 Fixes
+
+- **init:** Remove "experimental" from bun package manager ([b150a52](https://github.com/wxt-dev/wxt/commit/b150a52))
+- **web-ext:** Correctly pass `browserConsole` option to open devtools in Firefox ([#1308](https://github.com/wxt-dev/wxt/pull/1308))
+- `autoMount` not working if anchor is already present ([#1350](https://github.com/wxt-dev/wxt/pull/1350))
+
+### 🏡 Chore
+
+- Fix typo in CLI docs ([028c601](https://github.com/wxt-dev/wxt/commit/028c601))
+
+### ❤️ Contributors
+
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Paulo Pinto ([@psrpinto](https://github.com/psrpinto))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v0.19.23
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.22...wxt-v0.19.23)

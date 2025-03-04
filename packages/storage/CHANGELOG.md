@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.1.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.0.1...storage-v1.1.0)
+
+### 🚀 Enhancements
+
+- Add `storage.clear` ([#1368](https://github.com/wxt-dev/wxt/pull/1368))
+
+### 📖 Documentation
+
+- Update link ([654a54a](https://github.com/wxt-dev/wxt/commit/654a54a))
+
+### ❤️ Contributors
+
+- Chengxi ([@chengxilo](http://github.com/chengxilo))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+
 ## v1.0.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.0.0...storage-v1.0.1)

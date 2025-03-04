@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.2...module-svelte-v2.0.3)
+
+### 🩹 Fixes
+
+- Upgrade `vite-plugin-svelte` to support Vite 6 ([#1375](https://github.com/wxt-dev/wxt/pull/1375))
+
+### ❤️ Contributors
+
+- Eli ([@lishaduck](http://github.com/lishaduck))
+
 ## v2.0.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.1...module-svelte-v2.0.2)

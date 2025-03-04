@@ -1,4 +1,4 @@
-name: Continuous Publish
+name: ✨ pkg.pr.new
 on:
   push:
     branches:
@@ -7,11 +7,23 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Publish Test Packages
     runs-on: ubuntu-22.04
+    if: ${{ github.repository == 'wxt-dev/wxt' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm buildc all
-      - run: pnpx pkg-pr-new publish --compact './packages/*'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build All Packages
+        run: pnpm buildc all
+
+      - name: Publish
+        run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'

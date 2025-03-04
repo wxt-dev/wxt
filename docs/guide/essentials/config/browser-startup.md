@@ -6,7 +6,7 @@ outline: deep
 
 > See the [API Reference](/api/reference/wxt/interfaces/ExtensionRunnerConfig) for a full list of config.
 
-During development WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
+During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 
 ## Config Files
 
@@ -41,6 +41,8 @@ export default defineRunnerConfig({
 });
 ```
 
+By default, WXT will try to automatically discover where Chrome/Firefox are installed. However, if you have chrome installed in a non-standard location, you need to set it manually as shown above.
+
 ### Persist Data
 
 By default, to keep from modifying your browser's existing profiles, `web-ext` creates a brand new profile every time you run the `dev` script.
@@ -72,7 +74,7 @@ export default defineRunnerConfig({
 Now, next time you run the `dev` script, a persistent profile will be created in `.wxt/chrome-data/{profile-name}`. With a persistent profile, you can install devtools extensions to help with development, allow the browser to remember logins, etc, without worrying about the profile being reset the next time you run the `dev` script.
 
 :::tip
-You can use any directory you'd like for `--user-data-dir`, the examples above create a persistent profile for each WXT project. To create a profile for all WXT projects, you can put the `chrome-data` directory inside you're user's home directory.
+You can use any directory you'd like for `--user-data-dir`, the examples above create a persistent profile for each WXT project. To create a profile for all WXT projects, you can put the `chrome-data` directory inside your user's home directory.
 :::
 
 ### Disable Opening Browser
