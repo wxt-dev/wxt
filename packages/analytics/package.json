@@ -40,12 +40,12 @@
     "dist"
   ],
   "scripts": {
-    "dev": "buildc --deps-only -- wxt",
-    "dev:build": "buildc --deps-only -- wxt build",
+    "dev": "buildc deps && wxt",
+    "dev:build": "buildc deps && wxt build",
     "check": "pnpm build && check",
     "build": "buildc -- unbuild",
     "prepack": "pnpm -s build",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc deps && wxt prepare"
   },
   "peerDependencies": {
     "wxt": ">=0.19.23"
