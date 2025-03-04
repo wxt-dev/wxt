@@ -10,8 +10,8 @@ catalogs:
       specifier: ^4.1.2
       version: 4.1.2
     '@aklinker1/buildc':
-      specifier: 2.0.0-alpha7
-      version: 2.0.0-alpha7
+      specifier: 2.0.0-alpha8
+      version: 2.0.0-alpha8
     '@aklinker1/check':
       specifier: ^1.4.5
       version: 1.4.5
@@ -309,7 +309,7 @@ importers:
     devDependencies:
       '@aklinker1/buildc':
         specifier: 'catalog:'
-        version: 2.0.0-alpha7
+        version: 2.0.0-alpha8
       '@aklinker1/check':
         specifier: 'catalog:'
         version: 1.4.5(typescript@5.6.3)
@@ -906,8 +906,8 @@ packages:
   '@1natsu/wait-element@4.1.2':
     resolution: {integrity: sha512-qWxSJD+Q5b8bKOvESFifvfZ92DuMsY+03SBNjTO34ipJLP6mZ9yK4bQz/vlh48aEQXoJfaZBqUwKL5BdI5iiWw==}
 
-  '@aklinker1/buildc@2.0.0-alpha7':
-    resolution: {integrity: sha512-+dhdK0fQ2Twq+vxYmkFx4UZ5sRF5KtdJFDisjEI2evV61HUseeflr8gcx2ZtzIXNxXF8Al+FONgRHZo9I42Yug==}
+  '@aklinker1/buildc@2.0.0-alpha8':
+    resolution: {integrity: sha512-zAfDdmttUsdNw1kbOSmBEycfChQIpd6exCnmLqBqAwAw5YOtYj6IpNt98+YmDPmlbWhG+K0hCR0g4O4AD+BZSQ==}
     hasBin: true
 
   '@aklinker1/check@1.4.5':
@@ -5517,7 +5517,7 @@ snapshots:
       defu: 6.1.4
       many-keys-map: 2.0.1
 
-  '@aklinker1/buildc@2.0.0-alpha7': {}
+  '@aklinker1/buildc@2.0.0-alpha8': {}
 
   '@aklinker1/check@1.4.5(typescript@5.6.3)':
     dependencies:
