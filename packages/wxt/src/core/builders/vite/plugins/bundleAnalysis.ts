@@ -6,7 +6,6 @@ import path from 'node:path';
 let increment = 0;
 
 export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
-  // @ts-expect-error: Mismatched vite version
   return visualizer({
     template: 'raw-data',
     filename: path.resolve(
