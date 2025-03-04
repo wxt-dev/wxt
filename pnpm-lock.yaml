@@ -10,8 +10,8 @@ catalogs:
       specifier: ^4.1.2
       version: 4.1.2
     '@aklinker1/buildc':
-      specifier: ^1.1.4
-      version: 1.1.4
+      specifier: 2.0.0-alpha7
+      version: 2.0.0-alpha7
     '@aklinker1/check':
       specifier: ^1.4.5
       version: 1.4.5
@@ -309,7 +309,7 @@ importers:
     devDependencies:
       '@aklinker1/buildc':
         specifier: 'catalog:'
-        version: 1.1.4
+        version: 2.0.0-alpha7
       '@aklinker1/check':
         specifier: 'catalog:'
         version: 1.4.5(typescript@5.6.3)
@@ -906,8 +906,8 @@ packages:
   '@1natsu/wait-element@4.1.2':
     resolution: {integrity: sha512-qWxSJD+Q5b8bKOvESFifvfZ92DuMsY+03SBNjTO34ipJLP6mZ9yK4bQz/vlh48aEQXoJfaZBqUwKL5BdI5iiWw==}
 
-  '@aklinker1/buildc@1.1.4':
-    resolution: {integrity: sha512-3SQ2zVEsX+UWg/mHfp9TqU9OPI8abRGTOadChQB0Aqb4dtIy311pBddndVPuuD4uQfIhKbvPxkzZ0rwvlw52Rw==}
+  '@aklinker1/buildc@2.0.0-alpha7':
+    resolution: {integrity: sha512-+dhdK0fQ2Twq+vxYmkFx4UZ5sRF5KtdJFDisjEI2evV61HUseeflr8gcx2ZtzIXNxXF8Al+FONgRHZo9I42Yug==}
     hasBin: true
 
   '@aklinker1/check@1.4.5':
@@ -3108,10 +3108,6 @@ packages:
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
 
-  dependency-graph@1.0.0:
-    resolution: {integrity: sha512-cW3gggJ28HZ/LExwxP2B++aiKxhJXMSIt9K48FOXQkm+vuG5gyatXnLsONRJdzO/7VfjDIiaOOa/bs4l464Lwg==}
-    engines: {node: '>=4'}
-
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
     engines: {node: '>=6'}
@@ -4536,9 +4532,6 @@ packages:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
 
-  proper-lockfile@4.1.2:
-    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
-
   property-information@7.0.0:
     resolution: {integrity: sha512-7D/qOz/+Y4X/rzSB6jKxKUsQnphO046ei8qxG59mtM3RG3DHgTK81HrxrmoDVINJb8NKT5ZsRbwHvQ6B68Iyhg==}
 
@@ -4661,10 +4654,6 @@ packages:
   restore-cursor@5.1.0:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
     engines: {node: '>=18'}
-
-  retry@0.12.0:
-    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
-    engines: {node: '>= 4'}
 
   reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
@@ -5528,17 +5517,7 @@ snapshots:
       defu: 6.1.4
       many-keys-map: 2.0.1
 
-  '@aklinker1/buildc@1.1.4':
-    dependencies:
-      cac: 6.7.14
-      consola: 3.2.3
-      dependency-graph: 1.0.0
-      fast-glob: 3.3.2
-      fs-extra: 11.2.0
-      ohash: 1.1.4
-      pathe: 1.1.2
-      proper-lockfile: 4.1.2
-      yaml: 2.7.0
+  '@aklinker1/buildc@2.0.0-alpha7': {}
 
   '@aklinker1/check@1.4.5(typescript@5.6.3)':
     dependencies:
@@ -7667,8 +7646,6 @@ snapshots:
 
   defu@6.1.4: {}
 
-  dependency-graph@1.0.0: {}
-
   dequal@2.0.3: {}
 
   destr@2.0.3: {}
@@ -9145,12 +9122,6 @@ snapshots:
       kleur: 3.0.3
       sisteransi: 1.0.5
 
-  proper-lockfile@4.1.2:
-    dependencies:
-      graceful-fs: 4.2.11
-      retry: 0.12.0
-      signal-exit: 3.0.7
-
   property-information@7.0.0: {}
 
   proto-list@1.2.4: {}
@@ -9296,8 +9267,6 @@ snapshots:
     dependencies:
       onetime: 7.0.0
       signal-exit: 4.1.0
-
-  retry@0.12.0: {}
 
   reusify@1.0.4: {}
 
