@@ -25,6 +25,7 @@ catalog:
   '@types/prompts': ^2.4.9
   '@types/react': ^19.0.1
   '@types/react-dom': ^19.0.2
+  '@types/ua-parser-js': ^0.7.39
   '@types/webextension-polyfill': ^0.12.1
   '@vitejs/plugin-react': ^4.3.4
   '@vitejs/plugin-vue': ^5.2.1
@@ -90,6 +91,7 @@ catalog:
   typedoc-plugin-markdown: 4.0.0-next.23
   typedoc-vitepress-theme: 1.0.0-next.3
   typescript: ^5.6.3
+  ua-parser-js: ^1.0.40
   unbuild: ^3.5.0
   unimport: ^3.13.1
   unocss: ^0.64.0 || ^0.65.0 || ^65.0.0 ||^66.0.0

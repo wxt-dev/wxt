@@ -54,6 +54,9 @@ catalogs:
     '@types/react-dom':
       specifier: ^19.0.2
       version: 19.0.2
+    '@types/ua-parser-js':
+      specifier: ^0.7.39
+      version: 0.7.39
     '@types/webextension-polyfill':
       specifier: ^0.12.1
       version: 0.12.1
@@ -249,6 +252,9 @@ catalogs:
     typescript:
       specifier: ^5.6.3
       version: 5.6.3
+    ua-parser-js:
+      specifier: ^1.0.40
+      version: 1.0.40
     unbuild:
       specifier: ^3.5.0
       version: 3.5.0
@@ -383,27 +389,27 @@ importers:
   packages/analytics:
     dependencies:
       ua-parser-js:
-        specifier: ^1.0.38
+        specifier: 'catalog:'
         version: 1.0.40
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
+        specifier: 'catalog:'
         version: 1.4.5(typescript@5.6.3)
       '@types/chrome':
-        specifier: ^0.0.268
-        version: 0.0.268
+        specifier: 'catalog:'
+        version: 0.0.280
       '@types/ua-parser-js':
-        specifier: ^0.7.39
+        specifier: 'catalog:'
         version: 0.7.39
       publint:
-        specifier: ^0.2.12
+        specifier: 'catalog:'
         version: 0.2.12
       typescript:
-        specifier: ^5.6.3
+        specifier: 'catalog:'
         version: 5.6.3
       unbuild:
-        specifier: ^2.0.0
-        version: 2.0.0(sass@1.80.7)(typescript@5.6.3)
+        specifier: 'catalog:'
+        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -3414,6 +3420,7 @@ packages:
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   global-dirs@3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
@@ -6343,7 +6350,7 @@ snapshots:
       '@rollup/pluginutils': 5.1.4(rollup@4.34.9)
       commondir: 1.0.1
       estree-walker: 2.0.2
-      fdir: 6.4.2(picomatch@4.0.2)
+      fdir: 6.4.3(picomatch@4.0.2)
       is-reference: 1.2.1
       magic-string: 0.30.17
       picomatch: 4.0.2
@@ -7387,7 +7394,7 @@ snapshots:
 
   citty@0.1.6:
     dependencies:
-      consola: 3.2.3
+      consola: 3.4.0
 
   cli-boxes@3.0.0: {}
 

@@ -51,15 +51,15 @@
     "wxt": ">=0.19.23"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
-    "@types/chrome": "^0.0.268",
-    "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.2.12",
-    "typescript": "^5.6.3",
-    "unbuild": "^2.0.0",
+    "@aklinker1/check": "catalog:",
+    "@types/chrome": "catalog:",
+    "@types/ua-parser-js": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
     "wxt": "workspace:*"
   },
   "dependencies": {
-    "ua-parser-js": "^1.0.38"
+    "ua-parser-js": "catalog:"
   }
 }
