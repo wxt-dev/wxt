@@ -14,6 +14,7 @@ import { version as i18nVersion } from '../../packages/i18n/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
+import knowledge from 'vitepress-knowledge';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -25,6 +26,17 @@ const ogImage = 'https://wxt.dev/social-preview.png';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  extends: knowledge({
+    serverUrl: 'https://knowledge.wxt.dev',
+    paths: {
+      '/': 'docs',
+      '/api/': 'api-reference',
+    },
+    pageSelectors: {
+      'examples.md': '#VPContent > .VPPage',
+    },
+  }),
+
   titleTemplate: `:title${titleSuffix}`,
   title: 'WXT',
   description,

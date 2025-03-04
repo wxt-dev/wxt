@@ -67,6 +67,7 @@ const chromeExtensionIds = [
   'boecmgggeigllcdocgioijmleimjbfkg', // Walmart WFS Profit Calculator
   'dlnjcbkmomenmieechnmgglgcljhoepd', // Youtube Live Chat Fullscreen
   'keiealdacakpnbbljlmhfgcebmaadieg', // Python Code Runner
+  'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

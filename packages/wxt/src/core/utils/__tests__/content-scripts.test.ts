@@ -11,8 +11,8 @@ describe('Content Script Utils', () => {
     it('should return a string containing all the options with defaults applied', () => {
       const hash = hashContentScriptOptions({ matches: [] });
 
-      expect(hash).toMatchInlineSnapshot(
-        `"[["all_frames",false],["exclude_globs",[]],["exclude_matches",[]],["include_globs",[]],["match_about_blank",false],["match_origin_as_fallback",false],["matches",[]],["run_at","document_idle"],["world","ISOLATED"]]"`,
+      expect(hash).toEqual(
+        '[["all_frames",false],["exclude_globs",[]],["exclude_matches",[]],["include_globs",[]],["match_about_blank",false],["match_origin_as_fallback",false],["matches",[]],["run_at","document_idle"],["world","ISOLATED"]]',
       );
     });
 

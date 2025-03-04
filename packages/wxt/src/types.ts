@@ -4,7 +4,6 @@ import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './client/content-scripts/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
-import type { FSWatcher } from 'chokidar';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
@@ -1097,7 +1096,7 @@ export interface WxtBuilderServer {
   /**
    * Chokidar file watcher instance.
    */
-  watcher: FSWatcher;
+  watcher: vite.ViteDevServer['watcher'];
   on?(event: string, callback: () => void): void;
 }
 

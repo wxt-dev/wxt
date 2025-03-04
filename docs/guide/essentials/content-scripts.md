@@ -8,7 +8,7 @@ outline: deep
 
 ## Context
 
-The first argument to a content script's `main` function is it's "context".
+The first argument to a content script's `main` function is its "context".
 
 ```ts
 // entrypoints/example.content.ts
