@@ -18,20 +18,20 @@
   },
   "dependencies": {
     "@wxt-dev/i18n": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.280",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.2",
+    "@types/chrome": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
-    "sass": "^1.80.7",
-    "typescript": "^5.6.3",
-    "unocss": "^0.64.0",
-    "vitest": "^2.1.4",
-    "vitest-plugin-random-seed": "^1.1.0",
+    "sass": "catalog:",
+    "typescript": "catalog:",
+    "unocss": "catalog:",
+    "vitest": "catalog:",
+    "vitest-plugin-random-seed": "catalog:",
     "wxt": "workspace:*"
   },
   "buildc": {

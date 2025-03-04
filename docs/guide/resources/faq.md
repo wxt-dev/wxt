@@ -164,3 +164,11 @@ This is usually caused by one of two things (or both) when using `createShadowRo
 Both issues have the same cause: the library puts something outside the `ShadowRoot`, and the `ShadowRoot`'s isolation prevents CSS from being applied to your UI.
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
+
+## Is there an LLM trained on WXT's docs that I chat with?
+
+Not yet, but we're working on it. For now, https://wxt.dev hosts pre-aggregated and pre-formatted knowledge files containing all the docs from this website:
+
+- Index listing available knowledge files: https://wxt.dev/knowledge/index.json
+
+You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!

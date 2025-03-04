@@ -52,9 +52,6 @@ export async function resolveConfig(
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
       rcFile: false,
-      jitiOptions: {
-        esmResolve: true,
-      },
     });
     if (inlineConfig.configFile && metadata.layers?.length === 0) {
       throw Error(`Config file "${inlineConfig.configFile}" not found`);

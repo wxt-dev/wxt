@@ -49,7 +49,6 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
     {
       cache: false,
       debug: wxt.config.debug,
-      esmResolve: true,
       alias: {
         'webextension-polyfill': resolve(
           wxt.config.wxtModuleDir,
@@ -65,7 +64,7 @@ export async function importEntrypointFile<T>(path: string): Promise<T> {
       },
       // Continue using node to load TS files even if `bun run --bun` is detected. Jiti does not
       // respect the custom transform function when using it's native bun option.
-      experimentalBun: false,
+      tryNative: false,
       // List of extensions to transform with esbuild
       extensions: [
         '.ts',

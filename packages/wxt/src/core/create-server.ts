@@ -1,4 +1,5 @@
 import { debounce } from 'perfect-debounce';
+import chokidar from 'chokidar';
 import {
   BuildStepOutput,
   EntrypointGroup,
@@ -28,6 +29,7 @@ import {
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
+import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -156,8 +158,25 @@ async function createServerInternal(): Promise<WxtDevServer> {
   const keyboardShortcuts = createKeyboardShortcuts(server);
 
   const buildAndOpenBrowser = async () => {
-    // Build after starting the dev server so it can be used to transform HTML files
-    server.currentOutput = await internalBuild();
+    try {
+      // Build after starting the dev server so it can be used to transform HTML files
+      server.currentOutput = await internalBuild();
+    } catch (err) {
+      if (!isBabelSyntaxError(err)) {
+        throw err;
+      }
+      logBabelSyntaxError(err);
+      wxt.logger.info('Waiting for syntax error to be fixed...');
+      await new Promise<void>((resolve) => {
+        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        watcher.on('all', () => {
+          watcher.close();
+          wxt.logger.info('Syntax error resolved, rebuilding...');
+          resolve();
+        });
+      });
+      return buildAndOpenBrowser();
+    }
 
     // Add file watchers for files not loaded by the dev server. See
     // https://github.com/wxt-dev/wxt/issues/428#issuecomment-1944731870
@@ -187,7 +206,7 @@ function createFileReloader(server: WxtDevServer) {
   const cb = async (event: string, path: string) => {
     changeQueue.push([event, path]);
 
-    await fileChangedMutex.runExclusive(async () => {
+    const reloading = fileChangedMutex.runExclusive(async () => {
       if (server.currentOutput == null) return;
 
       const fileChanges = changeQueue
@@ -255,6 +274,14 @@ function createFileReloader(server: WxtDevServer) {
       } catch {
         // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
       }
+    });
+
+    await reloading.catch((error) => {
+      if (!isBabelSyntaxError(error)) {
+        throw error;
+      }
+      // Log syntax errors without crashing the server.
+      logBabelSyntaxError(error);
     });
   };
 

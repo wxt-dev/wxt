@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.19.28
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.27...wxt-v0.19.28)
+
+### 🩹 Fixes
+
+- Ignore `manifest.manifest_version` option and warn about incorrect usage ([#1419](https://github.com/wxt-dev/wxt/pull/1419))
+- Resolve wxt modules from the root ([#1417](https://github.com/wxt-dev/wxt/pull/1417))
+- Properly detect and reload changed files when using Vite's `?suffix` imports ([#1432](https://github.com/wxt-dev/wxt/pull/1432))
+- Regression on variable expansion in dotenv files ([#1449](https://github.com/wxt-dev/wxt/pull/1449))
+- Allow vite 6.0.9+ ([#1497](https://github.com/wxt-dev/wxt/pull/1497))
+
+### 📖 Documentation
+
+- Host pre-aggregated LLM knowledge files ([#1355](https://github.com/wxt-dev/wxt/pull/1355))
+
+### 🏡 Chore
+
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- **deps:** Upgrade to Vite 6 and related dependencies ([#1496](https://github.com/wxt-dev/wxt/pull/1496))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Stefan Maric ([@stefanmaric](https://github.com/stefanmaric))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+- 1natsu ([@1natsu172](http://github.com/1natsu172))
+- Alec Larson ([@aleclarson](http://github.com/aleclarson))
+
 ## v0.19.27
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.26...wxt-v0.19.27)
