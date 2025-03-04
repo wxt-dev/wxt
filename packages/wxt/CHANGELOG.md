@@ -26,7 +26,7 @@
 ### ❤️ Contributors
 
 - Aaron ([@aklinker1](http://github.com/aklinker1))
-- Stefan Maric <me@stefanmaric.com>
+- Stefan Maric ([@stefanmaric](https://github.com/stefanmaric))
 - Okinea Dev ([@okineadev](http://github.com/okineadev))
 - 1natsu ([@1natsu172](http://github.com/1natsu172))
 - Alec Larson ([@aleclarson](http://github.com/aleclarson))
