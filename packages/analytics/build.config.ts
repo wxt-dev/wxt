@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 // Build module and plugins
 export default defineBuildConfig({
-  rootDir: 'modules/analytics',
+  rootDir: resolve(__dirname, 'modules/analytics'),
   outDir: resolve(__dirname, 'dist'),
   entries: [
     { input: 'index.ts', name: 'module' },
