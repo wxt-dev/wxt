@@ -12,6 +12,7 @@ jobs:
   vhs:
     name: Create VHS
     runs-on: ubuntu-22.04
+    if: ${{ github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
     steps:
