@@ -129,7 +129,15 @@ export async function createShadowRootUi<TMounted>(
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
   const css = [options.css ?? ''];
   if (ctx.options?.cssInjectionMode === 'ui') {
-    const entryCss = await loadCss();
+    let entryCss = await loadCss();
+    let propertyCss = entryCss
+      .slice(entryCss.indexOf('@property'))
+      .replaceAll('inherits: false', 'inherits: true');
+    const styleElem = document.createElement('style');
+    styleElem.id = 'wxt-style';
+    styleElem.innerHTML = `${propertyCss}`;
+    document.head.append(styleElem);
+    entryCss = entryCss.slice(0, entryCss.indexOf('@property'));
     // Replace :root selectors with :host since we're in a shadow root
     css.push(entryCss.replaceAll(':root', ':host'));
   }
