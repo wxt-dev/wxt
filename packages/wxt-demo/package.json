@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "buildc deps && wxt",
-    "build": "buildc deps && echo 'TODO add back build step'",
+    "build": "buildc deps && wxt build",
     "build:all": "buildc deps && pnpm run --reporter-hide-prefix /^build:all:.*/",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
