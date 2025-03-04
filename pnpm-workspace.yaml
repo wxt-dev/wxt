@@ -2,7 +2,12 @@ packages:
   - docs
   - packages/*
 onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - dtrace-provider
   - esbuild
+  - sharp
+  - simple-git-hooks
+  - spawn-sync
 catalog:
   '@1natsu/wait-element': ^4.1.2
   '@aklinker1/buildc': ^1.1.4
