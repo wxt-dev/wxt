@@ -4,17 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "buildc --deps-only -- wxt",
-    "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- pnpm run --reporter-hide-prefix /^build:all:.*/",
+    "dev": "buildc deps && wxt",
+    "build": "buildc deps && echo 'TODO add back build step'",
+    "build:all": "buildc deps && pnpm run --reporter-hide-prefix /^build:all:.*/",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
-    "test": "buildc --deps-only -- vitest",
-    "zip": "buildc --deps-only -- wxt zip",
-    "check": "buildc --deps-only -- check",
-    "postinstall": "buildc --deps-only -- wxt prepare"
+    "test": "buildc deps && vitest",
+    "zip": "buildc deps && wxt zip",
+    "check": "buildc deps && check",
+    "postinstall": "buildc deps && wxt prepare"
   },
   "dependencies": {
     "@wxt-dev/i18n": "workspace:*",
@@ -35,6 +35,6 @@
     "wxt": "workspace:*"
   },
   "buildc": {
-    "cachable": false
+    "cache": false
   }
 }

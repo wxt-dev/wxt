@@ -26,8 +26,8 @@
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "check": "buildc deps && check",
+    "test": "buildc deps && vitest"
   },
   "dependencies": {
     "async-mutex": "catalog:",

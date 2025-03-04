@@ -42,7 +42,7 @@
     "dev": "wxt",
     "check": "pnpm build && check",
     "build": "buildc -- unbuild",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc deps && wxt prepare"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
