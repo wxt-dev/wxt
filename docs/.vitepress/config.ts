@@ -14,6 +14,7 @@ import { version as i18nVersion } from '../../packages/i18n/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
+import { version as analyticsVersion } from '../../packages/analytics/package.json';
 import knowledge from 'vitepress-knowledge';
 
 const title = 'Next-gen Web Extension Framework';
@@ -23,6 +24,14 @@ const description =
 const ogTitle = `${title}${titleSuffix}`;
 const ogUrl = 'https://wxt.dev';
 const ogImage = 'https://wxt.dev/social-preview.png';
+
+const otherPackages = {
+  analytics: analyticsVersion,
+  'auto-icons': autoIconsVersion,
+  i18n: i18nVersion,
+  storage: storageVersion,
+  unocss: unocssVersion,
+};
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -109,12 +118,12 @@ export default defineConfig({
             'https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md',
           ),
         ]),
-        navItem('Other Packages', [
-          navItem(`@wxt-dev/storage — ${storageVersion}`, '/storage'),
-          navItem(`@wxt-dev/auto-icons — ${autoIconsVersion}`, '/auto-icons'),
-          navItem(`@wxt-dev/i18n — ${i18nVersion}`, '/i18n'),
-          navItem(`@wxt-dev/unocss — ${unocssVersion}`, '/unocss'),
-        ]),
+        navItem(
+          'Other Packages',
+          Object.entries(otherPackages).map(([name, version]) =>
+            navItem(`@wxt-dev/${name} — ${version}`, `/${name}`),
+          ),
+        ),
       ]),
     ],
 
