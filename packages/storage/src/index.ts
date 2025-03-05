@@ -379,6 +379,9 @@ function createStorage(): WxtStorage {
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
           );
         }
+        if (currentVersion === targetVersion) {
+          return;
+        }
 
         console.debug(
           `[@wxt-dev/storage] Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
