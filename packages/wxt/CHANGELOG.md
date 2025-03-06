@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.29
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.28...wxt-v0.19.29)
+
+### 🚀 Enhancements
+
+- Tolerate syntax errors ([#1437](https://github.com/wxt-dev/wxt/pull/1437))
+
+### 🩹 Fixes
+
+- Support `registration: "runtime"` for MV2 ([#1431](https://github.com/wxt-dev/wxt/pull/1431))
+
+### ❤️ Contributors
+
+- Thomas ([@harmonyharmo](http://github.com/harmonyharmo))
+- Alec Larson ([@aleclarson](http://github.com/aleclarson))
+
 ## v0.19.28
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.27...wxt-v0.19.28)
