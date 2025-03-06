@@ -17,7 +17,7 @@
 
 ### ❤️ Contributors
 
-- Ergou <ma2808203259@hotmail.com>
+- ergou ([@RayGuo-ergou](https://github.com/RayGuo-ergou))
 - Aaron ([@aklinker1](http://github.com/aklinker1))
 - Okinea Dev ([@okineadev](http://github.com/okineadev))
 
