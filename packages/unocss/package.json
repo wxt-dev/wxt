@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "buildc --deps-only -- check"
+    "check": "buildc deps && check"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",
