@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/browser-types",
   "description": "A modified version of @types/chrome for WXT",
-  "version": "0.0.287",
+  "version": "0.0.308",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

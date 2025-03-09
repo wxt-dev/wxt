@@ -1,4 +1,6 @@
 /// <reference types="chrome" />
+/// <reference types="@wxt-dev/types-test/lib/index.d.ts" />
+
 /**
  * Contains the `browser` export which you should use to access the extension APIs in your project:
  * ```ts
@@ -23,16 +25,32 @@ export interface WxtRuntime {}
  */
 export interface WxtI18n {}
 
-export type WxtBrowser = Omit<typeof chrome, 'runtime' | 'i18n'> & {
-  runtime: WxtRuntime & Omit<(typeof chrome)['runtime'], 'getURL'>;
-  i18n: WxtI18n & Omit<(typeof chrome)['i18n'], 'getMessage'>;
+export type WxtBrowser = Omit<typeof browser, 'runtime' | 'i18n'> & {
+  runtime: WxtRuntime & Omit<(typeof browser)['runtime'], 'getURL'>;
+  i18n: WxtI18n & Omit<(typeof browser)['i18n'], 'getMessage'>;
 };
 
-// #region snippet
-export const browser: WxtBrowser =
-  // @ts-expect-error
-  globalThis.browser?.runtime?.id == null
+/* // #region snippet
+// @ts-expect-error
+globalThis.browser?.runtime?.id == null
     ? globalThis.chrome
     : // @ts-expect-error
-      globalThis.browser;
-// #endregion snippet
+      globalThis.browser
+// #endregion snippet */
+
+/* const browser = (globalThis.browser?.runtime?.id == null
+  ? globalThis.chrome
+  : globalThis.browser) as any as typeof globalThis.browser; */
+
+type test = browser.runtime.MessageSender;
+//     ^?
+browser.runtime.connect();
+//                ^?
+browser.runtime.onMessage;
+//                ^?
+browser.runtime.onMessage.addListener;
+//                          ^?
+chrome.runtime.onMessage.addListener;
+//                            ^?
+
+browser.runtime.onMessage.addListener();

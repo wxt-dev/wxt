@@ -1,0 +1,16 @@
+{
+  "name": "@wxt-dev/types-test",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "gen": "tsx index.ts"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.308",
+    "@types/filesystem": "^0.0.36",
+    "@types/har-format": "^1.2.16"
+  }
+}

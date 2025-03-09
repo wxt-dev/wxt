@@ -5,7 +5,7 @@ declare namespace browser {
   ////////////////////
   export namespace cast {
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.AutoJoinPolicy
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.AutoJoinPolicy
      */
     export enum AutoJoinPolicy {
       CUSTOM_CONTROLLER_SCOPED = 'custom_controller_scoped',
@@ -15,7 +15,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.DefaultActionPolicy
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.DefaultActionPolicy
      */
     export enum DefaultActionPolicy {
       CREATE_SESSION = 'create_session',
@@ -23,7 +23,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.Capability
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.Capability
      */
     export enum Capability {
       VIDEO_OUT = 'video_out',
@@ -34,7 +34,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.ErrorCode
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.ErrorCode
      */
     export enum ErrorCode {
       CANCEL = 'cancel',
@@ -50,7 +50,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.ReceiverAvailability
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.ReceiverAvailability
      */
     export enum ReceiverAvailability {
       AVAILABLE = 'available',
@@ -58,16 +58,16 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.SenderPlatform
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.SenderPlatform
      */
     export enum SenderPlatform {
-      CHROME = 'chrome',
+      CHROME = 'browser',
       IOS = 'ios',
       ANDROID = 'android',
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.ReceiverType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.ReceiverType
      */
     export enum ReceiverType {
       CAST = 'cast',
@@ -77,7 +77,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.ReceiverAction
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.ReceiverAction
      */
     export enum ReceiverAction {
       CAST = 'cast',
@@ -85,7 +85,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.SessionStatus
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.SessionStatus
      */
     export enum SessionStatus {
       CONNECTED = 'connected',
@@ -94,12 +94,12 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.VERSION
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.VERSION
      */
     export var VERSION: number[];
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.isAvailable
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.isAvailable
      */
     export var isAvailable: boolean;
 
@@ -181,7 +181,7 @@ declare namespace browser {
 
     /**
      * @param escaped A string to unescape.
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast#.unescape
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast#.unescape
      */
     export function unescape(escaped: string): string;
 
@@ -192,7 +192,7 @@ declare namespace browser {
        * @param receiverListener
        * @param opt_autoJoinPolicy
        * @param opt_defaultActionPolicy
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.ApiConfig
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.ApiConfig
        */
       constructor(
         sessionRequest: browser.cast.SessionRequest,
@@ -218,7 +218,7 @@ declare namespace browser {
        * @param code
        * @param opt_description
        * @param opt_details
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.Error
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.Error
        */
       constructor(
         code: browser.cast.ErrorCode,
@@ -234,7 +234,7 @@ declare namespace browser {
     export class Image {
       /**
        * @param url
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.Image
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.Image
        */
       constructor(url: string);
 
@@ -246,7 +246,7 @@ declare namespace browser {
     export class SenderApplication {
       /**
        * @param platform
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.SenderApplication
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.SenderApplication
        */
       constructor(platform: browser.cast.SenderPlatform);
 
@@ -260,7 +260,7 @@ declare namespace browser {
        * @param appId
        * @param opt_capabilities
        * @param opt_timeout
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.SessionRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.SessionRequest
        */
       constructor(
         appId: string,
@@ -281,7 +281,7 @@ declare namespace browser {
        * @param displayName
        * @param appImages
        * @param receiver
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.Session
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.Session
        */
       constructor(
         sessionId: string,
@@ -427,7 +427,7 @@ declare namespace browser {
        * @param friendlyName
        * @param opt_capabilities
        * @param opt_volume
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.Receiver
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.Receiver
        */
       constructor(
         label: string,
@@ -448,7 +448,7 @@ declare namespace browser {
       /**
        * @param statusText
        * @param appImages
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.ReceiverDisplayStatus
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.ReceiverDisplayStatus
        */
       constructor(statusText: string, appImages: browser.cast.Image[]);
 
@@ -460,7 +460,7 @@ declare namespace browser {
       /**
        * @param opt_level
        * @param opt_muted
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.Volume
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.Volume
        */
       constructor(level?: number, muted?: boolean);
 
@@ -473,7 +473,7 @@ declare namespace browser {
     export var DEFAULT_MEDIA_RECEIVER_APP_ID: string;
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.MediaCommand
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.MediaCommand
      */
     export enum MediaCommand {
       PAUSE = 'pause',
@@ -483,7 +483,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.MetadataType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.MetadataType
      */
     export enum MetadataType {
       GENERIC,
@@ -494,7 +494,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.PlayerState
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.PlayerState
      */
     export enum PlayerState {
       IDLE = 'IDLE',
@@ -504,7 +504,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.ResumeState
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.ResumeState
      */
     export enum ResumeState {
       PLAYBACK_START = 'PLAYBACK_START',
@@ -512,7 +512,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.StreamType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.StreamType
      */
     export enum StreamType {
       BUFFERED = 'BUFFERED',
@@ -521,7 +521,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.IdleReason
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.IdleReason
      */
     export enum IdleReason {
       CANCELLED = 'CANCELLED',
@@ -531,7 +531,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.RepeatMode
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.RepeatMode
      */
     export enum RepeatMode {
       OFF = 'REPEAT_OFF',
@@ -543,7 +543,7 @@ declare namespace browser {
     export class QueueItem {
       /**
        * @param mediaInfo
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueItem
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueItem
        */
       constructor(mediaInfo: browser.cast.media.MediaInfo);
 
@@ -559,7 +559,7 @@ declare namespace browser {
     export class QueueLoadRequest {
       /**
        * @param items
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueLoadRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueLoadRequest
        */
       constructor(items: browser.cast.media.QueueItem[]);
 
@@ -572,7 +572,7 @@ declare namespace browser {
     export class QueueInsertItemsRequest {
       /**
        * @param itemsToInsert
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueInsertItemsRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueInsertItemsRequest
        */
       constructor(itemsToInsert: browser.cast.media.QueueItem[]);
 
@@ -584,7 +584,7 @@ declare namespace browser {
     export class QueueRemoveItemsRequest {
       /**
        * @param itemIdsToRemove
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueRemoveItemsRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueRemoveItemsRequest
        */
       constructor(itemIdsToRemove: number[]);
 
@@ -595,7 +595,7 @@ declare namespace browser {
     export class QueueReorderItemsRequest {
       /**
        * @param itemIdsToReorder
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueReorderItemsRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueReorderItemsRequest
        */
       constructor(itemIdsToReorder: number[]);
 
@@ -607,7 +607,7 @@ declare namespace browser {
     export class QueueUpdateItemsRequest {
       /**
        * @param itemsToUpdate
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.QueueUpdateItemsRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.QueueUpdateItemsRequest
        */
       constructor(itemsToUpdate: browser.cast.media.QueueItem[]);
 
@@ -616,7 +616,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TrackType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TrackType
      */
     export enum TrackType {
       TEXT = 'TEXT',
@@ -625,7 +625,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TextTrackType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TextTrackType
      */
     export enum TextTrackType {
       SUBTITLES = 'SUBTITLES',
@@ -636,7 +636,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TextTrackEdgeType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TextTrackEdgeType
      */
     export enum TextTrackEdgeType {
       NONE = 'NONE',
@@ -647,7 +647,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TextTrackWindowType
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TextTrackWindowType
      */
     export enum TextTrackWindowType {
       NONE = 'NONE',
@@ -656,7 +656,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TextTrackFontGenericFamily
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TextTrackFontGenericFamily
      */
     export enum TextTrackFontGenericFamily {
       SANS_SERIF = 'SANS_SERIF',
@@ -669,7 +669,7 @@ declare namespace browser {
     }
 
     /**
-     * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media#.TextTrackFontStyle
+     * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media#.TextTrackFontStyle
      */
     export enum TextTrackFontStyle {
       NORMAL = 'NORMAL',
@@ -680,7 +680,7 @@ declare namespace browser {
 
     export class GetStatusRequest {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.GetStatusRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.GetStatusRequest
        */
       constructor();
 
@@ -689,7 +689,7 @@ declare namespace browser {
 
     export class PauseRequest {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.PauseRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.PauseRequest
        */
       constructor();
 
@@ -698,7 +698,7 @@ declare namespace browser {
 
     export class PlayRequest {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.PlayRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.PlayRequest
        */
       constructor();
 
@@ -707,7 +707,7 @@ declare namespace browser {
 
     export class SeekRequest {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.SeekRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.SeekRequest
        */
       constructor();
 
@@ -718,7 +718,7 @@ declare namespace browser {
 
     export class StopRequest {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.StopRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.StopRequest
        */
       constructor();
 
@@ -728,7 +728,7 @@ declare namespace browser {
     export class VolumeRequest {
       /**
        * @param volume
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.VolumeRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.VolumeRequest
        */
       constructor(volume: browser.cast.Volume);
 
@@ -739,7 +739,7 @@ declare namespace browser {
     export class LoadRequest {
       /**
        * @param mediaInfo
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.LoadRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.LoadRequest
        */
       constructor(mediaInfo: browser.cast.media.MediaInfo);
 
@@ -755,7 +755,7 @@ declare namespace browser {
       /**
        * @param opt_activeTrackIds
        * @param opt_textTrackStyle
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.EditTracksInfoRequest
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.EditTracksInfoRequest
        */
       constructor(
         activeTrackIds?: number[],
@@ -780,7 +780,7 @@ declare namespace browser {
 
     export class MovieMediaMetadata {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.MovieMediaMetadata
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.MovieMediaMetadata
        */
       constructor();
 
@@ -798,7 +798,7 @@ declare namespace browser {
 
     export class TvShowMediaMetadata {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.TvShowMediaMetadata
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.TvShowMediaMetadata
        */
       constructor();
 
@@ -824,7 +824,7 @@ declare namespace browser {
 
     export class MusicTrackMediaMetadata {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.MusicTrackMediaMetadata
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.MusicTrackMediaMetadata
        */
       constructor();
 
@@ -850,7 +850,7 @@ declare namespace browser {
 
     export class PhotoMediaMetadata {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.PhotoMediaMetadata
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.PhotoMediaMetadata
        */
       constructor();
 
@@ -873,7 +873,7 @@ declare namespace browser {
       /**
        * @param contentId
        * @param contentType
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.MediaInfo
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.MediaInfo
        */
       constructor(contentId: string, contentType: string);
 
@@ -891,7 +891,7 @@ declare namespace browser {
       /**
        * @param sessionId
        * @param mediaSessionId
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.Media
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.Media
        */
       constructor(sessionId: string, mediaSessionId: number);
 
@@ -1127,7 +1127,7 @@ declare namespace browser {
       /**
        * @param trackId
        * @param trackType
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.Track
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.Track
        */
       constructor(trackId: number, trackType: browser.cast.media.TrackType);
 
@@ -1143,7 +1143,7 @@ declare namespace browser {
 
     export class TextTrackStyle {
       /**
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.TextTrackStyle
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.TextTrackStyle
        */
       constructor();
 
@@ -1167,7 +1167,7 @@ declare namespace browser {
        * @param end
        * @param isMovingWindow
        * @param isLiveDone
-       * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.LiveSeekableRange
+       * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.LiveSeekableRange
        */
       constructor(
         start?: number,
@@ -1184,7 +1184,7 @@ declare namespace browser {
   }
 
   /**
-   * @see https://developers.google.com/cast/docs/reference/chrome/browser.cast.media.timeout
+   * @see https://developers.google.com/cast/docs/reference/browser/browser.cast.media.timeout
    */
   export namespace cast.media.timeout {
     export var load: number;

@@ -1,5 +1,7 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import { browser } from '../browser';
+/* import { browser } from '../browser'; */
+
+/* const test: wxtBrowser.runtime.MessageSender; */
 
 describe('browser', () => {
   describe('types', () => {

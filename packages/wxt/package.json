@@ -68,6 +68,8 @@
     "@types/node": "^20.17.6",
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
+    "@vitest/ui": "^3.0.8",
+    "@wxt-dev/types-test": "workspace:*",
     "extract-zip": "^2.0.1",
     "happy-dom": "^15.11.4",
     "lodash.merge": "^4.6.2",
