@@ -67,7 +67,7 @@ catalog:
   minimatch: ^10.0.1
   nano-spawn: ^0.2.0
   normalize-path: ^3.0.0
-  nypm: ^0.6.0
+  nypm: ^0.3.12
   ohash: ^1.1.4
   open: ^10.1.0
   ora: ^8.1.1
