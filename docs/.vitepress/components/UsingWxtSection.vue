@@ -68,6 +68,7 @@ const chromeExtensionIds = [
   'dlnjcbkmomenmieechnmgglgcljhoepd', // Youtube Live Chat Fullscreen
   'keiealdacakpnbbljlmhfgcebmaadieg', // Python Code Runner
   'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
+  'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
