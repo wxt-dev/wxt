@@ -386,7 +386,6 @@ function createStorage(): WxtStorage {
           return;
         }
 
-        console.log('debug', debug);
         if (debug === true) {
           console.debug(
             `[@wxt-dev/storage] Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
