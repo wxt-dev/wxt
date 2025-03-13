@@ -113,6 +113,20 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
+
+  function negateCheck(exclude: string[], relativePath: string) {
+    return exclude
+      ?.map((pattern) => {
+        if (pattern.startsWith('!')) {
+          if (relativePath.endsWith('.json')) {
+            console.log(minimatch(relativePath, pattern.slice(1)));
+          }
+          return minimatch(relativePath, pattern.slice(1));
+        }
+        return false;
+      })
+      .filter(Boolean);
+  }
   const files = (
     await glob(['**/*', ...(options?.include || [])], {
       cwd: directory,
@@ -121,9 +135,27 @@ async function zipDir(
       onlyFiles: true,
     })
   ).filter((relativePath) => {
+    let shouldExclude = options?.exclude?.some((pattern) =>
+      minimatch(relativePath, pattern),
+    );
+    console.log(
+      negateCheck(options?.exclude as string[], relativePath),
+      relativePath,
+    );
+    // shouldExclude = negateCheck(options?.exclude as string[], relativePath)
+    //   ? true
+    //   : shouldExclude;
+    // if (relativePath.endsWith('.json')) {
+    //   console.log({
+    //     should: shouldExclude,
+    //     relativePath,
+    //     dd: options?.exclude,
+    //   });
+    // }
+
     return (
       options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
+      shouldExclude
     );
   });
   const filesToZip = [
