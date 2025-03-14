@@ -359,7 +359,11 @@ function createStorage(): WxtStorage {
     defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
       const { driver, driverKey } = resolveKey(key);
 
-      const { version: targetVersion = 1, migrations = {} } = opts ?? {};
+      const {
+        version: targetVersion = 1,
+        migrations = {},
+        onMigrationComplete,
+      } = opts ?? {};
       if (targetVersion < 1) {
         throw Error(
           'Storage item version cannot be less than 1. Initial versions should be set to 1, not 0.',
@@ -406,6 +410,9 @@ function createStorage(): WxtStorage {
           { key: driverKey, value: migratedValue },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
+        if (onMigrationComplete !== undefined) {
+          onMigrationComplete(migratedValue, targetVersion);
+        }
         console.debug(
           `[@wxt-dev/storage] Storage migration completed for ${key} v${targetVersion}`,
           { migratedValue },
@@ -862,6 +869,10 @@ export interface WxtStorageItemOptions<T> {
    * A map of version numbers to the functions used to migrate the data to that version.
    */
   migrations?: Record<number, (oldValue: any) => any>;
+  /**
+   * A callback function that runs on migration complete.
+   */
+  onMigrationComplete?: (storage: T, targetVersion: number) => void;
 }
 
 export type StorageAreaChanges = {

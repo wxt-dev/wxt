@@ -705,6 +705,30 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it('should call onMigrationComplete callback function if defined', async () => {
+        await fakeBrowser.storage.local.set({
+          count: 2,
+          count$: { v: 1 },
+        });
+        const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+        const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
+        const onMigrationComplete = vi.fn((count, _v) => count);
+
+        storage.defineItem<number, { v: number }>(`local:count`, {
+          defaultValue: 0,
+          version: 3,
+          migrations: {
+            2: migrateToV2,
+            3: migrateToV3,
+          },
+          onMigrationComplete,
+        });
+        await waitForMigrations();
+
+        expect(onMigrationComplete).toBeCalledTimes(1);
+        expect(onMigrationComplete).toBeCalledWith(12, 3);
+      });
+
       it("should not run migrations if the value doesn't exist yet", async () => {
         const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
         const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
