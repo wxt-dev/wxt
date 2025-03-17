@@ -668,27 +668,26 @@ describe('findEntrypoints', () => {
     expect(entrypoints[0]).toEqual(expected);
   });
 
-  it('should not allow multiple entrypoints with the same name', async () => {
+  it('should ignore multiple */index.[jt]sx? if  */index.html already exists', async () => {
     globMock.mockResolvedValueOnce([
       'options/index.html',
       'options/index.jsx',
-      'popup.html',
       'popup/index.html',
       'popup/index.ts',
       'ui.html',
     ]);
+    expect(() => findEntrypoints());
+  });
 
+  it('should not allow multiple entrypoints with the same name', async () => {
+    globMock.mockResolvedValueOnce(['popup.html', 'popup/index.html']);
     await expect(() => findEntrypoints()).rejects.toThrowError(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
-        '',
-        '- options',
-        `  - ${unnormalizePath('src/entrypoints/options/index.html')}`,
-        `  - ${unnormalizePath('src/entrypoints/options/index.jsx')}`,
         '- popup',
         `  - ${unnormalizePath('src/entrypoints/popup.html')}`,
         `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
-        `  - ${unnormalizePath('src/entrypoints/popup/index.ts')}`,
+        ``,
       ].join('\n'),
     );
   });
