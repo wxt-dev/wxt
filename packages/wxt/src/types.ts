@@ -29,7 +29,7 @@ export interface InlineConfig {
   /**
    * Directory containing files that will be copied to the output directory as-is.
    *
-   * @default "${config.root}/public"
+   * @default "${config.srcDir}/public"
    */
   publicDir?: string;
   /**
