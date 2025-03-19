@@ -887,8 +887,6 @@ describe('Storage Utils', () => {
         await fakeBrowser.storage.local.set({
           count: 2,
           count$: { v: 1 },
-        });
-        await fakeBrowser.storage.local.set({
           count2: 2,
           count2$: { v: 1 },
         });
