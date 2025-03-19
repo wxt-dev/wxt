@@ -872,7 +872,7 @@ export interface WxtStorageItemOptions<T> {
   /**
    * A callback function that runs on migration complete.
    */
-  onMigrationComplete?: (storage: T, targetVersion: number) => void;
+  onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
 }
 
 export type StorageAreaChanges = {
