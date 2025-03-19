@@ -410,9 +410,7 @@ function createStorage(): WxtStorage {
           { key: driverKey, value: migratedValue },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
-        if (onMigrationComplete !== undefined) {
-          onMigrationComplete(migratedValue, targetVersion);
-        }
+        onMigrationComplete?.(migratedValue, targetVersion);
         console.debug(
           `[@wxt-dev/storage] Storage migration completed for ${key} v${targetVersion}`,
           { migratedValue },
