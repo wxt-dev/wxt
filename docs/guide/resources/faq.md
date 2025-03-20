@@ -167,8 +167,10 @@ Both issues have the same fix: tell the library to put elements inside the `Shad
 
 ## Is there an LLM trained on WXT's docs that I chat with?
 
-Not yet, but we're working on it. For now, https://wxt.dev hosts pre-aggregated and pre-formatted knowledge files containing all the docs from this website:
+Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit https://knowledge.wxt.dev/ for a fullscreen experience.
 
-- Index listing available knowledge files: https://wxt.dev/knowledge/index.json
+Additionally, if you want to train your own model or provide context to your editor, you can use the LLM knowledge files hosted by the site:
+
+https://wxt.dev/knowledge/index.json
 
 You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!

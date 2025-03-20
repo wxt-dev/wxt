@@ -361,6 +361,7 @@ function createStorage(): WxtStorage {
       const {
         version: targetVersion = 1,
         migrations = {},
+        onMigrationComplete,
         debug = false,
       } = opts ?? {};
       if (targetVersion < 1) {
@@ -423,6 +424,7 @@ function createStorage(): WxtStorage {
             { migratedValue },
           );
         }
+        onMigrationComplete?.(migratedValue, targetVersion);
       };
       const migrationsDone =
         opts?.migrations == null
@@ -880,6 +882,10 @@ export interface WxtStorageItemOptions<T> {
    * @default false
    */
   debug?: boolean;
+  /**
+   * A callback function that runs on migration complete.
+   */
+  onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
 }
 
 export type StorageAreaChanges = {
