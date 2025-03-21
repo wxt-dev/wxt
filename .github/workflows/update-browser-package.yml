@@ -1,0 +1,38 @@
+name: 🔄 Update @wxt-dev/browser
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight
+
+jobs:
+  sync:
+    name: 'Sync with @types/chrome'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          installArgs: --ignore-scripts
+
+      - name: Generate Latest Code
+        working-directory: packages/browser
+        run: pnpm gen
+
+      - name: Commit Changes
+        id: commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'fix: Update \`@wxt-dev/browser\` to latest \`@types/chrome\` version'
+          file_pattern: 'packages/browser/**'
+
+      - name: Publish Package
+        if: steps.commit.outputs.changes_detected == 'true'
+        working-directory: packages/browser
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
+          pnpm publish
