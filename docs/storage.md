@@ -15,7 +15,7 @@ A simplified wrapper around the extension storage APIs.
 This module is built-in to WXT, so you don't need to install anything.
 
 ```ts
-import { storage } from 'wxt/storage';
+import { storage } from '#imports';
 ```
 
 If you use auto-imports, `storage` is auto-imported for you, so you don't even need to import it!
@@ -37,7 +37,7 @@ import { storage } from '@wxt-dev/storage';
 
 ## Storage Permission
 
-To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
+To use the `@wxt-dev/storage` API, the `"storage"` permission must be added to the manifest:
 
 ```ts [wxt.config.ts]
 export default defineConfig({
@@ -74,7 +74,7 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
-For a full list of methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage).
+For a full list of methods available, see the [API reference](/api/reference/wxt/utils/storage/interfaces/WxtStorage).
 
 ## Watchers
 
@@ -97,7 +97,7 @@ unwatch();
 
 ## Metadata
 
-`wxt/storage` also supports setting metadata for keys, stored at `key + "$"`. Metadata is a collection of properties associated with a key. It might be a version number, last modified date, etc.
+`@wxt-dev/storage` also supports setting metadata for keys, stored at `key + "$"`. Metadata is a collection of properties associated with a key. It might be a version number, last modified date, etc.
 
 [Other than versioning](#versioning), you are responsible for managing a field's metadata:
 
@@ -157,7 +157,7 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
 });
 ```
 
-For a full list of properties and methods available, see the [API reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorageItem).
+For a full list of properties and methods available, see the [API reference](/api/reference/wxt/utils/storage/interfaces/WxtStorageItem).
 
 ### Versioning
 
@@ -353,4 +353,4 @@ await storage.setItems([
 ]);
 ```
 
-Refer to the [API Reference](/api/reference/@wxt-dev/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.
+Refer to the [API Reference](/api/reference/wxt/utils/storage/interfaces/WxtStorage) for types and examples of how to use all the bulk APIs.

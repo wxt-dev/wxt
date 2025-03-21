@@ -1,0 +1,56 @@
+{
+  "name": "@wxt-dev/webextension-polyfill",
+  "description": "Use webextension-polyfill with WXT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/webextension-polyfill"
+  },
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/webextension-polyfill/README.md",
+  "keywords": [
+    "wxt",
+    "module",
+    "webextension-polyfill"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.mts",
+      "default": "./dist/browser.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "wxt",
+    "check": "pnpm build && check",
+    "build": "buildc -- unbuild",
+    "prepare": "buildc --deps-only -- wxt prepare"
+  },
+  "peerDependencies": {
+    "webextension-polyfill": "*",
+    "wxt": ">=0.20.0"
+  },
+  "devDependencies": {
+    "@aklinker1/check": "catalog:",
+    "@types/webextension-polyfill": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
+    "webextension-polyfill": "catalog:",
+    "wxt": "workspace:*"
+  }
+}

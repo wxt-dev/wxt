@@ -1,9 +1,9 @@
-import type { Manifest } from 'wxt/browser';
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
 import { generateWxtDir } from '../../generate-wxt-dir';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
+import type { Browser } from '@wxt-dev/browser';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output, build the
@@ -30,7 +30,7 @@ export async function rebuild(
   },
 ): Promise<{
   output: BuildOutput;
-  manifest: Manifest.WebExtensionManifest;
+  manifest: Browser.runtime.Manifest;
   warnings: any[][];
 }> {
   const { default: ora } = await import('ora');

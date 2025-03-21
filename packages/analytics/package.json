@@ -48,7 +48,7 @@
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "peerDependencies": {
-    "wxt": ">=0.19.23"
+    "wxt": ">=0.20.0"
   },
   "devDependencies": {
     "@aklinker1/check": "catalog:",

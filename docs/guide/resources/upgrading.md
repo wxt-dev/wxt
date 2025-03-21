@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Upgrading WXT
 
 ## Overview
@@ -12,6 +16,202 @@ Listed below are all the breaking changes you should address when upgrading to a
 
 Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`, are considered major and have breaking changes. Once v1 is released, only major version bumps will have breaking changes.
 
+## v0.19.0 &rarr; v0.20.0
+
+v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.
+
+:::tip
+Read through all the changes once before making any code changes.
+:::
+
+### `webextension-polyfill` Removed
+
+WXT no longer uses the `webextension-polyfill`!
+
+Why? The polyfill doesn't add any value anymore. WXT's new `browser` supports the promise-based APIs on all browsers/manifest versions and all shared APIs behave the same way.
+
+To upgrade, you have two options:
+
+1. **Stop using the polyfill** - No changes necessary, though you may want to do some manual testing to make sure everything continues to work. None of the early testers of this feature reported any runtime issues once they stopped using the polyfill.
+2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
+   - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
+     ```sh
+     pnpm i webextension-polyfill @wxt-dev/webextension-polyfill
+     ```
+   - Add the WXT module to your config:
+     ```ts [wxt.config.ts]
+     export default defineConfig({
+       modules: ['@wxt-dev/webextension-polyfill'],
+     });
+     ```
+
+Regardless of your choice, the `extensionApi` config has been removed. Remove it from your `wxt.config.ts` file if present:
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  extensionApi: 'chrome', // [!code --]
+});
+```
+
+Additionally, how you consume extension API types have changed. `wxt/browser` now uses types based on `@types/chrome` instead of `@types/webextension-polyfill`.
+
+Types are now accessed off the `Browser` namespace:
+
+<!-- prettier-ignore -->
+```ts
+import type { Runtime } from 'wxt/browser'; // [!code --]
+import type { Browser } from 'wxt/browser'; // [!code ++]
+
+function getMessageSenderUrl(sender: Runtime.MessageSender): string { // [!code --]
+function getMessageSenderUrl(sender: Browser.runtime.MessageSender): string { // [!code ++]
+  // ...
+}
+```
+
+These new types contain up-to-date MV3 APIs, contain less bugs, and don't have any auto-generated names.
+
+### `public/` and `modules/` Directories Moved
+
+The default location for the `public/` and `modules/` directories have changed to better align with standards set by other frameworks (Nuxt, Next, Astro, etc). Now, each path is relative to the project's root directory, not the src directory.
+
+- If you follow the default folder structure, you don't need to make any changes.
+- If you set a custom `srcDir`, you have two options:
+  1.  Keep the folders in the same place and update your project config:
+      ```ts [wxt.config.ts]
+      export default defineConfig({
+        srcDir: 'src',
+        publicDir: 'src/public', // [!code ++]
+        modulesDir: 'src/modules', // [!code ++]
+      });
+      ```
+  2.  Move the your `public/` and `modules/` directories to the project root:
+      ```diff
+      <root>/
+      +   modules/
+      +   public/
+          src/
+              components/
+              entrypoints/
+      -       modules/
+      -       public/
+              utils/
+          wxt.config.ts
+      ```
+
+### Import Path Changes
+
+The APIs exported by `wxt/sandbox`, `wxt/client`, or `wxt/storage` have moved to `wxt/utils/*`.
+
+To upgrade, replace these imports with the new `#imports` module:
+
+```ts
+import { storage } from 'wxt/storage'; // [!code --]
+import { defineContentScript } from 'wxt/sandbox'; // [!code --]
+import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
+import { storage } from '#imports'; // [!code ++]
+import { defineContentScript } from '#imports'; // [!code ++]
+import { ContentScriptContext, useAppConfig } from '#imports'; // [!code ++]
+```
+
+You can combine the imports into a single import statement, but it's easier to just find/replace each statement.
+
+:::tip
+Before types will work, you'll need to run `wxt prepare` after installing v0.20 to generate the new TypeScript declarations.
+:::
+
+Read more about the new `#imports` module in the [blog post](/blog/2024-12-06-using-imports-module).
+
+### `createShadowRootUi` CSS Changes
+
+WXT now resets styles inherited from the webpage (`visibility`, `color`, `font-size`, etc.) by setting `all: initial` inside the shadow root.
+
+If you use `createShadowRootUi`:
+
+1. Double check that your UI looks the same as before.
+2. If you have any manual CSS resets to these styles, you can remove them. For example:
+
+   <!-- prettier-ignore -->
+   ```css [entrypoints/reddit.content/style.css]
+   body { /* [!code --] */
+     /* Override Reddit's default "hidden" visibility on elements */ /* [!code --] */
+     visibility: visible !important; /* [!code --] */
+   } /* [!code --] */
+   ```
+
+:::warning
+This doesn't effect `rem` units. You should continue using `postcss-rem-to-px` or an equivalent library if the webpage sets the HTML element's `font-size`.
+:::
+
+If you run into problems with the new behavior, you can disable it and continue using your current CSS:
+
+```ts
+const ui = await createShadowRootUi({
+  inheritStyles: true, // [!code ++]
+  // ...
+});
+```
+
+### Default Output Directories Changed
+
+The default value for the [`outDirTemplate`](/api/reference/wxt/interfaces/InlineConfig#outdirtemplate) config has changed. Now, different build modes are output to different directories:
+
+- `--mode production` &rarr; `.output/chrome-mv3`: Production builds are unchanged
+- `--mode development` &rarr; `.output/chrome-mv3-dev`: Dev mode now has a `-dev` suffix so it doesn't overwrite production builds
+- `--mode custom` &rarr; `.output/chrome-mv3-custom`: Other custom modes end with a `-[mode]` suffix
+
+To use the old behavior, writing all output to the same directory, set `outDirTemplate` option:
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  outDirTemplate: '{{browser}}-mv{{manifestVersion}}', // [!code ++]
+});
+```
+
+:::warning
+If you've previously loaded the extension into your browser manually for development, you'll need to uninstall and re-install it from the new dev output directory.
+:::
+
+### `runner` APIs Renamed
+
+To improve consistency with the `web-ext.config.ts` filename, the "runner" API and config options have been renamed. You can continue using the old names, but they have been deprecated and will be removed in a future version:
+
+1. The `runner` option has been renamed to `webExt`:
+   ```ts [wxt.config.ts]
+   export default defineConfig({
+     runner: { // [!code --]
+     webExt: { // [!code ++]
+       startUrls: ["https://wxt.dev"],
+     },
+   });
+   ```
+2. `defineRunnerConfig` has been renamed to `defineWebExtConfig`:
+   ```ts [web-ext.config.ts]
+   import { defineRunnerConfig } from 'wxt'; // [!code --]
+   import { defineWebExtConfig } from 'wxt'; // [!code ++]
+   ```
+3. The `ExtensionRunnerConfig` type has been renamed to `WebExtConfig`
+   ```ts
+   import type { ExtensionRunnerConfig } from 'wxt'; // [!code --]
+   import type { WebExtConfig } from 'wxt'; // [!code ++]
+   ```
+
+### Deprecated APIs Removed
+
+- `entrypointLoader` option: WXT now uses `vite-node` for importing entrypoints during the build process.
+  > This was deprecated in v0.19.0, see the [v0.19 section](#v0-18-5-rarr-v0-19-0) for migration steps.
+- `transformManifest` option: Use the `build:manifestGenerated` hook to transform the manifest instead:
+  <!-- prettier-ignore -->
+  ```ts [wxt.config.ts]
+  export default defineConfig({
+    transformManifest(manifest) { // [!code --]
+    hooks: { // [!code ++]
+      'build:manifestGenerated': (_, manifest) => { // [!code ++]
+         // ...
+      }, // [!code ++]
+    },
+  });
+  ```
+
 ## v0.18.5 &rarr; v0.19.0
 
 ### `vite-node` Entrypoint Loader
@@ -19,7 +219,7 @@ Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`
 The default entrypoint loader has changed to `vite-node`. If you use any NPM packages that depend on the `webextension-polyfill`, you need to add them to Vite's `ssr.noExternal` option:
 
 <!-- prettier-ignore -->
-```ts
+```ts [wxt.config.ts]
 export default defineConfig({
   vite: () => ({ // [!code ++]
     ssr: { // [!code ++]
@@ -67,7 +267,7 @@ Basically, you can now import and do things outside the `main` function of the e
 
 To continue using the old approach, add the following to your `wxt.config.ts` file:
 
-```ts
+```ts [wxt.config.ts]
 export default defineConfig({
   entrypointLoader: 'jiti', // [!code ++]
 });

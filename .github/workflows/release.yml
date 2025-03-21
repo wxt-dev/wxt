@@ -16,6 +16,7 @@ on:
           - module-vue
           - storage
           - unocss
+          - webextension-polyfill
           - wxt
 
 permissions:

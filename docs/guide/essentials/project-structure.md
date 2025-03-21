@@ -60,14 +60,14 @@ After enabling it, your project structure should look like this:
 📂 {rootDir}/
    📁 .output/
    📁 .wxt/
+   📁 modules/
+   📁 public/
    📂 src/
       📁 assets/
       📁 components/
       📁 composables/
       📁 entrypoints/
       📁 hooks/
-      📁 modules/
-      📁 public/
       📁 utils/
       📄 app.config.ts
    📄 .env
@@ -87,12 +87,12 @@ You can configure the following directories:
 export default defineConfig({
   // Relative to project root
   srcDir: "src",             // default: "."
+  modulesDir: "wxt-modules", // default: "modules"
   outDir: "dist",            // default: ".output"
+  publicDir: "static",       // default: "public"
 
   // Relative to srcDir
   entrypointsDir: "entries", // default: "entrypoints"
-  modulesDir: "wxt-modules", // default: "modules"
-  publicDir: "static",       // default: "public"
 })
 ```
 

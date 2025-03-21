@@ -15,6 +15,7 @@ on:
           - module-svelte
           - module-vue
           - storage
+          - webextension-polyfill
           - wxt
 
 permissions:
