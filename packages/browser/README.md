@@ -43,7 +43,7 @@ Types are generated based on the `@types/chrome` package, and with modifications
 
 ### Updating `@types/chrome` Version
 
-You don't need to do anything! A github action is ran every day to generate and publish this package using the latest `@types/chrome` version.
+You don't need to do anything! [A github action](https://github.com/wxt-dev/wxt/actions/workflows/update-browser-package.yml) is ran every day to generate and publish this package using the latest `@types/chrome` version.
 
 You can manually generate types via:
 
