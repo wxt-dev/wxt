@@ -20,7 +20,7 @@ import {
 import { createExtensionRunner } from './runners';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
-import { relative } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
 import {
@@ -31,6 +31,8 @@ import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import {
   isBabelSyntaxError,
   isModuleNotFoundError,
+  isViteLoadFallbackError,
+  isVitePluginError,
   logBabelSyntaxError,
   parseModuleNotFoundError,
 } from './utils/error';
@@ -184,6 +186,25 @@ async function createServerInternal(): Promise<WxtDevServer> {
           wxt.logger.error(err.message);
           wxt.logger.info('Waiting for import specifier to be fixed...');
           errorFiles.push(details.importer.slice(5));
+        }
+      } else if (
+        err instanceof Error &&
+        isVitePluginError(err) &&
+        isViteLoadFallbackError(err) &&
+        err.pluginCode === 'ENOENT'
+      ) {
+        // This error message comes from Rollup: https://github.com/rollup/rollup/blob/384d5333fbc3d8918b41856822376da2a65ccaa3/src/ModuleLoader.ts#L288-L289
+        const match = err.message.match(
+          // "Could not load /path/to/xyz.ts (imported by src/module.ts)"
+          /^Could not load (.*) \(imported by (.*)\)/,
+        );
+        if (match) {
+          wxt.logger.error(err.message);
+          wxt.logger.info('Waiting for missing file to be added...');
+
+          // The file that couldn't be loaded is an absolute path, but the importer is relative and
+          // so it needs to be resolved.
+          errorFiles.push(match[1], resolve(match[2]));
         }
       }
       // If we can't blame at least 1 file, the build failed irrecoverably.

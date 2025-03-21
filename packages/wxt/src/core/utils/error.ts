@@ -59,3 +59,26 @@ export function parseModuleNotFoundError(
     }
   );
 }
+
+export interface VitePluginError extends Error {
+  code: 'PLUGIN_ERROR';
+  pluginCode: string;
+  plugin: string;
+  hook: string;
+}
+
+export function isVitePluginError(
+  error: Error & { code?: string },
+): error is VitePluginError {
+  return error.code === 'PLUGIN_ERROR';
+}
+
+export interface ViteLoadFallbackError extends VitePluginError {
+  plugin: 'vite:load-fallback';
+  hook: 'load';
+  path: string;
+}
+
+export function isViteLoadFallbackError(error: VitePluginError): boolean {
+  return error.plugin === 'vite:load-fallback' && error.hook === 'load';
+}
