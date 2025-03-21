@@ -38,8 +38,7 @@ After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, 
 
 You can disable it with a single line:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   extensionApi: 'chrome',
 });

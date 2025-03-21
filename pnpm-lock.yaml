@@ -279,6 +279,9 @@ catalogs:
     vitepress-knowledge:
       specifier: ^0.4.0
       version: 0.4.0
+    vitepress-plugin-group-icons:
+      specifier: ^1.3.8
+      version: 1.3.8
     vitest:
       specifier: ^3.0.7
       version: 3.0.7
@@ -376,6 +379,9 @@ importers:
       vitepress-knowledge:
         specifier: 'catalog:'
         version: 0.4.0(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
+      vitepress-plugin-group-icons:
+        specifier: 'catalog:'
+        version: 1.3.8
       vitest-mock-extended:
         specifier: 'catalog:'
         version: 3.0.1(typescript@5.6.3)(vitest@3.0.7(@types/node@20.17.6)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))
@@ -1604,9 +1610,16 @@ packages:
   '@faker-js/faker@9.2.0':
     resolution: {integrity: sha512-ulqQu4KMr1/sTFIYvqSdegHT8NIkt66tFAkugGnHA+1WAfEn6hMzNR+svjXGFRVLnapxvej67Z/LwchFrnLBUg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
+
+  '@iconify-json/logos@1.2.4':
+    resolution: {integrity: sha512-XC4If5D/hbaZvUkTV8iaZuGlQCyG6CNOlaAaJaGa13V5QMYwYjgtKk3vPP8wz3wtTVNVEVk3LRx1fOJz+YnSMw==}
 
   '@iconify-json/simple-icons@1.2.27':
     resolution: {integrity: sha512-FtZwp/H7ih5rY9FPfDR+k6toOo/cuwpHWY8faNhxLs5O5uW6Q8TeqdNWfjVfgFtrs5tUUzWysjqNGL234v8EMA==}
+
+  '@iconify-json/vscode-icons@1.2.16':
+    resolution: {integrity: sha512-hstc2yVq2UJ6v6FrgjftzXRvphGZBsKxvSeXoFLP1Hgx89TPZKrGE5SV6vqsoeIlLYaQ7OZbXmAoVGroTfGmVQ==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -3387,6 +3400,7 @@ packages:
 
   glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
@@ -3517,6 +3531,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -4620,6 +4635,7 @@ packages:
 
   rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rollup-plugin-dts@6.1.1:
@@ -5231,6 +5247,9 @@ packages:
     resolution: {integrity: sha512-vHumLYPIuDmRrs+UuWSF7XibVsSyK2TN67Hd+VaYI6VIRDsUhh2DcfxPg1mIQSumRLj/5Vz9VpOdfZ8Wyxbs4A==}
     peerDependencies:
       vitepress: ^1.0.0
+
+  vitepress-plugin-group-icons@1.3.8:
+    resolution: {integrity: sha512-BIx1HgXEvbDeJX8NqVvthWHQqEW2slj1SkAWLMNoUR5IJq1dq6LmrURYCyznMJCB3/0g+YY89ifvQp3in1fX3g==}
 
   vitepress@1.6.3:
     resolution: {integrity: sha512-fCkfdOk8yRZT8GD9BFqusW3+GggWYZ/rYncOfmgcDtP3ualNHCAg+Robxp2/6xfH1WwPHtGpPwv7mbA3qomtBw==}
@@ -6029,7 +6048,15 @@ snapshots:
 
   '@faker-js/faker@9.2.0': {}
 
+  '@iconify-json/logos@1.2.4':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/simple-icons@1.2.27':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/vscode-icons@1.2.16':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -9862,6 +9889,14 @@ snapshots:
       picocolors: 1.1.1
       vitepress: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
       yaml: 2.7.0
+
+  vitepress-plugin-group-icons@1.3.8:
+    dependencies:
+      '@iconify-json/logos': 1.2.4
+      '@iconify-json/vscode-icons': 1.2.16
+      '@iconify/utils': 2.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.6)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3):
     dependencies:

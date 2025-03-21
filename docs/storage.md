@@ -39,8 +39,7 @@ import { storage } from '@wxt-dev/storage';
 
 To use the `wxt/storage` API, the `"storage"` permission must be added to the manifest:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   manifest: {
     permissions: ['storage'],

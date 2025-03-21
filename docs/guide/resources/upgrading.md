@@ -35,8 +35,7 @@ export default defineConfig({
 
 Importing variables and using them in the entrypoint options:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import { GOOGLE_MATCHES } from '~/utils/constants'
 
 export default defineContentScript({
@@ -47,8 +46,7 @@ export default defineContentScript({
 
 Using Vite-specific APIs like `import.meta.glob` to define entrypoint options:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 const providers: Record<string, any> = import.meta.glob('../providers/*', {
   eager: true,
 });
@@ -101,8 +99,7 @@ If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt pre
 You have two options:
 
 1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
-   ```ts
-   // wxt.config.ts
+   ```ts [wxt.config.ts]
    export default defineConfig({
      modulesDir: 'wxt-modules', // defaults to "modules"
    });
@@ -175,8 +172,7 @@ JS entrypoints in the output directory have been moved. Unless you're doing some
 
 ### Renamed `zip.ignoredSources` to `zip.excludeSources`
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   zip: {
     ignoredSources: [
