@@ -26,7 +26,9 @@ newPkgJson.dependencies = pkgJson.dependencies;
 newPkgJson.peerDependencies = pkgJson.peerDependencies;
 newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
-await fs.writeJson('package.json', newPkgJson);
+const outPkgJsonPath = resolve('package.json');
+await fs.writeJson(outPkgJsonPath, newPkgJson);
+await spawn('pnpm', ['-w', 'prettier', '--write', outPkgJsonPath]);
 
 // Generate declaration files
 
@@ -55,10 +57,6 @@ for (const { file, srcPath, destPath } of declarationFileMapping) {
   await fs.writeFile(destPath, transformedContent);
   console.log(`  \x1b[2m-\x1b[0m \x1b[36m${file}\x1b[0m`);
 }
-
-// Format files
-
-await spawn('pnpm', ['-w', 'prettier', '--write', '.']);
 
 // Done!
 
