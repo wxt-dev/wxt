@@ -3,8 +3,14 @@
   "description": "Provides a cross-browser API for using extension APIs and types based on @types/chrome",
   "version": "0.0.310",
   "type": "module",
-  "main": "src/index.mjs",
+  "module": "src/index.mjs",
   "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.mjs"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -14,7 +20,8 @@
     "directory": "packages/browser"
   },
   "scripts": {
-    "gen": "tsx scripts/generate.ts"
+    "gen": "tsx scripts/generate.ts",
+    "check": "check"
   },
   "author": {
     "name": "Aaron Klinker",
@@ -25,10 +32,13 @@
     "src"
   ],
   "devDependencies": {
+    "@aklinker1/check": "catalog:",
     "@types/chrome": "0.0.310",
     "fs-extra": "catalog:",
     "nano-spawn": "catalog:",
+    "publint": "catalog:",
     "tsx": "catalog:",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {

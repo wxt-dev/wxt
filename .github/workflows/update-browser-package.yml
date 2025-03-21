@@ -21,6 +21,10 @@ jobs:
         working-directory: packages/browser
         run: pnpm gen
 
+      - name: Run Checks
+        working-directory: packages/browser
+        run: pnpm check
+
       - name: Commit Changes
         id: commit
         uses: stefanzweifel/git-auto-commit-action@v5
