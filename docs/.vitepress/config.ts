@@ -16,6 +16,11 @@ import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
 import knowledge from 'vitepress-knowledge';
+import {
+  groupIconMdPlugin,
+  groupIconVitePlugin,
+  localIconLoader,
+} from 'vitepress-plugin-group-icons';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
@@ -51,6 +56,16 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
+    plugins: [
+      groupIconVitePlugin({
+        customIcon: {
+          'wxt.config.ts': localIconLoader(
+            import.meta.url,
+            '../public/logo.svg',
+          ),
+        },
+      }),
+    ],
   },
   lastUpdated: true,
   sitemap: {
@@ -73,6 +88,7 @@ export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(footnote);
+      md.use(groupIconMdPlugin);
     },
   },
 
