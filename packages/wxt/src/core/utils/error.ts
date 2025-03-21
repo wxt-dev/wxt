@@ -125,7 +125,7 @@ export function resolveErrorFiles(err: Error): string[] {
       errorFiles.push(err.path);
     }
     if (errorFiles.length) {
-      wxt.logger.error(err.message);
+      // The error message was already logged, so we don't need to do it again.
       wxt.logger.info('Waiting for missing file to be added...');
     }
   }
