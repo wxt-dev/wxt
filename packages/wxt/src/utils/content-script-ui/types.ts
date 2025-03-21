@@ -1,3 +1,5 @@
+/** @module wxt/utils/content-script-ui/types */
+
 export interface ContentScriptUi<TMounted> extends MountFunctions {
   mounted: TMounted | undefined;
 }
