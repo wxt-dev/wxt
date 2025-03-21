@@ -117,17 +117,21 @@ importers:
         specifier: workspace:*
         version: link:../wxt
 
-  packages/browser-types:
+  packages/browser:
     dependencies:
-      fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
-      giget:
-        specifier: ^1.2.3
-        version: 1.2.3
-      tsx:
-        specifier: 4.15.7
-        version: 4.15.7
+      '@types/filesystem':
+        specifier: '*'
+        version: 0.0.36
+      '@types/har-format':
+        specifier: '*'
+        version: 1.2.15
+    devDependencies:
+      '@types/chrome':
+        specifier: ^0.0.310
+        version: 0.0.310
+      vitest:
+        specifier: ^2.1.4
+        version: 2.1.4(@types/node@20.17.6)(happy-dom@15.11.4)(sass@1.80.7)
 
   packages/i18n:
     dependencies:
@@ -1934,6 +1938,9 @@ packages:
 
   '@types/chrome@0.0.280':
     resolution: {integrity: sha512-AotSmZrL9bcZDDmSI1D9dE7PGbhOur5L0cKxXd7IqbVizQWCY4gcvupPUVsQ4FfDj3V2tt/iOpomT9EY0s+w1g==}
+
+  '@types/chrome@0.0.310':
+    resolution: {integrity: sha512-2+C6NKe4DxGbT6v8noDOx5APEUtSxRL0Rzm2TVGYFkPi1fO36hiN9W1QIuGI93rdM34Qy4d+7orA+vXRZk5rjA==}
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -6359,6 +6366,11 @@ snapshots:
       '@types/har-format': 1.2.15
 
   '@types/chrome@0.0.280':
+    dependencies:
+      '@types/filesystem': 0.0.36
+      '@types/har-format': 1.2.15
+
+  '@types/chrome@0.0.310':
     dependencies:
       '@types/filesystem': 0.0.36
       '@types/har-format': 1.2.15

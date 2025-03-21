@@ -1,4 +1,4 @@
-declare namespace browser {
+export namespace Browser {
   ////////////////////
   // Cast
   // @see https://code.google.com/p/chromium/codesearch#chromium/src/ui/file_manager/externs/chrome_cast.js

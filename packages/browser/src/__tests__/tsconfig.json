@@ -1,0 +1,4 @@
+{
+  // Separate test files from main source files in a separate TS project so
+  // references to @types/chrome are not included in the source files.
+}
