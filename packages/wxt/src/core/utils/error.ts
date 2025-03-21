@@ -1,4 +1,4 @@
-import { relative } from 'node:path';
+import { isAbsolute, relative, resolve } from 'node:path';
 import pc from 'picocolors';
 import { wxt } from '../wxt';
 
@@ -79,6 +79,56 @@ export interface ViteLoadFallbackError extends VitePluginError {
   path: string;
 }
 
-export function isViteLoadFallbackError(error: VitePluginError): boolean {
+export function isViteLoadFallbackError(
+  error: VitePluginError,
+): error is ViteLoadFallbackError {
   return error.plugin === 'vite:load-fallback' && error.hook === 'load';
+}
+
+export function resolveErrorFiles(err: Error): string[] {
+  const errorFiles: string[] = [];
+
+  if ('cause' in err && err.cause instanceof Error) {
+    err = err.cause;
+  }
+
+  // TODO: support syntax errors from ESBuild and others.
+  if (err instanceof SyntaxError) {
+    if (isBabelSyntaxError(err)) {
+      logBabelSyntaxError(err);
+      wxt.logger.info('Waiting for syntax error to be fixed...');
+      errorFiles.push(err.id);
+    }
+  } else if (isModuleNotFoundError(err)) {
+    const details = parseModuleNotFoundError(err);
+    if (details && details.importer.startsWith('/@fs/')) {
+      wxt.logger.error(err.message);
+      wxt.logger.info('Waiting for import specifier to be fixed...');
+      errorFiles.push(details.importer.slice(5));
+    }
+  } else if (
+    isVitePluginError(err) &&
+    isViteLoadFallbackError(err) &&
+    err.pluginCode === 'ENOENT'
+  ) {
+    // Extract the importer from the error message, which is produced by Rollup:
+    // https://github.com/rollup/rollup/blob/384d5333fbc3d8918b41856822376da2a65ccaa3/src/ModuleLoader.ts#L288-L289
+    const importerMatch = err.message.match(
+      // "Could not load /path/to/xyz.ts (imported by src/module.ts)"
+      /\(imported by (.*)\)/,
+    );
+    if (importerMatch) {
+      errorFiles.push(resolve(importerMatch[1]));
+    }
+    // Ignore non-absolute paths, which are likely virtual modules.
+    if (isAbsolute(err.path)) {
+      errorFiles.push(err.path);
+    }
+    if (errorFiles.length) {
+      wxt.logger.error(err.message);
+      wxt.logger.info('Waiting for missing file to be added...');
+    }
+  }
+
+  return errorFiles;
 }
