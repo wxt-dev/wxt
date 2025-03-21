@@ -7,7 +7,7 @@ import { sep as posixSep } from 'node:path/posix';
 // Fetch latest version
 
 console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
-// await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome']);
+await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome']);
 
 // Generate new package.json
 
