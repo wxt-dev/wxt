@@ -5,6 +5,9 @@
   "type": "module",
   "main": "src/index.mjs",
   "types": "src/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
