@@ -96,15 +96,17 @@ export function resolveErrorFiles(err: Error): string[] {
   if (err instanceof SyntaxError) {
     if (isBabelSyntaxError(err)) {
       logBabelSyntaxError(err);
-      wxt.logger.info('Waiting for syntax error to be fixed...');
       errorFiles.push(err.id);
+
+      wxt.logger.info('Waiting for syntax error to be fixed...');
     }
   } else if (isModuleNotFoundError(err)) {
     const details = parseModuleNotFoundError(err);
     if (details && details.importer.startsWith('/@fs/')) {
+      errorFiles.push(details.importer.slice(5));
+
       wxt.logger.error(err.message);
       wxt.logger.info('Waiting for import specifier to be fixed...');
-      errorFiles.push(details.importer.slice(5));
     }
   } else if (
     isVitePluginError(err) &&
@@ -125,8 +127,20 @@ export function resolveErrorFiles(err: Error): string[] {
       errorFiles.push(err.path);
     }
     if (errorFiles.length) {
-      // The error message was already logged, so we don't need to do it again.
+      // The error was already logged by Vite, so just log this.
       wxt.logger.info('Waiting for missing file to be added...');
+    }
+  } else if (
+    // Vite throws an error when Rollup cannot resolve an import at build time:
+    // https://github.com/vitejs/vite/blob/998303b438734e8219715fe6883b97fb10404c16/packages/vite/src/node/build.ts#L1027-L1032
+    err.message.includes('Rollup failed to resolve import')
+  ) {
+    const importerMatch = err.message.match(/ from "(.*)"/);
+    if (importerMatch) {
+      errorFiles.push(importerMatch[1]);
+
+      // The error was already logged by Vite, so just log this.
+      wxt.logger.info('Waiting for import specifier to be fixed...');
     }
   }
 
