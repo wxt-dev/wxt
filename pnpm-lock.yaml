@@ -460,9 +460,6 @@ importers:
         specifier: '*'
         version: 1.2.15
     devDependencies:
-      '@aklinker1/check':
-        specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
       '@types/chrome':
         specifier: 0.0.310
         version: 0.0.310
@@ -472,15 +469,9 @@ importers:
       nano-spawn:
         specifier: 'catalog:'
         version: 0.2.0
-      publint:
-        specifier: 'catalog:'
-        version: 0.2.12
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
-      typescript:
-        specifier: 'catalog:'
-        version: 5.6.3
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.6)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
