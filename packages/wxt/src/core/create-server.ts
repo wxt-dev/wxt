@@ -29,7 +29,12 @@ import {
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
-import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
+import {
+  isBabelSyntaxError,
+  isModuleNotFoundError,
+  logBabelSyntaxError,
+  parseModuleNotFoundError,
+} from './utils/error';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -162,16 +167,30 @@ async function createServerInternal(): Promise<WxtDevServer> {
       // Build after starting the dev server so it can be used to transform HTML files
       server.currentOutput = await internalBuild();
     } catch (err) {
-      if (!isBabelSyntaxError(err)) {
+      let watchFile: string | undefined;
+      // TODO: support syntax errors from ESBuild and others.
+      if (err instanceof SyntaxError && isBabelSyntaxError(err)) {
+        logBabelSyntaxError(err);
+        wxt.logger.info('Waiting for syntax error to be fixed...');
+        watchFile = err.id;
+      } else if (err instanceof Error && isModuleNotFoundError(err)) {
+        const details = parseModuleNotFoundError(err);
+        if (details && details.importer.startsWith('/@fs/')) {
+          wxt.logger.error(err.message);
+          wxt.logger.info('Waiting for import specifier to be fixed...');
+          watchFile = details.importer.slice(5);
+        }
+      }
+      if (!watchFile) {
         throw err;
       }
-      logBabelSyntaxError(err);
-      wxt.logger.info('Waiting for syntax error to be fixed...');
       await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        const watcher = chokidar.watch(watchFile, {
+          ignoreInitial: true,
+        });
         watcher.on('all', () => {
           watcher.close();
-          wxt.logger.info('Syntax error resolved, rebuilding...');
+          wxt.logger.info('File changed, rebuilding...');
           resolve();
         });
       });
