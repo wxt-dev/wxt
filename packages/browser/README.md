@@ -50,3 +50,9 @@ You can manually generate types via:
 ```sh
 pnpm gen
 ```
+
+### Why not just use `@types/chrome`?
+
+With WXT, you must import the `browser` variable to use the extension APIs. The way `@types/chrome` is implemented forces you to define a global `chrome` variable. With WXT, this isn't acceptable, we don't want to pollute the global (type) scope or introduce conflicts with auto-imports.
+
+Additionally, WXT overrides types to provide additional type safety for some APIs, like `browser.runtime.getURL` and `browser.i18n.getMessage`. With `@types/chrome`'s nested namespace approach, it's not possible to override the types for those functions.
