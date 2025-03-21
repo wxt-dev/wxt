@@ -34,7 +34,8 @@ import { wxt } from '../../wxt';
  */
 export function detectDevChanges(
   changedFiles: string[],
-  currentOutput: BuildOutput,
+  currentOutput: BuildOutput | undefined,
+  errorFiles: string[] | undefined,
 ): DevModeChange {
   const isConfigChange = some(
     changedFiles,
@@ -46,6 +47,12 @@ export function detectDevChanges(
     file.startsWith(wxt.config.modulesDir),
   );
   if (isWxtModuleChange) return { type: 'full-restart' };
+
+  if (errorFiles?.some((file) => changedFiles.includes(file)))
+    return { type: 'full-restart' };
+
+  // Other changes don't matter if the build hasn't once finished.
+  if (!currentOutput) return { type: 'no-change' };
 
   const isRunnerChange = some(
     changedFiles,
