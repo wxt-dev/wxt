@@ -1,13 +1,26 @@
 import type * as vite from 'vite';
 import { UnimportOptions, Import } from 'unimport';
 import { LogLevel } from 'consola';
-import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
-import { ManifestContentScript } from './core/utils/types';
 import type { Browser } from '@wxt-dev/browser';
+import {
+  BackgroundEntrypointOptions,
+  BaseContentScriptEntrypointOptions,
+  BaseEntrypointOptions,
+  IsolatedWorldContentScriptEntrypointOptions,
+  MainWorldContentScriptEntrypointOptions,
+  OptionsEntrypointOptions,
+  PerBrowserOption,
+  PopupEntrypointOptions,
+  SidepanelEntrypointOptions,
+  TargetBrowser,
+} from './option-types';
+
+export type * from './client-types';
+export type * from './option-types';
 
 export interface InlineConfig {
   /**
@@ -513,7 +526,6 @@ export interface ReloadContentScriptPayload {
   contentScript: Omit<Browser.scripting.RegisteredContentScript, 'id'>;
 }
 
-export type TargetBrowser = string;
 export type TargetManifestVersion = 2 | 3;
 
 export type UserConfig = Omit<InlineConfig, 'configFile'>;
@@ -527,151 +539,6 @@ export interface Logger {
   fatal(...args: any[]): void;
   success(...args: any[]): void;
   level: LogLevel;
-}
-
-export interface BaseEntrypointOptions {
-  /**
-   * List of target browsers to include this entrypoint in. Defaults to being included in all
-   * builds. Cannot be used with `exclude`. You must choose one of the two options.
-   *
-   * @default undefined
-   */
-  include?: TargetBrowser[];
-  /**
-   * List of target browsers to exclude this entrypoint from. Cannot be used with `include`. You
-   * must choose one of the two options.
-   *
-   * @default undefined
-   */
-  exclude?: TargetBrowser[];
-}
-
-export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
-  persistent?: PerBrowserOption<boolean>;
-  /**
-   * Set to `"module"` to output the background entrypoint as ESM. ESM outputs can share chunks and
-   * reduce the overall size of the bundled extension.
-   *
-   * When `undefined`, the background is bundled individually into an IIFE format.
-   *
-   * @default undefined
-   */
-  type?: PerBrowserOption<'module'>;
-}
-
-export interface BaseContentScriptEntrypointOptions
-  extends BaseEntrypointOptions {
-  matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default "documentIdle"
-   */
-  runAt?: PerBrowserOption<Browser.scripting.RegisteredContentScript['runAt']>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default false
-   */
-  matchAboutBlank?: PerBrowserOption<
-    ManifestContentScript['match_about_blank']
-  >;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default []
-   */
-  excludeMatches?: PerBrowserOption<ManifestContentScript['exclude_matches']>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default []
-   */
-  includeGlobs?: PerBrowserOption<ManifestContentScript['include_globs']>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default []
-   */
-  excludeGlobs?: PerBrowserOption<ManifestContentScript['exclude_globs']>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default false
-   */
-  allFrames?: PerBrowserOption<ManifestContentScript['all_frames']>;
-  /**
-   * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-   * @default false
-   */
-  matchOriginAsFallback?: PerBrowserOption<boolean>;
-  /**
-   * Customize how imported/generated styles are injected with the content script. Regardless of the
-   * mode selected, CSS will always be built and included in the output directory.
-   *
-   * - `"manifest"` - Include the CSS in the manifest, under the content script's `css` array.
-   * - `"manual"` - Exclude the CSS from the manifest. You are responsible for manually loading it
-   *   onto the page. Use `browser.runtime.getURL("content-scripts/<name>.css")` to get the file's
-   *   URL
-   * - `"ui"` - Exclude the CSS from the manifest. CSS will be automatically added to your UI when
-   *   calling `createShadowRootUi`
-   *
-   * @default "manifest"
-   */
-  cssInjectionMode?: PerBrowserOption<'manifest' | 'manual' | 'ui'>;
-  /**
-   * Specify how the content script is registered.
-   *
-   * - `"manifest"`: The content script will be added to the `content_scripts` entry in the
-   *   manifest. This is the normal and most well known way of registering a content script.
-   * - `"runtime"`: The content script's `matches` is added to `host_permissions` and you are
-   *   responsible for using the scripting API to register/execute the content script
-   *   dynamically at runtime.
-   *
-   * @default "manifest"
-   */
-  registration?: PerBrowserOption<'manifest' | 'runtime'>;
-}
-
-export interface MainWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
-  /**
-   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
-   */
-  world: 'MAIN';
-}
-
-export interface IsolatedWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
-  /**
-   * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
-   * @default "ISOLATED"
-   */
-  world?: 'ISOLATED';
-}
-
-export interface PopupEntrypointOptions extends BaseEntrypointOptions {
-  /**
-   * Defaults to "browser_action" to be equivalent to MV3's "action" key
-   */
-  mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
-  defaultIcon?: Record<string, string>;
-  defaultTitle?: PerBrowserOption<string>;
-  browserStyle?: PerBrowserOption<boolean>;
-}
-
-export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
-  openInTab?: PerBrowserOption<boolean>;
-  browserStyle?: PerBrowserOption<boolean>;
-  chromeStyle?: PerBrowserOption<boolean>;
-}
-
-export interface SidepanelEntrypointOptions extends BaseEntrypointOptions {
-  /**
-   * Firefox only. See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/sidebar_action#syntax
-   * @default false
-   */
-  openAtInstall?: PerBrowserOption<boolean>;
-  /**
-   * @deprecated See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/sidebar_action#syntax
-   */
-  browserStyle?: PerBrowserOption<boolean>;
-  defaultIcon?: string | Record<string, string>;
-  defaultTitle?: PerBrowserOption<string>;
 }
 
 export interface BaseEntrypoint {
@@ -772,58 +639,6 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface IsolatedWorldContentScriptDefinition
-  extends IsolatedWorldContentScriptEntrypointOptions {
-  /**
-   * Main function executed when the content script is loaded.
-   *
-   * When running a content script with `browser.scripting.executeScript`,
-   * values returned from this function will be returned in the `executeScript`
-   * result as well. Otherwise returning a value does nothing.
-   */
-  main(ctx: ContentScriptContext): any | Promise<any>;
-}
-
-export interface MainWorldContentScriptDefinition
-  extends MainWorldContentScriptEntrypointOptions {
-  /**
-   * Main function executed when the content script is loaded.
-   *
-   * When running a content script with `browser.scripting.executeScript`,
-   * values returned from this function will be returned in the `executeScript`
-   * result as well. Otherwise returning a value does nothing.
-   */
-  main(): any | Promise<any>;
-}
-
-export type ContentScriptDefinition =
-  | IsolatedWorldContentScriptDefinition
-  | MainWorldContentScriptDefinition;
-
-export interface BackgroundDefinition extends BackgroundEntrypointOptions {
-  /**
-   * Main function executed when the background script is started. Cannot be async.
-   */
-  main(): void;
-}
-
-export interface UnlistedScriptDefinition extends BaseEntrypointOptions {
-  /**
-   * Main function executed when the unlisted script is ran.
-   *
-   * When running a content script with `browser.scripting.executeScript`,
-   * values returned from this function will be returned in the `executeScript`
-   * result as well. Otherwise returning a value does nothing.
-   */
-  main(): any | Promise<any>;
-}
-
-/**
- * Either a single value or a map of different browsers to the value for that browser.
- */
-export type PerBrowserOption<T> = T | PerBrowserMap<T>;
-export type PerBrowserMap<T> = { [browser: TargetBrowser]: T };
-
 /**
  * Convert `{ key: PerBrowserOption<T> }` to just `{ key: T }`, stripping away the
  * `PerBrowserOption` type for all fields inside the object.
@@ -913,7 +728,7 @@ export interface ConfigEnv {
    * [the guide](https://wxt.dev/guide/key-concepts/multiple-browsers.html#target-manifest-version) for more
    * details.
    */
-  manifestVersion: 2 | 3;
+  manifestVersion: TargetManifestVersion;
 }
 
 export type WxtCommand = 'build' | 'serve';
@@ -1567,8 +1382,6 @@ export interface GeneratedPublicFile extends ResolvedBasePublicFile {
    */
   contents: string;
 }
-
-export type WxtPlugin = () => void;
 
 export type WxtDirEntry = WxtDirTypeReferenceEntry | WxtDirFileEntry;
 
