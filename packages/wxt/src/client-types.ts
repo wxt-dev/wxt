@@ -4,7 +4,7 @@ import {
   IsolatedWorldContentScriptEntrypointOptions,
   MainWorldContentScriptEntrypointOptions,
 } from './option-types';
-import { ContentScriptContext } from './utils/content-script-context';
+import { ContentScriptContext } from './client/content-scripts/content-script-context';
 
 export type WxtPlugin = () => void;
 
