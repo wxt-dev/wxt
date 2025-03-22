@@ -19,6 +19,9 @@ import {
   TargetBrowser,
 } from './option-types';
 
+export type * from './client-types';
+export type * from './option-types';
+
 export interface InlineConfig {
   /**
    * Your project's root directory containing the `package.json` used to fill out the
