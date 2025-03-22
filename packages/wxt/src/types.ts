@@ -1589,7 +1589,7 @@ export interface GeneratedPublicFile extends ResolvedBasePublicFile {
   contents: string;
 }
 
-export type WxtPlugin = () => void;
+export type { WxtPlugin } from './sandbox/define-wxt-plugin';
 
 export type WxtDirEntry = WxtDirTypeReferenceEntry | WxtDirFileEntry;
 
