@@ -1,6 +1,6 @@
-import { ContentScriptDefinition } from '../../types';
 import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
+import { ContentScriptDefinition } from '../../types';
 import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
 import { createLocationWatcher } from './location-watcher';
 
@@ -161,6 +161,38 @@ export class ContentScriptContext implements AbortController {
 
     this.onInvalidated(() => cancelIdleCallback(id));
     return id;
+  }
+
+  /**
+   * Clears a timeout set by ctx.setTimeout.
+   */
+  clearTimeout(id: number | null): void {
+    if (id !== null) {
+      clearTimeout(id);
+    }
+  }
+
+  /**
+   * Clears an interval set by ctx.setInterval.
+   */
+  clearInterval(id: number | null): void {
+    if (id !== null) {
+      clearInterval(id);
+    }
+  }
+
+  /**
+   * Cancels an animation frame request set by ctx.requestAnimationFrame.
+   */
+  cancelAnimationFrame(id: number): void {
+    cancelAnimationFrame(id);
+  }
+
+  /**
+   * Cancels an idle callback request set by ctx.requestIdleCallback.
+   */
+  cancelIdleCallback(id: number): void {
+    cancelIdleCallback(id);
   }
 
   /**
