@@ -349,10 +349,7 @@ async function getUnimportOptions(
 
   const defaultOptions: WxtResolvedUnimportOptions = {
     debugLog: logger.debug,
-    imports: [
-      { name: 'defineConfig', from: 'wxt' },
-      { name: 'fakeBrowser', from: 'wxt/testing' },
-    ],
+    imports: [{ name: 'defineConfig', from: 'wxt' }],
     presets: [
       {
         package: 'wxt/client',
