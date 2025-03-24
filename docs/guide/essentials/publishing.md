@@ -133,8 +133,7 @@ When running `wxt zip -b firefox`, WXT will zip both your extension and sources.
 
 To customize which files are zipped, add the `zip` option to your config file.
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -184,8 +183,7 @@ See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 
 If you use private packages and you don't want to provide your auth token to the Firefox team during the review process, you can use `zip.downloadPackages` to download any private packages and include them in the zip.
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   zip: {
     downloadPackages: [

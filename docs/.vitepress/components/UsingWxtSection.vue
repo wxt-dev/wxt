@@ -69,6 +69,7 @@ const chromeExtensionIds = [
   'keiealdacakpnbbljlmhfgcebmaadieg', // Python Code Runner
   'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
   'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
+  'hlnhhamckimoaiekbglafiebkfimhapb', // SnapThePrice: AI-Powered Real-time Lowest Price Finder
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

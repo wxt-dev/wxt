@@ -40,6 +40,7 @@
     "typescript": "catalog:",
     "vitepress": "catalog:",
     "vitepress-knowledge": "catalog:",
+    "vitepress-plugin-group-icons": "catalog:",
     "vitest-mock-extended": "catalog:",
     "vue": "catalog:",
     "wxt": "workspace:*"

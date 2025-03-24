@@ -38,8 +38,7 @@ After the release of MV3 and Chrome's official deprecation of MV2 in June 2024, 
 
 You can disable it with a single line:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   extensionApi: 'chrome',
 });
@@ -47,7 +46,7 @@ export default defineConfig({
 
 This will change `wxt/browser` to simply export the `browser` or `chrome` globals based on browser at runtime:
 
-<<< @/../packages/wxt/src/browser/chrome.ts#snippet
+<<< @/../packages/browser/src/index.mjs#snippet
 
 Accessing types is a little different with the polyfill disabled. They do not need to be imported; they're available on the `browser` object itself:
 

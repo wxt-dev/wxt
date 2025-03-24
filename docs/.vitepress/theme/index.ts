@@ -4,6 +4,7 @@ import EntrypointPatterns from '../components/EntrypointPatterns.vue';
 import UsingWxtSection from '../components/UsingWxtSection.vue';
 import ExampleSearch from '../components/ExampleSearch.vue';
 import './custom.css';
+import 'virtual:group-icons.css';
 
 export default {
   extends: DefaultTheme,

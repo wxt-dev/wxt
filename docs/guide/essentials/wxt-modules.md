@@ -9,8 +9,7 @@ WXT provides a "module system" that let's you run code at different steps in the
 There are two ways to add a module to your project:
 
 1. **NPM**: install an NPM package, like [`@wxt-dev/auto-icons`](https://www.npmjs.com/package/@wxt-dev/auto-icons) and add it to your config:
-   ```ts
-   // wxt.config.ts
+   ```ts [wxt.config.ts]
    export default defineConfig({
      modules: ['@wxt-dev/auto-icons'],
    });

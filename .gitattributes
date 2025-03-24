@@ -11,3 +11,6 @@ yarn.lock linguist-generated
 
 # Exclude templates from language statistics
 templates/**/* linguist-vendored
+
+# Other generated files
+packages/browser/src/gen/** linguist-generated

@@ -76,8 +76,7 @@ Most listed entrypoints have options that need to be added to the `manifest.json
 
 For example, here's how to define `matches` for content scripts:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 export default defineContentScript({
   matches: ['*://*.wxt.dev/*'],
   main() {

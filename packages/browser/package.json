@@ -1,0 +1,36 @@
+{
+  "name": "@wxt-dev/browser",
+  "description": "Provides a cross-browser API for using extension APIs and types based on @types/chrome",
+  "version": "0.0.310",
+  "type": "module",
+  "main": "src/index.mjs",
+  "types": "src/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/browser"
+  },
+  "scripts": {
+    "gen": "tsx scripts/generate.ts"
+  },
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "devDependencies": {
+    "@types/chrome": "0.0.310",
+    "fs-extra": "catalog:",
+    "nano-spawn": "catalog:",
+    "tsx": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@types/filesystem": "*",
+    "@types/har-format": "*"
+  },
+  "peerDependencies": {}
+}
