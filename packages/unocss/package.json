@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/unocss",
   "description": "UnoCSS integration for WXT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

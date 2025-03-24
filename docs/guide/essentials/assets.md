@@ -89,8 +89,7 @@ But, inside content scripts, the hostname is whatever the tab is set to. So if y
 
 To fix this, you need to convert the image to a full URL using `browser.runtime.getURL`:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import iconUrl from '/icon/128.png';
 
 export default defineContentScript({
@@ -135,8 +134,7 @@ Run `wxt build`, and you should see the WASM file copied into your `.output/chro
 
 Next, since this is in a content script and we'll be fetching the WASM file over the network to load it, we need to add the file to the `web_accessible_resources`:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   manifest: {
     web_accessible_resources: [
@@ -153,8 +151,7 @@ export default defineConfig({
 
 And finally, we need to load and initialize the `.wasm` file inside the content script to use it:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import initWasm, { parseSync } from '@oxc-parser/wasm';
 
 export default defineContentScript({

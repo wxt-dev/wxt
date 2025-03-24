@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.1.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.1.0...storage-v1.1.1)
+
+### 🩹 Fixes
+
+- Return early if no migration is needed ([#1502](https://github.com/wxt-dev/wxt/pull/1502))
+
+### 🏡 Chore
+
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- **deps:** Upgrade to Vite 6 and related dependencies ([#1496](https://github.com/wxt-dev/wxt/pull/1496))
+
+### ❤️ Contributors
+
+- ergou ([@RayGuo-ergou](https://github.com/RayGuo-ergou))
+- Aaron ([@aklinker1](http://github.com/aklinker1))
+- Okinea Dev ([@okineadev](http://github.com/okineadev))
+
 ## v1.1.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.0.1...storage-v1.1.0)

@@ -41,8 +41,7 @@ This is the original method WXT used to import TS files. However, because it doe
 
 That means you cannot use imported variables outside the `main` function in JS entrypoints, like for content script `matches` or other options:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import { GOOGLE_MATCHES } from '~/utils/match-patterns';
 
 export default defineContentScript({
