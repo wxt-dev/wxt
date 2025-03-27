@@ -92,7 +92,9 @@ async function createServerInternal(): Promise<WxtDevServer> {
       }
 
       await builderServer.listen();
-      wxt.logger.success(`Started dev server @ ${server.origin}`);
+      const hostInfo =
+        server.host === 'localhost' ? '' : ` (listening on ${server.host})`;
+      wxt.logger.success(`Started dev server @ ${server.origin}${hostInfo}`);
       await wxt.hooks.callHook('server:started', wxt, server);
 
       // Register content scripts for the first time after the background starts
