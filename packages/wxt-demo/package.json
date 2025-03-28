@@ -22,7 +22,6 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/chrome": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@wxt-dev/auto-icons": "workspace:*",
