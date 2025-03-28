@@ -37,7 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'fix: Upgrade \`@wxt-dev/browser\` to latest \`@types/chrome\` version'
-          file_pattern: 'packages/browser/**'
 
       - name: Publish Package
         if: steps.commit.outputs.changes_detected == 'true'
