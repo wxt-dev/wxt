@@ -916,9 +916,6 @@ importers:
         specifier: 'catalog:'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@types/chrome':
-        specifier: 'catalog:'
-        version: 0.0.280
       '@types/react':
         specifier: 'catalog:'
         version: 19.0.1
