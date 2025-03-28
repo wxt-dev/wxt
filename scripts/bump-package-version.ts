@@ -58,7 +58,7 @@ let versionChangelogBody = versionChangelog
 if (originalBumpType === 'major') {
   versionChangelogBody = versionChangelogBody.replace(
     '[compare changes]',
-    `[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes]`,
+    `[⚠️ breaking changes](https://wxt.dev/guide/resources/upgrading.html) &bull; [compare changes]`,
   );
 }
 const { releases: prevReleases } = await fs
