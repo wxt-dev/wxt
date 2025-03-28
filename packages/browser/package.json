@@ -11,6 +11,7 @@
     "directory": "packages/browser"
   },
   "scripts": {
+    "check": "check",
     "gen": "tsx scripts/generate.ts"
   },
   "author": {
