@@ -70,3 +70,7 @@ You don't have to use `#imports` if you don't like - you can continue importing 
 Happy Coding 😄
 
 > P.S. Yes, this is exactly how [Nuxt's `#imports`](https://nuxt.com/docs/guide/concepts/auto-imports#explicit-imports) works! We use the exact same library, [`unimport`](https://github.com/unjs/unimport).
+
+---
+
+[Discuss this blog post on Github](https://github.com/wxt-dev/wxt/discussions/1543).
