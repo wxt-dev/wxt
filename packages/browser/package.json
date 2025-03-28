@@ -26,6 +26,7 @@
     "fs-extra": "catalog:",
     "nano-spawn": "catalog:",
     "tsx": "catalog:",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
