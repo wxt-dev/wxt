@@ -1,4 +1,4 @@
-import type { BackgroundDefinition } from '../types';
+import type { BackgroundDefinition } from '../client-types';
 
 export function defineBackground(main: () => void): BackgroundDefinition;
 export function defineBackground(

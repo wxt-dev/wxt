@@ -1,4 +1,4 @@
-import { ContentScriptDefinition } from '../../types';
+import { ContentScriptDefinition } from '../../client-types';
 import { browser } from 'wxt/browser';
 import { logger } from '../../sandbox/utils/logger';
 import { WxtLocationChangeEvent, getUniqueEventName } from './custom-events';
