@@ -1,8 +1,11 @@
 # Changelog
 
 ## v0.20.0
+Excited to release the next major version of WXT! Follow the [Upgrade guide](https://wxt.dev/guide/resources/upgrading.html) to update!
 
-[⚠️ breaking changes](https://wxt.dev/guide/upgrade-guide/wxt) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.29...wxt-v0.20.0)
+---
+
+[⚠️ breaking changes](https://wxt.dev/guide/resources/upgrading.html) &bull; [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.29...wxt-v0.20.0)
 
 ### 🚀 Enhancements
 
@@ -33,24 +36,10 @@
 - Fix type errors ([aad17c8](https://github.com/wxt-dev/wxt/commit/aad17c8))
 - Remove duplicate test ([e54df0a](https://github.com/wxt-dev/wxt/commit/e54df0a))
 
-#### ⚠️ Breaking Changes
-
-- ⚠️  Remove `webextension-polyfill` ([#1084](https://github.com/wxt-dev/wxt/pull/1084))
-- ⚠️  Individual exports and introduce the `#imports` module ([#1258](https://github.com/wxt-dev/wxt/pull/1258))
-- ⚠️  Reset inherited styles inside shadow root ([#1269](https://github.com/wxt-dev/wxt/pull/1269))
-- ⚠️  Auto-import types ([#1315](https://github.com/wxt-dev/wxt/pull/1315))
-- ⚠️  Add suffix to non-production output directories ([#1086](https://github.com/wxt-dev/wxt/pull/1086))
-- ⚠️  Remove deprecated `jiti` entrypoint loader ([#1087](https://github.com/wxt-dev/wxt/pull/1087))
-- ⚠️  Rename `runner` to `webExt` ([#1180](https://github.com/wxt-dev/wxt/pull/1180))
-- ⚠️  Remove `transformManfiest` option ([#1181](https://github.com/wxt-dev/wxt/pull/1181))
-- ⚠️  Make `publicDir` and `modulesDir` relative to project root ([#1216](https://github.com/wxt-dev/wxt/pull/1216))
-- ⚠️  Move `wxt/storage` to `wxt/utils/storage` ([#1271](https://github.com/wxt-dev/wxt/pull/1271))
-
 ### ❤️ Contributors
 
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 - 1natsu ([@1natsu172](https://github.com/1natsu172))
-
 ## v0.19.29
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.28...wxt-v0.19.29)
