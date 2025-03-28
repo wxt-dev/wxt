@@ -92,17 +92,19 @@ The default location for the `public/` and `modules/` directories have changed t
 - If you follow the default folder structure, you don't need to make any changes.
 - If you set a custom `srcDir`, you have two options:
   1.  Move the your `public/` and `modules/` directories to the project root:
-      ```diff
-      <root>/
-      +   modules/
-      +   public/
-          src/
-              components/
-              entrypoints/
-      -       modules/
-      -       public/
-              utils/
-          wxt.config.ts
+      <!-- prettier-ignore -->
+      ```html
+      📂 {rootDir}/
+         📁 modules/ <!-- [!code ++] -->
+         📁 public/ <!-- [!code ++] -->
+         📂 src/
+            📁 components/
+            📁 entrypoints/
+            📁 modules/ <!-- [!code --] -->
+            📁 public/ <!-- [!code --] -->
+            📁 utils/
+            📄 app.config.ts
+         📄 wxt.config.ts
       ```
   2.  Keep the folders in the same place and update your project config:
       ```ts [wxt.config.ts]
