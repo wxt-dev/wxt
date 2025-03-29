@@ -1463,7 +1463,7 @@ describe('Manifest Utils', () => {
             command: 'build',
           },
           server: {
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           },
@@ -1487,8 +1487,8 @@ describe('Manifest Utils', () => {
             manifestVersion: 2,
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });
@@ -1515,7 +1515,7 @@ describe('Manifest Utils', () => {
             browser: 'chrome',
           },
           server: fakeWxtDevServer({
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           }),
@@ -1561,8 +1561,8 @@ describe('Manifest Utils', () => {
             },
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });

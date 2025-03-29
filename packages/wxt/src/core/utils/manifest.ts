@@ -458,7 +458,7 @@ function discoverIcons(
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
 }
 
-function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
+function addDevModeCsp(manifest: Manifest.WebExtensionManifest): void {
   const permission = `http://${wxt.server?.hostname ?? ''}/*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 

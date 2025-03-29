@@ -327,9 +327,9 @@ export async function createViteBuilder(
     async createServer(info) {
       const serverConfig: vite.InlineConfig = {
         server: {
+          host: info.host,
           port: info.port,
           strictPort: true,
-          host: info.hostname,
           origin: info.origin,
         },
       };
