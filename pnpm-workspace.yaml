@@ -48,6 +48,7 @@ catalog:
   esbuild: ^0.25.0
   extract-zip: ^2.0.1
   fast-glob: ^3.3.2
+  feed: ^4.2.2
   filesize: ^10.1.6
   fs-extra: ^11.2.0
   get-port-please: ^3.1.2
@@ -56,7 +57,6 @@ catalog:
   hookable: ^5.5.3
   import-meta-resolve: ^4.1.0
   is-wsl: ^3.1.0
-  jiti: ^2.4.2
   json5: ^2.2.3
   jszip: ^3.10.1
   linkedom: ^0.18.5

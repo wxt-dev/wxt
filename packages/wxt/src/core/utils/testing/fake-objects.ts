@@ -4,7 +4,6 @@
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
-import type { Manifest } from 'wxt/browser';
 import {
   FsCache,
   ResolvedConfig,
@@ -27,6 +26,7 @@ import {
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '../../../core/wxt';
+import type { Browser } from '@wxt-dev/browser';
 
 faker.seed(import.meta.test.SEED);
 
@@ -208,13 +208,11 @@ export function fakeOutputFile(): OutputFile {
   return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
 }
 
-export const fakeManifest = fakeObjectCreator<Manifest.WebExtensionManifest>(
-  () => ({
-    manifest_version: faker.helpers.arrayElement([2, 3]),
-    name: faker.string.alphanumeric(),
-    version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
-  }),
-);
+export const fakeManifest = fakeObjectCreator<Browser.runtime.Manifest>(() => ({
+  manifest_version: faker.helpers.arrayElement([2, 3]),
+  name: faker.string.alphanumeric(),
+  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+}));
 
 export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
   name: faker.string.alphanumeric(),
@@ -245,6 +243,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
     imports: {
+      disabled: faker.datatype.boolean(),
       eslintrc: {
         enabled: faker.helpers.arrayElement([false, 8, 9]),
         filePath: fakeFile(),
@@ -296,11 +295,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       compressionLevel: 9,
       zipSources: false,
     },
-    transformManifest: () => {},
     userConfigMetadata: {},
     alias: {},
-    extensionApi: 'webextension-polyfill',
-    entrypointLoader: 'vite-node',
     experimental: {},
     dev: {
       reloadCommand: 'Alt+R',
@@ -356,8 +352,8 @@ export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
   entrypoints: fakeArray(fakeEntrypoint),
 }));
 
-export const fakeManifestCommand =
-  fakeObjectCreator<Manifest.WebExtensionManifestCommandsType>(() => ({
+export const fakeManifestCommand = fakeObjectCreator<Browser.commands.Command>(
+  () => ({
     description: faker.string.sample(),
     suggested_key: {
       default: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int(
@@ -367,7 +363,8 @@ export const fakeManifestCommand =
         },
       )}`,
     },
-  }));
+  }),
+);
 
 export const fakeDevServer = fakeObjectCreator<WxtDevServer>(() => ({
   host: 'localhost',
