@@ -209,6 +209,7 @@ For MV2, the background is added as a script to the background page. For MV3, th
 
 When defining your background entrypoint, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
 
+<!-- prettier-ignore -->
 ```ts
 browser.action.onClick.addListener(() => { // [!code --]
   // ... // [!code --]
