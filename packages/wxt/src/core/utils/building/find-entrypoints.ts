@@ -226,6 +226,12 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
   );
   const errorLines = Object.entries(namesToPaths).reduce<string[]>(
     (lines, [name, absolutePaths]) => {
+      const tsFilePath = absolutePaths.find((path) =>
+        /\.(ts|js)x?$/.test(path),
+      );
+      if (absolutePaths.length > 1 && tsFilePath) {
+        absolutePaths = absolutePaths.filter((r) => r !== tsFilePath);
+      }
       if (absolutePaths.length > 1) {
         lines.push(`- ${name}`);
         absolutePaths.forEach((absolutePath) => {
