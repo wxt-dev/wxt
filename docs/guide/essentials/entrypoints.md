@@ -210,14 +210,12 @@ For MV2, the background is added as a script to the background page. For MV3, th
 When defining your background entrypoint, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
 
 ```ts
-browser.action.onClick.addListener(() => {
-  // [!code --]
+browser.action.onClick.addListener(() => { // [!code --]
   // ... // [!code --]
 }); // [!code --]
 
 export default defineBackground(() => {
-  browser.action.onClick.addListener(() => {
-    // [!code ++]
+  browser.action.onClick.addListener(() => { // [!code ++]
     // ... // [!code ++]
   }); // [!code ++]
 });
@@ -299,15 +297,14 @@ export default defineContentScript({
 
 When defining content script entrypoints, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
 
+<!-- prettier-ignore -->
 ```ts
-browser.runtime.onMessage.addListener((message) => {
-  // [!code --]
+browser.runtime.onMessage.addListener((message) => { // [!code --]
   // ... // [!code --]
 }); // [!code --]
 
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener((message) => {
-    // [!code ++]
+  browser.runtime.onMessage.addListener((message) => { // [!code ++]
     // ... // [!code ++]
   }); // [!code ++]
 });
@@ -665,15 +662,14 @@ You are responsible for loading/running these scripts where needed. If necessary
 
 When defining an unlisted script, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
 
+<!-- prettier-ignore -->
 ```ts
-document.querySelectorAll('a').forEach((anchor) => {
-  // [!code --]
+document.querySelectorAll('a').forEach((anchor) => { // [!code --]
   // ... // [!code --]
 }); // [!code --]
 
 export default defineUnlistedScript(() => {
-  document.querySelectorAll('a').forEach((anchor) => {
-    // [!code ++]
+  document.querySelectorAll('a').forEach((anchor) => { // [!code ++]
     // ... // [!code ++]
   }); // [!code ++]
 });
