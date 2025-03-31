@@ -1463,7 +1463,7 @@ describe('Manifest Utils', () => {
             command: 'build',
           },
           server: {
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           },
@@ -1487,8 +1487,8 @@ describe('Manifest Utils', () => {
             manifestVersion: 2,
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });
@@ -1503,7 +1503,7 @@ describe('Manifest Utils', () => {
         expect(actual).toMatchObject({
           content_security_policy:
             "script-src 'self' http://localhost:3000; object-src 'self';",
-          permissions: ['http://localhost/*', 'tabs'],
+          permissions: ['http://localhost:3000/*', 'tabs'],
         });
       });
 
@@ -1515,7 +1515,7 @@ describe('Manifest Utils', () => {
             browser: 'chrome',
           },
           server: fakeWxtDevServer({
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           }),
@@ -1535,7 +1535,7 @@ describe('Manifest Utils', () => {
             sandbox:
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';",
           },
-          host_permissions: ['http://localhost/*'],
+          host_permissions: ['http://localhost:3000/*'],
           permissions: ['tabs', 'scripting'],
         });
       });
@@ -1561,8 +1561,8 @@ describe('Manifest Utils', () => {
             },
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });
