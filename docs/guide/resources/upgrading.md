@@ -6,11 +6,26 @@ outline: deep
 
 ## Overview
 
-To upgrade WXT to the latest version... just install it!
+To upgrade WXT to the latest major version:
+
+1. Install it, skipping scripts so `wxt prepare` doesn't run - it will probably throw an error after a major version change (we'll run it later).
+   ```sh
+   pnpm i wxt@latest --ignore-scripts
+   ```
+2. Follow the upgrade steps below to fix any breaking changes.
+3. Run `wxt prepare`. It should succeed and type errors will go away afterwords.
+   ```sh
+   pnpm wxt prepare
+   ```
+4. Manually test to make sure both dev mode and production builds work.
+
+For minor or patch version updates, there are no special steps. Just update it with your package manager:
 
 ```sh
 pnpm i wxt@latest
 ```
+
+---
 
 Listed below are all the breaking changes you should address when upgrading to a new version of WXT.
 
@@ -21,7 +36,7 @@ Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`
 v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.
 
 :::tip
-Read through all the changes once before making any code changes.
+Read through all the changes once before updating your code.
 :::
 
 ### `webextension-polyfill` Removed
