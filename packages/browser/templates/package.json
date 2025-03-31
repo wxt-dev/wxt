@@ -11,6 +11,7 @@
     "directory": "packages/browser"
   },
   "scripts": {
+    "check": "check",
     "gen": "tsx scripts/generate.ts"
   },
   "author": {
@@ -26,6 +27,7 @@
     "fs-extra": "catalog:",
     "nano-spawn": "catalog:",
     "tsx": "catalog:",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   }
 }

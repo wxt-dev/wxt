@@ -1,5 +1,5 @@
 import 'wxt';
-import 'wxt/sandbox';
+import 'wxt/utils/define-app-config';
 import {
   addAlias,
   addViteConfig,
@@ -9,7 +9,7 @@ import {
 import { relative, resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
 
-declare module 'wxt/sandbox' {
+declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
     analytics: AnalyticsConfig;
   }
@@ -44,7 +44,7 @@ export default defineWxtModule({
           ? clientModuleId
           : relative(wxtAnalyticsFolder, clientModuleId)
       }';`,
-      `import { useAppConfig } from 'wxt/client';`,
+      `import { useAppConfig } from '#imports';`,
       ``,
       `export const analytics = createAnalytics(useAppConfig().analytics);`,
       ``,

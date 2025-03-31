@@ -37,9 +37,7 @@ export async function WxtVitest(
     resolveAppConfig(wxt.config),
     extensionApiMock(wxt.config),
   ];
-  if (wxt.config.imports !== false) {
-    plugins.push(UnimportPlugin.vite(wxt.config.imports));
-  }
+  plugins.push(UnimportPlugin.vite(wxt.config.imports));
 
   return plugins;
 }

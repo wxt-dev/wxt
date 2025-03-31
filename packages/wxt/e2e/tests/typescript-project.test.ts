@@ -239,6 +239,7 @@ describe('TypeScript Project', () => {
       /// <reference path="./types/paths.d.ts" />
       /// <reference path="./types/i18n.d.ts" />
       /// <reference path="./types/globals.d.ts" />
+      /// <reference path="./types/imports-module.d.ts" />
       /// <reference path="./types/imports.d.ts" />
       "
     `);
