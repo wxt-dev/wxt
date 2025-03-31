@@ -15,7 +15,6 @@
     "src/utils/define-wxt-plugin.ts",
     "src/utils/match-patterns.ts",
     "src/utils/storage.ts",
-    "src/browser.ts",
     "src/testing/index.ts",
     "src/modules.ts"
   ]
