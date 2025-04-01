@@ -121,8 +121,8 @@ catalogs:
       specifier: ^2.0.1
       version: 2.0.1
     fast-glob:
-      specifier: ^3.3.2
-      version: 3.3.2
+      specifier: ^3.3.3
+      version: 3.3.3
     feed:
       specifier: ^4.2.2
       version: 4.2.2
@@ -336,7 +336,7 @@ importers:
         version: 3.2.3
       fast-glob:
         specifier: 'catalog:'
-        version: 3.3.2
+        version: 3.3.3
       feed:
         specifier: 'catalog:'
         version: 4.2.2
@@ -492,7 +492,7 @@ importers:
         version: 0.2.1
       fast-glob:
         specifier: 'catalog:'
-        version: 3.3.2
+        version: 3.3.3
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
@@ -672,7 +672,7 @@ importers:
         version: 6.1.4
       fast-glob:
         specifier: 'catalog:'
-        version: 3.3.2
+        version: 3.3.3
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
@@ -775,7 +775,7 @@ importers:
         version: 0.25.0
       fast-glob:
         specifier: 'catalog:'
-        version: 3.3.2
+        version: 3.3.3
       filesize:
         specifier: 'catalog:'
         version: 10.1.6
@@ -3237,8 +3237,8 @@ packages:
     engines: {node: '>= 10.17.0'}
     hasBin: true
 
-  fast-glob@3.3.2:
-    resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
+  fast-glob@3.3.3:
+    resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
 
   fastq@1.15.0:
@@ -5450,7 +5450,7 @@ snapshots:
       cac: 6.7.14
       consola: 3.2.3
       dependency-graph: 1.0.0
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       fs-extra: 11.2.0
       ohash: 1.1.4
       pathe: 1.1.2
@@ -7760,7 +7760,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fast-glob@3.3.2:
+  fast-glob@3.3.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.5
       '@nodelib/fs.walk': 1.2.8
@@ -9592,7 +9592,7 @@ snapshots:
       acorn: 8.14.0
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       local-pkg: 0.5.0
       magic-string: 0.30.17
       mlly: 1.7.4
