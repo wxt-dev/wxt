@@ -60,8 +60,7 @@
       ]
     },
     "patchedDependencies": {
-      "markdown-it-footnote": "patches/markdown-it-footnote.patch",
-      "@aklinker1/buildc": "patches/@aklinker1__buildc.patch"
+      "markdown-it-footnote": "patches/markdown-it-footnote.patch"
     }
   }
 }
