@@ -299,6 +299,9 @@ catalogs:
       version: 0.12.0
 
 patchedDependencies:
+  '@aklinker1/buildc':
+    hash: 2c4278bee8901103a6d941950fc13e19a014a8cae4e31cc8b1ac6ea41b222ceb
+    path: patches/@aklinker1__buildc.patch
   markdown-it-footnote:
     hash: 5b74a0001a771ff5df790dd36b6883c4794e1f666b231499edb2d65eae8f4930
     path: patches/markdown-it-footnote.patch
@@ -309,7 +312,7 @@ importers:
     devDependencies:
       '@aklinker1/buildc':
         specifier: 'catalog:'
-        version: 2.0.0-alpha9
+        version: 2.0.0-alpha9(patch_hash=2c4278bee8901103a6d941950fc13e19a014a8cae4e31cc8b1ac6ea41b222ceb)
       '@aklinker1/check':
         specifier: 'catalog:'
         version: 1.4.5(typescript@5.6.3)
@@ -5517,7 +5520,7 @@ snapshots:
       defu: 6.1.4
       many-keys-map: 2.0.1
 
-  '@aklinker1/buildc@2.0.0-alpha9': {}
+  '@aklinker1/buildc@2.0.0-alpha9(patch_hash=2c4278bee8901103a6d941950fc13e19a014a8cae4e31cc8b1ac6ea41b222ceb)': {}
 
   '@aklinker1/check@1.4.5(typescript@5.6.3)':
     dependencies:
