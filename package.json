@@ -26,6 +26,7 @@
     "changelogen": "catalog:",
     "consola": "catalog:",
     "fast-glob": "catalog:",
+    "feed": "catalog:",
     "fs-extra": "catalog:",
     "lint-staged": "catalog:",
     "markdown-it-footnote": "catalog:",
@@ -40,6 +41,7 @@
     "typescript": "catalog:",
     "vitepress": "catalog:",
     "vitepress-knowledge": "catalog:",
+    "vitepress-plugin-group-icons": "catalog:",
     "vitest-mock-extended": "catalog:",
     "vue": "catalog:",
     "wxt": "workspace:*"

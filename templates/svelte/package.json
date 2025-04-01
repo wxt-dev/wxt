@@ -16,12 +16,11 @@
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.4",
-    "@types/chrome": "^0.0.280",
     "@wxt-dev/module-svelte": "^2.0.0",
     "svelte": "^5.1.16",
     "svelte-check": "^4.0.7",
     "tslib": "^2.8.1",
     "typescript": "^5.6.3",
-    "wxt": "^0.19.13"
+    "wxt": "^0.19.29"
   }
 }

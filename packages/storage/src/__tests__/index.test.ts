@@ -705,6 +705,30 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it('should call onMigrationComplete callback function if defined', async () => {
+        await fakeBrowser.storage.local.set({
+          count: 2,
+          count$: { v: 1 },
+        });
+        const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+        const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
+        const onMigrationComplete = vi.fn((count, _v) => count);
+
+        storage.defineItem<number, { v: number }>(`local:count`, {
+          defaultValue: 0,
+          version: 3,
+          migrations: {
+            2: migrateToV2,
+            3: migrateToV3,
+          },
+          onMigrationComplete,
+        });
+        await waitForMigrations();
+
+        expect(onMigrationComplete).toBeCalledTimes(1);
+        expect(onMigrationComplete).toBeCalledWith(12, 3);
+      });
+
       it("should not run migrations if the value doesn't exist yet", async () => {
         const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
         const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
@@ -846,6 +870,73 @@ describe('Storage Utils', () => {
         await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
 
         await expect(item.migrate()).rejects.toThrow(expectedError);
+      });
+
+      it('should print migration logs if debug option is true', async () => {
+        await fakeBrowser.storage.local.set({
+          count: 2,
+          count$: { v: 1 },
+        });
+        const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+        const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
+        const consoleSpy = vi.spyOn(console, 'debug');
+
+        storage.defineItem<number, { v: number }>(`local:count`, {
+          defaultValue: 0,
+          version: 3,
+          migrations: {
+            2: migrateToV2,
+            3: migrateToV3,
+          },
+          debug: true,
+        });
+        await waitForMigrations();
+
+        expect(consoleSpy).toHaveBeenCalledTimes(4);
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `[@wxt-dev/storage] Running storage migration for local:count: v1 -> v3`,
+        );
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `[@wxt-dev/storage] Storage migration processed for version: v2`,
+        );
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `[@wxt-dev/storage] Storage migration processed for version: v3`,
+        );
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `[@wxt-dev/storage] Storage migration completed for local:count v3`,
+          { migratedValue: expect.any(Number) },
+        );
+      });
+      it('should not print migration logs if debug option is undefined or false', async () => {
+        await fakeBrowser.storage.local.set({
+          count: 2,
+          count$: { v: 1 },
+          count2: 2,
+          count2$: { v: 1 },
+        });
+        const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+        const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
+        const consoleSpy = vi.spyOn(console, 'debug');
+
+        storage.defineItem<number, { v: number }>(`local:count`, {
+          defaultValue: 0,
+          version: 3,
+          migrations: {
+            2: migrateToV2,
+            3: migrateToV3,
+          },
+        });
+
+        storage.defineItem<number, { v: number }>(`local:count2`, {
+          defaultValue: 0,
+          version: 2,
+          migrations: {
+            2: migrateToV2,
+          },
+          debug: false,
+        });
+        await waitForMigrations();
+        expect(consoleSpy).toHaveBeenCalledTimes(0);
       });
     });
 

@@ -46,7 +46,7 @@ import image from '~/assets/image.png';
 
 ## `/public` Directory
 
-Files inside `<srcDir>/public/` are copied into the output folder as-is, without being processed by WXT's bundler.
+Files inside `<rootDir>/public/` are copied into the output folder as-is, without being processed by WXT's bundler.
 
 Here's how you access them:
 
@@ -81,6 +81,10 @@ img.src = imageUrl;
 
 :::
 
+:::warning
+Assets in the `public/` directory are **_not_** accessible in content scripts by default. To use a public asset in a content script, you must add it to your manifest's [`web_accessible_resources` array](/api/reference/wxt/type-aliases/UserManifest#web-accessible-resources).
+:::
+
 ## Inside Content Scripts
 
 Assets inside content scripts are a little different. By default, when you import an asset, it returns just the path to the asset. This is because Vite assumes you're loading assets from the same hostname.
@@ -89,8 +93,7 @@ But, inside content scripts, the hostname is whatever the tab is set to. So if y
 
 To fix this, you need to convert the image to a full URL using `browser.runtime.getURL`:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import iconUrl from '/icon/128.png';
 
 export default defineContentScript({
@@ -135,8 +138,7 @@ Run `wxt build`, and you should see the WASM file copied into your `.output/chro
 
 Next, since this is in a content script and we'll be fetching the WASM file over the network to load it, we need to add the file to the `web_accessible_resources`:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   manifest: {
     web_accessible_resources: [
@@ -153,8 +155,7 @@ export default defineConfig({
 
 And finally, we need to load and initialize the `.wasm` file inside the content script to use it:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 import initWasm, { parseSync } from '@oxc-parser/wasm';
 
 export default defineContentScript({
