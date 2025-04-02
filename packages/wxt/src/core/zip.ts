@@ -121,9 +121,23 @@ async function zipDir(
       onlyFiles: true,
     })
   ).filter((relativePath) => {
+    function negateCheck() {
+      return options?.exclude?.some(
+        (option) =>
+          option.startsWith('!') && minimatch(relativePath, option.slice(1)),
+      );
+    }
+    if (negateCheck()) {
+      return true;
+    }
+    const updatedExcludeOptions = options?.exclude?.filter(
+      (option) => !option.startsWith('!'),
+    );
     return (
       options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
+      !updatedExcludeOptions?.some((pattern) =>
+        minimatch(relativePath, pattern),
+      )
     );
   });
   const filesToZip = [
