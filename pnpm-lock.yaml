@@ -250,8 +250,8 @@ catalogs:
       specifier: 1.0.0-next.3
       version: 1.0.0-next.3
     typescript:
-      specifier: ^5.6.3
-      version: 5.6.3
+      specifier: ^5.8.2
+      version: 5.8.2
     ua-parser-js:
       specifier: ^1.0.40
       version: 1.0.40
@@ -315,7 +315,7 @@ importers:
         version: 1.1.4
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@commitlint/config-conventional':
         specifier: 'catalog:'
         version: 19.8.0
@@ -363,34 +363,34 @@ importers:
         version: 4.19.3
       typedoc:
         specifier: 'catalog:'
-        version: 0.25.4(typescript@5.6.3)
+        version: 0.25.4(typescript@5.8.2)
       typedoc-plugin-frontmatter:
         specifier: 'catalog:'
-        version: 1.1.0(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3)))
+        version: 1.1.0(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2)))
       typedoc-plugin-markdown:
         specifier: 'catalog:'
-        version: 4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3))
+        version: 4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2))
       typedoc-vitepress-theme:
         specifier: 'catalog:'
-        version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3)))
+        version: 1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2)))
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       vitepress:
         specifier: 'catalog:'
-        version: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
+        version: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.8.2)
       vitepress-knowledge:
         specifier: 'catalog:'
-        version: 0.4.0(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3))
+        version: 0.4.0(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.8.2))
       vitepress-plugin-group-icons:
         specifier: 'catalog:'
         version: 1.3.8
       vitest-mock-extended:
         specifier: 'catalog:'
-        version: 3.0.1(typescript@5.6.3)(vitest@3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))
+        version: 3.0.1(typescript@5.8.2)(vitest@3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))
       vue:
         specifier: 'catalog:'
-        version: 3.5.12(typescript@5.6.3)
+        version: 3.5.12(typescript@5.8.2)
       wxt:
         specifier: workspace:*
         version: link:packages/wxt
@@ -403,7 +403,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@types/chrome':
         specifier: 'catalog:'
         version: 0.0.280
@@ -415,10 +415,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -437,7 +437,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       oxlint:
         specifier: 'catalog:'
         version: 0.11.1
@@ -446,10 +446,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -477,7 +477,7 @@ importers:
         version: 4.19.3
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
@@ -496,7 +496,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@types/chrome':
         specifier: 'catalog:'
         version: 0.0.280
@@ -511,10 +511,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
@@ -533,7 +533,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@types/react':
         specifier: 'catalog:'
         version: 19.0.1
@@ -551,10 +551,10 @@ importers:
         version: 19.0.0(react@19.0.0)
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -567,7 +567,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       publint:
         specifier: 'catalog:'
         version: 0.2.12
@@ -576,10 +576,10 @@ importers:
         version: 1.9.4
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -595,16 +595,16 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       publint:
         specifier: 'catalog:'
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -613,20 +613,20 @@ importers:
     dependencies:
       '@vitejs/plugin-vue':
         specifier: 'catalog:'
-        version: 5.2.1(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+        version: 5.2.1(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       publint:
         specifier: 'catalog:'
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -642,7 +642,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@types/chrome':
         specifier: 'catalog:'
         version: 0.0.280
@@ -657,10 +657,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
@@ -676,7 +676,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       oxlint:
         specifier: 'catalog:'
         version: 0.11.1
@@ -685,13 +685,13 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       unocss:
         specifier: 'catalog:'
-        version: 66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+        version: 66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       wxt:
         specifier: workspace:*
         version: link:../wxt
@@ -700,7 +700,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@types/webextension-polyfill':
         specifier: 'catalog:'
         version: 0.12.3
@@ -709,10 +709,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       webextension-polyfill:
         specifier: 'catalog:'
         version: 0.12.0
@@ -860,7 +860,7 @@ importers:
     devDependencies:
       '@aklinker1/check':
         specifier: 'catalog:'
-        version: 1.4.5(typescript@5.6.3)
+        version: 1.4.5(typescript@5.8.2)
       '@faker-js/faker':
         specifier: 'catalog:'
         version: 9.2.0
@@ -896,10 +896,10 @@ importers:
         version: 0.2.12
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unbuild:
         specifier: 'catalog:'
-        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        version: 3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
@@ -936,10 +936,10 @@ importers:
         version: 1.80.7
       typescript:
         specifier: 'catalog:'
-        version: 5.6.3
+        version: 5.8.2
       unocss:
         specifier: 'catalog:'
-        version: 66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+        version: 66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       vitest:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
@@ -4996,8 +4996,8 @@ packages:
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x
 
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+  typescript@5.8.2:
+    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -5461,12 +5461,12 @@ snapshots:
       proper-lockfile: 4.1.2
       yaml: 2.7.0
 
-  '@aklinker1/check@1.4.5(typescript@5.6.3)':
+  '@aklinker1/check@1.4.5(typescript@5.8.2)':
     dependencies:
       '@antfu/utils': 0.7.10
       ci-info: 4.1.0
       citty: 0.1.6
-      typescript: 5.6.3
+      typescript: 5.8.2
 
   '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@4.34.9)':
     dependencies:
@@ -6575,11 +6575,11 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@unocss/astro@66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))':
+  '@unocss/astro@66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       '@unocss/core': 66.0.0
       '@unocss/reset': 66.0.0
-      '@unocss/vite': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+      '@unocss/vite': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
     optionalDependencies:
       vite: 6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
     transitivePeerDependencies:
@@ -6612,14 +6612,14 @@ snapshots:
     dependencies:
       '@unocss/core': 66.0.0
 
-  '@unocss/inspector@66.0.0(vue@3.5.13(typescript@5.6.3))':
+  '@unocss/inspector@66.0.0(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       '@unocss/core': 66.0.0
       '@unocss/rule-utils': 66.0.0
       colorette: 2.0.20
       gzip-size: 6.0.0
       sirv: 3.0.1
-      vue-flow-layout: 0.1.1(vue@3.5.13(typescript@5.6.3))
+      vue-flow-layout: 0.1.1(vue@3.5.13(typescript@5.8.2))
     transitivePeerDependencies:
       - vue
 
@@ -6706,12 +6706,12 @@ snapshots:
     dependencies:
       '@unocss/core': 66.0.0
 
-  '@unocss/vite@66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))':
+  '@unocss/vite@66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@unocss/config': 66.0.0
       '@unocss/core': 66.0.0
-      '@unocss/inspector': 66.0.0(vue@3.5.13(typescript@5.6.3))
+      '@unocss/inspector': 66.0.0(vue@3.5.13(typescript@5.8.2))
       chokidar: 3.6.0
       magic-string: 0.30.17
       tinyglobby: 0.2.10
@@ -6731,15 +6731,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.2.1(vite@5.4.14(@types/node@20.17.30)(sass@1.80.7))(vue@3.5.13(typescript@5.6.3))':
+  '@vitejs/plugin-vue@5.2.1(vite@5.4.14(@types/node@20.17.30)(sass@1.80.7))(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       vite: 5.4.14(@types/node@20.17.30)(sass@1.80.7)
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
 
-  '@vitejs/plugin-vue@5.2.1(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))':
+  '@vitejs/plugin-vue@5.2.1(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       vite: 6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
 
   '@vitest/coverage-v8@3.0.7(vitest@3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))':
     dependencies:
@@ -6909,36 +6909,36 @@ snapshots:
       '@vue/shared': 3.5.13
       csstype: 3.1.3
 
-  '@vue/server-renderer@3.5.12(vue@3.5.12(typescript@5.6.3))':
+  '@vue/server-renderer@3.5.12(vue@3.5.12(typescript@5.8.2))':
     dependencies:
       '@vue/compiler-ssr': 3.5.12
       '@vue/shared': 3.5.12
-      vue: 3.5.12(typescript@5.6.3)
+      vue: 3.5.12(typescript@5.8.2)
 
-  '@vue/server-renderer@3.5.13(vue@3.5.13(typescript@5.6.3))':
+  '@vue/server-renderer@3.5.13(vue@3.5.13(typescript@5.8.2))':
     dependencies:
       '@vue/compiler-ssr': 3.5.13
       '@vue/shared': 3.5.13
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
 
   '@vue/shared@3.5.12': {}
 
   '@vue/shared@3.5.13': {}
 
-  '@vueuse/core@12.7.0(typescript@5.6.3)':
+  '@vueuse/core@12.7.0(typescript@5.8.2)':
     dependencies:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 12.7.0
-      '@vueuse/shared': 12.7.0(typescript@5.6.3)
-      vue: 3.5.13(typescript@5.6.3)
+      '@vueuse/shared': 12.7.0(typescript@5.8.2)
+      vue: 3.5.13(typescript@5.8.2)
     transitivePeerDependencies:
       - typescript
 
-  '@vueuse/integrations@12.7.0(focus-trap@7.6.4)(typescript@5.6.3)':
+  '@vueuse/integrations@12.7.0(focus-trap@7.6.4)(typescript@5.8.2)':
     dependencies:
-      '@vueuse/core': 12.7.0(typescript@5.6.3)
-      '@vueuse/shared': 12.7.0(typescript@5.6.3)
-      vue: 3.5.13(typescript@5.6.3)
+      '@vueuse/core': 12.7.0(typescript@5.8.2)
+      '@vueuse/shared': 12.7.0(typescript@5.8.2)
+      vue: 3.5.13(typescript@5.8.2)
     optionalDependencies:
       focus-trap: 7.6.4
     transitivePeerDependencies:
@@ -6946,9 +6946,9 @@ snapshots:
 
   '@vueuse/metadata@12.7.0': {}
 
-  '@vueuse/shared@12.7.0(typescript@5.6.3)':
+  '@vueuse/shared@12.7.0(typescript@5.8.2)':
     dependencies:
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
     transitivePeerDependencies:
       - typescript
 
@@ -8455,7 +8455,7 @@ snapshots:
 
   mkdirp@3.0.1: {}
 
-  mkdist@2.2.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3)):
+  mkdist@2.2.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       autoprefixer: 10.4.20(postcss@8.5.3)
       citty: 0.1.6
@@ -8472,8 +8472,8 @@ snapshots:
       tinyglobby: 0.2.12
     optionalDependencies:
       sass: 1.80.7
-      typescript: 5.6.3
-      vue: 3.5.13(typescript@5.6.3)
+      typescript: 5.8.2
+      vue: 3.5.13(typescript@5.8.2)
 
   mlly@1.7.4:
     dependencies:
@@ -9130,11 +9130,11 @@ snapshots:
       glob: 6.0.4
     optional: true
 
-  rollup-plugin-dts@6.1.1(rollup@4.34.9)(typescript@5.6.3):
+  rollup-plugin-dts@6.1.1(rollup@4.34.9)(typescript@5.8.2):
     dependencies:
       magic-string: 0.30.17
       rollup: 4.34.9
-      typescript: 5.6.3
+      typescript: 5.8.2
     optionalDependencies:
       '@babel/code-frame': 7.26.2
 
@@ -9500,9 +9500,9 @@ snapshots:
 
   trim-lines@3.0.1: {}
 
-  ts-essentials@10.0.1(typescript@5.6.3):
+  ts-essentials@10.0.1(typescript@5.8.2):
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.8.2
 
   tslib@2.6.0: {}
 
@@ -9525,28 +9525,28 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typedoc-plugin-frontmatter@1.1.0(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3))):
+  typedoc-plugin-frontmatter@1.1.0(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2))):
     dependencies:
-      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3))
+      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2))
       yaml: 2.7.0
 
-  typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3)):
+  typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2)):
     dependencies:
-      typedoc: 0.25.4(typescript@5.6.3)
+      typedoc: 0.25.4(typescript@5.8.2)
 
-  typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3))):
+  typedoc-vitepress-theme@1.0.0-next.3(typedoc-plugin-markdown@4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2))):
     dependencies:
-      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4(typescript@5.6.3))
+      typedoc-plugin-markdown: 4.0.0-next.23(typedoc@0.25.4(typescript@5.8.2))
 
-  typedoc@0.25.4(typescript@5.6.3):
+  typedoc@0.25.4(typescript@5.8.2):
     dependencies:
       lunr: 2.3.9
       marked: 4.3.0
       minimatch: 9.0.5
       shiki: 0.14.5
-      typescript: 5.6.3
+      typescript: 5.8.2
 
-  typescript@5.6.3: {}
+  typescript@5.8.2: {}
 
   ua-parser-js@1.0.40: {}
 
@@ -9554,7 +9554,7 @@ snapshots:
 
   uhyphen@0.2.0: {}
 
-  unbuild@3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3)):
+  unbuild@3.5.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       '@rollup/plugin-alias': 5.1.1(rollup@4.34.9)
       '@rollup/plugin-commonjs': 28.0.2(rollup@4.34.9)
@@ -9570,18 +9570,18 @@ snapshots:
       hookable: 5.5.3
       jiti: 2.4.2
       magic-string: 0.30.17
-      mkdist: 2.2.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      mkdist: 2.2.0(sass@1.80.7)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       mlly: 1.7.4
       pathe: 2.0.3
       pkg-types: 2.1.0
       pretty-bytes: 6.1.1
       rollup: 4.34.9
-      rollup-plugin-dts: 6.1.1(rollup@4.34.9)(typescript@5.6.3)
+      rollup-plugin-dts: 6.1.1(rollup@4.34.9)(typescript@5.8.2)
       scule: 1.3.0
       tinyglobby: 0.2.12
       untyped: 2.0.0
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.8.2
     transitivePeerDependencies:
       - sass
       - vue
@@ -9645,9 +9645,9 @@ snapshots:
 
   universalify@2.0.0: {}
 
-  unocss@66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3)):
+  unocss@66.0.0(postcss@8.5.3)(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2)):
     dependencies:
-      '@unocss/astro': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+      '@unocss/astro': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       '@unocss/cli': 66.0.0
       '@unocss/core': 66.0.0
       '@unocss/postcss': 66.0.0(postcss@8.5.3)
@@ -9664,7 +9664,7 @@ snapshots:
       '@unocss/transformer-compile-class': 66.0.0
       '@unocss/transformer-directives': 66.0.0
       '@unocss/transformer-variant-group': 66.0.0
-      '@unocss/vite': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.3))
+      '@unocss/vite': 66.0.0(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
     optionalDependencies:
       vite: 6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
     transitivePeerDependencies:
@@ -9794,12 +9794,12 @@ snapshots:
     optionalDependencies:
       vite: 6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
 
-  vitepress-knowledge@0.4.0(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)):
+  vitepress-knowledge@0.4.0(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.8.2)):
     dependencies:
       linkedom: 0.18.6
       node-html-markdown: 1.3.0
       picocolors: 1.1.1
-      vitepress: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3)
+      vitepress: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.8.2)
       yaml: 2.7.0
 
   vitepress-plugin-group-icons@1.3.8:
@@ -9810,7 +9810,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.6.3):
+  vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.7)(search-insights@2.15.0)(typescript@5.8.2):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.20.3)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.15.0)
@@ -9819,17 +9819,17 @@ snapshots:
       '@shikijs/transformers': 2.5.0
       '@shikijs/types': 2.5.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.2.1(vite@5.4.14(@types/node@20.17.30)(sass@1.80.7))(vue@3.5.13(typescript@5.6.3))
+      '@vitejs/plugin-vue': 5.2.1(vite@5.4.14(@types/node@20.17.30)(sass@1.80.7))(vue@3.5.13(typescript@5.8.2))
       '@vue/devtools-api': 7.7.2
       '@vue/shared': 3.5.13
-      '@vueuse/core': 12.7.0(typescript@5.6.3)
-      '@vueuse/integrations': 12.7.0(focus-trap@7.6.4)(typescript@5.6.3)
+      '@vueuse/core': 12.7.0(typescript@5.8.2)
+      '@vueuse/integrations': 12.7.0(focus-trap@7.6.4)(typescript@5.8.2)
       focus-trap: 7.6.4
       mark.js: 8.11.1
       minisearch: 7.1.2
       shiki: 2.5.0
       vite: 5.4.14(@types/node@20.17.30)(sass@1.80.7)
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
     optionalDependencies:
       postcss: 8.5.3
     transitivePeerDependencies:
@@ -9859,10 +9859,10 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vitest-mock-extended@3.0.1(typescript@5.6.3)(vitest@3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)):
+  vitest-mock-extended@3.0.1(typescript@5.8.2)(vitest@3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)):
     dependencies:
-      ts-essentials: 10.0.1(typescript@5.6.3)
-      typescript: 5.6.3
+      ts-essentials: 10.0.1(typescript@5.8.2)
+      typescript: 5.8.2
       vitest: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
 
   vitest-plugin-random-seed@1.1.1(vite@6.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)):
@@ -9912,29 +9912,29 @@ snapshots:
 
   vscode-textmate@8.0.0: {}
 
-  vue-flow-layout@0.1.1(vue@3.5.13(typescript@5.6.3)):
+  vue-flow-layout@0.1.1(vue@3.5.13(typescript@5.8.2)):
     dependencies:
-      vue: 3.5.13(typescript@5.6.3)
+      vue: 3.5.13(typescript@5.8.2)
 
-  vue@3.5.12(typescript@5.6.3):
+  vue@3.5.12(typescript@5.8.2):
     dependencies:
       '@vue/compiler-dom': 3.5.12
       '@vue/compiler-sfc': 3.5.12
       '@vue/runtime-dom': 3.5.12
-      '@vue/server-renderer': 3.5.12(vue@3.5.12(typescript@5.6.3))
+      '@vue/server-renderer': 3.5.12(vue@3.5.12(typescript@5.8.2))
       '@vue/shared': 3.5.12
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.8.2
 
-  vue@3.5.13(typescript@5.6.3):
+  vue@3.5.13(typescript@5.8.2):
     dependencies:
       '@vue/compiler-dom': 3.5.13
       '@vue/compiler-sfc': 3.5.13
       '@vue/runtime-dom': 3.5.13
-      '@vue/server-renderer': 3.5.13(vue@3.5.13(typescript@5.6.3))
+      '@vue/server-renderer': 3.5.13(vue@3.5.13(typescript@5.8.2))
       '@vue/shared': 3.5.13
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.8.2
 
   watchpack@2.4.1:
     dependencies:
