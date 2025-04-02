@@ -19,7 +19,7 @@ catalogs:
       specifier: 5.12.0
       version: 5.12.0
     '@commitlint/config-conventional':
-      specifier: ^19.8.0
+      specifier: ^19.7.1
       version: 19.8.0
     '@commitlint/types':
       specifier: ^19.5.0
@@ -40,7 +40,7 @@ catalogs:
       specifier: ^4.6.9
       version: 4.6.9
     '@types/node':
-      specifier: ^20.17.30
+      specifier: ^20.17.6
       version: 20.17.30
     '@types/normalize-path':
       specifier: ^3.0.2
@@ -121,7 +121,7 @@ catalogs:
       specifier: ^2.0.1
       version: 2.0.1
     fast-glob:
-      specifier: ^3.3.3
+      specifier: ^3.3.2
       version: 3.3.3
     feed:
       specifier: ^4.2.2
@@ -2233,9 +2233,6 @@ packages:
 
   '@types/node@20.17.30':
     resolution: {integrity: sha512-7zf4YyHA+jvBNfVrk2Gtvs6x7E8V+YDW05bNfG2XkWDJfYRXrTiP/DsB2zSYTaHX0bGIujTBQdMVAhb+j7mwpg==}
-
-  '@types/node@20.17.6':
-    resolution: {integrity: sha512-VEI7OdvK2wP7XHnsuXbAJnEpEkF6NjSN45QJlL4VGqZSXsnicpesdTWsg9RISeSdYd3yeRj/y3k5KGjUXYnFwQ==}
 
   '@types/normalize-path@3.0.2':
     resolution: {integrity: sha512-DO++toKYPaFn0Z8hQ7Tx+3iT9t77IJo/nDiqTXilgEP+kPNIYdpS9kh3fXuc53ugqwp9pxC1PVjCpV1tQDyqMA==}
@@ -6485,7 +6482,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.1':
     dependencies:
-      '@types/node': 20.17.6
+      '@types/node': 20.17.30
 
   '@types/estree@1.0.6': {}
 
@@ -6534,10 +6531,6 @@ snapshots:
   '@types/minimatch@3.0.5': {}
 
   '@types/node@20.17.30':
-    dependencies:
-      undici-types: 6.19.8
-
-  '@types/node@20.17.6':
     dependencies:
       undici-types: 6.19.8
 
