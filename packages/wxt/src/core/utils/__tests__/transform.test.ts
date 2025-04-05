@@ -137,5 +137,38 @@ export default defineContentScript({
 
       expect(actual).toEqual(expected);
     });
+
+    it('should not remove any variables delcared outside the main function that are used', () => {
+      const input = `
+        const [ a ] = [ 123, 456 ];
+        const { b } = { b: 123 };
+        const { c: { d } } = { c: { d: 123 } };
+        const { e, ...rest } = { e: 123, f: 456 };
+
+        console.log(a);
+        console.log(b);
+        console.log(d);
+        console.log(e);
+        console.log(rest);
+
+        export default defineBackground(() => {
+          console.log('Hello background!', { id: browser.runtime.id });
+        });`;
+      const expected = `const [ a ] = [ 123, 456 ];
+const { b } = { b: 123 };
+const { c: { d } } = { c: { d: 123 } };
+const { e, ...rest } = { e: 123, f: 456 };
+
+console.log(a);
+console.log(b);
+console.log(d);
+console.log(e);
+console.log(rest);
+
+export default defineBackground();`;
+
+      const actual = removeMainFunctionCode(input).code;
+      expect(actual).toEqual(expected);
+    });
   });
 });

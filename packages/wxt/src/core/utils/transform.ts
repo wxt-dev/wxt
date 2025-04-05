@@ -50,19 +50,83 @@ function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
 
   let deletedCount = 0;
   const ast = mod.$ast as any;
-  for (let i = ast.body.length - 1; i >= 0; i--) {
-    if (ast.body[i].type === 'VariableDeclaration') {
-      for (let j = ast.body[i].declarations.length - 1; j >= 0; j--) {
-        if (!usedMap.get(ast.body[i].declarations[j].id.name)) {
-          ast.body[i].declarations.splice(j, 1);
+
+  const isUsed = (id: any) => {
+    return id?.type === 'Identifier' && usedMap.get(id.name);
+  };
+
+  const cleanArrayPattern = (pattern: any): boolean => {
+    const elements = pattern.elements;
+    for (let i = elements.length - 1; i >= 0; i--) {
+      const el = elements[i];
+      if (el?.type === 'Identifier' && !isUsed(el)) {
+        elements.splice(i, 1);
+        deletedCount++;
+      }
+    }
+    return elements.length === 0;
+  };
+
+  const cleanObjectPattern = (pattern: any): boolean => {
+    const properties = pattern.properties;
+    for (let i = properties.length - 1; i >= 0; i--) {
+      const prop = properties[i];
+
+      if (prop.type === 'Property') {
+        const value = prop.value;
+        // support nested object
+        if (value.type === 'ObjectPattern') {
+          const isEmpty = cleanObjectPattern(value);
+          if (isEmpty) {
+            properties.splice(i, 1);
+          }
+        } else if (value.type === 'ArrayPattern') {
+          const isEmpty = cleanArrayPattern(value);
+          if (isEmpty) {
+            properties.splice(i, 1);
+          }
+        } else if (value.type === 'Identifier' && !isUsed(value)) {
+          properties.splice(i, 1);
+          deletedCount++;
+        }
+      } else if (prop.type === 'RestElement') {
+        const arg = prop.argument;
+        if (arg.type === 'Identifier' && !isUsed(arg)) {
+          properties.splice(i, 1);
           deletedCount++;
         }
       }
-      if (ast.body[i].declarations.length === 0) {
-        ast.body.splice(i, 1);
+    }
+    return properties.length === 0;
+  };
+
+  for (let i = ast.body.length - 1; i >= 0; i--) {
+    if (ast.body[i].type !== 'VariableDeclaration') continue;
+
+    for (let j = ast.body[i].declarations.length - 1; j >= 0; j--) {
+      const id = ast.body[i].declarations[j].id;
+
+      let shouldRemove = false;
+
+      if (id.type === 'Identifier') {
+        shouldRemove = !isUsed(id);
+        if (shouldRemove) deletedCount++;
+      } else if (id.type === 'ArrayPattern') {
+        shouldRemove = cleanArrayPattern(id);
+      } else if (id.type === 'ObjectPattern') {
+        shouldRemove = cleanObjectPattern(id);
+      }
+
+      if (shouldRemove) {
+        ast.body[i].declarations.splice(j, 1);
       }
     }
+
+    if (ast.body[i].declarations.length === 0) {
+      ast.body.splice(i, 1);
+    }
   }
+
   return deletedCount;
 }
 
