@@ -149,7 +149,6 @@ export default defineContentScript({
         console.log(b);
         console.log(d);
         console.log(e);
-        console.log(f);
         console.log(rest);
 
         export default defineBackground(() => {
@@ -164,7 +163,6 @@ console.log(a);
 console.log(b);
 console.log(d);
 console.log(e);
-console.log(f);
 console.log(rest);
 
 export default defineBackground();`;
