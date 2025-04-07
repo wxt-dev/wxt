@@ -135,27 +135,19 @@ async function zipDir(
       onlyFiles: true,
     })
   ).filter((relativePath) => {
-    let shouldExclude = options?.exclude?.some((pattern) =>
-      minimatch(relativePath, pattern),
+    const isNegated = options?.exclude?.some(
+      (option) =>
+        option.startsWith('!') && minimatch(relativePath, option.slice(1)),
     );
-    console.log(
-      negateCheck(options?.exclude as string[], relativePath),
-      relativePath,
+    if (isNegated) return true;
+    const updatedExcludeOptions = options?.exclude?.filter(
+      (option) => !option.startsWith('!'),
     );
-    // shouldExclude = negateCheck(options?.exclude as string[], relativePath)
-    //   ? true
-    //   : shouldExclude;
-    // if (relativePath.endsWith('.json')) {
-    //   console.log({
-    //     should: shouldExclude,
-    //     relativePath,
-    //     dd: options?.exclude,
-    //   });
-    // }
-
     return (
       options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      shouldExclude
+      !updatedExcludeOptions?.some((pattern) =>
+        minimatch(relativePath, pattern),
+      )
     );
   });
   const filesToZip = [
