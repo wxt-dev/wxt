@@ -19,15 +19,13 @@ export interface Runner {
 export async function run(options: RunOptions): Promise<Runner> {
   const resolvedOptions = await resolveRunOptions(options);
 
-  switch (resolvedOptions.target) {
-    case 'firefox':
-      return runFirefox(resolvedOptions);
-    case 'chromium':
-      return runChromium(resolvedOptions);
-    default:
-      throw new Error(
-        `Unsupported target: "${resolvedOptions.target}". Must be "firefox" or "chromium"`,
-      );
+  if (
+    resolvedOptions.target.includes('firefox') ||
+    resolvedOptions.target.includes('zen')
+  ) {
+    return runFirefox(resolvedOptions);
+  } else {
+    return runChromium(resolvedOptions);
   }
 }
 

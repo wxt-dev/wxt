@@ -19,7 +19,8 @@ Programmatically open a browser and install a web extension from a local directo
 - [ ] Validate list of known browser paths on Mac
 - [ ] Validate list of known browser paths on Windows
 - [ ] Validate list of known browser paths on Linux
-- [ ] Support more than just "chromium" or "firefox" for targets
+- [x] Support more than just "chromium" or "firefox" for targets
+- [ ] Unit tests
 
 ## Features
 

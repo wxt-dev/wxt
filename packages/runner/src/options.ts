@@ -1,22 +1,30 @@
-import {
-  CHROMIUM_PATHS,
-  FIREFOX_PATHS,
-  type BrowserPlatform,
-} from './browser-paths';
+import { KNOWN_BROWSER_PATHS, type BrowserPlatform } from './browser-paths';
 import { resolve } from 'node:path';
 import { debug } from './debug';
 import { open } from 'node:fs/promises';
 
 const debugOptions = debug.scoped('options');
 
+export type KnownTarget =
+  | 'chromium'
+  | 'chrome'
+  | 'chrome-beta'
+  | 'chrome-dev'
+  | 'chrome-canary'
+  | 'edge'
+  | 'edge-beta'
+  | 'edge-dev'
+  | 'edge-canary'
+  | 'firefox'
+  | 'firefox-nightly'
+  | 'firefox-developer-edition'
+  | 'zen';
+export type UnknownTarget = string & {};
+export type Target = KnownTarget | UnknownTarget;
+
 export type RunOptions = {
-  /** Paths to binaries to use for each browser. */
-  browserBinaries?: {
-    /** Custom chromium binary to use. */
-    chromium?: string;
-    /** Custom firefox binary to use. */
-    firefox?: string;
-  };
+  /** Paths to binaries to use for each target. */
+  browserBinaries?: Record<string, string>;
   /** Customize the arguments passed to the chromium binary. Conflicting arguments with required ones to install extensions are ignored. */
   chromiumArgs?: string[];
   /** Control how data is persisted between launches. */
@@ -29,8 +37,8 @@ export type RunOptions = {
   firefoxArgs?: string[];
   /** Customize the port Firefox's debugger is listening on. Defaults to a random open port. */
   firefoxRemoteDebuggingPort?: number;
-  /** Specify the browser to open. Defaults to `"chromium"`. */
-  target?: 'chromium' | 'firefox';
+  /** Specify the browser to open. Defaults to `"chrome"`. */
+  target?: Target;
 };
 
 export type ResolvedRunOptions = {
@@ -43,7 +51,7 @@ export type ResolvedRunOptions = {
   extensionDir: string;
   firefoxArgs: string[];
   firefoxRemoteDebuggingPort: number;
-  target: 'chromium' | 'firefox';
+  target: string;
 };
 
 export async function resolveRunOptions(
@@ -51,7 +59,7 @@ export async function resolveRunOptions(
 ): Promise<ResolvedRunOptions> {
   debugOptions('User options:', options);
 
-  const target = options?.target || 'chromium';
+  const target = options?.target || 'chrome';
 
   const browserBinary =
     options?.browserBinaries?.[target] ?? (await findBrowserBinary(target));
@@ -85,21 +93,22 @@ export async function resolveRunOptions(
   return resolved;
 }
 
-async function findBrowserBinary(
-  target: 'chromium' | 'firefox',
-): Promise<string | undefined> {
-  const potentialPaths =
-    (target === 'chromium' ? CHROMIUM_PATHS : FIREFOX_PATHS)[getPlatform()] ??
-    [];
+async function findBrowserBinary(target: string): Promise<string | undefined> {
+  const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[getPlatform()] ?? [];
   for (const path of potentialPaths) {
     if (await exists(path)) return path;
   }
 }
 
 function getPlatform(): BrowserPlatform {
-  return process.platform === 'win32' || process.platform === 'darwin'
-    ? process.platform
-    : 'linux';
+  switch (process.platform) {
+    case 'win32':
+      return 'windows';
+    case 'darwin':
+      return 'mac';
+    default:
+      return 'linux';
+  }
 }
 
 function resolveChromiumArgs(
