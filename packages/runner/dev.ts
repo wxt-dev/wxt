@@ -1,3 +1,10 @@
+//
+// USAGE:
+//   pnpm dev
+//   pnpm dev firefox-nightly
+//   pnpm dev <target>
+//
+
 import { run } from './src';
 
 // Uncomment to enable debug logs

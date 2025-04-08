@@ -24,7 +24,6 @@
     "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
     "dev": "tsx dev.ts",
-    "dev:firefox": "tsx dev.ts firefox",
     "build": "buildc -- unbuild",
     "prepublishOnly": "pnpm build"
   },
