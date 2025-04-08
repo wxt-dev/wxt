@@ -1,7 +1,8 @@
 import { KNOWN_BROWSER_PATHS, type BrowserPlatform } from './browser-paths';
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
+import { homedir, tmpdir } from 'node:os';
 import { debug } from './debug';
-import { open } from 'node:fs/promises';
+import { mkdtemp, open } from 'node:fs/promises';
 
 const debugOptions = debug.scoped('options');
 
@@ -27,8 +28,8 @@ export type RunOptions = {
   browserBinaries?: Record<string, string>;
   /** Customize the arguments passed to the chromium binary. Conflicting arguments with required ones to install extensions are ignored. */
   chromiumArgs?: string[];
-  /** Control how data is persisted between launches. */
-  chromiumDataPersistence?: unknown;
+  /** Control how data is persisted between launches. Either save data at a user level, project level, or don't persist data at all. Defaults to `project`. */
+  dataPersistence?: 'user' | 'project' | 'none';
   /** Customize the port Chrome's debugger is listening on. Defaults to a random open port. */
   chromiumRemoteDebuggingPort?: number;
   /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. */
@@ -45,8 +46,8 @@ export type ResolvedRunOptions = {
   /** Absolute path to the browser binary. */
   browserBinary: string;
   chromiumArgs: string[];
-  chromiumDataPersistence: unknown;
   chromiumRemoteDebuggingPort: number;
+  dataPersistence: 'user' | 'project' | 'none';
   /** Absolute path to the extension directory. */
   extensionDir: string;
   firefoxArgs: string[];
@@ -70,21 +71,30 @@ export async function resolveRunOptions(
 
   const chromiumRemoteDebuggingPort = options?.chromiumRemoteDebuggingPort ?? 0;
   const firefoxRemoteDebuggingPort = options?.firefoxRemoteDebuggingPort ?? 0;
-  const chromiumDataPersistence = '.wxt/runner/' + target;
+  const dataPersistence = options?.dataPersistence ?? 'project';
+  const dataDir =
+    dataPersistence === 'user'
+      ? join(homedir(), '.wxt', 'runner', target)
+      : dataPersistence === 'project'
+        ? resolve('.wxt', 'runner', target)
+        : dataPersistence === 'none'
+          ? await mkdtemp(join(tmpdir(), 'wxt-runner-'))
+          : resolve(dataPersistence);
 
   const resolved: ResolvedRunOptions = {
     browserBinary,
     chromiumArgs: resolveChromiumArgs(
       options?.chromiumArgs,
       chromiumRemoteDebuggingPort,
-      chromiumDataPersistence,
+      dataPersistence,
     ),
-    chromiumDataPersistence,
+    dataPersistence,
     chromiumRemoteDebuggingPort,
     extensionDir: resolve(options?.extensionDir ?? '.'),
     firefoxArgs: resolveFirefoxArgs(
       options?.firefoxArgs,
       firefoxRemoteDebuggingPort,
+      dataDir,
     ),
     firefoxRemoteDebuggingPort,
     target,
@@ -114,22 +124,25 @@ function getPlatform(): BrowserPlatform {
 function resolveChromiumArgs(
   userArgs: string[] | undefined,
   chromiumRemoteDebuggingPort: ResolvedRunOptions['chromiumRemoteDebuggingPort'],
-  chromiumDataPersistence: ResolvedRunOptions['chromiumDataPersistence'],
+  dataDir: string,
 ): string[] {
   return deduplicateArgs(
     [
+      // Limit features to improve performance
       `--no-first-run`,
+      // Enable debugging
       `--remote-debugging-port=${chromiumRemoteDebuggingPort}`,
+      // Required for installing extensions
       `--remote-debugging-pipe`,
-      `--user-data-dir=${resolve(chromiumDataPersistence as string)}`,
+      `--user-data-dir=${dataDir}`,
       `--enable-unsafe-extension-debugging`,
     ],
     userArgs,
     {
       '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom chromium --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mchromiumRemoteDebuggingPort\x1b[0m option instead.',
+        '\x1b[1m\x1b[33mCustom Chromium --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mchromiumRemoteDebuggingPort\x1b[0m option instead.',
       '--user-data-dir':
-        '\x1b[1m\x1b[33mCustom chromium --user-data-dir argument ignored.\x1b[0m Use \x1b[36mchromiumDataPersistence\x1b[0m option instead.',
+        '\x1b[1m\x1b[33mCustom Chromium --user-data-dir argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
     },
   );
 }
@@ -137,17 +150,26 @@ function resolveChromiumArgs(
 function resolveFirefoxArgs(
   userArgs: string[] | undefined,
   firefoxRemoteDebuggingPort: ResolvedRunOptions['firefoxRemoteDebuggingPort'],
+  dataDir: string,
 ): string[] {
   return deduplicateArgs(
     [
+      // Allows opening multiple instances of Firefox at the same time
       `--new-instance`,
+      `--no-remote`,
+      `--profile`,
+      dataDir,
+      // Required for installing extensions
       `--remote-debugging-port=${firefoxRemoteDebuggingPort}`,
+      // Default URL to start with
       `about:debugging#/runtime/this-firefox`,
     ],
     userArgs,
     {
       '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom firefox --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mfirefoxDebuggerPort\x1b[0m option instead.',
+        '\x1b[1m\x1b[33mCustom Firefox --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mfirefoxDebuggerPort\x1b[0m option instead.',
+      '--profile':
+        '\x1b[1m\x1b[33mCustom Firefox --profile argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
     },
   );
 }
