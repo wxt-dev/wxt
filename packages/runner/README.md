@@ -12,13 +12,8 @@ Programmatically open a browser and install a web extension from a local directo
 - [x] Provide install functions to allow hooking into already running instances of Chrome/Firefox
   - [ ] Try to setup E2E tests on Firefox with Puppeteer using this approach
   - [ ] Try to setup E2E tests on Chrome with Puppeteer using this approach
-- [ ] Implement the `chromiumDataPersistence` option
-- [ ] Implement some form of data persistence for Firefox
+- [x] Implement the `dataPersistence` option for Chrome and Firefox
 - [ ] Close browsers when process exits
-- [ ] Don't error out if the browser is already open
-- [ ] Validate list of known browser paths on Mac
-- [ ] Validate list of known browser paths on Windows
-- [ ] Validate list of known browser paths on Linux
 - [x] Support more than just "chromium" or "firefox" for targets
 - [ ] Unit tests
 
