@@ -6,7 +6,7 @@ outline: deep
 
 > See the [API Reference](/api/reference/wxt/interfaces/ExtensionRunnerConfig) for a full list of config.
 
-During development WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
+During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 
 ## Config Files
 

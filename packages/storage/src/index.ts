@@ -394,7 +394,7 @@ function createStorage(): WxtStorage {
               (await migrations?.[migrateToVersion]?.(migratedValue)) ??
               migratedValue;
           } catch (err) {
-            throw Error(`v${migrateToVersion} migration failed for "${key}"`, {
+            throw new MigrationError(key, migrateToVersion, {
               cause: err,
             });
           }

@@ -17,6 +17,7 @@
     "email": "aaronklinker1+wxt@gmail.com"
   },
   "license": "MIT",
+  "funding": "https://github.com/sponsors/wxt-dev",
   "version": "2.0.3",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -46,13 +47,13 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0"
+    "@sveltejs/vite-plugin-svelte": "catalog:"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
-    "publint": "^0.2.12",
-    "typescript": "^5.6.3",
-    "unbuild": "^2.0.0",
+    "@aklinker1/check": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
     "wxt": "workspace:*"
   }
 }

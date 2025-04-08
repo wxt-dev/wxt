@@ -11,7 +11,7 @@ export default defineConfig({
 });
 ```
 
-By default, WXT automatically setups up auto-imports for all of it's own APIs:
+By default, WXT sets up auto-imports for all of it's own APIs:
 
 - [`browser`](/api/reference/wxt/browser/variables/browser) from `wxt/browser`
 - [`defineContentScript`](/api/reference/wxt/sandbox/functions/defineContentScript) from `wxt/sandbox`

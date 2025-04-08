@@ -6,9 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directories:
-      - /
-      - packages/*
+    directory: /
     schedule:
       interval: 'monthly'
   - package-ecosystem: 'github-actions'
