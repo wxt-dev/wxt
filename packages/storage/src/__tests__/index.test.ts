@@ -979,7 +979,7 @@ describe('Storage Utils', () => {
 
         const actual = await item.getMeta();
 
-        expect(actual).toBe(expected);
+        expect(actual).toEqual(expected);
       });
 
       it('should return an empty object if missing', async () => {
