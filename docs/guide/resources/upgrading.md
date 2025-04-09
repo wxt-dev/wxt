@@ -9,14 +9,18 @@ outline: deep
 To upgrade WXT to the latest major version:
 
 1. Install it, skipping scripts so `wxt prepare` doesn't run - it will probably throw an error after a major version change (we'll run it later).
+
    ```sh
    pnpm i wxt@latest --ignore-scripts
    ```
+
 2. Follow the upgrade steps below to fix any breaking changes.
 3. Run `wxt prepare`. It should succeed and type errors will go away afterwords.
+
    ```sh
    pnpm wxt prepare
    ```
+
 4. Manually test to make sure both dev mode and production builds work.
 
 For minor or patch version updates, there are no special steps. Just update it with your package manager:
@@ -44,7 +48,7 @@ Read through all the changes once before updating your code.
 WXT's `browser` no longer uses the `webextension-polyfill`!
 
 :::details Why?
-See https://github.com/wxt-dev/wxt/issues/784
+See <https://github.com/wxt-dev/wxt/issues/784>
 :::
 
 To upgrade, you have two options:
@@ -52,11 +56,15 @@ To upgrade, you have two options:
 1. **Stop using the polyfill** - No changes necessary, though you may want to do some manual testing to make sure everything continues to work. None of the early testers of this feature reported any runtime issues once they stopped using the polyfill.
    - If you're already using `extensionApi: "chrome"`, then you don't need to test anything! You're already using the same `browser` object v0.20 provides by default.
 2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
+
    - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
+
      ```sh
      pnpm i webextension-polyfill @wxt-dev/webextension-polyfill
      ```
+
    - Add the WXT module to your config:
+
      ```ts [wxt.config.ts]
      export default defineConfig({
        modules: ['@wxt-dev/webextension-polyfill'],
@@ -106,9 +114,10 @@ The default location for the `public/` and `modules/` directories have changed t
 
 - If you follow the default folder structure, you don't need to make any changes.
 - If you set a custom `srcDir`, you have two options:
-  1.  Move the your `public/` and `modules/` directories to the project root:
-      <!-- prettier-ignore -->
-      ```html
+
+  1. Move the your `public/` and `modules/` directories to the project root:
+     <!-- prettier-ignore -->
+     ```html
       📂 {rootDir}/
          📁 modules/ <!-- [!code ++] -->
          📁 public/ <!-- [!code ++] -->
@@ -121,14 +130,16 @@ The default location for the `public/` and `modules/` directories have changed t
             📄 app.config.ts
          📄 wxt.config.ts
       ```
-  2.  Keep the folders in the same place and update your project config:
-      ```ts [wxt.config.ts]
-      export default defineConfig({
-        srcDir: 'src',
-        publicDir: 'src/public', // [!code ++]
-        modulesDir: 'src/modules', // [!code ++]
-      });
-      ```
+
+  2. Keep the folders in the same place and update your project config:
+
+     ```ts [wxt.config.ts]
+     export default defineConfig({
+       srcDir: 'src',
+       publicDir: 'src/public', // [!code ++]
+       modulesDir: 'src/modules', // [!code ++]
+     });
+     ```
 
 ### Import Path Changes and `#imports`
 
@@ -230,7 +241,7 @@ If you've previously loaded the extension into your browser manually for develop
 ### Deprecated APIs Removed
 
 - `entrypointLoader` option: WXT now uses `vite-node` for importing entrypoints during the build process.
-  > This was deprecated in v0.19.0, see the [v0.19 section](#v0-18-5-rarr-v0-19-0) for migration steps.
+  > This was deprecated in v0.19.0, see the [v0.19 section](#v0185--v0190) for migration steps.
 - `transformManifest` option: Use the `build:manifestGenerated` hook to transform the manifest instead:
   <!-- prettier-ignore -->
   ```ts [wxt.config.ts]
@@ -251,6 +262,7 @@ If you've previously loaded the extension into your browser manually for develop
 To improve consistency with the `web-ext.config.ts` filename, the "runner" API and config options have been renamed. You can continue using the old names, but they have been deprecated and will be removed in a future version:
 
 1. The `runner` option has been renamed to `webExt`:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      runner: { // [!code --]
@@ -259,12 +271,16 @@ To improve consistency with the `web-ext.config.ts` filename, the "runner" API a
      },
    });
    ```
+
 2. `defineRunnerConfig` has been renamed to `defineWebExtConfig`:
+
    ```ts [web-ext.config.ts]
    import { defineRunnerConfig } from 'wxt'; // [!code --]
    import { defineWebExtConfig } from 'wxt'; // [!code ++]
    ```
+
 3. The `ExtensionRunnerConfig` type has been renamed to `WebExtConfig`
+
    ```ts
    import type { ExtensionRunnerConfig } from 'wxt'; // [!code --]
    import type { WebExtConfig } from 'wxt'; // [!code ++]
@@ -357,6 +373,7 @@ If you already have `<srcDir>/modules` or `<srcDir>/Modules` directory, `wxt pre
 You have two options:
 
 1. [Recommended] Keep your files where they are and tell WXT to look in a different folder:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      modulesDir: 'wxt-modules', // defaults to "modules"

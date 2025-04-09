@@ -52,7 +52,13 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "prettier --ignore-unknown --write"
+    "*": "prettier --ignore-unknown --write",
+    "docs/**/*.md": [
+      "markdownlint --config .markdownlint.docs.json --fix"
+    ],
+    "**/*.md": [
+      "markdownlint -i ./docs --config .markdownlint.json --fix"
+    ]
   },
   "pnpm": {
     "peerDependencyRules": {

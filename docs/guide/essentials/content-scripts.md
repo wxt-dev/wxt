@@ -76,6 +76,7 @@ To create a standalone content script that only includes a CSS file:
 
 1. Create the CSS file: `entrypoints/example.content.css`
 2. Use the `build:manifestGenerated` hook to add the content script to the manifest:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      hooks: {
@@ -476,6 +477,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
    ```
 
 1. Add the page to the manifest's `web_accessible_resources`:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      manifest: {
