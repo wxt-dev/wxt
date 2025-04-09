@@ -66,10 +66,10 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       }
       return results;
     }, [])
-    // Remove <name>/index.* if <name>/index.html exists
     .filter(({ name, inputPath }, _, entrypointInfos) => {
-      if (inputPath.endsWith('.html')) return true;
+      // Remove <name>/index.* if <name>/index.html exists
 
+      if (inputPath.endsWith('.html')) return true;
       const isIndexFile = /index\..+$/.test(inputPath);
       if (!isIndexFile) return true;
 
@@ -81,7 +81,6 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
 
       return true;
     });
-  console.log(entrypointInfos);
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
 
@@ -239,7 +238,6 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
     },
     {},
   );
-
   const errorLines = Object.entries(namesToPaths).reduce<string[]>(
     (lines, [name, absolutePaths]) => {
       if (absolutePaths.length > 1) {
