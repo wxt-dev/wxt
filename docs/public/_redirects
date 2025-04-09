@@ -32,6 +32,8 @@
 /guide/build-targets.html       /guide/multiple-browsers.html
 /guide/installation.html        /get-started/installation.html
 /guide/introduction.html        /get-started/introduction.html
+/guide/upgrade-guide/wxt        /guide/resources/upgrading.html
+/guide/upgrade-guide/wxt.html   /guide/resources/upgrading.html
 
 # 0.19.0
 /guide/go-further/entrypoint-side-effects.html /guide/go-further/entrypoint-loaders.html

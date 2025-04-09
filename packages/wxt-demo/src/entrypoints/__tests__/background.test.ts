@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import background from '../background';
 
-chrome.i18n.getMessage = () => 'fake-message';
+browser.i18n.getMessage = () => 'fake-message';
 
 const logMock = vi.fn();
 console.log = logMock;
@@ -11,7 +11,7 @@ describe('Background Entrypoint', () => {
     fakeBrowser.reset();
   });
 
-  it("should log the extenion's runtime ID", () => {
+  it("should log the extension's runtime ID", () => {
     const id = 'some-id';
     fakeBrowser.runtime.id = id;
 

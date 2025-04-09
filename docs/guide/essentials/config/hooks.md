@@ -6,8 +6,7 @@ WXT includes a system that lets you hook into the build process and make changes
 
 The easiest way to add a hook is via the `wxt.config.ts`. Here's an example hook that modifies the `manifest.json` file before it is written to the output directory:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 export default defineConfig({
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {

@@ -4,50 +4,30 @@ outline: deep
 
 # Entrypoints
 
-WXT uses the files inside the `entrypoints/` directory as inputs when bundling your extension. They can be HTML, JS, CSS, or any variant of those file types supported by Vite (Pug, TS, JSX, SCSS, etc).
+WXT uses the files inside the `entrypoints/` directory as inputs when bundling your extension. They can be HTML, JS, CSS, or any variant of those file types supported by Vite (TS, JSX, SCSS, etc).
 
-Here's an example set of entrypoints:
+## Folder Structure
+
+Inside the `entrypoints/` directory, an entrypoint is defined as a single file or directory (with an `index` file) inside it.
+
+:::code-group
 
 <!-- prettier-ignore -->
-```html
+```html [Single File]
 📂 entrypoints/
-   📂 popup/
-      📄 index.html
-      📄 main.ts
-      📄 style.css
-   📄 background.ts
-   📄 content.ts
+   📄 {name}.{ext}
 ```
 
-[[toc]]
+<!-- prettier-ignore -->
+```html [Directory]
+📂 entrypoints/
+   📂 {name}/
+      📄 index.{ext}
+```
 
-## Listed vs Unlisted
-
-For web extensions, there are two types of entrypoints:
-
-- **Listed**: Referenced in the `manifest.json`
-- **Unlisted**: Not referenced in the `manifest.json`
-
-Throughout the rest of WXT's documentation, listed entrypoints are referred to by name. For example:
-
-- Popup
-- Options
-- Background
-- Content Scripts
-- Etc.
-
-Some examples of "unlisted" entrypoints:
-
-- A welcome page shown when the extension is installed
-- JS files injected by content scripts into the page's main world
-
-:::tip
-Regardless of whether an entrypoint is listed or unlisted, it will still be bundled into your extension and be available at runtime.
 :::
 
-## Adding Entrypoints
-
-An entrypoint can be defined as a single file or directory with an `index` file inside it.
+The entrypoint's `name` dictates the type of entrypoint. For example, to add a ["Background" entrypoint](#background), either of these files would work:
 
 :::code-group
 
@@ -66,9 +46,95 @@ An entrypoint can be defined as a single file or directory with an `index` file 
 
 :::
 
-The entrypoint's name dictates the type of entrypoint, listed vs unlisted. In this example, "background" is the name of the ["Background" entrypoint](#background).
-
 Refer to the [Entrypoint Types](#entrypoint-types) section for the full list of listed entrypoints and their filename patterns.
+
+### Including Other Files
+
+When using an entrypoint directory, `entrypoints/{name}/index.{ext}`, you can add related files next to the `index` file.
+
+<!-- prettier-ignore -->
+```html
+📂 entrypoints/
+   📂 popup/
+      📄 index.html     ← This file is the entrypoint
+      📄 main.ts
+      📄 style.css
+   📂 background/
+      📄 index.ts       ← This file is the entrypoint
+      📄 alarms.ts
+      📄 messaging.ts
+   📂 youtube.content/
+      📄 index.ts       ← This file is the entrypoint
+      📄 style.css
+```
+
+:::danger
+**DO NOT** put files related to an entrypoint directly inside the `entrypoints/` directory. WXT will treat them as entrypoints and try to build them, usually resulting in an error.
+
+Instead, use a directory for that entrypoint:
+
+<!-- prettier-ignore -->
+```html
+📂 entrypoints/
+   📄 popup.html <!-- [!code --] -->
+   📄 popup.ts <!-- [!code --] -->
+   📄 popup.css <!-- [!code --] -->
+   📂 popup/ <!-- [!code ++] -->
+      📄 index.html <!-- [!code ++] -->
+      📄 main.ts <!-- [!code ++] -->
+      📄 style.css <!-- [!code ++] -->
+```
+
+:::
+
+### Deeply Nested Entrypoints
+
+While the `entrypoints/` directory might resemble the `pages/` directory of other web frameworks, like Nuxt or Next.js, **it does not support deeply nesting entrypoints** in the same way.
+
+Entrypoints must be zero or one levels deep for WXT to discover and build them:
+
+<!-- prettier-ignore -->
+```html
+📂 entrypoints/
+   📂 youtube/ <!-- [!code --] -->
+       📂 content/ <!-- [!code --] -->
+          📄 index.ts <!-- [!code --] -->
+          📄 ... <!-- [!code --] -->
+       📂 injected/ <!-- [!code --] -->
+          📄 index.ts <!-- [!code --] -->
+          📄 ... <!-- [!code --] -->
+   📂 youtube.content/ <!-- [!code ++] -->
+      📄 index.ts <!-- [!code ++] -->
+      📄 ... <!-- [!code ++] -->
+   📂 youtube-injected/ <!-- [!code ++] -->
+      📄 index.ts <!-- [!code ++] -->
+      📄 ... <!-- [!code ++] -->
+```
+
+## Unlisted Entrypoints
+
+In web extensions, there are two types of entrypoints:
+
+1. **Listed**: Referenced in the `manifest.json`
+2. **Unlisted**: Not referenced in the `manifest.json`
+
+Throughout the rest of WXT's documentation, listed entrypoints are referred to by name. For example:
+
+- Popup
+- Options
+- Background
+- Content Script
+
+However, not all entrypoints in web extensions are listed in the manifest. Some are not listed in the manifest, but are still used by extensions. For example:
+
+- A welcome page shown in a new tab when the extension is installed
+- JS files injected by content scripts into the main world
+
+For more details on how to add unlisted entrypoints, see:
+
+- [Unlisted Pages](#unlisted-pages)
+- [Unlisted Scripts](#unlisted-scripts)
+- [Unlisted CSS](#unlisted-css)
 
 ## Defining Manifest Options
 
@@ -76,8 +142,7 @@ Most listed entrypoints have options that need to be added to the `manifest.json
 
 For example, here's how to define `matches` for content scripts:
 
-```ts
-// entrypoints/content.ts
+```ts [entrypoints/content.ts]
 export default defineContentScript({
   matches: ['*://*.wxt.dev/*'],
   main() {
@@ -106,8 +171,6 @@ When building your extension, WXT will look at the options defined in your entry
 ### Background
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/manifest/background/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
-
-For MV2, the background is added as a script to the background page. For MV3, the background becomes a service worker.
 
 <EntrypointPatterns
   :patterns="[
@@ -142,6 +205,25 @@ export default defineBackground({
 
 :::
 
+For MV2, the background is added as a script to the background page. For MV3, the background becomes a service worker.
+
+When defining your background entrypoint, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
+
+<!-- prettier-ignore -->
+```ts
+browser.action.onClick.addListener(() => { // [!code --]
+  // ... // [!code --]
+}); // [!code --]
+
+export default defineBackground(() => {
+  browser.action.onClick.addListener(() => { // [!code ++]
+    // ... // [!code ++]
+  }); // [!code ++]
+});
+```
+
+Refer to the [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) documentation for more details.
+
 ### Bookmarks
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/override/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
@@ -170,18 +252,18 @@ export default defineBackground({
 </html>
 ```
 
+When you define a Bookmarks entrypoint, WXT will automatically update the manifest to override the browser's bookmarks page with your own HTML page.
+
 ### Content Scripts
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
-
-See [Content Script UI](/guide/essentials/content-scripts) for more info on creating UIs and including CSS in content scripts.
 
 <EntrypointPatterns
   :patterns="[
     ['content.[jt]sx?', 'content-scripts/content.js'],
     ['content/index.[jt]sx?', 'content-scripts/content.js'],
-    ['<name>.content.[jt]sx?', 'content-scripts/<name>.js'],
-    ['<name>.content/index.[jt]sx?', 'content-scripts/<name>.js'],
+    ['{name}.content.[jt]sx?', 'content-scripts/{name}.js'],
+    ['{name}.content/index.[jt]sx?', 'content-scripts/{name}.js'],
   ]"
 />
 
@@ -214,11 +296,28 @@ export default defineContentScript({
 });
 ```
 
+When defining content script entrypoints, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
+
+<!-- prettier-ignore -->
+```ts
+browser.runtime.onMessage.addListener((message) => { // [!code --]
+  // ... // [!code --]
+}); // [!code --]
+
+export default defineBackground(() => {
+  browser.runtime.onMessage.addListener((message) => { // [!code ++]
+    // ... // [!code ++]
+  }); // [!code ++]
+});
+```
+
+Refer to the [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) documentation for more details.
+
+See [Content Script UI](/guide/essentials/content-scripts) for more info on creating UIs and including CSS in content scripts.
+
 ### Devtools
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/devtools/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
-
-Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/examples/devtools-extension#readme) to add different panels and panes.
 
 <EntrypointPatterns
   :patterns="[
@@ -242,6 +341,8 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
   </body>
 </html>
 ```
+
+Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/examples/devtools-extension#readme) to add different panels and panes.
 
 ### History
 
@@ -271,6 +372,8 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
 </html>
 ```
 
+When you define a History entrypoint, WXT will automatically update the manifest to override the browser's history page with your own HTML page.
+
 ### Newtab
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/override/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
@@ -298,6 +401,8 @@ Follow the [Devtools Example](https://github.com/wxt-dev/examples/tree/main/exam
   </body>
 </html>
 ```
+
+When you define a Newtab entrypoint, WXT will automatically update the manifest to override the browser's new tab page with your own HTML page.
 
 ### Options
 
@@ -388,8 +493,8 @@ Firefox does not support sandboxed pages.
   :patterns="[
     ['sandbox.html', 'sandbox.html'],
     ['sandbox/index.html', 'sandbox.html'],
-    ['<name>.sandbox.html', '<name>.html'],
-    ['<name>.sandbox/index.html', '<name>.html'],
+    ['{name}.sandbox.html', '{name}.html'],
+    ['{name}.sandbox/index.html', '{name}.html'],
   ]"
 />
 
@@ -415,14 +520,12 @@ Firefox does not support sandboxed pages.
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/sidePanel/) &bull; [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar_action` API.
-
 <EntrypointPatterns
   :patterns="[
     ['sidepanel.html', 'sidepanel.html'],
     ['sidepanel/index.html', 'sidepanel.html'],
-    ['<name>.sidepanel.html', '<name>.html` '],
-    ['<name>.sidepanel/index.html', '<name>.html` '],
+    ['{name}.sidepanel.html', '{name}.html` '],
+    ['{name}.sidepanel/index.html', '{name}.html` '],
   ]"
 />
 
@@ -456,20 +559,18 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
 </html>
 ```
 
+In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar_action` API.
+
 ### Unlisted CSS
-
-Follow Vite's guide to setup your preprocessor of choice: <https://vitejs.dev/guide/features.html#css-pre-processors>
-
-CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/essentials/content-scripts#css) docs.
 
 <EntrypointPatterns
   :patterns="[
-    ['<name>.(css|scss|sass|less|styl|stylus)', '<name>.css'],
-    ['<name>/index.(css|scss|sass|less|styl|stylus)', '<name>.css'],
+    ['{name}.(css|scss|sass|less|styl|stylus)', '{name}.css'],
+    ['{name}/index.(css|scss|sass|less|styl|stylus)', '{name}.css'],
     ['content.(css|scss|sass|less|styl|stylus)', 'content-scripts/content.css'],
     ['content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/content.css'],
-    ['<name>.content.(css|scss|sass|less|styl|stylus)', 'content-scripts/<name>.css'],
-    ['<name>.content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/<name>.css'],
+    ['{name}.content.(css|scss|sass|less|styl|stylus)', 'content-scripts/{name}.css'],
+    ['{name}.content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/{name}.css'],
   ]"
 />
 
@@ -479,12 +580,16 @@ body {
 }
 ```
 
+Follow Vite's guide to setup your preprocessor of choice: https://vitejs.dev/guide/features.html#css-pre-processors
+
+CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/essentials/content-scripts#css) docs.
+
 ### Unlisted Pages
 
 <EntrypointPatterns
   :patterns="[
-    ['<name>.html', '<name>.html'],
-    ['<name>/index.html', '<name>.html'],
+    ['{name}.html', '{name}.html'],
+    ['{name}/index.html', '{name}.html'],
   ]"
 />
 
@@ -506,20 +611,21 @@ body {
 </html>
 ```
 
-Pages are accessible at `/<name>.html`:
+At runtime, unlisted pages are accessible at `/{name}.html`:
 
 ```ts
-const url = browser.runtime.getURL('/<name>.html');
+const url = browser.runtime.getURL('/{name}.html');
 
-console.log(url); // "chrome-extension://<id>/<name>.html"
+console.log(url); // "chrome-extension://{id}/{name}.html"
+window.open(url); // Open the page in a new tab
 ```
 
 ### Unlisted Scripts
 
 <EntrypointPatterns
   :patterns="[
-    ['<name>.[jt]sx?', '<name>.js'],
-    ['<name>/index.[jt]sx?', '<name>.js'],
+    ['{name}.[jt]sx?', '{name}.js'],
+    ['{name}/index.[jt]sx?', '{name}.js'],
   ]"
 />
 
@@ -545,12 +651,29 @@ export default defineUnlistedScript({
 
 :::
 
-Scripts are accessible from `/<name>.js`:
+At runtime, unlisted scripts are accessible from `/{name}.js`:
 
 ```ts
-const url = browser.runtime.getURL('/<name>.js');
+const url = browser.runtime.getURL('/{name}.js');
 
-console.log(url); // "chrome-extension://<id>/<name>.js"
+console.log(url); // "chrome-extension://{id}/{name}.js"
 ```
 
 You are responsible for loading/running these scripts where needed. If necessary, don't forget to add the script and/or any related assets to [`web_accessible_resources`](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources).
+
+When defining an unlisted script, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
+
+<!-- prettier-ignore -->
+```ts
+document.querySelectorAll('a').forEach((anchor) => { // [!code --]
+  // ... // [!code --]
+}); // [!code --]
+
+export default defineUnlistedScript(() => {
+  document.querySelectorAll('a').forEach((anchor) => { // [!code ++]
+    // ... // [!code ++]
+  }); // [!code ++]
+});
+```
+
+Refer to the [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) documentation for more details.

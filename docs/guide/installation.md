@@ -101,8 +101,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
    :::
 
 4. Add scripts to your `package.json`:
-
-   ```json
+   ```json [package.json]
    {
      "scripts": {
        "dev": "wxt", // [!code ++]

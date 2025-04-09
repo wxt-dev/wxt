@@ -12,8 +12,7 @@ In most cases, you shouldn't change Vite's build settings. WXT provides sensible
 
 You can change Vite's config via the `wxt.config.ts` file:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -28,8 +27,7 @@ export default defineConfig({
 
 To add a plugin, install the NPM package and add it to the Vite config:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 import { defineConfig } from 'wxt';
 import VueRouter from 'unplugin-vue-router/vite';
 
@@ -47,8 +45,7 @@ export default defineConfig({
 :::warning
 Due to the way WXT orchestrates Vite builds, some plugins may not work as expected. For example, `vite-plugin-remove-console` normally only runs when you build for production (`vite build`). However, WXT uses a combination of dev server and builds during development, so you need to manually tell it when to run:
 
-```ts
-// wxt.config.ts
+```ts [wxt.config.ts]
 import { defineConfig } from 'wxt';
 import removeConsole from 'vite-plugin-remove-console';
 

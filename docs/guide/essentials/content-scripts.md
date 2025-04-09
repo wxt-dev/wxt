@@ -76,9 +76,7 @@ To create a standalone content script that only includes a CSS file:
 
 1. Create the CSS file: `entrypoints/example.content.css`
 2. Use the `build:manifestGenerated` hook to add the content script to the manifest:
-
-   ```ts
-   // wxt.config.ts
+   ```ts [wxt.config.ts]
    export default defineConfig({
      hooks: {
        'build:manifestGenerated': (wxt, manifest) => {
@@ -258,13 +256,13 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/reference/wxt/client/functions/createIntegratedUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/integrated/functions/createIntegratedUi) for the complete list of options.
 
 ### Shadow Root
 
 Often in web extensions, you don't want your content script's CSS affecting the page, or vise-versa. The [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot) API is ideal for this.
 
-WXT's [`createShadowRootUi`](/api/reference/wxt/client/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs whose styles are isolated from the page. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
+WXT's [`createShadowRootUi`](/api/reference/wxt/utils/content-script-ui/shadow-root/functions/createShadowRootUi) abstracts all the `ShadowRoot` setup away, making it easy to create UIs whose styles are isolated from the page. It also supports an optional `isolateEvents` parameter to further isolate user interactions.
 
 To use `createShadowRootUi`, follow these steps:
 
@@ -447,7 +445,7 @@ export default defineContentScript({
 
 :::
 
-See the [API Reference](/api/reference/wxt/client/functions/createShadowRootUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/shadow-root/functions/createShadowRootUi) for the complete list of options.
 
 Full examples:
 
@@ -458,7 +456,7 @@ Full examples:
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
 
-WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/functions/createIframeUi), which simplifies setting up the IFrame.
+WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi), which simplifies setting up the IFrame.
 
 1. Create an HTML page that will be loaded into your IFrame:
 
@@ -478,9 +476,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/fun
    ```
 
 1. Add the page to the manifest's `web_accessible_resources`:
-
-   ```ts
-   // wxt.config.ts
+   ```ts [wxt.config.ts]
    export default defineConfig({
      manifest: {
        web_accessible_resources: [
@@ -517,7 +513,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/client/fun
    });
    ```
 
-See the [API Reference](/api/reference/wxt/client/functions/createIframeUi) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi) for the complete list of options.
 
 ## Isolated World vs Main World
 
@@ -628,7 +624,7 @@ export default defineContentScript({
 When the `ui.remove` is called, `autoMount` also stops.
 :::
 
-See the [API Reference](/api/reference/wxt/client/interfaces/ContentScriptUi.html#automount) for the complete list of options.
+See the [API Reference](/api/reference/wxt/utils/content-script-ui/types/interfaces/ContentScriptUi#automount) for the complete list of options.
 
 ## Dealing with SPAs
 
