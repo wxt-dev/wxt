@@ -677,7 +677,6 @@ describe('findEntrypoints', () => {
     ]);
 
     const entrypoints = await findEntrypoints();
-    console.log(entrypoints);
 
     expect(entrypoints).toHaveLength(2);
     expect(entrypoints[0]).toMatchObject({
