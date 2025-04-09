@@ -4,10 +4,10 @@ import { getEntrypointName } from '../../../utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
 import { normalizePath } from '../../../utils/paths';
-import { murmurHash } from 'ohash';
+import { hash } from 'ohash';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
-const inlineScriptContents: Record<number, string> = {};
+const inlineScriptContents: Record<string, string> = {};
 
 /**
  * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
@@ -85,13 +85,13 @@ export function devHtmlPrerender(
         inlineScripts.forEach((script) => {
           // Save the text content for later
           const textContent = script.textContent ?? '';
-          const hash = murmurHash(textContent);
-          inlineScriptContents[hash] = textContent;
+          const textHash = hash(textContent);
+          inlineScriptContents[textHash] = textContent;
 
           // Replace unsafe inline script
           const virtualScript = document.createElement('script');
           virtualScript.type = 'module';
-          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${hash}`;
+          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${textHash}`;
           script.replaceWith(virtualScript);
         });
 

@@ -9,5 +9,7 @@ export default {
     'esbuild',
     // Maintained manually to match min-node version
     '@types/node',
+    // License changed in newer versions
+    'ua-parser-js',
   ],
 };
