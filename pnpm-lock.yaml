@@ -301,9 +301,6 @@ catalogs:
       specifier: ^0.12.0
       version: 0.12.0
 
-overrides:
-  '@babel/helpers': 7.26.10
-
 patchedDependencies:
   markdown-it-footnote:
     hash: 5b74a0001a771ff5df790dd36b6883c4794e1f666b231499edb2d65eae8f4930
