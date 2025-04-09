@@ -668,8 +668,9 @@ describe('findEntrypoints', () => {
     expect(entrypoints[0]).toEqual(expected);
   });
 
-  it('should ignore other index files when index.html exists', async () => {
+  it('should ignore other index files in the same directory when index.html exists', async () => {
     globMock.mockResolvedValueOnce([
+      'content/index.ts',
       'popup/index.html',
       'popup/index.ts',
       'popup/index.css',
@@ -678,10 +679,14 @@ describe('findEntrypoints', () => {
     const entrypoints = await findEntrypoints();
     console.log(entrypoints);
 
-    expect(entrypoints).toHaveLength(1);
+    expect(entrypoints).toHaveLength(2);
     expect(entrypoints[0]).toMatchObject({
-      name: 'popup',
+      type: 'content-script',
+      name: 'content',
+    });
+    expect(entrypoints[1]).toMatchObject({
       type: 'popup',
+      name: 'popup',
     });
   });
 
