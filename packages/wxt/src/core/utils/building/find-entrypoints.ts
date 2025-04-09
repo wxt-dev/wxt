@@ -53,20 +53,35 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
-  const entrypointInfos: EntrypointInfo[] = relativePaths.reduce<
-    EntrypointInfo[]
-  >((results, relativePath) => {
-    const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
-    const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
-    const matchingGlob = pathGlobs.find((glob) =>
-      minimatch(relativePath, glob),
-    );
-    if (matchingGlob) {
-      const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      results.push({ name, inputPath, type });
-    }
-    return results;
-  }, []);
+  const entrypointInfos: EntrypointInfo[] = relativePaths
+    .reduce<EntrypointInfo[]>((results, relativePath) => {
+      const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
+      const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
+      const matchingGlob = pathGlobs.find((glob) =>
+        minimatch(relativePath, glob),
+      );
+      if (matchingGlob) {
+        const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
+        results.push({ name, inputPath, type });
+      }
+      return results;
+    }, [])
+    // Remove <name>/index.* if <name>/index.html exists
+    .filter(({ name, inputPath }, _, entrypointInfos) => {
+      if (inputPath.endsWith('.html')) return true;
+
+      const isIndexFile = /index\..+$/.test(inputPath);
+      if (!isIndexFile) return true;
+
+      const hasIndexHtml = entrypointInfos.some(
+        (entry) =>
+          entry.name === name && entry.inputPath.endsWith('index.html'),
+      );
+      if (hasIndexHtml) return false;
+
+      return true;
+    });
+  console.log(entrypointInfos);
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
 
@@ -224,14 +239,9 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
     },
     {},
   );
+
   const errorLines = Object.entries(namesToPaths).reduce<string[]>(
     (lines, [name, absolutePaths]) => {
-      const tsFilePath = absolutePaths.find((path) =>
-        /\.(ts|js)x?$/.test(path),
-      );
-      if (absolutePaths.length > 1 && tsFilePath) {
-        absolutePaths = absolutePaths.filter((r) => r !== tsFilePath);
-      }
       if (absolutePaths.length > 1) {
         lines.push(`- ${name}`);
         absolutePaths.forEach((absolutePath) => {
