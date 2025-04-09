@@ -14,6 +14,7 @@ import { WxtPackageManagerImpl } from './types';
 import { yarn } from './yarn';
 import { pnpm } from './pnpm';
 import { npm } from './npm';
+import { deno } from './deno';
 
 export async function createWxtPackageManager(
   root: string,
@@ -73,4 +74,5 @@ const packageManagers: Record<PackageManagerName, WxtPackageManagerImpl> = {
   pnpm,
   bun,
   yarn,
+  deno,
 };
