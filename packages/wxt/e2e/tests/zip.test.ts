@@ -285,4 +285,26 @@ describe('Zipping', () => {
       expect(await project.fileExists(sourcesZip)).toBe(false);
     },
   );
+
+  it('exclude files in .zip except those with a bang !', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const unzipDir = project.resolvePath('.output/test-1.0.0-chrome');
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-chrome.zip');
+
+    await project.zip({
+      zip: {
+        exclude: ['**/*.json', '!manifest.json'],
+      },
+    });
+
+    await extract(sourcesZip, { dir: unzipDir });
+    expect(await project.fileExists(unzipDir, 'manifest.json')).toBe(true);
+  });
 });
