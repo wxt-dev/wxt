@@ -21,7 +21,9 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: pnpm check
+        run: |
+          pnpm check
+          pnpm lint
 
   builds:
     name: Builds
