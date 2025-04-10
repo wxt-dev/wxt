@@ -109,15 +109,18 @@ async function createServerInternal(): Promise<WxtDevServer> {
       await buildAndOpenBrowser();
 
       // Listen for file changes and reload different parts of the extension accordingly
-      const reloadOnChange = () => {
+      const reloadOnChange = createFileReloader(server);
+      server.watcher.on('all', async (...args) => {
+        await reloadOnChange(args[0], args[1]);
+
+        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
         keyboardShortcuts.start();
-        keyboardShortcuts.printHelp({
-          canReopenBrowser:
-            !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
-        });
-        return createFileReloader(server);
-      };
-      server.watcher.on('all', reloadOnChange);
+      });
+
+      keyboardShortcuts.printHelp({
+        canReopenBrowser:
+          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+      });
     },
 
     async stop() {
