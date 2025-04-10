@@ -8,7 +8,10 @@ export const KNOWN_BROWSER_PATHS: Record<
 
   chromium: {
     mac: [],
-    linux: [],
+    linux: [
+      // Arch
+      '/usr/bin/chromium',
+    ],
     windows: [],
   },
   chrome: {
@@ -58,7 +61,10 @@ export const KNOWN_BROWSER_PATHS: Record<
 
   firefox: {
     mac: ['/Applications/Firefox.app/Contents/MacOS/firefox'],
-    linux: [],
+    linux: [
+      // Arch
+      '/usr/bin/firefox',
+    ],
     windows: [],
   },
   'firefox-nightly': {
@@ -68,7 +74,10 @@ export const KNOWN_BROWSER_PATHS: Record<
   },
   'firefox-developer-edition': {
     mac: ['/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'],
-    linux: [],
+    linux: [
+      // Arch
+      '/usr/bin/firefox-developer-edition',
+    ],
     windows: [],
   },
   zen: {
