@@ -113,7 +113,6 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
-
   const files = (
     await glob(['**/*', ...(options?.include || [])], {
       cwd: directory,

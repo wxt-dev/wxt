@@ -15,10 +15,6 @@ export default defineConfig({
   },
   zip: {
     downloadPackages: ['sass'],
-    exclude: [
-      '**/*.json', // Exclude all .json files
-      '!manifest.json', // Include manifest.json
-    ],
   },
   analysis: {
     open: true,
