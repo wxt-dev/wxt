@@ -29,7 +29,7 @@ This means you can use the promise-style API for both MV2 and MV3, and it will w
 All types can be accessed via WXT's `Browser` namespace:
 
 ```ts
-import { Browser } from 'wxt/browser';
+import { type Browser } from 'wxt/browser';
 
 function handleMessage(message: any, sender: Browser.runtime.MessageSender) {
   // ...

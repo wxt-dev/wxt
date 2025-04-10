@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress';
+import { DefaultTheme, defineConfig } from 'vitepress';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
 import {
   menuGroup,
@@ -15,7 +15,7 @@ import { version as autoIconsVersion } from '../../packages/auto-icons/package.j
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
-import knowledge from 'vitepress-knowledge';
+import addKnowledge from 'vitepress-knowledge';
 import {
   groupIconMdPlugin,
   groupIconVitePlugin,
@@ -43,18 +43,25 @@ const otherPackages = {
   unocss: unocssVersion,
 };
 
+const knowledge = addKnowledge<DefaultTheme.Config>({
+  serverUrl: 'https://knowledge.wxt.dev',
+  paths: {
+    '/': 'docs',
+    '/api/': 'api-reference',
+    '/blog/': 'blog',
+  },
+  layoutSelectors: {
+    blog: '.container-content',
+  },
+  pageSelectors: {
+    'examples.md': '#VPContent > .VPPage',
+    'blog.md': '#VPContent > .VPPage',
+  },
+});
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  extends: knowledge({
-    serverUrl: 'https://knowledge.wxt.dev',
-    paths: {
-      '/': 'docs',
-      '/api/': 'api-reference',
-    },
-    pageSelectors: {
-      'examples.md': '#VPContent > .VPPage',
-    },
-  }),
+  extends: knowledge,
 
   titleTemplate: `:title${titleSuffix}`,
   title: 'WXT',
@@ -78,6 +85,9 @@ export default defineConfig({
   },
 
   async buildEnd(site) {
+    // @ts-expect-error: knowledge.buildEnd is not typed, but it exists.
+    await knowledge.buildEnd(site);
+
     // Only construct the RSS document for production builds
     const { default: blogDataLoader } = await import('./loaders/blog.data');
     const posts = await blogDataLoader.load();
@@ -95,8 +105,8 @@ export default defineConfig({
         description: post.frontmatter.description,
       });
     });
-    console.log('rss.xml:');
-    console.log(feed.rss2());
+    // console.log('rss.xml:');
+    // console.log(feed.rss2());
     await writeFile(join(site.outDir, 'rss.xml'), feed.rss2(), 'utf8');
   },
 
@@ -117,6 +127,9 @@ export default defineConfig({
     config: (md) => {
       md.use(footnote);
       md.use(groupIconMdPlugin);
+    },
+    languageAlias: {
+      mjs: 'js',
     },
   },
 
