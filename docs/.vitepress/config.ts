@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress';
+import { DefaultTheme, defineConfig } from 'vitepress';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
 import {
   menuGroup,
@@ -15,20 +15,25 @@ import { version as autoIconsVersion } from '../../packages/auto-icons/package.j
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
-import knowledge from 'vitepress-knowledge';
+import addKnowledge from 'vitepress-knowledge';
 import {
   groupIconMdPlugin,
   groupIconVitePlugin,
   localIconLoader,
 } from 'vitepress-plugin-group-icons';
+import { Feed } from 'feed';
+import { writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+const origin = 'https://wxt.dev';
 
 const title = 'Next-gen Web Extension Framework';
 const titleSuffix = ' – WXT';
 const description =
   "WXT provides the best developer experience, making it quick, easy, and fun to develop web extensions. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
 const ogTitle = `${title}${titleSuffix}`;
-const ogUrl = 'https://wxt.dev';
-const ogImage = 'https://wxt.dev/social-preview.png';
+const ogUrl = origin;
+const ogImage = `${origin}/social-preview.png`;
 
 const otherPackages = {
   analytics: analyticsVersion,
@@ -38,18 +43,25 @@ const otherPackages = {
   unocss: unocssVersion,
 };
 
+const knowledge = addKnowledge<DefaultTheme.Config>({
+  serverUrl: 'https://knowledge.wxt.dev',
+  paths: {
+    '/': 'docs',
+    '/api/': 'api-reference',
+    '/blog/': 'blog',
+  },
+  layoutSelectors: {
+    blog: '.container-content',
+  },
+  pageSelectors: {
+    'examples.md': '#VPContent > .VPPage',
+    'blog.md': '#VPContent > .VPPage',
+  },
+});
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  extends: knowledge({
-    serverUrl: 'https://knowledge.wxt.dev',
-    paths: {
-      '/': 'docs',
-      '/api/': 'api-reference',
-    },
-    pageSelectors: {
-      'examples.md': '#VPContent > .VPPage',
-    },
-  }),
+  extends: knowledge,
 
   titleTemplate: `:title${titleSuffix}`,
   title: 'WXT',
@@ -69,7 +81,33 @@ export default defineConfig({
   },
   lastUpdated: true,
   sitemap: {
-    hostname: 'https://wxt.dev',
+    hostname: origin,
+  },
+
+  async buildEnd(site) {
+    // @ts-expect-error: knowledge.buildEnd is not typed, but it exists.
+    await knowledge.buildEnd(site);
+
+    // Only construct the RSS document for production builds
+    const { default: blogDataLoader } = await import('./loaders/blog.data');
+    const posts = await blogDataLoader.load();
+    const feed = new Feed({
+      copyright: 'MIT',
+      id: 'wxt',
+      title: 'WXT Blog',
+      link: `${origin}/blog`,
+    });
+    posts.forEach((post) => {
+      feed.addItem({
+        date: post.frontmatter.date,
+        link: new URL(post.url, origin).href,
+        title: post.frontmatter.title,
+        description: post.frontmatter.description,
+      });
+    });
+    // console.log('rss.xml:');
+    // console.log(feed.rss2());
+    await writeFile(join(site.outDir, 'rss.xml'), feed.rss2(), 'utf8');
   },
 
   head: [
@@ -89,6 +127,9 @@ export default defineConfig({
     config: (md) => {
       md.use(footnote);
       md.use(groupIconMdPlugin);
+    },
+    languageAlias: {
+      mjs: 'js',
     },
   },
 
@@ -126,6 +167,7 @@ export default defineConfig({
       navItem('Guide', '/guide/installation'),
       navItem('Examples', '/examples'),
       navItem('API', '/api/reference/wxt'),
+      navItem('Blog', '/blog'),
       navItem(`v${wxtVersion}`, [
         navItem('wxt', [
           navItem(`v${wxtVersion}`, '/'),

@@ -21,7 +21,7 @@ declare module 'virtual:user-unlisted-script-entrypoint' {
 }
 
 declare module 'wxt/browser' {
-  export const browser: import('webextension-polyfill').Browser;
+  export { browser, Browser } from '@wxt-dev/browser';
 }
 
 declare module 'virtual:wxt-plugins' {
