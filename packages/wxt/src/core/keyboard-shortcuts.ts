@@ -35,9 +35,7 @@ export function createKeyboardShortcuts(
     },
 
     stop() {
-      if (rl) {
-        rl?.removeListener('line', handleInput);
-      }
+      rl?.removeListener('line', handleInput);
     },
 
     printHelp(flags) {
