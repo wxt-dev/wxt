@@ -668,27 +668,46 @@ describe('findEntrypoints', () => {
     expect(entrypoints[0]).toEqual(expected);
   });
 
-  it('should not allow multiple entrypoints with the same name', async () => {
+  it('should ignore other index files in the same directory when index.html exists', async () => {
     globMock.mockResolvedValueOnce([
-      'options/index.html',
-      'options/index.jsx',
+      'content/index.ts',
+      'popup/index.html',
+      'popup/index.ts',
+      'popup/index.css',
+    ]);
+
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints).toHaveLength(2);
+    expect(entrypoints[0]).toMatchObject({
+      type: 'content-script',
+      name: 'content',
+    });
+    expect(entrypoints[1]).toMatchObject({
+      type: 'popup',
+      name: 'popup',
+    });
+  });
+
+  it('should not allow a file entrypoint and directory entrypoint to have the same name', async () => {
+    globMock.mockResolvedValueOnce([
       'popup.html',
       'popup/index.html',
       'popup/index.ts',
-      'ui.html',
+      'other.ts',
+      'other/index.ts',
     ]);
 
     await expect(() => findEntrypoints()).rejects.toThrowError(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
         '',
-        '- options',
-        `  - ${unnormalizePath('src/entrypoints/options/index.html')}`,
-        `  - ${unnormalizePath('src/entrypoints/options/index.jsx')}`,
+        '- other',
+        `  - ${unnormalizePath('src/entrypoints/other.ts')}`,
+        `  - ${unnormalizePath('src/entrypoints/other/index.ts')}`,
         '- popup',
         `  - ${unnormalizePath('src/entrypoints/popup.html')}`,
         `  - ${unnormalizePath('src/entrypoints/popup/index.html')}`,
-        `  - ${unnormalizePath('src/entrypoints/popup/index.ts')}`,
       ].join('\n'),
     );
   });

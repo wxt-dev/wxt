@@ -53,20 +53,34 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
-  const entrypointInfos: EntrypointInfo[] = relativePaths.reduce<
-    EntrypointInfo[]
-  >((results, relativePath) => {
-    const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
-    const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
-    const matchingGlob = pathGlobs.find((glob) =>
-      minimatch(relativePath, glob),
-    );
-    if (matchingGlob) {
-      const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
-      results.push({ name, inputPath, type });
-    }
-    return results;
-  }, []);
+  const entrypointInfos: EntrypointInfo[] = relativePaths
+    .reduce<EntrypointInfo[]>((results, relativePath) => {
+      const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
+      const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
+      const matchingGlob = pathGlobs.find((glob) =>
+        minimatch(relativePath, glob),
+      );
+      if (matchingGlob) {
+        const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
+        results.push({ name, inputPath, type });
+      }
+      return results;
+    }, [])
+    .filter(({ name, inputPath }, _, entrypointInfos) => {
+      // Remove <name>/index.* if <name>/index.html exists
+
+      if (inputPath.endsWith('.html')) return true;
+      const isIndexFile = /index\..+$/.test(inputPath);
+      if (!isIndexFile) return true;
+
+      const hasIndexHtml = entrypointInfos.some(
+        (entry) =>
+          entry.name === name && entry.inputPath.endsWith('index.html'),
+      );
+      if (hasIndexHtml) return false;
+
+      return true;
+    });
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
 
