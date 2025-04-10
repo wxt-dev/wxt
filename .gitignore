@@ -7,6 +7,7 @@
 .wxt
 *.log
 /docs/.vitepress/cache
+docs/.vitepress/.temp
 coverage
 dist
 node_modules

@@ -13,7 +13,6 @@ import {
   fakeWxtDevServer,
   setFakeWxt,
 } from '../testing/fake-objects';
-import { Manifest } from 'webextension-polyfill';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
@@ -22,6 +21,7 @@ import {
 } from '../../../types';
 import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
+import type { Browser } from '@wxt-dev/browser';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';
@@ -58,7 +58,7 @@ describe('Manifest Utils', () => {
             outDir,
           },
         });
-        const expected: Partial<Manifest.WebExtensionManifest> = {
+        const expected: Partial<Browser.runtime.Manifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
@@ -1091,31 +1091,6 @@ describe('Manifest Utils', () => {
       });
     });
 
-    describe('transformManifest option', () => {
-      it("should call the transformManifest option after the manifest is generated, but before it's returned", async () => {
-        const entrypoints: Entrypoint[] = [];
-        const buildOutput = fakeBuildOutput();
-        const newAuthor = 'Custom Author';
-        setFakeWxt({
-          config: {
-            transformManifest(manifest: any) {
-              manifest.author = newAuthor;
-            },
-          },
-        });
-        const expected = {
-          author: newAuthor,
-        };
-
-        const { manifest: actual } = await generateManifest(
-          entrypoints,
-          buildOutput,
-        );
-
-        expect(actual).toMatchObject(expected);
-      });
-    });
-
     describe('version', () => {
       it.each(['chrome', 'safari', 'edge'] as const)(
         'should include version and version_name as is on %s',
@@ -1488,7 +1463,7 @@ describe('Manifest Utils', () => {
             command: 'build',
           },
           server: {
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           },
@@ -1512,8 +1487,8 @@ describe('Manifest Utils', () => {
             manifestVersion: 2,
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });
@@ -1528,7 +1503,7 @@ describe('Manifest Utils', () => {
         expect(actual).toMatchObject({
           content_security_policy:
             "script-src 'self' http://localhost:3000; object-src 'self';",
-          permissions: ['http://localhost/*', 'tabs'],
+          permissions: ['http://localhost:3000/*', 'tabs'],
         });
       });
 
@@ -1540,7 +1515,7 @@ describe('Manifest Utils', () => {
             browser: 'chrome',
           },
           server: fakeWxtDevServer({
-            hostname: 'localhost',
+            host: 'localhost',
             port: 3000,
             origin: 'http://localhost:3000',
           }),
@@ -1560,7 +1535,7 @@ describe('Manifest Utils', () => {
             sandbox:
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';",
           },
-          host_permissions: ['http://localhost/*'],
+          host_permissions: ['http://localhost:3000/*'],
           permissions: ['tabs', 'scripting'],
         });
       });
@@ -1586,8 +1561,8 @@ describe('Manifest Utils', () => {
             },
           },
           server: fakeWxtDevServer({
+            host: 'localhost',
             port: 3000,
-            hostname: 'localhost',
             origin: 'http://localhost:3000',
           }),
         });

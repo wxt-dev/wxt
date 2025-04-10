@@ -1,75 +1,9 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.19.29",
+  "version": "0.20.0",
   "description": "⚡ Next-gen Web Extension Framework",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wxt-dev/wxt.git"
-  },
-  "homepage": "https://wxt.dev",
-  "keywords": [
-    "vite",
-    "chrome",
-    "web",
-    "extension",
-    "browser",
-    "bundler",
-    "framework"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
   "license": "MIT",
-  "funding": "https://github.com/sponsors/wxt-dev",
-  "files": [
-    "bin",
-    "dist"
-  ],
-  "bin": {
-    "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
-  },
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
-    },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.mjs"
-    },
-    "./sandbox": {
-      "types": "./dist/sandbox/index.d.ts",
-      "default": "./dist/sandbox/index.mjs"
-    },
-    "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "default": "./dist/browser/index.mjs"
-    },
-    "./browser/chrome": {
-      "types": "./dist/browser/chrome.d.ts",
-      "import": "./dist/browser/chrome.mjs"
-    },
-    "./testing": {
-      "types": "./dist/testing/index.d.ts",
-      "default": "./dist/testing/index.mjs"
-    },
-    "./storage": {
-      "types": "./dist/storage.d.ts",
-      "default": "./dist/storage.mjs"
-    },
-    "./vite-builder-env": {
-      "types": "./dist/vite-builder-env.d.ts"
-    },
-    "./modules": {
-      "types": "./dist/modules.d.ts",
-      "default": "./dist/modules.mjs"
-    }
-  },
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
@@ -84,11 +18,10 @@
   "dependencies": {
     "@1natsu/wait-element": "catalog:",
     "@aklinker1/rollup-plugin-visualizer": "catalog:",
-    "@types/chrome": "catalog:",
-    "@types/webextension-polyfill": "catalog:",
     "@webext-core/fake-browser": "catalog:",
     "@webext-core/isolated-element": "catalog:",
     "@webext-core/match-patterns": "catalog:",
+    "@wxt-dev/browser": "workspace:*",
     "@wxt-dev/storage": "workspace:^1.0.0",
     "async-mutex": "catalog:",
     "c12": "catalog:",
@@ -108,7 +41,6 @@
     "hookable": "catalog:",
     "import-meta-resolve": "catalog:",
     "is-wsl": "catalog:",
-    "jiti": "catalog:",
     "json5": "catalog:",
     "jszip": "catalog:",
     "linkedom": "catalog:",
@@ -128,8 +60,7 @@
     "unimport": "catalog:",
     "vite": "catalog:",
     "vite-node": "catalog:",
-    "web-ext-run": "catalog:",
-    "webextension-polyfill": "catalog:"
+    "web-ext-run": "catalog:"
   },
   "devDependencies": {
     "@aklinker1/check": "catalog:",
@@ -149,9 +80,111 @@
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:"
   },
-  "peerDependenciesMeta": {
-    "@types/chrome": {
-      "optional": true
+  "peerDependenciesMeta": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git"
+  },
+  "homepage": "https://wxt.dev",
+  "keywords": [
+    "vite",
+    "chrome",
+    "web",
+    "extension",
+    "browser",
+    "bundler",
+    "framework"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "funding": "https://github.com/sponsors/wxt-dev",
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "bin": {
+    "wxt": "./bin/wxt.mjs",
+    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./utils/app-config": {
+      "types": "./dist/utils/app-config.d.ts",
+      "default": "./dist/utils/app-config.mjs"
+    },
+    "./utils/inject-script": {
+      "types": "./dist/utils/inject-script.d.ts",
+      "default": "./dist/utils/inject-script.mjs"
+    },
+    "./utils/content-script-context": {
+      "types": "./dist/utils/content-script-context.d.ts",
+      "default": "./dist/utils/content-script-context.mjs"
+    },
+    "./utils/content-script-ui/types": {
+      "types": "./dist/utils/content-script-ui/types.d.ts",
+      "default": "./dist/utils/content-script-ui/types.mjs"
+    },
+    "./utils/content-script-ui/integrated": {
+      "types": "./dist/utils/content-script-ui/integrated.d.ts",
+      "default": "./dist/utils/content-script-ui/integrated.mjs"
+    },
+    "./utils/content-script-ui/shadow-root": {
+      "types": "./dist/utils/content-script-ui/shadow-root.d.ts",
+      "default": "./dist/utils/content-script-ui/shadow-root.mjs"
+    },
+    "./utils/content-script-ui/iframe": {
+      "types": "./dist/utils/content-script-ui/iframe.d.ts",
+      "default": "./dist/utils/content-script-ui/iframe.mjs"
+    },
+    "./utils/define-app-config": {
+      "types": "./dist/utils/define-app-config.d.ts",
+      "default": "./dist/utils/define-app-config.mjs"
+    },
+    "./utils/define-background": {
+      "types": "./dist/utils/define-background.d.ts",
+      "default": "./dist/utils/define-background.mjs"
+    },
+    "./utils/define-content-script": {
+      "types": "./dist/utils/define-content-script.d.ts",
+      "default": "./dist/utils/define-content-script.mjs"
+    },
+    "./utils/define-unlisted-script": {
+      "types": "./dist/utils/define-unlisted-script.d.ts",
+      "default": "./dist/utils/define-unlisted-script.mjs"
+    },
+    "./utils/define-wxt-plugin": {
+      "types": "./dist/utils/define-wxt-plugin.d.ts",
+      "default": "./dist/utils/define-wxt-plugin.mjs"
+    },
+    "./utils/match-patterns": {
+      "types": "./dist/utils/match-patterns.d.ts",
+      "default": "./dist/utils/match-patterns.mjs"
+    },
+    "./utils/storage": {
+      "types": "./dist/utils/storage.d.ts",
+      "default": "./dist/utils/storage.mjs"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.mjs"
+    },
+    "./vite-builder-env": {
+      "types": "./dist/vite-builder-env.d.ts"
+    },
+    "./modules": {
+      "types": "./dist/modules.d.ts",
+      "default": "./dist/modules.mjs"
     }
   }
 }

@@ -183,7 +183,7 @@ export default defineConfig({
 ```ts
 export default defineConfig({
   manifest: {
-    permissions: ['storage', 'tabs'],
+    host_permissions: ['https://www.google.com/*'],
   },
 });
 ```

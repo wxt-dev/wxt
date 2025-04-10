@@ -24,7 +24,7 @@ export default defineConfig({
 Now in your entrypoint, import UnoCSS:
 
 ```ts
-import 'uno.css';
+import 'virtual:uno.css';
 ```
 
 > [!IMPORTANT]

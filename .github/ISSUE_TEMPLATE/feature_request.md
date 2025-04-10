@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for WXT
 title: ''
-labels: feature
+type: Feature
 assignees: ''
 ---
 
