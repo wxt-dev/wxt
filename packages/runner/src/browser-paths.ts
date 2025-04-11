@@ -17,7 +17,7 @@ export const KNOWN_BROWSER_PATHS: Record<
   chrome: {
     mac: ['/Applications/Chrome.app/Contents/MacOS/Google Chrome'],
     linux: [],
-    windows: [],
+    windows: ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'],
   },
   'chrome-beta': {
     mac: [],
