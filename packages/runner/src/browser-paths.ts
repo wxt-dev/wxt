@@ -70,7 +70,7 @@ export const KNOWN_BROWSER_PATHS: Record<
   'firefox-nightly': {
     mac: ['/Applications/Firefox Nightly.app/Contents/MacOS/firefox'],
     linux: [],
-    windows: [],
+    windows: ['C:\\Program Files\\Firefox Nightly\\firefox.exe'],
   },
   'firefox-developer-edition': {
     mac: ['/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'],
