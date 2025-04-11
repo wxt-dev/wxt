@@ -631,6 +631,30 @@ importers:
         specifier: workspace:*
         version: link:../wxt
 
+  packages/runner:
+    devDependencies:
+      '@aklinker1/check':
+        specifier: 'catalog:'
+        version: 1.4.5(typescript@5.6.3)
+      oxlint:
+        specifier: 'catalog:'
+        version: 0.11.1
+      publint:
+        specifier: 'catalog:'
+        version: 0.2.12
+      tsx:
+        specifier: 'catalog:'
+        version: 4.19.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.6.3
+      unbuild:
+        specifier: 'catalog:'
+        version: 3.5.0(sass@1.80.7)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      vitest:
+        specifier: 'catalog:'
+        version: 3.0.7(@types/node@20.17.30)(happy-dom@17.1.8)(jiti@2.4.2)(sass@1.80.7)(tsx@4.19.3)(yaml@2.7.0)
+
   packages/storage:
     dependencies:
       async-mutex:
