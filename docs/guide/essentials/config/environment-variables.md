@@ -35,12 +35,14 @@ WXT provides some custom environment variables based on the current command:
 | Usage                              | Type      | Description                                           |
 | ---------------------------------- | --------- | ----------------------------------------------------- |
 | `import.meta.env.MANIFEST_VERSION` | `2 │ 3`   | The target manifest version                           |
-| `import.meta.env.BROWSER`          | `string`  | The target browser                                    |
+| `import.meta.env.BROWSER`          | `string`  | The target browser.                                   |
 | `import.meta.env.CHROME`           | `boolean` | Equivalent to `import.meta.env.BROWSER === "chrome"`  |
 | `import.meta.env.FIREFOX`          | `boolean` | Equivalent to `import.meta.env.BROWSER === "firefox"` |
 | `import.meta.env.SAFARI`           | `boolean` | Equivalent to `import.meta.env.BROWSER === "safari"`  |
 | `import.meta.env.EDGE`             | `boolean` | Equivalent to `import.meta.env.BROWSER === "edge"`    |
 | `import.meta.env.OPERA`            | `boolean` | Equivalent to `import.meta.env.BROWSER === "opera"`   |
+
+The `BROWSER` can be a safer literal string union type of all browser names that you want to support, see [`targetBrowsers`](/api/reference/wxt/interfaces/InlineConfig#targetBrowers) option.
 
 You can also access all of [Vite's environment variables](https://vite.dev/guide/env-and-mode.html#env-variables):
 
