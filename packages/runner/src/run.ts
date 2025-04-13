@@ -5,8 +5,7 @@ import {
   type RunOptions,
 } from './options';
 import { spawn } from 'node:child_process';
-import { createCdpConnection } from './cdp';
-import { installFirefox } from './install';
+import { installChromium, installFirefox } from './install';
 import { promiseWithResolvers } from './promises';
 
 const debugFirefox = debug.scoped('firefox');
@@ -116,10 +115,7 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
   // Wait for the browser to open before proceeding.
   await opened.promise;
 
-  using cdp = createCdpConnection(browserProcess);
-  await cdp.send<{ id: string }>('Extensions.loadUnpacked', {
-    path: options.extensionDir,
-  });
+  await installChromium(browserProcess, options.extensionDir);
 
   return {
     stop() {

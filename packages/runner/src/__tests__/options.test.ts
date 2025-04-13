@@ -122,7 +122,26 @@ describe('Options', () => {
       });
       expect(actual.chromiumArgs).toEqual([
         // Defaults
+        '--disable-features=Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,PrivacySandboxSettings4',
+        '--disable-component-extensions-with-background-pages',
+        '--disable-background-networking',
+        '--disable-component-update',
+        '--disable-client-side-phishing-detection',
+        '--disable-sync',
+        '--metrics-recording-only',
+        '--disable-default-apps',
+        '--no-default-browser-check',
         '--no-first-run',
+        '--disable-background-timer-throttling',
+        '--disable-ipc-flooding-protection',
+        '--password-store=basic',
+        '--use-mock-keychain',
+        '--force-fieldtrials=*BackgroundTracing/default/',
+        '--disable-hang-monitor',
+        '--disable-prompt-on-repost',
+        '--disable-domain-reliability',
+        '--propagate-iph-for-testing',
+        // Debugging
         expect.stringContaining('--remote-debugging-port='),
         '--remote-debugging-pipe',
         expect.stringContaining('--user-data-dir='), // See dataPersistence tests
