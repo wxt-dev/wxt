@@ -1,4 +1,10 @@
 export function openWebSocket(url: string): Promise<WebSocket> {
+  if (typeof WebSocket === 'undefined') {
+    throw new Error(
+      'To open Firefox, your JS runtime must support the standard WebSocket API (NodeJS >=22.4.0, Bun, etc).',
+    );
+  }
+
   return new Promise<WebSocket>((resolve, reject) => {
     const webSocket = new WebSocket(url);
 
