@@ -23,7 +23,7 @@
   "scripts": {
     "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
-    "dev": "tsx dev.ts",
+    "dev": "tsx --trace-warnings dev.ts",
     "build": "buildc -- unbuild",
     "prepublishOnly": "pnpm build"
   },

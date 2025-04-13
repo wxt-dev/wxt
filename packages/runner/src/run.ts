@@ -32,8 +32,10 @@ export async function run(options: RunOptions): Promise<Runner> {
 async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
   const urlRes = promiseWithResolvers<string>();
   const urlTimeout = setTimeout(() => {
-    urlRes.reject(Error('Timed out after 10s waiting for Firefox to start'));
+    urlRes.reject(Error('Timed out after 10s waiting for the browser to open'));
   }, 10e3);
+
+  // Firefox notifies the user if an instance is already running, so we don't add any logs for it.
 
   const browserProcess = spawn(
     `"${options.browserBinary}"`,
@@ -79,16 +81,40 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
     },
   );
 
+  const opened = promiseWithResolvers<void>();
+  const openedTimeout = setTimeout(() => {
+    opened.reject(Error('Timed out after 10s waiting for browser to open.'));
+  }, 10e3);
+
   const debugChromeStderr = debugChrome.scoped('stderr');
   browserProcess.stderr!.on('data', (data: string) => {
     const message = data.toString().trim();
     debugChromeStderr(message);
+
+    // This message signifies Chrome started up correctly.
+    if (message.startsWith('DevTools listening on')) {
+      clearTimeout(openedTimeout);
+      opened.resolve();
+    }
   });
-  const debugChromeStdout = debugFirefox.scoped('stdout');
+  const debugChromeStdout = debugChrome.scoped('stdout');
   browserProcess.stdout!.on('data', (data: string) => {
     const message = data.toString().trim();
     debugChromeStdout(message);
+
+    // This message signifies Chrome was already open, and thus we couldn't open the required new instance.
+    if (message === 'Opening in existing browser session.') {
+      clearTimeout(openedTimeout);
+      opened.reject(
+        Error(
+          'An instance of the browser is already running. Close it and try again.',
+        ),
+      );
+    }
   });
+
+  // Wait for the browser to open before proceeding.
+  await opened.promise;
 
   using cdp = createCdpConnection(browserProcess);
   await cdp.send<{ id: string }>('Extensions.loadUnpacked', {

@@ -86,7 +86,7 @@ export async function resolveRunOptions(
     chromiumArgs: resolveChromiumArgs(
       options?.chromiumArgs,
       chromiumRemoteDebuggingPort,
-      dataPersistence,
+      dataDir,
     ),
     dataPersistence,
     chromiumRemoteDebuggingPort,
