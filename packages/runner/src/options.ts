@@ -32,8 +32,8 @@ export type RunOptions = {
   dataPersistence?: 'user' | 'project' | 'none';
   /** Customize the port Chrome's debugger is listening on. Defaults to a random open port. */
   chromiumRemoteDebuggingPort?: number;
-  /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. */
-  extensionDir: string;
+  /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. Defaults to the current working directory. */
+  extensionDir?: string;
   /** Customize the arguments passed to the firefox binary. Conflicting arguments with required ones to install extensions are ignored. */
   firefoxArgs?: string[];
   /** Customize the port Firefox's debugger is listening on. Defaults to a random open port. */
@@ -76,7 +76,7 @@ export async function resolveRunOptions(
 
   const chromiumRemoteDebuggingPort = options?.chromiumRemoteDebuggingPort ?? 0;
   const firefoxRemoteDebuggingPort = options?.firefoxRemoteDebuggingPort ?? 0;
-  const dataPersistence = options?.dataPersistence ?? 'project';
+  const dataPersistence = options?.dataPersistence ?? 'none';
   const dataDir =
     dataPersistence === 'user'
       ? join(homedir(), '.wxt', 'runner', target)

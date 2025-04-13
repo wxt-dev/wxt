@@ -41,7 +41,7 @@ export type BidiWebExtensionInstallResponse = {
  *
  * Otherwise it the CDP doesn't have permission to install extensions.
  */
-export async function installChrome(
+export async function installChromium(
   browserProcess: ChildProcess,
   extensionDir: string,
 ): Promise<CdpExtensionsLoadUnpackedResponse> {
