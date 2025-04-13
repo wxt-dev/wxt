@@ -4,7 +4,6 @@ import { createCdpConnection, type CDPConnection } from '../cdp';
 import { createBidiConnection, type BidiConnection } from '../bidi';
 import type { ChildProcess } from 'node:child_process';
 import { installChromium, installFirefox } from '../install';
-import { aE } from 'vitest/dist/chunks/reporters.d.CfRkRKN2.js';
 
 vi.mock('../cdp');
 const createCdpConnectionMock = vi.mocked(createCdpConnection);
