@@ -38,7 +38,7 @@ export type RunOptions = {
   firefoxArgs?: string[];
   /** Customize the port Firefox's debugger is listening on. Defaults to a random open port. */
   firefoxRemoteDebuggingPort?: number;
-  /** Specify the browser to open. Defaults to `"chrome"`. */
+  /** Specify the browser to open. Defaults to `"chrome"`, but you can pass any string. */
   target?: Target;
 };
 
@@ -47,6 +47,8 @@ export type ResolvedRunOptions = {
   browserBinary: string;
   chromiumArgs: string[];
   chromiumRemoteDebuggingPort: number;
+  /** Absolute path to the directory where browser data will be stored. */
+  dataDir: string;
   dataPersistence: 'user' | 'project' | 'none';
   /** Absolute path to the extension directory. */
   extensionDir: string;
@@ -62,12 +64,15 @@ export async function resolveRunOptions(
 
   const target = options?.target || 'chrome';
 
-  const browserBinary =
+  const _browserBinary =
     options?.browserBinaries?.[target] ?? (await findBrowserBinary(target));
-  if (!browserBinary)
+  if (!_browserBinary)
     throw Error(
       `Could not find "${target}" binary.\n\nIf it is installed in a custom location, you can specify the path with the browserPaths option.`,
     );
+
+  // Denormalize the path so it uses the correct path separator for the OS
+  const browserBinary = resolve(_browserBinary);
 
   const chromiumRemoteDebuggingPort = options?.chromiumRemoteDebuggingPort ?? 0;
   const firefoxRemoteDebuggingPort = options?.firefoxRemoteDebuggingPort ?? 0;
@@ -88,6 +93,7 @@ export async function resolveRunOptions(
       chromiumRemoteDebuggingPort,
       dataDir,
     ),
+    dataDir,
     dataPersistence,
     chromiumRemoteDebuggingPort,
     extensionDir: resolve(options?.extensionDir ?? '.'),
