@@ -109,7 +109,7 @@ export interface InlineConfig {
    */
   browser?: TargetBrowser;
   /**
-   * Target browsers to support. If not empty, `import.meta.env.BROWSER` will be narrowed to a string literal type containing only the specified browser names.
+   * Target browsers to support. When set, `import.meta.env.BROWSER` will be narrowed to a string literal type containing only the specified browser names.
    *
    * @default []
    */
