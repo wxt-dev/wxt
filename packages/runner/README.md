@@ -7,16 +7,9 @@ Programmatically open a browser and install a web extension from a local directo
 
 ## TODO
 
-- [x] Launch Chrome with extension installed
-- [x] Launch Firefox with extension installed
 - [x] Provide install functions to allow hooking into already running instances of Chrome/Firefox
   - [ ] Try to setup E2E tests on Firefox with Puppeteer using this approach
   - [ ] Try to setup E2E tests on Chrome with Puppeteer using this approach
-- [x] Implement the `dataPersistence` option for Chrome and Firefox
-- [x] Close browsers when process exits
-- [x] Support more than just "chromium" or "firefox" for targets
-- [ ] Unit tests
-- [x] Error messages if browser instances are already open
 
 ## Features
 
