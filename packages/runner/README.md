@@ -13,9 +13,10 @@ Programmatically open a browser and install a web extension from a local directo
   - [ ] Try to setup E2E tests on Firefox with Puppeteer using this approach
   - [ ] Try to setup E2E tests on Chrome with Puppeteer using this approach
 - [x] Implement the `dataPersistence` option for Chrome and Firefox
-- [ ] Close browsers when process exits
+- [x] Close browsers when process exits
 - [x] Support more than just "chromium" or "firefox" for targets
 - [ ] Unit tests
+- [x] Error messages if browser instances are already open
 
 ## Features
 
