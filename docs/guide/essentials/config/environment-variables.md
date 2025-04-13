@@ -42,7 +42,7 @@ WXT provides some custom environment variables based on the current command:
 | `import.meta.env.EDGE`             | `boolean` | Equivalent to `import.meta.env.BROWSER === "edge"`    |
 | `import.meta.env.OPERA`            | `boolean` | Equivalent to `import.meta.env.BROWSER === "opera"`   |
 
-The `BROWSER` can be a safer literal string union type of all browser names that you want to support, see [`targetBrowsers`](/api/reference/wxt/interfaces/InlineConfig#targetbrowsers) option.
+You can set the [`targetBrowsers`](/api/reference/wxt/interfaces/InlineConfig#targetbrowsers) option to make the `BROWSER` variable a more specific type, like `"chrome" | "firefox"`.
 
 You can also access all of [Vite's environment variables](https://vite.dev/guide/env-and-mode.html#env-variables):
 
