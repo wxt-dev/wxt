@@ -35,7 +35,7 @@ WXT provides some custom environment variables based on the current command:
 | Usage                              | Type      | Description                                           |
 | ---------------------------------- | --------- | ----------------------------------------------------- |
 | `import.meta.env.MANIFEST_VERSION` | `2 │ 3`   | The target manifest version                           |
-| `import.meta.env.BROWSER`          | `string`  | The target browser.                                   |
+| `import.meta.env.BROWSER`          | `string`  | The target browser                                    |
 | `import.meta.env.CHROME`           | `boolean` | Equivalent to `import.meta.env.BROWSER === "chrome"`  |
 | `import.meta.env.FIREFOX`          | `boolean` | Equivalent to `import.meta.env.BROWSER === "firefox"` |
 | `import.meta.env.SAFARI`           | `boolean` | Equivalent to `import.meta.env.BROWSER === "safari"`  |
