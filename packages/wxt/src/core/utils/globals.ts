@@ -12,7 +12,12 @@ export function getGlobals(
     {
       name: 'BROWSER',
       value: config.browser,
-      type: `string`,
+      type:
+        config.targetBrowsers.length === 0
+          ? 'string'
+          : config.targetBrowsers
+              .map((browser) => JSON.stringify(browser))
+              .join(' | '),
     },
     {
       name: 'CHROME',

@@ -70,6 +70,13 @@ export async function resolveConfig(
   if (debug) logger.level = LogLevels.debug;
 
   const browser = mergedConfig.browser ?? 'chrome';
+  const targetBrowsers = mergedConfig.targetBrowsers ?? [];
+  if (targetBrowsers.length > 0 && targetBrowsers.indexOf(browser) === -1) {
+    // Should we stop?
+    logger.warn(
+      `Current target browser \`${browser}\` is not in your \`targetBrowsers\` list!`,
+    );
+  }
   const manifestVersion =
     mergedConfig.manifestVersion ??
     (browser === 'firefox' || browser === 'safari' ? 2 : 3);
@@ -197,6 +204,7 @@ export async function resolveConfig(
 
   return {
     browser,
+    targetBrowsers,
     command,
     debug,
     entrypointsDir,
