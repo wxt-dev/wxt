@@ -23,7 +23,7 @@ WXT provides two commands to help automate submitting a new version for review a
 - `wxt submit init`: Setup all the required secrets and options for the `wxt submit` command
 - `wxt submit`: Submit new versions of your extension for review (and publish them automatically once approved)
 
-To get started, run `wxt submit init` and follow the prompts. Once finished, you should have a `.env.submit` file! WXT will use this file to submit your updates.
+To get started, run `wxt submit init` and follow the prompts, or run `wxt submit --help` to view all available options. Once finished, you should have a `.env.submit` file! WXT will use this file to submit your updates.
 
 > In CI, make sure you add all the environment variables to the submit step.
 

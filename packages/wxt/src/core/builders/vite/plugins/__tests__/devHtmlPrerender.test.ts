@@ -20,7 +20,7 @@ describe('Dev HTML Prerender Plugin', () => {
       ['~local/style.css', 'http://localhost:5173/style.css'],
       ['~absolute/style.css', 'http://localhost:5173/assets/style.css'],
       ['~file', 'http://localhost:5173/example.css'],
-      // Absolute paths are loaded with the `/@fs/` base path
+      // Paths outside the project root are loaded with the `/@fs/` base path
       [
         '~outside/test.css',
         `http://localhost:5173/@fs${
