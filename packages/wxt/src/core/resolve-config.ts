@@ -71,7 +71,7 @@ export async function resolveConfig(
 
   const browser = mergedConfig.browser ?? 'chrome';
   const targetBrowsers = mergedConfig.targetBrowsers ?? [];
-  if (targetBrowsers.length > 0 && targetBrowsers.indexOf(browser) === -1) {
+  if (targetBrowsers.length > 0 && !targetBrowsers.includes(browser)) {
     throw new Error(
       `Current target browser \`${browser}\` is not in your \`targetBrowsers\` list!`,
     );
