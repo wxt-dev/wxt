@@ -7,7 +7,7 @@
 ### 🚀 Enhancements
 
 - Enable wxt usage inside of devcontainers ([#1406](https://github.com/wxt-dev/wxt/pull/1406))
-- Type-safe `import.meta.env.BROWSER` with new `targetBrowers` config ([#1574](https://github.com/wxt-dev/wxt/pull/1574))
+- Type-safe `import.meta.env.BROWSER` with new `targetBrowsers` config ([#1574](https://github.com/wxt-dev/wxt/pull/1574))
 
 ### 🩹 Fixes
 
