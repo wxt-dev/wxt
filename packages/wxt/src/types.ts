@@ -109,6 +109,12 @@ export interface InlineConfig {
    */
   browser?: TargetBrowser;
   /**
+   * Target browsers to support. When set, `import.meta.env.BROWSER` will be narrowed to a string literal type containing only the specified browser names.
+   *
+   * @default []
+   */
+  targetBrowsers?: TargetBrowser[];
+  /**
    * Explicitly set a manifest version to target. This will override the default manifest version
    * for each command, and can be overridden by the command line `--mv2` or `--mv3` option.
    */
@@ -1311,6 +1317,7 @@ export interface ResolvedConfig {
   mode: string;
   command: WxtCommand;
   browser: TargetBrowser;
+  targetBrowsers: TargetBrowser[];
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
   logger: Logger;

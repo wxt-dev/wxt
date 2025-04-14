@@ -396,6 +396,19 @@ describe('TypeScript Project', () => {
     expect(output).toContain('./example.ts');
   });
 
+  it('should set correct import.meta.env.BROWSER type based on targetBrowsers', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.setConfigFileConfig({
+      targetBrowsers: ['firefox', 'chrome'],
+    });
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/types/globals.d.ts');
+    expect(output).toContain('readonly BROWSER: "firefox" | "chrome";');
+  });
+
   // TODO: Once a module has been published, use it here for testing - local files are never added to the .wxt/wxt.d.ts file
   it.todo(
     'should add modules from NPM to the TS project if they have a configKey',
