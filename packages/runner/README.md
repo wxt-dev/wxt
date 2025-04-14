@@ -11,13 +11,13 @@ await run({
 ```
 
 > [!WARNING]
-> This package is still in development and is not ready for production use.
+> This package is intended to replace [`web-ext`](https://github.com/mozilla/web-ext) in the future, but it is not ready at the moment. Once it's ready for testing in WXT, more details will be added here.
 
 ## Features
 
 - Supports all Chromium and Firefox based browsers
 - Zero dependencies
-- Persist data between launches on Chrome
+- Shortcuts for persisting data between launches
 
 ## Requirements
 
@@ -60,11 +60,11 @@ Defaults to opening `chrome`. You may see type-hints for a list of popular brows
 
 ### Browser Binaries
 
-`@wxt-dev/runner` will look for browser installs in [common paths](https://github.com/wxt-dev/wxt/blob/runner/packages/runner/src/browser-paths.ts). Sometimes you need to specify the path to a browser's binary because:
+`@wxt-dev/runner` will look for browser binaries/executables in [a hard-coded list of paths](https://github.com/wxt-dev/wxt/blob/main/packages/runner/src/browser-paths.ts). It does not and will not explore your filesystem/`$PATH` to find where the browser is installed. That means there are times you will need to specify the path to a browser's binary on your system:
 
-- Your install path is non-standard
-- You want to use a specific version/release of the browser
-- You're using a less popular browser and `@wxt-dev/runner` doesn't have a pre-defined path for it.
+- Your browser's path is non-standard or missing from the hard-coded list.
+- You want to use a specific version/release of the browser.
+- You're using a less popular browser and `@wxt-dev/runner` doesn't have hard-coded paths for it.
 
 To do this, use the `browserBinaries` option and set the path to the browser's binary:
 
