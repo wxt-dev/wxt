@@ -1,7 +1,7 @@
 import { defineWxtModule } from '../modules';
 
 export default defineWxtModule({
-  name: 'wxt:built-in:favicon-type',
+  name: 'wxt:built-in:wxt-types',
   setup(wxt) {
     wxt.hooks.hook('prepare:publicPaths', async (wxt, paths) => {
       if (wxt.config.manifest.permissions?.includes('favicon')) {

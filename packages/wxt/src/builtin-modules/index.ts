@@ -1,5 +1,5 @@
 import { WxtModule } from '../types';
 import unimport from './unimport';
-import faviconTypes from './favicon-type';
+import wxtTypes from './wxt-types';
 
-export const builtinModules: WxtModule<any>[] = [unimport, faviconTypes];
+export const builtinModules: WxtModule<any>[] = [unimport, wxtTypes];
