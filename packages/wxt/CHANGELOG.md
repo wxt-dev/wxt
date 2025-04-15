@@ -1,6 +1,38 @@
 # Changelog
 
+## v0.20.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.0...wxt-v0.20.1)
+
+### 🚀 Enhancements
+
+- Enable wxt usage inside of devcontainers ([#1406](https://github.com/wxt-dev/wxt/pull/1406))
+- Type-safe `import.meta.env.BROWSER` with new `targetBrowsers` config ([#1574](https://github.com/wxt-dev/wxt/pull/1574))
+
+### 🩹 Fixes
+
+- Don't remove top-level destructured variable definitions when importing entrypoints ([#1561](https://github.com/wxt-dev/wxt/pull/1561))
+- Add JSDoc type annotation to auto-imports for ESlint ([#1558](https://github.com/wxt-dev/wxt/pull/1558))
+
+### 📖 Documentation
+
+- Fix knowledge file generation ([#1550](https://github.com/wxt-dev/wxt/pull/1550))
+
+### 🏡 Chore
+
+- **deps:** Update all dependencies ([#1568](https://github.com/wxt-dev/wxt/pull/1568))
+- Update comment ([61b42ef](https://github.com/wxt-dev/wxt/commit/61b42ef))
+
+### ❤️ Contributors
+
+- 7sDream ([@7sDream](https://github.com/7sDream))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Nostro ([@nostrorom](https://github.com/nostrorom))
+- Khalil Yao ([@yyz945947732](https://github.com/yyz945947732))
+- Alec WM ([@alecdwm](https://github.com/alecdwm))
+
 ## v0.20.0
+
 Excited to release the next major version of WXT! Follow the [Upgrade guide](https://wxt.dev/guide/resources/upgrading.html) to update!
 
 ---
@@ -40,6 +72,7 @@ Excited to release the next major version of WXT! Follow the [Upgrade guide](htt
 
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 - 1natsu ([@1natsu172](https://github.com/1natsu172))
+
 ## v0.19.29
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.19.28...wxt-v0.19.29)
