@@ -70,6 +70,7 @@ const chromeExtensionIds = [
   'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
   'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
   'hlnhhamckimoaiekbglafiebkfimhapb', // SnapThePrice: AI-Powered Real-time Lowest Price Finder
+  'gdjampjdgjmbifnhldgcnccdjkcoicmg', // radiofrance - news & broadcasts (French), music (international)
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
