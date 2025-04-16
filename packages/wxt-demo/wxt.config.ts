@@ -20,7 +20,7 @@ export default defineConfig({
   analysis: {
     open: true,
   },
-  runner: {
+  webExt: {
     startUrls: ['https://duckduckgo.com'],
   },
   example: {

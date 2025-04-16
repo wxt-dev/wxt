@@ -22,7 +22,7 @@ You can configure browser startup in 3 places:
    });
    ```
 
-2. `<rootDir>/wxt.config.ts`: Via the [`runner` config](/api/reference/wxt/interfaces/InlineConfig#runner), included in version control
+2. `<rootDir>/wxt.config.ts`: Via the [`webExt` config](/api/reference/wxt/interfaces/InlineConfig#webext), included in version control
 3. `$HOME/web-ext.config.ts`: Provide default values for all WXT projects on your computer
 
 ## Recipes
