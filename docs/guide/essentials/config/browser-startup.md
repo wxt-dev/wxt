@@ -14,7 +14,7 @@ You can configure browser startup in 3 places:
 
 1. `<rootDir>/web-ext.config.ts`: Ignored from version control, this file lets you configure your own options for a specific project without affecting other developers
 
-   ```ts
+   ```ts [web-ext.config.ts]
    import { defineWebExtConfig } from 'wxt';
 
    export default defineWebExtConfig({
@@ -22,7 +22,7 @@ You can configure browser startup in 3 places:
    });
    ```
 
-2. `<rootDir>/wxt.config.ts`: Via the [`runner` config](/api/reference/wxt/interfaces/InlineConfig#runner), included in version control
+2. `<rootDir>/wxt.config.ts`: Via the [`webExt` config](/api/reference/wxt/interfaces/InlineConfig#webext), included in version control
 3. `$HOME/web-ext.config.ts`: Provide default values for all WXT projects on your computer
 
 ## Recipes
@@ -31,7 +31,7 @@ You can configure browser startup in 3 places:
 
 To set or customize the browser opened during development:
 
-```ts
+```ts [web-ext.config.ts]
 export default defineWebExtConfig({
   binaries: {
     chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
@@ -81,7 +81,7 @@ You can use any directory you'd like for `--user-data-dir`, the examples above c
 
 If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
 
-```ts
+```ts [web-ext.config.ts]
 export default defineWebExtConfig({
   disabled: true,
 });
