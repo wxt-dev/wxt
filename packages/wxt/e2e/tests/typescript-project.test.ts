@@ -53,11 +53,10 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | "/"
           | "/options.html"
           | "/popup.html"
           | "/sandbox.html"
-          | "/"
-          | ""
         type HtmlPublicPath = Extract<PublicPath, \`\${string}.html\`>
         export interface WxtRuntime {
           getURL(path: PublicPath): string;
@@ -441,12 +440,11 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | "/"
           | "/_favicon"
           | "/options.html"
           | "/popup.html"
           | "/sandbox.html"
-          | "/"
-          | ""
         type HtmlPublicPath = Extract<PublicPath, \`\${string}.html\`>
         export interface WxtRuntime {
           getURL(path: PublicPath): string;
