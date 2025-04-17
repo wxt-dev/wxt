@@ -71,6 +71,7 @@ const chromeExtensionIds = [
   'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
   'hlnhhamckimoaiekbglafiebkfimhapb', // SnapThePrice: AI-Powered Real-time Lowest Price Finder
   'gdjampjdgjmbifnhldgcnccdjkcoicmg', // radiofrance - news & broadcasts (French), music (international)
+  'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
