@@ -128,8 +128,8 @@ export function devHtmlPrerender(
         // Resolve virtualized inline scripts
         if (id.startsWith(resolvedVirtualInlineScript)) {
           // id="virtual:wxt-inline-script?<hash>"
-          const hash = hash(id.substring(id.indexOf('?')));
-          return inlineScriptContents[hash];
+          const newHash = hash(id.substring(id.indexOf('?')));
+          return inlineScriptContents[newHash];
         }
 
         // Ignore chunks during HTML file pre-rendering
