@@ -128,7 +128,7 @@ export function devHtmlPrerender(
         // Resolve virtualized inline scripts
         if (id.startsWith(resolvedVirtualInlineScript)) {
           // id="virtual:wxt-inline-script?<hash>"
-          const hash = Number(id.substring(id.indexOf('?') + 1));
+          const hash = hash(id.substring(id.indexOf('?')));
           return inlineScriptContents[hash];
         }
 
