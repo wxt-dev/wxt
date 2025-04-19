@@ -167,6 +167,10 @@
       "types": "./dist/utils/match-patterns.d.ts",
       "default": "./dist/utils/match-patterns.mjs"
     },
+    "./utils/split-shadow-root-css": {
+      "types": "./dist/utils/split-shadow-root-css.d.ts",
+      "default": "./dist/utils/split-shadow-root-css.mjs"
+    },
     "./utils/storage": {
       "types": "./dist/utils/storage.d.ts",
       "default": "./dist/utils/storage.mjs"
