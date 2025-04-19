@@ -75,11 +75,20 @@ export async function createShadowRootUi<TMounted>(
   const remove = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
+
     // Detach shadow root from DOM
     shadowHost.remove();
+
+    // Remove document CSS
+    const documentStyle = document.querySelector(
+      `[wxt-shadow-root-document-styles=${instanceId}]`,
+    );
+    documentStyle?.remove();
+
     // Remove children from uiContainer
     while (uiContainer.lastChild)
       uiContainer.removeChild(uiContainer.lastChild);
+
     // Clear mounted value
     mounted = undefined;
   };
