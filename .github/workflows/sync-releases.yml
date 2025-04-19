@@ -14,6 +14,7 @@ on:
           - module-solid
           - module-svelte
           - module-vue
+          - runner
           - storage
           - webextension-polyfill
           - wxt
