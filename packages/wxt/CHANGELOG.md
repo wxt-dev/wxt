@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.20.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.1...wxt-v0.20.2)
+
+### 🩹 Fixes
+
+- Fix hashing issue with inline scripts ([#1591](https://github.com/wxt-dev/wxt/pull/1591))
+
+### 📖 Documentation
+
+- Fix typo in changelog ([acb6cd1](https://github.com/wxt-dev/wxt/commit/acb6cd1))
+
+### ❤️ Contributors
+
+- Yunsup Sim ([@SimYunSup](https://github.com/SimYunSup))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.0...wxt-v0.20.1)
