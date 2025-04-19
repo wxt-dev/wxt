@@ -308,7 +308,10 @@ export async function createViteBuilder(
     async build(group) {
       let entryConfig;
       if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
-      else if (group.inputPath.endsWith('.css'))
+      else if (
+        group.type === 'content-script-style' ||
+        group.type === 'unlisted-style'
+      )
         entryConfig = getCssConfig(group);
       else entryConfig = getLibModeConfig(group);
 
