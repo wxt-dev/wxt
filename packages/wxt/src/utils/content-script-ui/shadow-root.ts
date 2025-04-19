@@ -60,7 +60,9 @@ export async function createShadowRootUi<TMounted>(
     // Add document CSS
     if (
       documentCss &&
-      !document.querySelector(`[wxt-shadow-root-document-styles=${instanceId}]`)
+      !document.querySelector(
+        `style[wxt-shadow-root-document-styles="${instanceId}"]`,
+      )
     ) {
       const style = document.createElement('style');
       style.textContent = documentCss;
@@ -81,7 +83,7 @@ export async function createShadowRootUi<TMounted>(
 
     // Remove document CSS
     const documentStyle = document.querySelector(
-      `[wxt-shadow-root-document-styles=${instanceId}]`,
+      `style[wxt-shadow-root-document-styles="${instanceId}"]`,
     );
     documentStyle?.remove();
 
