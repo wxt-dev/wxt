@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.20.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.2...wxt-v0.20.3)
+
+### 🚀 Enhancements
+
+- Automatically place document-level CSS outside shadow root ([#1594](https://github.com/wxt-dev/wxt/pull/1594))
+
+### 🩹 Fixes
+
+- Fix double hashing of inline script keys ([b0f4ac8](https://github.com/wxt-dev/wxt/commit/b0f4ac8))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.1...wxt-v0.20.2)
