@@ -85,13 +85,13 @@ export function devHtmlPrerender(
         inlineScripts.forEach((script) => {
           // Save the text content for later
           const textContent = script.textContent ?? '';
-          const textHash = hash(textContent);
-          inlineScriptContents[textHash] = textContent;
+          const key = hash(textContent);
+          inlineScriptContents[key] = textContent;
 
           // Replace unsafe inline script
           const virtualScript = document.createElement('script');
           virtualScript.type = 'module';
-          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${textHash}`;
+          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${key}`;
           script.replaceWith(virtualScript);
         });
 
@@ -111,7 +111,7 @@ export function devHtmlPrerender(
       },
     },
     {
-      name: 'wxt:virtualize-react-refresh',
+      name: 'wxt:virtualize-inline-scripts',
       apply: 'serve',
       resolveId(id) {
         // Resolve inline scripts
@@ -127,9 +127,9 @@ export function devHtmlPrerender(
       load(id) {
         // Resolve virtualized inline scripts
         if (id.startsWith(resolvedVirtualInlineScript)) {
-          // id="virtual:wxt-inline-script?<hash>"
-          const newHash = hash(id.substring(id.indexOf('?')));
-          return inlineScriptContents[newHash];
+          // id="virtual:wxt-inline-script?<key>"
+          const key = id.substring(id.indexOf('?') + 1);
+          return inlineScriptContents[key];
         }
 
         // Ignore chunks during HTML file pre-rendering
