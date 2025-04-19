@@ -15,7 +15,6 @@ export function splitShadowRootCss(css: string): {
   let match;
   while ((match = rulesRegex.exec(css)) !== null) {
     documentCss += match[1];
-    console.log(match[1]);
     shadowCss = shadowCss.replace(match[1], '');
   }
 
