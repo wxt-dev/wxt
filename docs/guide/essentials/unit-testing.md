@@ -85,7 +85,7 @@ import { injectScript, createShadowRootUi } from '#imports';
 But Vitest sees this:
 
 ```ts
-import { injectScript } from 'wxt/browser';
+import { injectScript } from 'wxt/utils/inject-script';
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root';
 ```
 
