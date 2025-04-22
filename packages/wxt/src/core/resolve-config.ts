@@ -301,8 +301,8 @@ function resolveZipConfig(
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
-    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}-sources.zip',
+    artifactTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}.zip',
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,

@@ -91,7 +91,7 @@ describe('Zipping', () => {
       mode: 'development',
       zip: {
         artifactTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}.zip',
-        sourcesTemplate: '{{name}}-{{version}}-{{mode}}-sources.zip',
+        sourcesTemplate: '{{name}}-{{version}}-{{browser}}-{{mode}}-sources.zip',
       },
     });
 
