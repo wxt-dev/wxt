@@ -750,8 +750,20 @@ export interface WxtStorage {
   ): WxtStorageItem<TValue | null, TMetadata>;
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,
-    options: WxtStorageItemOptions<TValue>,
+    options: WxtStorageItemOptions<TValue> & { fallback: TValue },
   ): WxtStorageItem<TValue, TMetadata>;
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<TValue> & { fallback?: never },
+  ): WxtStorageItem<TValue | null, TMetadata>;
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<TValue> & { defaultValue: TValue },
+  ): WxtStorageItem<TValue, TMetadata>;
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<TValue> & { defaultValue?: never },
+  ): WxtStorageItem<TValue | null, TMetadata>;
 }
 
 interface WxtStorageDriver {
