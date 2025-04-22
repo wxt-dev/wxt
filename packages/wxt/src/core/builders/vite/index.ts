@@ -65,6 +65,7 @@ export async function createViteBuilder(
     config.server.watch = {
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
+    config.server.cors = config.server.cors ?? "/*";
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};
