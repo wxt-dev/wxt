@@ -8958,7 +8958,7 @@ export namespace Browser {
             default_popup?: string | undefined;
         }
 
-        // Source: https://developer.Browser.com/docs/extensions/mv3/declare_permissions/
+        /** Source: https://developer.Browser.com/docs/extensions/reference/permissions-list */
         export type ManifestPermissions =
             | "accessibilityFeatures.modify"
             | "accessibilityFeatures.read"
@@ -9015,11 +9015,11 @@ export namespace Browser {
             | "privacy"
             | "processes"
             | "proxy"
+            | "readingList"
             | "scripting"
             | "search"
             | "sessions"
             | "sidePanel"
-            | "signedInDevices"
             | "storage"
             | "system.cpu"
             | "system.display"
@@ -9041,6 +9041,23 @@ export namespace Browser {
             | "webRequest"
             | "webRequestBlocking"
             | "webRequestAuthProvider";
+
+        /** Source : https://developer.Browser.com/docs/extensions/reference/api/permissions */
+        export type ManifestOptionalPermissions = Exclude<
+            ManifestPermissions,
+            | "debugger"
+            | "declarativeNetRequest"
+            | "devtools"
+            | "experimental"
+            | "fontSettings"
+            | "geolocation"
+            | "proxy"
+            | "tts"
+            | "ttsEngine"
+            | "unlimitedStorage"
+            | "wallpaper"
+            | "webAuthenticationProxy"
+        >;
 
         export interface SearchProvider {
             name?: string | undefined;
@@ -9261,8 +9278,8 @@ export namespace Browser {
                 }
                 | undefined;
             content_security_policy?: string | undefined;
-            optional_permissions?: string[] | undefined;
-            permissions?: string[] | undefined;
+            optional_permissions?: ManifestOptionalPermissions[] | string[] | undefined;
+            permissions?: ManifestPermissions[] | string[] | undefined;
             web_accessible_resources?: string[] | undefined;
         }
 
@@ -9297,7 +9314,7 @@ export namespace Browser {
                 sandbox?: string;
             };
             host_permissions?: string[] | undefined;
-            optional_permissions?: ManifestPermissions[] | undefined;
+            optional_permissions?: ManifestOptionalPermissions[] | undefined;
             optional_host_permissions?: string[] | undefined;
             permissions?: ManifestPermissions[] | undefined;
             web_accessible_resources?: Array<{ resources: string[]; matches: string[] }> | undefined;
