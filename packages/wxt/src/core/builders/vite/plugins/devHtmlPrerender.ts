@@ -150,7 +150,10 @@ export function pointToDevServer(
   attr: string,
 ) {
   document.querySelectorAll(querySelector).forEach((element) => {
-    if (element.hasAttribute('vite-ignore') || element.hasAttribute('wxt-ignore')) {
+    if (
+      element.hasAttribute('vite-ignore') ||
+      element.hasAttribute('wxt-ignore')
+    ) {
       element.removeAttribute('wxt-ignore');
       return;
     }
