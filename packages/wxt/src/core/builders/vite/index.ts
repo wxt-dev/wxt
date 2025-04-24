@@ -65,7 +65,6 @@ export async function createViteBuilder(
     config.server.watch = {
       ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
     };
-    config.server.cors = config.server.cors ?? { origin: "*" };
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};
@@ -332,6 +331,9 @@ export async function createViteBuilder(
           port: info.port,
           strictPort: true,
           origin: info.origin,
+          cors: {
+            origin: /^(https?:\/\/(?:(?:[^:]+\.)?localhost|127\.0\.0\.1|\[::1\])(?::\d+)?)|(moz-extension:\/\/\w+)|(chrome-extension:\/\/\w+)$/,
+          }
         },
       };
       const baseConfig = await getBaseConfig();
