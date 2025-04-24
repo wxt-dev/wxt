@@ -26,12 +26,12 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   wxt.logger.info('Zipping extension...');
   const zipFiles: string[] = [];
 
+  const packageJson = await getPackageJson();
   const projectName =
     wxt.config.zip.name ??
     safeFilename(
-      (await getPackageJson())?.name || path.basename(process.cwd()),
+      packageJson?.name || path.basename(process.cwd()),
     );
-  const packageVersion = (await getPackageJson())?.version;
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
@@ -40,7 +40,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         '{{version}}',
         output.manifest.version_name ?? output.manifest.version,
       )
-      .replaceAll('{{packageVersion}}', packageVersion)
+      .replaceAll('{{packageVersion}}', packageJson?.version)
       .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
