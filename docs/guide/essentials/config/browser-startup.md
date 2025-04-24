@@ -15,6 +15,7 @@ You have two options:
 
 1. Install [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) (which still supports the `--load-extension` flag) and [point the `chrome` binary to it](#set-browser-binaries), or
 2. [Disable this feature](#disable-opening-browser) and manually load your extension
+
 :::
 
 ## Config Files
