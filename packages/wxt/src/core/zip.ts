@@ -34,8 +34,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     template
       .replaceAll('{{name}}', projectName)
       .replaceAll('{{browser}}', wxt.config.browser)
+      .replaceAll('{{version}}', output.manifest.version)
       .replaceAll(
-        '{{version}}',
+        '{{versionName}}',
         output.manifest.version_name ?? output.manifest.version,
       )
       .replaceAll('{{packageVersion}}', packageJson?.version)
