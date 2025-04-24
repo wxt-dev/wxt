@@ -331,9 +331,6 @@ export async function createViteBuilder(
           port: info.port,
           strictPort: true,
           origin: info.origin,
-          cors: {
-            origin: /^(https?:\/\/(?:(?:[^:]+\.)?localhost|127\.0\.0\.1|\[::1\])(?::\d+)?)|(moz-extension:\/\/\w+)|(chrome-extension:\/\/\w+)$/,
-          }
         },
       };
       const baseConfig = await getBaseConfig();
