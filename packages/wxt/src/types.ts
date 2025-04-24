@@ -147,6 +147,7 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to kebab-case
      * - <span v-pre>`{{version}}`</span> - The version_name or version from the manifest
+     * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
@@ -171,6 +172,7 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to kebab-case
      * - <span v-pre>`{{version}}`</span> - The version_name or version from the manifest
+     * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
