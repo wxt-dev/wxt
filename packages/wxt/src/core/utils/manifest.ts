@@ -465,7 +465,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
     permissionUrlInstance.port = '';
     permissonUrl = permissionUrlInstance.toString();
   }
-  const permission = `${permissonUrl}/*`;
+  const permission = `${permissonUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
