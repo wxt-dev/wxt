@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.20.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.3...wxt-v0.20.4)
+
+### 🚀 Enhancements
+
+- Ignore popup/index.ts instead of erroring ([#1520](https://github.com/wxt-dev/wxt/pull/1520))
+- Ignore elements with a `vite-ignore` or `wxt-ignore` attribute ([#1603](https://github.com/wxt-dev/wxt/pull/1603))
+- Add `{{packageVersion}}` as template variable ([#1604](https://github.com/wxt-dev/wxt/pull/1604))
+
+### 🩹 Fixes
+
+- Adding missing `""` to `PublicPath` and `browser.runtime.getUrl` ([#1597](https://github.com/wxt-dev/wxt/pull/1597))
+- Fix CORS error in Firefox ([#1607](https://github.com/wxt-dev/wxt/pull/1607))
+
+### 📖 Documentation
+
+- **Content Script UI:** Add additional details about when `onRemove` is called ([656a9b3](https://github.com/wxt-dev/wxt/commit/656a9b3))
+
+### ❤️ Contributors
+
+- Yunsup Sim <pedogunu@gmail.com>
+- ТΞNSΛI <tensai@gmx.net>
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.2...wxt-v0.20.3)
