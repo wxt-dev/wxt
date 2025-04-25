@@ -5,6 +5,7 @@ import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import { logger } from '../internal/logger';
+import { splitShadowRootCss } from '../split-shadow-root-css';
 
 /**
  * Create a content script UI inside a [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
@@ -17,6 +18,7 @@ export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
   options: ShadowRootContentScriptUiOptions<TMounted>,
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
+  const instanceId = crypto.randomUUID();
   const css: string[] = [];
 
   if (!options.inheritStyles) {
@@ -31,6 +33,9 @@ export async function createShadowRootUi<TMounted>(
     css.push(entryCss.replaceAll(':root', ':host'));
   }
 
+  // Some rules must be applied outside the shadow root, so split the CSS apart
+  const { shadowCss, documentCss } = splitShadowRootCss(css.join('\n').trim());
+
   const {
     isolatedElement: uiContainer,
     parentElement: shadowHost,
@@ -38,7 +43,7 @@ export async function createShadowRootUi<TMounted>(
   } = await createIsolatedElement({
     name: options.name,
     css: {
-      textContent: css.join('\n').trim(),
+      textContent: shadowCss,
     },
     mode: options.mode ?? 'open',
     isolateEvents: options.isolateEvents,
@@ -51,6 +56,20 @@ export async function createShadowRootUi<TMounted>(
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
     applyPosition(shadowHost, shadow.querySelector('html'), options);
+
+    // Add document CSS
+    if (
+      documentCss &&
+      !document.querySelector(
+        `style[wxt-shadow-root-document-styles="${instanceId}"]`,
+      )
+    ) {
+      const style = document.createElement('style');
+      style.textContent = documentCss;
+      style.setAttribute('wxt-shadow-root-document-styles', instanceId);
+      (document.head ?? document.body).append(style);
+    }
+
     // Mount UI inside shadow root
     mounted = options.onMount(uiContainer, shadow, shadowHost);
   };
@@ -58,11 +77,20 @@ export async function createShadowRootUi<TMounted>(
   const remove = () => {
     // Cleanup mounted state
     options.onRemove?.(mounted);
+
     // Detach shadow root from DOM
     shadowHost.remove();
+
+    // Remove document CSS
+    const documentStyle = document.querySelector(
+      `style[wxt-shadow-root-document-styles="${instanceId}"]`,
+    );
+    documentStyle?.remove();
+
     // Remove children from uiContainer
     while (uiContainer.lastChild)
       uiContainer.removeChild(uiContainer.lastChild);
+
     // Clear mounted value
     mounted = undefined;
   };

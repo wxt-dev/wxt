@@ -53,6 +53,7 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | ""
           | "/"
           | "/options.html"
           | "/popup.html"

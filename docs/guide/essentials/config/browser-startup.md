@@ -8,6 +8,16 @@ outline: deep
 
 During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 
+:::danger
+Chrome 137 removed support for the `--load-extension` CLI flag, which WXT relied on to open the browser with an extension installed. So this feature will not work for Chrome.
+
+You have two options:
+
+1. Install [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) (which still supports the `--load-extension` flag) and [point the `chrome` binary to it](#set-browser-binaries), or
+2. [Disable this feature](#disable-opening-browser) and manually load your extension
+
+:::
+
 ## Config Files
 
 You can configure browser startup in 3 places:

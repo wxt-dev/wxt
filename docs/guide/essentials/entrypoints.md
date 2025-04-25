@@ -211,12 +211,12 @@ When defining your background entrypoint, keep in mind that WXT will import this
 
 <!-- prettier-ignore -->
 ```ts
-browser.action.onClick.addListener(() => { // [!code --]
+browser.action.onClicked.addListener(() => { // [!code --]
   // ... // [!code --]
 }); // [!code --]
 
 export default defineBackground(() => {
-  browser.action.onClick.addListener(() => { // [!code ++]
+  browser.action.onClicked.addListener(() => { // [!code ++]
     // ... // [!code ++]
   }); // [!code ++]
 });
