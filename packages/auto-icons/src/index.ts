@@ -32,7 +32,7 @@ export default defineWxtModule<AutoIconsOptions>({
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
       if (manifest.icons)
-        return wxt.logger.warn(
+        wxt.logger.warn(
           '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
         );
 
