@@ -26,7 +26,11 @@ const MAX_SUBSTITUTIONS = 9;
 export function standardizeLocale(locale: string): string {
   if (locale.length === 2) return locale.toLowerCase();
 
-  const prefix = locale.substring(0, 2);
-  const suffix = locale.substring(3);
-  return `${prefix.toLowerCase()}_${suffix.toUpperCase()}`;
+  const [is_match, prefix, suffix] =
+    locale.match(/^([a-z]{2})[-_]([a-z]{2,3})$/i) ?? [];
+  if (is_match) {
+    return `${prefix.toLowerCase()}_${suffix.toUpperCase()}`;
+  }
+
+  return locale;
 }

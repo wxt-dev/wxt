@@ -74,11 +74,20 @@ describe('Utils', () => {
     it('should convert locale code extensions to uppercase', () => {
       expect(standardizeLocale('en_US')).toEqual('en_US');
       expect(standardizeLocale('en_us')).toEqual('en_US');
+      expect(standardizeLocale('es_419')).toEqual('es_419');
     });
 
     it('should convert dashes to underscores', () => {
       expect(standardizeLocale('en_US')).toEqual('en_US');
       expect(standardizeLocale('en-US')).toEqual('en_US');
+    });
+
+    it('should return the input string as-is for unknown formats', () => {
+      expect(standardizeLocale('en_USSS')).toEqual('en_USSS');
+      expect(standardizeLocale('en-')).toEqual('en-');
+      expect(standardizeLocale('------')).toEqual('------');
+      expect(standardizeLocale('test')).toEqual('test');
+      expect(standardizeLocale('hello-world')).toEqual('hello-world');
     });
   });
 });
