@@ -21,3 +21,12 @@ export function getSubstitutionCount(message: string): number {
 }
 
 const MAX_SUBSTITUTIONS = 9;
+
+/** Given a string, standardize it to the format `xx_YY`. */
+export function standardizeLocale(locale: string): string {
+  if (locale.length === 2) return locale.toLowerCase();
+
+  const prefix = locale.substring(0, 2);
+  const suffix = locale.substring(3);
+  return `${prefix.toLowerCase()}_${suffix.toUpperCase()}`;
+}
