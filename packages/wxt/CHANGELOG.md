@@ -33,8 +33,8 @@
 
 ### ❤️ Contributors
 
-- Yunsup Sim <pedogunu@gmail.com>
-- ТΞNSΛI <tensai@gmx.net>
+- Yunsup Sim ([@SimYunSup](https://github.com/SimYunSup))
+- ТΞNSΛI ([@Tensai75](https://github.com/Tensai75))
 - Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 
