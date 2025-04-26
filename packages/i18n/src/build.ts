@@ -10,6 +10,8 @@ import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
 import { applyChromeMessagePlaceholders, getSubstitutionCount } from './utils';
 
+export { SUPPORTED_LOCALES } from './supported-locales';
+
 //
 // TYPES
 //
