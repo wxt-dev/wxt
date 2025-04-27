@@ -73,6 +73,7 @@ const chromeExtensionIds = [
   'gdjampjdgjmbifnhldgcnccdjkcoicmg', // radiofrance - news & broadcasts (French), music (international)
   'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
   'njnammmpdodmfkodnfpammnpdcbhnlcm', // Always Light Mode - Setting website always in light mode
+  'lblmfclcfniabobmamfkdogcgdagbhhb', // DesignPicker - Color Picker & Font Detector
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
