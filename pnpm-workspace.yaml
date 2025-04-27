@@ -64,6 +64,7 @@ catalog:
   lodash.merge: ^4.6.2
   magicast: ^0.3.5
   markdown-it-footnote: ^4.0.0
+  markdownlint-cli: ^0.44.0
   minimatch: ^10.0.1
   nano-spawn: ^0.2.0
   normalize-path: ^3.0.0
