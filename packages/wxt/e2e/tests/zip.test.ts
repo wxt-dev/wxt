@@ -83,16 +83,17 @@ describe('Zipping', () => {
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
     );
-    const artifactZip = '.output/test-1.0.0-beta.1-firefox-development.zip';
-    const sourcesZip = '.output/test-1.0.0-beta.1-development-sources.zip';
+    const artifactZip = '.output/test-1.0.0-beta.1-firefox-dev.zip';
+    const sourcesZip = '.output/test-1.0.0-beta.1-sources-dev.zip';
 
     await project.zip({
       browser: 'firefox',
       mode: 'development',
       zip: {
         artifactTemplate:
-          '{{name}}-{{packageVersion}}-{{browser}}-{{mode}}.zip',
-        sourcesTemplate: '{{name}}-{{packageVersion}}-{{mode}}-sources.zip',
+          '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
+        sourcesTemplate:
+          '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip',
       },
     });
 

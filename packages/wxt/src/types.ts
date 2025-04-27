@@ -150,9 +150,10 @@ export interface InlineConfig {
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{packageVersion}}-{{browser}}.zip"
+     * @default "{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip"
      */
     artifactTemplate?: string;
     /**
@@ -175,9 +176,10 @@ export interface InlineConfig {
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{packageVersion}}-sources.zip"
+     * @default "{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip"
      */
     sourcesTemplate?: string;
     /**
