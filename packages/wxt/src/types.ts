@@ -152,7 +152,7 @@ export interface InlineConfig {
      * - <span v-pre>`{{mode}}`</span> - The current mode
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-{{browser}}.zip"
+     * @default "{{name}}-{{packageVersion}}-{{browser}}.zip"
      */
     artifactTemplate?: string;
     /**
@@ -177,7 +177,7 @@ export interface InlineConfig {
      * - <span v-pre>`{{mode}}`</span> - The current mode
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-sources.zip"
+     * @default "{{name}}-{{packageVersion}}-sources.zip"
      */
     sourcesTemplate?: string;
     /**
