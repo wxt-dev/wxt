@@ -5,7 +5,7 @@ export default defineWxtModule({
   setup(wxt) {
     wxt.hooks.hook('prepare:publicPaths', async (wxt, paths) => {
       if (wxt.config.manifest.permissions?.includes('favicon')) {
-        paths.push('_favicon/');
+        paths.push('_favicon/?${string}');
         wxt.hooks.hook('build:manifestGenerated', (_, manifest) => {
           const favicon_resource: any = {
             resources: ['/_favicon/*'],

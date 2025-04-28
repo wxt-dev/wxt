@@ -441,8 +441,9 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | ""
           | "/"
-          | "/_favicon"
+          | "/_favicon/?\${string}\"
           | "/options.html"
           | "/popup.html"
           | "/sandbox.html"
