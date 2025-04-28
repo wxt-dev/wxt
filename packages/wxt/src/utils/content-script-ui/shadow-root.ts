@@ -18,7 +18,7 @@ export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
   options: ShadowRootContentScriptUiOptions<TMounted>,
 ): Promise<ShadowRootContentScriptUi<TMounted>> {
-  const instanceId = crypto.randomUUID();
+  const instanceId = Math.random().toString(36).substring(2, 15);
   const css: string[] = [];
 
   if (!options.inheritStyles) {

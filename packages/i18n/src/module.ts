@@ -16,12 +16,14 @@ import {
   generateChromeMessagesText,
   parseMessagesFile,
   generateTypeText,
+  SUPPORTED_LOCALES,
 } from './build';
 import glob from 'fast-glob';
 import { basename, extname, join, resolve } from 'node:path';
 import { watch } from 'chokidar';
 import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
 import { writeFile } from 'node:fs/promises';
+import { standardizeLocale } from './utils';
 
 export default defineWxtModule<I18nOptions>({
   name: '@wxt-dev/i18n',
@@ -46,10 +48,22 @@ export default defineWxtModule<I18nOptions>({
         cwd: localesDir,
         absolute: true,
       });
-      return files.map((file) => ({
-        file,
-        locale: basename(file).replace(extname(file), ''),
-      }));
+
+      const unsupportedLocales: string[] = [];
+
+      const res = files.map((file) => {
+        const rawLocale = basename(file).replace(extname(file), '');
+        const locale = standardizeLocale(rawLocale);
+        if (!SUPPORTED_LOCALES.has(locale)) unsupportedLocales.push(locale);
+        return { file, locale };
+      });
+
+      if (unsupportedLocales.length > 0)
+        wxt.logger.warn(
+          `Unsupported locales: [${unsupportedLocales.join(', ')}].\n\nWeb extensions only support a limited set of locales as described here: https://developer.chrome.com/docs/extensions/reference/api/i18n#locales`,
+        );
+
+      return res;
     };
 
     const generateOutputJsonFiles = async (): Promise<

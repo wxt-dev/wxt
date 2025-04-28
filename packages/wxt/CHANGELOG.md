@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.4...wxt-v0.20.5)
+
+### 🩹 Fixes
+
+- Don't use crypto.randUUID for shadow root UIs ([3577c0b](https://github.com/wxt-dev/wxt/commit/3577c0b))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.3...wxt-v0.20.4)
@@ -21,8 +33,8 @@
 
 ### ❤️ Contributors
 
-- Yunsup Sim <pedogunu@gmail.com>
-- ТΞNSΛI <tensai@gmx.net>
+- Yunsup Sim ([@SimYunSup](https://github.com/SimYunSup))
+- ТΞNSΛI ([@Tensai75](https://github.com/Tensai75))
 - Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 
