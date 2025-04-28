@@ -1,10 +1,10 @@
 # Favicons
 
-[How to fetch favicons](https://developer.chrome.com/docs/extensions/how-to/ui/favicons)
+[Chrome Docs: How to fetch favicons](https://developer.chrome.com/docs/extensions/how-to/ui/favicons)
 
-## What happens when you add favicons permissions in wxt.config.ts?
+#### What happens when you add favicons permissions in wxt.config.ts?
 
-WXT automatically adds value in web_accessible_resources with default and updates the types for favicons
+WXT automatically adds value in `web_accessible_resources` with default value and updates the types for favicon.
 
 This is automatically added in manifest.json
 
@@ -18,7 +18,7 @@ This is automatically added in manifest.json
 
 ```
 
-## If you want to add custom values in `matches` parameter you can either add by hook or [WXT Modules](https://wxt.dev/guide/essentials/wxt-modules.html#wxt-modules).
+#### If you want to add custom values in `matches` parameter you can either add by hook or WXT modules.
 
 1. Via hook in wxt.config.ts
 
@@ -42,7 +42,9 @@ export default defineConfig({
 
 ```
 
-2. Via module
+2. Via custom module
+
+- Follow the guide for [creating modules](https://wxt.dev/guide/essentials/wxt-modules.html#writing-modules) and paste this below code.
 
 ```js
 
