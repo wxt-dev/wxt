@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
-import {
-  fakeBuildOutput,
-  setFakeWxt,
-} from '../../src/core/utils/testing/fake-objects';
-import { generateManifest } from '../../src/core/utils/manifest';
 
 describe('TypeScript Project', () => {
   it('should generate defined constants correctly', async () => {
