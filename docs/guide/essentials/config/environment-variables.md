@@ -65,7 +65,6 @@ To use environment variables in the manifest, you need to use the function synta
 
 ```ts
 export default defineConfig({
-  extensionApi: 'chrome',
   modules: ['@wxt-dev/module-vue'],
   manifest: { // [!code --]
     oauth2: { // [!code --]
