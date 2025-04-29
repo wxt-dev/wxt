@@ -80,4 +80,21 @@ export default defineConfig({
 });
 ```
 
+Note env variables like `import.meta.env.DEV` will not be defined here, instead access the mode like this:
+
+```ts
+export default defineConfig({
+  manifest: ({ mode }) => {
+    const isDev = mode === "development";
+    console.log("Is development mode:", isDev);
+
+    return {
+      oauth2: {
+        client_id: import.meta.env.WXT_APP_CLIENT_ID
+      }
+    };
+  },
+});
+```
+
 WXT can't load your `.env` files until after the config file has been loaded. So by using the function syntax for `manifest`, it defers creating the object until after the `.env` files are loaded into the process.
