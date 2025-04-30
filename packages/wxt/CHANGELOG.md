@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.20.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.5...wxt-v0.20.6)
+
 ## v0.20.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.4...wxt-v0.20.5)
