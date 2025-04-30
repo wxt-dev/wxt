@@ -105,5 +105,5 @@ catalog:
   vitest-mock-extended: ^3.1.0
   vitest-plugin-random-seed: ^1.1.1
   vue: ^3.5.13
-  web-ext-run: ^0.2.2
+  web-ext-run: ^0.2.3
   webextension-polyfill: ^0.12.0
