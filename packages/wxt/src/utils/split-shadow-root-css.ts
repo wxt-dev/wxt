@@ -11,7 +11,7 @@ export function splitShadowRootCss(css: string): {
   let shadowCss = css;
   let documentCss = '';
 
-  const rulesRegex = /(\s*@property[\s\S]*?{[\s\S]*?})/gm;
+  const rulesRegex = /(\s*@(property|font-face)[\s\S]*?{[\s\S]*?})/gm;
   let match;
   while ((match = rulesRegex.exec(css)) !== null) {
     documentCss += match[1];
