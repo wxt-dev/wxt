@@ -50,11 +50,11 @@ See https://github.com/wxt-dev/wxt/issues/784
 To upgrade, you have two options:
 
 1. **Stop using the polyfill**
-   - If you're already using `extensionApi: "chrome"`, then you don't need to test anything! You're already using the same `browser` object v0.20 provides by default.
-   - If you were using the polyfill, there is only one breaking change: `browser.runtime.onMessage` no longer supports using promises to return a response:
+   - If you're already using `extensionApi: "chrome"`, then you're not using the polyfill and there is nothing to change!
+   - Otherwise there is only one change: `browser.runtime.onMessage` no longer supports using promises to return a response:
       ```ts
       browser.runtime.onMessage.addListener(async () => { // [!code --]
-browser.runtime.onMessage.addListener(async (_message, _sender, sendResponse) => { // [!code ++]
+      browser.runtime.onMessage.addListener(async (_message, _sender, sendResponse) => { // [!code ++]
         const res = await someAsyncWork(); // [!code --]
         return res; // [!code --]
         someAsyncWork().then((res) => { // [!code ++]
