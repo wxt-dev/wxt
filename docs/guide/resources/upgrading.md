@@ -52,17 +52,17 @@ To upgrade, you have two options:
 1. **Stop using the polyfill**
    - If you're already using `extensionApi: "chrome"`, then you're not using the polyfill and there is nothing to change!
    - Otherwise there is only one change: `browser.runtime.onMessage` no longer supports using promises to return a response:
-      ```ts
-      browser.runtime.onMessage.addListener(async () => { // [!code --]
-      browser.runtime.onMessage.addListener(async (_message, _sender, sendResponse) => { // [!code ++]
-        const res = await someAsyncWork(); // [!code --]
-        return res; // [!code --]
-        someAsyncWork().then((res) => { // [!code ++]
-          sendResponse(res); // [!code ++]
-        }); // [!code ++]
-        return true; // [!code ++]
-      });
-      ```
+     ```ts
+     browser.runtime.onMessage.addListener(async () => { // [!code --]
+       const res = await someAsyncWork(); // [!code --]
+       return res; // [!code --]
+     browser.runtime.onMessage.addListener(async (_message, _sender, sendResponse) => { // [!code ++]
+       someAsyncWork().then((res) => { // [!code ++]
+         sendResponse(res); // [!code ++]
+       }); // [!code ++]
+       return true; // [!code ++]
+     });
+     ```
 2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
    - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
      ```sh
