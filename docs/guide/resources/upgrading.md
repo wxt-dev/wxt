@@ -61,7 +61,7 @@ To upgrade, you have two options:
           sendResponse(res); // [!code ++]
         }); // [!code ++]
         return true; // [!code ++]
-      })
+      });
       ```
 2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
    - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
