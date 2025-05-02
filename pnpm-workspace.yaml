@@ -85,7 +85,7 @@ catalog:
   sharp: ^0.34.1
   simple-git-hooks: ^2.12.1
   solid-js: ^1.9.5
-  tsx: 4.19.3
+  tsx: 4.19.4
   typedoc: ^0.25.4
   typedoc-plugin-frontmatter: ^1.3.0
   typedoc-plugin-markdown: 4.0.0-next.23
