@@ -48,17 +48,17 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "catalog:"
+    "@vitejs/plugin-react": "^4.3.4"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "publint": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
+    "@aklinker1/check": "^1.4.5",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
+    "publint": "^0.3.12",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   }
 }

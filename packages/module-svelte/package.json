@@ -47,13 +47,13 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "catalog:"
+    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
+    "@aklinker1/check": "^1.4.5",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   }
 }
