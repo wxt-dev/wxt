@@ -18,8 +18,8 @@ export default {
         getWxtHelp('prepare'),
         getWxtHelp('clean'),
         getWxtHelp('init'),
-        getWxtHelp('submit'),
-        getWxtHelp('submit init'),
+        getWxtSubmitHelp(''),
+        getWxtSubmitHelp('init'),
       ]);
 
     consola.success(`Generated CLI docs`);
@@ -46,6 +46,11 @@ async function getHelp(command: string): Promise<string> {
 
 function getWxtHelp(command: string): Promise<string> {
   return getHelp(`bun --silent wxt ${command}`.trim());
+}
+
+async function getWxtSubmitHelp(command: string): Promise<string> {
+  const res = await getWxtHelp(`submit ${command}`);
+  return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
 
 export interface Command {
