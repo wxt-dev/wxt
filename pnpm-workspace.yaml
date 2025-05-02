@@ -15,7 +15,7 @@ catalog:
   '@aklinker1/rollup-plugin-visualizer': 5.12.0
   '@commitlint/config-conventional': ^19.8.0
   '@commitlint/types': ^19.8.0
-  '@faker-js/faker': ^9.6.0
+  '@faker-js/faker': ^9.7.0
   '@sveltejs/vite-plugin-svelte': ^4.0.0 || ^5.0.0
   '@types/chrome': ^0.0.313
   '@types/fs-extra': ^11.0.4
@@ -53,7 +53,7 @@ catalog:
   fs-extra: ^11.3.0
   get-port-please: ^3.1.2
   giget: ^1.2.3 || ^2.0.0
-  happy-dom: ^17.4.4
+  happy-dom: ^17.4.6
   hookable: ^5.5.3
   import-meta-resolve: ^4.1.0
   is-wsl: ^3.1.0
@@ -71,12 +71,12 @@ catalog:
   ohash: ^2.0.11
   open: ^10.1.0
   ora: ^8.2.0
-  oxlint: ^0.16.5
+  oxlint: ^0.16.8
   perfect-debounce: ^1.0.0
   picocolors: ^1.1.1
   prettier: ^3.5.3
   prompts: ^2.4.2
-  publint: ^0.3.10
+  publint: ^0.3.12
   publish-browser-extension: ^2.3.0 || ^3.0.0
   react: ^19.1.0
   react-dom: ^19.1.0
