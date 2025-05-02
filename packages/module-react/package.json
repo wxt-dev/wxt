@@ -51,7 +51,7 @@
     "@vitejs/plugin-react": "^4.3.4"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0-alpha.2",
+    "@aklinker1/check": "2.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.2",
     "publint": "^0.3.12",

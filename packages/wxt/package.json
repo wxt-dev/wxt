@@ -63,7 +63,7 @@
     "web-ext-run": "^0.2.3"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0-alpha.2",
+    "@aklinker1/check": "2.0.0",
     "@faker-js/faker": "^9.7.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",

@@ -39,7 +39,7 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0-alpha.2",
+    "@aklinker1/check": "2.0.0",
     "@types/chrome": "^0.0.313",
     "@types/node": "^20.17.6",
     "oxlint": "^0.16.8",
