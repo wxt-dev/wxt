@@ -19,5 +19,22 @@ describe('browser', () => {
         browser.i18n.detectLanguage('Hello, world!'),
       ).resolves.toMatchTypeOf<chrome.i18n.LanguageDetectionResult>();
     });
+
+    it('should allow using strings instead of enums', () => {
+      browser.declarativeNetRequest.updateDynamicRules({
+        addRules: [
+          {
+            id: 1,
+            action: {
+              type: 'modifyHeaders',
+              responseHeaders: [],
+            },
+            condition: {
+              resourceTypes: ['xmlhttprequest'],
+            },
+          },
+        ],
+      });
+    });
   });
 });

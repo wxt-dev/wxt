@@ -586,7 +586,7 @@ export namespace Browser {
             /** Device name */
             deviceName: string;
             /** Type of the device */
-            deviceType: DeviceType;
+            deviceType: (DeviceType | `${DeviceType}`);
             /** The user-friendly name (e.g. "USB Microphone"). */
             displayName: string;
             /** The unique identifier of the audio device. */
@@ -598,14 +598,14 @@ export namespace Browser {
             /** The stable/persisted device id string when available. */
             stableDeviceId?: string;
             /** Stream type associated with this device. */
-            streamType: StreamType;
+            streamType: (StreamType | `${StreamType}`);
         }
 
         export interface DeviceFilter {
             /** If set, only audio devices whose active state matches this value will satisfy the filter. */
             isActive?: boolean;
             /** If set, only audio devices whose stream type is included in this list will satisfy the filter. */
-            streamTypes?: StreamType[];
+            streamTypes?: (StreamType | `${StreamType}`)[];
         }
 
         export interface DeviceIdLists {
@@ -661,7 +661,7 @@ export namespace Browser {
             /** Whether or not the stream is now muted. */
             isMuted: boolean;
             /** The type of the stream for which the mute value changed. The updated mute value applies to all devices with this stream type. */
-            streamType: StreamType;
+            streamType: (StreamType | `${StreamType}`);
         }
 
         /** Type of stream an audio device provides. */
@@ -7772,7 +7772,7 @@ export namespace Browser {
             /** Printer capabilities in [CDD format](https://developers.google.com/cloud-print/docs/cdd#cdd-example). The property may be missing. */
             capabilities?: { [key: string]: unknown };
             /** The status of the printer. */
-            status: PrinterStatus;
+            status: (PrinterStatus | `${PrinterStatus}`);
         }
 
         /** Status of the print job. */
@@ -7807,7 +7807,7 @@ export namespace Browser {
              */
             recentlyUsedRank?: number;
             /** The source of the printer (user or policy configured). */
-            source: PrinterSource;
+            source: (PrinterSource | `${PrinterSource}`);
             /** The printer URI. This can be used by extensions to choose the printer for the user. */
             uri: string;
         }
@@ -7859,7 +7859,7 @@ export namespace Browser {
             /** The id of created print job. This is a unique identifier among all print jobs on the device. If status is not OK, jobId will be null. */
             jobId: string | null;
             /** The status of the request. */
-            status: SubmitJobStatus;
+            status: (SubmitJobStatus | `${SubmitJobStatus}`);
         }
 
         /** The status of submitJob request. */
@@ -7907,7 +7907,7 @@ export namespace Browser {
         /**
          * Event fired when the status of the job is changed. This is only fired for the jobs created by this extension.
          */
-        export const onJobStatusChanged: Browser.events.Event<(jobId: string, status: JobStatus) => void>;
+        export const onJobStatusChanged: Browser.events.Event<(jobId: string, status: (JobStatus | `${JobStatus}`)) => void>;
     }
 
     ////////////////////
@@ -7955,7 +7955,7 @@ export namespace Browser {
             /** Displayed name of the printer. */
             name: string;
             /** The source of the printer. */
-            source: PrinterSource;
+            source: (PrinterSource | `${PrinterSource}`);
             /** The full path for the printer. Contains protocol, hostname, port, and queue. */
             uri: string;
         }
@@ -7987,11 +7987,11 @@ export namespace Browser {
             /** The settings of the print job. */
             settings: PrintSettings;
             /** Source showing who initiated the print job. */
-            source: PrintJobSource;
+            source: (PrintJobSource | `${PrintJobSource}`);
             /** ID of source. Null if source is PRINT_PREVIEW or ANDROID_APP. */
             sourceId: string | null;
             /** The final status of the job. */
-            status: PrintJobStatus;
+            status: (PrintJobStatus | `${PrintJobStatus}`);
             /** The title of the document which was printed. */
             title: string;
         }
@@ -8020,11 +8020,11 @@ export namespace Browser {
 
         export interface PrintSettings {
             /** The requested color mode. */
-            color: ColorMode;
+            color: (ColorMode | `${ColorMode}`);
             /** The requested number of copies. */
             copies: number;
             /** The requested duplex mode. */
-            duplex: DuplexMode;
+            duplex: (DuplexMode | `${DuplexMode}`);
             /** The requested media size. */
             mediaSize: MediaSize;
         }
@@ -8750,7 +8750,7 @@ export namespace Browser {
          */
         export interface ContextFilter {
             contextIds?: string[] | undefined;
-            contextTypes?: ContextType[] | undefined;
+            contextTypes?: (ContextType | `${ContextType}`)[] | undefined;
             documentIds?: string[] | undefined;
             documentOrigins?: string[] | undefined;
             documentUrls?: string[] | undefined;
@@ -8791,7 +8791,7 @@ export namespace Browser {
             /** A unique identifier for this context */
             contextId: string;
             /** The type of context this corresponds to. */
-            contextType: ContextType;
+            contextType: (ContextType | `${ContextType}`);
             /**
              * Optional.
              * A UUID for the document associated with this context, or undefined if this context is hosted not in a document.
@@ -13209,7 +13209,7 @@ export namespace Browser {
             /**
              * A list of request types. Requests that cannot match any of the types will be filtered out.
              */
-            types?: ResourceType[] | undefined;
+            types?: (ResourceType | `${ResourceType}`)[] | undefined;
             /** A list of URLs or URL patterns. Requests that cannot match any of the URLs will be filtered out. */
             urls: string[];
 
@@ -13261,7 +13261,7 @@ export namespace Browser {
             /**
              * How the requested resource will be used.
              */
-            type: ResourceType;
+            type: (ResourceType | `${ResourceType}`);
             /** The time when this signal is triggered, in milliseconds since the epoch. */
             timeStamp: number;
             /** The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used.
@@ -13288,7 +13288,7 @@ export namespace Browser {
             requestId: string;
             tabId: number;
             timeStamp: number;
-            type: ResourceType;
+            type: (ResourceType | `${ResourceType}`);
             url: string;
         }
 
@@ -13973,7 +13973,7 @@ export namespace Browser {
             tabId: number;
 
             /** The resource type of the request. */
-            type: ResourceType;
+            type: (ResourceType | `${ResourceType}`);
 
             /** The URL of the request. */
             url: string;
@@ -14015,7 +14015,7 @@ export namespace Browser {
             responseHeaders?: ModifyHeaderInfo[] | undefined;
 
             /** The type of action to perform. */
-            type: RuleActionType;
+            type: (RuleActionType | `${RuleActionType}`);
         }
 
         export interface RuleCondition {
@@ -14023,7 +14023,7 @@ export namespace Browser {
              * Specifies whether the network request is first-party or third-party to the domain from which it originated.
              * If omitted, all requests are accepted.
              */
-            domainType?: DomainType | undefined;
+            domainType?: (DomainType | `${DomainType}`) | undefined;
 
             /**
          * @deprecated since Chrome 101. Use initiatorDomains instead.
@@ -14110,7 +14110,7 @@ export namespace Browser {
              * Only one of requestMethods and excludedRequestMethods should be specified.
              * If neither of them is specified, all request methods are matched.
              */
-            excludedRequestMethods?: RequestMethod[] | undefined;
+            excludedRequestMethods?: (RequestMethod | `${RequestMethod}`)[] | undefined;
 
             /**
              * List of resource types which the rule won't match.
@@ -14118,7 +14118,7 @@ export namespace Browser {
              * and {@link Browser.declarativeNetRequest.RuleCondition.excludedResourceTypes} should be specified.
              * If neither of them is specified, all resource types except "main_frame" are blocked.
              */
-            excludedResourceTypes?: ResourceType[] | undefined;
+            excludedResourceTypes?: (ResourceType | `${ResourceType}`)[] | undefined;
 
             /**
              * List of {@link Browser.tabs.Tab.id} which the rule should not match.
@@ -14149,7 +14149,7 @@ export namespace Browser {
              * Note: Specifying a {@link Browser.declarativeNetRequest.RuleCondition.requestMethods} rule condition will also exclude non-HTTP(s) requests,
              * whereas specifying {@link Browser.declarativeNetRequest.RuleCondition.excludedRequestMethods} will not.
              */
-            requestMethods?: RequestMethod[];
+            requestMethods?: (RequestMethod | `${RequestMethod}`)[];
 
             /**
              * List of {@link Browser.tabs.Tab.id} which the rule should not match.
@@ -14191,7 +14191,7 @@ export namespace Browser {
              *
              * Note: this must be specified for allowAllRequests rules and may only include the sub_frame and main_frame resource types.
              */
-            resourceTypes?: ResourceType[] | undefined;
+            resourceTypes?: (ResourceType | `${ResourceType}`)[] | undefined;
 
             /**
              * Rule does not match if the request matches any response header condition in this list (if specified). If both `excludedResponseHeaders` and `responseHeaders` are specified, then the `excludedResponseHeaders` property takes precedence.
@@ -14261,7 +14261,7 @@ export namespace Browser {
             header: string;
 
             /** The operation to be performed on a header. */
-            operation: HeaderOperation;
+            operation: (HeaderOperation | `${HeaderOperation}`);
 
             /** The new value for the header.
              * Must be specified for append and set operations.
@@ -14343,7 +14343,7 @@ export namespace Browser {
             /** Specifies the reason why the regular expression is not supported.
              * Only provided if isSupported is false.
              */
-            reason?: UnsupportedRegexReason | undefined;
+            reason?: (UnsupportedRegexReason | `${UnsupportedRegexReason}`) | undefined;
         }
 
         export interface TabActionCountUpdate {
