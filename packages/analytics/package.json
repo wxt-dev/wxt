@@ -51,7 +51,7 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
+    "@aklinker1/check": "2.0.0",
     "@types/chrome": "^0.0.313",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.12",

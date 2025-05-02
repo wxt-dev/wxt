@@ -17,8 +17,8 @@ importers:
         specifier: ^1.1.4
         version: 1.1.4
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@commitlint/config-conventional':
         specifier: ^19.8.0
         version: 19.8.0
@@ -105,8 +105,8 @@ importers:
         version: 1.0.40
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/chrome':
         specifier: ^0.0.313
         version: 0.0.313
@@ -139,8 +139,8 @@ importers:
         version: 0.34.1
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       oxlint:
         specifier: ^0.16.8
         version: 0.16.8
@@ -198,8 +198,8 @@ importers:
         version: 3.3.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/chrome':
         specifier: ^0.0.313
         version: 0.0.313
@@ -235,8 +235,8 @@ importers:
         version: 4.3.4(vite@6.3.4(@types/node@20.17.30)(jiti@2.4.2)(sass@1.86.3)(tsx@4.19.4)(yaml@2.7.0))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/react':
         specifier: ^19.1.0
         version: 19.1.0
@@ -269,8 +269,8 @@ importers:
         version: 2.11.6(solid-js@1.9.5)(vite@6.3.4(@types/node@20.17.30)(jiti@2.4.2)(sass@1.86.3)(tsx@4.19.4)(yaml@2.7.0))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -297,8 +297,8 @@ importers:
         version: 5.1.6
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -319,8 +319,8 @@ importers:
         version: 5.2.3(vite@6.3.4(@types/node@20.17.30)(jiti@2.4.2)(sass@1.86.3)(tsx@4.19.4)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.3))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -344,8 +344,8 @@ importers:
         version: 2.0.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/chrome':
         specifier: ^0.0.313
         version: 0.0.313
@@ -378,8 +378,8 @@ importers:
         version: 3.3.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       oxlint:
         specifier: ^0.16.8
         version: 0.16.8
@@ -402,8 +402,8 @@ importers:
   packages/webextension-polyfill:
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/webextension-polyfill':
         specifier: ^0.12.3
         version: 0.12.3
@@ -562,8 +562,8 @@ importers:
         version: 0.2.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^1.4.5
-        version: 1.4.5(typescript@5.8.3)
+        specifier: 2.0.0
+        version: 2.0.0
       '@faker-js/faker':
         specifier: ^9.7.0
         version: 9.7.0
@@ -662,11 +662,9 @@ packages:
     resolution: {integrity: sha512-3SQ2zVEsX+UWg/mHfp9TqU9OPI8abRGTOadChQB0Aqb4dtIy311pBddndVPuuD4uQfIhKbvPxkzZ0rwvlw52Rw==}
     hasBin: true
 
-  '@aklinker1/check@1.4.5':
-    resolution: {integrity: sha512-whVpnpSK4qa4/83q22JAmxwRAEj35qYs8eIH/tX1C6rKbiwx7EL6kQVmSAhCe1NYqzoIWyOgsISdDPyHjC+h2A==}
+  '@aklinker1/check@2.0.0':
+    resolution: {integrity: sha512-itoIc3WlLCtoVEwTIi/f6E4UKXJQJhYyMzbBqbQ73uvIsChgXKfmZHjaUwz4PyBtmkvlO4yhkh1JSQUzy2x5jA==}
     hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
 
   '@aklinker1/rollup-plugin-visualizer@5.12.0':
     resolution: {integrity: sha512-X24LvEGw6UFmy0lpGJDmXsMyBD58XmX1bbwsaMLhNoM+UMQfQ3b2RtC+nz4b/NoRK5r6QJSKJHBNVeUdwqybaQ==}
@@ -4935,12 +4933,11 @@ snapshots:
       proper-lockfile: 4.1.2
       yaml: 2.7.0
 
-  '@aklinker1/check@1.4.5(typescript@5.8.3)':
+  '@aklinker1/check@2.0.0':
     dependencies:
       '@antfu/utils': 0.7.10
       ci-info: 4.2.0
       citty: 0.1.6
-      typescript: 5.8.3
 
   '@aklinker1/rollup-plugin-visualizer@5.12.0(rollup@4.34.9)':
     dependencies:
