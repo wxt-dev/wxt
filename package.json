@@ -12,7 +12,7 @@
     "check": "check && bun run --filter '*' check",
     "test": "bun run --filter '*' test run",
     "test:coverage": "bun run --filter '*' test:coverage",
-    "prepare": "simple-git-hooks",
+    "prepare": "simple-git-hooks && bun run --filter '*' prepare",
     "prepublish": "bun run --silent build",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "bun --silent docs:gen && vitepress dev docs",
@@ -20,7 +20,7 @@
     "docs:preview": "bun --silent docs:gen && vitepress preview docs"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.4",
+    "@aklinker1/buildc": "^1.1.5",
     "@aklinker1/check": "2.0.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",

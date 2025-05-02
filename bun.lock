@@ -3,7 +3,7 @@
   "workspaces": {
     "": {
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.4",
+        "@aklinker1/buildc": "^1.1.5",
         "@aklinker1/check": "2.0.0",
         "@commitlint/config-conventional": "^19.8.0",
         "@commitlint/types": "^19.8.0",
@@ -343,7 +343,7 @@
   "packages": {
     "@1natsu/wait-element": ["@1natsu/wait-element@4.1.2", "", { "dependencies": { "defu": "^6.1.4", "many-keys-map": "^2.0.1" } }, "sha512-qWxSJD+Q5b8bKOvESFifvfZ92DuMsY+03SBNjTO34ipJLP6mZ9yK4bQz/vlh48aEQXoJfaZBqUwKL5BdI5iiWw=="],
 
-    "@aklinker1/buildc": ["@aklinker1/buildc@1.1.4", "", { "dependencies": { "cac": "^6.7.14", "consola": "^3.2.3", "dependency-graph": "^1.0.0", "fast-glob": "^3.3.2", "fs-extra": "^11.2.0", "ohash": "^1.1.3", "pathe": "^1.1.2", "proper-lockfile": "^4.1.2", "yaml": "^2.4.5" }, "bin": { "buildc": "bin/buildc.mjs" } }, "sha512-3SQ2zVEsX+UWg/mHfp9TqU9OPI8abRGTOadChQB0Aqb4dtIy311pBddndVPuuD4uQfIhKbvPxkzZ0rwvlw52Rw=="],
+    "@aklinker1/buildc": ["@aklinker1/buildc@1.1.5", "", { "dependencies": { "cac": "^6.7.14", "consola": "^3.2.3", "dependency-graph": "^1.0.0", "fast-glob": "^3.3.2", "fs-extra": "^11.2.0", "ohash": "^1.1.3", "pathe": "^1.1.2", "proper-lockfile": "^4.1.2", "yaml": "^2.4.5" }, "bin": { "buildc": "bin/buildc.mjs" } }, "sha512-SL8NBNwOiTiCKjQnpOxTA4WfoeiTNhiVy1J6Ztk28xTbZQ7IL0zHbKODnEJAjuy8bfnxlChQT1ZMzjG7kBU4aw=="],
 
     "@aklinker1/check": ["@aklinker1/check@2.0.0", "", { "dependencies": { "@antfu/utils": "^0.7.7", "ci-info": "^4.0.0", "citty": "^0.1.6" }, "bin": { "check": "bin/check.mjs" } }, "sha512-itoIc3WlLCtoVEwTIi/f6E4UKXJQJhYyMzbBqbQ73uvIsChgXKfmZHjaUwz4PyBtmkvlO4yhkh1JSQUzy2x5jA=="],
 
