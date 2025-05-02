@@ -3,6 +3,6 @@ coverage
 dist
 .wxt
 docs/.vitepress/cache
-pnpm-lock.yaml
+bun.lock
 CHANGELOG.md
 packages/browser/src/gen

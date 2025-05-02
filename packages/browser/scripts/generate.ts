@@ -7,7 +7,7 @@ import { sep as posixSep } from 'node:path/posix';
 // Fetch latest version
 
 console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
-await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome@latest']);
+await spawn('bun', ['i', '--ignore-scripts', '-D', '@types/chrome@latest']);
 
 // Generate new package.json
 
@@ -28,7 +28,7 @@ newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
 const outPkgJsonPath = resolve('package.json');
 await fs.writeJson(outPkgJsonPath, newPkgJson);
-await spawn('pnpm', ['-w', 'prettier', '--write', outPkgJsonPath]);
+await spawn('bun', ['prettier', '--write', outPkgJsonPath]);
 
 // Generate declaration files
 

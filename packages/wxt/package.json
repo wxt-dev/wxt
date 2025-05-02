@@ -7,13 +7,13 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
-    "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
+    "check": "bun run build && bun check:default && bun check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test -- run --coverage",
+    "test:coverage": "bun run test -- run --coverage",
     "sync-releases": "pnpx changelogen@latest gh release",
-    "prepack": "pnpm build"
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@1natsu/wait-element": "^4.1.2",

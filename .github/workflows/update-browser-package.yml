@@ -24,11 +24,11 @@ jobs:
 
       - name: Generate Latest Code
         working-directory: packages/browser
-        run: pnpm gen
+        run: bun gen
 
       - name: Run Checks
         working-directory: packages/browser
-        run: pnpm check
+        run: bun check
 
       - name: Commit Changes
         id: commit
@@ -43,4 +43,4 @@ jobs:
         working-directory: packages/browser
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm publish
+          bun publish

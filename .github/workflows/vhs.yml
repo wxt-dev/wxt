@@ -24,11 +24,11 @@ jobs:
         with:
           install: false
 
-      # This prevents pnpm dlx from downloading WXT in the video
+      # This prevents bunx from downloading WXT in the video
       - name: Pre-install WXT
         run: |
-          pnpm store add wxt@latest
-          pnpm dlx wxt@latest --version
+          bun i wxt@latest
+          bunx wxt@latest --version
 
       - name: Record VHS
         uses: charmbracelet/vhs-action@v2.1.0

@@ -9,6 +9,7 @@ import {
 // https://pkg-size.dev/wxt
 
 test('Only one version of esbuild should be installed (each version is ~20mb of node_modules)', async () => {
+  // TODO
   const { stdout } = await spawn('pnpm', [
     'why',
     'esbuild',

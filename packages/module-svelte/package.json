@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "pnpm build && check"
+    "check": "bun run build && check"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6",

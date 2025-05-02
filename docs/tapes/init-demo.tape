@@ -7,7 +7,7 @@
 Output docs/assets/init-demo.gif
 
 # The tools we will use
-Require pnpm
+Require bun
 
 
 # === Scene ====
@@ -43,11 +43,11 @@ Show
 
 # ===== Actions =====
 
-Type 'pnpm dlx wxt@latest init .' Sleep 1s Enter
+Type 'bunx wxt@latest init .' Sleep 1s Enter
 Sleep 3.25s
 Down@750ms Enter@750ms # Select `vue` template
 Sleep 1.25s
-Down@750ms Enter@750ms # Select `pnpm` as a package manager
+Down@750ms Down@750ms Enter@750ms # Select `bun` as a package manager
 Sleep 5s
 
 

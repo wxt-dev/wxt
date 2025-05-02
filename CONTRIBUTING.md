@@ -22,7 +22,7 @@ The title of your pull request should follow the [conventional commit format](#c
 
 ## Setup
 
-WXT uses `pnpm`, so make sure you have it installed.
+WXT uses `bun`, so make sure you have it installed.
 
 ```sh
 corepack enable
@@ -31,7 +31,7 @@ corepack enable
 Then, simply run the install command:
 
 ```sh
-pnpm i
+bun i
 ```
 
 ## Development
@@ -41,44 +41,44 @@ Here are some helpful commands:
 ```sh
 # Build WXT package
 cd packages/wxt
-pnpm build
+bun run build
 ```
 
 ```sh
 # Build WXT package, then build demo extension
 cd packages/wxt-demo
-pnpm build
+bun run build
 ```
 
 ```sh
 # Build WXT package, then start the demo extension in dev mode
 cd packages/wxt-demo
-pnpm dev
+bun dev
 ```
 
 ```sh
 # Run unit and E2E tests
-pnpm test
+bun run test
 ```
 
 ```sh
 # Start the docs website locally
-pnpm docs:dev
+bun docs:dev
 ```
 
 ## Profiling
 
 ```sh
 # Build the latest version
-pnpm --filter wxt build
+bun run --filter wxt build
 
 # CD to the demo directory
 cd packages/wxt-demo
 
 # 1. Generate a flamechart with 0x
-pnpm dlx 0x node_modules/wxt/bin/wxt.mjs build
+bunx 0x node_modules/wxt/bin/wxt.mjs build
 # 2. Inspect the process with chrome @ chrome://inspect
-pnpm node --inspect node_modules/wxt/bin/wxt.mjs build
+node --inspect node_modules/wxt/bin/wxt.mjs build
 ```
 
 ## Updating Docs
@@ -96,7 +96,7 @@ WXT has unit and E2E tests. When making a change or adding a feature, make sure 
 To run tests for a specific file, add the filename at the end of the test command:
 
 ```sh
-pnpm test manifest-contents
+bun run test manifest-contents
 ```
 
 All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
@@ -149,7 +149,7 @@ Releases are done with GitHub actions:
 Use [`taze`](https://www.npmjs.com/package/taze) to upgrade dependencies throughout the entire monorepo.
 
 ```sh
-pnpm dlx taze -r
+bunx taze@latest -r
 ```
 
 Configuration is in [`taze.config.ts`](./taze.config.ts).

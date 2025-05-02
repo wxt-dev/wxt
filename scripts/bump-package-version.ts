@@ -36,7 +36,7 @@ if (currentVersion.startsWith('0.')) {
     bumpType = 'patch';
   }
 }
-await spawn('pnpm', ['version', bumpType], {
+await spawn('npm', ['version', bumpType], {
   cwd: pkgDir,
 });
 const updatedPkgJson = await fs.readJson(pkgJsonPath);

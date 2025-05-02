@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- pnpm run --reporter-hide-prefix /^build:all:.*/",
+    "build:all": "buildc --deps-only -- bun build:all:chrome-mv3 && bun build:all:chrome-mv2 && bun build:all:firefox-mv3 && bun build:all:firefox-mv2",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",

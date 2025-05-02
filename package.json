@@ -4,17 +4,20 @@
   "engines": {
     "node": ">=18.20.3"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "bun@1.2.11",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "check": "check && pnpm -r --sequential run check",
-    "test": "pnpm -r --sequential run test run",
-    "test:coverage": "pnpm -r --sequential run test:coverage",
+    "check": "check && bun run --filter '*' check",
+    "test": "bun run --filter '*' test run",
+    "test:coverage": "bun run --filter '*' test:coverage",
     "prepare": "simple-git-hooks",
-    "prepublish": "pnpm -s build",
+    "prepublish": "bun run --silent build",
     "docs:gen": "typedoc --options docs/typedoc.json",
-    "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
-    "docs:build": "pnpm -s docs:gen && vitepress build docs",
-    "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
+    "docs:dev": "bun --silent docs:gen && vitepress dev docs",
+    "docs:build": "bun --silent docs:gen && vitepress build docs",
+    "docs:preview": "bun --silent docs:gen && vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.4",
@@ -47,20 +50,12 @@
     "wxt": "workspace:*"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "bunx lint-staged"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search",
-        "search-insights"
-      ]
-    },
-    "patchedDependencies": {
-      "markdown-it-footnote": "patches/markdown-it-footnote.patch"
-    }
+  "patchedDependencies": {
+    "markdown-it-footnote": "patches/markdown-it-footnote.patch"
   }
 }

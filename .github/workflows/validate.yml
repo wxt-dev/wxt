@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: pnpm check
+        run: bun check
 
   builds:
     name: Builds
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: pnpm buildc all
+        run: bun buildc all
 
   build-demo:
     name: Build Demo
@@ -47,11 +47,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: pnpm build:all
+        run: bun build:all
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: pnpm wxt zip
+        run: bun wxt zip
         working-directory: packages/wxt-demo
 
   tests:
@@ -68,7 +68,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run Tests
-        run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
+        run: bun test:coverage -- --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v5
@@ -86,7 +86,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run Tests
-        run: pnpm test
+        run: bun run test
 
   template:
     name: Template
@@ -108,7 +108,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Pack WXT package
-        run: pnpm pack
+        run: bun pm pack
         working-directory: packages/wxt
 
       - name: Install Dependencies
@@ -120,15 +120,15 @@ jobs:
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: pnpm compile
+        run: bun compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: pnpm check
+        run: bun check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
 
       - name: Build Template
-        run: pnpm build
+        run: bun run build
         working-directory: templates/${{ matrix.template }}
