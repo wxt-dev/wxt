@@ -26,9 +26,9 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "chokidar": "catalog:",
-    "confbox": "catalog:",
-    "fast-glob": "catalog:"
+    "chokidar": "^4.0.3",
+    "confbox": "^0.1.8 || ^0.2.2",
+    "fast-glob": "^3.3.3"
   },
   "peerDependencies": {
     "wxt": ">=0.19.7"
@@ -39,15 +39,15 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "@types/chrome": "catalog:",
-    "@types/node": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:",
-    "vitest-plugin-random-seed": "catalog:",
+    "@aklinker1/check": "^1.4.5",
+    "@types/chrome": "^0.0.313",
+    "@types/node": "^20.17.6",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.1.2",
+    "vitest-plugin-random-seed": "^1.1.1",
     "wxt": "workspace:*"
   },
   "main": "./dist/index.cjs",

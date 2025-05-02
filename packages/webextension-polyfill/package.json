@@ -45,12 +45,12 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "@types/webextension-polyfill": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
-    "webextension-polyfill": "catalog:",
+    "@aklinker1/check": "^1.4.5",
+    "@types/webextension-polyfill": "^0.12.3",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"
   }
 }

@@ -30,18 +30,18 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "async-mutex": "catalog:",
-    "dequal": "catalog:"
+    "async-mutex": "^0.5.0",
+    "dequal": "^2.0.3"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "@types/chrome": "catalog:",
-    "@webext-core/fake-browser": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:"
+    "@aklinker1/check": "^1.4.5",
+    "@types/chrome": "^0.0.313",
+    "@webext-core/fake-browser": "^1.3.2",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.1.2"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
