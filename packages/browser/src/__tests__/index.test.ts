@@ -20,7 +20,7 @@ describe('browser', () => {
       ).resolves.toMatchTypeOf<chrome.i18n.LanguageDetectionResult>();
     });
 
-    it('should allow using strings instead of enums', () => {
+    it('should allow using strings or enums', () => {
       browser.declarativeNetRequest.updateDynamicRules({
         addRules: [
           {
@@ -30,7 +30,9 @@ describe('browser', () => {
               responseHeaders: [],
             },
             condition: {
-              resourceTypes: ['xmlhttprequest'],
+              resourceTypes: [
+                browser.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
+              ],
             },
           },
         ],
