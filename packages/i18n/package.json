@@ -40,7 +40,7 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
+    "@aklinker1/check": "2.0.0",
     "@types/node": "^20.17.6",
     "oxlint": "^0.16.8",
     "publint": "^0.3.12",
