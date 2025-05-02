@@ -53,7 +53,7 @@
   "devDependencies": {
     "@aklinker1/check": "2.0.0",
     "publint": "^0.3.12",
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.6",
     "typescript": "^5.8.3",
     "unbuild": "^3.5.0",
     "wxt": "workspace:*"
