@@ -26,6 +26,7 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
+    "@wxt-dev/browser": "workspace:*",
     "chokidar": "^4.0.3",
     "confbox": "^0.1.8 || ^0.2.2",
     "fast-glob": "^3.3.3"
@@ -40,7 +41,6 @@
   },
   "devDependencies": {
     "@aklinker1/check": "2.0.0",
-    "@types/chrome": "^0.0.313",
     "@types/node": "^20.17.6",
     "oxlint": "^0.16.8",
     "publint": "^0.3.12",
