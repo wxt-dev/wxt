@@ -507,8 +507,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1
       linkedom:
-        specifier: ^0.18.9
-        version: 0.18.9
+        specifier: ^0.18.10
+        version: 0.18.10
       magicast:
         specifier: ^0.3.5
         version: 0.3.5
@@ -3326,8 +3326,8 @@ packages:
     resolution: {integrity: sha512-cNOjgCnLB+FnvWWtyRTzmB3POJ+cXxTA81LoW7u8JdmhfXzriropYwpjShnz1QLLWsQwY7nIxoDmcPTwphDK9w==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  linkedom@0.18.9:
-    resolution: {integrity: sha512-Pfvhwjs46nBrcQdauQjMXDJZqj6VwN7KStT84xQqmIgD9bPH6UVJ/ESW8y4VHVF2h7di0/P+f4Iln4U5emRcmg==}
+  linkedom@0.18.10:
+    resolution: {integrity: sha512-ESCqVAtme2GI3zZnlVRidiydByV6WmPlmKeFzFVQslADiAO2Wi+H6xL/5kr/pUOESjEoVb2Eb3cYFJ/TQhQOWA==}
 
   lint-staged@15.5.0:
     resolution: {integrity: sha512-WyCzSbfYGhK7cU+UuDDkzUiytbfbi0ZdPy2orwtM75P3WTtQBzmG40cCxIa8Ii2+XjfxzLH6Be46tUfWS85Xfg==}
@@ -7526,7 +7526,7 @@ snapshots:
 
   lines-and-columns@2.0.3: {}
 
-  linkedom@0.18.9:
+  linkedom@0.18.10:
     dependencies:
       css-select: 5.1.0
       cssom: 0.5.0
@@ -9016,7 +9016,7 @@ snapshots:
 
   vitepress-knowledge@0.4.1(vitepress@1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.86.3)(search-insights@2.15.0)(typescript@5.8.3)):
     dependencies:
-      linkedom: 0.18.9
+      linkedom: 0.18.10
       node-html-markdown: 1.3.0
       picocolors: 1.1.1
       vitepress: 1.6.3(@algolia/client-search@5.20.3)(@types/node@20.17.30)(@types/react@18.3.12)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.86.3)(search-insights@2.15.0)(typescript@5.8.3)
