@@ -7480,7 +7480,7 @@ export namespace Browser {
      */
     export namespace permissions {
         export interface Permissions {
-            /** The list of host permissions, including those specified in the `optional_permissions` or `permissions` keys in the manifest, and those associated with [Content Scripts](https://developer.Browser.com/docs/extensions/develop/concepts/content-scripts). */
+            /** The list of host permissions, including those specified in the `optional_permissions` or `permissions` keys in the manifest, and those associated with [Content Scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts). */
             origins?: string[];
             /** List of named permissions (does not include hosts or origins). */
             permissions?: Browser.runtime.ManifestPermissions[];
@@ -8498,7 +8498,7 @@ export namespace Browser {
         }
 
         export interface ConnectionOptions {
-            /** Optional. Flag indicating whether or not the connection should be left open when the application is suspended (see Manage App Lifecycle: https://developer.Browser.com/apps/app_lifecycle).
+            /** Optional. Flag indicating whether or not the connection should be left open when the application is suspended (see Manage App Lifecycle: https://developer.chrome.com/apps/app_lifecycle).
              *  The default value is "false." When the application is loaded, any serial connections previously opened with persistent=true can be fetched with getConnections. */
             persistent?: boolean | undefined;
             /** Optional. An application-defined string to associate with the connection. */
@@ -8716,13 +8716,13 @@ export namespace Browser {
         /** The ID of the extension/app. */
         export var id: string;
 
-        /** https://developer.Browser.com/docs/extensions/reference/api/runtime#type-PlatformOs */
+        /** https://developer.chrome.com/docs/extensions/reference/api/runtime#type-PlatformOs */
         export type PlatformOs = "mac" | "win" | "android" | "cros" | "linux" | "openbsd" | "fuchsia";
-        /** https://developer.Browser.com/docs/extensions/reference/api/runtime#type-PlatformArch */
+        /** https://developer.chrome.com/docs/extensions/reference/api/runtime#type-PlatformArch */
         export type PlatformArch = "arm" | "arm64" | "x86-32" | "x86-64" | "mips" | "mips64";
-        /** https://developer.Browser.com/docs/extensions/reference/api/runtime#type-PlatformNaclArch */
+        /** https://developer.chrome.com/docs/extensions/reference/api/runtime#type-PlatformNaclArch */
         export type PlatformNaclArch = "arm" | "x86-32" | "x86-64" | "mips" | "mips64";
-        /** https://developer.Browser.com/docs/extensions/reference/api/runtime#type-ContextType */
+        /** https://developer.chrome.com/docs/extensions/reference/api/runtime#type-ContextType */
         export enum ContextType {
             TAB = "TAB",
             POPUP = "POPUP",
@@ -8731,7 +8731,7 @@ export namespace Browser {
             SIDE_PANEL = "SIDE_PANEL",
             DEVELOPER_TOOLS = "DEVELOPER_TOOLS",
         }
-        /** https://developer.Browser.com/docs/extensions/reference/api/runtime#type-OnInstalledReason */
+        /** https://developer.chrome.com/docs/extensions/reference/api/runtime#type-OnInstalledReason */
         export enum OnInstalledReason {
             INSTALL = "install",
             UPDATE = "update",
@@ -8958,7 +8958,7 @@ export namespace Browser {
             default_popup?: string | undefined;
         }
 
-        /** Source: https://developer.Browser.com/docs/extensions/reference/permissions-list */
+        /** Source: https://developer.chrome.com/docs/extensions/reference/permissions-list */
         export type ManifestPermissions =
             | "accessibilityFeatures.modify"
             | "accessibilityFeatures.read"
@@ -9042,7 +9042,7 @@ export namespace Browser {
             | "webRequestBlocking"
             | "webRequestAuthProvider";
 
-        /** Source : https://developer.Browser.com/docs/extensions/reference/api/permissions */
+        /** Source : https://developer.chrome.com/docs/extensions/reference/api/permissions */
         export type ManifestOptionalPermissions = Exclude<
             ManifestPermissions,
             | "debugger"
