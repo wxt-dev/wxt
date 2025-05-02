@@ -50,7 +50,7 @@
     "sharp": "^0.34.1"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.4.5",
+    "@aklinker1/check": "2.0.0-alpha.2",
     "oxlint": "^0.16.8",
     "publint": "^0.3.12",
     "typescript": "^5.8.3",
