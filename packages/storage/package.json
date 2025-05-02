@@ -30,12 +30,12 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
+    "@wxt-dev/browser": "workspace:*",
     "async-mutex": "^0.5.0",
     "dequal": "^2.0.3"
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "@types/chrome": "^0.0.313",
     "@webext-core/fake-browser": "^1.3.2",
     "oxlint": "^0.16.8",
     "publint": "^0.3.12",

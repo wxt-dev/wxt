@@ -52,7 +52,6 @@
   },
   "devDependencies": {
     "@aklinker1/check": "^1.4.5",
-    "@types/chrome": "^0.0.313",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.12",
     "typescript": "^5.8.3",
@@ -60,6 +59,7 @@
     "wxt": "workspace:*"
   },
   "dependencies": {
+    "@wxt-dev/browser": "workspace:*",
     "ua-parser-js": "^1.0.40"
   }
 }

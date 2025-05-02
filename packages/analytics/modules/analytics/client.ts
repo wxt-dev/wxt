@@ -9,11 +9,12 @@ import type {
   AnalyticsEventMetadata,
   AnalyticsProvider,
 } from './types';
+import { browser } from '@wxt-dev/browser';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
-  if (typeof chrome === 'undefined' || !chrome?.runtime?.id)
+  if (!browser?.runtime?.id)
     throw Error(
       'Cannot use WXT analytics in contexts without access to the browser.runtime APIs',
     );
@@ -51,13 +52,13 @@ function createBackgroundAnalytics(
     defineStorageItem<boolean>('local:wxt-analytics:enabled', false);
 
   // Cached values
-  const platformInfo = chrome.runtime.getPlatformInfo();
+  const platformInfo = browser.runtime.getPlatformInfo();
   const userAgent = UAParser();
   let userId = Promise.resolve(userIdStorage.getValue()).then(
     (id) => id ?? globalThis.crypto.randomUUID(),
   );
   let userProperties = userPropertiesStorage.getValue();
-  const manifest = chrome.runtime.getManifest();
+  const manifest = browser.runtime.getManifest();
 
   const getBackgroundMeta = () => ({
     timestamp: Date.now(),
@@ -178,7 +179,7 @@ function createBackgroundAnalytics(
     config?.providers?.map((provider) => provider(analytics, config)) ?? [];
 
   // Listen for messages from the rest of the extension
-  chrome.runtime.onConnect.addListener((port) => {
+  browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
       port.onMessage.addListener(({ fn, args }) => {
         // @ts-expect-error: Untyped fn key
@@ -194,7 +195,7 @@ function createBackgroundAnalytics(
  * Creates an analytics client for non-background contexts.
  */
 function createFrontendAnalytics(): Analytics {
-  const port = chrome.runtime.connect({ name: ANALYTICS_PORT });
+  const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
@@ -252,8 +253,8 @@ function defineStorageItem<T>(
 ): AnalyticsStorageItem<T> {
   return {
     getValue: async () =>
-      (await chrome.storage.local.get(key))[key] ?? defaultValue,
-    setValue: (newValue) => chrome.storage.local.set({ [key]: newValue }),
+      (await browser.storage.local.get(key))[key] ?? defaultValue,
+    setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
 
