@@ -22,7 +22,7 @@ export async function createShadowRootUi<TMounted>(
   const css: string[] = [];
 
   if (!options.inheritStyles) {
-    css.push(`/* WXT Shadow Root Reset */ body{all:initial;}`);
+    css.push(`/* WXT Shadow Root Reset */ :host{all:initial !important;}`);
   }
   if (options.css) {
     css.push(options.css);
