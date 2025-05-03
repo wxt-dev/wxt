@@ -57,5 +57,8 @@
   },
   "patchedDependencies": {
     "markdown-it-footnote": "patches/markdown-it-footnote.patch"
+  },
+  "resolutions": {
+    "esbuild": "0.25.3"
   }
 }

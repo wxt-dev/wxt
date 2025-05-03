@@ -6,11 +6,11 @@ import { bun } from '../../src/core/package-managers/bun';
 
 test('Only one version of esbuild should be installed (each version is ~20mb of node_modules)', async () => {
   const deps = await bun.listDependencies({ all: true });
+
   const esbuildVersions = new Set<string>();
   deps.forEach((dep) => {
     if (dep.name === 'esbuild') esbuildVersions.add(dep.version);
   });
-  console.log(esbuildVersions);
 
   expect([...esbuildVersions]).toHaveLength(1);
 });
