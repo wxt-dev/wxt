@@ -18,8 +18,8 @@ function benchmark_ref() {
     git checkout $1
     bunx buildc clean
     git apply scripts/benchmarks/browser-startup.patch
-    bunx i --ignore-scripts
-    bunx --filter wxt build
+    bun install --ignore-scripts
+    bun run --filter wxt build
     echo -n "$1 " >> stats.txt
 
     # Run benchmark
