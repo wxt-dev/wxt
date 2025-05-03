@@ -18,8 +18,8 @@ export default {
         getWxtHelp('prepare'),
         getWxtHelp('clean'),
         getWxtHelp('init'),
-        getPublishExtensionHelp(''),
-        getPublishExtensionHelp('init'),
+        getWxtSubmitHelp(''),
+        getWxtSubmitHelp('init'),
       ]);
 
     consola.success(`Generated CLI docs`);
@@ -45,13 +45,11 @@ async function getHelp(command: string): Promise<string> {
 }
 
 function getWxtHelp(command: string): Promise<string> {
-  return getHelp(`pnpm -s wxt ${command}`.trim());
+  return getHelp(`bun --silent wxt ${command}`.trim());
 }
 
-async function getPublishExtensionHelp(command: string): Promise<string> {
-  const res = await getHelp(
-    `./node_modules/.bin/publish-extension ${command}`.trim(),
-  );
+async function getWxtSubmitHelp(command: string): Promise<string> {
+  const res = await getWxtHelp(`submit ${command}`);
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
 

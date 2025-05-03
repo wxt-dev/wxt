@@ -42,9 +42,9 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- unbuild",
-    "prepack": "pnpm -s build",
+    "prepack": "bun run --silent build",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "peerDependencies": {

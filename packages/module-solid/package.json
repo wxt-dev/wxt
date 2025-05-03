@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- unbuild",
     "prepare": "buildc --deps-only -- wxt prepare"
   },

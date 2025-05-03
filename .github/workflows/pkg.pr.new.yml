@@ -23,7 +23,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: pnpm buildc all
+        run: bun buildc all
 
       - name: Publish
-        run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'
+        run: bunx pkg-pr-new publish --compact './packages/*'
