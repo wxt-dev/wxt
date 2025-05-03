@@ -24,7 +24,7 @@ function benchmark_ref() {
 
     # Run benchmark
     for i in $(seq $N); do
-        bun wxt packages/wxt-demo
+        bun run wxt packages/wxt-demo
     done
     git checkout HEAD -- packages/wxt/src/core/runners/web-ext.ts bun.lock
     echo "" >> stats.txt

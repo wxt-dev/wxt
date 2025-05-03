@@ -31,7 +31,7 @@ corepack enable
 Then, simply run the install command:
 
 ```sh
-bun i
+bun install
 ```
 
 ## Development
@@ -53,7 +53,7 @@ bun run build
 ```sh
 # Build WXT package, then start the demo extension in dev mode
 cd packages/wxt-demo
-bun dev
+bun run dev
 ```
 
 ```sh
@@ -63,7 +63,7 @@ bun run test
 
 ```sh
 # Start the docs website locally
-bun docs:dev
+bun run docs:dev
 ```
 
 ## Profiling

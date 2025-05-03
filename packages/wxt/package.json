@@ -7,7 +7,7 @@
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
     "build": "buildc -- unbuild",
-    "check": "bun run build && bun check:default && bun check:tsc-virtual",
+    "check": "bun run build && bun run check:default && bun run check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",

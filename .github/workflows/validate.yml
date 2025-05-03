@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: bun check
+        run: bun run check
 
   builds:
     name: Builds
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun buildc all
+        run: bun run buildc all
 
   build-demo:
     name: Build Demo
@@ -47,11 +47,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: bun build:all
+        run: bun run build:all
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: bun wxt zip
+        run: bun run wxt zip
         working-directory: packages/wxt-demo
 
   tests:
@@ -68,7 +68,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run Tests
-        run: bun test:coverage -- --reporter=default --reporter=hanging-process
+        run: bun run test:coverage -- --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v5
@@ -120,12 +120,12 @@ jobs:
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: bun compile
+        run: bun run compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: bun check
+        run: bun run check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
 

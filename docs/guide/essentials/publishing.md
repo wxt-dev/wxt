@@ -163,8 +163,8 @@ yarn zip:firefox
 ```
 
 ```sh [bun]
-bun i
-bun zip:firefox
+bun instal
+bun run zip:firefox
 ```
 
 :::

@@ -5,12 +5,12 @@ inputs:
   install:
     default: 'true'
     type: boolean
-    description: Whether or not to run 'bun i'
+    description: Whether or not to run 'bun install'
 
   installArgs:
     default: ''
     type: string
-    description: Additional args to append to "bun i"
+    description: Additional args to append to "bun install"
 
 runs:
   using: composite
@@ -24,4 +24,4 @@ runs:
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bun i ${{ inputs.installArgs }}
+      run: bun install ${{ inputs.installArgs }}

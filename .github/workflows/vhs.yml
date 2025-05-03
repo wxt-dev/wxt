@@ -27,7 +27,7 @@ jobs:
       # This prevents bunx from downloading WXT in the video
       - name: Pre-install WXT
         run: |
-          bun i wxt@latest
+          bun install wxt@latest
           bunx wxt@latest --version
 
       - name: Record VHS

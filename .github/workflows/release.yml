@@ -52,7 +52,7 @@ jobs:
 
       - name: Bump and Tag
         run: |
-          bun scripts/bump-package-version.ts ${{ inputs.package }}
+          bun run scripts/bump-package-version.ts ${{ inputs.package }}
           git push
           git push --tags
 
@@ -64,6 +64,6 @@ jobs:
           bun publish
 
       - name: Create GitHub release
-        run: bun scripts/create-github-release.ts ${{ inputs.package }}
+        run: bun run scripts/create-github-release.ts ${{ inputs.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

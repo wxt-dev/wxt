@@ -24,11 +24,11 @@ jobs:
 
       - name: Generate Latest Code
         working-directory: packages/browser
-        run: bun gen
+        run: bun run gen
 
       - name: Run Checks
         working-directory: packages/browser
-        run: bun check
+        run: bun run check
 
       - name: Commit Changes
         id: commit
