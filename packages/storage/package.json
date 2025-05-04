@@ -30,7 +30,7 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "@wxt-dev/browser": "workspace:*",
+    "@wxt-dev/browser": "workspace:^",
     "async-mutex": "^0.5.0",
     "dequal": "^2.0.3"
   },

@@ -59,7 +59,7 @@
     "wxt": "workspace:*"
   },
   "dependencies": {
-    "@wxt-dev/browser": "workspace:*",
+    "@wxt-dev/browser": "workspace:^",
     "ua-parser-js": "^1.0.40"
   }
 }

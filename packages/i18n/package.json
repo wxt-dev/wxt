@@ -26,7 +26,7 @@
     "test": "buildc --deps-only -- vitest"
   },
   "dependencies": {
-    "@wxt-dev/browser": "workspace:*",
+    "@wxt-dev/browser": "workspace:^",
     "chokidar": "^4.0.3",
     "confbox": "^0.1.8 || ^0.2.2",
     "fast-glob": "^3.3.3"

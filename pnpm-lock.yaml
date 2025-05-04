@@ -101,7 +101,7 @@ importers:
   packages/analytics:
     dependencies:
       '@wxt-dev/browser':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../browser
       ua-parser-js:
         specifier: ^1.0.40
@@ -188,7 +188,7 @@ importers:
   packages/i18n:
     dependencies:
       '@wxt-dev/browser':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../browser
       chokidar:
         specifier: ^4.0.3
@@ -337,7 +337,7 @@ importers:
   packages/storage:
     dependencies:
       '@wxt-dev/browser':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../browser
       async-mutex:
         specifier: ^0.5.0
@@ -441,7 +441,7 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@wxt-dev/browser':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../browser
       '@wxt-dev/storage':
         specifier: workspace:^1.0.0
