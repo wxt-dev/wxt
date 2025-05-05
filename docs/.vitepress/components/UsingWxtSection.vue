@@ -7,9 +7,6 @@ import useListExtensionDetails, {
 // Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
-  'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
-  'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
-  'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -77,6 +74,9 @@ const chromeExtensionIds = [
   'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
   'njnammmpdodmfkodnfpammnpdcbhnlcm', // Always Light Mode - Setting website always in light mode
   'lblmfclcfniabobmamfkdogcgdagbhhb', // DesignPicker - Color Picker & Font Detector
+  'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
+  'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
+  'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
