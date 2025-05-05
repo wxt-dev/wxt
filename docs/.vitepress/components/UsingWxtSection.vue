@@ -74,6 +74,9 @@ const chromeExtensionIds = [
   'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
   'njnammmpdodmfkodnfpammnpdcbhnlcm', // Always Light Mode - Setting website always in light mode
   'lblmfclcfniabobmamfkdogcgdagbhhb', // DesignPicker - Color Picker & Font Detector
+  'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
+  'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
+  'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
