@@ -112,7 +112,7 @@ export namespace Browser {
          */
         export function initialize(
             apiConfig: Browser.cast.ApiConfig,
-            successCallback: Function,
+            successCallback: () => void,
             errorCallback: (error: Browser.cast.Error) => void,
         ): void;
 
@@ -160,7 +160,7 @@ export namespace Browser {
          */
         export function setCustomReceivers(
             receivers: Browser.cast.Receiver[],
-            successCallback: Function,
+            successCallback: () => void,
             errorCallback: (error: Browser.cast.Error) => void,
         ): void;
 
@@ -171,7 +171,7 @@ export namespace Browser {
          */
         export function setReceiverDisplayStatus(
             receiver: Browser.cast.Receiver,
-            successCallback: Function,
+            successCallback: () => void,
             errorCallback: (error: Browser.cast.Error) => void,
         ): void;
 
@@ -294,7 +294,7 @@ export namespace Browser {
              */
             setReceiverVolumeLevel(
                 newLevel: number,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -305,7 +305,7 @@ export namespace Browser {
              */
             setReceiverMuted(
                 muted: boolean,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -313,13 +313,13 @@ export namespace Browser {
              * @param successCallback
              * @param errorCallback
              */
-            leave(successCallback: Function, errorCallback: (error: Browser.cast.Error) => void): void;
+            leave(successCallback: () => void, errorCallback: (error: Browser.cast.Error) => void): void;
 
             /**
              * @param successCallback
              * @param errorCallback
              */
-            stop(successCallback: Function, errorCallback: (error: Browser.cast.Error) => void): void;
+            stop(successCallback: () => void, errorCallback: (error: Browser.cast.Error) => void): void;
 
             /**
              * @param namespace
@@ -330,7 +330,7 @@ export namespace Browser {
             sendMessage(
                 namespace: string,
                 message: string | object,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -887,7 +887,7 @@ export namespace Browser {
              */
             getStatus(
                 getStatusRequest: Browser.cast.media.GetStatusRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -898,7 +898,7 @@ export namespace Browser {
              */
             play(
                 playRequest: Browser.cast.media.PlayRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -909,7 +909,7 @@ export namespace Browser {
              */
             pause(
                 pauseRequest: Browser.cast.media.PauseRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -920,7 +920,7 @@ export namespace Browser {
              */
             seek(
                 seekRequest: Browser.cast.media.SeekRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -931,7 +931,7 @@ export namespace Browser {
              */
             stop(
                 stopRequest: Browser.cast.media.StopRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -942,7 +942,7 @@ export namespace Browser {
              */
             setVolume(
                 volumeRequest: Browser.cast.media.VolumeRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -953,7 +953,7 @@ export namespace Browser {
              */
             editTracksInfo(
                 editTracksInfoRequest: Browser.cast.media.EditTracksInfoRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -986,7 +986,7 @@ export namespace Browser {
              */
             queueAppendItem(
                 item: Browser.cast.media.QueueItem,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -997,7 +997,7 @@ export namespace Browser {
              */
             queueInsertItems(
                 queueInsertItemsRequest: Browser.cast.media.QueueInsertItemsRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1008,7 +1008,7 @@ export namespace Browser {
              */
             queueJumpToItem(
                 itemId: number,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1021,7 +1021,7 @@ export namespace Browser {
             queueMoveItemToNewIndex(
                 itemId: number,
                 newIndex: number,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1029,13 +1029,13 @@ export namespace Browser {
              * @param successCallback
              * @param errorCallback
              */
-            queueNext(successCallback: Function, errorCallback: (error: Browser.cast.Error) => void): void;
+            queueNext(successCallback: () => void, errorCallback: (error: Browser.cast.Error) => void): void;
 
             /**
              * @param successCallback
              * @param errorCallback
              */
-            queuePrev(successCallback: Function, errorCallback: (error: Browser.cast.Error) => void): void;
+            queuePrev(successCallback: () => void, errorCallback: (error: Browser.cast.Error) => void): void;
 
             /**
              * @param itemId
@@ -1044,7 +1044,7 @@ export namespace Browser {
              */
             queueRemoveItem(
                 itemId: number,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1055,7 +1055,7 @@ export namespace Browser {
              */
             queueReorderItems(
                 queueReorderItemsRequest: Browser.cast.media.QueueReorderItemsRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1066,7 +1066,7 @@ export namespace Browser {
              */
             queueSetRepeatMode(
                 repeatMode: Browser.cast.media.RepeatMode,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
 
@@ -1077,7 +1077,7 @@ export namespace Browser {
              */
             queueUpdateItems(
                 queueUpdateItemsRequest: Browser.cast.media.QueueUpdateItemsRequest,
-                successCallback: Function,
+                successCallback: () => void,
                 errorCallback: (error: Browser.cast.Error) => void,
             ): void;
         }
