@@ -79,7 +79,7 @@ export default defineConfig({
 });
 ```
 
-Note env variables like `import.meta.env.DEV` will not be defined here, instead access the mode like this:
+Note that Vite's runtime environment variables, like `import.meta.env.DEV`, will not be defined. Instead, access the `mode` like this:
 
 ```ts
 export default defineConfig({
