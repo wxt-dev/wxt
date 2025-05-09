@@ -87,11 +87,7 @@ export default defineConfig({
     const isDev = mode === "development";
     console.log("Is development mode:", isDev);
 
-    return {
-      oauth2: {
-        client_id: import.meta.env.WXT_APP_CLIENT_ID
-      }
-    };
+    // ...
   },
 });
 ```
