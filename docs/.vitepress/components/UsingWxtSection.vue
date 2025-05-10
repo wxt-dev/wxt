@@ -77,6 +77,7 @@ const chromeExtensionIds = [
   'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
   'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
   'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
+  'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
