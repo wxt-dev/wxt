@@ -77,6 +77,7 @@ const chromeExtensionIds = [
   'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
   'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
   'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
+  'modkelfkcfjpgbfmnbnllalkiogfofhb', // Language Learning with AI
   'npfopljnjbamegincfjelhjhnonnjloo', // Bilibili Feed History Helper
   'edkhpdceeinkcacjdgebjehipmnbomce', // NZBDonkey - The ultimate NZB file download tool
   'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
