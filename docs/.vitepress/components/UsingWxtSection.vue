@@ -77,6 +77,7 @@ const chromeExtensionIds = [
   'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
   'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
   'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
+  'ggcfemmoabhhelfkhknhbnkmeahloiod', // CanCopy - A web extension that allow you to copy any content from website
   'modkelfkcfjpgbfmnbnllalkiogfofhb', // Language Learning with AI
   'npfopljnjbamegincfjelhjhnonnjloo', // Bilibili Feed History Helper
   'edkhpdceeinkcacjdgebjehipmnbomce', // NZBDonkey - The ultimate NZB file download tool
