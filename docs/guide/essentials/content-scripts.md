@@ -205,14 +205,13 @@ export default defineContentScript({
   matches: ['<all_urls>'],
 
   main(ctx) {
+    let app: Record<string, any>;
     const ui = createIntegratedUi(ctx, {
       position: 'inline',
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        app = mount(App, { target: container });
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
@@ -389,15 +388,14 @@ export default defineContentScript({
 
   async main(ctx) {
     // 3. Define your UI
+    let app: Record<string, any>;
     const ui = await createShadowRootUi(ctx, {
       name: 'example-ui',
       position: 'inline',
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        app = mount(App, { target: container });
       },
       onRemove: () => {
         // Destroy the app when the UI is removed
