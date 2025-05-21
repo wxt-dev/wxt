@@ -26,9 +26,7 @@ export function createKeyboardShortcuts(
 
   return {
     start() {
-      if (rl) return;
-
-      rl = readline.createInterface({
+      rl ??= readline.createInterface({
         input: process.stdin,
         terminal: false, // Don't intercept ctrl+C, ctrl+Z, etc
       });
@@ -37,8 +35,7 @@ export function createKeyboardShortcuts(
     },
 
     stop() {
-      rl?.close();
-      rl = undefined;
+      rl?.removeListener('line', handleInput);
     },
 
     printHelp(flags) {
