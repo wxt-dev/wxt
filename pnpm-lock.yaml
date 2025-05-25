@@ -169,6 +169,9 @@ importers:
       '@types/chrome':
         specifier: 0.0.323
         version: 0.0.323
+      '@types/firefox-webext-browser':
+        specifier: 120.0.4
+        version: 120.0.4
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -1943,6 +1946,9 @@ packages:
 
   '@types/filewriter@0.0.33':
     resolution: {integrity: sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==}
+
+  '@types/firefox-webext-browser@120.0.4':
+    resolution: {integrity: sha512-lBrpf08xhiZBigrtdQfUaqX1UauwZ+skbFiL8u2Tdra/rklkKadYmIzTwkNZSWtuZ7OKpFqbE2HHfDoFqvZf6w==}
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
@@ -6098,6 +6104,8 @@ snapshots:
       '@types/filewriter': 0.0.33
 
   '@types/filewriter@0.0.33': {}
+
+  '@types/firefox-webext-browser@120.0.4': {}
 
   '@types/fs-extra@11.0.4':
     dependencies:

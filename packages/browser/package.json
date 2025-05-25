@@ -24,6 +24,7 @@
   ],
   "devDependencies": {
     "@types/chrome": "0.0.323",
+    "@types/firefox-webext-browser": "120.0.4",
     "fs-extra": "^11.3.0",
     "nano-spawn": "^0.2.0",
     "tsx": "4.19.4",
