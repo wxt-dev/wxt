@@ -184,9 +184,15 @@ async function downloadPrivatePackages() {
       const tgzPath = await wxt.pm.downloadDependency(
         id,
         wxt.config.zip.downloadedPackagesDir,
+        { cwd: wxt.config.root },
       );
       files.push(tgzPath);
-      overrides[id] = tgzPath;
+
+      // make sure alias packages are correctly overridden
+      // alias@name@spec -> alias@spec
+      const normalizedId = id.replace(/^(.+?)(@.+)@(.+)$/, '$1@$3');
+
+      overrides[normalizedId] = tgzPath;
     }
   }
 
