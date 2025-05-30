@@ -210,9 +210,7 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
@@ -395,11 +393,9 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
-      onRemove: () => {
+      onRemove: (app) => {
         // Destroy the app when the UI is removed
         unmount(app);
       },
