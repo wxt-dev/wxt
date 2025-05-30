@@ -253,6 +253,12 @@ export interface InlineConfig {
      */
     downloadPackages?: string[];
     /**
+     * Strips the `workspace:` protocol used by some package managers from dependencies.
+     *
+     * @default false
+     */
+    stripWorkspaceProtocol?: boolean;
+    /**
      * Compression level to use when zipping files.
      *
      * Levels: 0 (no compression) to 9 (maximum compression).
@@ -1336,6 +1342,7 @@ export interface ResolvedConfig {
     sourcesRoot: string;
     downloadedPackagesDir: string;
     downloadPackages: string[];
+    stripWorkspaceProtocol: boolean;
     compressionLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     exclude: string[];
     /**
