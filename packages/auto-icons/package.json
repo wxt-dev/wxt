@@ -39,7 +39,8 @@
   ],
   "scripts": {
     "build": "buildc -- unbuild",
-    "check": "pnpm build && check"
+    "check": "pnpm build && check",
+    "test": "buildc --deps-only -- vitest"
   },
   "peerDependencies": {
     "wxt": ">=0.19.0"
