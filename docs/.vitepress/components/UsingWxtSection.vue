@@ -85,6 +85,7 @@ const chromeExtensionIds = [
   'edkhpdceeinkcacjdgebjehipmnbomce', // NZBDonkey - The ultimate NZB file download tool
   'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
   'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
+  'eehmoikadcijkapfjocnhjclpbaindlb', // BrowserLens - https://browserlens.com/
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
