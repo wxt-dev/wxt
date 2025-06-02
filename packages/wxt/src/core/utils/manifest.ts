@@ -459,7 +459,13 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
-  const permission = `${wxt.server?.origin ?? ''}/*`;
+  let permissonUrl = wxt.server?.origin;
+  if (permissonUrl) {
+    const permissionUrlInstance = new URL(permissonUrl);
+    permissionUrlInstance.port = '';
+    permissonUrl = permissionUrlInstance.toString();
+  }
+  const permission = `${permissonUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {

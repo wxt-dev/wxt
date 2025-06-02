@@ -3,6 +3,7 @@ import { presetUno } from 'unocss';
 
 export default defineConfig({
   srcDir: 'src',
+  targetBrowsers: ['chrome', 'firefox', 'safari'],
   manifest: {
     permissions: ['storage'],
     default_locale: 'en',
@@ -19,7 +20,7 @@ export default defineConfig({
   analysis: {
     open: true,
   },
-  runner: {
+  webExt: {
     startUrls: ['https://duckduckgo.com'],
   },
   example: {

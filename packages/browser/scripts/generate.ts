@@ -76,5 +76,7 @@ function transformFile(file: string, content: string): string {
       .replaceAll('declare namespace chrome', 'export namespace Browser')
       // Update references to `chrome` namespace to `Browser`
       .replaceAll('chrome.', 'Browser.')
+      // Fix links to developer.chrome.com
+      .replaceAll('developer.Browser.com', 'developer.chrome.com')
   );
 }

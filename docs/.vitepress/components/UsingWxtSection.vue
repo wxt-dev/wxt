@@ -70,6 +70,21 @@ const chromeExtensionIds = [
   'hafcajcllbjnoolpfngclfmmgpikdhlm', // Monochromate
   'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
   'hlnhhamckimoaiekbglafiebkfimhapb', // SnapThePrice: AI-Powered Real-time Lowest Price Finder
+  'gdjampjdgjmbifnhldgcnccdjkcoicmg', // radiofrance - news & broadcasts (French), music (international)
+  'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
+  'njnammmpdodmfkodnfpammnpdcbhnlcm', // Always Light Mode - Setting website always in light mode
+  'lblmfclcfniabobmamfkdogcgdagbhhb', // DesignPicker - Color Picker & Font Detector
+  'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
+  'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
+  'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
+  'lcaieahkjgeggeiihblhcjbbjlppgieh', // NetSuite Record Scripts
+  'gmocfknjllodfiomnljmaehcplnekhlo', // VueTracker
+  'ggcfemmoabhhelfkhknhbnkmeahloiod', // CanCopy - A web extension that allow you to copy any content from website
+  'modkelfkcfjpgbfmnbnllalkiogfofhb', // Language Learning with AI
+  'npfopljnjbamegincfjelhjhnonnjloo', // Bilibili Feed History Helper
+  'edkhpdceeinkcacjdgebjehipmnbomce', // NZBDonkey - The ultimate NZB file download tool
+  'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
+  'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

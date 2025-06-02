@@ -1,13 +1,18 @@
 import { beforeEach, describe, it, vi } from 'vitest';
 import { createI18n } from '..';
+import { browser } from '@wxt-dev/browser';
 
-const getMessageMock = vi.fn();
-
-vi.stubGlobal('chrome', {
-  i18n: {
-    getMessage: getMessageMock,
-  },
+vi.mock('@wxt-dev/browser', async () => {
+  const { vi } = await import('vitest');
+  return {
+    browser: {
+      i18n: {
+        getMessage: vi.fn(),
+      },
+    },
+  };
 });
+const getMessageMock = vi.mocked(browser.i18n.getMessage);
 
 const n: number = 1;
 

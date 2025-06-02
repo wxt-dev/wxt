@@ -29,13 +29,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "tsx": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:"
+    "@aklinker1/check": "2.0.0",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "tsx": "4.19.4",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.1.2"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

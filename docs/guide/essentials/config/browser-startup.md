@@ -8,13 +8,23 @@ outline: deep
 
 During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 
+:::danger
+Chrome 137 removed support for the `--load-extension` CLI flag, which WXT relied on to open the browser with an extension installed. So this feature will not work for Chrome.
+
+You have two options:
+
+1. Install [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) (which still supports the `--load-extension` flag) and [point the `chrome` binary to it](#set-browser-binaries), or
+2. [Disable this feature](#disable-opening-browser) and manually load your extension
+
+:::
+
 ## Config Files
 
 You can configure browser startup in 3 places:
 
 1. `<rootDir>/web-ext.config.ts`: Ignored from version control, this file lets you configure your own options for a specific project without affecting other developers
 
-   ```ts
+   ```ts [web-ext.config.ts]
    import { defineWebExtConfig } from 'wxt';
 
    export default defineWebExtConfig({
@@ -22,7 +32,7 @@ You can configure browser startup in 3 places:
    });
    ```
 
-2. `<rootDir>/wxt.config.ts`: Via the [`runner` config](/api/reference/wxt/interfaces/InlineConfig#runner), included in version control
+2. `<rootDir>/wxt.config.ts`: Via the [`webExt` config](/api/reference/wxt/interfaces/InlineConfig#webext), included in version control
 3. `$HOME/web-ext.config.ts`: Provide default values for all WXT projects on your computer
 
 ## Recipes
@@ -31,7 +41,7 @@ You can configure browser startup in 3 places:
 
 To set or customize the browser opened during development:
 
-```ts
+```ts [web-ext.config.ts]
 export default defineWebExtConfig({
   binaries: {
     chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
@@ -81,7 +91,7 @@ You can use any directory you'd like for `--user-data-dir`, the examples above c
 
 If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
 
-```ts
+```ts [web-ext.config.ts]
 export default defineWebExtConfig({
   disabled: true,
 });

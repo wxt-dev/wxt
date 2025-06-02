@@ -9,6 +9,9 @@ export type ContentScriptUiOptions<TMounted> = ContentScriptPositioningOptions &
     /**
      * Callback called before the UI is removed from the webpage. Use to cleanup your UI, like
      * unmounting your Vue or React apps.
+     *
+     * Note that this callback is called only when `ui.remove` is called - that means it is
+     * not called automatically when the anchor is removed, unless you use `autoMount`.
      */
     onRemove?: (mounted: TMounted | undefined) => void;
   };
