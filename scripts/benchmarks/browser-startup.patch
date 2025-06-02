@@ -1,26 +1,26 @@
-diff --git a/packages/wxt/src/core/runners/web-ext.ts b/packages/wxt/src/core/runners/web-ext.ts
-index 09819c3..a0f0df2 100644
---- a/packages/wxt/src/core/runners/web-ext.ts
-+++ b/packages/wxt/src/core/runners/web-ext.ts
-@@ -3,6 +3,8 @@ import { ExtensionRunner } from '../../types';
+diff --git a/packages/wxt/src/core/runners/wxt.ts b/packages/wxt/src/core/runners/wxt.ts
+index 901ba4d7..34a19e43 100644
+--- a/packages/wxt/src/core/runners/wxt.ts
++++ b/packages/wxt/src/core/runners/wxt.ts
+@@ -2,6 +2,8 @@ import { ExtensionRunner } from '../../types';
  import { formatDuration } from '../utils/time';
- import defu from 'defu';
  import { wxt } from '../wxt';
+ import { run, type Runner } from '@wxt-dev/runner';
 +import fs from 'node:fs';
 +import stream from 'node:stream/promises';
- 
- /**
-  * Create an `ExtensionRunner` backed by `web-ext`.
-@@ -78,6 +80,12 @@ export function createWebExtRunner(): ExtensionRunner {
- 
+
+ /** Create an `ExtensionRunner` backed by `@wxt-dev/runner`. */
+ export function createWxtRunner(): ExtensionRunner {
+@@ -22,6 +24,12 @@ export function createWxtRunner(): ExtensionRunner {
+
        const duration = Date.now() - startTime;
        wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
-+      await runner.exit();
++      runner.stop();
 +      const s = fs.createWriteStream('stats.txt', { flags: 'a' });
 +      s.write(duration + ' ');
 +      s.end();
 +      await stream.finished(s);
 +      process.exit(0);
      },
- 
+
      async closeBrowser() {

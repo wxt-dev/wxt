@@ -3,7 +3,7 @@ import { relative } from 'node:path';
 import { wxt } from '../wxt';
 
 /**
- * The WSL runner just logs a warning message because `web-ext` doesn't work in WSL.
+ * The WSL runner just logs a warning message because `@wxt-dev/runner` doesn't work in WSL.
  */
 export function createWslRunner(): ExtensionRunner {
   return {

@@ -13,6 +13,7 @@ coverage
 dist
 node_modules
 TODOs.md
+wxt.runner.config.ts
 templates/*/pnpm-lock.yaml
 templates/*/yarn.lock
 templates/*/package-lock.json
