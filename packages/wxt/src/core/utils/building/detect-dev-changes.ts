@@ -26,7 +26,7 @@ import { wxt } from '../../wxt';
  *   - Background script is changed
  *   - Manifest is different
  * - Restart browser
- *   - web-ext.config.ts (runner config changes)
+ *   - wxt.runner.config.ts (runner config changes)
  * - Full dev server restart
  *   - wxt.config.ts (main config file)
  *   - modules/* (any file related to WXT modules)

@@ -180,7 +180,7 @@ describe('Hooks', () => {
 
     const server = await project.startServer({
       hooks,
-      webExt: {
+      runner: {
         disabled: true,
       },
     });

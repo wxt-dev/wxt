@@ -1,6 +1,8 @@
 import { defineConfig } from 'wxt';
 import { presetUno } from 'unocss';
 
+const startUrls = ['https://duckduckgo.com'];
+
 export default defineConfig({
   srcDir: 'src',
   targetBrowsers: ['chrome', 'firefox', 'safari'],
@@ -20,8 +22,9 @@ export default defineConfig({
   analysis: {
     open: true,
   },
-  webExt: {
-    startUrls: ['https://duckduckgo.com'],
+  runner: {
+    chromiumArgs: [...startUrls],
+    firefoxArgs: [...startUrls],
   },
   example: {
     a: 'a',

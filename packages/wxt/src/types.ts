@@ -8,6 +8,7 @@ import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
 import { ManifestContentScript } from './core/utils/types';
 import type { Browser } from '@wxt-dev/browser';
+import { RunOptions } from '@wxt-dev/runner';
 
 export interface InlineConfig {
   /**
@@ -132,13 +133,9 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
-   * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
+   * Configure browser startup. See https://wxt.dev/guide/essentials/config/browser-startup.html for more information.
    */
-  webExt?: WebExtConfig;
-  /**
-   * @deprecated Use `webExt` instead. Same option, just renamed.
-   */
-  runner?: WebExtConfig;
+  runner?: WxtRunnerConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
@@ -926,96 +923,12 @@ export interface ConfigEnv {
 
 export type WxtCommand = 'build' | 'serve';
 
-/**
- * @deprecated Use `WebExtConfig` instead.
- */
-export type ExtensionRunnerConfig = WebExtConfig;
-
-/**
- * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the browser.
- */
-export interface WebExtConfig {
+export type WxtRunnerConfig = RunOptions & {
   /**
-   * Whether or not to open the browser with the extension installed in dev mode.
-   *
-   * @default false
+   * Set to true to disable opening the browser automatically during development.
    */
   disabled?: boolean;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#browser-console
-   */
-  openConsole?: boolean;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#devtools
-   */
-  openDevtools?: boolean;
-  /**
-   * List of browser names and the binary that should be used to open the browser.
-   *
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-binary
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox
-   */
-  binaries?: Record<string, string>;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile
-   */
-  firefoxProfile?: string;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-profile
-   */
-  chromiumProfile?: string;
-  /**
-   * An map of chrome preferences from https://chromium.googlesource.com/chromium/src/+/main/chrome/common/pref_names.h
-   *
-   * @example
-   * // change your downloads directory
-   * {
-   *   download: {
-   *     default_directory: "/my/custom/dir",
-   *   },
-   * }
-   *
-   * @default
-   * // Enable dev mode and allow content script sourcemaps
-   * {
-   *   devtools: {
-   *     synced_preferences_sync_disabled: {
-   *       skipContentScripts: false,
-   *     },
-   *   }
-   *   extensions: {
-   *     ui: {
-   *       developer_mode: true,
-   *     },
-   *   }
-   * }
-   */
-  chromiumPref?: Record<string, any>;
-  /**
-   * By default, chrome opens a random port for debugging. Set this value to use a specific port.
-   */
-  chromiumPort?: number;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
-   */
-  firefoxPrefs?: Record<string, string>;
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
-   */
-  firefoxArgs?: string[];
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
-   */
-  chromiumArgs?: string[];
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#start-url
-   */
-  startUrls?: string[];
-  /**
-   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#keep-profile-changes
-   */
-  keepProfileChanges?: boolean;
-}
+};
 
 export interface WxtBuilder {
   /**
@@ -1326,7 +1239,7 @@ export interface ResolvedConfig {
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  runnerConfig: C12ResolvedConfig<WebExtConfig>;
+  runnerConfig: C12ResolvedConfig<WxtRunnerConfig>;
   zip: {
     name?: string;
     artifactTemplate: string;

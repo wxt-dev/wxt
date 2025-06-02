@@ -20,8 +20,8 @@ WXT follows a strict project structure. By default, it's a flat folder structure
    📄 app.config.ts
    📄 package.json
    📄 tsconfig.json
-   📄 web-ext.config.ts
    📄 wxt.config.ts
+   📄 wxt.runner.config.ts
 ```
 
 Here's a brief summary of each of these files and directories:
@@ -41,8 +41,8 @@ Here's a brief summary of each of these files and directories:
 - `app.config.ts`: Contains [Runtime Config](/guide/essentials/config/runtime)
 - `package.json`: The standard file used by your package manager
 - `tsconfig.json`: Config telling TypeScript how to behave
-- `web-ext.config.ts`: Configure [Browser Startup](/guide/essentials/config/browser-startup)
 - `wxt.config.ts`: The main config file for WXT projects
+- `wxt.runner.config.ts`: Configure [Browser Startup](/guide/essentials/config/browser-startup)
 
 ## Adding a `src/` Directory
 
@@ -75,8 +75,8 @@ After enabling it, your project structure should look like this:
    📄 .env.publish
    📄 package.json
    📄 tsconfig.json
-   📄 web-ext.config.ts
    📄 wxt.config.ts
+   📄 wxt.runner.config.ts
 ```
 
 ## Customizing Other Directories

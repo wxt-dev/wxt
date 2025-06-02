@@ -2,21 +2,15 @@
 
 Programmatically open a browser and install a web extension from a local directory.
 
-###### With WXT
+## Usage
 
-> [!WARNING]
-> This package is intended to replace [`web-ext`](https://github.com/mozilla/web-ext) in the future, but it is not ready at the moment. Once it's ready for testing in WXT, more details will be added here.
+### With WXT
 
-```ts
-// ~/wxt.runner.config.ts OR <project>/wxt.runner.config.ts
-import { defineRunnerConfig } from 'wxt';
+See WXT's [browser startup docs](https://wxt.dev/guide/essentials/config/browser-startup.html).
 
-export default defineRunnerConfig({
-  // Options go here
-});
-```
+### JS API
 
-###### JS API
+Pass a directory to the `run` function to install an extension and open the browser.
 
 ```ts
 import { run } from '@wxt-dev/runner';
@@ -29,9 +23,9 @@ await run({
 
 ## Features
 
-- Supports all Chromium and Firefox based browsers
-- Zero dependencies
-- One-line config for persisting data between launches
+- ✅ Supports all Chromium and Firefox based browsers
+- 🧪 Zero dependencies
+- 🎉 One-line config for persisting data between launches
 
 ## Requirements
 
@@ -44,16 +38,10 @@ await run({
 
 You also need to have a specific version of the browser installed that supports the latest features so extensions can be loaded:
 
-| Browser  | Version  |
-| -------- | -------- |
-| Chromium | Unknown  |
-| Firefox  | &ge; 139 |
-
-## TODO
-
-- [x] Provide install functions to allow hooking into already running instances of Chrome/Firefox
-  - [ ] Try to setup E2E tests on Firefox with Puppeteer using this approach
-  - [ ] Try to setup E2E tests on Chrome with Puppeteer using this approach
+| Browser  | Version | Release Date  |
+| -------- | :-----: | :-----------: |
+| Chromium | &ge;126 | June 11, 2024 |
+| Firefox  | &ge;139 | May 27, 2025  |
 
 ## Options
 
@@ -86,9 +74,9 @@ await run({
 });
 ```
 
-- `"none"` (default): Use a brand new browser profile every time the browser is opened (stored in the system's tmp directory)
-- `"project"`: Create a new profile that is re-used for your current directory (by default stored in `.wxt-runner` or `.wxt/runner` for WXT projects)
-- `"user"`: Create a new profile that is re-used for all projects using `@wxt-dev/runner` (by default stored in `$HOME/.wxt-runner`)
+- `"none"` (default): Use a new profile every time the browser is opened
+- `"project"`: Store user data in `.wxt-runner` (or `.wxt/runner` for WXT projects) so it is reused by future sessions for this project.
+- `"user"`: Store user data in `$HOME/.wxt-runner` so it is reused by future sessions for all your projects.
 
 These presets configure different flags for different operating systems when spawning the browser process.
 
@@ -102,7 +90,7 @@ If you want to customize your data persistence beyond what these presets define,
 - You want to use a specific version/release of the browser.
 - You're using a less popular browser and `@wxt-dev/runner` doesn't have hard-coded paths for it.
 
-To do this, use the `browserBinaries` option and set the path to the browser's binary:
+To do this, use the `browserBinaries` option and set the path to the target's binary:
 
 ```ts
 import { run } from '@wxt-dev/runner';
@@ -212,7 +200,7 @@ To see debug logs, set the `DEBUG` env var to `"@wxt-dev/runner"`. This will pri
 
 ## Implementation Details
 
-All this package does is spawn a child process to open the browser with some default flags before using remote protocols to install the extension.
+`@wxt-dev/runner` spawns a child process using the target browser's binary path and some default flags. Then it uses the browser's remote protocol to install the extension.
 
 ### Firefox
 

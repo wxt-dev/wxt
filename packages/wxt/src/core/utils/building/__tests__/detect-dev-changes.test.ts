@@ -98,9 +98,9 @@ describe('Detect Dev Changes', () => {
     });
   });
 
-  describe('web-ext.config.ts', () => {
+  describe('wxt.runner.config.ts', () => {
     it("should return 'browser-restart' when one of the changed files is the config file", () => {
-      const runnerFile = '/root/web-ext.config.ts';
+      const runnerFile = '/root/wxt.runner.config.ts';
       setFakeWxt({
         config: {
           runnerConfig: {

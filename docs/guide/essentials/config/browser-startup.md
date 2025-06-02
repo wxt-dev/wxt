@@ -6,93 +6,75 @@ outline: deep
 
 > See the [API Reference](/api/reference/wxt/interfaces/WebExtConfig) for a full list of config.
 
-During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
+During development, WXT uses [`@wxt-dev/runner`](https://www.npmjs.com/package/@wxt-dev/runner) to automatically open a browser window with your extension installed.
 
-:::danger
-Chrome 137 removed support for the `--load-extension` CLI flag, which WXT relied on to open the browser with an extension installed. So this feature will not work for Chrome.
+:::warning
+Chrome 137 removed support for the `--load-extension` CLI flag, which WXT v0.20.6 and below relied upon. The current version of WXT relies on very new APIs CDP and WebDriver Bidi.
 
-You have two options:
+Make sure your development browser meets these minimum requirements:
 
-1. Install [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) (which still supports the `--load-extension` flag) and [point the `chrome` binary to it](#set-browser-binaries), or
-2. [Disable this feature](#disable-opening-browser) and manually load your extension
+| Browser  | Minimum Version | Release Date  |
+| -------- | :-------------: | :-----------: |
+| Chromium |       126       | June 11, 2024 |
+| Firefox  |       139       | May 27, 2025  |
 
-:::
+- Chromium: Version 110 or higher, released
+- Firefox: v139 or higher, released May 27, 2025
+  :::
+
+To use older versions of Chrome or Firefox, you can [disable the runner](#disable-opening-browser) and manually install the extension from the browsers settings.
 
 ## Config Files
 
 You can configure browser startup in 3 places:
 
-1. `<rootDir>/web-ext.config.ts`: Ignored from version control, this file lets you configure your own options for a specific project without affecting other developers
+1. `<rootDir>/wxt.runner.config.ts`: Ignored from version control, this file lets you configure your own options for a specific project without affecting other developers
 
-   ```ts [web-ext.config.ts]
-   import { defineWebExtConfig } from 'wxt';
+   ```ts [wxt.runner.config.ts]
+   import { defineRunnerConfig } from 'wxt';
 
-   export default defineWebExtConfig({
+   export default defineRunnerConfig({
      // ...
    });
    ```
 
-2. `<rootDir>/wxt.config.ts`: Via the [`webExt` config](/api/reference/wxt/interfaces/InlineConfig#webext), included in version control
-3. `$HOME/web-ext.config.ts`: Provide default values for all WXT projects on your computer
+2. `<rootDir>/wxt.config.ts`: Via the [`runner` config](/api/reference/wxt/interfaces/InlineConfig#runner), included in version control
+3. `$HOME/.wxtrunnerrc`: Provide default values for all WXT projects on your computer
 
 ## Recipes
 
+For more information on configuring `@wxt-dev/runner`, see [`@wxt-dev/runner`'s documentation](/runner#options).
+
 ### Set Browser Binaries
 
-To set or customize the browser opened during development:
+To set or customize the binaries used during development for all your projects:
 
-```ts [web-ext.config.ts]
-export default defineWebExtConfig({
-  binaries: {
-    chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
-    firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
-    edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
-  },
-});
+```ini [$HOME/.wxtrunnerrc]
+# Use Chrome Beta instead of regular Chrome when targeting "chrome"
+browserBinaries.chrome=/path/to/chrome-beta
+
+# Point Firefox to a custom install location
+browserBinaries.firefox=/path/to/firefox
 ```
 
 By default, WXT will try to automatically discover where Chrome/Firefox are installed. However, if you have chrome installed in a non-standard location, you need to set it manually as shown above.
 
 ### Persist Data
 
-By default, to keep from modifying your browser's existing profiles, `web-ext` creates a brand new profile every time you run the `dev` script.
+For security reasons, browsers will not allow you to open an existing profile during development. Instead, `@wxt-dev/runner` provides a way to persist data across sessions:
 
-Right now, Chromium based browsers are the only browsers that support overriding this behavior and persisting data when running the `dev` script multiple times.
-
-To persist data, set the `--user-data-dir` flag:
-
-:::code-group
-
-```ts [Mac/Linux]
-export default defineWebExtConfig({
-  chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
+```ts [wxt.runner.config.ts]
+export default defineRunnerConfig({
+  dataPersistence: 'project', // or "user" for using a single profile for all projects
 });
 ```
-
-```ts [Windows]
-import { resolve } from 'node:path';
-
-export default defineWebExtConfig({
-  // On Windows, the path must be absolute
-  chromiumProfile: resolve('.wxt/chrome-data'),
-  keepProfileChanges: true,
-});
-```
-
-:::
-
-Now, next time you run the `dev` script, a persistent profile will be created in `.wxt/chrome-data/{profile-name}`. With a persistent profile, you can install devtools extensions to help with development, allow the browser to remember logins, etc, without worrying about the profile being reset the next time you run the `dev` script.
-
-:::tip
-You can use any directory you'd like for `--user-data-dir`, the examples above create a persistent profile for each WXT project. To create a profile for all WXT projects, you can put the `chrome-data` directory inside your user's home directory.
-:::
 
 ### Disable Opening Browser
 
 If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
 
-```ts [web-ext.config.ts]
-export default defineWebExtConfig({
+```ts [wxt.runner.config.ts]
+export default defineRunnerConfig({
   disabled: true,
 });
 ```
