@@ -32,6 +32,7 @@ function benchmark_ref() {
 
 rm -f stats.txt
 
+benchmark_ref "HEAD"
 benchmark_ref "main"
 # benchmark_ref "..."
 
