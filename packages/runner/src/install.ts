@@ -11,21 +11,25 @@ export async function installFirefox(
   debuggerUrl: string,
   extensionDir: string,
 ): Promise<BidiWebExtensionInstallResponse> {
-  using bidi = await createBidiConnection(debuggerUrl);
+  const bidi = await createBidiConnection(debuggerUrl);
 
-  // Start a session
-  await bidi.send<unknown>('session.new', { capabilities: {} });
+  try {
+    // Start a session
+    await bidi.send<unknown>('session.new', { capabilities: {} });
 
-  // Install the extension
-  return await bidi.send<BidiWebExtensionInstallResponse>(
-    'webExtension.install',
-    {
-      extensionData: {
-        type: 'path',
-        path: extensionDir,
+    // Install the extension
+    return await bidi.send<BidiWebExtensionInstallResponse>(
+      'webExtension.install',
+      {
+        extensionData: {
+          type: 'path',
+          path: extensionDir,
+        },
       },
-    },
-  );
+    );
+  } finally {
+    bidi.close();
+  }
 }
 
 export type BidiWebExtensionInstallResponse = {
@@ -45,13 +49,18 @@ export async function installChromium(
   browserProcess: ChildProcess,
   extensionDir: string,
 ): Promise<CdpExtensionsLoadUnpackedResponse> {
-  using cdp = createCdpConnection(browserProcess);
-  return await cdp.send<CdpExtensionsLoadUnpackedResponse>(
-    'Extensions.loadUnpacked',
-    {
-      path: extensionDir,
-    },
-  );
+  const cdp = createCdpConnection(browserProcess);
+
+  try {
+    return await cdp.send<CdpExtensionsLoadUnpackedResponse>(
+      'Extensions.loadUnpacked',
+      {
+        path: extensionDir,
+      },
+    );
+  } finally {
+    cdp.close();
+  }
 }
 
 export type CdpExtensionsLoadUnpackedResponse = {

@@ -1,6 +1,6 @@
 import { ExtensionRunner } from '../../types';
 import { createWslRunner } from './wsl';
-import { createWebExtRunner } from './web-ext';
+import { createWxtRunner } from './wxt';
 import { createSafariRunner } from './safari';
 import { createManualRunner } from './manual';
 import { isWsl } from '../utils/wsl';
@@ -12,5 +12,5 @@ export async function createExtensionRunner(): Promise<ExtensionRunner> {
   if (await isWsl()) return createWslRunner();
   if (wxt.config.runnerConfig.config?.disabled) return createManualRunner();
 
-  return createWebExtRunner();
+  return createWxtRunner();
 }

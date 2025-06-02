@@ -3,7 +3,7 @@ import { debug } from './debug';
 
 const debugBidi = debug.scoped('bidi');
 
-export interface BidiConnection extends Disposable {
+export interface BidiConnection {
   send<T>(method: string, params: any, timeout?: number): Promise<T>;
   close(): void;
 }
