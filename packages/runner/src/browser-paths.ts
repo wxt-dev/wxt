@@ -1,7 +1,22 @@
 export type BrowserPlatform = 'windows' | 'mac' | 'linux';
 
+export type KnownTarget =
+  | 'chromium'
+  | 'chrome'
+  | 'chrome-beta'
+  | 'chrome-dev'
+  | 'chrome-canary'
+  | 'edge'
+  | 'edge-beta'
+  | 'edge-dev'
+  | 'edge-canary'
+  | 'firefox'
+  | 'firefox-nightly'
+  | 'firefox-developer-edition'
+  | 'zen';
+
 export const KNOWN_BROWSER_PATHS: Record<
-  string,
+  KnownTarget,
   Record<BrowserPlatform, string[]>
 > = {
   // Chromium based targets
@@ -85,4 +100,21 @@ export const KNOWN_BROWSER_PATHS: Record<
     linux: [],
     windows: [],
   },
+};
+
+/**
+ * When targeting a browser, this map contains the other targets to fall back on when a binary could not be found for the primary target.
+ */
+export const FALLBACK_TARGETS: Partial<Record<KnownTarget, KnownTarget[]>> = {
+  chrome: [
+    'chromium',
+    'chrome-canary',
+    'chrome-beta',
+    'chrome-dev',
+    'edge',
+    'edge-canary',
+    'edge-beta',
+    'edge-dev',
+  ],
+  firefox: ['firefox-developer-edition', 'firefox-nightly', 'zen'],
 };

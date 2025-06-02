@@ -1,4 +1,9 @@
-import { KNOWN_BROWSER_PATHS, type BrowserPlatform } from './browser-paths';
+import {
+  FALLBACK_TARGETS,
+  KNOWN_BROWSER_PATHS,
+  KnownTarget,
+  type BrowserPlatform,
+} from './browser-paths';
 import { resolve, join } from 'node:path';
 import { homedir, tmpdir } from 'node:os';
 import { debug } from './debug';
@@ -6,20 +11,6 @@ import { mkdtemp, open } from 'node:fs/promises';
 
 const debugOptions = debug.scoped('options');
 
-export type KnownTarget =
-  | 'chromium'
-  | 'chrome'
-  | 'chrome-beta'
-  | 'chrome-dev'
-  | 'chrome-canary'
-  | 'edge'
-  | 'edge-beta'
-  | 'edge-dev'
-  | 'edge-canary'
-  | 'firefox'
-  | 'firefox-nightly'
-  | 'firefox-developer-edition'
-  | 'zen';
 export type UnknownTarget = string & {};
 export type Target = KnownTarget | UnknownTarget;
 
@@ -110,9 +101,17 @@ export async function resolveRunOptions(
 }
 
 async function findBrowserBinary(target: string): Promise<string | undefined> {
-  const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[getPlatform()] ?? [];
-  for (const path of potentialPaths) {
-    if (await exists(path)) return path;
+  const targets = new Set<KnownTarget>([target as KnownTarget]);
+  FALLBACK_TARGETS[target as KnownTarget]?.forEach((fallback) =>
+    targets.add(fallback),
+  );
+  const platform = getPlatform();
+
+  for (const target of targets) {
+    const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[platform] ?? [];
+    for (const path of potentialPaths) {
+      if (await exists(path)) return path;
+    }
   }
 }
 
