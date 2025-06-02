@@ -1,0 +1,51 @@
+{
+  "name": "@wxt-dev/runner",
+  "description": "Launch Chrome and Firefox with a web extension installed",
+  "version": "0.1.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/runner"
+  },
+  "homepage": "https://github.com/wxt-dev/wxt/tree/main/packages/runner#readme",
+  "keywords": [
+    "web-extension",
+    "chrome-extension",
+    "wxt"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/wxt-dev",
+  "scripts": {
+    "check": "pnpm build && check",
+    "test": "buildc --deps-only -- vitest",
+    "dev": "tsx --trace-warnings dev.ts",
+    "build": "buildc -- unbuild",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@aklinker1/check": "2.0.0",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "tsx": "4.19.4",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.1.2"
+  },
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}
