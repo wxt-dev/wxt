@@ -1,19 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import { ResolvedRunOptions, resolveRunOptions } from '../options';
 import { resolve, join } from 'node:path';
 import { tmpdir, homedir } from 'node:os';
+import { mkdir } from 'node:fs/promises';
 
-vi.mock('node:os');
-const tmpdirMock = vi.mocked(tmpdir);
-const homedirMock = vi.mocked(homedir);
-
-const homeDir = '~';
-const tmpDir = '/tmp';
+vi.mock('node:os', async () => {
+  const { vi } = await import('vitest');
+  const os: any = await vi.importActual('node:os');
+  const { join } = await import('node:path');
+  return {
+    ...os,
+    tmpdir: () => join(os.tmpdir(), 'tmpdir-mock'),
+    homedir: () => join(os.tmpdir(), 'homedir-mock'),
+  };
+});
 
 describe('Options', () => {
-  beforeEach(() => {
-    homedirMock.mockReturnValue(homeDir);
-    tmpdirMock.mockReturnValue(tmpDir);
+  beforeAll(async () => {
+    // Make sure mock test directories exist
+    await mkdir(tmpdir(), { recursive: true });
+    await mkdir(homedir(), { recursive: true });
   });
 
   describe('extensionDir', () => {
@@ -249,14 +255,14 @@ describe('Options', () => {
       });
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'none',
-        dataDir: expect.stringContaining(join(tmpDir, 'wxt-runner-')),
+        dataDir: expect.stringContaining(join(tmpdir(), 'wxt-runner-')),
         chromiumArgs: expect.arrayContaining([
           expect.stringContaining(
-            `--user-data-dir=${join(tmpDir, 'wxt-runner-')}`,
+            `--user-data-dir=${join(tmpdir(), 'wxt-runner-')}`,
           ),
         ]),
         firefoxArgs: expect.arrayContaining([
-          expect.stringContaining(join(tmpDir, 'wxt-runner-')),
+          expect.stringContaining(join(tmpdir(), 'wxt-runner-')),
         ]),
       });
     });
@@ -285,14 +291,14 @@ describe('Options', () => {
       });
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'user',
-        dataDir: expect.stringContaining(join(homeDir, '.wxt/runner')),
+        dataDir: expect.stringContaining(join(homedir(), '.wxt/runner')),
         chromiumArgs: expect.arrayContaining([
           expect.stringContaining(
-            `--user-data-dir=${join(homeDir, '.wxt/runner')}`,
+            `--user-data-dir=${join(homedir(), '.wxt/runner')}`,
           ),
         ]),
         firefoxArgs: expect.arrayContaining([
-          expect.stringContaining(join(homeDir, '.wxt/runner')),
+          expect.stringContaining(join(homedir(), '.wxt/runner')),
         ]),
       });
     });
