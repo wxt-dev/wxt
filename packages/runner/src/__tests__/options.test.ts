@@ -273,14 +273,14 @@ describe('Options', () => {
       });
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'project',
-        dataDir: expect.stringContaining(join(process.cwd(), '.wxt/runner')),
+        dataDir: expect.stringContaining(join(process.cwd(), '.wxt-runner')),
         chromiumArgs: expect.arrayContaining([
           expect.stringContaining(
-            `--user-data-dir=${join(process.cwd(), '.wxt/runner')}`,
+            `--user-data-dir=${join(process.cwd(), '.wxt-runner')}`,
           ),
         ]),
         firefoxArgs: expect.arrayContaining([
-          expect.stringContaining(join(process.cwd(), '.wxt/runner')),
+          expect.stringContaining(join(process.cwd(), '.wxt-runner')),
         ]),
       });
     });
@@ -291,14 +291,14 @@ describe('Options', () => {
       });
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'user',
-        dataDir: expect.stringContaining(join(homedir(), '.wxt/runner')),
+        dataDir: expect.stringContaining(join(homedir(), '.wxt-runner')),
         chromiumArgs: expect.arrayContaining([
           expect.stringContaining(
-            `--user-data-dir=${join(homedir(), '.wxt/runner')}`,
+            `--user-data-dir=${join(homedir(), '.wxt-runner')}`,
           ),
         ]),
         firefoxArgs: expect.arrayContaining([
-          expect.stringContaining(join(homedir(), '.wxt/runner')),
+          expect.stringContaining(join(homedir(), '.wxt-runner')),
         ]),
       });
     });

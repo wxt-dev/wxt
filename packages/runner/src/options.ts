@@ -21,6 +21,8 @@ export type RunOptions = {
   chromiumArgs?: string[];
   /** Control how data is persisted between launches. Either save data at a user level, project level, or don't persist data at all. Defaults to `project`. */
   dataPersistence?: 'user' | 'project' | 'none';
+  /** Customize where your profile's data is stored when using `dataPersistence: 'project'`. Can be absolute or relative to the current working directory. */
+  projectDataDir?: string;
   /** Customize the port Chrome's debugger is listening on. Defaults to a random open port. */
   chromiumRemoteDebuggingPort?: number;
   /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. Defaults to the current working directory. */
@@ -72,7 +74,9 @@ export async function resolveRunOptions(
     dataPersistence === 'user'
       ? join(homedir(), '.wxt-runner', target)
       : dataPersistence === 'project'
-        ? resolve('.wxt-runner', target)
+        ? options?.projectDataDir
+          ? resolve(options.projectDataDir)
+          : resolve('.wxt-runner', target)
         : dataPersistence === 'none'
           ? await mkdtemp(join(tmpdir(), 'wxt-runner-'))
           : resolve(dataPersistence);
