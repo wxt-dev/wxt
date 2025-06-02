@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { ResolvedRunOptions, resolveRunOptions } from '../options';
 import { resolve, join } from 'node:path';
 import { tmpdir, homedir } from 'node:os';
