@@ -55,6 +55,7 @@ export function createWebExtRunner(): ExtensionRunner {
               ),
               args: [
                 '--unsafely-disable-devtools-self-xss-warnings',
+                '--disable-features=DisableLoadExtensionCommandLineSwitch',
                 ...(wxtUserConfig?.chromiumArgs ?? []),
               ],
             }),
