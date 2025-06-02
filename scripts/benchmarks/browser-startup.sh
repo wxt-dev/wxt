@@ -26,7 +26,7 @@ function benchmark_ref() {
     for i in $(seq $N); do
         pnpm wxt packages/wxt-demo
     done
-    git checkout HEAD -- packages/wxt/src/core/runners/web-ext.ts pnpm-lock.yaml
+    git checkout HEAD -- packages/wxt/src/core/runners/wxt.ts pnpm-lock.yaml
     echo "" >> stats.txt
 }
 
