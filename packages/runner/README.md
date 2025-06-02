@@ -151,7 +151,7 @@ await run({
 To see debug logs, set the `DEBUG` env var to `"@wxt-dev/runner"`. This will print the resolved config, commands used to spawn the browser, any messages sent on the browser's communication protocol, and more for you to debug.
 
 <details>
-<summary>Example debug output</details>
+<summary>Example debug output</summary>
 
 ```
 @wxt-dev/runner:options User options: { extensionDir: 'demo-extension', target: undefined }
