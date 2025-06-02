@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.20.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.6...wxt-v0.20.7)
+
+### 🚀 Enhancements
+
+- Add `@font-face` to be processed by `splitShadowRootCss` ([#1635](https://github.com/wxt-dev/wxt/pull/1635))
+- Add DisableLoadExtensionCommandLineSwitch flag to Chromium runner ([#1698](https://github.com/wxt-dev/wxt/pull/1698))
+
+### 🩹 Fixes
+
+- Improve CSS reset inside shadow roots ([da5cd325](https://github.com/wxt-dev/wxt/commit/da5cd325))
+
+### 🏡 Chore
+
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- **deps:** Update all dependencies ([#1648](https://github.com/wxt-dev/wxt/pull/1648))
+- Change browser workspace dependency to `^` ([c7335add](https://github.com/wxt-dev/wxt/commit/c7335add))
+
+### ❤️ Contributors
+
+- Richard Lee ([@dlackty](https://github.com/dlackty))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Seaders ([@seaders](https://github.com/seaders))
+
 ## v0.20.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.5...wxt-v0.20.6)
