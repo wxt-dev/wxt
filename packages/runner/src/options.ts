@@ -70,9 +70,9 @@ export async function resolveRunOptions(
   const dataPersistence = options?.dataPersistence ?? 'none';
   const dataDir =
     dataPersistence === 'user'
-      ? join(homedir(), '.wxt', 'runner', target)
+      ? join(homedir(), '.wxt-runner', target)
       : dataPersistence === 'project'
-        ? resolve('.wxt', 'runner', target)
+        ? resolve('.wxt-runner', target)
         : dataPersistence === 'none'
           ? await mkdtemp(join(tmpdir(), 'wxt-runner-'))
           : resolve(dataPersistence);
