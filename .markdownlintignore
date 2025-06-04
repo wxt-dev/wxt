@@ -1,0 +1,9 @@
+node_modules
+.git
+.output
+dist
+
+# Generated files
+packages/wxt/README.md
+packages/*/CHANGELOG.md
+docs/api
