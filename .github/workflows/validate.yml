@@ -59,11 +59,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: ubuntu-22.04
-            coverage: true
-          - os: windows-latest
-            coverage: false
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,15 +71,15 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run Tests
-        if: ${{ ! matrix.coverage }}
+        if: matrix.os != 'ubuntu-latest'
         run: pnpm test
 
       - name: Run Tests (Coverage)
-        if: matrix.coverage
+        if: matrix.os == 'ubuntu-latest'
         run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
-        if: matrix.coverage
+        if: matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
