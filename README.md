@@ -37,7 +37,7 @@
 
 ## Demo
 
-https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94
+<https://github.com/wxt-dev/wxt/assets/10101283/4d678939-1bdb-495c-9c36-3aa281d84c94>
 
 ## Quick Start
 

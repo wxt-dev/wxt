@@ -156,7 +156,7 @@ Configuration is in [`taze.config.ts`](./taze.config.ts).
 
 ## Install Unreleased Versions
 
-This repo uses https://pkg.pr.new to publish versions of all it's packages for almost every commit. You can install them via:
+This repo uses <https://pkg.pr.new> to publish versions of all it's packages for almost every commit. You can install them via:
 
 ```sh
 npm i https://pkg.pr.new/[package-name]@[ref]
@@ -177,7 +177,7 @@ npm i https://pkg.pr.new/@wxt-dev/module-react@426f907
 
 ## Blog Posts
 
-Anyone is welcome to submit a blog post on https://wxt.dev/blog!
+Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 
 > [!NOTE]
 > Before starting on a blog post, please message Aaron on Discord or start a discussion on GitHub to get permission to write about a topic, but most topics are welcome: Major version updates, tutorials, etc.

@@ -92,7 +92,7 @@ await run({
 
 These presets configure different flags for different operating systems when spawning the browser process.
 
-If you want to customize your data persistence beyond what these presets define, [you can override the browser flags yourself](#Arguments) to configure persistence.
+If you want to customize your data persistence beyond what these presets define, [you can override the browser flags yourself](#arguments) to configure persistence.
 
 ### Browser Binaries
 

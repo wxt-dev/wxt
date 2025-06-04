@@ -20,13 +20,13 @@ await chrome.scripting.getRegisteredContentScripts();
 
 ## How do I disable opening the browser automatically during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser>
 
 ## How do I stay logged into a website during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data>
 
-## My component library doesn't work in content scripts!
+## My component library doesn't work in content scripts
 
 This is usually caused by one of two things (or both) when using `createShadowRootUi`:
 
@@ -167,11 +167,11 @@ Both issues have the same fix: tell the library to put elements inside the `Shad
 
 ## Is there an LLM trained on WXT's docs that I chat with?
 
-Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit https://knowledge.wxt.dev/ for a fullscreen experience.
+Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
 
 Additionally, if you want to train your own model or provide context to your editor, you can use the LLM knowledge files hosted by the site:
 
-https://wxt.dev/knowledge/index.json
+<https://wxt.dev/knowledge/index.json>
 
 You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!
 
