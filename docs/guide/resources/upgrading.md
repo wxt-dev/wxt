@@ -241,6 +241,7 @@ If you've previously loaded the extension into your browser manually for develop
 ### Deprecated APIs Removed
 
 - `entrypointLoader` option: WXT now uses `vite-node` for importing entrypoints during the build process.
+  <!-- markdownlint-disable-next-line MD051 -->
   > This was deprecated in v0.19.0, see the [v0.19 section](#v0-18-5-rarr-v0-19-0) for migration steps.
 - `transformManifest` option: Use the `build:manifestGenerated` hook to transform the manifest instead:
   <!-- prettier-ignore -->
@@ -433,7 +434,7 @@ item.watch((newValue: number, oldValue: number) => { // [!code ++]
 
 JS entrypoints in the output directory have been moved. Unless you're doing some kind of post-build work referencing files, you don't have to make any changes.
 
-```
+```plaintext
 .output/
   <target>/
     chunks/

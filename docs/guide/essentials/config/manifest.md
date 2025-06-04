@@ -128,7 +128,7 @@ If a version is not present in your `package.json`, it defaults to `"0.0.0"`.
 
 WXT automatically discovers your extension's icon by looking at files in the `public/` directory:
 
-```
+```plaintext
 public/
 ├─ icon-16.png
 ├─ icon-24.png

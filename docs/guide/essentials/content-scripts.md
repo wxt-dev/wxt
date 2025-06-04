@@ -19,7 +19,7 @@ export default defineContentScript({
 
 This object is responsible for tracking whether or not the content script's context is "invalidated". Most browsers, by default, do not stop content scripts if the extension is uninstalled, updated, or disabled. When this happens, content scripts start reporting this error:
 
-```
+```plaintext
 Error: Extension context invalidated.
 ```
 
