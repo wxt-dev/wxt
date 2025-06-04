@@ -50,7 +50,9 @@ Changing execution order is simple:
      📄 0.my-module.ts
      📄 1.another-module.ts
   ```
+
 - If you need to run an NPM module after user modules, just make it a user module and prefix the filename with a number!
+
   ```ts
   // modules/2.i18n.ts
   export { default } from '@wxt-dev/i18n/module';

@@ -235,6 +235,7 @@ If you want to use the `activeTab` permission or the `browser.action.onClicked` 
 
 1. Delete the [Popup entrypoint](/guide/essentials/entrypoints#popup) if it exists
 2. Add the `action` key to your manifest:
+
    ```ts
    export default defineConfig({
      manifest: {
