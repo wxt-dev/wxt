@@ -23,6 +23,10 @@ jobs:
       - name: Basic Checks
         run: pnpm check
 
+      - name: Markdownlint
+        run: pnpm experimental:check:md
+        continue-on-error: true
+
   builds:
     name: Builds
     runs-on: ubuntu-22.04

@@ -7,6 +7,7 @@
   "packageManager": "pnpm@10.10.0",
   "scripts": {
     "check": "check && pnpm -r --sequential run check",
+    "experimental:check:md": "markdownlint .",
     "test": "pnpm -r --sequential run test run",
     "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
@@ -30,6 +31,7 @@
     "fs-extra": "^11.3.0",
     "lint-staged": "^15.5.1",
     "markdown-it-footnote": "^4.0.0",
+    "markdownlint-cli": "^0.45.0",
     "nano-spawn": "^0.2.0",
     "prettier": "^3.5.3",
     "simple-git-hooks": "^2.13.0",
