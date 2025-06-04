@@ -2,7 +2,9 @@
 
 Programmatically open a browser and install a web extension from a local directory.
 
-###### With WXT
+## Usage
+
+### With WXT
 
 > [!WARNING]
 > This package is intended to replace [`web-ext`](https://github.com/mozilla/web-ext) in the future, but it is not ready at the moment. Once it's ready for testing in WXT, more details will be added here.
@@ -16,7 +18,7 @@ export default defineRunnerConfig({
 });
 ```
 
-###### JS API
+### JS API
 
 ```ts
 import { run } from '@wxt-dev/runner';
@@ -153,7 +155,7 @@ To see debug logs, set the `DEBUG` env var to `"@wxt-dev/runner"`. This will pri
 <details>
 <summary>Example debug output</summary>
 
-```
+```plaintext
 @wxt-dev/runner:options User options: { extensionDir: 'demo-extension', target: undefined }
 @wxt-dev/runner:options Resolved options: {
   browserBinary: '/usr/bin/chromium',

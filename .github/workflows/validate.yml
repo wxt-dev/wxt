@@ -24,8 +24,7 @@ jobs:
         run: pnpm check
 
       - name: Markdownlint
-        run: pnpm experimental:check:md
-        continue-on-error: true
+        run: pnpm check:md
 
   builds:
     name: Builds

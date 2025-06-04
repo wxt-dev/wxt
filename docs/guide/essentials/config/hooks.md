@@ -32,7 +32,7 @@ Because hooks can be defined in multiple places, including [WXT Modules](/guide/
 
 To see the order for your project, run `wxt prepare --debug` flag and search for the "Hook execution order":
 
-```
+```plaintext
 ⚙ Hook execution order:
 ⚙   1. wxt:built-in:unimport
 ⚙   2. src/modules/auto-icons.ts

@@ -20,7 +20,7 @@ There are two ways to add a module to your project:
 
 2. **Local**: add a file to your project's `modules/` directory:
 
-   ```
+   ```plaintext
    <rootDir>/
      modules/
        my-module.ts
