@@ -11,7 +11,7 @@
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test -- run --coverage",
+    "test:coverage": "pnpm test run --coverage",
     "sync-releases": "pnpx changelogen@latest gh release",
     "prepack": "pnpm build"
   },
