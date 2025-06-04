@@ -55,11 +55,17 @@ jobs:
         working-directory: packages/wxt-demo
 
   tests:
-    name: Tests (${{ matrix.os }})
+    name: Tests (${{ matrix.title }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - title: 'Linux'
+            os: ubuntu-22.04
+            coverage: true
+          - title: 'Windows'
+            os: windows-latest
+            coverage: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,15 +77,15 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run Tests
-        if: matrix.os != 'ubuntu-latest'
+        if: ${{ ! matrix.coverage }}
         run: pnpm test
 
       - name: Run Tests (Coverage)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.coverage
         run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.coverage
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
