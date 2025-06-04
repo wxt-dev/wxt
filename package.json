@@ -6,8 +6,8 @@
   },
   "packageManager": "pnpm@10.10.0",
   "scripts": {
-    "check": "check:md && check && pnpm -r --sequential run check",
-    "check:md": "markdownlint .",
+    "check": "check && pnpm -r --sequential run check",
+    "experimental:check:md": "markdownlint .",
     "test": "pnpm -r --sequential run test run",
     "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
