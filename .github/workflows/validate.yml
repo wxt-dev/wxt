@@ -55,7 +55,7 @@ jobs:
         working-directory: packages/wxt-demo
 
   tests:
-    name: Tests
+    name: Tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
