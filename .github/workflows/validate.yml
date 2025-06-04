@@ -77,15 +77,9 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run Tests
-        if: ${{ ! matrix.coverage }}
-        run: pnpm test
-
-      - name: Run Tests (Coverage)
         if: matrix.coverage
-        run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
-        if: matrix.coverage
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
