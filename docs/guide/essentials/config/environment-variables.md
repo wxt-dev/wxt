@@ -86,8 +86,8 @@ Note that Vite's runtime environment variables, like `import.meta.env.DEV`, will
 ```ts
 export default defineConfig({
   manifest: ({ mode }) => {
-    const isDev = mode === "development";
-    console.log("Is development mode:", isDev);
+    const isDev = mode === 'development';
+    console.log('Is development mode:', isDev);
 
     // ...
   },
