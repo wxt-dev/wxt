@@ -2,6 +2,7 @@ import type * as vite from 'vite';
 import {
   BuildStepOutput,
   Entrypoint,
+  EntrypointGroup,
   ResolvedConfig,
   WxtBuilder,
   WxtBuilderServer,
@@ -24,7 +25,9 @@ import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
-import { relative } from 'node:path';
+import { relative, join, extname, dirname } from 'node:path';
+import fs from 'fs-extra';
+import { normalizePath } from '../../utils/paths';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -172,10 +175,7 @@ export async function createViteBuilder(
     );
     return {
       mode: wxtConfig.mode,
-      plugins: [
-        wxtPlugins.multipageMove(entrypoints, wxtConfig),
-        wxtPlugins.entrypointGroupGlobals(entrypoints),
-      ],
+      plugins: [wxtPlugins.entrypointGroupGlobals(entrypoints)],
       build: {
         rollupOptions: {
           input: entrypoints.reduce<Record<string, string>>((input, entry) => {
@@ -319,9 +319,10 @@ export async function createViteBuilder(
         buildConfig,
       );
       const result = await vite.build(buildConfig);
+      const chunks = getBuildOutputChunks(result);
       return {
         entrypoints: group,
-        chunks: getBuildOutputChunks(result),
+        chunks: await moveHtmlFiles(wxtConfig, group, chunks),
       };
     },
     async createServer(info) {
@@ -399,4 +400,77 @@ function getRollupEntry(entrypoint: Entrypoint): string {
     return `${moduleId}?${entrypoint.inputPath}`;
   }
   return entrypoint.inputPath;
+}
+
+/**
+ * Ensures the HTML files output by a multipage build are in the correct location. This does two
+ * things:
+ *
+ * 1. Moves the HTML files to their final location at `<outDir>/<entrypoint.name>.html`.
+ * 2. Updates the bundle so it summarizes the files correctly in the returned build output.
+ *
+ * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't need to be modified.
+ * HTML files access them via absolute URLs, so we don't need to update any import paths in the HTML
+ * files either.
+ */
+async function moveHtmlFiles(
+  config: ResolvedConfig,
+  group: EntrypointGroup,
+  chunks: BuildStepOutput['chunks'],
+): Promise<BuildStepOutput['chunks']> {
+  if (!Array.isArray(group)) return chunks;
+
+  const entryMap = group.reduce<Record<string, Entrypoint>>((map, entry) => {
+    const a = normalizePath(relative(config.root, entry.inputPath));
+    map[a] = entry;
+    return map;
+  }, {});
+
+  const movedChunks = await Promise.all(
+    chunks.map(async (chunk) => {
+      if (!chunk.fileName.endsWith('.html')) return chunk;
+
+      const entry = entryMap[chunk.fileName];
+      const oldBundlePath = chunk.fileName;
+      const newBundlePath = getEntrypointBundlePath(
+        entry,
+        config.outDir,
+        extname(chunk.fileName),
+      );
+      const oldAbsPath = join(config.outDir, oldBundlePath);
+      const newAbsPath = join(config.outDir, newBundlePath);
+      await fs.ensureDir(dirname(newAbsPath));
+      await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
+
+      return {
+        ...chunk,
+        fileName: newBundlePath,
+      };
+    }),
+  );
+
+  // TODO: Optimize and only delete old path directories
+  removeEmptyDirs(config.outDir);
+
+  return movedChunks;
+}
+
+/**
+ * Recursively remove all directories that are empty/
+ */
+export async function removeEmptyDirs(dir: string): Promise<void> {
+  const files = await fs.readdir(dir);
+  for (const file of files) {
+    const filePath = join(dir, file);
+    const stats = await fs.stat(filePath);
+    if (stats.isDirectory()) {
+      await removeEmptyDirs(filePath);
+    }
+  }
+
+  try {
+    await fs.rmdir(dir);
+  } catch {
+    // noop on failure - this means the directory was not empty.
+  }
 }
