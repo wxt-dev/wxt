@@ -65,7 +65,6 @@ To use environment variables in the manifest, you need to use the function synta
 
 ```ts
 export default defineConfig({
-  extensionApi: 'chrome',
   modules: ['@wxt-dev/module-vue'],
   manifest: { // [!code --]
     oauth2: { // [!code --]
@@ -81,3 +80,16 @@ export default defineConfig({
 ```
 
 WXT can't load your `.env` files until after the config file has been loaded. So by using the function syntax for `manifest`, it defers creating the object until after the `.env` files are loaded into the process.
+
+Note that Vite's runtime environment variables, like `import.meta.env.DEV`, will not be defined. Instead, access the `mode` like this:
+
+```ts
+export default defineConfig({
+  manifest: ({ mode }) => {
+    const isDev = mode === 'development';
+    console.log('Is development mode:', isDev);
+
+    // ...
+  },
+});
+```
