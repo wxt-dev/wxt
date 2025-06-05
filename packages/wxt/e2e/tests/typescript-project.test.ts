@@ -48,6 +48,7 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | ""
           | "/"
           | "/options.html"
           | "/popup.html"
@@ -394,6 +395,19 @@ describe('TypeScript Project', () => {
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toContain('./example.ts');
+  });
+
+  it('should set correct import.meta.env.BROWSER type based on targetBrowsers', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.setConfigFileConfig({
+      targetBrowsers: ['firefox', 'chrome'],
+    });
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/types/globals.d.ts');
+    expect(output).toContain('readonly BROWSER: "firefox" | "chrome";');
   });
 
   // TODO: Once a module has been published, use it here for testing - local files are never added to the .wxt/wxt.d.ts file

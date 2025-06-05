@@ -1,6 +1,7 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
 import { MigrationError, type WxtStorageItem, storage } from '../index';
+import { browser } from '@wxt-dev/browser';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained
@@ -222,7 +223,7 @@ describe('Storage Utils', () => {
       describe('setMeta', () => {
         it('should set metadata at key+$', async () => {
           const existing = { v: 1 };
-          await chrome.storage[storageArea].set({ count$: existing });
+          await browser.storage[storageArea].set({ count$: existing });
           const newValues = {
             date: Date.now(),
           };
@@ -238,7 +239,7 @@ describe('Storage Utils', () => {
           'should remove any properties set to %s',
           async (version) => {
             const existing = { v: 1 };
-            await chrome.storage[storageArea].set({ count$: existing });
+            await browser.storage[storageArea].set({ count$: existing });
             const expected = {};
 
             await storage.setMeta(`${storageArea}:count`, { v: version });
@@ -1265,7 +1266,7 @@ describe('Storage Utils', () => {
 
         await item.removeValue();
         // Make sure it's actually blank before running the test
-        expect(await chrome.storage.local.get()).toEqual({});
+        expect(await browser.storage.local.get()).toEqual({});
         init.mockClear();
 
         const [value1, value2] = await Promise.all([
@@ -1281,6 +1282,19 @@ describe('Storage Utils', () => {
       it('should define a nullable value when options are not passed', () => {
         const item = storage.defineItem<number>(`local:test`);
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+
+        const item2 = storage.defineItem<number>(`local:test`, {});
+        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+
+        const item3 = storage.defineItem<number>(`local:test`, {
+          fallback: undefined,
+        });
+        expectTypeOf(item3).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+
+        const item4 = storage.defineItem<number>(`local:test`, {
+          defaultValue: undefined,
+        });
+        expectTypeOf(item4).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
 
       it('should define a non-null value when options are passed with a nullish default value', () => {
@@ -1288,6 +1302,11 @@ describe('Storage Utils', () => {
           defaultValue: 123,
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+
+        const item2 = storage.defineItem(`local:test`, {
+          fallback: 123,
+        });
+        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
       });
 
       it('should define a nullable value when options are passed with null default value', () => {

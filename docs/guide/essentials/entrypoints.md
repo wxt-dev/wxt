@@ -211,12 +211,12 @@ When defining your background entrypoint, keep in mind that WXT will import this
 
 <!-- prettier-ignore -->
 ```ts
-browser.action.onClick.addListener(() => { // [!code --]
+browser.action.onClicked.addListener(() => { // [!code --]
   // ... // [!code --]
 }); // [!code --]
 
 export default defineBackground(() => {
-  browser.action.onClick.addListener(() => { // [!code ++]
+  browser.action.onClicked.addListener(() => { // [!code ++]
     // ... // [!code ++]
   }); // [!code ++]
 });
@@ -580,7 +580,7 @@ body {
 }
 ```
 
-Follow Vite's guide to setup your preprocessor of choice: https://vitejs.dev/guide/features.html#css-pre-processors
+Follow Vite's guide to setup your preprocessor of choice: <https://vitejs.dev/guide/features.html#css-pre-processors>
 
 CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/essentials/content-scripts#css) docs.
 

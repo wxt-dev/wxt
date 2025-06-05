@@ -4,7 +4,7 @@
 
 WXT supports [dotenv files the same way as Vite](https://vite.dev/guide/env-and-mode.html#env-files). Create any of the following files:
 
-```
+```plaintext
 .env
 .env.local
 .env.[mode]
@@ -41,6 +41,8 @@ WXT provides some custom environment variables based on the current command:
 | `import.meta.env.SAFARI`           | `boolean` | Equivalent to `import.meta.env.BROWSER === "safari"`  |
 | `import.meta.env.EDGE`             | `boolean` | Equivalent to `import.meta.env.BROWSER === "edge"`    |
 | `import.meta.env.OPERA`            | `boolean` | Equivalent to `import.meta.env.BROWSER === "opera"`   |
+
+You can set the [`targetBrowsers`](/api/reference/wxt/interfaces/InlineConfig#targetbrowsers) option to make the `BROWSER` variable a more specific type, like `"chrome" | "firefox"`.
 
 You can also access all of [Vite's environment variables](https://vite.dev/guide/env-and-mode.html#env-variables):
 
