@@ -9,7 +9,7 @@ import { normalizePath } from '../../../utils/paths';
  * Ensures the HTML files output by a multipage build are in the correct location. This does two
  * things:
  *
- * 1. Moves the HMTL files to their final location at `<outDir>/<entrypoint.name>.html`.
+ * 1. Moves the HTML files to their final location at `<outDir>/<entrypoint.name>.html`.
  * 2. Updates the bundle so it summarizes the files correctly in the returned build output.
  *
  * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't need to be modified.
@@ -24,6 +24,18 @@ export function multipageMove(
 ): vite.Plugin {
   return {
     name: 'wxt:multipage-move',
+    async generateBundle(_, bundle) {
+      // bundle['test.txt'] = {
+      //   type: 'asset',
+      //   fileName: 'test.txt',
+      //   source: 'test',
+      //   name: 'test.txt',
+      //   names: ['test.txt'],
+      //   needsCodeReference: false,
+      //   originalFileNames: ['test.txt'],
+      //   originalFileName: 'test.txt',
+      // };
+    },
     async writeBundle(_, bundle) {
       for (const oldBundlePath in bundle) {
         // oldBundlePath = 'entrypoints/popup.html' or 'entrypoints/options/index.html'
@@ -60,12 +72,12 @@ export function multipageMove(
         await ensureDir(dirname(newAbsPath));
         await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
 
-        const renamedChunk = {
-          ...bundle[oldBundlePath],
-          fileName: newBundlePath,
-        };
-        delete bundle[oldBundlePath];
-        bundle[newBundlePath] = renamedChunk;
+        // const renamedChunk = {
+        //   ...bundle[oldBundlePath],
+        //   fileName: newBundlePath,
+        // };
+        // delete bundle[oldBundlePath];
+        // bundle[newBundlePath] = renamedChunk;
       }
 
       // Remove directories that were created
