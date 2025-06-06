@@ -30,6 +30,11 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   const projectName =
     wxt.config.zip.name ??
     safeFilename(packageJson?.name || path.basename(process.cwd()));
+  const modeSuffixes: Record<string, string | undefined> = {
+    production: '',
+    development: '-dev',
+  };
+  const modeSuffix = modeSuffixes[wxt.config.mode] ?? `-${wxt.config.mode}`;
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
@@ -39,6 +44,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         output.manifest.version_name ?? output.manifest.version,
       )
       .replaceAll('{{packageVersion}}', packageJson?.version)
+      .replaceAll('{{modeSuffix}}', modeSuffix)
       .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
