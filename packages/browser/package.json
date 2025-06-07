@@ -23,7 +23,8 @@
     "src"
   ],
   "devDependencies": {
-    "@mdn/browser-compat-data": "latest",
+    "@types/chrome": "0.0.326",
+    "@types/firefox-webext-browser": "120.0.4",
     "fs-extra": "^11.3.0",
     "nano-spawn": "^0.2.0",
     "ts-morph": "^26.0.0",
