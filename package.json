@@ -7,7 +7,6 @@
   "packageManager": "pnpm@10.10.0",
   "scripts": {
     "check": "check && pnpm -r --sequential run check",
-    "check:md": "markdownlint .",
     "test": "pnpm -r --sequential run test run",
     "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
@@ -19,7 +18,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.4",
-    "@aklinker1/check": "2.0.0",
+    "@aklinker1/check": "^2.1.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",
     "@types/fs-extra": "^11.0.4",

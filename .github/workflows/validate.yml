@@ -23,9 +23,6 @@ jobs:
       - name: Basic Checks
         run: pnpm check
 
-      - name: Markdownlint
-        run: pnpm check:md
-
   builds:
     name: Builds
     runs-on: ubuntu-22.04
