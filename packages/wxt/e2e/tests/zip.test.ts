@@ -74,6 +74,76 @@ describe('Zipping', () => {
     `);
   });
 
+  it('should download local packages and produce a valid build when zipping sources', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+      dependencies: {
+        '@local/file': `file:../../tests/__fixtures__/local-package`,
+        '@local/link': `link:../../tests/__fixtures__/local-package`,
+      },
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'firefox',
+      zip: { downloadPackages: ['@local/file', '@local/link'] },
+    });
+    expect(await project.fileExists('.output/')).toBe(true);
+
+    await extract(sourcesZip, { dir: unzipDir });
+    // Update package json wxt path
+    const packageJsonPath = project.resolvePath(unzipDir, 'package.json');
+    const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
+    packageJson.dependencies.wxt = '../../../../..';
+    await writeFile(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2),
+      'utf-8',
+    );
+
+    // Build zipped extension
+    await expect(
+      spawn('pnpm', ['i', '--ignore-workspace', '--frozen-lockfile', 'false'], {
+        cwd: unzipDir,
+      }),
+    ).resolves.not.toHaveProperty('exitCode');
+    await expect(
+      spawn('pnpm', ['wxt', 'build', '-b', 'firefox'], {
+        cwd: unzipDir,
+      }),
+    ).resolves.not.toHaveProperty('exitCode');
+
+    await expect(project.fileExists(unzipDir, '.output')).resolves.toBe(true);
+    expect(
+      await project.serializeFile(
+        project.resolvePath(unzipDir, 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      ".output/test-1.0.0-sources/package.json
+      ----------------------------------------
+      {
+        "name": "test",
+        "description": "Example description",
+        "version": "1.0.0",
+        "dependencies": {
+          "wxt": "../../../../..",
+          "@local/file": "file:../../tests/__fixtures__/local-package",
+          "@local/link": "link:../../tests/__fixtures__/local-package"
+        },
+        "resolutions": {
+          "@local/file@file:../../tests/__fixtures__/local-package": "file://./.wxt/local_modules/local-package-0.0.0.tgz",
+          "@local/link@link:../../tests/__fixtures__/local-package": "file://./.wxt/local_modules/local-package-0.0.0.tgz"
+        }
+      }"
+    `);
+  });
+
   it('should correctly apply template variables for zip file names based on provided config', async () => {
     const project = new TestProject({
       name: 'test',
