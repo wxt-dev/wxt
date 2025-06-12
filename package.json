@@ -6,6 +6,9 @@
   },
   "packageManager": "pnpm@10.10.0",
   "scripts": {
+    "build": "pnpm -C packages/wxt build",
+    "build:demo": "pnpm -C packages/wxt-demo build",
+    "dev": "pnpm -C packages/wxt-demo dev",
     "check": "check && pnpm -r --sequential run check",
     "test": "pnpm -r --sequential run test run",
     "test:coverage": "pnpm -r --sequential run test:coverage",
