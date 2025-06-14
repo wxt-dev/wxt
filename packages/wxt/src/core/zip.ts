@@ -3,7 +3,6 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
-import { minimatch } from 'minimatch';
 import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log/printFileList';
 import { findEntrypoints, internalBuild } from './utils/building';
