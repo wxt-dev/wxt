@@ -11,6 +11,7 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils/paths';
+import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -121,19 +122,9 @@ async function zipDir(
       onlyFiles: true,
     })
   ).filter((relativePath) => {
-    const isNegated = options?.exclude?.some(
-      (option) =>
-        option.startsWith('!') && minimatch(relativePath, option.slice(1)),
-    );
-    if (isNegated) return true;
-    const updatedExcludeOptions = options?.exclude?.filter(
-      (option) => !option.startsWith('!'),
-    );
     return (
-      options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !updatedExcludeOptions?.some((pattern) =>
-        minimatch(relativePath, pattern),
-      )
+      minimatchMultiple(relativePath, options?.include) ||
+      !minimatchMultiple(relativePath, options?.exclude)
     );
   });
   const filesToZip = [

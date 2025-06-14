@@ -286,7 +286,7 @@ describe('Zipping', () => {
     },
   );
 
-  it('exclude files in .zip except those with a bang !', async () => {
+  it('should include files in the zip when negated in zip.exclude', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
