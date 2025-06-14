@@ -78,7 +78,7 @@ Alternatively, if you're trying to use similar APIs under different names (to su
 
 ## Entrypoint Limitations
 
-Because WXT imports your entrypoint files into a NodeJS, non-extension environment, the `chrome` and/or `browser` variables **will not be available**.
+Because WXT imports your entrypoint files into a NodeJS, non-extension environment, the `chrome`/`browser` variables provided to extensions by the browser **will not be available**.
 
 To prevent some basic errors, WXT polyfills these globals with the same in-memory, fake implementation it uses for testing: [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/fake-browser/installation/). However, not all the APIs have been implemented.
 
@@ -134,4 +134,4 @@ export default defineUnlistedScript(() => {
 
 :::
 
-Read the docs on WXT's [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) for more details about this limitation.
+Read [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) for more technical details about this limitation.
