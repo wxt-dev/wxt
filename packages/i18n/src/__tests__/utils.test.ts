@@ -1,10 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { ChromeMessage } from '../build';
-import { applyChromeMessagePlaceholders, getSubstitutionCount } from '../utils';
+import {
+  applyChromeMessagePlaceholders,
+  getSubstitutionCount,
+  standardizeLocale,
+} from '../utils';
 
 describe('Utils', () => {
   describe('applyChromeMessagePlaceholders', () => {
-    it('should return the combined stirng', () => {
+    it('should return the combined string', () => {
       const input = {
         message: 'Hello $username$, welcome to $appName$',
         placeholders: {
@@ -58,6 +62,32 @@ describe('Utils', () => {
     it('should only allow up to 9 substitutions', () => {
       expect(getSubstitutionCount('Hello $9')).toBe(9);
       expect(getSubstitutionCount('Hello $10')).toBe(1);
+    });
+  });
+
+  describe('standardizeLocale', () => {
+    it('should convert two-letter locale codes to lowercase', () => {
+      expect(standardizeLocale('en')).toEqual('en');
+      expect(standardizeLocale('EN')).toEqual('en');
+    });
+
+    it('should convert locale code extensions to uppercase', () => {
+      expect(standardizeLocale('en_US')).toEqual('en_US');
+      expect(standardizeLocale('en_us')).toEqual('en_US');
+      expect(standardizeLocale('es_419')).toEqual('es_419');
+    });
+
+    it('should convert dashes to underscores', () => {
+      expect(standardizeLocale('en_US')).toEqual('en_US');
+      expect(standardizeLocale('en-US')).toEqual('en_US');
+    });
+
+    it('should return the input string as-is for unknown formats', () => {
+      expect(standardizeLocale('en_USSS')).toEqual('en_USSS');
+      expect(standardizeLocale('en-')).toEqual('en-');
+      expect(standardizeLocale('------')).toEqual('------');
+      expect(standardizeLocale('test')).toEqual('test');
+      expect(standardizeLocale('hello-world')).toEqual('hello-world');
     });
   });
 });

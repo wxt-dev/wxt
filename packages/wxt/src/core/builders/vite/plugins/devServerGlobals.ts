@@ -16,7 +16,7 @@ export function devServerGlobals(
       return {
         define: {
           __DEV_SERVER_ORIGIN__: JSON.stringify(
-            server.origin.replace(/^http(s):/, 'ws$1:'),
+            server.origin.replace(/^http(s?):/, 'ws$1:'),
           ),
         },
       };

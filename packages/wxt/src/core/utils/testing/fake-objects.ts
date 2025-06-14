@@ -235,6 +235,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
 
   return {
     browser,
+    targetBrowsers: [],
     command,
     entrypointsDir: fakeDir(),
     modulesDir: fakeDir(),

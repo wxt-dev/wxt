@@ -85,7 +85,7 @@ import { injectScript, createShadowRootUi } from '#imports';
 But Vitest sees this:
 
 ```ts
-import { injectScript } from 'wxt/browser';
+import { injectScript } from 'wxt/utils/inject-script';
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root';
 ```
 
@@ -105,4 +105,4 @@ To use a different framework, you will likely have to disable auto-imports, setu
 
 It is possible to do, but will require a bit more setup. Refer to Vitest's setup for an example of how to setup a test environment:
 
-https://github.com/wxt-dev/wxt/blob/main/packages/wxt/src/testing/wxt-vitest-plugin.ts
+<https://github.com/wxt-dev/wxt/blob/main/packages/wxt/src/testing/wxt-vitest-plugin.ts>
