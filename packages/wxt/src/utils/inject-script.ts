@@ -32,11 +32,13 @@ export async function injectScript(
     script.src = url;
   }
 
-  if (!options?.keepInDom) {
-    script.onload = () => script.remove();
-  }
+  await options?.manipulateScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
+
+  if (!options?.keepInDom) {
+    script.remove();
+  }
 }
 
 export interface InjectScriptOptions {
@@ -45,4 +47,12 @@ export interface InjectScriptOptions {
    * injected. To disable this behavior, set this flag to true.
    */
   keepInDom?: boolean;
+  /**
+   * Manipulate the script element just before it is added to the DOM.
+   *
+   * It can be useful for e.g. passing data to the script via the `dataset`
+   * property (which can be accessed by the script via
+   * `document.currentScript`).
+   */
+  manipulateScript?: (script: HTMLScriptElement) => Promise<void> | void;
 }
