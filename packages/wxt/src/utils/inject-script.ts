@@ -26,7 +26,7 @@ export async function injectScript(
 
   if (browser.runtime.getManifest().manifest_version === 2) {
     // MV2 requires using an inline script
-    script.innerHTML = await fetch(url).then((res) => res.text());
+    script.text = await fetch(url).then((res) => res.text());
   } else {
     // MV3 requires using src
     script.src = url;
