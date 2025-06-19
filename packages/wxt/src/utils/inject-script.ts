@@ -32,6 +32,8 @@ export async function injectScript(
     script.src = url;
   }
 
+  await options?.modifyScript?.(script);
+
   (document.head ?? document.documentElement).append(script);
 
   if (!options?.keepInDom) {
@@ -45,4 +47,12 @@ export interface InjectScriptOptions {
    * injected. To disable this behavior, set this flag to true.
    */
   keepInDom?: boolean;
+  /**
+   * Modify the script element just before it is added to the DOM.
+   *
+   * It can be used to e.g. modify `script.async`/`script.defer`, add event
+   * listeners to the element, or pass data to the script via `script.dataset`
+   * (which can be accessed by the script via `document.currentScript`).
+   */
+  modifyScript?: (script: HTMLScriptElement) => Promise<void> | void;
 }
