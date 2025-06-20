@@ -1,5 +1,6 @@
 /** @module wxt/utils/inject-script */
 import { browser } from 'wxt/browser';
+import { waitForScriptResultEvent } from './internal/script-result';
 
 export type ScriptPublicPath = Extract<
   // @ts-expect-error: PublicPath is generated per-project
@@ -16,7 +17,8 @@ export type ScriptPublicPath = Extract<
  * Make sure to add the injected script to your manifest's
  * `web_accessible_resources`.
  *
- * @returns A result object containing the created script element.
+ * @returns A result object containing the created script element and the return
+ * value of the script.
  */
 export async function injectScript(
   path: ScriptPublicPath,
@@ -35,6 +37,7 @@ export async function injectScript(
   }
 
   const loadedPromise = makeLoadedPromise(script);
+  const resultPromise = waitForScriptResultEvent(script);
 
   await options?.modifyScript?.(script);
 
@@ -45,9 +48,11 @@ export async function injectScript(
   }
 
   await loadedPromise;
+  const result = await resultPromise;
 
   return {
     script,
+    result,
   };
 }
 
@@ -96,4 +101,8 @@ export interface InjectScriptResult {
    * for them via `document.currentScript`.
    */
   script: HTMLScriptElement;
+  /**
+   * The return value of the script.
+   */
+  result: unknown;
 }
