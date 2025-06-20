@@ -1,5 +1,6 @@
 /** @module wxt/utils/inject-script */
 import { browser } from 'wxt/browser';
+import { waitForScriptResultEvent } from './internal/script-result';
 
 export type ScriptPublicPath = Extract<
   // @ts-expect-error: PublicPath is generated per-project
@@ -15,11 +16,13 @@ export type ScriptPublicPath = Extract<
  *
  * Make sure to add the injected script to your manifest's
  * `web_accessible_resources`.
+ *
+ * @returns The return value of the script.
  */
 export async function injectScript(
   path: ScriptPublicPath,
   options?: InjectScriptOptions,
-): Promise<void> {
+): Promise<unknown> {
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
@@ -33,6 +36,7 @@ export async function injectScript(
   }
 
   const loadedPromise = makeLoadedPromise(script);
+  const resultPromise = waitForScriptResultEvent(script);
 
   await options?.manipulateScript?.(script);
 
@@ -43,6 +47,9 @@ export async function injectScript(
   }
 
   await loadedPromise;
+  const result = await resultPromise;
+
+  return result;
 }
 
 function makeLoadedPromise(script: HTMLScriptElement): Promise<void> {
