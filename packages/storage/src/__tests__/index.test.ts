@@ -939,6 +939,30 @@ describe('Storage Utils', () => {
         await waitForMigrations();
         expect(consoleSpy).toHaveBeenCalledTimes(0);
       });
+
+      it('should initialize item version if value did not exist beforehand', async () => {
+        const migrateToV2 = vi.fn((oldValue: string) => {
+          JSON.parse(oldValue);
+        });
+
+        const getItemDefinition = () =>
+          storage.defineItem<{
+            value: string;
+          }>('local:data', {
+            version: 2,
+            migrations: {
+              2: migrateToV2,
+            },
+          });
+        let item = getItemDefinition();
+        await item.setValue({ value: 'test' });
+        const actualMeta = await item.getMeta();
+        expect.soft(actualMeta).toBe({ v: 2 });
+
+        item = getItemDefinition();
+        await item.getValue();
+        expect(migrateToV2).toBeCalledTimes(0);
+      });
     });
 
     describe('getValue', () => {
