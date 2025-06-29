@@ -12,15 +12,22 @@ import { fetchCached } from '../../../utils/network';
 export function download(config: ResolvedConfig): Plugin {
   return {
     name: 'wxt:download',
-    resolveId(id) {
-      if (id.startsWith('url:')) return '\0' + id;
+    resolveId: {
+      filter: {
+        id: /^url:/,
+      },
+      handler(id) {
+        return `\0${id}`;
+      },
     },
-    async load(id) {
-      if (!id.startsWith('\0url:')) return;
-
-      // Load file from network or cache
-      const url = id.replace('\0url:', '');
-      return await fetchCached(url, config);
+    load: {
+      filter: {
+        id: /^\x00url:/,
+      },
+      async handler(id) {
+        const url = id.replace('\0url:', '');
+        return await fetchCached(url, config);
+      },
     },
   };
 }
