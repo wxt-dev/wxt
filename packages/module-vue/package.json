@@ -46,7 +46,7 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^5.2.3"
+    "@vitejs/plugin-vue": "^5.2.4"
   },
   "devDependencies": {
     "@aklinker1/check": "2.0.0",
