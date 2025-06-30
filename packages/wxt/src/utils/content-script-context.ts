@@ -208,6 +208,8 @@ export class ContentScriptContext implements AbortController {
       if (this.isValid) this.locationWatcher.run();
     }
 
+    const eventType = type.startsWith('wxt:') ? getUniqueEventName(type) : type
+
     const invalidatedHandler = () => {
       if (this.isInvalid) {
         // This is implicitly done in the above getter, but just doing it to
@@ -217,7 +219,7 @@ export class ContentScriptContext implements AbortController {
     };
 
     target.addEventListener?.(
-      type,
+      eventType,
       invalidatedHandler,
       {
         capture: true,
@@ -226,7 +228,7 @@ export class ContentScriptContext implements AbortController {
     );
 
     target.addEventListener?.(
-      type.startsWith('wxt:') ? getUniqueEventName(type) : type,
+      eventType,
       handler,
       {
         ...options,
