@@ -208,15 +208,17 @@ export class ContentScriptContext implements AbortController {
       if (this.isValid) this.locationWatcher.run();
     }
 
-    const isValidHandler = (event: Event) => {
-      if (!this.isValid) {
+    const invalidatedHandler = () => {
+      if (this.isInvalid) {
+        // This is implicitly done in the above getter, but just doing it to
+        // be explicit here
         this.notifyInvalidated();
       }
     };
 
     target.addEventListener?.(
       type,
-      isValidHandler,
+      invalidatedHandler,
       {
         ...options,
         capture: true,
