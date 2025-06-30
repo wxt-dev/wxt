@@ -220,7 +220,6 @@ export class ContentScriptContext implements AbortController {
       type,
       invalidatedHandler,
       {
-        ...options,
         capture: true,
         signal: this.signal,
       },
