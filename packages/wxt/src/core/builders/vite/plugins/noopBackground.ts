@@ -10,13 +10,21 @@ export function noopBackground(): Plugin {
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
   return {
     name: 'wxt:noop-background',
-    resolveId(id) {
-      if (id === virtualModuleId) return resolvedVirtualModuleId;
+    resolveId: {
+      filter: {
+        id: new RegExp(`^${virtualModuleId}$`),
+      },
+      handler() {
+        return resolvedVirtualModuleId;
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualModuleId) {
+    load: {
+      filter: {
+        id: new RegExp(`^${resolvedVirtualModuleId}$`),
+      },
+      handler() {
         return `import { defineBackground } from 'wxt/utils/define-background';\nexport default defineBackground(() => void 0)`;
-      }
+      },
     },
   };
 }
