@@ -210,17 +210,9 @@ export class ContentScriptContext implements AbortController {
 
     const eventType = type.startsWith('wxt:') ? getUniqueEventName(type) : type
 
-    const invalidatedHandler = () => {
-      if (this.isInvalid) {
-        // This is implicitly done in the above getter, but just doing it to
-        // be explicit here
-        this.notifyInvalidated();
-      }
-    };
-
     target.addEventListener?.(
       eventType,
-      invalidatedHandler,
+      () => this.isInvalid, // signals the onInvalidated listener when invalid
       {
         capture: true,
         signal: this.signal,
