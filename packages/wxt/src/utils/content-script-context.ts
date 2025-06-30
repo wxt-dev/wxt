@@ -212,7 +212,7 @@ export class ContentScriptContext implements AbortController {
 
     target.addEventListener?.(
       eventType,
-      () => this.isInvalid, // signals the onInvalidated listener when invalid
+      () => this.isInvalid, // signals the abort controller when invalid
       {
         capture: true,
         signal: this.signal,
