@@ -39,27 +39,14 @@ import { createLocationWatcher } from './internal/location-watcher';
  * ```
  */
 export class ContentScriptContext implements AbortController {
-  private static SCRIPT_STARTED_MESSAGE_TYPE = getUniqueEventName(
-    'wxt:content-script-started',
-  );
-
-  private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
-  private receivedMessageIds = new Set<string>();
 
   constructor(
     private readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
     this.abortController = new AbortController();
-
-    if (this.isTopFrame) {
-      this.listenForNewerScripts({ ignoreFirstEvent: true });
-      this.stopOldScripts();
-    } else {
-      this.listenForNewerScripts();
-    }
   }
 
   get signal() {
@@ -221,6 +208,22 @@ export class ContentScriptContext implements AbortController {
       if (this.isValid) this.locationWatcher.run();
     }
 
+    const isValidHandler = (event: Event) => {
+      if (!this.isValid) {
+        this.notifyInvalidated();
+      }
+    };
+
+    target.addEventListener?.(
+      type,
+      isValidHandler,
+      {
+        ...options,
+        capture: true,
+        signal: this.signal,
+      },
+    );
+
     target.addEventListener?.(
       type.startsWith('wxt:') ? getUniqueEventName(type) : type,
       handler,
@@ -240,46 +243,6 @@ export class ContentScriptContext implements AbortController {
     logger.debug(
       `Content script "${this.contentScriptName}" context invalidated`,
     );
-  }
-
-  stopOldScripts() {
-    // Use postMessage so it get's sent to all the frames of the page.
-    window.postMessage(
-      {
-        type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
-        contentScriptName: this.contentScriptName,
-        messageId: Math.random().toString(36).slice(2),
-      },
-      '*',
-    );
-  }
-
-  verifyScriptStartedEvent(event: MessageEvent) {
-    const isScriptStartedEvent =
-      event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE;
-    const isSameContentScript =
-      event.data?.contentScriptName === this.contentScriptName;
-    const isNotDuplicate = !this.receivedMessageIds.has(event.data?.messageId);
-    return isScriptStartedEvent && isSameContentScript && isNotDuplicate;
-  }
-
-  listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
-    let isFirst = true;
-
-    const cb = (event: MessageEvent) => {
-      if (this.verifyScriptStartedEvent(event)) {
-        this.receivedMessageIds.add(event.data.messageId);
-
-        const wasFirst = isFirst;
-        isFirst = false;
-        if (wasFirst && options?.ignoreFirstEvent) return;
-
-        this.notifyInvalidated();
-      }
-    };
-
-    addEventListener('message', cb);
-    this.onInvalidated(() => removeEventListener('message', cb));
   }
 }
 
