@@ -14,33 +14,50 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
 
   return {
     name: 'wxt:plugin-loader',
-    resolveId(id) {
-      if (id === virtualModuleId) return resolvedVirtualModuleId;
-      if (id === virtualHtmlModuleId) return resolvedVirtualHtmlModuleId;
+    resolveId: {
+      filter: {
+        id: [
+          new RegExp(`^${virtualModuleId}$`),
+          new RegExp(`^${virtualHtmlModuleId}$`),
+        ],
+      },
+      handler(id) {
+        if (id === virtualModuleId) {
+          return resolvedVirtualModuleId;
+        } else {
+          return resolvedVirtualHtmlModuleId;
+        }
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualModuleId) {
-        // Import and init all plugins
-        const imports = config.plugins
-          .map(
-            (plugin, i) =>
-              `import initPlugin${i} from '${normalizePath(plugin)}';`,
-          )
-          .join('\n');
-        const initCalls = config.plugins
-          .map((_, i) => `  initPlugin${i}();`)
-          .join('\n');
-        return `${imports}\n\nexport function initPlugins() {\n${initCalls}\n}`;
-      }
-      if (id === resolvedVirtualHtmlModuleId) {
-        return `import { initPlugins } from '${virtualModuleId}';
-
-try {
-  initPlugins();
-} catch (err) {
-  console.error("[wxt] Failed to initialize plugins", err);
-}`;
-      }
+    load: {
+      filter: {
+        id: [
+          new RegExp(`^${resolvedVirtualModuleId}$`),
+          new RegExp(`^${resolvedVirtualHtmlModuleId}$`),
+        ],
+      },
+      handler(id) {
+        if (id === resolvedVirtualModuleId) {
+          // Import and init all plugins
+          const imports = config.plugins
+            .map(
+              (plugin, i) =>
+                `import initPlugin${i} from '${normalizePath(plugin)}';`,
+            )
+            .join('\n');
+          const initCalls = config.plugins
+            .map((_, i) => `  initPlugin${i}();`)
+            .join('\n');
+          return `${imports}\n\nexport function initPlugins() {\n${initCalls}\n}`;
+        } else {
+          return `import { initPlugins } from '${virtualModuleId}';
+            try {
+              initPlugins();
+            } catch (err) {
+              console.error("[wxt] Failed to initialize plugins", err);
+            }`;
+        }
+      },
     },
     transformIndexHtml: {
       // Use "pre" so the new script is added before vite bundles all the scripts
@@ -63,7 +80,7 @@ try {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
         }
-        document.head.prepend(script);
+        document.head?.prepend(script);
         return document.toString();
       },
     },
