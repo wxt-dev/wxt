@@ -6,7 +6,10 @@ import { browser } from 'wxt/browser';
 import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
 import { reloadContentScript } from './utils/reload-content-scripts';
 
-if (import.meta.env.COMMAND === 'serve') {
+if (
+  import.meta.env.COMMAND === 'serve' &&
+  import.meta.env.BROWSER !== 'firefox-android'
+) {
   try {
     const ws = getDevServerWebSocket();
     ws.addWxtEventListener('wxt:reload-extension', () => {

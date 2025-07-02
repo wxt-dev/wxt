@@ -1015,6 +1015,14 @@ export interface WebExtConfig {
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#keep-profile-changes
    */
   keepProfileChanges?: boolean;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#adb-device
+   */
+  firefoxAndroidDevice?: string;
+  /**
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-apk
+   */
+  firefoxAndroidApk?: string;
 }
 
 export interface WxtBuilder {
