@@ -76,7 +76,10 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       exclude: excludeSources,
       transform(absolutePath, zipPath, content) {
         if (zipPath.endsWith('package.json')) {
-          return addOverridesToPackageJson(absolutePath, content, overrides);
+          return transformPackageJson(absolutePath, content, {
+            overrides,
+            stripWorkspaceProtocol: wxt.config.zip.stripWorkspaceProtocol,
+          });
         }
       },
       additionalFiles: downloadedPackages,
@@ -193,22 +196,57 @@ async function downloadPrivatePackages() {
   return { overrides, files };
 }
 
-function addOverridesToPackageJson(
+function transformPackageJson(
   absolutePackageJsonPath: string,
   content: string,
-  overrides: Record<string, string>,
+  {
+    overrides,
+    stripWorkspaceProtocol,
+  }: {
+    overrides: Record<string, string>;
+    stripWorkspaceProtocol: boolean;
+  },
 ): string {
-  if (Object.keys(overrides).length === 0) return content;
+  const packageJson = JSON.parse(content);
 
-  const packageJsonDir = path.dirname(absolutePackageJsonPath);
-  const oldPackage = JSON.parse(content);
-  const newPackage = {
-    ...oldPackage,
-    [wxt.pm.overridesKey]: { ...oldPackage[wxt.pm.overridesKey] },
-  };
-  Object.entries(overrides).forEach(([key, absolutePath]) => {
-    newPackage[wxt.pm.overridesKey][key] =
-      'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
-  });
-  return JSON.stringify(newPackage, null, 2);
+  // add overrides to package.json
+  if (Object.keys(overrides).length > 0) {
+    const packageJsonDir = path.dirname(absolutePackageJsonPath);
+    packageJson[wxt.pm.overridesKey] ??= {};
+
+    Object.entries(overrides).forEach(([key, absolutePath]) => {
+      packageJson[wxt.pm.overridesKey][key] =
+        'file://./' +
+        normalizePath(path.relative(packageJsonDir, absolutePath));
+    });
+  }
+
+  // strip "workspace:" protocol in dependency versions (see https://pnpm.io/workspaces#workspace-protocol-workspace)
+  if (stripWorkspaceProtocol) {
+    for (const depType of [
+      'dependencies',
+      'devDependencies',
+      'peerDependencies',
+      'optionalDependencies',
+    ] as const) {
+      for (const [name, version] of Object.entries<string>(
+        packageJson[depType] ?? {},
+      )) {
+        if (version.startsWith('workspace:')) {
+          // TODO: for "workspace:*", "workspace:~" and "workspace:^" the version should ideally be replaced by the package version in the workspace
+          // (see https://pnpm.io/workspaces#publishing-workspace-packages)
+          const versionWithoutWorkspace = version.slice('workspace:'.length);
+
+          // if the version is an alias (`workspace:foo@1.0.0`) it has to be converted to a regular aliased dependency (`npm:foo@1.0.0`)
+          const isAlias = versionWithoutWorkspace.includes('@');
+
+          packageJson[depType][name] = isAlias
+            ? `npm:${versionWithoutWorkspace}`
+            : versionWithoutWorkspace;
+        }
+      }
+    }
+  }
+
+  return JSON.stringify(packageJson, null, 2);
 }
