@@ -32,11 +32,17 @@ export async function injectScript(
     script.src = url;
   }
 
-  if (!options?.keepInDom) {
-    script.onload = () => script.remove();
-  }
+  await new Promise<void>((resolve, reject) => {
+    script.onload = () => {
+      resolve();
+      if (!options?.keepInDom) {
+        script.remove();
+      }
+    };
+    script.onerror = () => reject();
 
-  (document.head ?? document.documentElement).append(script);
+    (document.head ?? document.documentElement).append(script);
+  });
 }
 
 export interface InjectScriptOptions {
