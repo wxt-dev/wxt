@@ -17,7 +17,7 @@
     "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.4",
+    "@aklinker1/buildc": "^1.1.5",
     "@aklinker1/check": "^2.1.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",
