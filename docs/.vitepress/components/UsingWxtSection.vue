@@ -89,6 +89,7 @@ const chromeExtensionIds = [
   'nhmbcmalgpkjbomhlhgdicanmkkaajmg', // Chatslator: Livestream Chat Translator
   'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
+  'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
