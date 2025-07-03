@@ -32,11 +32,32 @@ export async function injectScript(
     script.src = url;
   }
 
-  if (!options?.keepInDom) {
-    script.onload = () => script.remove();
+  if (
+    options?.awaitExecution &&
+    browser.runtime.getManifest().manifest_version === 3
+  ) {
+    // For MV3 with awaitExecution, return a promise that resolves when script loads
+    return new Promise<void>((resolve, reject) => {
+      script.onload = () => {
+        if (!options?.keepInDom) {
+          script.remove();
+        }
+        resolve();
+      };
+      script.onerror = () => {
+        if (!options?.keepInDom) {
+          script.remove();
+        }
+        reject(new Error(`Failed to load script: ${path}`));
+      };
+      (document.head ?? document.documentElement).append(script);
+    });
+  } else {
+    if (!options?.keepInDom) {
+      script.onload = () => script.remove();
+    }
+    (document.head ?? document.documentElement).append(script);
   }
-
-  (document.head ?? document.documentElement).append(script);
 }
 
 export interface InjectScriptOptions {
@@ -45,4 +66,9 @@ export interface InjectScriptOptions {
    * injected. To disable this behavior, set this flag to true.
    */
   keepInDom?: boolean;
+  /**
+   * If true, the function will return a promise that resolves when the script
+   * has finished loading. Only supported in MV3.
+   */
+  awaitExecution?: boolean;
 }
