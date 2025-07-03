@@ -115,18 +115,13 @@ export function devHtmlPrerender(
       apply: 'serve',
       resolveId: {
         filter: {
-          id: {
-            include: [new RegExp(`^${virtualInlineScript}`), /^\/chunks\//],
-          },
+          id: [new RegExp(`^${virtualInlineScript}`), /^\/chunks\//],
         },
         handler(id) {
           // Resolve inline scripts
           if (id.startsWith(virtualInlineScript)) {
             return '\0' + id;
-          }
-
-          // Ignore chunks during HTML file pre-rendering
-          if (id.startsWith('/chunks/')) {
+          } else {
             return '\0noop';
           }
         },
