@@ -25,7 +25,7 @@ import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
-import { relative, join, extname, dirname } from 'node:path';
+import { dirname, extname, join, relative } from 'node:path';
 import fs from 'fs-extra';
 import { normalizePath } from '../../utils/paths';
 
@@ -109,24 +109,19 @@ export async function createViteBuilder(
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
+    const iifeReturnValueName = safeVarName(entrypoint.name);
+
     if (
       entrypoint.type === 'content-script-style' ||
       entrypoint.type === 'unlisted-style'
     ) {
       plugins.push(wxtPlugins.cssEntrypoints(entrypoint, wxtConfig));
+      plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
     }
 
-    const iifeReturnValueName = safeVarName(entrypoint.name);
-    const libMode: vite.UserConfig = {
+    return {
       mode: wxtConfig.mode,
       plugins,
-      esbuild: {
-        // Add a footer with the returned value so it can return values to `scripting.executeScript`
-        // Footer is added a part of esbuild to make sure it's not minified. It
-        // get's removed if added to `build.rollupOptions.output.footer`
-        // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
-        footer: iifeReturnValueName + ';',
-      },
       build: {
         lib: {
           entry,
@@ -162,8 +157,7 @@ export async function createViteBuilder(
         // See https://github.com/aklinker1/vite-plugin-web-extension/issues/96
         'process.env.NODE_ENV': JSON.stringify(wxtConfig.mode),
       },
-    };
-    return libMode;
+    } satisfies vite.UserConfig;
   };
 
   /**

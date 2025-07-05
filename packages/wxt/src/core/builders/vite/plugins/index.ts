@@ -13,3 +13,4 @@ export * from './defineImportMeta';
 export * from './removeEntrypointMainFunction';
 export * from './wxtPluginLoader';
 export * from './resolveAppConfig';
+export * from './iife-footer';
