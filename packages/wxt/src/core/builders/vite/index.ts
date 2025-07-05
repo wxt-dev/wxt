@@ -116,6 +116,12 @@ export async function createViteBuilder(
       entrypoint.type === 'unlisted-style'
     ) {
       plugins.push(wxtPlugins.cssEntrypoints(entrypoint, wxtConfig));
+    }
+
+    if (
+      entrypoint.type === 'content-script' ||
+      entrypoint.type === 'unlisted-script'
+    ) {
       plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
     }
 

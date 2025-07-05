@@ -12,7 +12,7 @@ export function iifeFooter(iifeReturnValueName: string): Plugin {
     generateBundle(_, bundle) {
       for (const chunk of Object.values(bundle)) {
         if (chunk.type === 'chunk' && chunk.isEntry) {
-          chunk.code += `\n${iifeReturnValueName};`;
+          chunk.code += `${iifeReturnValueName};`;
         }
       }
     },
