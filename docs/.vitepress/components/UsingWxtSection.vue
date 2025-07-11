@@ -7,6 +7,7 @@ import useListExtensionDetails, {
 // Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
+  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -90,6 +91,7 @@ const chromeExtensionIds = [
   'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
   'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
+  'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
