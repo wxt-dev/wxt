@@ -87,6 +87,7 @@ const chromeExtensionIds = [
   'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
   'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
   'eehmoikadcijkapfjocnhjclpbaindlb', // BrowserLens - https://browserlens.com/
+  'miponnamafdenpgjemkknimgjfibicdc', // Youtube Video Scheduler
   'nhmbcmalgpkjbomhlhgdicanmkkaajmg', // Chatslator: Livestream Chat Translator
   'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
