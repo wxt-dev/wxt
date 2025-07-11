@@ -90,6 +90,7 @@ const chromeExtensionIds = [
   'nhmbcmalgpkjbomhlhgdicanmkkaajmg', // Chatslator: Livestream Chat Translator
   'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
+  'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
