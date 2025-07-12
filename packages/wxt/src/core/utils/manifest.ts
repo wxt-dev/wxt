@@ -77,6 +77,11 @@ export async function generateManifest(
     icons: discoverIcons(buildOutput),
   };
   const userManifest = wxt.config.manifest;
+
+  if (typeof userManifest.author === 'object' && userManifest.author !== null) {
+    userManifest.author = userManifest.author.email ?? '';
+  }
+
   if (userManifest.manifest_version) {
     delete userManifest.manifest_version;
     wxt.logger.warn(
