@@ -24,9 +24,7 @@ export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
     },
     resolveId: {
       filter: {
-        id: {
-          exclude: new RegExp(`^${virtualModuleId}$`),
-        },
+        id: new RegExp(`^${virtualModuleId}$`),
       },
       async handler() {
         return (await exists(appConfigFile))
