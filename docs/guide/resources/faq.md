@@ -165,6 +165,10 @@ Both issues have the same cause: the library puts something outside the `ShadowR
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
 
+## Does WXT provide docs for LLMs?
+
+Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).
+
 ## Is there an LLM trained on WXT's docs that I chat with?
 
 Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
