@@ -39,7 +39,8 @@ export function hashContentScriptOptions(
     Object.entries(withDefaults)
       // Sort any arrays so their values are consistent
       .map<[string, unknown]>(([key, value]) => {
-        if (Array.isArray(value)) return [key, value.sort()];
+      // Keeping matches unsorted gives developers more control on what users see in extension stores
+      if (Array.isArray(value) && key !== "matches") return [key, value.sort()];
         else return [key, value];
       })
       // Sort all the fields alphabetically
