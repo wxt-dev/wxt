@@ -13,6 +13,37 @@ import { browser } from '@wxt-dev/browser';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
+// Based on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background#browser_support
+function isBackgroundScript(): boolean {
+  if (!browser?.runtime?.getManifest || !location.protocol.endsWith('extension:')) {
+    return false;
+  }
+
+  const { background, background_page: backgroundPageWXT, manifest_version } = browser.runtime.getManifest();
+  // Misconfiguration or Non-WXT Context Check
+  // Force check page attribute for possible configurations
+  const backgroundPageManifest = (background as any)?.page;
+
+  const backgroundPageOrScriptsCheck =
+    location.pathname === '/_generated_background_page.html' ||
+    (backgroundPageManifest && location.pathname.endsWith(backgroundPageManifest)) ||
+    (backgroundPageWXT && location.pathname.endsWith(backgroundPageWXT));
+
+  if (manifest_version === 3) {
+    try {
+      return self instanceof ServiceWorkerGlobalScope && 
+        // Check if called inside manifest defined service worker file
+        background?.service_worker !== undefined && location.pathname.endsWith(background.service_worker);
+      // oxlint-disable-next-line no-unused-vars
+    } catch (e) {
+      // Return page or scripts check for non-service worker contexts
+      return backgroundPageOrScriptsCheck;
+    }
+  }
+
+  return backgroundPageOrScriptsCheck;
+}
+
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
     throw Error(
@@ -24,10 +55,7 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
     );
   }
 
-  // TODO: This only works for standard WXT extensions, add a more generic
-  // background script detector that works with non-WXT projects.
-  if (location.pathname === '/background.js')
-    return createBackgroundAnalytics(config);
+  if (isBackgroundScript()) return createBackgroundAnalytics(config);
 
   return createFrontendAnalytics();
 }
