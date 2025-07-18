@@ -24,9 +24,9 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
       handler(id) {
         if (id === virtualModuleId) {
           return resolvedVirtualModuleId;
-        } else {
-          return resolvedVirtualHtmlModuleId;
         }
+
+        return resolvedVirtualHtmlModuleId;
       },
     },
     load: {
@@ -70,19 +70,20 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
 
         const { document } = parseHTML(html);
         const existing = document.querySelector(`script[src='${src}']`);
-        if (existing) return;
 
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = src;
+        if (!existing) {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = src;
 
-        if (document.head === null) {
-          const newHead = document.createElement('head');
-          document.documentElement.prepend(newHead);
+          if (document.head === null) {
+            const newHead = document.createElement('head');
+            document.documentElement.prepend(newHead);
+          }
+
+          document.head.prepend(script);
+          return document.toString();
         }
-
-        document.head.prepend(script);
-        return document.toString();
       },
     },
   };
