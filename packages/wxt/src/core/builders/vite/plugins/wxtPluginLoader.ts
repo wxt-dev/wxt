@@ -76,11 +76,12 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
         script.type = 'module';
         script.src = src;
 
-        if (document.head == null) {
+        if (document.head === null) {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
         }
-        document.head?.prepend(script);
+
+        document.head.prepend(script);
         return document.toString();
       },
     },
