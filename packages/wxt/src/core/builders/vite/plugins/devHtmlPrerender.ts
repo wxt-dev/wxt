@@ -115,23 +115,15 @@ export function devHtmlPrerender(
       apply: 'serve',
       resolveId: {
         filter: {
-          id: [new RegExp(`^${virtualInlineScript}`), /^\/chunks\//],
+          id: [new RegExp(`^${virtualInlineScript}`)],
         },
         handler(id) {
-          // Resolve inline scripts
-          if (id.startsWith(virtualInlineScript)) {
-            return '\0' + id;
-          } else {
-            return '\0noop';
-          }
+          return '\0' + id;
         },
       },
       load: {
         filter: {
-          id: {
-            include: [new RegExp(`^${resolvedVirtualInlineScript}`)],
-            exclude: '\0noop',
-          },
+          id: [new RegExp(`^${resolvedVirtualInlineScript}`)],
         },
         handler(id) {
           const key = id.substring(id.indexOf('?') + 1);
