@@ -1625,6 +1625,23 @@ describe('Manifest Utils', () => {
         );
       });
     });
+
+    it('should convert author object to string in manifest', async () => {
+      setFakeWxt({
+        config: {
+          outDir,
+          manifestVersion: 3,
+          manifest: {
+            author: { email: 'example@example.com' },
+          },
+        },
+      });
+      const buildOutput = fakeBuildOutput();
+
+      const { manifest: actual } = await generateManifest([], buildOutput);
+
+      expect(actual.author).toBe('example@example.com');
+    });
   });
 
   describe('stripPathFromMatchPattern', () => {

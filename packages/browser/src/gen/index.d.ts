@@ -8997,7 +8997,7 @@ export namespace Browser {
             // Optional
             author?: {
                 email: string;
-            } | undefined;
+            } | string | undefined;
             background_page?: string | undefined;
             chrome_settings_overrides?: {
                 homepage?: string | undefined;
