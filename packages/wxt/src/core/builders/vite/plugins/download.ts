@@ -22,7 +22,7 @@ export function download(config: ResolvedConfig): Plugin {
     },
     load: {
       filter: {
-        id: /^\\0url:/,
+        id: /^\x00url:/,
       },
       async handler(id) {
         const url = id.replace('\0url:', '');
