@@ -87,6 +87,7 @@ const chromeExtensionIds = [
   'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
   'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
   'eehmoikadcijkapfjocnhjclpbaindlb', // BrowserLens - https://browserlens.com/
+  'hfhellofkjebbchcdffmicekjdomkcmc', // Epic Games Library Extension
   'gknigcbhlammoakmmdddkblknanpjiac', // Zen Analytics Pixel Tracker - zapt.web.app
   'cnklededohhcbmjjdlbjdkkihkgoggol', // Crypto Pulse - Compose your newtab with nature images, widgets & realtime Crypto Price & Bitcoin RSS.
   'miponnamafdenpgjemkknimgjfibicdc', // Youtube Video Scheduler
