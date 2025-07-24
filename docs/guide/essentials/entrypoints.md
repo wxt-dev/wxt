@@ -300,14 +300,14 @@ When defining content script entrypoints, keep in mind that WXT will import this
 
 <!-- prettier-ignore -->
 ```ts
-browser.runtime.onMessage.addListener((message) => { // [!code --]
-  // ... // [!code --]
-}); // [!code --]
+const container = document.createElement('div'); // [!code --]
+document.body.append(container); // [!code --]
 
-export default defineBackground(() => {
-  browser.runtime.onMessage.addListener((message) => { // [!code ++]
-    // ... // [!code ++]
-  }); // [!code ++]
+export default defineContentScript({
+  main: function () {
+    const container = document.createElement('div'); // [!code ++]
+    document.body.append(container); // [!code ++]
+  },
 });
 ```
 

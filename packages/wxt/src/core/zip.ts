@@ -3,7 +3,6 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
-import { minimatch } from 'minimatch';
 import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log/printFileList';
 import { findEntrypoints, internalBuild } from './utils/building';
@@ -11,6 +10,7 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils/paths';
+import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -122,8 +122,8 @@ async function zipDir(
     })
   ).filter((relativePath) => {
     return (
-      options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
+      minimatchMultiple(relativePath, options?.include) ||
+      !minimatchMultiple(relativePath, options?.exclude)
     );
   });
   const filesToZip = [
