@@ -95,6 +95,7 @@ const chromeExtensionIds = [
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
   'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
   'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
+  'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
