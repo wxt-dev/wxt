@@ -76,9 +76,12 @@ export async function generateManifest(
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
-  const userManifest = wxt.config.manifest;
+  const userManifest = { ...wxt.config.manifest };
 
   if (typeof userManifest.author === 'object' && userManifest.author !== null) {
+    wxt.logger.warn(
+      'manifest.author should be a string, not an object. Chromium browsers ignore this field, and Gecko-based (firefox based) only uses it for display.\nUpdate your config to: author: "Your Name"',
+    );
     userManifest.author = userManifest.author.email ?? '';
   }
 

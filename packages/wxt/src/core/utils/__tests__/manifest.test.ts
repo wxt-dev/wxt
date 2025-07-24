@@ -1626,21 +1626,89 @@ describe('Manifest Utils', () => {
       });
     });
 
-    it('should convert author object to string in manifest', async () => {
-      setFakeWxt({
-        config: {
-          outDir,
-          manifestVersion: 3,
-          manifest: {
-            author: { email: 'example@example.com' },
+    describe('author field handling', () => {
+      it('should convert author object with email to string', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {
+              author: { email: 'example@example.com' },
+            },
           },
-        },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.author).toBe('example@example.com');
       });
-      const buildOutput = fakeBuildOutput();
 
-      const { manifest: actual } = await generateManifest([], buildOutput);
+      it('should handle author object without email property', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {
+              author: {} as any,
+            },
+          },
+        });
+        const buildOutput = fakeBuildOutput();
 
-      expect(actual.author).toBe('example@example.com');
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.author).toBe('');
+      });
+
+      it('should preserve author when already a string', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {
+              author: 'John Doe',
+            },
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.author).toBe('John Doe');
+      });
+
+      it('should handle undefined author', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {},
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.author).toBeUndefined();
+      });
+
+      it('should handle null author', async () => {
+        setFakeWxt({
+          config: {
+            outDir,
+            manifestVersion: 3,
+            manifest: {
+              author: null as any,
+            },
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], buildOutput);
+
+        expect(actual.author).toBeUndefined();
+      });
     });
   });
 
