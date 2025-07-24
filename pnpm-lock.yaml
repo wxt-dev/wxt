@@ -170,8 +170,8 @@ importers:
         version: 1.2.15
     devDependencies:
       '@types/chrome':
-        specifier: 0.1.0
-        version: 0.1.0
+        specifier: 0.1.1
+        version: 0.1.1
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -318,7 +318,7 @@ importers:
   packages/module-vue:
     dependencies:
       '@vitejs/plugin-vue':
-        specifier: ^5.2.3
+        specifier: ^5.2.3 || ^6.0.0
         version: 5.2.3(vite@6.3.5(@types/node@20.17.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.3))
     devDependencies:
       '@aklinker1/check':
@@ -579,7 +579,7 @@ importers:
         specifier: ^3.13.1 || ^4.0.0 || ^5.0.0
         version: 3.13.1(rollup@4.34.9)(webpack-sources@3.2.3)
       vite:
-        specifier: ^5.4.19 || ^6.3.4
+        specifier: ^5.4.19 || ^6.3.4 || ^7.0.0
         version: 6.3.5(@types/node@20.17.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0)
       vite-node:
         specifier: ^2.1.4 || ^3.1.2
@@ -1966,8 +1966,8 @@ packages:
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
-  '@types/chrome@0.1.0':
-    resolution: {integrity: sha512-Mq712O2Ykw+EVAC5D1wt4Ot4v2rfp7nDosmxhIMKULJAa8o7ELeO88rWzRasaB+AYnqayzfX/XSWaDKBfk1rYQ==}
+  '@types/chrome@0.1.1':
+    resolution: {integrity: sha512-MLtFW++/n+OPQIaf5hA6pmURd3Zn+OxuvASyf2mYh8B8pHDpbhHjwlVHMw3H/aJC9Z7Z3itO0AFaZeegrGk0yA==}
 
   '@types/conventional-commits-parser@5.0.1':
     resolution: {integrity: sha512-7uz5EHdzz2TqoMfV7ee61Egf5y6NkcO4FB/1iCCQnbeiI1F3xzv3vK5dBCXUCLQgGYS+mUeigK1iKQzvED+QnQ==}
@@ -6337,7 +6337,7 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
 
-  '@types/chrome@0.1.0':
+  '@types/chrome@0.1.1':
     dependencies:
       '@types/filesystem': 0.0.36
       '@types/har-format': 1.2.15
