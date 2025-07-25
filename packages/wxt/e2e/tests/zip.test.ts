@@ -325,7 +325,7 @@ describe('Zipping', () => {
 
     await project.zip({
       browser: 'firefox',
-      zip: {
+      experimental: {
         autoIncludeExternalSources: true,
       },
     });
@@ -350,7 +350,7 @@ describe('Zipping', () => {
 
     await project.zip({
       browser: 'firefox',
-      zip: {
+      experimental: {
         autoIncludeExternalSources: false,
       },
     });

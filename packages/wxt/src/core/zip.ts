@@ -68,7 +68,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       await downloadPrivatePackages();
 
     // Gather external files if enabled
-    const externalFiles = wxt.config.zip.autoIncludeExternalSources
+    const externalFiles = wxt.config.experimental.autoIncludeExternalSources
       ? await gatherExternalFiles(output)
       : [];
 

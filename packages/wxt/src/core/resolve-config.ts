@@ -229,7 +229,9 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: defu(mergedConfig.experimental, {}),
+    experimental: defu(mergedConfig.experimental, {
+      autoIncludeExternalSources: false,
+    }),
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -306,7 +308,6 @@ function resolveZipConfig(
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
-    autoIncludeExternalSources: false,
     ...mergedConfig.zip,
     zipSources:
       mergedConfig.zip?.zipSources ?? ['firefox', 'opera'].includes(browser),
