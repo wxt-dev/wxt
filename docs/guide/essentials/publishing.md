@@ -200,7 +200,7 @@ Depending on your package manager, the `package.json` in the sources zip will be
 WXT uses the command `npm pack <package-name>` to download the package. That means regardless of your package manager, you need to properly setup a `.npmrc` file. NPM and PNPM both respect `.npmrc` files, but Yarn and Bun have their own ways of authorizing private registries, so you'll need to add a `.npmrc` file.
 :::
 
-#### Monorepo Support (Experimental)
+#### Include External Sources (Experimental)
 
 If your extension is part of a monorepo and imports files from outside the extension directory (like shared libraries), you can enable automatic inclusion of these external files:
 
