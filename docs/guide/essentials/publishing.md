@@ -143,6 +143,24 @@ export default defineConfig({
 });
 ```
 
+#### Monorepo Support (Experimental)
+
+If your extension is part of a monorepo and imports files from outside the extension directory (like shared libraries), you can enable automatic inclusion of these external files:
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  zip: {
+    autoIncludeExternalSources: true, // EXPERIMENTAL
+  },
+});
+```
+
+When enabled, WXT will analyze your build output to find all imported files from outside the extension's source directory and automatically include them in the sources zip. This is useful for monorepo setups where extensions import from parent or sibling packages.
+
+:::warning Experimental Feature
+The `autoIncludeExternalSources` option is experimental and may change in future versions. Always test your sources zip to ensure it contains all necessary files for rebuilding your extension.
+:::
+
 If it's your first time submitting to the Firefox Addon Store, or if you've updated your project layout, always test your sources ZIP! The commands below should allow you to rebuild your extension from inside the extracted ZIP.
 
 :::code-group

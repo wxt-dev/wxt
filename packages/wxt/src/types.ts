@@ -260,6 +260,18 @@ export interface InlineConfig {
      * @default 9
      */
     compressionLevel?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    /**
+     * **EXPERIMENTAL**: Automatically include source files from outside the project directory
+     * that are used by the built extension. This is useful for monorepo setups where extensions
+     * import from parent/sibling packages.
+     *
+     * When enabled, WXT will analyze the build output to find all imported files from outside
+     * the extension's source directory and include them in the sources zip.
+     *
+     * @experimental
+     * @default false
+     */
+    autoIncludeExternalSources?: boolean;
   };
   analysis?: {
     /**

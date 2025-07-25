@@ -1,4 +1,4 @@
-import { InlineConfig } from '../types';
+import { InlineConfig, BuildOutput } from '../types';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
@@ -66,6 +66,12 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
+
+    // Gather external files if enabled
+    const externalFiles = wxt.config.zip.autoIncludeExternalSources
+      ? await gatherExternalFiles(output)
+      : [];
+
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -79,7 +85,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
           return addOverridesToPackageJson(absolutePath, content, overrides);
         }
       },
-      additionalFiles: downloadedPackages,
+      additionalFiles: [...downloadedPackages, ...externalFiles],
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
@@ -211,4 +217,63 @@ function addOverridesToPackageJson(
       'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
   });
   return JSON.stringify(newPackage, null, 2);
+}
+
+/**
+ * Analyzes the build output to find all external files (files outside the project directory)
+ * that are imported by the extension and should be included in the sources zip.
+ */
+async function gatherExternalFiles(output: BuildOutput): Promise<string[]> {
+  const externalFiles = new Set<string>();
+  const sourcesRoot = path.resolve(wxt.config.zip.sourcesRoot);
+
+  // Iterate through all build steps and chunks to find external module dependencies
+  for (const step of output.steps) {
+    for (const chunk of step.chunks) {
+      if (chunk.type === 'chunk') {
+        // Check each module ID (dependency) in the chunk
+        for (const moduleId of chunk.moduleIds) {
+          const normalizedModuleId = path.resolve(moduleId);
+
+          // Only include files that:
+          // 1. Are outside the sources root directory
+          // 2. Are not in node_modules (those should be handled by package.json dependencies)
+          // 3. Are real files (not virtual modules or URLs)
+          if (
+            !normalizedModuleId.startsWith(sourcesRoot) &&
+            !normalizedModuleId.includes('node_modules') &&
+            !normalizedModuleId.startsWith('virtual:') &&
+            !normalizedModuleId.startsWith('http') &&
+            path.isAbsolute(normalizedModuleId)
+          ) {
+            // Check if the file actually exists before adding it
+            try {
+              await fs.access(normalizedModuleId);
+              externalFiles.add(normalizedModuleId);
+            } catch {
+              // File doesn't exist, skip it
+              wxt.logger.debug(
+                `Skipping non-existent external file: ${normalizedModuleId}`,
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const externalFilesArray = Array.from(externalFiles);
+
+  if (externalFilesArray.length > 0) {
+    wxt.logger.info(
+      `Found ${externalFilesArray.length} external source files to include in zip`,
+    );
+    externalFilesArray.forEach((file) => {
+      wxt.logger.debug(
+        `  External file: ${path.relative(process.cwd(), file)}`,
+      );
+    });
+  }
+
+  return externalFilesArray;
 }

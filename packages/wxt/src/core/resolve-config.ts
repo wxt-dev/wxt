@@ -306,6 +306,7 @@ function resolveZipConfig(
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
+    autoIncludeExternalSources: false,
     ...mergedConfig.zip,
     zipSources:
       mergedConfig.zip?.zipSources ?? ['firefox', 'opera'].includes(browser),
