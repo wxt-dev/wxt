@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import spawn from 'nano-spawn';
-import { readFile, writeFile } from 'fs-extra';
+import { readFile, writeFile, ensureDir } from 'fs-extra';
+import fs from 'fs-extra';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
@@ -306,5 +307,53 @@ describe('Zipping', () => {
 
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, 'manifest.json')).toBe(true);
+  });
+
+  describe('autoIncludeExternalSources', () => {
+    it('should automatically include external source files when autoIncludeExternalSources is enabled', async () => {
+      const project = new TestProject({
+        name: 'test-extension',
+        version: '1.0.0',
+      });
+
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {});',
+      );
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: {
+          autoIncludeExternalSources: true,
+        },
+      });
+
+      expect(
+        await project.fileExists('.output/test-extension-1.0.0-sources.zip'),
+      ).toBe(true);
+    });
+
+    it('should not include external source files when autoIncludeExternalSources is disabled', async () => {
+      const project = new TestProject({
+        name: 'test-extension',
+        version: '1.0.0',
+      });
+
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {});',
+      );
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: {
+          autoIncludeExternalSources: false,
+        },
+      });
+
+      expect(
+        await project.fileExists('.output/test-extension-1.0.0-sources.zip'),
+      ).toBe(true);
+    });
   });
 });
