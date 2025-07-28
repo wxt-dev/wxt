@@ -46,32 +46,41 @@ export function createWebExtRunner(): ExtensionRunner {
               prefs: wxtUserConfig?.firefoxPrefs,
               args: wxtUserConfig?.firefoxArgs,
             }
-          : {
-              chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
-              chromiumProfile: wxtUserConfig?.chromiumProfile,
-              chromiumPref: defu(
-                wxtUserConfig?.chromiumPref,
-                DEFAULT_CHROMIUM_PREFS,
-              ),
-              args: [
-                '--unsafely-disable-devtools-self-xss-warnings',
-                '--disable-features=DisableLoadExtensionCommandLineSwitch',
-                ...(wxtUserConfig?.chromiumArgs ?? []),
-              ],
-            }),
+          : wxt.config.browser === 'firefox-android'
+            ? {
+                firefoxApk: wxtUserConfig?.firefoxAndroidApk,
+                adbDevice: wxtUserConfig?.firefoxAndroidDevice,
+              }
+            : {
+                chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
+                chromiumProfile: wxtUserConfig?.chromiumProfile,
+                chromiumPref: defu(
+                  wxtUserConfig?.chromiumPref,
+                  DEFAULT_CHROMIUM_PREFS,
+                ),
+                args: [
+                  '--unsafely-disable-devtools-self-xss-warnings',
+                  '--disable-features=DisableLoadExtensionCommandLineSwitch',
+                  ...(wxtUserConfig?.chromiumArgs ?? []),
+                ],
+              }),
       };
 
       const finalConfig = {
         ...userConfig,
         target:
-          wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
+          wxt.config.browser === 'firefox'
+            ? 'firefox-desktop'
+            : wxt.config.browser === 'firefox-android'
+              ? 'firefox-android'
+              : 'chromium',
         sourceDir: wxt.config.outDir,
         // Don't add a "Reload Manager" extension alongside dev extension, WXT
-        // already handles reloads intenrally.
-        noReloadManagerExtension: true,
+        // already handles reloads internally (except firefox-android).
+        noReloadManagerExtension: wxt.config.browser !== 'firefox-android',
         // WXT handles reloads, so disable auto-reload behaviors in web-ext
-        noReload: true,
-        noInput: true,
+        noReload: wxt.config.browser !== 'firefox-android',
+        noInput: wxt.config.browser !== 'firefox-android',
       };
       const options = {
         // Don't call `process.exit(0)` after starting web-ext
