@@ -6,6 +6,7 @@
 
 - Generate extension icons with the correct sizes
 - Make the icon greyscale during development
+- SVG is supported
 
 ## Usage
 
