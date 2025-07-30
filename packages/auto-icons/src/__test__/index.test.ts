@@ -527,9 +527,10 @@ describe('auto-icons module', () => {
     });
 
     it('should handle custom base icon path correctly', async () => {
+      const customPath = 'custom/icon.png';
       const options: AutoIconsOptions = {
         enabled: true,
-        baseIconPath: '/absolute/path/to/icon.png',
+        baseIconPath: customPath,
       };
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
@@ -544,8 +545,8 @@ describe('auto-icons module', () => {
         await buildHook(mockWxt as unknown as Wxt, output);
       }
 
-      // Should use the absolute path directly
-      expect(sharp).toHaveBeenCalledWith('/absolute/path/to/icon.png');
+      // Should resolve the path relative to srcDir
+      expect(sharp).toHaveBeenCalledWith(resolve('/mock/src', customPath));
     });
   });
 
