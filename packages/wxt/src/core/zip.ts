@@ -1,4 +1,4 @@
-import { InlineConfig } from '../types';
+import { InlineConfig, BuildOutput } from '../types';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
@@ -11,6 +11,7 @@ import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils/paths';
 import { minimatchMultiple } from './utils/minimatch-multiple';
+import { gatherExternalFiles } from './utils/external-files';
 
 /**
  * Build and zip the extension for distribution.
@@ -66,6 +67,12 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
+
+    // Gather external files if enabled
+    const externalFiles = wxt.config.experimental.autoIncludeExternalSources
+      ? await gatherExternalFiles(output)
+      : [];
+
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -79,7 +86,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
           return addOverridesToPackageJson(absolutePath, content, overrides);
         }
       },
-      additionalFiles: downloadedPackages,
+      additionalFiles: [...downloadedPackages, ...externalFiles],
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
