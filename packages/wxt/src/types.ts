@@ -1492,9 +1492,14 @@ export interface WxtPackageManager extends Nypm.PackageManager {
    *
    * @param id Name of the package to download, can include a version (like `wxt@0.17.1`)
    * @param downloadDir Where to store the package.
+   * @param options Working directory used to resolve local packages
    * @returns Absolute path to downloaded file.
    */
-  downloadDependency: (id: string, downloadDir: string) => Promise<string>;
+  downloadDependency: (
+    id: string,
+    downloadDir: string,
+    options?: { cwd?: string },
+  ) => Promise<string>;
   /**
    * Run `npm ls`, `pnpm ls`, or `bun pm ls`, or `yarn list` and return the results.
    *
