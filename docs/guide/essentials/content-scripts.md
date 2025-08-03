@@ -614,6 +614,53 @@ export default defineUnlistedScript(() => {
 });
 ```
 
+`injectScript` returns the created script element. It can be used to e.g. send messages to the script in the form of custom events. The script can add an event listener for them via `document.currentScript`. An example of bidirectional communication:
+
+```ts
+// entrypoints/example.content.ts
+export default defineContentScript({
+  matches: ['*://*/*'],
+  async main() {
+    const { script } = await injectScript('/example-main-world.js', {
+      modifyScript(script) {
+        // Add a listener before the injected script is loaded.
+        script.addEventListener('from-injected-script', (event) => {
+          if (event instanceof CustomEvent) {
+            console.log(`${event.type}:`, event.detail);
+          }
+        });
+      },
+    });
+
+    // Send an event after the injected script is loaded.
+    script.dispatchEvent(
+      new CustomEvent('from-content-script', {
+        detail: 'General Kenobi',
+      }),
+    );
+  },
+});
+```
+
+```ts
+// entrypoints/example-main-world.ts
+export default defineUnlistedScript(() => {
+  const script = document.currentScript;
+
+  script?.addEventListener('from-content-script', (event) => {
+    if (event instanceof CustomEvent) {
+      console.log(`${event.type}:`, event.detail);
+    }
+  });
+
+  script?.dispatchEvent(
+    new CustomEvent('from-injected-script', {
+      detail: 'Hello there',
+    }),
+  );
+});
+```
+
 ## Mounting UI to dynamic element
 
 In many cases, you may need to mount a UI to a DOM element that does not exist at the time the web page is initially loaded. To handle this, use the `autoMount` API to automatically mount the UI when the target element appears dynamically and unmount it when the element disappears. In WXT, the `anchor` option is used to target the element, enabling automatic mounting and unmounting based on its appearance and removal.
