@@ -35,6 +35,9 @@ export default function (ids: string[]) {
       query,
       variables: { ids },
     }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
     .then(async (res) => {
       isLoading.value = false;

@@ -182,5 +182,5 @@ Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 > [!NOTE]
 > Before starting on a blog post, please message Aaron on Discord or start a discussion on GitHub to get permission to write about a topic, but most topics are welcome: Major version updates, tutorials, etc.
 
-- **English only**: Blog posts should be written in English. Unfortunately, our maintainers doesn't have the bandwidth right now to translate our docs, let alone blog posts. Sorry 😓
+- **English only**: Blog posts should be written in English. Unfortunately, our maintainers don't have the bandwidth right now to translate our docs, let alone blog posts. Sorry 😓
 - **AI**: Please only use AI to translate or proof-read your blog post. Don't generate the whole thing... We don't want to publish that.
