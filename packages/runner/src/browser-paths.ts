@@ -1,11 +1,13 @@
 export type BrowserPlatform = 'windows' | 'mac' | 'linux';
 
 export type KnownTarget =
+  | 'arc'
   | 'chromium'
   | 'chrome'
   | 'chrome-beta'
   | 'chrome-dev'
   | 'chrome-canary'
+  | 'dia'
   | 'edge'
   | 'edge-beta'
   | 'edge-dev'
@@ -21,6 +23,11 @@ export const KNOWN_BROWSER_PATHS: Record<
 > = {
   // Chromium based targets
 
+  arc: {
+    mac: ['/Applications/Arc.app/Contents/MacOS/Arc'],
+    linux: [],
+    windows: [],
+  },
   chromium: {
     mac: [],
     linux: [
@@ -52,6 +59,11 @@ export const KNOWN_BROWSER_PATHS: Record<
   },
   'chrome-dev': {
     mac: [],
+    linux: [],
+    windows: [],
+  },
+  dia: {
+    mac: ['/Applications/Dia.app/Contents/MacOS/Dia'],
     linux: [],
     windows: [],
   },
@@ -116,10 +128,12 @@ export const KNOWN_BROWSER_PATHS: Record<
  */
 export const FALLBACK_TARGETS: Partial<Record<KnownTarget, KnownTarget[]>> = {
   chrome: [
+    'arc',
     'chromium',
     'chrome-canary',
     'chrome-beta',
     'chrome-dev',
+    'dia',
     'edge',
     'edge-canary',
     'edge-beta',
