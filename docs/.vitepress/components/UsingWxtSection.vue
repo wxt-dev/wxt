@@ -4,7 +4,7 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
-// Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
+// Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
@@ -86,9 +86,18 @@ const chromeExtensionIds = [
   'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
   'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
   'eehmoikadcijkapfjocnhjclpbaindlb', // BrowserLens - https://browserlens.com/
+  'hfhellofkjebbchcdffmicekjdomkcmc', // Epic Games Library Extension
+  'gknigcbhlammoakmmdddkblknanpjiac', // Zen Analytics Pixel Tracker - zapt.web.app
+  'cnklededohhcbmjjdlbjdkkihkgoggol', // Crypto Pulse - Compose your newtab with nature images, widgets & realtime Crypto Price & Bitcoin RSS.
+  'miponnamafdenpgjemkknimgjfibicdc', // Youtube Video Scheduler
   'nhmbcmalgpkjbomhlhgdicanmkkaajmg', // Chatslator: Livestream Chat Translator
   'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
   'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
+  'ehboaofjncodknjkngdggmpdinhdoijp', // 2FAS Pass - https://2fas.com/
+  'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
+  'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
+  'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
+  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

@@ -96,7 +96,12 @@ export const KNOWN_BROWSER_PATHS: Record<
     windows: [],
   },
   zen: {
-    mac: ['/Applications/Zen Browser.app/Contents/MacOS/zen'],
+    mac: [
+      '/Applications/Zen Browser.app/Contents/MacOS/zen',
+      // Homebrew Cask
+      // https://github.com/Homebrew/homebrew-cask/blob/main/Casks/z/zen.rb#L23C13-L23C19
+      '/Applications/Zen.app/Contents/MacOS/zen',
+    ],
     linux: [],
     windows: [],
   },
