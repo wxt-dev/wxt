@@ -48,14 +48,14 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "vite-plugin-solid": "catalog:"
+    "vite-plugin-solid": "^2.11.6"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "publint": "catalog:",
-    "solid-js": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
+    "@aklinker1/check": "2.0.0",
+    "publint": "^0.3.12",
+    "solid-js": "^1.9.6",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   }
 }
