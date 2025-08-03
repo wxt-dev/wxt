@@ -4,10 +4,9 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
-// Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
+// Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
-  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -98,6 +97,7 @@ const chromeExtensionIds = [
   'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
   'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
   'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
+  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
