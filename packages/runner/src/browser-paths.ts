@@ -30,7 +30,10 @@ export const KNOWN_BROWSER_PATHS: Record<
     windows: [],
   },
   chrome: {
-    mac: ['/Applications/Chrome.app/Contents/MacOS/Google Chrome'],
+    mac: [
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Chrome.app/Contents/MacOS/Google Chrome',
+    ],
     linux: [],
     windows: ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'],
   },
@@ -42,6 +45,7 @@ export const KNOWN_BROWSER_PATHS: Record<
   'chrome-canary': {
     mac: [
       '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
+      '/Applications/Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
     ],
     linux: [],
     windows: [],
@@ -96,7 +100,12 @@ export const KNOWN_BROWSER_PATHS: Record<
     windows: [],
   },
   zen: {
-    mac: ['/Applications/Zen Browser.app/Contents/MacOS/zen'],
+    mac: [
+      '/Applications/Zen Browser.app/Contents/MacOS/zen',
+      // Homebrew Cask
+      // https://github.com/Homebrew/homebrew-cask/blob/main/Casks/z/zen.rb#L23C13-L23C19
+      '/Applications/Zen.app/Contents/MacOS/zen',
+    ],
     linux: [],
     windows: [],
   },
