@@ -27,7 +27,7 @@ export const KNOWN_BROWSER_PATHS: Record<
     mac: ['/Applications/Arc.app/Contents/MacOS/Arc'],
     linux: [],
     windows: [],
-  }, 
+  },
   chromium: {
     mac: [],
     linux: [
