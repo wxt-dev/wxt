@@ -24,7 +24,7 @@
     }
   ],
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
