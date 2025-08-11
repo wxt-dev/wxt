@@ -1,5 +1,45 @@
 # Changelog
 
+## v0.20.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.7...wxt-v0.20.8)
+
+### 🩹 Fixes
+
+- Support http server websocket inside containers ([#1707](https://github.com/wxt-dev/wxt/pull/1707))
+- Recreating keyboardShortcuts interface on file changes. ([#1465](https://github.com/wxt-dev/wxt/pull/1465))
+- Fix bad regex from #1707 ([#1712](https://github.com/wxt-dev/wxt/pull/1712), [#1707](https://github.com/wxt-dev/wxt/issues/1707))
+- Fix bundle variable assignment error with `rolldown-vite` ([#1715](https://github.com/wxt-dev/wxt/pull/1715))
+- Support negation patterns when including/excluding files from ZIP files ([#1517](https://github.com/wxt-dev/wxt/pull/1517))
+- **rolldown-compat:** Only apply footer to content and unlisted scripts via plugin ([#1793](https://github.com/wxt-dev/wxt/pull/1793))
+- Init project should allow the .git folder to exist ([#1731](https://github.com/wxt-dev/wxt/pull/1731))
+- Adding missing chromiumPort parameter in web-ext.ts to enable fixed port debugging ([#1818](https://github.com/wxt-dev/wxt/pull/1818))
+
+### 📖 Documentation
+
+- Fix API reference sidebar by naming new module ([eb0bffb5](https://github.com/wxt-dev/wxt/commit/eb0bffb5))
+- Update JSDoc with ways to cancel timeouts and intervals set by content script context ([030f23d2](https://github.com/wxt-dev/wxt/commit/030f23d2))
+
+### 🏡 Chore
+
+- Fix auto-fixable `markdownlint` errors ([#1710](https://github.com/wxt-dev/wxt/pull/1710))
+- Remove automd ([7d25110a](https://github.com/wxt-dev/wxt/commit/7d25110a))
+- Wxt & @wxt-dev/module-vue support Vite 7 ([#1771](https://github.com/wxt-dev/wxt/pull/1771))
+- Fix type error ([0333ce5c](https://github.com/wxt-dev/wxt/commit/0333ce5c))
+
+### 🤖 CI
+
+- Use matrix for test jobs ([#1708](https://github.com/wxt-dev/wxt/pull/1708))
+
+### ❤️ Contributors
+
+- Sylva <sylvain.lavabre@live.fr>
+- Btea ([@btea](https://github.com/btea))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Ayu ([@ayu-exorcist](https://github.com/ayu-exorcist))
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
+
 ## v0.20.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.6...wxt-v0.20.7)
