@@ -183,6 +183,14 @@
       "types": "./dist/testing/index.d.ts",
       "default": "./dist/testing/index.mjs"
     },
+    "./testing/fake-browser": {
+      "types": "./dist/testing/fake-browser.d.ts",
+      "default": "./dist/testing/fake-browser.mjs"
+    },
+    "./testing/wxt-vitest-plugin": {
+      "types": "./dist/testing/wxt-vitest-plugin.d.ts",
+      "default": "./dist/testing/wxt-vitest-plugin.mjs"
+    },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
     },
