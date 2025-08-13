@@ -16,7 +16,7 @@ import { registerWxt, wxt } from '../core/wxt';
  * ```ts
  * // vitest.config.ts
  * import { defineConfig } from 'vitest/config';
- * import { WxtVitest } from 'wxt/testing';
+ * import { WxtVitest } from 'wxt/testing/wxt-vitest-plugin';
  *
  * export default defineConfig({
  *   plugins: [WxtVitest()],
