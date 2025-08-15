@@ -115,17 +115,30 @@ export function devHtmlPrerender(
       apply: 'serve',
       resolveId: {
         filter: {
-          id: [new RegExp(`^${virtualInlineScript}`)],
+          id: [new RegExp(`^${virtualInlineScript}`), new RegExp('^/chunks/')],
         },
         handler(id) {
+          // Ignore chunks during HTML file pre-rendering
+          if (id.startsWith('/chunks/')) {
+            return '\0noop';
+          }
+
           return '\0' + id;
         },
       },
       load: {
         filter: {
-          id: [new RegExp(`^${resolvedVirtualInlineScript}`)],
+          id: [
+            new RegExp(`^${resolvedVirtualInlineScript}`),
+            new RegExp('^\x00noop'),
+          ],
         },
         handler(id) {
+          // Ignore chunks during HTML file pre-rendering
+          if (id === '\0noop') {
+            return '';
+          }
+
           const key = id.substring(id.indexOf('?') + 1);
           return inlineScriptContents[key];
         },
