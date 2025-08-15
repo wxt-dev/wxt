@@ -36,7 +36,7 @@ This example demonstrates that you don't have to mock `browser.storage` (used by
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { fakeBrowser } from 'wxt/testing';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
 
 const accountStorage = storage.defineItem<Account>('local:account');
 
