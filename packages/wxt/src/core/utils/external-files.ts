@@ -36,11 +36,8 @@ export async function gatherExternalFiles(
             try {
               await fs.access(normalizedModuleId);
               externalFiles.add(normalizedModuleId);
-            } catch {
-              wxt.logger.debug(
-                `Skipping non-existent external file: ${normalizedModuleId}`,
-              );
-            }
+            } catch (error) {}
+          } else {
           }
         }
       }

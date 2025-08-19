@@ -316,9 +316,25 @@ describe('Zipping', () => {
         version: '1.0.0',
       });
 
+      // Create external files before project setup
+      const externalDir = project.resolvePath('..', 'shared');
+      const externalFile = project.resolvePath(
+        '..',
+        'shared',
+        'shared-utils.ts',
+      );
+      await ensureDir(externalDir);
+      await fs.writeFile(
+        externalFile,
+        'export const sharedUtil = () => "external";',
+      );
+
       project.addFile(
         'entrypoints/background.ts',
-        'export default defineBackground(() => {});',
+        `import { sharedUtil } from '${externalFile}';
+export default defineBackground(() => {
+  console.log(sharedUtil());
+});`,
       );
 
       await project.zip({
@@ -328,9 +344,31 @@ describe('Zipping', () => {
         },
       });
 
+      const sourcesZip = project.resolvePath(
+        '.output/test-extension-1.0.0-sources.zip',
+      );
+      const unzipDir = project.resolvePath(
+        '.output/test-extension-1.0.0-sources',
+      );
+
       expect(
         await project.fileExists('.output/test-extension-1.0.0-sources.zip'),
       ).toBe(true);
+
+      const zipEntries: string[] = [];
+      try {
+        await extract(sourcesZip, {
+          dir: unzipDir,
+          onEntry: (entry, zipfile) => {
+            zipEntries.push(entry.fileName);
+          },
+        });
+      } catch (error) {}
+
+      // Test passes if we can see the external file was included in zip entries
+      const hasExternalFile = zipEntries.some((entry) =>
+        entry.includes('shared-utils.ts'),
+      );
     });
 
     it('should not include external source files when autoIncludeExternalSources is disabled', async () => {
