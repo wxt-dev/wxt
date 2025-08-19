@@ -98,6 +98,7 @@ const chromeExtensionIds = [
   'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
   'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
   'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
+  'hgppdobcpkfkmiegekaglonjajeojmdd', // Browsely - AI-powered browser extension
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
