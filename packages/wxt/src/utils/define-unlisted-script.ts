@@ -1,5 +1,5 @@
 /** @module wxt/utils/define-unlisted-script */
-import type { UnlistedScriptDefinition } from '../types';
+import type { UnlistedScriptDefinition } from '../client-types';
 
 export function defineUnlistedScript(
   main: () => void,
