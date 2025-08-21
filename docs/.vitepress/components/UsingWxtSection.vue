@@ -98,6 +98,7 @@ const chromeExtensionIds = [
   'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
   'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
   'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
+  'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
