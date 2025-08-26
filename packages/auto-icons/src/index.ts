@@ -14,10 +14,23 @@ export default defineWxtModule<AutoIconsOptions>({
       {
         enabled: true,
         baseIconPath: resolve(wxt.config.srcDir, 'assets/icon.png'),
-        grayscaleOnDevelopment: true,
+        developmentIndicator: 'grayscale',
         sizes: [128, 48, 32, 16],
       },
     );
+
+    // Backward compatibility for the deprecated option
+    if (options?.grayscaleOnDevelopment !== undefined) {
+      wxt.logger.warn(
+        '`[auto-icons]` "grayscaleOnDevelopment" is deprecated. Use "developmentIndicator" instead.',
+      );
+
+      if (options?.developmentIndicator === undefined) {
+        parsedOptions.developmentIndicator = options!.grayscaleOnDevelopment
+          ? 'grayscale'
+          : false;
+      }
+    }
 
     const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
@@ -42,21 +55,44 @@ export default defineWxtModule<AutoIconsOptions>({
     });
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
-      const image = sharp(resolvedPath).png();
-
-      if (
-        wxt.config.mode === 'development' &&
-        parsedOptions.grayscaleOnDevelopment
-      ) {
-        image.grayscale();
-      }
-
       const outputFolder = wxt.config.outDir;
 
       for (const size of parsedOptions.sizes) {
-        const resized = image.resize(size);
+        const resizedImage = sharp(resolvedPath).resize(size).png();
+
+        if (wxt.config.mode === 'development') {
+          if (parsedOptions.developmentIndicator === 'grayscale') {
+            resizedImage.grayscale();
+          } else if (parsedOptions.developmentIndicator === 'overlay') {
+            // Helper to build an overlay that places a yellow rectangle at the bottom
+            // of the icon with the text "DEV" in black. The overlay has the same
+            // dimensions as the icon so we can composite it with default gravity.
+            const buildDevOverlay = (size: number) => {
+              const rectHeight = Math.round(size * 0.5);
+              const fontSize = Math.round(size * 0.35);
+
+              return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
+                <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="${size - rectHeight}" width="${size}" height="${rectHeight}" fill="#ffff00" />
+                  <text x="${size / 2}" y="${size - rectHeight / 2}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="bold" fill="black" text-anchor="middle" dominant-baseline="middle">DEV</text>
+                </svg>`);
+            };
+            const overlayBuffer = await sharp(buildDevOverlay(size))
+              .png()
+              .toBuffer();
+
+            resizedImage.composite([
+              {
+                input: overlayBuffer,
+                left: 0,
+                top: 0,
+              },
+            ]);
+          }
+        }
+
         ensureDir(resolve(outputFolder, 'icons'));
-        await resized.toFile(resolve(outputFolder, `icons/${size}.png`));
+        await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({
           type: 'asset',
@@ -90,8 +126,19 @@ export interface AutoIconsOptions {
    */
   baseIconPath?: string;
   /**
+   * Apply a visual indicator to the icon when running in development mode.
+   *
+   * "grayscale" converts the icon to grayscale.
+   * "overlay" covers the bottom half with a yellow rectangle and writes "DEV" in black text.
+   * Set to `false` to disable any indicator.
+   *
+   * @default "grayscale"
+   */
+  developmentIndicator?: 'grayscale' | 'overlay' | false;
+  /**
    * Grayscale the image when in development mode to indicate development
    * @default true
+   * @deprecated Use `developmentIndicator` instead
    */
   grayscaleOnDevelopment?: boolean;
   /**

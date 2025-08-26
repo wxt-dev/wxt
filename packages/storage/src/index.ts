@@ -1,4 +1,3 @@
-/// <reference types="chrome" />
 /**
  * Simplified storage APIs with support for versioned fields, snapshots, metadata, and item definitions.
  *
@@ -7,13 +6,7 @@
  */
 import { dequal } from 'dequal/lite';
 import { Mutex } from 'async-mutex';
-
-const browser: typeof chrome =
-  // @ts-expect-error
-  globalThis.browser?.runtime?.id == null
-    ? globalThis.chrome
-    : // @ts-expect-error
-      globalThis.browser;
+import { browser, type Browser } from '@wxt-dev/browser';
 
 export const storage = createStorage();
 
@@ -897,7 +890,7 @@ export interface WxtStorageItemOptions<T> {
 }
 
 export type StorageAreaChanges = {
-  [key: string]: chrome.storage.StorageChange;
+  [key: string]: Browser.storage.StorageChange;
 };
 
 /**

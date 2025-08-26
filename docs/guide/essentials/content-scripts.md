@@ -19,7 +19,7 @@ export default defineContentScript({
 
 This object is responsible for tracking whether or not the content script's context is "invalidated". Most browsers, by default, do not stop content scripts if the extension is uninstalled, updated, or disabled. When this happens, content scripts start reporting this error:
 
-```
+```plaintext
 Error: Extension context invalidated.
 ```
 
@@ -76,6 +76,7 @@ To create a standalone content script that only includes a CSS file:
 
 1. Create the CSS file: `entrypoints/example.content.css`
 2. Use the `build:manifestGenerated` hook to add the content script to the manifest:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      hooks: {
@@ -210,9 +211,7 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
@@ -395,11 +394,9 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
-      onRemove: () => {
+      onRemove: (app) => {
         // Destroy the app when the UI is removed
         unmount(app);
       },
@@ -459,6 +456,7 @@ If you don't need to run your UI in the same frame as the content script, you ca
 WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi), which simplifies setting up the IFrame.
 
 1. Create an HTML page that will be loaded into your IFrame:
+
    ```html
    <!-- entrypoints/example-iframe.html -->
    <!doctype html>
@@ -473,7 +471,9 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
      </body>
    </html>
    ```
+
 1. Add the page to the manifest's `web_accessible_resources`:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      manifest: {
@@ -486,6 +486,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
      },
    });
    ```
+
 1. Create and mount the IFrame:
 
    ```ts

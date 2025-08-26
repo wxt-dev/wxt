@@ -1,3 +1,5 @@
+/** @module wxt/utils/split-shadow-root-css */
+
 /**
  * Given a CSS string that will be loaded into a shadow root, split it into two parts:
  * - `documentCss`: CSS that needs to be applied to the document (like `@property`)
@@ -11,7 +13,7 @@ export function splitShadowRootCss(css: string): {
   let shadowCss = css;
   let documentCss = '';
 
-  const rulesRegex = /(\s*@property[\s\S]*?{[\s\S]*?})/gm;
+  const rulesRegex = /(\s*@(property|font-face)[\s\S]*?{[\s\S]*?})/gm;
   let match;
   while ((match = rulesRegex.exec(css)) !== null) {
     documentCss += match[1];
