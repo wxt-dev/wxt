@@ -106,7 +106,7 @@ Entrypoints must be zero or one levels deep for WXT to discover and build them:
    📂 youtube.content/ <!-- [!code ++] -->
       📄 index.ts <!-- [!code ++] -->
       📄 ... <!-- [!code ++] -->
-   📂 youtube-injected/ <!-- [!code ++] -->
+   📂 youtube.injected/ <!-- [!code ++] -->
       📄 index.ts <!-- [!code ++] -->
       📄 ... <!-- [!code ++] -->
 ```
