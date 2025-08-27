@@ -202,7 +202,7 @@ export class ContentScriptContext implements AbortController {
   ): void;
   addEventListener<TType extends keyof DocumentEventMap>(
     target: Document,
-    type: keyof DocumentEventMap,
+    type: TType,
     handler: (event: DocumentEventMap[TType]) => void,
     options?: AddEventListenerOptions,
   ): void;
