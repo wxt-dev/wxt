@@ -24,7 +24,7 @@
   ],
   "devDependencies": {
     "@types/chrome": "0.1.4",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "nano-spawn": "^0.2.0",
     "tsx": "4.19.4",
     "typescript": "^5.8.3",
