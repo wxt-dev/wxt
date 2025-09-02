@@ -38,7 +38,7 @@ jobs:
       - validate
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }} # https://github.com/sbellone/release-workflow-example
