@@ -42,7 +42,7 @@
     "typescript": "^5.8.3",
     "vitepress": "^1.6.3",
     "vitepress-knowledge": "^0.4.1",
-    "vitepress-plugin-group-icons": "^1.5.2",
+    "vitepress-plugin-group-icons": "^1.6.3",
     "vitest-mock-extended": "^3.1.0",
     "vue": "^3.5.13",
     "wxt": "workspace:*"
