@@ -48,7 +48,7 @@
     "minimatch": "^10.0.1",
     "nano-spawn": "^0.2.0",
     "normalize-path": "^3.0.0",
-    "nypm": "^0.6.0",
+    "nypm": "^0.6.1",
     "ohash": "^2.0.11",
     "open": "^10.1.2",
     "ora": "^8.2.0",
