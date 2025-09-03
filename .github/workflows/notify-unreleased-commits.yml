@@ -1,0 +1,33 @@
+name: 🔔 Notify Unreleased Commits
+on:
+  schedule:
+    - cron: '0 20 * * 1' # Weekly at 8 PM UTC (3 PM CT)
+
+jobs:
+  notify:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+
+      - name: List Commits
+        id: list-commits
+        run: |
+          OUTPUT="$(./scripts/list-unreleased-commits.sh)"
+          echo "::set-output name=summary::${OUTPUT}"
+
+      - name: Discord notification
+        uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UNRELEASED_COMMITS }}
+        with:
+          args: |
+            ```
+            {{ steps.list-commits.outputs.summary }}
+            ```
+
+            If a package needs released, please [run the workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml).
+
+            Before running, consider:
+            - Are there any breaking changes? If so, prepare a list of breaking changes and update the changelog and release notes after the release.
+            - Are there any PRs open that we wait to release after they're merged?
