@@ -4,12 +4,10 @@ description: Install PNPM, Node, and dependencies
 inputs:
   install:
     default: 'true'
-    type: boolean
     description: Whether or not to run 'pnpm install'
 
   installArgs:
     default: ''
-    type: string
     description: Additional args to append to "pnpm install"
 
 runs:
