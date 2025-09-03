@@ -1,5 +1,36 @@
 # Changelog
 
+## v1.2.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.1.1...storage-v1.2.0)
+
+### 🚀 Enhancements
+
+- **storage:** Add `onMigrationComplete` callback ([#1514](https://github.com/wxt-dev/wxt/pull/1514))
+- **storage:** Add `debug` option to enable migration logs ([#1513](https://github.com/wxt-dev/wxt/pull/1513))
+
+### 🩹 Fixes
+
+- Fix typescript error on `defineItem` fallback ([#1601](https://github.com/wxt-dev/wxt/pull/1601))
+- Use `@wxt-dev/browser` instead of `@types/chrome` ([#1645](https://github.com/wxt-dev/wxt/pull/1645))
+
+### 🏡 Chore
+
+- **deps:** Update all dependencies ([#1568](https://github.com/wxt-dev/wxt/pull/1568))
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- Change browser workspace dependency to `^` ([c7335add](https://github.com/wxt-dev/wxt/commit/c7335add))
+- **deps:** Upgrade oxlint from 0.16.8 to 1.14.0 ([a01928e0](https://github.com/wxt-dev/wxt/commit/a01928e0))
+- **deps:** Upgrade typescript from 5.8.3 to 5.9.2 ([a6eef643](https://github.com/wxt-dev/wxt/commit/a6eef643))
+- Create script for managing dependency upgrades ([#1875](https://github.com/wxt-dev/wxt/pull/1875))
+- **deps:** Upgrade all dev dependencies ([#1876](https://github.com/wxt-dev/wxt/pull/1876))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Anh71me ([@iyume](https://github.com/iyume))
+- Ergou <ma2808203259@hotmail.com>
+
 ## v1.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.1.0...storage-v1.1.1)
