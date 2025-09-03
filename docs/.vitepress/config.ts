@@ -15,6 +15,7 @@ import { version as autoIconsVersion } from '../../packages/auto-icons/package.j
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
+import { version as runnerVersion } from '../../packages/runner/package.json';
 import addKnowledge from 'vitepress-knowledge';
 import {
   groupIconMdPlugin,
@@ -41,6 +42,7 @@ const otherPackages = {
   i18n: i18nVersion,
   storage: storageVersion,
   unocss: unocssVersion,
+  runner: runnerVersion,
 };
 
 const knowledge = addKnowledge<DefaultTheme.Config>({

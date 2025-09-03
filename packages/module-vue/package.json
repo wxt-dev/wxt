@@ -46,13 +46,13 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "catalog:"
+    "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
+    "@aklinker1/check": "2.0.0",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   }
 }

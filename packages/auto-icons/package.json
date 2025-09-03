@@ -24,7 +24,7 @@
     }
   ],
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -45,16 +45,16 @@
     "wxt": ">=0.19.0"
   },
   "dependencies": {
-    "defu": "catalog:",
-    "fs-extra": "catalog:",
-    "sharp": "catalog:"
+    "defu": "^6.1.4",
+    "fs-extra": "^11.3.0",
+    "sharp": "^0.34.1"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
+    "@aklinker1/check": "2.0.0",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   }
 }

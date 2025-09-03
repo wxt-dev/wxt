@@ -3,8 +3,7 @@
   "compilerOptions": {
     "paths": {
       "#analytics": ["./.wxt/analytics/index.ts"]
-    },
-    "types": ["chrome"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }

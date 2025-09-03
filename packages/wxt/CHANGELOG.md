@@ -1,5 +1,113 @@
 # Changelog
 
+## v0.20.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.7...wxt-v0.20.8)
+
+### 🩹 Fixes
+
+- Support http server websocket inside containers ([#1707](https://github.com/wxt-dev/wxt/pull/1707))
+- Recreating keyboardShortcuts interface on file changes. ([#1465](https://github.com/wxt-dev/wxt/pull/1465))
+- Fix bad regex from #1707 ([#1712](https://github.com/wxt-dev/wxt/pull/1712), [#1707](https://github.com/wxt-dev/wxt/issues/1707))
+- Fix bundle variable assignment error with `rolldown-vite` ([#1715](https://github.com/wxt-dev/wxt/pull/1715))
+- Support negation patterns when including/excluding files from ZIP files ([#1517](https://github.com/wxt-dev/wxt/pull/1517))
+- **rolldown-compat:** Only apply footer to content and unlisted scripts via plugin ([#1793](https://github.com/wxt-dev/wxt/pull/1793))
+- Init project should allow the .git folder to exist ([#1731](https://github.com/wxt-dev/wxt/pull/1731))
+- Adding missing chromiumPort parameter in web-ext.ts to enable fixed port debugging ([#1818](https://github.com/wxt-dev/wxt/pull/1818))
+
+### 📖 Documentation
+
+- Fix API reference sidebar by naming new module ([eb0bffb5](https://github.com/wxt-dev/wxt/commit/eb0bffb5))
+- Update JSDoc with ways to cancel timeouts and intervals set by content script context ([030f23d2](https://github.com/wxt-dev/wxt/commit/030f23d2))
+
+### 🏡 Chore
+
+- Fix auto-fixable `markdownlint` errors ([#1710](https://github.com/wxt-dev/wxt/pull/1710))
+- Remove automd ([7d25110a](https://github.com/wxt-dev/wxt/commit/7d25110a))
+- Wxt & @wxt-dev/module-vue support Vite 7 ([#1771](https://github.com/wxt-dev/wxt/pull/1771))
+- Fix type error ([0333ce5c](https://github.com/wxt-dev/wxt/commit/0333ce5c))
+
+### 🤖 CI
+
+- Use matrix for test jobs ([#1708](https://github.com/wxt-dev/wxt/pull/1708))
+
+### ❤️ Contributors
+
+- Sylva <sylvain.lavabre@live.fr>
+- Btea ([@btea](https://github.com/btea))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Ayu ([@ayu-exorcist](https://github.com/ayu-exorcist))
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
+
+## v0.20.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.6...wxt-v0.20.7)
+
+### 🚀 Enhancements
+
+- Add `@font-face` to be processed by `splitShadowRootCss` ([#1635](https://github.com/wxt-dev/wxt/pull/1635))
+- Add DisableLoadExtensionCommandLineSwitch flag to Chromium runner ([#1698](https://github.com/wxt-dev/wxt/pull/1698))
+
+### 🩹 Fixes
+
+- Improve CSS reset inside shadow roots ([da5cd325](https://github.com/wxt-dev/wxt/commit/da5cd325))
+
+### 🏡 Chore
+
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- **deps:** Update all dependencies ([#1648](https://github.com/wxt-dev/wxt/pull/1648))
+- Change browser workspace dependency to `^` ([c7335add](https://github.com/wxt-dev/wxt/commit/c7335add))
+
+### ❤️ Contributors
+
+- Richard Lee ([@dlackty](https://github.com/dlackty))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Seaders ([@seaders](https://github.com/seaders))
+
+## v0.20.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.5...wxt-v0.20.6)
+
+## v0.20.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.4...wxt-v0.20.5)
+
+### 🩹 Fixes
+
+- Don't use crypto.randUUID for shadow root UIs ([3577c0b](https://github.com/wxt-dev/wxt/commit/3577c0b))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.3...wxt-v0.20.4)
+
+### 🚀 Enhancements
+
+- Ignore popup/index.ts instead of erroring ([#1520](https://github.com/wxt-dev/wxt/pull/1520))
+- Ignore elements with a `vite-ignore` or `wxt-ignore` attribute ([#1603](https://github.com/wxt-dev/wxt/pull/1603))
+- Add `{{packageVersion}}` as template variable ([#1604](https://github.com/wxt-dev/wxt/pull/1604))
+
+### 🩹 Fixes
+
+- Adding missing `""` to `PublicPath` and `browser.runtime.getUrl` ([#1597](https://github.com/wxt-dev/wxt/pull/1597))
+- Fix CORS error in Firefox ([#1607](https://github.com/wxt-dev/wxt/pull/1607))
+
+### 📖 Documentation
+
+- **Content Script UI:** Add additional details about when `onRemove` is called ([656a9b3](https://github.com/wxt-dev/wxt/commit/656a9b3))
+
+### ❤️ Contributors
+
+- Yunsup Sim ([@SimYunSup](https://github.com/SimYunSup))
+- ТΞNSΛI ([@Tensai75](https://github.com/Tensai75))
+- Nishu ([@nishu-murmu](https://github.com/nishu-murmu))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.2...wxt-v0.20.3)
