@@ -48,7 +48,7 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "vite-plugin-solid": "^2.11.6"
+    "vite-plugin-solid": "^2.11.8"
   },
   "devDependencies": {
     "@aklinker1/check": "^2.1.0",
