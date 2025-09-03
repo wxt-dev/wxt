@@ -14,21 +14,17 @@ jobs:
       - name: List Commits
         id: list-commits
         run: |
-          SUMMARY="$(./scripts/list-unreleased-commits.sh)"
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$SUMMARY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          ./scripts/list-unreleased-commits.sh > summary.txt
 
       - name: Discord notification
-        uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554
+        run: |
+          curl -X POST \
+            -F "payload_json={\"content\": \"${{ env.MESSAGE }}\"}" \
+            -F "file1=@summary.txt" \
+            $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UNRELEASED_COMMITS }}
-        with:
-          args: |
-            ```
-            ${{ steps.list-commits.outputs.summary }}
-            ```
-
+          MESSAGE: |
             If a package needs released, please [run the workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml).
 
             Before running, consider:
