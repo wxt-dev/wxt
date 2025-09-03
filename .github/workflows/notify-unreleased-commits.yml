@@ -14,8 +14,8 @@ jobs:
       - name: List Commits
         id: list-commits
         run: |
-          OUTPUT="$(./scripts/list-unreleased-commits.sh)"
-          echo "::set-output name=summary::${OUTPUT}"
+          SUMMARY="$(./scripts/list-unreleased-commits.sh)"
+          echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
 
       - name: Discord notification
         uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554
@@ -24,7 +24,7 @@ jobs:
         with:
           args: |
             ```
-            {{ steps.list-commits.outputs.summary }}
+            ${{ steps.list-commits.outputs.summary }}
             ```
 
             If a package needs released, please [run the workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml).
