@@ -23,7 +23,7 @@ import { registerWxt, wxt } from '../core/wxt';
  * ```ts
  * // vitest.config.ts
  * import { defineConfig } from 'vitest/config';
- * import { WxtVitest } from 'wxt/testing/wxt-vitest-plugin';
+ * import { WxtVitest } from 'wxt/testing/vitest-plugin';
  *
  * export default defineConfig({
  *   plugins: [WxtVitest()],
