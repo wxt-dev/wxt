@@ -20,13 +20,13 @@ await chrome.scripting.getRegisteredContentScripts();
 
 ## How do I disable opening the browser automatically during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser>
 
 ## How do I stay logged into a website during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data>
 
-## My component library doesn't work in content scripts!
+## My component library doesn't work in content scripts
 
 This is usually caused by one of two things (or both) when using `createShadowRootUi`:
 
@@ -167,11 +167,11 @@ Both issues have the same fix: tell the library to put elements inside the `Shad
 
 ## Is there an LLM trained on WXT's docs that I chat with?
 
-Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit https://knowledge.wxt.dev/ for a fullscreen experience.
+Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
 
 Additionally, if you want to train your own model or provide context to your editor, you can use the LLM knowledge files hosted by the site:
 
-https://wxt.dev/knowledge/index.json
+<https://wxt.dev/knowledge/index.json>
 
 You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!
 
@@ -179,11 +179,11 @@ You don't need to crawl the entire website, these files already contain all the 
 
 To run the WXT dev server in a devcontainer, but load the dev build of your extension in your browser:
 
-1. **Bind-mount your project directory to your host**  
+1. **Bind-mount your project directory to your host**
    If you're using VS Code, you can open your project folder with the `Dev Containers: Open Folder in Container...` command. This keeps the folder synchronized between your host and the devcontainer, ensuring that the extension `dist` directory remains accessible from the host.
 
-2. **Disable auto-opening the browser**  
-   WXT automatically opens your browser during development, but since you're running inside a container, it won't be able to access it. Follow the instructions [here](https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser) to disable browser auto-opening in your `wxt.config.ts`.
+2. **Disable auto-opening the browser**
+   WXT automatically opens your browser during development, but since you're running inside a container, it won't be able to access it. Follow [the guide here](https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser) to disable browser auto-opening in your `wxt.config.ts`.
 
-3. **Tell WXT to listen on all network interfaces**  
+3. **Tell WXT to listen on all network interfaces**
    To enable hot-reloading, your extension has to connect to the WXT dev server running inside your container. WXT will only listen on `localhost` by default, which prevents connections from outside the devcontainer. To fix this you can instruct WXT to listen on all interfaces with `wxt --host 0.0.0.0`.

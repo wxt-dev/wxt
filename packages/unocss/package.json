@@ -40,16 +40,16 @@
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "typescript": "catalog:",
-    "unbuild": "catalog:",
-    "unocss": "catalog:",
+    "@aklinker1/check": "2.0.0",
+    "oxlint": "^0.16.8",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"
   },
   "dependencies": {
-    "defu": "catalog:",
-    "fast-glob": "catalog:"
+    "defu": "^6.1.4",
+    "fast-glob": "^3.3.3"
   }
 }

@@ -1,7 +1,6 @@
 export * from './devHtmlPrerender';
 export * from './devServerGlobals';
 export * from './download';
-export * from './multipageMove';
 export * from './resolveVirtualModules';
 export * from './tsconfigPaths';
 export * from './noopBackground';
@@ -14,3 +13,4 @@ export * from './defineImportMeta';
 export * from './removeEntrypointMainFunction';
 export * from './wxtPluginLoader';
 export * from './resolveAppConfig';
+export * from './iifeFooter';

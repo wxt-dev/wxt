@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.2.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.3...i18n-v0.2.4)
+
+### 🩹 Fixes
+
+- Standardize locale codes and warn about unsupported ones ([#1617](https://github.com/wxt-dev/wxt/pull/1617))
+- Use `@wxt-dev/browser` instead of `@types/chrome` ([#1645](https://github.com/wxt-dev/wxt/pull/1645))
+
+### 📖 Documentation
+
+- Add react language ID to README ([#1347](https://github.com/wxt-dev/wxt/pull/1347))
+- Fix public path reference ([bcb20874](https://github.com/wxt-dev/wxt/commit/bcb20874))
+
+### 🏡 Chore
+
+- **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))
+- **deps:** Bump dev and non-breaking major dependencies ([#1167](https://github.com/wxt-dev/wxt/pull/1167))
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- Change browser workspace dependency to `^` ([c7335add](https://github.com/wxt-dev/wxt/commit/c7335add))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Okinea Dev ([@okineadev](https://github.com/okineadev))
+- Redwoodlid ([@redwoodlid](https://github.com/redwoodlid))
+
 ## v0.2.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.2...i18n-v0.2.3)

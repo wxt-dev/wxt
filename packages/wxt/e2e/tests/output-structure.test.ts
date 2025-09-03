@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 
 describe('Output Directory Structure', () => {
@@ -433,13 +433,11 @@ describe('Output Directory Structure', () => {
           function logHello(name) {
             console.log(\`Hello \${name}!\`);
           }
-          background;
           const definition = defineBackground({
             main() {
               logHello("background");
             }
           });
-          background;
           function initPlugins() {
           }
           ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
@@ -468,7 +466,6 @@ describe('Output Directory Structure', () => {
           const result$1 = result;
           return result$1;
         }();
-        background;
         "
       `);
   });

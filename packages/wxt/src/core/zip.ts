@@ -3,7 +3,6 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
-import { minimatch } from 'minimatch';
 import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log/printFileList';
 import { findEntrypoints, internalBuild } from './utils/building';
@@ -11,6 +10,7 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils/paths';
+import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -26,11 +26,10 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   wxt.logger.info('Zipping extension...');
   const zipFiles: string[] = [];
 
+  const packageJson = await getPackageJson();
   const projectName =
     wxt.config.zip.name ??
-    safeFilename(
-      (await getPackageJson())?.name || path.basename(process.cwd()),
-    );
+    safeFilename(packageJson?.name || path.basename(process.cwd()));
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
@@ -39,6 +38,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         '{{version}}',
         output.manifest.version_name ?? output.manifest.version,
       )
+      .replaceAll('{{packageVersion}}', packageJson?.version)
       .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
@@ -122,8 +122,8 @@ async function zipDir(
     })
   ).filter((relativePath) => {
     return (
-      options?.include?.some((pattern) => minimatch(relativePath, pattern)) ||
-      !options?.exclude?.some((pattern) => minimatch(relativePath, pattern))
+      minimatchMultiple(relativePath, options?.include) ||
+      !minimatchMultiple(relativePath, options?.exclude)
     );
   });
   const filesToZip = [

@@ -7,6 +7,7 @@ import {
   I18n,
   Substitution,
 } from './types';
+import { browser } from '@wxt-dev/browser';
 
 export function createI18n<
   T extends I18nStructure = DefaultI18nStructure,
@@ -39,9 +40,9 @@ export function createI18n<
     if (sub?.length) {
       // Convert all substitutions to strings
       const stringSubs = sub?.map((sub) => String(sub));
-      message = chrome.i18n.getMessage(key.replaceAll('.', '_'), stringSubs);
+      message = browser.i18n.getMessage(key.replaceAll('.', '_'), stringSubs);
     } else {
-      message = chrome.i18n.getMessage(key.replaceAll('.', '_'));
+      message = browser.i18n.getMessage(key.replaceAll('.', '_'));
     }
     if (!message) {
       console.warn(`[i18n] Message not found: "${key}"`);

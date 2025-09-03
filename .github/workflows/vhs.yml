@@ -17,7 +17,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -31,12 +31,12 @@ jobs:
           pnpm dlx wxt@latest --version
 
       - name: Record VHS
-        uses: charmbracelet/vhs-action@v2.1.0
+        uses: charmbracelet/vhs-action@59641cdc7fadf3978db65eb8c6937ea2752f4ec3 # v2.1.0
         with:
           path: 'docs/tapes/init-demo.tape'
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

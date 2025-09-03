@@ -4,7 +4,7 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
-// Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
+// Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
@@ -71,6 +71,37 @@ const chromeExtensionIds = [
   'bmoggiinmnodjphdjnmpcnlleamkfedj', // AliasVault - Open-Source Password & (Email) Alias Manager
   'hlnhhamckimoaiekbglafiebkfimhapb', // SnapThePrice: AI-Powered Real-time Lowest Price Finder
   'gdjampjdgjmbifnhldgcnccdjkcoicmg', // radiofrance - news & broadcasts (French), music (international)
+  'jlnhphlghikichhgbnkepenehbmloenb', // Blens - Time Tracker and AI Insight
+  'njnammmpdodmfkodnfpammnpdcbhnlcm', // Always Light Mode - Setting website always in light mode
+  'lblmfclcfniabobmamfkdogcgdagbhhb', // DesignPicker - Color Picker & Font Detector
+  'pamnlaoeobcmhkliljfaofekeddpmfoh', // Web to PDF
+  'jmbcbeepjfenihlocplnbmbhimcoooka', // Online CSV Viewer
+  'nkjcoophmpcmmgadnljnlpbpfdfacgbo', // YouTube Video Transcript
+  'lcaieahkjgeggeiihblhcjbbjlppgieh', // NetSuite Record Scripts
+  'gmocfknjllodfiomnljmaehcplnekhlo', // VueTracker
+  'ggcfemmoabhhelfkhknhbnkmeahloiod', // CanCopy - A web extension that allow you to copy any content from website
+  'modkelfkcfjpgbfmnbnllalkiogfofhb', // Language Learning with AI
+  'npfopljnjbamegincfjelhjhnonnjloo', // Bilibili Feed History Helper
+  'edkhpdceeinkcacjdgebjehipmnbomce', // NZBDonkey - The ultimate NZB file download tool
+  'cckggnbnimdbbpmdinkkgbbncopbloob', // WeChat Markdown Editor(微信 Markdown 编辑器)
+  'jcblcjolcojmfopefcighfmkkefbaofg', // Tab Grab
+  'eehmoikadcijkapfjocnhjclpbaindlb', // BrowserLens - https://browserlens.com/
+  'hfhellofkjebbchcdffmicekjdomkcmc', // Epic Games Library Extension
+  'gknigcbhlammoakmmdddkblknanpjiac', // Zen Analytics Pixel Tracker - zapt.web.app
+  'cnklededohhcbmjjdlbjdkkihkgoggol', // Crypto Pulse - Compose your newtab with nature images, widgets & realtime Crypto Price & Bitcoin RSS.
+  'miponnamafdenpgjemkknimgjfibicdc', // Youtube Video Scheduler
+  'nhmbcmalgpkjbomhlhgdicanmkkaajmg', // Chatslator: Livestream Chat Translator
+  'mbamjfdjbcdgpopfnkkmlohadbbnplhm', // 公众号阅读增强器 - https://wxreader.honwhy.wang
+  'hannhecbnjnnbbafffmogdlnajpcomek', // 토탐정
+  'ehboaofjncodknjkngdggmpdinhdoijp', // 2FAS Pass - https://2fas.com/
+  'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
+  'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
+  'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
+  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
+  'hgppdobcpkfkmiegekaglonjajeojmdd', // Browsely - AI-powered browser extension
+  'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
+  'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
+  'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

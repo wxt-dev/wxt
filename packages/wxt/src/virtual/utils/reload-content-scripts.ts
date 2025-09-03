@@ -37,10 +37,22 @@ export async function reloadManifestContentScriptMv3(
 
   if (existing) {
     logger.debug('Updating content script', existing);
-    await browser.scripting.updateContentScripts([{ ...contentScript, id }]);
+    await browser.scripting.updateContentScripts([
+      {
+        ...contentScript,
+        id,
+        css: contentScript.css ?? [],
+      },
+    ]);
   } else {
     logger.debug('Registering new content script...');
-    await browser.scripting.registerContentScripts([{ ...contentScript, id }]);
+    await browser.scripting.registerContentScripts([
+      {
+        ...contentScript,
+        id,
+        css: contentScript.css ?? [],
+      },
+    ]);
   }
 
   await reloadTabsForContentScript(contentScript);

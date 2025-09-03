@@ -118,6 +118,8 @@ export class ContentScriptContext implements AbortController {
 
   /**
    * Wrapper around `window.setInterval` that automatically clears the interval when invalidated.
+   *
+   * Intervals can be cleared by calling the normal `clearInterval` function.
    */
   setInterval(handler: () => void, timeout?: number): number {
     const id = setInterval(() => {
@@ -129,6 +131,8 @@ export class ContentScriptContext implements AbortController {
 
   /**
    * Wrapper around `window.setTimeout` that automatically clears the interval when invalidated.
+   *
+   * Timeouts can be cleared by calling the normal `setTimeout` function.
    */
   setTimeout(handler: () => void, timeout?: number): number {
     const id = setTimeout(() => {
@@ -141,6 +145,8 @@ export class ContentScriptContext implements AbortController {
   /**
    * Wrapper around `window.requestAnimationFrame` that automatically cancels the request when
    * invalidated.
+   *
+   * Callbacks can be canceled by calling the normal `cancelAnimationFrame` function.
    */
   requestAnimationFrame(callback: FrameRequestCallback): number {
     const id = requestAnimationFrame((...args) => {
@@ -154,6 +160,8 @@ export class ContentScriptContext implements AbortController {
   /**
    * Wrapper around `window.requestIdleCallback` that automatically cancels the request when
    * invalidated.
+   *
+   * Callbacks can be canceled by calling the normal `cancelIdleCallback` function.
    */
   requestIdleCallback(
     callback: IdleRequestCallback,
@@ -169,6 +177,8 @@ export class ContentScriptContext implements AbortController {
 
   /**
    * Call `target.addEventListener` and remove the event listener when the context is invalidated.
+   *
+   * Listeners can be canceled by calling the normal `removeEventListener` function.
    *
    * Includes additional events useful for content scripts:
    *
@@ -192,7 +202,7 @@ export class ContentScriptContext implements AbortController {
   ): void;
   addEventListener<TType extends keyof DocumentEventMap>(
     target: Document,
-    type: keyof DocumentEventMap,
+    type: TType,
     handler: (event: DocumentEventMap[TType]) => void,
     options?: AddEventListenerOptions,
   ): void;
