@@ -31,7 +31,7 @@
     "lint-staged": "^15.5.2",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.45.0",
-    "nano-spawn": "^0.2.1",
+    "nano-spawn": "^1.0.2",
     "prettier": "^3.6.2",
     "simple-git-hooks": "^2.13.1",
     "tsx": "4.19.4",

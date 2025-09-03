@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/chrome": "{{chromeTypesVersion}}",
     "fs-extra": "^11.3.0",
-    "nano-spawn": "^0.2.0",
+    "nano-spawn": "^1.0.2",
     "tsx": "4.19.4",
     "typescript": "^5.9.2",
     "vitest": "^3.1.2"
