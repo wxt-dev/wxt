@@ -15,10 +15,10 @@ runs:
 
   steps:
     - name: 🛠️ Setup PNPM
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@f2b2b233b538f500472c7274c7012f57857d8ce0 # v4.1.0
 
     - name: 🛠️ Setup NodeJS
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@b7234cc9fe124f0f4932554b4e5284543083ae7b # v4.4.0
       with:
         node-version: 20
         cache: pnpm
