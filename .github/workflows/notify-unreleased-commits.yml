@@ -26,7 +26,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UNRELEASED_COMMITS }}
           MESSAGE: |
-            If a package needs released, please [run the workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml).
+            If a package needs released, please [run the workflow](<https://github.com/wxt-dev/wxt/actions/workflows/release.yml>).
 
             Before running, consider:
             - Are there any breaking changes? If so, prepare a list of breaking changes and update the changelog and release notes after the release.
