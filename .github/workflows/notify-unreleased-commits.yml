@@ -1,5 +1,6 @@
 name: 🔔 Notify Unreleased Commits
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 20 * * 1' # Weekly at 8 PM UTC (3 PM CT)
 
