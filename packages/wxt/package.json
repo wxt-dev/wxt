@@ -60,7 +60,7 @@
     "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0",
     "vite": "^5.4.19 || ^6.3.4 || ^7.0.0",
     "vite-node": "^2.1.4 || ^3.1.2",
-    "web-ext-run": "^0.2.3"
+    "web-ext-run": "^0.2.4"
   },
   "devDependencies": {
     "@aklinker1/check": "^2.1.0",
