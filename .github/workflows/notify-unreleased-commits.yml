@@ -15,7 +15,9 @@ jobs:
         id: list-commits
         run: |
           SUMMARY="$(./scripts/list-unreleased-commits.sh)"
-          echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Discord notification
         uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554
