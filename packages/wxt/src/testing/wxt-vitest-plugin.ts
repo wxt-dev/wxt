@@ -1,3 +1,10 @@
+/**
+ * Contains a Vitest plugin that configures your test environment to work with
+ * WXT projects.
+ *
+ * @module wxt/testing/vitest
+ */
+
 import type * as vite from 'vite';
 import {
   download,
