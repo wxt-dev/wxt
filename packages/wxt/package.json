@@ -76,8 +76,8 @@
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "typescript": "^5.9.2",
-    "unbuild": "^3.5.0",
-    "vitest": "^3.1.2",
+    "unbuild": "^3.6.1",
+    "vitest": "^3.2.4",
     "vitest-plugin-random-seed": "^1.1.1"
   },
   "peerDependenciesMeta": {},
