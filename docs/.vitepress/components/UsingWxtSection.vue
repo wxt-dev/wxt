@@ -99,6 +99,8 @@ const chromeExtensionIds = [
   'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
   'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
   'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
+  'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
+  'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
