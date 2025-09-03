@@ -52,7 +52,7 @@
     "@aklinker1/check": "^2.1.0",
     "publint": "^0.3.12",
     "typescript": "^5.9.2",
-    "unbuild": "^3.5.0",
+    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }
