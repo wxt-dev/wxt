@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
