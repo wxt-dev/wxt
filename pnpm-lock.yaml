@@ -56,8 +56,8 @@ importers:
         specifier: ^0.45.0
         version: 0.45.0
       nano-spawn:
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^1.0.2
+        version: 1.0.2
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -176,8 +176,8 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       nano-spawn:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.2
+        version: 1.0.2
       tsx:
         specifier: 4.19.4
         version: 4.19.4
@@ -543,8 +543,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1
       nano-spawn:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.2
+        version: 1.0.2
       normalize-path:
         specifier: ^3.0.0
         version: 3.0.0
@@ -592,8 +592,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       '@faker-js/faker':
-        specifier: ^9.7.0
-        version: 9.7.0
+        specifier: ^10.0.0
+        version: 10.0.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -1452,9 +1452,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@faker-js/faker@9.7.0':
-    resolution: {integrity: sha512-aozo5vqjCmDoXLNUJarFZx2IN/GgGaogY4TMJ6so/WLZOWpSV7fvj2dmrV6sEAnUm1O7aCrhTibjpzeDFgNqbg==}
-    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+  '@faker-js/faker@10.0.0':
+    resolution: {integrity: sha512-UollFEUkVXutsaP+Vndjxar40Gs5JL2HeLcl8xO1QAjJgOdhc3OmBFWyEylS+RddWaaBiAzH+5/17PLQJwDiLw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@iconify-json/logos@1.2.4':
     resolution: {integrity: sha512-XC4If5D/hbaZvUkTV8iaZuGlQCyG6CNOlaAaJaGa13V5QMYwYjgtKk3vPP8wz3wtTVNVEVk3LRx1fOJz+YnSMw==}
@@ -3870,13 +3870,9 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nano-spawn@0.2.0:
-    resolution: {integrity: sha512-IjZBIOLxSlxu+m/kacg9JuP93oUpRemeV0mEuCy64nzBKKIL9m0aLJHtVPcVuzJDHFhElzjpwbW4a3tMzgKoZQ==}
-    engines: {node: '>=18.19'}
-
-  nano-spawn@0.2.1:
-    resolution: {integrity: sha512-/pULofvsF8mOVcl/nUeVXL/GYOEvc7eJWSIxa+K4OYUolvXa5zwSgevsn4eoHs1xvh/BO3vx/PZiD9+Ow2ZVuw==}
-    engines: {node: '>=18.19'}
+  nano-spawn@1.0.2:
+    resolution: {integrity: sha512-21t+ozMQDAL/UGgQVBbZ/xXvNO10++ZPuTmKRO8k9V3AClVRht49ahtDjfY8l1q6nSHOrE5ASfthzH3ol6R/hg==}
+    engines: {node: '>=20.17'}
 
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
@@ -5978,7 +5974,7 @@ snapshots:
   '@esbuild/win32-x64@0.25.0':
     optional: true
 
-  '@faker-js/faker@9.7.0': {}
+  '@faker-js/faker@10.0.0': {}
 
   '@iconify-json/logos@1.2.4':
     dependencies:
@@ -8607,9 +8603,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nano-spawn@0.2.0: {}
-
-  nano-spawn@0.2.1: {}
+  nano-spawn@1.0.2: {}
 
   nanoid@3.3.11: {}
 
