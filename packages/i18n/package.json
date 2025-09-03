@@ -44,7 +44,7 @@
     "@types/node": "^20.17.6",
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "unbuild": "^3.5.0",
     "vitest": "^3.1.2",
     "vitest-plugin-random-seed": "^1.1.1",

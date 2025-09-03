@@ -27,7 +27,7 @@
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
     "sass": "^1.87.0",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "vitest": "^3.1.2",
     "vitest-plugin-random-seed": "^1.1.1",

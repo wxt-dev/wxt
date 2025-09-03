@@ -33,7 +33,7 @@
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "tsx": "4.19.4",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "unbuild": "^3.5.0",
     "vitest": "^3.1.2"
   },

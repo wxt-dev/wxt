@@ -54,7 +54,7 @@
     "@aklinker1/check": "2.0.0",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.12",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "unbuild": "^3.5.0",
     "wxt": "workspace:*"
   },
