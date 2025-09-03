@@ -18,8 +18,9 @@ jobs:
 
       - name: Discord notification
         run: |
+          PAYLOAD=$(jq -n --arg content "${{ env.MESSAGE }}" '{"content": $content}')
           curl -X POST \
-            -F "payload_json={\"content\": \"${{ env.MESSAGE }}\"}" \
+            -F "payload_json=${PAYLOAD}" \
             -F "file1=@summary.txt" \
             $DISCORD_WEBHOOK
         env:
