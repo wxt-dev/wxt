@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.20.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.8...wxt-v0.20.9)
+
+### 🩹 Fixes
+
+- **types:** Use TType for DocumentEventMap key in ctx.addEventListener ([#1863](https://github.com/wxt-dev/wxt/pull/1863))
+- Prevent Unlisted CSS from being excluded in the build when using CSS preprocessor ([#1590](https://github.com/wxt-dev/wxt/pull/1590))
+
+### 🏡 Chore
+
+- **deps:** Upgrade oxlint from 0.16.8 to 1.14.0 ([a01928e0](https://github.com/wxt-dev/wxt/commit/a01928e0))
+- **deps:** Upgrade typescript from 5.8.3 to 5.9.2 ([a6eef643](https://github.com/wxt-dev/wxt/commit/a6eef643))
+- Upgrade nano-spawn to v1 ([5fefd8e0](https://github.com/wxt-dev/wxt/commit/5fefd8e0))
+- Upgrade faker to v10 ([984568e0](https://github.com/wxt-dev/wxt/commit/984568e0))
+- Upgrade dotenv to v17.2.2 ([380a9630](https://github.com/wxt-dev/wxt/commit/380a9630))
+- Upgrade happy-dom to v18.0.1 ([c1c3d3b7](https://github.com/wxt-dev/wxt/commit/c1c3d3b7))
+- Create script for managing dependency upgrades ([#1875](https://github.com/wxt-dev/wxt/pull/1875))
+- **deps:** Upgrade all dev dependencies ([#1876](https://github.com/wxt-dev/wxt/pull/1876))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Kim Gyeongjae ([@PortalCube](https://github.com/PortalCube))
+- Atomie CHEN <atomic_cwh@163.com>
+
 ## v0.20.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.7...wxt-v0.20.8)
