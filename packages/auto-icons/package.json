@@ -46,11 +46,11 @@
   },
   "dependencies": {
     "defu": "^6.1.4",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "sharp": "^0.34.1"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
+    "@aklinker1/check": "^2.1.0",
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "typescript": "^5.9.2",
