@@ -42,7 +42,7 @@
   "devDependencies": {
     "@aklinker1/check": "2.0.0",
     "@types/node": "^20.17.6",
-    "oxlint": "^0.16.8",
+    "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "typescript": "^5.8.3",
     "unbuild": "^3.5.0",

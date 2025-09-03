@@ -73,7 +73,7 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^17.4.6",
     "lodash.merge": "^4.6.2",
-    "oxlint": "^0.16.8",
+    "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "typescript": "^5.8.3",
     "unbuild": "^3.5.0",
