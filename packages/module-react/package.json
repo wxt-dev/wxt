@@ -48,7 +48,7 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.4.1"
+    "@vitejs/plugin-react": "^4.4.1 || ^5.0.0"
   },
   "devDependencies": {
     "@aklinker1/check": "^2.1.0",
