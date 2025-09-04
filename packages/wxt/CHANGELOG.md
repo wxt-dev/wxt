@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.20.10
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.9...wxt-v0.20.10)
+
+### 🏡 Chore
+
+- **deps:** Upgrade non-breaking production dependencies ([#1877](https://github.com/wxt-dev/wxt/pull/1877))
+- **deps:** Upgrade web-ext-run to support CDP ([#1879](https://github.com/wxt-dev/wxt/pull/1879))
+- **deps:** `publish-browser-extension` upgrade ([#1880](https://github.com/wxt-dev/wxt/pull/1880))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.8...wxt-v0.20.9)
