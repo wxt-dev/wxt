@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.1.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.4...module-react-v1.1.5)
+
+### 🏡 Chore
+
+- **deps:** Support @vitejs/plugin-react@5 ([9170159b](https://github.com/wxt-dev/wxt/commit/9170159b))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v1.1.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.3...module-react-v1.1.4)
