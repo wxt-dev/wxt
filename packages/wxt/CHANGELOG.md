@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.20.11
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.10...wxt-v0.20.11)
+
+### 🩹 Fixes
+
+- Split `wxt/testing` into separate modules to fix issues with `jsdom` and `happy-dom` ([#1844](https://github.com/wxt-dev/wxt/pull/1844))
+- `input_components` is supported by mv3 ([#1881](https://github.com/wxt-dev/wxt/pull/1881))
+
+### 🏡 Chore
+
+- **deps:** Upgrade project subdependencies ([#1882](https://github.com/wxt-dev/wxt/pull/1882))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Qijia Liu <liumeo@pku.edu.cn>
+- Marcellino Ornelas ([@marcellino-ornelas](https://github.com/marcellino-ornelas))
+
 ## v0.20.10
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.9...wxt-v0.20.10)
