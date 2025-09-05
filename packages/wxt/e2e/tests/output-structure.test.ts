@@ -345,7 +345,6 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        var _a, _b;
         import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
         function defineBackground(arg) {
           if (arg == null || typeof arg === "function") return { main: arg };
@@ -357,7 +356,7 @@ describe('Output Directory Structure', () => {
             logHello("background");
           }
         });
-        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
         function print(method, ...args) {
           return;
         }
@@ -423,9 +422,8 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        var background = function() {
+        var background = (function() {
           "use strict";
-          var _a, _b;
           function defineBackground(arg) {
             if (arg == null || typeof arg === "function") return { main: arg };
             return arg;
@@ -440,7 +438,7 @@ describe('Output Directory Structure', () => {
           });
           function initPlugins() {
           }
-          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
+          globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
           function print(method, ...args) {
             return;
           }
@@ -465,7 +463,7 @@ describe('Output Directory Structure', () => {
           }
           const result$1 = result;
           return result$1;
-        }();
+        })();
         "
       `);
   });
