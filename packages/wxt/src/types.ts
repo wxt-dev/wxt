@@ -312,12 +312,14 @@ export interface InlineConfig {
    *
    * The key is the import alias and the value is either a relative path to the root directory or an absolute path.
    *
+   * Set to `false` to disable aliases, including the default ones. This is useful if you want to handle aliases in your own plugin. Note that WXT modules can still add aliases.
+   *
    * @example
    * {
    *   "testing": "src/utils/testing.ts"
    * }
    */
-  alias?: Record<string, string>;
+  alias?: Record<string, string> | false;
   /**
    * Experimental settings - use with caution.
    */
