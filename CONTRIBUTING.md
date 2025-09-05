@@ -40,19 +40,16 @@ Here are some helpful commands:
 
 ```sh
 # Build WXT package
-cd packages/wxt
 pnpm build
 ```
 
 ```sh
 # Build WXT package, then build demo extension
-cd packages/wxt-demo
-pnpm build
+pnpm build:demo
 ```
 
 ```sh
 # Build WXT package, then start the demo extension in dev mode
-cd packages/wxt-demo
 pnpm dev
 ```
 
