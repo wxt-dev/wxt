@@ -1351,7 +1351,6 @@ describe('Manifest Utils', () => {
         event_rules: {},
         file_browser_handlers: {},
         file_system_provider_capabilities: {},
-        input_components: {},
         nacl_modules: {},
         natively_connectable: {},
         offline_enabled: {},
