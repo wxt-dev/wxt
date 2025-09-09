@@ -8,6 +8,7 @@ import type { TargetBrowser } from '../../types';
 export function loadEnv(mode: string, browser: TargetBrowser) {
   return expand(
     config({
+      quiet: true,
       // Files on top override files below
       path: [
         `.env.${mode}.${browser}.local`,
