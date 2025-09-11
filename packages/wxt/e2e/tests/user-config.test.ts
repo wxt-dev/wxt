@@ -150,6 +150,6 @@ describe('User Config', () => {
 
     await expect(
       project.build({ configFile: 'foo.config.ts' }),
-    ).rejects.toThrowError(/not found/);
+    ).rejects.toThrowError(/No entrypoints found/);
   });
 });
