@@ -29,6 +29,7 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { safeVarName } from './utils/strings';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -236,6 +237,7 @@ export async function resolveConfig(
     },
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
+    iifeName: mergedConfig.iifeName ?? safeVarName,
     builtinModules,
     userModules,
     plugins: [],
