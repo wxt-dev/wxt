@@ -374,6 +374,11 @@ export interface InlineConfig {
    * "wxt-module-analytics").
    */
   modules?: string[];
+  /**
+   * The name to use for each entrypoint IIFE global variable.
+   * If not set, a safe variable name will be generated from the entrypoint name.
+   */
+  iifeName?: (entrypointName: string) => string;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -1400,6 +1405,7 @@ export interface ResolvedConfig {
    * ["@wxt-dev/module-vue/plugin", "wxt-module-google-analytics/plugin"]
    */
   plugins: string[];
+  iifeName: (entryPointName: string) => string;
 }
 
 export interface FsCache {

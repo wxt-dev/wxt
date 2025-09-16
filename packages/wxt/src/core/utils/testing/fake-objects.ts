@@ -305,6 +305,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     hooks: {},
     vite: () => ({}),
     plugins: [],
+    iifeName: (entrypointName) => entrypointName,
   };
 });
 

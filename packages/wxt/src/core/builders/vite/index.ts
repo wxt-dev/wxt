@@ -20,7 +20,6 @@ import {
 } from '../../utils/virtual-modules';
 import { Hookable } from 'hookable';
 import { toArray } from '../../utils/arrays';
-import { safeVarName } from '../../utils/strings';
 import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
@@ -109,7 +108,7 @@ export async function createViteBuilder(
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
-    const iifeReturnValueName = safeVarName(entrypoint.name);
+    const iifeReturnValueName = wxtConfig.iifeName(entrypoint.name);
 
     if (
       entrypoint.type === 'content-script-style' ||
