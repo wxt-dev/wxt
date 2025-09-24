@@ -1315,6 +1315,18 @@ describe('Storage Utils', () => {
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
+
+      it('should define a non-null value when options are passed with a non-null init function', () => {
+        const item = storage.defineItem(`local:test`, {
+          init: () => 123,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+
+        const item2 = storage.defineItem(`local:test`, {
+          init: () => Promise.resolve(123),
+        });
+        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
     });
   });
 
