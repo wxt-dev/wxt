@@ -102,6 +102,7 @@ const chromeExtensionIds = [
   'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
   'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
   'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
+  'gpnckbhgpnjciklpoehkmligeaebigaa', // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
