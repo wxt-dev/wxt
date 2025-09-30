@@ -13,7 +13,6 @@ export function createIntegratedUi<TMounted>(
   options: IntegratedContentScriptUiOptions<TMounted>,
 ): IntegratedContentScriptUi<TMounted> {
   const wrapper = document.createElement(options.tag || 'div');
-  wrapper.setAttribute('data-wxt-integrated', '');
 
   let mounted: TMounted | undefined = undefined;
   const mount = () => {
