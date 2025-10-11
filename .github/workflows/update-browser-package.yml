@@ -12,7 +12,8 @@ jobs:
     name: 'Sync with @types/chrome'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Push version changes
+      id-token: write # OIDC for NPM publishing
     steps:
       - name: Checkout
         uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
@@ -42,5 +43,5 @@ jobs:
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm publish
+          sudo npm i -g npm@latest
+          npm publish
