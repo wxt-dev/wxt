@@ -42,5 +42,5 @@ jobs:
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm publish
+          sudo npm i -g npm@latest
+          npm publish
