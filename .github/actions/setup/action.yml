@@ -18,7 +18,7 @@ runs:
       uses: pnpm/action-setup@f2b2b233b538f500472c7274c7012f57857d8ce0 # v4.1.0
 
     - name: 🛠️ Setup NodeJS
-      uses: actions/setup-node@b7234cc9fe124f0f4932554b4e5284543083ae7b # v4.4.0
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
         node-version: 20
         cache: pnpm
