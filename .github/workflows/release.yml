@@ -50,6 +50,9 @@ jobs:
       - name: Update NPM
         run: sudo npm i -g npm@latest
 
+      - name: Print NPM Version
+        run: npm --version
+
       - name: Configure Git
         run: |
           git config user.name 'github-actions[bot]'
