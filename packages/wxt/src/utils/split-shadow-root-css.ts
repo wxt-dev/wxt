@@ -1,6 +1,6 @@
 /** @module wxt/utils/split-shadow-root-css */
 
-const AT_RULE_BLOCKS = /\s*@(?:property|font-face)\b[\s\S]*?{[\s\S]*?}/g;
+const AT_RULE_BLOCKS = /(\s*@(property|font-face)[\s\S]*?{[\s\S]*?})/gm;
 
 /**
  * Given a CSS string that will be loaded into a shadow root, split it into two parts:
