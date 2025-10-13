@@ -47,6 +47,9 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Update NPM
+        run: sudo npm i -g npm@latest
+
       - name: Configure Git
         run: |
           git config user.name 'github-actions[bot]'
@@ -61,9 +64,7 @@ jobs:
 
       - name: Publish to NPM
         working-directory: packages/${{ inputs.package }}
-        run: |
-          sudo npm i -g npm@latest
-          npm publish
+        run: npm publish
 
       - name: Create GitHub release
         run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}

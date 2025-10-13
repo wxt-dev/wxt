@@ -23,6 +23,9 @@ jobs:
         with:
           installArgs: --ignore-scripts
 
+      - name: Update NPM
+        run: sudo npm i -g npm@latest
+
       - name: Generate Latest Code
         working-directory: packages/browser
         run: pnpm gen
@@ -42,6 +45,4 @@ jobs:
       - name: Publish Package
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
-        run: |
-          sudo npm i -g npm@latest
-          npm publish
+        run: npm publish
