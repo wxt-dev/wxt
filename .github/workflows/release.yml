@@ -58,7 +58,9 @@ jobs:
           which npm
 
       - name: Print NPM Version
-        run: npm --version
+        run: |
+          npm --version
+          /usr/local/bin/npm --version
 
       # Disabled until the right version of NPM is installed
       # - name: Configure Git
