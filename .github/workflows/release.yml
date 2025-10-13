@@ -50,6 +50,9 @@ jobs:
       - name: Update NPM
         run: sudo npm i -g npm@latest
 
+      - name: Which NPM
+        run: which -a npm
+
       - name: Print NPM Version
         run: npm --version
 
