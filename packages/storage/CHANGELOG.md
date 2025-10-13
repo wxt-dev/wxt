@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.2...storage-v1.2.3)
+
 ## v1.2.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.1...storage-v1.2.2)
