@@ -24,10 +24,10 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate
-    uses: './.github/workflows/validate.yml'
-    secrets: inherit
+  # validate:
+  #   name: Validate
+  #   uses: './.github/workflows/validate.yml'
+  #   secrets: inherit
 
   publish:
     name: Publish
@@ -35,8 +35,8 @@ jobs:
     permissions:
       contents: write # Push version changes
       id-token: write # OIDC for NPM publishing
-    needs:
-      - validate
+    # needs:
+    #   - validate
     steps:
       - name: Checkout
         uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
@@ -56,23 +56,24 @@ jobs:
       - name: Print NPM Version
         run: npm --version
 
-      - name: Configure Git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global push.followTags true
-
-      - name: Bump and Tag
-        run: |
-          pnpm tsx scripts/bump-package-version.ts ${{ inputs.package }}
-          git push
-          git push --tags
-
-      - name: Publish to NPM
-        working-directory: packages/${{ inputs.package }}
-        run: npm publish
-
-      - name: Create GitHub release
-        run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Disabled until the right version of NPM is installed
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name 'github-actions[bot]'
+      #     git config user.email 'github-actions[bot]@users.noreply.github.com'
+      #     git config --global push.followTags true
+      #
+      # - name: Bump and Tag
+      #   run: |
+      #     pnpm tsx scripts/bump-package-version.ts ${{ inputs.package }}
+      #     git push
+      #     git push --tags
+      #
+      # - name: Publish to NPM
+      #   working-directory: packages/${{ inputs.package }}
+      #   run: npm publish
+      #
+      # - name: Create GitHub release
+      #   run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
