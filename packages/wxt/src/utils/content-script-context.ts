@@ -44,7 +44,6 @@ export class ContentScriptContext implements AbortController {
   );
 
   private id: string;
-  private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
 
@@ -55,12 +54,8 @@ export class ContentScriptContext implements AbortController {
     this.id = Math.random().toString(36).slice(2);
     this.abortController = new AbortController();
 
-    if (this.isTopFrame) {
-      this.stopOldScripts();
-      this.listenForNewerScripts();
-    } else {
-      this.listenForNewerScripts();
-    }
+    this.stopOldScripts();
+    this.listenForNewerScripts();
   }
 
   get signal() {
