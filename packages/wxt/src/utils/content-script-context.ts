@@ -55,8 +55,8 @@ export class ContentScriptContext implements AbortController {
     this.abortController = new AbortController();
 
     if (this.isTopFrame) {
-      this.listenForNewerScripts({ ignoreFirstEvent: true });
       this.stopOldScripts();
+      this.listenForNewerScripts();
     } else {
       this.listenForNewerScripts();
     }
@@ -262,9 +262,7 @@ export class ContentScriptContext implements AbortController {
     return isSameContentScript && isNotDuplicate;
   }
 
-  listenForNewerScripts(options?: { ignoreFirstEvent?: boolean }) {
-    let isFirst = true;
-
+  listenForNewerScripts() {
     const cb: EventListener = (event) => {
       if (
         !(event instanceof CustomEvent) ||
@@ -274,12 +272,6 @@ export class ContentScriptContext implements AbortController {
       }
 
       this.receivedMessageIds.add(event.detail.messageId);
-
-      const wasFirst = isFirst;
-      isFirst = false;
-      if (wasFirst && options?.ignoreFirstEvent) {
-        return;
-      }
       this.notifyInvalidated();
     };
 
