@@ -43,15 +43,16 @@ export class ContentScriptContext implements AbortController {
     'wxt:content-script-started',
   );
 
+  private id: string;
   private isTopFrame = window.self === window.top;
   private abortController: AbortController;
   private locationWatcher = createLocationWatcher(this);
-  private receivedMessageIds = new Set<string>();
 
   constructor(
     private readonly contentScriptName: string,
     public readonly options?: Omit<ContentScriptDefinition, 'main'>,
   ) {
+    this.id = Math.random().toString(36).slice(2);
     this.abortController = new AbortController();
 
     if (this.isTopFrame) {
@@ -247,7 +248,7 @@ export class ContentScriptContext implements AbortController {
       new CustomEvent(ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE, {
         detail: {
           contentScriptName: this.contentScriptName,
-          messageId: Math.random().toString(36).slice(2),
+          messageId: this.id,
         },
       }),
     );
@@ -256,10 +257,9 @@ export class ContentScriptContext implements AbortController {
   verifyScriptStartedEvent(event: CustomEvent) {
     const isSameContentScript =
       event.detail?.contentScriptName === this.contentScriptName;
-    const isNotDuplicate = !this.receivedMessageIds.has(
-      event.detail?.messageId,
-    );
-    return isSameContentScript && isNotDuplicate;
+    // Handle case where website dispatches the event again for some reason
+    const isFromSelf = event.detail?.messageId === this.id;
+    return isSameContentScript && !isFromSelf;
   }
 
   listenForNewerScripts() {
@@ -270,8 +270,6 @@ export class ContentScriptContext implements AbortController {
       ) {
         return;
       }
-
-      this.receivedMessageIds.add(event.detail.messageId);
       this.notifyInvalidated();
     };
 
