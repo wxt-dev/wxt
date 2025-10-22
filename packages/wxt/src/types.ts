@@ -1029,7 +1029,7 @@ export interface WxtBuilder {
   /**
    * Import a JS entrypoint file, returning the default export containing the options.
    */
-  importEntrypoint<T>(path: string): Promise<T>;
+  importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
   /**
    * Import a list of JS entrypoint files, returning their options.
    */
