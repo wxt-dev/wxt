@@ -12,15 +12,19 @@ jobs:
     name: 'Sync with @types/chrome'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Push version changes
+      id-token: write # OIDC for NPM publishing
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
 
       - name: Setup
         uses: ./.github/actions/setup
         with:
           installArgs: --ignore-scripts
+
+      - name: Update NPM
+        run: sudo npm i -g npm@latest
 
       - name: Generate Latest Code
         working-directory: packages/browser
@@ -32,7 +36,7 @@ jobs:
 
       - name: Commit Changes
         id: commit
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -41,6 +45,4 @@ jobs:
       - name: Publish Package
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm publish
+        run: npm publish

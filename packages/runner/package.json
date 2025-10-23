@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/runner",
   "description": "Launch Chrome and Firefox with a web extension installed",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "repository": {
     "type": "git",
@@ -29,13 +29,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
-    "oxlint": "^0.16.8",
+    "@aklinker1/check": "^2.1.0",
+    "oxlint": "^1.14.0",
     "publint": "^0.3.12",
-    "tsx": "4.19.4",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
-    "vitest": "^3.1.2"
+    "tsx": "4.20.5",
+    "typescript": "^5.9.2",
+    "unbuild": "^3.6.1",
+    "vitest": "^3.2.4"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

@@ -39,6 +39,7 @@ export function createWebExtRunner(): ExtensionRunner {
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
+        chromiumPort: wxtUserConfig?.chromiumPort,
         ...(wxt.config.browser === 'firefox'
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
@@ -55,7 +56,6 @@ export function createWebExtRunner(): ExtensionRunner {
               ),
               args: [
                 '--unsafely-disable-devtools-self-xss-warnings',
-                '--disable-features=DisableLoadExtensionCommandLineSwitch',
                 ...(wxtUserConfig?.chromiumArgs ?? []),
               ],
             }),
