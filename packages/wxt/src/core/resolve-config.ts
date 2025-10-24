@@ -532,17 +532,10 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 function resolveWxtModuleDir() {
-  // TODO: Drop the __filename expression once we're fully running in ESM
-  // (see https://github.com/wxt-dev/wxt/issues/277)
-  const importer =
-    typeof __filename === 'string'
-      ? pathToFileURL(__filename).href
-      : import.meta.url;
-
   // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
   // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
   // have it.
-  const url = esmResolve('wxt', importer);
+  const url = esmResolve('wxt', import.meta.url);
 
   // esmResolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
