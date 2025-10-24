@@ -573,8 +573,8 @@ export async function mergeBuilderConfig(
   if (vite) {
     return {
       vite: async (env) => {
-        const resolvedInlineConfig = (await inlineConfig.vite?.(env)) ?? {};
-        const resolvedUserConfig = (await userConfig.vite?.(env)) ?? {};
+        const [resolvedInlineConfig = {}, resolvedUserConfig = {}] =
+          await Promise.all([inlineConfig.vite?.(env), userConfig.vite?.(env)]);
         return vite.mergeConfig(resolvedUserConfig, resolvedInlineConfig);
       },
     };

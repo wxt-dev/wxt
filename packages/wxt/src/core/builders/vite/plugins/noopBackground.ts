@@ -1,4 +1,4 @@
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../../utils/constants';
 
 /**
