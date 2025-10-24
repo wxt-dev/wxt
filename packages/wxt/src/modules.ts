@@ -171,7 +171,7 @@ export function addImportPreset(
     if (!wxt.config.imports) return;
 
     wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
+    // De-duplicate built-in named presets
     if (wxt.config.imports.presets.includes(preset)) return;
 
     wxt.config.imports.presets.push(preset);
