@@ -11,6 +11,7 @@ jobs:
   sync:
     name: 'Sync with @types/chrome'
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'wxt-dev'
     permissions:
       contents: write # Push version changes
       id-token: write # OIDC for NPM publishing
