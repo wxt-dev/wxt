@@ -62,7 +62,9 @@ jobs:
       - name: Publish to NPM
         working-directory: packages/${{ inputs.package }}
         run: |
-          pnpm publish
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz
 
       - name: Create GitHub release
         run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
