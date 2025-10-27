@@ -59,7 +59,8 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "@algolia/client-search",
-        "search-insights"
+        "search-insights",
+        "svelte"
       ]
     },
     "patchedDependencies": {

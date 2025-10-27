@@ -8,3 +8,4 @@ onlyBuiltDependencies:
   - sharp
   - simple-git-hooks
   - spawn-sync
+autoInstallPeers: false
