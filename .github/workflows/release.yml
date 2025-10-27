@@ -31,9 +31,10 @@ jobs:
 
   publish:
     name: Publish
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
-      contents: write
+      contents: write # Push version changes
+      id-token: write # OIDC for NPM publishing
     needs:
       - validate
     steps:
@@ -61,9 +62,9 @@ jobs:
       - name: Publish to NPM
         working-directory: packages/${{ inputs.package }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm build
-          pnpm publish
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz
 
       - name: Create GitHub release
         run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
