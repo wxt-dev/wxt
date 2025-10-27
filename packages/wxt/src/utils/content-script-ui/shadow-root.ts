@@ -54,7 +54,7 @@ export async function createShadowRootUi<TMounted>(
   const mount = () => {
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
-    applyPosition(shadowHost, shadow.querySelector('html'), options);
+    applyPosition(shadowHost, uiContainer, options);
 
     // Add document CSS
     if (
