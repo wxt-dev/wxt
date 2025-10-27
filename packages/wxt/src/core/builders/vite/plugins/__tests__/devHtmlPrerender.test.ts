@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Window } from 'happy-dom';
 import { pointToDevServer } from '../devHtmlPrerender';
 import {
   fakeDevServer,
@@ -7,6 +6,7 @@ import {
 } from '../../../../utils/testing/fake-objects';
 import { normalizePath } from '../../../../utils/paths';
 import { resolve } from 'node:path';
+import { parseHTML } from 'linkedom';
 
 describe('Dev HTML Prerender Plugin', () => {
   describe('pointToDevServer', () => {
@@ -32,9 +32,7 @@ describe('Dev HTML Prerender Plugin', () => {
       // URLs should not be changed
       ['https://example.com/style.css', 'https://example.com/style.css'],
     ])('should transform "%s" into "%s"', (input, expected) => {
-      const { document } = new Window({
-        url: 'http://localhost',
-      });
+      const { document } = parseHTML('<html></html>');
       const root = '/some/root';
       const config = fakeResolvedConfig({
         root,
@@ -55,7 +53,7 @@ describe('Dev HTML Prerender Plugin', () => {
       const id = root + '/entrypoints/popup/index.html';
 
       document.head.innerHTML = `<link rel="stylesheet" href="${input}" />`;
-      pointToDevServer(config, server, id, document as any, 'link', 'href');
+      pointToDevServer(config, server, id, document, 'link', 'href');
 
       const actual = document.querySelector('link')!;
       expect(actual.getAttribute('href')).toBe(expected);
