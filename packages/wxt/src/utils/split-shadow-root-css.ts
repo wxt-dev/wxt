@@ -12,13 +12,10 @@ export function splitShadowRootCss(css: string): {
   documentCss: string;
   shadowCss: string;
 } {
-  const documentCss = Array
-    .from(css.matchAll(AT_RULE_BLOCKS), (m) => m[0])
-    .join("")
+  const documentCss = Array.from(css.matchAll(AT_RULE_BLOCKS), (m) => m[0])
+    .join('')
     .trim();
-  const shadowCss = css
-    .replace(AT_RULE_BLOCKS, "")
-    .trim();
+  const shadowCss = css.replace(AT_RULE_BLOCKS, '').trim();
 
   return {
     documentCss: documentCss,
