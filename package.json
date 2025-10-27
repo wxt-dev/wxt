@@ -20,7 +20,7 @@
     "@aklinker1/buildc": "^1.1.5",
     "@aklinker1/check": "^2.1.2",
     "@commitlint/config-conventional": "^19.8.1",
-    "@commitlint/types": "^19.8.1",
+    "@commitlint/types": "^20.0.0",
     "@types/fs-extra": "^11.0.4",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^3.2.4",
