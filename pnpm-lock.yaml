@@ -578,9 +578,6 @@ importers:
       unimport:
         specifier: ^3.13.1 || ^4.0.0 || ^5.0.0
         version: 3.13.1(rollup@4.34.9)(webpack-sources@3.2.3)
-      vite:
-        specifier: ^5.4.19 || ^6.3.4 || ^7.0.0
-        version: 6.3.5(@types/node@20.17.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0)
       vite-node:
         specifier: ^2.1.4 || ^3.1.2
         version: 3.2.0(@types/node@20.17.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0)
@@ -630,6 +627,9 @@ importers:
       unbuild:
         specifier: ^3.5.0
         version: 3.5.0(sass@1.89.1)(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@20.17.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0)
       vitest:
         specifier: ^3.1.2
         version: 3.2.0(@types/debug@4.1.12)(@types/node@20.17.30)(happy-dom@17.5.6)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.7.0)
