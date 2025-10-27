@@ -9,3 +9,10 @@ onlyBuiltDependencies:
   - simple-git-hooks
   - spawn-sync
 autoInstallPeers: false
+patchedDependencies:
+  markdown-it-footnote: patches/markdown-it-footnote.patch
+peerDependencyRules:
+  ignoreMissing:
+    - '@algolia/client-search'
+    - search-insights
+    - svelte
