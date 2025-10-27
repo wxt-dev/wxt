@@ -71,6 +71,7 @@
     "@types/normalize-path": "^3.0.2",
     "@types/prompts": "^2.4.9",
     "extract-zip": "^2.0.1",
+    "happy-dom": "^18.0.1",
     "lodash.merge": "^4.6.2",
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
