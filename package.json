@@ -54,16 +54,5 @@
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search",
-        "search-insights"
-      ]
-    },
-    "patchedDependencies": {
-      "markdown-it-footnote": "patches/markdown-it-footnote.patch"
-    }
   }
 }
