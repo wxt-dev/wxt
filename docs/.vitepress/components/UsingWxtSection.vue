@@ -102,6 +102,7 @@ const chromeExtensionIds = [
   'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
   'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
   'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
+  'fbgblmjbeebanackldpbmpacppflgmlj', // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
