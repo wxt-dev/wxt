@@ -7,6 +7,7 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-22.04
+    if: github.repository_owner == 'wxt-dev'
     steps:
       - name: Checkout
         uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0

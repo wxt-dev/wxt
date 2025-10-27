@@ -103,6 +103,12 @@ const chromeExtensionIds = [
   'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
   'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
   'cndibmoanboadcifjkjbdpjgfedanolh'  // BetterCampus (prev. BetterCanvas)
+  'hinfimgacobnellbncbcpdlpaapcofaa', // Leetcode Fonts - Change fonts in leetcode effortlessly
+  'kbkbfefhhabpkibojinapkkgciiacggg', // TranslateManga - Manga Translator & Manga Tracker
+  'emeakbgdecgmdjgegnejpppcnkcnoaen', // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
+  'gpnckbhgpnjciklpoehkmligeaebigaa', // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
+  'fjlalaedpfcojcfpkgkglbjjbbkofgnl', // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
+  'fbgblmjbeebanackldpbmpacppflgmlj', // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
