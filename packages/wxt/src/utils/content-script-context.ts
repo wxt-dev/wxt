@@ -247,6 +247,17 @@ export class ContentScriptContext implements AbortController {
         },
       }),
     );
+
+    // Send message using `window.postMessage` for backwards compatibility to invalidate old versions before WXT changed to `document.dispatchEvent`
+    // TODO: Remove this once WXT version using `document.dispatchEvent` has been released for a while
+    window.postMessage(
+      {
+        type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
+        contentScriptName: this.contentScriptName,
+        messageId: this.id,
+      },
+      '*',
+    );
   }
 
   verifyScriptStartedEvent(event: CustomEvent) {
