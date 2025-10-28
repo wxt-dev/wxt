@@ -12974,6 +12974,9 @@ export namespace Browser {
         ): Promise<GetFrameResultDetails | null>;
         function getFrame(
             details: GetFrameDetails,
+        ): Promise<GetFrameResultDetails | null>;
+        export function getFrame(
+            details: GetFrameDetails,
             callback: (details: GetFrameResultDetails | null) => void,
         ): void;
 
