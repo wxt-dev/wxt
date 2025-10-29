@@ -21,9 +21,6 @@ import {
 import { Hookable } from 'hookable';
 import { toArray } from '../../utils/arrays';
 import { safeVarName } from '../../utils/strings';
-import { ViteNodeServer } from 'vite-node/server';
-import { ViteNodeRunner } from 'vite-node/client';
-import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
 import { dirname, extname, join, relative } from 'node:path';
 import fs from 'fs-extra';
@@ -71,7 +68,6 @@ export async function createViteBuilder(
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};
-    // @ts-ignore: Untyped option:
     config.legacy.skipWebSocketTokenCheck = true;
 
     const server = getWxtDevServer?.();
@@ -90,8 +86,9 @@ export async function createViteBuilder(
       wxtPlugins.resolveAppConfig(wxtConfig),
     );
     if (
+      // TODO: Should this be migrated to use perEnvironmentState?
       wxtConfig.analysis.enabled &&
-      // If included, vite-node entrypoint loader will increment the
+      // If included, entrypoint loader will increment the
       // bundleAnalysis's internal build index tracker, which we don't want
       !baseConfigOptions?.excludeAnalysisPlugin
     ) {
@@ -224,8 +221,7 @@ export async function createViteBuilder(
       },
     };
   };
-
-  const createViteNodeImporter = async (paths: string[]) => {
+  const createImporterEnvironment = async (paths: string[]) => {
     const baseConfig = await getBaseConfig({
       excludeAnalysisPlugin: true,
     });
@@ -238,33 +234,47 @@ export async function createViteBuilder(
         wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
       ),
     };
-    const config = vite.mergeConfig(baseConfig, envConfig);
-    const server = await vite.createServer(config);
-    await server.pluginContainer.buildStart({});
-    const node = new ViteNodeServer(
-      // @ts-ignore: Some weird type error...
-      server,
+    const importerConfig = vite.mergeConfig(baseConfig, envConfig);
+
+    const config = await vite.resolveConfig(
+      vite.mergeConfig(importerConfig || {}, {
+        configFile: false,
+        envDir: false,
+        cacheDir: process.cwd(),
+        environments: {
+          inline: {
+            consumer: 'server',
+            dev: {
+              moduleRunnerTransform: true,
+            },
+            resolve: {
+              external: true,
+              mainFields: [],
+              conditions: ['node'],
+            },
+          },
+        },
+      } satisfies vite.InlineConfig),
+      'serve',
     );
-    installSourcemapsSupport({
-      getSourceMap: (source) => node.getSourceMap(source),
-    });
-    const runner = new ViteNodeRunner({
-      root: server.config.root,
-      base: server.config.base,
-      // when having the server and runner in a different context,
-      // you will need to handle the communication between them
-      // and pass to this function
-      fetchModule(id) {
-        return node.fetchModule(id);
+
+    const environment = vite.createRunnableDevEnvironment('inline', config, {
+      runnerOptions: {
+        hmr: {
+          logger: false,
+        },
       },
-      resolveId(id, importer) {
-        return node.resolveId(id, importer);
-      },
+      hot: false,
     });
-    return { runner, server };
+    await environment.init();
+
+    return environment;
   };
 
-  const requireDefaultExport = (path: string, mod: any) => {
+  function requireDefaultExport(
+    path: string,
+    mod: any,
+  ): asserts mod is { default: unknown } {
     const relativePath = relative(wxtConfig.root, path);
     if (mod?.default == null) {
       const defineFn = relativePath.includes('.content')
@@ -277,36 +287,37 @@ export async function createViteBuilder(
         `${relativePath}: Default export not found, did you forget to call "export default ${defineFn}(...)"?`,
       );
     }
-  };
+  }
 
   return {
     name: 'Vite',
     version: vite.version,
     async importEntrypoint(path) {
-      const env = createExtensionEnvironment();
-      const { runner, server } = await createViteNodeImporter([path]);
-      const res = await env.run(() => runner.executeFile(path));
-      await server.close();
-      requireDefaultExport(path, res);
-      return res.default;
+      const [module] = await this.importEntrypoints([path]);
+
+      return module as any;
     },
     async importEntrypoints(paths) {
-      const env = createExtensionEnvironment();
-      const { runner, server } = await createViteNodeImporter(paths);
-      const res = await env.run(() =>
-        Promise.all(
-          paths.map(async (path) => {
-            const mod = await runner.executeFile(path);
-            requireDefaultExport(path, mod);
-            return mod.default;
-          }),
-        ),
-      );
-      await server.close();
-      return res;
+      const context = createExtensionEnvironment();
+      const environment = await createImporterEnvironment(paths);
+
+      try {
+        return await context.run(
+          async () =>
+            await Promise.all(
+              paths.map(async (path) => {
+                const module = await environment.runner.import(path);
+                requireDefaultExport(path, module);
+                return module.default as any;
+              }),
+            ),
+        );
+      } finally {
+        await environment.close();
+      }
     },
     async build(group) {
-      let entryConfig;
+      let entryConfig: vite.InlineConfig;
       if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
       else if (
         group.type === 'content-script-style' ||
@@ -315,12 +326,16 @@ export async function createViteBuilder(
         entryConfig = getCssConfig(group);
       else entryConfig = getLibModeConfig(group);
 
-      const buildConfig = vite.mergeConfig(await getBaseConfig(), entryConfig);
+      const buildConfig: vite.InlineConfig = vite.mergeConfig(
+        await getBaseConfig(),
+        entryConfig,
+      );
       await hooks.callHook(
         'vite:build:extendConfig',
         toArray(group),
         buildConfig,
       );
+
       const result = await vite.build(buildConfig);
       const chunks = getBuildOutputChunks(result);
       return {
