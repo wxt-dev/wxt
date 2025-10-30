@@ -1,5 +1,6 @@
 /** @module wxt/utils/inject-script */
 import { browser } from 'wxt/browser';
+import { waitForScriptResultEvent } from './internal/script-result';
 
 export type ScriptPublicPath = Extract<
   // @ts-expect-error: PublicPath is generated per-project
@@ -15,11 +16,14 @@ export type ScriptPublicPath = Extract<
  *
  * Make sure to add the injected script to your manifest's
  * `web_accessible_resources`.
+ *
+ * @returns A result object containing the created script element and the return
+ * value of the script.
  */
 export async function injectScript(
   path: ScriptPublicPath,
   options?: InjectScriptOptions,
-): Promise<void> {
+): Promise<InjectScriptResult> {
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
@@ -32,11 +36,46 @@ export async function injectScript(
     script.src = url;
   }
 
-  if (!options?.keepInDom) {
-    script.onload = () => script.remove();
-  }
+  const loadedPromise = makeLoadedPromise(script);
+  const resultPromise = waitForScriptResultEvent(script);
+
+  await options?.modifyScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
+
+  if (!options?.keepInDom) {
+    script.remove();
+  }
+
+  await loadedPromise;
+  const result = await resultPromise;
+
+  return {
+    script,
+    result,
+  };
+}
+
+function makeLoadedPromise(script: HTMLScriptElement): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const onload = () => {
+      resolve();
+      cleanup();
+    };
+
+    const onerror = () => {
+      reject(new Error(`Failed to load script: ${script.src}`));
+      cleanup();
+    };
+
+    const cleanup = () => {
+      script.removeEventListener('load', onload);
+      script.removeEventListener('error', onerror);
+    };
+
+    script.addEventListener('load', onload);
+    script.addEventListener('error', onerror);
+  });
 }
 
 export interface InjectScriptOptions {
@@ -45,4 +84,25 @@ export interface InjectScriptOptions {
    * injected. To disable this behavior, set this flag to true.
    */
   keepInDom?: boolean;
+  /**
+   * Modify the script element just before it is added to the DOM.
+   *
+   * It can be used to e.g. modify `script.async`/`script.defer`, add event
+   * listeners to the element, or pass data to the script via `script.dataset`
+   * (which can be accessed by the script via `document.currentScript`).
+   */
+  modifyScript?: (script: HTMLScriptElement) => Promise<void> | void;
+}
+
+export interface InjectScriptResult {
+  /**
+   * The created script element. It can be used to e.g. send messages to the
+   * script in the form of custom events. The script can add an event listener
+   * for them via `document.currentScript`.
+   */
+  script: HTMLScriptElement;
+  /**
+   * The return value of the script.
+   */
+  result: unknown;
 }
