@@ -9225,6 +9225,11 @@ export namespace Browser {
             | "webRequestBlocking"
             | "webRequestAuthProvider";
 
+        /**
+         * @deprecated Use `ManifestPermission` instead.
+         */
+        export type ManifestPermissions = ManifestPermission;
+
         /** Source : https://developer.chrome.com/docs/extensions/reference/api/permissions */
         type ManifestOptionalPermission = Exclude<
             ManifestPermission,
