@@ -118,6 +118,17 @@ export async function generateManifest(
       ? undefined
       : versionName;
 
+  // Warn if building for Firefox without data_collection_permissions
+  if (
+    wxt.config.browser === 'firefox' &&
+    !userManifest.browser_specific_settings?.gecko?.data_collection_permissions
+  ) {
+    wxt.logger.warn(
+      'Firefox requires explicit data collection permissions. Consider adding `data_collection_permissions` to your manifest config.\n' +
+        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
