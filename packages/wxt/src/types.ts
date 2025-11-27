@@ -1448,13 +1448,30 @@ export interface Eslintrc {
   globalsPropValue?: EslintGlobalsPropValue;
 }
 
-export interface ResolvedEslintrc {
-  /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | 8 | 9;
+interface ResolvedEslintrcBase {
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;
 }
+
+export interface ResolvedEslintrc8 extends ResolvedEslintrcBase {
+  enabled: 8;
+}
+
+export interface ResolvedEslintrc9 extends ResolvedEslintrcBase {
+  enabled: 9;
+  definitionPath: string;
+}
+
+interface ResolvedEslintrcDisabled {
+  /** False if disabled, otherwise the major version of ESLint installed */
+  enabled: false;
+}
+
+export type ResolvedEslintrcEnabled = ResolvedEslintrc8 | ResolvedEslintrc9;
+export type ResolvedEslintrc =
+  | ResolvedEslintrcDisabled
+  | ResolvedEslintrcEnabled;
 
 export type WxtUnimportOptions = Partial<UnimportOptions> & {
   /**

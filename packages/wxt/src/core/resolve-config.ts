@@ -522,12 +522,22 @@ async function getUnimportEslintOptions(
       enabled = inlineEnabled;
   }
 
+  if (enabled === false) {
+    return { enabled: false };
+  }
+
+  if (enabled === 9) {
+    return {
+      enabled: 9,
+      filePath: path.resolve(wxtDir, 'eslint-auto-imports.mjs'),
+      definitionPath: path.resolve(wxtDir, 'eslint-auto-imports.d.mts'),
+      globalsPropValue: true,
+    };
+  }
+
   return {
     enabled,
-    filePath: path.resolve(
-      wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
-    ),
+    filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
     globalsPropValue: true,
   };
 }
