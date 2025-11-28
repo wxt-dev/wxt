@@ -14,6 +14,8 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
+  ResolvedEslintrcLegacy,
+  Eslintrc,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -491,54 +493,64 @@ async function getUnimportOptions(
     disabled,
   };
 
-  return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
-    config.imports ?? {},
-    defaultOptions,
-  );
+  const importsCopy = {
+    ...(config.imports || {}),
+    eslintrc: undefined,
+  };
+
+  // @ts-expect-error merging objects with different types may create unexpected behavior
+  return defu(importsCopy, defaultOptions);
 }
 
 async function getUnimportEslintOptions(
   wxtDir: string,
   options: InlineConfig['imports'],
-): Promise<ResolvedEslintrc> {
-  const inlineEnabled =
-    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+): Promise<ResolvedEslintrc | ResolvedEslintrcLegacy | undefined> {
+  if (options === false) return undefined;
 
-  let enabled: ResolvedEslintrc['enabled'];
-  switch (inlineEnabled) {
-    case 'auto':
-      const version = await getEslintVersion();
-      let major = parseInt(version[0]);
-      if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
-      // NaN
-      else enabled = false;
-      break;
-    case true:
-      enabled = 8;
-      break;
-    default:
-      enabled = inlineEnabled;
+  const enabled = options?.eslintrc?.enabled;
+  if (enabled === false) return undefined;
+
+  const isLegacy = enabled === true || enabled === 8;
+  if (isLegacy) return getEslintLegacyConfig(wxtDir, options.eslintrc);
+  if (enabled === 9) return getEslintConfig(wxtDir, options.eslintrc);
+
+  // Auto-detect ESLint version
+
+  const version = await getEslintVersion();
+  const major = parseInt(version[0]);
+
+  if (Number.isNaN(major)) return undefined;
+
+  if (major >= 9) {
+    return getEslintConfig(wxtDir, options.eslintrc);
+  } else {
+    return getEslintLegacyConfig(wxtDir, options.eslintrc);
   }
+}
 
-  if (enabled === false) {
-    return { enabled: false };
-  }
-
-  if (enabled === 9) {
-    return {
-      enabled: 9,
-      filePath: path.resolve(wxtDir, 'eslint-auto-imports.mjs'),
-      definitionPath: path.resolve(wxtDir, 'eslint-auto-imports.d.mts'),
-      globalsPropValue: true,
-    };
-  }
-
+function getEslintConfig(
+  wxtDir: string,
+  eslintrc: Eslintrc | undefined,
+): ResolvedEslintrc {
   return {
-    enabled,
-    filePath: path.resolve(wxtDir, 'eslintrc-auto-import.json'),
-    globalsPropValue: true,
+    legacy: false,
+    filePath:
+      eslintrc?.filePath || path.resolve(wxtDir, 'eslint-auto-imports.mjs'),
+    definitionPath: path.resolve(wxtDir, 'eslint-auto-imports.d.mts'),
+    globalsPropValue: eslintrc?.globalsPropValue ?? true,
+  };
+}
+
+function getEslintLegacyConfig(
+  wxtDir: string,
+  eslintrc: Eslintrc | undefined,
+): ResolvedEslintrcLegacy {
+  return {
+    legacy: true,
+    filePath:
+      eslintrc?.filePath || path.resolve(wxtDir, 'eslintrc-auto-import.json'),
+    globalsPropValue: eslintrc?.globalsPropValue ?? true,
   };
 }
 

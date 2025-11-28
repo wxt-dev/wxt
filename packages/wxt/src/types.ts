@@ -1448,30 +1448,20 @@ export interface Eslintrc {
   globalsPropValue?: EslintGlobalsPropValue;
 }
 
-interface ResolvedEslintrcBase {
+export interface ResolvedEslintrcLegacy {
+  legacy: true;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;
 }
 
-export interface ResolvedEslintrc8 extends ResolvedEslintrcBase {
-  enabled: 8;
-}
-
-export interface ResolvedEslintrc9 extends ResolvedEslintrcBase {
-  enabled: 9;
+export interface ResolvedEslintrc {
+  legacy: false;
+  /** Absolute path */
+  filePath: string;
   definitionPath: string;
+  globalsPropValue: EslintGlobalsPropValue;
 }
-
-interface ResolvedEslintrcDisabled {
-  /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false;
-}
-
-export type ResolvedEslintrcEnabled = ResolvedEslintrc8 | ResolvedEslintrc9;
-export type ResolvedEslintrc =
-  | ResolvedEslintrcDisabled
-  | ResolvedEslintrcEnabled;
 
 export type WxtUnimportOptions = Partial<UnimportOptions> & {
   /**
@@ -1491,7 +1481,9 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
    * You don't need to check this value before modifying the auto-import options. Even if `disabled` is `true`, there's no harm in adding imports to the config - they'll just be ignored.
    */
   disabled: boolean;
-  eslintrc: ResolvedEslintrc;
+
+  /** undefined if disabled */
+  eslintrc: ResolvedEslintrc | ResolvedEslintrcLegacy | undefined;
 };
 
 /**

@@ -1,9 +1,8 @@
 import { addViteConfig, defineWxtModule } from '../modules';
 import type {
   EslintGlobalsPropValue,
-  ResolvedEslintrc8,
-  ResolvedEslintrc9,
-  ResolvedEslintrcEnabled,
+  ResolvedEslintrc,
+  ResolvedEslintrcLegacy,
   Wxt,
   WxtDirFileEntry,
   WxtModule,
@@ -51,7 +50,7 @@ export default defineWxtModule({
       // Only create global types when user has enabled auto-imports
       entries.push(await getImportsDeclarationEntry(unimport));
 
-      if (wxt.config.imports.eslintrc.enabled === false) return;
+      if (!wxt.config.imports.eslintrc) return;
 
       // Only generate ESLint config if that feature is enabled
       const eslintConfigEntries = await getEslintConfigEntries(
@@ -104,7 +103,7 @@ async function getImportsModuleEntry(
 
 async function getEslintConfigEntries(
   unimport: Unimport,
-  eslintrc: ResolvedEslintrcEnabled,
+  eslintrc: ResolvedEslintrc | ResolvedEslintrcLegacy,
 ): Promise<WxtDirFileEntry[]> {
   const globals = (await unimport.getImports())
     .map((i) => i.as ?? i.name)
@@ -115,15 +114,15 @@ async function getEslintConfigEntries(
       return globals;
     }, {});
 
-  if (eslintrc.enabled === 9) {
-    return getEslint9ConfigEntry(eslintrc, globals);
+  if (eslintrc.legacy) {
+    return [getEslintLegacyConfigEntry(eslintrc, globals)];
   } else {
-    return [getEslint8ConfigEntry(eslintrc, globals)];
+    return getEslintConfigEntry(eslintrc, globals);
   }
 }
 
-export function getEslint8ConfigEntry(
-  eslintrc: ResolvedEslintrc8,
+export function getEslintLegacyConfigEntry(
+  eslintrc: ResolvedEslintrcLegacy,
   globals: Record<string, EslintGlobalsPropValue>,
 ): WxtDirFileEntry {
   return {
@@ -132,8 +131,8 @@ export function getEslint8ConfigEntry(
   };
 }
 
-export function getEslint9ConfigEntry(
-  eslintrc: ResolvedEslintrc9,
+export function getEslintConfigEntry(
+  eslintrc: ResolvedEslintrc,
   globals: Record<string, EslintGlobalsPropValue>,
 ): WxtDirFileEntry[] {
   const jsFileEntry: WxtDirFileEntry = {
