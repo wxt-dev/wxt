@@ -9629,6 +9629,13 @@ export namespace Browser {
          */
         function getVersion(): string;
 
+        /**
+         * Returns the extension's version as declared in the manifest.
+         * @returns The extension's version.
+         * @since Chrome 143
+         */
+        export function getVersion(): string;
+
         /** Reloads the app or extension. This method is not supported in kiosk mode. For kiosk mode, use {@link Browser.runtime.restart()} method. */
         function reload(): void;
 
