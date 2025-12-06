@@ -495,6 +495,7 @@ async function getUnimportOptions(
 
   const importsCopy = {
     ...(config.imports || {}),
+    // NOTE: `eslintrc` is resolved separately above
     eslintrc: undefined,
   };
 
@@ -533,11 +534,16 @@ function getEslintConfig(
   wxtDir: string,
   eslintrc: Eslintrc | undefined,
 ): ResolvedEslintrc {
+  const filePath =
+    eslintrc?.filePath || path.resolve(wxtDir, 'eslint-auto-imports.mjs');
+  const definitionPath =
+    eslintrc?.definitionPath ||
+    path.resolve(wxtDir, 'eslint-auto-imports.d.mts');
+
   return {
     legacy: false,
-    filePath:
-      eslintrc?.filePath || path.resolve(wxtDir, 'eslint-auto-imports.mjs'),
-    definitionPath: path.resolve(wxtDir, 'eslint-auto-imports.d.mts'),
+    filePath,
+    definitionPath,
     globalsPropValue: eslintrc?.globalsPropValue ?? true,
   };
 }
@@ -546,10 +552,12 @@ function getEslintLegacyConfig(
   wxtDir: string,
   eslintrc: Eslintrc | undefined,
 ): ResolvedEslintrcLegacy {
+  const filePath =
+    eslintrc?.filePath || path.resolve(wxtDir, 'eslintrc-auto-import.json');
+
   return {
     legacy: true,
-    filePath:
-      eslintrc?.filePath || path.resolve(wxtDir, 'eslintrc-auto-import.json'),
+    filePath,
     globalsPropValue: eslintrc?.globalsPropValue ?? true,
   };
 }
