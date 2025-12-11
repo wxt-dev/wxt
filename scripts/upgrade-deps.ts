@@ -253,7 +253,6 @@ async function detectUpgrades(
     const latestVersion = dep.info['dist-tags'].latest;
     const latestVersionReleasedAt = new Date(dep.info.time[latestVersion]);
 
-    semver.RELEASE_TYPES;
     const upgradeToVersion = isMajor
       ? // Always use the latest version for major upgrades
         latestVersion
