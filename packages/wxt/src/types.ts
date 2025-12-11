@@ -1434,6 +1434,7 @@ export interface Eslintrc {
    * @default 'auto'
    */
   enabled?: false | true | 'auto' | 8 | 9;
+
   /**
    * File path to save the generated eslint config.
    *
@@ -1442,17 +1443,34 @@ export interface Eslintrc {
    * - 8 and below: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
+
+  /**
+   * File path to the TypeScript definition file to use for auto-imported variables.
+   * Needs to match the definition file path for `filePath`
+   *
+   * Default:
+   * - 9 and above: './.wxt/types/wxt-auto-imports.d.mts'
+   */
+  definitionPath?: string;
+
   /**
    * @default true
    */
   globalsPropValue?: EslintGlobalsPropValue;
 }
 
-export interface ResolvedEslintrc {
-  /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | 8 | 9;
+export interface ResolvedEslintrcLegacy {
+  legacy: true;
   /** Absolute path */
   filePath: string;
+  globalsPropValue: EslintGlobalsPropValue;
+}
+
+export interface ResolvedEslintrc {
+  legacy: false;
+  /** Absolute path */
+  filePath: string;
+  definitionPath: string;
   globalsPropValue: EslintGlobalsPropValue;
 }
 
@@ -1474,7 +1492,9 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
    * You don't need to check this value before modifying the auto-import options. Even if `disabled` is `true`, there's no harm in adding imports to the config - they'll just be ignored.
    */
   disabled: boolean;
-  eslintrc: ResolvedEslintrc;
+
+  /** undefined if disabled */
+  eslintrc: ResolvedEslintrc | ResolvedEslintrcLegacy | undefined;
 };
 
 /**

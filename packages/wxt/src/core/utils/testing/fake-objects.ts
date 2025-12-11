@@ -233,7 +233,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
   const manifestVersion = faker.helpers.arrayElement([2, 3] as const);
   const mode = faker.helpers.arrayElement(['development', 'production']);
 
-  return {
+  const config: ResolvedConfig = {
     browser,
     targetBrowsers: [],
     command,
@@ -246,8 +246,9 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     imports: {
       disabled: faker.datatype.boolean(),
       eslintrc: {
-        enabled: faker.helpers.arrayElement([false, 8, 9]),
+        legacy: faker.datatype.boolean(),
         filePath: fakeFile(),
+        definitionPath: fakeFile(),
         globalsPropValue: faker.helpers.arrayElement([
           true,
           false,
@@ -255,7 +256,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
           'readonly',
           'writable',
           'writeable',
-        ] as const),
+        ]),
       },
     },
     logger: mock(),
@@ -306,6 +307,8 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     vite: () => ({}),
     plugins: [],
   };
+
+  return config;
 });
 
 export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
