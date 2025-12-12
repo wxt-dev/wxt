@@ -9,6 +9,7 @@ import {
 const cli = cac('wxt');
 
 cli.option('--debug', 'enable debug mode');
+cli.option('--level <level>', 'specify log level');
 
 // DEV
 cli
