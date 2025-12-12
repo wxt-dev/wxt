@@ -747,6 +747,7 @@ describe('Manifest Utils', () => {
             {
               matches: ['*://google.com/*'],
               resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
             },
           ]);
         });
@@ -830,6 +831,7 @@ describe('Manifest Utils', () => {
             {
               matches: ['*://play.google.com/*'],
               resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
             },
           ]);
         });
@@ -993,6 +995,7 @@ describe('Manifest Utils', () => {
           {
             resources: ['content-scripts/one.css'],
             matches: ['*://google.com/*'],
+            use_dynamic_url: true,
           },
         ]);
       });
