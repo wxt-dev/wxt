@@ -31,16 +31,18 @@ jobs:
 
   publish:
     name: Publish
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
-      contents: write
+      contents: write # Push version changes
+      id-token: write # OIDC for NPM publishing
     needs:
       - validate
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
         with:
           fetch-depth: 0
+          ssh-key: ${{ secrets.DEPLOY_KEY }} # https://github.com/sbellone/release-workflow-example
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -60,9 +62,9 @@ jobs:
       - name: Publish to NPM
         working-directory: packages/${{ inputs.package }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm build
-          pnpm publish
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz
 
       - name: Create GitHub release
         run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}

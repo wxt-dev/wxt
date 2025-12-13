@@ -1,0 +1,36 @@
+name: 🔔 Notify Unreleased Commits
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 20 * * 1' # Weekly at 8 PM UTC (3 PM CT)
+
+jobs:
+  notify:
+    runs-on: ubuntu-22.04
+    if: github.repository_owner == 'wxt-dev'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: List Commits
+        id: list-commits
+        run: |
+          ./scripts/list-unreleased-commits.sh > summary.txt
+
+      - name: Discord notification
+        run: |
+          PAYLOAD=$(jq -n --arg content "${{ env.MESSAGE }}" '{"content": $content}')
+          curl -X POST \
+            -F "payload_json=${PAYLOAD}" \
+            -F "file1=@summary.txt" \
+            $DISCORD_WEBHOOK
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UNRELEASED_COMMITS }}
+          MESSAGE: |
+            If a package needs released, please [run the workflow](<https://github.com/wxt-dev/wxt/actions/workflows/release.yml>).
+
+            Before running, consider:
+            - Are there any breaking changes? If so, prepare a list of breaking changes and update the changelog and release notes after the release.
+            - Are there any PRs open that we wait to release after they're merged?

@@ -40,11 +40,11 @@
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
-    "oxlint": "^0.16.8",
+    "@aklinker1/check": "^2.1.0",
+    "oxlint": "^1.14.0",
     "publint": "^0.3.12",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
+    "typescript": "^5.9.2",
+    "unbuild": "^3.6.1",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"
   },

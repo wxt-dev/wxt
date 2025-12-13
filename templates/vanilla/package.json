@@ -15,7 +15,7 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "wxt": "^0.20.6"
   }
 }

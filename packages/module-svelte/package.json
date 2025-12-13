@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -47,13 +47,13 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0"
+    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0 || ^6.0.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
+    "@aklinker1/check": "^2.1.0",
     "publint": "^0.3.12",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
+    "typescript": "^5.9.2",
+    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }
