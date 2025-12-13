@@ -74,7 +74,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@22457c87c1b161cf7dde222c3e82b2b5f8d2bed2 # v2.0.2
+        uses: oven-sh/setup-bun@635640504f6d7197d3bb29876a652f671028dc97 # v2.0.2
 
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
