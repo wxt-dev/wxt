@@ -383,6 +383,69 @@ describe('Output Directory Structure', () => {
       `);
   });
 
+  it('should support a custom IIFE name', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/background.js',
+      `export default defineBackground(() => {});`,
+    );
+
+    await project.build({
+      iifeName: (entryPointName) => `custom_iife_name_${entryPointName}`,
+      vite: () => ({
+        build: {
+          // Make output for snapshot readable
+          minify: false,
+        },
+      }),
+    });
+
+    const contents = await project.serializeFile(
+      '.output/chrome-mv3/background.js',
+    );
+    expect(contents).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/background.js
+      ----------------------------------------
+      var custom_iife_name_background = (function() {
+        "use strict";
+        function defineBackground(arg) {
+          if (arg == null || typeof arg === "function") return { main: arg };
+          return arg;
+        }
+        const definition = defineBackground(() => {
+        });
+        function initPlugins() {
+        }
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+        function print(method, ...args) {
+          return;
+        }
+        const logger = {
+          debug: (...args) => print(console.debug, ...args),
+          log: (...args) => print(console.log, ...args),
+          warn: (...args) => print(console.warn, ...args),
+          error: (...args) => print(console.error, ...args)
+        };
+        let result;
+        try {
+          initPlugins();
+          result = definition.main();
+          if (result instanceof Promise) {
+            console.warn(
+              "The background's main() function return a promise, but it must be synchronous"
+            );
+          }
+        } catch (err) {
+          logger.error("The background crashed on startup!");
+          throw err;
+        }
+        const result$1 = result;
+        return result$1;
+      })();
+      "
+    `);
+  });
+
   it('should generate IIFE background script when type=undefined', async () => {
     const project = new TestProject();
     project.addFile(
