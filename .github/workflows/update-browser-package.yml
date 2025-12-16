@@ -26,9 +26,6 @@ jobs:
         with:
           installArgs: --ignore-scripts
 
-      - name: Update NPM
-        run: sudo npm i -g npm@latest
-
       - name: Generate Latest Code
         working-directory: packages/browser
         run: pnpm gen
@@ -45,7 +42,10 @@ jobs:
         with:
           commit_message: 'fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version'
 
-      - name: Publish Package
+      - name: Publish to NPM
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
-        run: npm publish
+        run: |
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz
