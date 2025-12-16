@@ -45,7 +45,7 @@ export async function injectScript(
   }
 
   await loadedPromise;
-  
+
   return {
     script,
   };
