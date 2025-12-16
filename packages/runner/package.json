@@ -35,7 +35,7 @@
     "tsx": "4.21.0",
     "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.16"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

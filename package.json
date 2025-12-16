@@ -23,7 +23,7 @@
     "@commitlint/types": "^19.8.1",
     "@types/fs-extra": "^11.0.4",
     "@types/semver": "^7.7.1",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/coverage-v8": "^4.0.16",
     "changelogen": "^0.6.2",
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
