@@ -77,7 +77,7 @@
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.16",
     "vitest-plugin-random-seed": "^1.1.2"
   },
   "peerDependenciesMeta": {},
