@@ -15,11 +15,13 @@ export type ScriptPublicPath = Extract<
  *
  * Make sure to add the injected script to your manifest's
  * `web_accessible_resources`.
+ *
+ * @returns A result object containing the created script element.
  */
 export async function injectScript(
   path: ScriptPublicPath,
   options?: InjectScriptOptions,
-): Promise<void> {
+): Promise<InjectScriptResult> {
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
@@ -43,6 +45,10 @@ export async function injectScript(
   }
 
   await loadedPromise;
+
+  return {
+    script,
+  };
 }
 
 function makeLoadedPromise(script: HTMLScriptElement): Promise<void> {
@@ -81,4 +87,13 @@ export interface InjectScriptOptions {
    * (which can be accessed by the script via `document.currentScript`).
    */
   modifyScript?: (script: HTMLScriptElement) => Promise<void> | void;
+}
+
+export interface InjectScriptResult {
+  /**
+   * The created script element. It can be used to e.g. send messages to the
+   * script in the form of custom events. The script can add an event listener
+   * for them via `document.currentScript`.
+   */
+  script: HTMLScriptElement;
 }
