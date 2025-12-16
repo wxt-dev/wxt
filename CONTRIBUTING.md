@@ -146,13 +146,17 @@ Releases are done with GitHub actions:
 
 ## Upgrading Dependencies
 
-Use [`taze`](https://www.npmjs.com/package/taze) to upgrade dependencies throughout the entire monorepo.
+WXT has custom rules around what dependencies can be upgraded. Use the `scripts/upgrade-deps.ts` script to upgrade dependencies and follow these rules.
 
 ```sh
-pnpm dlx taze -r
+pnpm tsx scripts/upgrade-deps.ts
 ```
 
-Configuration is in [`taze.config.ts`](./taze.config.ts).
+To see all the options, run:
+
+```sh
+pnpm tsx scripts/upgrade-deps.ts --help
+```
 
 ## Install Unreleased Versions
 

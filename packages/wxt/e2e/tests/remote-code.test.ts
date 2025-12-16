@@ -16,7 +16,7 @@ describe('Remote Code', () => {
     const output = await project.serializeFile('.output/chrome-mv3/popup.js');
     expect(output).toContain(
       // Some text that will hopefully be in future versions of this script
-      'lodash.com',
+      '__lodash_placeholder__',
     );
     expect(output).not.toContain(url);
     expect(

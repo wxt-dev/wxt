@@ -12,7 +12,7 @@ export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
       config.analysis.outputDir,
       `${config.analysis.outputName}-${increment++}.json`,
     ),
-  });
+  }) as vite.Plugin;
 }
 
 /**

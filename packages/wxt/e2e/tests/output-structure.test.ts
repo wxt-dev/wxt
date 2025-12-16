@@ -220,6 +220,77 @@ describe('Output Directory Structure', () => {
     expect(await project.fileExists('.output/chrome-mv3/unlisted.js'));
   });
 
+  it('should support CSS entrypoints', async () => {
+    const project = new TestProject();
+
+    project.addFile(
+      'entrypoints/plain-one.css',
+      `body {
+        font: 100% Helvetica, sans-serif;
+        color: #333;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/plain-two.content.css',
+      `body {
+        font: 100% Helvetica, sans-serif;
+        color: #333;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/sass-one.scss',
+      `$font-stack: Helvetica, sans-serif;
+      $primary-color: #333;
+
+      body {
+        font: 100% $font-stack;
+        color: $primary-color;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/sass-two.content.scss',
+      `$font-stack: Helvetica, sans-serif;
+      $primary-color: #333;
+
+      body {
+        font: 100% $font-stack;
+        color: $primary-color;
+      }`,
+    );
+
+    await project.build();
+
+    expect(await project.serializeOutput(['.output/chrome-mv3/manifest.json']))
+      .toMatchInlineSnapshot(`
+        ".output/chrome-mv3/assets/plain-one.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/assets/sass-one.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/content-scripts/plain-two.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/content-scripts/sass-two.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/manifest.json
+        ----------------------------------------
+        <contents-ignored>"
+      `);
+  });
+
   it("should output to a custom directory when overriding 'outDir'", async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');
@@ -274,7 +345,6 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        var _a, _b;
         import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
         function defineBackground(arg) {
           if (arg == null || typeof arg === "function") return { main: arg };
@@ -286,7 +356,7 @@ describe('Output Directory Structure', () => {
             logHello("background");
           }
         });
-        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
         function print(method, ...args) {
           return;
         }
@@ -352,9 +422,8 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        var background = function() {
+        var background = (function() {
           "use strict";
-          var _a, _b;
           function defineBackground(arg) {
             if (arg == null || typeof arg === "function") return { main: arg };
             return arg;
@@ -369,7 +438,7 @@ describe('Output Directory Structure', () => {
           });
           function initPlugins() {
           }
-          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
+          globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
           function print(method, ...args) {
             return;
           }
@@ -394,7 +463,7 @@ describe('Output Directory Structure', () => {
           }
           const result$1 = result;
           return result$1;
-        }();
+        })();
         "
       `);
   });
