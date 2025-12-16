@@ -522,7 +522,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
   return {
     getItem: async (key) => {
-      const res = await getStorageArea().get(key);
+      const res = await getStorageArea().get<Record<string, any>>(key);
       return res[key];
     },
     getItems: async (keys) => {
@@ -563,7 +563,10 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     },
     watch(key, cb) {
       const listener = (changes: StorageAreaChanges) => {
-        const change = changes[key];
+        const change = changes[key] as {
+          newValue?: any;
+          oldValue?: any | null;
+        } | null;
         if (change == null) return;
         if (dequal(change.newValue, change.oldValue)) return;
         cb(change.newValue ?? null, change.oldValue ?? null);
