@@ -11,11 +11,15 @@ jobs:
   sync:
     name: 'Sync with @types/chrome'
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'wxt-dev'
     permissions:
-      contents: write
+      contents: write # Push version changes
+      id-token: write # OIDC for NPM publishing
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -32,15 +36,16 @@ jobs:
 
       - name: Commit Changes
         id: commit
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version'
 
-      - name: Publish Package
+      - name: Publish to NPM
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
-          pnpm publish
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz

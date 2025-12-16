@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Add analytics to your web extension",
   "repository": {
     "type": "git",
@@ -51,11 +51,11 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
+    "@aklinker1/check": "^2.2.0",
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.12",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
+    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   },
   "dependencies": {
