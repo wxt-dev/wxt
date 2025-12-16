@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.20.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.11...wxt-v0.20.12)
+
+### 🚀 Enhancements
+
+- Remove `data-wxt-*` attributes ([#1913](https://github.com/wxt-dev/wxt/pull/1913))
+- Default to using `use_dynamic_url: true` for content script css files ([#1993](https://github.com/wxt-dev/wxt/pull/1993))
+
+### 🩹 Fixes
+
+- Wxt normal logs are drowned by `dotenv@17.0.0` ads ([#1883](https://github.com/wxt-dev/wxt/pull/1883))
+- Optimize `splitShadowRootCss` ([#1934](https://github.com/wxt-dev/wxt/pull/1934))
+- `wxt prepare` fails with the error "__vite_ssr_exportName__ is not defined" when using Vite 7 ([#1884](https://github.com/wxt-dev/wxt/pull/1884))
+
+### 🏡 Chore
+
+- Use `linkedom` a test instead of `happy-dom` ([#1957](https://github.com/wxt-dev/wxt/pull/1957))
+- Add support for `vite-node` v5 ([#2001](https://github.com/wxt-dev/wxt/pull/2001))
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- **dev-deps:** Upgrade `happy-dom` to address CVE-2025-61927 ([#2002](https://github.com/wxt-dev/wxt/pull/2002))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Jaguar Zhou ([@aiktb](https://github.com/aiktb))
+- Alexander Harding <noreply@harding.dev>
+- Florian Kühne ([@ZerGo0](https://github.com/ZerGo0))
+
 ## v0.20.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.10...wxt-v0.20.11)

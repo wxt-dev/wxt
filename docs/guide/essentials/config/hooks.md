@@ -11,7 +11,7 @@ export default defineConfig({
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
       if (wxt.config.mode === 'development') {
-        manifest.title += ' (DEV)';
+        manifest.name += ' (DEV)';
       }
     },
   },
