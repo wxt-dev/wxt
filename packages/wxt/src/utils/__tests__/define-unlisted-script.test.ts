@@ -22,7 +22,7 @@ describe('defineUnlistedScript', () => {
     expect(actual).toEqual({ main });
   });
 
-  it('should return the object definition when given a main function that returns a value', () => {
+  it('should return the result without awaiting for synchronous main functions', () => {
     const main = vi.fn(() => 'test');
 
     const actual = defineUnlistedScript(main);
