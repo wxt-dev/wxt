@@ -49,7 +49,7 @@ export default defineConfig({
       firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
       edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
     },
-  }
+  },
 });
 ```
 
