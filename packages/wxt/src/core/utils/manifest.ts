@@ -553,6 +553,7 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
+      use_dynamic_url: true,
       matches:
         script.options.matches?.map((matchPattern) =>
           stripPathFromMatchPattern(matchPattern),
