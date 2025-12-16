@@ -253,7 +253,8 @@ function defineStorageItem<T>(
 ): AnalyticsStorageItem<T> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get(key))[key] ?? defaultValue,
+      (await browser.storage.local.get<Record<string, any>>(key))[key] ??
+      defaultValue,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
