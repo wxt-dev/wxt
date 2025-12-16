@@ -142,14 +142,12 @@ describe('User Config', () => {
   it('should not throw error when config file not exist', async () => {
     const project = new TestProject();
     project.addFile(
-      'src/entrypoints/background.ts',
+      'entrypoints/background.ts',
       `export default defineBackground(
         () => console.log('Hello background'),
       );`,
     );
 
-    await expect(
-      project.build({ configFile: 'foo.config.ts' }),
-    ).rejects.toThrowError(/No entrypoints found/);
+    await project.build({ configFile: 'foo.config.ts' });
   });
 });
