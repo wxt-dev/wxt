@@ -102,6 +102,16 @@ const chromeExtensionIds = [
   'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
   'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
   'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
+  'cndibmoanboadcifjkjbdpjgfedanolh', // BetterCampus (prev. BetterCanvas)
+  'hinfimgacobnellbncbcpdlpaapcofaa', // Leetcode Fonts - Change fonts in leetcode effortlessly
+  'kbkbfefhhabpkibojinapkkgciiacggg', // TranslateManga - Manga Translator & Manga Tracker
+  'emeakbgdecgmdjgegnejpppcnkcnoaen', // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
+  'gpnckbhgpnjciklpoehkmligeaebigaa', // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
+  'fjlalaedpfcojcfpkgkglbjjbbkofgnl', // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
+  'fbgblmjbeebanackldpbmpacppflgmlj', // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
+  'dfacnjidgbagicaekenjgclfnhdnjjdi', // Zen Virtual Piano - https://zen-piano.web.app/
+  'naeibcegmgpofimedkmfgjgphfhfhlab', // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
+  'ffglckbhfbfmdkefdmjbhpnffkcmlhdh', // Redirect Web - Automatically redirect pages or open them in another app
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

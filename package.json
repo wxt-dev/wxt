@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.5",
-    "@aklinker1/check": "^2.1.0",
+    "@aklinker1/check": "^2.1.2",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
     "@types/fs-extra": "^11.0.4",
@@ -54,16 +54,5 @@
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search",
-        "search-insights"
-      ]
-    },
-    "patchedDependencies": {
-      "markdown-it-footnote": "patches/markdown-it-footnote.patch"
-    }
   }
 }
