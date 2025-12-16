@@ -51,9 +51,6 @@ export async function resolveConfig(
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
     });
-    if (inlineConfig.configFile && metadata.layers?.length === 0) {
-      throw Error(`Config file "${inlineConfig.configFile}" not found`);
-    }
     userConfig = loadedConfig ?? {};
     userConfigMetadata = metadata;
   }

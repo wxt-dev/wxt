@@ -139,7 +139,7 @@ describe('User Config', () => {
     ).toBe(true);
   });
 
-  it('should throw error when config file not exist', async () => {
+  it('should not throw error when config file not exist', async () => {
     const project = new TestProject();
     project.addFile(
       'src/entrypoints/background.ts',
