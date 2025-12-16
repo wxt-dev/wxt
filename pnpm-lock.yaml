@@ -33,7 +33,7 @@ importers:
         version: 7.7.1
       '@vitest/coverage-v8':
         specifier: ^4.0.16
-        version: 4.0.16(vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
+        version: 4.0.16(vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
       changelogen:
         specifier: ^0.6.2
         version: 0.6.2(magicast@0.3.5)
@@ -102,7 +102,7 @@ importers:
         version: 1.6.5(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
       vitest-mock-extended:
         specifier: ^3.1.0
-        version: 3.1.0(typescript@5.9.3)(vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.1.0(typescript@5.9.3)(vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
       vue:
         specifier: ^3.5.25
         version: 3.5.25(typescript@5.9.3)
@@ -195,7 +195,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/i18n:
     dependencies:
@@ -232,7 +232,7 @@ importers:
         version: 3.6.1(sass@1.97.0)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       vitest-plugin-random-seed:
         specifier: ^1.1.2
         version: 1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
@@ -365,7 +365,7 @@ importers:
         version: 3.6.1(sass@1.97.0)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/storage:
     dependencies:
@@ -399,7 +399,7 @@ importers:
         version: 3.6.1(sass@1.97.0)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
 
   packages/unocss:
     dependencies:
@@ -586,10 +586,10 @@ importers:
         version: 5.2.0
       vite:
         specifier: ^5.4.19 || ^6.3.4 || ^7.0.0
-        version: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)
+        version: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       vite-node:
         specifier: ^3.2.4 || ^5.0.0
-        version: 5.2.0(@types/node@20.19.13)(jiti@2.6.1)
+        version: 5.2.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       web-ext-run:
         specifier: ^0.2.4
         version: 0.2.4
@@ -619,8 +619,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       happy-dom:
-        specifier: ^18.0.1
-        version: 18.0.1
+        specifier: ^20.0.0
+        version: 20.0.11
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -635,13 +635,13 @@ importers:
         version: 5.9.3
       unbuild:
         specifier: ^3.6.1
-        version: 3.6.1(typescript@5.9.3)
+        version: 3.6.1(sass@1.97.0)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       vitest-plugin-random-seed:
         specifier: ^1.1.2
-        version: 1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1))
+        version: 1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
 
   packages/wxt-demo:
     dependencies:
@@ -678,7 +678,7 @@ importers:
         version: 66.5.0(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       vitest-plugin-random-seed:
         specifier: ^1.1.2
         version: 1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
@@ -3101,8 +3101,8 @@ packages:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
     engines: {node: '>=10'}
 
-  happy-dom@18.0.1:
-    resolution: {integrity: sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==}
+  happy-dom@20.0.11:
+    resolution: {integrity: sha512-QsCdAUHAmiDeKeaNojb1OHOPF7NjcWPBR7obdu3NwH2a/oyQaLg5d0aaCy/9My6CdPChYF07dvz5chaXBGaD4g==}
     engines: {node: '>=20.0.0'}
 
   has-flag@4.0.0:
@@ -6404,7 +6404,7 @@ snapshots:
       vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
       vue: 3.5.25(typescript@5.9.3)
 
-  '@vitest/coverage-v8@4.0.16(vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))':
+  '@vitest/coverage-v8@4.0.16(vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.16
@@ -6417,7 +6417,7 @@ snapshots:
       obug: 2.1.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6437,14 +6437,6 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
-
-  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1))':
-    dependencies:
-      '@vitest/spy': 4.0.16
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)
 
   '@vitest/pretty-format@4.0.16':
     dependencies:
@@ -7434,7 +7426,7 @@ snapshots:
     dependencies:
       duplexer: 0.1.2
 
-  happy-dom@18.0.1:
+  happy-dom@20.0.11:
     dependencies:
       '@types/node': 20.19.13
       '@types/whatwg-mimetype': 3.0.2
@@ -8104,24 +8096,6 @@ snapshots:
       sass: 1.97.0
       typescript: 5.9.3
       vue: 3.5.25(typescript@5.9.3)
-
-  mkdist@2.3.0(typescript@5.9.3):
-    dependencies:
-      autoprefixer: 10.4.21(postcss@8.5.6)
-      citty: 0.1.6
-      cssnano: 7.1.1(postcss@8.5.6)
-      defu: 6.1.4
-      esbuild: 0.25.9
-      jiti: 1.21.7
-      mlly: 1.8.0
-      pathe: 2.0.3
-      pkg-types: 2.3.0
-      postcss: 8.5.6
-      postcss-nested: 7.0.2(postcss@8.5.6)
-      semver: 7.7.3
-      tinyglobby: 0.2.14
-    optionalDependencies:
-      typescript: 5.9.3
 
   mlly@1.8.0:
     dependencies:
@@ -9164,40 +9138,6 @@ snapshots:
       - vue-sfc-transformer
       - vue-tsc
 
-  unbuild@3.6.1(typescript@5.9.3):
-    dependencies:
-      '@rollup/plugin-alias': 5.1.1(rollup@4.50.0)
-      '@rollup/plugin-commonjs': 28.0.6(rollup@4.50.0)
-      '@rollup/plugin-json': 6.1.0(rollup@4.50.0)
-      '@rollup/plugin-node-resolve': 16.0.1(rollup@4.50.0)
-      '@rollup/plugin-replace': 6.0.2(rollup@4.50.0)
-      '@rollup/pluginutils': 5.3.0(rollup@4.50.0)
-      citty: 0.1.6
-      consola: 3.4.2
-      defu: 6.1.4
-      esbuild: 0.25.9
-      fix-dts-default-cjs-exports: 1.0.1
-      hookable: 5.5.3
-      jiti: 2.5.1
-      magic-string: 0.30.18
-      mkdist: 2.3.0(typescript@5.9.3)
-      mlly: 1.8.0
-      pathe: 2.0.3
-      pkg-types: 2.3.0
-      pretty-bytes: 7.0.1
-      rollup: 4.50.0
-      rollup-plugin-dts: 6.2.3(rollup@4.50.0)(typescript@5.9.3)
-      scule: 1.3.0
-      tinyglobby: 0.2.14
-      untyped: 2.0.0
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - sass
-      - vue
-      - vue-sfc-transformer
-      - vue-tsc
-
   unconfig@7.3.3:
     dependencies:
       '@quansync/fs': 0.1.5
@@ -9335,13 +9275,13 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-node@5.2.0(@types/node@20.19.13)(jiti@2.6.1):
+  vite-node@5.2.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       cac: 6.7.14
       es-module-lexer: 1.7.0
       obug: 2.1.1
       pathe: 2.0.3
-      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)
+      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -9377,19 +9317,6 @@ snapshots:
       '@types/node': 20.19.13
       fsevents: 2.3.3
       sass: 1.97.0
-
-  vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1):
-    dependencies:
-      esbuild: 0.27.1
-      fdir: 6.5.0(picomatch@4.0.3)
-      picomatch: 4.0.3
-      postcss: 8.5.6
-      rollup: 4.50.0
-      tinyglobby: 0.2.15
-    optionalDependencies:
-      '@types/node': 20.19.13
-      fsevents: 2.3.3
-      jiti: 2.6.1
 
   vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
@@ -9478,59 +9405,17 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vitest-mock-extended@3.1.0(typescript@5.9.3)(vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)):
+  vitest-mock-extended@3.1.0(typescript@5.9.3)(vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)):
     dependencies:
       ts-essentials: 10.1.1(typescript@5.9.3)
       typescript: 5.9.3
-      vitest: 4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
 
   vitest-plugin-random-seed@1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)):
     dependencies:
       vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
 
-  vitest-plugin-random-seed@1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)):
-    dependencies:
-      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)
-
-  vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1):
-    dependencies:
-      '@vitest/expect': 4.0.16
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1))
-      '@vitest/pretty-format': 4.0.16
-      '@vitest/runner': 4.0.16
-      '@vitest/snapshot': 4.0.16
-      '@vitest/spy': 4.0.16
-      '@vitest/utils': 4.0.16
-      es-module-lexer: 1.7.0
-      expect-type: 1.2.2
-      magic-string: 0.30.21
-      obug: 2.1.1
-      pathe: 2.0.3
-      picomatch: 4.0.3
-      std-env: 3.10.0
-      tinybench: 2.9.0
-      tinyexec: 1.0.2
-      tinyglobby: 0.2.15
-      tinyrainbow: 3.0.3
-      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 20.19.13
-      happy-dom: 18.0.1
-    transitivePeerDependencies:
-      - jiti
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - yaml
-
-  vitest@4.0.16(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
+  vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.16
       '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
@@ -9554,7 +9439,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.13
-      happy-dom: 18.0.1
+      happy-dom: 20.0.11
     transitivePeerDependencies:
       - jiti
       - less
