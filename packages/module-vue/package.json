@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -49,10 +49,10 @@
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
-    "publint": "^0.3.12",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
+    "@aklinker1/check": "^2.2.0",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
+    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }

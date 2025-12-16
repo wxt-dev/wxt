@@ -46,6 +46,7 @@ export const googleAnalytics4 =
               ad_personalization: 'DENIED',
             },
             user_properties: mappedUserProperties,
+            user_agent: navigator.userAgent,
             events: [
               {
                 name: eventName,
