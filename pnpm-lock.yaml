@@ -543,9 +543,6 @@ importers:
       unimport:
         specifier: ^3.13.1 || ^4.0.0 || ^5.0.0
         version: 5.6.0
-      vite-node:
-        specifier: ^3.2.4 || ^5.0.0
-        version: 5.3.0(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2)
       web-ext-run:
         specifier: ^0.2.4
         version: 0.2.4
@@ -2793,9 +2790,6 @@ packages:
   es-module-lexer@1.7.0:
     resolution: {integrity: sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA==}
 
-  es-module-lexer@2.0.0:
-    resolution: {integrity: sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw==}
-
   es6-error@4.1.1:
     resolution: {integrity: sha512-Um/+FxMr9CISWh0bi5Zv0iOD+4cFh5qLeks1qhAopKVAJw3drgKbKySikp7wGhDL0HPeaja0P5ULZrxLkniUVg==}
 
@@ -4558,11 +4552,6 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
-
-  vite-node@5.3.0:
-    resolution: {integrity: sha512-8f20COPYJujc3OKPX6OuyBy3ZIv2det4eRRU4GY1y2MjbeGSUmPjedxg1b72KnTagCofwvZ65ThzjxDW2AtQFQ==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
 
   vite-plugin-solid@2.11.10:
     resolution: {integrity: sha512-Yr1dQybmtDtDAHkii6hXuc1oVH9CPcS/Zb2jN/P36qqcrkNnVPsMTzQ06jyzFPFjj3U1IYKMVt/9ZqcwGCEbjw==}
@@ -6856,8 +6845,6 @@ snapshots:
 
   es-module-lexer@1.7.0: {}
 
-  es-module-lexer@2.0.0: {}
-
   es6-error@4.1.1: {}
 
   esbuild@0.21.5:
@@ -8912,26 +8899,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
-
-  vite-node@5.3.0(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2):
-    dependencies:
-      cac: 6.7.14
-      es-module-lexer: 2.0.0
-      obug: 2.1.1
-      pathe: 2.0.3
-      vite: 7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2)
-    transitivePeerDependencies:
-      - '@types/node'
-      - jiti
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - yaml
 
   vite-plugin-solid@2.11.10(solid-js@1.9.11)(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2)):
     dependencies:
