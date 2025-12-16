@@ -63,7 +63,7 @@
     "web-ext-run": "^0.2.4"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
+    "@aklinker1/check": "^2.1.2",
     "@faker-js/faker": "^10.0.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
@@ -78,7 +78,7 @@
     "typescript": "^5.9.2",
     "unbuild": "^3.6.1",
     "vitest": "^3.2.4",
-    "vitest-plugin-random-seed": "^1.1.1"
+    "vitest-plugin-random-seed": "^1.1.2"
   },
   "peerDependenciesMeta": {},
   "repository": {

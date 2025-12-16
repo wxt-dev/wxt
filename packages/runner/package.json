@@ -29,7 +29,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
+    "@aklinker1/check": "^2.1.2",
     "oxlint": "^1.14.0",
     "publint": "^0.3.12",
     "tsx": "4.20.5",
