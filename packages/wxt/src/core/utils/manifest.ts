@@ -553,6 +553,7 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
+      use_dynamic_url: true,
       matches:
         script.options.matches?.map((matchPattern) =>
           stripPathFromMatchPattern(matchPattern),
@@ -716,7 +717,6 @@ const mv2OnlyKeys = [
   'event_rules',
   'file_browser_handlers',
   'file_system_provider_capabilities',
-  'input_components',
   'nacl_modules',
   'natively_connectable',
   'offline_enabled',

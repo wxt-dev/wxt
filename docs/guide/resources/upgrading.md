@@ -54,7 +54,6 @@ See <https://github.com/wxt-dev/wxt/issues/784>
 To upgrade, you have two options:
 
 1. **Stop using the polyfill**
-
    - If you're already using `extensionApi: "chrome"`, then you're not using the polyfill and there is nothing to change!
    - Otherwise there is only one change: `browser.runtime.onMessage` no longer supports using promises to return a response:
 
@@ -71,7 +70,6 @@ To upgrade, you have two options:
      ```
 
 2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
-
    - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
 
      ```sh
@@ -129,7 +127,6 @@ The default location for the `public/` and `modules/` directories have changed t
 
 - If you follow the default folder structure, you don't need to make any changes.
 - If you set a custom `srcDir`, you have two options:
-
   1. Move the your `public/` and `modules/` directories to the project root:
      <!-- prettier-ignore -->
      ```html
