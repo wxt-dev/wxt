@@ -16,7 +16,7 @@ const result = (() => {
   try {
     result = definition.main();
 
-    if (result && typeof result === 'object' && 'then' in result) {
+    if (result instanceof Promise) {
       result = (result as Promise<any>).catch((err) => {
         logger.error(
           `The unlisted script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
