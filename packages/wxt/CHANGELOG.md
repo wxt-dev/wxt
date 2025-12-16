@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.20.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.12...wxt-v0.20.13)
+
+### 🚀 Enhancements
+
+- Remove script element immediately in injectScript ([#1761](https://github.com/wxt-dev/wxt/pull/1761))
+- Add `modifyScript` option to `injectScript` ([#1762](https://github.com/wxt-dev/wxt/pull/1762))
+- Make `injectScript` return the created script element ([#1838](https://github.com/wxt-dev/wxt/pull/1838))
+- Support `.wxtrc` config file ([#1833](https://github.com/wxt-dev/wxt/pull/1833))
+
+### 🩹 Fixes
+
+- Make `injectScript` wait until script is actually loaded ([#1763](https://github.com/wxt-dev/wxt/pull/1763))
+- Don't return promises from unlisted scripts that do not have an async `main` function ([#1907](https://github.com/wxt-dev/wxt/pull/1907))
+
+### 💅 Refactors
+
+- Use `script.text` instead of `innerHTML` in `injectScript` ([#1764](https://github.com/wxt-dev/wxt/pull/1764))
+
+### ❤️ Contributors
+
+- Rxliuli ([@rxliuli](https://github.com/rxliuli))
+- Sebastian Landwehr <info@sebastianlandwehr.com>
+- Johan Kiviniemi ([@ion1](https://github.com/ion1))
+
 ## v0.20.12
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.11...wxt-v0.20.12)
