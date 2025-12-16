@@ -31,7 +31,7 @@ describe('defineUnlistedScript', () => {
     expect(actual.main()).eq('test');
   });
 
-  it('should return the object definition when given a main function that returns a promise', async () => {
+  it('should return a promise of a result for async main functions', async () => {
     const main = vi.fn(() => Promise.resolve('test'));
 
     const actual = defineUnlistedScript(main);
