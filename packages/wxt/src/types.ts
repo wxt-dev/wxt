@@ -200,7 +200,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     *   "coverage", // Include the coverage directory in the `sourcesRoot`
      * ]
      */
     includeSources?: string[];
@@ -213,7 +213,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Include the coverage directory in the `sourcesRoot`
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
      * ]
      */
     excludeSources?: string[];

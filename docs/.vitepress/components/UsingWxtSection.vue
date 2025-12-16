@@ -109,6 +109,8 @@ const chromeExtensionIds = [
   'gpnckbhgpnjciklpoehkmligeaebigaa', // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
   'fjlalaedpfcojcfpkgkglbjjbbkofgnl', // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
   'fbgblmjbeebanackldpbmpacppflgmlj', // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
+  'dfacnjidgbagicaekenjgclfnhdnjjdi', // Zen Virtual Piano - https://zen-piano.web.app/
+  'naeibcegmgpofimedkmfgjgphfhfhlab', // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
   'ffglckbhfbfmdkefdmjbhpnffkcmlhdh', // Redirect Web - Automatically redirect pages or open them in another app
 ];
 
