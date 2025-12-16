@@ -32,11 +32,11 @@ export async function injectScript(
     script.src = url;
   }
 
-  if (!options?.keepInDom) {
-    script.onload = () => script.remove();
-  }
-
   (document.head ?? document.documentElement).append(script);
+
+  if (!options?.keepInDom) {
+    script.remove();
+  }
 }
 
 export interface InjectScriptOptions {
