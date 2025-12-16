@@ -1,5 +1,5 @@
 /** @module wxt/utils/content-script-context */
-import { ContentScriptDefinition } from '../types';
+import { ContentScriptDefinition } from '../client-types';
 import { browser } from 'wxt/browser';
 import { logger } from '../utils/internal/logger';
 import {
