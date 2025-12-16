@@ -40,14 +40,14 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
+    "@aklinker1/check": "^2.2.0",
     "@types/node": "^20.17.6",
-    "oxlint": "^1.14.0",
-    "publint": "^0.3.12",
-    "typescript": "^5.9.2",
+    "oxlint": "^1.33.0",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
-    "vitest": "^3.2.4",
-    "vitest-plugin-random-seed": "^1.1.1",
+    "vitest": "^4.0.16",
+    "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },
   "main": "./dist/index.cjs",

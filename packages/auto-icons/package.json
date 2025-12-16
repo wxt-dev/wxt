@@ -46,14 +46,14 @@
   },
   "dependencies": {
     "defu": "^6.1.4",
-    "fs-extra": "^11.3.1",
-    "sharp": "^0.34.3"
+    "fs-extra": "^11.3.2",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
-    "oxlint": "^1.14.0",
-    "publint": "^0.3.12",
-    "typescript": "^5.9.2",
+    "@aklinker1/check": "^2.2.0",
+    "oxlint": "^1.33.0",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }

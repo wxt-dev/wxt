@@ -4,6 +4,7 @@ import * as semver from 'semver';
 import { dirname } from 'node:path';
 import consola from 'consola';
 import spawn from 'nano-spawn';
+import pMap from 'p-map';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
@@ -177,7 +178,7 @@ function validateNoMultipleVersions(
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
   // Use PNPM instead of API in case dependencies don't come from NPM
   const res = await spawn('pnpm', ['view', name, '--json']);
-  return JSON.parse(res.output);
+  return JSON.parse(res.stdout);
 }
 
 type PackageInfo = {
@@ -203,12 +204,13 @@ type DependencyInfo = {
 async function fetchAllPackageInfos(
   deps: DependencyVersionMap,
 ): Promise<DependencyInfo[]> {
-  const infos = await Promise.all(
-    Object.entries(deps).map(async ([name, currentVersionRange]) => ({
-      name,
-      currentVersionRange,
-      info: await fetchPackageInfo(name),
-    })),
+  const infos: DependencyInfo[] = await pMap(
+    Object.entries(deps),
+    async ([name, currentVersionRange]) => {
+      const info = await fetchPackageInfo(name);
+      return { name, currentVersionRange, info };
+    },
+    { concurrency: 20 },
   );
   return infos.toSorted((a, b) => a.name.localeCompare(b.name));
 }
@@ -253,7 +255,6 @@ async function detectUpgrades(
     const latestVersion = dep.info['dist-tags'].latest;
     const latestVersionReleasedAt = new Date(dep.info.time[latestVersion]);
 
-    semver.RELEASE_TYPES;
     const upgradeToVersion = isMajor
       ? // Always use the latest version for major upgrades
         latestVersion
