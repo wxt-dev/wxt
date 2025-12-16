@@ -45,8 +45,9 @@ export function createIframeUi<TMounted>(
   };
 }
 
-export interface IframeContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
+export interface IframeContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
   /**
    * The iframe added to the DOM.
    */
