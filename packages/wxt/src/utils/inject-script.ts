@@ -32,6 +32,8 @@ export async function injectScript(
     script.src = url;
   }
 
+  const loadedPromise = makeLoadedPromise(script);
+
   await options?.modifyScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
@@ -39,6 +41,30 @@ export async function injectScript(
   if (!options?.keepInDom) {
     script.remove();
   }
+
+  await loadedPromise;
+}
+
+function makeLoadedPromise(script: HTMLScriptElement): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const onload = () => {
+      resolve();
+      cleanup();
+    };
+
+    const onerror = () => {
+      reject(new Error(`Failed to load script: ${script.src}`));
+      cleanup();
+    };
+
+    const cleanup = () => {
+      script.removeEventListener('load', onload);
+      script.removeEventListener('error', onerror);
+    };
+
+    script.addEventListener('load', onload);
+    script.addEventListener('error', onerror);
+  });
 }
 
 export interface InjectScriptOptions {
