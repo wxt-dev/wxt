@@ -41,6 +41,18 @@ export default defineWebExtConfig({
 });
 ```
 
+```ts [wxt.config.ts]
+export default defineConfig({
+  webExt: {
+    binaries: {
+      chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
+      firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
+      edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
+    },
+  },
+});
+```
+
 By default, WXT will try to automatically discover where Chrome/Firefox are installed. However, if you have chrome installed in a non-standard location, you need to set it manually as shown above.
 
 ### Persist Data
