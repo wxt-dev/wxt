@@ -39,6 +39,7 @@ export async function injectScript(
   if (!options?.keepInDom) {
     script.remove();
   }
+
   await loadedPromise;
 }
 
