@@ -14,7 +14,6 @@ export function createIframeUi<TMounted>(
   options: IframeContentScriptUiOptions<TMounted>,
 ): IframeContentScriptUi<TMounted> {
   const wrapper = document.createElement('div');
-  wrapper.setAttribute('data-wxt-iframe', '');
   const iframe = document.createElement('iframe');
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   iframe.src = browser.runtime.getURL(options.page);
@@ -46,8 +45,9 @@ export function createIframeUi<TMounted>(
   };
 }
 
-export interface IframeContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
+export interface IframeContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
   /**
    * The iframe added to the DOM.
    */
