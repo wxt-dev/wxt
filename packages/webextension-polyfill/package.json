@@ -45,10 +45,10 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.2",
-    "@types/webextension-polyfill": "^0.12.3",
-    "publint": "^0.3.12",
-    "typescript": "^5.9.2",
+    "@aklinker1/check": "^2.2.0",
+    "@types/webextension-polyfill": "^0.12.4",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"

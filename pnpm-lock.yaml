@@ -61,6 +61,9 @@ importers:
       nano-spawn:
         specifier: ^1.0.2
         version: 1.0.3
+      p-map:
+        specifier: ^7.0.4
+        version: 7.0.4
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -117,8 +120,8 @@ importers:
         version: 1.0.41
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
@@ -148,8 +151,8 @@ importers:
         version: 0.34.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       oxlint:
         specifier: ^1.14.0
         version: 1.14.0
@@ -191,7 +194,7 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
       vitest:
-        specifier: ^3.1.2
+        specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@20.19.13)(happy-dom@18.0.1)(jiti@2.5.1)(sass@1.92.0)(tsx@4.20.5)(yaml@2.8.1)
 
   packages/i18n:
@@ -210,8 +213,8 @@ importers:
         version: 3.3.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@types/node':
         specifier: ^20.17.6
         version: 20.19.13
@@ -244,8 +247,8 @@ importers:
         version: 5.0.2(vite@7.1.4(@types/node@20.19.13)(jiti@2.5.1)(sass@1.92.0)(tsx@4.20.5)(yaml@2.8.1))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@types/react':
         specifier: ^19.1.12
         version: 19.1.12
@@ -278,8 +281,8 @@ importers:
         version: 2.11.8(solid-js@1.9.9)(vite@7.1.4(@types/node@20.19.13)(jiti@2.5.1)(sass@1.92.0)(tsx@4.20.5)(yaml@2.8.1))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -303,8 +306,8 @@ importers:
         version: 6.1.4(vite@7.1.4(@types/node@20.19.13)(jiti@2.5.1)(sass@1.92.0)(tsx@4.20.5)(yaml@2.8.1))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -325,8 +328,8 @@ importers:
         version: 6.0.1(vite@7.1.4(@types/node@20.19.13)(jiti@2.5.1)(sass@1.92.0)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.21(typescript@5.9.2))
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       publint:
         specifier: ^0.3.12
         version: 0.3.12
@@ -343,8 +346,8 @@ importers:
   packages/runner:
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       oxlint:
         specifier: ^1.14.0
         version: 1.14.0
@@ -377,8 +380,8 @@ importers:
         version: 2.0.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@webext-core/fake-browser':
         specifier: ^1.3.2
         version: 1.3.2
@@ -408,8 +411,8 @@ importers:
         version: 3.3.3
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       oxlint:
         specifier: ^1.14.0
         version: 1.14.0
@@ -432,8 +435,8 @@ importers:
   packages/webextension-polyfill:
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@types/webextension-polyfill':
         specifier: ^0.12.3
         version: 0.12.3
@@ -592,8 +595,8 @@ importers:
         version: 0.2.4
     devDependencies:
       '@aklinker1/check':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       '@faker-js/faker':
         specifier: ^10.0.0
         version: 10.0.0
@@ -692,10 +695,6 @@ packages:
     resolution: {integrity: sha512-SL8NBNwOiTiCKjQnpOxTA4WfoeiTNhiVy1J6Ztk28xTbZQ7IL0zHbKODnEJAjuy8bfnxlChQT1ZMzjG7kBU4aw==}
     hasBin: true
 
-  '@aklinker1/check@2.1.0':
-    resolution: {integrity: sha512-x+0vxb0vHV+6ZskcLYobI6FCAFG1jwVGgKuH9pTfHLW3vlzbGSGUKcxbCuMI3Q51WZS8oE4UfB+4v5M2+0uz1g==}
-    hasBin: true
-
   '@aklinker1/check@2.1.2':
     resolution: {integrity: sha512-mOWpH57s6379L/rOSmK21G2Dq/xznUjGVGs+VIrAC3LuRCej5urNuCwOeFUNYy9P2D44KL2dqfZZmi42LsDNVA==}
     hasBin: true
@@ -792,9 +791,6 @@ packages:
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
-
-  '@antfu/utils@0.7.10':
-    resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
 
   '@antfu/utils@9.2.0':
     resolution: {integrity: sha512-Oq1d9BGZakE/FyoEtcNeSwM7MpDO2vUBi11RWBZXf75zPsbUVWmUs03EqkRFrcgbXyKTas0BdZWC1wcuSoqSAw==}
@@ -3642,6 +3638,10 @@ packages:
       oxlint-tsgolint:
         optional: true
 
+  p-map@7.0.4:
+    resolution: {integrity: sha512-tkAQEw8ysMzmkhgw8k+1U/iPhWNhykKnSk4Rd5zLoPJCuJaGRPo6YposrZgaxHKzDHdDWWZvE/Sk7hsL2X/CpQ==}
+    engines: {node: '>=18'}
+
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
@@ -4877,12 +4877,6 @@ snapshots:
       proper-lockfile: 4.1.2
       yaml: 2.8.1
 
-  '@aklinker1/check@2.1.0':
-    dependencies:
-      '@antfu/utils': 0.7.10
-      ci-info: 4.3.0
-      citty: 0.1.6
-
   '@aklinker1/check@2.1.2':
     dependencies:
       ci-info: 4.3.0
@@ -5016,8 +5010,6 @@ snapshots:
     dependencies:
       package-manager-detector: 1.3.0
       tinyexec: 1.0.1
-
-  '@antfu/utils@0.7.10': {}
 
   '@antfu/utils@9.2.0': {}
 
@@ -7935,6 +7927,8 @@ snapshots:
       '@oxlint/linux-x64-musl': 1.14.0
       '@oxlint/win32-arm64': 1.14.0
       '@oxlint/win32-x64': 1.14.0
+
+  p-map@7.0.4: {}
 
   package-json-from-dist@1.0.1: {}
 

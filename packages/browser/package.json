@@ -24,10 +24,10 @@
   ],
   "devDependencies": {
     "@types/chrome": "0.1.32",
-    "fs-extra": "^11.3.1",
-    "nano-spawn": "^1.0.2",
-    "tsx": "4.20.5",
-    "typescript": "^5.9.2",
+    "fs-extra": "^11.3.2",
+    "nano-spawn": "^1.0.3",
+    "tsx": "4.21.0",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {
