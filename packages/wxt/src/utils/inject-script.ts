@@ -32,6 +32,8 @@ export async function injectScript(
     script.src = url;
   }
 
+  const loadedPromise = makeLoadedPromise(script);
+
   await options?.modifyScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
