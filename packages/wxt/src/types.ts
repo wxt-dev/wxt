@@ -462,8 +462,7 @@ export interface BuildStepOutput {
 }
 
 export interface WxtDevServer
-  extends Omit<WxtBuilderServer, 'listen' | 'close'>,
-    ServerInfo {
+  extends Omit<WxtBuilderServer, 'listen' | 'close'>, ServerInfo {
   /**
    * Stores the current build output of the server.
    */
@@ -567,8 +566,7 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
   type?: PerBrowserOption<'module'>;
 }
 
-export interface BaseContentScriptEntrypointOptions
-  extends BaseEntrypointOptions {
+export interface BaseContentScriptEntrypointOptions extends BaseEntrypointOptions {
   matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -635,16 +633,14 @@ export interface BaseContentScriptEntrypointOptions
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
 }
 
-export interface MainWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    */
   world: 'MAIN';
 }
 
-export interface IsolatedWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    * @default "ISOLATED"
@@ -780,8 +776,7 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface IsolatedWorldContentScriptDefinition
-  extends IsolatedWorldContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptDefinition extends IsolatedWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -792,8 +787,7 @@ export interface IsolatedWorldContentScriptDefinition
   main(ctx: ContentScriptContext): any | Promise<any>;
 }
 
-export interface MainWorldContentScriptDefinition
-  extends MainWorldContentScriptEntrypointOptions {
+export interface MainWorldContentScriptDefinition extends MainWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -1544,8 +1538,9 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
-  extends WxtModule<TOptions> {
+export interface WxtModuleWithMetadata<
+  TOptions extends WxtModuleOptions,
+> extends WxtModule<TOptions> {
   type: 'local' | 'node_module';
   id: string;
 }

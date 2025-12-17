@@ -48,13 +48,13 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "vite-plugin-solid": "^2.11.8"
+    "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
-    "publint": "^0.3.12",
-    "solid-js": "^1.9.9",
-    "typescript": "^5.9.2",
+    "@aklinker1/check": "^2.2.0",
+    "publint": "^0.3.16",
+    "solid-js": "^1.9.10",
+    "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }

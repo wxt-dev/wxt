@@ -21,4 +21,22 @@ describe('defineUnlistedScript', () => {
 
     expect(actual).toEqual({ main });
   });
+
+  it('should return the result without awaiting for synchronous main functions', () => {
+    const main = vi.fn(() => 'test');
+
+    const actual = defineUnlistedScript(main);
+
+    expect(actual).toEqual({ main });
+    expect(actual.main()).eq('test');
+  });
+
+  it('should return a promise of a result for async main functions', async () => {
+    const main = vi.fn(() => Promise.resolve('test'));
+
+    const actual = defineUnlistedScript(main);
+
+    expect(actual).toEqual({ main });
+    await expect(actual.main()).resolves.toEqual('test');
+  });
 });

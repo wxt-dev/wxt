@@ -757,6 +757,12 @@ export interface WxtStorage {
   ): WxtStorageItem<TValue, TMetadata>;
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,
+    options: WxtStorageItemOptions<TValue> & {
+      init: () => TValue | Promise<TValue>;
+    },
+  ): WxtStorageItem<TValue, TMetadata>;
+  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+    key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue | null, TMetadata>;
 }
