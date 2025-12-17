@@ -182,20 +182,20 @@ importers:
         specifier: 0.1.32
         version: 0.1.32
       fs-extra:
-        specifier: ^11.3.2
+        specifier: ^11.3.1
         version: 11.3.2
       nano-spawn:
-        specifier: ^1.0.3
+        specifier: ^1.0.2
         version: 1.0.3
       tsx:
-        specifier: 4.21.0
-        version: 4.21.0
+        specifier: 4.20.5
+        version: 4.20.5
       typescript:
-        specifier: ^5.9.3
+        specifier: ^5.9.2
         version: 5.9.3
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+        version: 4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.20.5)(yaml@2.8.1)
 
   packages/i18n:
     dependencies:
@@ -4602,6 +4602,11 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  tsx@4.20.5:
+    resolution: {integrity: sha512-+wKjMNU9w/EaQayHXb7WA7ZaHY6hN8WgfvHNQ3t1PnU91/7O8TcTnIhCDYTZwnt8JsO9IBqZ30Ln1r7pPF52Aw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   tsx@4.21.0:
     resolution: {integrity: sha512-5C1sg4USs1lfG0GFb2RLXsdpXqBSEhAaA/0kPL01wxzpMqLILNxIxIOKiILz+cdg/pLnOUxFYOR5yhHU666wbw==}
@@ -9060,6 +9065,13 @@ snapshots:
 
   tslib@2.8.1: {}
 
+  tsx@4.20.5:
+    dependencies:
+      esbuild: 0.25.9
+      get-tsconfig: 4.10.1
+    optionalDependencies:
+      fsevents: 2.3.3
+
   tsx@4.21.0:
     dependencies:
       esbuild: 0.27.1
@@ -9318,6 +9330,22 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.97.0
 
+  vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.20.5)(yaml@2.8.1):
+    dependencies:
+      esbuild: 0.27.1
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.50.0
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 20.19.13
+      fsevents: 2.3.3
+      jiti: 2.6.1
+      sass: 1.97.0
+      tsx: 4.20.5
+      yaml: 2.8.1
+
   vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       esbuild: 0.27.1
@@ -9414,6 +9442,44 @@ snapshots:
   vitest-plugin-random-seed@1.1.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)):
     dependencies:
       vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1)
+
+  vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.20.5)(yaml@2.8.1):
+    dependencies:
+      '@vitest/expect': 4.0.16
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
+      '@vitest/pretty-format': 4.0.16
+      '@vitest/runner': 4.0.16
+      '@vitest/snapshot': 4.0.16
+      '@vitest/spy': 4.0.16
+      '@vitest/utils': 4.0.16
+      es-module-lexer: 1.7.0
+      expect-type: 1.2.2
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      std-env: 3.10.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.15
+      tinyrainbow: 3.0.3
+      vite: 7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.20.5)(yaml@2.8.1)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 20.19.13
+      happy-dom: 20.0.11
+    transitivePeerDependencies:
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
 
   vitest@4.0.16(@types/node@20.19.13)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
