@@ -706,6 +706,35 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it('should not run migrations if initialized on a version greater than 1', async () => {
+        const migrateToV2 = vi.fn((oldValue) => oldValue * 2);
+
+        const item = storage.defineItem<number, { v: number }>(`local:count`, {
+          defaultValue: 0,
+          version: 2,
+          migrations: {
+            2: migrateToV2,
+          },
+        });
+        // runs getOrInitValue, sets meta
+        await item.migrate();
+        await waitForMigrations();
+
+        await item.setValue(1);
+
+        // should do nothing
+        await item.migrate();
+        await waitForMigrations();
+
+        const actualValue = await item.getValue();
+        const actualMeta = await item.getMeta();
+
+        expect(actualValue).toEqual(1);
+        expect(actualMeta).toEqual({ v: 2 });
+
+        expect(migrateToV2).not.toBeCalled();
+      });
+
       it('should call onMigrationComplete callback function if defined', async () => {
         await fakeBrowser.storage.local.set({
           count: 2,
@@ -748,7 +777,7 @@ describe('Storage Utils', () => {
         const actualMeta = await item.getMeta();
 
         expect(actualValue).toEqual(0);
-        expect(actualMeta).toEqual({});
+        expect(actualMeta).toEqual({ v: 3 });
 
         expect(migrateToV2).not.toBeCalled();
         expect(migrateToV3).not.toBeCalled();
