@@ -6,6 +6,10 @@ import { createIsolatedElement } from '@webext-core/isolated-element';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import { logger } from '../internal/logger';
 import { splitShadowRootCss } from '../split-shadow-root-css';
+import {
+  renameCssCustomProperties,
+  type CssPropertyPrefixOptions,
+} from '../rename-css-custom-properties';
 
 /**
  * Create a content script UI inside a [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
@@ -33,8 +37,14 @@ export async function createShadowRootUi<TMounted>(
     css.push(entryCss.replaceAll(':root', ':host'));
   }
 
+  // Rename CSS custom properties if prefix options are provided
+  let finalCss = css.join('\n').trim();
+  if (options.cssPropertyRename) {
+    finalCss = renameCssCustomProperties(finalCss, options.cssPropertyRename);
+  }
+
   // Some rules must be applied outside the shadow root, so split the CSS apart
-  const { shadowCss, documentCss } = splitShadowRootCss(css.join('\n').trim());
+  const { shadowCss, documentCss } = splitShadowRootCss(finalCss);
 
   const {
     isolatedElement: uiContainer,
@@ -207,4 +217,25 @@ export type ShadowRootContentScriptUiOptions<TMounted> =
       shadow: ShadowRoot,
       shadowHost: HTMLElement,
     ) => TMounted;
+    /**
+     * Rename CSS custom property prefixes to prevent conflicts with host page styles.
+     *
+     * This is useful when your extension uses CSS frameworks like Tailwind CSS v4 that define
+     * typed `@property` rules, which can conflict with host pages using older versions.
+     *
+     * @example
+     * ```ts
+     * createShadowRootUi(ctx, {
+     *   name: 'my-ui',
+     *   cssPropertyRename: {
+     *     fromPrefix: '--tw-',
+     *     toPrefix: '--my-ext-tw-',
+     *   },
+     *   onMount(container) {
+     *     // ...
+     *   },
+     * });
+     * ```
+     */
+    cssPropertyRename?: CssPropertyPrefixOptions;
   };

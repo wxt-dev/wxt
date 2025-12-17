@@ -171,6 +171,10 @@
       "types": "./dist/utils/split-shadow-root-css.d.ts",
       "default": "./dist/utils/split-shadow-root-css.mjs"
     },
+    "./utils/rename-css-custom-properties": {
+      "types": "./dist/utils/rename-css-custom-properties.d.ts",
+      "default": "./dist/utils/rename-css-custom-properties.mjs"
+    },
     "./utils/storage": {
       "types": "./dist/utils/storage.d.ts",
       "default": "./dist/utils/storage.mjs"
