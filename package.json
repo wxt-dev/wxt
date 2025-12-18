@@ -5,7 +5,8 @@
     "bun": ">=1.3.5"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/wxt/e2e/dist/*"
   ],
   "scripts": {
     "check": "check && bun run --workspaces check",

@@ -10,7 +10,17 @@ describe('Init command', () => {
 
     await spawn(
       'bun',
-      ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
+      [
+        'run',
+        '--silent',
+        'wxt',
+        'init',
+        project.root,
+        '-t',
+        'vue',
+        '--pm',
+        'npm',
+      ],
       {
         env: { CI: 'true' },
         stdio: 'ignore',
@@ -57,7 +67,17 @@ describe('Init command', () => {
     await expect(() =>
       spawn(
         'bun',
-        ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
+        [
+          'run',
+          '--silent',
+          'wxt',
+          'init',
+          project.root,
+          '-t',
+          'vue',
+          '--pm',
+          'npm',
+        ],
         {
           env: { CI: 'true' },
           stdio: 'ignore',

@@ -31,6 +31,7 @@ export class TestProject {
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
     this.root = resolve(E2E_DIR, 'dist', id);
+
     this.files.push([
       'package.json',
       JSON.stringify(
@@ -40,7 +41,8 @@ export class TestProject {
             description: 'Example description',
             version: '0.0.0',
             dependencies: {
-              wxt: '../../..',
+              // This is built and moved here inside `vitest.globalSetup.ts`
+              wxt: '../wxt.tgz',
             },
           },
           packageJson,
@@ -119,7 +121,7 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await spawn('bun', ['install', '--ignore-scripts'], {
+    await spawn('pnpm', ['install', '--prefer-offline'], {
       cwd: this.root,
     });
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(

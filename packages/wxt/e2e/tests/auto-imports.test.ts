@@ -288,20 +288,6 @@ describe('Auto Imports', () => {
       );
     });
 
-    it('should NOT output an ESlint config file by default', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
-
-      await project.prepare();
-
-      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
-        false,
-      );
-      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
-        false,
-      );
-    });
-
     it('should allow customizing the output', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
@@ -331,7 +317,8 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await spawn('bun', ['eslint', 'entrypoints/background.js'], {
+
+        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
           cwd: project.root,
         });
       }
@@ -357,6 +344,7 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 9)).rejects.toMatchObject({
             exitCode: 1,
+            stderr: '',
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
             ),

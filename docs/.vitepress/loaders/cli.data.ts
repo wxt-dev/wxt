@@ -49,7 +49,7 @@ async function getHelp(command: string): Promise<string> {
 }
 
 function getWxtHelp(command: string): Promise<string> {
-  return getHelp(`pnpm -s wxt ${command}`.trim());
+  return getHelp(`bun run --silent wxt ${command}`.trim());
 }
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
