@@ -45,7 +45,9 @@
     "check": "bun run build && check",
     "build": "buildc -- tsdown",
     "prepack": "bun run --silent build",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'TODO'",
+    "test:coverage": "echo 'TODO'"
   },
   "peerDependencies": {
     "wxt": ">=0.20.0"
