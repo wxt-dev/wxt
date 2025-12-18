@@ -21,7 +21,7 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
-    "build": "buildc -- tsdown src/index.ts src/build.ts src/module.ts",
+    "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest"
   },
