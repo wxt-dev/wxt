@@ -44,6 +44,7 @@ async function getHelp(command: string): Promise<string> {
   const exitCode = await child.exited;
   if (exitCode !== 0) throw Error(`Command failed with exit code ${exitCode}`);
 
+  // @ts-ignore: text() is an untyped util Bun provides for ReadableStreams
   return await child.stdout.text();
 }
 

@@ -174,12 +174,15 @@ function validateNoMultipleVersions(
 }
 
 async function spawnJson(cmd: string[]): Promise<any> {
-  const proc = Bun.spawn({ cmd });
-  const exitCode = await proc.exited;
+  const child = Bun.spawn({ cmd });
+  const exitCode = await child.exited;
   if (exitCode !== 0)
     throw new Error(`Command failed with exit code ${exitCode}`);
 
-  return JSON.parse(await proc.stdout.text());
+  return JSON.parse(
+    // @ts-ignore: text() is an untyped util Bun provides for ReadableStreams
+    await child.stdout.text(),
+  );
 }
 
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
