@@ -23,6 +23,7 @@
   "scripts": {
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
     "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepublishOnly": "bun run build"

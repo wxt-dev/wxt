@@ -12,6 +12,7 @@
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
     "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
     "zip": "buildc --deps-only -- wxt zip",
     "check": "buildc --deps-only -- check",
     "postinstall": "buildc --deps-only -- wxt prepare"
