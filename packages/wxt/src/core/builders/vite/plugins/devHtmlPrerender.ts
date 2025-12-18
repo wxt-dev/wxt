@@ -123,7 +123,7 @@ export function devHtmlPrerender(
             return '\0noop';
           }
 
-          return '\0' + id;
+          return `\0${id}`;
         },
       },
       load: {
