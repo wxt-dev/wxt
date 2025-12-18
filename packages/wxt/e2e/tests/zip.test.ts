@@ -39,7 +39,7 @@ describe('Zipping', () => {
 
     // Build zipped extension
     await expect(
-      spawn('bun', ['i'], {
+      spawn('pnpm', ['install'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');

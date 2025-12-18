@@ -20,7 +20,7 @@ export async function setup() {
     await rm(e2eDistPath, { recursive: true, force: true });
   }
 
-  // Pack WXT for projects to use
+  // Pack WXT for test projects to use
   await mkdir('e2e/dist', { recursive: true });
   await spawn('bun', ['pm', 'pack', '--filename', 'wxt.tgz']);
   await rename('../../wxt.tgz', 'e2e/dist/wxt.tgz');
