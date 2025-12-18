@@ -52,7 +52,8 @@
     "wxt": "workspace:*"
   },
   "patchedDependencies": {
-    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
+    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
   },
   "simple-git-hooks": {
     "pre-commit": "bun run lint-staged"
