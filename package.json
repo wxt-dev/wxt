@@ -14,9 +14,9 @@
     "prepare": "simple-git-hooks",
     "prepublish": "bun run --silent build",
     "docs:gen": "typedoc --options docs/typedoc.json",
-    "docs:dev": "bun run --silent docs:gen && vitepress dev docs",
-    "docs:build": "bun run --silent docs:gen && vitepress build docs",
-    "docs:preview": "bun run --silent docs:gen && vitepress preview docs"
+    "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
+    "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
+    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.5",
