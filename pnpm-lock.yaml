@@ -122,9 +122,6 @@ importers:
         specifier: ^1.0.40
         version: 1.0.41
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
@@ -150,9 +147,6 @@ importers:
         specifier: ^0.34.5
         version: 0.34.5
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       oxlint:
         specifier: ^1.33.0
         version: 1.33.0
@@ -212,9 +206,6 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@types/node':
         specifier: ^20.17.6
         version: 20.19.13
@@ -243,9 +234,6 @@ importers:
         specifier: ^4.4.1 || ^5.0.0
         version: 5.0.2(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.7
@@ -274,9 +262,6 @@ importers:
         specifier: ^2.11.10
         version: 2.11.10(solid-js@1.9.10)(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       publint:
         specifier: ^0.3.16
         version: 0.3.16
@@ -296,9 +281,6 @@ importers:
         specifier: ^4.0.0 || ^5.0.0 || ^6.0.0
         version: 6.1.4(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       publint:
         specifier: ^0.3.16
         version: 0.3.16
@@ -315,9 +297,6 @@ importers:
         specifier: ^5.2.3 || ^6.0.0
         version: 6.0.1(vite@7.3.0(@types/node@20.19.13)(jiti@2.6.1)(sass@1.97.0)(tsx@4.21.0)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.3))
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       publint:
         specifier: ^0.3.16
         version: 0.3.16
@@ -330,9 +309,6 @@ importers:
 
   packages/runner:
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       oxlint:
         specifier: ^1.33.0
         version: 1.33.0
@@ -361,9 +337,6 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@webext-core/fake-browser':
         specifier: ^1.3.2
         version: 1.3.2
@@ -389,9 +362,6 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       oxlint:
         specifier: ^1.33.0
         version: 1.33.0
@@ -410,9 +380,6 @@ importers:
 
   packages/webextension-polyfill:
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@types/webextension-polyfill':
         specifier: ^0.12.4
         version: 0.12.4
@@ -567,9 +534,6 @@ importers:
         specifier: ^0.2.4
         version: 0.2.4
     devDependencies:
-      '@aklinker1/check':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0

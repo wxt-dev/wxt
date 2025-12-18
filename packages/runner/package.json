@@ -28,7 +28,6 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.2.0",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "tsx": "4.21.0",
