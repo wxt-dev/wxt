@@ -20,6 +20,5 @@ templates/*/yarn.lock
 templates/*/package-lock.json
 docs/api/reference
 stats.html
-.tool-versions
 .cache
 *-stats.txt
