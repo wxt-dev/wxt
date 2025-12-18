@@ -6,7 +6,7 @@ import { readdir, mkdir } from 'node:fs/promises';
 // Fetch latest version
 
 console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
-await Bun.$`bun i --ignore-scripts -D @types/chrome@latest`;
+await Bun.$`bun install --ignore-scripts -D @types/chrome@latest`;
 
 // Generate new package.json
 

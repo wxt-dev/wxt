@@ -79,7 +79,7 @@ async function main(): Promise<never> {
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
   console.log();
-  consola.info('Run `bun i` to install new dependencies');
+  consola.info('Run `bun install` to install new dependencies');
   console.log();
   process.exit(0);
 }

@@ -27,7 +27,7 @@ WXT uses Bun for package management and development. Install it from: <https://b
 Then, simply run the install command:
 
 ```sh
-bun i
+bun install
 ```
 
 ## Development
