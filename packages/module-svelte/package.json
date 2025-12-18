@@ -40,7 +40,9 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "bun run build && check"
+    "check": "bun run build && check",
+    "test": "echo 'TODO'",
+    "test:coverage": "echo 'TODO'"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6",
