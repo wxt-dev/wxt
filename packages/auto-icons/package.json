@@ -53,7 +53,6 @@
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }
