@@ -2,9 +2,9 @@ name: Basic Setup
 description: Install Bun and dependencies
 
 inputs:
-  installArgs:
-    default: ''
-    description: Additional args to append to "bun install"
+  install:
+    default: 'true'
+    description: Whether or not to run 'bun install'
 
 runs:
   using: composite
