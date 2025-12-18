@@ -23,7 +23,7 @@
   "scripts": {
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
-    "dev": "bun dev.ts",
+    "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepublishOnly": "bun run build"
   },

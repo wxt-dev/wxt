@@ -5,8 +5,8 @@
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
-    "wxt": "bun src/cli/index.ts",
-    "build": "buildc -- tsdown --config-loader unrun",
+    "wxt": "bun run src/cli/index.ts",
+    "build": "buildc -- bun run --bun tsdown --config-loader unrun",
     "check": "bun run build && bun run check:default && bun run check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",

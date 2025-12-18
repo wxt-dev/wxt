@@ -11,7 +11,7 @@ import { consola } from 'consola';
 const pkg = process.argv[2];
 if (pkg == null) {
   throw Error(
-    'Package name missing. Usage: bun bump-package-version.ts <package-name>',
+    'Package name missing. Usage: bun run scripts/bump-package-version.ts <package-name>',
   );
 }
 const { pkgDir, pkgName, currentVersion, prevTag, changelogPath, pkgJsonPath } =

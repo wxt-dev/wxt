@@ -2,9 +2,9 @@
   "private": true,
   "type": "module",
   "engines": {
-    "bun": ">=1.3.4"
+    "bun": ">=1.3.5"
   },
-  "packageManager": "bun@1.3.4",
+  "packageManager": "bun@1.3.5",
   "workspaces": [
     "packages/*"
   ],
@@ -24,6 +24,7 @@
     "@aklinker1/check": "^2.2.0",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
+    "@types/bun": "^1.3.5",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^4.0.16",
     "changelogen": "^0.6.2",
@@ -33,7 +34,6 @@
     "lint-staged": "^16.2.7",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.45.0",
-    "nano-spawn": "^1.0.3",
     "p-map": "^7.0.4",
     "prettier": "^3.7.4",
     "semver": "^7.7.3",
@@ -54,16 +54,10 @@
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
   },
-  "trustedDependencies": [
-    "@aklinker1/buildc"
-  ],
   "simple-git-hooks": {
     "pre-commit": "bun lint-staged"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
-  },
-  "dependencies": {
-    "@types/bun": "^1.3.5"
   }
 }

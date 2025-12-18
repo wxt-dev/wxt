@@ -164,7 +164,7 @@ yarn zip:firefox
 
 ```sh [bun]
 bun i
-bun run zip:firefox
+bun zip:firefox
 ```
 
 :::

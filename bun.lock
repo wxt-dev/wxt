@@ -3,14 +3,12 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "dependencies": {
-        "@types/bun": "^1.3.5",
-      },
       "devDependencies": {
         "@aklinker1/buildc": "^1.1.5",
         "@aklinker1/check": "^2.2.0",
         "@commitlint/config-conventional": "^19.8.1",
         "@commitlint/types": "^19.8.1",
+        "@types/bun": "^1.3.5",
         "@types/semver": "^7.7.1",
         "@vitest/coverage-v8": "^4.0.16",
         "changelogen": "^0.6.2",
@@ -20,7 +18,6 @@
         "lint-staged": "^16.2.7",
         "markdown-it-footnote": "^4.0.0",
         "markdownlint-cli": "^0.45.0",
-        "nano-spawn": "^1.0.3",
         "p-map": "^7.0.4",
         "prettier": "^3.7.4",
         "semver": "^7.7.3",
@@ -86,9 +83,8 @@
         "@types/har-format": "*",
       },
       "devDependencies": {
-        "@types/chrome": "^0.1.32",
-        "nano-spawn": "^1.0.2",
-        "typescript": "^5.9.2",
+        "@types/chrome": "0.1.32",
+        "typescript": "^5.9.3",
         "vitest": "^4.0.16",
       },
     },
@@ -356,9 +352,6 @@
       },
     },
   },
-  "trustedDependencies": [
-    "@aklinker1/buildc",
-  ],
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
   },

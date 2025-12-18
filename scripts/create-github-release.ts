@@ -9,7 +9,7 @@ import consola from 'consola';
 const pkg = process.argv[2];
 if (pkg == null) {
   throw Error(
-    'Package name missing. Usage: bun create-github-release.ts <package-name>',
+    'Package name missing. Usage: bun run scripts/create-github-release.ts <package-name>',
   );
 }
 

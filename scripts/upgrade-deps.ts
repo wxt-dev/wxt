@@ -8,7 +8,7 @@ const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
 
 Usage:
-  bun scripts/upgrade-deps.ts [options]
+  bun run scripts/upgrade-deps.ts [options]
 
 Options:
   --write, -w       Write changes to package.json files
