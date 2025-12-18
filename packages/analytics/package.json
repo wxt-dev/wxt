@@ -34,8 +34,8 @@
       "default": "./dist/providers/umami.mjs"
     }
   },
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
@@ -43,7 +43,7 @@
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
     "check": "pnpm build && check",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "prepack": "pnpm -s build",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
@@ -55,7 +55,6 @@
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   },
   "dependencies": {

@@ -21,7 +21,7 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown src/index.ts src/build.ts src/module.ts",
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest"
   },
@@ -45,44 +45,24 @@
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.0.16",
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     },
     "./build": {
-      "import": {
-        "types": "./dist/build.d.mts",
-        "default": "./dist/build.mjs"
-      },
-      "require": {
-        "types": "./dist/build.d.cts",
-        "default": "./dist/build.cjs"
-      }
+      "types": "./dist/build.d.mts",
+      "default": "./dist/build.mjs"
     },
     "./module": {
-      "import": {
-        "types": "./dist/module.d.mts",
-        "default": "./dist/module.mjs"
-      },
-      "require": {
-        "types": "./dist/module.d.cts",
-        "default": "./dist/module.cjs"
-      }
+      "types": "./dist/module.d.mts",
+      "default": "./dist/module.mjs"
     }
   },
   "files": [

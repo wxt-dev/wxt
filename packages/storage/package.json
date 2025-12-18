@@ -25,7 +25,7 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest"
   },
@@ -40,11 +40,10 @@
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.0.16"
   },
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
