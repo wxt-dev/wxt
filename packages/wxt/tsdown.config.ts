@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { defineConfig, UserConfig } from 'tsdown';
 import pkgJson from './package.json' with { type: 'json' };
 import {
