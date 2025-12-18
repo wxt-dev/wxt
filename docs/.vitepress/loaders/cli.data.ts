@@ -54,7 +54,7 @@ function getWxtHelp(command: string): Promise<string> {
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
   const res = await getHelp(
-    `./node_modules/.bin/publish-extension ${command}`.trim(),
+    `./packages/wxt/node_modules/.bin/publish-extension ${command}`.trim(),
   );
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
