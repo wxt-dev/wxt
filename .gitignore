@@ -23,6 +23,3 @@ stats.html
 .tool-versions
 .cache
 *-stats.txt
-
-# TODO: remove
-dist-old

@@ -34,7 +34,7 @@
       "default": "./dist/providers/umami.mjs"
     }
   },
-  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
