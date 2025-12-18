@@ -22,6 +22,7 @@ export function download(config: ResolvedConfig): Plugin {
     },
     load: {
       filter: {
+        //eslint-disable-next-line no-control-regex
         id: /^\x00url:/,
       },
       async handler(id) {
