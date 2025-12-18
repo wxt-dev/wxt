@@ -16,7 +16,7 @@ N=20
 function benchmark_ref() {
     # Prep
     git checkout $1
-    bun buildc clean
+    bun run buildc clean
     git apply scripts/benchmarks/browser-startup.patch
     bun install --ignore-scripts
     bun run --cwd packages/wxt build

@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: bun check
+        run: bun run check
 
   builds:
     name: Builds
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun buildc all
+        run: bun run buildc all
 
   build-demo:
     name: Build Demo
@@ -51,7 +51,7 @@ jobs:
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: bun wxt zip
+        run: bun run wxt zip
         working-directory: packages/wxt-demo
 
   tests:

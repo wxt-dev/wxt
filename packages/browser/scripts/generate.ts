@@ -27,7 +27,7 @@ newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
 const outPkgJsonPath = resolve('package.json');
 await Bun.write(outPkgJsonPath, JSON.stringify(newPkgJson));
-await Bun.$`bun --cwd ../.. prettier --write "${outPkgJsonPath}"`;
+await Bun.$`bun run --cwd ../.. prettier --write "${outPkgJsonPath}"`;
 
 // Generate declaration files
 

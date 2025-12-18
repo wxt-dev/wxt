@@ -55,7 +55,7 @@
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
   },
   "simple-git-hooks": {
-    "pre-commit": "bun lint-staged"
+    "pre-commit": "bun run lint-staged"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"

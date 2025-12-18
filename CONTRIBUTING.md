@@ -88,13 +88,13 @@ Then there are a few different ways to profile WXT commands:
 - Create a CPU profile:
 
   ```sh
-  bun --cpu-prof node_modules/wxt/bin/wxt.mjs build
+  bun run --cpu-prof node_modules/wxt/bin/wxt.mjs build
   ```
 
 - Debug the process:
 
   ```sh
-  bun --inspect node_modules/wxt/bin/wxt.mjs build
+  bun run --inspect node_modules/wxt/bin/wxt.mjs build
   ```
 
 ## Updating Docs
