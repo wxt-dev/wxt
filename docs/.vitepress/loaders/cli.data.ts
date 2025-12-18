@@ -1,6 +1,5 @@
 import { resolve } from 'node:path';
 import consola from 'consola';
-import spawn from 'nano-spawn';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
 const cliDirGlob = resolve(cliDir, '**');
@@ -38,10 +37,14 @@ export default {
 
 async function getHelp(command: string): Promise<string> {
   const args = command.split(' ');
-  const res = await spawn(args[0], [...args.slice(1), '--help'], {
+  const child = Bun.spawn({
+    cmd: [...args, '--help'],
     cwd: 'packages/wxt',
   });
-  return res.stdout;
+  const exitCode = await child.exited;
+  if (exitCode !== 0) throw Error(`Command failed with exit code ${exitCode}`);
+
+  return await child.stdout.text();
 }
 
 function getWxtHelp(command: string): Promise<string> {

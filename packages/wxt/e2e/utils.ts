@@ -13,7 +13,7 @@ import {
 import { normalizePath } from '../src/core/utils/paths';
 import merge from 'lodash.merge';
 
-// Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
+// Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
 // files.
 export const WXT_PACKAGE_DIR = resolve(__dirname, '..');
@@ -119,7 +119,7 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
+    await spawn('bun', ['i', '--ignore-scripts'], {
       cwd: this.root,
     });
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(

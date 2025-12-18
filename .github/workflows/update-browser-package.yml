@@ -28,11 +28,11 @@ jobs:
 
       - name: Generate Latest Code
         working-directory: packages/browser
-        run: pnpm gen
+        run: bun gen
 
       - name: Run Checks
         working-directory: packages/browser
-        run: pnpm check
+        run: bun check
 
       - name: Commit Changes
         id: commit
@@ -46,6 +46,6 @@ jobs:
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
         run: |
-          pnpm pack
+          bun pm pack
           sudo npm i -g npm@latest
-          /usr/local/bin/npm publish *.tgz
+          npm publish *.tgz

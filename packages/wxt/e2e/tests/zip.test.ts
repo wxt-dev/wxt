@@ -4,8 +4,6 @@ import extract from 'extract-zip';
 import spawn from 'nano-spawn';
 import { readFile, writeFile } from 'fs-extra';
 
-process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
-
 describe('Zipping', () => {
   it('should download packages and produce a valid build when zipping sources', async () => {
     const project = new TestProject({
@@ -41,12 +39,12 @@ describe('Zipping', () => {
 
     // Build zipped extension
     await expect(
-      spawn('pnpm', ['i', '--ignore-workspace', '--frozen-lockfile', 'false'], {
+      spawn('bun', ['i'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');
     await expect(
-      spawn('pnpm', ['wxt', 'build', '-b', 'firefox'], {
+      spawn('bun', ['wxt', 'build', '-b', 'firefox'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');

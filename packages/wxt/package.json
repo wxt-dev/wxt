@@ -5,15 +5,15 @@
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
-    "wxt": "tsx src/cli/index.ts",
+    "wxt": "bun src/cli/index.ts",
     "build": "buildc -- tsdown --config-loader unrun",
-    "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
+    "check": "bun run build && bun run check:default && bun run check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test run --coverage",
+    "test:coverage": "bun run test run --coverage",
     "sync-releases": "pnpx changelogen@latest gh release",
-    "prepack": "pnpm build"
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@1natsu/wait-element": "^4.1.2",
@@ -63,6 +63,7 @@
     "web-ext-run": "^0.2.4"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.5",
     "@faker-js/faker": "^10.1.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
@@ -74,6 +75,7 @@
     "lodash.merge": "^4.6.2",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
+    "tsdown": "^0.18.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.16",
     "vitest-plugin-random-seed": "^1.1.2"

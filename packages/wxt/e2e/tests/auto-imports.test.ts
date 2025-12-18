@@ -331,7 +331,7 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
+        return await spawn('bun', ['eslint', 'entrypoints/background.js'], {
           cwd: project.root,
         });
       }

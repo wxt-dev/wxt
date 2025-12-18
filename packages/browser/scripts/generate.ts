@@ -1,13 +1,12 @@
-import spawn from 'nano-spawn';
-import fs from 'fs-extra';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve, sep } from 'node:path';
 import { sep as posixSep } from 'node:path/posix';
+import { readdir, mkdir } from 'node:fs/promises';
 
 // Fetch latest version
 
 console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
-await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome@latest']);
+await Bun.$`bun i --ignore-scripts -D @types/chrome@latest`;
 
 // Generate new package.json
 
@@ -17,8 +16,8 @@ const pkgJsonPath = fileURLToPath(
   import.meta.resolve('@types/chrome/package.json'),
 );
 const pkgDir = dirname(pkgJsonPath);
-const pkgJson = await fs.readJson(pkgJsonPath);
-const pkgJsonTemplate = await fs.readFile('templates/package.json', 'utf8');
+const pkgJson = await Bun.file(pkgJsonPath).json();
+const pkgJsonTemplate = await Bun.file('templates/package.json').text();
 const newPkgJson = JSON.parse(
   pkgJsonTemplate.replaceAll('{{chromeTypesVersion}}', pkgJson.version),
 );
@@ -27,15 +26,15 @@ newPkgJson.peerDependencies = pkgJson.peerDependencies;
 newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
 const outPkgJsonPath = resolve('package.json');
-await fs.writeJson(outPkgJsonPath, newPkgJson);
-await spawn('pnpm', ['-w', 'prettier', '--write', outPkgJsonPath]);
+await Bun.write(outPkgJsonPath, JSON.stringify(newPkgJson));
+await Bun.$`bun --cwd ../.. prettier --write "${outPkgJsonPath}"`;
 
 // Generate declaration files
 
 console.log('Generating declaration files');
 const outDir = resolve('src/gen');
 const declarationFileMapping = (
-  await fs.readdir(pkgDir, {
+  await readdir(pkgDir, {
     recursive: true,
     encoding: 'utf8',
   })
@@ -50,11 +49,11 @@ const declarationFileMapping = (
   }));
 
 for (const { file, srcPath, destPath } of declarationFileMapping) {
-  const content = await fs.readFile(srcPath, 'utf8');
+  const content = await Bun.file(srcPath).text();
   const transformedContent = transformFile(file, content);
   const destDir = dirname(destPath);
-  await fs.mkdir(destDir, { recursive: true });
-  await fs.writeFile(destPath, transformedContent);
+  await mkdir(destDir, { recursive: true });
+  await Bun.write(destPath, transformedContent);
   console.log(`  \x1b[2m-\x1b[0m \x1b[36m${file}\x1b[0m`);
 }
 

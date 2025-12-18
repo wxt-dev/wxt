@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check"
+    "check": "bun run build && check"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -49,7 +49,9 @@
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.5",
     "publint": "^0.3.16",
+    "tsdown": "^0.18.1",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

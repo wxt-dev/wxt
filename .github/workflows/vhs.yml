@@ -16,13 +16,13 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+      - name: Setup PNPM
+        uses: pnpm/action-setup@f2b2b233b538f500472c7274c7012f57857d8ce0 # v4.1.0
 
-      - name: Setup
-        uses: ./.github/actions/setup
+      - name: Setup NodeJS
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          install: false
+          cache: pnpm
 
       # This prevents pnpm dlx from downloading WXT in the video
       - name: Pre-install WXT

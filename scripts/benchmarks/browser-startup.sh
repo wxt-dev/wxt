@@ -16,17 +16,17 @@ N=20
 function benchmark_ref() {
     # Prep
     git checkout $1
-    pnpm buildc clean
+    bun buildc clean
     git apply scripts/benchmarks/browser-startup.patch
-    pnpm i --ignore-scripts
-    pnpm -r --filter wxt build
+    bun i --ignore-scripts
+    bun run --cwd packages/wxt build
     echo -n "$1 " >> stats.txt
 
     # Run benchmark
     for i in $(seq $N); do
-        pnpm wxt packages/wxt-demo
+        bun wxt packages/wxt-demo
     done
-    git checkout HEAD -- packages/wxt/src/core/runners/web-ext.ts pnpm-lock.yaml
+    git checkout HEAD -- packages/wxt/src/core/runners/web-ext.ts bun.lock
     echo "" >> stats.txt
 }
 

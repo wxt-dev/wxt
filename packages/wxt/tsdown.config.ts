@@ -1,6 +1,5 @@
 import { defineConfig, UserConfig } from 'tsdown';
 import pkgJson from './package.json' with { type: 'json' };
-import { readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
@@ -54,9 +53,9 @@ async function replaceVars(
   file: string,
   vars: Record<string, string>,
 ): Promise<void> {
-  let text = await readFile(file, 'utf8');
+  let text = await Bun.file(file).text();
   Object.entries(vars).forEach(([name, value]) => {
     text = text.replaceAll(`{{${name}}}`, value);
   });
-  await writeFile(file, text, 'utf8');
+  await Bun.write(file, text);
 }

@@ -35,9 +35,11 @@
     "dequal": "^2.0.3"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.5",
     "@webext-core/fake-browser": "^1.3.2",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
+    "tsdown": "^0.18.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.16"
   },

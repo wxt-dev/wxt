@@ -2,33 +2,34 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.20.3"
+    "bun": ">=1.3.4"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "bun@1.3.4",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "check": "check && pnpm -r --sequential run check",
-    "test": "pnpm -r --sequential run test run",
-    "test:coverage": "pnpm -r --sequential run test:coverage",
+    "check": "check && bun run --workspaces check",
+    "test": "bun run --workspaces test run",
+    "test:coverage": "bun run --workspaces test:coverage",
     "prepare": "simple-git-hooks",
-    "prepublish": "pnpm -s build",
+    "prepublish": "bun run --silent build",
     "docs:gen": "typedoc --options docs/typedoc.json",
-    "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
-    "docs:build": "pnpm -s docs:gen && vitepress build docs",
-    "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
+    "docs:dev": "bun run --silent docs:gen && vitepress dev docs",
+    "docs:build": "bun run --silent docs:gen && vitepress build docs",
+    "docs:preview": "bun run --silent docs:gen && vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.5",
     "@aklinker1/check": "^2.2.0",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
-    "@types/fs-extra": "^11.0.4",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^4.0.16",
     "changelogen": "^0.6.2",
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "feed": "^5.1.0",
-    "fs-extra": "^11.3.2",
     "lint-staged": "^16.2.7",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.45.0",
@@ -38,7 +39,6 @@
     "semver": "^7.7.3",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.18.1",
-    "tsx": "4.21.0",
     "typedoc": "^0.25.4",
     "typedoc-plugin-frontmatter": "^1.3.1",
     "typedoc-plugin-markdown": "4.0.0-next.23",
@@ -51,10 +51,19 @@
     "vue": "^3.5.25",
     "wxt": "workspace:*"
   },
+  "patchedDependencies": {
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
+  },
+  "trustedDependencies": [
+    "@aklinker1/buildc"
+  ],
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "bun lint-staged"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"
+  },
+  "dependencies": {
+    "@types/bun": "^1.3.5"
   }
 }

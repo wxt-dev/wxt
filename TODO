@@ -1,0 +1,18 @@
+- [x] Move config to bun
+- [x] Add back cli dev deps to packages
+- [x] `bun install` works
+- [x] Remove TSX
+- [x] Replace commands with `bun`
+- [x] Update README.md and CONTRIBUTING.md
+- [x] Use Bun.file?
+   - [x] Remove fs-extra
+- [x] browser `bun gen` command works
+- [x] runner `bun dev` command works with --trace-warnings
+- [x] Check for usage of setup action params
+- [x] Use `Bun.$` instead of spawn
+    - [x] Remove nano-spawn?
+- [ ] Fix packages/wxt/e2e/tests/npm-packages.test.ts
+- [ ] `bun install --analyze src/...` for aframe builds?
+- [x] Figure out what WXT_PNPM_IGNORE_WORKSPACE is used for
+- [x] Prefer --cwd over -F
+- [x] Ensure scripts/upgrade-deps.ts works

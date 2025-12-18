@@ -22,16 +22,12 @@ The title of your pull request should follow the [conventional commit format](#c
 
 ## Setup
 
-WXT uses `pnpm`, so make sure you have it installed.
-
-```sh
-corepack enable
-```
+WXT uses Bun for package management and development. Install it from: <https://bun.com/>
 
 Then, simply run the install command:
 
 ```sh
-pnpm i
+bun i
 ```
 
 ## Development
@@ -39,47 +35,67 @@ pnpm i
 Here are some helpful commands:
 
 ```sh
-# Build WXT package
-cd packages/wxt
-pnpm build
+# Build WXT package and workspace dependencies
+bun run -F wxt build
 ```
 
 ```sh
-# Build WXT package, then build demo extension
-cd packages/wxt-demo
-pnpm build
-```
-
-```sh
-# Build WXT package, then start the demo extension in dev mode
-cd packages/wxt-demo
-pnpm dev
+# Build workspace dependencies, then start the demo extension in dev mode
+bun run -F wxt-demo dev
 ```
 
 ```sh
 # Run unit and E2E tests
-pnpm test
+bun run test
 ```
 
 ```sh
 # Start the docs website locally
-pnpm docs:dev
+bun run docs:dev
 ```
+
+> Above, we used bun's `-F` flag to choose which package to run a command in, but there are other ways
+>
+> ```sh
+> bun run -F @wxt-dev/i18n build
+> # or
+> bun run --cwd packages/i18n build
+> # or
+> cd packages/i18n
+> bun run build
+> ```
+>
+> Pick your piosin!
 
 ## Profiling
 
 ```sh
 # Build the latest version
-pnpm --filter wxt build
+bun run -F wxt build
 
 # CD to the demo directory
 cd packages/wxt-demo
-
-# 1. Generate a flamechart with 0x
-pnpm dlx 0x node_modules/wxt/bin/wxt.mjs build
-# 2. Inspect the process with chrome @ chrome://inspect
-pnpm node --inspect node_modules/wxt/bin/wxt.mjs build
 ```
+
+Then there are a few different ways to profile WXT commands:
+
+- Generate a flamechart with 0x:
+
+  ```sh
+  bunx 0x node_modules/wxt/bin/wxt.mjs build
+  ```
+
+- Create a CPU profile:
+
+  ```sh
+  bun --cpu-prof node_modules/wxt/bin/wxt.mjs build
+  ```
+
+- Debug the process:
+
+  ```sh
+  bun --inspect node_modules/wxt/bin/wxt.mjs build
+  ```
 
 ## Updating Docs
 
@@ -96,7 +112,7 @@ WXT has unit and E2E tests. When making a change or adding a feature, make sure 
 To run tests for a specific file, add the filename at the end of the test command:
 
 ```sh
-pnpm test manifest-contents
+bun run -F wxt test manifest-contents
 ```
 
 All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
@@ -105,7 +121,7 @@ If you want to manually test a change, you can modify the demo project for your 
 
 ## Templates
 
-Each directory inside `templates/` is it's own standalone project. Simply `cd` into the directory you're updating, install dependencies with `npm` (NOT `pnpm`), and run the relevant commands
+Each directory inside `templates/` is it's own standalone project. Simply `cd` into the directory you're updating, install dependencies with `npm` (NOT `bun`), and run the relevant commands
 
 ```sh
 cd templates/vue
@@ -121,7 +137,7 @@ Note that templates are hardcoded to a specific version of `wxt` from NPM, they 
     "typescript": "^5.3.2",
     "vite-plugin-solid": "^2.7.0",
 -   "wxt": "^0.8.0"
-+   "wxt": "../.."
++   "wxt": "../../packages/wxt"
   }
 ```
 
@@ -137,6 +153,8 @@ cp -r templates/vanilla templates/<new-template-name>
 
 That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.
 
+All current templates are based on Vite's templates: <https://github.com/vitejs/vite/tree/main/packages/create-vite>
+
 ## Releasing Updates
 
 Releases are done with GitHub actions:
@@ -149,13 +167,13 @@ Releases are done with GitHub actions:
 WXT has custom rules around what dependencies can be upgraded. Use the `scripts/upgrade-deps.ts` script to upgrade dependencies and follow these rules.
 
 ```sh
-pnpm tsx scripts/upgrade-deps.ts
+bun run scripts/upgrade-deps.ts
 ```
 
 To see all the options, run:
 
 ```sh
-pnpm tsx scripts/upgrade-deps.ts --help
+bun run scripts/upgrade-deps.ts --help
 ```
 
 ## Install Unreleased Versions

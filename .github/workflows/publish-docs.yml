@@ -37,7 +37,7 @@ jobs:
 
       - name: Build docs
         run: |
-          pnpm docs:build
+          bun run docs:build
           docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
 
       - name: Push Image

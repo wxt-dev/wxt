@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
@@ -51,8 +51,10 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.5",
     "publint": "^0.3.16",
     "solid-js": "^1.9.10",
+    "tsdown": "^0.18.1",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

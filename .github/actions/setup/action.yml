@@ -1,29 +1,21 @@
 name: Basic Setup
-description: Install PNPM, Node, and dependencies
+description: Install Bun and dependencies
 
 inputs:
-  install:
-    default: 'true'
-    description: Whether or not to run 'pnpm install'
-
   installArgs:
     default: ''
-    description: Additional args to append to "pnpm install"
+    description: Additional args to append to "bun install"
 
 runs:
   using: composite
 
   steps:
-    - name: 🛠️ Setup PNPM
-      uses: pnpm/action-setup@f2b2b233b538f500472c7274c7012f57857d8ce0 # v4.1.0
-
-    - name: 🛠️ Setup NodeJS
-      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+    - name: 🛠️ Setup Bun
+      uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
       with:
-        node-version: 20
-        cache: pnpm
+        bun-version-file: 'package.json'
 
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: pnpm install ${{ inputs.installArgs }}
+      run: bun install --frozen-lockfile ${{ inputs.installArgs }}

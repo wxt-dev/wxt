@@ -5,20 +5,19 @@ import {
   updateGithubRelease,
 } from 'changelogen';
 import { getPkgTag, grabPackageDetails } from './git';
-import fs from 'fs-extra';
 import consola from 'consola';
 
 const pkg = process.argv[2];
 if (pkg == null) {
   throw Error(
-    'Package name missing. Usage: tsx sync-releases.ts <package-name>',
+    'Package name missing. Usage: bun sync-releases.ts <package-name>',
   );
 }
 
 // Update
 const { changelogPath, pkgName } = await grabPackageDetails(pkg);
-const { releases } = await fs
-  .readFile(changelogPath, 'utf8')
+const { releases } = await Bun.file(changelogPath)
+  .text()
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 const config = await loadChangelogConfig(process.cwd());

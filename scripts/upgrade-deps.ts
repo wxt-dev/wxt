@@ -1,16 +1,14 @@
 import glob from 'fast-glob';
-import fs from 'fs-extra';
 import * as semver from 'semver';
 import { dirname } from 'node:path';
 import consola from 'consola';
-import spawn from 'nano-spawn';
 import pMap from 'p-map';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
 
 Usage:
-  pnpm tsx scripts/upgrade-deps.ts [options]
+  bun scripts/upgrade-deps.ts [options]
 
 Options:
   --write, -w       Write changes to package.json files
@@ -81,7 +79,7 @@ async function main(): Promise<never> {
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
   console.log();
-  consola.info('Run `pnpm i` to install new dependencies');
+  consola.info('Run `bun i` to install new dependencies');
   console.log();
   process.exit(0);
 }
@@ -106,7 +104,7 @@ async function getPackageJsonDependencies(
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
-      content: await fs.readJson(path),
+      content: await Bun.file(path).json(),
       path,
       folder: dirname(path),
     })),
@@ -175,10 +173,32 @@ function validateNoMultipleVersions(
   process.exit(1);
 }
 
+async function spawnJson(cmd: string[]): Promise<any> {
+  const proc = Bun.spawn({ cmd });
+  const exitCode = await proc.exited;
+  if (exitCode !== 0)
+    throw new Error(`Command failed with exit code ${exitCode}`);
+
+  return JSON.parse(await proc.stdout.text());
+}
+
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
-  // Use PNPM instead of API in case dependencies don't come from NPM
-  const res = await spawn('pnpm', ['view', name, '--json']);
-  return JSON.parse(res.stdout);
+  // Bun doesn't return the dist-tags and time fields by default, have to fetch them separately
+  const partial = await spawnJson(['bun', 'info', name, '--json']);
+  const distTags = await spawnJson([
+    'bun',
+    'info',
+    name,
+    'dist-tags',
+    '--json',
+  ]);
+  const time = await spawnJson(['bun', 'info', name, 'time', '--json']);
+
+  return {
+    ...partial,
+    'dist-tags': distTags,
+    time,
+  };
 }
 
 type PackageInfo = {
@@ -347,7 +367,7 @@ async function writeUpgrades(
   upgrades: UpgradeDetails[],
 ) {
   for (const packageJsonFile of packageJsonFiles) {
-    const oldText = await fs.readFile(packageJsonFile, 'utf8');
+    const oldText = await Bun.file(packageJsonFile).text();
     let newText = oldText;
     for (const upgrade of upgrades) {
       const search = `"${upgrade.name}": "${upgrade.currentRange}"`;
@@ -355,7 +375,7 @@ async function writeUpgrades(
       newText = newText.replaceAll(search, replace);
     }
     if (newText !== oldText) {
-      await fs.writeFile(packageJsonFile, newText, 'utf8');
+      await Bun.write(packageJsonFile, newText);
     }
   }
 }
