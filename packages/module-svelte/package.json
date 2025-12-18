@@ -41,8 +41,8 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
-    "test": "echo 'TODO'",
-    "test:coverage": "echo 'TODO'"
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6",

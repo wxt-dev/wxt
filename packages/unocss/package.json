@@ -33,7 +33,9 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check"
+    "check": "buildc --deps-only -- check",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",

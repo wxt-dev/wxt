@@ -43,8 +43,8 @@
     "check": "bun run build && check",
     "build": "buildc -- tsdown",
     "prepare": "buildc --deps-only -- wxt prepare",
-    "test": "echo 'TODO'",
-    "test:coverage": "echo 'TODO'"
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
