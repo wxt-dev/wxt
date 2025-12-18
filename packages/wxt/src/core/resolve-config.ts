@@ -322,6 +322,7 @@ function resolveZipConfig(
     ],
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
+    stripWorkspaceProtocol: mergedConfig.zip?.stripWorkspaceProtocol ?? false,
   };
 }
 
