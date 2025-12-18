@@ -21,7 +21,7 @@
   "license": "MIT",
   "type": "module",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -32,7 +32,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check"
   },
   "peerDependencies": {
@@ -44,7 +44,6 @@
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"
   },

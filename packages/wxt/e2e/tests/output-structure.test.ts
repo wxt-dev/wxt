@@ -343,44 +343,40 @@ describe('Output Directory Structure', () => {
 
     expect(await project.serializeFile('.output/chrome-mv3/background.js'))
       .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
-        function defineBackground(arg) {
-          if (arg == null || typeof arg === "function") return { main: arg };
-          return arg;
-        }
-        const definition = defineBackground({
-          type: "module",
-          main() {
-            logHello("background");
+          ".output/chrome-mv3/background.js
+          ----------------------------------------
+          import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
+          function defineBackground(arg) {
+            if (arg == null || typeof arg === "function") return { main: arg };
+            return arg;
           }
-        });
-        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-        function print(method, ...args) {
-          return;
-        }
-        const logger = {
-          debug: (...args) => print(console.debug, ...args),
-          log: (...args) => print(console.log, ...args),
-          warn: (...args) => print(console.warn, ...args),
-          error: (...args) => print(console.error, ...args)
-        };
-        let result;
-        try {
-          initPlugins();
-          result = definition.main();
-          if (result instanceof Promise) {
-            console.warn(
-              "The background's main() function return a promise, but it must be synchronous"
-            );
+          const definition = defineBackground({
+            type: "module",
+            main() {
+              logHello("background");
+            }
+          });
+          globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+          function print(method, ...args) {
+            return;
           }
-        } catch (err) {
-          logger.error("The background crashed on startup!");
-          throw err;
-        }
-        "
-      `);
+          const logger = {
+            debug: (...args) => print(console.debug, ...args),
+            log: (...args) => print(console.log, ...args),
+            warn: (...args) => print(console.warn, ...args),
+            error: (...args) => print(console.error, ...args)
+          };
+          let result;
+          try {
+            initPlugins();
+            result = definition.main();
+            if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+          } catch (err) {
+            logger.error("The background crashed on startup!");
+            throw err;
+          }
+          "
+        `);
   });
 
   it('should generate IIFE background script when type=undefined', async () => {
@@ -420,51 +416,47 @@ describe('Output Directory Structure', () => {
 
     expect(await project.serializeFile('.output/chrome-mv3/background.js'))
       .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        var background = (function() {
-          "use strict";
-          function defineBackground(arg) {
-            if (arg == null || typeof arg === "function") return { main: arg };
-            return arg;
+      ".output/chrome-mv3/background.js
+      ----------------------------------------
+      var background = (function() {
+        "use strict";
+        function defineBackground(arg) {
+          if (arg == null || typeof arg === "function") return { main: arg };
+          return arg;
+        }
+        function logHello(name) {
+          console.log(\`Hello \${name}!\`);
+        }
+        const definition = defineBackground({
+          main() {
+            logHello("background");
           }
-          function logHello(name) {
-            console.log(\`Hello \${name}!\`);
-          }
-          const definition = defineBackground({
-            main() {
-              logHello("background");
-            }
-          });
-          function initPlugins() {
-          }
-          globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-          function print(method, ...args) {
-            return;
-          }
-          const logger = {
-            debug: (...args) => print(console.debug, ...args),
-            log: (...args) => print(console.log, ...args),
-            warn: (...args) => print(console.warn, ...args),
-            error: (...args) => print(console.error, ...args)
-          };
-          let result;
-          try {
-            initPlugins();
-            result = definition.main();
-            if (result instanceof Promise) {
-              console.warn(
-                "The background's main() function return a promise, but it must be synchronous"
-              );
-            }
-          } catch (err) {
-            logger.error("The background crashed on startup!");
-            throw err;
-          }
-          const result$1 = result;
-          return result$1;
-        })();
-        "
-      `);
+        });
+        function initPlugins() {
+        }
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+        function print(method, ...args) {
+          return;
+        }
+        const logger = {
+          debug: (...args) => print(console.debug, ...args),
+          log: (...args) => print(console.log, ...args),
+          warn: (...args) => print(console.warn, ...args),
+          error: (...args) => print(console.error, ...args)
+        };
+        let result;
+        try {
+          initPlugins();
+          result = definition.main();
+          if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+        } catch (err) {
+          logger.error("The background crashed on startup!");
+          throw err;
+        }
+        var background_entrypoint_default = result;
+        return background_entrypoint_default;
+      })();
+      "
+    `);
   });
 });

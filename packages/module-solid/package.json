@@ -22,7 +22,7 @@
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "import": {
@@ -41,7 +41,7 @@
   "scripts": {
     "dev": "wxt",
     "check": "pnpm build && check",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "peerDependencies": {
@@ -55,7 +55,6 @@
     "publint": "^0.3.16",
     "solid-js": "^1.9.10",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }
