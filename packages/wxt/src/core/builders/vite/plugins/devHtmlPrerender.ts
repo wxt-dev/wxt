@@ -139,6 +139,7 @@ export function devHtmlPrerender(
             return '';
           }
 
+          // id="virtual:wxt-inline-script?<key>"
           const key = id.substring(id.indexOf('?') + 1);
           return inlineScriptContents[key];
         },
