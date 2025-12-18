@@ -75,6 +75,8 @@ jobs:
 
       - name: Setup PNPM
         uses: pnpm/action-setup@f2b2b233b538f500472c7274c7012f57857d8ce0 # v4.1.0
+        with:
+          version: latest
 
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
