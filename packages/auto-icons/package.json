@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.5",
+    "@types/fs-extra": "^11.0.4",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "tsdown": "^0.18.1",
