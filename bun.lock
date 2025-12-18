@@ -339,6 +339,8 @@
         "react-dom": "^19.2.3",
       },
       "devDependencies": {
+        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/check": "^2.2.0",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
         "@wxt-dev/auto-icons": "workspace:*",

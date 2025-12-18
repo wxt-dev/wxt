@@ -65,7 +65,7 @@ bun run docs:dev
 > bun run build
 > ```
 >
-> Pick your piosin!
+> Pick your poison!
 
 ## Profiling
 

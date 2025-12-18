@@ -183,8 +183,11 @@ async function spawnJson(cmd: string[]): Promise<any> {
 }
 
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
-  // Bun doesn't return the dist-tags and time fields by default, have to fetch them separately
+  // Use Bun instead of API in case dependencies don't come from NPM.
   const partial = await spawnJson(['bun', 'info', name, '--json']);
+
+  // Bun doesn't return the dist-tags and time fields by default, have to fetch
+  // them separately.
   const distTags = await spawnJson([
     'bun',
     'info',
