@@ -26,7 +26,6 @@
     "@types/chrome": "0.1.32",
     "fs-extra": "^11.3.1",
     "nano-spawn": "^1.0.2",
-    "tsx": "4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^4.0.16"
   },
