@@ -23,7 +23,8 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
