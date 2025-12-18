@@ -49,20 +49,39 @@
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./build": {
-      "types": "./dist/build.d.mts",
-      "default": "./dist/build.mjs"
+      "import": {
+        "types": "./dist/build.d.mts",
+        "default": "./dist/build.mjs"
+      },
+      "require": {
+        "types": "./dist/build.d.cts",
+        "default": "./dist/build.cjs"
+      }
     },
     "./module": {
-      "types": "./dist/module.d.mts",
-      "default": "./dist/module.mjs"
+      "import": {
+        "types": "./dist/module.d.mts",
+        "default": "./dist/module.mjs"
+      },
+      "require": {
+        "types": "./dist/module.d.cts",
+        "default": "./dist/module.cjs"
+      }
     }
   },
   "files": [
