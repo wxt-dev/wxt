@@ -70,20 +70,19 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
 
         const { document } = parseHTML(html);
         const existing = document.querySelector(`script[src='${src}']`);
+        if (existing) return;
 
-        if (!existing) {
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = src;
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = src;
 
-          if (document.head == null) {
-            const newHead = document.createElement('head');
-            document.documentElement.prepend(newHead);
-          }
-
-          document.head?.prepend(script);
-          return document.toString();
+        if (document.head == null) {
+          const newHead = document.createElement('head');
+          document.documentElement.prepend(newHead);
         }
+
+        document.head?.prepend(script);
+        return document.toString();
       },
     },
   };
