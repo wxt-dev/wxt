@@ -130,6 +130,7 @@ export function devHtmlPrerender(
         filter: {
           id: [
             new RegExp(`^${resolvedVirtualInlineScript}`),
+            //eslint-disable-next-line no-control-regex
             new RegExp('^\x00noop'),
           ],
         },
