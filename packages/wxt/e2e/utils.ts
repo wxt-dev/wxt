@@ -119,7 +119,7 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await spawn('bun', ['i', '--ignore-scripts'], {
+    await spawn('bun', ['install', '--ignore-scripts'], {
       cwd: this.root,
     });
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
