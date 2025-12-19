@@ -278,6 +278,8 @@ function addEntrypoints(
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
+    if (popup.options.defaultState)
+      options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
