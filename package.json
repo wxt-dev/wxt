@@ -19,7 +19,7 @@
     "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.5",
+    "@aklinker1/buildc": "^1.1.6",
     "@aklinker1/check": "^2.2.0",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",

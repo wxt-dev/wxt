@@ -47,7 +47,7 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.5",
+    "@aklinker1/buildc": "^1.1.6",
     "@types/webextension-polyfill": "^0.12.4",
     "publint": "^0.3.16",
     "tsdown": "^0.18.1",

@@ -63,7 +63,7 @@
     "web-ext-run": "^0.2.4"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.5",
+    "@aklinker1/buildc": "^1.1.6",
     "@faker-js/faker": "^10.1.0",
     "@types/bun": "^1.3.5",
     "@types/fs-extra": "^11.0.4",

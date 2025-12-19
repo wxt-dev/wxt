@@ -4,7 +4,7 @@
   "workspaces": {
     "": {
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@aklinker1/check": "^2.2.0",
         "@commitlint/config-conventional": "^19.8.1",
         "@commitlint/types": "^19.8.1",
@@ -44,7 +44,7 @@
         "ua-parser-js": "^1.0.40",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@types/ua-parser-js": "^0.7.39",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
@@ -64,7 +64,7 @@
         "sharp": "^0.34.5",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@types/fs-extra": "^11.0.4",
         "oxlint": "^1.33.0",
         "publint": "^0.3.16",
@@ -99,7 +99,7 @@
         "fast-glob": "^3.3.3",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@types/node": "^20.17.6",
         "oxlint": "^1.33.0",
         "publint": "^0.3.16",
@@ -123,7 +123,7 @@
         "@vitejs/plugin-react": "^4.4.1 || ^5.0.0",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
         "publint": "^0.3.16",
@@ -144,7 +144,7 @@
         "vite-plugin-solid": "^2.11.10",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "publint": "^0.3.16",
         "solid-js": "^1.9.10",
         "tsdown": "^0.18.1",
@@ -162,7 +162,7 @@
         "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0 || ^6.0.0",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
         "typescript": "^5.9.3",
@@ -180,7 +180,7 @@
         "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
         "typescript": "^5.9.3",
@@ -194,7 +194,7 @@
       "name": "@wxt-dev/runner",
       "version": "0.1.2",
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "oxlint": "^1.33.0",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
@@ -211,7 +211,7 @@
         "dequal": "^2.0.3",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@webext-core/fake-browser": "^1.3.2",
         "oxlint": "^1.33.0",
         "publint": "^0.3.16",
@@ -228,7 +228,7 @@
         "fast-glob": "^3.3.3",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "oxlint": "^1.33.0",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
@@ -245,7 +245,7 @@
       "name": "@wxt-dev/webextension-polyfill",
       "version": "1.0.0",
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@types/webextension-polyfill": "^0.12.4",
         "publint": "^0.3.16",
         "tsdown": "^0.18.1",
@@ -313,7 +313,7 @@
         "web-ext-run": "^0.2.4",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@faker-js/faker": "^10.1.0",
         "@types/bun": "^1.3.5",
         "@types/fs-extra": "^11.0.4",
@@ -341,7 +341,7 @@
         "react-dom": "^19.2.3",
       },
       "devDependencies": {
-        "@aklinker1/buildc": "^1.1.5",
+        "@aklinker1/buildc": "^1.1.6",
         "@aklinker1/check": "^2.2.0",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
@@ -363,7 +363,7 @@
   "packages": {
     "@1natsu/wait-element": ["@1natsu/wait-element@4.1.2", "", { "dependencies": { "defu": "6.1.4", "many-keys-map": "2.0.1" } }, "sha512-qWxSJD+Q5b8bKOvESFifvfZ92DuMsY+03SBNjTO34ipJLP6mZ9yK4bQz/vlh48aEQXoJfaZBqUwKL5BdI5iiWw=="],
 
-    "@aklinker1/buildc": ["@aklinker1/buildc@1.1.5", "", { "dependencies": { "cac": "6.7.14", "consola": "3.4.2", "dependency-graph": "1.0.0", "fast-glob": "3.3.3", "fs-extra": "11.3.2", "ohash": "1.1.6", "pathe": "1.1.2", "proper-lockfile": "4.1.2", "yaml": "2.8.1" }, "bin": { "buildc": "bin/buildc.mjs" } }, "sha512-SL8NBNwOiTiCKjQnpOxTA4WfoeiTNhiVy1J6Ztk28xTbZQ7IL0zHbKODnEJAjuy8bfnxlChQT1ZMzjG7kBU4aw=="],
+    "@aklinker1/buildc": ["@aklinker1/buildc@1.1.6", "", { "dependencies": { "cac": "^6.7.14", "consola": "^3.2.3", "dependency-graph": "^1.0.0", "fast-glob": "^3.3.2", "fs-extra": "^11.2.0", "ohash": "^1.1.3", "pathe": "^1.1.2", "proper-lockfile": "^4.1.2", "yaml": "^2.4.5" }, "bin": { "buildc": "bin/buildc.mjs" } }, "sha512-5JM6ieV08l4UxQ+9ZUVfAyz46RENfRaRfyN74UqsMX7Vn7aAv5t8bZxkCbQCT38jlsIVLUKaYKWTNueicEzXIw=="],
 
     "@aklinker1/check": ["@aklinker1/check@2.2.0", "", { "dependencies": { "ci-info": "4.3.1" }, "bin": { "check": "bin/check.mjs" } }, "sha512-v+2iVqXN3b0qCbr0hYjE5botj42FnhLwHNuaa5vkIb+HNfhTv6+A1Haa390JgFJC/+A/OGmJlzicYMv4O3qRUQ=="],
 
