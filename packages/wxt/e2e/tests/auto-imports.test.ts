@@ -318,9 +318,7 @@ describe('Auto Imports', () => {
           imports: { eslintrc: { enabled: version } },
         });
 
-        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
-          cwd: project.root,
-        });
+        return await project.run('eslint', 'entrypoints/background.js');
       }
 
       describe('ESLint 9', () => {

@@ -1,7 +1,7 @@
 import { dirname, relative, resolve } from 'path';
 import fs, { mkdir } from 'fs-extra';
 import glob from 'fast-glob';
-import spawn from 'nano-spawn';
+import spawn, { Result as SpawnResult } from 'nano-spawn';
 import {
   InlineConfig,
   UserConfig,
@@ -24,6 +24,7 @@ export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
+  readonly needsIsolation: boolean;
 
   constructor(packageJson: any = {}) {
     // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
@@ -31,6 +32,15 @@ export class TestProject {
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
     this.root = resolve(E2E_DIR, 'dist', id);
+
+    // Test projects will use PNPM instead of bun when they have custom
+    // dependency requirements. Bun tries to use the monorepo workspace, causing problems.
+    // But using PNPM makes the tests really slow, so we only use it when necessary.
+    this.needsIsolation =
+      Object.keys({
+        ...packageJson.dependencies,
+        ...packageJson.devDependencies,
+      }).length > 0;
 
     this.files.push([
       'package.json',
@@ -40,10 +50,12 @@ export class TestProject {
             name: 'E2E Extension',
             description: 'Example description',
             version: '0.0.0',
-            dependencies: {
-              // This is built and moved here inside `vitest.globalSetup.ts`
-              wxt: '../wxt.tgz',
-            },
+            dependencies: this.needsIsolation
+              ? {
+                  // This is built and moved here inside `vitest.globalSetup.ts`
+                  wxt: '../wxt.tgz',
+                }
+              : undefined,
           },
           packageJson,
         ),
@@ -121,9 +133,11 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await spawn('pnpm', ['install', '--prefer-offline'], {
-      cwd: this.root,
-    });
+    if (this.needsIsolation) {
+      await spawn('pnpm', ['install', '--prefer-offline'], {
+        cwd: this.root,
+      });
+    }
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
@@ -195,5 +209,14 @@ export class TestProject {
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
     return await fs.readJson(this.resolvePath(path));
+  }
+
+  /**
+   * Run a command using the project's package manager.
+   */
+  async run(...args: string[]): Promise<SpawnResult> {
+    return await spawn(this.needsIsolation ? 'pnpm' : 'bun', args, {
+      cwd: this.root,
+    });
   }
 }
