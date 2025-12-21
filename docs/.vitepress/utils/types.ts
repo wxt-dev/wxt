@@ -16,3 +16,10 @@ export type ExamplesMetadata = {
 };
 
 export type KeySelectedObject = Record<string, boolean | undefined>;
+
+export interface PostFrontmatter {
+  title: string;
+  description?: string;
+  date: Date;
+  authors: { name: string; github: string }[];
+}
