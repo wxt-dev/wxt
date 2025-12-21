@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-// @ts-expect-error: Vitepress data-loader magic, this import is correct
-import { data } from '../loaders/blog.data';
+import { data, type Post } from '../loaders/blog.data';
 import BlogPostPreview from './BlogPostPreview.vue';
 
-const posts = computed(() =>
+const posts = computed<Post[]>(() =>
   data
     .map((post) => ({
       ...post,
@@ -60,11 +59,11 @@ li {
 ul li {
   padding-top: 16px;
   margin-top: 16px;
-  border-top: 1px solid var(--vp-c-default);
+  border-top: 1px solid var(--vp-c-default-2);
 }
 ul li:last-child {
   padding-bottom: 16px;
   margin-bottom: 16px;
-  border-bottom: 1px solid var(--vp-c-default);
+  border-bottom: 1px solid var(--vp-c-default-1);
 }
 </style>
