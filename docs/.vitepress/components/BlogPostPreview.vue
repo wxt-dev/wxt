@@ -39,6 +39,7 @@ li {
 p {
   margin: 0;
 }
+
 h3 {
   margin: 0;
   padding: 0;
@@ -48,15 +49,14 @@ h3 {
 li > a > div {
   display: flex;
   flex-direction: column;
-  margin: 0 -16px;
   padding: 16px;
   border-radius: 16px;
 }
 li > a > div:hover {
-  background: var(--vp-c-default);
+  background: var(--vp-c-default-3);
 }
 li .title {
-  color: var(--vp-c-text);
+  color: var(--vp-c-text-1);
   margin-bottom: 12px;
 }
 li .description {

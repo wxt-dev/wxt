@@ -2,7 +2,7 @@
 import { computed, toRaw } from 'vue';
 import { KeySelectedObject } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   label: string;
   items?: string[];
 }>();
@@ -33,8 +33,8 @@ function toggleItem(pkg: string) {
         <li v-for="item in items">
           <label :title="item">
             <input
-              type="checkbox"
               :checked="selectedItems[item]"
+              type="checkbox"
               @input="toggleItem(item)"
             />
             <span>{{ item }}</span>
@@ -83,7 +83,6 @@ label {
   display: flex;
   gap: 4px;
   align-items: flex-start;
-  text-wrap: wrap;
   overflow-wrap: anywhere;
   line-height: 140%;
   cursor: pointer;
