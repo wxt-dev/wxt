@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Example } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   example: Example;
 }>();
 </script>
@@ -36,9 +36,6 @@ a:hover {
 .name {
   font-size: 16px;
   font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   flex-shrink: 0;
 
   text-overflow: ellipsis;

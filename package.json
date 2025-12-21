@@ -52,6 +52,11 @@
     "vue": "^3.5.27",
     "wxt": "workspace:*"
   },
+  "pnpm": {
+    "overrides": {
+      "vite": "7.3.0"
+    }
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
