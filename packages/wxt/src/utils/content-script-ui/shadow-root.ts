@@ -218,7 +218,7 @@ export type ShadowRootContentScriptUiOptions<TMounted> =
       shadowHost: HTMLElement,
     ) => TMounted;
     /**
-     * Rename CSS custom property prefixes to prevent conflicts with host page styles.
+     * Rename CSS custom property and var prefixes to prevent conflicts with host page styles.
      *
      * This is useful when your extension uses CSS frameworks like Tailwind CSS v4 that define
      * typed `@property` rules, which can conflict with host pages using older versions.
