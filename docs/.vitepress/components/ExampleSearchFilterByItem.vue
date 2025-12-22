@@ -83,7 +83,6 @@ label {
   display: flex;
   gap: 4px;
   align-items: flex-start;
-  text-wrap: wrap;
   overflow-wrap: anywhere;
   line-height: 140%;
   cursor: pointer;

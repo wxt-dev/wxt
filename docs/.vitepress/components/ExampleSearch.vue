@@ -149,36 +149,10 @@ const filteredExamples = computed(() => {
   grid-area: results;
 }
 
-.box {
-  border-radius: 16px;
-  overflow: hidden;
-}
-
 .search input {
   min-width: 0;
   flex: 1;
   font-size: 16px;
-}
-
-.checkbox-col {
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  max-height: 200px;
-  font-size: 14px;
-  gap: 4px;
-}
-
-.filter-btn {
-  color: var(--vp-c-brand-1);
-}
-
-.checkbox-col .header {
-  font-size: 12px;
-  font-weight: bold;
-  opacity: 50%;
 }
 
 .checkbox-col p {
@@ -198,10 +172,6 @@ span {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-}
-
-.checkbox-col-container {
-  display: flex;
 }
 
 .search-results {
