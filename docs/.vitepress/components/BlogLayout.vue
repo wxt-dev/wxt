@@ -33,15 +33,12 @@ const date = useBlogDate(() => frontmatter.value.date);
 </template>
 
 <style scoped>
-.vp-doc {
-  display: flex;
-}
-
 main {
   max-width: 1080px;
   padding: 32px;
   margin: auto;
 }
+
 @media (min-width: 768px) {
   main {
     padding: 64px;
@@ -54,10 +51,6 @@ main {
   gap: 16px;
   overflow: hidden;
   padding-bottom: 32px;
-}
-
-.meta-row > * {
-  flex-shrink: 0;
 }
 
 .author {
@@ -73,11 +66,6 @@ main {
   width: 24px;
   height: 24px;
   border-radius: 100%;
-}
-
-.author span {
-  padding: 0;
-  margin: 0;
 }
 
 .author:hover {
