@@ -33,6 +33,12 @@
   border: 1px solid var(--vp-c-divider);
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   overflow-y: scroll;
 }
