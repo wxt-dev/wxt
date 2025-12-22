@@ -12,7 +12,7 @@ import fs from 'fs/promises';
 import fsExtra from 'fs-extra';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx bump-package-version.ts <package-name>',
   );
