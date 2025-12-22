@@ -34,11 +34,11 @@ const posts = computed<Post[]>(() =>
   flex-direction: column;
   align-items: center;
 }
+
 .container > div {
   padding: 32px;
   max-width: 900px;
   width: 100%;
-  min-width: 0;
 }
 
 h1 {
@@ -50,17 +50,13 @@ ul {
   flex-direction: column;
   list-style: none;
 }
-ul,
-li {
-  padding: 0;
-  margin: 0;
-}
 
 ul li {
   padding-top: 16px;
   margin-top: 16px;
   border-top: 1px solid var(--vp-c-default-2);
 }
+
 ul li:last-child {
   padding-bottom: 16px;
   margin-bottom: 16px;
