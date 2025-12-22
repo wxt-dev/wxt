@@ -181,12 +181,12 @@ describe('renameCssCustomProperties', () => {
   describe('custom prefixes', () => {
     it('should work with custom fromPrefix and toPrefix', () => {
       const css = `.class {
-  --custom-prop: value;
   background: var(--custom-prop);
+  --custom-prop: value;
 }`;
       const expected = `.class {
-  --my-custom-prop: value;
   background: var(--my-custom-prop);
+  --my-custom-prop: value;
 }`;
 
       expect(
@@ -219,33 +219,28 @@ describe('renameCssCustomProperties', () => {
       expect(renameCssCustomProperties(css, defaultOptions)).toBe(expected);
     });
 
-    it('should return original CSS when both fromPrefix and toPrefix are undefined', () => {
-      const css = `.class { --tw-prop: value; }`;
-      expect(renameCssCustomProperties(css, {})).toBe(css);
-    });
-
-    it('should prepend toPrefix to all custom properties when fromPrefix is undefined', () => {
-      const css = `.class { --prop: value; background: var(--prop); }`;
-      const expected = `.class { --wxt-prop: value; background: var(--wxt-prop); }`;
-      expect(renameCssCustomProperties(css, { toPrefix: '--wxt-' })).toBe(
-        expected,
-      );
-    });
-
-    it('should remove fromPrefix when toPrefix is undefined', () => {
-      const css = `.class { --tw-prop: value; }`;
-      const expected = `.class { prop: value; }`;
-      expect(renameCssCustomProperties(css, { fromPrefix: '--tw-' })).toBe(
-        expected,
-      );
-    });
-
-    it('should replace with empty string when toPrefix is empty string', () => {
-      const css = `.class { --tw-prop: value; }`;
-      const expected = `.class { prop: value; }`;
+    it('should not modify CSS when fromPrefix matches nothing', () => {
+      const css = `.class { --other-prop: value; }`;
       expect(
-        renameCssCustomProperties(css, { fromPrefix: '--tw-', toPrefix: '' }),
-      ).toBe(expected);
+        renameCssCustomProperties(css, {
+          fromPrefix: '--tw-',
+          toPrefix: '--wxt-tw-',
+        }),
+      ).toBe(css);
+    });
+
+    it('should throw error when fromPrefix is missing', () => {
+      const css = `.class { --tw-prop: value; }`;
+      expect(() =>
+        renameCssCustomProperties(css, { toPrefix: '--wxt-' } as any),
+      ).toThrow('cssPropertyRename requires both "fromPrefix" and "toPrefix"');
+    });
+
+    it('should throw error when toPrefix is missing', () => {
+      const css = `.class { --tw-prop: value; }`;
+      expect(() =>
+        renameCssCustomProperties(css, { fromPrefix: '--tw-' } as any),
+      ).toThrow('cssPropertyRename requires both "fromPrefix" and "toPrefix"');
     });
   });
 });
