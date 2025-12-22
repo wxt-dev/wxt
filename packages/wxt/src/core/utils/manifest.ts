@@ -121,11 +121,14 @@ export async function generateManifest(
   // Warn if building for Firefox without data_collection_permissions
   if (
     wxt.config.browser === 'firefox' &&
-    !userManifest.browser_specific_settings?.gecko?.data_collection_permissions
+    !userManifest.browser_specific_settings?.gecko
+      ?.data_collection_permissions &&
+    !wxt.config.suppressWarnings?.firefoxDataCollection
   ) {
     wxt.logger.warn(
-      'Firefox requires explicit data collection permissions. Consider adding `data_collection_permissions` to your manifest config.\n' +
-        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n',
+      'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
+        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
+        'To suppress this warning, add `firefoxDataCollection: true` to `suppressWarnings` in your wxt config.\n',
     );
   }
 

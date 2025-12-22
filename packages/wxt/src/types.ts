@@ -132,6 +132,22 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
+   * Suppress specific warnings during the build process.
+   *
+   * @example
+   * ```ts
+   * export default defineConfig({
+   *   suppressWarnings: {
+   *     firefoxDataCollection: true,
+   *   },
+   * })
+   * ```
+   */
+  suppressWarnings?: { firefoxDataCollection?: boolean } & Record<
+    string,
+    boolean
+  >;
+  /**
    * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
    */
   webExt?: WebExtConfig;
@@ -1419,6 +1435,13 @@ export interface ResolvedConfig {
    */
   alias: Record<string, string>;
   experimental: {};
+  /**
+   * List of warning identifiers to suppress during the build process.
+   */
+  suppressWarnings: { firefoxDataCollection?: boolean } & Record<
+    string,
+    boolean
+  >;
   dev: {
     /** Only defined during dev command */
     server?: {
