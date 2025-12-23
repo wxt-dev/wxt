@@ -1,4 +1,4 @@
-import autoImports from './.wxt/eslintrc-auto-import.js';
+import autoImports from './.wxt/eslintrc-auto-import.json';
 
 export default [
   {
