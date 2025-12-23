@@ -10,7 +10,7 @@ describe('PNPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await spawn('pnpm', ['i', '--ignore-workspace'], { cwd });
+      await spawn('pnpm', ['install'], { cwd });
     });
 
     it('should list direct dependencies', async () => {

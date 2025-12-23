@@ -49,6 +49,7 @@ describe('Content Script UIs', () => {
         <p id="three"></p>
       </div>
     `;
+    // @ts-ignore
     window.fetch = fetch;
     fetch.mockResolvedValue({ text: () => Promise.resolve('') });
     ctx = new ContentScriptContext('test');

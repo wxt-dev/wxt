@@ -9,8 +9,18 @@ describe('Init command', () => {
     const project = new TestProject();
 
     await spawn(
-      'pnpm',
-      ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
+      'bun',
+      [
+        'run',
+        '--silent',
+        'wxt',
+        'init',
+        project.root,
+        '-t',
+        'vue',
+        '--pm',
+        'npm',
+      ],
       {
         env: { CI: 'true' },
         stdio: 'ignore',
@@ -56,8 +66,18 @@ describe('Init command', () => {
 
     await expect(() =>
       spawn(
-        'pnpm',
-        ['-s', 'wxt', 'init', project.root, '-t', 'vue', '--pm', 'npm'],
+        'bun',
+        [
+          'run',
+          '--silent',
+          'wxt',
+          'init',
+          project.root,
+          '-t',
+          'vue',
+          '--pm',
+          'npm',
+        ],
         {
           env: { CI: 'true' },
           stdio: 'ignore',

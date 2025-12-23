@@ -10,7 +10,7 @@ Install the package:
 npm i --save-dev @wxt-dev/unocss unocss
 pnpm i -D @wxt-dev/unocss unocss
 yarn add --dev @wxt-dev/unocss unocss
-bun i -D @wxt-dev/unocss unocss
+bun add -D @wxt-dev/unocss unocss
 ```
 
 Add the module to `wxt.config.ts`:

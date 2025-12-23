@@ -23,7 +23,6 @@ import {
   localIconLoader,
 } from 'vitepress-plugin-group-icons';
 import { Feed } from 'feed';
-import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const origin = 'https://wxt.dev';
@@ -109,7 +108,7 @@ export default defineConfig({
     });
     // console.log('rss.xml:');
     // console.log(feed.rss2());
-    await writeFile(join(site.outDir, 'rss.xml'), feed.rss2(), 'utf8');
+    await Bun.write(join(site.outDir, 'rss.xml'), feed.rss2());
   },
 
   head: [

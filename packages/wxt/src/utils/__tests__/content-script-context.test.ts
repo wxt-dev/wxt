@@ -71,7 +71,6 @@ describe('Content Script Context', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
-      // @ts-expect-error
       context.addEventListener(window, 'visibilitychange', (_) => {});
     });
 
