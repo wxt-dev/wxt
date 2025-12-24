@@ -2,30 +2,62 @@ import { UAParser } from 'ua-parser-js';
 import type {
   Analytics,
   AnalyticsConfig,
+  AnalyticsEventMetadata,
   AnalyticsPageViewEvent,
+  AnalyticsProvider,
   AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
-  AnalyticsEventMetadata,
-  AnalyticsProvider,
 } from './types';
 import { browser } from '@wxt-dev/browser';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
+type TAnalyticsMessage = {
+  [K in keyof Analytics]: {
+    fn: K;
+    args: Parameters<Analytics[K]>;
+  };
+}[keyof Analytics];
 
+type TAnalyticsMethod =
+  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
+  | undefined;
+
+type TMethodForwarder = <K extends keyof Analytics>(
+  fn: K,
+) => (...args: Parameters<Analytics[K]>) => void;
+
+const INTERACTIVE_TAGS = new Set([
+  'A',
+  'BUTTON',
+  'INPUT',
+  'SELECT',
+  'TEXTAREA',
+]);
+const INTERACTIVE_ROLES = new Set([
+  'button',
+  'link',
+  'checkbox',
+  'menuitem',
+  'tab',
+  'radio',
+]);
+
+// This is injected by the build process, it only seems unused
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
     throw Error(
       'Cannot use WXT analytics in contexts without access to the browser.runtime APIs',
     );
-  if (config == null) {
+
+  if (config === null) {
     console.warn(
       "[@wxt-dev/analytics] Config not provided to createAnalytics. If you're using WXT, add the 'analytics' property to '<srcDir>/app.config.ts'.",
     );
   }
 
   // TODO: This only works for standard WXT extensions, add a more generic
-  // background script detector that works with non-WXT projects.
+  // Background script detector that works with non-WXT projects.
   if (location.pathname === '/background.js')
     return createBackgroundAnalytics(config);
 
@@ -41,12 +73,14 @@ function createBackgroundAnalytics(
   // User properties storage
   const userIdStorage =
     config?.userId ?? defineStorageItem<string>('wxt-analytics:user-id');
+
   const userPropertiesStorage =
     config?.userProperties ??
     defineStorageItem<Record<string, string>>(
       'wxt-analytics:user-properties',
       {},
     );
+
   const enabled =
     config?.enabled ??
     defineStorageItem<boolean>('local:wxt-analytics:enabled', false);
@@ -54,6 +88,7 @@ function createBackgroundAnalytics(
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
   const userAgent = UAParser();
+
   let userId = Promise.resolve(userIdStorage.getValue()).then(
     (id) => id ?? globalThis.crypto.randomUUID(),
   );
@@ -75,7 +110,7 @@ function createBackgroundAnalytics(
   const getBaseEvent = async (
     meta: AnalyticsEventMetadata,
   ): Promise<BaseAnalyticsEvent> => {
-    const platform = await platformInfo;
+    const { arch, os } = await platformInfo;
     return {
       meta,
       user: {
@@ -84,8 +119,8 @@ function createBackgroundAnalytics(
           version: config?.version ?? manifest.version_name ?? manifest.version,
           wxtMode: import.meta.env.MODE,
           wxtBrowser: import.meta.env.BROWSER,
-          arch: platform.arch,
-          os: platform.os,
+          arch,
+          os,
           browser: userAgent.browser.name,
           browserVersion: userAgent.browser.version,
           ...(await userProperties),
@@ -110,7 +145,9 @@ function createBackgroundAnalytics(
       ]);
       // Notify providers
       const event = await getBaseEvent(meta);
+
       if (config?.debug) console.debug('[@wxt-dev/analytics] identify', event);
+
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.identify(event)),
@@ -134,7 +171,9 @@ function createBackgroundAnalytics(
           title: meta?.title ?? globalThis.document?.title,
         },
       };
+
       if (config?.debug) console.debug('[@wxt-dev/analytics] page', event);
+
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.page(event)),
@@ -155,7 +194,9 @@ function createBackgroundAnalytics(
         ...baseEvent,
         event: { name: eventName, properties: eventProperties },
       };
+
       if (config?.debug) console.debug('[@wxt-dev/analytics] track', event);
+
       if (await enabled.getValue()) {
         await Promise.allSettled(
           providers.map((provider) => provider.track(event)),
@@ -181,9 +222,8 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }) => {
-        // @ts-expect-error: Untyped fn key
-        void analytics[fn]?.(...args);
+      port.onMessage.addListener(({ fn, args }: TAnalyticsMessage) => {
+        void (analytics[fn] as TAnalyticsMethod)?.(...args);
       });
     }
   });
@@ -201,17 +241,15 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document?.referrer || undefined,
-    screen: globalThis.window
-      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
-      : undefined,
+    referrer: globalThis.document?.referrer,
+    screen: `${globalThis.window.screen.width}x${globalThis.window.screen.height}`,
     url: location.href,
-    title: document.title || undefined,
+    title: document.title,
   });
 
-  const methodForwarder =
-    (fn: string) =>
-    (...args: any[]) => {
+  const methodForwarder: TMethodForwarder =
+    (fn) =>
+    (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
     };
 
@@ -222,20 +260,20 @@ function createFrontendAnalytics(): Analytics {
     setEnabled: methodForwarder('setEnabled'),
     autoTrack: (root) => {
       const onClick = (event: Event) => {
-        const element = event.target as any;
+        const element = event.target as HTMLElement | null;
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&
-            !INTERACTIVE_ROLES.has(element.getAttribute('role')))
+            !INTERACTIVE_ROLES.has(element.getAttribute('role') ?? ''))
         )
           return;
 
         void analytics.track('click', {
           tagName: element.tagName?.toLowerCase(),
-          id: element.id || undefined,
-          className: element.className || undefined,
-          textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
-          href: element.href,
+          id: element.id,
+          className: element.className,
+          textContent: element.textContent?.substring(0, 50), // Limit text content length
+          href: (element as HTMLAnchorElement).href,
         });
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
@@ -249,31 +287,15 @@ function createFrontendAnalytics(): Analytics {
 
 function defineStorageItem<T>(
   key: string,
-  defaultValue?: NonNullable<T>,
+  defaultValue?: T,
 ): AnalyticsStorageItem<T> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get<Record<string, any>>(key))[key] ??
-      defaultValue,
+      (((await browser.storage.local.get(key)) as Record<string, T>)[key] ??
+        defaultValue) as T,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
-
-const INTERACTIVE_TAGS = new Set([
-  'A',
-  'BUTTON',
-  'INPUT',
-  'SELECT',
-  'TEXTAREA',
-]);
-const INTERACTIVE_ROLES = new Set([
-  'button',
-  'link',
-  'checkbox',
-  'menuitem',
-  'tab',
-  'radio',
-]);
 
 export function defineAnalyticsProvider<T = never>(
   definition: (

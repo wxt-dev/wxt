@@ -25,6 +25,7 @@ export default defineWxtModule({
     const clientModuleId = process.env.NPM
       ? '@wxt-dev/analytics'
       : resolve(wxt.config.modulesDir, 'analytics/client');
+
     const pluginModuleId = process.env.NPM
       ? '@wxt-dev/analytics/background-plugin'
       : resolve(wxt.config.modulesDir, 'analytics/background-plugin');
@@ -44,10 +45,8 @@ export default defineWxtModule({
           ? clientModuleId
           : relative(wxtAnalyticsFolder, clientModuleId)
       }';`,
-      `import { useAppConfig } from '#imports';`,
-      ``,
-      `export const analytics = createAnalytics(useAppConfig().analytics);`,
-      ``,
+      `import { useAppConfig } from '#imports';\n`,
+      `export const analytics = createAnalytics(useAppConfig().analytics);\n`,
     ].join('\n');
     addAlias(wxt, '#analytics', wxtAnalyticsIndex);
     wxt.hook('prepare:types', async (_, entries) => {
