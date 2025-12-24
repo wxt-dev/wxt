@@ -36,10 +36,10 @@ li > a > div {
   flex-direction: column;
   padding: 16px;
   border-radius: 16px;
-}
 
-li > a > div:hover {
-  background: var(--vp-c-default-3);
+  &:hover {
+    background: var(--vp-c-default-3);
+  }
 }
 
 li .title {
