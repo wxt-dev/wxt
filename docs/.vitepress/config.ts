@@ -73,6 +73,7 @@ export default defineConfig({
     clearScreen: false,
     plugins: [
       llmstxt(),
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(
