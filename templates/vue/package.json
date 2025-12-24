@@ -21,6 +21,6 @@
     "@wxt-dev/module-vue": "^1.0.3",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.1.8",
-    "wxt": "^0.20.6"
+    "wxt": "^0.20.13"
   }
 }
