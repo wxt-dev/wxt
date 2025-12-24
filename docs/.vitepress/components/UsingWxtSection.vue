@@ -6,7 +6,7 @@ import useListExtensionDetails, {
 
 // Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
-const chromeExtensionIds = [
+const CHROME_EXTENSIONS_ID = [
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -119,7 +119,7 @@ const chromeExtensionIds = [
   'mfjdonmgmgcijagclnkfhmjiblbfjaid', // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
 ];
 
-const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
+const { data, err, isLoading } = useListExtensionDetails(CHROME_EXTENSIONS_ID);
 const sortedExtensions = computed(() => {
   if (!data.value?.length) return [];
 
@@ -153,35 +153,36 @@ function getStoreUrl(extension: ChromeExtension) {
     <li
       v-for="extension of sortedExtensions"
       :key="extension.id"
-      class="relative"
+      style="position: relative"
     >
       <img
-        :src="extension.iconUrl"
         :alt="`${extension.name} icon`"
+        :src="extension.iconUrl"
         referrerpolicy="no-referrer"
       />
-      <div class="relative">
+      <div style="position: relative">
         <a
           :href="getStoreUrl(extension)"
-          target="_blank"
           :title="extension.name"
           class="extension-name"
+          target="_blank"
           >{{ extension.name }}</a
         >
-        <p class="description" :title="extension.shortDescription">
+        <p :title="extension.shortDescription" class="description">
           {{ extension.shortDescription }}
         </p>
       </div>
       <p class="user-count">
-        <span>{{ extension.weeklyActiveUsers.toLocaleString() }} users</span
+        <span style="color: limegreen"
+          >{{ extension.weeklyActiveUsers.toLocaleString() }} users</span
         ><template v-if="extension.rating != null"
           >,
-          <span>{{ extension.rating }} stars</span>
+          <span style="color: gold">{{ extension.rating }} stars</span>
         </template>
       </p>
     </li>
   </ul>
-  <p class="centered pr">
+  <p class="pr">
     <a
       href="https://github.com/wxt-dev/wxt/edit/main/docs/.vitepress/components/UsingWxtSection.vue"
       target="_blank"
@@ -202,13 +203,11 @@ li img {
 
 ul {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  align-items: stretch;
-  gap: 16px;
-  list-style: none;
+  gap: 10px;
   margin: 16px 0;
   padding: 0;
 }
+
 @media (min-width: 960px) {
   ul {
     grid-template-columns: repeat(2, 1fr);
@@ -216,18 +215,12 @@ ul {
 }
 
 li {
-  margin: 0 !important;
   padding: 16px;
   display: flex;
   background-color: var(--vp-c-bg-soft);
   border-radius: 12px;
-  flex: 1;
   gap: 24px;
   align-items: center;
-}
-
-.centered {
-  text-align: center;
 }
 
 li a,
@@ -236,12 +229,17 @@ li .description {
   padding: 0;
   margin: 0;
 }
+
 li .user-count {
   opacity: 70%;
   font-size: small;
   position: absolute;
   bottom: 12px;
   right: 16px;
+
+  span {
+    font-weight: bold;
+  }
 }
 
 li a {
@@ -254,6 +252,7 @@ li a {
   margin: 0;
   text-decoration: none;
 }
+
 li a:hover {
   text-decoration: underline;
 }
@@ -276,10 +275,7 @@ li .extension-name {
 }
 
 .pr {
+  text-align: center;
   opacity: 70%;
-}
-
-.relative {
-  position: relative;
 }
 </style>
