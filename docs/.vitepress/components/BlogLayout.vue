@@ -33,14 +33,12 @@ const date = useBlogDate(() => frontmatter.value.date);
 </template>
 
 <style scoped>
-main {
+.container-content {
   max-width: 1080px;
   padding: 32px;
   margin: auto;
-}
 
-@media (min-width: 768px) {
-  main {
+  @media (min-width: 768px) {
     padding: 64px;
   }
 }
