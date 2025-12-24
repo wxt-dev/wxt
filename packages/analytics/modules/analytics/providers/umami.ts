@@ -12,6 +12,7 @@ export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
       if (config.debug) {
         console.debug('[@wxt-dev/analytics] Sending event to Umami:', payload);
       }
+
       return fetch(`${options.apiUrl}/send`, {
         method: 'POST',
         headers: {
