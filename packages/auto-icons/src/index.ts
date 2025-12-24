@@ -1,6 +1,6 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve, relative } from 'node:path';
+import { relative, resolve } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
 import { ensureDir, pathExists } from 'fs-extra';
@@ -37,7 +37,7 @@ export default defineWxtModule<AutoIconsOptions>({
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await pathExists(resolvedPath))) {
+    if (!(await (pathExists as (path: string) => Promise<boolean>)(resolvedPath))) {
       return wxt.logger.warn(
         `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );
@@ -91,7 +91,7 @@ export default defineWxtModule<AutoIconsOptions>({
           }
         }
 
-        ensureDir(resolve(outputFolder, 'icons'));
+        await ensureDir(resolve(outputFolder, 'icons'));
         await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({
