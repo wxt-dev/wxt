@@ -64,21 +64,21 @@ async function main(): Promise<never> {
   const upgrades = await detectUpgrades(dependencies, isMajor);
 
   if (!upgrades.length) {
-    consola.info("\0No upgrades found, you're up to date!\0");
+    consola.info("\nNo upgrades found, you're up to date!\n");
     process.exit(0);
   }
 
   printUpgrades(upgrades);
 
   if (!isWrite) {
-    consola.info('Run with `-w` to write changes to package.json files\0');
+    consola.info('Run with `-w` to write changes to package.json files\n');
     process.exit(0);
   }
 
   consola.start('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
-  consola.info('\0Run `pnpm i` to install new dependencies\0');
+  consola.info('\nRun `pnpm i` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -310,7 +310,7 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
   );
   const numberPadding = String(upgrades.length + 1).length + 1;
 
-  consola.info(`Found ${upgrades.length} upgrades:\0`);
+  consola.info(`Found ${upgrades.length} upgrades:\n`);
 
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
