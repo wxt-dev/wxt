@@ -551,6 +551,25 @@ export interface BaseEntrypointOptions {
    * @default undefined
    */
   exclude?: TargetBrowser[];
+  /**
+   * The variable name for the IIFE in the JS output bundle.
+   *
+   * This option is for content scripts with world=MAIN, and unlisted scripts.
+   * It's relevant for scripts that are inserted into the page context where the default IIFE
+   * variable name may conflict with an existing variable on the target page. This applies to content
+   * scripts with world=MAIN, and others, such as unlisted scripts, that could be dynamically injected
+   * into the page with a <script> tag.
+   *
+   * Available options:
+   * - `true`: automatically generate a name for the IIFE based on the entrypoint name
+   * - `false`: Output the IIFE without a variable name, making it anonymous. This is the safest option
+   *  to avoid conflicts with existing variables on the page. This will become the default in a future version of WXT.
+   * - `string`: Use the provided string as the global variable name.
+   * - `function`: A function that receives the entrypoint and returns a string to use as the variable name.
+   *
+   * @default true
+   */
+  globalName?: string | boolean | ((entrypoint: Entrypoint) => string);
 }
 
 export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
