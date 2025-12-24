@@ -15,11 +15,12 @@ export const googleAnalytics4 =
         data: BaseAnalyticsEvent,
         eventName: string,
         eventProperties: Record<string, string | undefined> | undefined,
-      ): Promise<void> => {
+      ) => {
         const url = new URL(
           config?.debug ? '/debug/mp/collect' : '/mp/collect',
           'https://www.google-analytics.com',
         );
+
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
         if (options.measurementId)
