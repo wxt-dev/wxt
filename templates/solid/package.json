@@ -20,6 +20,6 @@
   "devDependencies": {
     "@wxt-dev/module-solid": "^1.1.4",
     "typescript": "^5.9.3",
-    "wxt": "^0.20.6"
+    "wxt": "^0.20.13"
   }
 }
