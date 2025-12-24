@@ -107,21 +107,14 @@ const filteredExamples = computed(() => {
 <style scoped>
 .example-layout {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
   grid-template-areas:
-    'search'
-    'results';
+    'filters search'
+    'filters results';
   gap: 16px;
-}
 
-@media only screen and (min-width: 720px) {
-  .example-layout {
+  @media only screen and (min-width: 720px) {
     grid-template-columns: 256px 1fr;
     grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'filters search'
-      'filters results';
   }
 }
 
@@ -134,13 +127,11 @@ const filteredExamples = computed(() => {
 
 .filters {
   grid-area: filters;
-}
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-@media only screen and (min-width: 720px) {
-  .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  @media only screen and (min-width: 720px) {
     border-radius: 16px;
   }
 }
@@ -156,15 +147,12 @@ const filteredExamples = computed(() => {
 .search-results {
   display: grid;
   gap: 16px;
-}
 
-@media only screen and (min-width: 800px) {
-  .search-results {
+  @media only screen and (min-width: 800px) {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-@media only screen and (min-width: 1024px) {
-  .search-results {
+
+  @media only screen and (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
