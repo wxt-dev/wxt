@@ -23,6 +23,7 @@ export const googleAnalytics4 =
 
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
+
         if (options.measurementId)
           url.searchParams.set('measurement_id', options.measurementId);
 
@@ -34,7 +35,7 @@ export const googleAnalytics4 =
         const mappedUserProperties = Object.fromEntries(
           Object.entries(userProperties).map(([name, value]) => [
             name,
-            value == null ? undefined : { value },
+            value === null ? undefined : { value },
           ]),
         );
 

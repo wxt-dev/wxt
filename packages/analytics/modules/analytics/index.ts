@@ -61,6 +61,7 @@ export default defineWxtModule({
       const hasBackground = entrypoints.find(
         (entry) => entry.type === 'background',
       );
+
       if (!hasBackground) {
         entrypoints.push({
           type: 'background',
