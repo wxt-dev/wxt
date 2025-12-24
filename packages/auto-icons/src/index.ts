@@ -1,6 +1,6 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve, relative } from 'node:path';
+import { relative, resolve } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
 import { ensureDir, exists } from 'fs-extra';
@@ -19,6 +19,9 @@ export default defineWxtModule<AutoIconsOptions>({
       },
     );
 
+    // TODO: MAYBE DROP THIS COMPATIBILITY?
+    // TODO: It has a while, and for 1.0.0 we should be as much "up to date" as we can,
+    // TODO: because later it'll be harder to make breaking change?
     // Backward compatibility for the deprecated option
     if (options?.grayscaleOnDevelopment !== undefined) {
       wxt.logger.warn(
@@ -37,7 +40,9 @@ export default defineWxtModule<AutoIconsOptions>({
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await exists(resolvedPath))) {
+    // TODO: STH DOESN'T GOOD WITH FS-EXTRA, BECAUSE IT DOESN'T RECOGNIZE TYPES PROPERLY,
+    // TODO: SIMILAR ISSUE LIKE IN #2015 PR
+    if (!(await (exists as (path: string) => Promise<boolean>)(resolvedPath))) {
       return wxt.logger.warn(
         `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );
@@ -91,7 +96,7 @@ export default defineWxtModule<AutoIconsOptions>({
           }
         }
 
-        ensureDir(resolve(outputFolder, 'icons'));
+        await ensureDir(resolve(outputFolder, 'icons'));
         await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({
