@@ -114,6 +114,7 @@ const filteredExamples = computed(() => {
     'results';
   gap: 16px;
 }
+
 @media only screen and (min-width: 720px) {
   .example-layout {
     grid-template-columns: 256px 1fr;
@@ -123,62 +124,40 @@ const filteredExamples = computed(() => {
       'filters results';
   }
 }
+
 .search {
   grid-area: search;
   background: var(--vp-c-bg-soft);
   padding: 20px;
-  width: 100%;
-  display: flex;
   border-radius: 16px;
 }
+
 .filters {
-  display: none;
   grid-area: filters;
 }
+
 @media only screen and (min-width: 720px) {
   .filters {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 10px;
     border-radius: 16px;
-    overflow: hidden;
-    align-self: flex-start;
   }
 }
+
 .results {
   grid-area: results;
 }
 
 .search input {
-  min-width: 0;
-  flex: 1;
   font-size: 16px;
-}
-
-.checkbox-col p {
-  display: flex;
-  gap: 4px;
-  align-items: flex-start;
-  text-wrap: wrap;
-  overflow-wrap: anywhere;
-  line-height: 140%;
-}
-
-span {
-  padding-top: 1px;
-}
-
-.checkbox-col input[type='checkbox'] {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
 }
 
 .search-results {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
 }
+
 @media only screen and (min-width: 800px) {
   .search-results {
     grid-template-columns: repeat(2, 1fr);
