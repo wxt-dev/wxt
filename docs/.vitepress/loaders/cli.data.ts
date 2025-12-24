@@ -54,8 +54,3 @@ async function getPublishExtensionHelp(command: string): Promise<string> {
   );
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
-
-export interface Command {
-  name: string;
-  docs: string;
-}
