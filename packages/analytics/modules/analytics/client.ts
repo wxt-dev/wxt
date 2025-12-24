@@ -85,8 +85,8 @@ function createBackgroundAnalytics(
 
   const getBackgroundMeta = () => ({
     timestamp: Date.now(),
-    // Don't track sessions for the background, it can be running
-    // indefinitely, and will inflate session duration stats.
+    // Don't track sessions for the background, it can be running indefinitely
+    // and will inflate session duration stats.
     sessionId: undefined,
     language: navigator.language,
     referrer: undefined,
