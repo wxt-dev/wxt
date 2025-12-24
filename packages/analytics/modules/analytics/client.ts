@@ -43,7 +43,6 @@ const INTERACTIVE_ROLES = new Set([
   'radio',
 ]);
 
-// This is injected by the build process, it only seems unused
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
     throw Error(
