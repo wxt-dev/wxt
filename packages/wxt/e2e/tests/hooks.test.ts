@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestProject } from '../utils';
 import { WxtHooks } from '../../src';
 
@@ -34,6 +34,7 @@ function expectHooksToBeCalled(
     const hookName = key as keyof WxtHooks;
     const value = called[hookName];
     const times = typeof value === 'number' ? value : value ? 1 : 0;
+
     expect(
       hooks[hookName],
       `Expected "${hookName}" to be called ${times} time(s)`,
@@ -184,6 +185,7 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
+
     expect(hooks['server:closed']).not.toBeCalled();
     await server.stop();
 

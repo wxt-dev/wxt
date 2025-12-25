@@ -411,7 +411,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for snapshot readable
           minify: false,
         },
       }),
