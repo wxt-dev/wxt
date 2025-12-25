@@ -47,7 +47,10 @@ function createStorage(): WxtStorage {
 
   const getMetaKey = (key: string) => key + '$';
 
-  const mergeMeta = (oldMeta: any, newMeta: any): any => {
+  const mergeMeta = (
+    oldMeta: Record<string, unknown>,
+    newMeta: Record<string, unknown>,
+  ): Record<string, unknown> => {
     const newFields = { ...oldMeta };
 
     Object.entries(newMeta).forEach(([key, value]) => {
@@ -58,33 +61,35 @@ function createStorage(): WxtStorage {
     return newFields;
   };
 
-  const getValueOrFallback = (value: any, fallback: any) =>
+  const getValueOrFallback = <T>(value: T | null | undefined, fallback: T) =>
     value ?? fallback ?? null;
 
-  const getMetaValue = (properties: any) =>
-    typeof properties === 'object' && !Array.isArray(properties)
-      ? properties
+  const getMetaValue = (properties: unknown): Record<string, unknown> =>
+    typeof properties === 'object' &&
+    properties !== null &&
+    !Array.isArray(properties)
+      ? (properties as Record<string, unknown>)
       : {};
 
-  const getItem = async (
+  const getItem = async <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    opts: GetItemOptions<any> | undefined,
-  ) => {
-    const res = await driver.getItem<any>(driverKey);
-    return getValueOrFallback(res, opts?.fallback ?? opts?.defaultValue);
+    opts: GetItemOptions<T> | undefined,
+  ): Promise<T | null> => {
+    const res = await driver.getItem<T>(driverKey);
+    return getValueOrFallback(res, (opts?.fallback ?? opts?.defaultValue) as T);
   };
 
   const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
     const metaKey = getMetaKey(driverKey);
-    const res = await driver.getItem<any>(metaKey);
+    const res = await driver.getItem<Record<string, unknown>>(metaKey);
     return getMetaValue(res);
   };
 
-  const setItem = async (
+  const setItem = async <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    value: any,
+    value: T,
   ) => {
     await driver.setItem(driverKey, value ?? null);
   };
@@ -92,11 +97,11 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    properties: any | undefined,
+    properties: Record<string, unknown> | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    await driver.setItem(metaKey, mergeMeta(existingFields, properties));
+    await driver.setItem(metaKey, mergeMeta(existingFields, properties ?? {}));
   };
 
   const removeItem = async (
@@ -128,11 +133,11 @@ function createStorage(): WxtStorage {
     }
   };
 
-  const watch = (
+  const watch = <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    cb: WatchCallback<any>,
-  ) => driver.watch(driverKey, cb);
+    cb: WatchCallback<T | null>,
+  ) => driver.watch<T>(driverKey, cb);
 
   return {
     getItem: async (key, opts) => {
@@ -142,13 +147,15 @@ function createStorage(): WxtStorage {
 
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
-      const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
+      const keyToOptsMap = new Map<
+        string,
+        GetItemOptions<unknown> | undefined
+      >();
       const orderedKeys: StorageItemKey[] = [];
 
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
-        let opts: GetItemOptions<any> | undefined;
-
+        let opts: GetItemOptions<unknown> | undefined;
         if (typeof key === 'string') {
           // key: string
           keyStr = key;
@@ -170,7 +177,7 @@ function createStorage(): WxtStorage {
         keyToOptsMap.set(keyStr, opts);
       });
 
-      const resultsMap = new Map<StorageItemKey, any>();
+      const resultsMap = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
@@ -194,9 +201,9 @@ function createStorage(): WxtStorage {
       }));
     },
 
-    getMeta: async (key) => {
+    getMeta: async <T extends Record<string, unknown>>(key: StorageItemKey) => {
       const { driver, driverKey } = resolveKey(key);
-      return await getMeta(driver, driverKey);
+      return (await getMeta(driver, driverKey)) as T;
     },
 
     getMetas: async (args) => {
@@ -220,14 +227,17 @@ function createStorage(): WxtStorage {
         return map;
       }, {});
 
-      const resultsMap: Record<string, any> = {};
+      const resultsMap: Record<string, Record<string, unknown>> = {};
       await Promise.all(
         Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
           const areaRes = await browser.storage[area as StorageArea].get(
             keys.map((key) => key.driverMetaKey),
           );
           keys.forEach((key) => {
-            resultsMap[key.key] = areaRes[key.driverMetaKey] ?? {};
+            resultsMap[key.key] = (areaRes[key.driverMetaKey] ?? {}) as Record<
+              string,
+              unknown
+            >;
           });
         }),
       );
@@ -245,14 +255,14 @@ function createStorage(): WxtStorage {
 
     setItems: async (items) => {
       const areaToKeyValueMap: Partial<
-        Record<StorageArea, Array<{ key: string; value: any }>>
+        Record<StorageArea, Array<{ key: string; value: unknown }>>
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
           'key' in item ? item.key : item.item.key,
         );
         areaToKeyValueMap[driverArea] ??= [];
-        areaToKeyValueMap[driverArea].push({
+        areaToKeyValueMap[driverArea]!.push({
           key: driverKey,
           value: item.value,
         });
@@ -268,21 +278,24 @@ function createStorage(): WxtStorage {
 
     setMeta: async (key, properties) => {
       const { driver, driverKey } = resolveKey(key);
-      await setMeta(driver, driverKey, properties);
+      await setMeta(driver, driverKey, properties as Record<string, unknown>);
     },
 
     setMetas: async (items) => {
       const areaToMetaUpdatesMap: Partial<
-        Record<StorageArea, { key: string; properties: any }[]>
+        Record<
+          StorageArea,
+          { key: string; properties: Record<string, unknown> }[]
+        >
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
           'key' in item ? item.key : item.item.key,
         );
         areaToMetaUpdatesMap[driverArea] ??= [];
-        areaToMetaUpdatesMap[driverArea].push({
+        areaToMetaUpdatesMap[driverArea]!.push({
           key: driverKey,
-          properties: item.meta,
+          properties: item.meta as Record<string, unknown>,
         });
       });
 
@@ -393,7 +406,13 @@ function createStorage(): WxtStorage {
       });
     },
 
-    defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
+    defineItem: <
+      TValue,
+      TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    >(
+      key: StorageItemKey,
+      opts?: WxtStorageItemOptions<TValue>,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
 
       const {
@@ -411,13 +430,15 @@ function createStorage(): WxtStorage {
 
       const migrate: WxtStorageItem<any, any>['migrate'] = async () => {
         const driverMetaKey = getMetaKey(driverKey);
-        const [{ value }, { value: meta }] = await driver.getItems([
+        const [itemRes, metaRes] = await driver.getItems([
           driverKey,
           driverMetaKey,
         ]);
+        const value = itemRes.value;
+        const meta = getMetaValue(metaRes.value);
         if (value == null) return;
 
-        const currentVersion = meta?.v ?? 1;
+        const currentVersion = (meta?.v as number | undefined) ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
@@ -456,7 +477,10 @@ function createStorage(): WxtStorage {
         }
         await driver.setItems([
           { key: driverKey, value: migratedValue },
-          { key: driverMetaKey, value: { ...meta, v: targetVersion } },
+          {
+            key: driverMetaKey,
+            value: { ...meta, v: targetVersion },
+          },
         ]);
 
         if (debug) {
@@ -466,7 +490,7 @@ function createStorage(): WxtStorage {
           );
         }
 
-        onMigrationComplete?.(migratedValue, targetVersion);
+        onMigrationComplete?.(migratedValue as TValue, targetVersion);
       };
 
       const migrationsDone =
@@ -485,12 +509,12 @@ function createStorage(): WxtStorage {
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
-          const value = await driver.getItem<any>(driverKey);
+          const value = await driver.getItem<TValue>(driverKey);
           // Don't init value if it already exists or the init function isn't provided
           if (value != null || opts?.init == null) return value;
 
           const newValue = await opts.init();
-          await driver.setItem<any>(driverKey, newValue);
+          await driver.setItem<TValue>(driverKey, newValue);
           if (value == null && targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
           }
@@ -504,26 +528,29 @@ function createStorage(): WxtStorage {
         key,
 
         get defaultValue() {
-          return getFallback();
+          return getFallback() as TValue;
         },
         get fallback() {
-          return getFallback();
+          return getFallback() as TValue;
         },
 
         getValue: async () => {
           await migrationsDone;
 
           if (opts?.init) {
-            return await getOrInitValue();
+            return (await getOrInitValue()) as TValue;
           } else {
-            return await getItem(driver, driverKey, opts);
+            return (await getItem(driver, driverKey, opts)) as TValue;
           }
         },
 
         getMeta: async () => {
           await migrationsDone;
 
-          return await getMeta(driver, driverKey);
+          return (await getMeta(
+            driver,
+            driverKey,
+          )) as NullablePartial<TMetadata>;
         },
 
         setValue: async (value) => {
@@ -535,7 +562,11 @@ function createStorage(): WxtStorage {
         setMeta: async (properties) => {
           await migrationsDone;
 
-          return await setMeta(driver, driverKey, properties);
+          return await setMeta(
+            driver,
+            driverKey,
+            properties as Record<string, unknown>,
+          );
         },
 
         removeValue: async (opts) => {
@@ -550,9 +581,12 @@ function createStorage(): WxtStorage {
           return await removeMeta(driver, driverKey, properties);
         },
 
-        watch: (cb) =>
-          watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getFallback(), oldValue ?? getFallback()),
+        watch: (cb: WatchCallback<TValue>) =>
+          watch<TValue>(driver, driverKey, (newValue, oldValue) =>
+            cb(
+              (newValue ?? getFallback()) as TValue,
+              (oldValue ?? getFallback()) as TValue,
+            ),
           ),
 
         migrate,
@@ -587,9 +621,9 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
 
   return {
-    getItem: async (key) => {
-      const res = await getStorageArea().get<Record<string, any>>(key);
-      return res[key];
+    getItem: async <T>(key: string) => {
+      const res = await getStorageArea().get<Record<string, unknown>>(key);
+      return (res[key] as T) ?? null;
     },
 
     getItems: async (keys) => {
@@ -637,11 +671,11 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
 
-    watch(key, cb) {
+    watch<T>(key: string, cb: WatchCallback<T | null>) {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
-          newValue?: any;
-          oldValue?: any | null;
+          newValue?: T;
+          oldValue?: T | null;
         } | null;
 
         if (change == null || dequal(change.newValue, change.oldValue)) return;
@@ -694,11 +728,10 @@ export interface WxtStorage {
   getItems(
     keys: Array<
       | StorageItemKey
-      | WxtStorageItem<any, any>
-      | { key: StorageItemKey; options?: GetItemOptions<any> }
+      | WxtStorageItem<unknown, Record<string, unknown>>
+      | { key: StorageItemKey; options?: GetItemOptions<unknown> }
     >,
-  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
-
+  ): Promise<Array<{ key: StorageItemKey; value: unknown }>>;
   /**
    * Return an object containing metadata about the key. Object is stored at `key + "$"`. If value
    * is not an object, it returns an empty object.
@@ -715,9 +748,10 @@ export interface WxtStorage {
    * @returns An array containing storage keys and their metadata.
    */
   getMetas(
-    keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
-  ): Promise<Array<{ key: StorageItemKey; meta: any }>>;
-
+    keys: Array<
+      StorageItemKey | WxtStorageItem<unknown, Record<string, unknown>>
+    >,
+  ): Promise<Array<{ key: StorageItemKey; meta: Record<string, unknown> }>>;
   /**
    * Set a value in storage. Setting a value to `null` or `undefined` is equivalent to calling
    * `removeItem`.
@@ -738,8 +772,11 @@ export interface WxtStorage {
    */
   setItems(
     values: Array<
-      | { key: StorageItemKey; value: any }
-      | { item: WxtStorageItem<any, any>; value: any }
+      | { key: StorageItemKey; value: unknown }
+      | {
+          item: WxtStorageItem<unknown, Record<string, unknown>>;
+          value: unknown;
+        }
     >,
   ): Promise<void>;
 
@@ -762,8 +799,11 @@ export interface WxtStorage {
    */
   setMetas(
     metas: Array<
-      | { key: StorageItemKey; meta: Record<string, any> }
-      | { item: WxtStorageItem<any, any>; meta: Record<string, any> }
+      | { key: StorageItemKey; meta: Record<string, unknown> }
+      | {
+          item: WxtStorageItem<unknown, Record<string, unknown>>;
+          meta: Record<string, unknown>;
+        }
     >,
   ): Promise<void>;
 
@@ -781,9 +821,12 @@ export interface WxtStorage {
   removeItems(
     keys: Array<
       | StorageItemKey
-      | WxtStorageItem<any, any>
+      | WxtStorageItem<unknown, Record<string, unknown>>
       | { key: StorageItemKey; options?: RemoveItemOptions }
-      | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
+      | {
+          item: WxtStorageItem<unknown, Record<string, unknown>>;
+          options?: RemoveItemOptions;
+        }
     >,
   ): Promise<void>;
 
@@ -819,8 +862,10 @@ export interface WxtStorage {
    * Restores the results of `snapshot`. If new properties have been saved since the snapshot, they are
    * not overridden. Only values existing in the snapshot are overridden.
    */
-  restoreSnapshot(base: StorageArea, data: any): Promise<void>;
-
+  restoreSnapshot(
+    base: StorageArea,
+    data: Record<string, unknown>,
+  ): Promise<void>;
   /**
    * Watch for changes to a specific key in storage.
    */
@@ -836,24 +881,39 @@ export interface WxtStorage {
    *
    * Read full docs: https://wxt.dev/storage.html#defining-storage-items
    */
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+  >(
     key: StorageItemKey,
   ): WxtStorageItem<TValue | null, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+  >(
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue> & { fallback: TValue },
   ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+  >(
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue> & { defaultValue: TValue },
   ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+  >(
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue> & {
       init: () => TValue | Promise<TValue>;
     },
   ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+  >(
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue>,
   ): WxtStorageItem<TValue | null, TMetadata>;
@@ -861,9 +921,9 @@ export interface WxtStorage {
 
 interface WxtStorageDriver {
   getItem<T>(key: string): Promise<T | null>;
-  getItems(keys: string[]): Promise<{ key: string; value: any }[]>;
+  getItems(keys: string[]): Promise<{ key: string; value: unknown }[]>;
   setItem<T>(key: string, value: T | null): Promise<void>;
-  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
+  setItems(values: Array<{ key: string; value: unknown }>): Promise<void>;
   removeItem(key: string): Promise<void>;
   removeItems(keys: string[]): Promise<void>;
   clear(): Promise<void>;
@@ -930,7 +990,7 @@ export interface WxtStorageItem<
   /**
    * If there are migrations defined on the storage item, migrate to the latest version.
    *
-   * **This function is ran automatically whenever the extension updates**, so you don't have to call it
+   * **This function is run automatically whenever the extension updates**, so you don't have to call it
    * manually.
    */
   migrate(): Promise<void>;
@@ -996,8 +1056,7 @@ export interface WxtStorageItemOptions<T> {
   /**
    * A map of version numbers to the functions used to migrate the data to that version.
    */
-  migrations?: Record<number, (oldValue: any) => any>;
-
+  migrations?: Record<number, (oldValue: unknown) => unknown>;
   /**
    * Print debug logs, such as migration process.
    * @default false
