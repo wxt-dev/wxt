@@ -7,13 +7,12 @@ export type I18nStructure = {
   [K: string]: I18nFeatures;
 };
 
-export type DefaultI18nStructure = {
-  [K: string]: any;
-};
+export type DefaultI18nStructure = Record<string, unknown>;
 
 // prettier-ignore
 export type SubstitutionTuple<T extends SubstitutionCount> =
-    T extends 1 ? [$1: Substitution]
+    T extends 0 ? []
+  : T extends 1 ? [$1: Substitution]
   : T extends 2 ? [$1: Substitution, $2: Substitution]
   : T extends 3 ? [$1: Substitution, $2: Substitution, $3: Substitution]
   : T extends 4 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution]
@@ -22,7 +21,7 @@ export type SubstitutionTuple<T extends SubstitutionCount> =
   : T extends 7 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution]
   : T extends 8 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution]
   : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
-  : never
+  : []
 
 export type TFunction<T extends I18nStructure> = {
   // Non-plural, no substitutions
@@ -37,7 +36,7 @@ export type TFunction<T extends I18nStructure> = {
     key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: SubstitutionCount } ? P : never; }[keyof T],
     substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
-      : never,
+      : [],
   ): string;
 
   // Plural with 1 substitution
@@ -62,12 +61,16 @@ export type TFunction<T extends I18nStructure> = {
     n: number,
     substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
-      : never,
+      : [],
   ): string;
 };
 
-export interface I18n<T extends DefaultI18nStructure> {
-  t: TFunction<T>;
+export interface I18n<
+  T extends I18nStructure | DefaultI18nStructure = DefaultI18nStructure,
+> {
+  t: T extends DefaultI18nStructure
+    ? (key: string, ...args: unknown[]) => string
+    : TFunction<Extract<T, I18nStructure>>;
 }
 
 export type Substitution = string | number;
