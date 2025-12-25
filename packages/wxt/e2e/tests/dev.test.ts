@@ -10,6 +10,7 @@ describe('Dev Mode', () => {
     );
 
     const server = await project.startServer({
+      // TODO: MAYBE REMOVE IT BEFORE 1.0.0?
       runner: {
         disabled: true,
       },

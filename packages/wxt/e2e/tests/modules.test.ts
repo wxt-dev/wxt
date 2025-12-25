@@ -255,12 +255,14 @@ describe('Module Helpers', () => {
           customImport();
         });`,
       );
+
       const utils = project.addFile(
         'custom.ts',
         `export function customImport() {
           console.log("${expectedText}")
         }`,
       );
+
       project.addFile(
         'modules/test.ts',
         `import { defineWxtModule } from 'wxt/modules';
