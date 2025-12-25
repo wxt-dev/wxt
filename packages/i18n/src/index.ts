@@ -2,9 +2,9 @@
  * @module @wxt-dev/i18n
  */
 import {
-  I18nStructure,
   DefaultI18nStructure,
   I18n,
+  I18nStructure,
   Substitution,
 } from './types';
 import { browser } from '@wxt-dev/browser';
@@ -16,6 +16,7 @@ export function createI18n<
     // Resolve args
     let sub: Substitution[] | undefined;
     let count: number | undefined;
+
     args.forEach((arg, i) => {
       if (arg == null) {
         // ignore nullish args
@@ -37,6 +38,7 @@ export function createI18n<
 
     // Load the localization
     let message: string;
+
     if (sub?.length) {
       // Convert all substitutions to strings
       const stringSubs = sub?.map((sub) => String(sub));
@@ -44,9 +46,11 @@ export function createI18n<
     } else {
       message = browser.i18n.getMessage(key.replaceAll('.', '_'));
     }
+
     if (!message) {
       console.warn(`[i18n] Message not found: "${key}"`);
     }
+
     if (count == null) return message;
 
     // Apply pluralization
