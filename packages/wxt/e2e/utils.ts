@@ -178,7 +178,7 @@ export class TestProject {
   }
 
   fileExists(...path: string[]): Promise<boolean> {
-    return fs.exists(this.resolvePath(...path));
+    return fs.pathExists(this.resolvePath(...path));
   }
 
   async getOutputManifest(

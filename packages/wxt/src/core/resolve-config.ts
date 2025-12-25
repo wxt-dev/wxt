@@ -550,7 +550,7 @@ function resolveWxtModuleDir() {
 }
 
 async function isDirMissing(dir: string) {
-  return !(await fs.exists(dir));
+  return !(await fs.pathExists(dir));
 }
 
 function logMissingDir(logger: Logger, name: string, expected: string) {

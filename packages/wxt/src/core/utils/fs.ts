@@ -28,7 +28,7 @@ export async function writeFileIfDifferent(
  * `config.publicDir`.
  */
 export async function getPublicFiles(): Promise<string[]> {
-  if (!(await fs.exists(wxt.config.publicDir))) return [];
+  if (!(await fs.pathExists(wxt.config.publicDir))) return [];
 
   const files = await glob('**/*', { cwd: wxt.config.publicDir });
   return files.map(unnormalizePath);
