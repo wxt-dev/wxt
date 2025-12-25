@@ -25,7 +25,7 @@ export function openWebSocket(url: string): Promise<WebSocket> {
         ),
       );
     };
-    const onError = (error: any) => {
+    const onError = (error: unknown) => {
       cleanup();
       reject(new Error('Error connecting to WebSocket', { cause: error }));
     };

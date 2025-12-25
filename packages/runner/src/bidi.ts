@@ -4,7 +4,11 @@ import { debug } from './debug';
 const debugBidi = debug.scoped('bidi');
 
 export interface BidiConnection extends Disposable {
-  send<T>(method: string, params: any, timeout?: number): Promise<T>;
+  send<T>(
+    method: string,
+    params: Record<string, unknown>,
+    timeout?: number,
+  ): Promise<T>;
   close(): void;
 }
 
