@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { ResolvedRunOptions, resolveRunOptions } from '../options';
-import { resolve, join } from 'node:path';
-import { tmpdir, homedir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { homedir, tmpdir } from 'node:os';
 import { mkdir } from 'node:fs/promises';
 
 vi.mock('node:os', async () => {
@@ -11,7 +11,6 @@ vi.mock('node:os', async () => {
   return {
     ...os,
     tmpdir: () => join(os.tmpdir(), 'tmpdir-mock'),
-    homedir: () => join(os.tmpdir(), 'homedir-mock'),
   };
 });
 
