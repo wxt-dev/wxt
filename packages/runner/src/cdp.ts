@@ -5,7 +5,11 @@ import { debug } from './debug';
 const debugCdp = debug.scoped('cdp');
 
 export interface CDPConnection extends Disposable {
-  send<T>(method: string, params: any, timeout?: number): Promise<T>;
+  send<T>(
+    method: string,
+    params: Record<string, unknown>,
+    timeout?: number,
+  ): Promise<T>;
   close(): void;
 }
 
