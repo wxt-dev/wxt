@@ -32,7 +32,7 @@ export async function createBidiConnection(
           webSocket.removeEventListener('error', onError);
         };
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           cleanup();
           reject(
             new Error(
@@ -45,12 +45,14 @@ export async function createBidiConnection(
           const data = JSON.parse(event.data);
           if (data.id === id) {
             debugBidi('Received response:', data);
+            clearTimeout(timeoutId);
             cleanup();
             if (data.type === 'success') resolve(data.result);
             else reject(Error(data.message, { cause: data }));
           }
         };
-        const onError = (error: any) => {
+        const onError = (error: unknown) => {
+          clearTimeout(timeoutId);
           cleanup();
           reject(new Error('Error sending request', { cause: error }));
         };
