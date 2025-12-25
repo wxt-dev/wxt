@@ -118,7 +118,7 @@ function createStorage(): WxtStorage {
     return driver.watch(driverKey, cb);
   };
 
-  const storage: WxtStorage = {
+  return {
     getItem: async (key, opts) => {
       const { driver, driverKey } = resolveKey(key);
       return await getItem(driver, driverKey, opts);
@@ -491,7 +491,6 @@ function createStorage(): WxtStorage {
       };
     },
   };
-  return storage;
 }
 
 function createDriver(storageArea: StorageArea): WxtStorageDriver {
