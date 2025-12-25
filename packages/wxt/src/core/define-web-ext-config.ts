@@ -1,6 +1,7 @@
 import consola from 'consola';
 import { WebExtConfig } from '../types';
 
+// TODO: MAYBE DROP IT, BEFORE 1.0.0?
 /**
  * @deprecated Use `defineWebExtConfig` instead. Same function, different name.
  */
