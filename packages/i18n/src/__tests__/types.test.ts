@@ -48,66 +48,41 @@ describe('I18n Types', () => {
     describe('t', () => {
       it('should only allow passing valid combinations of arguments', () => {
         i18n.t('simple');
-        // TODO: WHY THERE'S SO MUCH TS-EXPECT-ERRORS?
-        // @ts-expect-error
         i18n.t('simple', []);
-        // @ts-expect-error
         i18n.t('simple', ['one']);
-        // @ts-expect-error
         i18n.t('simple', n);
 
         i18n.t('simpleSub1', ['one']);
-        // @ts-expect-error
         i18n.t('simpleSub1');
-        // @ts-expect-error
         i18n.t('simpleSub1', []);
-        // @ts-expect-error
         i18n.t('simpleSub1', ['one', 'two']);
-        // @ts-expect-error
         i18n.t('simpleSub1', n);
 
         i18n.t('simpleSub2', ['one', 'two']);
-        // @ts-expect-error
         i18n.t('simpleSub2');
-        // @ts-expect-error
         i18n.t('simpleSub2', ['one']);
-        // @ts-expect-error
         i18n.t('simpleSub2', ['one', 'two', 'three']);
-        // @ts-expect-error
         i18n.t('simpleSub2', n);
 
         i18n.t('plural', n);
-        // @ts-expect-error
         i18n.t('plural');
-        // @ts-expect-error
         i18n.t('plural', []);
-        // @ts-expect-error
         i18n.t('plural', ['one']);
-        // @ts-expect-error
         i18n.t('plural', n, ['sub']);
 
         i18n.t('pluralSub1', n);
         i18n.t('pluralSub1', n, undefined);
         i18n.t('pluralSub1', n, ['one']);
-        // @ts-expect-error
         i18n.t('pluralSub1');
-        // @ts-expect-error
         i18n.t('pluralSub1', ['one']);
-        // @ts-expect-error
         i18n.t('pluralSub1', n, []);
-        // @ts-expect-error
         i18n.t('pluralSub1', n, ['one', 'two']);
 
         i18n.t('pluralSub2', n, ['one', 'two']);
-        // @ts-expect-error
         i18n.t('pluralSub2');
-        // @ts-expect-error
         i18n.t('pluralSub2', ['one', 'two']);
-        // @ts-expect-error
         i18n.t('pluralSub2', n, ['one']);
-        // @ts-expect-error
         i18n.t('pluralSub2', n, ['one', 'two', 'three']);
-        // @ts-expect-error
         i18n.t('pluralSub2', n);
       });
     });

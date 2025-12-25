@@ -10,9 +10,9 @@ import {
 import { browser } from '@wxt-dev/browser';
 
 export function createI18n<
-  T extends I18nStructure = DefaultI18nStructure,
+  T extends I18nStructure | DefaultI18nStructure = DefaultI18nStructure,
 >(): I18n<T> {
-  const t = (key: string, ...args: any[]) => {
+  const t = (key: string, ...args: unknown[]) => {
     // Resolve args
     let sub: Substitution[] | undefined;
     let count: number | undefined;
