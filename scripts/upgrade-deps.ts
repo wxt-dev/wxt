@@ -1,6 +1,5 @@
 import glob from 'fast-glob';
-import fs from 'fs/promises';
-import fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 import * as semver from 'semver';
 import { dirname } from 'node:path';
 import consola from 'consola';
@@ -102,7 +101,7 @@ async function getPackageJsonDependencies(
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
-      content: await fsExtra.readJson(path),
+      content: await fs.readJson(path),
       path,
       folder: dirname(path),
     })),

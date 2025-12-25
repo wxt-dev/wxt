@@ -5,7 +5,7 @@ import {
   updateGithubRelease,
 } from 'changelogen';
 import { getPkgTag, grabPackageDetails } from './git';
-import fs from 'fs/promises';
+import fs from 'fs-extra';
 import consola from 'consola';
 
 const pkg = process.argv[2];
