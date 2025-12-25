@@ -19,7 +19,7 @@ function createStorage(): WxtStorage {
   };
   const getDriver = (area: StorageArea) => {
     const driver = drivers[area];
-    if (driver == null) {
+    if (driver === null) {
       const areaNames = Object.keys(drivers).join(', ');
       throw Error(`Invalid area "${area}". Options: ${areaNames}`);
     }
@@ -29,7 +29,7 @@ function createStorage(): WxtStorage {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
     const driverKey = key.substring(deliminatorIndex + 1);
-    if (driverKey == null)
+    if (driverKey === null)
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
       );
@@ -44,7 +44,7 @@ function createStorage(): WxtStorage {
   const mergeMeta = (oldMeta: any, newMeta: any): any => {
     const newFields = { ...oldMeta };
     Object.entries(newMeta).forEach(([key, value]) => {
-      if (value == null) delete newFields[key];
+      if (value === null) delete newFields[key];
       else newFields[key] = value;
     });
     return newFields;
@@ -102,11 +102,11 @@ function createStorage(): WxtStorage {
     properties: string | string[] | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
-    if (properties == null) {
+    if (properties === null) {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      [properties].flat().forEach((field) => delete newFields[field]);
+      [properties].flat().forEach((field) => delete newFields[field ?? '']);
       await driver.setItem(metaKey, newFields);
     }
   };
@@ -368,7 +368,7 @@ function createStorage(): WxtStorage {
           driverKey,
           driverMetaKey,
         ]);
-        if (value == null) return;
+        if (value === null) return;
 
         const currentVersion = meta?.v ?? 1;
         if (currentVersion > targetVersion) {
@@ -380,7 +380,7 @@ function createStorage(): WxtStorage {
           return;
         }
 
-        if (debug === true) {
+        if (debug) {
           console.debug(
             `[@wxt-dev/storage] Running storage migration for ${key}: v${currentVersion} -> v${targetVersion}`,
           );
@@ -395,7 +395,7 @@ function createStorage(): WxtStorage {
             migratedValue =
               (await migrations?.[migrateToVersion]?.(migratedValue)) ??
               migratedValue;
-            if (debug === true) {
+            if (debug) {
               console.debug(
                 `[@wxt-dev/storage] Storage migration processed for version: v${migrateToVersion}`,
               );
@@ -411,7 +411,7 @@ function createStorage(): WxtStorage {
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
 
-        if (debug === true) {
+        if (debug) {
           console.debug(
             `[@wxt-dev/storage] Storage migration completed for ${key} v${targetVersion}`,
             { migratedValue },
@@ -626,8 +626,8 @@ export interface WxtStorage {
   /**
    * Get the metadata of multiple storage items.
    *
-   * @param items List of keys or items to get the metadata of.
    * @returns An array containing storage keys and their metadata.
+   * @param keys List of keys or items to get the metadata of.
    */
   getMetas(
     keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
@@ -669,7 +669,7 @@ export interface WxtStorage {
   /**
    * Set the metadata of multiple storage items.
    *
-   * @param items List of storage keys or items and metadata to set for each.
+   * @param metas List of storage keys or items and metadata to set for each.
    */
   setMetas(
     metas: Array<
@@ -863,6 +863,7 @@ export interface SnapshotOptions {
 }
 
 export interface WxtStorageItemOptions<T> {
+  // TODO: MAYBE REMOVE IT BEFORE 1.0 RELEASE?
   /**
    * @deprecated Renamed to `fallback`, use it instead.
    */
