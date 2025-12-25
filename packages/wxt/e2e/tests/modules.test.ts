@@ -33,7 +33,6 @@ describe('Module Helpers', () => {
       );
 
       await project.build({
-        // @ts-expect-error: untyped field for testing
         example: options,
       });
 
