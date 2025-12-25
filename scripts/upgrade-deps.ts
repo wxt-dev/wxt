@@ -330,7 +330,7 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
         ? ` \x1b[2m\x1b[31m(${upgrade.latestVersion} available)\x1b[0m`
         : '';
     console.log(
-      `  ${num} ${name}  ${currentVersion}  \x1b[2m→\x1b[0m  ${upgradeToVersion}${latest}'`,
+      `  ${num} ${name}  ${currentVersion}  \x1b[2m→\x1b[0m  ${upgradeToVersion}${latest}`,
     );
   }
   console.log();
