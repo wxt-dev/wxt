@@ -1,9 +1,21 @@
+/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 /* Colors */
 :root {
   --wxt-c-green-1: #0b8a00;
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
   --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
+
+  --vp-c-brand-1: var(--wxt-c-green-1);
+  --vp-c-brand-2: var(--wxt-c-green-2);
+  --vp-c-brand-3: var(--wxt-c-green-3);
+  --vp-c-brand-soft: var(--wxt-c-green-soft);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .dark {
@@ -13,17 +25,7 @@
   --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
 }
 
-/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
-
-:root {
-  --vp-c-brand-1: var(--wxt-c-green-1);
-  --vp-c-brand-2: var(--wxt-c-green-2);
-  --vp-c-brand-3: var(--wxt-c-green-3);
-  --vp-c-brand-soft: var(--wxt-c-green-soft);
-}
-
 /* Customize Individual Components */
-
 .vp-doc .no-vertical-dividers th,
 .vp-doc .no-vertical-dividers td {
   border: none;
@@ -37,20 +39,15 @@ body {
   overflow-y: scroll;
 }
 
-.VPSidebar {
-  user-select: none;
-}
-
 .VPSidebarItem .badge {
-  display: inline-block;
-  min-width: 1.6em;
-  padding: 0.3em 0.4em 0.2em;
-  border-radius: 1rem;
-  font-size: 0.75em;
-  line-height: 1;
-  margin-left: 0.5rem;
-  text-align: center;
-  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75em;
+  height: 1.75em;
+  border-radius: 10rem;
+  font-size: 0.8em;
+  margin-left: 0.25rem;
   background-color: var(--vp-c-default-2);
 }
 
