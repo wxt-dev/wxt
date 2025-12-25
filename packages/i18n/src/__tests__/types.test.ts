@@ -4,6 +4,7 @@ import { browser } from '@wxt-dev/browser';
 
 vi.mock('@wxt-dev/browser', async () => {
   const { vi } = await import('vitest');
+
   return {
     browser: {
       i18n: {
@@ -14,7 +15,7 @@ vi.mock('@wxt-dev/browser', async () => {
 });
 const getMessageMock = vi.mocked(browser.i18n.getMessage);
 
-const n: number = 1;
+const n = 1;
 
 describe('I18n Types', () => {
   beforeEach(() => {
@@ -47,6 +48,7 @@ describe('I18n Types', () => {
     describe('t', () => {
       it('should only allow passing valid combinations of arguments', () => {
         i18n.t('simple');
+        // TODO: WHY THERE'S SO MUCH TS-EXPECT-ERRORS?
         // @ts-expect-error
         i18n.t('simple', []);
         // @ts-expect-error
