@@ -94,7 +94,7 @@ const EXT_FORMATS_MAP: Record<string, MessageFormat> = {
   '.toml': 'TOML',
 };
 
-const PARSERS: Record<MessageFormat, (text: string) => any> = {
+const PARSERS: Record<MessageFormat, (text: string) => unknown> = {
   YAML: parseYAML,
   JSON5: parseJSON5,
   TOML: parseTOML,
@@ -135,11 +135,11 @@ export function parseMessagesText(
 /**
  * Given the JS object form of a raw messages file, extract the messages.
  */
-export function parseMessagesObject(object: any): ParsedMessage[] {
+export function parseMessagesObject(object: unknown): ParsedMessage[] {
   return _parseMessagesObject(
     [],
     {
-      ...object,
+      ...(object as Record<string, unknown>),
       ...PREDEFINED_MESSAGES,
     },
     0,
@@ -148,7 +148,7 @@ export function parseMessagesObject(object: any): ParsedMessage[] {
 
 function _parseMessagesObject(
   path: string[],
-  object: any,
+  object: unknown,
   depth: number,
 ): ParsedMessage[] {
   switch (typeof object) {
@@ -169,7 +169,7 @@ function _parseMessagesObject(
       ];
     }
     case 'object':
-      if ([null, undefined].includes(object)) {
+      if (object === null || object === undefined) {
         throw new Error(
           `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
@@ -189,13 +189,13 @@ function _parseMessagesObject(
             type: 'plural',
             key: path,
             substitutions,
-            plurals: object,
+            plurals: object as Record<number | 'n', string>,
           },
         ];
       }
 
-      if (depth === 1 && isChromeMessage(object)) {
-        const message = applyChromeMessagePlaceholders(object);
+      if (depth === 1 && isChromeMessage(object as object)) {
+        const message = applyChromeMessagePlaceholders(object as ChromeMessage);
         const substitutions = getSubstitutionCount(message);
 
         return [
@@ -203,25 +203,28 @@ function _parseMessagesObject(
             type: 'chrome',
             key: path,
             substitutions,
-            ...object,
+            ...(object as ChromeMessage),
           },
         ];
       }
-      return Object.entries(object).flatMap(([key, value]) =>
-        _parseMessagesObject(path.concat(key), value, depth + 1),
+      return Object.entries(object as Record<string, unknown>).flatMap(
+        ([key, value]) =>
+          _parseMessagesObject(path.concat(key), value, depth + 1),
       );
     default:
       throw Error(`"Could not parse object of type "${typeof object}"`);
   }
 }
 
-function isPluralMessage(object: any): object is Record<number | 'n', string> {
+function isPluralMessage(
+  object: object,
+): object is Record<number | 'n', string> {
   return Object.keys(object).every(
     (key) => key === 'n' || isFinite(Number(key)),
   );
 }
 
-function isChromeMessage(object: any): object is ChromeMessage {
+function isChromeMessage(object: object): object is ChromeMessage {
   return Object.keys(object).every((key) =>
     ALLOWED_CHROME_MESSAGE_KEYS.has(key),
   );
