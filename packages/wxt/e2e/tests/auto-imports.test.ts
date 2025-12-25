@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import spawn from 'nano-spawn';
 
@@ -6,7 +6,7 @@ describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
     it('should generate a declaration file, imports.d.ts, for auto-imports', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare();
 
@@ -70,7 +70,7 @@ describe('Auto Imports', () => {
 
     it('should include auto-imports in the project', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare();
 
@@ -91,7 +91,7 @@ describe('Auto Imports', () => {
 
     it('should generate the #imports module', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
       // Project auto-imports should also be present
       project.addFile(
         'utils/time.ts',
@@ -138,7 +138,7 @@ describe('Auto Imports', () => {
       project.setConfigFileConfig({
         imports: false,
       });
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare();
 
@@ -150,8 +150,7 @@ describe('Auto Imports', () => {
       project.setConfigFileConfig({
         imports: false,
       });
-      project.addFile('entrypoints/popup.html', `<html></html>`);
-
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
       await project.prepare();
 
       expect(
@@ -176,7 +175,7 @@ describe('Auto Imports', () => {
       project.setConfigFileConfig({
         imports: false,
       });
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
       // Project auto-imports should also be present
       project.addFile(
         'utils/time.ts',
@@ -219,7 +218,7 @@ describe('Auto Imports', () => {
   describe('eslintrc', () => {
     it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare({
         imports: {
@@ -236,7 +235,7 @@ describe('Auto Imports', () => {
 
     it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare({
         imports: {
@@ -253,7 +252,7 @@ describe('Auto Imports', () => {
 
     it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare({
         imports: {
@@ -270,7 +269,7 @@ describe('Auto Imports', () => {
 
     it('"enabled: false" should NOT output an ESlint config file', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare({
         imports: {
@@ -288,9 +287,23 @@ describe('Auto Imports', () => {
       );
     });
 
+    it('should NOT output an ESlint config file by default', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
+
+      await project.prepare();
+
+      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        false,
+      );
+      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
+    });
+
     it('should allow customizing the output', async () => {
       const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile('entrypoints/popup.html', `<html lang="en"></html>`);
 
       await project.prepare({
         imports: {
@@ -317,7 +330,8 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
+
+        return spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
           cwd: project.root,
         });
       }
