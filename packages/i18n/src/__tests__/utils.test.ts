@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ChromeMessage } from '../build';
 import {
   applyChromeMessagePlaceholders,
@@ -43,7 +43,7 @@ describe('Utils', () => {
   });
 
   describe('getSubstitutionCount', () => {
-    it('should return the last substution present in the message', () => {
+    it('should return the last substitution present in the message', () => {
       expect(getSubstitutionCount('I like $1, but I like $2 better')).toBe(2);
     });
 
