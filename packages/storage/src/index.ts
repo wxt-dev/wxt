@@ -19,7 +19,7 @@ function createStorage(): WxtStorage {
   };
   const getDriver = (area: StorageArea) => {
     const driver = drivers[area];
-    if (driver === null) {
+    if (driver == null) {
       const areaNames = Object.keys(drivers).join(', ');
       throw Error(`Invalid area "${area}". Options: ${areaNames}`);
     }
@@ -29,7 +29,7 @@ function createStorage(): WxtStorage {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
     const driverKey = key.substring(deliminatorIndex + 1);
-    if (driverKey === null)
+    if (driverKey == null)
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
       );
@@ -44,7 +44,7 @@ function createStorage(): WxtStorage {
   const mergeMeta = (oldMeta: any, newMeta: any): any => {
     const newFields = { ...oldMeta };
     Object.entries(newMeta).forEach(([key, value]) => {
-      if (value === null) delete newFields[key];
+      if (value == null) delete newFields[key];
       else newFields[key] = value;
     });
     return newFields;
@@ -102,11 +102,11 @@ function createStorage(): WxtStorage {
     properties: string | string[] | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
-    if (properties === null) {
+    if (properties == null) {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      [properties].flat().forEach((field) => delete newFields[field ?? '']);
+      [properties].flat().forEach((field) => delete newFields[field]);
       await driver.setItem(metaKey, newFields);
     }
   };
@@ -368,7 +368,7 @@ function createStorage(): WxtStorage {
           driverKey,
           driverMetaKey,
         ]);
-        if (value === null) return;
+        if (value == null) return;
 
         const currentVersion = meta?.v ?? 1;
         if (currentVersion > targetVersion) {
