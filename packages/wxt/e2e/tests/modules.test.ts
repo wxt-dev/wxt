@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import type { GenericEntrypoint, InlineConfig } from '../../src';
 import { readFile } from 'fs-extra';
 import { normalizePath } from '../../src/core/utils/paths';
 
@@ -201,7 +201,7 @@ describe('Module Helpers', () => {
       project.addFile(
         'entrypoints/popup/index.html',
         `
-          <html>
+          <html lang="en">
             <body></body>
           </html>
         `,
