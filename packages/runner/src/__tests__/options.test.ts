@@ -6,7 +6,7 @@ import { mkdir } from 'node:fs/promises';
 
 vi.mock('node:os', async () => {
   const { vi } = await import('vitest');
-  const os: any = await vi.importActual('node:os');
+  const os = (await vi.importActual('node:os')) as typeof import('node:os');
   const { join } = await import('node:path');
   return {
     ...os,

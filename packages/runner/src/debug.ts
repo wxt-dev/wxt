@@ -1,10 +1,11 @@
 export interface Debug {
-  (...args: any[]): void;
   scoped: (scope: string) => Debug;
+
+  (...args: unknown[]): void;
 }
 
 function createDebug(scopes: string[]): Debug {
-  const debug = (...args: any[]) => {
+  const debug = (...args: unknown[]) => {
     const scope = scopes.join(':');
     if (
       process.env.DEBUG === '1' ||
