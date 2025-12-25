@@ -4,7 +4,7 @@ import {
   loadChangelogConfig,
   parseChangelogMarkdown,
 } from 'changelogen';
-import fs from 'fs/promises';
+import fs from 'fs-extra';
 import { grabPackageDetails } from './git';
 import consola from 'consola';
 
