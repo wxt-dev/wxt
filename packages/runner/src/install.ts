@@ -17,15 +17,12 @@ export async function installFirefox(
   await bidi.send<unknown>('session.new', { capabilities: {} });
 
   // Install the extension
-  return await bidi.send<BidiWebExtensionInstallResponse>(
-    'webExtension.install',
-    {
-      extensionData: {
-        type: 'path',
-        path: extensionDir,
-      },
+  return bidi.send<BidiWebExtensionInstallResponse>('webExtension.install', {
+    extensionData: {
+      type: 'path',
+      path: extensionDir,
     },
-  );
+  });
 }
 
 export type BidiWebExtensionInstallResponse = {
