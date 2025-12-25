@@ -6,7 +6,7 @@
  */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseYAML, parseJSON5, parseTOML } from 'confbox';
+import { parseJSON5, parseTOML, parseYAML } from 'confbox';
 import { dirname, extname } from 'node:path';
 import { applyChromeMessagePlaceholders, getSubstitutionCount } from './utils';
 
@@ -118,6 +118,7 @@ export async function parseMessagesFile(
 ): Promise<ParsedMessage[]> {
   const text = await readFile(file, 'utf8');
   const ext = extname(file).toLowerCase();
+
   return parseMessagesText(text, EXT_FORMATS_MAP[ext] ?? 'JSON5');
 }
 
@@ -173,13 +174,16 @@ function _parseMessagesObject(
           `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
       }
+
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item, depth + 1),
         );
+
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
         const substitutions = getSubstitutionCount(message);
+
         return [
           {
             type: 'plural',
@@ -189,9 +193,11 @@ function _parseMessagesObject(
           },
         ];
       }
+
       if (depth === 1 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
         const substitutions = getSubstitutionCount(message);
+
         return [
           {
             type: 'chrome',
@@ -227,7 +233,7 @@ function isChromeMessage(object: any): object is ChromeMessage {
 
 export function generateTypeText(messages: ParsedMessage[]): string {
   const renderMessageEntry = (message: ParsedMessage): string => {
-    // Use . for deep keys at runtime and types
+    // Use '.' for deep keys at runtime and types
     const key = message.key.join('.');
 
     const features = [

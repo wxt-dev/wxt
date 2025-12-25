@@ -1,7 +1,7 @@
 import { ChromeMessage } from './build';
 
 export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
-  if (message.placeholders == null) return message.message;
+  if (message.placeholders === null) return message.message;
 
   return Object.entries(message.placeholders ?? {}).reduce(
     (text, [name, value]) => {
@@ -28,6 +28,7 @@ export function standardizeLocale(locale: string): string {
 
   const [is_match, prefix, suffix] =
     locale.match(/^([a-z]{2})[-_]([a-z]{2,3})$/i) ?? [];
+
   if (is_match) {
     return `${prefix.toLowerCase()}_${suffix.toUpperCase()}`;
   }
