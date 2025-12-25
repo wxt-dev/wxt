@@ -123,7 +123,7 @@ function createStorage(): WxtStorage {
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
-      [properties].flat().forEach((field) => delete newFields[field]);
+      [properties].flat().forEach((field) => delete newFields[field ?? '']);
       await driver.setItem(metaKey, newFields);
     }
   };
