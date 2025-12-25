@@ -6,7 +6,7 @@
  */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseYAML, parseJSON5, parseTOML } from 'confbox';
+import { parseJSON5, parseTOML, parseYAML } from 'confbox';
 import { dirname, extname } from 'node:path';
 import { applyChromeMessagePlaceholders, getSubstitutionCount } from './utils';
 
@@ -45,6 +45,8 @@ export type ParsedMessage =
   | ParsedPluralMessage;
 
 export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
+
+type MessageType = Record<string, ChromeMessage> | Record<number | 'n', string>;
 
 //
 // CONSTANTS
@@ -94,7 +96,7 @@ const EXT_FORMATS_MAP: Record<string, MessageFormat> = {
   '.toml': 'TOML',
 };
 
-const PARSERS: Record<MessageFormat, (text: string) => any> = {
+const PARSERS: Record<MessageFormat, (text: string) => MessageType> = {
   YAML: parseYAML,
   JSON5: parseJSON5,
   TOML: parseTOML,
@@ -118,6 +120,7 @@ export async function parseMessagesFile(
 ): Promise<ParsedMessage[]> {
   const text = await readFile(file, 'utf8');
   const ext = extname(file).toLowerCase();
+
   return parseMessagesText(text, EXT_FORMATS_MAP[ext] ?? 'JSON5');
 }
 
@@ -134,7 +137,7 @@ export function parseMessagesText(
 /**
  * Given the JS object form of a raw messages file, extract the messages.
  */
-export function parseMessagesObject(object: any): ParsedMessage[] {
+export function parseMessagesObject(object: MessageType): ParsedMessage[] {
   return _parseMessagesObject(
     [],
     {
@@ -147,7 +150,7 @@ export function parseMessagesObject(object: any): ParsedMessage[] {
 
 function _parseMessagesObject(
   path: string[],
-  object: any,
+  object: MessageType,
   depth: number,
 ): ParsedMessage[] {
   switch (typeof object) {
@@ -168,54 +171,61 @@ function _parseMessagesObject(
       ];
     }
     case 'object':
-      if ([null, undefined].includes(object)) {
+      if (object === null || object === undefined) {
         throw new Error(
           `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
       }
+
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item, depth + 1),
         );
+
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
         const substitutions = getSubstitutionCount(message);
+
         return [
           {
             type: 'plural',
             key: path,
             substitutions,
-            plurals: object,
+            plurals: object as Record<string, string>,
           },
         ];
       }
+
       if (depth === 1 && isChromeMessage(object)) {
-        const message = applyChromeMessagePlaceholders(object);
+        const message = applyChromeMessagePlaceholders(
+          object as unknown as ChromeMessage,
+        );
         const substitutions = getSubstitutionCount(message);
+
         return [
           {
             type: 'chrome',
             key: path,
             substitutions,
-            ...object,
+            ...(object as unknown as ChromeMessage),
           },
         ];
       }
       return Object.entries(object).flatMap(([key, value]) =>
-        _parseMessagesObject(path.concat(key), value, depth + 1),
+        _parseMessagesObject(path.concat(key), value as MessageType, depth + 1),
       );
     default:
       throw Error(`"Could not parse object of type "${typeof object}"`);
   }
 }
 
-function isPluralMessage(object: any): object is Record<number | 'n', string> {
+function isPluralMessage(object: MessageType) {
   return Object.keys(object).every(
     (key) => key === 'n' || isFinite(Number(key)),
   );
 }
 
-function isChromeMessage(object: any): object is ChromeMessage {
+function isChromeMessage(object: MessageType) {
   return Object.keys(object).every((key) =>
     ALLOWED_CHROME_MESSAGE_KEYS.has(key),
   );
@@ -227,7 +237,7 @@ function isChromeMessage(object: any): object is ChromeMessage {
 
 export function generateTypeText(messages: ParsedMessage[]): string {
   const renderMessageEntry = (message: ParsedMessage): string => {
-    // Use . for deep keys at runtime and types
+    // Use '.' for deep keys at runtime and types
     const key = message.key.join('.');
 
     const features = [
