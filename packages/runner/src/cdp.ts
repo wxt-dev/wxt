@@ -21,6 +21,7 @@ export function createCdpConnection(
     send(method, params, timeout = 10e3) {
       const id = ++requestId;
       const command = { id, method, params };
+
       debugCdp('Sending command:', command);
 
       return new Promise((resolve, reject) => {
