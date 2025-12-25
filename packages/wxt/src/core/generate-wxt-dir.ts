@@ -136,7 +136,7 @@ declare module "wxt/browser" {
     'messages.json',
   );
   let messages: Message[];
-  if (await fs.exists(defaultLocalePath)) {
+  if (await fs.pathExists(defaultLocalePath)) {
     const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
     messages = parseI18nMessages(content);
   } else {
