@@ -2,7 +2,7 @@ import dns from 'node:dns';
 import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
 
-function isOffline(): Promise<boolean> {
+async function isOffline(): Promise<boolean> {
   const isOffline = new Promise<boolean>((res) => {
     dns.resolve('google.com', (err) => {
       if (err == null) {
@@ -32,6 +32,7 @@ export async function fetchCached(
 
   if (await isOnline()) {
     const res = await fetch(url);
+
     if (res.status < 300) {
       content = await res.text();
       await config.fsCache.set(url, content);

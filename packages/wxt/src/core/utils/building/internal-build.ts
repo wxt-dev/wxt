@@ -3,10 +3,10 @@ import { BuildOutput, Entrypoint } from '../../../types';
 import pc from 'picocolors';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
-import { formatDuration } from '../../utils/time';
-import { printBuildSummary } from '../../utils/log';
+import { formatDuration } from '../time';
+import { printBuildSummary } from '../log';
 import glob from 'fast-glob';
-import { unnormalizePath } from '../../utils/paths';
+import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
 import {
@@ -32,10 +32,11 @@ import { isCI } from 'ci-info';
 export async function internalBuild(): Promise<BuildOutput> {
   await wxt.hooks.callHook('build:before', wxt);
 
-  const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
-  const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
+  const VERB = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
+  const TARGET = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
+
   wxt.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
+    `${VERB} ${pc.cyan(TARGET)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
       `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
@@ -78,16 +79,18 @@ export async function internalBuild(): Promise<BuildOutput> {
   if (wxt.config.analysis.enabled) {
     await combineAnalysisStats();
     const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
+
     wxt.logger.info(
       `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
     );
+
     if (wxt.config.analysis.open) {
       if (isCI) {
         wxt.logger.debug(`Skipped opening ${pc.yellow(statsPath)} in CI`);
       } else {
         wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
         const { default: open } = await import('open');
-        open(wxt.config.analysis.outputFile);
+        await open(wxt.config.analysis.outputFile);
       }
     }
   }
@@ -133,12 +136,13 @@ function printValidationResults({
   }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
-    wxt.logger.log(relative(cwd, entrypoint.inputPath));
-    console.log();
+    wxt.logger.log(relative(cwd, entrypoint.inputPath) + '\n');
+
     errors.forEach((err) => {
       const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
-      const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
-      wxt.logger.log(`  - ${type} ${err.message} ${recieved}`);
+      const received = pc.dim(`(received: ${JSON.stringify(err.value)})`);
+
+      wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();
   });

@@ -19,13 +19,14 @@ export function createIframeUi<TMounted>(
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, iframe, options);
     options.onBeforeMount?.(wrapper, iframe);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
+
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();

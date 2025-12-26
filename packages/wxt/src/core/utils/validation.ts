@@ -14,6 +14,7 @@ export function validateEntrypoints(
 
   let errorCount = 0;
   let warningCount = 0;
+
   for (const err of errors) {
     if (err.type === 'warning') warningCount++;
     else errorCount++;
@@ -30,6 +31,7 @@ function validateContentScriptEntrypoint(
   definition: ContentScriptEntrypoint,
 ): ValidationResult[] {
   const errors = validateBaseEntrypoint(definition);
+
   if (
     definition.options.registration !== 'runtime' &&
     definition.options.matches == null

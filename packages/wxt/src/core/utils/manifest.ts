@@ -60,12 +60,14 @@ export async function generateManifest(
     wxt.config.manifest.version_name ??
     wxt.config.manifest.version ??
     pkg?.version;
+
   if (!versionName) {
     versionName = '0.0.0';
     wxt.logger.warn(
       'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/key-concepts/manifest.html#version-and-version-name',
     );
   }
+
   const version = wxt.config.manifest.version ?? simplifyVersion(versionName);
 
   const baseManifest: Browser.runtime.Manifest = {
@@ -76,7 +78,9 @@ export async function generateManifest(
     short_name: pkg?.shortName,
     icons: discoverIcons(buildOutput),
   };
+
   const userManifest = wxt.config.manifest;
+
   if (userManifest.manifest_version) {
     delete userManifest.manifest_version;
     wxt.logger.warn(
@@ -142,6 +146,7 @@ export async function generateManifest(
     throw Error(
       "Manifest 'name' is missing. Either:\n1. Set the name in your <rootDir>/package.json\n2. Set a name via the manifest option in your wxt.config.ts",
     );
+
   if (manifest.version == null) {
     throw Error(
       "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
@@ -274,13 +279,17 @@ function addEntrypoints(
       '.html',
     );
     const options: Browser.runtime.ManifestAction = {};
-    if (popup.options.defaultIcon)
+
+    if (popup.options.defaultIcon) {
       options.default_icon = popup.options.defaultIcon;
-    if (popup.options.defaultTitle)
+    }
+    if (popup.options.defaultTitle) {
       options.default_title = popup.options.defaultTitle;
-    if (popup.options.browserStyle)
+    }
+    if (popup.options.browserStyle) {
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
+    }
     if (manifest.manifest_version === 3) {
       manifest.action = {
         ...manifest.action,
@@ -397,6 +406,7 @@ function addEntrypoints(
           getContentScriptCssFiles(scripts, cssMap),
         ),
       );
+
       if (manifestContentScripts.length >= 0) {
         manifest.content_scripts ??= [];
         manifest.content_scripts.push(...manifestContentScripts);
@@ -459,19 +469,21 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
-  let permissonUrl = wxt.server?.origin;
-  if (permissonUrl) {
-    const permissionUrlInstance = new URL(permissonUrl);
+  let permissionUrl = wxt.server?.origin;
+
+  if (permissionUrl) {
+    const permissionUrlInstance = new URL(permissionUrl);
     permissionUrlInstance.port = '';
-    permissonUrl = permissionUrlInstance.toString();
+    permissionUrl = permissionUrlInstance.toString();
   }
-  const permission = `${permissonUrl}*`;
+
+  const PERMISSION = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
-    addHostPermission(manifest, permission);
+    addHostPermission(manifest, PERMISSION);
   } else {
-    addPermission(manifest, permission);
+    addPermission(manifest, PERMISSION);
   }
 
   const extensionPagesCsp = new ContentSecurityPolicy(
@@ -669,7 +681,7 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
 }
 
 /**
- * Make sure all resources are in MV3 format. If not, add a wanring
+ * Make sure all resources are in MV3 format. If not, add a warning
  */
 function validateMv3WebAccessibleResources(
   manifest: Browser.runtime.Manifest,
@@ -693,8 +705,10 @@ function validateMv3WebAccessibleResources(
  */
 function stripKeys(manifest: Browser.runtime.Manifest): void {
   let keysToRemove: string[] = [];
+
   if (wxt.config.manifestVersion === 2) {
     keysToRemove.push(...mv3OnlyKeys);
+
     if (wxt.config.browser === 'firefox')
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {

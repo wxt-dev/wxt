@@ -53,13 +53,13 @@ describe('createI18n', () => {
     (rawMessage, count, expected) => {
       const i18n = createI18n();
       getMessageMock.mockReturnValue(rawMessage);
-      const key = 'items';
+      const KEY = 'items';
 
-      const actual = i18n.t(key, count);
+      const actual = i18n.t(KEY, count);
 
       expect(actual).toBe(expected);
       expect(getMessageMock).toBeCalledTimes(1);
-      expect(getMessageMock).toBeCalledWith(key, [String(count)]);
+      expect(getMessageMock).toBeCalledWith(KEY, [String(count)]);
     },
   );
 

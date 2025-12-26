@@ -9,35 +9,36 @@ import { resolve } from 'path';
 
 describe('Entrypoint Utils', () => {
   describe('getEntrypointName', () => {
-    const entrypointsDir = '/entrypoints';
+    const ENTRYPOINTS_DIR = '/entrypoints';
 
     it.each<[string, string]>([
-      [resolve(entrypointsDir, 'popup.html'), 'popup'],
-      [resolve(entrypointsDir, 'options/index.html'), 'options'],
-      [resolve(entrypointsDir, 'example.sandbox/index.html'), 'example'],
-      [resolve(entrypointsDir, 'some.content/index.ts'), 'some'],
-      [resolve(entrypointsDir, 'overlay.content.ts'), 'overlay'],
+      [resolve(ENTRYPOINTS_DIR, 'popup.html'), 'popup'],
+      [resolve(ENTRYPOINTS_DIR, 'options/index.html'), 'options'],
+      [resolve(ENTRYPOINTS_DIR, 'example.sandbox/index.html'), 'example'],
+      [resolve(ENTRYPOINTS_DIR, 'some.content/index.ts'), 'some'],
+      [resolve(ENTRYPOINTS_DIR, 'overlay.content.ts'), 'overlay'],
     ])('should convert %s to %s', (inputPath, expected) => {
-      const actual = getEntrypointName(entrypointsDir, inputPath);
+      const actual = getEntrypointName(ENTRYPOINTS_DIR, inputPath);
       expect(actual).toBe(expected);
     });
   });
 
   describe('getEntrypointOutputFile', () => {
-    const outDir = '/.output';
+    const OUT_DIR = '/.output';
+
     it.each<{ expected: string; name: string; ext: string; outputDir: string }>(
       [
         {
           name: 'popup',
           ext: '.html',
-          outputDir: outDir,
-          expected: resolve(outDir, 'popup.html'),
+          outputDir: OUT_DIR,
+          expected: resolve(OUT_DIR, 'popup.html'),
         },
         {
           name: 'overlay',
           ext: '.ts',
-          outputDir: resolve(outDir, 'content-scripts'),
-          expected: resolve(outDir, 'content-scripts', 'overlay.ts'),
+          outputDir: resolve(OUT_DIR, 'content-scripts'),
+          expected: resolve(OUT_DIR, 'content-scripts', 'overlay.ts'),
         },
       ],
     )('should return %s', ({ name, ext, expected, outputDir }) => {

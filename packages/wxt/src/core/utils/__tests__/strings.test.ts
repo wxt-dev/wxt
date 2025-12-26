@@ -32,6 +32,7 @@ describe('String utils', () => {
       "should convert '%s' to '%s', which can be used for a variable name",
       (input, expected) => {
         const actual = safeVarName(input);
+
         expect(actual).toBe(expected);
       },
     );
@@ -39,7 +40,7 @@ describe('String utils', () => {
 
   describe('removeImportStatements', () => {
     it('should remove all import formats', () => {
-      const imports = `
+      const IMPORTS = `
 import { registerGithubService, createGithubApi } from "@/utils/github";
 import {
   registerGithubService,
@@ -54,16 +55,18 @@ import"@/utils/github"
  import'@/utils/github';
 import * as abc from "@/utils/github"
     `;
-      expect(removeImportStatements(imports).trim()).toEqual('');
+
+      expect(removeImportStatements(IMPORTS).trim()).toEqual('');
     });
 
     it('should not remove import.meta or inline import statements', () => {
-      const imports = `
+      const IMPORTS = `
 import.meta.env.DEV
 const a = await import("example");
 import("example");
     `;
-      expect(removeImportStatements(imports)).toEqual(imports);
+
+      expect(removeImportStatements(IMPORTS)).toEqual(IMPORTS);
     });
   });
 });

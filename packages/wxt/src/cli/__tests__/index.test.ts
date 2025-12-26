@@ -1,10 +1,12 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build } from '../../core/build';
-import { createServer } from '../../core/create-server';
-import { zip } from '../../core/zip';
-import { prepare } from '../../core/prepare';
-import { clean } from '../../core/clean';
-import { initialize } from '../../core/initialize';
+import {
+  build,
+  createServer,
+  zip,
+  prepare,
+  clean,
+  initialize,
+} from '../../core';
 import { mock } from 'vitest-mock-extended';
 import consola from 'consola';
 
@@ -117,14 +119,15 @@ describe('CLI', () => {
     });
 
     it('should respect passing --port', async () => {
-      const expectedPort = 3100;
-      mockArgv('--port', String(expectedPort));
+      const EXPECTED_PORT = 3100;
+
+      mockArgv('--port', String(EXPECTED_PORT));
       await importCli();
 
       expect(createServerMock).toBeCalledWith({
         dev: {
           server: {
-            port: expectedPort,
+            port: EXPECTED_PORT,
           },
         },
       });

@@ -9,6 +9,7 @@ import { reloadContentScript } from './utils/reload-content-scripts';
 if (import.meta.env.COMMAND === 'serve') {
   try {
     const ws = getDevServerWebSocket();
+
     ws.addWxtEventListener('wxt:reload-extension', () => {
       browser.runtime.reload();
     });
@@ -41,7 +42,7 @@ let result;
 try {
   initPlugins();
   result = definition.main();
-  // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
+  // @ts-expect-error: Res shouldn't be a promise, but we're checking it anyway
   if (result instanceof Promise) {
     console.warn(
       "The background's main() function return a promise, but it must be synchronous",
