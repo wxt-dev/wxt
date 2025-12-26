@@ -35,11 +35,11 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
       if (id === resolvedVirtualHtmlModuleId) {
         return `import { initPlugins } from '${virtualModuleId}';
 
-try {
-  initPlugins();
-} catch (err) {
-  console.error("[wxt] Failed to initialize plugins", err);
-}`;
+        try {
+          initPlugins();
+        } catch (err) {
+          console.error("[wxt] Failed to initialize plugins", err);
+        }`;
       }
     },
     transformIndexHtml: {
@@ -59,10 +59,11 @@ try {
         script.type = 'module';
         script.src = src;
 
-        if (document.head == null) {
+        if (document.head === null) {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
         }
+
         document.head.prepend(script);
         return document.toString();
       },
