@@ -21,7 +21,7 @@ export interface InlineConfig {
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
-   * After changing, don't forget to move the `public/` and `entrypoints/` directories into the new
+   * After changing, remember to move the `public/` and `entrypoints/` directories into the new
    * source dir.
    *
    * @default config.root
@@ -374,6 +374,10 @@ export interface InlineConfig {
    * "wxt-module-analytics").
    */
   modules?: string[];
+  /**
+   * Field only for testing purposes, don't use it for other cases
+   */
+  example?: { key: string };
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field

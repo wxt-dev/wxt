@@ -9,6 +9,7 @@ export const pnpm: WxtPackageManagerImpl = {
   },
   async listDependencies(options) {
     const args = ['ls', '-r', '--json'];
+
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
@@ -20,6 +21,7 @@ export const pnpm: WxtPackageManagerImpl = {
     ) {
       args.push('--ignore-workspace');
     }
+
     const res = await spawn('pnpm', args, { cwd: options?.cwd });
     const projects: NpmListProject[] = JSON.parse(res.stdout);
 

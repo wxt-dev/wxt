@@ -4,7 +4,11 @@ import { debug } from './debug';
 const debugBidi = debug.scoped('bidi');
 
 export interface BidiConnection extends Disposable {
-  send<T>(method: string, params: any, timeout?: number): Promise<T>;
+  send<T>(
+    method: string,
+    params: Record<string, unknown>,
+    timeout?: number,
+  ): Promise<T>;
   close(): void;
 }
 
@@ -23,6 +27,7 @@ export async function createBidiConnection(
     send(method, params, timeout = 10e3) {
       const id = ++requestId;
       const command = { id, method, params };
+
       debugBidi('Sending command:', command);
 
       return new Promise((resolve, reject) => {
@@ -31,7 +36,7 @@ export async function createBidiConnection(
           webSocket.removeEventListener('error', onError);
         };
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           cleanup();
           reject(
             new Error(
@@ -44,12 +49,14 @@ export async function createBidiConnection(
           const data = JSON.parse(event.data);
           if (data.id === id) {
             debugBidi('Received response:', data);
+            clearTimeout(timeoutId);
             cleanup();
             if (data.type === 'success') resolve(data.result);
             else reject(Error(data.message, { cause: data }));
           }
         };
-        const onError = (error: any) => {
+        const onError = (error: unknown) => {
+          clearTimeout(timeoutId);
           cleanup();
           reject(new Error('Error sending request', { cause: error }));
         };

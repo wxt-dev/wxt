@@ -16,6 +16,7 @@ export function createManualRunner(): ExtensionRunner {
       );
     },
     async closeBrowser() {
+      // TODO: THIS ISN'T USED ANYWHERE, MAYBE REMOVE?
       // noop
     },
   };

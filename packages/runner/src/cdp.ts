@@ -5,7 +5,11 @@ import { debug } from './debug';
 const debugCdp = debug.scoped('cdp');
 
 export interface CDPConnection extends Disposable {
-  send<T>(method: string, params: any, timeout?: number): Promise<T>;
+  send<T>(
+    method: string,
+    params: Record<string, unknown>,
+    timeout?: number,
+  ): Promise<T>;
   close(): void;
 }
 
@@ -21,6 +25,7 @@ export function createCdpConnection(
     send(method, params, timeout = 10e3) {
       const id = ++requestId;
       const command = { id, method, params };
+
       debugCdp('Sending command:', command);
 
       return new Promise((resolve, reject) => {

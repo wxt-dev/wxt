@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import type { GenericEntrypoint, InlineConfig } from '../../src';
 import { readFile } from 'fs-extra';
 import { normalizePath } from '../../src/core/utils/paths';
 
@@ -33,7 +33,6 @@ describe('Module Helpers', () => {
       );
 
       await project.build({
-        // @ts-expect-error: untyped field for testing
         example: options,
       });
 
@@ -201,7 +200,7 @@ describe('Module Helpers', () => {
       project.addFile(
         'entrypoints/popup/index.html',
         `
-          <html>
+          <html lang="en">
             <body></body>
           </html>
         `,
@@ -255,12 +254,14 @@ describe('Module Helpers', () => {
           customImport();
         });`,
       );
+
       const utils = project.addFile(
         'custom.ts',
         `export function customImport() {
           console.log("${expectedText}")
         }`,
       );
+
       project.addFile(
         'modules/test.ts',
         `import { defineWxtModule } from 'wxt/modules';
