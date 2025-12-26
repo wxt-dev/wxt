@@ -463,9 +463,11 @@ async function moveHtmlFiles(
  */
 export async function removeEmptyDirs(dir: string): Promise<void> {
   const files = await fs.readdir(dir);
+
   for (const file of files) {
     const filePath = join(dir, file);
     const stats = await fs.stat(filePath);
+
     if (stats.isDirectory()) {
       await removeEmptyDirs(filePath);
     }
