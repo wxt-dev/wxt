@@ -45,9 +45,11 @@ export function wrapAction(
       consola.fail(
         `Command failed after ${formatDuration(Date.now() - startTime)}`,
       );
+
       if (!(err instanceof ValidationError)) {
         consola.error(err);
       }
+
       process.exit(1);
     }
   };
@@ -101,6 +103,7 @@ export function createAliasedCommand(
     });
   aliasCommandNames.add(aliasedCommand.name);
 }
+
 export function isAliasedCommand(command: Command | undefined): boolean {
   return !!command && aliasCommandNames.has(command.name);
 }
