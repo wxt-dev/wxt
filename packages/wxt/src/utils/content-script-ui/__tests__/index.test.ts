@@ -8,7 +8,7 @@ import { ContentScriptUi } from '../types';
 
 /** Util for floating promise. */
 async function runMicrotasks() {
-  return await new Promise((resolve) => setTimeout(resolve, 0));
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function appendTestApp(container: HTMLElement) {
@@ -23,14 +23,17 @@ function appendTestElement({
   id: string;
 }) {
   const parent = document.querySelector('#parent');
+
   if (!parent) {
     throw Error(
       'Parent element not found. Please check the testing environment DOM',
     );
   }
+
   const element = document.createElement(tagName);
   element.id = id;
   parent.append(element);
+
   return element;
 }
 
@@ -146,6 +149,7 @@ describe('Content Script UIs', () => {
           position: 'overlay',
           page: '/page.html',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -159,6 +163,7 @@ describe('Content Script UIs', () => {
           page: '/page.html',
           alignment: 'top-left',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -172,6 +177,7 @@ describe('Content Script UIs', () => {
           page: '/page.html',
           alignment: 'top-right',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -185,6 +191,7 @@ describe('Content Script UIs', () => {
           page: '/page.html',
           alignment: 'bottom-right',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -198,6 +205,7 @@ describe('Content Script UIs', () => {
           page: '/page.html',
           alignment: 'bottom-left',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -206,15 +214,17 @@ describe('Content Script UIs', () => {
       });
 
       it('should respect the provided zIndex', () => {
-        const zIndex = 123;
+        const Z_INDEX = 123;
+
         const ui = createIframeUi(ctx, {
           position: 'overlay',
           page: '/page.html',
-          zIndex,
+          zIndex: Z_INDEX,
         });
+
         ui.mount();
 
-        expect(ui.wrapper.style.zIndex).toBe(String(zIndex));
+        expect(ui.wrapper.style.zIndex).toBe(String(Z_INDEX));
       });
     });
 
@@ -224,6 +234,7 @@ describe('Content Script UIs', () => {
           position: 'modal',
           page: '/page.html',
         });
+
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
@@ -232,15 +243,17 @@ describe('Content Script UIs', () => {
       });
 
       it('should respect the provided zIndex', () => {
-        const zIndex = 123;
+        const Z_INDEX = 123;
+
         const ui = createIframeUi(ctx, {
           position: 'modal',
           page: '/page.html',
-          zIndex,
+          zIndex: Z_INDEX,
         });
+
         ui.mount();
 
-        expect(ui.wrapper.style.zIndex).toBe(String(zIndex));
+        expect(ui.wrapper.style.zIndex).toBe(String(Z_INDEX));
       });
     });
   });
@@ -252,6 +265,7 @@ describe('Content Script UIs', () => {
           position: 'inline',
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(document.body.children).toContain(ui.wrapper);
@@ -265,6 +279,7 @@ describe('Content Script UIs', () => {
           onMount: appendTestApp,
           anchor: '#parent',
         });
+
         ui.mount();
 
         expect(document.querySelector('#parent')!.children).toContain(
@@ -283,6 +298,7 @@ describe('Content Script UIs', () => {
           onMount: appendTestApp,
           anchor: '//p[@id="three"]',
         });
+
         ui.mount();
 
         expect(document.querySelector('#three')!.children[0]).toBe(ui.wrapper);
@@ -296,6 +312,7 @@ describe('Content Script UIs', () => {
           onMount: appendTestApp,
           anchor: document.getElementById('parent'),
         });
+
         ui.mount();
 
         expect(document.querySelector('#parent')!.children).toContain(
@@ -311,6 +328,7 @@ describe('Content Script UIs', () => {
           onMount: appendTestApp,
           anchor: () => document.getElementById('parent'),
         });
+
         ui.mount();
 
         expect(document.querySelector('#parent')!.children).toContain(
@@ -339,6 +357,7 @@ describe('Content Script UIs', () => {
           append,
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(
@@ -355,6 +374,7 @@ describe('Content Script UIs', () => {
           append: 'first',
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(
@@ -371,6 +391,7 @@ describe('Content Script UIs', () => {
           append: 'replace',
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(document.body.children).toContain(ui.wrapper);
@@ -386,6 +407,7 @@ describe('Content Script UIs', () => {
           append: 'before',
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(document.querySelector('#parent')!.firstElementChild).toBe(
@@ -402,6 +424,7 @@ describe('Content Script UIs', () => {
           append: 'after',
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(document.querySelector('#parent')!.lastElementChild).toBe(
@@ -420,10 +443,10 @@ describe('Content Script UIs', () => {
           },
           onMount: appendTestApp,
         });
+
         ui.mount();
 
         expect(document.body.children).toContain(ui.wrapper);
-
         expect(document.querySelector('#parent')).toBeNull();
       });
     });
@@ -438,6 +461,7 @@ describe('Content Script UIs', () => {
           position: 'inline',
           onMount: () => expected,
         });
+
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
@@ -457,6 +481,7 @@ describe('Content Script UIs', () => {
           position: 'inline',
           onMount: () => expected,
         });
+
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
@@ -476,6 +501,7 @@ describe('Content Script UIs', () => {
           position: 'inline',
           onMount: () => expected,
         });
+
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
@@ -491,6 +517,7 @@ describe('Content Script UIs', () => {
   describe('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;
+
     beforeEach(async () => {
       ui?.remove();
       await runMicrotasks();
@@ -547,6 +574,7 @@ describe('Content Script UIs', () => {
 
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
           const onRemove = vi.fn();
+
           ui = await createUiFunction(ctx, {
             position: 'inline',
             onMount,
@@ -555,6 +583,7 @@ describe('Content Script UIs', () => {
             page: name === 'iframe' ? '/page.html' : undefined,
             name: 'test-component',
           });
+
           let dynamicEl;
           ui.autoMount();
           await runMicrotasks();
@@ -581,6 +610,7 @@ describe('Content Script UIs', () => {
         describe('options', () => {
           it('should auto-mount only once mount and remove when the `once` option is true', async () => {
             const onRemove = vi.fn();
+
             ui = await createUiFunction(ctx, {
               position: 'inline',
               onMount,
@@ -592,11 +622,13 @@ describe('Content Script UIs', () => {
             let dynamicEl;
             ui.autoMount({ once: true });
             await runMicrotasks();
+
             await expect
               .poll(() => document.querySelector(uiSelector))
               .toBeNull();
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
+
             await runMicrotasks();
             await expect
               .poll(() => document.querySelector(uiSelector))
@@ -604,17 +636,17 @@ describe('Content Script UIs', () => {
 
             dynamicEl.remove();
             await runMicrotasks();
+
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
 
-            // re-append after once cycle
-            dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
 
             // expect stop automount
             await expect
               .poll(() => document.querySelector(uiSelector))
               .toBeNull();
+
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
           });
@@ -629,6 +661,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+
             expect(() => ui.autoMount()).toThrowError(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
@@ -642,6 +675,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+
             expect(() => ui.autoMount()).toThrowError(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
@@ -651,6 +685,7 @@ describe('Content Script UIs', () => {
         describe('StopAutoMount', () => {
           it('should stop auto-mounting and remove ui when `ui.remove` is called', async () => {
             const onRemove = vi.fn();
+
             ui = await createUiFunction(ctx, {
               position: 'inline',
               onMount,
@@ -659,18 +694,21 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+
             let dynamicEl;
             ui.autoMount();
             await runMicrotasks();
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
+
             await expect
               .poll(() => document.querySelector(uiSelector))
               .not.toBeNull();
 
             dynamicEl.remove();
             await runMicrotasks();
+
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
 
@@ -679,6 +717,7 @@ describe('Content Script UIs', () => {
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             dynamicEl.remove();
             await runMicrotasks();
+
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(2);
           });
@@ -686,6 +725,7 @@ describe('Content Script UIs', () => {
           it('should call internal StopAutoMount when `ui.remove` is called', async () => {
             const onRemove = vi.fn();
             const onStop = vi.fn();
+
             ui = await createUiFunction(ctx, {
               position: 'inline',
               onMount,
@@ -694,8 +734,10 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+
             ui.autoMount({ onStop });
             ui.remove();
+
             expect(onStop).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
           });
@@ -708,7 +750,9 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
+
             const onStop = vi.fn();
+
             ui.autoMount({ onStop });
             ui.autoMount({ onStop });
 
@@ -716,7 +760,6 @@ describe('Content Script UIs', () => {
             expect(onStop).toBeCalledTimes(1);
 
             ui.autoMount({ onStop });
-
             ui.remove();
             expect(onStop).toBeCalledTimes(2);
           });

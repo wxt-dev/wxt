@@ -32,15 +32,16 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   const projectName =
     wxt.config.zip.name ??
     safeFilename(packageJson?.name || path.basename(process.cwd()));
+
   const applyTemplate = (template: string): string =>
     template
       .replaceAll('{{name}}', projectName)
       .replaceAll('{{browser}}', wxt.config.browser)
       .replaceAll(
         '{{version}}',
-        output.manifest.version_name ?? output.manifest.version,
+        String(output.manifest.version_name ?? output.manifest.version),
       )
-      .replaceAll('{{packageVersion}}', packageJson?.version)
+      .replaceAll('{{packageVersion}}', String(packageJson?.version))
       .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
@@ -48,8 +49,10 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
 
   // ZIP output directory
   await wxt.hooks.callHook('zip:extension:start', wxt);
+
   const outZipFilename = applyTemplate(wxt.config.zip.artifactTemplate);
   const outZipPath = path.resolve(wxt.config.outBaseDir, outZipFilename);
+
   await zipDir(wxt.config.outDir, outZipPath, {
     exclude: wxt.config.zip.exclude,
   });
@@ -59,20 +62,25 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   if (wxt.config.zip.zipSources) {
     const entrypoints = await findEntrypoints();
     const skippedEntrypoints = entrypoints.filter((entry) => entry.skipped);
+
     const excludeSources = [
       ...wxt.config.zip.excludeSources,
       ...skippedEntrypoints.map((entry) =>
         path.relative(wxt.config.zip.sourcesRoot, entry.inputPath),
       ),
     ].map((paths) => paths.replaceAll('\\', '/'));
+
     await wxt.hooks.callHook('zip:sources:start', wxt);
+
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
+
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
       sourcesZipFilename,
     );
+
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: excludeSources,
@@ -83,6 +91,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       },
       additionalFiles: downloadedPackages,
     });
+
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
   }
@@ -135,8 +144,10 @@ async function zipDir(
       path.relative(directory, file),
     ),
   ];
+
   for (const file of filesToZip) {
     const absolutePath = path.resolve(directory, file);
+
     if (file.endsWith('.json')) {
       const content = await readFile(absolutePath, 'utf-8');
       archive.file(
@@ -148,6 +159,7 @@ async function zipDir(
       archive.file(file, content);
     }
   }
+
   await options?.additionalWork?.(archive);
 
   await new Promise<void>((resolve, reject) =>
@@ -183,13 +195,13 @@ async function downloadPrivatePackages() {
 
     for (const pkg of downloadPackages) {
       wxt.logger.info(`Downloading package: ${pkg.name}@${pkg.version}`);
-      const id = `${pkg.name}@${pkg.version}`;
+      const ID = `${pkg.name}@${pkg.version}`;
       const tgzPath = await wxt.pm.downloadDependency(
-        id,
+        ID,
         wxt.config.zip.downloadedPackagesDir,
       );
       files.push(tgzPath);
-      overrides[id] = tgzPath;
+      overrides[ID] = tgzPath;
     }
   }
 
@@ -209,9 +221,11 @@ function addOverridesToPackageJson(
     ...oldPackage,
     [wxt.pm.overridesKey]: { ...oldPackage[wxt.pm.overridesKey] },
   };
+
   Object.entries(overrides).forEach(([key, absolutePath]) => {
     newPackage[wxt.pm.overridesKey][key] =
       'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
   });
+
   return JSON.stringify(newPackage, null, 2);
 }

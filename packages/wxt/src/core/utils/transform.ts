@@ -18,13 +18,14 @@ export function removeMainFunctionCode(code: string): {
   emptyMainFunction(mod);
   let removedCount = 0;
   let depth = 0;
-  const maxDepth = 10;
+  const MAX_DEPTH = 10;
+
   do {
     removedCount = 0;
     removedCount += removeUnusedTopLevelVariables(mod);
     removedCount += removeUnusedTopLevelFunctions(mod);
     removedCount += removeUnusedImports(mod);
-  } while (removedCount > 0 && depth++ <= maxDepth);
+  } while (removedCount > 0 && depth++ <= MAX_DEPTH);
   removeSideEffectImports(mod);
   return mod.generate();
 }
@@ -60,8 +61,10 @@ function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
 
   const cleanArrayPattern = (pattern: any): boolean => {
     const elements = pattern.elements;
+
     for (let i = elements.length - 1; i >= 0; i--) {
       const el = elements[i];
+
       if (el?.type === 'Identifier' && !isUsed(el)) {
         elements.splice(i, 1);
         deletedCount++;
@@ -72,6 +75,7 @@ function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
 
   const cleanObjectPattern = (pattern: any): boolean => {
     const properties = pattern.properties;
+
     for (let i = properties.length - 1; i >= 0; i--) {
       const prop = properties[i];
 
@@ -85,6 +89,7 @@ function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
           }
         } else if (value.type === 'ArrayPattern') {
           const isEmpty = cleanArrayPattern(value);
+
           if (isEmpty) {
             properties.splice(i, 1);
           }
@@ -94,6 +99,7 @@ function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
         }
       } else if (prop.type === 'RestElement') {
         const arg = prop.argument;
+
         if (arg.type === 'Identifier' && !isUsed(arg)) {
           properties.splice(i, 1);
           deletedCount++;
@@ -139,6 +145,7 @@ function removeUnusedTopLevelFunctions(mod: ProxifiedModule): number {
 
   let deletedCount = 0;
   const ast = mod.$ast as any;
+
   for (let i = ast.body.length - 1; i >= 0; i--) {
     if (
       ast.body[i].type === 'FunctionDeclaration' &&
@@ -148,6 +155,7 @@ function removeUnusedTopLevelFunctions(mod: ProxifiedModule): number {
       deletedCount++;
     }
   }
+
   return deletedCount;
 }
 
