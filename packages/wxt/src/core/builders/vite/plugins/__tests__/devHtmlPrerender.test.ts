@@ -32,7 +32,7 @@ describe('Dev HTML Prerender Plugin', () => {
       // URLs should not be changed
       ['https://example.com/style.css', 'https://example.com/style.css'],
     ])('should transform "%s" into "%s"', (input, expected) => {
-      const { document } = parseHTML('<html></html>');
+      const { document } = parseHTML('<html lang="en"></html>');
       const root = '/some/root';
       const config = fakeResolvedConfig({
         root,
