@@ -12,14 +12,15 @@ export function createIntegratedUi<TMounted>(
   ctx: ContentScriptContext,
   options: IntegratedContentScriptUiOptions<TMounted>,
 ): IntegratedContentScriptUi<TMounted> {
+  let mounted: TMounted | undefined;
   const wrapper = document.createElement(options.tag || 'div');
 
-  let mounted: TMounted | undefined = undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper);
   };
+
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.replaceChildren();

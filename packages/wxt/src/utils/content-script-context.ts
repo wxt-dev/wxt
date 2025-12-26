@@ -1,7 +1,7 @@
 /** @module wxt/utils/content-script-context */
 import { ContentScriptDefinition } from '../types';
 import { browser } from 'wxt/browser';
-import { logger } from '../utils/internal/logger';
+import { logger } from './internal/logger';
 import {
   WxtLocationChangeEvent,
   getUniqueEventName,
@@ -260,6 +260,7 @@ export class ContentScriptContext implements AbortController {
     const isSameContentScript =
       event.data?.contentScriptName === this.contentScriptName;
     const isNotDuplicate = !this.receivedMessageIds.has(event.data?.messageId);
+
     return isScriptStartedEvent && isSameContentScript && isNotDuplicate;
   }
 
@@ -272,6 +273,7 @@ export class ContentScriptContext implements AbortController {
 
         const wasFirst = isFirst;
         isFirst = false;
+
         if (wasFirst && options?.ignoreFirstEvent) return;
 
         this.notifyInvalidated();

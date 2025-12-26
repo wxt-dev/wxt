@@ -1,13 +1,13 @@
 import { browser } from 'wxt/browser';
 
 export class WxtLocationChangeEvent extends Event {
-  static EVENT_NAME = getUniqueEventName('wxt:locationchange');
+  static eventName = getUniqueEventName('wxt:locationchange');
 
   constructor(
     readonly newUrl: URL,
     readonly oldUrl: URL,
   ) {
-    super(WxtLocationChangeEvent.EVENT_NAME, {});
+    super(WxtLocationChangeEvent.eventName, {});
   }
 }
 

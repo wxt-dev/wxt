@@ -22,6 +22,7 @@ export function minimatchMultiple(
 
   const negatePatterns: string[] = [];
   const positivePatterns: string[] = [];
+
   for (const pattern of patterns) {
     if (pattern[0] === '!') negatePatterns.push(pattern.slice(1));
     else positivePatterns.push(pattern);
