@@ -9239,7 +9239,7 @@ export namespace Browser {
             // Required
             manifest_version: number;
             name: string;
-            version: string;
+            version: string | null;
 
             // Recommended
             default_locale?: string | undefined;
