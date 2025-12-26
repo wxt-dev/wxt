@@ -108,9 +108,11 @@ export function addViteConfig(
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
+
     wxt.config.vite = async (env) => {
       const fromUser = await userVite(env);
       const fromModule = viteConfig(env) ?? {};
+
       return vite.mergeConfig(fromModule, fromUser);
     };
   });
@@ -167,11 +169,12 @@ export function addImportPreset(
   preset: UnimportOptions['presets'][0],
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
+    // TODO: BUT IN NEWER VERSIONS OF WXT, THIS SHOULD NEVER HAPPENED, YEAH?
     // In older versions of WXT, `wxt.config.imports` could be false
     if (!wxt.config.imports) return;
 
     wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
+    // De-duplicate built-in named presets
     if (wxt.config.imports.presets.includes(preset)) return;
 
     wxt.config.imports.presets.push(preset);
@@ -208,6 +211,7 @@ export function addImportPreset(
 export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const target = resolve(wxt.config.root, path);
+
     if (wxt.config.alias[alias] != null && wxt.config.alias[alias] !== target) {
       wxt.logger.warn(
         `Skipped adding alias (${alias} => ${target}) because an alias with the same name already exists: ${alias} => ${wxt.config.alias[alias]}`,

@@ -1,4 +1,4 @@
-import { exists, rm } from 'fs-extra';
+import { pathExists, rm } from 'fs-extra';
 
 let setupHappened = false;
 
@@ -12,8 +12,9 @@ export async function setup() {
   // @ts-expect-error
   globalThis.__ENTRYPOINT__ = 'test';
 
-  const e2eDistPath = './e2e/dist/';
-  if (await exists(e2eDistPath)) {
-    await rm(e2eDistPath, { recursive: true, force: true });
+  const E2E_DIST_PATH = './e2e/dist/';
+
+  if (await pathExists(E2E_DIST_PATH)) {
+    await rm(E2E_DIST_PATH, { recursive: true, force: true });
   }
 }

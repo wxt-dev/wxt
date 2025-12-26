@@ -1,8 +1,7 @@
 import pc from 'picocolors';
-import { version } from '../../../version';
+import { VERSION } from '../../../version';
 import { consola } from 'consola';
 
 export function printHeader() {
-  console.log();
-  consola.log(`${pc.gray('WXT')} ${pc.gray(pc.bold(version))}`);
+  consola.log(`\n${pc.gray('WXT')} ${pc.gray(pc.bold(VERSION))}`);
 }

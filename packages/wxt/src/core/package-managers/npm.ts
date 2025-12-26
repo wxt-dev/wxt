@@ -60,11 +60,11 @@ export function dedupeDependencies(dependencies: Dependency[]): Dependency[] {
   const hashes = new Set<string>();
 
   return dependencies.filter((dep) => {
-    const hash = `${dep.name}@${dep.version}`;
-    if (hashes.has(hash)) {
+    const HASH = `${dep.name}@${dep.version}`;
+    if (hashes.has(HASH)) {
       return false;
     } else {
-      hashes.add(hash);
+      hashes.add(HASH);
       return true;
     }
   });

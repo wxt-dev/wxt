@@ -42,7 +42,9 @@ export async function clean(config?: string | InlineConfig) {
     '**/.wxt',
     `${path.relative(root, wxt.config.outBaseDir)}/*`,
   ];
+
   wxt.logger.debug('Looking for:', tempDirs.map(pc.cyan).join(', '));
+
   const directories = await glob(tempDirs, {
     cwd: root,
     absolute: true,

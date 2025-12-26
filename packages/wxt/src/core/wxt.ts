@@ -85,6 +85,7 @@ export async function initWxtModules() {
 
 async function initWxtModule(module: WxtModule<any>): Promise<void> {
   if (module.hooks) wxt.hooks.addHooks(module.hooks);
+
   await module.setup?.(
     wxt,
     // @ts-expect-error: Untyped configKey field

@@ -52,16 +52,18 @@ describe('Content Script Context', () => {
   });
 
   it('should invalidate the current content script when a new context is created', async () => {
-    const name = 'test';
+    const NAME = 'test';
+
     const onInvalidated = vi.fn();
-    const ctx = new ContentScriptContext(name);
+    const ctx = new ContentScriptContext(NAME);
+
     ctx.onInvalidated(onInvalidated);
 
     // Wait for events to run before next tick next tick
     await waitForEventsToFire();
 
     // Create a new context after first is initialized, and wait for it to initialize
-    new ContentScriptContext(name);
+    new ContentScriptContext(NAME);
     await waitForEventsToFire();
 
     expect(onInvalidated).toBeCalled();
@@ -71,6 +73,7 @@ describe('Content Script Context', () => {
   it('should not invalidate the current content script when a new context is created with a different name', async () => {
     const onInvalidated = vi.fn();
     const ctx = new ContentScriptContext('test1');
+
     ctx.onInvalidated(onInvalidated);
 
     // Wait for events to run before next tick next tick

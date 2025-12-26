@@ -40,19 +40,19 @@ describe('Module Utilities', () => {
 
   describe('addImportPreset', () => {
     it('should add the import to the config', async () => {
-      const preset = 'vue';
+      const PRESET = 'vue';
       const wxt = fakeWxt({ hooks: createHooks() });
 
-      addImportPreset(wxt, preset);
+      addImportPreset(wxt, PRESET);
       await wxt.hooks.callHook('config:resolved', wxt);
 
       expect(wxt.config.imports && wxt.config.imports.presets).toContain(
-        preset,
+        PRESET,
       );
     });
 
     it('should not add duplicate presets', async () => {
-      const preset = 'vue';
+      const PRESET = 'vue';
       const wxt = fakeWxt({
         hooks: createHooks(),
         config: {
@@ -62,7 +62,7 @@ describe('Module Utilities', () => {
         },
       });
 
-      addImportPreset(wxt, preset);
+      addImportPreset(wxt, PRESET);
       await wxt.hooks.callHook('config:resolved', wxt);
 
       expect(wxt.config.imports && wxt.config.imports.presets).toHaveLength(2);

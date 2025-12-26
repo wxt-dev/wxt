@@ -6,32 +6,32 @@ describe('Transform Utils', () => {
     it.each(['defineBackground', 'defineUnlistedScript'])(
       'should remove the first arrow function argument for %s',
       (def) => {
-        const input = `
+        const INPUT = `
           export default ${def}(() => {
             console.log();
           })
         `;
-        const expected = `export default ${def}();`;
+        const EXPECTED = `export default ${def}();`;
 
-        const actual = removeMainFunctionCode(input).code;
+        const actual = removeMainFunctionCode(INPUT).code;
 
-        expect(actual).toEqual(expected);
+        expect(actual).toEqual(EXPECTED);
       },
     );
 
     it.each(['defineBackground', 'defineUnlistedScript'])(
       'should remove the first function argument for %s',
       (def) => {
-        const input = `
+        const INPUT = `
           export default ${def}(function () {
             console.log();
           })
         `;
-        const expected = `export default ${def}();`;
+        const EXPECTED = `export default ${def}();`;
 
-        const actual = removeMainFunctionCode(input).code;
+        const actual = removeMainFunctionCode(INPUT).code;
 
-        expect(actual).toEqual(expected);
+        expect(actual).toEqual(EXPECTED);
       },
     );
 
@@ -40,57 +40,57 @@ describe('Transform Utils', () => {
       'defineContentScript',
       'defineUnlistedScript',
     ])('should remove the main field from %s', (def) => {
-      const input = `
+      const INPUT = `
         export default ${def}({
           asdf: "asdf",
           main: () => {},
         })
       `;
-      const expected = `export default ${def}({
+      const EXPECTED = `export default ${def}({
   asdf: "asdf"
 })`;
 
-      const actual = removeMainFunctionCode(input).code;
+      const actual = removeMainFunctionCode(INPUT).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(EXPECTED);
     });
 
     it('should remove unused imports', () => {
-      const input = `
+      const INPUT = `
         import { defineBackground } from "#imports"
         import { test1 } from "somewhere1"
         import test2 from "somewhere2"
 
         export default defineBackground(() => {})
       `;
-      const expected = `import { defineBackground } from "#imports"
+      const EXPECTED = `import { defineBackground } from "#imports"
 
 export default defineBackground();`;
 
-      const actual = removeMainFunctionCode(input).code;
+      const actual = removeMainFunctionCode(INPUT).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(EXPECTED);
     });
 
     it('should remove explict side-effect imports', () => {
-      const input = `
+      const INPUT = `
         import { defineBackground } from "#imports"
         import "my-polyfill"
         import "./style.css"
 
         export default defineBackground(() => {})
       `;
-      const expected = `import { defineBackground } from "#imports"
+      const EXPECTED = `import { defineBackground } from "#imports"
 
 export default defineBackground();`;
 
-      const actual = removeMainFunctionCode(input).code;
+      const actual = removeMainFunctionCode(INPUT).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(EXPECTED);
     });
 
     it("should remove any functions delcared outside the main function that aren't used", () => {
-      const input = `
+      const INPUT = `
               function getMatches() {
                 return ["*://*/*"]
               }
@@ -104,7 +104,7 @@ export default defineBackground();`;
                 main: () => {},
               })
             `;
-      const expected = `function getMatches() {
+      const EXPECTED = `function getMatches() {
   return ["*://*/*"]
 }
 
@@ -112,13 +112,13 @@ export default defineContentScript({
   matches: getMatches()
 })`;
 
-      const actual = removeMainFunctionCode(input).code;
+      const actual = removeMainFunctionCode(INPUT).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(EXPECTED);
     });
 
     it("should remove any variables delcared outside the main function that aren't used", () => {
-      const input = `
+      const INPUT = `
         const unused1 = "a", matches = ["*://*/*"];
         let unused2 = unused1 + "b";
 
@@ -127,19 +127,19 @@ export default defineContentScript({
           main: () => {}
         })
       `;
-      const expected = `const matches = ["*://*/*"];
+      const EXPECTED = `const matches = ["*://*/*"];
 
 export default defineContentScript({
   matches
 })`;
 
-      const actual = removeMainFunctionCode(input).code;
+      const actual = removeMainFunctionCode(INPUT).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(EXPECTED);
     });
 
     it('should not remove any variables delcared outside the main function that are used', () => {
-      const input = `
+      const INPUT = `
         const [ a ] = [ 123, 456 ];
         const { b } = { b: 123 };
         const { c: { d } } = { c: { d: 123 } };
@@ -154,7 +154,8 @@ export default defineContentScript({
         export default defineBackground(() => {
           console.log('Hello background!', { id: browser.runtime.id });
         });`;
-      const expected = `const [ a ] = [ 123, 456 ];
+
+      const EXPECTED = `const [ a ] = [ 123, 456 ];
 const { b } = { b: 123 };
 const { c: { d } } = { c: { d: 123 } };
 const { e, ...rest } = { e: 123, f: 456 };
@@ -167,8 +168,8 @@ console.log(rest);
 
 export default defineBackground();`;
 
-      const actual = removeMainFunctionCode(input).code;
-      expect(actual).toEqual(expected);
+      const actual = removeMainFunctionCode(INPUT).code;
+      expect(actual).toEqual(EXPECTED);
     });
   });
 });
