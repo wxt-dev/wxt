@@ -34,11 +34,11 @@ describe('NPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
 
     it('should download the dependency as a tarball', async () => {
+      const ID = 'mime-db@1.52.0';
       const downloadDir = path.resolve(cwd, 'dist');
-      const id = 'mime-db@1.52.0';
       const expected = path.resolve(downloadDir, 'mime-db-1.52.0.tgz');
 
-      const actual = await npm.downloadDependency(id, downloadDir);
+      const actual = await npm.downloadDependency(ID, downloadDir);
 
       expect(actual).toEqual(expected);
       expect(await pathExists(actual)).toBe(true);

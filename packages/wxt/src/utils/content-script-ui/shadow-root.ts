@@ -24,9 +24,11 @@ export async function createShadowRootUi<TMounted>(
   if (!options.inheritStyles) {
     css.push(`/* WXT Shadow Root Reset */ :host{all:initial !important;}`);
   }
+
   if (options.css) {
     css.push(options.css);
   }
+
   if (ctx.options?.cssInjectionMode === 'ui') {
     const entryCss = await loadCss();
     // Replace :root selectors with :host since we're in a shadow root
@@ -124,7 +126,7 @@ async function loadCss(): Promise<string> {
     .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
   try {
     const res = await fetch(url);
-    return await res.text();
+    return res.text();
   } catch (err) {
     logger.warn(
       `Failed to load styles @ ${url}. Did you forget to import the stylesheet in your entrypoint?`,
