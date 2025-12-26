@@ -1180,7 +1180,6 @@ describe('Manifest Utils', () => {
         setFakeWxt({
           config: {
             manifest: {
-              // @ts-ignore: Purposefully removing version from fake object
               version: null,
             },
           },
