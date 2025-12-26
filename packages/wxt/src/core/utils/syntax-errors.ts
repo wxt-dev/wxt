@@ -21,10 +21,12 @@ export function logBabelSyntaxError(error: BabelSyntaxError) {
   if (filename.startsWith('..')) {
     filename = error.id;
   }
+
   let message = error.message.replace(
     /\(\d+:\d+\)$/,
     `(${filename}:${error.loc.line}:${error.loc.column + 1})`,
   );
+
   if (error.frame) {
     message += '\n\n' + pc.red(error.frame);
   }

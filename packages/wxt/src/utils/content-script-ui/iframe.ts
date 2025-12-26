@@ -26,6 +26,7 @@ export function createIframeUi<TMounted>(
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
+
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();

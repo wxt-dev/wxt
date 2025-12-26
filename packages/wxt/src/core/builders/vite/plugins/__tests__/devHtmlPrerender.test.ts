@@ -33,16 +33,17 @@ describe('Dev HTML Prerender Plugin', () => {
       ['https://example.com/style.css', 'https://example.com/style.css'],
     ])('should transform "%s" into "%s"', (input, expected) => {
       const { document } = parseHTML('<html lang="en"></html>');
-      const root = '/some/root';
+      const ROOT = '/some/root';
+
       const config = fakeResolvedConfig({
-        root,
+        root: ROOT,
         alias: {
           '~local': '.',
-          '~absolute': `${root}/assets`,
-          '~file': `${root}/example.css`,
-          '~outside': `${root}/../non-root`,
-          '~~': root,
-          '~': root,
+          '~absolute': `${ROOT}/assets`,
+          '~file': `${ROOT}/example.css`,
+          '~outside': `${ROOT}/../non-root`,
+          '~~': ROOT,
+          '~': ROOT,
         },
       });
       const server = fakeDevServer({
@@ -50,10 +51,10 @@ describe('Dev HTML Prerender Plugin', () => {
         port: 5173,
         origin: 'http://localhost:5173',
       });
-      const id = root + '/entrypoints/popup/index.html';
+      const ID = ROOT + '/entrypoints/popup/index.html';
 
       document.head.innerHTML = `<link rel="stylesheet" href="${input}" />`;
-      pointToDevServer(config, server, id, document, 'link', 'href');
+      pointToDevServer(config, server, ID, document, 'link', 'href');
 
       const actual = document.querySelector('link')!;
       expect(actual.getAttribute('href')).toBe(expected);

@@ -58,6 +58,7 @@ export function getDevServerWebSocket(): WxtWebSocket {
     ws.addEventListener('message', (e) => {
       try {
         const message = JSON.parse(e.data) as WebSocketMessage;
+
         if (message.type === 'custom') {
           ws?.dispatchEvent(
             new CustomEvent(message.event, { detail: message.data }),
