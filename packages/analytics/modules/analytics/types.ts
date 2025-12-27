@@ -60,7 +60,7 @@ export interface BaseAnalyticsEvent {
   meta: AnalyticsEventMetadata;
   user: {
     id: string;
-    properties: Record<string, string | undefined>;
+    properties: Record<string, string | undefined | null>;
   };
 }
 
