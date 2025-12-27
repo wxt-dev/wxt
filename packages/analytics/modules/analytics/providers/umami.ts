@@ -67,5 +67,5 @@ interface UmamiPayload {
   url?: string;
   website: string;
   name: string;
-  data?: Record<string, string | undefined>;
+  data?: Record<string, string | undefined | null>;
 }
