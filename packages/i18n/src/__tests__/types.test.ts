@@ -15,7 +15,7 @@ vi.mock('@wxt-dev/browser', async () => {
 });
 const getMessageMock = vi.mocked(browser.i18n.getMessage);
 
-const n = 1;
+const N = 1;
 
 describe('I18n Types', () => {
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('I18n Types', () => {
         i18n.t('any');
         i18n.t('any', ['one']);
         i18n.t('any', ['one', 'two']);
-        i18n.t('any', n, ['one', 'two']);
+        i18n.t('any', N, ['one', 'two']);
       });
     });
   });
@@ -50,40 +50,40 @@ describe('I18n Types', () => {
         i18n.t('simple');
         i18n.t('simple', []);
         i18n.t('simple', ['one']);
-        i18n.t('simple', n);
+        i18n.t('simple', N);
 
         i18n.t('simpleSub1', ['one']);
         i18n.t('simpleSub1');
         i18n.t('simpleSub1', []);
         i18n.t('simpleSub1', ['one', 'two']);
-        i18n.t('simpleSub1', n);
+        i18n.t('simpleSub1', N);
 
         i18n.t('simpleSub2', ['one', 'two']);
         i18n.t('simpleSub2');
         i18n.t('simpleSub2', ['one']);
         i18n.t('simpleSub2', ['one', 'two', 'three']);
-        i18n.t('simpleSub2', n);
+        i18n.t('simpleSub2', N);
 
-        i18n.t('plural', n);
+        i18n.t('plural', N);
         i18n.t('plural');
         i18n.t('plural', []);
         i18n.t('plural', ['one']);
-        i18n.t('plural', n, ['sub']);
+        i18n.t('plural', N, ['sub']);
 
-        i18n.t('pluralSub1', n);
-        i18n.t('pluralSub1', n, undefined);
-        i18n.t('pluralSub1', n, ['one']);
+        i18n.t('pluralSub1', N);
+        i18n.t('pluralSub1', N, undefined);
+        i18n.t('pluralSub1', N, ['one']);
         i18n.t('pluralSub1');
         i18n.t('pluralSub1', ['one']);
-        i18n.t('pluralSub1', n, []);
-        i18n.t('pluralSub1', n, ['one', 'two']);
+        i18n.t('pluralSub1', N, []);
+        i18n.t('pluralSub1', N, ['one', 'two']);
 
-        i18n.t('pluralSub2', n, ['one', 'two']);
+        i18n.t('pluralSub2', N, ['one', 'two']);
         i18n.t('pluralSub2');
         i18n.t('pluralSub2', ['one', 'two']);
-        i18n.t('pluralSub2', n, ['one']);
-        i18n.t('pluralSub2', n, ['one', 'two', 'three']);
-        i18n.t('pluralSub2', n);
+        i18n.t('pluralSub2', N, ['one']);
+        i18n.t('pluralSub2', N, ['one', 'two', 'three']);
+        i18n.t('pluralSub2', N);
       });
     });
   });
