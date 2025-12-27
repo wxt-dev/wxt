@@ -377,7 +377,7 @@ export interface InlineConfig {
   /**
    * Field only for testing purposes, don't use it for other cases
    */
-  example?: { key: string };
+  example?: Record<string, string>;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
