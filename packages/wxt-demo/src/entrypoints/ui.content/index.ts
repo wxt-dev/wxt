@@ -18,8 +18,10 @@ export default defineContentScript({
       anchor: 'form[role=search]',
       onMount: (container) => {
         const app = document.createElement('div');
+
         app.classList.add('m-4', 'text-red-500');
         app.textContent = i18n.t('prompt_for_name');
+
         container.append(app);
       },
     });

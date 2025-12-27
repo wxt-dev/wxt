@@ -12,12 +12,12 @@ describe('Background Entrypoint', () => {
   });
 
   it("should log the extension's runtime ID", () => {
-    const id = 'some-id';
-    fakeBrowser.runtime.id = id;
+    const ID = 'some-id';
+    fakeBrowser.runtime.id = ID;
 
     background.main();
 
-    expect(logMock).toBeCalledWith(id);
+    expect(logMock).toBeCalledWith(ID);
   });
 
   it('should set the start time in storage', async () => {
