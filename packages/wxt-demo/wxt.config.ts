@@ -1,5 +1,5 @@
 import { defineConfig } from 'wxt';
-import { presetUno } from 'unocss';
+import { presetWind3 } from 'unocss';
 
 export default defineConfig({
   srcDir: 'src',
@@ -53,7 +53,7 @@ export default defineConfig({
           ],
         },
       },
-      presets: [presetUno()],
+      presets: [presetWind3()],
     },
   },
 });
