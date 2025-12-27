@@ -849,6 +849,7 @@ export interface WxtStorageItem<
    * The storage key passed when creating the storage item.
    */
   key: StorageItemKey;
+  // TODO: MAYBE REMOVE IT BEFORE 1.0.0 RELEASE?
   /**
    * @deprecated Renamed to fallback, use it instead.
    */
