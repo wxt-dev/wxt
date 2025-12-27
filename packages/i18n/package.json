@@ -21,7 +21,7 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest"
   },
@@ -40,19 +40,17 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.2.0",
     "@types/node": "^20.17.6",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.0.16",
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "import": {

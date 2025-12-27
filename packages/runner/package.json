@@ -24,21 +24,17 @@
     "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
     "dev": "tsx --trace-warnings dev.ts",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "prepublishOnly": "pnpm build"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@aklinker1/check": "^2.2.0",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
-    "tsx": "4.21.0",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.0.16"
   },
   "main": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.mts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",

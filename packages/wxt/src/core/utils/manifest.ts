@@ -436,8 +436,8 @@ function discoverIcons(
     /^icon@([0-9]+)w\.png$/,                // icon@16w.png
     /^icon@([0-9]+)h\.png$/,                // icon@16h.png
     /^icon@([0-9]+)\.png$/,                 // icon@16.png
-    /^icons?[/\\]([0-9]+)\.png$/,          // icon/16.png | icons/16.png
-    /^icons?[/\\]([0-9]+)x[0-9]+\.png$/,   // icon/16x16.png | icons/16x16.png
+    /^icons?[/\\]([0-9]+)\.png$/,           // icon/16.png | icons/16.png
+    /^icons?[/\\]([0-9]+)x[0-9]+\.png$/,    // icon/16x16.png | icons/16x16.png
   ];
   // #endregion snippet
 

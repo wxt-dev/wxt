@@ -27,7 +27,7 @@
   "version": "1.1.0",
   "type": "module",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -38,7 +38,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "check": "pnpm build && check"
   },
   "peerDependencies": {
@@ -50,11 +50,9 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.2.0",
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "wxt": "workspace:*"
   }
 }

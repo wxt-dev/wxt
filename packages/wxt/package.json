@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "wxt": "tsx src/cli/index.ts",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown --config-loader unrun",
     "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
@@ -63,7 +63,6 @@
     "web-ext-run": "^0.2.4"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.2.0",
     "@faker-js/faker": "^10.1.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
@@ -76,7 +75,6 @@
     "oxlint": "^1.33.0",
     "publint": "^0.3.16",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.0.16",
     "vitest-plugin-random-seed": "^1.1.2"
   },
@@ -109,93 +107,93 @@
     "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
   },
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/index.d.mts",
       "default": "./dist/index.mjs"
     },
     "./utils/app-config": {
-      "types": "./dist/utils/app-config.d.ts",
+      "types": "./dist/utils/app-config.d.mts",
       "default": "./dist/utils/app-config.mjs"
     },
     "./utils/inject-script": {
-      "types": "./dist/utils/inject-script.d.ts",
+      "types": "./dist/utils/inject-script.d.mts",
       "default": "./dist/utils/inject-script.mjs"
     },
     "./utils/content-script-context": {
-      "types": "./dist/utils/content-script-context.d.ts",
+      "types": "./dist/utils/content-script-context.d.mts",
       "default": "./dist/utils/content-script-context.mjs"
     },
     "./utils/content-script-ui/types": {
-      "types": "./dist/utils/content-script-ui/types.d.ts",
+      "types": "./dist/utils/content-script-ui/types.d.mts",
       "default": "./dist/utils/content-script-ui/types.mjs"
     },
     "./utils/content-script-ui/integrated": {
-      "types": "./dist/utils/content-script-ui/integrated.d.ts",
+      "types": "./dist/utils/content-script-ui/integrated.d.mts",
       "default": "./dist/utils/content-script-ui/integrated.mjs"
     },
     "./utils/content-script-ui/shadow-root": {
-      "types": "./dist/utils/content-script-ui/shadow-root.d.ts",
+      "types": "./dist/utils/content-script-ui/shadow-root.d.mts",
       "default": "./dist/utils/content-script-ui/shadow-root.mjs"
     },
     "./utils/content-script-ui/iframe": {
-      "types": "./dist/utils/content-script-ui/iframe.d.ts",
+      "types": "./dist/utils/content-script-ui/iframe.d.mts",
       "default": "./dist/utils/content-script-ui/iframe.mjs"
     },
     "./utils/define-app-config": {
-      "types": "./dist/utils/define-app-config.d.ts",
+      "types": "./dist/utils/define-app-config.d.mts",
       "default": "./dist/utils/define-app-config.mjs"
     },
     "./utils/define-background": {
-      "types": "./dist/utils/define-background.d.ts",
+      "types": "./dist/utils/define-background.d.mts",
       "default": "./dist/utils/define-background.mjs"
     },
     "./utils/define-content-script": {
-      "types": "./dist/utils/define-content-script.d.ts",
+      "types": "./dist/utils/define-content-script.d.mts",
       "default": "./dist/utils/define-content-script.mjs"
     },
     "./utils/define-unlisted-script": {
-      "types": "./dist/utils/define-unlisted-script.d.ts",
+      "types": "./dist/utils/define-unlisted-script.d.mts",
       "default": "./dist/utils/define-unlisted-script.mjs"
     },
     "./utils/define-wxt-plugin": {
-      "types": "./dist/utils/define-wxt-plugin.d.ts",
+      "types": "./dist/utils/define-wxt-plugin.d.mts",
       "default": "./dist/utils/define-wxt-plugin.mjs"
     },
     "./utils/match-patterns": {
-      "types": "./dist/utils/match-patterns.d.ts",
+      "types": "./dist/utils/match-patterns.d.mts",
       "default": "./dist/utils/match-patterns.mjs"
     },
     "./utils/split-shadow-root-css": {
-      "types": "./dist/utils/split-shadow-root-css.d.ts",
+      "types": "./dist/utils/split-shadow-root-css.d.mts",
       "default": "./dist/utils/split-shadow-root-css.mjs"
     },
     "./utils/storage": {
-      "types": "./dist/utils/storage.d.ts",
+      "types": "./dist/utils/storage.d.mts",
       "default": "./dist/utils/storage.mjs"
     },
     "./browser": {
-      "types": "./dist/browser.d.ts",
+      "types": "./dist/browser.d.mts",
       "default": "./dist/browser.mjs"
     },
     "./testing/fake-browser": {
-      "types": "./dist/testing/fake-browser.d.ts",
+      "types": "./dist/testing/fake-browser.d.mts",
       "default": "./dist/testing/fake-browser.mjs"
     },
     "./testing/vitest-plugin": {
-      "types": "./dist/testing/wxt-vitest-plugin.d.ts",
+      "types": "./dist/testing/wxt-vitest-plugin.d.mts",
       "default": "./dist/testing/wxt-vitest-plugin.mjs"
     },
     "./testing": {
-      "types": "./dist/testing/index.d.ts",
+      "types": "./dist/testing/index.d.mts",
       "default": "./dist/testing/index.mjs"
     },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
     },
     "./modules": {
-      "types": "./dist/modules.d.ts",
+      "types": "./dist/modules.d.mts",
       "default": "./dist/modules.mjs"
     }
   }
