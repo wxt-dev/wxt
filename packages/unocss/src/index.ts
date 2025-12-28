@@ -16,10 +16,12 @@ export default defineWxtModule<UnoCSSOptions>({
       },
     );
 
-    if (!resolvedOptions.enabled)
+    if (!resolvedOptions.enabled) {
       return wxt.logger.warn(`\`[unocss]\` ${this.name} disabled`);
+    }
 
     const excludedEntrypoints = new Set(resolvedOptions.excludeEntrypoints);
+
     if (wxt.config.debug) {
       wxt.logger.debug(
         `\`[unocss]\` Excluded entrypoints:`,
