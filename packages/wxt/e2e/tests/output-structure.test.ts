@@ -233,7 +233,6 @@ describe('Output Directory Structure', () => {
         color: #333;
       }`,
     );
-
     project.addFile(
       'entrypoints/plain-two.content.css',
       `body {
@@ -241,7 +240,6 @@ describe('Output Directory Structure', () => {
         color: #333;
       }`,
     );
-
     project.addFile(
       'entrypoints/sass-one.scss',
       `$font-stack: Helvetica, sans-serif;
@@ -252,7 +250,6 @@ describe('Output Directory Structure', () => {
         color: $primary-color;
       }`,
     );
-
     project.addFile(
       'entrypoints/sass-two.content.scss',
       `$font-stack: Helvetica, sans-serif;
@@ -338,7 +335,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for the snapshot readable
           minify: false,
         },
       }),
@@ -411,7 +408,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readable
+          // Make output for the snapshot readable
           minify: false,
         },
       }),

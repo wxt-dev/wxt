@@ -122,6 +122,7 @@ export class TestProject {
     await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
       cwd: this.root,
     });
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
@@ -184,6 +185,6 @@ export class TestProject {
   async getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(this.resolvePath(path));
+    return fs.readJson(this.resolvePath(path));
   }
 }
