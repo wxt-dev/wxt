@@ -3,7 +3,7 @@ import { defineWxtModule } from 'wxt/modules';
 import { relative, resolve } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
-import { ensureDir, exists } from 'fs-extra';
+import { ensureDir, pathExists } from 'fs-extra';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -37,22 +37,22 @@ export default defineWxtModule<AutoIconsOptions>({
 
     const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
-    if (!parsedOptions.enabled)
+    if (!parsedOptions.enabled) {
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
+    }
 
-    // TODO: STH DOESN'T GOOD WITH FS-EXTRA, BECAUSE IT DOESN'T RECOGNIZE TYPES PROPERLY,
-    // TODO: SIMILAR ISSUE LIKE IN #2015 PR
-    if (!(await (exists as (path: string) => Promise<boolean>)(resolvedPath))) {
+    if (!(await pathExists(resolvedPath))) {
       return wxt.logger.warn(
         `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );
     }
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
-      if (manifest.icons)
+      if (manifest.icons) {
         return wxt.logger.warn(
           '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
         );
+      }
 
       manifest.icons = Object.fromEntries(
         parsedOptions.sizes.map((size) => [size, `icons/${size}.png`]),
@@ -70,8 +70,9 @@ export default defineWxtModule<AutoIconsOptions>({
             resizedImage.grayscale();
           } else if (parsedOptions.developmentIndicator === 'overlay') {
             // Helper to build an overlay that places a yellow rectangle at the bottom
-            // of the icon with the text "DEV" in black. The overlay has the same
-            // dimensions as the icon so we can composite it with default gravity.
+            // of the icon with the text "DEV" in black.
+            // The overlay has the same dimensions as the icon,
+            // so we can composite it with default gravity.
             const buildDevOverlay = (size: number) => {
               const rectHeight = Math.round(size * 0.5);
               const fontSize = Math.round(size * 0.35);
@@ -82,6 +83,7 @@ export default defineWxtModule<AutoIconsOptions>({
                   <text x="${size / 2}" y="${size - rectHeight / 2}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="bold" fill="black" text-anchor="middle" dominant-baseline="middle">DEV</text>
                 </svg>`);
             };
+
             const overlayBuffer = await sharp(buildDevOverlay(size))
               .png()
               .toBuffer();
