@@ -32,6 +32,7 @@ export const googleAnalytics4 =
           screen: data.meta.screen,
           ...data.user.properties,
         };
+
         const mappedUserProperties = Object.fromEntries(
           Object.entries(userProperties).map(([name, value]) => [
             name,

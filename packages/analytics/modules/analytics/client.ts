@@ -23,6 +23,7 @@ const INTERACTIVE_TAGS = new Set([
   'SELECT',
   'TEXTAREA',
 ]);
+
 const INTERACTIVE_ROLES = new Set([
   'button',
   'link',
@@ -61,14 +62,12 @@ function createBackgroundAnalytics(
   // User properties storage
   const userIdStorage =
     config?.userId ?? defineStorageItem<string>('wxt-analytics:user-id');
-
   const userPropertiesStorage =
     config?.userProperties ??
     defineStorageItem<Record<string, string>>(
       'wxt-analytics:user-properties',
       {},
     );
-
   const enabled =
     config?.enabled ??
     defineStorageItem<boolean>('local:wxt-analytics:enabled', false);
@@ -81,6 +80,7 @@ function createBackgroundAnalytics(
     (id) => id ?? globalThis.crypto.randomUUID(),
   );
   let userProperties = userPropertiesStorage.getValue();
+
   const manifest = browser.runtime.getManifest();
 
   const getBackgroundMeta = () => ({
@@ -99,6 +99,7 @@ function createBackgroundAnalytics(
     meta: AnalyticsEventMetadata,
   ): Promise<BaseAnalyticsEvent> => {
     const { arch, os } = await platformInfo;
+
     return {
       meta,
       user: {
@@ -249,12 +250,14 @@ function createFrontendAnalytics(): Analytics {
     autoTrack: (root) => {
       const onClick = (event: Event) => {
         const element = event.target as HTMLElement | null;
+
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&
             !INTERACTIVE_ROLES.has(element.getAttribute('role') ?? ''))
-        )
+        ) {
           return;
+        }
 
         void analytics.track('click', {
           tagName: element.tagName?.toLowerCase(),
@@ -265,11 +268,13 @@ function createFrontendAnalytics(): Analytics {
         });
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
+
       return () => {
         root.removeEventListener('click', onClick);
       };
     },
   };
+
   return analytics;
 }
 
