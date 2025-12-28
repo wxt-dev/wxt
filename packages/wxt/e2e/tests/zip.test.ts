@@ -83,8 +83,8 @@ describe('Zipping', () => {
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
     );
-    const artifactZip = '.output/test-1.0.0-firefox-development.zip';
-    const sourcesZip = '.output/test-1.0.0-development-sources.zip';
+    const ARTIFACT_ZIP_PATH = '.output/test-1.0.0-firefox-development.zip';
+    const SOURCES_ZIP_PATH = '.output/test-1.0.0-development-sources.zip';
 
     await project.zip({
       browser: 'firefox',
@@ -95,8 +95,8 @@ describe('Zipping', () => {
       },
     });
 
-    expect(await project.fileExists(artifactZip)).toBe(true);
-    expect(await project.fileExists(sourcesZip)).toBe(true);
+    expect(await project.fileExists(ARTIFACT_ZIP_PATH)).toBe(true);
+    expect(await project.fileExists(SOURCES_ZIP_PATH)).toBe(true);
   });
 
   it('should not zip hidden files into sources by default', async () => {
@@ -110,12 +110,14 @@ describe('Zipping', () => {
     );
     project.addFile('.env');
     project.addFile('.hidden-dir/file');
+
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
     await project.zip({
       browser: 'firefox',
     });
+
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, '.env')).toBe(false);
     expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
@@ -132,6 +134,7 @@ describe('Zipping', () => {
     );
     project.addFile('.hidden-dir/file');
     project.addFile('.hidden-dir/nested/file');
+
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
@@ -141,6 +144,7 @@ describe('Zipping', () => {
         includeSources: ['.hidden-dir'],
       },
     });
+
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
     expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file')).toBe(
@@ -161,6 +165,7 @@ describe('Zipping', () => {
     project.addFile('.hidden-dir/file');
     project.addFile('.hidden-dir/nested/file1');
     project.addFile('.hidden-dir/nested/file2');
+
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
@@ -170,6 +175,7 @@ describe('Zipping', () => {
         includeSources: ['.env', '.hidden-dir/file', '.hidden-dir/nested/**'],
       },
     });
+
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.fileExists(unzipDir, '.env')).toBe(true);
     expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(true);
@@ -202,12 +208,14 @@ describe('Zipping', () => {
       });
 `,
     );
+
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
     await project.zip({
       browser: 'firefox',
     });
+
     await extract(sourcesZip, { dir: unzipDir });
     expect(
       await project.fileExists(unzipDir, 'entrypoints/not-firefox.content.ts'),
@@ -228,6 +236,7 @@ describe('Zipping', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {});',
       );
+
       const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
       await project.zip({
@@ -249,6 +258,7 @@ describe('Zipping', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {});',
       );
+      // TODO: TELL ME, IF YOU WANT TO DO CONST LIKE THIS UPPER_CASE, BECAUSE IT ISN'T REAL CONST, BUT LOOK LIKE CONST
       const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
       await project.zip({
@@ -273,6 +283,7 @@ describe('Zipping', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {});',
       );
+
       const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
 
       await project.zip({
