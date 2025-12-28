@@ -8,6 +8,7 @@ vi.mock('node:os', async () => {
   const { vi } = await import('vitest');
   const os: any = await vi.importActual('node:os');
   const { join } = await import('node:path');
+
   return {
     ...os,
     tmpdir: () => join(os.tmpdir(), 'tmpdir-mock'),
@@ -24,6 +25,7 @@ describe('Options', () => {
   describe('extensionDir', () => {
     it('should default to the current working directory', async () => {
       const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         extensionDir: process.cwd(),
       });
@@ -33,6 +35,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         extensionDir: './path/to/extension',
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         extensionDir: resolve(process.cwd(), './path/to/extension'),
       });
@@ -44,6 +47,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         extensionDir: 'path/to/extension',
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         target: 'chrome',
       });
@@ -57,6 +61,7 @@ describe('Options', () => {
           custom: '/path/to/custom/browser',
         },
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         target: 'custom',
       });
@@ -67,6 +72,7 @@ describe('Options', () => {
         extensionDir: 'path/to/extension',
         target: 'custom',
       });
+
       await expect(actual).rejects.toThrow('Could not find "custom" binary.');
     });
   });
@@ -81,6 +87,7 @@ describe('Options', () => {
         process.platform === 'win32'
           ? 'C:\\path\\to\\custom\\browser.exe'
           : path;
+
       const actual = await resolveRunOptions({
         extensionDir: 'path/to/extension',
         target: 'custom',
@@ -88,6 +95,7 @@ describe('Options', () => {
           custom: path,
         },
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         browserBinary: expectedPath,
       });
@@ -100,6 +108,7 @@ describe('Options', () => {
       await resolveRunOptions({
         chromiumArgs: ['--user-data-dir=some/custom/path'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -113,6 +122,7 @@ describe('Options', () => {
       await resolveRunOptions({
         chromiumArgs: ['--remote-debugging-port=9222'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -125,6 +135,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         chromiumArgs: ['--window-size=1920,1080'],
       });
+
       expect(actual.chromiumArgs).toEqual([
         // Defaults
         '--disable-features=Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,PrivacySandboxSettings4',
@@ -163,6 +174,7 @@ describe('Options', () => {
       await resolveRunOptions({
         firefoxArgs: ['--profile=some/custom/path'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Custom Firefox --profile argument ignored'),
@@ -174,6 +186,7 @@ describe('Options', () => {
       await resolveRunOptions({
         firefoxArgs: ['--remote-debugging-port=9222'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -186,6 +199,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         firefoxArgs: ['--window-size=1920,1080'],
       });
+
       expect(actual.firefoxArgs).toEqual([
         // Defaults
         '--new-instance',
@@ -203,6 +217,7 @@ describe('Options', () => {
   describe('chromiumRemoteDebuggingPort', () => {
     it('should default to 0', async () => {
       const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         chromiumRemoteDebuggingPort: 0,
         chromiumArgs: expect.arrayContaining([`--remote-debugging-port=0`]),
@@ -213,6 +228,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         chromiumRemoteDebuggingPort: 9222,
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         chromiumRemoteDebuggingPort: 9222,
         chromiumArgs: expect.arrayContaining([`--remote-debugging-port=9222`]),
@@ -223,6 +239,7 @@ describe('Options', () => {
   describe('firefoxRemoteDebuggingPort', () => {
     it('should default to 0', async () => {
       const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         firefoxRemoteDebuggingPort: 0,
         firefoxArgs: expect.arrayContaining([`--remote-debugging-port=0`]),
@@ -233,6 +250,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         firefoxRemoteDebuggingPort: 9222,
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         firefoxRemoteDebuggingPort: 9222,
         firefoxArgs: expect.arrayContaining([`--remote-debugging-port=9222`]),
@@ -243,6 +261,7 @@ describe('Options', () => {
   describe('dataPersistence', () => {
     it('should default to "none"', async () => {
       const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'none',
       });
@@ -252,6 +271,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'none',
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'none',
         dataDir: expect.stringContaining(join(tmpdir(), 'wxt-runner-')),
@@ -270,6 +290,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'project',
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'project',
         dataDir: expect.stringContaining(join(process.cwd(), '.wxt-runner')),
@@ -288,6 +309,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'user',
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         dataPersistence: 'user',
         dataDir: expect.stringContaining(join(homedir(), '.wxt-runner')),

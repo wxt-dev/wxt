@@ -6,6 +6,7 @@ export interface Debug {
 function createDebug(scopes: string[]): Debug {
   const debug = (...args: any[]) => {
     const scope = scopes.join(':');
+
     if (
       process.env.DEBUG === '1' ||
       process.env.DEBUG === 'true' ||
