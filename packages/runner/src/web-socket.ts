@@ -13,10 +13,12 @@ export function openWebSocket(url: string): Promise<WebSocket> {
       webSocket.removeEventListener('error', onError);
       webSocket.removeEventListener('close', onClose);
     };
+
     const onOpen = async () => {
       cleanup();
       resolve(webSocket);
     };
+
     const onClose = (event: CloseEvent) => {
       cleanup();
       reject(
