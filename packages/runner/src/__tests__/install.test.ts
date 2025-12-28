@@ -14,54 +14,62 @@ const createBidiConnectionMock = vi.mocked(createBidiConnection);
 describe('Install', () => {
   describe('Chromium', () => {
     it('Should send the install command to the process', async () => {
+      const EXTENSION_DIR = '/path/to/extension';
+      const EXPECTED_EXTENSION_ID = 'chromium-extension-id';
+
       const browserProcess = mock<ChildProcess>();
       const connection = mock<CDPConnection>({
         [Symbol.dispose]: vi.fn(),
       });
-      const extensionDir = '/path/to/extension';
-      const expectedExtensionId = 'chromium-extension-id';
 
       createCdpConnectionMock.mockReturnValue(connection);
       connection.send.mockImplementation(async (method) => {
-        if (method === 'Extensions.loadUnpacked')
-          return { id: expectedExtensionId };
+        if (method === 'Extensions.loadUnpacked') {
+          return { id: EXPECTED_EXTENSION_ID };
+        }
+
         throw Error('Unknown method');
       });
 
-      const res = await installChromium(browserProcess, extensionDir);
+      const res = await installChromium(browserProcess, EXTENSION_DIR);
 
       expect(createCdpConnectionMock).toBeCalledTimes(1);
       expect(createCdpConnectionMock).toBeCalledWith(browserProcess);
 
       expect(connection.send).toBeCalledTimes(1);
       expect(connection.send).toBeCalledWith('Extensions.loadUnpacked', {
-        path: extensionDir,
+        path: EXTENSION_DIR,
       });
 
-      expect(res).toEqual({ id: expectedExtensionId });
+      expect(res).toEqual({ id: EXPECTED_EXTENSION_ID });
     });
   });
 
   describe('Firefox', () => {
     it('Should connect to the server, start a session, then install the extension', async () => {
-      const debuggerUrl = 'http://127.0.0.1:9222';
-      const extensionDir = '/path/to/extension';
-      const expectedExtensionId = 'firefox-extension-id';
+      const DEBUGGER_URL = 'http://127.0.0.1:9222';
+      const EXTENSION_DIR = '/path/to/extension';
+      const EXPECTED_EXTENSION_ID = 'firefox-extension-id';
+
       const connection = mock<BidiConnection>({
         [Symbol.dispose]: vi.fn(),
       });
 
       createBidiConnectionMock.mockResolvedValue(connection);
       connection.send.mockImplementation(async (method) => {
-        if (method === 'session.new') return { sessionId: 'session-id' };
-        if (method === 'webExtension.install')
-          return { extension: expectedExtensionId };
+        if (method === 'session.new') {
+          return { sessionId: 'session-id' };
+        }
+
+        if (method === 'webExtension.install') {
+          return { extension: EXPECTED_EXTENSION_ID };
+        }
       });
 
-      const res = await installFirefox(debuggerUrl, extensionDir);
+      const res = await installFirefox(DEBUGGER_URL, EXTENSION_DIR);
 
       expect(createBidiConnectionMock).toBeCalledTimes(1);
-      expect(createBidiConnectionMock).toBeCalledWith(debuggerUrl);
+      expect(createBidiConnectionMock).toBeCalledWith(DEBUGGER_URL);
 
       expect(connection.send).toBeCalledTimes(2);
       expect(connection.send).toBeCalledWith('session.new', {
@@ -70,11 +78,11 @@ describe('Install', () => {
       expect(connection.send).toBeCalledWith('webExtension.install', {
         extensionData: {
           type: 'path',
-          path: extensionDir,
+          path: EXTENSION_DIR,
         },
       });
 
-      expect(res).toEqual({ extension: expectedExtensionId });
+      expect(res).toEqual({ extension: EXPECTED_EXTENSION_ID });
     });
   });
 });

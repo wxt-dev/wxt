@@ -41,6 +41,7 @@ export function createCdpConnection(
           if (res.id !== id) return;
 
           debugCdp('Received response:', res);
+
           clearTimeout(timer);
           outputStream.removeListener('data', onData);
 
