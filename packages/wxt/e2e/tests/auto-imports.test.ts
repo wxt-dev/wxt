@@ -36,31 +36,22 @@ describe('Auto Imports', () => {
           }
           // for type re-export
           declare global {
-            // @ts-ignore
             export type { Browser } from 'wxt/browser'
             import('wxt/browser')
-            // @ts-ignore
             export type { StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage'
             import('wxt/utils/storage')
-            // @ts-ignore
             export type { WxtWindowEventMap } from 'wxt/utils/content-script-context'
             import('wxt/utils/content-script-context')
-            // @ts-ignore
             export type { IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe'
             import('wxt/utils/content-script-ui/iframe')
-            // @ts-ignore
             export type { IntegratedContentScriptUi, IntegratedContentScriptUiOptions } from 'wxt/utils/content-script-ui/integrated'
             import('wxt/utils/content-script-ui/integrated')
-            // @ts-ignore
             export type { ShadowRootContentScriptUi, ShadowRootContentScriptUiOptions } from 'wxt/utils/content-script-ui/shadow-root'
             import('wxt/utils/content-script-ui/shadow-root')
-            // @ts-ignore
             export type { ContentScriptUi, ContentScriptUiOptions, ContentScriptOverlayAlignment, ContentScriptAppendMode, ContentScriptInlinePositioningOptions, ContentScriptOverlayPositioningOptions, ContentScriptModalPositioningOptions, ContentScriptPositioningOptions, ContentScriptAnchoredOptions, AutoMountOptions, StopAutoMount, AutoMount } from 'wxt/utils/content-script-ui/types'
             import('wxt/utils/content-script-ui/types')
-            // @ts-ignore
             export type { WxtAppConfig } from 'wxt/utils/define-app-config'
             import('wxt/utils/define-app-config')
-            // @ts-ignore
             export type { ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script'
             import('wxt/utils/inject-script')
           }
