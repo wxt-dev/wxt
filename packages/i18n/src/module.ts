@@ -36,6 +36,7 @@ export default defineWxtModule<I18nOptions>({
       );
       return;
     }
+
     wxt.logger.info(
       '`[i18n]` Default locale: ' + wxt.config.manifest.default_locale,
     );
@@ -54,7 +55,9 @@ export default defineWxtModule<I18nOptions>({
       const res = files.map((file) => {
         const rawLocale = basename(file).replace(extname(file), '');
         const locale = standardizeLocale(rawLocale);
+
         if (!SUPPORTED_LOCALES.has(locale)) unsupportedLocales.push(locale);
+
         return { file, locale };
       });
 
@@ -71,7 +74,7 @@ export default defineWxtModule<I18nOptions>({
     > => {
       const files = await getLocalizationFiles();
 
-      return await Promise.all(
+      return Promise.all(
         files.map(async ({ file, locale }) => {
           const messages = await parseMessagesFile(file);
           return {
