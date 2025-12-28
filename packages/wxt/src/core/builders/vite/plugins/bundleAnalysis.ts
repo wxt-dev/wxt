@@ -15,9 +15,8 @@ export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
   }) as vite.Plugin;
 }
 
-// TODO: MAYBE REMOVE IT BEFORE 1.0.0?
 /**
- * @deprecated FOR TESTING ONLY.
+ * @internal FOR TESTING ONLY.
  */
 export function resetBundleIncrement() {
   increment = 0;
