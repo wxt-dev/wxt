@@ -13,10 +13,12 @@ export function openWebSocket(url: string): Promise<WebSocket> {
       webSocket.removeEventListener('error', onError);
       webSocket.removeEventListener('close', onClose);
     };
+
     const onOpen = async () => {
       cleanup();
       resolve(webSocket);
     };
+
     const onClose = (event: CloseEvent) => {
       cleanup();
       reject(
@@ -25,6 +27,7 @@ export function openWebSocket(url: string): Promise<WebSocket> {
         ),
       );
     };
+
     const onError = (error: unknown) => {
       cleanup();
       reject(new Error('Error connecting to WebSocket', { cause: error }));
