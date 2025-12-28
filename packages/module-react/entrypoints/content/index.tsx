@@ -22,6 +22,7 @@ function createUi(ctx: ContentScriptContext) {
     append: 'first',
     onMount(container) {
       const root = ReactDOM.createRoot(container);
+
       root.render(
         <React.StrictMode>
           <App />
