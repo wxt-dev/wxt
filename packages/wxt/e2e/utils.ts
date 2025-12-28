@@ -122,6 +122,7 @@ export class TestProject {
     await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
       cwd: this.root,
     });
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
