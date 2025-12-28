@@ -218,6 +218,7 @@ function createBackgroundAnalytics(
 function createFrontendAnalytics(): Analytics {
   const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
+
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
     timestamp: Date.now(),
