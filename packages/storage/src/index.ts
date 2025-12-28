@@ -17,6 +17,7 @@ function createStorage(): WxtStorage {
     sync: createDriver('sync'),
     managed: createDriver('managed'),
   };
+
   const getDriver = (area: StorageArea) => {
     const driver = drivers[area];
     if (driver == null) {
@@ -25,10 +26,12 @@ function createStorage(): WxtStorage {
     }
     return driver;
   };
+
   const resolveKey = (key: StorageItemKey) => {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
     const driverKey = key.substring(deliminatorIndex + 1);
+
     if (driverKey == null)
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
@@ -40,20 +43,24 @@ function createStorage(): WxtStorage {
       driver: getDriver(driverArea),
     };
   };
+
   const getMetaKey = (key: string) => key + '$';
   const mergeMeta = (
     oldMeta: Record<string, unknown>,
     newMeta: Record<string, unknown>,
   ): Record<string, unknown> => {
     const newFields = { ...oldMeta };
+
     Object.entries(newMeta).forEach(([key, value]) => {
       if (value == null) delete newFields[key];
       else newFields[key] = value;
     });
+
     return newFields;
   };
   const getValueOrFallback = <T>(value: T | null | undefined, fallback: T) =>
     value ?? fallback ?? null;
+
   const getMetaValue = (properties: unknown): Record<string, unknown> =>
     typeof properties === 'object' &&
     properties !== null &&
@@ -69,11 +76,13 @@ function createStorage(): WxtStorage {
     const res = await driver.getItem<T>(driverKey);
     return getValueOrFallback(res, (opts?.fallback ?? opts?.defaultValue) as T);
   };
+
   const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
     const metaKey = getMetaKey(driverKey);
     const res = await driver.getItem<Record<string, unknown>>(metaKey);
     return getMetaValue(res);
   };
+
   const setItem = async <T>(
     driver: WxtStorageDriver,
     driverKey: string,
@@ -81,6 +90,7 @@ function createStorage(): WxtStorage {
   ) => {
     await driver.setItem(driverKey, value ?? null);
   };
+
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
@@ -88,25 +98,30 @@ function createStorage(): WxtStorage {
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
+
     await driver.setItem(metaKey, mergeMeta(existingFields, properties ?? {}));
   };
+
   const removeItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
     opts: RemoveItemOptions | undefined,
   ) => {
     await driver.removeItem(driverKey);
+
     if (opts?.removeMeta) {
       const metaKey = getMetaKey(driverKey);
       await driver.removeItem(metaKey);
     }
   };
+
   const removeMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
     properties: string | string[] | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
+
     if (properties == null) {
       await driver.removeItem(metaKey);
     } else {
@@ -115,6 +130,7 @@ function createStorage(): WxtStorage {
       await driver.setItem(metaKey, newFields);
     }
   };
+
   const watch = <T>(
     driver: WxtStorageDriver,
     driverKey: string,
@@ -126,7 +142,7 @@ function createStorage(): WxtStorage {
   return {
     getItem: async (key, opts) => {
       const { driver, driverKey } = resolveKey(key);
-      return await getItem(driver, driverKey, opts);
+      return getItem(driver, driverKey, opts);
     },
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
@@ -139,6 +155,7 @@ function createStorage(): WxtStorage {
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
         let opts: GetItemOptions<unknown> | undefined;
+
         if (typeof key === 'string') {
           // key: string
           keyStr = key;
@@ -151,7 +168,9 @@ function createStorage(): WxtStorage {
           keyStr = key.key;
           opts = key.options;
         }
+
         orderedKeys.push(keyStr);
+
         const { driverArea, driverKey } = resolveKey(keyStr);
         const areaKeys = areaToKeyMap.get(driverArea) ?? [];
         areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
@@ -159,6 +178,7 @@ function createStorage(): WxtStorage {
       });
 
       const resultsMap = new Map<StorageItemKey, unknown>();
+
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
@@ -187,6 +207,7 @@ function createStorage(): WxtStorage {
       const keys = args.map((arg) => {
         const key = typeof arg === 'string' ? arg : arg.key;
         const { driverArea, driverKey } = resolveKey(key);
+
         return {
           key,
           driverArea,
@@ -194,6 +215,7 @@ function createStorage(): WxtStorage {
           driverMetaKey: getMetaKey(driverKey),
         };
       });
+
       const areaToDriverMetaKeysMap = keys.reduce<
         Partial<Record<StorageArea, (typeof keys)[number][]>>
       >((map, key) => {
@@ -203,6 +225,7 @@ function createStorage(): WxtStorage {
       }, {});
 
       const resultsMap: Record<string, Record<string, unknown>> = {};
+
       await Promise.all(
         Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
           const areaRes = await browser.storage[area as StorageArea].get(
@@ -234,12 +257,14 @@ function createStorage(): WxtStorage {
         const { driverArea, driverKey } = resolveKey(
           'key' in item ? item.key : item.item.key,
         );
+
         areaToKeyValueMap[driverArea] ??= [];
         areaToKeyValueMap[driverArea]!.push({
           key: driverKey,
           value: item.value,
         });
       });
+
       await Promise.all(
         Object.entries(areaToKeyValueMap).map(async ([driverArea, values]) => {
           const driver = getDriver(driverArea as StorageArea);
@@ -262,6 +287,7 @@ function createStorage(): WxtStorage {
         const { driverArea, driverKey } = resolveKey(
           'key' in item ? item.key : item.item.key,
         );
+
         areaToMetaUpdatesMap[driverArea] ??= [];
         areaToMetaUpdatesMap[driverArea]!.push({
           key: driverKey,
@@ -274,6 +300,7 @@ function createStorage(): WxtStorage {
           async ([storageArea, updates]) => {
             const driver = getDriver(storageArea as StorageArea);
             const metaKeys = updates.map(({ key }) => getMetaKey(key));
+
             const existingMetas = await driver.getItems(metaKeys);
             const existingMetaMap = Object.fromEntries(
               existingMetas.map(({ key, value }) => [key, getMetaValue(value)]),
@@ -281,6 +308,7 @@ function createStorage(): WxtStorage {
 
             const metaUpdates = updates.map(({ key, properties }) => {
               const metaKey = getMetaKey(key);
+
               return {
                 key: metaKey,
                 value: mergeMeta(existingMetaMap[metaKey] ?? {}, properties),
@@ -302,6 +330,7 @@ function createStorage(): WxtStorage {
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
         let opts: RemoveItemOptions | undefined;
+
         if (typeof key === 'string') {
           // key: string
           keyStr = key;
@@ -317,9 +346,12 @@ function createStorage(): WxtStorage {
           keyStr = key.key;
           opts = key.options;
         }
+
         const { driverArea, driverKey } = resolveKey(keyStr);
+
         areaToKeysMap[driverArea] ??= [];
         areaToKeysMap[driverArea].push(driverKey);
+
         if (opts?.removeMeta) {
           areaToKeysMap[driverArea].push(getMetaKey(driverKey));
         }
@@ -343,10 +375,12 @@ function createStorage(): WxtStorage {
     snapshot: async (base, opts) => {
       const driver = getDriver(base);
       const data = await driver.snapshot();
+
       opts?.excludeKeys?.forEach((key) => {
         delete data[key];
         delete data[getMetaKey(key)];
       });
+
       return data;
     },
     restoreSnapshot: async (base, data) => {
@@ -362,10 +396,7 @@ function createStorage(): WxtStorage {
         driver.unwatch();
       });
     },
-    defineItem: <
-      TValue,
-      TMetadata extends Record<string, unknown> = Record<string, unknown>,
-    >(
+    defineItem: <TValue>(
       key: StorageItemKey,
       opts?: WxtStorageItemOptions<TValue>,
     ) => {
@@ -377,6 +408,7 @@ function createStorage(): WxtStorage {
         onMigrationComplete,
         debug = false,
       } = opts ?? {};
+
       if (targetVersion < 1) {
         throw Error(
           'Storage item version cannot be less than 1. Initial versions should be set to 1, not 0.',
@@ -390,14 +422,17 @@ function createStorage(): WxtStorage {
         ]);
         const value = itemRes.value;
         const meta = getMetaValue(metaRes.value);
+
         if (value == null) return;
 
         const currentVersion = (meta?.v as number | undefined) ?? 1;
+
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
           );
         }
+
         if (currentVersion === targetVersion) {
           return;
         }
@@ -411,7 +446,9 @@ function createStorage(): WxtStorage {
           { length: targetVersion - currentVersion },
           (_, i) => currentVersion + i + 1,
         );
+
         let migratedValue = value;
+
         for (const migrateToVersion of migrationsToRun) {
           try {
             migratedValue =
@@ -428,6 +465,7 @@ function createStorage(): WxtStorage {
             });
           }
         }
+
         await driver.setItems([
           { key: driverKey, value: migratedValue },
           {
@@ -442,8 +480,10 @@ function createStorage(): WxtStorage {
             { migratedValue },
           );
         }
+
         onMigrationComplete?.(migratedValue as TValue, targetVersion);
       };
+
       const migrationsDone =
         opts?.migrations == null
           ? Promise.resolve()
@@ -466,6 +506,7 @@ function createStorage(): WxtStorage {
 
           const newValue = await opts.init();
           await driver.setItem<TValue>(driverKey, newValue);
+
           return newValue;
         });
 
@@ -482,26 +523,26 @@ function createStorage(): WxtStorage {
         },
         getValue: async () => {
           await migrationsDone;
+
           if (opts?.init) {
-            return (await getOrInitValue()) as TValue;
+            return getOrInitValue() as TValue;
           } else {
-            return (await getItem(driver, driverKey, opts)) as TValue;
+            return getItem(driver, driverKey, opts) as TValue;
           }
         },
         getMeta: async () => {
           await migrationsDone;
-          return (await getMeta(
-            driver,
-            driverKey,
-          )) as NullablePartial<TMetadata>;
+
+          return getMeta(driver, driverKey);
         },
         setValue: async (value) => {
           await migrationsDone;
-          return await setItem(driver, driverKey, value);
+          return setItem(driver, driverKey, value);
         },
         setMeta: async (properties) => {
           await migrationsDone;
-          return await setMeta(
+
+          return setMeta(
             driver,
             driverKey,
             properties as Record<string, unknown>,
@@ -509,11 +550,13 @@ function createStorage(): WxtStorage {
         },
         removeValue: async (opts) => {
           await migrationsDone;
-          return await removeItem(driver, driverKey, opts);
+
+          return removeItem(driver, driverKey, opts);
         },
         removeMeta: async (properties) => {
           await migrationsDone;
-          return await removeMeta(driver, driverKey, properties);
+
+          return removeMeta(driver, driverKey, properties);
         },
         watch: (cb: WatchCallback<TValue>) =>
           watch<TValue>(driver, driverKey, (newValue, oldValue) =>
@@ -539,6 +582,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
         ].join('\n'),
       );
     }
+
     if (browser.storage == null) {
       throw Error(
         "You must add the 'storage' permission to your manifest to use 'wxt/storage'",
@@ -546,18 +590,23 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     }
 
     const area = browser.storage[storageArea];
-    if (area == null)
+
+    if (area == null) {
       throw Error(`"browser.storage.${storageArea}" is undefined`);
+    }
+
     return area;
   };
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
   return {
     getItem: async <T>(key: string) => {
       const res = await getStorageArea().get<Record<string, unknown>>(key);
+
       return (res[key] as T) ?? null;
     },
     getItems: async (keys) => {
       const result = await getStorageArea().get(keys);
+
       return keys.map((key) => ({ key, value: result[key] ?? null }));
     },
     setItem: async (key, value) => {
@@ -575,6 +624,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
         },
         {},
       );
+
       await getStorageArea().set(map);
     },
     removeItem: async (key) => {
@@ -587,7 +637,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().clear();
     },
     snapshot: async () => {
-      return await getStorageArea().get();
+      return getStorageArea().get();
     },
     restoreSnapshot: async (data) => {
       await getStorageArea().set(data);
@@ -598,12 +648,17 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
           newValue?: T;
           oldValue?: T | null;
         } | null;
+
         if (change == null) return;
+
         if (dequal(change.newValue, change.oldValue)) return;
+
         cb(change.newValue ?? null, change.oldValue ?? null);
       };
+
       getStorageArea().onChanged.addListener(listener);
       watchListeners.add(listener);
+
       return () => {
         getStorageArea().onChanged.removeListener(listener);
         watchListeners.delete(listener);
@@ -899,6 +954,7 @@ export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
 export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
+  // TODO: MAYBE REMOVE IT BEFORE 1.0 RELEASE?
   /**
    * @deprecated Renamed to `fallback`, use it instead.
    */
