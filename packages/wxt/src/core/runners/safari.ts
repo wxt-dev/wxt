@@ -15,8 +15,5 @@ export function createSafariRunner(): ExtensionRunner {
         )}" as an unpacked extension manually`,
       );
     },
-    async closeBrowser() {
-      // noop
-    },
   };
 }

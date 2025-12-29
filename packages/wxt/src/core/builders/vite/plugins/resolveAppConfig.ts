@@ -8,7 +8,8 @@ import { ResolvedConfig } from '../../../../types';
  */
 export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
   const VIRTUAL_MODULE_ID = 'virtual:app-config';
-  const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID;
+  const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
+
   const appConfigFile = resolve(config.srcDir, 'app.config.ts');
 
   return {

@@ -8,6 +8,7 @@ describe('Yarn Package Management Utils', () => {
 
     it('should list direct dependencies', async () => {
       const actual = await yarn.listDependencies({ cwd });
+
       expect(actual).toEqual([
         { name: 'mime-db', version: '1.52.0' },
         { name: 'flatten', version: '1.0.3' },
@@ -17,6 +18,7 @@ describe('Yarn Package Management Utils', () => {
 
     it('should list all dependencies', async () => {
       const actual = await yarn.listDependencies({ cwd, all: true });
+
       expect(actual).toEqual([
         { name: 'mime-db', version: '1.52.0' },
         { name: 'flatten', version: '1.0.3' },

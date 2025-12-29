@@ -15,9 +15,5 @@ export function createManualRunner(): ExtensionRunner {
         )}" as an unpacked extension manually`,
       );
     },
-    async closeBrowser() {
-      // TODO: THIS ISN'T USED ANYWHERE, MAYBE REMOVE?
-      // noop
-    },
   };
 }

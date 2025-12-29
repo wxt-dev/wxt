@@ -8,9 +8,11 @@ export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
   async downloadDependency(id, downloadDir) {
     await ensureDir(downloadDir);
+
     const res = await spawn('npm', ['pack', id, '--json'], {
       cwd: downloadDir,
     });
+
     const packed: PackedDependency[] = JSON.parse(res.stdout);
 
     return path.resolve(downloadDir, packed[0].filename);
@@ -48,6 +50,7 @@ export function flattenNpmListOutput(projects: NpmListProject[]): Dependency[] {
         name,
         version: meta.version,
       });
+
       if (meta.dependencies) queue.push(meta.dependencies);
       if (meta.devDependencies) queue.push(meta.devDependencies);
     });
@@ -61,6 +64,7 @@ export function dedupeDependencies(dependencies: Dependency[]): Dependency[] {
 
   return dependencies.filter((dep) => {
     const HASH = `${dep.name}@${dep.version}`;
+
     if (hashes.has(HASH)) {
       return false;
     } else {

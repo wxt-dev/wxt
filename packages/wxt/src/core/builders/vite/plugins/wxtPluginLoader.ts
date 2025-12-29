@@ -8,9 +8,9 @@ import { ResolvedConfig } from '../../../../types';
  */
 export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
   const VIRTUAL_MODULE_ID = 'virtual:wxt-plugins';
-  const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID;
+  const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
   const VIRTUAL_HTML_MODULE_ID = 'virtual:wxt-html-plugins';
-  const RESOLVED_VIRTUAL_HTML_MODULE_ID = '\0' + VIRTUAL_HTML_MODULE_ID;
+  const RESOLVED_VIRTUAL_HTML_MODULE_ID = `\0${VIRTUAL_HTML_MODULE_ID}`;
 
   return {
     name: 'wxt:plugin-loader',
@@ -27,9 +27,11 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
               `import initPlugin${i} from '${normalizePath(plugin)}';`,
           )
           .join('\n');
+
         const initCalls = config.plugins
           .map((_, i) => `  initPlugin${i}();`)
           .join('\n');
+
         return `${imports}\n\nexport function initPlugins() {\n${initCalls}\n}`;
       }
       if (id === RESOLVED_VIRTUAL_HTML_MODULE_ID) {
@@ -66,6 +68,7 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
         }
 
         document.head.prepend(script);
+
         return document.toString();
       },
     },

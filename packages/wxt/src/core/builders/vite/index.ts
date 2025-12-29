@@ -55,10 +55,12 @@ export async function createViteBuilder(
     config.build.copyPublicDir = false;
     config.build.outDir = wxtConfig.outDir;
     config.build.emptyOutDir = false;
+
     // Disable minification for the dev command
     if (config.build.minify == null && wxtConfig.command === 'serve') {
       config.build.minify = false;
     }
+
     // Enable inline sourcemaps for the dev command (so content scripts have sourcemaps)
     if (config.build.sourcemap == null && wxtConfig.command === 'serve') {
       config.build.sourcemap = 'inline';
@@ -71,7 +73,6 @@ export async function createViteBuilder(
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};
-    // @ts-ignore: Untyped option:
     config.legacy.skipWebSocketTokenCheck = true;
 
     const server = getWxtDevServer?.();
@@ -89,6 +90,7 @@ export async function createViteBuilder(
       wxtPlugins.wxtPluginLoader(wxtConfig),
       wxtPlugins.resolveAppConfig(wxtConfig),
     );
+
     if (
       wxtConfig.analysis.enabled &&
       // If included, vite-node entrypoint loader will increment the
@@ -173,6 +175,7 @@ export async function createViteBuilder(
     const htmlEntrypoints = new Set(
       entrypoints.filter(isHtmlEntrypoint).map((e) => e.name),
     );
+
     return {
       mode: wxtConfig.mode,
       plugins: [wxtPlugins.entrypointGroupGlobals(entrypoints)],
@@ -233,21 +236,22 @@ export async function createViteBuilder(
     baseConfig.optimizeDeps ??= {};
     baseConfig.optimizeDeps.noDiscovery = true;
     baseConfig.optimizeDeps.include = [];
+
     const envConfig: vite.InlineConfig = {
       plugins: paths.map((path) =>
         wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
       ),
     };
     const config = vite.mergeConfig(baseConfig, envConfig);
+
     const server = await vite.createServer(config);
     await server.pluginContainer.buildStart({});
-    const node = new ViteNodeServer(
-      // @ts-ignore: Some weird type error...
-      server,
-    );
+
+    const node = new ViteNodeServer(server);
     installSourcemapsSupport({
       getSourceMap: (source) => node.getSourceMap(source),
     });
+
     const runner = new ViteNodeRunner({
       root: server.config.root,
       base: server.config.base,
@@ -261,11 +265,13 @@ export async function createViteBuilder(
         return node.resolveId(id, importer);
       },
     });
+
     return { runner, server };
   };
 
   const requireDefaultExport = (path: string, mod: any) => {
     const relativePath = relative(wxtConfig.root, path);
+
     if (mod?.default == null) {
       const defineFn = relativePath.includes('.content')
         ? 'defineContentScript'
@@ -286,43 +292,55 @@ export async function createViteBuilder(
       const env = createExtensionEnvironment();
       const { runner, server } = await createViteNodeImporter([path]);
       const res = await env.run(() => runner.executeFile(path));
+
       await server.close();
       requireDefaultExport(path, res);
+
       return res.default;
     },
     async importEntrypoints(paths) {
       const env = createExtensionEnvironment();
       const { runner, server } = await createViteNodeImporter(paths);
+
       const res = await env.run(() =>
         Promise.all(
           paths.map(async (path) => {
             const mod = await runner.executeFile(path);
             requireDefaultExport(path, mod);
+
             return mod.default;
           }),
         ),
       );
+
       await server.close();
       return res;
     },
     async build(group) {
       let entryConfig;
-      if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
-      else if (
+
+      if (Array.isArray(group)) {
+        entryConfig = getMultiPageConfig(group);
+      } else if (
         group.type === 'content-script-style' ||
         group.type === 'unlisted-style'
-      )
+      ) {
         entryConfig = getCssConfig(group);
-      else entryConfig = getLibModeConfig(group);
+      } else {
+        entryConfig = getLibModeConfig(group);
+      }
 
       const buildConfig = vite.mergeConfig(await getBaseConfig(), entryConfig);
+
       await hooks.callHook(
         'vite:build:extendConfig',
         toArray(group),
         buildConfig,
       );
+
       const result = await vite.build(buildConfig);
       const chunks = getBuildOutputChunks(result);
+
       return {
         entrypoints: group,
         chunks: await moveHtmlFiles(wxtConfig, group, chunks),
@@ -339,6 +357,7 @@ export async function createViteBuilder(
       };
       const baseConfig = await getBaseConfig();
       const finalConfig = vite.mergeConfig(baseConfig, serverConfig);
+
       await hooks.callHook('vite:devServer:extendConfig', finalConfig);
       const viteServer = await vite.createServer(finalConfig);
 
@@ -375,7 +394,9 @@ function getBuildOutputChunks(
   result: Awaited<ReturnType<typeof vite.build>>,
 ): BuildStepOutput['chunks'] {
   if ('on' in result) throw Error('wxt does not support vite watch mode.');
+
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
+
   return result.output;
 }
 
@@ -385,6 +406,7 @@ function getBuildOutputChunks(
  */
 function getRollupEntry(entrypoint: Entrypoint): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
+
   switch (entrypoint.type) {
     case 'background':
     case 'unlisted-script':
@@ -400,8 +422,10 @@ function getRollupEntry(entrypoint: Entrypoint): string {
 
   if (virtualEntrypointType) {
     const moduleId: VirtualModuleId = `virtual:wxt-${virtualEntrypointType}-entrypoint`;
+
     return `${moduleId}?${entrypoint.inputPath}`;
   }
+
   return entrypoint.inputPath;
 }
 
@@ -426,12 +450,15 @@ async function moveHtmlFiles(
   const entryMap = group.reduce<Record<string, Entrypoint>>((map, entry) => {
     const a = normalizePath(relative(config.root, entry.inputPath));
     map[a] = entry;
+
     return map;
   }, {});
 
   const movedChunks = await Promise.all(
     chunks.map(async (chunk) => {
-      if (!chunk.fileName.endsWith('.html')) return chunk;
+      if (!chunk.fileName.endsWith('.html')) {
+        return chunk;
+      }
 
       const entry = entryMap[chunk.fileName];
       const oldBundlePath = chunk.fileName;
@@ -442,6 +469,7 @@ async function moveHtmlFiles(
       );
       const oldAbsPath = join(config.outDir, oldBundlePath);
       const newAbsPath = join(config.outDir, newBundlePath);
+
       await fs.ensureDir(dirname(newAbsPath));
       await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
 

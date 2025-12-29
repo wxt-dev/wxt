@@ -77,6 +77,7 @@ export function createWebExtRunner(): ExtensionRunner {
         // Don't call `process.exit(0)` after starting web-ext
         shouldExitProgram: false,
       };
+
       wxt.logger.debug('web-ext config:', finalConfig);
       wxt.logger.debug('web-ext options:', options);
 
@@ -88,7 +89,7 @@ export function createWebExtRunner(): ExtensionRunner {
     },
 
     async closeBrowser() {
-      return await runner?.exit();
+      return runner?.exit();
     },
   };
 }

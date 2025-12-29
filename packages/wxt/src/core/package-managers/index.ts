@@ -25,7 +25,10 @@ export async function createWxtPackageManager(
 
   // Use requirePm to prevent throwing errors before the package manager utils are used.
   const requirePm = <T>(cb: (pm: PackageManager) => T) => {
-    if (pm == null) throw Error('Could not detect package manager');
+    if (pm == null) {
+      throw Error('Could not detect package manager');
+    }
+
     return cb(pm);
   };
 

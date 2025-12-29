@@ -4,8 +4,8 @@ import {
   EntrypointGroup,
   OutputFile,
 } from '../../../types';
-import { every, some } from '../../utils/arrays';
-import { normalizePath } from '../../utils/paths';
+import { every, some } from '../arrays';
+import { normalizePath } from '../paths';
 import { wxt } from '../../wxt';
 
 /**
@@ -40,17 +40,20 @@ export function detectDevChanges(
     changedFiles,
     (file) => file === wxt.config.userConfigMetadata.configFile,
   );
+
   if (isConfigChange) return { type: 'full-restart' };
 
   const isWxtModuleChange = some(changedFiles, (file) =>
     file.startsWith(wxt.config.modulesDir),
   );
+
   if (isWxtModuleChange) return { type: 'full-restart' };
 
   const isRunnerChange = some(
     changedFiles,
     (file) => file === wxt.config.runnerConfig.configFile,
   );
+
   if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
@@ -58,10 +61,12 @@ export function detectDevChanges(
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
+
   if (changedSteps.size === 0) {
     const hasPublicChange = some(changedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
     );
+
     if (hasPublicChange) {
       return {
         type: 'extension-reload',
@@ -78,6 +83,7 @@ export function detectDevChanges(
     steps: [],
     publicAssets: [...currentOutput.publicAssets],
   };
+
   const changedOutput: BuildOutput = {
     manifest: currentOutput.manifest,
     steps: [],
@@ -95,6 +101,7 @@ export function detectDevChanges(
   const isOnlyHtmlChanges =
     changedFiles.length > 0 &&
     every(changedFiles, (file) => file.endsWith('.html'));
+
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -109,6 +116,7 @@ export function detectDevChanges(
       changedOutput.steps.flatMap((step) => step.entrypoints),
       (entry) => entry.type === 'content-script',
     );
+
   if (isOnlyContentScripts) {
     return {
       type: 'content-script-reload',
@@ -158,6 +166,7 @@ function findEffectedSteps(
 
   for (const step of currentOutput.steps) {
     const effectedChunk = step.chunks.find((chunk) => isChunkEffected(chunk));
+
     if (effectedChunk) changes.push(step);
   }
 
@@ -206,10 +215,6 @@ interface HtmlReload extends RebuildChange {
 interface ExtensionReload extends RebuildChange {
   type: 'extension-reload';
 }
-
-// interface BrowserRestart extends RebuildChange {
-//   type: 'browser-restart';
-// }
 
 interface ContentScriptReload extends RebuildChange {
   type: 'content-script-reload';
