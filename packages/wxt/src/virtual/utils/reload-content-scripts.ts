@@ -76,6 +76,7 @@ export async function reloadRuntimeContentScriptMv3(
   const matches = registered.filter((cs) => {
     const hasJs = contentScript.js?.find((js) => cs.js?.includes(js));
     const hasCss = contentScript.css?.find((css) => cs.css?.includes(css));
+
     return hasJs || hasCss;
   });
 
