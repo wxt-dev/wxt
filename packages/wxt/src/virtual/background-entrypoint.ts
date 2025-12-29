@@ -42,6 +42,7 @@ let result;
 try {
   initPlugins();
   result = definition.main();
+  // TODO: WHAT'S THE REASON FOR THIS CHECK?
   // @ts-expect-error: Res shouldn't be a promise, but we're checking it anyway
   if (result instanceof Promise) {
     console.warn(
