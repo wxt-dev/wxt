@@ -188,6 +188,7 @@ describe('Detect Dev Changes', () => {
           }),
         ],
       };
+
       const step2: BuildStepOutput = {
         entrypoints: background,
         chunks: [
@@ -202,6 +203,7 @@ describe('Detect Dev Changes', () => {
         publicAssets: [],
         steps: [step1, step2],
       };
+
       const expected: DevModeChange = {
         type: 'extension-reload',
         cachedOutput: {
@@ -224,9 +226,11 @@ describe('Detect Dev Changes', () => {
       const htmlPage1 = fakePopupEntrypoint({
         inputPath: CHANGED_PATH,
       });
+
       const htmlPage2 = fakeOptionsEntrypoint({
         inputPath: '/root/page2.html',
       });
+
       const htmlPage3 = fakeGenericEntrypoint({
         type: 'sandbox',
         inputPath: '/root/page3.html',
@@ -240,6 +244,7 @@ describe('Detect Dev Changes', () => {
           }),
         ],
       };
+
       const step2: BuildStepOutput = {
         entrypoints: [htmlPage3],
         chunks: [
@@ -254,6 +259,7 @@ describe('Detect Dev Changes', () => {
         publicAssets: [],
         steps: [step1, step2],
       };
+
       const expected: DevModeChange = {
         type: 'html-reload',
         cachedOutput: {
@@ -371,6 +377,7 @@ describe('Detect Dev Changes', () => {
         publicAssets: [],
         steps: [step1, step2, step3],
       };
+
       const expected: DevModeChange = {
         type: 'content-script-reload',
         cachedOutput: {

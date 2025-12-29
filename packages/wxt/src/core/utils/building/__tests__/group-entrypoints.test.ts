@@ -15,6 +15,7 @@ const background: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const contentScript: Entrypoint = {
   type: 'content-script',
   name: 'overlay',
@@ -25,6 +26,7 @@ const contentScript: Entrypoint = {
   },
   skipped: false,
 };
+
 const unlistedScript: Entrypoint = {
   type: 'unlisted-script',
   name: 'injected',
@@ -33,6 +35,7 @@ const unlistedScript: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const popup: Entrypoint = {
   type: 'popup',
   name: 'popup',
@@ -41,6 +44,7 @@ const popup: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const unlistedPage: Entrypoint = {
   type: 'unlisted-page',
   name: 'onboarding',
@@ -49,6 +53,7 @@ const unlistedPage: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const options: Entrypoint = {
   type: 'options',
   name: 'options',
@@ -57,6 +62,7 @@ const options: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const sandbox1: Entrypoint = {
   type: 'sandbox',
   name: 'sandbox',
@@ -65,6 +71,7 @@ const sandbox1: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const sandbox2: Entrypoint = {
   type: 'sandbox',
   name: 'sandbox2',
@@ -73,6 +80,7 @@ const sandbox2: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const unlistedStyle: Entrypoint = {
   type: 'unlisted-style',
   name: 'injected',
@@ -81,6 +89,7 @@ const unlistedStyle: Entrypoint = {
   options: {},
   skipped: false,
 };
+
 const contentScriptStyle: Entrypoint = {
   type: 'content-script-style',
   name: 'injected',
@@ -98,6 +107,7 @@ describe('groupEntrypoints', () => {
       unlistedScript,
       popup,
     ];
+
     const expected = [contentScript, background, unlistedScript, [popup]];
 
     const actual = groupEntrypoints(entrypoints);
@@ -111,6 +121,7 @@ describe('groupEntrypoints', () => {
       contentScriptStyle,
       popup,
     ];
+
     const expected = [unlistedStyle, contentScriptStyle, [popup]];
 
     const actual = groupEntrypoints(entrypoints);
@@ -126,6 +137,7 @@ describe('groupEntrypoints', () => {
       options,
       sandbox1,
     ];
+
     const expected = [[popup, unlistedPage, options], background, [sandbox1]];
 
     const actual = groupEntrypoints(entrypoints);
@@ -140,6 +152,7 @@ describe('groupEntrypoints', () => {
       sandbox2,
       contentScript,
     ];
+
     const expected = [[sandbox1, sandbox2], [popup], contentScript];
 
     const actual = groupEntrypoints(entrypoints);
@@ -176,6 +189,7 @@ describe('groupEntrypoints', () => {
       },
       skipped: false,
     });
+
     const popup = fakePopupEntrypoint({
       skipped: true,
     });
