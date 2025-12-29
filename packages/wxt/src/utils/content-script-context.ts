@@ -74,6 +74,7 @@ export class ContentScriptContext implements AbortController {
     if (browser.runtime?.id == null) {
       this.notifyInvalidated(); // Sets `signal.aborted` to true
     }
+
     return this.signal.aborted;
   }
 
@@ -96,6 +97,7 @@ export class ContentScriptContext implements AbortController {
    */
   onInvalidated(cb: () => void): () => void {
     this.signal.addEventListener('abort', cb);
+
     return () => this.signal.removeEventListener('abort', cb);
   }
 
@@ -142,6 +144,7 @@ export class ContentScriptContext implements AbortController {
     return id;
   }
 
+  // TODO: IT SEEMS UNUSED, IT'S SHARED VIA API FOR DEVS?
   /**
    * Wrapper around `window.requestAnimationFrame` that automatically cancels the request when
    * invalidated.
@@ -237,6 +240,7 @@ export class ContentScriptContext implements AbortController {
    */
   notifyInvalidated() {
     this.abort('Content script context invalidated');
+
     logger.debug(
       `Content script "${this.contentScriptName}" context invalidated`,
     );
@@ -257,8 +261,10 @@ export class ContentScriptContext implements AbortController {
   verifyScriptStartedEvent(event: MessageEvent) {
     const isScriptStartedEvent =
       event.data?.type === ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE;
+
     const isSameContentScript =
       event.data?.contentScriptName === this.contentScriptName;
+
     const isNotDuplicate = !this.receivedMessageIds.has(event.data?.messageId);
 
     return isScriptStartedEvent && isSameContentScript && isNotDuplicate;

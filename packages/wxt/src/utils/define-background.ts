@@ -11,5 +11,6 @@ export function defineBackground(
   arg: (() => void) | BackgroundDefinition,
 ): BackgroundDefinition {
   if (arg == null || typeof arg === 'function') return { main: arg };
+
   return arg;
 }
