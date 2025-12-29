@@ -55,8 +55,10 @@ async function replaceVars(
   vars: Record<string, string>,
 ): Promise<void> {
   let text = await readFile(file, 'utf8');
+
   Object.entries(vars).forEach(([name, value]) => {
     text = text.replaceAll(`{{${name}}}`, value);
   });
+
   await writeFile(file, text, 'utf8');
 }
