@@ -17,9 +17,8 @@ export function entrypointGroupGlobals(
       for (const global of getEntrypointGlobals(name)) {
         define[`import.meta.env.${global.name}`] = JSON.stringify(global.value);
       }
-      return {
-        define,
-      };
+
+      return { define };
     },
   };
 }
