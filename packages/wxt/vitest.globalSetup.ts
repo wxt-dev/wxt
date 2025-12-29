@@ -9,7 +9,6 @@ export async function setup() {
 
   setupHappened = true;
 
-  // @ts-expect-error
   globalThis.__ENTRYPOINT__ = 'test';
 
   const E2E_DIST_PATH = './e2e/dist/';
