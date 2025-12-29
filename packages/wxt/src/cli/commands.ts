@@ -32,6 +32,7 @@ cli
       const serverOptions: NonNullable<
         NonNullable<Parameters<typeof createServer>[0]>['dev']
       >['server'] = {};
+
       if (flags.host) serverOptions.host = flags.host;
       if (flags.port) serverOptions.port = parseInt(flags.port);
 
@@ -49,6 +50,7 @@ cli
             : { server: serverOptions },
       });
       await server.start();
+
       return { isOngoing: true };
     }),
   );

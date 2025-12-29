@@ -22,11 +22,12 @@ export function wrapAction(
     // Enable consola's debug mode globally at the start of all commands when
     // the `--debug` flag is passed
     const isDebug = !!args.find((arg) => arg?.debug);
+    const startTime = Date.now();
+
     if (isDebug) {
       consola.level = LogLevels.debug;
     }
 
-    const startTime = Date.now();
     try {
       printHeader();
 
@@ -58,10 +59,12 @@ export function getArrayFromFlags<T>(
 ): T[] | undefined {
   const array = toArray<T | undefined>(flags[name]);
   const result = filterTruthy(array);
+
   return result.length ? result : undefined;
 }
 
 const aliasCommandNames = new Set<string>();
+
 /**
  * @param base Command to add this one to
  * @param name The command name to add
@@ -86,6 +89,7 @@ export function createAliasedCommand(
         const args = process.argv.slice(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
+
         await spawn(bin, args, {
           stdio: 'inherit',
         });
