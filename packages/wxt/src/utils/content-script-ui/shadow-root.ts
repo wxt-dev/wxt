@@ -122,10 +122,12 @@ export async function createShadowRootUi<TMounted>(
  */
 async function loadCss(): Promise<string> {
   const url = browser.runtime
+    // TODO: MAYBE REDEFINE IT OR IMPORT IN SOME WAY?
     // @ts-expect-error: getURL is defined per-project, but not inside the package
     .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
   try {
     const res = await fetch(url);
+
     return res.text();
   } catch (err) {
     logger.warn(
