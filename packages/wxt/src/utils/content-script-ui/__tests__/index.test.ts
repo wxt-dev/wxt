@@ -455,17 +455,17 @@ describe('Content Script UIs', () => {
   describe('mounted value', () => {
     describe('integrated', () => {
       it('should set the mounted value based on the onMounted return value', () => {
-        const expected = Symbol();
+        const EXPECTED = Symbol();
 
         const ui = createIntegratedUi(new ContentScriptContext('test'), {
           position: 'inline',
-          onMount: () => expected,
+          onMount: () => EXPECTED,
         });
 
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
-        expect(ui.mounted).toBe(expected);
+        expect(ui.mounted).toBe(EXPECTED);
 
         ui.remove();
         expect(ui.mounted).toBeUndefined();
@@ -474,18 +474,18 @@ describe('Content Script UIs', () => {
 
     describe('iframe', () => {
       it('should set the mounted value based on the onMounted return value', async () => {
-        const expected = Symbol();
+        const EXPECTED = Symbol();
 
         const ui = createIframeUi(new ContentScriptContext('test'), {
           page: '',
           position: 'inline',
-          onMount: () => expected,
+          onMount: () => EXPECTED,
         });
 
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
-        expect(ui.mounted).toBe(expected);
+        expect(ui.mounted).toBe(EXPECTED);
 
         ui.remove();
         expect(ui.mounted).toBeUndefined();
@@ -494,18 +494,18 @@ describe('Content Script UIs', () => {
 
     describe('shadow-root', () => {
       it('should set the mounted value based on the onMounted return value', async () => {
-        const expected = Symbol();
+        const EXPECTED = Symbol();
 
         const ui = await createShadowRootUi(new ContentScriptContext('test'), {
           name: 'test-component',
           position: 'inline',
-          onMount: () => expected,
+          onMount: () => EXPECTED,
         });
 
         expect(ui.mounted).toBeUndefined();
 
         ui.mount();
-        expect(ui.mounted).toBe(expected);
+        expect(ui.mounted).toBe(EXPECTED);
 
         ui.remove();
         expect(ui.mounted).toBeUndefined();
@@ -573,6 +573,8 @@ describe('Content Script UIs', () => {
         });
 
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
+          let dynamicEl;
+
           const onRemove = vi.fn();
 
           ui = await createUiFunction(ctx, {
@@ -584,7 +586,6 @@ describe('Content Script UIs', () => {
             name: 'test-component',
           });
 
-          let dynamicEl;
           ui.autoMount();
           await runMicrotasks();
 
@@ -595,6 +596,7 @@ describe('Content Script UIs', () => {
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
+
             await expect
               .poll(() => document.querySelector(uiSelector))
               .not.toBeNull();
@@ -609,6 +611,7 @@ describe('Content Script UIs', () => {
 
         describe('options', () => {
           it('should auto-mount only once mount and remove when the `once` option is true', async () => {
+            let dynamicEl;
             const onRemove = vi.fn();
 
             ui = await createUiFunction(ctx, {
@@ -619,7 +622,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            let dynamicEl;
+
             ui.autoMount({ once: true });
             await runMicrotasks();
 
@@ -630,6 +633,7 @@ describe('Content Script UIs', () => {
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
 
             await runMicrotasks();
+
             await expect
               .poll(() => document.querySelector(uiSelector))
               .not.toBeNull();
@@ -684,6 +688,7 @@ describe('Content Script UIs', () => {
 
         describe('StopAutoMount', () => {
           it('should stop auto-mounting and remove ui when `ui.remove` is called', async () => {
+            let dynamicEl;
             const onRemove = vi.fn();
 
             ui = await createUiFunction(ctx, {
@@ -695,7 +700,6 @@ describe('Content Script UIs', () => {
               name: 'test-component',
             });
 
-            let dynamicEl;
             ui.autoMount();
             await runMicrotasks();
 
