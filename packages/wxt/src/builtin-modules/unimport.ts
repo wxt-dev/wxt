@@ -13,6 +13,7 @@ export default defineWxtModule({
   name: 'wxt:built-in:unimport',
   setup(wxt) {
     let unimport: Unimport;
+
     const isEnabled = () => !wxt.config.imports.disabled;
 
     // Add user module imports to config
@@ -49,7 +50,7 @@ export default defineWxtModule({
       // Only create global types when user has enabled auto-imports
       entries.push(await getImportsDeclarationEntry(unimport));
 
-      if (wxt.config.imports.eslintrc.enabled === false) return;
+      if (!wxt.config.imports.eslintrc.enabled) return;
 
       // Only generate ESLint config if that feature is enabled
       entries.push(
@@ -91,6 +92,7 @@ async function getImportsModuleEntry(
   unimport: Unimport,
 ): Promise<WxtDirFileEntry> {
   const imports = await unimport.getImports();
+
   return {
     path: 'types/imports-module.d.ts',
     text: [
@@ -119,8 +121,11 @@ async function getEslintConfigEntry(
       return globals;
     }, {});
 
-  if (version <= 8) return getEslint8ConfigEntry(options, globals);
-  else return getEslint9ConfigEntry(options, globals);
+  if (version <= 8) {
+    return getEslint8ConfigEntry(options, globals);
+  } else {
+    return getEslint9ConfigEntry(options, globals);
+  }
 }
 
 export function getEslint8ConfigEntry(
