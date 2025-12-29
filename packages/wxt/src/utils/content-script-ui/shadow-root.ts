@@ -126,6 +126,7 @@ async function loadCss(): Promise<string> {
     .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
   try {
     const res = await fetch(url);
+
     return res.text();
   } catch (err) {
     logger.warn(
