@@ -7,7 +7,7 @@ import { ResolvedConfig } from '../../../../types';
  */
 export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
   const VIRTUAL_SETUP_MODULE = 'virtual:wxt-setup';
-  const RESOLVED_VIRTUAL_SETUP_MODULE = '\0' + VIRTUAL_SETUP_MODULE;
+  const RESOLVED_VIRTUAL_SETUP_MODULE = `\0${VIRTUAL_SETUP_MODULE}`;
 
   return {
     name: 'wxt:extension-api-mock',

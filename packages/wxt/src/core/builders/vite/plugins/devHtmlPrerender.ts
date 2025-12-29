@@ -24,7 +24,7 @@ export function devHtmlPrerender(
   );
 
   const VIRTUAL_INLINE_SCRIPT = 'virtual:wxt-inline-script';
-  const RESOLVED_VIRTUAL_INLINE_SCRIPT = '\0' + VIRTUAL_INLINE_SCRIPT;
+  const RESOLVED_VIRTUAL_INLINE_SCRIPT = `\0${VIRTUAL_INLINE_SCRIPT}`;
 
   return [
     {
@@ -60,9 +60,11 @@ export function devHtmlPrerender(
         const reloader = document.createElement('script');
         reloader.src = HTML_RELOAD_ID;
         reloader.type = 'module';
+
         document.head.appendChild(reloader);
 
         const newHtml = document.toString();
+
         config.logger.debug('transform ' + id);
         config.logger.debug('Old HTML:\n' + code);
         config.logger.debug('New HTML:\n' + newHtml);
@@ -77,6 +79,7 @@ export function devHtmlPrerender(
         const originalUrl = `${server.origin}${ctx.path}`;
         const name = getEntrypointName(config.entrypointsDir, ctx.filename);
         const url = `${server.origin}/${name}.html`;
+
         const serverHtml = await server.transformHtml(url, html, originalUrl);
 
         const { document } = parseHTML(serverHtml);
@@ -112,6 +115,7 @@ export function devHtmlPrerender(
         config.logger.debug('transformIndexHtml ' + ctx.filename);
         config.logger.debug('Old HTML:\n' + html);
         config.logger.debug('New HTML:\n' + newHtml);
+
         return newHtml;
       },
     },
@@ -121,7 +125,7 @@ export function devHtmlPrerender(
       resolveId(id) {
         // Resolve inline scripts
         if (id.startsWith(VIRTUAL_INLINE_SCRIPT)) {
-          return '\0' + id;
+          return `\0${id}`;
         }
 
         // Ignore chunks during HTML file pre-rendering
@@ -195,6 +199,7 @@ export function pointToDevServer(
         let path = normalizePath(resolvedAbsolutePath);
         // Add "/" to start of windows paths ("D:/some/path" -> "/D:/some/path")
         if (!path.startsWith('/')) path = '/' + path;
+
         element.setAttribute(attr, `${server.origin}/@fs${path}`);
       } else {
         // Inside the project, use relative path

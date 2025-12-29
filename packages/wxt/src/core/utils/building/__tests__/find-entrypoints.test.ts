@@ -13,11 +13,8 @@ import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
-import {
-  fakeResolvedConfig,
-  setFakeWxt,
-} from '../../../utils/testing/fake-objects';
-import { unnormalizePath } from '../../../utils/paths';
+import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
+import { unnormalizePath } from '../../paths';
 import { wxt } from '../../../wxt';
 
 vi.mock('fast-glob');
@@ -48,7 +45,7 @@ describe('findEntrypoints', () => {
     [
       'popup.html',
       `
-        <html>
+        <html lang="en">
           <head>
             <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
             <title>Default Title</title>
@@ -70,7 +67,7 @@ describe('findEntrypoints', () => {
     [
       'popup/index.html',
       `
-        <html>
+        <html lang="en">
           <head>
             <title>Title</title>
           </head>
@@ -104,7 +101,7 @@ describe('findEntrypoints', () => {
     [
       'options.html',
       `
-        <html>
+        <html lang="en">
           <head>
             <title>Default Title</title>
           </head>
@@ -122,7 +119,7 @@ describe('findEntrypoints', () => {
     [
       'options/index.html',
       `
-        <html>
+        <html lang="en">
           <head>
             <meta name="manifest.open_in_tab" content="true" />
             <title>Title</title>
@@ -210,6 +207,7 @@ describe('findEntrypoints', () => {
       const options: ContentScriptEntrypoint['options'] = {
         matches: ['<all_urls>'],
       };
+
       globMock.mockResolvedValueOnce([path]);
       importEntrypointsMock.mockResolvedValue([options]);
 
@@ -248,6 +246,7 @@ describe('findEntrypoints', () => {
       const options = {
         type: 'module',
       } satisfies BackgroundEntrypointOptions;
+
       globMock.mockResolvedValueOnce([path]);
       importEntrypointsMock.mockResolvedValue([options]);
 
@@ -263,7 +262,7 @@ describe('findEntrypoints', () => {
     [
       'sidepanel.html',
       `
-        <html>
+        <html lang="en">
           <head>
             <title>Default Title</title>
             <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
@@ -286,7 +285,7 @@ describe('findEntrypoints', () => {
     ],
     [
       'sidepanel/index.html',
-      `<html></html>`,
+      `<html lang="en"></html>`,
       {
         type: 'sidepanel',
         name: 'sidepanel',
@@ -298,7 +297,7 @@ describe('findEntrypoints', () => {
     ],
     [
       'named.sidepanel.html',
-      `<html></html>`,
+      `<html lang="en"></html>`,
       {
         type: 'sidepanel',
         name: 'named',
@@ -310,7 +309,7 @@ describe('findEntrypoints', () => {
     ],
     [
       'named.sidepanel/index.html',
-      `<html></html>`,
+      `<html lang="en"></html>`,
       {
         type: 'sidepanel',
         name: 'named',
@@ -411,6 +410,7 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
         skipped: false,
       };
+
       const options = {} satisfies BaseEntrypointOptions;
       globMock.mockResolvedValueOnce([path]);
       importEntrypointsMock.mockResolvedValue([options]);
@@ -756,7 +756,7 @@ describe('findEntrypoints', () => {
     it("should mark the popup as skipped when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['popup.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.include" content="['${
               'not' + config.browser
@@ -778,7 +778,7 @@ describe('findEntrypoints', () => {
     it("should mark the options page as skipped when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['options.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.include" content="['${
               'not' + config.browser
@@ -800,7 +800,7 @@ describe('findEntrypoints', () => {
     it("should mark unlisted pages as skipped when include doesn't contain the target browser", async () => {
       globMock.mockResolvedValueOnce(['unlisted.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.include" content="['${
               'not' + config.browser
@@ -852,7 +852,7 @@ describe('findEntrypoints', () => {
     it('should mark the popup as skipped when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['popup.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.exclude" content="['${config.browser}']" />
           </head>
@@ -872,7 +872,7 @@ describe('findEntrypoints', () => {
     it('should mark the options page as skipped when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['options.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.exclude" content="['${config.browser}']" />
           </head>
@@ -892,7 +892,7 @@ describe('findEntrypoints', () => {
     it('should mark unlisted pages as skipped when exclude contains the target browser', async () => {
       globMock.mockResolvedValueOnce(['unlisted.html']);
       readFileMock.mockResolvedValueOnce(
-        `<html>
+        `<html lang="en">
           <head>
             <meta name="manifest.exclude" content="['${config.browser}']" />
           </head>

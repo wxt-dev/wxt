@@ -34,6 +34,7 @@ describe('Manifest Utils', () => {
   describe('generateManifest', () => {
     describe('popup', () => {
       type ActionType = 'browser_action' | 'page_action';
+
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
@@ -234,7 +235,7 @@ describe('Manifest Utils', () => {
           open_in_tab: false,
           chrome_style: true,
           page: 'options.html',
-        };
+        } as const;
 
         const { manifest: actual } = await generateManifest(
           [options],
@@ -346,7 +347,7 @@ describe('Manifest Utils', () => {
             const expected = {
               persistent: true,
               scripts: ['background.js'],
-            };
+            } as const;
 
             const { manifest: actual } = await generateManifest(
               [background],
@@ -439,11 +440,12 @@ describe('Manifest Utils', () => {
             { type: 'asset', fileName: 'logo-48.png' },
           ],
         });
+
         const expected = {
           16: 'logo-16.png',
           32: 'logo-32.png',
           48: 'logo-48.png',
-        };
+        } as const;
 
         setFakeWxt({
           config: {
@@ -544,6 +546,7 @@ describe('Manifest Utils', () => {
         };
 
         const entrypoints = [cs1, cs2, cs3, cs4, cs5];
+
         setFakeWxt({
           config: {
             command: 'build',
@@ -1141,7 +1144,7 @@ describe('Manifest Utils', () => {
         async (browser) => {
           const VERSION = '1.0.0';
           const VERSION_NAME = '1.0.0-alpha1';
-          const entrypoints: Entrypoint[] = [];
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
 
           setFakeWxt({
@@ -1169,7 +1172,7 @@ describe('Manifest Utils', () => {
         async (browser) => {
           const VERSION = '1.0.0';
           const VERSION_NAME = '1.0.0-alpha1';
-          const entrypoints: Entrypoint[] = [];
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
 
           setFakeWxt({
@@ -1196,7 +1199,7 @@ describe('Manifest Utils', () => {
         'should not include the version_name if it is equal to version',
         async (browser) => {
           const VERSION = '1.0.0';
-          const entrypoints: Entrypoint[] = [];
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
 
           setFakeWxt({
@@ -1220,7 +1223,7 @@ describe('Manifest Utils', () => {
       );
 
       it('should log a warning if the version could not be detected', async () => {
-        const entrypoints: Entrypoint[] = [];
+        const entrypoints: Entrypoint[] = [] as const;
         const buildOutput = fakeBuildOutput();
 
         setFakeWxt({
@@ -1390,6 +1393,9 @@ describe('Manifest Utils', () => {
     });
 
     describe('Stripping keys', () => {
+      // TODO: This is really necessary?
+      // TODO: This seems to be the same, as it would be undefined,
+      // TODO: that's mean we can remove all of this objects, because it's undefined by default
       const mv2Manifest = {
         page_action: {},
         browser_action: {},
@@ -1409,15 +1415,18 @@ describe('Manifest Utils', () => {
         system_indicator: {},
         user_scripts: {},
       };
+
       const mv3Manifest = {
         action: {},
         export: {},
         optional_host_permissions: {},
         side_panel: {},
       };
+
       const hostPermissionsManifest = {
         host_permissions: {},
       };
+
       const manifest: any = {
         ...mv2Manifest,
         ...mv3Manifest,
@@ -1575,7 +1584,7 @@ describe('Manifest Utils', () => {
         });
 
         const output = fakeBuildOutput();
-        const entrypoints: Entrypoint[] = [];
+        const entrypoints: Entrypoint[] = [] as const;
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -1595,12 +1604,13 @@ describe('Manifest Utils', () => {
       });
 
       it('should convert MV3 CSP object to MV2 CSP string with localhost for MV2', async () => {
-        const entrypoints: Entrypoint[] = [];
-        const buildOutput = fakeBuildOutput();
         const INPUT_CSP =
           "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
         const EXPECTED_CSP =
           "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
+
+        const entrypoints: Entrypoint[] = [];
+        const buildOutput = fakeBuildOutput();
 
         // Setup WXT for Firefox and serve command
         setFakeWxt({
@@ -1655,8 +1665,8 @@ describe('Manifest Utils', () => {
 
     describe('manifest_version', () => {
       it('should ignore and log a warning when someone sets `manifest_version` inside the manifest', async () => {
-        const buildOutput = fakeBuildOutput();
         const EXPECTED_VERSION = 2;
+        const buildOutput = fakeBuildOutput();
 
         setFakeWxt({
           logger: mock(),

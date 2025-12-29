@@ -14,7 +14,7 @@ import { resolve } from 'path';
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {
     const VIRTUAL_ID: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
-    const RESOLVED_VIRTUAL_ID = '\0' + VIRTUAL_ID;
+    const RESOLVED_VIRTUAL_ID = `\0${VIRTUAL_ID}`;
 
     return {
       name: `wxt:resolve-virtual-${name}`,
@@ -27,6 +27,7 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
         const inputPath = normalizePath(
           id.substring(index + VIRTUAL_ID.length),
         );
+
         return RESOLVED_VIRTUAL_ID + inputPath;
       },
       async load(id) {
@@ -37,6 +38,7 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
           resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
           'utf-8',
         );
+
         return TEMPLATE.replace(`virtual:user-${name}`, inputPath);
       },
     };

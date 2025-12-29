@@ -20,7 +20,8 @@ export function download(config: ResolvedConfig): Plugin {
 
       // Load file from network or cache
       const url = id.replace('\0url:', '');
-      return await fetchCached(url, config);
+
+      return fetchCached(url, config);
     },
   };
 }
