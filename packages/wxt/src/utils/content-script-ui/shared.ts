@@ -74,6 +74,7 @@ export function getAnchor(
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null,
       );
+
       return (result.singleNodeValue as Element) ?? undefined;
     } else {
       // If the string is a CSS selector, query the document and return the element
@@ -204,6 +205,7 @@ function autoMountUi(
           uiCallbacks.mount();
         } else {
           uiCallbacks.unmount();
+
           if (options.once) {
             uiCallbacks.stopAutoMount();
           }
@@ -221,6 +223,7 @@ function autoMountUi(
     }
   }
 
+  // TODO: MISSING AWAIT
   observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };

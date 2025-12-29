@@ -24,8 +24,9 @@ describe('Content Script Context', () => {
     const onInvalidated = vi.fn();
 
     ctx.onInvalidated(onInvalidated);
-    // @ts-ignore
+    // @ts-expect-error -- deleting runtime.id to simulate disconnection
     delete fakeBrowser.runtime.id;
+
     const isValid = ctx.isValid;
 
     expect(onInvalidated).toBeCalled();
@@ -40,7 +41,7 @@ describe('Content Script Context', () => {
 
     ctx.onInvalidated(onInvalidated);
 
-    // Wait for events to run before next tick next tick
+    // Wait for events to run before next tick
     await waitForEventsToFire();
 
     // Create a new context after first is initialized, and wait for it to initialize
@@ -57,7 +58,7 @@ describe('Content Script Context', () => {
 
     ctx.onInvalidated(onInvalidated);
 
-    // Wait for events to run before next tick next tick
+    // Wait for events to run before next tick
     await waitForEventsToFire();
 
     // Create a new context after first is initialized, and wait for it to initialize
@@ -70,10 +71,12 @@ describe('Content Script Context', () => {
 
   describe('addEventListener', () => {
     const context = new ContentScriptContext('test');
+
     it('should infer types correctly for the window target', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
+      // TODO: IT SEEMS IT ISN'T IN 'WINDOW`, MISSING TYPE OR IT SHOULDN'T BE HERE?
       // @ts-expect-error
       context.addEventListener(window, 'visibilitychange', (_) => {});
     });
@@ -85,6 +88,7 @@ describe('Content Script Context', () => {
 
     it('should infer types correctly for HTML element targets', () => {
       const button = document.createElement('button');
+
       context.addEventListener(button, 'click', (_) => {});
       context.addEventListener(button, 'mouseover', (_) => {});
     });

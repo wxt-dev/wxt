@@ -13,5 +13,6 @@ export function defineUnlistedScript(
   arg: (() => void) | UnlistedScriptDefinition,
 ): UnlistedScriptDefinition {
   if (arg == null || typeof arg === 'function') return { main: arg };
+
   return arg;
 }
