@@ -1,20 +1,20 @@
 // Custom TS definitions for non-TS packages
 
 declare module 'zip-dir' {
-  // Represents the options object for zipdir function
+  // Represents the options object for zipDir function
   interface ZipDirOptions {
     saveTo?: string;
     filter?: (path: string, stat: import('fs').Stats) => boolean;
     each?: (path: string) => void;
   }
 
-  function zipdir(
+  function zipDir(
     dirPath: string,
     options?: ZipDirOptions,
     callback?: (error: Error | null, buffer: Buffer) => void,
   ): Promise<Buffer>;
 
-  export = zipdir;
+  export = zipDir;
 }
 
 declare module 'web-ext-run' {
@@ -39,13 +39,16 @@ declare module 'web-ext-run/util/logger' {
     write(packet: Packet, options: unknown): void;
     flushCapturedLogs(options: unknown): void;
   }
+
   export interface Packet {
     name: string;
     msg: string;
     level: number;
   }
+
   export class ConsoleStream implements IConsoleStream {
     constructor(options?: { verbose: false });
   }
+
   export const consoleStream: IConsoleStream;
 }
