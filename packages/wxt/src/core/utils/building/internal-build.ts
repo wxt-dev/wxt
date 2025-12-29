@@ -41,6 +41,7 @@ export async function internalBuild(): Promise<BuildOutput> {
       `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
+
   const startTime = Date.now();
 
   // Cleanup
@@ -51,10 +52,10 @@ export async function internalBuild(): Promise<BuildOutput> {
   wxt.logger.debug('Detected entrypoints:', entrypoints);
 
   const validationResults = validateEntrypoints(entrypoints);
+
   if (validationResults.errorCount + validationResults.warningCount > 0) {
     printValidationResults(validationResults);
-  }
-  if (validationResults.errorCount > 0) {
+  } else if (validationResults.errorCount > 0) {
     throw new ValidationError(`Entrypoint validation failed`, {
       cause: validationResults,
     });
@@ -79,6 +80,7 @@ export async function internalBuild(): Promise<BuildOutput> {
 
   if (wxt.config.analysis.enabled) {
     await combineAnalysisStats();
+
     const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
     wxt.logger.info(
       `Analysis complete:\n  ${styleText('gray', '└─')} ${styleText('yellow', statsPath)}`,
@@ -93,6 +95,7 @@ export async function internalBuild(): Promise<BuildOutput> {
           `Opening ${styleText('yellow', statsPath)} in browser...`,
         );
         const { default: open } = await import('open');
+
         await open(wxt.config.analysis.outputFile);
       }
     }
