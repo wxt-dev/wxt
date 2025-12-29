@@ -74,10 +74,12 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
 export function addPublicAssets(wxt: Wxt, dir: string): void {
   wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
     const moreFiles = await glob('**/*', { cwd: dir });
+
     if (moreFiles.length === 0) {
       wxt.logger.warn('No files to copy in', dir);
       return;
     }
+
     moreFiles.forEach((file) => {
       files.unshift({ absoluteSrc: resolve(dir, file), relativeDest: file });
     });
@@ -181,6 +183,7 @@ export function addImportPreset(
   });
 }
 
+// TODO: IT SEEMS UNUSED, IT'S AVAILABLE VIA API TO DEVS?
 /**
  * Adds an import alias to the project's TSConfig paths and bundler. Path can
  * be absolute or relative to the project's root directory.
@@ -218,6 +221,7 @@ export function addAlias(wxt: Wxt, alias: string, path: string) {
       );
       return;
     }
+
     wxt.config.alias[alias] = target;
   });
 }
