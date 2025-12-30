@@ -2,8 +2,9 @@ export default defineBackground({
   // type: 'module',
 
   main() {
-    console.log(browser.runtime.id);
     logId();
+    logEnv();
+
     console.log({
       url: import.meta.url,
       browser: import.meta.env.BROWSER,

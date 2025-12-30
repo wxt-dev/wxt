@@ -2,10 +2,10 @@ import { defineAppConfig } from '#imports';
 
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
-    example: string;
+    EXAMPLE: string;
   }
 }
 
 export default defineAppConfig({
-  example: 'value',
+  EXAMPLE: 'Example Env Value',
 });

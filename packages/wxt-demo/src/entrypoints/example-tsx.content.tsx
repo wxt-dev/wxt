@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 export default defineContentScript({
   matches: ['<all_urls>'],
   async main(ctx) {
-    console.log(browser.runtime.id);
     logId();
+    logEnv();
 
     console.log('WXT MODE:', {
       MODE: import.meta.env.MODE,
