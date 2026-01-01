@@ -36,7 +36,7 @@ jobs:
           path: 'docs/tapes/init-demo.tape'
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
+        uses: stefanzweifel/git-auto-commit-action@b811de3f2d9e17d5fa2a2e415eebf8129c596c7b # v6.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
