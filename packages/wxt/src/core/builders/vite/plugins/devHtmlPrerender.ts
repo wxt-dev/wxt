@@ -40,32 +40,32 @@ export function devHtmlPrerender(
       },
       // Convert scripts like src="./main.tsx" -> src="http://localhost:3000/entrypoints/popup/main.tsx"
       // before the paths are replaced with their bundled path
-      transform(code, id) {
-        if (
-          config.command !== 'serve' ||
-          server == null ||
-          !id.endsWith('.html')
-        )
-          return;
+      transform: {
+        filter: {
+          id: /\.html$/,
+        },
+        handler(code, id) {
+          if (config.command !== 'serve' || server == null) return;
 
-        const { document } = parseHTML(code);
+          const { document } = parseHTML(code);
 
-        const _pointToDevServer = (querySelector: string, attr: string) =>
-          pointToDevServer(config, server, id, document, querySelector, attr);
-        _pointToDevServer('script[type=module]', 'src');
-        _pointToDevServer('link[rel=stylesheet]', 'href');
+          const _pointToDevServer = (querySelector: string, attr: string) =>
+            pointToDevServer(config, server, id, document, querySelector, attr);
+          _pointToDevServer('script[type=module]', 'src');
+          _pointToDevServer('link[rel=stylesheet]', 'href');
 
-        // Add a script to add page reloading
-        const reloader = document.createElement('script');
-        reloader.src = htmlReloadId;
-        reloader.type = 'module';
-        document.head.appendChild(reloader);
+          // Add a script to add page reloading
+          const reloader = document.createElement('script');
+          reloader.src = htmlReloadId;
+          reloader.type = 'module';
+          document.head.appendChild(reloader);
 
-        const newHtml = document.toString();
-        config.logger.debug('transform ' + id);
-        config.logger.debug('Old HTML:\n' + code);
-        config.logger.debug('New HTML:\n' + newHtml);
-        return newHtml;
+          const newHtml = document.toString();
+          config.logger.debug('transform ' + id);
+          config.logger.debug('Old HTML:\n' + code);
+          config.logger.debug('New HTML:\n' + newHtml);
+          return newHtml;
+        },
       },
 
       // Pass the HTML through the dev server to add dev-mode specific code
@@ -113,29 +113,37 @@ export function devHtmlPrerender(
     {
       name: 'wxt:virtualize-inline-scripts',
       apply: 'serve',
-      resolveId(id) {
-        // Resolve inline scripts
-        if (id.startsWith(virtualInlineScript)) {
-          return '\0' + id;
-        }
+      resolveId: {
+        filter: {
+          id: [new RegExp(`^${virtualInlineScript}`), new RegExp('^/chunks/')],
+        },
+        handler(id) {
+          // Ignore chunks during HTML file pre-rendering
+          if (id.startsWith('/chunks/')) {
+            return '\0noop';
+          }
 
-        // Ignore chunks during HTML file pre-rendering
-        if (id.startsWith('/chunks/')) {
-          return '\0noop';
-        }
+          return `\0${id}`;
+        },
       },
-      load(id) {
-        // Resolve virtualized inline scripts
-        if (id.startsWith(resolvedVirtualInlineScript)) {
+      load: {
+        filter: {
+          id: [
+            new RegExp(`^${resolvedVirtualInlineScript}`),
+            //eslint-disable-next-line no-control-regex
+            new RegExp('^\x00noop'),
+          ],
+        },
+        handler(id) {
+          // Ignore chunks during HTML file pre-rendering
+          if (id === '\0noop') {
+            return '';
+          }
+
           // id="virtual:wxt-inline-script?<key>"
           const key = id.substring(id.indexOf('?') + 1);
           return inlineScriptContents[key];
-        }
-
-        // Ignore chunks during HTML file pre-rendering
-        if (id === '\0noop') {
-          return '';
-        }
+        },
       },
     },
   ];
