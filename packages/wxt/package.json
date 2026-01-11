@@ -35,7 +35,7 @@
     "esbuild": "^0.27.1",
     "fast-glob": "^3.3.3",
     "filesize": "^11.0.13",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.3",
     "get-port-please": "^3.2.0",
     "giget": "^1.2.3 || ^2.0.0",
     "hookable": "^5.5.3",
