@@ -14,13 +14,16 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
     if (entry.skipped) continue;
 
     let group = ENTRY_TYPE_TO_GROUP_MAP[entry.type];
+
     if (entry.type === 'background' && entry.options.type === 'module') {
       group = 'esm';
     }
+
     if (group === 'individual') {
       groups.push(entry);
     } else {
       let groupIndex = groupIndexMap[group];
+
       if (groupIndex == null) {
         groupIndex = groups.push([]) - 1;
         groupIndexMap[group] = groupIndex;

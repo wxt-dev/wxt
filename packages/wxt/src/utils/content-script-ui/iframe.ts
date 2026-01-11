@@ -15,17 +15,19 @@ export function createIframeUi<TMounted>(
 ): IframeContentScriptUi<TMounted> {
   const wrapper = document.createElement('div');
   const iframe = document.createElement('iframe');
+  // TODO: MAYBE REDEFINE IT OR IMPORT IN SOME WAY?
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, iframe, options);
     options.onBeforeMount?.(wrapper, iframe);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
+
   const remove = () => {
     options.onRemove?.(mounted);
     wrapper.remove();
@@ -65,6 +67,7 @@ export type IframeContentScriptUiOptions<TMounted> =
      * The path to the HTML page that will be shown in the iframe. This string is passed into
      * `browser.runtime.getURL`.
      */
+    // TODO: MAYBE REDEFINE IT OR IMPORT IN SOME WAY?
     // @ts-expect-error: HtmlPublicPath is generated per-project
     page: import('wxt/browser').HtmlPublicPath;
     /**

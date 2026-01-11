@@ -31,6 +31,7 @@ describe('createExtensionRunner', () => {
         browser: 'safari',
       },
     });
+
     const safariRunner = mock<ExtensionRunner>();
     createSafariRunnerMock.mockReturnValue(safariRunner);
 
@@ -44,6 +45,7 @@ describe('createExtensionRunner', () => {
         browser: 'chrome',
       },
     });
+
     const wslRunner = mock<ExtensionRunner>();
     createWslRunnerMock.mockReturnValue(wslRunner);
 
@@ -52,6 +54,7 @@ describe('createExtensionRunner', () => {
 
   it('should return a manual runner when `runner.disabled` is true', async () => {
     isWslMock.mockResolvedValueOnce(false);
+
     setFakeWxt({
       config: {
         browser: 'chrome',
@@ -62,6 +65,7 @@ describe('createExtensionRunner', () => {
         },
       },
     });
+
     const manualRunner = mock<ExtensionRunner>();
     createManualRunnerMock.mockReturnValue(manualRunner);
 

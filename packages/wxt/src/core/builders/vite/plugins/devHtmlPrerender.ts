@@ -16,14 +16,15 @@ export function devHtmlPrerender(
   config: ResolvedConfig,
   server: WxtDevServer | undefined,
 ): vite.PluginOption {
-  const htmlReloadId = '@wxt/reload-html';
+  const HTML_RELOAD_ID = '@wxt/reload-html';
+
   const resolvedHtmlReloadId = resolve(
     config.wxtModuleDir,
     'dist/virtual/reload-html.mjs',
   );
 
-  const virtualInlineScript = 'virtual:wxt-inline-script';
-  const resolvedVirtualInlineScript = '\0' + virtualInlineScript;
+  const VIRTUAL_INLINE_SCRIPT = 'virtual:wxt-inline-script';
+  const RESOLVED_VIRTUAL_INLINE_SCRIPT = `\0${VIRTUAL_INLINE_SCRIPT}`;
 
   return [
     {
@@ -33,7 +34,7 @@ export function devHtmlPrerender(
         return {
           resolve: {
             alias: {
-              [htmlReloadId]: resolvedHtmlReloadId,
+              [HTML_RELOAD_ID]: resolvedHtmlReloadId,
             },
           },
         };
@@ -57,14 +58,17 @@ export function devHtmlPrerender(
 
         // Add a script to add page reloading
         const reloader = document.createElement('script');
-        reloader.src = htmlReloadId;
+        reloader.src = HTML_RELOAD_ID;
         reloader.type = 'module';
+
         document.head.appendChild(reloader);
 
         const newHtml = document.toString();
+
         config.logger.debug('transform ' + id);
         config.logger.debug('Old HTML:\n' + code);
         config.logger.debug('New HTML:\n' + newHtml);
+
         return newHtml;
       },
 
@@ -75,7 +79,9 @@ export function devHtmlPrerender(
         const originalUrl = `${server.origin}${ctx.path}`;
         const name = getEntrypointName(config.entrypointsDir, ctx.filename);
         const url = `${server.origin}/${name}.html`;
+
         const serverHtml = await server.transformHtml(url, html, originalUrl);
+
         const { document } = parseHTML(serverHtml);
 
         // Replace inline script with virtual module served via dev server.
@@ -91,7 +97,8 @@ export function devHtmlPrerender(
           // Replace unsafe inline script
           const virtualScript = document.createElement('script');
           virtualScript.type = 'module';
-          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${key}`;
+          virtualScript.src = `${server.origin}/@id/${VIRTUAL_INLINE_SCRIPT}?${key}`;
+
           script.replaceWith(virtualScript);
         });
 
@@ -99,6 +106,7 @@ export function devHtmlPrerender(
         const viteClientScript = document.querySelector<HTMLScriptElement>(
           "script[src='/@vite/client']",
         );
+
         if (viteClientScript) {
           viteClientScript.src = `${server.origin}${viteClientScript.src}`;
         }
@@ -107,6 +115,7 @@ export function devHtmlPrerender(
         config.logger.debug('transformIndexHtml ' + ctx.filename);
         config.logger.debug('Old HTML:\n' + html);
         config.logger.debug('New HTML:\n' + newHtml);
+
         return newHtml;
       },
     },
@@ -115,8 +124,8 @@ export function devHtmlPrerender(
       apply: 'serve',
       resolveId(id) {
         // Resolve inline scripts
-        if (id.startsWith(virtualInlineScript)) {
-          return '\0' + id;
+        if (id.startsWith(VIRTUAL_INLINE_SCRIPT)) {
+          return `\0${id}`;
         }
 
         // Ignore chunks during HTML file pre-rendering
@@ -126,7 +135,7 @@ export function devHtmlPrerender(
       },
       load(id) {
         // Resolve virtualized inline scripts
-        if (id.startsWith(resolvedVirtualInlineScript)) {
+        if (id.startsWith(RESOLVED_VIRTUAL_INLINE_SCRIPT)) {
           // id="virtual:wxt-inline-script?<key>"
           const key = id.substring(id.indexOf('?') + 1);
           return inlineScriptContents[key];
@@ -166,6 +175,7 @@ export function pointToDevServer(
     const matchingAlias = Object.entries(config.alias).find(([key]) =>
       src.startsWith(key),
     );
+
     if (matchingAlias) {
       // Matches a import alias
       const [alias, replacement] = matchingAlias;
@@ -189,6 +199,7 @@ export function pointToDevServer(
         let path = normalizePath(resolvedAbsolutePath);
         // Add "/" to start of windows paths ("D:/some/path" -> "/D:/some/path")
         if (!path.startsWith('/')) path = '/' + path;
+
         element.setAttribute(attr, `${server.origin}/@fs${path}`);
       } else {
         // Inside the project, use relative path
