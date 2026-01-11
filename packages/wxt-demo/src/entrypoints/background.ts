@@ -1,5 +1,6 @@
 export default defineBackground({
   // type: 'module',
+  globalName: false,
 
   main() {
     console.log(browser.runtime.id);
