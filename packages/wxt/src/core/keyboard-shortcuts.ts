@@ -17,13 +17,6 @@ export function createKeyboardShortcuts(
 ): KeyboardShortcutWatcher {
   let rl: readline.Interface | undefined;
 
-  const handleInput = (line: string) => {
-    // Only handle our specific command
-    if (line.trim() === 'o') {
-      server.restartBrowser();
-    }
-  };
-
   return {
     start() {
       rl ??= readline.createInterface({
@@ -31,11 +24,20 @@ export function createKeyboardShortcuts(
         terminal: false, // Don't intercept ctrl+C, ctrl+Z, etc
       });
 
-      rl.on('line', handleInput);
+      rl.on('line', (line) => {
+        // Only handle our specific command
+        if (line.trim() === 'o') {
+          server.restartBrowser();
+        }
+      });
+      rl.on('close', () => {
+        wxt.logger.info('Keyboard shortcuts disabled');
+        rl = undefined;
+      });
     },
 
     stop() {
-      rl?.removeListener('line', handleInput);
+      rl?.close();
     },
 
     printHelp(flags) {
