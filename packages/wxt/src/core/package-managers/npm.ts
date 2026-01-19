@@ -6,9 +6,10 @@ import spawn from 'nano-spawn';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
-  async downloadDependency(id, downloadDir) {
+  async downloadDependency(id, downloadDir, options) {
     await ensureDir(downloadDir);
-    const res = await spawn('npm', ['pack', id, '--json'], {
+    const normalizedId = normalizeId(id, options?.cwd);
+    const res = await spawn('npm', ['pack', normalizedId, '--json'], {
       cwd: downloadDir,
     });
     const packed: PackedDependency[] = JSON.parse(res.stdout);
@@ -81,4 +82,18 @@ interface PackedDependency {
   name: string;
   version: string;
   filename: string;
+}
+
+/** Normalizes `file:` or `link:` package ids to point to an absolute path so they can be resolved from downloadDir. */
+function normalizeId(id: string, cwd?: string) {
+  // this regex matches file: and link: dependencies with optional alias
+  const match = id.match(/^(@?[^@]+)(?:@@?[^@]+)?@(?:file|link):(.+)$/);
+
+  if (!match) {
+    return id;
+  }
+
+  const [_, dependency, relativePath] = match;
+
+  return `${dependency}@file:${path.resolve(cwd ?? '', relativePath)}`;
 }
