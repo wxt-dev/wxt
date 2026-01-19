@@ -1,5 +1,6 @@
 // #region snippet
-export const browser = globalThis.browser?.runtime?.id
-  ? globalThis.browser
-  : globalThis.chrome;
+export const browser =
+  import.meta.env.FIREFOX || import.meta.env.SAFARI
+    ? globalThis.browser
+    : globalThis.chrome
 // #endregion snippet
