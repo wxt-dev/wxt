@@ -112,6 +112,7 @@ const chromeExtensionIds = [
   'dfacnjidgbagicaekenjgclfnhdnjjdi', // Zen Virtual Piano - https://zen-piano.web.app/
   'naeibcegmgpofimedkmfgjgphfhfhlab', // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
   'ffglckbhfbfmdkefdmjbhpnffkcmlhdh', // Redirect Web - Automatically redirect pages or open them in another app
+  'jmghclbfbbapimhbgnpffbimphlpolnm', // Teams Chat Exporter
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
