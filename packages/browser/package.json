@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/browser",
   "description": "Provides a cross-browser API for using extension APIs and types based on @types/chrome",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "type": "module",
   "main": "src/index.mjs",
   "types": "src/index.d.ts",
@@ -23,7 +23,7 @@
     "src"
   ],
   "devDependencies": {
-    "@types/chrome": "0.1.34",
+    "@types/chrome": "0.1.35",
     "fs-extra": "^11.3.1",
     "nano-spawn": "^1.0.2",
     "typescript": "^5.9.2",

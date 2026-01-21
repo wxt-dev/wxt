@@ -13968,8 +13968,6 @@ export namespace Browser {
             topDomains?: string[] | undefined;
 
             /**
-             * The rule will not match network requests when the associated top-level frame's domain
-             * matches one from the list of excludedTopDomains. If the list is empty or omitted,
              * The rule will not match network requests when the associated top-level frame's domain matches one from the list of `excludedTopDomains`. If the list is empty or omitted, no domains are excluded. This takes precedence over `topDomains`.
              *
              * Notes:
