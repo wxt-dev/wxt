@@ -14739,6 +14739,12 @@ export namespace Browser {
         const onClosed: events.Event<(info: PanelClosedInfo) => void>;
 
         /**
+         * Fired when the extension's side panel is closed.
+         * @since Chrome 142
+         */
+        const onClosed: events.Event<(info: PanelClosedInfo) => void>;
+
+        /**
          * Fired when the extension's side panel is opened.
          * @since Chrome 141
          */
