@@ -1031,7 +1031,7 @@ export namespace Browser {
             cookies?: boolean | undefined;
             /**
              * Stored passwords.
-             * @deprecated Support for password deletion through extensions has been removed. This data type will be ignored.
+             * @deprecated since Chrome 144. Support for password deletion through extensions has been removed. This data type will be ignored.
              */
             passwords?: boolean | undefined;
             /**
@@ -1127,7 +1127,7 @@ export namespace Browser {
          * Clears the browser's stored passwords.
          *
          * Can return its result via Promise in Manifest V3 or later since Chrome 96.
-         * @deprecated Support for password deletion through extensions has been removed. This function has no effect.
+         * @deprecated since Chrome 144. Support for password deletion through extensions has been removed. This function has no effect.
          */
         export function removePasswords(options: RemovalOptions): Promise<void>;
         export function removePasswords(options: RemovalOptions, callback: () => void): void;
@@ -3781,6 +3781,8 @@ export namespace Browser {
             BLOCKED_SCAN_FAILED = "blockedScanFailed",
             /** For use by the Secure Enterprise Browser extension. When required, Chrome will block the download to disc and download the file directly to Google Drive. */
             FORCE_SAVE_TO_GDRIVE = "forceSaveToGdrive",
+            /** For use by the Secure Enterprise Browser extension. When required, Chrome will block the download to disc and download the file directly to OneDrive. */
+            FORCE_SAVE_TO_ONEDRIVE = "forceSaveToOnedrive",
         }
 
         export interface DownloadItem {
@@ -13087,6 +13089,10 @@ export namespace Browser {
             EXTRA_HEADERS = "extraHeaders",
             /** Specifies that the response headers should be included in the event. */
             RESPONSE_HEADERS = "responseHeaders",
+            /** Specifies that the SecurityInfo should be included in the event. */
+            SECURITY_INFO = "securityInfo",
+            /** Specifies that the SecurityInfo with raw bytes of certificates should be included in the event. */
+            SECURITY_INFO_RAW_DER = "securityInfoRawDer",
         }
 
         /** @since Chrome 44 */
@@ -13145,6 +13151,23 @@ export namespace Browser {
             WEBBUNDLE = "webbundle",
             /** Specifies the resource as a type not included in the listed types. */
             OTHER = "other",
+        }
+
+        /** @since Chrome 144 */
+        export interface SecurityInfo {
+            /** A list of certificates */
+            certificates: {
+                /** Fingerprints of the certificate. */
+                fingerprint: {
+                    /** sha256 fingerprint of the certificate. */
+                    sha256: string;
+                };
+                /** Raw bytes of DER encoded server certificate */
+                rawDER?: ArrayBuffer;
+            }[];
+
+            /** State of the connection. One of secure, insecure, broken. */
+            state: string;
         }
 
         /** Contains data uploaded in a URL request. */
@@ -13284,6 +13307,11 @@ export namespace Browser {
         export interface OnHeadersReceivedDetails extends WebRequestDetails {
             /** The HTTP response headers that have been received with this response. */
             responseHeaders?: HttpHeader[];
+            /**
+             * Information about the TLS/QUIC connection used for the underlying connection. Only provided if `securityInfo` is specified in the `extraInfoSpec` parameter.
+             * @since Chrome 144
+             */
+            securityInfo?: SecurityInfo;
             /** Standard HTTP status code returned by the server. */
             statusCode: number;
             /** HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line) or an empty string if there are no headers.*/
@@ -14544,6 +14572,14 @@ export namespace Browser {
         }
 
         /**
+         * Closes the extension's side panel. This is a no-op if the panel is already closed.
+         * @param options Specifies the context in which to close the side panel.
+         * @since Chrome 141
+         */
+        export function close(options: CloseOptions): Promise<void>;
+        export function close(options: CloseOptions, callback: () => void): void;
+
+        /**
          * Returns the side panel's current layout.
          * @since Chrome 140
          */
@@ -14594,6 +14630,12 @@ export namespace Browser {
          */
         export function setPanelBehavior(behavior: PanelBehavior): Promise<void>;
         export function setPanelBehavior(behavior: PanelBehavior, callback: () => void): void;
+
+        /**
+         * Fired when the extension's side panel is closed.
+         * @since Chrome 142
+         */
+        const onClosed: events.Event<(info: PanelClosedInfo) => void>;
 
         /**
          * Fired when the extension's side panel is opened.
