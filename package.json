@@ -28,7 +28,7 @@
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "feed": "^5.1.0",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.3",
     "lint-staged": "^16.2.7",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.45.0",
