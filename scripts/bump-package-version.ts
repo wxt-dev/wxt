@@ -11,7 +11,7 @@ import { consola } from 'consola';
 import fs from 'fs-extra';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx bump-package-version.ts <package-name>',
   );
