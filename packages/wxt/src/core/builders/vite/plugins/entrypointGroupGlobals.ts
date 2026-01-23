@@ -13,12 +13,12 @@ export function entrypointGroupGlobals(
     config() {
       const define: vite.InlineConfig['define'] = {};
       let name = Array.isArray(entrypointGroup) ? 'html' : entrypointGroup.name;
+
       for (const global of getEntrypointGlobals(name)) {
         define[`import.meta.env.${global.name}`] = JSON.stringify(global.value);
       }
-      return {
-        define,
-      };
+
+      return { define };
     },
   };
 }

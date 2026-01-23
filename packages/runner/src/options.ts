@@ -7,7 +7,8 @@ import {
 import { resolve, join } from 'node:path';
 import { homedir, tmpdir } from 'node:os';
 import { debug } from './debug';
-import { mkdtemp, open } from 'node:fs/promises';
+import { mkdtemp } from 'node:fs/promises';
+import { pathExists } from 'fs-extra';
 
 const debugOptions = debug.scoped('options');
 
@@ -59,6 +60,7 @@ export async function resolveRunOptions(
 
   const _browserBinary =
     options?.browserBinaries?.[target] ?? (await findBrowserBinary(target));
+
   if (!_browserBinary)
     throw Error(
       `Could not find "${target}" binary.\n\nIf it is installed in a custom location, you can specify the path with the browserPaths option.`,
@@ -101,20 +103,24 @@ export async function resolveRunOptions(
     target,
   };
   debugOptions('Resolved options:', resolved);
+
   return resolved;
 }
 
 async function findBrowserBinary(target: string): Promise<string | undefined> {
   const targets = new Set<KnownTarget>([target as KnownTarget]);
+
   FALLBACK_TARGETS[target as KnownTarget]?.forEach((fallback) =>
     targets.add(fallback),
   );
+
   const platform = getPlatform();
 
   for (const target of targets) {
     const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[platform] ?? [];
+
     for (const path of potentialPaths) {
-      if (await exists(path)) return path;
+      if (await pathExists(path)) return path;
     }
   }
 }
@@ -192,10 +198,11 @@ function deduplicateArgs(
     return arg.startsWith('--') ? arg.split('=')[0] : arg;
   };
   const alreadyAdded = new Set<string>(requiredArgs.map(getKey));
-
   const args = [...requiredArgs];
+
   userArgs?.forEach((arg) => {
     const key = getKey(arg);
+
     if (alreadyAdded.has(key)) {
       if (warnings[key]) console.warn(`[@wxt-dev/runner] ${warnings[key]}`);
     } else {
@@ -205,17 +212,6 @@ function deduplicateArgs(
   });
 
   return args;
-}
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await open(path, 'r');
-    return true;
-  } catch (err) {
-    // @ts-expect-error: Unknown error type
-    if (err?.code === 'ENOENT') return false;
-    throw err;
-  }
 }
 
 /**

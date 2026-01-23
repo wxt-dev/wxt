@@ -122,6 +122,7 @@ export class TestProject {
     await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
       cwd: this.root,
     });
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
@@ -136,14 +137,6 @@ export class TestProject {
    */
   serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
     return this.serializeDir('.output', ignoreContentsOfFilenames);
-  }
-
-  /**
-   * Read all the files from the test project's `.wxt` directory and combine them into a string
-   * that can be used in a snapshot.
-   */
-  serializeWxtDir(): Promise<string> {
-    return this.serializeDir(resolve(this.root, '.wxt/types'));
   }
 
   /**
@@ -186,12 +179,12 @@ export class TestProject {
   }
 
   fileExists(...path: string[]): Promise<boolean> {
-    return fs.exists(this.resolvePath(...path));
+    return fs.pathExists(this.resolvePath(...path));
   }
 
   async getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(this.resolvePath(path));
+    return fs.readJson(this.resolvePath(path));
   }
 }

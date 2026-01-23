@@ -74,10 +74,12 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
 export function addPublicAssets(wxt: Wxt, dir: string): void {
   wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
     const moreFiles = await glob('**/*', { cwd: dir });
+
     if (moreFiles.length === 0) {
       wxt.logger.warn('No files to copy in', dir);
       return;
     }
+
     moreFiles.forEach((file) => {
       files.unshift({ absoluteSrc: resolve(dir, file), relativeDest: file });
     });
@@ -108,9 +110,11 @@ export function addViteConfig(
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
+
     wxt.config.vite = async (env) => {
       const fromUser = await userVite(env);
       const fromModule = viteConfig(env) ?? {};
+
       return vite.mergeConfig(fromModule, fromUser);
     };
   });
@@ -167,17 +171,19 @@ export function addImportPreset(
   preset: UnimportOptions['presets'][0],
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
+    // TODO: BUT IN NEWER VERSIONS OF WXT, THIS SHOULD NEVER HAPPENED, YEAH?
     // In older versions of WXT, `wxt.config.imports` could be false
     if (!wxt.config.imports) return;
 
     wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
+    // De-duplicate built-in named presets
     if (wxt.config.imports.presets.includes(preset)) return;
 
     wxt.config.imports.presets.push(preset);
   });
 }
 
+// TODO: IT SEEMS UNUSED, IT'S AVAILABLE VIA API TO DEVS?
 /**
  * Adds an import alias to the project's TSConfig paths and bundler. Path can
  * be absolute or relative to the project's root directory.
@@ -208,12 +214,14 @@ export function addImportPreset(
 export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const target = resolve(wxt.config.root, path);
+
     if (wxt.config.alias[alias] != null && wxt.config.alias[alias] !== target) {
       wxt.logger.warn(
         `Skipped adding alias (${alias} => ${target}) because an alias with the same name already exists: ${alias} => ${wxt.config.alias[alias]}`,
       );
       return;
     }
+
     wxt.config.alias[alias] = target;
   });
 }

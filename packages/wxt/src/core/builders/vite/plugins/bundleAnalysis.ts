@@ -16,7 +16,7 @@ export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
 }
 
 /**
- * @deprecated FOR TESTING ONLY.
+ * @internal FOR TESTING ONLY.
  */
 export function resetBundleIncrement() {
   increment = 0;

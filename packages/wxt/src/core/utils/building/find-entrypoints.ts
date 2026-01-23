@@ -5,11 +5,11 @@ import {
   Entrypoint,
   EntrypointInfo,
   GenericEntrypoint,
+  IsolatedWorldContentScriptEntrypointOptions,
+  MainWorldContentScriptEntrypointOptions,
   OptionsEntrypoint,
   PopupEntrypoint,
   SidepanelEntrypoint,
-  MainWorldContentScriptEntrypointOptions,
-  IsolatedWorldContentScriptEntrypointOptions,
 } from '../../../types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
@@ -21,9 +21,9 @@ import {
   isHtmlEntrypoint,
   isJsEntrypoint,
   resolvePerBrowserOptions,
-} from '../../utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
+} from '../entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
+import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
@@ -34,6 +34,7 @@ import { camelCase } from 'scule';
 export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
   await fs.mkdir(wxt.config.wxtDir, { recursive: true });
+
   try {
     await fs.writeJson(
       resolve(wxt.config.wxtDir, 'tsconfig.json'),
@@ -53,33 +54,38 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   relativePaths.sort();
 
   const pathGlobs = Object.keys(PATH_GLOB_TO_TYPE_MAP);
+
   const entrypointInfos: EntrypointInfo[] = relativePaths
     .reduce<EntrypointInfo[]>((results, relativePath) => {
       const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
       const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
+
       const matchingGlob = pathGlobs.find((glob) =>
         minimatch(relativePath, glob),
       );
+
       if (matchingGlob) {
         const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
         results.push({ name, inputPath, type });
       }
+
       return results;
     }, [])
     .filter(({ name, inputPath }, _, entrypointInfos) => {
       // Remove <name>/index.* if <name>/index.html exists
 
       if (inputPath.endsWith('.html')) return true;
+
       const isIndexFile = /index\..+$/.test(inputPath);
+
       if (!isIndexFile) return true;
 
       const hasIndexHtml = entrypointInfos.some(
         (entry) =>
           entry.name === name && entry.inputPath.endsWith('index.html'),
       );
-      if (hasIndexHtml) return false;
 
-      return true;
+      return !hasIndexHtml;
     });
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
@@ -90,11 +96,13 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
 
   // Import entrypoints to get their config
   let hasBackground = false;
+
   const entrypointOptions = await importEntrypoints(entrypointInfos);
   const entrypointsWithoutSkipped: Entrypoint[] = await Promise.all(
     entrypointInfos.map(async (info): Promise<Entrypoint> => {
       const { type } = info;
       const options = entrypointOptions[info.inputPath] ?? {};
+
       switch (type) {
         case 'popup':
           return await getPopupEntrypoint(info, options);
@@ -157,9 +165,11 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
   await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
 
   wxt.logger.debug('All entrypoints:', entrypoints);
+
   const skippedEntrypointNames = entrypoints
     .filter((item) => item.skipped)
     .map((item) => item.name);
+
   if (skippedEntrypointNames.length) {
     wxt.logger.warn(
       [
@@ -184,8 +194,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   await Promise.all([
     // HTML
     ...htmlInfos.map(async (info) => {
-      const res = await importHtmlEntrypoint(info);
-      resMap[info.inputPath] = res;
+      resMap[info.inputPath] = await importHtmlEntrypoint(info);
     }),
     // JS
     (async () => {
@@ -210,6 +219,7 @@ async function importHtmlEntrypoint(
   const { document } = parseHTML(content);
 
   const metaTags = document.querySelectorAll('meta');
+
   const res: Record<string, any> = {
     title: document.querySelector('title')?.textContent || undefined,
   };
@@ -219,6 +229,7 @@ async function importHtmlEntrypoint(
     if (!name.startsWith('manifest.')) return;
 
     const key = camelCase(name.slice(9));
+
     try {
       res[key] = JSON5.parse(tag.content);
     } catch {
@@ -238,6 +249,7 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
     },
     {},
   );
+
   const errorLines = Object.entries(namesToPaths).reduce<string[]>(
     (lines, [name, absolutePaths]) => {
       if (absolutePaths.length > 1) {
@@ -246,12 +258,15 @@ function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
           lines.push(`  - ${relative(wxt.config.root, absolutePath)}`);
         });
       }
+
       return lines;
     },
     [],
   );
+
   if (errorLines.length > 0) {
     const errorContent = errorLines.join('\n');
+
     throw Error(
       `Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.\n\n${errorContent}`,
     );
@@ -268,7 +283,7 @@ async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
-  const stictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
+  const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
       browserStyle: options.browserStyle,
       exclude: options.exclude,
@@ -279,13 +294,14 @@ async function getPopupEntrypoint(
     },
     wxt.config.browser,
   );
-  if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
-    stictOptions.mv2Key = 'browser_action';
+
+  if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
+    strictOptions.mv2Key = 'browser_action';
 
   return {
     type: 'popup',
     name: 'popup',
-    options: stictOptions,
+    options: strictOptions,
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
@@ -433,6 +449,7 @@ function isEntrypointSkipped(entry: Omit<Entrypoint, 'skipped'>): boolean {
   if (exclude?.length && !include?.length) {
     return exclude.includes(wxt.config.browser);
   }
+
   if (include?.length && !exclude?.length) {
     return !include.includes(wxt.config.browser);
   }

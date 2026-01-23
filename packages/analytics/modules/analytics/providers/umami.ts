@@ -12,6 +12,7 @@ export const umami = defineAnalyticsProvider<UmamiProviderOptions>(
       if (config.debug) {
         console.debug('[@wxt-dev/analytics] Sending event to Umami:', payload);
       }
+
       return fetch(`${options.apiUrl}/send`, {
         method: 'POST',
         headers: {
@@ -66,5 +67,5 @@ interface UmamiPayload {
   url?: string;
   website: string;
   name: string;
-  data?: Record<string, string | undefined>;
+  data?: Record<string, string | undefined | null>;
 }

@@ -13,9 +13,12 @@ export default defineContentScript({
       onMount: (container) => {
         const app = document.createElement('div');
         container.id = 'automount-anchor';
+
         app.classList.add('m-4', 'text-center', 'text-red-500');
         app.textContent = i18n.t('prompt_for_name');
+
         container.append(app);
+
         return { container, app };
       },
       onRemove() {
@@ -30,8 +33,10 @@ export default defineContentScript({
       onMount: (container) => {
         const app = document.createElement('div');
         app.id = 'automount-ui';
+
         app.classList.add('m-0', 'text-center', 'text-blue-500');
         app.textContent = `Hello, I'm automount UI.`;
+
         container.append(app);
       },
       onRemove() {
@@ -51,14 +56,18 @@ export default defineContentScript({
       anchor: 'form[role=search]',
       onMount: (container) => {
         const app = document.createElement('button');
+
         container.classList.add('flex', 'flex-justify-center');
         app.classList.add('mt-4', 'p-2');
         app.textContent = 'Stop auto-mount';
+
         app.onclick = (e) => {
           e.preventDefault();
           autoMountUi.remove();
         };
+
         container.append(app);
+
         return { container, app };
       },
     });

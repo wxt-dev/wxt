@@ -1,5 +1,5 @@
 import { defineConfig } from 'wxt';
-import { presetUno } from 'unocss';
+import { presetWind3 } from 'unocss';
 
 export default defineConfig({
   srcDir: 'src',
@@ -25,7 +25,6 @@ export default defineConfig({
   },
   example: {
     a: 'a',
-    // @ts-expect-error: c is not defined, this should be a type error, but it should show up in the module
     c: 'c',
   },
   unocss: {
@@ -53,7 +52,7 @@ export default defineConfig({
           ],
         },
       },
-      presets: [presetUno()],
+      presets: [presetWind3()],
     },
   },
 });

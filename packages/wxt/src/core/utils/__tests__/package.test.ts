@@ -20,10 +20,11 @@ describe('Package JSON Utils', () => {
     });
 
     it("should return an empty object when <root>/package.json doesn't exist", async () => {
-      const root = '/some/path/that/does/not/exist';
+      const ROOT = '/some/path/that/does/not/exist';
       const logger = mock<Logger>();
+
       setFakeWxt({
-        config: { root, logger },
+        config: { root: ROOT, logger },
         logger,
       });
 
