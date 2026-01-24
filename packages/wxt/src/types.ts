@@ -691,6 +691,8 @@ export interface BaseEntrypoint {
    * - `sandbox/index.html` &rarr; `sandbox`
    * - `overlay.content.ts` &rarr; `overlay`
    * - `overlay.content/index.ts` &rarr; `overlay`
+   * - `content.overlay.ts` &rarr; `overlay`
+   * - `content.overlay/index.ts` &rarr; `overlay`
    *
    * The name is used when generating an output file:
    * `<entrypoint.outputDir>/<entrypoint.name>.<ext>`

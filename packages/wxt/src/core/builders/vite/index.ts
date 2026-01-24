@@ -267,7 +267,13 @@ export async function createViteBuilder(
   const requireDefaultExport = (path: string, mod: any) => {
     const relativePath = relative(wxtConfig.root, path);
     if (mod?.default == null) {
-      const defineFn = relativePath.includes('.content')
+      const isContentScript =
+        relativePath.includes('.content') ||
+        relativePath.includes('/content.') ||
+        relativePath.includes('\\content.') ||
+        relativePath.includes('/content/') ||
+        relativePath.includes('\\content\\');
+      const defineFn = isContentScript
         ? 'defineContentScript'
         : relativePath.includes('background')
           ? 'defineBackground'

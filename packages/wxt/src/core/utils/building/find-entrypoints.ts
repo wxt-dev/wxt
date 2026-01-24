@@ -469,11 +469,15 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
 
   'content.[jt]s?(x)': 'content-script',
   'content/index.[jt]s?(x)': 'content-script',
+  'content.*.[jt]s?(x)': 'content-script',
+  'content.*/index.[jt]s?(x)': 'content-script',
   '*.content.[jt]s?(x)': 'content-script',
   '*.content/index.[jt]s?(x)': 'content-script',
   [`content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`content.*.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
   [`*.content.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
   [`content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
+  [`content.*/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
   [`*.content/index.${CSS_EXTENSIONS_PATTERN}`]: 'content-script-style',
 
   'popup.html': 'popup',

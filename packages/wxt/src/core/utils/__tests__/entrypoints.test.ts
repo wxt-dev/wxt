@@ -17,6 +17,8 @@ describe('Entrypoint Utils', () => {
       [resolve(entrypointsDir, 'example.sandbox/index.html'), 'example'],
       [resolve(entrypointsDir, 'some.content/index.ts'), 'some'],
       [resolve(entrypointsDir, 'overlay.content.ts'), 'overlay'],
+      [resolve(entrypointsDir, 'content.overlay.ts'), 'overlay'],
+      [resolve(entrypointsDir, 'content.overlay/index.ts'), 'overlay'],
     ])('should convert %s to %s', (inputPath, expected) => {
       const actual = getEntrypointName(entrypointsDir, inputPath);
       expect(actual).toBe(expected);

@@ -165,6 +165,16 @@ describe('findEntrypoints', () => {
       },
     ],
     [
+      'content.overlay.ts',
+      {
+        type: 'content-script',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'content.overlay.ts'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
+      },
+    ],
+    [
       'overlay.content.ts',
       {
         type: 'content-script',
@@ -180,6 +190,16 @@ describe('findEntrypoints', () => {
         type: 'content-script',
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content/index.ts'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+        skipped: false,
+      },
+    ],
+    [
+      'content.overlay/index.ts',
+      {
+        type: 'content-script',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'content.overlay/index.ts'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         skipped: false,
       },
@@ -627,6 +647,17 @@ describe('findEntrypoints', () => {
       },
     ],
     [
+      'content.overlay.css',
+      {
+        type: 'content-script-style',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'content.overlay.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
+        skipped: false,
+      },
+    ],
+    [
       'overlay.content.css',
       {
         type: 'content-script-style',
@@ -643,6 +674,17 @@ describe('findEntrypoints', () => {
         type: 'content-script-style',
         name: 'content',
         inputPath: resolve(config.entrypointsDir, 'content/index.css'),
+        outputDir: resolve(config.outDir, 'content-scripts'),
+        options: {},
+        skipped: false,
+      },
+    ],
+    [
+      'content.overlay/index.css',
+      {
+        type: 'content-script-style',
+        name: 'overlay',
+        inputPath: resolve(config.entrypointsDir, 'content.overlay/index.css'),
         outputDir: resolve(config.outDir, 'content-scripts'),
         options: {},
         skipped: false,
