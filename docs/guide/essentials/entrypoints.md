@@ -262,6 +262,8 @@ When you define a Bookmarks entrypoint, WXT will automatically update the manife
   :patterns="[
     ['content.[jt]sx?', 'content-scripts/content.js'],
     ['content/index.[jt]sx?', 'content-scripts/content.js'],
+    ['content.{name}.[jt]sx?', 'content-scripts/{name}.js'],
+    ['content.{name}/index.[jt]sx?', 'content-scripts/{name}.js'],
     ['{name}.content.[jt]sx?', 'content-scripts/{name}.js'],
     ['{name}.content/index.[jt]sx?', 'content-scripts/{name}.js'],
   ]"
