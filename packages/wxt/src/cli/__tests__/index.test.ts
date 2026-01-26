@@ -6,7 +6,7 @@ import { prepare } from '../../core/prepare';
 import { clean } from '../../core/clean';
 import { initialize } from '../../core/initialize';
 import { mock } from 'vitest-mock-extended';
-import consola from 'consola';
+import consola, { LogLevels } from 'consola';
 
 vi.mock('../../core/build');
 const buildMock = vi.mocked(build);
@@ -137,6 +137,21 @@ describe('CLI', () => {
       expect(createServerMock).toBeCalledWith({
         debug: true,
       });
+      expect(consola.level).toBe(LogLevels.debug);
+    });
+
+    it('should set log --level', async () => {
+      mockArgv('--level', 'warn');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.warn);
+    });
+
+    it('--debug should override --level', async () => {
+      mockArgv('--debug', '--level', 'silent');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.debug);
     });
   });
 
@@ -229,6 +244,21 @@ describe('CLI', () => {
       expect(buildMock).toBeCalledWith({
         debug: true,
       });
+      expect(consola.level).toBe(LogLevels.debug);
+    });
+
+    it('should set log --level', async () => {
+      mockArgv('build', '--level', 'warn');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.warn);
+    });
+
+    it('--debug should override --level', async () => {
+      mockArgv('build', '--debug', '--level', 'silent');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.debug);
     });
   });
 
@@ -310,6 +340,21 @@ describe('CLI', () => {
         debug: true,
         zip: {},
       });
+      expect(consola.level).toBe(LogLevels.debug);
+    });
+
+    it('should set log --level', async () => {
+      mockArgv('zip', '--level', 'warn');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.warn);
+    });
+
+    it('--debug should override --level', async () => {
+      mockArgv('zip', '--debug', '--level', 'silent');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.debug);
     });
 
     it('should pass undefined for zipSources when --sources is not passed', async () => {
@@ -379,6 +424,21 @@ describe('CLI', () => {
       expect(prepareMock).toBeCalledWith({
         debug: true,
       });
+      expect(consola.level).toBe(LogLevels.debug);
+    });
+
+    it('should set log --level', async () => {
+      mockArgv('prepare', '--level', 'warn');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.warn);
+    });
+
+    it('--debug should override --level', async () => {
+      mockArgv('prepare', '--debug', '--level', 'silent');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.debug);
     });
   });
 
@@ -413,6 +473,21 @@ describe('CLI', () => {
       expect(cleanMock).toBeCalledWith({
         debug: true,
       });
+      expect(consola.level).toBe(LogLevels.debug);
+    });
+
+    it('should set log --level', async () => {
+      mockArgv('clean', '--level', 'warn');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.warn);
+    });
+
+    it('--debug should override --level', async () => {
+      mockArgv('clean', '--debug', '--level', 'silent');
+      await importCli();
+
+      expect(consola.level).toBe(LogLevels.debug);
     });
   });
 
