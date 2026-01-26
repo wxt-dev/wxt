@@ -22,6 +22,7 @@
     "@webext-core/isolated-element": "^1.1.2",
     "@webext-core/match-patterns": "^1.0.3",
     "@wxt-dev/browser": "workspace:^",
+    "@wxt-dev/runner": "workspace:^",
     "@wxt-dev/storage": "workspace:^1.0.0",
     "async-mutex": "^0.5.0",
     "c12": "^3.3.2",

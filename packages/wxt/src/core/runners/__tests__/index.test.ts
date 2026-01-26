@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createExtensionRunner } from '..';
 import { setFakeWxt } from '../../utils/testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
@@ -7,6 +7,7 @@ import { createWslRunner } from '../wsl';
 import { createManualRunner } from '../manual';
 import { isWsl } from '../../utils/wsl';
 import { createWebExtRunner } from '../web-ext';
+import { createWxtRunner } from '../wxt-runner';
 import { ExtensionRunner } from '../../../types';
 
 vi.mock('../../utils/wsl');
@@ -24,7 +25,16 @@ const createManualRunnerMock = vi.mocked(createManualRunner);
 vi.mock('../web-ext');
 const createWebExtRunnerMock = vi.mocked(createWebExtRunner);
 
+vi.mock('../wxt-runner');
+const createWxtRunnerMock = vi.mocked(createWxtRunner);
+
 describe('createExtensionRunner', () => {
+  const originalDisplay = process.env.DISPLAY;
+
+  afterEach(() => {
+    process.env.DISPLAY = originalDisplay;
+  });
+
   it('should return a Safari runner when browser is "safari"', async () => {
     setFakeWxt({
       config: {
@@ -37,7 +47,8 @@ describe('createExtensionRunner', () => {
     await expect(createExtensionRunner()).resolves.toBe(safariRunner);
   });
 
-  it('should return a WSL runner when `is-wsl` is true', async () => {
+  it('should return a WSL runner when `is-wsl` is true and DISPLAY is not :0', async () => {
+    process.env.DISPLAY = ':1';
     isWslMock.mockResolvedValueOnce(true);
     setFakeWxt({
       config: {
@@ -50,8 +61,36 @@ describe('createExtensionRunner', () => {
     await expect(createExtensionRunner()).resolves.toBe(wslRunner);
   });
 
+  it('should return an internal runner when `is-wsl` is true and DISPLAY is :0 for Chrome/Chromium', async () => {
+    process.env.DISPLAY = ':0';
+    isWslMock.mockResolvedValueOnce(true);
+    setFakeWxt({
+      config: {
+        browser: 'chrome',
+      },
+    });
+    const internalRunner = mock<ExtensionRunner>();
+    createWxtRunnerMock.mockReturnValue(internalRunner);
+
+    await expect(createExtensionRunner()).resolves.toBe(internalRunner);
+  });
+
+  it('should return an internal runner when `is-wsl` is true and DISPLAY is :0 for Firefox', async () => {
+    process.env.DISPLAY = ':0';
+    isWslMock.mockResolvedValueOnce(true);
+    setFakeWxt({
+      config: {
+        browser: 'firefox',
+      },
+    });
+    const internalRunner = mock<ExtensionRunner>();
+    createWxtRunnerMock.mockReturnValue(internalRunner);
+
+    await expect(createExtensionRunner()).resolves.toBe(internalRunner);
+  });
+
   it('should return a manual runner when `runner.disabled` is true', async () => {
-    isWslMock.mockResolvedValueOnce(false);
+    isWslMock.mockResolvedValueOnce(true);
     setFakeWxt({
       config: {
         browser: 'chrome',
@@ -69,6 +108,7 @@ describe('createExtensionRunner', () => {
   });
 
   it('should return a web-ext runner otherwise', async () => {
+    isWslMock.mockResolvedValueOnce(false);
     setFakeWxt({
       config: {
         browser: 'chrome',
