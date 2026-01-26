@@ -4,8 +4,12 @@ import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
 import { hasGuiDisplay, isWsl } from '../utils/wsl';
-import * as fs from 'node:fs/promises';
-import { constants as fsConstants } from 'node:fs';
+import {
+  isWindowsPath,
+  resolveChromiumBinaryForRemoteDebuggingPipe,
+  resolveProfilePath,
+  sanitizePathForWslWithGui,
+} from './browser-utils';
 import path from 'node:path';
 
 /**
@@ -42,19 +46,13 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const runningInWsl = await isWsl();
       const runningInWslWithGui = runningInWsl && hasGuiDisplay();
-      const sanitizePathForWslg = (
-        value: string | undefined,
-        label: string,
-      ) => {
-        if (!runningInWslWithGui || value == null) return value;
-        if (isWindowsPath(value)) {
-          wxt.logger.warn(
-            `[web-ext] Ignoring ${label}="${value}" in WSL with GUI. Windows paths/binaries are incompatible with the CDP pipe used to load extensions. Install a Linux browser in WSL and omit this setting.`,
-          );
-          return undefined;
-        }
-        return value;
-      };
+      const sanitizePathForWslg = (value: string | undefined, label: string) =>
+        sanitizePathForWslWithGui(
+          value,
+          label,
+          runningInWslWithGui,
+          '[web-ext] ',
+        );
 
       const chromiumBinaryFromConfig =
         wxt.config.browser === 'firefox'
@@ -66,6 +64,7 @@ export function createWebExtRunner(): ExtensionRunner {
       const chromiumBinary = await resolveChromiumBinaryForRemoteDebuggingPipe({
         chromiumBinary: chromiumBinaryFromConfig,
         runningInWslWithGui,
+        loggerPrefix: '[web-ext] ',
       });
 
       const chromiumUserDataDirOverride =
@@ -81,10 +80,7 @@ export function createWebExtRunner(): ExtensionRunner {
 
       const coercedChromiumProfile = shouldCoerceUserDataDirToProfile
         ? sanitizePathForWslg(
-            resolveChromiumProfilePath(
-              wxt.config.root,
-              chromiumUserDataDirOverride,
-            ),
+            resolveProfilePath(wxt.config.root, chromiumUserDataDirOverride),
             'chromiumProfile',
           )
         : sanitizePathForWslg(
@@ -187,89 +183,6 @@ export function createWebExtRunner(): ExtensionRunner {
       return await runner?.exit();
     },
   };
-}
-
-async function resolveChromiumBinaryForRemoteDebuggingPipe({
-  chromiumBinary,
-  runningInWslWithGui,
-}: {
-  chromiumBinary: string | undefined;
-  runningInWslWithGui: boolean;
-}): Promise<string | undefined> {
-  if (!runningInWslWithGui) return chromiumBinary;
-
-  // In WSL with GUI, Chrome's wrapper script (google-chrome / google-chrome-stable)
-  // uses bash process substitution which closes extra FDs on exec.
-  // That breaks Chrome's `--remote-debugging-pipe` mode and causes CDP to
-  // disconnect immediately.
-  //
-  // Prefer the actual Chrome binary to keep the CDP pipe open.
-  const googleChromeRealBinary = '/opt/google/chrome/chrome';
-  const hasRealGoogleChrome = await isExecutable(googleChromeRealBinary);
-
-  if (chromiumBinary == null) {
-    if (hasRealGoogleChrome) return googleChromeRealBinary;
-    return chromiumBinary;
-  }
-
-  if (hasRealGoogleChrome && looksLikeGoogleChromeWrapper(chromiumBinary)) {
-    wxt.logger.warn(
-      `[web-ext] Using "${googleChromeRealBinary}" instead of "${chromiumBinary}" in WSL with GUI to keep the CDP pipe open (avoids "Remote debugging pipe file descriptors are not open").`,
-    );
-    return googleChromeRealBinary;
-  }
-
-  // Handle cases where a wrapper was explicitly provided from a non-/opt path.
-  if (looksLikeGoogleChromeWrapper(chromiumBinary)) {
-    const resolved = await fs
-      .realpath(chromiumBinary)
-      .catch(() => chromiumBinary);
-    const sibling = path.join(path.dirname(resolved), 'chrome');
-    if (await isExecutable(sibling)) return sibling;
-  }
-
-  return chromiumBinary;
-}
-
-async function isExecutable(filePath: string): Promise<boolean> {
-  try {
-    await fs.access(filePath, fsConstants.X_OK);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function looksLikeGoogleChromeWrapper(filePath: string): boolean {
-  const base = path.basename(filePath);
-  if (base === 'google-chrome') return true;
-  if (base === 'google-chrome-stable') return true;
-  if (base === 'google-chrome-beta') return true;
-  if (base === 'google-chrome-dev') return true;
-  if (base === 'google-chrome-unstable') return true;
-  if (filePath === '/opt/google/chrome/google-chrome') return true;
-  return false;
-}
-
-function isWindowsPath(value: string): boolean {
-  // Windows drive path: C:\...
-  if (/^[a-zA-Z]:\\/.test(value)) return true;
-  // WSL mounted drive: /mnt/c/...
-  if (/^\/mnt\/[a-zA-Z]\//.test(value)) return true;
-  // UNC-ish
-  if (value.startsWith('\\\\')) return true;
-  return false;
-}
-
-function resolveChromiumProfilePath(
-  projectRoot: string,
-  userDataDir: string,
-): string {
-  // If the user gave a relative path (common in Linux docs), make it absolute.
-  // This matches the Windows docs requirement and avoids depending on CWD.
-  return path.isAbsolute(userDataDir)
-    ? userDataDir
-    : path.resolve(projectRoot, userDataDir);
 }
 
 function extractUserDataDirFromChromiumArgs(
