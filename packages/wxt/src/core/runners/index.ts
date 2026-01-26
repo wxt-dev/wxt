@@ -4,7 +4,7 @@ import { createWebExtRunner } from './web-ext';
 import { createSafariRunner } from './safari';
 import { createManualRunner } from './manual';
 import { createWxtRunner } from './wxt-runner';
-import { isWsl } from '../utils/wsl';
+import { hasGuiDisplay, isWsl } from '../utils/wsl';
 import { wxt } from '../wxt';
 import { KNOWN_BROWSER_PATHS, type KnownTarget } from '@wxt-dev/runner';
 
@@ -19,13 +19,14 @@ export async function createExtensionRunner(): Promise<ExtensionRunner> {
   if (wxt.config.runnerConfig.config?.disabled) return createManualRunner();
 
   const runningInWsl = await isWsl();
-  const isWslg = process.env.DISPLAY === ':0';
-  if (runningInWsl && !isWslg) return createWslRunner();
+  const hasGui = hasGuiDisplay();
+  if (runningInWsl && !hasGui) return createWslRunner();
 
-  // On WSLg, prefer WXT's own runner for browsers supported by @wxt-dev/runner.
-  // This avoids web-ext-run / chrome-launcher WSL path rewriting (e.g. \\wsl.localhost\...)
-  // and keeps temp/profile directories on the Linux filesystem.
-  if (runningInWsl && isWslg && isKnownTarget(wxt.config.browser)) {
+  // When running in WSL with a GUI (WSLg, VcXsrv, X410, etc.), prefer WXT's own runner
+  // for browsers supported by @wxt-dev/runner. This avoids web-ext-run / chrome-launcher
+  // WSL path rewriting (e.g. \\wsl.localhost\...) and keeps temp/profile directories
+  // on the Linux filesystem.
+  if (runningInWsl && hasGui && isKnownTarget(wxt.config.browser)) {
     return createWxtRunner();
   }
 

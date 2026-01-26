@@ -1,16 +1,9 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { createWslRunner } from '../wsl';
 import { setFakeWxt } from '../../utils/testing/fake-objects';
 
 describe('createWslRunner', () => {
-  const originalDisplay = process.env.DISPLAY;
-
-  afterEach(() => {
-    process.env.DISPLAY = originalDisplay;
-  });
-
-  it('should warn when running in WSL without WSLg', async () => {
-    process.env.DISPLAY = ':0';
+  it('should warn when running in WSL without a GUI environment', async () => {
     const fake = setFakeWxt({
       config: {
         browser: 'chrome',
@@ -22,5 +15,10 @@ describe('createWslRunner', () => {
     await runner.openBrowser();
 
     expect(fake.logger.warn).toHaveBeenCalledTimes(1);
+    expect(fake.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Cannot auto-open browser when using WSL without a GUI environment',
+      ),
+    );
   });
 });

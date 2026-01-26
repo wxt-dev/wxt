@@ -3,7 +3,7 @@ import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
-import { isWsl } from '../utils/wsl';
+import { hasGuiDisplay, isWsl } from '../utils/wsl';
 import * as fs from 'node:fs/promises';
 import { constants as fsConstants } from 'node:fs';
 import path from 'node:path';
@@ -41,15 +41,15 @@ export function createWebExtRunner(): ExtensionRunner {
       const wxtUserConfig = wxt.config.runnerConfig.config;
 
       const runningInWsl = await isWsl();
-      const runningInWslg = runningInWsl && process.env.DISPLAY === ':0';
+      const runningInWslWithGui = runningInWsl && hasGuiDisplay();
       const sanitizePathForWslg = (
         value: string | undefined,
         label: string,
       ) => {
-        if (!runningInWslg || value == null) return value;
+        if (!runningInWslWithGui || value == null) return value;
         if (isWindowsPath(value)) {
           wxt.logger.warn(
-            `[web-ext] Ignoring ${label}="${value}" on WSLg (DISPLAY=:0). Windows paths/binaries are incompatible with the CDP pipe used to load extensions. Install a Linux browser in WSL and omit this setting.`,
+            `[web-ext] Ignoring ${label}="${value}" in WSL with GUI. Windows paths/binaries are incompatible with the CDP pipe used to load extensions. Install a Linux browser in WSL and omit this setting.`,
           );
           return undefined;
         }
@@ -65,7 +65,7 @@ export function createWebExtRunner(): ExtensionRunner {
             );
       const chromiumBinary = await resolveChromiumBinaryForRemoteDebuggingPipe({
         chromiumBinary: chromiumBinaryFromConfig,
-        runningInWslg,
+        runningInWslWithGui,
       });
 
       const chromiumUserDataDirOverride =
@@ -73,7 +73,7 @@ export function createWebExtRunner(): ExtensionRunner {
           ? undefined
           : extractUserDataDirFromChromiumArgs(wxtUserConfig?.chromiumArgs);
       const shouldCoerceUserDataDirToProfile =
-        runningInWslg &&
+        runningInWslWithGui &&
         wxt.config.browser !== 'firefox' &&
         wxtUserConfig?.chromiumProfile == null &&
         wxtUserConfig?.keepProfileChanges == null &&
@@ -98,7 +98,7 @@ export function createWebExtRunner(): ExtensionRunner {
           : // Match the Windows docs behavior when a profile directory is used.
             // This prevents web-ext-run from creating a brand new temp profile on every launch.
             (wxtUserConfig?.keepProfileChanges ??
-            (runningInWslg && coercedChromiumProfile != null
+            (runningInWslWithGui && coercedChromiumProfile != null
               ? true
               : undefined));
 
@@ -111,16 +111,16 @@ export function createWebExtRunner(): ExtensionRunner {
 
       if (shouldCoerceUserDataDirToProfile) {
         wxt.logger.warn(
-          `[web-ext] On WSLg (DISPLAY=:0), converting chromiumArgs "--user-data-dir" into { chromiumProfile, keepProfileChanges: true } (Windows-style) to avoid creating throwaway profiles on each launch.`,
+          `[web-ext] In WSL with GUI, converting chromiumArgs "--user-data-dir" into { chromiumProfile, keepProfileChanges: true } to avoid creating throwaway profiles on each launch.`,
         );
       } else if (
-        runningInWslg &&
+        runningInWslWithGui &&
         wxt.config.browser !== 'firefox' &&
         wxtUserConfig?.chromiumProfile != null &&
         wxtUserConfig?.keepProfileChanges == null
       ) {
         wxt.logger.warn(
-          `[web-ext] On WSLg (DISPLAY=:0), defaulting keepProfileChanges=true because chromiumProfile is set (Windows-style) to avoid creating throwaway profiles on each launch.`,
+          `[web-ext] In WSL with GUI, defaulting keepProfileChanges=true because chromiumProfile is set to avoid creating throwaway profiles on each launch.`,
         );
       }
 
@@ -191,14 +191,14 @@ export function createWebExtRunner(): ExtensionRunner {
 
 async function resolveChromiumBinaryForRemoteDebuggingPipe({
   chromiumBinary,
-  runningInWslg,
+  runningInWslWithGui,
 }: {
   chromiumBinary: string | undefined;
-  runningInWslg: boolean;
+  runningInWslWithGui: boolean;
 }): Promise<string | undefined> {
-  if (!runningInWslg) return chromiumBinary;
+  if (!runningInWslWithGui) return chromiumBinary;
 
-  // On WSLg, Chrome's wrapper script (google-chrome / google-chrome-stable)
+  // In WSL with GUI, Chrome's wrapper script (google-chrome / google-chrome-stable)
   // uses bash process substitution which closes extra FDs on exec.
   // That breaks Chrome's `--remote-debugging-pipe` mode and causes CDP to
   // disconnect immediately.
@@ -214,7 +214,7 @@ async function resolveChromiumBinaryForRemoteDebuggingPipe({
 
   if (hasRealGoogleChrome && looksLikeGoogleChromeWrapper(chromiumBinary)) {
     wxt.logger.warn(
-      `[web-ext] Using "${googleChromeRealBinary}" instead of "${chromiumBinary}" on WSLg to keep the CDP pipe open (avoids "Remote debugging pipe file descriptors are not open").`,
+      `[web-ext] Using "${googleChromeRealBinary}" instead of "${chromiumBinary}" in WSL with GUI to keep the CDP pipe open (avoids "Remote debugging pipe file descriptors are not open").`,
     );
     return googleChromeRealBinary;
   }

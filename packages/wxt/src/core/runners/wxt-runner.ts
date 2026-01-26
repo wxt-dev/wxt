@@ -1,6 +1,7 @@
 import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import { wxt } from '../wxt';
+import { hasGuiDisplay } from '../utils/wsl';
 import {
   KNOWN_BROWSER_PATHS,
   run,
@@ -56,18 +57,18 @@ export function createWxtRunner(): ExtensionRunner {
         );
       }
 
-      const runningInWslg = process.env.DISPLAY === ':0';
+      const runningInWslWithGui = hasGuiDisplay();
 
-      const binaryFromConfig = sanitizePathForWslg(
+      const binaryFromConfig = sanitizePathForWslWithGui(
         userConfig?.binaries?.[browser],
         `binaries.${browser}`,
-        runningInWslg,
+        runningInWslWithGui,
       );
 
       const browserBinaryOverride = !isFirefoxFamilyTarget(browser)
         ? await resolveChromiumBinaryForRemoteDebuggingPipe({
             chromiumBinary: binaryFromConfig,
-            runningInWslg,
+            runningInWslWithGui,
           })
         : binaryFromConfig;
 
@@ -79,10 +80,10 @@ export function createWxtRunner(): ExtensionRunner {
         const firefoxArgs: string[] = [...(userConfig?.firefoxArgs ?? [])];
         if (startUrls) firefoxArgs.push(...startUrls);
 
-        const firefoxProfile = sanitizePathForWslg(
+        const firefoxProfile = sanitizePathForWslWithGui(
           userConfig?.firefoxProfile,
           'firefoxProfile',
-          runningInWslg,
+          runningInWslWithGui,
         );
 
         const dataPersistence =
@@ -123,10 +124,10 @@ export function createWxtRunner(): ExtensionRunner {
           chromiumArgs.push(...startUrls);
         }
 
-        const chromiumProfile = sanitizePathForWslg(
+        const chromiumProfile = sanitizePathForWslWithGui(
           userConfig?.chromiumProfile,
           'chromiumProfile',
-          runningInWslg,
+          runningInWslWithGui,
         );
 
         const dataPersistence =
@@ -167,15 +168,15 @@ export function createWxtRunner(): ExtensionRunner {
   };
 }
 
-function sanitizePathForWslg(
+function sanitizePathForWslWithGui(
   value: string | undefined,
   label: string,
-  runningInWslg: boolean,
+  runningInWslWithGui: boolean,
 ): string | undefined {
-  if (!runningInWslg || value == null) return value;
+  if (!runningInWslWithGui || value == null) return value;
   if (isWindowsPath(value)) {
     wxt.logger.warn(
-      `[runner] Ignoring ${label}="${value}" on WSLg (DISPLAY=:0). Windows paths/binaries are incompatible with CDP pipe extension install. Install a Linux browser in WSL and omit this setting.`,
+      `[runner] Ignoring ${label}="${value}" in WSL with GUI. Windows paths/binaries are incompatible with CDP pipe extension install. Install a Linux browser in WSL and omit this setting.`,
     );
     return undefined;
   }
@@ -194,12 +195,12 @@ function isWindowsPath(value: string): boolean {
 
 async function resolveChromiumBinaryForRemoteDebuggingPipe({
   chromiumBinary,
-  runningInWslg,
+  runningInWslWithGui,
 }: {
   chromiumBinary: string | undefined;
-  runningInWslg: boolean;
+  runningInWslWithGui: boolean;
 }): Promise<string | undefined> {
-  if (!runningInWslg) return chromiumBinary;
+  if (!runningInWslWithGui) return chromiumBinary;
 
   const googleChromeRealBinary = '/opt/google/chrome/chrome';
   const hasRealGoogleChrome = await isExecutable(googleChromeRealBinary);
@@ -211,7 +212,7 @@ async function resolveChromiumBinaryForRemoteDebuggingPipe({
 
   if (hasRealGoogleChrome && looksLikeGoogleChromeWrapper(chromiumBinary)) {
     wxt.logger.warn(
-      `[runner] Using "${googleChromeRealBinary}" instead of "${chromiumBinary}" on WSLg to keep the CDP pipe open (avoids "Remote debugging pipe file descriptors are not open").`,
+      `[runner] Using "${googleChromeRealBinary}" instead of "${chromiumBinary}" in WSL with GUI to keep the CDP pipe open (avoids "Remote debugging pipe file descriptors are not open").`,
     );
     return googleChromeRealBinary;
   }
