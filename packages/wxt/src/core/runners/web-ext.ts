@@ -5,6 +5,7 @@ import defu from 'defu';
 import { wxt } from '../wxt';
 import { hasGuiDisplay, isWsl } from '../utils/wsl';
 import {
+  findInstalledBrowser,
   isWindowsPath,
   resolveChromiumBinaryForRemoteDebuggingPipe,
   resolveProfilePath,
@@ -66,6 +67,34 @@ export function createWebExtRunner(): ExtensionRunner {
         runningInWslWithGui,
         loggerPrefix: '[web-ext] ',
       });
+
+      // Check if browser is installed when running in WSL with GUI
+      if (
+        runningInWslWithGui &&
+        !chromiumBinary &&
+        wxt.config.browser !== 'firefox'
+      ) {
+        const foundBinary = await findInstalledBrowser(wxt.config.browser);
+        if (!foundBinary) {
+          throw Error(
+            `Browser "${wxt.config.browser}" not found in WSL. Please install a Linux version of the browser.`,
+          );
+        }
+      }
+
+      // Check Firefox installation
+      if (
+        runningInWslWithGui &&
+        wxt.config.browser === 'firefox' &&
+        !wxtUserConfig?.binaries?.firefox
+      ) {
+        const foundBinary = await findInstalledBrowser('firefox');
+        if (!foundBinary) {
+          throw Error(
+            `Browser "firefox" not found in WSL. Please install a Linux version of the browser.`,
+          );
+        }
+      }
 
       const chromiumUserDataDirOverride =
         wxt.config.browser === 'firefox'

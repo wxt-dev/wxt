@@ -2,6 +2,7 @@ import * as fs from 'node:fs/promises';
 import { constants as fsConstants } from 'node:fs';
 import path from 'node:path';
 import { wxt } from '../wxt';
+import { KNOWN_BROWSER_PATHS, type KnownTarget } from '@wxt-dev/runner';
 
 /**
  * Check if a path looks like a Windows path (drive letter, UNC, or WSL mount).
@@ -115,4 +116,20 @@ export function sanitizePathForWslWithGui(
     return undefined;
   }
   return value;
+}
+
+/**
+ * Check if a browser is installed by checking common Linux installation paths.
+ * Returns the path if found, undefined if not found.
+ */
+export async function findInstalledBrowser(
+  browser: string,
+): Promise<string | undefined> {
+  const paths = KNOWN_BROWSER_PATHS[browser as KnownTarget]?.linux || [];
+  for (const browserPath of paths) {
+    if (await isExecutable(browserPath)) {
+      return browserPath;
+    }
+  }
+  return undefined;
 }

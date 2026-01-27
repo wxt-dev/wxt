@@ -9,6 +9,7 @@ import {
   type Runner as WxtRunnerInstance,
 } from '@wxt-dev/runner';
 import {
+  findInstalledBrowser,
   resolveChromiumBinaryForRemoteDebuggingPipe,
   resolveProfilePath,
   sanitizePathForWslWithGui,
@@ -75,6 +76,16 @@ export function createWxtRunner(): ExtensionRunner {
             loggerPrefix: '[runner] ',
           })
         : binaryFromConfig;
+
+      // Check if browser is installed when running in WSL with GUI
+      if (runningInWslWithGui && !browserBinaryOverride) {
+        const foundBinary = await findInstalledBrowser(browser);
+        if (!foundBinary) {
+          throw Error(
+            `Browser "${browser}" not found in WSL. Please install a Linux version of the browser.`,
+          );
+        }
+      }
 
       const startUrls = Array.isArray(userConfig?.startUrls)
         ? userConfig.startUrls

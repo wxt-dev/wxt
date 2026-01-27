@@ -228,4 +228,58 @@ describe('createWebExtRunner (WSL with GUI)', () => {
     // Windows binary should be ignored, Linux binary used instead
     expect(finalConfig.chromiumBinary).toBe('/opt/google/chrome/chrome');
   });
+
+  it('should throw error when Chrome is not installed in WSL with GUI', async () => {
+    isWslMock.mockResolvedValueOnce(true);
+    hasGuiDisplayMock.mockReturnValueOnce(true);
+
+    // Mock fs.access to reject for all browser paths
+    const fsMock = await import('node:fs/promises');
+    vi.mocked(fsMock.access).mockImplementation(async () => {
+      throw new Error('ENOENT');
+    });
+
+    setFakeWxt({
+      config: {
+        browser: 'chrome',
+        manifestVersion: 3,
+        outDir: '/tmp/wxt-out',
+        runnerConfig: {
+          config: {},
+        },
+      },
+    });
+
+    const runner = createWebExtRunner();
+    await expect(runner.openBrowser()).rejects.toThrow(
+      'Browser "chrome" not found in WSL',
+    );
+  });
+
+  it('should throw error when Firefox is not installed in WSL with GUI', async () => {
+    isWslMock.mockResolvedValueOnce(true);
+    hasGuiDisplayMock.mockReturnValueOnce(true);
+
+    // Mock fs.access to reject for all browser paths
+    const fsMock = await import('node:fs/promises');
+    vi.mocked(fsMock.access).mockImplementation(async () => {
+      throw new Error('ENOENT');
+    });
+
+    setFakeWxt({
+      config: {
+        browser: 'firefox',
+        manifestVersion: 2,
+        outDir: '/tmp/wxt-out',
+        runnerConfig: {
+          config: {},
+        },
+      },
+    });
+
+    const runner = createWebExtRunner();
+    await expect(runner.openBrowser()).rejects.toThrow(
+      'Browser "firefox" not found in WSL',
+    );
+  });
 });
