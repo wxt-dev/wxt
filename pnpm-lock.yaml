@@ -407,6 +407,9 @@ importers:
       '@wxt-dev/browser':
         specifier: workspace:^
         version: link:../browser
+      '@wxt-dev/runner':
+        specifier: workspace:^
+        version: link:../runner
       '@wxt-dev/storage':
         specifier: workspace:^1.0.0
         version: link:../storage

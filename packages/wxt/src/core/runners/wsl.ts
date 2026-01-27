@@ -3,13 +3,15 @@ import { relative } from 'node:path';
 import { wxt } from '../wxt';
 
 /**
- * The WSL runner just logs a warning message because `web-ext` doesn't work in WSL.
+ * WSL sometimes cannot launch browsers.
+ *
+ * Note: WSL with GUI (DISPLAY or WAYLAND_DISPLAY set) is handled in `createExtensionRunner`.
  */
 export function createWslRunner(): ExtensionRunner {
   return {
     async openBrowser() {
       wxt.logger.warn(
-        `Cannot open browser when using WSL. Load "${relative(
+        `Cannot auto-open browser when using WSL without a GUI environment (no DISPLAY or WAYLAND_DISPLAY set). Load "${relative(
           process.cwd(),
           wxt.config.outDir,
         )}" as an unpacked extension manually`,
