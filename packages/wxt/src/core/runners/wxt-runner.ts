@@ -1,4 +1,4 @@
-import { ExtensionRunner } from '../../types';
+import { ExtensionRunner, WebExtConfig } from '../../types';
 import { formatDuration } from '../utils/time';
 import { wxt } from '../wxt';
 import { hasGuiDisplay } from '../utils/wsl';
@@ -91,88 +91,23 @@ export function createWxtRunner(): ExtensionRunner {
         ? userConfig.startUrls
         : undefined;
 
-      if (isFirefoxFamilyTarget(browser)) {
-        const firefoxArgs: string[] = [...(userConfig?.firefoxArgs ?? [])];
-        if (startUrls) firefoxArgs.push(...startUrls);
+      const runOptions = isFirefoxFamilyTarget(browser)
+        ? buildFirefoxRunOptions({
+            browser,
+            userConfig,
+            startUrls,
+            runningInWslWithGui,
+            browserBinaryOverride,
+          })
+        : buildChromiumRunOptions({
+            browser,
+            userConfig,
+            startUrls,
+            runningInWslWithGui,
+            browserBinaryOverride,
+          });
 
-        const firefoxProfile = sanitizePathForWslWithGui(
-          userConfig?.firefoxProfile,
-          'firefoxProfile',
-          runningInWslWithGui,
-          '[runner] ',
-        );
-
-        const dataPersistence =
-          firefoxProfile != null || userConfig?.keepProfileChanges
-            ? 'project'
-            : 'none';
-        const projectDataDir =
-          firefoxProfile != null
-            ? resolveProfilePath(wxt.config.root, firefoxProfile)
-            : undefined;
-
-        const runOptions = {
-          target: browser,
-          extensionDir: wxt.config.outDir,
-          firefoxArgs,
-          dataPersistence,
-          projectDataDir,
-        } as Parameters<typeof run>[0];
-
-        if (browserBinaryOverride) {
-          runOptions.browserBinaries = {
-            [browser]: browserBinaryOverride,
-          };
-        }
-
-        runner = await run(runOptions);
-      } else {
-        const chromiumArgs: string[] = [
-          '--unsafely-disable-devtools-self-xss-warnings',
-          ...(userConfig?.chromiumArgs ?? []),
-        ];
-
-        if (userConfig?.openDevtools) {
-          chromiumArgs.push('--auto-open-devtools-for-tabs');
-        }
-
-        if (startUrls) {
-          chromiumArgs.push(...startUrls);
-        }
-
-        const chromiumProfile = sanitizePathForWslWithGui(
-          userConfig?.chromiumProfile,
-          'chromiumProfile',
-          runningInWslWithGui,
-          '[runner] ',
-        );
-
-        const dataPersistence =
-          chromiumProfile != null || userConfig?.keepProfileChanges
-            ? 'project'
-            : 'none';
-        const projectDataDir =
-          chromiumProfile != null
-            ? resolveProfilePath(wxt.config.root, chromiumProfile)
-            : undefined;
-
-        const runOptions = {
-          target: browser,
-          extensionDir: wxt.config.outDir,
-          chromiumArgs,
-          chromiumRemoteDebuggingPort: userConfig?.chromiumPort,
-          dataPersistence,
-          projectDataDir,
-        } as Parameters<typeof run>[0];
-
-        if (browserBinaryOverride) {
-          runOptions.browserBinaries = {
-            [browser]: browserBinaryOverride,
-          };
-        }
-
-        runner = await run(runOptions);
-      }
+      runner = await run(runOptions);
 
       const duration = Date.now() - startTime;
       wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
@@ -183,4 +118,121 @@ export function createWxtRunner(): ExtensionRunner {
       runner = undefined;
     },
   };
+}
+
+function buildFirefoxRunOptions({
+  browser,
+  userConfig,
+  startUrls,
+  runningInWslWithGui,
+  browserBinaryOverride,
+}: {
+  browser: FirefoxFamilyTarget;
+  userConfig: WebExtConfig | undefined;
+  startUrls: string[] | undefined;
+  runningInWslWithGui: boolean;
+  browserBinaryOverride: string | undefined;
+}): Parameters<typeof run>[0] {
+  const firefoxArgs: string[] = [...(userConfig?.firefoxArgs ?? [])];
+  if (startUrls) firefoxArgs.push(...startUrls);
+
+  const firefoxProfile = sanitizePathForWslWithGui(
+    userConfig?.firefoxProfile,
+    'firefoxProfile',
+    runningInWslWithGui,
+    '[runner] ',
+  );
+
+  const { dataPersistence, projectDataDir } = resolveProfileConfig(
+    firefoxProfile,
+    userConfig?.keepProfileChanges,
+  );
+
+  const runOptions: Parameters<typeof run>[0] = {
+    target: browser,
+    extensionDir: wxt.config.outDir,
+    firefoxArgs,
+    dataPersistence,
+    projectDataDir,
+  };
+
+  if (browserBinaryOverride) {
+    runOptions.browserBinaries = {
+      [browser]: browserBinaryOverride,
+    };
+  }
+
+  return runOptions;
+}
+
+function buildChromiumRunOptions({
+  browser,
+  userConfig,
+  startUrls,
+  runningInWslWithGui,
+  browserBinaryOverride,
+}: {
+  browser: KnownTarget;
+  userConfig: WebExtConfig | undefined;
+  startUrls: string[] | undefined;
+  runningInWslWithGui: boolean;
+  browserBinaryOverride: string | undefined;
+}): Parameters<typeof run>[0] {
+  const chromiumArgs: string[] = [
+    '--unsafely-disable-devtools-self-xss-warnings',
+    ...(userConfig?.chromiumArgs ?? []),
+  ];
+
+  if (userConfig?.openDevtools) {
+    chromiumArgs.push('--auto-open-devtools-for-tabs');
+  }
+
+  if (startUrls) {
+    chromiumArgs.push(...startUrls);
+  }
+
+  const chromiumProfile = sanitizePathForWslWithGui(
+    userConfig?.chromiumProfile,
+    'chromiumProfile',
+    runningInWslWithGui,
+    '[runner] ',
+  );
+
+  const { dataPersistence, projectDataDir } = resolveProfileConfig(
+    chromiumProfile,
+    userConfig?.keepProfileChanges,
+  );
+
+  const runOptions: Parameters<typeof run>[0] = {
+    target: browser,
+    extensionDir: wxt.config.outDir,
+    chromiumArgs,
+    chromiumRemoteDebuggingPort: userConfig?.chromiumPort,
+    dataPersistence,
+    projectDataDir,
+  };
+
+  if (browserBinaryOverride) {
+    runOptions.browserBinaries = {
+      [browser]: browserBinaryOverride,
+    };
+  }
+
+  return runOptions;
+}
+
+function resolveProfileConfig(
+  profile: string | undefined,
+  keepProfileChanges: boolean | undefined,
+): {
+  dataPersistence: 'project' | 'none';
+  projectDataDir: string | undefined;
+} {
+  const dataPersistence =
+    profile != null || keepProfileChanges ? 'project' : 'none';
+  const projectDataDir = profile
+    ? resolveProfilePath(wxt.config.root, profile)
+    : undefined;
+
+  return { dataPersistence, projectDataDir };
 }
