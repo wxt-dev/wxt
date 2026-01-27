@@ -1,5 +1,6 @@
 import { defineConfig } from 'wxt';
 import { presetUno } from 'unocss';
+import path from 'node:path';
 
 export default defineConfig({
   srcDir: 'src',
@@ -54,6 +55,12 @@ export default defineConfig({
         },
       },
       presets: [presetUno()],
+    },
+  },
+  imports: {
+    eslintrc: {
+      enabled: true,
+      filePath: path.resolve('.wxt/eslintrc-auto-import.json'),
     },
   },
 });
