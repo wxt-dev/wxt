@@ -61,11 +61,12 @@ By default, to keep from modifying your browser's existing profiles, `web-ext` c
 
 Right now, Chromium based browsers are the only browsers that support overriding this behavior and persisting data when running the `dev` script multiple times.
 
-To persist data, set the `--user-data-dir` flag:
+To persist data, set the `--user-data-dir` flag in any of the config files mentioned above:
 
 :::code-group
 
 ```ts [Mac/Linux]
+import { defineWebExtConfig } from 'wxt';
 export default defineWebExtConfig({
   chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
 });
@@ -73,6 +74,7 @@ export default defineWebExtConfig({
 
 ```ts [Windows]
 import { resolve } from 'node:path';
+import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({
   // On Windows, the path must be absolute
