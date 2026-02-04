@@ -9,10 +9,13 @@ export const bun: WxtPackageManagerImpl = {
   },
   async listDependencies(options) {
     const args = ['pm', 'ls'];
+
     if (options?.all) {
       args.push('--all');
     }
+
     const res = await spawn('bun', args, { cwd: options?.cwd });
+
     return dedupeDependencies(
       res.stdout
         .split('\n')

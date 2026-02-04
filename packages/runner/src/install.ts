@@ -17,15 +17,12 @@ export async function installFirefox(
   await bidi.send<unknown>('session.new', { capabilities: {} });
 
   // Install the extension
-  return await bidi.send<BidiWebExtensionInstallResponse>(
-    'webExtension.install',
-    {
-      extensionData: {
-        type: 'path',
-        path: extensionDir,
-      },
+  return bidi.send<BidiWebExtensionInstallResponse>('webExtension.install', {
+    extensionData: {
+      type: 'path',
+      path: extensionDir,
     },
-  );
+  });
 }
 
 export type BidiWebExtensionInstallResponse = {
@@ -46,7 +43,7 @@ export async function installChromium(
   extensionDir: string,
 ): Promise<CdpExtensionsLoadUnpackedResponse> {
   using cdp = createCdpConnection(browserProcess);
-  return await cdp.send<CdpExtensionsLoadUnpackedResponse>(
+  return cdp.send<CdpExtensionsLoadUnpackedResponse>(
     'Extensions.loadUnpacked',
     {
       path: extensionDir,

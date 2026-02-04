@@ -17,8 +17,11 @@ test('Only one version of esbuild should be installed (each version is ~20mb of 
   ]);
   const projects: NpmListProject[] = JSON.parse(stdout);
   const esbuildVersions = new Set<string>();
+
   iterateDependencies(projects, (name, meta) => {
-    if (name === 'esbuild') esbuildVersions.add(meta.version);
+    if (name === 'esbuild') {
+      esbuildVersions.add(meta.version);
+    }
   });
 
   expect([...esbuildVersions]).toHaveLength(1);
@@ -31,10 +34,15 @@ function iterateDependencies(
   const recurse = (dependencies: Record<string, NpmListDependency>) => {
     Object.entries(dependencies).forEach(([name, meta]) => {
       cb(name, meta);
-      if (meta.dependencies) recurse(meta.dependencies);
+      if (meta.dependencies) {
+        recurse(meta.dependencies);
+      }
     });
   };
+
   projects.forEach((project) => {
-    if (project.dependencies) recurse(project.dependencies);
+    if (project.dependencies) {
+      recurse(project.dependencies);
+    }
   });
 }

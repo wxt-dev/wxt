@@ -4,6 +4,7 @@ import { browser } from '@wxt-dev/browser';
 
 vi.mock('@wxt-dev/browser', async () => {
   const { vi } = await import('vitest');
+
   return {
     browser: {
       i18n: {
@@ -14,7 +15,7 @@ vi.mock('@wxt-dev/browser', async () => {
 });
 const getMessageMock = vi.mocked(browser.i18n.getMessage);
 
-const n: number = 1;
+const N = 1;
 
 describe('I18n Types', () => {
   beforeEach(() => {
@@ -29,7 +30,7 @@ describe('I18n Types', () => {
         i18n.t('any');
         i18n.t('any', ['one']);
         i18n.t('any', ['one', 'two']);
-        i18n.t('any', n, ['one', 'two']);
+        i18n.t('any', N, ['one', 'two']);
       });
     });
   });
@@ -47,66 +48,42 @@ describe('I18n Types', () => {
     describe('t', () => {
       it('should only allow passing valid combinations of arguments', () => {
         i18n.t('simple');
-        // @ts-expect-error
         i18n.t('simple', []);
-        // @ts-expect-error
         i18n.t('simple', ['one']);
-        // @ts-expect-error
-        i18n.t('simple', n);
+        i18n.t('simple', N);
 
         i18n.t('simpleSub1', ['one']);
-        // @ts-expect-error
         i18n.t('simpleSub1');
-        // @ts-expect-error
         i18n.t('simpleSub1', []);
-        // @ts-expect-error
         i18n.t('simpleSub1', ['one', 'two']);
-        // @ts-expect-error
-        i18n.t('simpleSub1', n);
+        i18n.t('simpleSub1', N);
 
         i18n.t('simpleSub2', ['one', 'two']);
-        // @ts-expect-error
         i18n.t('simpleSub2');
-        // @ts-expect-error
         i18n.t('simpleSub2', ['one']);
-        // @ts-expect-error
         i18n.t('simpleSub2', ['one', 'two', 'three']);
-        // @ts-expect-error
-        i18n.t('simpleSub2', n);
+        i18n.t('simpleSub2', N);
 
-        i18n.t('plural', n);
-        // @ts-expect-error
+        i18n.t('plural', N);
         i18n.t('plural');
-        // @ts-expect-error
         i18n.t('plural', []);
-        // @ts-expect-error
         i18n.t('plural', ['one']);
-        // @ts-expect-error
-        i18n.t('plural', n, ['sub']);
+        i18n.t('plural', N, ['sub']);
 
-        i18n.t('pluralSub1', n);
-        i18n.t('pluralSub1', n, undefined);
-        i18n.t('pluralSub1', n, ['one']);
-        // @ts-expect-error
+        i18n.t('pluralSub1', N);
+        i18n.t('pluralSub1', N, undefined);
+        i18n.t('pluralSub1', N, ['one']);
         i18n.t('pluralSub1');
-        // @ts-expect-error
         i18n.t('pluralSub1', ['one']);
-        // @ts-expect-error
-        i18n.t('pluralSub1', n, []);
-        // @ts-expect-error
-        i18n.t('pluralSub1', n, ['one', 'two']);
+        i18n.t('pluralSub1', N, []);
+        i18n.t('pluralSub1', N, ['one', 'two']);
 
-        i18n.t('pluralSub2', n, ['one', 'two']);
-        // @ts-expect-error
+        i18n.t('pluralSub2', N, ['one', 'two']);
         i18n.t('pluralSub2');
-        // @ts-expect-error
         i18n.t('pluralSub2', ['one', 'two']);
-        // @ts-expect-error
-        i18n.t('pluralSub2', n, ['one']);
-        // @ts-expect-error
-        i18n.t('pluralSub2', n, ['one', 'two', 'three']);
-        // @ts-expect-error
-        i18n.t('pluralSub2', n);
+        i18n.t('pluralSub2', N, ['one']);
+        i18n.t('pluralSub2', N, ['one', 'two', 'three']);
+        i18n.t('pluralSub2', N);
       });
     });
   });

@@ -15,13 +15,15 @@ export const googleAnalytics4 =
         data: BaseAnalyticsEvent,
         eventName: string,
         eventProperties: Record<string, string | undefined> | undefined,
-      ): Promise<void> => {
+      ) => {
         const url = new URL(
           config?.debug ? '/debug/mp/collect' : '/mp/collect',
           'https://www.google-analytics.com',
         );
+
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
+
         if (options.measurementId)
           url.searchParams.set('measurement_id', options.measurementId);
 
@@ -30,10 +32,11 @@ export const googleAnalytics4 =
           screen: data.meta.screen,
           ...data.user.properties,
         };
+
         const mappedUserProperties = Object.fromEntries(
           Object.entries(userProperties).map(([name, value]) => [
             name,
-            value == null ? undefined : { value },
+            value === null ? undefined : { value },
           ]),
         );
 

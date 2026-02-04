@@ -18,6 +18,7 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
       if (interval != null) return;
 
       oldUrl = new URL(location.href);
+
       interval = ctx.setInterval(() => {
         let newUrl = new URL(location.href);
         if (newUrl.href !== oldUrl.href) {

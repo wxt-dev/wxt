@@ -8,6 +8,7 @@ process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 describe('PNPM Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
+
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
       await spawn('pnpm', ['i', '--ignore-workspace'], { cwd });
@@ -15,6 +16,7 @@ describe('PNPM Package Management Utils', () => {
 
     it('should list direct dependencies', async () => {
       const actual = await pnpm.listDependencies({ cwd });
+
       expect(actual).toEqual([
         { name: 'flatten', version: '1.0.3' },
         { name: 'mime-types', version: '2.1.35' },
@@ -23,6 +25,7 @@ describe('PNPM Package Management Utils', () => {
 
     it('should list all dependencies', async () => {
       const actual = await pnpm.listDependencies({ cwd, all: true });
+
       expect(actual).toEqual([
         { name: 'flatten', version: '1.0.3' },
         { name: 'mime-types', version: '2.1.35' },

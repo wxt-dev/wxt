@@ -5,7 +5,7 @@ import { initPlugins } from 'virtual:wxt-plugins';
 const result = (async () => {
   try {
     initPlugins();
-    return await definition.main();
+    return definition.main();
   } catch (err) {
     logger.error(
       `The content script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,

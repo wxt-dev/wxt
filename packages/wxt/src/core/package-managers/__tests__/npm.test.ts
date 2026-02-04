@@ -2,11 +2,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { npm } from '../npm';
 import spawn from 'nano-spawn';
-import { exists } from 'fs-extra';
+import { pathExists } from 'fs-extra';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
+
     beforeAll(async () => {
       // NPM needs the modules installed for 'npm ls' to work
       await spawn('npm', ['i'], { cwd });
@@ -14,6 +15,7 @@ describe('NPM Package Management Utils', () => {
 
     it('should list direct dependencies', async () => {
       const actual = await npm.listDependencies({ cwd });
+
       expect(actual).toEqual([
         { name: 'flatten', version: '1.0.3' },
         { name: 'mime-types', version: '2.1.35' },
@@ -22,6 +24,7 @@ describe('NPM Package Management Utils', () => {
 
     it('should list all dependencies', async () => {
       const actual = await npm.listDependencies({ cwd, all: true });
+
       expect(actual).toEqual([
         { name: 'flatten', version: '1.0.3' },
         { name: 'mime-types', version: '2.1.35' },
@@ -34,14 +37,15 @@ describe('NPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
 
     it('should download the dependency as a tarball', async () => {
-      const downloadDir = path.resolve(cwd, 'dist');
-      const id = 'mime-db@1.52.0';
-      const expected = path.resolve(downloadDir, 'mime-db-1.52.0.tgz');
+      const ID = 'mime-db@1.52.0';
 
-      const actual = await npm.downloadDependency(id, downloadDir);
+      const downloadDir = path.resolve(cwd, 'dist');
+
+      const expected = path.resolve(downloadDir, 'mime-db-1.52.0.tgz');
+      const actual = await npm.downloadDependency(ID, downloadDir);
 
       expect(actual).toEqual(expected);
-      expect(await exists(actual)).toBe(true);
+      expect(await pathExists(actual)).toBe(true);
     });
   });
 });

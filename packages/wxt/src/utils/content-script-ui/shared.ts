@@ -12,7 +12,7 @@ import {
   isExist as mountDetector,
   isNotExist as removeDetector,
 } from '@1natsu/wait-element/detectors';
-import { logger } from '../../utils/internal/logger';
+import { logger } from '../internal/logger';
 
 export function applyPosition(
   root: HTMLElement,
@@ -33,13 +33,18 @@ export function applyPosition(
   if (positionedElement) {
     if (options.position === 'overlay') {
       positionedElement.style.position = 'absolute';
-      if (options.alignment?.startsWith('bottom-'))
-        positionedElement.style.bottom = '0';
-      else positionedElement.style.top = '0';
 
-      if (options.alignment?.endsWith('-right'))
+      if (options.alignment?.startsWith('bottom-')) {
+        positionedElement.style.bottom = '0';
+      } else {
+        positionedElement.style.top = '0';
+      }
+
+      if (options.alignment?.endsWith('-right')) {
         positionedElement.style.right = '0';
-      else positionedElement.style.left = '0';
+      } else {
+        positionedElement.style.left = '0';
+      }
     } else {
       positionedElement.style.position = 'fixed';
       positionedElement.style.top = '0';
@@ -69,6 +74,7 @@ export function getAnchor(
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null,
       );
+
       return (result.singleNodeValue as Element) ?? undefined;
     } else {
       // If the string is a CSS selector, query the document and return the element
@@ -84,6 +90,7 @@ export function mountUi(
   options: ContentScriptAnchoredOptions,
 ): void {
   const anchor = getAnchor(options);
+
   if (anchor == null)
     throw Error(
       'Failed to mount content script UI: could not find anchor element',
@@ -108,7 +115,6 @@ export function mountUi(
       break;
     default:
       options.append(anchor, root);
-      break;
   }
 }
 
@@ -116,7 +122,7 @@ export function createMountFunctions<TMounted>(
   baseFunctions: BaseMountFunctions,
   options: ContentScriptUiOptions<TMounted>,
 ): MountFunctions {
-  let autoMountInstance: AutoMount | undefined = undefined;
+  let autoMountInstance: AutoMount | undefined;
 
   const stopAutoMount = () => {
     autoMountInstance?.stopAutoMount();
@@ -171,6 +177,7 @@ function autoMountUi(
 
   let resolvedAnchor =
     typeof options.anchor === 'function' ? options.anchor() : options.anchor;
+
   if (resolvedAnchor instanceof Element) {
     throw Error(
       'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
@@ -193,10 +200,12 @@ function autoMountUi(
           signal: abortController.signal,
         });
         isAnchorExist = !!changedAnchor;
+
         if (isAnchorExist) {
           uiCallbacks.mount();
         } else {
           uiCallbacks.unmount();
+
           if (options.once) {
             uiCallbacks.stopAutoMount();
           }
@@ -213,6 +222,8 @@ function autoMountUi(
       }
     }
   }
+
+  // TODO: MISSING AWAIT
   observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };
