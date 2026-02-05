@@ -15,10 +15,10 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "@tsconfig/svelte": "^5.0.6",
+    "@tsconfig/svelte": "^5.0.7",
     "@wxt-dev/module-svelte": "^2.0.4",
-    "svelte": "^5.46.0",
-    "svelte-check": "^4.3.4",
+    "svelte": "^5.49.2",
+    "svelte-check": "^4.3.6",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
     "wxt": "^0.20.6"
