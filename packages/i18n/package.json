@@ -41,10 +41,10 @@
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
-    "oxlint": "^1.33.0",
-    "publint": "^0.3.16",
+    "oxlint": "^1.43.0",
+    "publint": "^0.3.17",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.16",
+    "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },
