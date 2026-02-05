@@ -992,7 +992,7 @@ export interface WebExtConfig {
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
-  firefoxPrefs?: Record<string, string>;
+  firefoxPref?: Record<string, boolean | number | string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
    */
