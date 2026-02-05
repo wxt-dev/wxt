@@ -173,13 +173,13 @@ importers:
         specifier: 0.1.36
         version: 0.1.36
       fs-extra:
-        specifier: ^11.3.1
+        specifier: ^11.3.2
         version: 11.3.2
       nano-spawn:
-        specifier: ^1.0.2
+        specifier: ^1.0.3
         version: 1.0.3
       typescript:
-        specifier: ^5.9.2
+        specifier: ^5.9.3
         version: 5.9.3
       vitest:
         specifier: ^4.0.16

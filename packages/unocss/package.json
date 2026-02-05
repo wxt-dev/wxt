@@ -40,8 +40,8 @@
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
-    "oxlint": "^1.33.0",
-    "publint": "^0.3.16",
+    "oxlint": "^1.43.0",
+    "publint": "^0.3.17",
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"

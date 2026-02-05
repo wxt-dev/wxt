@@ -51,8 +51,8 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "publint": "^0.3.16",
-    "solid-js": "^1.9.10",
+    "publint": "^0.3.17",
+    "solid-js": "^1.9.11",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }
