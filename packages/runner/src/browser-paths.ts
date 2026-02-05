@@ -41,7 +41,13 @@ export const KNOWN_BROWSER_PATHS: Record<
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       '/Applications/Chrome.app/Contents/MacOS/Google Chrome',
     ],
-    linux: [],
+    linux: [
+      // Debian/Ubuntu official Google Chrome package
+      // Prefer the real binary over wrapper scripts to keep extra file descriptors open.
+      '/opt/google/chrome/chrome',
+      '/usr/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+    ],
     windows: ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'],
   },
   'chrome-beta': {

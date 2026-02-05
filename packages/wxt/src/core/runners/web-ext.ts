@@ -3,6 +3,15 @@ import { ExtensionRunner } from '../../types';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { hasGuiDisplay, isWsl } from '../utils/wsl';
+import {
+  findInstalledBrowser,
+  isWindowsPath,
+  resolveChromiumBinaryForRemoteDebuggingPipe,
+  resolveProfilePath,
+  sanitizePathForWslWithGui,
+} from './browser-utils';
+import path from 'node:path';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -31,32 +40,144 @@ export function createWebExtRunner(): ExtensionRunner {
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
         if (level >= ERROR_LOG_LEVEL) wxt.logger.error(name, msg);
         if (level >= WARN_LOG_LEVEL) wxt.logger.warn(msg);
+        if (level < WARN_LOG_LEVEL) wxt.logger.debug(name, msg);
       };
 
       const wxtUserConfig = wxt.config.runnerConfig.config;
+
+      const runningInWsl = await isWsl();
+      const runningInWslWithGui = runningInWsl && hasGuiDisplay();
+      const sanitizePathForWslg = (value: string | undefined, label: string) =>
+        sanitizePathForWslWithGui(
+          value,
+          label,
+          runningInWslWithGui,
+          '[web-ext] ',
+        );
+
+      const chromiumBinaryFromConfig =
+        wxt.config.browser === 'firefox'
+          ? undefined
+          : sanitizePathForWslg(
+              wxtUserConfig?.binaries?.[wxt.config.browser],
+              `binaries.${wxt.config.browser}`,
+            );
+      const chromiumBinary = await resolveChromiumBinaryForRemoteDebuggingPipe({
+        chromiumBinary: chromiumBinaryFromConfig,
+        runningInWslWithGui,
+        loggerPrefix: '[web-ext] ',
+      });
+
+      // Check if browser is installed when running in WSL with GUI
+      if (
+        runningInWslWithGui &&
+        !chromiumBinary &&
+        wxt.config.browser !== 'firefox'
+      ) {
+        const foundBinary = await findInstalledBrowser(wxt.config.browser);
+        if (!foundBinary) {
+          throw Error(
+            `Browser "${wxt.config.browser}" not found in WSL. Please install a Linux version of the browser.`,
+          );
+        }
+      }
+
+      // Check Firefox installation
+      if (
+        runningInWslWithGui &&
+        wxt.config.browser === 'firefox' &&
+        !wxtUserConfig?.binaries?.firefox
+      ) {
+        const foundBinary = await findInstalledBrowser('firefox');
+        if (!foundBinary) {
+          throw Error(
+            `Browser "firefox" not found in WSL. Please install a Linux version of the browser.`,
+          );
+        }
+      }
+
+      const chromiumUserDataDirOverride =
+        wxt.config.browser === 'firefox'
+          ? undefined
+          : extractUserDataDirFromChromiumArgs(wxtUserConfig?.chromiumArgs);
+      const shouldCoerceUserDataDirToProfile =
+        runningInWslWithGui &&
+        wxt.config.browser !== 'firefox' &&
+        wxtUserConfig?.chromiumProfile == null &&
+        wxtUserConfig?.keepProfileChanges == null &&
+        chromiumUserDataDirOverride != null;
+
+      const coercedChromiumProfile = shouldCoerceUserDataDirToProfile
+        ? sanitizePathForWslg(
+            resolveProfilePath(wxt.config.root, chromiumUserDataDirOverride),
+            'chromiumProfile',
+          )
+        : sanitizePathForWslg(
+            wxtUserConfig?.chromiumProfile,
+            'chromiumProfile',
+          );
+
+      const coercedKeepProfileChanges =
+        wxt.config.browser === 'firefox'
+          ? wxtUserConfig?.keepProfileChanges
+          : // Match the Windows docs behavior when a profile directory is used.
+            // This prevents web-ext-run from creating a brand new temp profile on every launch.
+            (wxtUserConfig?.keepProfileChanges ??
+            (runningInWslWithGui && coercedChromiumProfile != null
+              ? true
+              : undefined));
+
+      const coercedChromiumArgs =
+        wxt.config.browser === 'firefox'
+          ? wxtUserConfig?.chromiumArgs
+          : shouldCoerceUserDataDirToProfile
+            ? removeUserDataDirFromChromiumArgs(wxtUserConfig?.chromiumArgs)
+            : wxtUserConfig?.chromiumArgs;
+
+      if (shouldCoerceUserDataDirToProfile) {
+        wxt.logger.warn(
+          `[web-ext] In WSL with GUI, converting chromiumArgs "--user-data-dir" into { chromiumProfile, keepProfileChanges: true } to avoid creating throwaway profiles on each launch.`,
+        );
+      } else if (
+        runningInWslWithGui &&
+        wxt.config.browser !== 'firefox' &&
+        wxtUserConfig?.chromiumProfile != null &&
+        wxtUserConfig?.keepProfileChanges == null
+      ) {
+        wxt.logger.warn(
+          `[web-ext] In WSL with GUI, defaulting keepProfileChanges=true because chromiumProfile is set to avoid creating throwaway profiles on each launch.`,
+        );
+      }
+
       const userConfig = {
         browserConsole: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
-        keepProfileChanges: wxtUserConfig?.keepProfileChanges,
+        keepProfileChanges: coercedKeepProfileChanges,
         chromiumPort: wxtUserConfig?.chromiumPort,
         ...(wxt.config.browser === 'firefox'
           ? {
-              firefox: wxtUserConfig?.binaries?.firefox,
-              firefoxProfile: wxtUserConfig?.firefoxProfile,
+              firefox: sanitizePathForWslg(
+                wxtUserConfig?.binaries?.firefox,
+                'binaries.firefox',
+              ),
+              firefoxProfile: sanitizePathForWslg(
+                wxtUserConfig?.firefoxProfile,
+                'firefoxProfile',
+              ),
               prefs: wxtUserConfig?.firefoxPrefs,
               args: wxtUserConfig?.firefoxArgs,
             }
           : {
-              chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
-              chromiumProfile: wxtUserConfig?.chromiumProfile,
+              chromiumBinary,
+              chromiumProfile: coercedChromiumProfile,
               chromiumPref: defu(
                 wxtUserConfig?.chromiumPref,
                 DEFAULT_CHROMIUM_PREFS,
               ),
               args: [
                 '--unsafely-disable-devtools-self-xss-warnings',
-                ...(wxtUserConfig?.chromiumArgs ?? []),
+                ...(coercedChromiumArgs ?? []),
               ],
             }),
       };
@@ -91,6 +212,51 @@ export function createWebExtRunner(): ExtensionRunner {
       return await runner?.exit();
     },
   };
+}
+
+function extractUserDataDirFromChromiumArgs(
+  chromiumArgs: string[] | undefined,
+): string | undefined {
+  if (!chromiumArgs?.length) return undefined;
+
+  for (let i = 0; i < chromiumArgs.length; i++) {
+    const arg = chromiumArgs[i];
+    if (arg == null) continue;
+
+    const prefix = '--user-data-dir=';
+    if (arg.startsWith(prefix)) return arg.slice(prefix.length);
+
+    if (arg === '--user-data-dir') {
+      const next = chromiumArgs[i + 1];
+      if (typeof next === 'string' && next.length > 0) return next;
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
+function removeUserDataDirFromChromiumArgs(
+  chromiumArgs: string[] | undefined,
+): string[] | undefined {
+  if (!chromiumArgs?.length) return chromiumArgs;
+
+  const filtered: string[] = [];
+  for (let i = 0; i < chromiumArgs.length; i++) {
+    const arg = chromiumArgs[i];
+    if (arg == null) continue;
+
+    if (arg.startsWith('--user-data-dir=')) continue;
+    if (arg === '--user-data-dir') {
+      // Skip the value token too, if present.
+      i++;
+      continue;
+    }
+
+    filtered.push(arg);
+  }
+
+  return filtered;
 }
 
 // https://github.com/mozilla/web-ext/blob/e37e60a2738478f512f1255c537133321f301771/src/util/logger.js#L12
