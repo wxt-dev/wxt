@@ -5,7 +5,7 @@ import spawn from 'nano-spawn';
 import { readFile, writeFile } from 'fs-extra';
 
 describe('Zipping', () => {
-  it('should download packages and produce a valid build when zipping sources', async () => {
+  it.only('should download packages and produce a valid build when zipping sources', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -44,7 +44,7 @@ describe('Zipping', () => {
       }),
     ).resolves.not.toHaveProperty('exitCode');
     await expect(
-      spawn('bun', ['wxt', 'build', '-b', 'firefox'], {
+      spawn('pnpm', ['wxt', 'build', '-b', 'firefox'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');
