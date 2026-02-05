@@ -113,6 +113,7 @@ const chromeExtensionIds = [
   'naeibcegmgpofimedkmfgjgphfhfhlab', // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
   'ffglckbhfbfmdkefdmjbhpnffkcmlhdh', // Redirect Web - Automatically redirect pages or open them in another app
   'eglpfhbhmelampoihamjomgkeobgdofl', // Capture It - Capture & Edit Screenshots
+  'jmghclbfbbapimhbgnpffbimphlpolnm', // Teams Chat Exporter
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
