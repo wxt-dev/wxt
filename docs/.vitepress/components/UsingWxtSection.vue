@@ -115,6 +115,7 @@ const chromeExtensionIds = [
   'eglpfhbhmelampoihamjomgkeobgdofl', // Capture It - Capture & Edit Screenshots
   'jmghclbfbbapimhbgnpffbimphlpolnm', // Teams Chat Exporter
   'jdcppdokgfbnhiacbeplahgnciahnhck', // Lofi BGM Player - Free lofi focus music for work & study
+  'cgpmbiiagnehkikhcbnhiagfomajncpa', // Margin - Annotate and highlight any webpage, with your notes saved to the decentralized AT Protocol.
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
