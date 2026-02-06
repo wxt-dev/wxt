@@ -1,9 +1,9 @@
 import {
   determineSemverChange,
-  loadChangelogConfig,
-  parseCommits,
   generateMarkDown,
+  loadChangelogConfig,
   parseChangelogMarkdown,
+  parseCommits,
 } from 'changelogen';
 import spawn from 'nano-spawn';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
@@ -12,7 +12,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx bump-package-version.ts <package-name>',
   );

@@ -62,27 +62,22 @@ async function main(): Promise<never> {
   const isMajor = ['-m', '--major'].some((arg) => args.includes(arg));
   const upgrades = await detectUpgrades(dependencies, isMajor);
 
-  if (upgrades.length === 0) {
-    console.log();
-    consola.info("No upgrades found, you're up to date!");
-    console.log();
+  if (!upgrades.length) {
+    consola.info("\nNo upgrades found, you're up to date!\n");
     process.exit(0);
   }
 
   printUpgrades(upgrades);
 
   if (!isWrite) {
-    consola.info('Run with `-w` to write changes to package.json files');
-    console.log();
+    consola.info('Run with `-w` to write changes to package.json files\n');
     process.exit(0);
   }
 
   consola.start('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
-  console.log();
-  consola.info('Run `pnpm i` to install new dependencies');
-  console.log();
+  consola.info('\nRun `pnpm i` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -285,7 +280,6 @@ async function detectUpgrades(
     }
 
     if (upgradeToRange === currentRange) continue;
-    // if (currentVersion === latestVersion) continue;
 
     results.push({
       name: dep.name,
@@ -315,8 +309,8 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
   );
   const numberPadding = String(upgrades.length + 1).length + 1;
 
-  consola.info(`Found ${upgrades.length} upgrades:`);
-  console.log();
+  consola.info(`Found ${upgrades.length} upgrades:\n`);
+
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
     const num = `\x1b[2m${(i + 1).toString().padStart(numberPadding)}.\x1b[0m`;
