@@ -9,7 +9,7 @@ import fs from 'fs-extra';
 import consola from 'consola';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx sync-releases.ts <package-name>',
   );

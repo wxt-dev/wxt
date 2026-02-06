@@ -298,7 +298,7 @@ describe('Module Helpers', () => {
 
       await expect(
         project.serializeFile('.wxt/types/imports.d.ts'),
-      ).resolves.toContain("const ref: typeof import('vue')['ref']");
+      ).resolves.toContain("const ref: typeof import('vue').ref");
     });
   });
 });

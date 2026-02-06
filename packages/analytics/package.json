@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.16",
+    "publint": "^0.3.17",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   },

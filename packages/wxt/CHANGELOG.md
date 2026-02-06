@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.20.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.13...wxt-v0.20.14)
+
+### 🚀 Enhancements
+
+- Add `onBeforeMount` callback to `createIframeUi` options ([#1899](https://github.com/wxt-dev/wxt/pull/1899))
+
+### 🩹 Fixes
+
+- Remove failing test ([6fb4cee4](https://github.com/wxt-dev/wxt/commit/6fb4cee4))
+- Rename and make firefoxPrefs in web-ext.config.ts work ([#2068](https://github.com/wxt-dev/wxt/pull/2068))
+- **content-script-context:** Handle undefined browser.runtime ([#2042](https://github.com/wxt-dev/wxt/pull/2042))
+- `MaxListenersExceededWarning` ([#2058](https://github.com/wxt-dev/wxt/pull/2058))
+
+### 📖 Documentation
+
+- Fix alignment of 2 last comments of regex patterns ([#2012](https://github.com/wxt-dev/wxt/pull/2012))
+
+### 🏡 Chore
+
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- Upgrade major deps ([#2070](https://github.com/wxt-dev/wxt/pull/2070))
+- Refresh lockfile and upgrade subdependencies ([#2071](https://github.com/wxt-dev/wxt/pull/2071))
+
+### ❤️ Contributors
+
+- Dareka ([@darekadareka](https://github.com/darekadareka))
+- Mark ([@mjfaga](https://github.com/mjfaga))
+- Ariasuni <aria@ariasuni.eu>
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))
+
 ## v0.20.13
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.12...wxt-v0.20.13)

@@ -18,18 +18,18 @@
   },
   "dependencies": {
     "@wxt-dev/i18n": "workspace:*",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
-    "sass": "^1.97.0",
+    "sass": "^1.97.3",
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
-    "vitest": "^4.0.16",
+    "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },

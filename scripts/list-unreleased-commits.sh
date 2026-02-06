@@ -34,11 +34,11 @@ for dir in "$PACKAGES_DIR"/*; do
         if [ -n "$last_tag" ]; then
             # If a tag is found, show commits since that tag for the specific package directory
             echo "Commits since last tag ($last_tag):"
-            git log "${last_tag}..HEAD" --oneline -- "$dir"
+            git log "${last_tag}..HEAD" --oneline -- "$dir" | grep -v -E "^[a-f0-9]* (chore|docs)"
         else
             # If no tag is found, show all commits for that package directory
             echo "No tags found for this package. Listing all commits:"
-            git log --oneline -- "$dir"
+            git log --oneline -- "$dir" | grep -v -E "^[a-f0-9]* (chore|docs)"
         fi
         echo ""
     fi

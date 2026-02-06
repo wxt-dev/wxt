@@ -71,7 +71,7 @@ export class ContentScriptContext implements AbortController {
   }
 
   get isInvalid(): boolean {
-    if (browser.runtime.id == null) {
+    if (browser.runtime?.id == null) {
       this.notifyInvalidated(); // Sets `signal.aborted` to true
     }
     return this.signal.aborted;
