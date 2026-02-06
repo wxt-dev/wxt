@@ -42,6 +42,8 @@ You don't need to triage bugs if someone doesn't give you enough information. Yo
 
 If there's not an easy way to reproduce a bug, you're wasting your time triaging it. Just be mindful of your own time!
 
+Here's an example of how to ask for a reproduction: https://github.com/wxt-dev/wxt/issues/2064#issuecomment-3862579110. You could be more blunt than this.
+
 ## Add yourself as a code owner
 
 If you want to be responsible for a specific package or directory, add yourself to the [`.github/CODEOWNERS`](https://github.com/wxt-dev/wxt/blob/main/.github/CODEOWNERS) file to get added as a reviewer to PRs automatically. You can also add yourself to the default list to be added as a reviewer on all PRs.
