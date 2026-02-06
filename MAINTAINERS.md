@@ -12,6 +12,10 @@ Don't merge PRs that just add another way to do something, like [this one](https
 
 WXT is opinionated, if you have questions about what is WXT's opinion or we need to create a new one, create an issue and @ me to discuss.
 
+## PRs should be small and targetted
+
+A PR should make one change. They should not make any unrelated changes outside of accomplishing the one thing. This makes PRs easier to review and they get merged more quickly - a win-win for everyone.
+
 ## `@wxt-dev/*` packages are separate
 
 We can't make changes to these packages assuming people are using them only with WXT. For example, I almost missed [this PR](https://github.com/wxt-dev/wxt/pull/2049#issuecomment-3861251599).
