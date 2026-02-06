@@ -33,7 +33,7 @@ Here are some examples of conventional commit messages:
 
 The title of your pull request should follow the [conventional commit format](#conventional-commits). When a pull request is merged to the main branch, all changes are going to be squashed into a single commit. The message of this commit will be the title of the pull request. And for every release, the commit messages are used to generate the changelog.
 
-## Breaking Changes
+## Breaking Changes Policy
 
 A quick word on WXT's breaking changes policy. I am willing to make breaking changes, but they have to be for a good enough reason - they have to make WXT better as a whole, they can't be based on one opinion.
 
@@ -215,7 +215,7 @@ Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 - **English only**: Blog posts should be written in English. Unfortunately, our maintainers don't have the bandwidth right now to translate our docs, let alone blog posts. Sorry 😓
 - **AI**: Please only use AI to translate or proof-read your blog post. Don't generate the whole thing... We don't want to publish that.
 
-## Become a Maintainer!
+## Become a Maintainer
 
 If you're interested in becoming a maintainer, send an email to Aaron at <aaronklinker1@gmail.com> with your github username saying you're interested. The process is very informal, I will add you quickly if you've contributed code or answered questions and helped out the community!
 
