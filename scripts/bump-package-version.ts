@@ -8,8 +8,7 @@ import {
 import spawn from 'nano-spawn';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 import { consola } from 'consola';
-import fs from 'fs/promises';
-import fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 import path from 'node:path';
 
 const pkg = process.argv[2];
@@ -41,7 +40,7 @@ if (currentVersion.startsWith('0.')) {
 await spawn('pnpm', ['version', bumpType], {
   cwd: pkgDir,
 });
-const updatedPkgJson = await fsExtra.readJson(pkgJsonPath);
+const updatedPkgJson = await fs.readJson(pkgJsonPath);
 const newVersion: string = updatedPkgJson.version;
 const newTag = getPkgTag(pkg, newVersion);
 consola.info('Bump:', { currentVersion, bumpType, newVersion });
