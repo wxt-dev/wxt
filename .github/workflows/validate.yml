@@ -76,6 +76,9 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
 
+      - name: Log Path Relative
+        run: node -e "console.log(require('node:path/posix').relative('docs/blog', 'packages/wxt/package.json'))"
+
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
         run: pnpm test
