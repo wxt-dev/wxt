@@ -301,7 +301,7 @@ If you've previously loaded the extension into your browser manually for develop
   });
   ```
 
-### New Deprecations
+### New Deprecations in v0.20
 
 #### `runner` APIs Renamed
 
