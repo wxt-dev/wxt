@@ -68,21 +68,25 @@ describe('Runners', () => {
   });
 
   describe('build', () => {
+    const command = 'build';
+
     it('should use the manual runner as a placeholder since the runner is not used during builds', async () => {
-      await TestProject.simple().registerWxt('build');
+      await TestProject.simple().registerWxt(command);
 
       expect(wxt.config.runner).toBe(manualRunner);
     });
   });
 
   describe('dev', () => {
+    const command = 'serve';
+
     describe('inside WSL', () => {
       beforeEach(() => {
         isWsl = true;
       });
 
       it('should use the WSL runner', async () => {
-        await TestProject.simple().registerWxt('serve');
+        await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(wslRunner);
       });
@@ -90,14 +94,14 @@ describe('Runners', () => {
 
     describe('web-ext is installed', () => {
       it('should use the web-ext runner', async () => {
-        await TestProject.simple().registerWxt('serve');
+        await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(webExtRunner);
       });
 
       describe('disabled', () => {
         it('should use the manual runner', async () => {
-          await TestProject.simple().registerWxt('serve', {
+          await TestProject.simple().registerWxt(command, {
             webExt: { disabled: true },
           });
 
@@ -112,7 +116,7 @@ describe('Runners', () => {
       });
 
       it('should use the web-ext runner', async () => {
-        await TestProject.simple().registerWxt('serve');
+        await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(manualRunner);
       });
@@ -120,7 +124,7 @@ describe('Runners', () => {
 
     describe('targeting safari', () => {
       it('should use the safari runner', async () => {
-        await TestProject.simple().registerWxt('serve', {
+        await TestProject.simple().registerWxt(command, {
           browser: 'safari',
         });
 
