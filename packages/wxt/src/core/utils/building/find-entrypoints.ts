@@ -342,6 +342,7 @@ async function getUnlistedScriptEntrypoint(
       {
         include: options.include,
         exclude: options.exclude,
+        globalName: options.globalName,
       },
       wxt.config.browser,
     ),
