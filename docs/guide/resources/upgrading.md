@@ -64,9 +64,11 @@ In v0.20, how automatic startup is enabled/disabled has changed:
   rm ~/web-ext.config.ts
   ```
 
-## New Deprecations
+## New Deprecations in v0.20
 
-- `wxt.config.runnerConfig` renamed to `wxt.config.webExt`. `runnerConfig` be removed in next major release.
+Deprecated APIs will be removed in the next major release.
+
+- `wxt.config.runnerConfig` renamed to `wxt.config.webExt`.
 
 ## v0.19.0 &rarr; v0.20.0
 
@@ -301,7 +303,7 @@ If you've previously loaded the extension into your browser manually for develop
   });
   ```
 
-### New Deprecations in v0.20
+### New Deprecations
 
 #### `runner` APIs Renamed
 
