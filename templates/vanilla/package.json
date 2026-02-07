@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
+    "web-ext": "^9.2.0",
     "wxt": "^0.20.14"
   }
 }

@@ -35,6 +35,35 @@ Listed below are all the breaking changes you should address when upgrading to a
 
 Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`, are considered major and have breaking changes. Once v1 is released, only major version bumps will have breaking changes.
 
+## v0.20.0 &rarr; vX.Y.Z
+
+### Dev Browser Startup
+
+The package used to open the browser on startup has changed. Previously, WXT used `web-ext-run` as a direct dependency, but now we use `web-ext` as a peer dependency.
+
+:::details
+
+`web-ext-run` was a light-weight fork of `web-ext`, but it was difficult to maintain and quickly got out-of-date compared to `web-ext`.
+
+:::
+
+In v0.20, how automatic startup is enabled/disabled has changed:
+
+- To continue opening the browser automatically, add `web-ext` as a dependency of your project. No changes are required in your `web-ext.config.ts` files.
+
+  ```sh
+  pnpm add -D web-ext
+  ```
+
+- To disable the browser automatically, **_DON'T_** add `web-ext` as a dependency. Additionally, you can remove any `web-ext.config.ts` files since they're not used if `web-ext` isn't installed:
+
+  ```sh
+  rm web-ext.config.ts
+
+  # Keep the config in your home dir until all your projects have been upgraded
+  rm ~/web-ext.config.ts
+  ```
+
 ## v0.19.0 &rarr; v0.20.0
 
 v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.
