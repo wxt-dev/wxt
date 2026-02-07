@@ -6,7 +6,7 @@ outline: deep
 
 During development, WXT will use any of the below packages to automatically open a browser with your extension installed.
 
-- [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) - Recommended, it has been around for years
+- [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext)
 
 Just install the dependency you want WXT to use to open the browser.
 
