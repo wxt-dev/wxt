@@ -1,4 +1,4 @@
-import { expect, describe, vi, it, beforeAll, beforeEach } from 'vitest';
+import { expect, describe, vi, it, beforeEach } from 'vitest';
 import { ExtensionRunner } from '../../src';
 import { createSafariRunner } from '../../src/core/runners/safari';
 import { createManualRunner } from '../../src/core/runners/manual';
