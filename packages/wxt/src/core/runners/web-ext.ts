@@ -4,7 +4,7 @@ import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
 import webExt from 'web-ext';
-import webExtLogger from 'web-ext/util/logger';
+import { consoleStream } from 'web-ext/util/logger';
 
 /**
  * Create an `ExtensionRunner` backed by `web-ext`.
@@ -29,7 +29,7 @@ export function createWebExtRunner(): ExtensionRunner {
       }
 
       // Use WXT's logger instead of web-ext's built-in one.
-      webExtLogger.consoleStream.write = ({ level, msg, name }) => {
+      consoleStream.write = ({ level, msg, name }) => {
         if (level >= ERROR_LOG_LEVEL) wxt.logger.error(name, msg);
         if (level >= WARN_LOG_LEVEL) wxt.logger.warn(msg);
       };

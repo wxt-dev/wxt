@@ -224,7 +224,10 @@ export async function resolveConfig(
     root,
     runnerConfig: webExt,
     webExt,
-    runner: await resolveRunner(browser, logger, mergedConfig),
+    runner:
+      command === 'serve'
+        ? await resolveRunner(browser, logger, mergedConfig)
+        : createManualRunner(),
     srcDir,
     typesDir,
     wxtDir,

@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
-
 describe('User Config', () => {
   // Root directory is tested with all tests.
 
