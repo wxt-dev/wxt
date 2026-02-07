@@ -64,6 +64,10 @@ In v0.20, how automatic startup is enabled/disabled has changed:
   rm ~/web-ext.config.ts
   ```
 
+## New Deprecations
+
+- `wxt.config.runnerConfig` renamed to `wxt.config.webExt`. `runnerConfig` be removed in next major release.
+
 ## v0.19.0 &rarr; v0.20.0
 
 v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.

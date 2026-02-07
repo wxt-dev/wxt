@@ -105,3 +105,15 @@ Now, next time you run the `dev` script, a persistent profile will be created in
 :::tip
 You can use any directory you'd like for `--user-data-dir`, the examples above create a persistent profile for each WXT project. To create a profile for all WXT projects, you can put the `chrome-data` directory inside your user's home directory.
 :::
+
+#### Disable Opening Browser
+
+If you don't want to uninstall `web-ext`, like to test in your normal profile, you can do so via `disabled: true`:
+
+```ts [web-ext.config.ts]
+import { defineWebExtConfig } from 'wxt';
+
+export default defineWebExtConfig({
+  disabled: true,
+});
+```
