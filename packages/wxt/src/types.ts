@@ -655,6 +655,7 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
+  defaultState?: PerBrowserOption<'enabled' | 'disabled'>;
   browserStyle?: PerBrowserOption<boolean>;
 }
 
