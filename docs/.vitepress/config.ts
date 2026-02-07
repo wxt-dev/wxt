@@ -26,6 +26,7 @@ import {
 import { Feed } from 'feed';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import llmstxt from 'vitepress-plugin-llms';
 
 const ORIGIN = 'https://wxt.dev';
 const TITLE = 'Next-gen Web Extension Framework';
@@ -71,6 +72,7 @@ export default defineConfig({
   vite: {
     clearScreen: false,
     plugins: [
+      llmstxt(),
       // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {

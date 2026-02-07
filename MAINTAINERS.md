@@ -12,7 +12,7 @@ Don't merge PRs that just add another way to do something, like [this one](https
 
 WXT is opinionated, if you have questions about what is WXT's opinion or we need to create a new one, create an issue and @ me to discuss.
 
-## PRs should be small and targetted
+## PRs should be small and targeted
 
 A PR should make one change. They should not make any unrelated changes outside of accomplishing the one thing. This makes PRs easier to review and they get merged more quickly - a win-win for everyone.
 
@@ -41,6 +41,8 @@ If someone opens a PR to fix a bug but doesn't include tests, don't merge the PR
 You don't need to triage bugs if someone doesn't give you enough information. You can always ask for a repo with a reproduction or wait for more details.
 
 If there's not an easy way to reproduce a bug, you're wasting your time triaging it. Just be mindful of your own time!
+
+Here's an example of how to ask for a reproduction: <https://github.com/wxt-dev/wxt/issues/2064#issuecomment-3862579110>. You could be more blunt than this.
 
 ## Add yourself as a code owner
 

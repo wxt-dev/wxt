@@ -17,7 +17,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -36,7 +36,7 @@ jobs:
           path: 'docs/tapes/init-demo.tape'
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

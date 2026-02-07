@@ -47,6 +47,7 @@
     "vitepress": "^1.6.4",
     "vitepress-knowledge": "^0.4.1",
     "vitepress-plugin-group-icons": "^1.7.1",
+    "vitepress-plugin-llms": "^1.11.0",
     "vitest-mock-extended": "^3.1.0",
     "vue": "^3.5.27",
     "wxt": "workspace:*"
