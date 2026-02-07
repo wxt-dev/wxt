@@ -49,7 +49,7 @@ The package used to open the browser on startup has changed. Previously, WXT use
 
 In v0.20, how automatic startup is enabled/disabled has changed:
 
-- To continue opening the browser automatically, add `web-ext` as a dependency of your project. No changes are required in your `web-ext.config.ts` files.
+- To continue opening the browser automatically, add `web-ext` as a dependency. No changes are required in your `web-ext.config.ts` files.
 
   ```sh
   pnpm add -D web-ext
