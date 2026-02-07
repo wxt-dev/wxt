@@ -6,7 +6,7 @@ import {
   addWxtPlugin,
   defineWxtModule,
 } from 'wxt/modules';
-import { relative, resolve } from 'node:path';
+import { relative, resolve, sep } from 'node:path';
 import type { AnalyticsConfig } from './types';
 import { normalizePath } from 'wxt/utils/paths';
 
@@ -43,7 +43,12 @@ export default defineWxtModule({
       `import { createAnalytics } from '${
         process.env.NPM
           ? clientModuleId
-          : normalizePath(relative(wxtAnalyticsFolder, clientModuleId))
+          : `@/${normalizePath(
+              relative(wxtAnalyticsFolder, clientModuleId).replaceAll(
+                `..${sep}`,
+                '',
+              ),
+            )}`
       }';`,
       `import { useAppConfig } from '#imports';`,
       ``,
