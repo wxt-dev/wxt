@@ -1,5 +1,5 @@
 import { CAC, Command } from 'cac';
-import consola, { LogLevels } from 'consola';
+import consola, { LogLevels, LogType } from 'consola';
 import { filterTruthy, toArray } from '../core/utils/arrays';
 import { printHeader } from '../core/utils/log';
 import { formatDuration } from '../core/utils/time';
@@ -19,6 +19,11 @@ export function wrapAction(
   },
 ) {
   return async (...args: any[]) => {
+    const level: LogType | undefined = args.find((arg) => arg?.level)?.level;
+    if (level && Object.keys(LogLevels).includes(level)) {
+      consola.level = LogLevels[level];
+    }
+
     // Enable consola's debug mode globally at the start of all commands when the `--debug` flag is
     // passed
     const isDebug = !!args.find((arg) => arg?.debug);
