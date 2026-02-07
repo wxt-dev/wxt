@@ -10,12 +10,6 @@ During development, WXT will use any of the below packages to automatically open
 
 Just install the dependency you want WXT to use to open the browser.
 
-## Disable Opening Browser
-
-To disable automatic startup, uninstall all these packages.
-
-`web-ext` comes installed if you created your project using WXT's starter templates.
-
 ## `web-ext` Usage
 
 > See the [API Reference](/api/reference/wxt/interfaces/WebExtConfig) for a full list of config.
