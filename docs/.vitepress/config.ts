@@ -74,8 +74,11 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
+    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(
