@@ -8,7 +8,7 @@ import {
   prepareTypedocSidebar,
 } from './utils/menus';
 import { meta, script } from './utils/head';
-// @ts-expect-error; it isn't TypeScript lib
+// @ts-expect-error It isn't TypeScript lib
 import footnote from 'markdown-it-footnote';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
@@ -71,7 +71,9 @@ export default defineConfig({
   description: DESCRIPTION,
   vite: {
     clearScreen: false,
+    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
       // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
