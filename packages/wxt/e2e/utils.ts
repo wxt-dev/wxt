@@ -7,6 +7,7 @@ import { glob } from 'tinyglobby';
 import {
   InlineConfig,
   UserConfig,
+  WxtCommand,
   build,
   createServer,
   prepare,
@@ -14,6 +15,7 @@ import {
 } from '../src';
 import { normalizePath } from '../src/core/utils';
 import { pathExists, readJson } from '../src/core/utils/fs';
+import { registerWxt } from '../src/core/wxt';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -23,6 +25,18 @@ export const WXT_PACKAGE_DIR = resolve(__dirname, '..');
 export const E2E_DIR = resolve(WXT_PACKAGE_DIR, 'e2e');
 
 export class TestProject {
+  /**
+   * Create the simplest WXT project possible: one blank popup entrypoint, no
+   * custom config.
+   */
+  static simple(): TestProject {
+    const project = new TestProject();
+
+    project.addFile('entrypoints/popup.html', '<html></html>');
+
+    return project;
+  }
+
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
@@ -82,6 +96,15 @@ export class TestProject {
     this.files.push([filename, content ?? '']);
     if (filename === 'wxt.config.ts') this.config = {};
     return this.resolvePath(filename);
+  }
+
+  /**
+   * Register the global `wxt` object for this project. After calling, you can
+   * import `wxt` like normal and inspect it.
+   */
+  async registerWxt(command: WxtCommand, config: InlineConfig = {}) {
+    await this.writeProjectToDisk();
+    await registerWxt(command, { ...config, root: this.root });
   }
 
   async prepare(config: InlineConfig = {}) {
