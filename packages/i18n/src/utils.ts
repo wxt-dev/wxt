@@ -1,7 +1,7 @@
 import { ChromeMessage } from './build';
 
 export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
-  if (message.placeholders === null) return message.message;
+  if (message.placeholders == null) return message.message;
 
   return Object.entries(message.placeholders ?? {}).reduce(
     (text, [name, value]) => {
