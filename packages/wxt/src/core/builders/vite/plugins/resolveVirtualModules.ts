@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
-import { normalizePath } from '../../../utils/paths';
+import { normalizePath } from '../../paths';
 import {
   VirtualModuleId,
   virtualModuleNames,
