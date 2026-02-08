@@ -45,10 +45,8 @@ export default defineWxtModule({
           ? clientModuleId
           : normalizePath(relative(wxtAnalyticsFolder, clientModuleId))
       }';`,
-      `import { useAppConfig } from '#imports';`,
-      ``,
-      `export const analytics = createAnalytics(useAppConfig().analytics);`,
-      ``,
+      `import { useAppConfig } from '#imports';\n`,
+      `export const analytics = createAnalytics(useAppConfig().analytics);\n`,
     ].join('\n');
     addAlias(wxt, '#analytics', wxtAnalyticsIndex);
     wxt.hook('prepare:types', async (_, entries) => {
