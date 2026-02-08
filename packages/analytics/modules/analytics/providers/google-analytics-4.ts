@@ -35,7 +35,7 @@ export const googleAnalytics4 =
         const mappedUserProperties = Object.fromEntries(
           Object.entries(userProperties).map(([name, value]) => [
             name,
-            value === null ? undefined : { value },
+            value == null ? undefined : { value },
           ]),
         );
 
