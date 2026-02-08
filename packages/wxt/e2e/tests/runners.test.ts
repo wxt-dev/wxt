@@ -9,8 +9,8 @@ import { wxt } from '../../src/core/wxt';
 
 // Globals for modifying mock behaviors
 
-var isWsl = false;
-var importWebExtRunnerError: Error | undefined = undefined;
+let isWsl = false;
+let importWebExtRunnerError: Error | undefined = undefined;
 
 // Mock runners to create constants for checking equality
 
