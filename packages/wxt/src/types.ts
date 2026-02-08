@@ -1322,7 +1322,10 @@ export interface ResolvedConfig {
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
+  /** @deprecated - Use {@link webExt} instead. */
   runnerConfig: C12ResolvedConfig<WebExtConfig>;
+  webExt: C12ResolvedConfig<WebExtConfig>;
+  runner: ExtensionRunner;
   zip: {
     name?: string;
     artifactTemplate: string;

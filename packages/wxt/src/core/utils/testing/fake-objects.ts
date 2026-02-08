@@ -270,6 +270,10 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     runnerConfig: {
       config: {},
     },
+    webExt: {
+      config: {},
+    },
+    runner: mock(),
     debug: faker.datatype.boolean(),
     srcDir: fakeDir(),
     typesDir: fakeDir(),

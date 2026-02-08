@@ -10,7 +10,7 @@ describe('Dev Mode', () => {
     );
 
     const server = await project.startServer({
-      runner: {
+      webExt: {
         disabled: true,
       },
     });
