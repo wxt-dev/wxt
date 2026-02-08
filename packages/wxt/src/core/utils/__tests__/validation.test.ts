@@ -50,7 +50,6 @@ describe('Validation Utils', () => {
     it('should return an error when include is not an array', () => {
       const entrypoint = fakeGenericEntrypoint({
         options: {
-          // TODO: TS ISN'T ENOUGH HERE TO PREVENT THIS?
           // @ts-expect-error
           include: 0,
         },
@@ -77,7 +76,6 @@ describe('Validation Utils', () => {
       const entrypoint = fakeContentScriptEntrypoint({
         options: {
           registration: 'manifest',
-          // TODO: TS ISN'T ENOUGH HERE TO PREVENT THIS?
           // @ts-expect-error
           matches: null,
         },
@@ -105,7 +103,6 @@ describe('Validation Utils', () => {
       const entrypoint = fakeContentScriptEntrypoint({
         options: {
           registration: 'runtime',
-          // TODO: TS ISN'T ENOUGH HERE TO PREVENT THIS?
           // @ts-expect-error
           matches: null,
         },
