@@ -173,10 +173,6 @@
       "types": "./dist/utils/storage.d.mts",
       "default": "./dist/utils/storage.mjs"
     },
-    "./utils/paths": {
-      "types": "./dist/core/utils/paths.d.mts",
-      "default": "./dist/core/utils/paths.mjs"
-    },
     "./browser": {
       "types": "./dist/browser.d.mts",
       "default": "./dist/browser.mjs"
