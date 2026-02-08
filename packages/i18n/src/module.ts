@@ -91,7 +91,7 @@ export default defineWxtModule<I18nOptions>({
         ({ locale }) => locale === wxt.config.manifest.default_locale,
       )!;
 
-      if (defaultLocaleFile === null) {
+      if (defaultLocaleFile == null) {
         throw Error(
           `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|jsonc|yml|yaml|toml}\``,
         );
