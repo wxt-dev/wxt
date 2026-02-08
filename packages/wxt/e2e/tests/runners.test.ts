@@ -10,7 +10,7 @@ import { wxt } from '../../src/core/wxt';
 // Globals for modifying mock behaviors
 
 var isWsl = false;
-var isWebExtAvailable = true;
+var importWebExtRunnerError: Error | undefined = undefined;
 
 // Mock runners to create constants for checking equality
 
@@ -40,8 +40,8 @@ vi.mock('../../src/core/runners/web-ext', () => {
   const runner = createMockExtensionRunner('web-ext');
   return {
     createWebExtRunner: () => {
-      if (isWebExtAvailable) return runner;
-      else throw Error('Module not found: web-ext'); // TODO: make this realistic
+      if (!importWebExtRunnerError) return runner;
+      else throw importWebExtRunnerError;
     },
   };
 });
@@ -61,10 +61,22 @@ vi.mock('is-wsl', () => ({
   },
 }));
 
+/**
+ * Imitate a real module not found error - needs the correct `code` property.
+ */
+class ModuleNotFoundError extends Error {
+  code = 'ERR_MODULE_NOT_FOUND';
+
+  constructor(mod: string) {
+    super(`Cannot find package '${mod}' imported from ...`);
+    this.name = 'ModuleNotFoundError';
+  }
+}
+
 describe('Runners', () => {
   beforeEach(() => {
     isWsl = false;
-    isWebExtAvailable = true;
+    importWebExtRunnerError = undefined;
   });
 
   describe('build', () => {
@@ -112,13 +124,25 @@ describe('Runners', () => {
 
     describe('web-ext is not installed', () => {
       beforeEach(() => {
-        isWebExtAvailable = false;
+        importWebExtRunnerError = new ModuleNotFoundError('web-ext');
       });
 
       it('should use the web-ext runner', async () => {
         await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(manualRunner);
+      });
+    });
+
+    describe('some other error when importing the web-ext runner', () => {
+      beforeEach(() => {
+        importWebExtRunnerError = Error('test');
+      });
+
+      it('should throw the error', async () => {
+        await expect(TestProject.simple().registerWxt(command)).rejects.toThrow(
+          importWebExtRunnerError,
+        );
       });
     });
 

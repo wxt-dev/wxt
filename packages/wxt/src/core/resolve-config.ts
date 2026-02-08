@@ -677,9 +677,11 @@ async function resolveRunner(
     return mergedConfig.webExt?.disabled
       ? createManualRunner()
       : createWebExtRunner();
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+
+    console.log('error', err);
     logger.debug('Error loading the web-ext runner', err);
-    // TODO: only ignore "web-ext module not found" errors
   }
 
   return createManualRunner();
