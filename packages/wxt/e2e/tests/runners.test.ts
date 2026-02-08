@@ -127,7 +127,7 @@ describe('Runners', () => {
         importWebExtRunnerError = new ModuleNotFoundError('web-ext');
       });
 
-      it('should use the web-ext runner', async () => {
+      it('should use the manual runner', async () => {
         await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(manualRunner);
