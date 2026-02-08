@@ -142,7 +142,7 @@ describe('Auto Imports', () => {
 
       await project.prepare();
 
-      expect(await project.fileExists('.wxt/types/imports.d.ts')).toBe(false);
+      expect(await project.pathExists('.wxt/types/imports.d.ts')).toBe(false);
     });
 
     it('should only include imports-module.d.ts in the the project', async () => {
@@ -280,10 +280,10 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
         false,
       );
-      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
         false,
       );
     });
