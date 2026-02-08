@@ -77,9 +77,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
         (entry) =>
           entry.name === name && entry.inputPath.endsWith('index.html'),
       );
-      if (hasIndexHtml) return false;
 
-      return true;
+      return !hasIndexHtml;
     });
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
