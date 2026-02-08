@@ -108,7 +108,6 @@ export function mountUi(
       break;
     default:
       options.append(anchor, root);
-      break;
   }
 }
 
