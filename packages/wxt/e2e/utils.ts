@@ -189,9 +189,9 @@ export class TestProject {
     return fs.exists(this.resolvePath(...path));
   }
 
-  async getOutputManifest(
+  getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(this.resolvePath(path));
+    return fs.readJson(this.resolvePath(path));
   }
 }
