@@ -37,11 +37,11 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
       if (id === RESOLVED_VIRTUAL_HTML_MODULE_ID) {
         return `import { initPlugins } from '${VIRTUAL_MODULE_ID}';
 
-        try {
-          initPlugins();
-        } catch (err) {
-          console.error("[wxt] Failed to initialize plugins", err);
-        }`;
+try {
+  initPlugins();
+} catch (err) {
+  console.error("[wxt] Failed to initialize plugins", err);
+}`;
       }
     },
     transformIndexHtml: {
