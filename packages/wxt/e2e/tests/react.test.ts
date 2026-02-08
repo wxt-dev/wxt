@@ -16,7 +16,7 @@ describe('React', () => {
     project.addFile(
       'entrypoints/demo.content.tsx',
       `import ReactDOM from 'react-dom/client';
-
+      
       export default defineContentScript({
         matches: "<all_urls>",
         main() {
