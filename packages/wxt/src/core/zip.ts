@@ -4,12 +4,12 @@ import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
 import { formatDuration } from './utils/time';
-import { printFileList } from './utils/log/printFileList';
+import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
-import { normalizePath } from './utils/paths';
+import { normalizePath } from './utils';
 import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
