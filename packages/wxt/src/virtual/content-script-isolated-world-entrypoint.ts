@@ -9,7 +9,7 @@ const result = (async () => {
     const { main, ...options } = definition;
     const ctx = new ContentScriptContext(import.meta.env.ENTRYPOINT, options);
 
-    return main(ctx);
+    return await main(ctx);
   } catch (err) {
     logger.error(
       `The content script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
