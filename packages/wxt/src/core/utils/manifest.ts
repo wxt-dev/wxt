@@ -669,7 +669,7 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
 }
 
 /**
- * Make sure all resources are in MV3 format. If not, add a wanring
+ * Make sure all resources are in MV3 format. If not, add a warning.
  */
 function validateMv3WebAccessibleResources(
   manifest: Browser.runtime.Manifest,
