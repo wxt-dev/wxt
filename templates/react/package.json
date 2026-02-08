@@ -23,6 +23,7 @@
     "@types/react-dom": "^19.2.3",
     "@wxt-dev/module-react": "^1.1.5",
     "typescript": "^5.9.3",
+    "web-ext": "^9.2.0",
     "wxt": "^0.20.17"
   }
 }

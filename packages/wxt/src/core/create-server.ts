@@ -18,7 +18,6 @@ import {
   rebuild,
   findEntrypoints,
 } from './utils/building';
-import { createExtensionRunner } from './runners';
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
@@ -56,10 +55,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     return { host, port, origin };
   };
 
-  let [runner, builderServer] = await Promise.all([
-    createExtensionRunner(),
-    wxt.builder.createServer(getServerInfo()),
-  ]);
+  let builderServer = await wxt.builder.createServer(getServerInfo());
 
   // Used to track if modules need to be re-initialized
   let wasStopped = false;
@@ -86,7 +82,6 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async start() {
       if (wasStopped) {
         await wxt.reloadConfig();
-        runner = await createExtensionRunner();
         builderServer = await wxt.builder.createServer(getServerInfo());
         await initWxtModules();
       }
@@ -119,14 +114,15 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       keyboardShortcuts.printHelp({
         canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+          !wxt.config.runnerConfig.config.disabled &&
+          !!wxt.config.runner.canOpen?.(),
       });
     },
 
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await runner.closeBrowser?.();
+      await wxt.config.runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -150,11 +146,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await runner.closeBrowser?.();
+      await wxt.config.runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
-      runner = await createExtensionRunner();
-      await runner.openBrowser();
+      await wxt.config.runner.openBrowser();
       keyboardShortcuts.start();
     },
   };
@@ -190,7 +185,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     }
 
     // Open browser after everything is ready to go.
-    await runner.openBrowser();
+    await wxt.config.runner.openBrowser();
   };
 
   builderServer.on?.('close', () => keyboardShortcuts.stop());

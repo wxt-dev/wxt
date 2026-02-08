@@ -21,6 +21,7 @@
     "svelte-check": "^4.3.6",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
+    "web-ext": "^9.2.0",
     "wxt": "^0.20.17"
   }
 }
