@@ -180,7 +180,6 @@ export function addImportPreset(
   });
 }
 
-// TODO: IT SEEMS UNUSED, IT'S AVAILABLE VIA API TO DEVS?
 /**
  * Adds an import alias to the project's TSConfig paths and bundler. Path can
  * be absolute or relative to the project's root directory.
