@@ -62,7 +62,7 @@ try {
         script.type = 'module';
         script.src = src;
 
-        if (document.head === null) {
+        if (document.head == null) {
           const newHead = document.createElement('head');
           document.documentElement.prepend(newHead);
         }
