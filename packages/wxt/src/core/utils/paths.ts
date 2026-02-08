@@ -3,7 +3,7 @@ import normalize from 'normalize-path';
 
 /**
  * Converts system paths to normalized bundler path.\
- * On windows and unix, this returns paths with `/` instead of `\`.
+ * On Windows and Unix, this returns paths with `/` instead of `\`.
  */
 export function normalizePath(path: string): string {
   return normalize(path);
