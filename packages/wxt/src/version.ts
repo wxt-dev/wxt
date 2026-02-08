@@ -1,1 +1,1 @@
-export const VERSION = '{{version}}';
+export const version = '{{version}}';
