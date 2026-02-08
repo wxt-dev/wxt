@@ -95,6 +95,7 @@ describe('I18n Types', () => {
         i18n.t('pluralSub1', ['one']);
         // @ts-expect-error
         i18n.t('pluralSub1', N, []);
+        // @ts-expect-error
         i18n.t('pluralSub1', N, ['one', 'two']);
 
         i18n.t('pluralSub2', N, ['one', 'two']);
