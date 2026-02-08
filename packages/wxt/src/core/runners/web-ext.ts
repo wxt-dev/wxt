@@ -88,7 +88,7 @@ export function createWebExtRunner(): ExtensionRunner {
     },
 
     async closeBrowser() {
-      return await runner?.exit();
+      await runner?.exit();
     },
   };
 }
