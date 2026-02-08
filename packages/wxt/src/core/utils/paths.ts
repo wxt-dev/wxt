@@ -2,8 +2,8 @@ import systemPath from 'node:path';
 import normalize from 'normalize-path';
 
 /**
- * Converts system paths to normalized bundler path.\
- * On Windows and Unix, this returns paths with `/` instead of `\`.
+ * Converts system paths to normalized bundler path.
+ * On Windows, this returns paths with `/` instead of `\`.
  */
 export function normalizePath(path: string): string {
   return normalize(path);
