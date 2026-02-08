@@ -20,6 +20,9 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  },
   "scripts": {
     "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
