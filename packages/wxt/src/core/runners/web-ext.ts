@@ -44,7 +44,7 @@ export function createWebExtRunner(): ExtensionRunner {
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
               firefoxProfile: wxtUserConfig?.firefoxProfile,
-              prefs: wxtUserConfig?.firefoxPrefs,
+              pref: wxtUserConfig?.firefoxPref,
               args: wxtUserConfig?.firefoxArgs,
             }
           : {
@@ -88,7 +88,7 @@ export function createWebExtRunner(): ExtensionRunner {
     },
 
     async closeBrowser() {
-      return await runner?.exit();
+      await runner?.exit();
     },
   };
 }

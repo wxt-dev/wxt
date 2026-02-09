@@ -19,8 +19,8 @@ export function wrapAction(
   },
 ) {
   return async (...args: any[]) => {
-    // Enable consola's debug mode globally at the start of all commands when the `--debug` flag is
-    // passed
+    // Enable consola's debug mode globally at the start of all commands when
+    // the `--debug` flag is passed
     const isDebug = !!args.find((arg) => arg?.debug);
     if (isDebug) {
       consola.level = LogLevels.debug;
@@ -40,9 +40,7 @@ export function wrapAction(
       consola.fail(
         `Command failed after ${formatDuration(Date.now() - startTime)}`,
       );
-      if (err instanceof ValidationError) {
-        // Don't log these errors, they've already been logged
-      } else {
+      if (!(err instanceof ValidationError)) {
         consola.error(err);
       }
       process.exit(1);

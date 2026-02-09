@@ -470,6 +470,19 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
     />
     <meta name="manifest.type" content="page_action|browser_action" />
     <meta name="manifest.browser_style" content="true|false" />
+    <!-- Firefox only: where to place the action button -->
+    <meta
+      name="manifest.default_area"
+      content="navbar|menupanel|tabstrip|personaltoolbar"
+    />
+    <!-- Firefox only: icons for light/dark themes -->
+    <meta
+      name="manifest.theme_icons"
+      content="[
+        { light: '/icon-light-16.png', dark: '/icon-dark-16.png', size: 16 },
+        { light: '/icon-light-32.png', dark: '/icon-dark-32.png', size: 32 }
+      ]"
+    />
 
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />

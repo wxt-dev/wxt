@@ -13,6 +13,22 @@ import { browser } from '@wxt-dev/browser';
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
+const INTERACTIVE_TAGS = new Set([
+  'A',
+  'BUTTON',
+  'INPUT',
+  'SELECT',
+  'TEXTAREA',
+]);
+const INTERACTIVE_ROLES = new Set([
+  'button',
+  'link',
+  'checkbox',
+  'menuitem',
+  'tab',
+  'radio',
+]);
+
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
     throw Error(
@@ -62,8 +78,8 @@ function createBackgroundAnalytics(
 
   const getBackgroundMeta = () => ({
     timestamp: Date.now(),
-    // Don't track sessions for the background, it can be running
-    // indefinitely, and will inflate session duration stats.
+    // Don't track sessions for the background, it can be running indefinitely
+    // and will inflate session duration stats.
     sessionId: undefined,
     language: navigator.language,
     referrer: undefined,
@@ -75,7 +91,7 @@ function createBackgroundAnalytics(
   const getBaseEvent = async (
     meta: AnalyticsEventMetadata,
   ): Promise<BaseAnalyticsEvent> => {
-    const platform = await platformInfo;
+    const { arch, os } = await platformInfo;
     return {
       meta,
       user: {
@@ -84,8 +100,8 @@ function createBackgroundAnalytics(
           version: config?.version ?? manifest.version_name ?? manifest.version,
           wxtMode: import.meta.env.MODE,
           wxtBrowser: import.meta.env.BROWSER,
-          arch: platform.arch,
-          os: platform.os,
+          arch,
+          os,
           browser: userAgent.browser.name,
           browserVersion: userAgent.browser.version,
           ...(await userProperties),
@@ -258,22 +274,6 @@ function defineStorageItem<T>(
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
-
-const INTERACTIVE_TAGS = new Set([
-  'A',
-  'BUTTON',
-  'INPUT',
-  'SELECT',
-  'TEXTAREA',
-]);
-const INTERACTIVE_ROLES = new Set([
-  'button',
-  'link',
-  'checkbox',
-  'menuitem',
-  'tab',
-  'radio',
-]);
 
 export function defineAnalyticsProvider<T = never>(
   definition: (
