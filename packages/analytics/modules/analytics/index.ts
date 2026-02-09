@@ -8,6 +8,7 @@ import {
 } from 'wxt/modules';
 import { relative, resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
+import { normalizePath } from 'wxt';
 
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
@@ -42,7 +43,7 @@ export default defineWxtModule({
       `import { createAnalytics } from '${
         process.env.NPM
           ? clientModuleId
-          : relative(wxtAnalyticsFolder, clientModuleId)
+          : normalizePath(relative(wxtAnalyticsFolder, clientModuleId))
       }';`,
       `import { useAppConfig } from '#imports';`,
       ``,
