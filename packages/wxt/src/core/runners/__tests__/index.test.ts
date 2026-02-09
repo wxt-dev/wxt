@@ -38,7 +38,7 @@ describe('createExtensionRunner', () => {
   });
 
   it('should return a WSL runner when `is-wsl` is true', async () => {
-    isWslMock.mockResolvedValueOnce(true);
+    isWslMock.mockReturnValue(true);
     setFakeWxt({
       config: {
         browser: 'chrome',
@@ -51,7 +51,7 @@ describe('createExtensionRunner', () => {
   });
 
   it('should return a manual runner when `runner.disabled` is true', async () => {
-    isWslMock.mockResolvedValueOnce(false);
+    isWslMock.mockReturnValue(false);
     setFakeWxt({
       config: {
         browser: 'chrome',
