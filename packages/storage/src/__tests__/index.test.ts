@@ -789,7 +789,7 @@ describe('Storage Utils', () => {
         const actualMeta = await item.getMeta();
 
         expect(actualValue).toEqual(0);
-        expect(actualMeta).toEqual({ v: 3 });
+        expect(actualMeta).toEqual({});
 
         expect(migrateToV2).not.toBeCalled();
         expect(migrateToV3).not.toBeCalled();
