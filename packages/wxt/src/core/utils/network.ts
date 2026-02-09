@@ -2,7 +2,7 @@ import dns from 'node:dns';
 import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
 
-function isOffline(): Promise<boolean> {
+async function isOffline(): Promise<boolean> {
   const isOffline = new Promise<boolean>((res) => {
     dns.resolve('google.com', (err) => res(err != null));
   });
