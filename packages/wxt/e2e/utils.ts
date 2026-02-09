@@ -10,7 +10,7 @@ import {
   prepare,
   zip,
 } from '../src';
-import { normalizePath } from '../src/core/utils/paths';
+import { normalizePath } from '../src/core/utils';
 import merge from 'lodash.merge';
 
 // Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the

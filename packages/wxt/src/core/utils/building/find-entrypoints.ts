@@ -21,9 +21,9 @@ import {
   isHtmlEntrypoint,
   isJsEntrypoint,
   resolvePerBrowserOptions,
-} from '../../utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
+} from '../entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
+import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';

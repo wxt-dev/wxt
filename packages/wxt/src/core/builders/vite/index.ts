@@ -27,7 +27,7 @@ import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
 import { dirname, extname, join, relative } from 'node:path';
 import fs from 'fs-extra';
-import { normalizePath } from '../../utils/paths';
+import { normalizePath } from '../../utils';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,

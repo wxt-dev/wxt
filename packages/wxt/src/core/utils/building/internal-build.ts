@@ -3,10 +3,10 @@ import { BuildOutput, Entrypoint } from '../../../types';
 import pc from 'picocolors';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
-import { formatDuration } from '../../utils/time';
-import { printBuildSummary } from '../../utils/log';
+import { formatDuration } from '../time';
+import { printBuildSummary } from '../log';
 import glob from 'fast-glob';
-import { unnormalizePath } from '../../utils/paths';
+import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
 import {
