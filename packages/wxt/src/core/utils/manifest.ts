@@ -281,6 +281,12 @@ function addEntrypoints(
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
+    if (popup.options.defaultArea)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.default_area = popup.options.defaultArea;
+    if (popup.options.themeIcons)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.theme_icons = popup.options.themeIcons;
     if (manifest.manifest_version === 3) {
       manifest.action = {
         ...manifest.action,

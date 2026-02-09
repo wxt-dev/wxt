@@ -3,7 +3,7 @@ import { defineWxtModule } from 'wxt/modules';
 import { resolve, relative } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
-import { ensureDir, exists } from 'fs-extra';
+import { ensureDir, pathExists } from 'fs-extra';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -37,7 +37,7 @@ export default defineWxtModule<AutoIconsOptions>({
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await exists(resolvedPath))) {
+    if (!(await pathExists(resolvedPath))) {
       return wxt.logger.warn(
         `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );

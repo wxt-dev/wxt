@@ -114,7 +114,7 @@ async function findBrowserBinary(target: string): Promise<string | undefined> {
   for (const target of targets) {
     const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[platform] ?? [];
     for (const path of potentialPaths) {
-      if (await exists(path)) return path;
+      if (await pathExists(path)) return path;
     }
   }
 }
@@ -207,7 +207,7 @@ function deduplicateArgs(
   return args;
 }
 
-async function exists(path: string): Promise<boolean> {
+async function pathExists(path: string): Promise<boolean> {
   try {
     await open(path, 'r');
     return true;

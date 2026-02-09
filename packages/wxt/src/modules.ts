@@ -10,7 +10,7 @@ import type {
   WxtModuleOptions,
   WxtModuleSetup,
 } from './types';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
 import type { UnimportOptions } from 'unimport';
@@ -109,7 +109,10 @@ export function addViteConfig(
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
-      const fromUser = await userVite(env);
+      const [vite, fromUser] = await Promise.all([
+        import('vite'),
+        userVite(env),
+      ]);
       const fromModule = viteConfig(env) ?? {};
       return vite.mergeConfig(fromModule, fromUser);
     };

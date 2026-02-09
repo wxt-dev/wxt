@@ -66,7 +66,7 @@ Each module's setup function is executed after the `wxt.config.ts` file is loade
 
 Refer to the [API reference](/api/reference/wxt/interfaces/Wxt) for a complete list of properties and functions available.
 
-Also to make sure and read about all the [hooks that are available](https://wxt.dev/api/reference/wxt/interfaces/WxtHooks) - they are essential to writing modules.
+Also make sure to read about [all the hooks that are available](/api/reference/wxt/interfaces/WxtHooks) - they are essential to writing modules.
 
 ### Recipes
 
