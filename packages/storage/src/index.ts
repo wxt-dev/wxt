@@ -711,7 +711,7 @@ export interface WxtStorage {
   /**
    * Get the metadata of multiple storage items.
    *
-   * @param items List of keys or items to get the metadata of.
+   * @param keys List of keys or items to get the metadata of.
    * @returns An array containing storage keys and their metadata.
    */
   getMetas(
@@ -758,7 +758,7 @@ export interface WxtStorage {
   /**
    * Set the metadata of multiple storage items.
    *
-   * @param items List of storage keys or items and metadata to set for each.
+   * @param metas List of storage keys or items and metadata to set for each.
    */
   setMetas(
     metas: Array<
