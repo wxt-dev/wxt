@@ -706,33 +706,45 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
-      it('should not run migrations if initialized on a version greater than 1', async () => {
-        const migrateToV2 = vi.fn((oldValue) => oldValue * 2);
+      it('should set the version without running migrations for empty storage items', async () => {
+        const migrate = vi.fn((n: number) => n * 2);
 
-        const item = storage.defineItem<number, { v: number }>(`local:count`, {
-          defaultValue: 0,
+        const item = storage.defineItem<number>('local:key', {
+          init: () => 1,
           version: 2,
           migrations: {
-            2: migrateToV2,
+            2: migrate,
           },
         });
-        // runs getOrInitValue, sets meta
-        await item.migrate();
-        await waitForMigrations();
+        const value = await item.getValue();
+        const meta = await item.getMeta();
 
-        await item.setValue(1);
+        expect(value).toEqual(1);
+        expect(meta).toEqual({ v: 2 });
+        expect(migrate).toBeCalledTimes(0);
+      });
 
-        // should do nothing
-        await item.migrate();
-        await waitForMigrations();
+      it('should set the version and run migrations if a storage value already exists and v2 is added', async () => {
+        const key = 'local:key';
 
-        const actualValue = await item.getValue();
-        const actualMeta = await item.getMeta();
+        // Mimic as if an initial value was set by a previous version. We expect
+        // this value to be migrated and doubled to V2.
+        await storage.setItem(key, 1);
 
-        expect(actualValue).toEqual(1);
-        expect(actualMeta).toEqual({ v: 2 });
+        const migrate = vi.fn((n: number) => n * 2);
+        const item = storage.defineItem<number>(key, {
+          init: () => 1,
+          version: 2,
+          migrations: {
+            2: migrate,
+          },
+        });
+        const value = await item.getValue();
+        const meta = await item.getMeta();
 
-        expect(migrateToV2).not.toBeCalled();
+        expect(value).toEqual(2);
+        expect(meta).toEqual({ v: 2 });
+        expect(migrate).toBeCalledTimes(1);
       });
 
       it('should call onMigrationComplete callback function if defined', async () => {
