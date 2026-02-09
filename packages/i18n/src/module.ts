@@ -74,7 +74,7 @@ export default defineWxtModule<I18nOptions>({
     > => {
       const files = await getLocalizationFiles();
 
-      return Promise.all(
+      return await Promise.all(
         files.map(async ({ file, locale }) => {
           const messages = await parseMessagesFile(file);
           return {
