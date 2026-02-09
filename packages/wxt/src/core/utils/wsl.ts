@@ -1,7 +1,9 @@
+// TODO: Someone smarter than me should just mock this module instead.
+import isWsl_ from 'is-wsl';
+
 /**
  * Returns true when running on WSL or WSL2.
  */
-export async function isWsl(): Promise<boolean> {
-  const { default: isWsl } = await import('is-wsl'); // ESM only, requires dynamic import
-  return isWsl;
+export function isWsl(): boolean {
+  return isWsl_;
 }
