@@ -146,6 +146,10 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
       'page_action',
       undefined,
     ]),
+    // Firefox-specific options - kept undefined by default to avoid breaking existing tests
+    browserStyle: undefined,
+    defaultArea: undefined,
+    themeIcons: undefined,
   },
   skipped: faker.datatype.boolean(),
 }));

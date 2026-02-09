@@ -453,7 +453,7 @@ async function moveHtmlFiles(
   );
 
   // TODO: Optimize and only delete old path directories
-  removeEmptyDirs(config.outDir);
+  await removeEmptyDirs(config.outDir);
 
   return movedChunks;
 }

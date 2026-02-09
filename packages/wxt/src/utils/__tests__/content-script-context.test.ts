@@ -24,7 +24,7 @@ describe('Content Script Context', () => {
     const onInvalidated = vi.fn();
 
     ctx.onInvalidated(onInvalidated);
-    // @ts-ignore
+    // @ts-expect-error Deleting `runtime.id` to simulate disconnection
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 

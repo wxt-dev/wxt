@@ -213,7 +213,7 @@ function autoMountUi(
       }
     }
   }
-  observeElement(resolvedAnchor);
+  void observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };
 }
