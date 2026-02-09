@@ -465,13 +465,13 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
-  let permissonUrl = wxt.server?.origin;
-  if (permissonUrl) {
-    const permissionUrlInstance = new URL(permissonUrl);
+  let permissionUrl = wxt.server?.origin;
+  if (permissionUrl) {
+    const permissionUrlInstance = new URL(permissionUrl);
     permissionUrlInstance.port = '';
-    permissonUrl = permissionUrlInstance.toString();
+    permissionUrl = permissionUrlInstance.toString();
   }
-  const permission = `${permissonUrl}*`;
+  const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
@@ -675,7 +675,7 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
 }
 
 /**
- * Make sure all resources are in MV3 format. If not, add a wanring
+ * Make sure all resources are in MV3 format. If not, add a warning.
  */
 function validateMv3WebAccessibleResources(
   manifest: Browser.runtime.Manifest,

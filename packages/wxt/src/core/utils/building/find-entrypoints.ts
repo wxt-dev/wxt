@@ -266,7 +266,7 @@ async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
-  const stictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
+  const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
       browserStyle: options.browserStyle,
       exclude: options.exclude,
@@ -278,8 +278,8 @@ async function getPopupEntrypoint(
     },
     wxt.config.browser,
   );
-  if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
-    stictOptions.mv2Key = 'browser_action';
+  if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
+    strictOptions.mv2Key = 'browser_action';
 
   // themeIcons is an array of objects, not a per-browser option
   const themeIcons = options.themeIcons;
@@ -287,7 +287,7 @@ async function getPopupEntrypoint(
   return {
     type: 'popup',
     name: 'popup',
-    options: { ...stictOptions, themeIcons },
+    options: { ...strictOptions, themeIcons },
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };

@@ -137,8 +137,8 @@ function printValidationResults({
     console.log();
     errors.forEach((err) => {
       const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
-      const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
-      wxt.logger.log(`  - ${type} ${err.message} ${recieved}`);
+      const received = pc.dim(`(received: ${JSON.stringify(err.value)})`);
+      wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();
   });
