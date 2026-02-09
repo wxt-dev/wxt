@@ -276,16 +276,20 @@ async function getPopupEntrypoint(
       defaultIcon: options.defaultIcon,
       defaultTitle: options.title,
       mv2Key: options.type,
+      defaultArea: options.defaultArea,
     },
     wxt.config.browser,
   );
   if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
     stictOptions.mv2Key = 'browser_action';
 
+  // themeIcons is an array of objects, not a per-browser option
+  const themeIcons = options.themeIcons;
+
   return {
     type: 'popup',
     name: 'popup',
-    options: stictOptions,
+    options: { ...stictOptions, themeIcons },
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
