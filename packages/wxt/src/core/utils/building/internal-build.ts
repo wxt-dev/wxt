@@ -133,8 +133,8 @@ function printValidationResults({
   }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
-    wxt.logger.log(relative(cwd, entrypoint.inputPath));
-    console.log();
+    wxt.logger.log(relative(cwd, entrypoint.inputPath) + '\n');
+
     errors.forEach((err) => {
       const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
       const received = pc.dim(`(received: ${JSON.stringify(err.value)})`);

@@ -207,10 +207,6 @@ interface ExtensionReload extends RebuildChange {
   type: 'extension-reload';
 }
 
-// interface BrowserRestart extends RebuildChange {
-//   type: 'browser-restart';
-// }
-
 interface ContentScriptReload extends RebuildChange {
   type: 'content-script-reload';
   changedSteps: BuildStepOutput[];

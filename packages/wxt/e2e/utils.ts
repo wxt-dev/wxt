@@ -139,14 +139,6 @@ export class TestProject {
   }
 
   /**
-   * Read all the files from the test project's `.wxt` directory and combine them into a string
-   * that can be used in a snapshot.
-   */
-  serializeWxtDir(): Promise<string> {
-    return this.serializeDir(resolve(this.root, '.wxt/types'));
-  }
-
-  /**
    * Deeply print the filename and contents of all files in a directory.
    *
    * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
