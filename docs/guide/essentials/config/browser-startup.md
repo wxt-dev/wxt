@@ -32,6 +32,8 @@ You can configure browser startup in 3 places:
 To set or customize the browser opened during development:
 
 ```ts [web-ext.config.ts]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   binaries: {
     chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
@@ -61,11 +63,13 @@ By default, to keep from modifying your browser's existing profiles, `web-ext` c
 
 Right now, Chromium based browsers are the only browsers that support overriding this behavior and persisting data when running the `dev` script multiple times.
 
-To persist data, set the `--user-data-dir` flag:
+To persist data, set the `--user-data-dir` flag in any of the config files mentioned above:
 
 :::code-group
 
 ```ts [Mac/Linux]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
 });
@@ -73,6 +77,7 @@ export default defineWebExtConfig({
 
 ```ts [Windows]
 import { resolve } from 'node:path';
+import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({
   // On Windows, the path must be absolute
@@ -94,6 +99,8 @@ You can use any directory you'd like for `--user-data-dir`, the examples above c
 If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
 
 ```ts [web-ext.config.ts]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   disabled: true,
 });
