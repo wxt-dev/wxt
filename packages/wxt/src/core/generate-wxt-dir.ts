@@ -166,7 +166,8 @@ declare module "wxt/browser" {
   };
 
   const overrides = [
-    // Generate individual overloads for each message so JSDoc contains description and base translation.
+    // Generate individual overloads for each message so JSDoc contains
+    // description and base translation.
     ...messages.map((message) =>
       renderGetMessageOverload(
         `"${message.name}"`,
@@ -174,7 +175,8 @@ declare module "wxt/browser" {
         message.message,
       ),
     ),
-    // Include a final union-based override so TS accepts valid string templates or concatenations
+    // Include a final union-based override so TS accepts valid string
+    // templates or concatenations.
     // ie: browser.i18n.getMessage(`some_enum_${enumValue}`)
     renderGetMessageOverload(
       messages.map((message) => `"${message.name}"`).join(' | '),
