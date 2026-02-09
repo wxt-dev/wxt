@@ -1428,7 +1428,9 @@ export interface FsCache {
 
 export interface ExtensionRunner {
   openBrowser(): Promise<void>;
-  closeBrowser(): Promise<void>;
+
+  closeBrowser?(): Promise<void>;
+
   /** Whether or not this runner actually opens the browser. */
   canOpen?(): boolean;
 }
