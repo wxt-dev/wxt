@@ -14,7 +14,6 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   OutputChunk,
-  OutputFile,
   OutputAsset,
   BuildOutput,
   BuildStepOutput,
