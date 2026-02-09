@@ -21,7 +21,7 @@ import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from './utils/types';
 import fs from 'fs-extra';
-import { normalizePath } from './utils/paths';
+import { normalizePath } from './utils';
 import glob from 'fast-glob';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';

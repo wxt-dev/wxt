@@ -12,7 +12,7 @@ import {
   isExist as mountDetector,
   isNotExist as removeDetector,
 } from '@1natsu/wait-element/detectors';
-import { logger } from '../../utils/internal/logger';
+import { logger } from '../internal/logger';
 
 export function applyPosition(
   root: HTMLElement,

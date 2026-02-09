@@ -1,6 +1,6 @@
 import { ResolvedConfig } from '../../../../types';
 import type * as vite from 'vite';
-import { normalizePath } from '../../../utils/paths';
+import { normalizePath } from '../../../utils';
 import { removeMainFunctionCode } from '../../../utils/transform';
 import { resolve } from 'node:path';
 

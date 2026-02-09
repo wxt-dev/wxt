@@ -24,7 +24,7 @@ import {
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
-import { setWxtForTesting } from '../../../core/wxt';
+import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
 faker.seed(import.meta.test.SEED);

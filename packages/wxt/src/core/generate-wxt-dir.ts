@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import { dirname, relative, resolve } from 'node:path';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import { getEntrypointGlobals, getGlobals } from './utils/globals';
-import { normalizePath } from './utils/paths';
+import { normalizePath } from './utils';
 import path from 'node:path';
 import { Message, parseI18nMessages } from './utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
