@@ -184,8 +184,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   await Promise.all([
     // HTML
     ...htmlInfos.map(async (info) => {
-      const res = await importHtmlEntrypoint(info);
-      resMap[info.inputPath] = res;
+      resMap[info.inputPath] = await importHtmlEntrypoint(info);
     }),
     // JS
     (async () => {
