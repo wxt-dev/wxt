@@ -1,6 +1,6 @@
 import { parseHTML } from 'linkedom';
 import type * as vite from 'vite';
-import { normalizePath } from '../../paths';
+import { normalizePath } from '../../../utils';
 import { ResolvedConfig } from '../../../../types';
 
 /**

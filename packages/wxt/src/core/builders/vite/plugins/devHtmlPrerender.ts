@@ -3,7 +3,7 @@ import { ResolvedConfig, WxtDevServer } from '../../../../types';
 import { getEntrypointName } from '../../../utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
-import { normalizePath } from '../../paths';
+import { normalizePath } from '../../../utils';
 import { hash } from 'ohash';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
