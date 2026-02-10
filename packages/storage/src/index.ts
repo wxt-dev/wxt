@@ -491,6 +491,9 @@ function createStorage(): WxtStorage {
 
           const newValue = await opts.init();
           await driver.setItem<any>(driverKey, newValue);
+          if (value == null && targetVersion > 1) {
+            await setMeta(driver, driverKey, { v: targetVersion });
+          }
           return newValue;
         });
 
