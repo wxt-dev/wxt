@@ -1,8 +1,8 @@
-import glob from 'fast-glob';
-import * as semver from 'semver';
-import { dirname } from 'node:path';
 import consola from 'consola';
+import glob from 'fast-glob';
+import { dirname } from 'node:path';
 import pMap from 'p-map';
+import * as semver from 'semver';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
@@ -367,7 +367,8 @@ async function writeUpgrades(
   upgrades: UpgradeDetails[],
 ) {
   for (const packageJsonFile of packageJsonFiles) {
-    const oldText = await Bun.file(packageJsonFile).text();
+    const file = Bun.file(packageJsonFile);
+    const oldText = await file.text();
     let newText = oldText;
     for (const upgrade of upgrades) {
       const search = `"${upgrade.name}": "${upgrade.currentRange}"`;
@@ -375,7 +376,7 @@ async function writeUpgrades(
       newText = newText.replaceAll(search, replace);
     }
     if (newText !== oldText) {
-      await Bun.write(packageJsonFile, newText);
+      await file.write(newText);
     }
   }
 }
