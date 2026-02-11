@@ -53,7 +53,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.6",
     "publint": "^0.3.17",
-    "tsdown": "^0.18.1",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

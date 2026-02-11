@@ -45,7 +45,7 @@
     "@aklinker1/buildc": "^1.1.6",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
-    "tsdown": "^0.18.1",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"

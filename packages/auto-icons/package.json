@@ -56,7 +56,7 @@
     "@types/fs-extra": "^11.0.4",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
-    "tsdown": "^0.18.1",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

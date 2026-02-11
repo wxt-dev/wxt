@@ -83,9 +83,9 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^20.5.0",
     "lodash.merge": "^4.6.2",
-    "oxlint": "^1.33.0",
-    "publint": "^0.3.16",
-    "tsdown": "^0.18.1",
+    "oxlint": "^1.43.0",
+    "publint": "^0.3.17",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2"
