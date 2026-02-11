@@ -1,10 +1,10 @@
-import prompts from 'prompts';
 import { consola } from 'consola';
+import fs, { readdir } from 'fs-extra';
 import { downloadTemplate } from 'giget';
-import fs from 'fs-extra';
 import path from 'node:path';
 import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
+import prompts from 'prompts';
 
 export async function initialize(options: {
   directory: string;
@@ -169,6 +169,8 @@ async function cloneProject({
       dir: directory,
       force: true,
     });
+
+    console.log('FILES', await readdir(directory));
 
     // 2. Move _gitignore -> .gitignore
     await fs
