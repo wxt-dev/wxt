@@ -1,5 +1,5 @@
 import { consola } from 'consola';
-import fs, { readdir } from 'fs-extra';
+import fs from 'fs-extra';
 import { downloadTemplate } from 'giget';
 import path from 'node:path';
 import pc from 'picocolors';
@@ -170,7 +170,7 @@ async function cloneProject({
       force: true,
     });
 
-    console.log('FILES', await readdir(directory));
+    console.log('FILES', await fs.readdir(directory));
 
     // 2. Move _gitignore -> .gitignore
     await fs
