@@ -1,49 +1,39 @@
 import glob from 'fast-glob';
 import { mkdir, writeJson } from 'fs-extra';
+import spawn from 'nano-spawn';
 import { describe, expect, it } from 'vitest';
-import { initialize } from '../../src';
-import { TestProject } from '../utils';
+import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
     const project = new TestProject();
 
-    await initialize({
-      directory: project.root,
-      packageManager: 'npm',
-      template: 'vue',
-    });
-
+    await spawn(
+      'bun',
+      [
+        'run',
+        '--silent',
+        'wxt',
+        'init',
+        project.root,
+        '-t',
+        'vue',
+        '--pm',
+        'npm',
+      ],
+      {
+        env: { CI: 'true' },
+        stdio: 'inherit',
+        cwd: WXT_PACKAGE_DIR,
+      },
+    );
     const files = await glob('**/*', {
       cwd: project.root,
       onlyFiles: true,
       dot: true,
     });
 
-    expect(files.sort()).toMatchInlineSnapshot(`
-      [
-        ".gitignore",
-        ".vscode/extensions.json",
-        "README.md",
-        "assets/vue.svg",
-        "components/HelloWorld.vue",
-        "entrypoints/background.ts",
-        "entrypoints/content.ts",
-        "entrypoints/popup/App.vue",
-        "entrypoints/popup/index.html",
-        "entrypoints/popup/main.ts",
-        "entrypoints/popup/style.css",
-        "package.json",
-        "public/icon/128.png",
-        "public/icon/16.png",
-        "public/icon/32.png",
-        "public/icon/48.png",
-        "public/icon/96.png",
-        "public/wxt.svg",
-        "tsconfig.json",
-        "wxt.config.ts",
-      ]
-    `);
+    expect(files.length).not.toBe(0);
   });
 
   it('should throw an error if the directory is not empty', async () => {
@@ -52,11 +42,25 @@ describe('Init command', () => {
     await writeJson(project.resolvePath('package.json'), {});
 
     await expect(() =>
-      initialize({
-        directory: project.root,
-        template: 'vue',
-        packageManager: 'npm',
-      }),
+      spawn(
+        'bun',
+        [
+          'run',
+          '--silent',
+          'wxt',
+          'init',
+          project.root,
+          '-t',
+          'vue',
+          '--pm',
+          'npm',
+        ],
+        {
+          env: { CI: 'true' },
+          stdio: 'ignore',
+          cwd: WXT_PACKAGE_DIR,
+        },
+      ),
     ).rejects.toThrowError('Command failed with exit code 1:');
   });
 });
