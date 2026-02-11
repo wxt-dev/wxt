@@ -1,5 +1,8 @@
 import glob from 'fast-glob';
+import fs from 'fs-extra';
+import merge from 'lodash.merge';
 import spawn, { Result as SpawnResult } from 'nano-spawn';
+import { dirname, relative, resolve } from 'node:path';
 import {
   InlineConfig,
   UserConfig,
@@ -44,12 +47,6 @@ export class TestProject {
             name: 'E2E Extension',
             description: 'Example description',
             version: '0.0.0',
-            dependencies: this.needsIsolation
-              ? {
-                  // This is built and moved here inside `vitest.globalSetup.ts`
-                  wxt: '../wxt.tgz',
-                }
-              : undefined,
           },
           packageJson,
         ),
@@ -135,9 +132,7 @@ export class TestProject {
       });
     }
 
-    await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
-      () => {},
-    );
+    await fs.ensureDir(resolve(this.root, 'public'));
   }
 
   /**
@@ -204,7 +199,7 @@ export class TestProject {
    * Run a command using the project's package manager.
    */
   async run(...args: string[]): Promise<SpawnResult> {
-    return await spawn(this.needsIsolation ? 'pnpm' : 'bun', args, {
+    return await spawn('bun', args, {
       cwd: this.root,
     });
   }

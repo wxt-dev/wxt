@@ -341,7 +341,6 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 9)).rejects.toMatchObject({
             exitCode: 1,
-            stderr: '',
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
             ),

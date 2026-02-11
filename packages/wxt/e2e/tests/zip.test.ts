@@ -1,8 +1,8 @@
+import extract from 'extract-zip';
+import { readFile, writeFile } from 'fs-extra';
+import spawn from 'nano-spawn';
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import extract from 'extract-zip';
-import spawn from 'nano-spawn';
-import { readFile, writeFile } from 'fs-extra';
 
 describe('Zipping', () => {
   it.only('should download packages and produce a valid build when zipping sources', async () => {
@@ -62,8 +62,8 @@ describe('Zipping', () => {
         "description": "Example description",
         "version": "1.0.0",
         "dependencies": {
-          "wxt": "../../../../..",
-          "flatten": "1.0.3"
+          "flatten": "1.0.3",
+          "wxt": "../../../../.."
         },
         "resolutions": {
           "flatten@1.0.3": "file://./.wxt/local_modules/flatten-1.0.3.tgz"
