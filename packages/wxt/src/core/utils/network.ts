@@ -3,10 +3,15 @@ import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
 
 async function isOffline(): Promise<boolean> {
-  const isOffline = new Promise<boolean>((res) => {
-    dns.resolve('google.com', (err) => res(err != null));
-  });
-  return withTimeout(isOffline, 1e3).catch(() => true);
+  try {
+    const isOffline = new Promise<boolean>((res) => {
+      dns.resolve('google.com', (err) => res(err != null));
+    });
+    return await withTimeout(isOffline, 1e3);
+  } catch (error) {
+    console.error('Error checking offline status:', error);
+    return true;
+  }
 }
 
 export async function isOnline(): Promise<boolean> {
