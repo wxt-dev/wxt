@@ -24,7 +24,7 @@ export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
-  readonly needsIsolation: boolean;
+  readonly hasCustomDependencies: boolean;
 
   constructor(packageJson: any = {}) {
     // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
@@ -33,11 +33,7 @@ export class TestProject {
     const id = Math.random().toString(32).substring(3);
     this.root = resolve(E2E_DIR, 'dist', id);
 
-    // Test projects that don't have any custom dependencies don't need to be
-    // isolated from the monorepo's PNPM workspace - this means the install
-    // command can be skipped and the project will reuse
-    // `packages/wxt/node_modules`!
-    this.needsIsolation =
+    this.hasCustomDependencies =
       Object.keys({
         ...packageJson.dependencies,
         ...packageJson.devDependencies,
@@ -131,11 +127,14 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    if (this.needsIsolation) {
+    // Only install dependencies if the project has custom ones - otherwise the
+    // project will reuse the ones in `packages/wxt/node_modules`!
+    if (this.hasCustomDependencies) {
       await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
         cwd: this.root,
       });
     }
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
