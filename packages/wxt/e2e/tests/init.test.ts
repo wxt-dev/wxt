@@ -29,7 +29,6 @@ describe('Init command', () => {
     );
     const files = await glob('**/*', {
       cwd: project.root,
-      onlyFiles: true,
       dot: true,
     });
 

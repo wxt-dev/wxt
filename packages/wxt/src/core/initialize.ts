@@ -170,14 +170,6 @@ async function cloneProject({
       force: true,
     });
 
-    console.log('FILES', await fs.readdir(directory, { recursive: true }));
-    await new Promise((res) => setTimeout(res, 1000));
-    console.log('FILES', await fs.readdir(directory, { recursive: true }));
-    await new Promise((res) => setTimeout(res, 2000));
-    console.log('FILES', await fs.readdir(directory, { recursive: true }));
-    await new Promise((res) => setTimeout(res, 4000));
-    console.log('FILES', await fs.readdir(directory, { recursive: true }));
-
     // 2. Move _gitignore -> .gitignore
     await fs
       .move(
