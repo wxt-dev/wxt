@@ -50,7 +50,7 @@ To make a breaking change:
 
 WXT uses Bun for package management and development. Install it from: <https://bun.com/>
 
-Then, simply run the install command:
+Then install dependencies:
 
 ```sh
 bun install
@@ -62,12 +62,12 @@ Here are some helpful commands:
 
 ```sh
 # Build WXT package and workspace dependencies
-bun run -F wxt build
+bun run --filter wxt build
 ```
 
 ```sh
 # Build workspace dependencies, then start the demo extension in dev mode
-bun run -F wxt-demo dev
+bun run --filter wxt-demo dev
 ```
 
 ```sh
@@ -80,7 +80,7 @@ bun run test
 bun run docs:dev
 ```
 
-> Above, we used bun's `-F` flag to choose which package to run a command in, but there are other ways
+> Above, we used bun's `--filter` flag to choose which package to run a command in, but there are other ways:
 >
 > ```sh
 > bun run -F @wxt-dev/i18n build
@@ -97,7 +97,7 @@ bun run docs:dev
 
 ```sh
 # Build the latest version
-bun run -F wxt build
+bun run --filter wxt build
 
 # CD to the demo directory
 cd packages/wxt-demo
@@ -138,7 +138,7 @@ WXT has unit and E2E tests. When making a change or adding a feature, make sure 
 To run tests for a specific file, add the filename at the end of the test command:
 
 ```sh
-bun run -F wxt test manifest-contents
+bun run --filter wxt test manifest-contents
 ```
 
 All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
