@@ -35,6 +35,7 @@
     "markdownlint-cli": "^0.47.0",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
+    "publish-browser-extension": "^4.0.3",
     "semver": "^7.7.4",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.20.3",

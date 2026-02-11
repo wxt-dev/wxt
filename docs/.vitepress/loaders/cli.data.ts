@@ -1,5 +1,4 @@
 import consola from 'consola';
-import fs from 'fs-extra';
 import { resolve } from 'node:path';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
@@ -54,11 +53,8 @@ function getWxtHelp(command: string): Promise<string> {
 }
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
-  console.log('CWD:', process.cwd());
-  console.log(await fs.readdir('./packages/wxt/node_modules/.bin'));
-  const res = await getHelp(
-    `./packages/wxt/node_modules/.bin/publish-extension ${command}`.trim(),
-  );
+  // console.error('\n\n\n', await fs.readdir('.'));
+  const res = await getHelp(`publish-extension ${command}`.trim());
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
 
