@@ -1,18 +1,25 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createFileReloader } from '../create-server';
-import { detectDevChanges, findEntrypoints, rebuild } from '../utils/building';
+import { findEntrypoints, rebuild } from '../utils/building';
 import {
+  fakeBackgroundEntrypoint,
   fakeBuildOutput,
   fakeDevServer,
+  fakeOutputChunk,
   setFakeWxt,
 } from '../utils/testing/fake-objects';
 
-vi.mock('../utils/building', () => ({
-  detectDevChanges: vi.fn(),
-  findEntrypoints: vi.fn(),
-  internalBuild: vi.fn(),
-  rebuild: vi.fn(),
-}));
+vi.mock('../utils/building', async () => {
+  const actual =
+    await vi.importActual<typeof import('../utils/building')>(
+      '../utils/building',
+    );
+  return {
+    ...actual,
+    findEntrypoints: vi.fn(),
+    rebuild: vi.fn(),
+  };
+});
 
 describe('createFileReloader', () => {
   beforeEach(() => {
@@ -39,8 +46,16 @@ describe('createFileReloader', () => {
     const relevantFile = '/root/src/entrypoints/background.ts';
     const noisyProfileFile =
       '/root/private/.dev-profile/Default/Cache/Cache_Data/d573fa6484e43cf9_0';
+    const backgroundEntrypoint = fakeBackgroundEntrypoint({
+      inputPath: relevantFile,
+    });
     const currentOutput = fakeBuildOutput({
-      steps: [],
+      steps: [
+        {
+          entrypoints: backgroundEntrypoint,
+          chunks: [fakeOutputChunk({ moduleIds: [relevantFile] })],
+        },
+      ],
       publicAssets: [],
     });
     const server = fakeDevServer({
@@ -48,16 +63,6 @@ describe('createFileReloader', () => {
       reloadExtension: vi.fn(),
     });
 
-    vi.mocked(detectDevChanges).mockImplementation((fileChanges, output) => {
-      if (fileChanges.includes(relevantFile)) {
-        return {
-          type: 'extension-reload',
-          rebuildGroups: [],
-          cachedOutput: output,
-        };
-      }
-      return { type: 'no-change' };
-    });
     vi.mocked(rebuild).mockResolvedValue({
       output: currentOutput,
       manifest: currentOutput.manifest,
@@ -72,11 +77,12 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await Promise.all([fixedFirst, fixedSecond]);
 
-    const seenFiles = vi
-      .mocked(detectDevChanges)
-      .mock.calls.flatMap(([fileChanges]) => fileChanges);
-
-    expect(seenFiles).toContain(relevantFile);
+    expect(rebuild).toBeCalledTimes(1);
+    expect(rebuild).toBeCalledWith(
+      [],
+      [expect.objectContaining({ inputPath: relevantFile })],
+      expect.anything(),
+    );
     expect(server.reloadExtension).toBeCalledTimes(1);
   });
 });
