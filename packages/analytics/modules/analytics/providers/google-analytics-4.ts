@@ -19,7 +19,7 @@ export const googleAnalytics4 =
       ): Promise<void> => {
         const url = new URL(
           config?.debug ? '/debug/mp/collect' : '/mp/collect',
-          options?.apiUrl ? options.apiUrl : 'https://www.google-analytics.com',
+          options.apiUrl ?? 'https://www.google-analytics.com',
         );
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
