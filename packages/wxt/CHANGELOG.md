@@ -1,5 +1,52 @@
 # Changelog
 
+## v0.20.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.14...wxt-v0.20.15)
+
+### 🚀 Enhancements
+
+- Export `normalizePath` from `wxt` module ([#2080](https://github.com/wxt-dev/wxt/pull/2080))
+- **popup:** Add Firefox `default_area` and `theme_icons` support ([#2097](https://github.com/wxt-dev/wxt/pull/2097))
+- Add log `--level` cli option ([#1973](https://github.com/wxt-dev/wxt/pull/1973))
+
+### 🩹 Fixes
+
+- Content script is incorrectly invalidated when injected multiple times ([#2035](https://github.com/wxt-dev/wxt/pull/2035))
+- Use `uiContainer` to apply position when creating shadow root ui ([#2036](https://github.com/wxt-dev/wxt/pull/2036))
+- Make `ExtensionRunner#closeBrowser` optional ([#2092](https://github.com/wxt-dev/wxt/pull/2092))
+- Rename `name` to `names` prop of `rollup` to fix deprecated warning ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 💅 Refactors
+
+- Standardize file existence checks to `pathExists` ([#2083](https://github.com/wxt-dev/wxt/pull/2083))
+- Cleanup esm ([#1950](https://github.com/wxt-dev/wxt/pull/1950))
+- `async`/`await` cleanup ([#2088](https://github.com/wxt-dev/wxt/pull/2088))
+- Cleanup unnecssary checks ([#2089](https://github.com/wxt-dev/wxt/pull/2089))
+- Simplify import paths ([#2093](https://github.com/wxt-dev/wxt/pull/2093))
+
+### 📖 Documentation
+
+- Fix JSDoc ([6ae5fb5e](https://github.com/wxt-dev/wxt/commit/6ae5fb5e))
+
+### 🏡 Chore
+
+- Cleanup comment line lengths ([#2090](https://github.com/wxt-dev/wxt/pull/2090))
+- Cleanup `@ts-*` comments ([#2094](https://github.com/wxt-dev/wxt/pull/2094))
+- Update JSDoc to use `@internal` ([#2091](https://github.com/wxt-dev/wxt/pull/2091))
+- Fix typos ([#2086](https://github.com/wxt-dev/wxt/pull/2086))
+- Remove unused code ([#2087](https://github.com/wxt-dev/wxt/pull/2087))
+- Simplify imports of `cli/__tests__/index.ts` ([#2104](https://github.com/wxt-dev/wxt/pull/2104))
+
+### ❤️ Contributors
+
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Wotan-allfather <wotan-ai@proton.me>
+- Namu ([@namuorg](https://github.com/namuorg))
+- Eli ([@lishaduck](https://github.com/lishaduck))
+
 ## v0.20.14
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.13...wxt-v0.20.14)
