@@ -183,6 +183,42 @@ describe('Zipping', () => {
     );
   });
 
+  it('should only include specified files when includeSources is provided (allowlist behavior)', async () => {
+    const project = new TestProject({
+      name: 'test',
+      version: '1.0.0',
+    });
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {});',
+    );
+    project.addFile('src/utils.ts', 'export const x = 1;');
+    project.addFile('secrets/api-key.txt', 'supersecret');
+    project.addFile('cache/data.json', '{}');
+    const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+    const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+    await project.zip({
+      browser: 'firefox',
+      zip: {
+        includeSources: ['entrypoints/**', 'src/**'],
+      },
+    });
+    await extract(sourcesZip, { dir: unzipDir });
+
+    // Included files should be present
+    expect(
+      await project.pathExists(unzipDir, 'entrypoints/background.ts'),
+    ).toBe(true);
+    expect(await project.pathExists(unzipDir, 'src/utils.ts')).toBe(true);
+
+    // Non-included files should NOT be present (allowlist behavior)
+    expect(await project.pathExists(unzipDir, 'secrets/api-key.txt')).toBe(
+      false,
+    );
+    expect(await project.pathExists(unzipDir, 'cache/data.json')).toBe(false);
+  });
+
   it('should exclude skipped entrypoints from respective browser sources zip', async () => {
     const project = new TestProject({
       name: 'test',

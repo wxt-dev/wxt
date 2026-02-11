@@ -311,7 +311,7 @@ function resolveZipConfig(
     artifactTemplate:
       '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
-    includeSources: [],
+    includeSources: mergedConfig.zip?.includeSources ?? ['**/*'],
     compressionLevel: 9,
     ...mergedConfig.zip,
     zipSources:
