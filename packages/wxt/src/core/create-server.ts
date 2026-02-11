@@ -14,6 +14,7 @@ import {
 import {
   internalBuild,
   detectDevChanges,
+  getRelevantDevChangedFiles,
   rebuild,
   findEntrypoints,
 } from './utils/building';
@@ -214,9 +215,18 @@ export function createFileReloader(server: WxtDevServer) {
       if (fileChanges.length === 0) return;
       if (server.currentOutput == null) return;
 
+      const relevantFileChanges = getRelevantDevChangedFiles(
+        fileChanges,
+        server.currentOutput,
+      );
+      if (relevantFileChanges.length === 0) return;
+
       await wxt.reloadConfig();
 
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
+      const changes = detectDevChanges(
+        relevantFileChanges,
+        server.currentOutput,
+      );
       if (changes.type === 'no-change') return;
 
       if (changes.type === 'full-restart') {
@@ -233,7 +243,7 @@ export function createFileReloader(server: WxtDevServer) {
 
       // Log the entrypoints that were effected
       wxt.logger.info(
-        `Changed: ${Array.from(new Set(fileChanges))
+        `Changed: ${relevantFileChanges
           .map((file) => pc.dim(relative(wxt.config.root, file)))
           .join(', ')}`,
       );
