@@ -34,8 +34,9 @@ export default defineWxtModule<AutoIconsOptions>({
 
     const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
-    if (!parsedOptions.enabled)
+    if (!parsedOptions.enabled) {
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
+    }
 
     if (!(await pathExists(resolvedPath))) {
       return wxt.logger.warn(
@@ -44,10 +45,11 @@ export default defineWxtModule<AutoIconsOptions>({
     }
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
-      if (manifest.icons)
+      if (manifest.icons) {
         return wxt.logger.warn(
           '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
         );
+      }
 
       manifest.icons = Object.fromEntries(
         parsedOptions.sizes.map((size) => [size, `icons/${size}.png`]),
@@ -65,8 +67,9 @@ export default defineWxtModule<AutoIconsOptions>({
             resizedImage.grayscale();
           } else if (parsedOptions.developmentIndicator === 'overlay') {
             // Helper to build an overlay that places a yellow rectangle at the bottom
-            // of the icon with the text "DEV" in black. The overlay has the same
-            // dimensions as the icon so we can composite it with default gravity.
+            // of the icon with the text "DEV" in black.
+            // The overlay has the same dimensions as the icon,
+            // so we can composite it with default gravity.
             const buildDevOverlay = (size: number) => {
               const rectHeight = Math.round(size * 0.5);
               const fontSize = Math.round(size * 0.35);
@@ -77,6 +80,7 @@ export default defineWxtModule<AutoIconsOptions>({
                   <text x="${size / 2}" y="${size - rectHeight / 2}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="bold" fill="black" text-anchor="middle" dominant-baseline="middle">DEV</text>
                 </svg>`);
             };
+
             const overlayBuffer = await sharp(buildDevOverlay(size))
               .png()
               .toBuffer();
@@ -91,7 +95,7 @@ export default defineWxtModule<AutoIconsOptions>({
           }
         }
 
-        ensureDir(resolve(outputFolder, 'icons'));
+        await ensureDir(resolve(outputFolder, 'icons'));
         await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({

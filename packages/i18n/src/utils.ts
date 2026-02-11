@@ -28,6 +28,7 @@ export function standardizeLocale(locale: string): string {
 
   const [is_match, prefix, suffix] =
     locale.match(/^([a-z]{2})[-_]([a-z]{2,3})$/i) ?? [];
+
   if (is_match) {
     return `${prefix.toLowerCase()}_${suffix.toUpperCase()}`;
   }

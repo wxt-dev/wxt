@@ -5,6 +5,7 @@ import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server
 
 export function reloadContentScript(payload: ReloadContentScriptPayload) {
   const manifest = browser.runtime.getManifest();
+
   if (manifest.manifest_version == 2) {
     void reloadContentScriptMv2(payload);
   } else {
@@ -29,14 +30,18 @@ export async function reloadManifestContentScriptMv3(
   contentScript: ContentScript,
 ) {
   const id = `wxt:${contentScript.js![0]}`;
+
   logger.log('Reloading content script:', contentScript);
+
   const registered = await browser.scripting.getRegisteredContentScripts();
+
   logger.debug('Existing scripts:', registered);
 
   const existing = registered.find((cs) => cs.id === id);
 
   if (existing) {
     logger.debug('Updating content script', existing);
+
     await browser.scripting.updateContentScripts([
       {
         ...contentScript,
@@ -46,6 +51,7 @@ export async function reloadManifestContentScriptMv3(
     ]);
   } else {
     logger.debug('Registering new content script...');
+
     await browser.scripting.registerContentScripts([
       {
         ...contentScript,
@@ -62,12 +68,15 @@ export async function reloadRuntimeContentScriptMv3(
   contentScript: ContentScript,
 ) {
   logger.log('Reloading content script:', contentScript);
+
   const registered = await browser.scripting.getRegisteredContentScripts();
+
   logger.debug('Existing scripts:', registered);
 
   const matches = registered.filter((cs) => {
     const hasJs = contentScript.js?.find((js) => cs.js?.includes(js));
     const hasCss = contentScript.css?.find((css) => cs.css?.includes(css));
+
     return hasJs || hasCss;
   });
 
@@ -90,7 +99,9 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
   );
   const matchingTabs = allTabs.filter((tab) => {
     const url = tab.url;
+
     if (!url) return false;
+
     return !!matchPatterns.find((pattern) => pattern.includes(url));
   });
   await Promise.all(

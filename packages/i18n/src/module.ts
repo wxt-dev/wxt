@@ -14,8 +14,8 @@ import 'wxt';
 import { addAlias, defineWxtModule } from 'wxt/modules';
 import {
   generateChromeMessagesText,
-  parseMessagesFile,
   generateTypeText,
+  parseMessagesFile,
   SUPPORTED_LOCALES,
 } from './build';
 import glob from 'fast-glob';
@@ -36,6 +36,7 @@ export default defineWxtModule<I18nOptions>({
       );
       return;
     }
+
     wxt.logger.info(
       '`[i18n]` Default locale: ' + wxt.config.manifest.default_locale,
     );
@@ -54,7 +55,9 @@ export default defineWxtModule<I18nOptions>({
       const res = files.map((file) => {
         const rawLocale = basename(file).replace(extname(file), '');
         const locale = standardizeLocale(rawLocale);
+
         if (!SUPPORTED_LOCALES.has(locale)) unsupportedLocales.push(locale);
+
         return { file, locale };
       });
 
@@ -70,6 +73,7 @@ export default defineWxtModule<I18nOptions>({
       GeneratedPublicFile[]
     > => {
       const files = await getLocalizationFiles();
+
       return await Promise.all(
         files.map(async ({ file, locale }) => {
           const messages = await parseMessagesFile(file);
@@ -86,6 +90,7 @@ export default defineWxtModule<I18nOptions>({
       const defaultLocaleFile = files.find(
         ({ locale }) => locale === wxt.config.manifest.default_locale,
       )!;
+
       if (defaultLocaleFile == null) {
         throw Error(
           `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|jsonc|yml|yaml|toml}\``,
@@ -93,6 +98,7 @@ export default defineWxtModule<I18nOptions>({
       }
 
       const messages = await parseMessagesFile(defaultLocaleFile.file);
+
       return {
         path: typesPath,
         text: generateTypeText(messages),
@@ -152,7 +158,7 @@ export { type GeneratedI18nStructure }
 
     addAlias(wxt, '#i18n', sourcePath);
 
-    // Generate separate declaration file containing types - this prevents
+    // Generate a separate declaration file containing types - this prevents
     // firing the dev server's default file watcher when updating the types,
     // which would cause a full rebuild and reload of the extension.
 

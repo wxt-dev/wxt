@@ -20,8 +20,10 @@ export const googleAnalytics4 =
           config?.debug ? '/debug/mp/collect' : '/mp/collect',
           'https://www.google-analytics.com',
         );
+
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
+
         if (options.measurementId)
           url.searchParams.set('measurement_id', options.measurementId);
 

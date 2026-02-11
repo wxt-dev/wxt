@@ -44,6 +44,7 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
       shell: true,
     },
   );
+
   const debugFirefoxStderr = debugFirefox.scoped('stderr');
   browserProcess.stderr.on('data', (data: string) => {
     const message = data.toString().trim();
@@ -54,6 +55,7 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
       urlRes.resolve(message.slice(28));
     }
   });
+
   const debugFirefoxStdout = debugFirefox.scoped('stdout');
   browserProcess.stdout.on('data', (data: string) => {
     const message = data.toString().trim();
@@ -96,6 +98,7 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
       opened.resolve();
     }
   });
+
   const debugChromeStdout = debugChrome.scoped('stdout');
   browserProcess.stdout!.on('data', (data: string) => {
     const message = data.toString().trim();

@@ -1,13 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import type { GenericEntrypoint, InlineConfig } from '../../src';
 import { readFile } from 'fs-extra';
 import { normalizePath } from '../../src/core/utils/paths';
 
 describe('Module Helpers', () => {
   describe('options', () => {
     it('should receive the options defined in wxt.config.ts based on the configKey field', async () => {
-      const options = { key: '123' };
+      const options = { key: '123' } as const;
       const reportOptions = vi.fn();
       vi.stubGlobal('reportOptions', reportOptions);
       const project = new TestProject();
@@ -57,6 +57,7 @@ describe('Module Helpers', () => {
         outputDir: project.resolvePath('.output/chrome-mv3'),
         skipped: false,
       };
+
       project.addFile(
         'modules/test/injected.ts',
         `export default defineUnlistedScript(() => {})`,
@@ -71,6 +72,7 @@ describe('Module Helpers', () => {
           })
         `,
       );
+
       const config: InlineConfig = {
         browser: 'chrome',
       };
@@ -90,7 +92,6 @@ describe('Module Helpers', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {})',
       );
-
       project.addFile('modules/test/public/module.txt');
       const dir = project.resolvePath('modules/test/public');
       project.addFile(
@@ -131,7 +132,6 @@ describe('Module Helpers', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {})',
       );
-
       project.addFile('public/user.txt', 'from-user');
       project.addFile('modules/test/public/user.txt', 'from-module');
       const dir = project.resolvePath('modules/test/public');
@@ -161,15 +161,17 @@ describe('Module Helpers', () => {
 
   describe('addWxtPlugin', () => {
     function addPluginModule(project: TestProject) {
-      const expectedText = 'Hello from plugin!';
+      const EXPECTED_TEXT = 'Hello from plugin!';
+
       const pluginPath = project.addFile(
         'modules/test/client-plugin.ts',
         `
           export default defineWxtPlugin(() => {
-            console.log("${expectedText}")
+            console.log("${EXPECTED_TEXT}")
           })
         `,
       );
+
       project.addFile(
         'modules/test.ts',
         `
@@ -180,7 +182,8 @@ describe('Module Helpers', () => {
           });
         `,
       );
-      return expectedText;
+
+      return EXPECTED_TEXT;
     }
 
     it('should include the plugin in the background', async () => {
@@ -189,6 +192,7 @@ describe('Module Helpers', () => {
         'entrypoints/background.ts',
         'export default defineBackground(() => {})',
       );
+
       const expectedText = addPluginModule(project);
 
       await project.build();
@@ -201,11 +205,12 @@ describe('Module Helpers', () => {
       project.addFile(
         'entrypoints/popup/index.html',
         `
-          <html>
+          <html lang="en">
             <body></body>
           </html>
         `,
       );
+
       const expectedText = addPluginModule(project);
 
       await project.build();
@@ -224,6 +229,7 @@ describe('Module Helpers', () => {
           })
         `,
       );
+
       const expectedText = addPluginModule(project);
 
       await project.build();
@@ -233,10 +239,12 @@ describe('Module Helpers', () => {
 
     it('should include the plugin in unlisted scripts', async () => {
       const project = new TestProject();
+
       project.addFile(
         'entrypoints/unlisted.ts',
         'export default defineUnlistedScript(() => {})',
       );
+
       const expectedText = addPluginModule(project);
 
       await project.build();
@@ -247,7 +255,8 @@ describe('Module Helpers', () => {
 
   describe('imports', () => {
     it('should add auto-imports', async () => {
-      const expectedText = 'customImport!';
+      const EXPECTED_TEXT = 'customImport!';
+
       const project = new TestProject();
       project.addFile(
         'entrypoints/background.ts',
@@ -258,7 +267,7 @@ describe('Module Helpers', () => {
       const utils = project.addFile(
         'custom.ts',
         `export function customImport() {
-          console.log("${expectedText}")
+          console.log("${EXPECTED_TEXT}")
         }`,
       );
       project.addFile(
@@ -274,11 +283,12 @@ describe('Module Helpers', () => {
 
       await project.build();
 
-      await expect(project.serializeOutput()).resolves.toContain(expectedText);
+      await expect(project.serializeOutput()).resolves.toContain(EXPECTED_TEXT);
     });
 
     it('should add preset', async () => {
       const project = new TestProject();
+
       project.addFile(
         'entrypoints/background.ts',
         `export default defineBackground(() => {

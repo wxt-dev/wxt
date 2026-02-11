@@ -7,8 +7,9 @@ import { ResolvedConfig } from '../../../../types';
  * When importing `virtual:app-config`, resolve it to the `app.config.ts` file in the project.
  */
 export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
-  const virtualModuleId = 'virtual:app-config';
-  const resolvedVirtualModuleId = '\0' + virtualModuleId;
+  const VIRTUAL_MODULE_ID = 'virtual:app-config';
+  const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
+
   const appConfigFile = resolve(config.srcDir, 'app.config.ts');
 
   return {
@@ -18,19 +19,19 @@ export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
         optimizeDeps: {
           // Prevent ESBuild from attempting to resolve the virtual module
           // while optimizing WXT.
-          exclude: [virtualModuleId],
+          exclude: [VIRTUAL_MODULE_ID],
         },
       };
     },
     async resolveId(id) {
-      if (id !== virtualModuleId) return;
+      if (id !== VIRTUAL_MODULE_ID) return;
 
       return (await pathExists(appConfigFile))
         ? appConfigFile
-        : resolvedVirtualModuleId;
+        : RESOLVED_VIRTUAL_MODULE_ID;
     },
     load(id) {
-      if (id === resolvedVirtualModuleId) return `export default {}`;
+      if (id === RESOLVED_VIRTUAL_MODULE_ID) return `export default {}`;
     },
   };
 }

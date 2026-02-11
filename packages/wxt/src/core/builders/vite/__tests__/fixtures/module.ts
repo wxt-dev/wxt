@@ -1,4 +1,4 @@
-import { a } from './test';
+import { A } from './test';
 
 function defineSomething<T>(config: T): T {
   return config;
@@ -7,6 +7,6 @@ function defineSomething<T>(config: T): T {
 export default defineSomething({
   option: 'some value',
   main: () => {
-    console.log('main', a);
+    console.log('main', A);
   },
 });

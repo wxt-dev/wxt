@@ -23,8 +23,8 @@ import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
 import type { Browser } from '@wxt-dev/browser';
 
-const outDir = '/output';
-const contentScriptOutDir = '/output/content-scripts';
+const OUT_DIR = '/output';
+const CONTENT_SCRIPT_OUT_DIR = '/output/content-scripts';
 
 describe('Manifest Utils', () => {
   beforeEach(() => {
@@ -34,17 +34,17 @@ describe('Manifest Utils', () => {
   describe('generateManifest', () => {
     describe('popup', () => {
       type ActionType = 'browser_action' | 'page_action';
+
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
-            // @ts-expect-error: Force this to be undefined instead of inheriting the random value
-            mv2Key: type ?? null,
+            mv2Key: type,
             defaultIcon: {
               '16': '/icon/16.png',
             },
-            defaultTitle: 'Default Iitle',
+            defaultTitle: 'Default Title',
           },
-          outputDir: outDir,
+          outputDir: OUT_DIR,
           skipped: false,
         });
 
@@ -55,9 +55,10 @@ describe('Manifest Utils', () => {
         setFakeWxt({
           config: {
             manifestVersion: 3,
-            outDir,
+            outDir: OUT_DIR,
           },
         });
+
         const expected: Partial<Browser.runtime.Manifest> = {
           action: {
             default_icon: popup.options.defaultIcon,
@@ -86,12 +87,14 @@ describe('Manifest Utils', () => {
         async ({ inputType, expectedType }) => {
           const popup = popupEntrypoint(inputType);
           const buildOutput = fakeBuildOutput();
+
           setFakeWxt({
             config: {
               manifestVersion: 2,
-              outDir,
+              outDir: OUT_DIR,
             },
           });
+
           const expected = {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
@@ -193,9 +196,10 @@ describe('Manifest Utils', () => {
     describe('action without popup', () => {
       it('should respect the action field in the manifest without a popup', async () => {
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 3,
             manifest: {
               action: {
@@ -215,9 +219,10 @@ describe('Manifest Utils', () => {
 
       it('should generate `browser_action` for MV2 when only `action` is defined', async () => {
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 2,
             manifest: {
               action: {
@@ -236,9 +241,10 @@ describe('Manifest Utils', () => {
 
       it('should keep the `page_action` for MV2 when both `action` and `page_action` are defined', async () => {
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 2,
             manifest: {
               action: {
@@ -260,9 +266,10 @@ describe('Manifest Utils', () => {
 
       it('should keep the custom `browser_action` for MV2 when both `action` and `browser_action` are defined', async () => {
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 2,
             manifest: {
               action: {
@@ -287,7 +294,7 @@ describe('Manifest Utils', () => {
 
     describe('options', () => {
       const options = fakeOptionsEntrypoint({
-        outputDir: outDir,
+        outputDir: OUT_DIR,
         options: {
           openInTab: false,
           chromeStyle: true,
@@ -300,16 +307,17 @@ describe('Manifest Utils', () => {
         setFakeWxt({
           config: {
             manifestVersion: 3,
-            outDir,
+            outDir: OUT_DIR,
             browser: 'chrome',
           },
         });
+
         const buildOutput = fakeBuildOutput();
         const expected = {
           open_in_tab: false,
           chrome_style: true,
           page: 'options.html',
-        };
+        } as const;
 
         const { manifest: actual } = await generateManifest(
           [options],
@@ -324,9 +332,10 @@ describe('Manifest Utils', () => {
           config: {
             manifestVersion: 3,
             browser: 'firefox',
-            outDir,
+            outDir: OUT_DIR,
           },
         });
+
         const buildOutput = fakeBuildOutput();
         const expected = {
           open_in_tab: false,
@@ -345,7 +354,7 @@ describe('Manifest Utils', () => {
 
     describe('background', () => {
       const background = fakeBackgroundEntrypoint({
-        outputDir: outDir,
+        outputDir: OUT_DIR,
         options: {
           persistent: true,
           type: 'module',
@@ -359,11 +368,12 @@ describe('Manifest Utils', () => {
           async (browser) => {
             setFakeWxt({
               config: {
-                outDir,
+                outDir: OUT_DIR,
                 manifestVersion: 3,
                 browser,
               },
             });
+
             const buildOutput = fakeBuildOutput();
             const expected = {
               type: 'module',
@@ -382,11 +392,12 @@ describe('Manifest Utils', () => {
         it('should include a background script and type for firefox', async () => {
           setFakeWxt({
             config: {
-              outDir,
+              outDir: OUT_DIR,
               manifestVersion: 3,
               browser: 'firefox',
             },
           });
+
           const buildOutput = fakeBuildOutput();
           const expected = {
             type: 'module',
@@ -408,16 +419,17 @@ describe('Manifest Utils', () => {
           async (browser) => {
             setFakeWxt({
               config: {
-                outDir,
+                outDir: OUT_DIR,
                 manifestVersion: 2,
                 browser,
               },
             });
+
             const buildOutput = fakeBuildOutput();
             const expected = {
               persistent: true,
               scripts: ['background.js'],
-            };
+            } as const;
 
             const { manifest: actual } = await generateManifest(
               [background],
@@ -431,11 +443,12 @@ describe('Manifest Utils', () => {
         it('should include a background script and persistent for firefox mv2', async () => {
           setFakeWxt({
             config: {
-              outDir,
+              outDir: OUT_DIR,
               manifestVersion: 2,
               browser: 'firefox',
             },
           });
+
           const buildOutput = fakeBuildOutput();
           const expected = {
             persistent: true,
@@ -509,11 +522,13 @@ describe('Manifest Utils', () => {
             { type: 'asset', fileName: 'logo-48.png' },
           ],
         });
+
         const expected = {
           16: 'logo-16.png',
           32: 'logo-32.png',
           48: 'logo-48.png',
-        };
+        } as const;
+
         setFakeWxt({
           config: {
             manifest: {
@@ -537,7 +552,7 @@ describe('Manifest Utils', () => {
           type: 'content-script',
           name: 'one',
           inputPath: 'entrypoints/one.content/index.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
           },
@@ -547,11 +562,12 @@ describe('Manifest Utils', () => {
           type: 'asset',
           fileName: 'content-scripts/one.css',
         };
+
         const cs2: ContentScriptEntrypoint = {
           type: 'content-script',
           name: 'two',
           inputPath: 'entrypoints/two.content/index.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
             runAt: 'document_end',
@@ -562,11 +578,12 @@ describe('Manifest Utils', () => {
           type: 'asset',
           fileName: 'content-scripts/two.css',
         };
+
         const cs3: ContentScriptEntrypoint = {
           type: 'content-script',
           name: 'three',
           inputPath: 'entrypoints/three.content/index.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
             runAt: 'document_end',
@@ -577,11 +594,12 @@ describe('Manifest Utils', () => {
           type: 'asset',
           fileName: 'content-scripts/three.css',
         };
+
         const cs4: ContentScriptEntrypoint = {
           type: 'content-script',
           name: 'four',
           inputPath: 'entrypoints/four.content/index.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://duckduckgo.com/*'],
             runAt: 'document_end',
@@ -592,11 +610,12 @@ describe('Manifest Utils', () => {
           type: 'asset',
           fileName: 'content-scripts/four.css',
         };
+
         const cs5: ContentScriptEntrypoint = {
           type: 'content-script',
           name: 'five',
           inputPath: 'entrypoints/five.content/index.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
             world: 'MAIN',
@@ -609,13 +628,15 @@ describe('Manifest Utils', () => {
         };
 
         const entrypoints = [cs1, cs2, cs3, cs4, cs5];
+
         setFakeWxt({
           config: {
             command: 'build',
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 3,
           },
         });
+
         const buildOutput: Omit<BuildOutput, 'manifest'> = {
           publicAssets: [],
           steps: [
@@ -637,18 +658,21 @@ describe('Manifest Utils', () => {
           css: ['content-scripts/one.css'],
           js: ['content-scripts/one.js'],
         });
+
         expect(actual.content_scripts).toContainEqual({
           matches: ['*://google.com/*'],
           run_at: 'document_end',
           css: ['content-scripts/two.css', 'content-scripts/three.css'],
           js: ['content-scripts/two.js', 'content-scripts/three.js'],
         });
+
         expect(actual.content_scripts).toContainEqual({
           matches: ['*://duckduckgo.com/*'],
           run_at: 'document_end',
           css: ['content-scripts/four.css'],
           js: ['content-scripts/four.js'],
         });
+
         expect(actual.content_scripts).toContainEqual({
           matches: ['*://google.com/*'],
           css: ['content-scripts/five.css'],
@@ -662,16 +686,18 @@ describe('Manifest Utils', () => {
           type: 'content-script',
           name: 'one',
           inputPath: 'entrypoints/one.content.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
           },
           skipped: false,
         };
+
         const generatedContentScript = {
           matches: ['*://google.com/*'],
           js: ['content-scripts/one.js'],
         };
+
         const userContentScript = {
           css: ['content-scripts/two.css'],
           matches: ['*://*.google.com/*'],
@@ -679,9 +705,10 @@ describe('Manifest Utils', () => {
 
         const entrypoints = [cs];
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             command: 'build',
             manifest: {
               content_scripts: [userContentScript],
@@ -706,13 +733,14 @@ describe('Manifest Utils', () => {
               type: 'content-script',
               name: 'one',
               inputPath: 'entrypoints/one.content.ts',
-              outputDir: contentScriptOutDir,
+              outputDir: CONTENT_SCRIPT_OUT_DIR,
               options: {
                 matches: ['*://google.com/*'],
                 cssInjectionMode,
               },
               skipped: false,
             };
+
             const styles: OutputAsset = {
               type: 'asset',
               fileName: 'content-scripts/one.css',
@@ -723,9 +751,10 @@ describe('Manifest Utils', () => {
               publicAssets: [],
               steps: [{ entrypoints: cs, chunks: [styles] }],
             };
+
             setFakeWxt({
               config: {
-                outDir,
+                outDir: OUT_DIR,
                 command: 'build',
               },
             });
@@ -752,13 +781,14 @@ describe('Manifest Utils', () => {
               type: 'content-script',
               name: 'one',
               inputPath: 'entrypoints/one.content.ts',
-              outputDir: contentScriptOutDir,
+              outputDir: CONTENT_SCRIPT_OUT_DIR,
               options: {
                 matches: ['*://google.com/*'],
                 cssInjectionMode,
               },
               skipped: false,
             };
+
             const styles: OutputAsset = {
               type: 'asset',
               fileName: 'content-scripts/one.css',
@@ -769,9 +799,10 @@ describe('Manifest Utils', () => {
               publicAssets: [],
               steps: [{ entrypoints: cs, chunks: [styles] }],
             };
+
             setFakeWxt({
               config: {
-                outDir,
+                outDir: OUT_DIR,
                 command: 'build',
               },
             });
@@ -795,13 +826,14 @@ describe('Manifest Utils', () => {
             type: 'content-script',
             name: 'one',
             inputPath: 'entrypoints/one.content.ts',
-            outputDir: contentScriptOutDir,
+            outputDir: CONTENT_SCRIPT_OUT_DIR,
             options: {
               matches: ['*://google.com/*'],
               cssInjectionMode: 'ui',
             },
             skipped: false,
           };
+
           const styles: OutputAsset = {
             type: 'asset',
             fileName: 'content-scripts/one.css',
@@ -812,9 +844,10 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
+
           setFakeWxt({
             config: {
-              outDir,
+              outDir: OUT_DIR,
               command: 'build',
               manifestVersion: 3,
             },
@@ -839,13 +872,14 @@ describe('Manifest Utils', () => {
             type: 'content-script',
             name: 'one',
             inputPath: 'entrypoints/one.content.ts',
-            outputDir: contentScriptOutDir,
+            outputDir: CONTENT_SCRIPT_OUT_DIR,
             options: {
               matches: ['*://google.com/*'],
               cssInjectionMode: 'ui',
             },
             skipped: false,
           };
+
           const styles: OutputAsset = {
             type: 'asset',
             fileName: 'content-scripts/one.css',
@@ -856,9 +890,10 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
+
           setFakeWxt({
             config: {
-              outDir,
+              outDir: OUT_DIR,
               command: 'build',
               manifestVersion: 2,
             },
@@ -879,13 +914,14 @@ describe('Manifest Utils', () => {
             type: 'content-script',
             name: 'one',
             inputPath: 'entrypoints/one.content.ts',
-            outputDir: contentScriptOutDir,
+            outputDir: CONTENT_SCRIPT_OUT_DIR,
             options: {
               matches: ['*://play.google.com/books/*'],
               cssInjectionMode: 'ui',
             },
             skipped: false,
           };
+
           const styles: OutputAsset = {
             type: 'asset',
             fileName: 'content-scripts/one.css',
@@ -896,9 +932,10 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
+
           setFakeWxt({
             config: {
-              outDir,
+              outDir: OUT_DIR,
               command: 'build',
               manifestVersion: 3,
             },
@@ -925,7 +962,7 @@ describe('Manifest Utils', () => {
             type: 'content-script',
             name: 'one',
             inputPath: 'entrypoints/one.content.ts',
-            outputDir: contentScriptOutDir,
+            outputDir: CONTENT_SCRIPT_OUT_DIR,
             options: {
               matches: ['*://google.com/*'],
               registration: 'runtime',
@@ -942,10 +979,11 @@ describe('Manifest Utils', () => {
             publicAssets: [],
             steps: [{ entrypoints: cs, chunks: [styles] }],
           };
+
           setFakeWxt({
             config: {
               manifestVersion: 3,
-              outDir,
+              outDir: OUT_DIR,
               command: 'build',
             },
           });
@@ -966,7 +1004,7 @@ describe('Manifest Utils', () => {
         'should include the side_panel and permission, ignoring all options for %s',
         async (browser) => {
           const sidepanel = fakeSidepanelEntrypoint({
-            outputDir: outDir,
+            outputDir: OUT_DIR,
             skipped: false,
           });
           const buildOutput = fakeBuildOutput();
@@ -975,10 +1013,11 @@ describe('Manifest Utils', () => {
             config: {
               manifestVersion: 3,
               browser,
-              outDir,
+              outDir: OUT_DIR,
               command: 'build',
             },
           });
+
           const expected = {
             side_panel: {
               default_path: 'sidepanel.html',
@@ -999,7 +1038,7 @@ describe('Manifest Utils', () => {
         'should include a sidebar_action for %s',
         async (browser) => {
           const sidepanel = fakeSidepanelEntrypoint({
-            outputDir: outDir,
+            outputDir: OUT_DIR,
             skipped: false,
           });
           const buildOutput = fakeBuildOutput();
@@ -1008,9 +1047,10 @@ describe('Manifest Utils', () => {
             config: {
               manifestVersion: 3,
               browser,
-              outDir,
+              outDir: OUT_DIR,
             },
           });
+
           const expected = {
             sidebar_action: {
               default_panel: 'sidepanel.html',
@@ -1037,13 +1077,14 @@ describe('Manifest Utils', () => {
           type: 'content-script',
           name: 'one',
           inputPath: 'entrypoints/one.content.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
             cssInjectionMode: 'ui',
           },
           skipped: false,
         };
+
         const styles: OutputAsset = {
           type: 'asset',
           fileName: 'content-scripts/one.css',
@@ -1054,9 +1095,10 @@ describe('Manifest Utils', () => {
           publicAssets: [],
           steps: [{ entrypoints: cs, chunks: [styles] }],
         };
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             command: 'build',
             manifestVersion: 3,
             manifest: {
@@ -1087,13 +1129,14 @@ describe('Manifest Utils', () => {
           type: 'content-script',
           name: 'one',
           inputPath: 'entrypoints/one.content.ts',
-          outputDir: contentScriptOutDir,
+          outputDir: CONTENT_SCRIPT_OUT_DIR,
           options: {
             matches: ['*://google.com/*'],
             cssInjectionMode: 'ui',
           },
           skipped: false,
         };
+
         const styles: OutputAsset = {
           type: 'asset',
           fileName: 'content-scripts/one.css',
@@ -1104,9 +1147,10 @@ describe('Manifest Utils', () => {
           publicAssets: [],
           steps: [{ entrypoints: cs, chunks: [styles] }],
         };
+
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             command: 'build',
             manifestVersion: 2,
             manifest: {
@@ -1129,7 +1173,7 @@ describe('Manifest Utils', () => {
       it('should convert mv3 items to mv2 strings automatically', async () => {
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 2,
             manifest: {
               web_accessible_resources: [
@@ -1160,7 +1204,7 @@ describe('Manifest Utils', () => {
       it('should convert mv2 strings to mv3 items with a warning automatically', async () => {
         setFakeWxt({
           config: {
-            outDir,
+            outDir: OUT_DIR,
             manifestVersion: 3,
             manifest: {
               web_accessible_resources: ['/icon.svg'],
@@ -1180,16 +1224,17 @@ describe('Manifest Utils', () => {
       it.each(['chrome', 'safari', 'edge'] as const)(
         'should include version and version_name as is on %s',
         async (browser) => {
-          const version = '1.0.0';
-          const versionName = '1.0.0-alpha1';
-          const entrypoints: Entrypoint[] = [];
+          const VERSION = '1.0.0';
+          const VERSION_NAME = '1.0.0-alpha1';
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
+
           setFakeWxt({
             config: {
               browser,
               manifest: {
-                version,
-                version_name: versionName,
+                version: VERSION,
+                version_name: VERSION_NAME,
               },
             },
           });
@@ -1199,24 +1244,25 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.version).toBe(version);
-          expect(actual.version_name).toBe(versionName);
+          expect(actual.version).toBe(VERSION);
+          expect(actual.version_name).toBe(VERSION_NAME);
         },
       );
 
       it.each(['firefox'] as const)(
         'should not include a version_name on %s because it is unsupported',
         async (browser) => {
-          const version = '1.0.0';
-          const versionName = '1.0.0-alpha1';
-          const entrypoints: Entrypoint[] = [];
+          const VERSION = '1.0.0';
+          const VERSION_NAME = '1.0.0-alpha1';
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
+
           setFakeWxt({
             config: {
               browser,
               manifest: {
-                version,
-                version_name: versionName,
+                version: VERSION,
+                version_name: VERSION_NAME,
               },
             },
           });
@@ -1226,7 +1272,7 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.version).toBe(version);
+          expect(actual.version).toBe(VERSION);
           expect(actual.version_name).toBeUndefined();
         },
       );
@@ -1234,15 +1280,16 @@ describe('Manifest Utils', () => {
       it.each(['chrome', 'firefox', 'safari', 'edge'])(
         'should not include the version_name if it is equal to version',
         async (browser) => {
-          const version = '1.0.0';
-          const entrypoints: Entrypoint[] = [];
+          const VERSION = '1.0.0';
+          const entrypoints: Entrypoint[] = [] as const;
           const buildOutput = fakeBuildOutput();
+
           setFakeWxt({
             config: {
               browser,
               manifest: {
-                version,
-                version_name: version,
+                version: VERSION,
+                version_name: VERSION,
               },
             },
           });
@@ -1252,14 +1299,15 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.version).toBe(version);
+          expect(actual.version).toBe(VERSION);
           expect(actual.version_name).toBeUndefined();
         },
       );
 
       it('should log a warning if the version could not be detected', async () => {
-        const entrypoints: Entrypoint[] = [];
+        const entrypoints: Entrypoint[] = [] as const;
         const buildOutput = fakeBuildOutput();
+
         setFakeWxt({
           config: {
             manifest: {
@@ -1284,7 +1332,7 @@ describe('Manifest Utils', () => {
     });
 
     describe('commands', () => {
-      const reloadCommandName = 'wxt:reload-extension';
+      const RELOAD_COMMAND_NAME = 'wxt:reload-extension';
       const reloadCommand = {
         description: expect.any(String),
         suggested_key: {
@@ -1305,7 +1353,7 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.commands).toEqual({
-          [reloadCommandName]: reloadCommand,
+          [RELOAD_COMMAND_NAME]: reloadCommand,
         });
       });
 
@@ -1327,7 +1375,7 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.commands).toEqual({
-          [reloadCommandName]: {
+          [RELOAD_COMMAND_NAME]: {
             ...reloadCommand,
             suggested_key: {
               default: 'Ctrl+E',
@@ -1357,18 +1405,20 @@ describe('Manifest Utils', () => {
       });
 
       it('should not override any existing commands when adding the one to reload the extension', async () => {
-        const customCommandName = 'custom-command';
+        const CUSTOM_COMMAND_NAME = 'custom-command';
         const customCommand = fakeManifestCommand();
+
         setFakeWxt({
           config: {
             command: 'serve',
             manifest: {
               commands: {
-                [customCommandName]: customCommand,
+                [CUSTOM_COMMAND_NAME]: customCommand,
               },
             },
           },
         });
+
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1378,8 +1428,8 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.commands).toEqual({
-          [reloadCommandName]: reloadCommand,
-          [customCommandName]: customCommand,
+          [RELOAD_COMMAND_NAME]: reloadCommand,
+          [CUSTOM_COMMAND_NAME]: customCommand,
         });
       });
 
@@ -1412,6 +1462,7 @@ describe('Manifest Utils', () => {
         setFakeWxt({
           config: { command: 'build' },
         });
+
         const output = fakeBuildOutput();
         const entrypoints = fakeArray(fakeEntrypoint);
 
@@ -1425,6 +1476,9 @@ describe('Manifest Utils', () => {
     });
 
     describe('Stripping keys', () => {
+      // TODO: This is really necessary?
+      // TODO: This seems to be the same, as it would be undefined,
+      // TODO: that's mean we can remove all of this objects, because it's undefined by default
       const mv2Manifest = {
         page_action: {},
         browser_action: {},
@@ -1444,15 +1498,18 @@ describe('Manifest Utils', () => {
         system_indicator: {},
         user_scripts: {},
       };
+
       const mv3Manifest = {
         action: {},
         export: {},
         optional_host_permissions: {},
         side_panel: {},
       };
+
       const hostPermissionsManifest = {
         host_permissions: {},
       };
+
       const manifest: any = {
         ...mv2Manifest,
         ...mv3Manifest,
@@ -1497,6 +1554,7 @@ describe('Manifest Utils', () => {
       it('should keep host_permissions as-is for MV3', async () => {
         const expectedHostPermissions = ['https://google.com/*'];
         const expectedPermissions = ['scripting'];
+
         setFakeWxt({
           config: {
             manifest: {
@@ -1507,6 +1565,7 @@ describe('Manifest Utils', () => {
             command: 'build',
           },
         });
+
         const output = fakeBuildOutput();
 
         const { manifest: actual } = await generateManifest([], output);
@@ -1521,6 +1580,7 @@ describe('Manifest Utils', () => {
           '*://*.youtube.com/*',
           'https://google.com/*',
         ];
+
         setFakeWxt({
           config: {
             manifest: {
@@ -1531,6 +1591,7 @@ describe('Manifest Utils', () => {
             command: 'build',
           },
         });
+
         const output = fakeBuildOutput();
 
         const { manifest: actual } = await generateManifest([], output);
@@ -1604,8 +1665,9 @@ describe('Manifest Utils', () => {
             origin: 'http://localhost:3000',
           }),
         });
+
         const output = fakeBuildOutput();
-        const entrypoints: Entrypoint[] = [];
+        const entrypoints: Entrypoint[] = [] as const;
 
         const { manifest: actual } = await generateManifest(
           entrypoints,
@@ -1625,12 +1687,13 @@ describe('Manifest Utils', () => {
       });
 
       it('should convert MV3 CSP object to MV2 CSP string with localhost for MV2', async () => {
+        const INPUT_CSP =
+          "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
+        const EXPECTED_CSP =
+          "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
+
         const entrypoints: Entrypoint[] = [];
         const buildOutput = fakeBuildOutput();
-        const inputCsp =
-          "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';";
-        const expectedCsp =
-          "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';";
 
         // Setup WXT for Firefox and serve command
         setFakeWxt({
@@ -1640,7 +1703,7 @@ describe('Manifest Utils', () => {
             manifestVersion: 2,
             manifest: {
               content_security_policy: {
-                extension_pages: inputCsp,
+                extension_pages: INPUT_CSP,
               },
             },
           },
@@ -1656,7 +1719,7 @@ describe('Manifest Utils', () => {
           buildOutput,
         );
 
-        expect(actual.content_security_policy).toEqual(expectedCsp);
+        expect(actual.content_security_policy).toEqual(EXPECTED_CSP);
       });
     });
 
@@ -1685,13 +1748,14 @@ describe('Manifest Utils', () => {
 
     describe('manifest_version', () => {
       it('should ignore and log a warning when someone sets `manifest_version` inside the manifest', async () => {
+        const EXPECTED_VERSION = 2;
         const buildOutput = fakeBuildOutput();
-        const expectedVersion = 2;
+
         setFakeWxt({
           logger: mock(),
           config: {
             command: 'build',
-            manifestVersion: expectedVersion,
+            manifestVersion: EXPECTED_VERSION,
             manifest: {
               manifest_version: 3,
             },
@@ -1700,7 +1764,7 @@ describe('Manifest Utils', () => {
 
         const { manifest } = await generateManifest([], buildOutput);
 
-        expect(manifest.manifest_version).toBe(expectedVersion);
+        expect(manifest.manifest_version).toBe(EXPECTED_VERSION);
         expect(wxt.logger.warn).toBeCalledTimes(1);
         expect(wxt.logger.warn).toBeCalledWith(
           expect.stringContaining(

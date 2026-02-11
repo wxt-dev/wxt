@@ -61,6 +61,7 @@ export const analytics = createAnalytics(useAppConfig().analytics);
       const hasBackground = entrypoints.find(
         (entry) => entry.type === 'background',
       );
+
       if (!hasBackground) {
         entrypoints.push({
           type: 'background',

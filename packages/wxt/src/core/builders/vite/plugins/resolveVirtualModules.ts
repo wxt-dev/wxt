@@ -13,28 +13,33 @@ import { resolve } from 'path';
  */
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {
-    const virtualId: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
-    const resolvedVirtualId = '\0' + virtualId;
+    const VIRTUAL_ID: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
+    const RESOLVED_VIRTUAL_ID = `\0${VIRTUAL_ID}`;
+
     return {
       name: `wxt:resolve-virtual-${name}`,
       resolveId(id) {
         // Id doesn't start with prefix, it looks like this:
         // /path/to/project/virtual:wxt-background?/path/to/project/entrypoints/background.ts
-        const index = id.indexOf(virtualId);
+        const index = id.indexOf(VIRTUAL_ID);
         if (index === -1) return;
 
-        const inputPath = normalizePath(id.substring(index + virtualId.length));
-        return resolvedVirtualId + inputPath;
+        const inputPath = normalizePath(
+          id.substring(index + VIRTUAL_ID.length),
+        );
+
+        return RESOLVED_VIRTUAL_ID + inputPath;
       },
       async load(id) {
-        if (!id.startsWith(resolvedVirtualId)) return;
+        if (!id.startsWith(RESOLVED_VIRTUAL_ID)) return;
 
-        const inputPath = id.replace(resolvedVirtualId, '');
-        const template = await fs.readFile(
+        const inputPath = id.replace(RESOLVED_VIRTUAL_ID, '');
+        const TEMPLATE = await fs.readFile(
           resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
           'utf-8',
         );
-        return template.replace(`virtual:user-${name}`, inputPath);
+
+        return TEMPLATE.replace(`virtual:user-${name}`, inputPath);
       },
     };
   });

@@ -38,6 +38,7 @@ export function getDevServerWebSocket(): WxtWebSocket {
 
   if (ws == null) {
     const serverUrl = __DEV_SERVER_ORIGIN__;
+
     logger.debug('Connecting to dev server @', serverUrl);
 
     ws = new WebSocket(serverUrl, 'vite-hmr') as WxtWebSocket;
@@ -58,6 +59,7 @@ export function getDevServerWebSocket(): WxtWebSocket {
     ws.addEventListener('message', (e) => {
       try {
         const message = JSON.parse(e.data) as WebSocketMessage;
+
         if (message.type === 'custom') {
           ws?.dispatchEvent(
             new CustomEvent(message.event, { detail: message.data }),

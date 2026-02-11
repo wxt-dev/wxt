@@ -119,14 +119,15 @@ describe('CLI', () => {
     });
 
     it('should respect passing --port', async () => {
-      const expectedPort = 3100;
-      mockArgv('--port', String(expectedPort));
+      const EXPECTED_PORT = 3100;
+
+      mockArgv('--port', String(EXPECTED_PORT));
       await importCli();
 
       expect(createServerMock).toBeCalledWith({
         dev: {
           server: {
-            port: expectedPort,
+            port: EXPECTED_PORT,
           },
         },
       });

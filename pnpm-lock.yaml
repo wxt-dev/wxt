@@ -305,6 +305,10 @@ importers:
         version: link:../wxt
 
   packages/runner:
+    dependencies:
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.3.3
     devDependencies:
       oxlint:
         specifier: ^1.43.0

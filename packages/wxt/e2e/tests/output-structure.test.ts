@@ -5,9 +5,12 @@ describe('Output Directory Structure', () => {
   it('should not output hidden files and directories that start with "."', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/.DS_Store');
-    project.addFile('entrypoints/.hidden1/index.html', '<html></html>');
-    project.addFile('entrypoints/.hidden2.html', '<html></html>');
-    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.addFile(
+      'entrypoints/.hidden1/index.html',
+      '<html lang="en"></html>',
+    );
+    project.addFile('entrypoints/.hidden2.html', '<html lang="en"></html>');
+    project.addFile('entrypoints/unlisted.html', '<html lang="en"></html>');
 
     await project.build();
 
@@ -23,7 +26,7 @@ describe('Output Directory Structure', () => {
       ================================================================================
       .output/chrome-mv3/unlisted.html
       ----------------------------------------
-      <html><head>  <script type="module" crossorigin src="/chunks/unlisted-DPbbfBKe.js"></script>
+      <html lang="en"><head>  <script type="module" crossorigin src="/chunks/unlisted-DPbbfBKe.js"></script>
       </head></html>"
     `);
   });
@@ -113,7 +116,7 @@ describe('Output Directory Structure', () => {
 
   it('should not include an entrypoint if the target browser is not in the list of included targets', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/options.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html lang="en"></html>');
     project.addFile(
       'entrypoints/background.ts',
       `
@@ -133,7 +136,7 @@ describe('Output Directory Structure', () => {
 
   it('should not include an entrypoint if the target browser is in the list of excluded targets', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/options.html', '<html></html>');
+    project.addFile('entrypoints/options.html', '<html lang="en"></html>');
     project.addFile(
       'entrypoints/background.ts',
       `
@@ -163,7 +166,7 @@ describe('Output Directory Structure', () => {
       'entrypoints/background.ts',
       `export default defineBackground(() => {});`,
     );
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
     project.addFile(
       'entrypoints/overlay.content.ts',
       `export default defineContentScript({
@@ -230,7 +233,6 @@ describe('Output Directory Structure', () => {
         color: #333;
       }`,
     );
-
     project.addFile(
       'entrypoints/plain-two.content.css',
       `body {
@@ -238,7 +240,6 @@ describe('Output Directory Structure', () => {
         color: #333;
       }`,
     );
-
     project.addFile(
       'entrypoints/sass-one.scss',
       `$font-stack: Helvetica, sans-serif;
@@ -249,7 +250,6 @@ describe('Output Directory Structure', () => {
         color: $primary-color;
       }`,
     );
-
     project.addFile(
       'entrypoints/sass-two.content.scss',
       `$font-stack: Helvetica, sans-serif;
@@ -293,7 +293,7 @@ describe('Output Directory Structure', () => {
 
   it("should output to a custom directory when overriding 'outDir'", async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.addFile('entrypoints/unlisted.html', '<html lang="en"></html>');
     project.setConfigFileConfig({
       outDir: 'dist',
     });
@@ -324,7 +324,7 @@ describe('Output Directory Structure', () => {
     );
     project.addFile(
       'entrypoints/popup/index.html',
-      `<html>
+      `<html lang="en">
         <head>
           <script type="module" src="./main.ts"></script>
         </head>
@@ -397,7 +397,7 @@ describe('Output Directory Structure', () => {
     );
     project.addFile(
       'entrypoints/popup/index.html',
-      `<html>
+      `<html lang="en">
           <head>
             <script type="module" src="./main.ts"></script>
           </head>

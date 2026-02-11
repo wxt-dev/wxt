@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestProject } from '../utils';
-import { WxtHooks } from '../../src/types';
+import { WxtHooks } from '../../src';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
@@ -34,6 +34,7 @@ function expectHooksToBeCalled(
     const hookName = key as keyof WxtHooks;
     const value = called[hookName];
     const times = typeof value === 'number' ? value : value ? 1 : 0;
+
     expect(
       hooks[hookName],
       `Expected "${hookName}" to be called ${times} time(s)`,
@@ -48,7 +49,7 @@ describe('Hooks', () => {
 
   it('prepare should call hooks', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
 
     await project.prepare({ hooks });
 
@@ -80,7 +81,7 @@ describe('Hooks', () => {
 
   it('build should call hooks', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
 
     await project.build({ hooks });
 
@@ -112,7 +113,7 @@ describe('Hooks', () => {
 
   it('zip should call hooks', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
 
     await project.zip({ hooks });
 
@@ -144,7 +145,7 @@ describe('Hooks', () => {
 
   it('zip -b firefox should call hooks', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
 
     await project.zip({ hooks, browser: 'firefox' });
 
@@ -176,7 +177,7 @@ describe('Hooks', () => {
 
   it('server.start should call hooks', async () => {
     const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
+    project.addFile('entrypoints/popup.html', '<html lang="en"></html>');
 
     const server = await project.startServer({
       hooks,
@@ -184,6 +185,7 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
+
     expect(hooks['server:closed']).not.toBeCalled();
     await server.stop();
 

@@ -46,7 +46,7 @@ export async function installChromium(
   extensionDir: string,
 ): Promise<CdpExtensionsLoadUnpackedResponse> {
   using cdp = createCdpConnection(browserProcess);
-  return await cdp.send<CdpExtensionsLoadUnpackedResponse>(
+  return cdp.send<CdpExtensionsLoadUnpackedResponse>(
     'Extensions.loadUnpacked',
     {
       path: extensionDir,

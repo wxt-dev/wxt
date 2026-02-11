@@ -6,8 +6,8 @@ import { ResolvedConfig } from '../../../../types';
  * Mock `wxt/browser` and stub the global `browser`/`chrome` types with a fake version of the extension APIs
  */
 export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
-  const virtualSetupModule = 'virtual:wxt-setup';
-  const resolvedVirtualSetupModule = '\0' + virtualSetupModule;
+  const VIRTUAL_SETUP_MODULE = 'virtual:wxt-setup';
+  const RESOLVED_VIRTUAL_SETUP_MODULE = `\0${VIRTUAL_SETUP_MODULE}`;
 
   return {
     name: 'wxt:extension-api-mock',
@@ -18,7 +18,7 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
       );
       return {
         test: {
-          setupFiles: [virtualSetupModule],
+          setupFiles: [VIRTUAL_SETUP_MODULE],
         },
         resolve: {
           alias: [
@@ -33,15 +33,16 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
       };
     },
     resolveId(id) {
-      if (id.endsWith(virtualSetupModule)) return resolvedVirtualSetupModule;
+      if (id.endsWith(VIRTUAL_SETUP_MODULE))
+        return RESOLVED_VIRTUAL_SETUP_MODULE;
     },
     load(id) {
-      if (id === resolvedVirtualSetupModule) return setupTemplate;
+      if (id === RESOLVED_VIRTUAL_SETUP_MODULE) return SETUP_TEMPLATE;
     },
   };
 }
 
-const setupTemplate = `
+const SETUP_TEMPLATE = `
   import { vi } from 'vitest';
   import { fakeBrowser } from 'wxt/testing/fake-browser';
 
