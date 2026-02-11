@@ -86,11 +86,14 @@ if (pkg === 'wxt') {
   const templateDirs = await fs.readdir(templatesDir);
   for (const templateDir of templateDirs) {
     const templatePkgJsonPath = join(templatesDir, templateDir, 'package.json');
-    if (await fs.pathExists(templatePkgJsonPath)) {
-      const templatePkgJson = await fs.readJson(templatePkgJsonPath);
+    const templatePkgJsonFile = Bun.file(templatePkgJsonPath);
+    if (await templatePkgJsonFile.exists()) {
+      const templatePkgJson = await templatePkgJsonFile.json();
       if (templatePkgJson.devDependencies?.wxt) {
         templatePkgJson.devDependencies.wxt = `^${newVersion}`;
-        await fs.writeJson(templatePkgJsonPath, templatePkgJson, { spaces: 2 });
+        await templatePkgJsonFile.write(
+          JSON.stringify(templatePkgJson, null, 2),
+        );
         templatePkgJsonPaths.push(templatePkgJsonPath);
         consola.success(`Updated wxt version in ${templatePkgJsonPath}`);
       }
