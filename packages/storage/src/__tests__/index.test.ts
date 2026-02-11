@@ -706,6 +706,47 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it('should set the version without running migrations for empty storage items', async () => {
+        const migrate = vi.fn((n: number) => n * 2);
+
+        const item = storage.defineItem<number>('local:key', {
+          init: () => 1,
+          version: 2,
+          migrations: {
+            2: migrate,
+          },
+        });
+        const value = await item.getValue();
+        const meta = await item.getMeta();
+
+        expect(value).toEqual(1);
+        expect(meta).toEqual({ v: 2 });
+        expect(migrate).toBeCalledTimes(0);
+      });
+
+      it('should set the version and run migrations if a storage value already exists and v2 is added', async () => {
+        const key = 'local:key';
+
+        // Mimic as if an initial value was set by a previous version. We expect
+        // this value to be migrated and doubled to V2.
+        await storage.setItem(key, 1);
+
+        const migrate = vi.fn((n: number) => n * 2);
+        const item = storage.defineItem<number>(key, {
+          init: () => 1,
+          version: 2,
+          migrations: {
+            2: migrate,
+          },
+        });
+        const value = await item.getValue();
+        const meta = await item.getMeta();
+
+        expect(value).toEqual(2);
+        expect(meta).toEqual({ v: 2 });
+        expect(migrate).toBeCalledTimes(1);
+      });
+
       it('should call onMigrationComplete callback function if defined', async () => {
         await fakeBrowser.storage.local.set({
           count: 2,
@@ -1314,6 +1355,18 @@ describe('Storage Utils', () => {
           defaultValue: null,
         });
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+      });
+
+      it('should define a non-null value when options are passed with a non-null init function', () => {
+        const item = storage.defineItem(`local:test`, {
+          init: () => 123,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+
+        const item2 = storage.defineItem(`local:test`, {
+          init: () => Promise.resolve(123),
+        });
+        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
       });
     });
   });

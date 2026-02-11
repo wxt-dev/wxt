@@ -19,9 +19,10 @@ export function createIframeUi<TMounted>(
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, iframe, options);
+    options.onBeforeMount?.(wrapper, iframe);
     mountUi(wrapper, options);
     mounted = options.onMount?.(wrapper, iframe);
   };
@@ -45,8 +46,9 @@ export function createIframeUi<TMounted>(
   };
 }
 
-export interface IframeContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
+export interface IframeContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
   /**
    * The iframe added to the DOM.
    */
@@ -72,4 +74,9 @@ export type IframeContentScriptUiOptions<TMounted> =
      * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
      */
     onMount?: (wrapper: HTMLElement, iframe: HTMLIFrameElement) => TMounted;
+    /**
+     * Callback executed before mounting the UI. Use this function to customize the iframe or wrapper
+     * elements before they are injected into the DOM. It is called every time `ui.mount()` is called.
+     */
+    onBeforeMount?: (wrapper: HTMLElement, iframe: HTMLIFrameElement) => void;
   };

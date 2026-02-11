@@ -106,6 +106,88 @@ describe('Manifest Utils', () => {
           expect(actual[expectedType]).toEqual(expected);
         },
       );
+
+      it('should include default_area for Firefox in mv3', async () => {
+        const popup = fakePopupEntrypoint({
+          options: {
+            // @ts-expect-error: Force this to be undefined
+            mv2Key: null,
+            defaultArea: 'navbar',
+          },
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).default_area).toBe('navbar');
+      });
+
+      it('should include theme_icons for Firefox in mv3', async () => {
+        const themeIcons = [
+          { light: '/icon-light-16.png', dark: '/icon-dark-16.png', size: 16 },
+          { light: '/icon-light-32.png', dark: '/icon-dark-32.png', size: 32 },
+        ];
+        const popup = fakePopupEntrypoint({
+          options: {
+            // @ts-expect-error: Force this to be undefined
+            mv2Key: null,
+            themeIcons,
+          },
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual(themeIcons);
+      });
+
+      it('should include default_area for Firefox in mv2', async () => {
+        const popup = fakePopupEntrypoint({
+          options: {
+            // @ts-expect-error: Force this to be undefined
+            mv2Key: null,
+            defaultArea: 'menupanel',
+          },
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            manifestVersion: 2,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.browser_action as any).default_area).toBe('menupanel');
+      });
     });
 
     describe('action without popup', () => {
@@ -747,6 +829,7 @@ describe('Manifest Utils', () => {
             {
               matches: ['*://google.com/*'],
               resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
             },
           ]);
         });
@@ -830,6 +913,7 @@ describe('Manifest Utils', () => {
             {
               matches: ['*://play.google.com/*'],
               resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
             },
           ]);
         });
@@ -993,6 +1077,7 @@ describe('Manifest Utils', () => {
           {
             resources: ['content-scripts/one.css'],
             matches: ['*://google.com/*'],
+            use_dynamic_url: true,
           },
         ]);
       });

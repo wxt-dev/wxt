@@ -14,7 +14,7 @@ export function createIntegratedUi<TMounted>(
 ): IntegratedContentScriptUi<TMounted> {
   const wrapper = document.createElement(options.tag || 'div');
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
@@ -50,8 +50,9 @@ export function createIntegratedUi<TMounted>(
  * Shared types for the different `wxt/utils/content-script-ui/*` modules.
  * @module wxt/utils/content-script-ui/types
  */
-export interface IntegratedContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
+export interface IntegratedContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
   /**
    * A wrapper div that assists in positioning.
    */

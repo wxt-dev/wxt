@@ -17,15 +17,14 @@ jobs:
       id-token: write # OIDC for NPM publishing
     steps:
       - name: Checkout
-        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup
         uses: ./.github/actions/setup
         with:
           installArgs: --ignore-scripts
-
-      - name: Update NPM
-        run: sudo npm i -g npm@latest
 
       - name: Generate Latest Code
         working-directory: packages/browser
@@ -37,13 +36,16 @@ jobs:
 
       - name: Commit Changes
         id: commit
-        uses: stefanzweifel/git-auto-commit-action@01d77ca6cb089da1360e540865f7d035c95aa199 # v6.0.1
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version'
 
-      - name: Publish Package
+      - name: Publish to NPM
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
-        run: npm publish
+        run: |
+          pnpm pack
+          sudo npm i -g npm@latest
+          /usr/local/bin/npm publish *.tgz

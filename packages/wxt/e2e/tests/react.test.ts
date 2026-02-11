@@ -31,7 +31,7 @@ describe('React', () => {
     await project.build();
 
     expect(
-      await project.fileExists('.output/chrome-mv3/content-scripts/demo.js'),
+      await project.pathExists('.output/chrome-mv3/content-scripts/demo.js'),
     ).toBe(true);
     expect(await project.serializeFile('.output/chrome-mv3/manifest.json'))
       .toMatchInlineSnapshot(`

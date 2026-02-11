@@ -22,7 +22,7 @@
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "import": {
@@ -41,7 +41,7 @@
   "scripts": {
     "dev": "wxt",
     "check": "pnpm build && check",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "peerDependencies": {
@@ -51,14 +51,12 @@
     "@vitejs/plugin-react": "^4.4.1 || ^5.0.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "^2.1.0",
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
-    "publint": "^0.3.12",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "typescript": "^5.9.2",
-    "unbuild": "^3.6.1",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "publint": "^0.3.17",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }
 }

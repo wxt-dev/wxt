@@ -21,7 +21,7 @@ export interface InlineConfig {
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
-   * After changing, don't forget to move the `public/` and `entrypoints/` directories into the new
+   * After changing, remember to move the `public/` and `entrypoints/` directories into the new
    * source dir.
    *
    * @default config.root
@@ -200,7 +200,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     *   "coverage", // Include the coverage directory in the `sourcesRoot`
      * ]
      */
     includeSources?: string[];
@@ -213,7 +213,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Include the coverage directory in the `sourcesRoot`
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
      * ]
      */
     excludeSources?: string[];
@@ -462,8 +462,7 @@ export interface BuildStepOutput {
 }
 
 export interface WxtDevServer
-  extends Omit<WxtBuilderServer, 'listen' | 'close'>,
-    ServerInfo {
+  extends Omit<WxtBuilderServer, 'listen' | 'close'>, ServerInfo {
   /**
    * Stores the current build output of the server.
    */
@@ -567,8 +566,7 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
   type?: PerBrowserOption<'module'>;
 }
 
-export interface BaseContentScriptEntrypointOptions
-  extends BaseEntrypointOptions {
+export interface BaseContentScriptEntrypointOptions extends BaseEntrypointOptions {
   matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -635,21 +633,32 @@ export interface BaseContentScriptEntrypointOptions
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
 }
 
-export interface MainWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    */
   world: 'MAIN';
 }
 
-export interface IsolatedWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    * @default "ISOLATED"
    */
   world?: 'ISOLATED';
+}
+
+/**
+ * Firefox theme icon definition for light/dark mode support.
+ * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action#theme_icons
+ */
+export interface ThemeIcon {
+  /** Path to the icon shown when the browser uses a light theme. */
+  light: string;
+  /** Path to the icon shown when the browser uses a dark theme. */
+  dark: string;
+  /** Icon size in pixels. */
+  size: number;
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
@@ -660,6 +669,18 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
   browserStyle?: PerBrowserOption<boolean>;
+  /**
+   * Firefox only. Defines the part of the browser in which the button is initially placed.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#default_area
+   */
+  defaultArea?: PerBrowserOption<
+    'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar'
+  >;
+  /**
+   * Firefox only. Icons for light and dark themes.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#theme_icons
+   */
+  themeIcons?: ThemeIcon[];
 }
 
 export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
@@ -780,8 +801,7 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface IsolatedWorldContentScriptDefinition
-  extends IsolatedWorldContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptDefinition extends IsolatedWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -792,8 +812,7 @@ export interface IsolatedWorldContentScriptDefinition
   main(ctx: ContentScriptContext): any | Promise<any>;
 }
 
-export interface MainWorldContentScriptDefinition
-  extends MainWorldContentScriptEntrypointOptions {
+export interface MainWorldContentScriptDefinition extends MainWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -998,7 +1017,7 @@ export interface WebExtConfig {
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
-  firefoxPrefs?: Record<string, string>;
+  firefoxPref?: Record<string, boolean | number | string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
    */
@@ -1409,7 +1428,9 @@ export interface FsCache {
 
 export interface ExtensionRunner {
   openBrowser(): Promise<void>;
-  closeBrowser(): Promise<void>;
+
+  closeBrowser?(): Promise<void>;
+
   /** Whether or not this runner actually opens the browser. */
   canOpen?(): boolean;
 }
@@ -1544,8 +1565,9 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
-  extends WxtModule<TOptions> {
+export interface WxtModuleWithMetadata<
+  TOptions extends WxtModuleOptions,
+> extends WxtModule<TOptions> {
   type: 'local' | 'node_module';
   id: string;
 }

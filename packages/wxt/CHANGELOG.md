@@ -1,5 +1,96 @@
 # Changelog
 
+## v0.20.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.13...wxt-v0.20.14)
+
+### 🚀 Enhancements
+
+- Add `onBeforeMount` callback to `createIframeUi` options ([#1899](https://github.com/wxt-dev/wxt/pull/1899))
+
+### 🩹 Fixes
+
+- Remove failing test ([6fb4cee4](https://github.com/wxt-dev/wxt/commit/6fb4cee4))
+- Rename and make firefoxPrefs in web-ext.config.ts work ([#2068](https://github.com/wxt-dev/wxt/pull/2068))
+- **content-script-context:** Handle undefined browser.runtime ([#2042](https://github.com/wxt-dev/wxt/pull/2042))
+- `MaxListenersExceededWarning` ([#2058](https://github.com/wxt-dev/wxt/pull/2058))
+
+### 📖 Documentation
+
+- Fix alignment of 2 last comments of regex patterns ([#2012](https://github.com/wxt-dev/wxt/pull/2012))
+
+### 🏡 Chore
+
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- Upgrade major deps ([#2070](https://github.com/wxt-dev/wxt/pull/2070))
+- Refresh lockfile and upgrade subdependencies ([#2071](https://github.com/wxt-dev/wxt/pull/2071))
+
+### ❤️ Contributors
+
+- Dareka ([@darekadareka](https://github.com/darekadareka))
+- Mark ([@mjfaga](https://github.com/mjfaga))
+- Ariasuni <aria@ariasuni.eu>
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))
+
+## v0.20.13
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.12...wxt-v0.20.13)
+
+### 🚀 Enhancements
+
+- Remove script element immediately in injectScript ([#1761](https://github.com/wxt-dev/wxt/pull/1761))
+- Add `modifyScript` option to `injectScript` ([#1762](https://github.com/wxt-dev/wxt/pull/1762))
+- Make `injectScript` return the created script element ([#1838](https://github.com/wxt-dev/wxt/pull/1838))
+- Support `.wxtrc` config file ([#1833](https://github.com/wxt-dev/wxt/pull/1833))
+
+### 🩹 Fixes
+
+- Make `injectScript` wait until script is actually loaded ([#1763](https://github.com/wxt-dev/wxt/pull/1763))
+- Don't return promises from unlisted scripts that do not have an async `main` function ([#1907](https://github.com/wxt-dev/wxt/pull/1907))
+
+### 💅 Refactors
+
+- Use `script.text` instead of `innerHTML` in `injectScript` ([#1764](https://github.com/wxt-dev/wxt/pull/1764))
+
+### ❤️ Contributors
+
+- Rxliuli ([@rxliuli](https://github.com/rxliuli))
+- Sebastian Landwehr <info@sebastianlandwehr.com>
+- Johan Kiviniemi ([@ion1](https://github.com/ion1))
+
+## v0.20.12
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.11...wxt-v0.20.12)
+
+### 🚀 Enhancements
+
+- Remove `data-wxt-*` attributes ([#1913](https://github.com/wxt-dev/wxt/pull/1913))
+- Default to using `use_dynamic_url: true` for content script css files ([#1993](https://github.com/wxt-dev/wxt/pull/1993))
+
+### 🩹 Fixes
+
+- Wxt normal logs are drowned by `dotenv@17.0.0` ads ([#1883](https://github.com/wxt-dev/wxt/pull/1883))
+- Optimize `splitShadowRootCss` ([#1934](https://github.com/wxt-dev/wxt/pull/1934))
+- `wxt prepare` fails with the error "__vite_ssr_exportName__ is not defined" when using Vite 7 ([#1884](https://github.com/wxt-dev/wxt/pull/1884))
+
+### 🏡 Chore
+
+- Use `linkedom` a test instead of `happy-dom` ([#1957](https://github.com/wxt-dev/wxt/pull/1957))
+- Add support for `vite-node` v5 ([#2001](https://github.com/wxt-dev/wxt/pull/2001))
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- **dev-deps:** Upgrade `happy-dom` to address CVE-2025-61927 ([#2002](https://github.com/wxt-dev/wxt/pull/2002))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Jaguar Zhou ([@aiktb](https://github.com/aiktb))
+- Alexander Harding <noreply@harding.dev>
+- Florian Kühne ([@ZerGo0](https://github.com/ZerGo0))
+
 ## v0.20.11
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.10...wxt-v0.20.11)

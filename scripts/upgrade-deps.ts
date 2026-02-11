@@ -4,6 +4,7 @@ import * as semver from 'semver';
 import { dirname } from 'node:path';
 import consola from 'consola';
 import spawn from 'nano-spawn';
+import pMap from 'p-map';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
@@ -61,27 +62,22 @@ async function main(): Promise<never> {
   const isMajor = ['-m', '--major'].some((arg) => args.includes(arg));
   const upgrades = await detectUpgrades(dependencies, isMajor);
 
-  if (upgrades.length === 0) {
-    console.log();
-    consola.info("No upgrades found, you're up to date!");
-    console.log();
+  if (!upgrades.length) {
+    consola.info("\nNo upgrades found, you're up to date!\n");
     process.exit(0);
   }
 
   printUpgrades(upgrades);
 
   if (!isWrite) {
-    consola.info('Run with `-w` to write changes to package.json files');
-    console.log();
+    consola.info('Run with `-w` to write changes to package.json files\n');
     process.exit(0);
   }
 
   consola.start('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
-  console.log();
-  consola.info('Run `pnpm i` to install new dependencies');
-  console.log();
+  consola.info('\nRun `pnpm i` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -177,7 +173,7 @@ function validateNoMultipleVersions(
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
   // Use PNPM instead of API in case dependencies don't come from NPM
   const res = await spawn('pnpm', ['view', name, '--json']);
-  return JSON.parse(res.output);
+  return JSON.parse(res.stdout);
 }
 
 type PackageInfo = {
@@ -203,12 +199,13 @@ type DependencyInfo = {
 async function fetchAllPackageInfos(
   deps: DependencyVersionMap,
 ): Promise<DependencyInfo[]> {
-  const infos = await Promise.all(
-    Object.entries(deps).map(async ([name, currentVersionRange]) => ({
-      name,
-      currentVersionRange,
-      info: await fetchPackageInfo(name),
-    })),
+  const infos: DependencyInfo[] = await pMap(
+    Object.entries(deps),
+    async ([name, currentVersionRange]) => {
+      const info = await fetchPackageInfo(name);
+      return { name, currentVersionRange, info };
+    },
+    { concurrency: 20 },
   );
   return infos.toSorted((a, b) => a.name.localeCompare(b.name));
 }
@@ -253,7 +250,6 @@ async function detectUpgrades(
     const latestVersion = dep.info['dist-tags'].latest;
     const latestVersionReleasedAt = new Date(dep.info.time[latestVersion]);
 
-    semver.RELEASE_TYPES;
     const upgradeToVersion = isMajor
       ? // Always use the latest version for major upgrades
         latestVersion
@@ -284,7 +280,6 @@ async function detectUpgrades(
     }
 
     if (upgradeToRange === currentRange) continue;
-    // if (currentVersion === latestVersion) continue;
 
     results.push({
       name: dep.name,
@@ -314,8 +309,8 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
   );
   const numberPadding = String(upgrades.length + 1).length + 1;
 
-  consola.info(`Found ${upgrades.length} upgrades:`);
-  console.log();
+  consola.info(`Found ${upgrades.length} upgrades:\n`);
+
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
     const num = `\x1b[2m${(i + 1).toString().padStart(numberPadding)}.\x1b[0m`;

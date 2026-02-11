@@ -1,10 +1,12 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build } from '../../core/build';
-import { createServer } from '../../core/create-server';
-import { zip } from '../../core/zip';
-import { prepare } from '../../core/prepare';
-import { clean } from '../../core/clean';
-import { initialize } from '../../core/initialize';
+import {
+  build,
+  createServer,
+  zip,
+  prepare,
+  clean,
+  initialize,
+} from '../../core';
 import { mock } from 'vitest-mock-extended';
 import consola, { LogLevels } from 'consola';
 

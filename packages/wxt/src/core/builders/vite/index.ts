@@ -27,7 +27,7 @@ import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
 import { dirname, extname, join, relative } from 'node:path';
 import fs from 'fs-extra';
-import { normalizePath } from '../../utils/paths';
+import { normalizePath } from '../../utils';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -146,10 +146,10 @@ export async function createViteBuilder(
             ),
             // Output content script CSS to `content-scripts/`, but all other scripts are written to
             // `assets/`.
-            assetFileNames: ({ name }) => {
+            assetFileNames: ({ names }) => {
               if (
                 entrypoint.type === 'content-script' &&
-                name?.endsWith('css')
+                names[0].endsWith('css')
               ) {
                 return `content-scripts/${entrypoint.name}.[ext]`;
               } else {
@@ -453,7 +453,7 @@ async function moveHtmlFiles(
   );
 
   // TODO: Optimize and only delete old path directories
-  removeEmptyDirs(config.outDir);
+  await removeEmptyDirs(config.outDir);
 
   return movedChunks;
 }
