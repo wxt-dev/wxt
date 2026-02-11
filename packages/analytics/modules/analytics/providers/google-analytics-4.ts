@@ -4,7 +4,7 @@ import type { BaseAnalyticsEvent } from '../types';
 const DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
 
 export interface GoogleAnalytics4ProviderOptions {
-  apiUrl: string | undefined;
+  apiUrl?: string;
   apiSecret: string;
   measurementId: string;
 }
