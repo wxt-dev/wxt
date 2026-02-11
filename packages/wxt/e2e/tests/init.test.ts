@@ -35,29 +35,29 @@ describe('Init command', () => {
     });
 
     expect(files.sort()).toMatchInlineSnapshot(`
-          [
-            ".gitignore",
-            ".vscode/extensions.json",
-            "README.md",
-            "assets/vue.svg",
-            "components/HelloWorld.vue",
-            "entrypoints/background.ts",
-            "entrypoints/content.ts",
-            "entrypoints/popup/App.vue",
-            "entrypoints/popup/index.html",
-            "entrypoints/popup/main.ts",
-            "entrypoints/popup/style.css",
-            "package.json",
-            "public/icon/128.png",
-            "public/icon/16.png",
-            "public/icon/32.png",
-            "public/icon/48.png",
-            "public/icon/96.png",
-            "public/wxt.svg",
-            "tsconfig.json",
-            "wxt.config.ts",
-          ]
-        `);
+      [
+        ".gitignore",
+        ".vscode/extensions.json",
+        "README.md",
+        "assets/vue.svg",
+        "components/HelloWorld.vue",
+        "entrypoints/background.ts",
+        "entrypoints/content.ts",
+        "entrypoints/popup/App.vue",
+        "entrypoints/popup/index.html",
+        "entrypoints/popup/main.ts",
+        "entrypoints/popup/style.css",
+        "package.json",
+        "public/icon/128.png",
+        "public/icon/16.png",
+        "public/icon/32.png",
+        "public/icon/48.png",
+        "public/icon/96.png",
+        "public/wxt.svg",
+        "tsconfig.json",
+        "wxt.config.ts",
+      ]
+    `);
   });
 
   it('should throw an error if the directory is not empty', async () => {
