@@ -4,13 +4,7 @@ import { withTimeout } from './time';
 
 function isOffline(): Promise<boolean> {
   const isOffline = new Promise<boolean>((res) => {
-    dns.resolve('google.com', (err) => {
-      if (err == null) {
-        res(false);
-      } else {
-        res(true);
-      }
-    });
+    dns.resolve('google.com', (err) => res(err != null));
   });
   return withTimeout(isOffline, 1e3).catch(() => true);
 }

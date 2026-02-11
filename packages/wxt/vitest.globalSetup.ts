@@ -1,7 +1,6 @@
-import { exists, rm } from 'fs-extra';
+import { pathExists, rm } from 'fs-extra';
 import spawn from 'nano-spawn';
-import { rename } from 'node:fs/promises';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, rename } from 'node:fs/promises';
 
 let setupHappened = false;
 
@@ -16,7 +15,7 @@ export async function setup() {
   globalThis.__ENTRYPOINT__ = 'test';
 
   const e2eDistPath = './e2e/dist/';
-  if (await exists(e2eDistPath)) {
+  if (await pathExists(e2eDistPath)) {
     await rm(e2eDistPath, { recursive: true, force: true });
   }
 

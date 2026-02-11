@@ -55,8 +55,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.6",
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.16",
-    "tsdown": "^0.18.1",
+    "publint": "^0.3.17",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   },

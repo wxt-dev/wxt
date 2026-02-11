@@ -281,6 +281,12 @@ function addEntrypoints(
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
+    if (popup.options.defaultArea)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.default_area = popup.options.defaultArea;
+    if (popup.options.themeIcons)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.theme_icons = popup.options.themeIcons;
     if (manifest.manifest_version === 3) {
       manifest.action = {
         ...manifest.action,
@@ -436,8 +442,8 @@ function discoverIcons(
     /^icon@([0-9]+)w\.png$/,                // icon@16w.png
     /^icon@([0-9]+)h\.png$/,                // icon@16h.png
     /^icon@([0-9]+)\.png$/,                 // icon@16.png
-    /^icons?[/\\]([0-9]+)\.png$/,          // icon/16.png | icons/16.png
-    /^icons?[/\\]([0-9]+)x[0-9]+\.png$/,   // icon/16x16.png | icons/16x16.png
+    /^icons?[/\\]([0-9]+)\.png$/,           // icon/16.png | icons/16.png
+    /^icons?[/\\]([0-9]+)x[0-9]+\.png$/,    // icon/16x16.png | icons/16x16.png
   ];
   // #endregion snippet
 
@@ -459,13 +465,13 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
-  let permissonUrl = wxt.server?.origin;
-  if (permissonUrl) {
-    const permissionUrlInstance = new URL(permissonUrl);
+  let permissionUrl = wxt.server?.origin;
+  if (permissionUrl) {
+    const permissionUrlInstance = new URL(permissionUrl);
     permissionUrlInstance.port = '';
-    permissonUrl = permissionUrlInstance.toString();
+    permissionUrl = permissionUrlInstance.toString();
   }
-  const permission = `${permissonUrl}*`;
+  const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (manifest.manifest_version === 3) {
@@ -669,7 +675,7 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
 }
 
 /**
- * Make sure all resources are in MV3 format. If not, add a wanring
+ * Make sure all resources are in MV3 format. If not, add a warning.
  */
 function validateMv3WebAccessibleResources(
   manifest: Browser.runtime.Manifest,

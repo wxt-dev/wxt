@@ -14,7 +14,6 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   OutputChunk,
-  OutputFile,
   OutputAsset,
   BuildOutput,
   BuildStepOutput,
@@ -25,7 +24,7 @@ import {
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
-import { setWxtForTesting } from '../../../core/wxt';
+import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
 faker.seed(import.meta.test.SEED);
@@ -146,6 +145,10 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
       'page_action',
       undefined,
     ]),
+    // Firefox-specific options - kept undefined by default to avoid breaking existing tests
+    browserStyle: undefined,
+    defaultArea: undefined,
+    themeIcons: undefined,
   },
   skipped: faker.datatype.boolean(),
 }));
@@ -203,10 +206,6 @@ export const fakeOutputAsset = fakeObjectCreator<OutputAsset>(() => ({
   type: 'asset',
   fileName: fakeFileName(),
 }));
-
-export function fakeOutputFile(): OutputFile {
-  return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
-}
 
 export const fakeManifest = fakeObjectCreator<Browser.runtime.Manifest>(() => ({
   manifest_version: faker.helpers.arrayElement([2, 3]),

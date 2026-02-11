@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import { dirname, relative, resolve } from 'node:path';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import { getEntrypointGlobals, getGlobals } from './utils/globals';
-import { normalizePath } from './utils/paths';
+import { normalizePath } from './utils';
 import path from 'node:path';
 import { Message, parseI18nMessages } from './utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
@@ -136,7 +136,7 @@ declare module "wxt/browser" {
     'messages.json',
   );
   let messages: Message[];
-  if (await fs.exists(defaultLocalePath)) {
+  if (await fs.pathExists(defaultLocalePath)) {
     const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
     messages = parseI18nMessages(content);
   } else {
@@ -166,7 +166,8 @@ declare module "wxt/browser" {
   };
 
   const overrides = [
-    // Generate individual overloads for each message so JSDoc contains description and base translation.
+    // Generate individual overloads for each message so JSDoc contains
+    // description and base translation.
     ...messages.map((message) =>
       renderGetMessageOverload(
         `"${message.name}"`,
@@ -174,7 +175,8 @@ declare module "wxt/browser" {
         message.message,
       ),
     ),
-    // Include a final union-based override so TS accepts valid string templates or concatenations
+    // Include a final union-based override so TS accepts valid string
+    // templates or concatenations.
     // ie: browser.i18n.getMessage(`some_enum_${enumValue}`)
     renderGetMessageOverload(
       messages.map((message) => `"${message.name}"`).join(' | '),

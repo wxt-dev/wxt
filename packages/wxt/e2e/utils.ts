@@ -1,5 +1,3 @@
-import { dirname, relative, resolve } from 'path';
-import fs, { mkdir } from 'fs-extra';
 import glob from 'fast-glob';
 import spawn, { Result as SpawnResult } from 'nano-spawn';
 import {
@@ -10,8 +8,7 @@ import {
   prepare,
   zip,
 } from '../src';
-import { normalizePath } from '../src/core/utils/paths';
-import merge from 'lodash.merge';
+import { normalizePath } from '../src/core/utils';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -24,7 +21,7 @@ export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
-  readonly needsIsolation: boolean;
+  readonly hasCustomDependencies: boolean;
 
   constructor(packageJson: any = {}) {
     // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
@@ -33,10 +30,7 @@ export class TestProject {
     const id = Math.random().toString(32).substring(3);
     this.root = resolve(E2E_DIR, 'dist', id);
 
-    // Test projects will use PNPM instead of bun when they have custom
-    // dependency requirements. Bun tries to use the monorepo workspace, causing problems.
-    // But using PNPM makes the tests really slow, so we only use it when necessary.
-    this.needsIsolation =
+    this.hasCustomDependencies =
       Object.keys({
         ...packageJson.dependencies,
         ...packageJson.devDependencies,
@@ -133,11 +127,14 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    if (this.needsIsolation) {
-      await spawn('pnpm', ['install', '--prefer-offline'], {
+    // Only install dependencies if the project has custom ones - otherwise the
+    // project will reuse the ones in `packages/wxt/node_modules`!
+    if (this.hasCustomDependencies) {
+      await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
         cwd: this.root,
       });
     }
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
@@ -152,14 +149,6 @@ export class TestProject {
    */
   serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
     return this.serializeDir('.output', ignoreContentsOfFilenames);
-  }
-
-  /**
-   * Read all the files from the test project's `.wxt` directory and combine them into a string
-   * that can be used in a snapshot.
-   */
-  serializeWxtDir(): Promise<string> {
-    return this.serializeDir(resolve(this.root, '.wxt/types'));
   }
 
   /**
@@ -201,14 +190,14 @@ export class TestProject {
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 
-  fileExists(...path: string[]): Promise<boolean> {
-    return fs.exists(this.resolvePath(...path));
+  pathExists(...path: string[]): Promise<boolean> {
+    return fs.pathExists(this.resolvePath(...path));
   }
 
-  async getOutputManifest(
+  getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(this.resolvePath(path));
+    return fs.readJson(this.resolvePath(path));
   }
 
   /**

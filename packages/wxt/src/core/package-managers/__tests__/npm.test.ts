@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { npm } from '../npm';
 import spawn from 'nano-spawn';
-import { exists } from 'fs-extra';
+import { pathExists } from 'fs-extra';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {
@@ -41,7 +41,7 @@ describe('NPM Package Management Utils', () => {
       const actual = await npm.downloadDependency(id, downloadDir);
 
       expect(actual).toEqual(expected);
-      expect(await exists(actual)).toBe(true);
+      expect(await pathExists(actual)).toBe(true);
     });
   });
 });

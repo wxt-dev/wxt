@@ -1,15 +1,15 @@
 import {
   determineSemverChange,
-  loadChangelogConfig,
-  parseCommits,
   generateMarkDown,
+  loadChangelogConfig,
   parseChangelogMarkdown,
+  parseCommits,
 } from 'changelogen';
-import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 import { consola } from 'consola';
+import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: bun run scripts/bump-package-version.ts <package-name>',
   );
@@ -77,8 +77,31 @@ const newChangelog =
 await Bun.write(changelogPath, newChangelog);
 consola.success('Updated changelog');
 
+// Update WXT version in templates when releasing wxt package
+const templatePkgJsonPaths: string[] = [];
+if (pkg === 'wxt') {
+  const templatesDir = 'templates';
+  const templateDirs = await fs.readdir(templatesDir);
+  for (const templateDir of templateDirs) {
+    const templatePkgJsonPath = path.join(
+      templatesDir,
+      templateDir,
+      'package.json',
+    );
+    if (await fs.pathExists(templatePkgJsonPath)) {
+      const templatePkgJson = await fs.readJson(templatePkgJsonPath);
+      if (templatePkgJson.devDependencies?.wxt) {
+        templatePkgJson.devDependencies.wxt = `^${newVersion}`;
+        await fs.writeJson(templatePkgJsonPath, templatePkgJson, { spaces: 2 });
+        templatePkgJsonPaths.push(templatePkgJsonPath);
+        consola.success(`Updated wxt version in ${templatePkgJsonPath}`);
+      }
+    }
+  }
+}
+
 // Commit changes
-await Bun.$`git add "${pkgJsonPath}" "${changelogPath}"`;
+await Bun.$`git add "${pkgJsonPath}" "${changelogPath}" ${templatePkgJsonPaths.join(' ')}`;
 await Bun.$`git commit -m "chore(release): ${pkgName} v${newVersion}"`;
 await Bun.$`git tag ${newTag}`;
 consola.success('Committed version and changelog');

@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.6",
-    "oxlint": "^1.33.0",
-    "publint": "^0.3.16",
+    "oxlint": "^1.43.0",
+    "publint": "^0.3.17",
     "tsdown": "^0.18.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.18"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",

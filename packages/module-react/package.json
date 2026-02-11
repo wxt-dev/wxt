@@ -54,12 +54,11 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.6",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "publint": "^0.3.16",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "tsdown": "^0.18.1",
+    "publint": "^0.3.17",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

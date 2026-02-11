@@ -126,7 +126,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await runner.closeBrowser();
+      await runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -150,7 +150,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await runner.closeBrowser();
+      await runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
       runner = await createExtensionRunner();

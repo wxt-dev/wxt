@@ -1,5 +1,5 @@
-import { Plugin } from 'vite';
-import { ResolvedConfig } from '../../../../types';
+import type { Plugin } from 'vite';
+import type { ResolvedConfig } from '../../../../types';
 import { fetchCached } from '../../../utils/network';
 
 /**
@@ -15,12 +15,12 @@ export function download(config: ResolvedConfig): Plugin {
     resolveId(id) {
       if (id.startsWith('url:')) return '\0' + id;
     },
-    async load(id) {
+    load(id) {
       if (!id.startsWith('\0url:')) return;
 
       // Load file from network or cache
       const url = id.replace('\0url:', '');
-      return await fetchCached(url, config);
+      return fetchCached(url, config);
     },
   };
 }

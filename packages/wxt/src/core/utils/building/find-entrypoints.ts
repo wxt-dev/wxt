@@ -21,9 +21,9 @@ import {
   isHtmlEntrypoint,
   isJsEntrypoint,
   resolvePerBrowserOptions,
-} from '../../utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
+} from '../entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
+import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
@@ -77,9 +77,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
         (entry) =>
           entry.name === name && entry.inputPath.endsWith('index.html'),
       );
-      if (hasIndexHtml) return false;
 
-      return true;
+      return !hasIndexHtml;
     });
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
@@ -184,8 +183,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   await Promise.all([
     // HTML
     ...htmlInfos.map(async (info) => {
-      const res = await importHtmlEntrypoint(info);
-      resMap[info.inputPath] = res;
+      resMap[info.inputPath] = await importHtmlEntrypoint(info);
     }),
     // JS
     (async () => {
@@ -268,7 +266,7 @@ async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
-  const stictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
+  const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
       browserStyle: options.browserStyle,
       exclude: options.exclude,
@@ -276,16 +274,20 @@ async function getPopupEntrypoint(
       defaultIcon: options.defaultIcon,
       defaultTitle: options.title,
       mv2Key: options.type,
+      defaultArea: options.defaultArea,
     },
     wxt.config.browser,
   );
-  if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
-    stictOptions.mv2Key = 'browser_action';
+  if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
+    strictOptions.mv2Key = 'browser_action';
+
+  // themeIcons is an array of objects, not a per-browser option
+  const themeIcons = options.themeIcons;
 
   return {
     type: 'popup',
     name: 'popup',
-    options: stictOptions,
+    options: { ...strictOptions, themeIcons },
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };

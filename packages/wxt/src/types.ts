@@ -21,7 +21,7 @@ export interface InlineConfig {
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
-   * After changing, don't forget to move the `public/` and `entrypoints/` directories into the new
+   * After changing, remember to move the `public/` and `entrypoints/` directories into the new
    * source dir.
    *
    * @default config.root
@@ -648,6 +648,19 @@ export interface IsolatedWorldContentScriptEntrypointOptions extends BaseContent
   world?: 'ISOLATED';
 }
 
+/**
+ * Firefox theme icon definition for light/dark mode support.
+ * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action#theme_icons
+ */
+export interface ThemeIcon {
+  /** Path to the icon shown when the browser uses a light theme. */
+  light: string;
+  /** Path to the icon shown when the browser uses a dark theme. */
+  dark: string;
+  /** Icon size in pixels. */
+  size: number;
+}
+
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   /**
    * Defaults to "browser_action" to be equivalent to MV3's "action" key
@@ -656,6 +669,18 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
   browserStyle?: PerBrowserOption<boolean>;
+  /**
+   * Firefox only. Defines the part of the browser in which the button is initially placed.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#default_area
+   */
+  defaultArea?: PerBrowserOption<
+    'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar'
+  >;
+  /**
+   * Firefox only. Icons for light and dark themes.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#theme_icons
+   */
+  themeIcons?: ThemeIcon[];
 }
 
 export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
@@ -992,7 +1017,7 @@ export interface WebExtConfig {
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
-  firefoxPrefs?: Record<string, string>;
+  firefoxPref?: Record<string, boolean | number | string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
    */
@@ -1403,7 +1428,9 @@ export interface FsCache {
 
 export interface ExtensionRunner {
   openBrowser(): Promise<void>;
-  closeBrowser(): Promise<void>;
+
+  closeBrowser?(): Promise<void>;
+
   /** Whether or not this runner actually opens the browser. */
   canOpen?(): boolean;
 }

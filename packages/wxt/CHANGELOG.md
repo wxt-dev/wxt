@@ -1,5 +1,88 @@
 # Changelog
 
+## v0.20.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.14...wxt-v0.20.15)
+
+### 🚀 Enhancements
+
+- Export `normalizePath` from `wxt` module ([#2080](https://github.com/wxt-dev/wxt/pull/2080))
+- **popup:** Add Firefox `default_area` and `theme_icons` support ([#2097](https://github.com/wxt-dev/wxt/pull/2097))
+- Add log `--level` cli option ([#1973](https://github.com/wxt-dev/wxt/pull/1973))
+
+### 🩹 Fixes
+
+- Content script is incorrectly invalidated when injected multiple times ([#2035](https://github.com/wxt-dev/wxt/pull/2035))
+- Use `uiContainer` to apply position when creating shadow root ui ([#2036](https://github.com/wxt-dev/wxt/pull/2036))
+- Make `ExtensionRunner#closeBrowser` optional ([#2092](https://github.com/wxt-dev/wxt/pull/2092))
+- Rename `name` to `names` prop of `rollup` to fix deprecated warning ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 💅 Refactors
+
+- Standardize file existence checks to `pathExists` ([#2083](https://github.com/wxt-dev/wxt/pull/2083))
+- Cleanup esm ([#1950](https://github.com/wxt-dev/wxt/pull/1950))
+- `async`/`await` cleanup ([#2088](https://github.com/wxt-dev/wxt/pull/2088))
+- Cleanup unnecssary checks ([#2089](https://github.com/wxt-dev/wxt/pull/2089))
+- Simplify import paths ([#2093](https://github.com/wxt-dev/wxt/pull/2093))
+
+### 📖 Documentation
+
+- Fix JSDoc ([6ae5fb5e](https://github.com/wxt-dev/wxt/commit/6ae5fb5e))
+
+### 🏡 Chore
+
+- Cleanup comment line lengths ([#2090](https://github.com/wxt-dev/wxt/pull/2090))
+- Cleanup `@ts-*` comments ([#2094](https://github.com/wxt-dev/wxt/pull/2094))
+- Update JSDoc to use `@internal` ([#2091](https://github.com/wxt-dev/wxt/pull/2091))
+- Fix typos ([#2086](https://github.com/wxt-dev/wxt/pull/2086))
+- Remove unused code ([#2087](https://github.com/wxt-dev/wxt/pull/2087))
+- Simplify imports of `cli/__tests__/index.ts` ([#2104](https://github.com/wxt-dev/wxt/pull/2104))
+
+### ❤️ Contributors
+
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Wotan-allfather <wotan-ai@proton.me>
+- Namu ([@namuorg](https://github.com/namuorg))
+- Eli ([@lishaduck](https://github.com/lishaduck))
+
+## v0.20.14
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.13...wxt-v0.20.14)
+
+### 🚀 Enhancements
+
+- Add `onBeforeMount` callback to `createIframeUi` options ([#1899](https://github.com/wxt-dev/wxt/pull/1899))
+
+### 🩹 Fixes
+
+- Remove failing test ([6fb4cee4](https://github.com/wxt-dev/wxt/commit/6fb4cee4))
+- Rename and make firefoxPrefs in web-ext.config.ts work ([#2068](https://github.com/wxt-dev/wxt/pull/2068))
+- **content-script-context:** Handle undefined browser.runtime ([#2042](https://github.com/wxt-dev/wxt/pull/2042))
+- `MaxListenersExceededWarning` ([#2058](https://github.com/wxt-dev/wxt/pull/2058))
+
+### 📖 Documentation
+
+- Fix alignment of 2 last comments of regex patterns ([#2012](https://github.com/wxt-dev/wxt/pull/2012))
+
+### 🏡 Chore
+
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- Upgrade major deps ([#2070](https://github.com/wxt-dev/wxt/pull/2070))
+- Refresh lockfile and upgrade subdependencies ([#2071](https://github.com/wxt-dev/wxt/pull/2071))
+
+### ❤️ Contributors
+
+- Dareka ([@darekadareka](https://github.com/darekadareka))
+- Mark ([@mjfaga](https://github.com/mjfaga))
+- Ariasuni <aria@ariasuni.eu>
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))
+
 ## v0.20.13
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.12...wxt-v0.20.13)

@@ -164,6 +164,10 @@ Both issues have the same cause: the library puts something outside the `ShadowR
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
 
+## Does WXT provide docs for LLMs?
+
+Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).
+
 ## Is there an LLM trained on WXT's docs that I chat with?
 
 Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
@@ -186,3 +190,33 @@ To run the WXT dev server in a devcontainer, but load the dev build of your exte
 
 3. **Tell WXT to listen on all network interfaces**
    To enable hot-reloading, your extension has to connect to the WXT dev server running inside your container. WXT will only listen on `localhost` by default, which prevents connections from outside the devcontainer. To fix this you can instruct WXT to listen on all interfaces with `wxt --host 0.0.0.0`.
+
+## How do I use the new Prompt API in Chrome?
+
+The service responsible for the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api) is not enabled by default if you let WXT open the browser during dev mode. When checking `LanguageModel.availability`, you will always receive "unavailable".
+
+You have two options:
+
+1. Pass the `--disable-features=DisableLoadExtensionCommandLineSwitch` feature flag to enable the service in the browser WXT opens:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       chromiumArgs: [
+         '--disable-features=DisableLoadExtensionCommandLineSwitch',
+       ],
+     },
+   });
+   ```
+
+2. Disable the runner and install your extension in your regular chrome profile manually:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       disabled: true,
+     },
+   });
+   ```

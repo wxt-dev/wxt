@@ -8,7 +8,7 @@ import { getPkgTag, grabPackageDetails } from './git';
 import consola from 'consola';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: bun run scripts/sync-releases.ts <package-name>',
   );
