@@ -6,6 +6,8 @@ import {
   parseCommits,
 } from 'changelogen';
 import { consola } from 'consola';
+import fs from 'fs-extra';
+import { join } from 'node:path';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 
 const pkg = process.argv[2];
@@ -83,11 +85,7 @@ if (pkg === 'wxt') {
   const templatesDir = 'templates';
   const templateDirs = await fs.readdir(templatesDir);
   for (const templateDir of templateDirs) {
-    const templatePkgJsonPath = path.join(
-      templatesDir,
-      templateDir,
-      'package.json',
-    );
+    const templatePkgJsonPath = join(templatesDir, templateDir, 'package.json');
     if (await fs.pathExists(templatePkgJsonPath)) {
       const templatePkgJson = await fs.readJson(templatePkgJsonPath);
       if (templatePkgJson.devDependencies?.wxt) {
