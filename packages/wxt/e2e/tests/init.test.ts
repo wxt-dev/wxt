@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { TestProject, WXT_PACKAGE_DIR } from '../utils';
-import spawn from 'nano-spawn';
 import glob from 'fast-glob';
 import { mkdir, writeJson } from 'fs-extra';
+import spawn from 'nano-spawn';
+import { describe, expect, it } from 'vitest';
+import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
@@ -23,7 +23,7 @@ describe('Init command', () => {
       ],
       {
         env: { CI: 'true' },
-        stdio: 'ignore',
+        stdio: 'inherit',
         cwd: WXT_PACKAGE_DIR,
       },
     );
