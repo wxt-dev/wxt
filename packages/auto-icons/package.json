@@ -52,7 +52,7 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.6",
+    "@aklinker1/buildc": "^1.1.7",
     "@types/fs-extra": "^11.0.4",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",

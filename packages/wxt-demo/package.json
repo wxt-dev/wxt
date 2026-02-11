@@ -23,7 +23,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.6",
+    "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^2.2.0",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",

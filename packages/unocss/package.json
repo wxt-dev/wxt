@@ -42,7 +42,7 @@
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.6",
+    "@aklinker1/buildc": "^1.1.7",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
     "tsdown": "^0.20.3",

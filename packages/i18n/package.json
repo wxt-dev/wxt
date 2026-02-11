@@ -41,7 +41,7 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.6",
+    "@aklinker1/buildc": "^1.1.7",
     "@types/node": "^20.17.6",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
