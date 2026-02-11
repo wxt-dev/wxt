@@ -196,11 +196,19 @@ export interface InlineConfig {
      * creating a ZIP of all your source code for Firefox. Patterns are relative to your
      * `config.zip.sourcesRoot`.
      *
-     * This setting overrides `excludeSources`. So if a file matches both lists, it is included in the ZIP.
+     * When specified, ONLY files matching these patterns will be included (allowlist behavior).
+     * This prevents accidental inclusion of sensitive files like secrets or credentials.
+     * Files matching `excludeSources` patterns are still excluded.
+     *
+     * When not specified, all files are included by default (except hidden files, node_modules,
+     * and files matching `excludeSources`).
      *
      * @example
      * [
-     *   "coverage", // Include the coverage directory in the `sourcesRoot`
+     *   "entrypoints/**",
+     *   "wxt.config.ts",
+     *   "package.json",
+     *   "tsconfig.json",
      * ]
      */
     includeSources?: string[];

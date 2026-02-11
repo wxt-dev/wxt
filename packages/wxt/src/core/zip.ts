@@ -113,18 +113,20 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
+  // When include patterns are provided, use only those patterns (allowlist behavior)
+  // When no include patterns are provided, use **/* as the default (include everything)
+  const globPatterns =
+    options?.include && options.include.length > 0 ? options.include : ['**/*'];
   const files = (
-    await glob(['**/*', ...(options?.include || [])], {
+    await glob(globPatterns, {
       cwd: directory,
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
     })
   ).filter((relativePath) => {
-    return (
-      minimatchMultiple(relativePath, options?.include) ||
-      !minimatchMultiple(relativePath, options?.exclude)
-    );
+    // Exclude files that match any exclude pattern
+    return !minimatchMultiple(relativePath, options?.exclude);
   });
   const filesToZip = [
     ...files,
