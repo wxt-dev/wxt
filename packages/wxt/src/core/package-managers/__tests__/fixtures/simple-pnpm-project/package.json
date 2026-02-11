@@ -1,5 +1,6 @@
 {
   "name": "pnpm-ls",
+  "packageManager": "pnpm@10.29.3",
   "dependencies": {
     "mime-types": "2.1.35"
   },

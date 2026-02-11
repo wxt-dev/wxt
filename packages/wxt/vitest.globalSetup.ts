@@ -1,6 +1,4 @@
 import { pathExists, rm } from 'fs-extra';
-import spawn from 'nano-spawn';
-import { mkdir, rename } from 'node:fs/promises';
 
 let setupHappened = false;
 
@@ -18,9 +16,4 @@ export async function setup() {
   if (await pathExists(e2eDistPath)) {
     await rm(e2eDistPath, { recursive: true, force: true });
   }
-
-  // Pack WXT for test projects to use
-  await mkdir('e2e/dist', { recursive: true });
-  await spawn('bun', ['pm', 'pack', '--filename', 'wxt.tgz']);
-  await rename('../../wxt.tgz', 'e2e/dist/wxt.tgz');
 }

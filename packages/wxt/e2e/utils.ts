@@ -127,7 +127,7 @@ export class TestProject {
     // Only install dependencies if the project has custom ones - otherwise the
     // project will reuse the ones in `packages/wxt/node_modules`!
     if (this.hasCustomDependencies) {
-      await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
+      await spawn('bun', ['install', '--ignore-scripts'], {
         cwd: this.root,
       });
     }
