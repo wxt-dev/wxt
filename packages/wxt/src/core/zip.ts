@@ -10,7 +10,6 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils/paths';
-import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -119,18 +118,12 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
-  const files = (
-    await glob(['**/*', ...(options?.include || [])], {
-      cwd: directory,
-      // Ignore node_modules, otherwise this glob step takes forever
-      ignore: ['**/node_modules'],
-      onlyFiles: true,
-    })
-  ).filter((relativePath) => {
-    return (
-      minimatchMultiple(relativePath, options?.include) ||
-      !minimatchMultiple(relativePath, options?.exclude)
-    );
+  // includeSources patterns are used directly (defaults to ['**/*'] from config)
+  // excludeSources patterns are passed to glob's ignore option for efficient filtering
+  const files = await glob(options?.include ?? ['**/*'], {
+    cwd: directory,
+    ignore: options?.exclude ?? [],
+    onlyFiles: true,
   });
   const filesToZip = [
     ...files,
