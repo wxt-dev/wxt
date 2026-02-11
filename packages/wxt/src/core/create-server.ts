@@ -1,4 +1,3 @@
-import { debounce } from 'perfect-debounce';
 import chokidar from 'chokidar';
 import {
   BuildStepOutput,
@@ -202,20 +201,18 @@ async function createServerInternal(): Promise<WxtDevServer> {
  * Returns a function responsible for reloading different parts of the extension when a file
  * changes.
  */
-function createFileReloader(server: WxtDevServer) {
+export function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
+  let processLoop: Promise<void> | undefined;
 
-  const cb = async (event: string, path: string) => {
-    changeQueue.push([event, path]);
-
+  const processQueue = async () => {
     const reloading = fileChangedMutex.runExclusive(async () => {
-      if (server.currentOutput == null) return;
-
       const fileChanges = changeQueue
         .splice(0, changeQueue.length)
         .map(([_, file]) => file);
       if (fileChanges.length === 0) return;
+      if (server.currentOutput == null) return;
 
       await wxt.reloadConfig();
 
@@ -288,10 +285,30 @@ function createFileReloader(server: WxtDevServer) {
     });
   };
 
-  return debounce(cb, wxt.config.dev.server!.watchDebounce, {
-    leading: true,
-    trailing: false,
-  });
+  const waitForDebounceWindow = async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, wxt.config.dev.server!.watchDebounce);
+    });
+  };
+
+  const queueWorker = async () => {
+    while (true) {
+      await processQueue();
+
+      await waitForDebounceWindow();
+      if (changeQueue.length === 0) break;
+    }
+  };
+
+  return async (event: string, path: string) => {
+    // Queue every event before debouncing so we never drop changes.
+    changeQueue.push([event, path]);
+
+    processLoop ??= queueWorker().finally(() => {
+      processLoop = undefined;
+    });
+    await processLoop;
+  };
 }
 
 /**
