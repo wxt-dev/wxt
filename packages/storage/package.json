@@ -27,7 +27,8 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
@@ -35,9 +36,11 @@
     "dequal": "^2.0.3"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@webext-core/fake-browser": "^1.3.4",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },

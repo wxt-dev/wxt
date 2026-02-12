@@ -38,6 +38,6 @@ jobs:
           installArgs: --ignore-scripts
 
       - name: Sync Releases
-        run: pnpm tsx scripts/sync-releases.ts ${{ inputs.package }}
+        run: bun run scripts/sync-releases.ts ${{ inputs.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

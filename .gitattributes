@@ -7,6 +7,7 @@
 pnpm-lock.yaml linguist-generated
 package-lock.json linguist-generated
 bun.lockb linguist-generated
+bun.lock linguist-generated
 yarn.lock linguist-generated
 
 # Exclude templates from language statistics

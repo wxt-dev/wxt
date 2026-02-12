@@ -2,24 +2,27 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.20.3"
+    "bun": ">=1.3.5"
   },
-  "packageManager": "pnpm@10.29.2+sha512.bef43fa759d91fd2da4b319a5a0d13ef7a45bb985a3d7342058470f9d2051a3ba8674e629672654686ef9443ad13a82da2beb9eeb3e0221c87b8154fff9d74b8",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "check": "check && pnpm -r --sequential run check",
-    "test": "pnpm -r --sequential run test run",
-    "test:coverage": "pnpm -r --sequential run test:coverage",
+    "check": "check && bun run --workspaces check",
+    "test": "bun run --workspaces test run",
+    "test:coverage": "bun run --workspaces test:coverage",
     "prepare": "simple-git-hooks",
     "docs:gen": "typedoc --options docs/typedoc.json",
-    "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
-    "docs:build": "pnpm -s docs:gen && vitepress build docs",
-    "docs:preview": "pnpm -s docs:gen && vitepress preview docs"
+    "docs:dev": "bun run --silent docs:gen && bun run vitepress dev docs",
+    "docs:build": "bun run --silent docs:gen && bun run vitepress build docs",
+    "docs:preview": "bun run --silent docs:gen && bun run vitepress preview docs"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.6",
+    "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^2.2.0",
     "@commitlint/config-conventional": "^20.4.1",
     "@commitlint/types": "^20.4.0",
+    "@types/bun": "^1.3.5",
     "@types/fs-extra": "^11.0.4",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^4.0.18",
@@ -27,17 +30,16 @@
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "feed": "^5.2.0",
-    "fs-extra": "^11.3.3",
     "lint-staged": "^16.2.7",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.47.0",
     "nano-spawn": "^2.0.0",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
+    "publish-browser-extension": "^4.0.3",
     "semver": "^7.7.4",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.20.3",
-    "tsx": "4.21.0",
     "typedoc": "^0.25.4",
     "typedoc-plugin-frontmatter": "^1.3.1",
     "typedoc-plugin-markdown": "4.0.0-next.23",
@@ -51,8 +53,12 @@
     "vue": "^3.5.27",
     "wxt": "workspace:*"
   },
+  "patchedDependencies": {
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
+    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
+  },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "bun run lint-staged"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write"

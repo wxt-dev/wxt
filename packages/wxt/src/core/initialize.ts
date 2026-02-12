@@ -1,10 +1,10 @@
-import prompts from 'prompts';
 import { consola } from 'consola';
-import { downloadTemplate } from 'giget';
 import fs from 'fs-extra';
+import { downloadTemplate } from 'giget';
 import path from 'node:path';
 import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
+import prompts from 'prompts';
 
 export async function initialize(options: {
   directory: string;

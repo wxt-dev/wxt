@@ -42,15 +42,18 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepack": "pnpm -s build",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepack": "bun run --silent build",
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.17",
     "typescript": "^5.9.3",

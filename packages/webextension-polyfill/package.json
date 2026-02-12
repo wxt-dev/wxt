@@ -36,17 +36,21 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "webextension-polyfill": "*",
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/webextension-polyfill": "^0.12.4",
     "publint": "^0.3.17",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"

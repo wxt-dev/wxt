@@ -1,16 +1,14 @@
-import glob from 'fast-glob';
-import fs from 'fs-extra';
-import * as semver from 'semver';
-import { dirname } from 'node:path';
 import consola from 'consola';
-import spawn from 'nano-spawn';
+import glob from 'fast-glob';
+import { dirname } from 'node:path';
 import pMap from 'p-map';
+import * as semver from 'semver';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
 
 Usage:
-  pnpm tsx scripts/upgrade-deps.ts [options]
+  bun run scripts/upgrade-deps.ts [options]
 
 Options:
   --write, -w       Write changes to package.json files
@@ -77,7 +75,7 @@ async function main(): Promise<never> {
   consola.start('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
-  consola.info('\nRun `pnpm i` to install new dependencies\n');
+  consola.info('\nRun `bun install` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -101,7 +99,7 @@ async function getPackageJsonDependencies(
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
-      content: await fs.readJson(path),
+      content: await Bun.file(path).json(),
       path,
       folder: dirname(path),
     })),
@@ -170,10 +168,38 @@ function validateNoMultipleVersions(
   process.exit(1);
 }
 
+async function spawnJson(cmd: string[]): Promise<any> {
+  const child = Bun.spawn({ cmd });
+  const exitCode = await child.exited;
+  if (exitCode !== 0)
+    throw new Error(`Command failed with exit code ${exitCode}`);
+
+  return JSON.parse(
+    // @ts-ignore: text() is an untyped util Bun provides for ReadableStreams
+    await child.stdout.text(),
+  );
+}
+
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
-  // Use PNPM instead of API in case dependencies don't come from NPM
-  const res = await spawn('pnpm', ['view', name, '--json']);
-  return JSON.parse(res.stdout);
+  // Use Bun instead of API in case dependencies don't come from NPM.
+  const partial = await spawnJson(['bun', 'info', name, '--json']);
+
+  // Bun doesn't return the dist-tags and time fields by default, have to fetch
+  // them separately.
+  const distTags = await spawnJson([
+    'bun',
+    'info',
+    name,
+    'dist-tags',
+    '--json',
+  ]);
+  const time = await spawnJson(['bun', 'info', name, 'time', '--json']);
+
+  return {
+    ...partial,
+    'dist-tags': distTags,
+    time,
+  };
 }
 
 type PackageInfo = {
@@ -341,7 +367,8 @@ async function writeUpgrades(
   upgrades: UpgradeDetails[],
 ) {
   for (const packageJsonFile of packageJsonFiles) {
-    const oldText = await fs.readFile(packageJsonFile, 'utf8');
+    const file = Bun.file(packageJsonFile);
+    const oldText = await file.text();
     let newText = oldText;
     for (const upgrade of upgrades) {
       const search = `"${upgrade.name}": "${upgrade.currentRange}"`;
@@ -349,7 +376,7 @@ async function writeUpgrades(
       newText = newText.replaceAll(search, replace);
     }
     if (newText !== oldText) {
-      await fs.writeFile(packageJsonFile, newText, 'utf8');
+      await file.write(newText);
     }
   }
 }

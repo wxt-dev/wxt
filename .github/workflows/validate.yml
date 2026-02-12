@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: pnpm check
+        run: bun run check
 
   builds:
     name: Builds
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: pnpm buildc all
+        run: bun run buildc all
 
   build-demo:
     name: Build Demo
@@ -47,11 +47,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: pnpm build:all
+        run: bun run build:all
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: pnpm wxt zip
+        run: bun run wxt zip
         working-directory: packages/wxt-demo
 
   tests:
@@ -73,16 +73,18 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
+      - name: Setup PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          version: latest
 
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
-        run: pnpm test
+        run: bun run test
 
       - name: Run Tests (Coverage)
         if: matrix.coverage
-        run: pnpm test:coverage --reporter=default --reporter=hanging-process
+        run: bun run test:coverage --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
         if: matrix.coverage
@@ -110,7 +112,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Pack WXT package
-        run: pnpm pack
+        run: bun pm pack
         working-directory: packages/wxt
 
       - name: Install Dependencies
@@ -122,15 +124,15 @@ jobs:
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: pnpm compile
+        run: bun run compile
         if: matrix.template != 'svelte'
         working-directory: templates/${{ matrix.template }}
 
       - name: Type Check Template
-        run: pnpm check
+        run: bun run check
         if: matrix.template == 'svelte'
         working-directory: templates/${{ matrix.template }}
 
       - name: Build Template
-        run: pnpm build
+        run: bun run build
         working-directory: templates/${{ matrix.template }}

@@ -40,9 +40,11 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -51,8 +53,10 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "publint": "^0.3.17",
     "solid-js": "^1.9.11",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

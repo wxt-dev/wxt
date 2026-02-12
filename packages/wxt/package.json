@@ -5,15 +5,15 @@
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
-    "wxt": "tsx src/cli/index.ts",
-    "build": "buildc -- tsdown --config-loader unrun",
-    "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
+    "wxt": "bun run src/cli/index.ts",
+    "build": "buildc -- bun run --bun tsdown --config-loader unrun",
+    "check": "bun run build && bun run check:default && bun run check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test run --coverage",
+    "test:coverage": "bun run test run --coverage",
     "sync-releases": "pnpx changelogen@latest gh release",
-    "prepack": "pnpm build"
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@1natsu/wait-element": "^4.1.2",
@@ -71,7 +71,9 @@
     }
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@faker-js/faker": "^10.2.0",
+    "@types/bun": "^1.3.5",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.17.6",
@@ -83,6 +85,7 @@
     "lodash.merge": "^4.6.2",
     "oxlint": "^1.43.0",
     "publint": "^0.3.17",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2"

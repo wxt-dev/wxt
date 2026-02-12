@@ -1,8 +1,8 @@
 //
 // USAGE:
-//   pnpm dev
-//   pnpm dev firefox-nightly
-//   pnpm dev <target>
+//   bun run dev
+//   bun run dev firefox-nightly
+//   bun run dev <target>
 //
 
 import { run } from './src';

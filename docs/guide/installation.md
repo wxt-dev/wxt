@@ -76,7 +76,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
    ```
 
    ```sh [Bun]
-   bun i -D wxt
+   bun add -D wxt
    ```
 
    ```sh [NPM]

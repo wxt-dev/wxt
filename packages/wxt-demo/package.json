@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- pnpm run --reporter-hide-prefix /^build:all:.*/",
+    "build:all": "buildc --deps-only -- bun run build:all:chrome-mv3 && bun run build:all:chrome-mv2 && bun run build:all:firefox-mv3 && bun run build:all:firefox-mv2",
     "build:all:chrome-mv3": "wxt build",
     "build:all:chrome-mv2": "wxt build --mv2",
     "build:all:firefox-mv3": "wxt build -b firefox --mv3",
     "build:all:firefox-mv2": "wxt build -b firefox",
     "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
     "zip": "buildc --deps-only -- wxt zip",
     "check": "buildc --deps-only -- check",
     "postinstall": "buildc --deps-only -- wxt prepare"
@@ -22,6 +23,8 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
+    "@aklinker1/check": "^2.2.0",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@wxt-dev/auto-icons": "workspace:*",

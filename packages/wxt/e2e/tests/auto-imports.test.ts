@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import spawn from 'nano-spawn';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -317,9 +316,8 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
-          cwd: project.root,
-        });
+
+        return await project.run('eslint', 'entrypoints/background.js');
       }
 
       describe('ESLint 9', () => {

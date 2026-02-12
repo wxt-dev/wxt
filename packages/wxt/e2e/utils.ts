@@ -1,8 +1,8 @@
 import glob from 'fast-glob';
-import fs, { mkdir } from 'fs-extra';
+import fs from 'fs-extra';
 import merge from 'lodash.merge';
-import spawn from 'nano-spawn';
-import { dirname, relative, resolve } from 'path';
+import spawn, { Result as SpawnResult } from 'nano-spawn';
+import { dirname, relative, resolve } from 'node:path';
 import {
   InlineConfig,
   UserConfig,
@@ -13,7 +13,7 @@ import {
 } from '../src';
 import { normalizePath } from '../src/core/utils';
 
-// Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
+// Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
 // files.
 export const WXT_PACKAGE_DIR = resolve(__dirname, '..');
@@ -47,9 +47,6 @@ export class TestProject {
             name: 'E2E Extension',
             description: 'Example description',
             version: '0.0.0',
-            dependencies: {
-              wxt: '../../..',
-            },
           },
           packageJson,
         ),
@@ -130,14 +127,12 @@ export class TestProject {
     // Only install dependencies if the project has custom ones - otherwise the
     // project will reuse the ones in `packages/wxt/node_modules`!
     if (this.hasCustomDependencies) {
-      await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
+      await spawn('bun', ['install', '--ignore-scripts'], {
         cwd: this.root,
       });
     }
 
-    await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
-      () => {},
-    );
+    await fs.ensureDir(resolve(this.root, 'public'));
   }
 
   /**
@@ -198,5 +193,14 @@ export class TestProject {
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
     return fs.readJson(this.resolvePath(path));
+  }
+
+  /**
+   * Run a command using the project's package manager.
+   */
+  async run(...args: string[]): Promise<SpawnResult> {
+    return await spawn('bun', args, {
+      cwd: this.root,
+    });
   }
 }
