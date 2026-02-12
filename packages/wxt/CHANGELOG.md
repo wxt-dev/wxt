@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.17
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.16...wxt-v0.20.17)
+
+### 🩹 Fixes
+
+- Update left-over CJS require of `publish-browser-extension` to ESM ([#2120](https://github.com/wxt-dev/wxt/pull/2120))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.16
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.15...wxt-v0.20.16)
