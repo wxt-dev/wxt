@@ -9,7 +9,7 @@ async function isOffline(): Promise<boolean> {
     });
     return await withTimeout(isOffline, 1e3);
   } catch (error) {
-    console.error('Error checking offline status:', error);
+    consola.error('Error checking offline status:', error);
     return true;
   }
 }
