@@ -12,12 +12,12 @@ describe('browser', () => {
 
     it('should provide values via the browser import', () => {
       expectTypeOf(browser.runtime.id).toEqualTypeOf<string>();
-      expectTypeOf<
-        typeof browser.storage.local
-      >().toEqualTypeOf<Browser.storage.LocalStorageArea>();
-      expectTypeOf<
-        typeof browser.i18n.detectLanguage
-      >().returns.resolves.toEqualTypeOf<chrome.i18n.LanguageDetectionResult>();
+      expectTypeOf(
+        browser.storage.local,
+      ).toEqualTypeOf<Browser.storage.LocalStorageArea>();
+      expectTypeOf(
+        browser.i18n.detectLanguage,
+      ).returns.resolves.toEqualTypeOf<chrome.i18n.LanguageDetectionResult>();
     });
   });
 });
