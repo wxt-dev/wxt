@@ -284,10 +284,10 @@ describe('Auto Imports', () => {
 
       await project.prepare();
 
-      expect(await project.fileExists('.wxt/eslint-auto-imports.mjs')).toBe(
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
         false,
       );
-      expect(await project.fileExists('.wxt/eslintrc-auto-import.json')).toBe(
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
         false,
       );
     });
