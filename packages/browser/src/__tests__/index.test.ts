@@ -11,7 +11,7 @@ describe('browser', () => {
     });
 
     it('should provide values via the browser import', () => {
-      expectTypeOf<typeof browser.runtime.id>().toEqualTypeOf<string>();
+      expectTypeOf(browser.runtime.id).toEqualTypeOf<string>();
       expectTypeOf<
         typeof browser.storage.local
       >().toEqualTypeOf<Browser.storage.LocalStorageArea>();
