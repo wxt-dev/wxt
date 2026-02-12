@@ -1,5 +1,5 @@
 [build]
-command = "bun docs:build"
+command = "bun run docs:build"
 publish = "docs/.vitepress/dist"
 
 [build.environment]

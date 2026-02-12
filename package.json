@@ -33,6 +33,7 @@
     "lint-staged": "^16.2.7",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.47.0",
+    "nano-spawn": "^2.0.0",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
     "publish-browser-extension": "^4.0.3",

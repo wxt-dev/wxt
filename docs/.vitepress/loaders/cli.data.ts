@@ -1,4 +1,5 @@
 import consola from 'consola';
+import spawn from 'nano-spawn';
 import { resolve } from 'node:path';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
@@ -37,15 +38,10 @@ export default {
 
 async function getHelp(command: string): Promise<string> {
   const args = command.split(' ');
-  const child = Bun.spawn({
-    cmd: [...args, '--help'],
+  const result = await spawn(args[0], [...args.slice(1), '--help'], {
     cwd: 'packages/wxt',
   });
-  const exitCode = await child.exited;
-  if (exitCode !== 0) throw Error(`Command failed with exit code ${exitCode}`);
-
-  // @ts-ignore: text() is an untyped util Bun provides for ReadableStreams
-  return await child.stdout.text();
+  return result.stdout;
 }
 
 function getWxtHelp(command: string): Promise<string> {
