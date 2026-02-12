@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.20.16
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.15...wxt-v0.20.16)
+
+### 🩹 Fixes
+
+- Revert "rename `name` to `names` prop of `rollup` to fix deprecated warning " ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 🏡 Chore
+
+- Speed up E2E tests by skipping `pnpm install` when possible ([#2113](https://github.com/wxt-dev/wxt/pull/2113))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.15
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.14...wxt-v0.20.15)
