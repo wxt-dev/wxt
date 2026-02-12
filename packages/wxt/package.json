@@ -112,7 +112,7 @@
   ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.cjs"
+    "wxt-publish-extension": "./bin/wxt-publish-extension.mjs"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
