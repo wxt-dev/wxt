@@ -146,10 +146,10 @@ export async function createViteBuilder(
             ),
             // Output content script CSS to `content-scripts/`, but all other scripts are written to
             // `assets/`.
-            assetFileNames: ({ names }) => {
+            assetFileNames: ({ name }) => {
               if (
                 entrypoint.type === 'content-script' &&
-                names[0].endsWith('css')
+                name?.endsWith('css')
               ) {
                 return `content-scripts/${entrypoint.name}.[ext]`;
               } else {
