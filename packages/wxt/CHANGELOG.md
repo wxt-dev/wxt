@@ -78,7 +78,7 @@
 
 - Dareka ([@darekadareka](https://github.com/darekadareka))
 - Mark ([@mjfaga](https://github.com/mjfaga))
-- Ariasuni <aria@ariasuni.eu>
+- ariasuni ([@ariasuni](https://github.com/ariasuni))
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 - Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
 - Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))
