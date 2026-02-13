@@ -97,18 +97,3 @@ export interface AnalyticsTrackEvent extends BaseAnalyticsEvent {
     properties?: Record<string, string>;
   };
 }
-
-export type TAnalyticsMessage = {
-  [K in keyof Analytics]: {
-    fn: K;
-    args: Parameters<Analytics[K]>;
-  };
-}[keyof Analytics];
-
-export type TAnalyticsMethod =
-  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
-  | undefined;
-
-export type TMethodForwarder = <K extends keyof Analytics>(
-  fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;

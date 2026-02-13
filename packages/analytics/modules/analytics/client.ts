@@ -8,11 +8,23 @@ import type {
   AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
-  TAnalyticsMessage,
-  TAnalyticsMethod,
-  TMethodForwarder,
 } from './types';
 import { browser } from '@wxt-dev/browser';
+
+type TAnalyticsMessage = {
+  [K in keyof Analytics]: {
+    fn: K;
+    args: Parameters<Analytics[K]>;
+  };
+}[keyof Analytics];
+
+type TAnalyticsMethod =
+  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
+  | undefined;
+
+type TMethodForwarder = <K extends keyof Analytics>(
+  fn: K,
+) => (...args: Parameters<Analytics[K]>) => void;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
