@@ -25,7 +25,6 @@ export default defineConfig({
   },
   example: {
     a: 'a',
-    // @ts-expect-error: c is not defined, this should be a type error, but it should show up in the module
     c: 'c',
   },
   unocss: {
