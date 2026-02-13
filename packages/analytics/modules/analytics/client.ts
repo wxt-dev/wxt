@@ -2,14 +2,29 @@ import { UAParser } from 'ua-parser-js';
 import type {
   Analytics,
   AnalyticsConfig,
+  AnalyticsEventMetadata,
   AnalyticsPageViewEvent,
+  AnalyticsProvider,
   AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
-  AnalyticsEventMetadata,
-  AnalyticsProvider,
 } from './types';
 import { browser } from '@wxt-dev/browser';
+
+type TAnalyticsMessage = {
+  [K in keyof Analytics]: {
+    fn: K;
+    args: Parameters<Analytics[K]>;
+  };
+}[keyof Analytics];
+
+type TAnalyticsMethod =
+  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
+  | undefined;
+
+type TMethodForwarder = <K extends keyof Analytics>(
+  fn: K,
+) => (...args: Parameters<Analytics[K]>) => void;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -163,7 +178,7 @@ function createBackgroundAnalytics(
     },
     track: async (
       eventName: string,
-      eventProperties?: Record<string, string>,
+      eventProperties?: Record<string, string | undefined>,
       meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
       const baseEvent = await getBaseEvent(meta);
@@ -197,9 +212,8 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }) => {
-        // @ts-expect-error: Untyped fn key
-        void analytics[fn]?.(...args);
+      port.onMessage.addListener(({ fn, args }: TAnalyticsMessage) => {
+        void (analytics[fn] as TAnalyticsMethod)?.(...args);
       });
     }
   });
@@ -217,17 +231,15 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document?.referrer || undefined,
-    screen: globalThis.window
-      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
-      : undefined,
+    referrer: globalThis.document?.referrer,
+    screen: `${globalThis.window?.screen.width}x${globalThis.window?.screen.height}`,
     url: location.href,
-    title: document.title || undefined,
+    title: document.title,
   });
 
-  const methodForwarder =
-    (fn: string) =>
-    (...args: any[]) => {
+  const methodForwarder: TMethodForwarder =
+    (fn) =>
+    (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
     };
 
@@ -238,11 +250,11 @@ function createFrontendAnalytics(): Analytics {
     setEnabled: methodForwarder('setEnabled'),
     autoTrack: (root) => {
       const onClick = (event: Event) => {
-        const element = event.target as any;
+        const element = event.target as HTMLElement | null;
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&
-            !INTERACTIVE_ROLES.has(element.getAttribute('role')))
+            !INTERACTIVE_ROLES.has(element.getAttribute('role') ?? ''))
         )
           return;
 
@@ -251,7 +263,7 @@ function createFrontendAnalytics(): Analytics {
           id: element.id || undefined,
           className: element.className || undefined,
           textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
-          href: element.href,
+          href: (element as HTMLAnchorElement).href,
         });
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
@@ -265,12 +277,12 @@ function createFrontendAnalytics(): Analytics {
 
 function defineStorageItem<T>(
   key: string,
-  defaultValue?: NonNullable<T>,
+  defaultValue?: T,
 ): AnalyticsStorageItem<T> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get<Record<string, any>>(key))[key] ??
-      defaultValue,
+      (((await browser.storage.local.get(key)) as Record<string, T>)[key] ??
+        defaultValue) as T,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
