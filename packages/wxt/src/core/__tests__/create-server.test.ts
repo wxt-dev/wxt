@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createFileReloader } from '../create-server';
+import { createFileReloader } from '../utils/create-file-reloader';
 import { findEntrypoints, rebuild } from '../utils/building';
 import {
   fakeBackgroundEntrypoint,
