@@ -4,7 +4,9 @@ import { defineWxtModule } from 'wxt/modules';
 export interface ExampleModuleOptions {
   a: string;
   b?: string;
+  c: string;
 }
+
 declare module 'wxt' {
   interface InlineConfig {
     example?: ExampleModuleOptions;
