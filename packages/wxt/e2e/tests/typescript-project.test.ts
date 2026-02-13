@@ -397,6 +397,44 @@ describe('TypeScript Project', () => {
     expect(output).toContain('./example.ts');
   });
 
+  it('should allow disabling the default aliases', async () => {
+    const project = new TestProject();
+    project.addFile('src/entrypoints/unlisted.html', '<html></html>');
+    project.setConfigFileConfig({
+      srcDir: 'src',
+      alias: false,
+    });
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/tsconfig.json');
+    expect(output).toMatchInlineSnapshot(`
+      ".wxt/tsconfig.json
+      ----------------------------------------
+      {
+        "compilerOptions": {
+          "target": "ESNext",
+          "module": "ESNext",
+          "moduleResolution": "Bundler",
+          "noEmit": true,
+          "esModuleInterop": true,
+          "forceConsistentCasingInFileNames": true,
+          "resolveJsonModule": true,
+          "strict": true,
+          "skipLibCheck": true,
+          "paths": {
+
+          }
+        },
+        "include": [
+          "../**/*",
+          "./wxt.d.ts"
+        ],
+        "exclude": ["../.output"]
+      }"
+    `);
+  });
+
   it('should set correct import.meta.env.BROWSER type based on targetBrowsers', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');
