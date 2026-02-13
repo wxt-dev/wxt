@@ -12,7 +12,7 @@ import { browser } from '@wxt-dev/browser';
 export function createI18n<
   T extends I18nStructure = DefaultI18nStructure,
 >(): I18n<T> {
-  const t = (key: string, ...args: any[]) => {
+  const t = ((key, ...args) => {
     // Resolve args
     let sub: Substitution[] | undefined;
     let count: number | undefined;
@@ -64,7 +64,7 @@ export function createI18n<
       default:
         throw Error('Unknown plural formatting');
     }
-  };
+  }) as I18n<T>['t'];
 
-  return { t } as I18n<T>;
+  return { t };
 }
