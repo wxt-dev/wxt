@@ -8,21 +8,21 @@ export type I18nStructure = {
 };
 
 export type DefaultI18nStructure = {
-  [K: string]: any;
+  [K: string]: unknown;
 };
 
-type DefaultTFunction = {
-  (key: string): string;
-  (key: string, substitutions?: string[]): string;
-  (key: string, n: number): string;
-  (key: string, n: number, substitutions?: string[]): string;
+type DefaultTFunction<TKeys extends string> = {
+  (key: TKeys): string;
+  (key: TKeys, substitutions?: string[]): string;
+  (key: TKeys, n: number): string;
+  (key: TKeys, n: number, substitutions?: string[]): string;
 };
 
 export interface I18n<
   T extends I18nStructure | DefaultI18nStructure = DefaultI18nStructure,
 > {
   t: T extends DefaultI18nStructure
-    ? DefaultTFunction
+    ? DefaultTFunction<keyof T & string>
     : TFunction<Extract<T, I18nStructure>>;
 }
 
