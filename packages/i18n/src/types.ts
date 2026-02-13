@@ -7,10 +7,6 @@ export type I18nStructure = {
   [K: string]: I18nFeatures;
 };
 
-export type DefaultI18nStructure = {
-  [K: string]: unknown;
-};
-
 type DefaultTFunction<TKeys extends string> = {
   (key: TKeys): string;
   (key: TKeys, substitutions?: string[]): string;
@@ -18,10 +14,8 @@ type DefaultTFunction<TKeys extends string> = {
   (key: TKeys, n: number, substitutions?: string[]): string;
 };
 
-export interface I18n<
-  T extends I18nStructure | DefaultI18nStructure = DefaultI18nStructure,
-> {
-  t: T extends DefaultI18nStructure
+export interface I18n<T extends I18nStructure> {
+  t: T extends I18nStructure
     ? DefaultTFunction<keyof T & string>
     : TFunction<Extract<T, I18nStructure>>;
 }
