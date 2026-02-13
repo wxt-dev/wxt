@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TestProject } from '../utils';
-import { WxtHooks } from '../../src/types';
+import { WxtHooks } from '../../src';
 
 const hooks: WxtHooks = {
   ready: vi.fn(),
