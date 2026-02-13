@@ -1,17 +1,10 @@
 /**
  * @module @wxt-dev/i18n
  */
-import {
-  I18nStructure,
-  DefaultI18nStructure,
-  I18n,
-  Substitution,
-} from './types';
+import { I18nStructure, I18n, Substitution } from './types';
 import { browser } from '@wxt-dev/browser';
 
-export function createI18n<
-  T extends I18nStructure = DefaultI18nStructure,
->(): I18n<T> {
+export function createI18n<T extends I18nStructure>(): I18n<T> {
   const t = ((key, ...args) => {
     // Resolve args
     let sub: Substitution[] | undefined;
