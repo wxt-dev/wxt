@@ -1,6 +1,7 @@
 import dns from 'node:dns';
 import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
+import consola from 'consola';
 
 async function isOffline(): Promise<boolean> {
   try {
