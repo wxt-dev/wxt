@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import type { GenericEntrypoint, InlineConfig } from '../../src';
 import { readFile } from 'fs-extra';
-import { normalizePath } from '../../src/core/utils/paths';
+import { normalizePath } from '../../src';
 
 describe('Module Helpers', () => {
   describe('options', () => {
