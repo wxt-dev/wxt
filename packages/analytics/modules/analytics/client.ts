@@ -178,7 +178,7 @@ function createBackgroundAnalytics(
     },
     track: async (
       eventName: string,
-      eventProperties?: Record<string, string>,
+      eventProperties?: Record<string, string | undefined>,
       meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
       const baseEvent = await getBaseEvent(meta);
@@ -260,9 +260,9 @@ function createFrontendAnalytics(): Analytics {
 
         void analytics.track('click', {
           tagName: element.tagName?.toLowerCase(),
-          id: element.id,
-          className: element.className,
-          textContent: element.textContent?.substring(0, 50), // Limit text content length
+          id: element.id || undefined,
+          className: element.className || undefined,
+          textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
           href: (element as HTMLAnchorElement).href,
         });
       };
