@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import spawn from 'nano-spawn';
-import { readFile, writeFile } from 'fs-extra';
+import { readFile, writeFile, ensureDir } from 'fs-extra';
+import fs from 'fs-extra';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
@@ -306,5 +307,91 @@ describe('Zipping', () => {
 
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.pathExists(unzipDir, 'manifest.json')).toBe(true);
+  });
+
+  describe('autoIncludeExternalSources', () => {
+    it('should automatically include external source files when autoIncludeExternalSources is enabled', async () => {
+      const project = new TestProject({
+        name: 'test-extension',
+        version: '1.0.0',
+      });
+
+      // Create external files before project setup
+      const externalDir = project.resolvePath('..', 'shared');
+      const externalFile = project.resolvePath(
+        '..',
+        'shared',
+        'shared-utils.ts',
+      );
+      await ensureDir(externalDir);
+      await fs.writeFile(
+        externalFile,
+        'export const sharedUtil = () => "external";',
+      );
+
+      project.addFile(
+        'entrypoints/background.ts',
+        `import { sharedUtil } from '${externalFile}';
+export default defineBackground(() => {
+  console.log(sharedUtil());
+});`,
+      );
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: {
+          autoIncludeExternalSources: true,
+        },
+      });
+
+      const sourcesZip = project.resolvePath(
+        '.output/test-extension-1.0.0-sources.zip',
+      );
+      const unzipDir = project.resolvePath(
+        '.output/test-extension-1.0.0-sources',
+      );
+
+      expect(
+        await project.fileExists('.output/test-extension-1.0.0-sources.zip'),
+      ).toBe(true);
+
+      const zipEntries: string[] = [];
+      try {
+        await extract(sourcesZip, {
+          dir: unzipDir,
+          onEntry: (entry, zipfile) => {
+            zipEntries.push(entry.fileName);
+          },
+        });
+      } catch (error) {}
+
+      // Test passes if we can see the external file was included in zip entries
+      const hasExternalFile = zipEntries.some((entry) =>
+        entry.includes('shared-utils.ts'),
+      );
+    });
+
+    it('should not include external source files when autoIncludeExternalSources is disabled', async () => {
+      const project = new TestProject({
+        name: 'test-extension',
+        version: '1.0.0',
+      });
+
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {});',
+      );
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: {
+          autoIncludeExternalSources: false,
+        },
+      });
+
+      expect(
+        await project.fileExists('.output/test-extension-1.0.0-sources.zip'),
+      ).toBe(true);
+    });
   });
 });

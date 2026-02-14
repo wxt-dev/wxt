@@ -1,4 +1,4 @@
-import { InlineConfig } from '../types';
+import { InlineConfig, BuildOutput } from '../types';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
@@ -11,6 +11,7 @@ import JSZip from 'jszip';
 import glob from 'fast-glob';
 import { normalizePath } from './utils';
 import { minimatchMultiple } from './utils/minimatch-multiple';
+import { gatherExternalFiles } from './utils/external-files';
 
 /**
  * Build and zip the extension for distribution.
@@ -66,6 +67,12 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
+
+    // Gather external files if enabled
+    const externalFiles = wxt.config.experimental.autoIncludeExternalSources
+      ? await gatherExternalFiles(output)
+      : [];
+
     const sourcesZipFilename = applyTemplate(wxt.config.zip.sourcesTemplate);
     const sourcesZipPath = path.resolve(
       wxt.config.outBaseDir,
@@ -79,7 +86,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
           return addOverridesToPackageJson(absolutePath, content, overrides);
         }
       },
-      additionalFiles: downloadedPackages,
+      additionalFiles: [...downloadedPackages, ...externalFiles],
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
@@ -126,14 +133,33 @@ async function zipDir(
       !minimatchMultiple(relativePath, options?.exclude)
     );
   });
-  const filesToZip = [
-    ...files,
-    ...(options?.additionalFiles ?? []).map((file) =>
-      path.relative(directory, file),
-    ),
-  ];
+  // Handle additional files with special handling for external files
+  const additionalFiles = options?.additionalFiles ?? [];
+  const externalFileMap = new Map<string, string>(); // zipPath -> originalPath
+
+  const additionalRelativePaths = additionalFiles.map((file) => {
+    const relativePath = path.relative(directory, file);
+
+    // If the relative path starts with ../, put it in an _external directory
+    // to avoid invalid relative paths in the zip
+    if (relativePath.startsWith('../')) {
+      const filename = path.basename(file);
+      const flatPath = `_external/${filename}`;
+      externalFileMap.set(flatPath, file); // Map flattened path to original path
+      return flatPath;
+    }
+
+    return relativePath;
+  });
+
+  const filesToZip = [...files, ...additionalRelativePaths];
+
   for (const file of filesToZip) {
-    const absolutePath = path.resolve(directory, file);
+    // Use original path for external files, resolved path for regular files
+    const absolutePath = externalFileMap.has(file)
+      ? externalFileMap.get(file)!
+      : path.resolve(directory, file);
+
     if (file.endsWith('.json')) {
       const content = await fs.readFile(absolutePath, 'utf-8');
       archive.file(
