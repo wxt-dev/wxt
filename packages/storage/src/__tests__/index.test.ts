@@ -706,16 +706,18 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
-      it('should set the version without running migrations for empty storage items', async () => {
+      it('should not run migrations on initialisation', async () => {
         const migrate = vi.fn((n: number) => n * 2);
 
-        const item = storage.defineItem<number>('local:key', {
-          init: () => 1,
+        let item = storage.defineItem<number>('local:key', {
           version: 2,
           migrations: {
             2: migrate,
           },
         });
+        await item.setValue(1);
+        await item.migrate();
+
         const value = await item.getValue();
         const meta = await item.getMeta();
 
@@ -789,7 +791,7 @@ describe('Storage Utils', () => {
         const actualMeta = await item.getMeta();
 
         expect(actualValue).toEqual(0);
-        expect(actualMeta).toEqual({});
+        expect(actualMeta).toEqual({ v: 3 });
 
         expect(migrateToV2).not.toBeCalled();
         expect(migrateToV3).not.toBeCalled();
@@ -899,9 +901,12 @@ describe('Storage Utils', () => {
       });
 
       it('should handle errors in migration functions', async () => {
+        const key = 'local:key';
+        await storage.setItem(key, 1);
+
         const cause = Error('Some error');
-        const expectedError = new MigrationError('local:key', 2, { cause });
-        const item = storage.defineItem<number>('local:key', {
+        const expectedError = new MigrationError(key, 2, { cause });
+        const item = storage.defineItem<number>(key, {
           version: 3,
           migrations: {
             2: () => {
@@ -909,7 +914,6 @@ describe('Storage Utils', () => {
             },
           },
         });
-        await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
 
         await expect(item.migrate()).rejects.toThrow(expectedError);
       });
