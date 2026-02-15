@@ -133,15 +133,18 @@ export async function resolveConfig(
     defaults: userConfig.webExt ?? userConfig.runner,
   });
   // Make sure alias are absolute
-  const alias = Object.fromEntries(
-    Object.entries({
-      ...mergedConfig.alias,
-      '@': srcDir,
-      '~': srcDir,
-      '@@': root,
-      '~~': root,
-    }).map(([key, value]) => [key, path.resolve(root, value)]),
-  );
+  const alias =
+    mergedConfig.alias !== false
+      ? Object.fromEntries(
+          Object.entries({
+            ...mergedConfig.alias,
+            '@': srcDir,
+            '~': srcDir,
+            '@@': root,
+            '~~': root,
+          }).map(([key, value]) => [key, path.resolve(root, value)]),
+        )
+      : {};
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
