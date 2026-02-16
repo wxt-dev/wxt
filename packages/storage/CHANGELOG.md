@@ -1,5 +1,37 @@
 # Changelog
 
+## v1.2.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.6...storage-v1.2.7)
+
+### 🩹 Fixes
+
+- Add another `defineItem` signature when `init` function is passed ([#1909](https://github.com/wxt-dev/wxt/pull/1909))
+- **storage:** Set version number on init ([#1996](https://github.com/wxt-dev/wxt/pull/1996))
+
+### 💅 Refactors
+
+- Code cleanup in analytics package ([#2084](https://github.com/wxt-dev/wxt/pull/2084))
+
+### 📖 Documentation
+
+- Rename keys name of getMetas() to be proper ([#2105](https://github.com/wxt-dev/wxt/pull/2105))
+
+### 🏡 Chore
+
+- Fix type errors after `chrome` type upgrades ([6036c6e8](https://github.com/wxt-dev/wxt/commit/6036c6e8))
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+
+### ❤️ Contributors
+
+- Willow ([@42willow](https://github.com/42willow))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Dan McGee <dpmcgee@gmail.com>
+
 ## v1.2.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.5...storage-v1.2.6)

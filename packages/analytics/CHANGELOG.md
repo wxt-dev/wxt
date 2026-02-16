@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.5.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.1...analytics-v0.5.2)
+
+### 🩹 Fixes
+
+- Normalize path for createAnalytics of analytics/index.ts ([#2013](https://github.com/wxt-dev/wxt/pull/2013))
+- Allow custom API URL in Google Analytics 4 provider options ([#1653](https://github.com/wxt-dev/wxt/pull/1653))
+
+### 💅 Refactors
+
+- Code cleanup in analytics package ([#2084](https://github.com/wxt-dev/wxt/pull/2084))
+
+### 🏡 Chore
+
+- Fix other type error after `chrome` types update ([31ebf966](https://github.com/wxt-dev/wxt/commit/31ebf966))
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+
+### ❤️ Contributors
+
+- Honwhy Wang <honwhy.wang@gmail.com>
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+
 ## v0.5.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.0...analytics-v0.5.1)

@@ -1,12 +1,18 @@
 import dns from 'node:dns';
 import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
+import consola from 'consola';
 
-function isOffline(): Promise<boolean> {
-  const isOffline = new Promise<boolean>((res) => {
-    dns.resolve('google.com', (err) => res(err != null));
-  });
-  return withTimeout(isOffline, 1e3).catch(() => true);
+async function isOffline(): Promise<boolean> {
+  try {
+    const isOffline = new Promise<boolean>((res) => {
+      dns.resolve('google.com', (err) => res(err != null));
+    });
+    return await withTimeout(isOffline, 1e3);
+  } catch (error) {
+    consola.error('Error checking offline status:', error);
+    return true;
+  }
 }
 
 export async function isOnline(): Promise<boolean> {
