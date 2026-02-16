@@ -1,12 +1,18 @@
 import { Mutex } from 'async-mutex';
 import pc from 'picocolors';
 import { relative } from 'node:path';
-import { BuildStepOutput, EntrypointGroup, WxtDevServer } from '../../types';
+import {
+  BuildOutput,
+  BuildStepOutput,
+  EntrypointGroup,
+  WxtDevServer,
+} from '../../types';
 import { wxt } from '../wxt';
 import {
   detectDevChanges,
   findEntrypoints,
   getRelevantDevChangedFiles,
+  groupEntrypoints,
   rebuild,
 } from './building';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './entrypoints';
@@ -15,6 +21,8 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './content-scripts';
+import { filterTruthy, toArray } from './arrays';
+import { normalizePath } from './paths';
 import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
 
 /**
@@ -34,19 +42,34 @@ export function createFileReloader(server: WxtDevServer) {
       if (fileChanges.length === 0) return;
       if (server.currentOutput == null) return;
 
+      const normalizedFileChanges = fileChanges.map(normalizePath);
       const relevantFileChanges = getRelevantDevChangedFiles(
         fileChanges,
         server.currentOutput,
       );
-      if (relevantFileChanges.length === 0) return;
+      const normalizedEntrypointsDir = normalizePath(wxt.config.entrypointsDir);
+      const hasEntrypointDirChange = normalizedFileChanges.some(
+        (file) =>
+          file === normalizedEntrypointsDir ||
+          file.startsWith(`${normalizedEntrypointsDir}/`),
+      );
+      if (relevantFileChanges.length === 0 && !hasEntrypointDirChange) return;
 
       await wxt.reloadConfig();
+      const allEntrypoints = await findEntrypoints();
+      const allEntrypointGroups = groupEntrypoints(allEntrypoints);
+      const newEntrypointGroups = getNewEntrypointGroups(
+        normalizedFileChanges,
+        allEntrypointGroups,
+        server.currentOutput,
+      );
+      if (relevantFileChanges.length === 0 && newEntrypointGroups.length === 0)
+        return;
 
       const changes = detectDevChanges(
         relevantFileChanges,
         server.currentOutput,
       );
-      if (changes.type === 'no-change') return;
 
       if (changes.type === 'full-restart') {
         wxt.logger.info('Config changed, restarting server...');
@@ -59,46 +82,62 @@ export function createFileReloader(server: WxtDevServer) {
         server.restartBrowser();
         return;
       }
+      if (changes.type === 'no-change' && newEntrypointGroups.length === 0)
+        return;
+
+      const changedFilesToLog = Array.from(
+        new Set([
+          ...relevantFileChanges,
+          ...newEntrypointGroups
+            .flatMap((group) => toArray(group))
+            .map((entry) => entry.inputPath),
+        ]),
+      );
 
       // Log the entrypoints that were effected
       wxt.logger.info(
-        `Changed: ${relevantFileChanges
+        `Changed: ${changedFilesToLog
           .map((file) => pc.dim(relative(wxt.config.root, file)))
           .join(', ')}`,
       );
 
       // Rebuild entrypoints on change
-      const allEntrypoints = await findEntrypoints();
+      const rebuildGroups =
+        changes.type === 'no-change'
+          ? newEntrypointGroups
+          : mergeEntrypointGroups(
+              getLatestRebuildGroups(
+                changes.rebuildGroups,
+                allEntrypointGroups,
+              ),
+              newEntrypointGroups,
+            );
       try {
         const { output: newOutput } = await rebuild(
           allEntrypoints,
-          // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
-          changes.rebuildGroups,
-          changes.cachedOutput,
+          rebuildGroups,
+          changes.type === 'no-change'
+            ? server.currentOutput
+            : changes.cachedOutput,
         );
         server.currentOutput = newOutput;
 
         // Perform reloads
-        switch (changes.type) {
-          case 'extension-reload':
-            server.reloadExtension();
-            wxt.logger.success(`Reloaded extension`);
-            break;
-          case 'html-reload':
-            const { reloadedNames } = reloadHtmlPages(
-              changes.rebuildGroups,
-              server,
-            );
-            wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
-            break;
-          case 'content-script-reload':
-            reloadContentScripts(changes.changedSteps, server);
+        const needsFullExtensionReload =
+          newEntrypointGroups.length > 0 ||
+          changes.type === 'extension-reload' ||
+          changes.type === 'no-change';
+        if (needsFullExtensionReload) {
+          server.reloadExtension();
+          wxt.logger.success(`Reloaded extension`);
+        } else if (changes.type === 'html-reload') {
+          const { reloadedNames } = reloadHtmlPages(rebuildGroups, server);
+          wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
+        } else {
+          reloadContentScripts(changes.changedSteps, server);
 
-            const rebuiltNames = changes.rebuildGroups
-              .flat()
-              .map((entry) => entry.name);
-            wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
-            break;
+          const rebuiltNames = rebuildGroups.flat().map((entry) => entry.name);
+          wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
         }
       } catch {
         // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
@@ -138,6 +177,72 @@ export function createFileReloader(server: WxtDevServer) {
     });
     await processLoop;
   };
+}
+
+function getNewEntrypointGroups(
+  normalizedFileChanges: string[],
+  allEntrypointGroups: EntrypointGroup[],
+  currentOutput: BuildOutput,
+): EntrypointGroup[] {
+  const changedFiles = new Set(normalizedFileChanges);
+  const builtEntrypointPaths = new Set(
+    currentOutput.steps.flatMap((step) =>
+      toArray(step.entrypoints).map((entry) => normalizePath(entry.inputPath)),
+    ),
+  );
+
+  return allEntrypointGroups.filter((group) => {
+    const groupEntrypoints = toArray(group);
+    const hasNewEntrypoint = groupEntrypoints.some(
+      (entry) => !builtEntrypointPaths.has(normalizePath(entry.inputPath)),
+    );
+    const changedEntrypoint = groupEntrypoints.some((entry) =>
+      changedFiles.has(normalizePath(entry.inputPath)),
+    );
+    return hasNewEntrypoint && changedEntrypoint;
+  });
+}
+
+function getLatestRebuildGroups(
+  rebuildGroups: EntrypointGroup[],
+  allEntrypointGroups: EntrypointGroup[],
+): EntrypointGroup[] {
+  const groupByEntrypointPath = new Map<string, EntrypointGroup>();
+
+  allEntrypointGroups.forEach((group) => {
+    toArray(group).forEach((entry) => {
+      groupByEntrypointPath.set(normalizePath(entry.inputPath), group);
+    });
+  });
+
+  return mergeEntrypointGroups(
+    rebuildGroups.flatMap((group) => {
+      return filterTruthy(
+        toArray(group).map((entry) =>
+          groupByEntrypointPath.get(normalizePath(entry.inputPath)),
+        ),
+      );
+    }),
+  );
+}
+
+function mergeEntrypointGroups(
+  ...groups: EntrypointGroup[][]
+): EntrypointGroup[] {
+  const deduped = new Map<string, EntrypointGroup>();
+
+  groups.flat().forEach((group) => {
+    deduped.set(getEntrypointGroupKey(group), group);
+  });
+
+  return [...deduped.values()];
+}
+
+function getEntrypointGroupKey(group: EntrypointGroup): string {
+  return toArray(group)
+    .map((entry) => normalizePath(entry.inputPath))
+    .sort()
+    .join('|');
 }
 
 /**
