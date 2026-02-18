@@ -117,6 +117,7 @@ const chromeExtensionIds = [
   'jdcppdokgfbnhiacbeplahgnciahnhck', // Lofi BGM Player - Free lofi focus music for work & study
   'cgpmbiiagnehkikhcbnhiagfomajncpa', // Margin - Annotate and highlight any webpage, with your notes saved to the decentralized AT Protocol.
   'mfjdonmgmgcijagclnkfhmjiblbfjaid', // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
+  'dhiekgdaipindoapjmcnpompdknjeijf', // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
