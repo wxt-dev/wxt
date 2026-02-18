@@ -225,7 +225,9 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: defu(mergedConfig.experimental, {}),
+    experimental: defu(mergedConfig.experimental, {
+      autoIncludeExternalSources: false,
+    }),
     dev: {
       server: devServerConfig,
       reloadCommand,

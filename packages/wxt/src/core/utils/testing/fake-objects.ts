@@ -297,7 +297,9 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     },
     userConfigMetadata: {},
     alias: {},
-    experimental: {},
+    experimental: {
+      autoIncludeExternalSources: false,
+    },
     dev: {
       reloadCommand: 'Alt+R',
     },
