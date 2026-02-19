@@ -2,8 +2,7 @@ import { ContentScriptContext } from '../content-script-context';
 import { WxtLocationChangeEvent } from './custom-events';
 
 const supportsNavigationApi =
-  (globalThis as any).navigation !== 'undefined' &&
-  (globalThis as any).navigation.addEventListener === 'function';
+  typeof (globalThis as any).navigation?.addEventListener === 'function';
 
 /**
  * Create a util that watches for URL changes, dispatching the custom event when detected. Stops
