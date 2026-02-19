@@ -11,7 +11,6 @@ const supportsNavigationApi =
  * falls back to polling.
  */
 export function createLocationWatcher(ctx: ContentScriptContext) {
-  let interval: number | undefined;
   let lastUrl: URL;
   let watching = false;
 
@@ -37,7 +36,7 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
           { signal: ctx.signal },
         );
       } else {
-        interval = ctx.setInterval(() => {
+        ctx.setInterval(() => {
           const newUrl = new URL(location.href);
           if (newUrl.href !== lastUrl.href) {
             window.dispatchEvent(new WxtLocationChangeEvent(newUrl, lastUrl));
