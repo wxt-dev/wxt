@@ -1,7 +1,7 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
-import { describe, it, expect, beforeEach, vi, expectTypeOf } from 'vitest';
-import { MigrationError, type WxtStorageItem, storage } from '../index';
 import { browser } from '@wxt-dev/browser';
+import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { MigrationError, type WxtStorageItem, storage } from '../index';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number of chained
@@ -23,6 +23,9 @@ describe('Storage Utils', () => {
   beforeEach(() => {
     fakeBrowser.reset();
     storage.unwatch();
+
+    // Setup a spy to check for excessive calls
+    fakeBrowser.storage.local.set = vi.spyOn(fakeBrowser.storage.local, 'set');
   });
 
   describe.each(['local', 'sync', 'managed', 'session'] as const)(
@@ -949,6 +952,7 @@ describe('Storage Utils', () => {
           { migratedValue: expect.any(Number) },
         );
       });
+
       it('should not print migration logs if debug option is undefined or false', async () => {
         await fakeBrowser.storage.local.set({
           count: 2,
@@ -979,6 +983,62 @@ describe('Storage Utils', () => {
         });
         await waitForMigrations();
         expect(consoleSpy).toHaveBeenCalledTimes(0);
+      });
+
+      describe('calling setValue', () => {
+        const migrateToV2 = vi.fn((v1) => v1);
+        const defineTestItem = () =>
+          storage.defineItem<number>('local:count', {
+            version: 2,
+            migrations: {
+              2: migrateToV2,
+            },
+          });
+
+        it('should set the version metadata when setting the value for the first time', async () => {
+          const item = defineTestItem();
+
+          expect(await item.getValue()).toBeNull();
+          expect(await item.getMeta()).toEqual({});
+          expect(fakeBrowser.storage.local.set).toBeCalledTimes(0);
+
+          await item.setValue(1);
+
+          expect(await item.getValue()).toBe(1);
+          expect(await item.getMeta()).toEqual({ v: 2 });
+          // Called twice, once for setting the value, once for updating the metadata.
+          expect(fakeBrowser.storage.local.set).toBeCalledTimes(2);
+          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 1 });
+          expect(fakeBrowser.storage.local.set).toBeCalledWith({
+            count$: { v: 2 },
+          });
+
+          await item.setValue(2);
+          expect(await item.getValue()).toBe(2);
+          expect(await item.getMeta()).toEqual({ v: 2 });
+          // Only called one more time, just for setting the value
+          expect(fakeBrowser.storage.local.set).toBeCalledTimes(3);
+          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 2 });
+
+          // Migration function never called throughout the whole test
+          expect(migrateToV2).not.toBeCalled();
+        });
+
+        it('should not set the version metadata when a value is already in storage', async () => {
+          await fakeBrowser.storage.local.set({ count: 1, count$: { v: 2 } });
+          vi.mocked(fakeBrowser.storage.local.set).mockClear();
+
+          const item = defineTestItem();
+          await item.setValue(2);
+
+          expect(await item.getValue()).toEqual(2);
+          expect(await item.getMeta()).toEqual({ v: 2 });
+
+          expect(fakeBrowser.storage.local.set).toBeCalledTimes(1);
+          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 2 });
+
+          expect(migrateToV2).not.toBeCalled();
+        });
       });
     });
 
