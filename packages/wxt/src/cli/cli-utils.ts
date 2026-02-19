@@ -94,8 +94,11 @@ export function createAliasedCommand(
         await spawn(bin, args, {
           stdio: 'inherit',
         });
-      } catch {
-        // Let the other aliased CLI log errors, just exit
+      } catch (err) {
+        consola.fail('Command failed');
+        if (!(err instanceof ValidationError)) {
+          consola.error(err);
+        }
         process.exit(1);
       }
     });
