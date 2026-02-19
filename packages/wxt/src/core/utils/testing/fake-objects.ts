@@ -292,6 +292,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       name: faker.person.firstName().toLowerCase(),
       downloadedPackagesDir: fakeDir(),
       downloadPackages: [],
+      stripWorkspaceProtocol: false,
       compressionLevel: 9,
       zipSources: false,
     },
