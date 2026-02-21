@@ -7,13 +7,23 @@ export type I18nStructure = {
   [K: string]: I18nFeatures;
 };
 
-export type DefaultI18nStructure = {
-  [K: string]: any;
+type DefaultTFunction<TKeys extends string> = {
+  (key: TKeys): string;
+  (key: TKeys, substitutions?: string[]): string;
+  (key: TKeys, n: number): string;
+  (key: TKeys, n: number, substitutions?: string[]): string;
 };
+
+export interface I18n<T extends I18nStructure> {
+  t: T extends I18nStructure
+    ? DefaultTFunction<keyof T & string>
+    : TFunction<Extract<T, I18nStructure>>;
+}
 
 // prettier-ignore
 export type SubstitutionTuple<T extends SubstitutionCount> =
-    T extends 1 ? [$1: Substitution]
+    T extends 0 ? []
+  : T extends 1 ? [$1: Substitution]
   : T extends 2 ? [$1: Substitution, $2: Substitution]
   : T extends 3 ? [$1: Substitution, $2: Substitution, $3: Substitution]
   : T extends 4 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution]
@@ -22,7 +32,7 @@ export type SubstitutionTuple<T extends SubstitutionCount> =
   : T extends 7 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution]
   : T extends 8 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution]
   : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
-  : never
+  : []
 
 export type TFunction<T extends I18nStructure> = {
   // Non-plural, no substitutions
@@ -31,7 +41,7 @@ export type TFunction<T extends I18nStructure> = {
     key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: 0 } ? P : never; }[keyof T],
   ): string;
 
-  // Non-plural with substitutions
+  // Non-plural with optional substitutions
   <K extends keyof T>(
     // prettier-ignore
     key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: SubstitutionCount } ? P : never; }[keyof T],
@@ -65,10 +75,6 @@ export type TFunction<T extends I18nStructure> = {
       : never,
   ): string;
 };
-
-export interface I18n<T extends DefaultI18nStructure> {
-  t: TFunction<T>;
-}
 
 export type Substitution = string | number;
 
