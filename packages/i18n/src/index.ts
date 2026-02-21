@@ -5,7 +5,7 @@ import { I18nStructure, I18n, Substitution } from './types';
 import { browser } from '@wxt-dev/browser';
 
 export function createI18n<T extends I18nStructure>(): I18n<T> {
-  const t = ((key, ...args) => {
+  const t = ((key: string, ...args: unknown[]) => {
     // Resolve args
     let sub: Substitution[] | undefined;
     let count: number | undefined;
