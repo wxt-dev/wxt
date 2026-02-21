@@ -12,7 +12,7 @@ export default defineBackground({
       manifestVersion: import.meta.env.MANIFEST_VERSION,
     });
 
-    console.log(useAppConfig());
+    console.log(getAppConfig());
 
     browser.runtime.getURL('/');
     browser.runtime.getURL('/background.js');
