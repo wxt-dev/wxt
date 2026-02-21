@@ -2,15 +2,16 @@ name: ✨ Auto-label PR
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 
 jobs:
-  auto-label:
+  update-pr:
+    name: Update PR
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-      - name: Check assignees and get changed files
+      - name: Gather Info
         id: check
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
@@ -48,7 +49,15 @@ jobs:
             core.setOutput('labels', JSON.stringify(labels));
             console.log('Detected package labels:', labels);
 
-      - name: Assign author to PR
+            // Get current labels on the PR that match pkg/* pattern
+            const currentPkgLabels = pr.labels
+              .map(label => label.name)
+              .filter(name => name.startsWith('pkg/'));
+
+            core.setOutput('current_pkg_labels', JSON.stringify(currentPkgLabels));
+            console.log('Current pkg labels:', currentPkgLabels);
+
+      - name: Sync Author
         if: steps.check.outputs.has_assignees == 'false'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
@@ -62,20 +71,41 @@ jobs:
 
             console.log('Assigned PR author: ${{ steps.check.outputs.author }}');
 
-      - name: Add package labels
-        if: steps.check.outputs.labels != '[]'
+      - name: Sync Labels
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
-            const labels = ${{ steps.check.outputs.labels }};
+            const newLabels = ${{ steps.check.outputs.labels }};
+            const currentLabels = ${{ steps.check.outputs.current_pkg_labels }};
 
-            if (labels.length > 0) {
+            // Find labels to add (in newLabels but not in currentLabels)
+            const labelsToAdd = newLabels.filter(label => !currentLabels.includes(label));
+
+            // Find labels to remove (in currentLabels but not in newLabels)
+            const labelsToRemove = currentLabels.filter(label => !newLabels.includes(label));
+
+            // Add new labels
+            if (labelsToAdd.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.payload.pull_request.number,
-                labels: labels
+                labels: labelsToAdd
               });
+              console.log('Added labels:', labelsToAdd);
+            }
 
-              console.log('Added labels:', labels);
+            // Remove obsolete labels
+            for (const label of labelsToRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                name: label
+              });
+              console.log('Removed label:', label);
+            }
+
+            if (labelsToAdd.length === 0 && labelsToRemove.length === 0) {
+              console.log('No label changes needed');
             }
