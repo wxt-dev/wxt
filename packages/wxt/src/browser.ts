@@ -10,7 +10,7 @@
  * @module wxt/browser
  */
 import { browser as _browser, type Browser } from '@wxt-dev/browser';
-import { ScriptPublicPath } from './utils/inject-script';
+import type { ScriptPublicPath } from './utils/inject-script';
 
 /**
  * This interface is empty because it is generated per-project when running `wxt prepare`. See:
@@ -33,12 +33,15 @@ type ScriptInjection<Args extends any[], Result> =
 type InjectionResult<Result> = Array<
   Browser.scripting.InjectionResult<Awaited<Result>>
 >;
-interface WxtScripting {
+
+export interface WxtScripting {
   executeScript: {
+    /**
+     * @see {@link Browser.scripting.executeScript}
+     */
     <Args extends any[], Result>(
       injection: ScriptInjection<Args, Result>,
     ): Promise<InjectionResult<Result>>;
-
     <Args extends any[], Result>(
       injection: ScriptInjection<Args, Result>,
       callback: (results: InjectionResult<Result>) => void,
