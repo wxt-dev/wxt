@@ -37,7 +37,8 @@ describe('Manifest Utils', () => {
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
-            mv2Key: type,
+            // @ts-expect-error: Force this to be undefined instead of inheriting the random value
+            mv2Key: type ?? null,
             defaultIcon: {
               '16': '/icon/16.png',
             },
