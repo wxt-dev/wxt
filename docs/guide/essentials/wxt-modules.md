@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # WXT Modules
 
 WXT provides a "module system" that let's you run code at different steps in the build process to modify it.
