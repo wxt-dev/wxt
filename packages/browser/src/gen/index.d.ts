@@ -706,6 +706,12 @@ export namespace Browser {
         const ROOT_NODE_ID = "0";
 
         /**
+         * The `id` associated with the root level node.
+         * @since Chrome 145
+         */
+        export const ROOT_NODE_ID = "0";
+
+        /**
          * Creates a bookmark or folder under the specified parentId. If url is NULL or missing, it will be a folder.
          *
          * Can return its result via Promise since Chrome 90.
@@ -11114,7 +11120,11 @@ export namespace Browser {
             sessionId?: string | undefined;
             /**
              * The ID of the Split View that the tab belongs to.
+<<<<<<< HEAD
              * @since Chrome 140
+=======
+             * @since Chrome 145
+>>>>>>> 2d2db23c (fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version)
              */
             splitViewId?: number | undefined;
             /**
@@ -11193,6 +11203,12 @@ export namespace Browser {
          * @since Chrome 140
          */
         const SPLIT_VIEW_ID_NONE: -1;
+
+        /**
+         * An ID that represents the absence of a split tab.
+         * @since Chrome 145
+         */
+        export const SPLIT_VIEW_ID_NONE: -1;
 
         /**
          * An ID that represents the absence of a browser tab.
