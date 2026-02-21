@@ -30,6 +30,7 @@ describe('Auto Imports', () => {
             const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
             const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
             const fakeBrowser: typeof import('wxt/testing').fakeBrowser
+            const getAppConfig: typeof import('wxt/utils/app-config').getAppConfig
             const injectScript: typeof import('wxt/utils/inject-script').injectScript
             const storage: typeof import('wxt/utils/storage').storage
             const useAppConfig: typeof import('wxt/utils/app-config').useAppConfig
@@ -111,7 +112,7 @@ describe('Auto Imports', () => {
           declare module '#imports' {
             export { browser, Browser } from 'wxt/browser';
             export { storage, StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
-            export { useAppConfig } from 'wxt/utils/app-config';
+            export { getAppConfig, useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext, WxtWindowEventMap } from 'wxt/utils/content-script-context';
             export { createIframeUi, IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe';
             export { createIntegratedUi, IntegratedContentScriptUi, IntegratedContentScriptUiOptions } from 'wxt/utils/content-script-ui/integrated';
@@ -196,7 +197,7 @@ describe('Auto Imports', () => {
           declare module '#imports' {
             export { browser, Browser } from 'wxt/browser';
             export { storage, StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
-            export { useAppConfig } from 'wxt/utils/app-config';
+            export { getAppConfig, useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext, WxtWindowEventMap } from 'wxt/utils/content-script-context';
             export { createIframeUi, IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe';
             export { createIntegratedUi, IntegratedContentScriptUi, IntegratedContentScriptUiOptions } from 'wxt/utils/content-script-ui/integrated';
