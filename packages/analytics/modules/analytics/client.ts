@@ -234,7 +234,7 @@ function createFrontendAnalytics(): Analytics {
     referrer: globalThis.document.referrer || undefined,
     screen: `${globalThis.window.screen.width}x${globalThis.window.screen.height}`,
     url: location.href,
-    title: document.title,
+    title: document.title || undefined,
   });
 
   const methodForwarder: MethodForwarder =
