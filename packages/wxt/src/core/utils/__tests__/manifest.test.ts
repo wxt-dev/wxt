@@ -43,6 +43,7 @@ describe('Manifest Utils', () => {
               '16': '/icon/16.png',
             },
             defaultTitle: 'Default Iitle',
+            defaultState: 'enabled',
           },
           outputDir: outDir,
           skipped: false,
@@ -62,6 +63,7 @@ describe('Manifest Utils', () => {
           action: {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
+            default_state: popup.options.defaultState,
             default_popup: 'popup.html',
           },
         };
@@ -95,6 +97,7 @@ describe('Manifest Utils', () => {
           const expected = {
             default_icon: popup.options.defaultIcon,
             default_title: popup.options.defaultTitle,
+            default_state: popup.options.defaultState,
             default_popup: 'popup.html',
           };
 
