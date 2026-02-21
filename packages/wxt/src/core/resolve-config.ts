@@ -387,7 +387,7 @@ async function getUnimportOptions(
       },
       {
         from: 'wxt/utils/app-config',
-        imports: defineImportsAndTypes(['useAppConfig'], []),
+        imports: defineImportsAndTypes(['getAppConfig', 'useAppConfig'], []),
       },
       {
         from: 'wxt/utils/content-script-context',

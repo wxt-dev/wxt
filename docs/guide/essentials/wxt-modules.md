@@ -131,7 +131,7 @@ declare module 'wxt/utils/define-app-config' {
 Runtime options are returned when calling
 
 ```ts
-const config = useAppConfig();
+const config = getAppConfig();
 console.log(config.myModule);
 ```
 
@@ -220,7 +220,7 @@ export default defineWxtModule({
     const analyticsModuleCode = `
       import { createAnalytics } from 'some-module';
 
-      export const analytics = createAnalytics(useAppConfig().analytics);
+      export const analytics = createAnalytics(getAppConfig().analytics);
       export const { reportEvent, reportPageView } = analytics;
     `;
 
