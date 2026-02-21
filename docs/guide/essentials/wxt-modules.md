@@ -141,6 +141,58 @@ console.log(config.myModule);
 
 This is very useful when [generating runtime code](#generate-runtime-module).
 
+#### Add custom entrypoint options
+
+Modules can add custom options to entrypoints by augmenting the entrypoint options types. This allows you to add custom configuration that can be accessed during the build process.
+
+```ts
+import { defineWxtModule } from 'wxt/modules';
+import 'wxt';
+
+declare module 'wxt' {
+  export interface BackgroundEntrypointOptions {
+    // Add custom options to the background entrypoint
+    myCustomOption?: string;
+  }
+}
+
+export default defineWxtModule({
+  setup(wxt) {
+    wxt.hook('entrypoints:resolved', (_, entrypoints) => {
+      const background = entrypoints.find((e) => e.type === 'background');
+      if (background) {
+        console.log('Custom option:', background.options.myCustomOption);
+      }
+    });
+  },
+});
+```
+
+Now users can set the custom option in their entrypoint:
+
+```ts [entrypoints/background.ts]
+export default defineBackground({
+  myCustomOption: 'custom value',
+  main() {
+    // ...
+  },
+});
+```
+
+This works for all other JS and HTML entrypoints, here's an example of how to pass a custom option from an HTML file.
+
+```html [entrypoints/popup.html]
+<html>
+  <head>
+    <meta name="wxt.myHtmlOption" content="custom value" />
+    <title>Popup</title>
+  </head>
+  <body>
+    <!-- ... -->
+  </body>
+</html>
+```
+
 #### Generate output file
 
 ```ts
