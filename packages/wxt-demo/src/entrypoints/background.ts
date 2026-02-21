@@ -49,7 +49,7 @@ function _otherTypeChecksNotEvaluated() {
     target: { tabId: 1 },
     files: [
       '/background.js',
-      // @ts-expect-error: Should error out for unknown strings
+      // @ts-expect-error: Should error for non-existing paths
       '/other.js',
     ],
   });
