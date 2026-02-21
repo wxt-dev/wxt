@@ -94,10 +94,3 @@ export function isJsEntrypoint(
   const ext = extname(entrypoint.inputPath);
   return ['.js', '.jsx', '.ts', '.tsx'].includes(ext);
 }
-
-export function isEntryPointOfType(
-  entrypoint: Pick<Entrypoint, 'type'>,
-  types: Array<Entrypoint['type']>,
-) {
-  return types.includes(entrypoint.type);
-}
