@@ -231,8 +231,8 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document.referrer || undefined,
-    screen: `${globalThis.window.screen.width}x${globalThis.window.screen.height}`,
+    referrer: document.referrer || undefined,
+    screen: `${window.screen.width}x${window.screen.height}`,
     url: location.href,
     title: document.title || undefined,
   });
