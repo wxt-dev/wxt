@@ -11,18 +11,18 @@ import type {
 } from './types';
 import { browser } from '@wxt-dev/browser';
 
-type TAnalyticsMessage = {
+type AnalyticsMessage = {
   [K in keyof Analytics]: {
     fn: K;
     args: Parameters<Analytics[K]>;
   };
 }[keyof Analytics];
 
-type TAnalyticsMethod =
+type AnalyticsMethod =
   | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
   | undefined;
 
-type TMethodForwarder = <K extends keyof Analytics>(
+type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
 ) => (...args: Parameters<Analytics[K]>) => void;
 
@@ -212,8 +212,8 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }: TAnalyticsMessage) => {
-        void (analytics[fn] as TAnalyticsMethod)?.(...args);
+      port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
+        void (analytics[fn] as AnalyticsMethod)?.(...args);
       });
     }
   });
@@ -231,13 +231,15 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document?.referrer,
-    screen: `${globalThis.window?.screen.width}x${globalThis.window?.screen.height}`,
+    referrer: globalThis.document?.referrer || undefined,
+    screen: globalThis.window
+      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
+      : undefined,
     url: location.href,
-    title: document.title,
+    title: document.title || undefined,
   });
 
-  const methodForwarder: TMethodForwarder =
+  const methodForwarder: MethodForwarder =
     (fn) =>
     (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
