@@ -231,12 +231,10 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document?.referrer || undefined,
-    screen: globalThis.window
-      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
-      : undefined,
+    referrer: globalThis.document.referrer,
+    screen: `${globalThis.window.screen.width}x${globalThis.window.screen.height}`,
     url: location.href,
-    title: document.title || undefined,
+    title: document.title,
   });
 
   const methodForwarder: MethodForwarder =
@@ -283,7 +281,7 @@ function defineStorageItem<T>(
 ): AnalyticsStorageItem<T> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get<Record<string, any>>(key))[key] ??
+      (await browser.storage.local.get<Record<string, T>>(key))[key] ??
       defaultValue,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };

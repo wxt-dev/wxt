@@ -43,7 +43,7 @@ export interface AnalyticsConfig {
 }
 
 export interface AnalyticsStorageItem<T> {
-  getValue: () => T | Promise<T>;
+  getValue: () => T | undefined | Promise<T | undefined>;
   setValue?: (newValue: T) => void | Promise<void>;
 }
 
