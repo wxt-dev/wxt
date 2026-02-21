@@ -415,7 +415,13 @@ function createStorage(): WxtStorage {
           driverKey,
           driverMetaKey,
         ]);
-        if (value == null) return;
+        if (value == null) {
+          // Prevent running migrations if initiated at a version >= 2
+          if (targetVersion >= 2) {
+            await setMeta(driver, driverKey, { v: targetVersion });
+          }
+          return;
+        }
 
         const currentVersion = meta?.v ?? 1;
         if (currentVersion > targetVersion) {
@@ -491,9 +497,6 @@ function createStorage(): WxtStorage {
 
           const newValue = await opts.init();
           await driver.setItem<any>(driverKey, newValue);
-          if (value == null && targetVersion > 1) {
-            await setMeta(driver, driverKey, { v: targetVersion });
-          }
           return newValue;
         });
 
