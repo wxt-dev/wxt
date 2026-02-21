@@ -36,30 +36,35 @@ export function detectDevChanges(
   changedFiles: string[],
   currentOutput: BuildOutput,
 ): DevModeChange {
-  const isConfigChange = some(
+  const relevantChangedFiles = getRelevantDevChangedFiles(
     changedFiles,
+    currentOutput,
+  );
+
+  const isConfigChange = some(
+    relevantChangedFiles,
     (file) => file === wxt.config.userConfigMetadata.configFile,
   );
   if (isConfigChange) return { type: 'full-restart' };
 
-  const isWxtModuleChange = some(changedFiles, (file) =>
+  const isWxtModuleChange = some(relevantChangedFiles, (file) =>
     file.startsWith(wxt.config.modulesDir),
   );
   if (isWxtModuleChange) return { type: 'full-restart' };
 
   const isRunnerChange = some(
-    changedFiles,
+    relevantChangedFiles,
     (file) => file === wxt.config.runnerConfig.configFile,
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
-    changedFiles.flatMap((changedFile) =>
+    relevantChangedFiles.flatMap((changedFile) =>
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
   if (changedSteps.size === 0) {
-    const hasPublicChange = some(changedFiles, (file) =>
+    const hasPublicChange = some(relevantChangedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
     );
     if (hasPublicChange) {
@@ -93,8 +98,8 @@ export function detectDevChanges(
   }
 
   const isOnlyHtmlChanges =
-    changedFiles.length > 0 &&
-    every(changedFiles, (file) => file.endsWith('.html'));
+    relevantChangedFiles.length > 0 &&
+    every(relevantChangedFiles, (file) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -123,6 +128,19 @@ export function detectDevChanges(
     cachedOutput: unchangedOutput,
     rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
   };
+}
+
+export function getRelevantDevChangedFiles(
+  changedFiles: string[],
+  currentOutput: BuildOutput,
+): string[] {
+  return Array.from(new Set(changedFiles)).filter((changedFile) => {
+    if (changedFile === wxt.config.userConfigMetadata.configFile) return true;
+    if (changedFile.startsWith(wxt.config.modulesDir)) return true;
+    if (changedFile === wxt.config.runnerConfig.configFile) return true;
+    if (changedFile.startsWith(wxt.config.publicDir)) return true;
+    return findEffectedSteps(changedFile, currentOutput).length > 0;
+  });
 }
 
 /**
