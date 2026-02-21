@@ -1,0 +1,81 @@
+name: ✨ Auto-label PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Check assignees and get changed files
+        id: check
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            // Check if PR has assignees
+            const hasAssignees = pr.assignees && pr.assignees.length > 0;
+            core.setOutput('has_assignees', hasAssignees);
+            core.setOutput('author', pr.user.login);
+
+            // Get list of changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            // Find all packages that were modified
+            const packagesRegex = /^packages\/([^\/]+)\//;
+            const affectedPackages = new Set();
+
+            for (const file of files) {
+              const match = file.filename.match(packagesRegex);
+              if (match) {
+                affectedPackages.add(match[1]);
+              }
+            }
+
+            const labels = Array.from(affectedPackages).map(pkg => `pkg/${pkg}`);
+            core.setOutput('labels', JSON.stringify(labels));
+            console.log('Detected package labels:', labels);
+
+      - name: Assign author to PR
+        if: steps.check.outputs.has_assignees == 'false'
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              assignees: ['${{ steps.check.outputs.author }}']
+            });
+
+            console.log('Assigned PR author: ${{ steps.check.outputs.author }}');
+
+      - name: Add package labels
+        if: steps.check.outputs.labels != '[]'
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const labels = ${{ steps.check.outputs.labels }};
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: labels
+              });
+
+              console.log('Added labels:', labels);
+            }
