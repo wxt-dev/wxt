@@ -4,9 +4,9 @@
  * See [the guide](https://wxt.dev/storage.html) for more information.
  * @module @wxt-dev/storage
  */
-import { dequal } from 'dequal/lite';
-import { Mutex } from 'async-mutex';
 import { browser, type Browser } from '@wxt-dev/browser';
+import { Mutex } from 'async-mutex';
+import { dequal } from 'dequal/lite';
 
 export const storage = createStorage();
 
@@ -409,12 +409,18 @@ function createStorage(): WxtStorage {
         );
       }
 
+      let needsVersionSet = false;
+
       const migrate: WxtStorageItem<any, any>['migrate'] = async () => {
         const driverMetaKey = getMetaKey(driverKey);
         const [{ value }, { value: meta }] = await driver.getItems([
           driverKey,
           driverMetaKey,
         ]);
+
+        // Used in setValue to also set the version when needed
+        needsVersionSet = value == null && meta?.v == null && !!targetVersion;
+
         if (value == null) return;
 
         const currentVersion = meta?.v ?? 1;
@@ -529,7 +535,18 @@ function createStorage(): WxtStorage {
         setValue: async (value) => {
           await migrationsDone;
 
-          return await setItem(driver, driverKey, value);
+          if (needsVersionSet) {
+            needsVersionSet = false;
+            await Promise.all([
+              // Note: These calls cannot be done in a single `setItems` call;
+              // metadata needs to be merged together with existing data and
+              // setItems overwrites the whole value without merging.
+              setItem(driver, driverKey, value),
+              setMeta(driver, driverKey, { v: targetVersion }),
+            ]);
+          } else {
+            await setItem(driver, driverKey, value);
+          }
         },
 
         setMeta: async (properties) => {
