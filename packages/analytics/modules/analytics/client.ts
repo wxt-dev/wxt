@@ -275,13 +275,18 @@ function createFrontendAnalytics(): Analytics {
   return analytics;
 }
 
+function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(
   key: string,
-  defaultValue?: T,
-): AnalyticsStorageItem<T> {
+  defaultValue: T,
+): AnalyticsStorageItem<T>;
+function defineStorageItem(
+  key: string,
+  defaultValue?: unknown,
+): AnalyticsStorageItem<unknown> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get<Record<string, T>>(key))[key] ??
+      (await browser.storage.local.get<Record<string, unknown>>(key))[key] ??
       defaultValue,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
