@@ -164,6 +164,7 @@ describe('Auto Imports', () => {
         /// <reference types="wxt/vite-builder-env" />
         /// <reference path="./types/paths.d.ts" />
         /// <reference path="./types/i18n.d.ts" />
+        /// <reference path="./types/browser.d.ts" />
         /// <reference path="./types/globals.d.ts" />
         /// <reference path="./types/imports-module.d.ts" />
         "
