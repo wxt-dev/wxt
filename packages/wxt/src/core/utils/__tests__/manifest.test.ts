@@ -42,7 +42,7 @@ describe('Manifest Utils', () => {
             defaultIcon: {
               '16': '/icon/16.png',
             },
-            defaultTitle: 'Default Iitle',
+            defaultTitle: 'Default Title',
           },
           outputDir: outDir,
           skipped: false,
