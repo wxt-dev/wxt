@@ -684,6 +684,7 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
 }
 
 export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
+  title?: string;
   openInTab?: PerBrowserOption<boolean>;
   browserStyle?: PerBrowserOption<boolean>;
   chromeStyle?: PerBrowserOption<boolean>;

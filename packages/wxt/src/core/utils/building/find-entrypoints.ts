@@ -115,20 +115,14 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
             ...info,
             type,
             outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
-            options: {
-              include: options.include,
-              exclude: options.exclude,
-            },
+            options,
           };
         default:
           return {
             ...info,
             type,
             outputDir: wxt.config.outDir,
-            options: {
-              include: options.include,
-              exclude: options.exclude,
-            },
+            options,
           };
       }
     }),
@@ -266,23 +260,19 @@ async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
+  // Extract non-per-browser options
+  const { themeIcons, title, type, ...perBrowserOptions } = options;
+
   const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
-      browserStyle: options.browserStyle,
-      exclude: options.exclude,
-      include: options.include,
-      defaultIcon: options.defaultIcon,
-      defaultTitle: options.title,
-      mv2Key: options.type,
-      defaultArea: options.defaultArea,
+      ...perBrowserOptions,
+      defaultTitle: title,
+      mv2Key: type,
     },
     wxt.config.browser,
   );
   if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
     strictOptions.mv2Key = 'browser_action';
-
-  // themeIcons is an array of objects, not a per-browser option
-  const themeIcons = options.themeIcons;
 
   return {
     type: 'popup',
@@ -300,16 +290,7 @@ async function getOptionsEntrypoint(
   return {
     type: 'options',
     name: 'options',
-    options: resolvePerBrowserOptions(
-      {
-        browserStyle: options.browserStyle,
-        chromeStyle: options.chromeStyle,
-        exclude: options.exclude,
-        include: options.include,
-        openInTab: options.openInTab,
-      },
-      wxt.config.browser,
-    ),
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
@@ -324,10 +305,7 @@ async function getUnlistedPageEntrypoint(
     name: info.name,
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    options: {
-      include: options.include,
-      exclude: options.exclude,
-    },
+    options,
   };
 }
 
@@ -340,13 +318,7 @@ async function getUnlistedScriptEntrypoint(
     name,
     inputPath,
     outputDir: wxt.config.outDir,
-    options: resolvePerBrowserOptions(
-      {
-        include: options.include,
-        exclude: options.exclude,
-      },
-      wxt.config.browser,
-    ),
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
   };
 }
 
@@ -355,15 +327,7 @@ async function getBackgroundEntrypoint(
   options: Record<string, any>,
 ): Promise<BackgroundEntrypoint> {
   const strictOptions: BackgroundEntrypoint['options'] =
-    resolvePerBrowserOptions(
-      {
-        include: options.include,
-        exclude: options.exclude,
-        persistent: options.persistent,
-        type: options.type,
-      },
-      wxt.config.browser,
-    );
+    resolvePerBrowserOptions(options, wxt.config.browser);
 
   if (wxt.config.manifestVersion !== 3) {
     delete strictOptions.type;
@@ -400,17 +364,16 @@ async function getSidepanelEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<SidepanelEntrypoint> {
+  // Extract non-per-browser options and rename title to defaultTitle
+  const { title, ...perBrowserOptions } = options;
+
   return {
     type: 'sidepanel',
     name: info.name,
     options: resolvePerBrowserOptions(
       {
-        browserStyle: options.browserStyle,
-        exclude: options.exclude,
-        include: options.include,
-        defaultIcon: options.defaultIcon,
-        defaultTitle: options.title,
-        openAtInstall: options.openAtInstall,
+        ...perBrowserOptions,
+        defaultTitle: title,
       },
       wxt.config.browser,
     ),

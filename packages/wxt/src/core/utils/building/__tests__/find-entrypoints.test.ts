@@ -112,7 +112,9 @@ describe('findEntrypoints', () => {
         name: 'options',
         inputPath: resolve(config.entrypointsDir, 'options.html'),
         outputDir: config.outDir,
-        options: {},
+        options: {
+          title: 'Default Title',
+        },
         skipped: false,
       },
     ],
@@ -133,6 +135,7 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
         options: {
           openInTab: true,
+          title: 'Title',
         },
         skipped: false,
       },
