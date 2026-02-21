@@ -35,7 +35,7 @@ export interface AnalyticsConfig {
   /**
    * Configure how the user Id is persisted. Defaults to using `browser.storage.local`.
    */
-  userId?: AnalyticsStorageItem<string>;
+  userId?: AnalyticsStorageItem<string | undefined>;
   /**
    * Configure how user properties are persisted. Defaults to using `browser.storage.local`.
    */
