@@ -153,6 +153,33 @@ describe('findEntrypoints', () => {
     },
   );
 
+  it('should extract wxt.* meta tags from HTML entrypoints', async () => {
+    const path = 'popup.html';
+    const content = `
+      <html>
+        <head>
+          <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
+          <meta name="wxt.custom_option" content="custom_value" />
+          <meta name="wxt.anotherOption" content="true" />
+          <title>Test Title</title>
+        </head>
+      </html>
+    `;
+
+    globMock.mockResolvedValueOnce([path]);
+    readFileMock.mockResolvedValueOnce(content);
+
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints).toHaveLength(1);
+    expect(entrypoints[0].options).toMatchObject({
+      defaultIcon: { '16': '/icon/16.png' },
+      customOption: 'custom_value',
+      anotherOption: true,
+      defaultTitle: 'Test Title',
+    });
+  });
+
   it.each<[string, Omit<ContentScriptEntrypoint, 'options'>]>([
     [
       'content.ts',

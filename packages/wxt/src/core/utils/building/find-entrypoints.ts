@@ -194,7 +194,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   return resMap;
 }
 
-/** Extract `manifest.` options from meta tags, converting snake_case keys to camelCase */
+/** Extract `manifest.` and `wxt.` options from meta tags, converting snake_case keys to camelCase */
 async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {
@@ -208,9 +208,16 @@ async function importHtmlEntrypoint(
 
   metaTags.forEach((tag) => {
     const name = tag.name;
-    if (!name.startsWith('manifest.')) return;
+    let key: string;
 
-    const key = camelCase(name.slice(9));
+    if (name.startsWith('manifest.')) {
+      key = camelCase(name.slice(9));
+    } else if (name.startsWith('wxt.')) {
+      key = camelCase(name.slice(4));
+    } else {
+      return;
+    }
+
     try {
       res[key] = JSON5.parse(tag.content);
     } catch {
