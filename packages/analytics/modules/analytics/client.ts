@@ -10,6 +10,7 @@ import type {
   BaseAnalyticsEvent,
 } from './types';
 import { browser } from '@wxt-dev/browser';
+import { isBackground } from '@wxt-dev/is-background';
 
 type AnalyticsMessage = {
   [K in keyof Analytics]: {
@@ -55,10 +56,7 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
     );
   }
 
-  // TODO: This only works for standard WXT extensions, add a more generic
-  // background script detector that works with non-WXT projects.
-  if (location.pathname === '/background.js')
-    return createBackgroundAnalytics(config);
+  if (isBackground()) return createBackgroundAnalytics(config);
 
   return createFrontendAnalytics();
 }
