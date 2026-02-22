@@ -17,6 +17,7 @@ jobs:
       - name: List Commits
         id: list-commits
         run: |
+          ./scripts/list-unreleased-commits.sh
           ./scripts/list-unreleased-commits.sh > summary.txt
 
       - name: Discord notification
