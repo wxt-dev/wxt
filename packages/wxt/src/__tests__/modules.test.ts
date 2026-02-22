@@ -4,10 +4,6 @@ import { describe, it, expect } from 'vitest';
 import { createHooks } from 'hookable';
 
 describe('Module Utilities', () => {
-  it('should fail', () => {
-    expect(1).toBe(2);
-  });
-
   describe('addViteConfig', () => {
     it('should add base vite config', async () => {
       const wxt = fakeWxt({

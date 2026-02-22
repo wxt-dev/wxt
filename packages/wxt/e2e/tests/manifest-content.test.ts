@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
 
 describe('Manifest Content', () => {
+  it('should fail', () => {
+    expect(1).toBe(2);
+  });
+
   it.each([
     { browser: undefined, outDir: 'chrome-mv3', expected: undefined },
     { browser: 'chrome', outDir: 'chrome-mv3', expected: undefined },
