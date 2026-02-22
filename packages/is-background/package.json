@@ -32,6 +32,8 @@
     "extension",
     "is",
     "background",
+    "script",
+    "page",
     "service",
     "worker"
   ],
