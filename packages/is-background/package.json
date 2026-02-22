@@ -30,6 +30,7 @@
     "chrome",
     "web",
     "extension",
+    "is",
     "background",
     "service",
     "worker"
