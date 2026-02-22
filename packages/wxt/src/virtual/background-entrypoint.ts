@@ -41,7 +41,7 @@ let result;
 try {
   initPlugins();
   result = definition.main();
-  // @ts-expect-error: res shouldn't be a promise, but we're checking it anyways
+  // @ts-expect-error: Res shouldn't be a promise, but we're checking it anyways
   if (result instanceof Promise) {
     console.warn(
       "The background's main() function return a promise, but it must be synchronous",

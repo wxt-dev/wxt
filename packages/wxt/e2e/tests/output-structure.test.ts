@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 
 describe('Output Directory Structure', () => {
@@ -126,7 +126,7 @@ describe('Output Directory Structure', () => {
 
     await project.build({ browser: 'firefox' });
 
-    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+    expect(await project.pathExists('.output/firefox-mv2/background.js')).toBe(
       false,
     );
   });
@@ -146,7 +146,7 @@ describe('Output Directory Structure', () => {
 
     await project.build({ browser: 'chrome' });
 
-    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+    expect(await project.pathExists('.output/firefox-mv2/background.js')).toBe(
       false,
     );
   });
@@ -174,7 +174,7 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.fileExists('stats.html')).toBe(true);
+    expect(await project.pathExists('stats.html')).toBe(true);
   });
 
   it('should support JavaScript entrypoints', async () => {
@@ -210,14 +210,85 @@ describe('Output Directory Structure', () => {
         ----------------------------------------
         {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.duckduckgo.com/*"],"js":["content-scripts/named.js"]}]}"
       `);
-    expect(await project.fileExists('.output/chrome-mv3/background.js'));
+    expect(await project.pathExists('.output/chrome-mv3/background.js'));
     expect(
-      await project.fileExists('.output/chrome-mv3/content-scripts/content.js'),
+      await project.pathExists('.output/chrome-mv3/content-scripts/content.js'),
     );
     expect(
-      await project.fileExists('.output/chrome-mv3/content-scripts/named.js'),
+      await project.pathExists('.output/chrome-mv3/content-scripts/named.js'),
     );
-    expect(await project.fileExists('.output/chrome-mv3/unlisted.js'));
+    expect(await project.pathExists('.output/chrome-mv3/unlisted.js'));
+  });
+
+  it('should support CSS entrypoints', async () => {
+    const project = new TestProject();
+
+    project.addFile(
+      'entrypoints/plain-one.css',
+      `body {
+        font: 100% Helvetica, sans-serif;
+        color: #333;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/plain-two.content.css',
+      `body {
+        font: 100% Helvetica, sans-serif;
+        color: #333;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/sass-one.scss',
+      `$font-stack: Helvetica, sans-serif;
+      $primary-color: #333;
+
+      body {
+        font: 100% $font-stack;
+        color: $primary-color;
+      }`,
+    );
+
+    project.addFile(
+      'entrypoints/sass-two.content.scss',
+      `$font-stack: Helvetica, sans-serif;
+      $primary-color: #333;
+
+      body {
+        font: 100% $font-stack;
+        color: $primary-color;
+      }`,
+    );
+
+    await project.build();
+
+    expect(await project.serializeOutput(['.output/chrome-mv3/manifest.json']))
+      .toMatchInlineSnapshot(`
+        ".output/chrome-mv3/assets/plain-one.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/assets/sass-one.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/content-scripts/plain-two.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/content-scripts/sass-two.css
+        ----------------------------------------
+        body{font:100% Helvetica,sans-serif;color:#333}
+
+        ================================================================================
+        .output/chrome-mv3/manifest.json
+        ----------------------------------------
+        <contents-ignored>"
+      `);
   });
 
   it("should output to a custom directory when overriding 'outDir'", async () => {
@@ -229,7 +300,7 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.fileExists('dist/chrome-mv3/manifest.json')).toBe(
+    expect(await project.pathExists('dist/chrome-mv3/manifest.json')).toBe(
       true,
     );
   });
@@ -264,7 +335,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for the snapshot readable
           minify: false,
         },
       }),
@@ -272,45 +343,40 @@ describe('Output Directory Structure', () => {
 
     expect(await project.serializeFile('.output/chrome-mv3/background.js'))
       .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        var _a, _b;
-        import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
-        function defineBackground(arg) {
-          if (arg == null || typeof arg === "function") return { main: arg };
-          return arg;
-        }
-        const definition = defineBackground({
-          type: "module",
-          main() {
-            logHello("background");
+          ".output/chrome-mv3/background.js
+          ----------------------------------------
+          import { l as logHello, i as initPlugins } from "./chunks/_virtual_wxt-plugins-OjKtWpmY.js";
+          function defineBackground(arg) {
+            if (arg == null || typeof arg === "function") return { main: arg };
+            return arg;
           }
-        });
-        ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
-        function print(method, ...args) {
-          return;
-        }
-        const logger = {
-          debug: (...args) => print(console.debug, ...args),
-          log: (...args) => print(console.log, ...args),
-          warn: (...args) => print(console.warn, ...args),
-          error: (...args) => print(console.error, ...args)
-        };
-        let result;
-        try {
-          initPlugins();
-          result = definition.main();
-          if (result instanceof Promise) {
-            console.warn(
-              "The background's main() function return a promise, but it must be synchronous"
-            );
+          const definition = defineBackground({
+            type: "module",
+            main() {
+              logHello("background");
+            }
+          });
+          globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+          function print(method, ...args) {
+            return;
           }
-        } catch (err) {
-          logger.error("The background crashed on startup!");
-          throw err;
-        }
-        "
-      `);
+          const logger = {
+            debug: (...args) => print(console.debug, ...args),
+            log: (...args) => print(console.log, ...args),
+            warn: (...args) => print(console.warn, ...args),
+            error: (...args) => print(console.error, ...args)
+          };
+          let result;
+          try {
+            initPlugins();
+            result = definition.main();
+            if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+          } catch (err) {
+            logger.error("The background crashed on startup!");
+            throw err;
+          }
+          "
+        `);
   });
 
   it('should generate IIFE background script when type=undefined', async () => {
@@ -342,7 +408,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for the snapshot readable
           minify: false,
         },
       }),
@@ -350,55 +416,47 @@ describe('Output Directory Structure', () => {
 
     expect(await project.serializeFile('.output/chrome-mv3/background.js'))
       .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        var background = function() {
-          "use strict";
-          var _a, _b;
-          function defineBackground(arg) {
-            if (arg == null || typeof arg === "function") return { main: arg };
-            return arg;
+      ".output/chrome-mv3/background.js
+      ----------------------------------------
+      var background = (function() {
+        "use strict";
+        function defineBackground(arg) {
+          if (arg == null || typeof arg === "function") return { main: arg };
+          return arg;
+        }
+        function logHello(name) {
+          console.log(\`Hello \${name}!\`);
+        }
+        const definition = defineBackground({
+          main() {
+            logHello("background");
           }
-          function logHello(name) {
-            console.log(\`Hello \${name}!\`);
-          }
-          background;
-          const definition = defineBackground({
-            main() {
-              logHello("background");
-            }
-          });
-          background;
-          function initPlugins() {
-          }
-          ((_b = (_a = globalThis.browser) == null ? void 0 : _a.runtime) == null ? void 0 : _b.id) ? globalThis.browser : globalThis.chrome;
-          function print(method, ...args) {
-            return;
-          }
-          const logger = {
-            debug: (...args) => print(console.debug, ...args),
-            log: (...args) => print(console.log, ...args),
-            warn: (...args) => print(console.warn, ...args),
-            error: (...args) => print(console.error, ...args)
-          };
-          let result;
-          try {
-            initPlugins();
-            result = definition.main();
-            if (result instanceof Promise) {
-              console.warn(
-                "The background's main() function return a promise, but it must be synchronous"
-              );
-            }
-          } catch (err) {
-            logger.error("The background crashed on startup!");
-            throw err;
-          }
-          const result$1 = result;
-          return result$1;
-        }();
-        background;
-        "
-      `);
+        });
+        function initPlugins() {
+        }
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+        function print(method, ...args) {
+          return;
+        }
+        const logger = {
+          debug: (...args) => print(console.debug, ...args),
+          log: (...args) => print(console.log, ...args),
+          warn: (...args) => print(console.warn, ...args),
+          error: (...args) => print(console.error, ...args)
+        };
+        let result;
+        try {
+          initPlugins();
+          result = definition.main();
+          if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+        } catch (err) {
+          logger.error("The background crashed on startup!");
+          throw err;
+        }
+        var background_entrypoint_default = result;
+        return background_entrypoint_default;
+      })();
+      "
+    `);
   });
 });

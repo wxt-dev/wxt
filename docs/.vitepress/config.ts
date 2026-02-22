@@ -25,6 +25,7 @@ import {
 import { Feed } from 'feed';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import llmstxt from 'vitepress-plugin-llms';
 
 const origin = 'https://wxt.dev';
 
@@ -71,6 +72,7 @@ export default defineConfig({
   vite: {
     clearScreen: false,
     plugins: [
+      llmstxt(),
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(

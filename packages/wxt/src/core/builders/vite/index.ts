@@ -25,9 +25,9 @@ import { ViteNodeServer } from 'vite-node/server';
 import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
-import { relative, join, extname, dirname } from 'node:path';
+import { dirname, extname, join, relative } from 'node:path';
 import fs from 'fs-extra';
-import { normalizePath } from '../../utils/paths';
+import { normalizePath } from '../../utils';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -109,6 +109,8 @@ export async function createViteBuilder(
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
+    const iifeReturnValueName = safeVarName(entrypoint.name);
+
     if (
       entrypoint.type === 'content-script-style' ||
       entrypoint.type === 'unlisted-style'
@@ -116,17 +118,16 @@ export async function createViteBuilder(
       plugins.push(wxtPlugins.cssEntrypoints(entrypoint, wxtConfig));
     }
 
-    const iifeReturnValueName = safeVarName(entrypoint.name);
-    const libMode: vite.UserConfig = {
+    if (
+      entrypoint.type === 'content-script' ||
+      entrypoint.type === 'unlisted-script'
+    ) {
+      plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+    }
+
+    return {
       mode: wxtConfig.mode,
       plugins,
-      esbuild: {
-        // Add a footer with the returned value so it can return values to `scripting.executeScript`
-        // Footer is added a part of esbuild to make sure it's not minified. It
-        // get's removed if added to `build.rollupOptions.output.footer`
-        // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
-        footer: iifeReturnValueName + ';',
-      },
       build: {
         lib: {
           entry,
@@ -162,8 +163,7 @@ export async function createViteBuilder(
         // See https://github.com/aklinker1/vite-plugin-web-extension/issues/96
         'process.env.NODE_ENV': JSON.stringify(wxtConfig.mode),
       },
-    };
-    return libMode;
+    } satisfies vite.UserConfig;
   };
 
   /**
@@ -241,10 +241,7 @@ export async function createViteBuilder(
     const config = vite.mergeConfig(baseConfig, envConfig);
     const server = await vite.createServer(config);
     await server.pluginContainer.buildStart({});
-    const node = new ViteNodeServer(
-      // @ts-ignore: Some weird type error...
-      server,
-    );
+    const node = new ViteNodeServer(server);
     installSourcemapsSupport({
       getSourceMap: (source) => node.getSourceMap(source),
     });
@@ -308,7 +305,10 @@ export async function createViteBuilder(
     async build(group) {
       let entryConfig;
       if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
-      else if (group.inputPath.endsWith('.css'))
+      else if (
+        group.type === 'content-script-style' ||
+        group.type === 'unlisted-style'
+      )
         entryConfig = getCssConfig(group);
       else entryConfig = getLibModeConfig(group);
 
@@ -450,7 +450,7 @@ async function moveHtmlFiles(
   );
 
   // TODO: Optimize and only delete old path directories
-  removeEmptyDirs(config.outDir);
+  await removeEmptyDirs(config.outDir);
 
   return movedChunks;
 }

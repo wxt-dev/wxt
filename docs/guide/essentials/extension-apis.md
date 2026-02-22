@@ -75,3 +75,63 @@ Alternatively, if you're trying to use similar APIs under different names (to su
   //
 });
 ```
+
+## Entrypoint Limitations
+
+Because WXT imports your entrypoint files into a NodeJS, non-extension environment, the `chrome`/`browser` variables provided to extensions by the browser **will not be available**.
+
+To prevent some basic errors, WXT polyfills these globals with the same in-memory, fake implementation it uses for testing: [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/fake-browser/installation/). However, not all the APIs have been implemented.
+
+So it is extremely important to NEVER use `browser.*` extension APIs outside the main function of any JS/TS entrypoints (background, content scripts, and unlisted scripts). If you do, you'll see an error like this:
+
+```plaintext
+✖ Command failed after 440 ms
+
+ ERROR  Browser.action.onClicked.addListener not implemented.
+```
+
+The fix is simple, just move your API usage into the entrypoint's main function:
+
+:::code-group
+
+```ts [background.ts]
+browser.action.onClicked.addListener(() => {
+  /* ... */
+}); // [!code --]
+
+export default defineBackground(() => {
+  browser.action.onClicked.addListener(() => {
+    /* ... */
+  }); // [!code ++]
+});
+```
+
+```ts [content.ts]
+browser.runtime.onMessage.addListener(() => {
+  /* ... */
+}); // [!code --]
+
+export default defineContentScript({
+  main() {
+    browser.runtime.onMessage.addListener(() => {
+      /* ... */
+    }); // [!code ++]
+  },
+});
+```
+
+```ts [unlisted.ts]
+browser.runtime.onMessage.addListener(() => {
+  /* ... */
+}); // [!code --]
+
+export default defineUnlistedScript(() => {
+  browser.runtime.onMessage.addListener(() => {
+    /* ... */
+  }); // [!code ++]
+});
+```
+
+:::
+
+Read [Entrypoint Loaders](/guide/essentials/config/entrypoint-loaders) for more technical details about this limitation.

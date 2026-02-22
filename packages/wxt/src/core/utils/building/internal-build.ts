@@ -3,10 +3,10 @@ import { BuildOutput, Entrypoint } from '../../../types';
 import pc from 'picocolors';
 import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
-import { formatDuration } from '../../utils/time';
-import { printBuildSummary } from '../../utils/log';
+import { formatDuration } from '../time';
+import { printBuildSummary } from '../log';
 import glob from 'fast-glob';
-import { unnormalizePath } from '../../utils/paths';
+import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
 import {
@@ -87,7 +87,7 @@ export async function internalBuild(): Promise<BuildOutput> {
       } else {
         wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
         const { default: open } = await import('open');
-        open(wxt.config.analysis.outputFile);
+        await open(wxt.config.analysis.outputFile);
       }
     }
   }
@@ -133,12 +133,12 @@ function printValidationResults({
   }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
-    wxt.logger.log(relative(cwd, entrypoint.inputPath));
-    console.log();
+    wxt.logger.log(relative(cwd, entrypoint.inputPath) + '\n');
+
     errors.forEach((err) => {
       const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
-      const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
-      wxt.logger.log(`  - ${type} ${err.message} ${recieved}`);
+      const received = pc.dim(`(received: ${JSON.stringify(err.value)})`);
+      wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();
   });

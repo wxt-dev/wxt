@@ -9,7 +9,7 @@ WXT provides first class support for Vitest for unit testing:
 ```ts
 // vitest.config.ts
 import { defineConfig } from 'vitest/config';
-import { WxtVitest } from 'wxt/testing';
+import { WxtVitest } from 'wxt/testing/vitest-plugin';
 
 export default defineConfig({
   plugins: [WxtVitest()],
@@ -36,7 +36,7 @@ This example demonstrates that you don't have to mock `browser.storage` (used by
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { fakeBrowser } from 'wxt/testing';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
 
 const accountStorage = storage.defineItem<Account>('local:account');
 

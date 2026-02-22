@@ -10,7 +10,7 @@ import type {
   WxtModuleOptions,
   WxtModuleSetup,
 } from './types';
-import * as vite from 'vite';
+import type * as vite from 'vite';
 import glob from 'fast-glob';
 import { resolve } from 'node:path';
 import type { UnimportOptions } from 'unimport';
@@ -109,7 +109,10 @@ export function addViteConfig(
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
-      const fromUser = await userVite(env);
+      const [vite, fromUser] = await Promise.all([
+        import('vite'),
+        userVite(env),
+      ]);
       const fromModule = viteConfig(env) ?? {};
       return vite.mergeConfig(fromModule, fromUser);
     };
@@ -167,11 +170,8 @@ export function addImportPreset(
   preset: UnimportOptions['presets'][0],
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
-    // In older versions of WXT, `wxt.config.imports` could be false
-    if (!wxt.config.imports) return;
-
     wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
+    // De-duplicate built-in named presets
     if (wxt.config.imports.presets.includes(preset)) return;
 
     wxt.config.imports.presets.push(preset);

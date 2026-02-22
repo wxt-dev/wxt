@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src/types';
+import type { GenericEntrypoint, InlineConfig } from '../../src';
 import { readFile } from 'fs-extra';
-import { normalizePath } from '../../src/core/utils/paths';
+import { normalizePath } from '../../src';
 
 describe('Module Helpers', () => {
   describe('options', () => {
@@ -77,7 +77,7 @@ describe('Module Helpers', () => {
 
       await project.build(config);
 
-      expect(await project.fileExists('.output/chrome-mv3/injected.js')).toBe(
+      expect(await project.pathExists('.output/chrome-mv3/injected.js')).toBe(
         true,
       );
     });
@@ -118,10 +118,10 @@ describe('Module Helpers', () => {
         fileName: 'module.txt',
       });
       await expect(
-        project.fileExists('.output/chrome-mv3/module.txt'),
+        project.pathExists('.output/chrome-mv3/module.txt'),
       ).resolves.toBe(true);
       await expect(
-        project.fileExists('.output/chrome-mv3/example/generated.txt'),
+        project.pathExists('.output/chrome-mv3/example/generated.txt'),
       ).resolves.toBe(true);
     });
 
@@ -298,7 +298,7 @@ describe('Module Helpers', () => {
 
       await expect(
         project.serializeFile('.wxt/types/imports.d.ts'),
-      ).resolves.toContain("const ref: typeof import('vue')['ref']");
+      ).resolves.toContain("const ref: typeof import('vue').ref");
     });
   });
 });

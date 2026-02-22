@@ -13,11 +13,8 @@ import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
 import glob from 'fast-glob';
-import {
-  fakeResolvedConfig,
-  setFakeWxt,
-} from '../../../utils/testing/fake-objects';
-import { unnormalizePath } from '../../../utils/paths';
+import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
+import { unnormalizePath } from '../../paths';
 import { wxt } from '../../../wxt';
 
 vi.mock('fast-glob');
@@ -115,7 +112,9 @@ describe('findEntrypoints', () => {
         name: 'options',
         inputPath: resolve(config.entrypointsDir, 'options.html'),
         outputDir: config.outDir,
-        options: {},
+        options: {
+          title: 'Default Title',
+        },
         skipped: false,
       },
     ],
@@ -136,6 +135,7 @@ describe('findEntrypoints', () => {
         outputDir: config.outDir,
         options: {
           openInTab: true,
+          title: 'Title',
         },
         skipped: false,
       },
@@ -152,6 +152,33 @@ describe('findEntrypoints', () => {
       expect(entrypoints[0]).toEqual(expected);
     },
   );
+
+  it('should extract wxt.* meta tags from HTML entrypoints', async () => {
+    const path = 'popup.html';
+    const content = `
+      <html>
+        <head>
+          <meta name="manifest.default_icon" content="{ '16': '/icon/16.png' }" />
+          <meta name="wxt.custom_option" content="custom_value" />
+          <meta name="wxt.anotherOption" content="true" />
+          <title>Test Title</title>
+        </head>
+      </html>
+    `;
+
+    globMock.mockResolvedValueOnce([path]);
+    readFileMock.mockResolvedValueOnce(content);
+
+    const entrypoints = await findEntrypoints();
+
+    expect(entrypoints).toHaveLength(1);
+    expect(entrypoints[0].options).toMatchObject({
+      defaultIcon: { '16': '/icon/16.png' },
+      customOption: 'custom_value',
+      anotherOption: true,
+      defaultTitle: 'Test Title',
+    });
+  });
 
   it.each<[string, Omit<ContentScriptEntrypoint, 'options'>]>([
     [

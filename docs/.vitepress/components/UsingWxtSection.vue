@@ -4,10 +4,9 @@ import useListExtensionDetails, {
   ChromeExtension,
 } from '../composables/useListExtensionDetails';
 
-// Add extension IDs here. Order doesn't matter, will be sorted by a combination of weekly active users and rating.
+// Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
-  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -98,6 +97,28 @@ const chromeExtensionIds = [
   'hnjamiaoicaepbkhdoknhhcedjdocpkd', // Quick Prompt - https://github.com/wenyuanw/quick-prompt
   'kacblhilkacgfnkjfodalohcnllcgmjd', // Add QR Code Generator Icon Back To Address Bar
   'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne', // Piwik PRO Tracking Helper
+  'nkbikckldmljjiiajklecmgmajgapbfl', // PIPX - Take Control of Picture-in-Picture, Automatically
+  'hgppdobcpkfkmiegekaglonjajeojmdd', // Browsely - AI-powered browser extension
+  'ehmoihnjgkdimihkhokkmfjdgomohjgm', // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
+  'alglchohmdikgdjhafiicilegegieafa', // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
+  'aamihahiiogceidpbnfgehacgiecephe', // ChatSight - Add Table of Contents to ChatGPT
+  'cndibmoanboadcifjkjbdpjgfedanolh', // BetterCampus (prev. BetterCanvas)
+  'hinfimgacobnellbncbcpdlpaapcofaa', // Leetcode Fonts - Change fonts in leetcode effortlessly
+  'kbkbfefhhabpkibojinapkkgciiacggg', // TranslateManga - Manga Translator & Manga Tracker
+  'emeakbgdecgmdjgegnejpppcnkcnoaen', // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
+  'gpnckbhgpnjciklpoehkmligeaebigaa', // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
+  'fjlalaedpfcojcfpkgkglbjjbbkofgnl', // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
+  'fbgblmjbeebanackldpbmpacppflgmlj', // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
+  'dfacnjidgbagicaekenjgclfnhdnjjdi', // Zen Virtual Piano - https://zen-piano.web.app/
+  'naeibcegmgpofimedkmfgjgphfhfhlab', // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
+  'ffglckbhfbfmdkefdmjbhpnffkcmlhdh', // Redirect Web - Automatically redirect pages or open them in another app
+  'eglpfhbhmelampoihamjomgkeobgdofl', // Capture It - Capture & Edit Screenshots
+  'jmghclbfbbapimhbgnpffbimphlpolnm', // Teams Chat Exporter
+  'jdcppdokgfbnhiacbeplahgnciahnhck', // Lofi BGM Player - Free lofi focus music for work & study
+  'cgpmbiiagnehkikhcbnhiagfomajncpa', // Margin - Annotate and highlight any webpage, with your notes saved to the decentralized AT Protocol.
+  'mfjdonmgmgcijagclnkfhmjiblbfjaid', // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
+  'dhiekgdaipindoapjmcnpompdknjeijf', // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
+  'lapnciffpekdengooeolaienkeoilfeo', // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

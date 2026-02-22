@@ -63,9 +63,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.body.children).toContain(ui.wrapper);
         expect(document.querySelector('app')).not.toBeNull();
       });
 
@@ -77,9 +75,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('pre[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.querySelector('pre')).toBe(ui.wrapper);
         expect(document.querySelector('app')).not.toBeNull();
       });
     });
@@ -92,7 +88,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(document.querySelector('div[data-wxt-iframe]')).toBeDefined();
+        expect(document.body.children).toContain(ui.wrapper);
         expect(document.querySelector('iframe')).toBeDefined();
       });
     });
@@ -108,9 +104,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('test-component[data-wxt-shadow-root]'),
-        ).not.toBeNull();
+        expect(document.querySelector('test-component')).toBe(ui.shadowHost);
         expect(ui.shadow.querySelector('app')).not.toBeNull();
       });
 
@@ -143,7 +137,7 @@ describe('Content Script UIs', () => {
         });
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe=""><iframe src="chrome-extension://test-extension-id/page.html"></iframe></div>"`,
+          `"<div><iframe src="chrome-extension://test-extension-id/page.html"></iframe></div>"`,
         );
       });
     });
@@ -157,7 +151,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; left: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; left: 0px;"></iframe></div>"`,
         );
       });
 
@@ -170,7 +164,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; left: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; left: 0px;"></iframe></div>"`,
         );
       });
 
@@ -183,7 +177,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; right: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; top: 0px; right: 0px;"></iframe></div>"`,
         );
       });
 
@@ -196,7 +190,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; bottom: 0px; right: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; bottom: 0px; right: 0px;"></iframe></div>"`,
         );
       });
 
@@ -209,7 +203,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; bottom: 0px; left: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: absolute; bottom: 0px; left: 0px;"></iframe></div>"`,
         );
       });
 
@@ -235,7 +229,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(ui.wrapper.outerHTML).toMatchInlineSnapshot(
-          `"<div data-wxt-iframe="" style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px;"></iframe></div>"`,
+          `"<div style="overflow: visible; position: relative; width: 0px; height: 0px; display: block;"><iframe src="chrome-extension://test-extension-id/page.html" style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px;"></iframe></div>"`,
         );
       });
 
@@ -262,9 +256,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('body > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.body.children).toContain(ui.wrapper);
       });
     });
 
@@ -277,9 +269,9 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('#parent > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.querySelector('#parent')!.children).toContain(
+          ui.wrapper,
+        );
       });
 
       it('should append the element using an XPath string', () => {
@@ -295,9 +287,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('#three > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.querySelector('#three')!.children[0]).toBe(ui.wrapper);
       });
     });
 
@@ -310,9 +300,9 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('#parent > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.querySelector('#parent')!.children).toContain(
+          ui.wrapper,
+        );
       });
     });
 
@@ -325,9 +315,9 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('#parent > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.querySelector('#parent')!.children).toContain(
+          ui.wrapper,
+        );
       });
     });
 
@@ -354,9 +344,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(
-          document.querySelector(
-            '#parent > div[data-wxt-integrated]:last-child',
-          ),
+          document.querySelector('#parent')!.lastElementChild,
         ).not.toBeNull();
       });
     });
@@ -372,9 +360,7 @@ describe('Content Script UIs', () => {
         ui.mount();
 
         expect(
-          document.querySelector(
-            '#parent > div[data-wxt-integrated]:first-child',
-          ),
+          document.querySelector('#parent')!.children[0].firstElementChild,
         ).not.toBeNull();
       });
     });
@@ -389,9 +375,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('body > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.body.children).toContain(ui.wrapper);
         expect(document.querySelector('#parent')).toBeNull();
       });
     });
@@ -406,11 +390,9 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector(
-            '#parent > div[data-wxt-integrated]:first-child',
-          ),
-        ).not.toBeNull();
+        expect(document.querySelector('#parent')!.firstElementChild).toBe(
+          ui.wrapper,
+        );
       });
     });
 
@@ -424,11 +406,9 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector(
-            '#parent > div[data-wxt-integrated]:last-child',
-          ),
-        ).not.toBeNull();
+        expect(document.querySelector('#parent')!.lastElementChild).toBe(
+          ui.wrapper,
+        );
       });
     });
 
@@ -444,9 +424,8 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(
-          document.querySelector('body > div[data-wxt-integrated]'),
-        ).not.toBeNull();
+        expect(document.body.children).toContain(ui.wrapper);
+
         expect(document.querySelector('#parent')).toBeNull();
       });
     });
@@ -529,23 +508,29 @@ describe('Content Script UIs', () => {
       {
         name: 'integrated',
         createUiFunction: createIntegratedUi,
-        uiSelector: 'div[data-wxt-integrated]',
+        uiSelector: '[data-wrapper-name="integrated"]',
       },
       {
         name: 'iframe',
         createUiFunction: createIframeUi,
-        uiSelector: 'div[data-wxt-iframe]',
+        uiSelector: `[data-wrapper-name="iframe"]`,
       },
       {
         name: 'shadow-root',
         createUiFunction: createShadowRootUi,
-        uiSelector: 'test-component[data-wxt-shadow-root]',
+        uiSelector: 'test-component',
       },
     ] as const)(
       'built-in UI type: $name',
       ({ name, createUiFunction, uiSelector }) => {
+        const onMount = vi.fn((wrapper: HTMLElement) => {
+          if (name === 'shadow-root') return;
+
+          wrapper.setAttribute('data-wrapper-name', name);
+          appendTestApp(wrapper);
+        });
+
         it('should mount if an anchor already exists at the initialization', async () => {
-          const onMount = vi.fn(appendTestApp);
           ui = await createUiFunction(ctx, {
             position: 'inline',
             onMount,
@@ -555,6 +540,7 @@ describe('Content Script UIs', () => {
           });
 
           appendTestElement({ id: DYNAMIC_CHILD_ID });
+
           ui.autoMount();
           await runMicrotasks();
 
@@ -564,7 +550,6 @@ describe('Content Script UIs', () => {
         });
 
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
-          const onMount = vi.fn(appendTestApp);
           const onRemove = vi.fn();
           ui = await createUiFunction(ctx, {
             position: 'inline',
@@ -599,7 +584,6 @@ describe('Content Script UIs', () => {
 
         describe('options', () => {
           it('should auto-mount only once mount and remove when the `once` option is true', async () => {
-            const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             ui = await createUiFunction(ctx, {
               position: 'inline',
@@ -644,7 +628,7 @@ describe('Content Script UIs', () => {
           it('should throw when anchor is set as type Element', async () => {
             ui = await createUiFunction(ctx, {
               position: 'inline',
-              onMount: appendTestApp,
+              onMount,
               anchor: document.documentElement,
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
@@ -657,7 +641,7 @@ describe('Content Script UIs', () => {
           it('should throw when anchor is set as type `() => Element`', async () => {
             ui = await createUiFunction(ctx, {
               position: 'inline',
-              onMount: appendTestApp,
+              onMount,
               anchor: () => document.documentElement,
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
@@ -670,7 +654,6 @@ describe('Content Script UIs', () => {
 
         describe('StopAutoMount', () => {
           it('should stop auto-mounting and remove ui when `ui.remove` is called', async () => {
-            const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             ui = await createUiFunction(ctx, {
               position: 'inline',
@@ -705,7 +688,6 @@ describe('Content Script UIs', () => {
           });
 
           it('should call internal StopAutoMount when `ui.remove` is called', async () => {
-            const onMount = vi.fn(appendTestApp);
             const onRemove = vi.fn();
             const onStop = vi.fn();
             ui = await createUiFunction(ctx, {
@@ -723,7 +705,6 @@ describe('Content Script UIs', () => {
           });
 
           it('should allow calling automount again after internal StopAutoMount is called', async () => {
-            const onMount = vi.fn(appendTestApp);
             ui = await createUiFunction(ctx, {
               position: 'inline',
               onMount,

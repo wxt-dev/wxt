@@ -26,8 +26,10 @@ export async function registerWxt(
 
   const hooks = createHooks<WxtHooks>();
   const config = await resolveConfig(inlineConfig, command);
-  const builder = await createViteBuilder(config, hooks, () => wxt.server);
-  const pm = await createWxtPackageManager(config.root);
+  const [builder, pm] = await Promise.all([
+    createViteBuilder(config, hooks, () => wxt.server),
+    createWxtPackageManager(config.root),
+  ]);
 
   wxt = {
     config,

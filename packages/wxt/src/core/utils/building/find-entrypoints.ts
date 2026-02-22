@@ -21,9 +21,9 @@ import {
   isHtmlEntrypoint,
   isJsEntrypoint,
   resolvePerBrowserOptions,
-} from '../../utils/entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../utils/constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../utils/paths';
+} from '../entrypoints';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
+import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
@@ -77,9 +77,8 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
         (entry) =>
           entry.name === name && entry.inputPath.endsWith('index.html'),
       );
-      if (hasIndexHtml) return false;
 
-      return true;
+      return !hasIndexHtml;
     });
 
   await wxt.hooks.callHook('entrypoints:found', wxt, entrypointInfos);
@@ -116,20 +115,14 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
             ...info,
             type,
             outputDir: resolve(wxt.config.outDir, CONTENT_SCRIPT_OUT_DIR),
-            options: {
-              include: options.include,
-              exclude: options.exclude,
-            },
+            options,
           };
         default:
           return {
             ...info,
             type,
             outputDir: wxt.config.outDir,
-            options: {
-              include: options.include,
-              exclude: options.exclude,
-            },
+            options,
           };
       }
     }),
@@ -184,8 +177,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   await Promise.all([
     // HTML
     ...htmlInfos.map(async (info) => {
-      const res = await importHtmlEntrypoint(info);
-      resMap[info.inputPath] = res;
+      resMap[info.inputPath] = await importHtmlEntrypoint(info);
     }),
     // JS
     (async () => {
@@ -202,7 +194,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   return resMap;
 }
 
-/** Extract `manifest.` options from meta tags, converting snake_case keys to camelCase */
+/** Extract `manifest.` and `wxt.` options from meta tags, converting snake_case keys to camelCase */
 async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {
@@ -216,9 +208,16 @@ async function importHtmlEntrypoint(
 
   metaTags.forEach((tag) => {
     const name = tag.name;
-    if (!name.startsWith('manifest.')) return;
+    let key: string;
 
-    const key = camelCase(name.slice(9));
+    if (name.startsWith('manifest.')) {
+      key = camelCase(name.slice(9));
+    } else if (name.startsWith('wxt.')) {
+      key = camelCase(name.slice(4));
+    } else {
+      return;
+    }
+
     try {
       res[key] = JSON5.parse(tag.content);
     } catch {
@@ -268,24 +267,24 @@ async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
-  const stictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
+  // Extract non-per-browser options
+  const { themeIcons, title, type, ...perBrowserOptions } = options;
+
+  const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
-      browserStyle: options.browserStyle,
-      exclude: options.exclude,
-      include: options.include,
-      defaultIcon: options.defaultIcon,
-      defaultTitle: options.title,
-      mv2Key: options.type,
+      ...perBrowserOptions,
+      defaultTitle: title,
+      mv2Key: type,
     },
     wxt.config.browser,
   );
-  if (stictOptions.mv2Key && stictOptions.mv2Key !== 'page_action')
-    stictOptions.mv2Key = 'browser_action';
+  if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
+    strictOptions.mv2Key = 'browser_action';
 
   return {
     type: 'popup',
     name: 'popup',
-    options: stictOptions,
+    options: { ...strictOptions, themeIcons },
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
@@ -298,16 +297,7 @@ async function getOptionsEntrypoint(
   return {
     type: 'options',
     name: 'options',
-    options: resolvePerBrowserOptions(
-      {
-        browserStyle: options.browserStyle,
-        chromeStyle: options.chromeStyle,
-        exclude: options.exclude,
-        include: options.include,
-        openInTab: options.openInTab,
-      },
-      wxt.config.browser,
-    ),
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
@@ -322,10 +312,7 @@ async function getUnlistedPageEntrypoint(
     name: info.name,
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
-    options: {
-      include: options.include,
-      exclude: options.exclude,
-    },
+    options,
   };
 }
 
@@ -338,13 +325,7 @@ async function getUnlistedScriptEntrypoint(
     name,
     inputPath,
     outputDir: wxt.config.outDir,
-    options: resolvePerBrowserOptions(
-      {
-        include: options.include,
-        exclude: options.exclude,
-      },
-      wxt.config.browser,
-    ),
+    options: resolvePerBrowserOptions(options, wxt.config.browser),
   };
 }
 
@@ -353,15 +334,7 @@ async function getBackgroundEntrypoint(
   options: Record<string, any>,
 ): Promise<BackgroundEntrypoint> {
   const strictOptions: BackgroundEntrypoint['options'] =
-    resolvePerBrowserOptions(
-      {
-        include: options.include,
-        exclude: options.exclude,
-        persistent: options.persistent,
-        type: options.type,
-      },
-      wxt.config.browser,
-    );
+    resolvePerBrowserOptions(options, wxt.config.browser);
 
   if (wxt.config.manifestVersion !== 3) {
     delete strictOptions.type;
@@ -398,17 +371,16 @@ async function getSidepanelEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
 ): Promise<SidepanelEntrypoint> {
+  // Extract non-per-browser options and rename title to defaultTitle
+  const { title, ...perBrowserOptions } = options;
+
   return {
     type: 'sidepanel',
     name: info.name,
     options: resolvePerBrowserOptions(
       {
-        browserStyle: options.browserStyle,
-        exclude: options.exclude,
-        include: options.include,
-        defaultIcon: options.defaultIcon,
-        defaultTitle: options.title,
-        openAtInstall: options.openAtInstall,
+        ...perBrowserOptions,
+        defaultTitle: title,
       },
       wxt.config.browser,
     ),

@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # WXT Modules
 
 WXT provides a "module system" that let's you run code at different steps in the build process to modify it.
@@ -66,7 +70,7 @@ Each module's setup function is executed after the `wxt.config.ts` file is loade
 
 Refer to the [API reference](/api/reference/wxt/interfaces/Wxt) for a complete list of properties and functions available.
 
-Also to make sure and read about all the [hooks that are available](https://wxt.dev/api/reference/wxt/interfaces/WxtHooks) - they are essential to writing modules.
+Also make sure to read about [all the hooks that are available](/api/reference/wxt/interfaces/WxtHooks) - they are essential to writing modules.
 
 ### Recipes
 
@@ -131,11 +135,63 @@ declare module 'wxt/utils/define-app-config' {
 Runtime options are returned when calling
 
 ```ts
-const config = useAppConfig();
+const config = getAppConfig();
 console.log(config.myModule);
 ```
 
 This is very useful when [generating runtime code](#generate-runtime-module).
+
+#### Add custom entrypoint options
+
+Modules can add custom options to entrypoints by augmenting the entrypoint options types. This allows you to add custom configuration that can be accessed during the build process.
+
+```ts
+import { defineWxtModule } from 'wxt/modules';
+import 'wxt';
+
+declare module 'wxt' {
+  export interface BackgroundEntrypointOptions {
+    // Add custom options to the background entrypoint
+    myCustomOption?: string;
+  }
+}
+
+export default defineWxtModule({
+  setup(wxt) {
+    wxt.hook('entrypoints:resolved', (_, entrypoints) => {
+      const background = entrypoints.find((e) => e.type === 'background');
+      if (background) {
+        console.log('Custom option:', background.options.myCustomOption);
+      }
+    });
+  },
+});
+```
+
+Now users can set the custom option in their entrypoint:
+
+```ts [entrypoints/background.ts]
+export default defineBackground({
+  myCustomOption: 'custom value',
+  main() {
+    // ...
+  },
+});
+```
+
+This works for all other JS and HTML entrypoints, here's an example of how to pass a custom option from an HTML file.
+
+```html [entrypoints/popup.html]
+<html>
+  <head>
+    <meta name="wxt.myHtmlOption" content="custom value" />
+    <title>Popup</title>
+  </head>
+  <body>
+    <!-- ... -->
+  </body>
+</html>
+```
 
 #### Generate output file
 
@@ -220,7 +276,7 @@ export default defineWxtModule({
     const analyticsModuleCode = `
       import { createAnalytics } from 'some-module';
 
-      export const analytics = createAnalytics(useAppConfig().analytics);
+      export const analytics = createAnalytics(getAppConfig().analytics);
       export const { reportEvent, reportPageView } = analytics;
     `;
 

@@ -1,3 +1,10 @@
+/**
+ * Contains a Vitest plugin that configures your test environment to work with
+ * WXT projects.
+ *
+ * @module wxt/testing/vitest
+ */
+
 import type * as vite from 'vite';
 import {
   download,
@@ -16,7 +23,7 @@ import { registerWxt, wxt } from '../core/wxt';
  * ```ts
  * // vitest.config.ts
  * import { defineConfig } from 'vitest/config';
- * import { WxtVitest } from 'wxt/testing';
+ * import { WxtVitest } from 'wxt/testing/vitest-plugin';
  *
  * export default defineConfig({
  *   plugins: [WxtVitest()],
