@@ -16,6 +16,7 @@ import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
 import { version as runnerVersion } from '../../packages/runner/package.json';
+import { version as isBackgroundVersion } from '../../packages/is-background/package.json';
 import addKnowledge from 'vitepress-knowledge';
 import {
   groupIconMdPlugin,
@@ -44,6 +45,7 @@ const otherPackages = {
   storage: storageVersion,
   unocss: unocssVersion,
   runner: runnerVersion,
+  'is-background': isBackgroundVersion,
 };
 
 const knowledge = addKnowledge<DefaultTheme.Config>({

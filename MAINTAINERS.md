@@ -47,3 +47,44 @@ Here's an example of how to ask for a reproduction: <https://github.com/wxt-dev/
 ## Add yourself as a code owner
 
 If you want to be responsible for a specific package or directory, add yourself to the [`.github/CODEOWNERS`](https://github.com/wxt-dev/wxt/blob/main/.github/CODEOWNERS) file to get added as a reviewer to PRs automatically. You can also add yourself to the default list to be added as a reviewer on all PRs.
+
+## Releasing Package Updates
+
+Releases are done with GitHub actions:
+
+- Use the [Release workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml) to release a single package in the monorepo. This automatically detects the version change with conventional commits, builds and uploads the package to NPM, and creates a GitHub release.
+- Use the [Sync Releases workflow](https://github.com/wxt-dev/wxt/actions/workflows/sync-releases.yml) to sync the GitHub releases with changes to the changelog. To change a release, update the `CHANGELOG.md` file and run the workflow. It will sync the releases of a single package in the monorepo.
+
+## Creating New Packages
+
+Example PR: <https://github.com/wxt-dev/wxt/pull/2152>
+
+1. Create the package.
+
+2. Update CI workflow inputs.
+
+3. Add docs page and version for "Other Packages" dropdown.
+
+4. Merge the PR.
+
+5. Tag the commit (look at other tags for pattern):
+
+   ```sh
+   git tag <dir-name>-v<version>
+   git push --tags
+   ```
+
+6. Publish the package to NPM:
+
+   ```sh
+   cd packages/<dir-name>
+   pnpm publish --access public
+   ```
+
+7. Create a basic release on GitHub mentioning the new package is available.
+
+A couple of things to note:
+
+- pkg.pr.new will fail on the original PR. It's fine to ignore and merge your PR as long as it fails due to your new package not being published to NPM yet.
+- The regular release workflow DOES NOT WORK for new packages. You have to have at least one `<dir-name>-v<version>` tag created before you can run that workflow for your new package.
+- You don't need to create a CHANGELOG.md file for the package, it will be created automatically after future changes are released via the normal release workflow.
