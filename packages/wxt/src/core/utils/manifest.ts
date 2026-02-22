@@ -118,6 +118,20 @@ export async function generateManifest(
       ? undefined
       : versionName;
 
+  // Warn if building for Firefox without data_collection_permissions
+  if (
+    wxt.config.browser === 'firefox' &&
+    !userManifest.browser_specific_settings?.gecko
+      ?.data_collection_permissions &&
+    !wxt.config.suppressWarnings?.firefoxDataCollection
+  ) {
+    wxt.logger.warn(
+      'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
+        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
+        'To suppress this warning, set `suppressWarnings.firefoxDataCollection` to `true` in your wxt config.\n',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
