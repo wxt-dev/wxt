@@ -11,7 +11,7 @@ permissions:
 jobs:
   vhs:
     name: Create VHS
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     if: ${{ github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
@@ -37,9 +37,8 @@ jobs:
 
       - name: Record VHS
         run: |
-          sudo apt update
-          sudo apt install -y ffmpeg ttyd
-          go install github.com/charmbracelet/vhs@latest
+          brew install ttyd ffmpeg
+          go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
           vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
