@@ -8,7 +8,8 @@
     "build": "buildc -- tsdown",
     "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test run --coverage"
+    "test:coverage": "pnpm test run --coverage",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^"
