@@ -143,10 +143,7 @@ export interface InlineConfig {
    * })
    * ```
    */
-  suppressWarnings?: { firefoxDataCollection?: boolean } & Record<
-    string,
-    boolean
-  >;
+  suppressWarnings?: { firefoxDataCollection?: boolean };
   /**
    * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
    */
@@ -1438,10 +1435,7 @@ export interface ResolvedConfig {
   /**
    * List of warning identifiers to suppress during the build process.
    */
-  suppressWarnings: { firefoxDataCollection?: boolean } & Record<
-    string,
-    boolean
-  >;
+  suppressWarnings: { firefoxDataCollection?: boolean };
   dev: {
     /** Only defined during dev command */
     server?: {
