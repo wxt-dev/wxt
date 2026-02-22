@@ -24,6 +24,11 @@ jobs:
         with:
           install: false
 
+      - name: Install FFMPEG
+        run: |
+          sudo apt update
+          sudo apt install -y ffmpeg ttyd
+
       # This prevents pnpm dlx from downloading WXT in the video
       - name: Pre-install WXT
         run: |
