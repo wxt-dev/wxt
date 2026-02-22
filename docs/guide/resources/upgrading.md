@@ -180,7 +180,7 @@ import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
 import { storage } from '#imports'; // [!code ++]
 import { defineContentScript } from '#imports'; // [!code ++]
-import { ContentScriptContext, useAppConfig } from '#imports'; // [!code ++]
+import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
 ```
 
 You can combine the imports into a single import statement, but it's easier to just find/replace each statement.
@@ -194,7 +194,7 @@ import {
   storage, // [!code ++]
   defineContentScript, // [!code ++]
   ContentScriptContext, // [!code ++]
-  useAppConfig, // [!code ++]
+  getAppConfig, // [!code ++]
 } from '#imports'; // [!code ++]
 ```
 

@@ -1,0 +1,111 @@
+name: ✨ Auto-label PR
+
+on:
+  pull_request_target:
+    types: [opened, synchronized, reopened]
+
+jobs:
+  update-pr:
+    name: Update PR
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Gather Info
+        id: check
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            // Check if PR has assignees
+            const hasAssignees = pr.assignees && pr.assignees.length > 0;
+            core.setOutput('has_assignees', hasAssignees);
+            core.setOutput('author', pr.user.login);
+
+            // Get list of changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            // Find all packages that were modified
+            const packagesRegex = /^packages\/([^\/]+)\//;
+            const affectedPackages = new Set();
+
+            for (const file of files) {
+              const match = file.filename.match(packagesRegex);
+              if (match) {
+                affectedPackages.add(match[1]);
+              }
+            }
+
+            const labels = Array.from(affectedPackages).map(pkg => `pkg/${pkg}`);
+            core.setOutput('labels', JSON.stringify(labels));
+            console.log('Detected package labels:', labels);
+
+            // Get current labels on the PR that match pkg/* pattern
+            const currentPkgLabels = pr.labels
+              .map(label => label.name)
+              .filter(name => name.startsWith('pkg/'));
+
+            core.setOutput('current_pkg_labels', JSON.stringify(currentPkgLabels));
+            console.log('Current pkg labels:', currentPkgLabels);
+
+      - name: Sync Author
+        if: steps.check.outputs.has_assignees == 'false'
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              assignees: ['${{ steps.check.outputs.author }}']
+            });
+
+            console.log('Assigned PR author: ${{ steps.check.outputs.author }}');
+
+      - name: Sync Labels
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const newLabels = ${{ steps.check.outputs.labels }};
+            const currentLabels = ${{ steps.check.outputs.current_pkg_labels }};
+
+            // Find labels to add (in newLabels but not in currentLabels)
+            const labelsToAdd = newLabels.filter(label => !currentLabels.includes(label));
+
+            // Find labels to remove (in currentLabels but not in newLabels)
+            const labelsToRemove = currentLabels.filter(label => !newLabels.includes(label));
+
+            // Add new labels
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: labelsToAdd
+              });
+              console.log('Added labels:', labelsToAdd);
+            }
+
+            // Remove obsolete labels
+            for (const label of labelsToRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                name: label
+              });
+              console.log('Removed label:', label);
+            }
+
+            if (labelsToAdd.length === 0 && labelsToRemove.length === 0) {
+              console.log('No label changes needed');
+            }

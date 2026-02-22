@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Add analytics to your web extension",
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
     }
   },
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
@@ -43,7 +43,7 @@
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
     "check": "pnpm build && check",
-    "build": "buildc -- unbuild",
+    "build": "buildc -- tsdown",
     "prepack": "pnpm -s build",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
@@ -51,11 +51,9 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/check": "2.0.0",
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.12",
-    "typescript": "^5.8.3",
-    "unbuild": "^3.5.0",
+    "publint": "^0.3.17",
+    "typescript": "^5.9.3",
     "wxt": "workspace:*"
   },
   "dependencies": {

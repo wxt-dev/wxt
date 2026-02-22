@@ -12,7 +12,7 @@ export default defineBackground({
       manifestVersion: import.meta.env.MANIFEST_VERSION,
     });
 
-    console.log(useAppConfig());
+    console.log(getAppConfig());
 
     browser.runtime.getURL('/');
     browser.runtime.getURL('/background.js');
@@ -43,3 +43,14 @@ export default defineBackground({
     storage.setItem('session:startTime', Date.now());
   },
 });
+
+function _otherTypeChecksNotEvaluated() {
+  browser.scripting.executeScript({
+    target: { tabId: 1 },
+    files: [
+      '/background.js',
+      // @ts-expect-error: Should error for non-existing paths
+      '/other.js',
+    ],
+  });
+}

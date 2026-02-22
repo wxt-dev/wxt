@@ -6,6 +6,19 @@ If you are changing the docs or fixing a bug, feel free to fork and open a PR.
 
 If you want to add a new feature, please create an issue or discussion first so we can decide if the feature is inline with the vision for WXT.
 
+## WXT's Vision
+
+WXT is two things:
+
+1. A build tool
+2. A set of runtime utilities
+
+The long term goal of WXT is provide an opinionated build tool that keeps WXT projects standard, while providing light-weight runtime utils that simplify a lot of the boilerplate/overhead when setting up a new extension.
+
+I also want to provide a way for developers to use either one of those two things independently, and not require them to use both. This is why all of WXT's runtime utils are shipped as their own NPM packages, most of them not bundled inside the core `wxt` package. If you just want to use the packages, they're availalbe, and if you just want to use WXT's built tool, you don't have to import any of WXT's utilities, you can use your own.
+
+> The few runtime utils shipped inside WXT are things that should be used by 90% of extensions. That said, they're also legacy utils left in from before I started creating separate NPM packages, and in the future, they may be removed from the core package.
+
 ## Conventional Commits
 
 This project uses [Conventional Commit format](https://www.conventionalcommits.org/en/v1.0.0/) to automatically generate a changelog and better understand the changes in the project
@@ -19,6 +32,19 @@ Here are some examples of conventional commit messages:
 ## Conventional PR Titles
 
 The title of your pull request should follow the [conventional commit format](#conventional-commits). When a pull request is merged to the main branch, all changes are going to be squashed into a single commit. The message of this commit will be the title of the pull request. And for every release, the commit messages are used to generate the changelog.
+
+## Breaking Changes Policy
+
+A quick word on WXT's breaking changes policy. I am willing to make breaking changes, but they have to be for a good enough reason - they have to make WXT better as a whole, they can't be based on one opinion.
+
+Breaking changes also require a major release. Major releases have happened once or twice a year, so after you merge your PR, you'll have to wait a little bit before it is released.
+
+To make a breaking change:
+
+1. Make sure you're PR is targeting the `major` branch
+2. Add `!` after the conventional commit type (`fix!: ...`, `feat!: ...`, `chore!: ...`, etc) to indicate that it is a breaking change
+3. At the top of the PR, provide documentation that will inform developers about the breaking change, why it was done, and how to migrate their extension so nothing breaks.
+   - This documentation will be put ["Upgrading WXT"](https://wxt.dev/guide/resources/upgrading.html) page in the docs, read through previous breaking change docs for an idea of what is required.
 
 ## Setup
 
@@ -146,13 +172,17 @@ Releases are done with GitHub actions:
 
 ## Upgrading Dependencies
 
-Use [`taze`](https://www.npmjs.com/package/taze) to upgrade dependencies throughout the entire monorepo.
+WXT has custom rules around what dependencies can be upgraded. Use the `scripts/upgrade-deps.ts` script to upgrade dependencies and follow these rules.
 
 ```sh
-pnpm dlx taze -r
+pnpm tsx scripts/upgrade-deps.ts
 ```
 
-Configuration is in [`taze.config.ts`](./taze.config.ts).
+To see all the options, run:
+
+```sh
+pnpm tsx scripts/upgrade-deps.ts --help
+```
 
 ## Install Unreleased Versions
 
@@ -184,3 +214,9 @@ Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 
 - **English only**: Blog posts should be written in English. Unfortunately, our maintainers don't have the bandwidth right now to translate our docs, let alone blog posts. Sorry 😓
 - **AI**: Please only use AI to translate or proof-read your blog post. Don't generate the whole thing... We don't want to publish that.
+
+## Become a Maintainer
+
+If you're interested in becoming a maintainer, send an email to Aaron at <aaronklinker1@gmail.com> with your github username saying you're interested. The process is very informal, I will add you quickly if you've contributed code or answered questions and helped out the community!
+
+Maintainers don't have to just write code - they can manage issues, answer questsions, review PRs, organize and prioritize work - there's lots of ways for you to help out.

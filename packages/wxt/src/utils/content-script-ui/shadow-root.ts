@@ -48,7 +48,6 @@ export async function createShadowRootUi<TMounted>(
     mode: options.mode ?? 'open',
     isolateEvents: options.isolateEvents,
   });
-  shadowHost.setAttribute('data-wxt-shadow-root', '');
 
   let mounted: TMounted | undefined;
 

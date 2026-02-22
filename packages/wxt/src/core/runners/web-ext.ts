@@ -17,15 +17,6 @@ export function createWebExtRunner(): ExtensionRunner {
     async openBrowser() {
       const startTime = Date.now();
 
-      if (
-        wxt.config.browser === 'firefox' &&
-        wxt.config.manifestVersion === 3
-      ) {
-        throw Error(
-          'Dev mode does not support Firefox MV3. For alternatives, see https://github.com/wxt-dev/wxt/issues/230#issuecomment-1806881653',
-        );
-      }
-
       // Use WXT's logger instead of web-ext's built-in one.
       const webExtLogger = await import('web-ext-run/util/logger');
       webExtLogger.consoleStream.write = ({ level, msg, name }) => {
@@ -39,11 +30,12 @@ export function createWebExtRunner(): ExtensionRunner {
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
+        chromiumPort: wxtUserConfig?.chromiumPort,
         ...(wxt.config.browser === 'firefox'
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
               firefoxProfile: wxtUserConfig?.firefoxProfile,
-              prefs: wxtUserConfig?.firefoxPrefs,
+              pref: wxtUserConfig?.firefoxPref,
               args: wxtUserConfig?.firefoxArgs,
             }
           : {
@@ -55,7 +47,6 @@ export function createWebExtRunner(): ExtensionRunner {
               ),
               args: [
                 '--unsafely-disable-devtools-self-xss-warnings',
-                '--disable-features=DisableLoadExtensionCommandLineSwitch',
                 ...(wxtUserConfig?.chromiumArgs ?? []),
               ],
             }),
@@ -88,7 +79,7 @@ export function createWebExtRunner(): ExtensionRunner {
     },
 
     async closeBrowser() {
-      return await runner?.exit();
+      await runner?.exit();
     },
   };
 }

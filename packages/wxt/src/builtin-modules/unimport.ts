@@ -49,7 +49,7 @@ export default defineWxtModule({
       // Only create global types when user has enabled auto-imports
       entries.push(await getImportsDeclarationEntry(unimport));
 
-      if (wxt.config.imports.eslintrc.enabled === false) return;
+      if (!wxt.config.imports.eslintrc.enabled) return;
 
       // Only generate ESLint config if that feature is enabled
       entries.push(

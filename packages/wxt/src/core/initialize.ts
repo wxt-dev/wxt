@@ -58,7 +58,9 @@ export async function initialize(options: {
 
   const isExists = await fs.pathExists(input.directory);
   if (isExists) {
-    const isEmpty = (await fs.readdir(input.directory)).length === 0;
+    const isEmpty =
+      (await fs.readdir(input.directory)).filter((dir) => dir !== '.git')
+        .length === 0;
     if (!isEmpty) {
       consola.error(
         `The directory ${path.resolve(input.directory)} is not empty. Aborted.`,

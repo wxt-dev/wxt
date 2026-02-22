@@ -1,6 +1,6 @@
 # ES Modules
 
-You source code should always be written as ESM. However, you have some control whether an entrypoint is bundled as ESM.
+Your source code should always be written as ESM. However, you have some control whether an entrypoint is bundled as ESM.
 
 ## HTML Pages <Badge type="warning" text="≥0.0.1" />
 

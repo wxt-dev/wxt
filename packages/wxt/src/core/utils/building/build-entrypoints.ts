@@ -4,7 +4,7 @@ import {
   EntrypointGroup,
   ResolvedPublicFile,
 } from '../../../types';
-import { getPublicFiles } from '../../utils/fs';
+import { getPublicFiles } from '../fs';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
 import type { Ora } from 'ora';

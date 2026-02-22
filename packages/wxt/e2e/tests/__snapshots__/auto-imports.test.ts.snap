@@ -47,6 +47,7 @@ exports[`Auto Imports > eslintrc > "enabled: 8" should output a JSON config file
     "defineUnlistedScript": true,
     "defineWxtPlugin": true,
     "fakeBrowser": true,
+    "getAppConfig": true,
     "injectScript": true,
     "storage": true,
     "useAppConfig": true
@@ -101,6 +102,7 @@ const globals = {
   "defineUnlistedScript": true,
   "defineWxtPlugin": true,
   "fakeBrowser": true,
+  "getAppConfig": true,
   "injectScript": true,
   "storage": true,
   "useAppConfig": true
@@ -164,6 +166,7 @@ exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config f
     "defineUnlistedScript": true,
     "defineWxtPlugin": true,
     "fakeBrowser": true,
+    "getAppConfig": true,
     "injectScript": true,
     "storage": true,
     "useAppConfig": true
@@ -219,6 +222,7 @@ exports[`Auto Imports > eslintrc > should allow customizing the output 1`] = `
     "defineUnlistedScript": "readonly",
     "defineWxtPlugin": "readonly",
     "fakeBrowser": "readonly",
+    "getAppConfig": "readonly",
     "injectScript": "readonly",
     "storage": "readonly",
     "useAppConfig": "readonly"
