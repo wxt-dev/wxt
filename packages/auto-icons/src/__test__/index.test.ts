@@ -10,7 +10,6 @@ import type { AutoIconsOptions } from '../index';
 
 // Mock dependencies
 vi.mock('fs-extra', () => ({
-  exists: vi.fn(),
   ensureDir: vi.fn(),
   pathExists: vi.fn(),
 }));
@@ -87,7 +86,7 @@ describe('auto-icons module', () => {
     vi.mocked(sharp).mockReturnValue(
       mockSharpInstance as unknown as sharp.Sharp,
     );
-    vi.mocked(fsExtra.exists).mockResolvedValue(true as any);
+    vi.mocked(fsExtra.pathExists).mockResolvedValue(true as any);
     vi.mocked(fsExtra.ensureDir).mockResolvedValue(undefined as any);
   });
 
@@ -159,7 +158,7 @@ describe('auto-icons module', () => {
     });
 
     it('should warn when base icon not found', async () => {
-      vi.mocked(fsExtra.exists).mockResolvedValue(false as any);
+      vi.mocked(fsExtra.pathExists).mockResolvedValue(false as any);
 
       const options: AutoIconsOptions = {
         enabled: true,
