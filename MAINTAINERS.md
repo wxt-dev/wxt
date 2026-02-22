@@ -60,19 +60,27 @@ Releases are done with GitHub actions:
 Example PR: <https://github.com/wxt-dev/wxt/pull/2152>
 
 1. Create the package.
+
 2. Update CI workflow inputs.
+
 3. Add docs page and version for "Other Packages" dropdown.
+
 4. Merge the PR.
+
 5. Tag the commit (look at other tags for pattern):
+
    ```sh
    git tag <dir-name>-v<version>
    git push --tags
    ```
+
 6. Publish the package to NPM:
+
    ```sh
    cd packages/<dir-name>
    pnpm publish --access public
    ```
+
 7. Create a basic release on GitHub mentioning the new package is available.
 
 A couple of things to note:
