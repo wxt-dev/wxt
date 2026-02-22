@@ -121,6 +121,9 @@ importers:
       '@wxt-dev/browser':
         specifier: workspace:^
         version: link:../browser
+      '@wxt-dev/is-background':
+        specifier: workspace:^
+        version: link:../is-background
       ua-parser-js:
         specifier: ^1.0.40
         version: 1.0.41
