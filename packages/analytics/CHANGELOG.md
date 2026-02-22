@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.5.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.2...analytics-v0.5.3)
+
+### 🩹 Fixes
+
+- Add `getAppConfig` as an alias to `useAppConfig` ([#2144](https://github.com/wxt-dev/wxt/pull/2144))
+- Allow `userId` option to return `undefined` ([636cf1f8](https://github.com/wxt-dev/wxt/commit/636cf1f8))
+- Improve background script detection logic for analytics package ([#1808](https://github.com/wxt-dev/wxt/pull/1808))
+
+### 🏡 Chore
+
+- Created new types, instead of `any` for `analytics` ([#2119](https://github.com/wxt-dev/wxt/pull/2119))
+
+### ❤️ Contributors
+
+- Smit ([@sm17p](https://github.com/sm17p))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Sheng Zhang ([@Arktomson](https://github.com/Arktomson))
+
 ## v0.5.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.1...analytics-v0.5.2)
