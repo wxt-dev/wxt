@@ -566,7 +566,28 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
   type?: PerBrowserOption<'module'>;
 }
 
-export interface BaseContentScriptEntrypointOptions extends BaseEntrypointOptions {
+export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
+  /**
+   * The variable name for the IIFE in the output bundle.
+   *
+   * This option is relevant for scripts inserted into the page context where the default IIFE
+   * variable name may conflict with an existing variable on the target page. This applies to content
+   * scripts with world=MAIN, and others, such as unlisted scripts, that could be dynamically injected
+   * into the page with a <script> tag.
+   *
+   * Available options:
+   * - `true`: automatically generate a name for the IIFE based on the entrypoint name
+   * - `false`: Output the IIFE without a variable name, making it anonymous. This is the safest option
+   *  to avoid conflicts with existing variables on the page. This will become the default in a future version of WXT.
+   * - `string`: Use the provided string as the global variable name.
+   * - `function`: A function that receives the entrypoint and returns a string to use as the variable name.
+   *
+   * @default true
+   */
+  globalName?: string | boolean | ((entrypoint: Entrypoint) => string);
+}
+
+export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypointOptions {
   matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -749,10 +770,14 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'newtab'
     | 'devtools'
     | 'unlisted-page'
-    | 'unlisted-script'
     | 'unlisted-style'
     | 'content-script-style';
   options: ResolvedPerBrowserOptions<BaseEntrypointOptions>;
+}
+
+export interface UnlistedScriptEntrypoint extends BaseEntrypoint {
+  type: 'unlisted-script';
+  options: ResolvedPerBrowserOptions<BaseScriptEntrypointOptions>;
 }
 
 export interface BackgroundEntrypoint extends BaseEntrypoint {
@@ -786,6 +811,7 @@ export interface SidepanelEntrypoint extends BaseEntrypoint {
 export type Entrypoint =
   | GenericEntrypoint
   | BackgroundEntrypoint
+  | UnlistedScriptEntrypoint
   | ContentScriptEntrypoint
   | PopupEntrypoint
   | OptionsEntrypoint
@@ -835,7 +861,7 @@ export interface BackgroundDefinition extends BackgroundEntrypointOptions {
   main(): void;
 }
 
-export interface UnlistedScriptDefinition extends BaseEntrypointOptions {
+export interface UnlistedScriptDefinition extends BaseScriptEntrypointOptions {
   /**
    * Main function executed when the unlisted script is ran.
    *

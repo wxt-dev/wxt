@@ -459,4 +459,104 @@ describe('Output Directory Structure', () => {
       "
     `);
   });
+
+  describe('globalName option', () => {
+    it('generates an IIFE with a default name', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^var content\s?=[\s\S]*^content;$/gm);
+    });
+
+    it('generates an IIFE with a specific name', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: "MyContentScript",
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(
+        /^var MyContentScript =[\s\S]*^MyContentScript;$/gm,
+      );
+    });
+
+    it('generates an IIFE with a specific name provided by a function', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: () => "MyContentScript",
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(
+        /^var MyContentScript =[\s\S]*^MyContentScript;$/gm,
+      );
+    });
+
+    it('generates an anonymous IIFE when not minified', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: false,
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^\(function\(\) {[\s\S]*^}\)\(\);$/gm);
+    });
+
+    it('generates an anonymous IIFE when minified', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: false,
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: true } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^\(function\(\){[\s\S]*}\)\(\);$/gm);
+    });
+  });
 });
