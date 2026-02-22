@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.3...analytics-v0.5.4)
+
+### 🩹 Fixes
+
+- Continue using `useAppConfig` to support older versions of WXT ([bfd94556](https://github.com/wxt-dev/wxt/commit/bfd94556))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.5.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.2...analytics-v0.5.3)

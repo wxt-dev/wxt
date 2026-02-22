@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Add analytics to your web extension",
   "type": "module",
   "scripts": {
