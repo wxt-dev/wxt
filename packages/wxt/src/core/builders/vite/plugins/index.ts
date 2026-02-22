@@ -14,3 +14,4 @@ export * from './removeEntrypointMainFunction';
 export * from './wxtPluginLoader';
 export * from './resolveAppConfig';
 export * from './iifeFooter';
+export * from './iifeAnonymous';
