@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && pnpm run --reporter-hide-prefix /^check:.*/",
+    "check": "pnpm build && check",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "pnpm test run --coverage"
   },
