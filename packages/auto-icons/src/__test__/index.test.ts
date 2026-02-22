@@ -12,6 +12,7 @@ import type { AutoIconsOptions } from '../index';
 vi.mock('fs-extra', () => ({
   exists: vi.fn(),
   ensureDir: vi.fn(),
+  pathExists: vi.fn(),
 }));
 
 vi.mock('sharp', () => ({
