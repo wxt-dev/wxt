@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.7...storage-v1.2.8)
+
+### 🩹 Fixes
+
+- Correctly update version metadata when setting a value for the first time ([#2139](https://github.com/wxt-dev/wxt/pull/2139))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v1.2.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.6...storage-v1.2.7)
