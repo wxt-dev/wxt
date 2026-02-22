@@ -143,7 +143,12 @@ export interface InlineConfig {
    * })
    * ```
    */
-  suppressWarnings?: { firefoxDataCollection?: boolean };
+  suppressWarnings?: {
+    /**
+     * Suppress warnings for: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
+     */
+    firefoxDataCollection?: boolean;
+  };
   /**
    * Configure browser startup. Options set here can be overridden in a `web-ext.config.ts` file.
    */
