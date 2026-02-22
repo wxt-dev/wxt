@@ -45,6 +45,10 @@ function setupEnv(options: {
 }
 
 describe('isBackground Getter', () => {
+  it('should fail', () => {
+    expect(1).toBe(2);
+  });
+
   describe('Non-extension contexts', () => {
     it('should return false', () => {
       setupEnv({
