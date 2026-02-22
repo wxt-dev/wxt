@@ -479,9 +479,17 @@ describe('auto-icons module', () => {
         enabled: true,
       };
 
-      // Make toFile throw an error
-      mockSharpInstance.resize = vi.fn().mockImplementation(() => ({
+      // Make toFile throw an error - need to properly chain resize -> png -> toFile
+      const errorInstance = {
         toFile: vi.fn().mockRejectedValue(new Error('Sharp processing failed')),
+        grayscale: vi.fn(),
+        composite: vi.fn(),
+      };
+      errorInstance.grayscale.mockReturnValue(errorInstance);
+      errorInstance.composite.mockReturnValue(errorInstance);
+
+      mockSharpInstance.resize = vi.fn().mockImplementation(() => ({
+        png: vi.fn().mockReturnValue(errorInstance),
       }));
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
