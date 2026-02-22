@@ -10,6 +10,7 @@ on:
           - analytics
           - auto-icons
           - i18n
+          - is-background
           - module-react
           - module-solid
           - module-svelte

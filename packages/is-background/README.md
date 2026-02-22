@@ -1,6 +1,8 @@
-# WXT Is Background
+# `@wxt-dev/is-background`
 
-Exports a simple boolean determining if the current JS context is the background or not.
+Exports a getter to determine if the current JS context is the background or not.
+
+## Installation
 
 ```sh
 pnpm add @wxt-dev/is-background
@@ -11,5 +13,5 @@ pnpm add @wxt-dev/is-background
 ```ts
 import { isBackground } from '@wxt-dev/is-background';
 
-console.log(isBackground); // true | false
+isBackground(); // true | false
 ```
