@@ -58,7 +58,7 @@ describe('isBackground Getter', () => {
     });
   });
 
-  describe('Chromium', () => {
+  describe('Chromium & Safari', () => {
     const hasExtensionApis = true;
 
     describe('MV2', () => {
@@ -115,7 +115,7 @@ describe('isBackground Getter', () => {
     });
   });
 
-  describe('Firefox & Safari, MV2 & MV3', () => {
+  describe('Firefox, MV2 & MV3', () => {
     const hasServiceWorkerGlobalScope = false;
     const hasExtensionApis = true;
     const hasGetBackgroundPage = true;
