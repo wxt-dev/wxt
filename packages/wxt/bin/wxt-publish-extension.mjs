@@ -4,4 +4,4 @@
  * `publish-browser-extension` as a direct dependency (like for PNPM, which doesn't link
  * sub-dependency binaries to "node_modules/.bin")
  */
-import 'publish-browser-extension/cli';
+await import('publish-browser-extension/cli');
