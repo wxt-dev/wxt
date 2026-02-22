@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.2.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.4...i18n-v0.2.5)
+
+### 🩹 Fixes
+
+- Add `.jsonc` support for locale files to match docs ([#2066](https://github.com/wxt-dev/wxt/pull/2066))
+
+### 🏡 Chore
+
+- Manually fix markdownlint errors ([#1711](https://github.com/wxt-dev/wxt/pull/1711))
+- **deps:** Upgrade oxlint from 0.16.8 to 1.14.0 ([a01928e0](https://github.com/wxt-dev/wxt/commit/a01928e0))
+- **deps:** Upgrade typescript from 5.8.3 to 5.9.2 ([a6eef643](https://github.com/wxt-dev/wxt/commit/a6eef643))
+- Create script for managing dependency upgrades ([#1875](https://github.com/wxt-dev/wxt/pull/1875))
+- **deps:** Upgrade all dev dependencies ([#1876](https://github.com/wxt-dev/wxt/pull/1876))
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- Upgrade major deps ([#2070](https://github.com/wxt-dev/wxt/pull/2070))
+
+### ❤️ Contributors
+
+- Ilya Kubariev ([@gymnasy55](https://github.com/gymnasy55))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.2.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.3...i18n-v0.2.4)
