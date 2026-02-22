@@ -1,8 +1,8 @@
 name: ✨ Auto-label PR
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  pull_request_target:
+    types: [opened, synchronized, reopened]
 
 jobs:
   update-pr:
