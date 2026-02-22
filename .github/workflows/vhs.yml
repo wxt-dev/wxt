@@ -11,7 +11,7 @@ permissions:
 jobs:
   vhs:
     name: Create VHS
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     if: ${{ github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
@@ -24,6 +24,11 @@ jobs:
         with:
           install: false
 
+      - name: Setup Go
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
+        with:
+          go-version: '1.25.1'
+
       # This prevents pnpm dlx from downloading WXT in the video
       - name: Pre-install WXT
         run: |
@@ -31,9 +36,10 @@ jobs:
           pnpm dlx wxt@latest --version
 
       - name: Record VHS
-        uses: charmbracelet/vhs-action@59641cdc7fadf3978db65eb8c6937ea2752f4ec3 # v2.1.0
-        with:
-          path: 'docs/tapes/init-demo.tape'
+        run: |
+          brew install ttyd ffmpeg
+          go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
+          vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
