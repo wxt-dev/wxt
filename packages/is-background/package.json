@@ -1,0 +1,56 @@
+{
+  "name": "@wxt-dev/is-background",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Check if the current context is the background or not.",
+  "license": "MIT",
+  "scripts": {
+    "build": "buildc -- tsdown",
+    "check": "pnpm build && check",
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "pnpm test run --coverage",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@wxt-dev/browser": "workspace:^"
+  },
+  "devDependencies": {
+    "oxlint": "^1.43.0",
+    "publint": "^0.3.17",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/is-background"
+  },
+  "keywords": [
+    "wxt",
+    "chrome",
+    "web",
+    "extension",
+    "is",
+    "background",
+    "script",
+    "page",
+    "service",
+    "worker"
+  ],
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
+  "funding": "https://github.com/sponsors/wxt-dev",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.mts",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  }
+}

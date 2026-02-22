@@ -70,7 +70,7 @@ async function getPathsDeclarationEntry(
       getEntrypointBundlePath(
         entry,
         wxt.config.outDir,
-        isHtmlEntrypoint(entry) ? '.html' : '.js',
+        getEntrypointPublicExt(entry),
       ),
     )
     .concat(await getPublicFiles());
@@ -105,6 +105,18 @@ declare module "wxt/browser" {
     text: template.replace('{{ union }}', unions || '    | never'),
     tsReference: true,
   };
+}
+
+function getEntrypointPublicExt(entry: Entrypoint): '.html' | '.js' | '.css' {
+  if (isHtmlEntrypoint(entry)) return '.html';
+
+  switch (entry.type) {
+    case 'content-script-style':
+    case 'unlisted-style':
+      return '.css';
+    default:
+      return '.js';
+  }
 }
 
 async function getI18nDeclarationEntry(): Promise<WxtDirFileEntry> {
