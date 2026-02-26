@@ -7,7 +7,6 @@ import useListExtensionDetails, {
 // Add extension IDs to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 const chromeExtensionIds = [
-  'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust
   'ocfdgncpifmegplaglcnglhioflaimkd', // GitHub: Better Line Counts
   'mgmdkjcljneegjfajchedjpdhbadklcf', // Anime Skip Player
   'bfbnagnphiehemkdgmmficmjfddgfhpl', // UltraWideo
@@ -121,6 +120,7 @@ const chromeExtensionIds = [
   'dhiekgdaipindoapjmcnpompdknjeijf', // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
   'lapnciffpekdengooeolaienkeoilfeo', // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
   'bhgobenflkkhfcgkikejaaejenoddcmo', // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
+  'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
