@@ -1,5 +1,4 @@
 import { debounce } from 'perfect-debounce';
-import chokidar from 'chokidar';
 import {
   BuildStepOutput,
   EntrypointGroup,
@@ -29,7 +28,11 @@ import {
   mapWxtOptionsToRegisteredContentScript,
 } from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
-import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
+import {
+  isBabelSyntaxError,
+  logBabelSyntaxError,
+  resolveErrorFiles,
+} from './utils/error';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
@@ -106,21 +109,24 @@ async function createServerInternal(): Promise<WxtDevServer> {
         reloadContentScripts(server.currentOutput.steps, server);
       });
 
-      await buildAndOpenBrowser();
+      const { success, errorFiles } = await buildAndOpenBrowser();
+      errorFiles?.forEach((file) => {
+        server.watcher.add(file);
+      });
 
       // Listen for file changes and reload different parts of the extension accordingly
-      const reloadOnChange = createFileReloader(server);
+      const reloadOnChange = createFileReloader(server, errorFiles);
       server.watcher.on('all', async (...args) => {
         await reloadOnChange(args[0], args[1]);
+      });
 
-        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
+      if (success) {
         keyboardShortcuts.start();
-      });
-
-      keyboardShortcuts.printHelp({
-        canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
-      });
+        keyboardShortcuts.printHelp({
+          canReopenBrowser:
+            !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+        });
+      }
     },
 
     async stop() {
@@ -165,20 +171,14 @@ async function createServerInternal(): Promise<WxtDevServer> {
       // Build after starting the dev server so it can be used to transform HTML files
       server.currentOutput = await internalBuild();
     } catch (err) {
-      if (!isBabelSyntaxError(err)) {
-        throw err;
+      if (err instanceof Error) {
+        const errorFiles = resolveErrorFiles(err);
+        if (errorFiles.length) {
+          return { success: false, errorFiles };
+        }
       }
-      logBabelSyntaxError(err);
-      wxt.logger.info('Waiting for syntax error to be fixed...');
-      await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
-        watcher.on('all', () => {
-          watcher.close();
-          wxt.logger.info('Syntax error resolved, rebuilding...');
-          resolve();
-        });
-      });
-      return buildAndOpenBrowser();
+      // Build error cannot be recovered from.
+      throw err;
     }
 
     // Add file watchers for files not loaded by the dev server. See
@@ -191,6 +191,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
     // Open browser after everything is ready to go.
     await runner.openBrowser();
+
+    return {
+      success: true,
+    };
   };
 
   builderServer.on?.('close', () => keyboardShortcuts.stop());
@@ -202,7 +206,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
  * Returns a function responsible for reloading different parts of the extension when a file
  * changes.
  */
-function createFileReloader(server: WxtDevServer) {
+function createFileReloader(server: WxtDevServer, errorFiles?: string[]) {
   const fileChangedMutex = new Mutex();
   const changeQueue: Array<[string, string]> = [];
 
@@ -210,8 +214,6 @@ function createFileReloader(server: WxtDevServer) {
     changeQueue.push([event, path]);
 
     const reloading = fileChangedMutex.runExclusive(async () => {
-      if (server.currentOutput == null) return;
-
       const fileChanges = changeQueue
         .splice(0, changeQueue.length)
         .map(([_, file]) => file);
@@ -219,11 +221,20 @@ function createFileReloader(server: WxtDevServer) {
 
       await wxt.reloadConfig();
 
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
+      const changes = detectDevChanges(
+        fileChanges,
+        server.currentOutput,
+        errorFiles,
+      );
       if (changes.type === 'no-change') return;
 
       if (changes.type === 'full-restart') {
-        wxt.logger.info('Config changed, restarting server...');
+        const prettyCause = {
+          'config-file': 'Config file',
+          'source-file': 'Source file',
+          'wxt-module': 'WXT module',
+        }[changes.cause];
+        wxt.logger.info(`${prettyCause} changed, restarting server...`);
         server.restart();
         return;
       }

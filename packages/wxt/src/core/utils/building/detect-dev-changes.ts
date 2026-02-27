@@ -34,18 +34,25 @@ import { wxt } from '../../wxt';
  */
 export function detectDevChanges(
   changedFiles: string[],
-  currentOutput: BuildOutput,
+  currentOutput: BuildOutput | undefined,
+  errorFiles: string[] | undefined,
 ): DevModeChange {
   const isConfigChange = some(
     changedFiles,
     (file) => file === wxt.config.userConfigMetadata.configFile,
   );
-  if (isConfigChange) return { type: 'full-restart' };
+  if (isConfigChange) return { type: 'full-restart', cause: 'config-file' };
 
   const isWxtModuleChange = some(changedFiles, (file) =>
     file.startsWith(wxt.config.modulesDir),
   );
-  if (isWxtModuleChange) return { type: 'full-restart' };
+  if (isWxtModuleChange) return { type: 'full-restart', cause: 'wxt-module' };
+
+  if (errorFiles?.some((file) => changedFiles.includes(file)))
+    return { type: 'full-restart', cause: 'source-file' };
+
+  // Other changes don't matter if the build hasn't once finished.
+  if (!currentOutput) return { type: 'no-change' };
 
   const isRunnerChange = some(
     changedFiles,
@@ -193,6 +200,7 @@ interface RebuildChange {
 
 interface FullRestart {
   type: 'full-restart';
+  cause: 'config-file' | 'source-file' | 'wxt-module';
 }
 
 interface BrowserRestart {

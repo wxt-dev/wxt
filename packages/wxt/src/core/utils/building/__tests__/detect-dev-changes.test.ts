@@ -39,7 +39,7 @@ describe('Detect Dev Changes', () => {
         ],
       };
 
-      const actual = detectDevChanges(changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput, []);
 
       expect(actual).toEqual({ type: 'no-change' });
     });
@@ -63,9 +63,10 @@ describe('Detect Dev Changes', () => {
       };
       const expected: DevModeChange = {
         type: 'full-restart',
+        cause: 'config-file',
       };
 
-      const actual = detectDevChanges(changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -90,9 +91,10 @@ describe('Detect Dev Changes', () => {
       };
       const expected: DevModeChange = {
         type: 'full-restart',
+        cause: 'wxt-module',
       };
 
-      const actual = detectDevChanges(changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -118,7 +120,7 @@ describe('Detect Dev Changes', () => {
         type: 'browser-restart',
       };
 
-      const actual = detectDevChanges(changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -149,7 +151,7 @@ describe('Detect Dev Changes', () => {
         cachedOutput: currentOutput,
       };
 
-      const actual = detectDevChanges(changes, currentOutput);
+      const actual = detectDevChanges(changes, currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -196,7 +198,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [background],
       };
 
-      const actual = detectDevChanges([changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -247,7 +249,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [[htmlPage1, htmlPage2]],
       };
 
-      const actual = detectDevChanges([changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -296,7 +298,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [[htmlPage1, htmlPage2]],
       };
 
-      const actual = detectDevChanges([changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -355,7 +357,7 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [script1, script3],
       };
 
-      const actual = detectDevChanges([changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
@@ -413,9 +415,16 @@ describe('Detect Dev Changes', () => {
         rebuildGroups: [script1, script3],
       };
 
-      const actual = detectDevChanges([changedPath], currentOutput);
+      const actual = detectDevChanges([changedPath], currentOutput, []);
 
       expect(actual).toEqual(expected);
     });
+  });
+
+  describe('Source file with error', () => {
+    it.todo(
+      'should return a full restart when the changed file had an error',
+      () => {},
+    );
   });
 });
