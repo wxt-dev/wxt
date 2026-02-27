@@ -8,6 +8,7 @@ import {
   prepareTypedocSidebar,
 } from './utils/menus';
 import { meta, script } from './utils/head';
+// @ts-expect-error It isn't TypeScript lib
 import footnote from 'markdown-it-footnote';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
@@ -28,15 +29,14 @@ import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import llmstxt from 'vitepress-plugin-llms';
 
-const origin = 'https://wxt.dev';
-
-const title = 'Next-gen Web Extension Framework';
-const titleSuffix = ' – WXT';
-const description =
+const ORIGIN = 'https://wxt.dev';
+const TITLE = 'Next-gen Web Extension Framework';
+const TITLE_SUFFIX = ' – WXT';
+const DESCRIPTION =
   "WXT provides the best developer experience, making it quick, easy, and fun to develop web extensions. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.";
-const ogTitle = `${title}${titleSuffix}`;
-const ogUrl = origin;
-const ogImage = `${origin}/social-preview.png`;
+const OG_TITLE = `${TITLE}${TITLE_SUFFIX}`;
+const OG_URL = ORIGIN;
+const OG_IMAGE = `${ORIGIN}/social-preview.png`;
 
 const otherPackages = {
   analytics: analyticsVersion,
@@ -68,13 +68,16 @@ const knowledge = addKnowledge<DefaultTheme.Config>({
 export default defineConfig({
   extends: knowledge,
 
-  titleTemplate: `:title${titleSuffix}`,
+  titleTemplate: `:title${TITLE_SUFFIX}`,
   title: 'WXT',
-  description,
+  description: DESCRIPTION,
   vite: {
     clearScreen: false,
+    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(
@@ -87,7 +90,7 @@ export default defineConfig({
   },
   lastUpdated: true,
   sitemap: {
-    hostname: origin,
+    hostname: ORIGIN,
   },
 
   async buildEnd(site) {
@@ -101,27 +104,25 @@ export default defineConfig({
       copyright: 'MIT',
       id: 'wxt',
       title: 'WXT Blog',
-      link: `${origin}/blog`,
+      link: `${ORIGIN}/blog`,
     });
     posts.forEach((post) => {
       feed.addItem({
-        date: post.frontmatter.date,
-        link: new URL(post.url, origin).href,
+        date: new Date(post.frontmatter.date),
+        link: new URL(post.url, ORIGIN).href,
         title: post.frontmatter.title,
         description: post.frontmatter.description,
       });
     });
-    // console.log('rss.xml:');
-    // console.log(feed.rss2());
     await writeFile(join(site.outDir, 'rss.xml'), feed.rss2(), 'utf8');
   },
 
   head: [
     meta('og:type', 'website'),
-    meta('og:title', ogTitle),
-    meta('og:image', ogImage),
-    meta('og:url', ogUrl),
-    meta('og:description', description),
+    meta('og:title', OG_TITLE),
+    meta('og:image', OG_IMAGE),
+    meta('og:url', OG_URL),
+    meta('og:description', DESCRIPTION),
     meta('twitter:card', 'summary_large_image', { useName: true }),
     script('https://umami.aklinker1.io/script.js', {
       'data-website-id': 'c1840c18-a12c-4a45-a848-55ae85ef7915',
