@@ -321,7 +321,20 @@ export interface InlineConfig {
   /**
    * Experimental settings - use with caution.
    */
-  experimental?: {};
+  experimental?: {
+    /**
+     * **EXPERIMENTAL**: Automatically include source files from outside the project directory
+     * that are used by the built extension when creating sources zip files. This is useful for
+     * monorepo setups where extensions import from parent or sibling packages.
+     *
+     * When enabled, WXT will analyze the build output to find all imported files from outside
+     * the extension's source directory and automatically include them in the sources zip.
+     *
+     * @experimental
+     * @default false
+     */
+    autoIncludeExternalSources?: boolean;
+  };
   /**
    * Config effecting dev mode only.
    */
@@ -1406,7 +1419,13 @@ export interface ResolvedConfig {
    * Import aliases to absolute paths.
    */
   alias: Record<string, string>;
-  experimental: {};
+  experimental: {
+    /**
+     * **EXPERIMENTAL**: Automatically include source files from outside the project directory
+     * that are used by the built extension when creating sources zip files.
+     */
+    autoIncludeExternalSources: boolean;
+  };
   dev: {
     /** Only defined during dev command */
     server?: {
