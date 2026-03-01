@@ -45,7 +45,7 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@types/webextension-polyfill": "^0.12.4",
+    "@types/webextension-polyfill": "^0.12.5",
     "publint": "^0.3.17",
     "typescript": "^5.9.3",
     "webextension-polyfill": "^0.12.0",
