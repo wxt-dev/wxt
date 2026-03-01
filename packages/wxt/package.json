@@ -25,7 +25,7 @@
     "@wxt-dev/storage": "workspace:^1.0.0",
     "async-mutex": "^0.5.0",
     "c12": "^3.3.3",
-    "cac": "^6.7.14",
+    "cac": "^7.0.0",
     "chokidar": "^5.0.0",
     "ci-info": "^4.4.0",
     "consola": "^3.4.2",
