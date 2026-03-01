@@ -27,6 +27,21 @@ type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
 ) => (...args: Parameters<Analytics[K]>) => void;
 
+type AnalyticsMessage = {
+  [K in keyof Analytics]: {
+    fn: K;
+    args: Parameters<Analytics[K]>;
+  };
+}[keyof Analytics];
+
+type AnalyticsMethod =
+  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
+  | undefined;
+
+type MethodForwarder = <K extends keyof Analytics>(
+  fn: K,
+) => (...args: Parameters<Analytics[K]>) => void;
+
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
 const INTERACTIVE_TAGS = new Set([
