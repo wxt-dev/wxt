@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { GenericEntrypoint, InlineConfig } from '../../src';
+import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
 import { readFile } from 'fs-extra';
 import { normalizePath } from '../../src';
 
@@ -49,7 +49,7 @@ describe('Module Helpers', () => {
         'export default defineBackground(() => {})',
       );
 
-      const entrypoint: GenericEntrypoint = {
+      const entrypoint: UnlistedScriptEntrypoint = {
         type: 'unlisted-script',
         inputPath: project.resolvePath('modules/test/injected.ts'),
         name: 'injected',

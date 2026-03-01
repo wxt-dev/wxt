@@ -109,7 +109,7 @@ export async function createViteBuilder(
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
-    const iifeReturnValueName = safeVarName(entrypoint.name);
+    let iifeReturnValueName = safeVarName(entrypoint.name);
 
     if (
       entrypoint.type === 'content-script-style' ||
@@ -122,7 +122,17 @@ export async function createViteBuilder(
       entrypoint.type === 'content-script' ||
       entrypoint.type === 'unlisted-script'
     ) {
-      plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      if (typeof entrypoint.options.globalName === 'string') {
+        iifeReturnValueName = entrypoint.options.globalName;
+      } else if (typeof entrypoint.options.globalName === 'function') {
+        iifeReturnValueName = entrypoint.options.globalName(entrypoint);
+      }
+
+      if (entrypoint.options.globalName === false) {
+        plugins.push(wxtPlugins.iifeAnonymous(iifeReturnValueName));
+      } else {
+        plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      }
     }
 
     return {

@@ -119,6 +119,8 @@ const chromeExtensionIds = [
   'mfjdonmgmgcijagclnkfhmjiblbfjaid', // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
   'dhiekgdaipindoapjmcnpompdknjeijf', // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
   'lapnciffpekdengooeolaienkeoilfeo', // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
+  'bhgobenflkkhfcgkikejaaejenoddcmo', // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
+  'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);

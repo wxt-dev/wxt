@@ -10,6 +10,7 @@ import {
   SidepanelEntrypoint,
   MainWorldContentScriptEntrypointOptions,
   IsolatedWorldContentScriptEntrypointOptions,
+  UnlistedScriptEntrypoint,
 } from '../../../types';
 import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
@@ -319,7 +320,7 @@ async function getUnlistedPageEntrypoint(
 async function getUnlistedScriptEntrypoint(
   { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
-): Promise<GenericEntrypoint> {
+): Promise<UnlistedScriptEntrypoint> {
   return {
     type: 'unlisted-script',
     name,
