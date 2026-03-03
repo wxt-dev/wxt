@@ -8,7 +8,8 @@ import { registerWxt } from '../core/wxt';
 import spawn from 'nano-spawn';
 
 /**
- * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
+ * Wrap an action handler to add a timer, error handling, and maybe enable debug
+ * mode.
  */
 export function wrapAction(
   cb: (
@@ -54,8 +55,8 @@ export function wrapAction(
 }
 
 /**
- * Array flags, when not passed, are either `undefined` or `[undefined]`. This function filters out
- * the
+ * Array flags, when not passed, are either `undefined` or `[undefined]`. This
+ * function filters out the
  */
 export function getArrayFromFlags<T>(
   flags: any,

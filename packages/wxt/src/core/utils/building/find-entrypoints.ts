@@ -30,7 +30,8 @@ import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
 
 /**
- * Return entrypoints and their configuration by looking through the project's files.
+ * Return entrypoints and their configuration by looking through the project's
+ * files.
  */
 export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
@@ -195,7 +196,10 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   return resMap;
 }
 
-/** Extract `manifest.` and `wxt.` options from meta tags, converting snake_case keys to camelCase */
+/**
+ * Extract `manifest.` and `wxt.` options from meta tags, converting snake_case
+ * keys to camelCase
+ */
 async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {

@@ -9,9 +9,7 @@ export interface KeyboardShortcutWatcher {
   printHelp(flags: { canReopenBrowser: boolean }): void;
 }
 
-/**
- * Function that creates a keyboard shortcut handler for the extension.
- */
+/** Function that creates a keyboard shortcut handler for the extension. */
 export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {

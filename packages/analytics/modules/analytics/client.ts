@@ -62,7 +62,8 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
 }
 
 /**
- * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
+ * Creates an analytics client in the background responsible for uploading
+ * events to the server to avoid CORS errors.
  */
 function createBackgroundAnalytics(
   config: AnalyticsConfig | undefined,
@@ -219,9 +220,7 @@ function createBackgroundAnalytics(
   return analytics;
 }
 
-/**
- * Creates an analytics client for non-background contexts.
- */
+/** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
   const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();

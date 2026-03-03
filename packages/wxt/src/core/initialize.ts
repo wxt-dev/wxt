@@ -87,13 +87,9 @@ export async function initialize(options: {
 }
 
 interface Template {
-  /**
-   * Template's name.
-   */
+  /** Template's name. */
   name: string;
-  /**
-   * Path to template directory in github repo.
-   */
+  /** Path to template directory in github repo. */
   path: string;
 }
 

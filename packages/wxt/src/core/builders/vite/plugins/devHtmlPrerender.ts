@@ -10,7 +10,8 @@ import { hash } from 'ohash';
 const inlineScriptContents: Record<string, string> = {};
 
 /**
- * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
+ * Pre-renders the HTML entrypoints when building the extension to connect to
+ * the dev server.
  */
 export function devHtmlPrerender(
   config: ResolvedConfig,

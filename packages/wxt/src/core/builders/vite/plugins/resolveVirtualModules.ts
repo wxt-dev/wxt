@@ -9,7 +9,8 @@ import fs from 'fs-extra';
 import { resolve } from 'path';
 
 /**
- * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual` directory.
+ * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual`
+ * directory.
  */
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {
