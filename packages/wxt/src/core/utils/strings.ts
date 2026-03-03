@@ -7,9 +7,7 @@ export function kebabCaseAlphanumeric(str: string): string {
     .replace(/\s+/g, '-'); // Replace spaces with hyphens
 }
 
-/**
- * Return a safe variable name for a given string.
- */
+/** Return a safe variable name for a given string. */
 export function safeVarName(str: string): string {
   const name = camelCase(kebabCaseAlphanumeric(str));
   if (name.match(/^[a-z]/)) return name;
@@ -18,15 +16,16 @@ export function safeVarName(str: string): string {
 }
 
 /**
- * Converts a string to a valid filename (NOT path), stripping out invalid characters.
+ * Converts a string to a valid filename (NOT path), stripping out invalid
+ * characters.
  */
 export function safeFilename(str: string): string {
   return kebabCaseAlphanumeric(str);
 }
 
 /**
- * Removes import statements from the top of a file. Keeps import.meta and inline, async `import()`
- * calls.
+ * Removes import statements from the top of a file. Keeps import.meta and
+ * inline, async `import()` calls.
  */
 export function removeImportStatements(text: string): string {
   return text.replace(

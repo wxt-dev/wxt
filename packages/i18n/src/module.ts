@@ -3,7 +3,7 @@
  *
  * ```ts
  * export default defineConfig({
- *   modules: ["@wxt-dev/i18n/module"],
+ *   modules: ['@wxt-dev/i18n/module'],
  * });
  * ```
  *
@@ -180,13 +180,12 @@ export { type GeneratedI18nStructure }
   },
 });
 
-/**
- * Options for the i18n module
- */
+/** Options for the i18n module */
 export interface I18nOptions {
   /**
    * Directory containing files that define the translations.
-   * @default "${config.srcDir}/locales"
+   *
+   * @default '${config.srcDir}/locales'
    */
   localesDir?: string;
 }

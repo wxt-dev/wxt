@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { MigrationError, type WxtStorageItem, storage } from '../index';
 
 /**
- * This works because fakeBrowser is synchronous, and is will finish any number of chained
- * calls within a single tick of the event loop, ie: a timeout of 0.
+ * This works because fakeBrowser is synchronous, and is will finish any number
+ * of chained calls within a single tick of the event loop, ie: a timeout of 0.
  */
 async function waitForMigrations() {
   return new Promise((res) => setTimeout(res));

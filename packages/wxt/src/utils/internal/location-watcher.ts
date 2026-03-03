@@ -5,9 +5,9 @@ const supportsNavigationApi =
   typeof (globalThis as any).navigation?.addEventListener === 'function';
 
 /**
- * Create a util that watches for URL changes, dispatching the custom event when detected. Stops
- * watching when content script is invalidated. Uses Navigation API when available, otherwise
- * falls back to polling.
+ * Create a util that watches for URL changes, dispatching the custom event when
+ * detected. Stops watching when content script is invalidated. Uses Navigation
+ * API when available, otherwise falls back to polling.
  */
 export function createLocationWatcher(ctx: ContentScriptContext) {
   let lastUrl: URL;
@@ -15,8 +15,8 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
 
   return {
     /**
-     * Ensure the location watcher is actively looking for URL changes. If it's already watching,
-     * this is a noop.
+     * Ensure the location watcher is actively looking for URL changes. If it's
+     * already watching, this is a noop.
      */
     run() {
       if (watching) return;

@@ -4,8 +4,8 @@ import { dirname, resolve } from 'path';
 import { writeFileIfDifferent } from './fs';
 
 /**
- * A basic file system cache stored at `<srcDir>/.wxt/cache/<key>`. Just caches a string in a
- * file for the given key.
+ * A basic file system cache stored at `<srcDir>/.wxt/cache/<key>`. Just caches
+ * a string in a file for the given key.
  *
  * @param srcDir Absolute path to source directory. See `InternalConfig.srcDir`
  */

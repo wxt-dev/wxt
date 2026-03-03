@@ -4,7 +4,8 @@ import type * as vite from 'vite';
 import { ResolvedConfig } from '../../../../types';
 
 /**
- * When importing `virtual:app-config`, resolve it to the `app.config.ts` file in the project.
+ * When importing `virtual:app-config`, resolve it to the `app.config.ts` file
+ * in the project.
  */
 export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
   const virtualModuleId = 'virtual:app-config';

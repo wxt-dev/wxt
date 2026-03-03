@@ -59,9 +59,7 @@ export class TestProject {
     ]);
   }
 
-  /**
-   * Add a `wxt.config.ts` to the project with specific contents.
-   */
+  /** Add a `wxt.config.ts` to the project with specific contents. */
   setConfigFileConfig(config: UserConfig = {}) {
     this.config = config;
     this.files.push([
@@ -109,9 +107,7 @@ export class TestProject {
     return server;
   }
 
-  /**
-   * Call `path.resolve` relative to the project's root directory.
-   */
+  /** Call `path.resolve` relative to the project's root directory. */
   resolvePath(...path: string[]): string {
     return resolve(this.root, ...path);
   }
@@ -141,11 +137,11 @@ export class TestProject {
   }
 
   /**
-   * Read all the files from the test project's `.output` directory and combine them into a string
-   * that can be used in a snapshot.
+   * Read all the files from the test project's `.output` directory and combine
+   * them into a string that can be used in a snapshot.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
     return this.serializeDir('.output', ignoreContentsOfFilenames);
@@ -154,8 +150,8 @@ export class TestProject {
   /**
    * Deeply print the filename and contents of all files in a directory.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   private async serializeDir(
     dir: string,
@@ -179,8 +175,8 @@ export class TestProject {
 
   /**
    * @param path An absolute path to a file or a path relative to the root.
-   * @param ignoreContents An optional boolean that, when true, causes this function to not print
-   *                       the file contents.
+   * @param ignoreContents An optional boolean that, when true, causes this
+   *   function to not print the file contents.
    */
   async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
     const absolutePath = this.resolvePath(path);

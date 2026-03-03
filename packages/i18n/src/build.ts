@@ -51,7 +51,8 @@ export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
 //
 
 /**
- * See https://developer.chrome.com/docs/extensions/reference/api/i18n#overview-predefined
+ * See
+ * https://developer.chrome.com/docs/extensions/reference/api/i18n#overview-predefined
  */
 const PREDEFINED_MESSAGES: Record<string, ChromeMessage> = {
   '@@extension_id': {
@@ -110,9 +111,7 @@ const ALLOWED_CHROME_MESSAGE_KEYS: Set<string> = new Set<keyof ChromeMessage>([
 // PARSING
 //
 
-/**
- * Parse a messages file, extract the messages. Supports JSON, JSON5, and YAML.
- */
+/** Parse a messages file, extract the messages. Supports JSON, JSON5, and YAML. */
 export async function parseMessagesFile(
   file: string,
 ): Promise<ParsedMessage[]> {
@@ -121,9 +120,7 @@ export async function parseMessagesFile(
   return parseMessagesText(text, EXT_FORMATS_MAP[ext] ?? 'JSON5');
 }
 
-/**
- * Parse a string, extracting the messages. Supports JSON, JSON5, and YAML.
- */
+/** Parse a string, extracting the messages. Supports JSON, JSON5, and YAML. */
 export function parseMessagesText(
   text: string,
   format: 'JSON5' | 'YAML' | 'TOML',
@@ -131,9 +128,7 @@ export function parseMessagesText(
   return parseMessagesObject(PARSERS[format](text));
 }
 
-/**
- * Given the JS object form of a raw messages file, extract the messages.
- */
+/** Given the JS object form of a raw messages file, extract the messages. */
 export function parseMessagesObject(object: any): ParsedMessage[] {
   return _parseMessagesObject(
     [],

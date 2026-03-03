@@ -8,10 +8,10 @@ import { minimatch, MinimatchOptions } from 'minimatch';
  * matches any of the negative patterns, it will return `false`.
  *
  * @example
- * ```ts
- * minimatchMultiple('a.json', ['*.json', '!b.json']); // => true
- * minimatchMultiple('b.json', ['*.json', '!b.json']); // => false
- * ```
+ *   ```ts
+ *   minimatchMultiple('a.json', ['*.json', '!b.json']); // => true
+ *   minimatchMultiple('b.json', ['*.json', '!b.json']); // => false
+ *   ```;
  */
 export function minimatchMultiple(
   search: string,

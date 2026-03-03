@@ -4,9 +4,7 @@ import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
 
-/**
- * Create an `ExtensionRunner` backed by `web-ext`.
- */
+/** Create an `ExtensionRunner` backed by `web-ext`. */
 export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 

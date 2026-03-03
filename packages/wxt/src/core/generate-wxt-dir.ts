@@ -10,7 +10,8 @@ import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
 import { wxt } from './wxt';
 
 /**
- * Generate and write all the files inside the `InternalConfig.typesDir` directory.
+ * Generate and write all the files inside the `InternalConfig.typesDir`
+ * directory.
  */
 export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
   await fs.ensureDir(wxt.config.typesDir);
