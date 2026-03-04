@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { unnormalizePath } from './paths';
 import { wxt } from '../wxt';
 
@@ -31,6 +31,9 @@ export async function writeFileIfDifferent(
 export async function getPublicFiles(): Promise<string[]> {
   if (!(await fs.pathExists(wxt.config.publicDir))) return [];
 
-  const files = await glob('**/*', { cwd: wxt.config.publicDir });
+  const files = await glob('**/*', {
+    cwd: wxt.config.publicDir,
+    expandDirectories: false,
+  });
   return files.map(unnormalizePath);
 }

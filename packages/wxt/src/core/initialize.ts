@@ -157,8 +157,8 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { default: ora } = await import('ora');
-  const spinner = ora('Downloading template').start();
+  const { createSpinner } = await import('nanospinner');
+  const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
     await downloadTemplate(`gh:${REPO}/${template.path}`, {
@@ -176,9 +176,9 @@ async function cloneProject({
         consola.warn('Failed to move _gitignore to .gitignore:', err),
       );
 
-    spinner.succeed();
+    spinner.success();
   } catch (err) {
-    spinner.fail();
+    spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
   }
 }

@@ -12,7 +12,7 @@ import type {
   WxtModuleSetup,
 } from './types';
 import type * as vite from 'vite';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { resolve } from 'node:path';
 import type { UnimportOptions } from 'unimport';
 
@@ -74,7 +74,10 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
  */
 export function addPublicAssets(wxt: Wxt, dir: string): void {
   wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
-    const moreFiles = await glob('**/*', { cwd: dir });
+    const moreFiles = await glob('**/*', {
+      cwd: dir,
+      expandDirectories: false,
+    });
     if (moreFiles.length === 0) {
       wxt.logger.warn('No files to copy in', dir);
       return;

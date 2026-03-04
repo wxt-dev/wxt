@@ -7,26 +7,28 @@ import {
 import { getPublicFiles } from '../fs';
 import fs from 'fs-extra';
 import { dirname, resolve } from 'path';
-import type { Ora } from 'ora';
+import type { Spinner } from 'nanospinner';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { toArray } from '../arrays';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
-  spinner: Ora,
+  spinner: Spinner,
 ): Promise<Omit<BuildOutput, 'manifest'>> {
   const steps: BuildStepOutput[] = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const groupNames = toArray(group).map((e) => e.name);
     const groupNameColored = groupNames.join(pc.dim(', '));
-    spinner.text =
-      pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
+    spinner.update({
+      text: pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`,
+    });
     try {
       steps.push(await wxt.builder.build(group));
     } catch (err) {
-      spinner.stop().clear();
+      spinner.stop();
+      spinner.clear();
       wxt.logger.error(err);
       throw Error(`Failed to build ${groupNames.join(', ')}`, { cause: err });
     }

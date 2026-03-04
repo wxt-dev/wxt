@@ -12,12 +12,12 @@ import {
 import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
 import fs from 'fs-extra';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
 import { unnormalizePath } from '../../paths';
 import { wxt } from '../../../wxt';
 
-vi.mock('fast-glob');
+vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
 
 vi.mock('fs-extra');

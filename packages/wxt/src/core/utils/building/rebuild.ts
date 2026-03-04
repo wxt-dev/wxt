@@ -35,8 +35,8 @@ export async function rebuild(
   manifest: Browser.runtime.Manifest;
   warnings: any[][];
 }> {
-  const { default: ora } = await import('ora');
-  const spinner = ora(`Preparing...`).start();
+  const { createSpinner } = await import('nanospinner');
+  const spinner = createSpinner('Preparing...').start();
 
   // Update types directory with new files and types
   await generateWxtDir(allEntrypoints).catch((err) => {
