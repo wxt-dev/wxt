@@ -1,4 +1,4 @@
-import { pathExists } from 'fs-extra';
+import { pathExists } from '../../../utils/fs';
 import { resolve } from 'node:path';
 import type * as vite from 'vite';
 import { ResolvedConfig } from '../../../../types';

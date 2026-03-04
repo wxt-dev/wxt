@@ -1,12 +1,12 @@
 import { Entrypoint, WxtDirEntry, WxtDirFileEntry } from '../types';
-import fs from 'fs-extra';
+import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
 import { getEntrypointGlobals, getGlobals } from './utils/globals';
 import { normalizePath } from './utils';
 import path from 'node:path';
 import { Message, parseI18nMessages } from './utils/i18n';
-import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
+import { pathExists, writeFileIfDifferent, getPublicFiles } from './utils/fs';
 import { wxt } from './wxt';
 
 /**
@@ -14,7 +14,7 @@ import { wxt } from './wxt';
  * directory.
  */
 export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
-  await fs.ensureDir(wxt.config.typesDir);
+  await mkdir(wxt.config.typesDir, { recursive: true });
 
   const entries: WxtDirEntry[] = [
     // Hard-coded entries
@@ -57,7 +57,7 @@ export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
 
   await Promise.all(
     absoluteFileEntries.map(async (file) => {
-      await fs.ensureDir(dirname(file.path));
+      await mkdir(dirname(file.path), { recursive: true });
       await writeFileIfDifferent(file.path, file.text);
     }),
   );
@@ -149,8 +149,8 @@ declare module "wxt/browser" {
     'messages.json',
   );
   let messages: Message[];
-  if (await fs.pathExists(defaultLocalePath)) {
-    const content = JSON.parse(await fs.readFile(defaultLocalePath, 'utf-8'));
+  if (await pathExists(defaultLocalePath)) {
+    const content = JSON.parse(await readFile(defaultLocalePath, 'utf-8'));
     messages = parseI18nMessages(content);
   } else {
     messages = parseI18nMessages({});

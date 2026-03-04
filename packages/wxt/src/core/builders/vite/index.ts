@@ -26,7 +26,7 @@ import { ViteNodeRunner } from 'vite-node/client';
 import { installSourcemapsSupport } from 'vite-node/source-map';
 import { createExtensionEnvironment } from '../../utils/environments';
 import { dirname, extname, join, relative } from 'node:path';
-import fs from 'fs-extra';
+import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
 import { normalizePath } from '../../utils';
 
 export async function createViteBuilder(
@@ -455,8 +455,8 @@ async function moveHtmlFiles(
       );
       const oldAbsPath = join(config.outDir, oldBundlePath);
       const newAbsPath = join(config.outDir, newBundlePath);
-      await fs.ensureDir(dirname(newAbsPath));
-      await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
+      await mkdir(dirname(newAbsPath), { recursive: true });
+      await rename(oldAbsPath, newAbsPath);
 
       return {
         ...chunk,
@@ -473,17 +473,17 @@ async function moveHtmlFiles(
 
 /** Recursively remove all directories that are empty/ */
 export async function removeEmptyDirs(dir: string): Promise<void> {
-  const files = await fs.readdir(dir);
+  const files = await readdir(dir);
   for (const file of files) {
     const filePath = join(dir, file);
-    const stats = await fs.stat(filePath);
+    const stats = await stat(filePath);
     if (stats.isDirectory()) {
       await removeEmptyDirs(filePath);
     }
   }
 
   try {
-    await fs.rmdir(dir);
+    await rmdir(dir);
   } catch {
     // noop on failure - this means the directory was not empty.
   }

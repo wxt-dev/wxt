@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { resolve } from 'node:path';
-import * as fsExtra from 'fs-extra';
+import * as fsPromises from 'node:fs/promises';
 import sharp from 'sharp';
 import type { Wxt, UserManifest } from 'wxt';
 
@@ -9,9 +9,9 @@ import autoIconsModule from '../index';
 import type { AutoIconsOptions } from '../index';
 
 // Mock dependencies
-vi.mock('fs-extra', () => ({
-  ensureDir: vi.fn(),
-  pathExists: vi.fn(),
+vi.mock('node:fs/promises', () => ({
+  mkdir: vi.fn(),
+  access: vi.fn(),
 }));
 
 vi.mock('sharp', () => ({
@@ -86,8 +86,8 @@ describe('auto-icons module', () => {
     vi.mocked(sharp).mockReturnValue(
       mockSharpInstance as unknown as sharp.Sharp,
     );
-    vi.mocked(fsExtra.pathExists).mockResolvedValue(true as any);
-    vi.mocked(fsExtra.ensureDir).mockResolvedValue(undefined as any);
+    vi.mocked(fsPromises.access).mockResolvedValue(undefined);
+    vi.mocked(fsPromises.mkdir).mockResolvedValue(undefined as any);
   });
 
   describe('module setup', () => {
@@ -158,7 +158,7 @@ describe('auto-icons module', () => {
     });
 
     it('should warn when base icon not found', async () => {
-      vi.mocked(fsExtra.pathExists).mockResolvedValue(false as any);
+      vi.mocked(fsPromises.access).mockRejectedValue(new Error('ENOENT'));
 
       const options: AutoIconsOptions = {
         enabled: true,
@@ -293,8 +293,9 @@ describe('auto-icons module', () => {
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(32);
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(16);
 
-      expect(fsExtra.ensureDir).toHaveBeenCalledWith(
+      expect(fsPromises.mkdir).toHaveBeenCalledWith(
         resolve('/mock/dist', 'icons'),
+        { recursive: true },
       );
 
       expect(output.publicAssets).toEqual([
@@ -514,7 +515,7 @@ describe('auto-icons module', () => {
       };
 
       // Make ensureDir throw an error
-      vi.mocked(fsExtra.ensureDir).mockRejectedValue(
+      vi.mocked(fsPromises.mkdir).mockRejectedValue(
         new Error('Directory creation failed'),
       );
 
@@ -530,7 +531,7 @@ describe('auto-icons module', () => {
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
         // But ensureDir should have been called
-        expect(fsExtra.ensureDir).toHaveBeenCalled();
+        expect(fsPromises.mkdir).toHaveBeenCalled();
       }
     });
 

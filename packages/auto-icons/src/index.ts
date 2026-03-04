@@ -3,7 +3,7 @@ import { defineWxtModule } from 'wxt/modules';
 import { resolve, relative } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
-import { ensureDir, pathExists } from 'fs-extra';
+import { access, mkdir } from 'node:fs/promises';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -37,7 +37,11 @@ export default defineWxtModule<AutoIconsOptions>({
     if (!parsedOptions.enabled)
       return wxt.logger.warn(`\`[auto-icons]\` ${this.name} disabled`);
 
-    if (!(await pathExists(resolvedPath))) {
+    const iconExists = await access(resolvedPath).then(
+      () => true,
+      () => false,
+    );
+    if (!iconExists) {
       return wxt.logger.warn(
         `\`[auto-icons]\` Skipping icon generation, no base icon found at ${relative(process.cwd(), resolvedPath)}`,
       );
@@ -91,7 +95,7 @@ export default defineWxtModule<AutoIconsOptions>({
           }
         }
 
-        ensureDir(resolve(outputFolder, 'icons'));
+        mkdir(resolve(outputFolder, 'icons'), { recursive: true });
         await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({

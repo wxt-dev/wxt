@@ -5,7 +5,7 @@ import {
   VirtualModuleId,
   virtualModuleNames,
 } from '../../../utils/virtual-modules';
-import fs from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 
 /**
@@ -31,7 +31,7 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
         if (!id.startsWith(resolvedVirtualId)) return;
 
         const inputPath = id.replace(resolvedVirtualId, '');
-        const template = await fs.readFile(
+        const template = await readFile(
           resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
           'utf-8',
         );

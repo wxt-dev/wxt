@@ -12,7 +12,7 @@ import {
   IsolatedWorldContentScriptEntrypointOptions,
   UnlistedScriptEntrypoint,
 } from '../../../types';
-import fs from 'fs-extra';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
@@ -35,11 +35,11 @@ import { camelCase } from 'scule';
  */
 export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
-  await fs.mkdir(wxt.config.wxtDir, { recursive: true });
+  await mkdir(wxt.config.wxtDir, { recursive: true });
   try {
-    await fs.writeJson(
+    await writeFile(
       resolve(wxt.config.wxtDir, 'tsconfig.json'),
-      {},
+      JSON.stringify({}),
       { flag: 'wx' },
     );
   } catch (err) {
@@ -204,7 +204,7 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
 async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {
-  const content = await fs.readFile(info.inputPath, 'utf-8');
+  const content = await readFile(info.inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
   const metaTags = document.querySelectorAll('meta');

@@ -11,7 +11,7 @@ import {
 } from '../../../../types';
 import { resolve } from 'path';
 import { findEntrypoints } from '../find-entrypoints';
-import fs from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import { glob } from 'tinyglobby';
 import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
 import { unnormalizePath } from '../../paths';
@@ -20,10 +20,8 @@ import { wxt } from '../../../wxt';
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
 
-vi.mock('fs-extra');
-const readFileMock = vi.mocked(
-  fs.readFile as (path: string) => Promise<string>,
-);
+vi.mock('node:fs/promises');
+const readFileMock = vi.mocked(readFile);
 
 describe('findEntrypoints', () => {
   const config = fakeResolvedConfig({

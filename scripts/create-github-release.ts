@@ -4,7 +4,7 @@ import {
   loadChangelogConfig,
   parseChangelogMarkdown,
 } from 'changelogen';
-import fs from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import { grabPackageDetails } from './git';
 import consola from 'consola';
 
@@ -19,8 +19,7 @@ const { pkgName, prevTag, currentVersion, changelogPath } =
   await grabPackageDetails(pkg);
 consola.info('Creating release for:', { pkg, pkgName, prevTag });
 
-const { releases } = await fs
-  .readFile(changelogPath, 'utf8')
+const { releases } = await readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 

@@ -1,4 +1,4 @@
-import { pathExists, rm } from 'fs-extra';
+import { access, rm } from 'node:fs/promises';
 
 let setupHappened = false;
 
@@ -12,7 +12,10 @@ export async function setup() {
   globalThis.__ENTRYPOINT__ = 'test';
 
   const e2eDistPath = './e2e/dist/';
-  if (await pathExists(e2eDistPath)) {
+  try {
+    await access(e2eDistPath);
     await rm(e2eDistPath, { recursive: true, force: true });
+  } catch {
+    // Directory doesn't exist, nothing to clean up
   }
 }

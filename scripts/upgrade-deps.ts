@@ -1,5 +1,5 @@
 import { glob } from 'tinyglobby';
-import fs from 'fs-extra';
+import { readFile, writeFile } from 'node:fs/promises';
 import * as semver from 'semver';
 import { dirname } from 'node:path';
 import consola from 'consola';
@@ -101,7 +101,7 @@ async function getPackageJsonDependencies(
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
-      content: await fs.readJson(path),
+      content: JSON.parse(await readFile(path, 'utf-8')),
       path,
       folder: dirname(path),
     })),
@@ -341,7 +341,7 @@ async function writeUpgrades(
   upgrades: UpgradeDetails[],
 ) {
   for (const packageJsonFile of packageJsonFiles) {
-    const oldText = await fs.readFile(packageJsonFile, 'utf8');
+    const oldText = await readFile(packageJsonFile, 'utf8');
     let newText = oldText;
     for (const upgrade of upgrades) {
       const search = `"${upgrade.name}": "${upgrade.currentRange}"`;
@@ -349,7 +349,7 @@ async function writeUpgrades(
       newText = newText.replaceAll(search, replace);
     }
     if (newText !== oldText) {
-      await fs.writeFile(packageJsonFile, newText, 'utf8');
+      await writeFile(packageJsonFile, newText, 'utf8');
     }
   }
 }

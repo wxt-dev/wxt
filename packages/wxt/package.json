@@ -35,7 +35,6 @@
     "esbuild": "^0.27.1",
     "tinyglobby": "^0.2.13",
     "filesize": "^11.0.13",
-    "fs-extra": "^11.3.3",
     "get-port-please": "^3.2.0",
     "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
     "hookable": "^6.0.1",
@@ -72,7 +71,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.2.0",
-    "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.17.6",
     "@types/normalize-path": "^3.0.2",

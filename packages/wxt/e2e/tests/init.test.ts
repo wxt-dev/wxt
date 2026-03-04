@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 import spawn from 'nano-spawn';
 import { glob } from 'tinyglobby';
-import { mkdir, writeJson } from 'fs-extra';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {
@@ -53,7 +53,7 @@ describe('Init command', () => {
   it('should throw an error if the directory is not empty', async () => {
     const project = new TestProject();
     await mkdir(project.root, { recursive: true });
-    await writeJson(project.resolvePath('package.json'), {});
+    await writeFile(project.resolvePath('package.json'), JSON.stringify({}));
 
     await expect(() =>
       spawn(

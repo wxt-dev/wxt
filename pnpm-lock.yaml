@@ -25,9 +25,6 @@ importers:
       '@commitlint/types':
         specifier: ^20.4.0
         version: 20.4.0
-      '@types/fs-extra':
-        specifier: ^11.0.4
-        version: 11.0.4
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
@@ -43,9 +40,6 @@ importers:
       feed:
         specifier: ^5.2.0
         version: 5.2.0
-      fs-extra:
-        specifier: ^11.3.3
-        version: 11.3.3
       lint-staged:
         specifier: ^16.2.7
         version: 16.2.7
@@ -149,9 +143,6 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
-      fs-extra:
-        specifier: ^11.3.3
-        version: 11.3.3
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -184,9 +175,6 @@ importers:
       '@types/chrome':
         specifier: 0.1.37
         version: 0.1.37
-      fs-extra:
-        specifier: ^11.3.3
-        version: 11.3.3
       nano-spawn:
         specifier: ^2.0.0
         version: 2.0.0
@@ -474,9 +462,6 @@ importers:
       filesize:
         specifier: ^11.0.13
         version: 11.0.13
-      fs-extra:
-        specifier: ^11.3.3
-        version: 11.3.3
       get-port-please:
         specifier: ^3.2.0
         version: 3.2.0
@@ -559,9 +544,6 @@ importers:
       '@faker-js/faker':
         specifier: ^10.2.0
         version: 10.2.0
-      '@types/fs-extra':
-        specifier: ^11.0.4
-        version: 11.0.4
       '@types/lodash.merge':
         specifier: ^4.6.9
         version: 4.6.9
@@ -1950,9 +1932,6 @@ packages:
   '@types/filewriter@0.0.33':
     resolution: {integrity: sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==}
 
-  '@types/fs-extra@11.0.4':
-    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
-
   '@types/har-format@1.2.16':
     resolution: {integrity: sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A==}
 
@@ -1964,9 +1943,6 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-
-  '@types/jsonfile@6.1.4':
-    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
 
   '@types/katex@0.16.8':
     resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==}
@@ -5975,11 +5951,6 @@ snapshots:
 
   '@types/filewriter@0.0.33': {}
 
-  '@types/fs-extra@11.0.4':
-    dependencies:
-      '@types/jsonfile': 6.1.4
-      '@types/node': 20.19.32
-
   '@types/har-format@1.2.16': {}
 
   '@types/hast@3.0.4':
@@ -5989,10 +5960,6 @@ snapshots:
   '@types/jsesc@2.5.1': {}
 
   '@types/json-schema@7.0.15': {}
-
-  '@types/jsonfile@6.1.4':
-    dependencies:
-      '@types/node': 20.19.32
 
   '@types/katex@0.16.8': {}
 
