@@ -4,6 +4,7 @@ import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
+import { createSpinner } from 'nanospinner';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output,
@@ -35,7 +36,6 @@ export async function rebuild(
   manifest: Browser.runtime.Manifest;
   warnings: any[][];
 }> {
-  const { createSpinner } = await import('nanospinner');
   const spinner = createSpinner('Preparing...').start();
 
   // Update types directory with new files and types
