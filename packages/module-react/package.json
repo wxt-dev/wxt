@@ -54,7 +54,7 @@
   "devDependencies": {
     "@types/react-dom": "^19.2.3",
     "@types/react": "^19.2.13",
-    "publint": "^0.3.17",
+    "publint": "^0.3.18",
     "react-dom": "^19.2.4",
     "react": "^19.2.4",
     "typescript": "^5.9.3",

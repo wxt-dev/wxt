@@ -82,7 +82,7 @@
     "happy-dom": "^20.5.0",
     "lodash.merge": "^4.6.2",
     "oxlint": "^1.43.0",
-    "publint": "^0.3.17",
+    "publint": "^0.3.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2"

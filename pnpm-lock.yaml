@@ -78,7 +78,7 @@ importers:
         version: 0.2.15
       tsdown:
         specifier: ^0.20.3
-        version: 0.20.3(publint@0.3.17)(typescript@5.9.3)
+        version: 0.20.3(publint@0.3.18)(typescript@5.9.3)
       tsx:
         specifier: 4.21.0
         version: 4.21.0
@@ -135,8 +135,8 @@ importers:
         specifier: ^0.7.39
         version: 0.7.39
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -160,8 +160,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -219,8 +219,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -244,8 +244,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -266,8 +266,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.13)
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -291,8 +291,8 @@ importers:
         version: 2.11.10(solid-js@1.9.11)(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
     devDependencies:
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       solid-js:
         specifier: ^1.9.11
         version: 1.9.11
@@ -310,8 +310,8 @@ importers:
         version: 6.2.4(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
     devDependencies:
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -326,8 +326,8 @@ importers:
         version: 6.0.4(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))
     devDependencies:
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -341,8 +341,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -369,8 +369,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -391,8 +391,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -409,8 +409,8 @@ importers:
         specifier: ^0.12.4
         version: 0.12.4
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -593,8 +593,8 @@ importers:
         specifier: ^1.43.0
         version: 1.43.0
       publint:
-        specifier: ^0.3.17
-        version: 0.3.17
+        specifier: ^0.3.18
+        version: 0.3.18
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -3949,8 +3949,8 @@ packages:
   proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
 
-  publint@0.3.17:
-    resolution: {integrity: sha512-Q3NLegA9XM6usW+dYQRG1g9uEHiYUzcCVBJDJ7yMcWRqVU9LYZUWdqbwMZfmTCFC5PZLQpLAmhvRcQRl3exqkw==}
+  publint@0.3.18:
+    resolution: {integrity: sha512-JRJFeBTrfx4qLwEuGFPk+haJOJN97KnPuK01yj+4k/Wj5BgoOK5uNsivporiqBjk2JDaslg7qJOhGRnpltGeog==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8231,7 +8231,7 @@ snapshots:
 
   proto-list@1.2.4: {}
 
-  publint@0.3.17:
+  publint@0.3.18:
     dependencies:
       '@publint/pack': 0.1.4
       package-manager-detector: 1.6.0
@@ -8741,7 +8741,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  tsdown@0.20.3(publint@0.3.17)(typescript@5.9.3):
+  tsdown@0.20.3(publint@0.3.18)(typescript@5.9.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
@@ -8760,7 +8760,7 @@ snapshots:
       unconfig-core: 7.4.2
       unrun: 0.2.27
     optionalDependencies:
-      publint: 0.3.17
+      publint: 0.3.18
       typescript: 5.9.3
     transitivePeerDependencies:
       - '@ts-macro/tsc'
