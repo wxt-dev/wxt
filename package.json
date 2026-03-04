@@ -34,6 +34,7 @@
     "nano-spawn": "^2.0.0",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
+    "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.20.3",

@@ -1,6 +1,4 @@
-/**
- * Checks if `predicate` returns truthy for all elements of the array.
- */
+/** Checks if `predicate` returns truthy for all elements of the array. */
 export function every<T>(
   array: T[],
   predicate: (item: T, index: number) => boolean,
@@ -10,9 +8,7 @@ export function every<T>(
   return true;
 }
 
-/**
- * Returns true when any of the predicates return true;
- */
+/** Returns true when any of the predicates return true; */
 export function some<T>(
   array: T[],
   predicate: (item: T, index: number) => boolean,
@@ -22,9 +18,7 @@ export function some<T>(
   return false;
 }
 
-/**
- * Convert an item or array to an array.
- */
+/** Convert an item or array to an array. */
 export function toArray<T>(a: T | T[]): T[] {
   return Array.isArray(a) ? a : [a];
 }

@@ -15,9 +15,7 @@ export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
   }) as vite.Plugin;
 }
 
-/**
- * @internal FOR TESTING ONLY.
- */
+/** @internal FOR TESTING ONLY. */
 export function resetBundleIncrement() {
   increment = 0;
 }

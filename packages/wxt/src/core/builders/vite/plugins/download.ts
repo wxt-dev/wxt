@@ -3,11 +3,12 @@ import type { ResolvedConfig } from '../../../../types';
 import { fetchCached } from '../../../utils/network';
 
 /**
- * Downloads any URL imports, like Google Analytics, into virtual modules so they are bundled with
- * the extension instead of depending on remote code at runtime.
+ * Downloads any URL imports, like Google Analytics, into virtual modules so
+ * they are bundled with the extension instead of depending on remote code at
+ * runtime.
  *
  * @example
- * import "url:https://google-tagmanager.com/gtag?id=XYZ";
+ *   import 'url:https://google-tagmanager.com/gtag?id=XYZ';
  */
 export function download(config: ResolvedConfig): Plugin {
   return {

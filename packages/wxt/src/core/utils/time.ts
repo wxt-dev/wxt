@@ -5,9 +5,7 @@ export function formatDuration(duration: number): string {
   return `${(duration / 1e3).toFixed(0)} s`;
 }
 
-/**
- * Add a timeout to a promise.
- */
+/** Add a timeout to a promise. */
 export function withTimeout<T>(
   promise: Promise<T>,
   duration: number,
@@ -24,7 +22,8 @@ export function withTimeout<T>(
 }
 
 /**
- * @deprecated Don't use in production, just for testing and slowing things down.
+ * @deprecated Don't use in production, just for testing and slowing things
+ *   down.
  */
 export function sleep(ms: number): Promise<void> {
   return new Promise((res) => setTimeout(res, ms));

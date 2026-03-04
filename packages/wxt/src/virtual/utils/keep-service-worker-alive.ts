@@ -1,8 +1,6 @@
 import { browser } from 'wxt/browser';
 
-/**
- * https://developer.chrome.com/blog/longer-esw-lifetimes/
- */
+/** https://developer.chrome.com/blog/longer-esw-lifetimes/ */
 export function keepServiceWorkerAlive() {
   setInterval(async () => {
     // Calling an async browser API resets the service worker's timeout
