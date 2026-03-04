@@ -8,7 +8,7 @@ import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
 import { minimatchMultiple } from './utils/minimatch-multiple';
 
@@ -120,6 +120,7 @@ async function zipDir(
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
+      expandDirectories: false,
     })
   ).filter((relativePath) => {
     return (

@@ -1,4 +1,4 @@
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import fs, { mkdir } from 'fs-extra';
 import merge from 'lodash.merge';
 import spawn from 'nano-spawn';
@@ -160,6 +160,7 @@ export class TestProject {
     const outputFiles = await glob('**/*', {
       cwd: this.resolvePath(dir),
       ignore: ['**/node_modules', '**/.output'],
+      expandDirectories: false,
     });
     outputFiles.sort();
     const fileContents = [];

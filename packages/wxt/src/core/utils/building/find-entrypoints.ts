@@ -16,7 +16,7 @@ import fs from 'fs-extra';
 import { minimatch } from 'minimatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import {
   getEntrypointName,
   isHtmlEntrypoint,
@@ -50,6 +50,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
 
   const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: wxt.config.entrypointsDir,
+    expandDirectories: false,
   });
   // Ensure consistent output
   relativePaths.sort();

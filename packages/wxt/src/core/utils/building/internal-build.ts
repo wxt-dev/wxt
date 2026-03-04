@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '../time';
 import { printBuildSummary } from '../log';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
@@ -100,6 +100,7 @@ async function combineAnalysisStats(): Promise<void> {
   const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
     cwd: wxt.config.analysis.outputDir,
     absolute: true,
+    expandDirectories: false,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 

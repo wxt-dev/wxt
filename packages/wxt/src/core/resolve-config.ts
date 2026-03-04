@@ -22,7 +22,7 @@ import defu from 'defu';
 import { NullablyRequired } from './utils/types';
 import fs from 'fs-extra';
 import { normalizePath } from './utils';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
@@ -612,6 +612,7 @@ export async function resolveWxtUserModules(
   const localModulePaths = await glob(['*.[tj]s', '*/index.[tj]s'], {
     cwd: modulesDir,
     onlyFiles: true,
+    expandDirectories: false,
   }).catch(() => []);
   // Sort modules to ensure a consistent execution order
   localModulePaths.sort();

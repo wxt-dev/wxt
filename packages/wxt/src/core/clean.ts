@@ -1,5 +1,5 @@
 import path from 'node:path';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import fs from 'fs-extra';
 import pc from 'picocolors';
 import { InlineConfig } from '../types';
@@ -48,6 +48,7 @@ export async function clean(config?: string | InlineConfig) {
     absolute: true,
     onlyDirectories: true,
     deep: 2,
+    expandDirectories: false,
   });
   if (directories.length === 0) {
     wxt.logger.debug('No generated files found.');
