@@ -274,9 +274,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      vite:
-        specifier: ^5.4.19 || ^6.3.4 || ^7.0.0
-        version: 7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2)
       wxt:
         specifier: workspace:*
         version: link:../wxt
