@@ -23,15 +23,23 @@ export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
         },
       };
     },
-    async resolveId(id) {
-      if (id !== virtualModuleId) return;
-
-      return (await pathExists(appConfigFile))
-        ? appConfigFile
-        : resolvedVirtualModuleId;
+    resolveId: {
+      filter: {
+        id: new RegExp(`^${virtualModuleId}$`),
+      },
+      async handler() {
+        return (await pathExists(appConfigFile))
+          ? appConfigFile
+          : resolvedVirtualModuleId;
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualModuleId) return `export default {}`;
+    load: {
+      filter: {
+        id: new RegExp(`^${resolvedVirtualModuleId}$`),
+      },
+      handler() {
+        return `export default {}`;
+      },
     },
   };
 }
