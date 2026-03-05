@@ -4,7 +4,7 @@ import {
   fakeDevServer,
   fakeResolvedConfig,
 } from '../../../../utils/testing/fake-objects';
-import { normalizePath } from '../../../../utils/paths';
+import { normalizePath } from '../../../../utils';
 import { resolve } from 'node:path';
 import { parseHTML } from 'linkedom';
 

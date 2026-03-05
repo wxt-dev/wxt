@@ -190,3 +190,33 @@ To run the WXT dev server in a devcontainer, but load the dev build of your exte
 
 3. **Tell WXT to listen on all network interfaces**
    To enable hot-reloading, your extension has to connect to the WXT dev server running inside your container. WXT will only listen on `localhost` by default, which prevents connections from outside the devcontainer. To fix this you can instruct WXT to listen on all interfaces with `wxt --host 0.0.0.0`.
+
+## How do I use the new Prompt API in Chrome?
+
+The service responsible for the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api) is not enabled by default if you let WXT open the browser during dev mode. When checking `LanguageModel.availability`, you will always receive "unavailable".
+
+You have two options:
+
+1. Pass the `--disable-features=DisableLoadExtensionCommandLineSwitch` feature flag to enable the service in the browser WXT opens:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       chromiumArgs: [
+         '--disable-features=DisableLoadExtensionCommandLineSwitch',
+       ],
+     },
+   });
+   ```
+
+2. Disable the runner and install your extension in your regular chrome profile manually:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       disabled: true,
+     },
+   });
+   ```

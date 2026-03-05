@@ -105,3 +105,24 @@ export default defineWebExtConfig({
   disabled: true,
 });
 ```
+
+### Enabling Chrome Features
+
+Some APIs are disabled in Chrome during development because of the default flags `web-ext` uses to launch Chrome, like the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api).
+
+If your extension depends on new features or services, you can enable them via `chromiumArgs`:
+
+```ts
+import { defineWebExtConfig } from 'wxt';
+
+export default defineWebExtConfig({
+  chromiumArgs: [
+    // For example, this flag enables the Prompt API
+    '--disable-features=DisableLoadExtensionCommandLineSwitch',
+  ],
+});
+```
+
+There is no comprehensive list of what feature flags enable what APIs and services.
+
+Alternatively, if you can't find a flag that enables a feature you're looking for, [disable the opening the browser during development](#disable-opening-browser) and use your regular chrome profile for development.

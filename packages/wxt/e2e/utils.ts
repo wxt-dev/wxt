@@ -1,7 +1,8 @@
-import { dirname, relative, resolve } from 'path';
+import { glob } from 'tinyglobby';
 import fs, { mkdir } from 'fs-extra';
-import glob from 'fast-glob';
+import merge from 'lodash.merge';
 import spawn from 'nano-spawn';
+import { dirname, relative, resolve } from 'path';
 import {
   InlineConfig,
   UserConfig,
@@ -10,8 +11,7 @@ import {
   prepare,
   zip,
 } from '../src';
-import { normalizePath } from '../src/core/utils/paths';
-import merge from 'lodash.merge';
+import { normalizePath } from '../src/core/utils';
 
 // Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -24,6 +24,7 @@ export class TestProject {
   files: Array<[string, string]> = [];
   config: UserConfig | undefined;
   readonly root: string;
+  readonly hasCustomDependencies: boolean;
 
   constructor(packageJson: any = {}) {
     // We can't put each test's project inside e2e/dist directly, otherwise the wxt.config.ts
@@ -31,6 +32,13 @@ export class TestProject {
     // end to make each test's path unique.
     const id = Math.random().toString(32).substring(3);
     this.root = resolve(E2E_DIR, 'dist', id);
+
+    this.hasCustomDependencies =
+      Object.keys({
+        ...packageJson.dependencies,
+        ...packageJson.devDependencies,
+      }).length > 0;
+
     this.files.push([
       'package.json',
       JSON.stringify(
@@ -51,9 +59,7 @@ export class TestProject {
     ]);
   }
 
-  /**
-   * Add a `wxt.config.ts` to the project with specific contents.
-   */
+  /** Add a `wxt.config.ts` to the project with specific contents. */
   setConfigFileConfig(config: UserConfig = {}) {
     this.config = config;
     this.files.push([
@@ -101,9 +107,7 @@ export class TestProject {
     return server;
   }
 
-  /**
-   * Call `path.resolve` relative to the project's root directory.
-   */
+  /** Call `path.resolve` relative to the project's root directory. */
   resolvePath(...path: string[]): string {
     return resolve(this.root, ...path);
   }
@@ -119,38 +123,35 @@ export class TestProject {
       await fs.writeFile(filePath, content ?? '', 'utf-8');
     }
 
-    await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
-      cwd: this.root,
-    });
+    // Only install dependencies if the project has custom ones - otherwise the
+    // project will reuse the ones in `packages/wxt/node_modules`!
+    if (this.hasCustomDependencies) {
+      await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
+        cwd: this.root,
+      });
+    }
+
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
       () => {},
     );
   }
 
   /**
-   * Read all the files from the test project's `.output` directory and combine them into a string
-   * that can be used in a snapshot.
+   * Read all the files from the test project's `.output` directory and combine
+   * them into a string that can be used in a snapshot.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
     return this.serializeDir('.output', ignoreContentsOfFilenames);
   }
 
   /**
-   * Read all the files from the test project's `.wxt` directory and combine them into a string
-   * that can be used in a snapshot.
-   */
-  serializeWxtDir(): Promise<string> {
-    return this.serializeDir(resolve(this.root, '.wxt/types'));
-  }
-
-  /**
    * Deeply print the filename and contents of all files in a directory.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   private async serializeDir(
     dir: string,
@@ -159,6 +160,7 @@ export class TestProject {
     const outputFiles = await glob('**/*', {
       cwd: this.resolvePath(dir),
       ignore: ['**/node_modules', '**/.output'],
+      expandDirectories: false,
     });
     outputFiles.sort();
     const fileContents = [];
@@ -174,8 +176,8 @@ export class TestProject {
 
   /**
    * @param path An absolute path to a file or a path relative to the root.
-   * @param ignoreContents An optional boolean that, when true, causes this function to not print
-   *                       the file contents.
+   * @param ignoreContents An optional boolean that, when true, causes this
+   *   function to not print the file contents.
    */
   async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
     const absolutePath = this.resolvePath(path);
@@ -185,13 +187,13 @@ export class TestProject {
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 
-  fileExists(...path: string[]): Promise<boolean> {
-    return fs.exists(this.resolvePath(...path));
+  pathExists(...path: string[]): Promise<boolean> {
+    return fs.pathExists(this.resolvePath(...path));
   }
 
-  async getOutputManifest(
+  getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return await fs.readJson(this.resolvePath(path));
+    return fs.readJson(this.resolvePath(path));
   }
 }

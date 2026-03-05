@@ -20,7 +20,7 @@ describe('Remote Code', () => {
     );
     expect(output).not.toContain(url);
     expect(
-      await project.fileExists(`.wxt/cache/${encodeURIComponent(url)}`),
+      await project.pathExists(`.wxt/cache/${encodeURIComponent(url)}`),
     ).toBe(true);
   });
 });

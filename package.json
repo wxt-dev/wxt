@@ -4,13 +4,12 @@
   "engines": {
     "node": ">=18.20.3"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.29.2+sha512.bef43fa759d91fd2da4b319a5a0d13ef7a45bb985a3d7342058470f9d2051a3ba8674e629672654686ef9443ad13a82da2beb9eeb3e0221c87b8154fff9d74b8",
   "scripts": {
     "check": "check && pnpm -r --sequential run check",
     "test": "pnpm -r --sequential run test run",
     "test:coverage": "pnpm -r --sequential run test:coverage",
     "prepare": "simple-git-hooks",
-    "prepublish": "pnpm -s build",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "pnpm -s docs:gen && vitepress dev docs",
     "docs:build": "pnpm -s docs:gen && vitepress build docs",
@@ -26,7 +25,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "changelogen": "^0.6.2",
     "consola": "^3.4.2",
-    "fast-glob": "^3.3.3",
+    "tinyglobby": "^0.2.13",
     "feed": "^5.2.0",
     "fs-extra": "^11.3.3",
     "lint-staged": "^16.2.7",
@@ -35,6 +34,7 @@
     "nano-spawn": "^2.0.0",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
+    "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.20.3",

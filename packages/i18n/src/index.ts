@@ -1,6 +1,4 @@
-/**
- * @module @wxt-dev/i18n
- */
+/** @module @wxt-dev/i18n */
 import {
   I18nStructure,
   DefaultI18nStructure,

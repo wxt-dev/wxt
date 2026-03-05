@@ -126,7 +126,7 @@ describe('Output Directory Structure', () => {
 
     await project.build({ browser: 'firefox' });
 
-    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+    expect(await project.pathExists('.output/firefox-mv2/background.js')).toBe(
       false,
     );
   });
@@ -146,7 +146,7 @@ describe('Output Directory Structure', () => {
 
     await project.build({ browser: 'chrome' });
 
-    expect(await project.fileExists('.output/firefox-mv2/background.js')).toBe(
+    expect(await project.pathExists('.output/firefox-mv2/background.js')).toBe(
       false,
     );
   });
@@ -174,7 +174,7 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.fileExists('stats.html')).toBe(true);
+    expect(await project.pathExists('stats.html')).toBe(true);
   });
 
   it('should support JavaScript entrypoints', async () => {
@@ -210,14 +210,14 @@ describe('Output Directory Structure', () => {
         ----------------------------------------
         {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.duckduckgo.com/*"],"js":["content-scripts/named.js"]}]}"
       `);
-    expect(await project.fileExists('.output/chrome-mv3/background.js'));
+    expect(await project.pathExists('.output/chrome-mv3/background.js'));
     expect(
-      await project.fileExists('.output/chrome-mv3/content-scripts/content.js'),
+      await project.pathExists('.output/chrome-mv3/content-scripts/content.js'),
     );
     expect(
-      await project.fileExists('.output/chrome-mv3/content-scripts/named.js'),
+      await project.pathExists('.output/chrome-mv3/content-scripts/named.js'),
     );
-    expect(await project.fileExists('.output/chrome-mv3/unlisted.js'));
+    expect(await project.pathExists('.output/chrome-mv3/unlisted.js'));
   });
 
   it('should support CSS entrypoints', async () => {
@@ -300,7 +300,7 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.fileExists('dist/chrome-mv3/manifest.json')).toBe(
+    expect(await project.pathExists('dist/chrome-mv3/manifest.json')).toBe(
       true,
     );
   });
@@ -335,7 +335,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for the snapshot readable
           minify: false,
         },
       }),
@@ -408,7 +408,7 @@ describe('Output Directory Structure', () => {
     await project.build({
       vite: () => ({
         build: {
-          // Make output for snapshot readible
+          // Make output for the snapshot readable
           minify: false,
         },
       }),
@@ -458,5 +458,105 @@ describe('Output Directory Structure', () => {
       })();
       "
     `);
+  });
+
+  describe('globalName option', () => {
+    it('generates an IIFE with a default name', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^var content\s?=[\s\S]*^content;$/gm);
+    });
+
+    it('generates an IIFE with a specific name', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: "MyContentScript",
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(
+        /^var MyContentScript =[\s\S]*^MyContentScript;$/gm,
+      );
+    });
+
+    it('generates an IIFE with a specific name provided by a function', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: () => "MyContentScript",
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(
+        /^var MyContentScript =[\s\S]*^MyContentScript;$/gm,
+      );
+    });
+
+    it('generates an anonymous IIFE when not minified', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: false,
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^\(function\(\) {[\s\S]*^}\)\(\);$/gm);
+    });
+
+    it('generates an anonymous IIFE when minified', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: false,
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: true } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output).toMatch(/^\(function\(\){[\s\S]*}\)\(\);$/gm);
+    });
   });
 });

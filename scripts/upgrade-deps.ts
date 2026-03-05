@@ -1,4 +1,4 @@
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import fs from 'fs-extra';
 import * as semver from 'semver';
 import { dirname } from 'node:path';
@@ -97,7 +97,7 @@ async function getPackageJsonDependencies(
 }> {
   const packageJsonFiles = await glob(
     ['package.json', '*/*/package.json', '!**/node_modules'],
-    { onlyFiles: true },
+    { onlyFiles: true, expandDirectories: false },
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({

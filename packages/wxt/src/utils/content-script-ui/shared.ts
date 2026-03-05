@@ -12,7 +12,7 @@ import {
   isExist as mountDetector,
   isNotExist as removeDetector,
 } from '@1natsu/wait-element/detectors';
-import { logger } from '../../utils/internal/logger';
+import { logger } from '../internal/logger';
 
 export function applyPosition(
   root: HTMLElement,
@@ -108,7 +108,6 @@ export function mountUi(
       break;
     default:
       options.append(anchor, root);
-      break;
   }
 }
 
@@ -116,7 +115,7 @@ export function createMountFunctions<TMounted>(
   baseFunctions: BaseMountFunctions,
   options: ContentScriptUiOptions<TMounted>,
 ): MountFunctions {
-  let autoMountInstance: AutoMount | undefined = undefined;
+  let autoMountInstance: AutoMount | undefined;
 
   const stopAutoMount = () => {
     autoMountInstance?.stopAutoMount();
@@ -213,7 +212,7 @@ function autoMountUi(
       }
     }
   }
-  observeElement(resolvedAnchor);
+  void observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };
 }

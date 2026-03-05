@@ -17,21 +17,46 @@ export type Target = KnownTarget | UnknownTarget;
 export type RunOptions = {
   /** Paths to binaries to use for each target. */
   browserBinaries?: Record<string, string>;
-  /** Customize the arguments passed to the chromium binary. Conflicting arguments with required ones to install extensions are ignored. */
+  /**
+   * Customize the arguments passed to the chromium binary. Conflicting
+   * arguments with required ones to install extensions are ignored.
+   */
   chromiumArgs?: string[];
-  /** Control how data is persisted between launches. Either save data at a user level, project level, or don't persist data at all. Defaults to `project`. */
+  /**
+   * Control how data is persisted between launches. Either save data at a user
+   * level, project level, or don't persist data at all. Defaults to `project`.
+   */
   dataPersistence?: 'user' | 'project' | 'none';
-  /** Customize where your profile's data is stored when using `dataPersistence: 'project'`. Can be absolute or relative to the current working directory. */
+  /**
+   * Customize where your profile's data is stored when using `dataPersistence:
+   * 'project'`. Can be absolute or relative to the current working directory.
+   */
   projectDataDir?: string;
-  /** Customize the port Chrome's debugger is listening on. Defaults to a random open port. */
+  /**
+   * Customize the port Chrome's debugger is listening on. Defaults to a random
+   * open port.
+   */
   chromiumRemoteDebuggingPort?: number;
-  /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. Defaults to the current working directory. */
+  /**
+   * Directory where the extension will be installed from. Should contain a
+   * `manifest.json` file. Can be relative to the current working directory.
+   * Defaults to the current working directory.
+   */
   extensionDir?: string;
-  /** Customize the arguments passed to the firefox binary. Conflicting arguments with required ones to install extensions are ignored. */
+  /**
+   * Customize the arguments passed to the firefox binary. Conflicting arguments
+   * with required ones to install extensions are ignored.
+   */
   firefoxArgs?: string[];
-  /** Customize the port Firefox's debugger is listening on. Defaults to a random open port. */
+  /**
+   * Customize the port Firefox's debugger is listening on. Defaults to a random
+   * open port.
+   */
   firefoxRemoteDebuggingPort?: number;
-  /** Specify the browser to open. Defaults to `"chrome"`, but you can pass any string. */
+  /**
+   * Specify the browser to open. Defaults to `"chrome"`, but you can pass any
+   * string.
+   */
   target?: Target;
 };
 
@@ -114,7 +139,7 @@ async function findBrowserBinary(target: string): Promise<string | undefined> {
   for (const target of targets) {
     const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[platform] ?? [];
     for (const path of potentialPaths) {
-      if (await exists(path)) return path;
+      if (await pathExists(path)) return path;
     }
   }
 }
@@ -207,7 +232,7 @@ function deduplicateArgs(
   return args;
 }
 
-async function exists(path: string): Promise<boolean> {
+async function pathExists(path: string): Promise<boolean> {
   try {
     await open(path, 'r');
     return true;
@@ -219,8 +244,9 @@ async function exists(path: string): Promise<boolean> {
 }
 
 /**
- * Copied from https://github.com/GoogleChrome/chrome-launcher/blob/main/src/flags.ts
- * with some flags commented out. Run tests after updating to compare.
+ * Copied from
+ * https://github.com/GoogleChrome/chrome-launcher/blob/main/src/flags.ts with
+ * some flags commented out. Run tests after updating to compare.
  */
 const CHROME_LAUNCHER_DEFAULT_FLAGS = [
   '--disable-features=' +

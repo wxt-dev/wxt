@@ -1,11 +1,12 @@
 import { ResolvedConfig } from '../../../../types';
-import * as vite from 'vite';
-import { normalizePath } from '../../../utils/paths';
+import type * as vite from 'vite';
+import { normalizePath } from '../../../utils';
 import { removeMainFunctionCode } from '../../../utils/transform';
 import { resolve } from 'node:path';
 
 /**
- * Transforms entrypoints, removing the main function from the entrypoint if it exists.
+ * Transforms entrypoints, removing the main function from the entrypoint if it
+ * exists.
  */
 export function removeEntrypointMainFunction(
   config: ResolvedConfig,

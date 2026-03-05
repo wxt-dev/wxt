@@ -26,7 +26,7 @@ describe('Zipping', () => {
       browser: 'firefox',
       zip: { downloadPackages: ['flatten'] },
     });
-    expect(await project.fileExists('.output/')).toBe(true);
+    expect(await project.pathExists('.output/')).toBe(true);
 
     await extract(sourcesZip, { dir: unzipDir });
     // Update package json wxt path
@@ -51,7 +51,7 @@ describe('Zipping', () => {
       }),
     ).resolves.not.toHaveProperty('exitCode');
 
-    await expect(project.fileExists(unzipDir, '.output')).resolves.toBe(true);
+    await expect(project.pathExists(unzipDir, '.output')).resolves.toBe(true);
     expect(
       await project.serializeFile(
         project.resolvePath(unzipDir, 'package.json'),
@@ -95,8 +95,8 @@ describe('Zipping', () => {
       },
     });
 
-    expect(await project.fileExists(artifactZip)).toBe(true);
-    expect(await project.fileExists(sourcesZip)).toBe(true);
+    expect(await project.pathExists(artifactZip)).toBe(true);
+    expect(await project.pathExists(sourcesZip)).toBe(true);
   });
 
   it('should not zip hidden files into sources by default', async () => {
@@ -117,8 +117,8 @@ describe('Zipping', () => {
       browser: 'firefox',
     });
     await extract(sourcesZip, { dir: unzipDir });
-    expect(await project.fileExists(unzipDir, '.env')).toBe(false);
-    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
+    expect(await project.pathExists(unzipDir, '.env')).toBe(false);
+    expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(false);
   });
 
   it('should not zip files inside hidden directories if only the directory is specified', async () => {
@@ -142,8 +142,8 @@ describe('Zipping', () => {
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
-    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(false);
-    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file')).toBe(
+    expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(false);
+    expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file')).toBe(
       false,
     );
   });
@@ -171,12 +171,12 @@ describe('Zipping', () => {
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
-    expect(await project.fileExists(unzipDir, '.env')).toBe(true);
-    expect(await project.fileExists(unzipDir, '.hidden-dir/file')).toBe(true);
-    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file1')).toBe(
+    expect(await project.pathExists(unzipDir, '.env')).toBe(true);
+    expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(true);
+    expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file1')).toBe(
       true,
     );
-    expect(await project.fileExists(unzipDir, '.hidden-dir/nested/file2')).toBe(
+    expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file2')).toBe(
       true,
     );
   });
@@ -210,10 +210,10 @@ describe('Zipping', () => {
     });
     await extract(sourcesZip, { dir: unzipDir });
     expect(
-      await project.fileExists(unzipDir, 'entrypoints/not-firefox.content.ts'),
+      await project.pathExists(unzipDir, 'entrypoints/not-firefox.content.ts'),
     ).toBe(false);
     expect(
-      await project.fileExists(unzipDir, 'entrypoints/all.content.ts'),
+      await project.pathExists(unzipDir, 'entrypoints/all.content.ts'),
     ).toBe(true);
   });
 
@@ -234,7 +234,7 @@ describe('Zipping', () => {
         browser,
       });
 
-      expect(await project.fileExists(sourcesZip)).toBe(true);
+      expect(await project.pathExists(sourcesZip)).toBe(true);
     },
   );
 
@@ -258,7 +258,7 @@ describe('Zipping', () => {
         },
       });
 
-      expect(await project.fileExists(sourcesZip)).toBe(true);
+      expect(await project.pathExists(sourcesZip)).toBe(true);
     },
   );
 
@@ -282,7 +282,7 @@ describe('Zipping', () => {
         },
       });
 
-      expect(await project.fileExists(sourcesZip)).toBe(false);
+      expect(await project.pathExists(sourcesZip)).toBe(false);
     },
   );
 
@@ -305,6 +305,6 @@ describe('Zipping', () => {
     });
 
     await extract(sourcesZip, { dir: unzipDir });
-    expect(await project.fileExists(unzipDir, 'manifest.json')).toBe(true);
+    expect(await project.pathExists(unzipDir, 'manifest.json')).toBe(true);
   });
 });

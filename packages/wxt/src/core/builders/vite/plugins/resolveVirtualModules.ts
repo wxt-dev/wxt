@@ -1,6 +1,6 @@
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
-import { normalizePath } from '../../../utils/paths';
+import { normalizePath } from '../../../utils';
 import {
   VirtualModuleId,
   virtualModuleNames,
@@ -9,7 +9,8 @@ import { resolve } from 'path';
 import fs from 'fs-extra';
 
 /**
- * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual` directory.
+ * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual`
+ * directory.
  */
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {

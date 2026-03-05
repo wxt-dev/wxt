@@ -3,14 +3,15 @@ import { ResolvedConfig, WxtDevServer } from '../../../../types';
 import { getEntrypointName } from '../../../utils/entrypoints';
 import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
-import { normalizePath } from '../../../utils/paths';
+import { normalizePath } from '../../../utils';
 import { hash } from 'ohash';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
 const inlineScriptContents: Record<string, string> = {};
 
 /**
- * Pre-renders the HTML entrypoints when building the extension to connect to the dev server.
+ * Pre-renders the HTML entrypoints when building the extension to connect to
+ * the dev server.
  */
 export function devHtmlPrerender(
   config: ResolvedConfig,

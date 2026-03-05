@@ -19,7 +19,7 @@ export function createIframeUi<TMounted>(
   iframe.src = browser.runtime.getURL(options.page);
   wrapper.appendChild(iframe);
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, iframe, options);
     options.onBeforeMount?.(wrapper, iframe);
@@ -49,34 +49,33 @@ export function createIframeUi<TMounted>(
 export interface IframeContentScriptUi<
   TMounted,
 > extends ContentScriptUi<TMounted> {
-  /**
-   * The iframe added to the DOM.
-   */
+  /** The iframe added to the DOM. */
   iframe: HTMLIFrameElement;
-  /**
-   * A wrapper div that assists in positioning.
-   */
+  /** A wrapper div that assists in positioning. */
   wrapper: HTMLDivElement;
 }
 
 export type IframeContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**
-     * The path to the HTML page that will be shown in the iframe. This string is passed into
-     * `browser.runtime.getURL`.
+     * The path to the HTML page that will be shown in the iframe. This string
+     * is passed into `browser.runtime.getURL`.
      */
     // @ts-expect-error: HtmlPublicPath is generated per-project
     page: import('wxt/browser').HtmlPublicPath;
     /**
-     * Callback executed when mounting the UI. Use this function to customize the iframe or wrapper
-     * element's appearance. It is called every time `ui.mount()` is called.
+     * Callback executed when mounting the UI. Use this function to customize
+     * the iframe or wrapper element's appearance. It is called every time
+     * `ui.mount()` is called.
      *
-     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     * Optionally return a value that can be accessed at `ui.mounted` or in the
+     * `onRemove` callback.
      */
     onMount?: (wrapper: HTMLElement, iframe: HTMLIFrameElement) => TMounted;
     /**
-     * Callback executed before mounting the UI. Use this function to customize the iframe or wrapper
-     * elements before they are injected into the DOM. It is called every time `ui.mount()` is called.
+     * Callback executed before mounting the UI. Use this function to customize
+     * the iframe or wrapper elements before they are injected into the DOM. It
+     * is called every time `ui.mount()` is called.
      */
     onBeforeMount?: (wrapper: HTMLElement, iframe: HTMLIFrameElement) => void;
   };

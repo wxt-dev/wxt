@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/i18n",
   "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "type": "module",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "@wxt-dev/browser": "workspace:^",
     "chokidar": "^5.0.0",
     "confbox": "^0.1.8 || ^0.2.2",
-    "fast-glob": "^3.3.3"
+    "tinyglobby": "^0.2.13"
   },
   "peerDependencies": {
     "wxt": ">=0.19.7"

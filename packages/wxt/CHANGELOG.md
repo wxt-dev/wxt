@@ -1,5 +1,134 @@
 # Changelog
 
+## v0.20.18
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.17...wxt-v0.20.18)
+
+### 🚀 Enhancements
+
+- Create tests for all func of `network.ts` ([#2132](https://github.com/wxt-dev/wxt/pull/2132))
+- Use Navigation API for location change detection with polling fallback ([#2136](https://github.com/wxt-dev/wxt/pull/2136))
+- **modules:** Add support for augumenting entrypoint options ([#2149](https://github.com/wxt-dev/wxt/pull/2149))
+- New `@wxt-dev/is-background` package ([#2152](https://github.com/wxt-dev/wxt/pull/2152))
+- Add `globalName` entrypoint option. ([#2017](https://github.com/wxt-dev/wxt/pull/2017))
+
+### 🩹 Fixes
+
+- Add `getAppConfig` as an alias to `useAppConfig` ([#2144](https://github.com/wxt-dev/wxt/pull/2144))
+- Enable mv3 dev mode with firefox 147 ([#2135](https://github.com/wxt-dev/wxt/pull/2135))
+- **types:** Add type safety to `browser.runtime.executeScript` `files` option ([#2142](https://github.com/wxt-dev/wxt/pull/2142))
+- **types:** Include CSS entrypoints in PublicPath generation ([#2150](https://github.com/wxt-dev/wxt/pull/2150))
+- Fix submit command ([#2157](https://github.com/wxt-dev/wxt/pull/2157))
+
+### 📖 Documentation
+
+- Added "Glossy New Tab" to the homepage ([#2133](https://github.com/wxt-dev/wxt/pull/2133))
+- Add All API Hub to showcase extensions ([#2137](https://github.com/wxt-dev/wxt/pull/2137))
+- Add `wxt-local-analytics` to community resources ([#2141](https://github.com/wxt-dev/wxt/pull/2141))
+- Add deep outline to modules page to show recipes ([653608c9](https://github.com/wxt-dev/wxt/commit/653608c9))
+
+### 🏡 Chore
+
+- Add missing `async` to network.ts ([#2107](https://github.com/wxt-dev/wxt/pull/2107))
+- Make type for `__ENTRYPOINT__` of vitest.globalSetup.ts ([#2128](https://github.com/wxt-dev/wxt/pull/2128))
+- Remove unnecessary `@ts-ignore` of `builders/vite` index.ts ([#2127](https://github.com/wxt-dev/wxt/pull/2127))
+- Rename `zipdir` to `zipDir` ([#2126](https://github.com/wxt-dev/wxt/pull/2126))
+- Simplify imports in `wxt/e2e` ([#2122](https://github.com/wxt-dev/wxt/pull/2122))
+- Remove `@ts-expect-error` from manifest.test.ts and fix typo ([#2123](https://github.com/wxt-dev/wxt/pull/2123))
+
+### 🤖 CI
+
+- Fix VHS action ([#2155](https://github.com/wxt-dev/wxt/pull/2155))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Jonathan Viney ([@jviney](https://github.com/jviney))
+- Tam Dang ([@dahomita](https://github.com/dahomita))
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Anthony Ciccarello ([@aciccarello](https://github.com/aciccarello))
+- Henrik Wenz ([@HaNdTriX](https://github.com/HaNdTriX))
+- Sheng Zhang ([@Arktomson](https://github.com/Arktomson))
+- Oleksii ([@Aler1x](https://github.com/Aler1x))
+- Qixing-jk <vq3d5d8c@duck.com>
+- Muzammil ([@oyzamil](https://github.com/oyzamil))
+
+## v0.20.17
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.16...wxt-v0.20.17)
+
+### 🩹 Fixes
+
+- Update left-over CJS require of `publish-browser-extension` to ESM ([#2120](https://github.com/wxt-dev/wxt/pull/2120))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.16
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.15...wxt-v0.20.16)
+
+### 🩹 Fixes
+
+- Revert "rename `name` to `names` prop of `rollup` to fix deprecated warning " ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 🏡 Chore
+
+- Speed up E2E tests by skipping `pnpm install` when possible ([#2113](https://github.com/wxt-dev/wxt/pull/2113))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.15
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.14...wxt-v0.20.15)
+
+### 🚀 Enhancements
+
+- Export `normalizePath` from `wxt` module ([#2080](https://github.com/wxt-dev/wxt/pull/2080))
+- **popup:** Add Firefox `default_area` and `theme_icons` support ([#2097](https://github.com/wxt-dev/wxt/pull/2097))
+- Add log `--level` cli option ([#1973](https://github.com/wxt-dev/wxt/pull/1973))
+
+### 🩹 Fixes
+
+- Content script is incorrectly invalidated when injected multiple times ([#2035](https://github.com/wxt-dev/wxt/pull/2035))
+- Use `uiContainer` to apply position when creating shadow root ui ([#2036](https://github.com/wxt-dev/wxt/pull/2036))
+- Make `ExtensionRunner#closeBrowser` optional ([#2092](https://github.com/wxt-dev/wxt/pull/2092))
+- Rename `name` to `names` prop of `rollup` to fix deprecated warning ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 💅 Refactors
+
+- Standardize file existence checks to `pathExists` ([#2083](https://github.com/wxt-dev/wxt/pull/2083))
+- Cleanup esm ([#1950](https://github.com/wxt-dev/wxt/pull/1950))
+- `async`/`await` cleanup ([#2088](https://github.com/wxt-dev/wxt/pull/2088))
+- Cleanup unnecssary checks ([#2089](https://github.com/wxt-dev/wxt/pull/2089))
+- Simplify import paths ([#2093](https://github.com/wxt-dev/wxt/pull/2093))
+
+### 📖 Documentation
+
+- Fix JSDoc ([6ae5fb5e](https://github.com/wxt-dev/wxt/commit/6ae5fb5e))
+
+### 🏡 Chore
+
+- Cleanup comment line lengths ([#2090](https://github.com/wxt-dev/wxt/pull/2090))
+- Cleanup `@ts-*` comments ([#2094](https://github.com/wxt-dev/wxt/pull/2094))
+- Update JSDoc to use `@internal` ([#2091](https://github.com/wxt-dev/wxt/pull/2091))
+- Fix typos ([#2086](https://github.com/wxt-dev/wxt/pull/2086))
+- Remove unused code ([#2087](https://github.com/wxt-dev/wxt/pull/2087))
+- Simplify imports of `cli/__tests__/index.ts` ([#2104](https://github.com/wxt-dev/wxt/pull/2104))
+
+### ❤️ Contributors
+
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Wotan-allfather <wotan-ai@proton.me>
+- Namu ([@namuorg](https://github.com/namuorg))
+- Eli ([@lishaduck](https://github.com/lishaduck))
+
 ## v0.20.14
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.13...wxt-v0.20.14)
@@ -31,7 +160,7 @@
 
 - Dareka ([@darekadareka](https://github.com/darekadareka))
 - Mark ([@mjfaga](https://github.com/mjfaga))
-- Ariasuni <aria@ariasuni.eu>
+- ariasuni ([@ariasuni](https://github.com/ariasuni))
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 - Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
 - Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))

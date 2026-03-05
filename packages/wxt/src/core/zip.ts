@@ -4,16 +4,17 @@ import fs from 'fs-extra';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
 import { formatDuration } from './utils/time';
-import { printFileList } from './utils/log/printFileList';
+import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
-import glob from 'fast-glob';
-import { normalizePath } from './utils/paths';
+import { glob } from 'tinyglobby';
+import { normalizePath } from './utils';
 import { minimatchMultiple } from './utils/minimatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
+ *
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
  * @returns A list of all files included in the ZIP.
  */
@@ -119,6 +120,7 @@ async function zipDir(
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
+      expandDirectories: false,
     })
   ).filter((relativePath) => {
     return (
