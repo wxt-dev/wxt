@@ -27,7 +27,7 @@
     "consola": "^3.4.2",
     "feed": "^5.2.0",
     "fs-extra": "^11.3.4",
-    "lint-staged": "^16.3.2",
+    "nano-staged": "^0.8.0",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.48.0",
     "nano-spawn": "^2.0.0",
@@ -53,9 +53,9 @@
     "wxt": "workspace:*"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "pnpm nano-staged"
   },
-  "lint-staged": {
+  "nano-staged": {
     "*": "prettier --ignore-unknown --write"
   }
 }
