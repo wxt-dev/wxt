@@ -256,7 +256,7 @@ importers:
   packages/module-react:
     dependencies:
       '@vitejs/plugin-react':
-        specifier: ^5.1.4
+        specifier: ^4.4.1 || ^5.0.0
         version: 5.1.4(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
     devDependencies:
       '@types/react':
@@ -397,7 +397,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       unocss:
-        specifier: ^66.6.5
+        specifier: ^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0
         version: 66.6.5(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
       wxt:
         specifier: workspace:*
@@ -451,7 +451,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3(magicast@0.5.2)
       cac:
-        specifier: ^7.0.0
+        specifier: ^6.7.14 || ^7.0.0
         version: 7.0.0
       chokidar:
         specifier: ^5.0.0
@@ -547,7 +547,7 @@ importers:
         specifier: ^0.2.15
         version: 0.2.15
       unimport:
-        specifier: ^6.0.1
+        specifier: ^3.13.1 || ^4.0.0 || ^5.0.0 || ^6.0.0
         version: 6.0.1
       vite:
         specifier: ^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0
@@ -636,7 +636,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       unocss:
-        specifier: ^66.6.5
+        specifier: ^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0
         version: 66.6.5(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
       vitest:
         specifier: ^4.0.18
