@@ -550,7 +550,7 @@ importers:
         specifier: ^3.13.1 || ^4.0.0 || ^5.0.0
         version: 5.6.0
       vite:
-        specifier: ^5.4.19 || ^6.3.4 || ^7.0.0
+        specifier: ^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0
         version: 7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2)
       vite-node:
         specifier: ^3.2.4 || ^5.0.0
