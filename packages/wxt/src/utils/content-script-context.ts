@@ -9,20 +9,22 @@ import {
 import { createLocationWatcher } from './internal/location-watcher';
 
 /**
- * Implements [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+ * Implements
+ * [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
  * Used to detect and stop content script code when the script is invalidated.
  *
- * It also provides several utilities like `ctx.setTimeout` and `ctx.setInterval` that should be used in
- * content scripts instead of `window.setTimeout` or `window.setInterval`.
+ * It also provides several utilities like `ctx.setTimeout` and
+ * `ctx.setInterval` that should be used in content scripts instead of
+ * `window.setTimeout` or `window.setInterval`.
  *
  * To create context for testing, you can use the class's constructor:
  *
  * ```ts
  * import { ContentScriptContext } from 'wxt/utils/content-scripts-context';
  *
- * test("storage listener should be removed when context is invalidated", () => {
+ * test('storage listener should be removed when context is invalidated', () => {
  *   const ctx = new ContentScriptContext('test');
- *   const item = storage.defineItem("local:count", { defaultValue: 0 });
+ *   const item = storage.defineItem('local:count', { defaultValue: 0 });
  *   const watcher = vi.fn();
  *
  *   const unwatch = item.watch(watcher);
@@ -78,17 +80,18 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Add a listener that is called when the content script's context is invalidated.
-   *
-   * @returns A function to remove the listener.
+   * Add a listener that is called when the content script's context is
+   * invalidated.
    *
    * @example
-   * browser.runtime.onMessage.addListener(cb);
-   * const removeInvalidatedListener = ctx.onInvalidated(() => {
-   *   browser.runtime.onMessage.removeListener(cb);
-   * })
-   * // ...
-   * removeInvalidatedListener();
+   *   browser.runtime.onMessage.addListener(cb);
+   *   const removeInvalidatedListener = ctx.onInvalidated(() => {
+   *     browser.runtime.onMessage.removeListener(cb);
+   *   });
+   *   // ...
+   *   removeInvalidatedListener();
+   *
+   * @returns A function to remove the listener.
    */
   onInvalidated(cb: () => void): () => void {
     this.signal.addEventListener('abort', cb);
@@ -96,15 +99,15 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Return a promise that never resolves. Useful if you have an async function that shouldn't run
-   * after the context is expired.
+   * Return a promise that never resolves. Useful if you have an async function
+   * that shouldn't run after the context is expired.
    *
    * @example
-   * const getValueFromStorage = async () => {
-   *   if (ctx.isInvalid) return ctx.block();
+   *   const getValueFromStorage = async () => {
+   *     if (ctx.isInvalid) return ctx.block();
    *
-   *   // ...
-   * }
+   *     // ...
+   *   };
    */
   block<T>(): Promise<T> {
     return new Promise(() => {
@@ -113,7 +116,8 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Wrapper around `window.setInterval` that automatically clears the interval when invalidated.
+   * Wrapper around `window.setInterval` that automatically clears the interval
+   * when invalidated.
    *
    * Intervals can be cleared by calling the normal `clearInterval` function.
    */
@@ -126,7 +130,8 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Wrapper around `window.setTimeout` that automatically clears the interval when invalidated.
+   * Wrapper around `window.setTimeout` that automatically clears the interval
+   * when invalidated.
    *
    * Timeouts can be cleared by calling the normal `setTimeout` function.
    */
@@ -139,10 +144,11 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Wrapper around `window.requestAnimationFrame` that automatically cancels the request when
-   * invalidated.
+   * Wrapper around `window.requestAnimationFrame` that automatically cancels
+   * the request when invalidated.
    *
-   * Callbacks can be canceled by calling the normal `cancelAnimationFrame` function.
+   * Callbacks can be canceled by calling the normal `cancelAnimationFrame`
+   * function.
    */
   requestAnimationFrame(callback: FrameRequestCallback): number {
     const id = requestAnimationFrame((...args) => {
@@ -154,10 +160,11 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Wrapper around `window.requestIdleCallback` that automatically cancels the request when
-   * invalidated.
+   * Wrapper around `window.requestIdleCallback` that automatically cancels the
+   * request when invalidated.
    *
-   * Callbacks can be canceled by calling the normal `cancelIdleCallback` function.
+   * Callbacks can be canceled by calling the normal `cancelIdleCallback`
+   * function.
    */
   requestIdleCallback(
     callback: IdleRequestCallback,
@@ -172,23 +179,26 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
-   * Call `target.addEventListener` and remove the event listener when the context is invalidated.
+   * Call `target.addEventListener` and remove the event listener when the
+   * context is invalidated.
    *
-   * Listeners can be canceled by calling the normal `removeEventListener` function.
+   * Listeners can be canceled by calling the normal `removeEventListener`
+   * function.
    *
    * Includes additional events useful for content scripts:
    *
-   * - `"wxt:locationchange"` - Triggered when HTML5 history mode is used to change URL. Content
-   *   scripts are not reloaded when navigating this way, so this can be used to reset the content
-   *   script state on URL change, or run custom code.
+   * - `"wxt:locationchange"` - Triggered when HTML5 history mode is used to
+   *   change URL. Content scripts are not reloaded when navigating this way, so
+   *   this can be used to reset the content script state on URL change, or run
+   *   custom code.
    *
    * @example
-   * ctx.addEventListener(document, "visibilitychange", () => {
-   *   // ...
-   * });
-   * ctx.addEventListener(window, "wxt:locationchange", () => {
-   *   // ...
-   * });
+   *   ctx.addEventListener(document, 'visibilitychange', () => {
+   *     // ...
+   *   });
+   *   ctx.addEventListener(window, 'wxt:locationchange', () => {
+   *     // ...
+   *   });
    */
   addEventListener<TType extends keyof WxtWindowEventMap>(
     target: Window,

@@ -1,5 +1,5 @@
 import { CAC, Command } from 'cac';
-import consola, { LogLevels } from 'consola';
+import consola, { LogLevels, LogType } from 'consola';
 import { filterTruthy, toArray } from '../core/utils/arrays';
 import { printHeader } from '../core/utils/log';
 import { formatDuration } from '../core/utils/time';
@@ -8,7 +8,8 @@ import { registerWxt } from '../core/wxt';
 import spawn from 'nano-spawn';
 
 /**
- * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
+ * Wrap an action handler to add a timer, error handling, and maybe enable debug
+ * mode.
  */
 export function wrapAction(
   cb: (
@@ -19,6 +20,11 @@ export function wrapAction(
   },
 ) {
   return async (...args: any[]) => {
+    const level: LogType | undefined = args.find((arg) => arg?.level)?.level;
+    if (level && Object.keys(LogLevels).includes(level)) {
+      consola.level = LogLevels[level];
+    }
+
     // Enable consola's debug mode globally at the start of all commands when
     // the `--debug` flag is passed
     const isDebug = !!args.find((arg) => arg?.debug);
@@ -49,8 +55,8 @@ export function wrapAction(
 }
 
 /**
- * Array flags, when not passed, are either `undefined` or `[undefined]`. This function filters out
- * the
+ * Array flags, when not passed, are either `undefined` or `[undefined]`. This
+ * function filters out the
  */
 export function getArrayFromFlags<T>(
   flags: any,

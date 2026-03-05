@@ -45,7 +45,7 @@ export default defineWxtModule<AutoIconsOptions>({
 
     wxt.hooks.hook('build:manifestGenerated', async (wxt, manifest) => {
       if (manifest.icons)
-        return wxt.logger.warn(
+        wxt.logger.warn(
           '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
         );
 
@@ -109,12 +109,11 @@ export default defineWxtModule<AutoIconsOptions>({
   },
 });
 
-/**
- * Options for the auto-icons module
- */
+/** Options for the auto-icons module */
 export interface AutoIconsOptions {
   /**
    * Enable auto-icons generation
+   *
    * @default true
    */
   enabled?: boolean;
@@ -122,27 +121,30 @@ export interface AutoIconsOptions {
    * Path to the image to use.
    *
    * Path is relative to the project's src directory.
-   * @default "<srcDir>/assets/icon.png"
+   *
+   * @default '<srcDir>/assets/icon.png'
    */
   baseIconPath?: string;
   /**
    * Apply a visual indicator to the icon when running in development mode.
    *
-   * "grayscale" converts the icon to grayscale.
-   * "overlay" covers the bottom half with a yellow rectangle and writes "DEV" in black text.
-   * Set to `false` to disable any indicator.
+   * "grayscale" converts the icon to grayscale. "overlay" covers the bottom
+   * half with a yellow rectangle and writes "DEV" in black text. Set to `false`
+   * to disable any indicator.
    *
-   * @default "grayscale"
+   * @default 'grayscale'
    */
   developmentIndicator?: 'grayscale' | 'overlay' | false;
   /**
    * Grayscale the image when in development mode to indicate development
-   * @default true
+   *
    * @deprecated Use `developmentIndicator` instead
+   * @default true
    */
   grayscaleOnDevelopment?: boolean;
   /**
    * Sizes to generate icons for
+   *
    * @default [128, 48, 32, 16]
    */
   sizes?: number[];

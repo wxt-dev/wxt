@@ -5,11 +5,11 @@ import {
   parseChangelogMarkdown,
   parseCommits,
 } from 'changelogen';
-import spawn from 'nano-spawn';
-import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 import { consola } from 'consola';
 import fs from 'fs-extra';
+import spawn from 'nano-spawn';
 import path from 'node:path';
+import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 
 const pkg = process.argv[2];
 if (!pkg) {
@@ -24,7 +24,8 @@ consola.info('Bumping:', { pkg, pkgDir, pkgName, currentVersion });
 // Get commits
 const config = await loadChangelogConfig(process.cwd());
 consola.info('Config:', config);
-const rawCommits = await listCommitsInDir(pkgDir, prevTag);
+const additionalDirs = pkg === 'wxt' ? ['docs'] : [];
+const rawCommits = await listCommitsInDir(pkgDir, prevTag, additionalDirs);
 const commits = parseCommits(rawCommits, config);
 
 // Bump version

@@ -10,7 +10,8 @@ import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
 import { wxt } from './wxt';
 
 /**
- * Generate and write all the files inside the `InternalConfig.typesDir` directory.
+ * Generate and write all the files inside the `InternalConfig.typesDir`
+ * directory.
  */
 export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
   await fs.ensureDir(wxt.config.typesDir);
@@ -70,7 +71,7 @@ async function getPathsDeclarationEntry(
       getEntrypointBundlePath(
         entry,
         wxt.config.outDir,
-        isHtmlEntrypoint(entry) ? '.html' : '.js',
+        getEntrypointPublicExt(entry),
       ),
     )
     .concat(await getPublicFiles());
@@ -105,6 +106,18 @@ declare module "wxt/browser" {
     text: template.replace('{{ union }}', unions || '    | never'),
     tsReference: true,
   };
+}
+
+function getEntrypointPublicExt(entry: Entrypoint): '.html' | '.js' | '.css' {
+  if (isHtmlEntrypoint(entry)) return '.html';
+
+  switch (entry.type) {
+    case 'content-script-style':
+    case 'unlisted-style':
+      return '.css';
+    default:
+      return '.js';
+  }
 }
 
 async function getI18nDeclarationEntry(): Promise<WxtDirFileEntry> {

@@ -37,7 +37,8 @@ export async function createViteBuilder(
   const vite = await import('vite');
 
   /**
-   * Returns the base vite config shared by all builds based on the inline and user config.
+   * Returns the base vite config shared by all builds based on the inline and
+   * user config.
    */
   const getBaseConfig = async (baseConfigOptions?: {
     excludeAnalysisPlugin?: boolean;
@@ -102,14 +103,15 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
+   * Return the basic config for building an entrypoint in [lib
+   * mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     const entry = getRollupEntry(entrypoint);
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
-    const iifeReturnValueName = safeVarName(entrypoint.name);
+    let iifeReturnValueName = safeVarName(entrypoint.name);
 
     if (
       entrypoint.type === 'content-script-style' ||
@@ -122,7 +124,17 @@ export async function createViteBuilder(
       entrypoint.type === 'content-script' ||
       entrypoint.type === 'unlisted-script'
     ) {
-      plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      if (typeof entrypoint.options.globalName === 'string') {
+        iifeReturnValueName = entrypoint.options.globalName;
+      } else if (typeof entrypoint.options.globalName === 'function') {
+        iifeReturnValueName = entrypoint.options.globalName(entrypoint);
+      }
+
+      if (entrypoint.options.globalName === false) {
+        plugins.push(wxtPlugins.iifeAnonymous(iifeReturnValueName));
+      } else {
+        plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      }
     }
 
     return {
@@ -167,7 +179,8 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building multiple entrypoints in [multi-page
+   * mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
     const htmlEntrypoints = new Set(
@@ -200,7 +213,8 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building a single CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building a single CSS entrypoint in [multi-page
+   * mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     return {
@@ -241,10 +255,7 @@ export async function createViteBuilder(
     const config = vite.mergeConfig(baseConfig, envConfig);
     const server = await vite.createServer(config);
     await server.pluginContainer.buildStart({});
-    const node = new ViteNodeServer(
-      // @ts-ignore: Some weird type error...
-      server,
-    );
+    const node = new ViteNodeServer(server);
     installSourcemapsSupport({
       getSourceMap: (source) => node.getSourceMap(source),
     });
@@ -380,8 +391,8 @@ function getBuildOutputChunks(
 }
 
 /**
- * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
- * be passed as an input to rollup.
+ * Returns the input module ID (virtual or real file) for an entrypoint. The
+ * returned string should be passed as an input to rollup.
  */
 function getRollupEntry(entrypoint: Entrypoint): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
@@ -406,15 +417,17 @@ function getRollupEntry(entrypoint: Entrypoint): string {
 }
 
 /**
- * Ensures the HTML files output by a multipage build are in the correct location. This does two
- * things:
+ * Ensures the HTML files output by a multipage build are in the correct
+ * location. This does two things:
  *
- * 1. Moves the HTML files to their final location at `<outDir>/<entrypoint.name>.html`.
- * 2. Updates the bundle so it summarizes the files correctly in the returned build output.
+ * 1. Moves the HTML files to their final location at
+ *    `<outDir>/<entrypoint.name>.html`.
+ * 2. Updates the bundle so it summarizes the files correctly in the returned build
+ *    output.
  *
- * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't need to be modified.
- * HTML files access them via absolute URLs, so we don't need to update any import paths in the HTML
- * files either.
+ * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't
+ * need to be modified. HTML files access them via absolute URLs, so we don't
+ * need to update any import paths in the HTML files either.
  */
 async function moveHtmlFiles(
   config: ResolvedConfig,
@@ -458,9 +471,7 @@ async function moveHtmlFiles(
   return movedChunks;
 }
 
-/**
- * Recursively remove all directories that are empty/
- */
+/** Recursively remove all directories that are empty/ */
 export async function removeEmptyDirs(dir: string): Promise<void> {
   const files = await fs.readdir(dir);
   for (const file of files) {
