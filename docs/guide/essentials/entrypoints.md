@@ -300,14 +300,14 @@ When defining content script entrypoints, keep in mind that WXT will import this
 
 <!-- prettier-ignore -->
 ```ts
-browser.runtime.onMessage.addListener((message) => { // [!code --]
-  // ... // [!code --]
-}); // [!code --]
+const container = document.createElement('div'); // [!code --]
+document.body.append(container); // [!code --]
 
-export default defineBackground(() => {
-  browser.runtime.onMessage.addListener((message) => { // [!code ++]
-    // ... // [!code ++]
-  }); // [!code ++]
+export default defineContentScript({
+  main: function () {
+    const container = document.createElement('div'); // [!code ++]
+    document.body.append(container); // [!code ++]
+  },
 });
 ```
 
@@ -470,6 +470,19 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
     />
     <meta name="manifest.type" content="page_action|browser_action" />
     <meta name="manifest.browser_style" content="true|false" />
+    <!-- Firefox only: where to place the action button -->
+    <meta
+      name="manifest.default_area"
+      content="navbar|menupanel|tabstrip|personaltoolbar"
+    />
+    <!-- Firefox only: icons for light/dark themes -->
+    <meta
+      name="manifest.theme_icons"
+      content="[
+        { light: '/icon-light-16.png', dark: '/icon-dark-16.png', size: 16 },
+        { light: '/icon-light-32.png', dark: '/icon-dark-32.png', size: 32 }
+      ]"
+    />
 
     <!-- Set include/exclude if the page should be removed from some builds -->
     <meta name="manifest.include" content="['chrome', ...]" />
@@ -580,7 +593,7 @@ body {
 }
 ```
 
-Follow Vite's guide to setup your preprocessor of choice: https://vitejs.dev/guide/features.html#css-pre-processors
+Follow Vite's guide to setup your preprocessor of choice: <https://vitejs.dev/guide/features.html#css-pre-processors>
 
 CSS entrypoints are always unlisted. To add CSS to a content script, see the [Content Script](/guide/essentials/content-scripts#css) docs.
 

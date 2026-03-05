@@ -19,7 +19,7 @@ export default defineContentScript({
 
 This object is responsible for tracking whether or not the content script's context is "invalidated". Most browsers, by default, do not stop content scripts if the extension is uninstalled, updated, or disabled. When this happens, content scripts start reporting this error:
 
-```
+```plaintext
 Error: Extension context invalidated.
 ```
 
@@ -76,6 +76,7 @@ To create a standalone content script that only includes a CSS file:
 
 1. Create the CSS file: `entrypoints/example.content.css`
 2. Use the `build:manifestGenerated` hook to add the content script to the manifest:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      hooks: {
@@ -210,9 +211,7 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
@@ -395,11 +394,9 @@ export default defineContentScript({
       anchor: 'body',
       onMount: (container) => {
         // Create the Svelte app inside the UI container
-        mount(App, {
-          target: container,
-        });
+        return mount(App, { target: container });
       },
-      onRemove: () => {
+      onRemove: (app) => {
         // Destroy the app when the UI is removed
         unmount(app);
       },
@@ -459,6 +456,7 @@ If you don't need to run your UI in the same frame as the content script, you ca
 WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/content-script-ui/iframe/functions/createIframeUi), which simplifies setting up the IFrame.
 
 1. Create an HTML page that will be loaded into your IFrame:
+
    ```html
    <!-- entrypoints/example-iframe.html -->
    <!doctype html>
@@ -473,7 +471,9 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
      </body>
    </html>
    ```
+
 1. Add the page to the manifest's `web_accessible_resources`:
+
    ```ts [wxt.config.ts]
    export default defineConfig({
      manifest: {
@@ -486,6 +486,7 @@ WXT provides a helper function, [`createIframeUi`](/api/reference/wxt/utils/cont
      },
    });
    ```
+
 1. Create and mount the IFrame:
 
    ```ts
@@ -589,6 +590,76 @@ For MV3, `injectScript` is synchronous and the injected script will be evaluated
 
 However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
 :::
+
+The `script` element can be modified just before it is added to the DOM by using the `modifyScript` option. This can be used to e.g. modify `script.async`/`script.defer`, add event listeners to the element, or pass data to the script via `script.dataset`. An example:
+
+```ts
+// entrypoints/example.content.ts
+export default defineContentScript({
+  matches: ['*://*/*'],
+  async main() {
+    await injectScript('/example-main-world.js', {
+      modifyScript(script) {
+        script.dataset['greeting'] = 'Hello there';
+      },
+    });
+  },
+});
+```
+
+```ts
+// entrypoints/example-main-world.ts
+export default defineUnlistedScript(() => {
+  console.log(document.currentScript?.dataset['greeting']);
+});
+```
+
+`injectScript` returns the created script element. It can be used to e.g. send messages to the script in the form of custom events. The script can add an event listener for them via `document.currentScript`. An example of bidirectional communication:
+
+```ts
+// entrypoints/example.content.ts
+export default defineContentScript({
+  matches: ['*://*/*'],
+  async main() {
+    const { script } = await injectScript('/example-main-world.js', {
+      modifyScript(script) {
+        // Add a listener before the injected script is loaded.
+        script.addEventListener('from-injected-script', (event) => {
+          if (event instanceof CustomEvent) {
+            console.log(`${event.type}:`, event.detail);
+          }
+        });
+      },
+    });
+
+    // Send an event after the injected script is loaded.
+    script.dispatchEvent(
+      new CustomEvent('from-content-script', {
+        detail: 'General Kenobi',
+      }),
+    );
+  },
+});
+```
+
+```ts
+// entrypoints/example-main-world.ts
+export default defineUnlistedScript(() => {
+  const script = document.currentScript;
+
+  script?.addEventListener('from-content-script', (event) => {
+    if (event instanceof CustomEvent) {
+      console.log(`${event.type}:`, event.detail);
+    }
+  });
+
+  script?.dispatchEvent(
+    new CustomEvent('from-injected-script', {
+      detail: 'Hello there',
+    }),
+  );
+});
+```
 
 ## Mounting UI to dynamic element
 

@@ -32,13 +32,14 @@ import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
 
 /**
- * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
+ * Creates a dev server and pre-builds all the files that need to exist before
+ * loading the extension.
  *
  * @example
- * const server = await wxt.createServer({
- *   // Enter config...
- * });
- * await server.start();
+ *   const server = await wxt.createServer({
+ *     // Enter config...
+ *   });
+ *   await server.start();
  */
 export async function createServer(
   inlineConfig?: InlineConfig,
@@ -110,8 +111,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
       // Listen for file changes and reload different parts of the extension accordingly
       const reloadOnChange = createFileReloader(server);
-      server.watcher.on('all', reloadOnChange);
-      keyboardShortcuts.start();
+      server.watcher.on('all', async (...args) => {
+        await reloadOnChange(args[0], args[1]);
+
+        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
+        keyboardShortcuts.start();
+      });
+
       keyboardShortcuts.printHelp({
         canReopenBrowser:
           !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
@@ -121,7 +127,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await runner.closeBrowser();
+      await runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -145,7 +151,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await runner.closeBrowser();
+      await runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
       runner = await createExtensionRunner();
@@ -194,8 +200,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
 }
 
 /**
- * Returns a function responsible for reloading different parts of the extension when a file
- * changes.
+ * Returns a function responsible for reloading different parts of the extension
+ * when a file changes.
  */
 function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
@@ -290,7 +296,8 @@ function createFileReloader(server: WxtDevServer) {
 }
 
 /**
- * From the server, tell the client to reload content scripts from the provided build step outputs.
+ * From the server, tell the client to reload content scripts from the provided
+ * build step outputs.
  */
 function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
   if (wxt.config.manifestVersion === 3) {
@@ -345,6 +352,7 @@ function getFilenameList(names: string[]): string {
 
 /**
  * Based on the current build output, return a list of files that are:
+ *
  * 1. Not in node_modules
  * 2. Not inside project root
  */

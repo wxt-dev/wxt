@@ -8,16 +8,6 @@ outline: deep
 
 During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
 
-:::danger
-Chrome 137 removed support for the `--load-extension` CLI flag, which WXT relied on to open the browser with an extension installed. So this feature will not work for Chrome.
-
-You have two options:
-
-1. Install [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) (which still supports the `--load-extension` flag) and [point the `chrome` binary to it](#set-browser-binaries), or
-2. [Disable this feature](#disable-opening-browser) and manually load your extension
-
-:::
-
 ## Config Files
 
 You can configure browser startup in 3 places:
@@ -42,11 +32,25 @@ You can configure browser startup in 3 places:
 To set or customize the browser opened during development:
 
 ```ts [web-ext.config.ts]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   binaries: {
     chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
     firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
     edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
+  },
+});
+```
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  webExt: {
+    binaries: {
+      chrome: '/path/to/chrome-beta', // Use Chrome Beta instead of regular Chrome
+      firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
+      edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
+    },
   },
 });
 ```
@@ -59,11 +63,13 @@ By default, to keep from modifying your browser's existing profiles, `web-ext` c
 
 Right now, Chromium based browsers are the only browsers that support overriding this behavior and persisting data when running the `dev` script multiple times.
 
-To persist data, set the `--user-data-dir` flag:
+To persist data, set the `--user-data-dir` flag in any of the config files mentioned above:
 
 :::code-group
 
 ```ts [Mac/Linux]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
 });
@@ -71,6 +77,7 @@ export default defineWebExtConfig({
 
 ```ts [Windows]
 import { resolve } from 'node:path';
+import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({
   // On Windows, the path must be absolute
@@ -92,7 +99,30 @@ You can use any directory you'd like for `--user-data-dir`, the examples above c
 If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
 
 ```ts [web-ext.config.ts]
+import { defineWebExtConfig } from 'wxt';
+
 export default defineWebExtConfig({
   disabled: true,
 });
 ```
+
+### Enabling Chrome Features
+
+Some APIs are disabled in Chrome during development because of the default flags `web-ext` uses to launch Chrome, like the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api).
+
+If your extension depends on new features or services, you can enable them via `chromiumArgs`:
+
+```ts
+import { defineWebExtConfig } from 'wxt';
+
+export default defineWebExtConfig({
+  chromiumArgs: [
+    // For example, this flag enables the Prompt API
+    '--disable-features=DisableLoadExtensionCommandLineSwitch',
+  ],
+});
+```
+
+There is no comprehensive list of what feature flags enable what APIs and services.
+
+Alternatively, if you can't find a flag that enables a feature you're looking for, [disable the opening the browser during development](#disable-opening-browser) and use your regular chrome profile for development.

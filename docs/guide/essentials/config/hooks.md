@@ -11,7 +11,7 @@ export default defineConfig({
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
       if (wxt.config.mode === 'development') {
-        manifest.title += ' (DEV)';
+        manifest.name += ' (DEV)';
       }
     },
   },
@@ -19,6 +19,8 @@ export default defineConfig({
 ```
 
 Most hooks provide the `wxt` object as the first argument. It contains the resolved config and other info about the current build. The other arguments can be modified by reference to change different parts of the build system.
+
+You can find the [list of all available hooks](/api/reference/wxt/interfaces/WxtHooks) in the API reference.
 
 Putting one-off hooks like this in your config file is simple, but if you find yourself writing lots of hooks, you should extract them into [WXT Modules](/guide/essentials/wxt-modules) instead.
 
@@ -32,7 +34,7 @@ Because hooks can be defined in multiple places, including [WXT Modules](/guide/
 
 To see the order for your project, run `wxt prepare --debug` flag and search for the "Hook execution order":
 
-```
+```plaintext
 ⚙ Hook execution order:
 ⚙   1. wxt:built-in:unimport
 ⚙   2. src/modules/auto-icons.ts
@@ -50,7 +52,9 @@ Changing execution order is simple:
      📄 0.my-module.ts
      📄 1.another-module.ts
   ```
+
 - If you need to run an NPM module after user modules, just make it a user module and prefix the filename with a number!
+
   ```ts
   // modules/2.i18n.ts
   export { default } from '@wxt-dev/i18n/module';

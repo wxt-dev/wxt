@@ -3,7 +3,7 @@
  *
  * ```ts
  * export default defineConfig({
- *   modules: ["@wxt-dev/i18n/module"],
+ *   modules: ['@wxt-dev/i18n/module'],
  * });
  * ```
  *
@@ -18,7 +18,7 @@ import {
   generateTypeText,
   SUPPORTED_LOCALES,
 } from './build';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { basename, extname, join, resolve } from 'node:path';
 import { watch } from 'chokidar';
 import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
@@ -44,9 +44,10 @@ export default defineWxtModule<I18nOptions>({
       options ?? {};
 
     const getLocalizationFiles = async () => {
-      const files = await glob('*.{json,json5,yml,yaml,toml}', {
+      const files = await glob('*.{json,json5,jsonc,yml,yaml,toml}', {
         cwd: localesDir,
         absolute: true,
+        expandDirectories: false,
       });
 
       const unsupportedLocales: string[] = [];
@@ -88,7 +89,7 @@ export default defineWxtModule<I18nOptions>({
       )!;
       if (defaultLocaleFile == null) {
         throw Error(
-          `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|yml|yaml|toml}\``,
+          `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|jsonc|yml|yaml|toml}\``,
         );
       }
 
@@ -180,13 +181,12 @@ export { type GeneratedI18nStructure }
   },
 });
 
-/**
- * Options for the i18n module
- */
+/** Options for the i18n module */
 export interface I18nOptions {
   /**
    * Directory containing files that define the translations.
-   * @default "${config.srcDir}/locales"
+   *
+   * @default '${config.srcDir}/locales'
    */
   localesDir?: string;
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 import spawn from 'nano-spawn';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { mkdir, writeJson } from 'fs-extra';
 
 describe('Init command', () => {
@@ -21,6 +21,7 @@ describe('Init command', () => {
       cwd: project.root,
       onlyFiles: true,
       dot: true,
+      expandDirectories: false,
     });
 
     expect(files.sort()).toMatchInlineSnapshot(`

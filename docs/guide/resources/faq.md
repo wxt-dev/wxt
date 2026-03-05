@@ -20,13 +20,13 @@ await chrome.scripting.getRegisteredContentScripts();
 
 ## How do I disable opening the browser automatically during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser>
 
 ## How do I stay logged into a website during development?
 
-See https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data
+See <https://wxt.dev/guide/essentials/config/browser-startup.html#persist-data>
 
-## My component library doesn't work in content scripts!
+## My component library doesn't work in content scripts
 
 This is usually caused by one of two things (or both) when using `createShadowRootUi`:
 
@@ -36,7 +36,6 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    Some component libraries manually add CSS to the page by adding a `<style>` or `<link>` element. They place this element in the document's `<head>` by default. This causes your styles to be placed outside the `ShadowRoot` and it's isolation blocks the styles from being applied to your UI.
 
    When a library does this, **you need to tell the library where to put its styles**. Here's the documentation for a few popular component libraries:
-
    - Ant Design: [`StyleProvider`](https://ant.design/docs/react/compatible-style#shadow-dom-usage)
    - Mantine: [`MantineProvider#getRootElement` and `MantineProvider#cssVariablesSelector`](https://mantine.dev/theming/mantine-provider/)
 
@@ -165,13 +164,17 @@ Both issues have the same cause: the library puts something outside the `ShadowR
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
 
+## Does WXT provide docs for LLMs?
+
+Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).
+
 ## Is there an LLM trained on WXT's docs that I chat with?
 
-Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit https://knowledge.wxt.dev/ for a fullscreen experience.
+Yes! There's a "Ask AI" button in the bottom right of the page, try it out! Or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
 
 Additionally, if you want to train your own model or provide context to your editor, you can use the LLM knowledge files hosted by the site:
 
-https://wxt.dev/knowledge/index.json
+<https://wxt.dev/knowledge/index.json>
 
 You don't need to crawl the entire website, these files already contain all the relevant docs for training a LLM on WXT. But feel free to crawl it and generate your own files if you want!
 
@@ -179,11 +182,41 @@ You don't need to crawl the entire website, these files already contain all the 
 
 To run the WXT dev server in a devcontainer, but load the dev build of your extension in your browser:
 
-1. **Bind-mount your project directory to your host**  
+1. **Bind-mount your project directory to your host**
    If you're using VS Code, you can open your project folder with the `Dev Containers: Open Folder in Container...` command. This keeps the folder synchronized between your host and the devcontainer, ensuring that the extension `dist` directory remains accessible from the host.
 
-2. **Disable auto-opening the browser**  
-   WXT automatically opens your browser during development, but since you're running inside a container, it won't be able to access it. Follow the instructions [here](https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser) to disable browser auto-opening in your `wxt.config.ts`.
+2. **Disable auto-opening the browser**
+   WXT automatically opens your browser during development, but since you're running inside a container, it won't be able to access it. Follow [the guide here](https://wxt.dev/guide/essentials/config/browser-startup.html#disable-opening-browser) to disable browser auto-opening in your `wxt.config.ts`.
 
-3. **Tell WXT to listen on all network interfaces**  
+3. **Tell WXT to listen on all network interfaces**
    To enable hot-reloading, your extension has to connect to the WXT dev server running inside your container. WXT will only listen on `localhost` by default, which prevents connections from outside the devcontainer. To fix this you can instruct WXT to listen on all interfaces with `wxt --host 0.0.0.0`.
+
+## How do I use the new Prompt API in Chrome?
+
+The service responsible for the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api) is not enabled by default if you let WXT open the browser during dev mode. When checking `LanguageModel.availability`, you will always receive "unavailable".
+
+You have two options:
+
+1. Pass the `--disable-features=DisableLoadExtensionCommandLineSwitch` feature flag to enable the service in the browser WXT opens:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       chromiumArgs: [
+         '--disable-features=DisableLoadExtensionCommandLineSwitch',
+       ],
+     },
+   });
+   ```
+
+2. Disable the runner and install your extension in your regular chrome profile manually:
+
+   ```ts
+   // wxt.config.ts
+   export default defineConfig({
+     webExt: {
+       disabled: true,
+     },
+   });
+   ```

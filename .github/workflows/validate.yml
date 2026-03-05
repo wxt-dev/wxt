@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -55,38 +55,40 @@ jobs:
         working-directory: packages/wxt-demo
 
   tests:
-    name: Tests
-    runs-on: ubuntu-22.04
+    name: Tests (${{ matrix.title }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - title: 'Linux'
+            os: ubuntu-22.04
+            coverage: true
+          - title: 'Windows'
+            os: windows-latest
+            coverage: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
 
       - name: Run Tests
-        run: pnpm test:coverage -- --reporter=default --reporter=hanging-process
+        if: ${{ ! matrix.coverage }}
+        run: pnpm test
+
+      - name: Run Tests (Coverage)
+        if: matrix.coverage
+        run: pnpm test:coverage --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
-        uses: codecov/codecov-action@v5
+        if: matrix.coverage
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  windows-tests:
-    name: Windows Tests
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Run Tests
-        run: pnpm test
 
   template:
     name: Template
@@ -102,7 +104,7 @@ jobs:
           - vue
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup
         uses: ./.github/actions/setup

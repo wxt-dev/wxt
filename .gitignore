@@ -5,6 +5,7 @@
 .output
 .webextrc
 .wxt
+.wxt-runner
 *.log
 /docs/.vitepress/cache
 docs/.vitepress/.temp

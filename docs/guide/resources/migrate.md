@@ -15,6 +15,11 @@ cd path/to/your/project
 pnpm dlx wxt@latest init example-wxt --template vanilla
 ```
 
+:::tip
+We recommend reviewing [project structure](/guide/essentials/project-structure.md) before you get started.
+You can customize directory names in `wxt.config.ts` to match your project's needs.
+:::
+
 In general, you'll need to:
 
 &ensp;<input type="checkbox" /> Install `wxt`<br />

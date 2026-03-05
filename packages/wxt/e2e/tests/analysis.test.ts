@@ -30,8 +30,8 @@ describe('Analysis', () => {
       },
     });
 
-    expect(await project.fileExists('stats.html')).toBe(true);
-    expect(await project.fileExists('.output/chrome-mv3/stats-0.json')).toBe(
+    expect(await project.pathExists('stats.html')).toBe(true);
+    expect(await project.pathExists('.output/chrome-mv3/stats-0.json')).toBe(
       false,
     );
   });
@@ -52,9 +52,9 @@ describe('Analysis', () => {
       },
     });
 
-    expect(await project.fileExists('stats.html')).toBe(true);
-    expect(await project.fileExists('stats-0.json')).toBe(true);
-    expect(await project.fileExists('stats-1.json')).toBe(true);
+    expect(await project.pathExists('stats.html')).toBe(true);
+    expect(await project.pathExists('stats-0.json')).toBe(true);
+    expect(await project.pathExists('stats-1.json')).toBe(true);
   });
 
   it('should support customizing the stats output directory', async () => {
@@ -73,7 +73,7 @@ describe('Analysis', () => {
       },
     });
 
-    expect(await project.fileExists('stats/bundle.html')).toBe(true);
+    expect(await project.pathExists('stats/bundle.html')).toBe(true);
   });
 
   it('should place artifacts next to the custom output file', async () => {
@@ -93,9 +93,9 @@ describe('Analysis', () => {
       },
     });
 
-    expect(await project.fileExists('stats/bundle.html')).toBe(true);
-    expect(await project.fileExists('stats/bundle-0.json')).toBe(true);
-    expect(await project.fileExists('stats/bundle-1.json')).toBe(true);
+    expect(await project.pathExists('stats/bundle.html')).toBe(true);
+    expect(await project.pathExists('stats/bundle-0.json')).toBe(true);
+    expect(await project.pathExists('stats/bundle-1.json')).toBe(true);
   });
 
   it('should open the stats in the browser when requested', async () => {

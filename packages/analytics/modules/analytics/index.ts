@@ -8,6 +8,7 @@ import {
 } from 'wxt/modules';
 import { relative, resolve } from 'node:path';
 import type { AnalyticsConfig } from './types';
+import { normalizePath } from 'wxt';
 
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
@@ -22,10 +23,10 @@ export default defineWxtModule({
     // Paths
     const wxtAnalyticsFolder = resolve(wxt.config.wxtDir, 'analytics');
     const wxtAnalyticsIndex = resolve(wxtAnalyticsFolder, 'index.ts');
-    const clientModuleId = import.meta.env.NPM
+    const clientModuleId = process.env.NPM
       ? '@wxt-dev/analytics'
       : resolve(wxt.config.modulesDir, 'analytics/client');
-    const pluginModuleId = import.meta.env.NPM
+    const pluginModuleId = process.env.NPM
       ? '@wxt-dev/analytics/background-plugin'
       : resolve(wxt.config.modulesDir, 'analytics/background-plugin');
 
@@ -38,17 +39,15 @@ export default defineWxtModule({
     });
 
     // Generate #analytics module
-    const wxtAnalyticsCode = [
-      `import { createAnalytics } from '${
-        import.meta.env.NPM
-          ? clientModuleId
-          : relative(wxtAnalyticsFolder, clientModuleId)
-      }';`,
-      `import { useAppConfig } from '#imports';`,
-      ``,
-      `export const analytics = createAnalytics(useAppConfig().analytics);`,
-      ``,
-    ].join('\n');
+    const wxtAnalyticsCode = `import { createAnalytics } from '${
+      process.env.NPM
+        ? clientModuleId
+        : normalizePath(relative(wxtAnalyticsFolder, clientModuleId))
+    }';
+import { useAppConfig } from '#imports';
+
+export const analytics = createAnalytics(useAppConfig().analytics);
+`;
     addAlias(wxt, '#analytics', wxtAnalyticsIndex);
     wxt.hook('prepare:types', async (_, entries) => {
       entries.push({

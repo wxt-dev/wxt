@@ -10,7 +10,7 @@ WXT does several pre-processing steps to try and prevent errors during this proc
 2. Use `@webext-core/fake-browser` to create a fake version of the `chrome` and `browser` globals expected by extensions.
 3. Pre-process the JS/TS code, stripping out the `main` function then tree-shaking unused code from the file
 
-However, this process is not perfect. It doesn't setup all the globals found in the browser and the APIs may behave differently. As such, **_you should avoid using browser or extension APIs outside the `main` function of your entrypoints!_**
+However, this process is not perfect. It doesn't setup all the globals found in the browser and the APIs may behave differently. As such, **_you should avoid using browser or extension APIs outside the `main` function of your entrypoints!_** See [Entrypoint Limitations](/guide/essentials/extension-apis#entrypoint-limitations) for more details.
 
 :::tip
 If you're running into errors while importing entrypoints, run `wxt prepare --debug` to see more details about this process. When debugging, WXT will print out the pre-processed code to help you identify issues.

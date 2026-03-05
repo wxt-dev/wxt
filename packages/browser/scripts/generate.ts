@@ -60,9 +60,7 @@ for (const { file, srcPath, destPath } of declarationFileMapping) {
 
 // Done!
 
-console.log(
-  '\x1b[32m✔\x1b[0m Done in ' + performance.now().toFixed(0) + ' ms',
-);
+console.log('\x1b[32m✔\x1b[0m Done in ' + performance.now().toFixed(0) + ' ms');
 
 // Transformations
 

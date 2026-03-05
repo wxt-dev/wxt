@@ -58,7 +58,9 @@ export async function initialize(options: {
 
   const isExists = await fs.pathExists(input.directory);
   if (isExists) {
-    const isEmpty = (await fs.readdir(input.directory)).length === 0;
+    const isEmpty =
+      (await fs.readdir(input.directory)).filter((dir) => dir !== '.git')
+        .length === 0;
     if (!isEmpty) {
       consola.error(
         `The directory ${path.resolve(input.directory)} is not empty. Aborted.`,
@@ -85,13 +87,9 @@ export async function initialize(options: {
 }
 
 interface Template {
-  /**
-   * Template's name.
-   */
+  /** Template's name. */
   name: string;
-  /**
-   * Path to template directory in github repo.
-   */
+  /** Path to template directory in github repo. */
   path: string;
 }
 
@@ -159,8 +157,8 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { default: ora } = await import('ora');
-  const spinner = ora('Downloading template').start();
+  const { createSpinner } = await import('nanospinner');
+  const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
     await downloadTemplate(`gh:${REPO}/${template.path}`, {
@@ -178,9 +176,9 @@ async function cloneProject({
         consola.warn('Failed to move _gitignore to .gitignore:', err),
       );
 
-    spinner.succeed();
+    spinner.success();
   } catch (err) {
-    spinner.fail();
+    spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
   }
 }
