@@ -1,7 +1,7 @@
+import { rm } from 'node:fs/promises';
 import path from 'node:path';
-import { glob } from 'tinyglobby';
-import fs from 'fs-extra';
 import pc from 'picocolors';
+import { glob } from 'tinyglobby';
 import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
 
@@ -60,7 +60,7 @@ export async function clean(config?: string | InlineConfig) {
     directories.map((dir) => pc.cyan(path.relative(root, dir))).join(', '),
   );
   for (const directory of directories) {
-    await fs.rm(directory, { force: true, recursive: true });
+    await rm(directory, { force: true, recursive: true });
     wxt.logger.debug('Deleted ' + pc.cyan(path.relative(root, directory)));
   }
 }

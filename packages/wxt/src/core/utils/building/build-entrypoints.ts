@@ -5,7 +5,7 @@ import {
   ResolvedPublicFile,
 } from '../../../types';
 import { getPublicFiles } from '../fs';
-import fs from 'fs-extra';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
 import type { Spinner } from 'nanospinner';
 import pc from 'picocolors';
@@ -50,11 +50,11 @@ async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
   for (const file of files) {
     const absoluteDest = resolve(wxt.config.outDir, file.relativeDest);
 
-    await fs.ensureDir(dirname(absoluteDest));
+    await mkdir(dirname(absoluteDest), { recursive: true });
     if ('absoluteSrc' in file) {
-      await fs.copyFile(file.absoluteSrc, absoluteDest);
+      await copyFile(file.absoluteSrc, absoluteDest);
     } else {
-      await fs.writeFile(absoluteDest, file.contents, 'utf8');
+      await writeFile(absoluteDest, file.contents, 'utf8');
     }
     publicAssets.push({
       type: 'asset',

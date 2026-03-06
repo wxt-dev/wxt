@@ -1,8 +1,8 @@
-import { glob } from 'tinyglobby';
-import fs, { mkdir } from 'fs-extra';
 import merge from 'lodash.merge';
 import spawn from 'nano-spawn';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'path';
+import { glob } from 'tinyglobby';
 import {
   InlineConfig,
   UserConfig,
@@ -12,6 +12,7 @@ import {
   zip,
 } from '../src';
 import { normalizePath } from '../src/core/utils';
+import { pathExists, readJson } from '../src/core/utils/fs';
 
 // Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -119,8 +120,8 @@ export class TestProject {
       const [name, content] = file;
       const filePath = this.resolvePath(name);
       const fileDir = dirname(filePath);
-      await fs.ensureDir(fileDir);
-      await fs.writeFile(filePath, content ?? '', 'utf-8');
+      await mkdir(fileDir, { recursive: true });
+      await writeFile(filePath, content ?? '', 'utf-8');
     }
 
     // Only install dependencies if the project has custom ones - otherwise the
@@ -183,17 +184,19 @@ export class TestProject {
     const absolutePath = this.resolvePath(path);
     return [
       normalizePath(relative(this.root, absolutePath)),
-      ignoreContents ? '<contents-ignored>' : await fs.readFile(absolutePath),
+      ignoreContents
+        ? '<contents-ignored>'
+        : await readFile(absolutePath, 'utf-8'),
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 
   pathExists(...path: string[]): Promise<boolean> {
-    return fs.pathExists(this.resolvePath(...path));
+    return pathExists(this.resolvePath(...path));
   }
 
   getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return fs.readJson(this.resolvePath(path));
+    return readJson(this.resolvePath(path));
   }
 }

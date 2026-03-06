@@ -20,7 +20,7 @@ import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from './utils/types';
-import fs from 'fs-extra';
+import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
 import { glob } from 'tinyglobby';
 import { builtinModules } from '../builtin-modules';
@@ -543,7 +543,7 @@ function resolveWxtModuleDir() {
 }
 
 async function isDirMissing(dir: string) {
-  return !(await fs.pathExists(dir));
+  return !(await pathExists(dir));
 }
 
 function logMissingDir(logger: Logger, name: string, expected: string) {

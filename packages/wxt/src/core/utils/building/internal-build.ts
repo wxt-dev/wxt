@@ -1,7 +1,7 @@
 import { findEntrypoints } from './find-entrypoints';
 import { BuildOutput, Entrypoint } from '../../../types';
 import pc from 'picocolors';
-import fs from 'fs-extra';
+import { mkdir, rm } from 'node:fs/promises';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '../time';
 import { printBuildSummary } from '../log';
@@ -43,8 +43,8 @@ export async function internalBuild(): Promise<BuildOutput> {
   const startTime = Date.now();
 
   // Cleanup
-  await fs.rm(wxt.config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(wxt.config.outDir);
+  await rm(wxt.config.outDir, { recursive: true, force: true });
+  await mkdir(wxt.config.outDir, { recursive: true });
 
   const entrypoints = await findEntrypoints();
   wxt.logger.debug('Detected entrypoints:', entrypoints);
@@ -111,7 +111,9 @@ async function combineAnalysisStats(): Promise<void> {
   });
 
   if (!wxt.config.analysis.keepArtifacts) {
-    await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+    await Promise.all(
+      absolutePaths.map((statsFile) => rm(statsFile, { force: true })),
+    );
   }
 }
 

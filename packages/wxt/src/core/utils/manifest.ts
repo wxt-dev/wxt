@@ -7,7 +7,7 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../../types';
-import fs from 'fs-extra';
+import { mkdir } from 'node:fs/promises';
 import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
@@ -33,7 +33,7 @@ export async function writeManifest(
       ? JSON.stringify(manifest)
       : JSON.stringify(manifest, null, 2);
 
-  await fs.ensureDir(wxt.config.outDir);
+  await mkdir(wxt.config.outDir, { recursive: true });
   await writeFileIfDifferent(resolve(wxt.config.outDir, 'manifest.json'), str);
 
   output.publicAssets.unshift({

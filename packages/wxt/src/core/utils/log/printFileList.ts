@@ -1,6 +1,6 @@
 import path from 'node:path';
 import pc from 'picocolors';
-import fs from 'fs-extra';
+import { lstat } from 'node:fs/promises';
 import { filesize } from 'filesize';
 import { printTable } from './printTable';
 
@@ -20,7 +20,7 @@ export async function printFileList(
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
       const color = getChunkColor(file);
-      const stats = await fs.lstat(file);
+      const stats = await lstat(file);
       totalSize += stats.size;
       const size = String(filesize(stats.size));
       return [
