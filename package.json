@@ -53,7 +53,7 @@
     "wxt": "workspace:*"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm nano-staged"
+    "pre-commit": "./node_modules/.bin/nano-staged"
   },
   "nano-staged": {
     "*": "prettier --ignore-unknown --write"
