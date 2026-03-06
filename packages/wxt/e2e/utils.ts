@@ -1,9 +1,8 @@
-import { glob } from 'tinyglobby';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { pathExists, readJson } from '../src/core/utils/fs';
 import merge from 'lodash.merge';
 import spawn from 'nano-spawn';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'path';
+import { glob } from 'tinyglobby';
 import {
   InlineConfig,
   UserConfig,
@@ -13,6 +12,7 @@ import {
   zip,
 } from '../src';
 import { normalizePath } from '../src/core/utils';
+import { pathExists, readJson } from '../src/core/utils/fs';
 
 // Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package

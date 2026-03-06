@@ -1,7 +1,7 @@
-import path from 'node:path';
-import { glob } from 'tinyglobby';
 import { rm } from 'node:fs/promises';
+import path from 'node:path';
 import pc from 'picocolors';
+import { glob } from 'tinyglobby';
 import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
 

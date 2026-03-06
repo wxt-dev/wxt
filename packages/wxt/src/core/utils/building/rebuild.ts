@@ -1,9 +1,10 @@
+import type { Browser } from '@wxt-dev/browser';
+import { createSpinner } from 'nanospinner';
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
 import { generateWxtDir } from '../../generate-wxt-dir';
-import { buildEntrypoints } from './build-entrypoints';
 import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
-import type { Browser } from '@wxt-dev/browser';
+import { buildEntrypoints } from './build-entrypoints';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output,
@@ -21,7 +22,7 @@ import type { Browser } from '@wxt-dev/browser';
  *   .wxt directory.
  * @param entrypointGroups The list of entrypoint groups to build.
  * @param existingOutput The previous output to combine the rebuild results
- *   into. An emptry array if this is the first build.
+ *   into. An empty array if this is the first build.
  */
 export async function rebuild(
   allEntrypoints: Entrypoint[],
@@ -35,7 +36,6 @@ export async function rebuild(
   manifest: Browser.runtime.Manifest;
   warnings: any[][];
 }> {
-  const { createSpinner } = await import('nanospinner');
   const spinner = createSpinner('Preparing...').start();
 
   // Update types directory with new files and types

@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 import spawn from 'nano-spawn';
-import { glob } from 'tinyglobby';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { glob } from 'tinyglobby';
+import { describe, expect, it } from 'vitest';
+import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {
   it('should download and create a template', async () => {

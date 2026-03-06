@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'path';
+import { glob } from 'tinyglobby';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,
@@ -9,13 +12,10 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../../../../types';
-import { resolve } from 'path';
-import { findEntrypoints } from '../find-entrypoints';
-import { readFile } from 'node:fs/promises';
-import { glob } from 'tinyglobby';
-import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
-import { unnormalizePath } from '../../paths';
 import { wxt } from '../../../wxt';
+import { unnormalizePath } from '../../paths';
+import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
+import { findEntrypoints } from '../find-entrypoints';
 
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);

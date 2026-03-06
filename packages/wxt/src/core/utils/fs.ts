@@ -1,7 +1,7 @@
 import { access, readFile, writeFile } from 'node:fs/promises';
 import { glob } from 'tinyglobby';
-import { unnormalizePath } from './paths';
 import { wxt } from '../wxt';
+import { unnormalizePath } from './paths';
 
 export async function pathExists(path: string): Promise<boolean> {
   try {

@@ -8,7 +8,7 @@
     "dev:build": "buildc --deps-only -- wxt build",
     "check": "pnpm build && check",
     "build": "buildc -- tsdown",
-    "prepack": "pnpm -s build",
+    "prepack": "pnpm build",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.17",
+    "publint": "^0.3.18",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   },

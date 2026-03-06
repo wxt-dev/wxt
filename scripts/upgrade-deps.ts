@@ -1,10 +1,10 @@
-import { glob } from 'tinyglobby';
-import { readFile, writeFile } from 'node:fs/promises';
-import * as semver from 'semver';
-import { dirname } from 'node:path';
 import consola from 'consola';
 import spawn from 'nano-spawn';
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import pMap from 'p-map';
+import * as semver from 'semver';
+import { glob } from 'tinyglobby';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.

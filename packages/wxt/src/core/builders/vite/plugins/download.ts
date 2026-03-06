@@ -13,15 +13,23 @@ import { fetchCached } from '../../../utils/network';
 export function download(config: ResolvedConfig): Plugin {
   return {
     name: 'wxt:download',
-    resolveId(id) {
-      if (id.startsWith('url:')) return '\0' + id;
+    resolveId: {
+      filter: {
+        id: /^url:/,
+      },
+      handler(id) {
+        return `\0${id}`;
+      },
     },
-    load(id) {
-      if (!id.startsWith('\0url:')) return;
-
-      // Load file from network or cache
-      const url = id.replace('\0url:', '');
-      return fetchCached(url, config);
+    load: {
+      filter: {
+        //eslint-disable-next-line no-control-regex
+        id: /^\x00url:/,
+      },
+      handler(id) {
+        const url = id.replace('\0url:', '');
+        return fetchCached(url, config);
+      },
     },
   };
 }
