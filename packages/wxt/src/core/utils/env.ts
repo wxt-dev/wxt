@@ -19,24 +19,27 @@ export function loadEnv(mode: string, browser: TargetBrowser) {
   // We reversed the list so that more specific files take priority over more general ones.
   const parsed = Object.fromEntries(
     envFiles
-      .slice() 
-      .reverse() 
+      .slice()
+      .reverse()
       .flatMap((filePath) => {
         if (!existsSync(filePath)) return [];
-        
+
         try {
           const content = readFileSync(filePath, 'utf-8');
           const parsedEnv = parseEnv(content);
           return Object.entries(parsedEnv);
-        } catch (e) {
+        } catch {
           return [];
         }
       }),
-  );
+  ) as Record<string, string>;
 
   // We prepare the environment for variable expansion ($VAR)
-  const processEnv = { ...process.env };
-  expand({ parsed, processEnv });
+  const processEnv = { ...process.env } as Record<string, string>;
+  expand({
+    parsed,
+    processEnv,
+  });
 
   return parsed;
 }
