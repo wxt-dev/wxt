@@ -25,7 +25,7 @@
     "test": "buildc --deps-only -- vitest",
     "dev": "tsx --trace-warnings dev.ts",
     "build": "buildc -- tsdown",
-    "prepublishOnly": "pnpm build"
+    "prepack": "pnpm build"
   },
   "devDependencies": {
     "oxlint": "^1.51.0",

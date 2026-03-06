@@ -40,7 +40,8 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check"
+    "check": "pnpm build && check",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"

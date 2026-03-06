@@ -33,7 +33,8 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check"
+    "check": "buildc --deps-only -- check",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",

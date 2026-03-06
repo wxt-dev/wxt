@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.2.0...module-react-v1.2.1)
+
+### 🏡 Chore
+
+- Add prepack script to all packages ([032f7931](https://github.com/wxt-dev/wxt/commit/032f7931))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v1.2.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.5...module-react-v1.2.0)
