@@ -8,7 +8,7 @@
     "dev:build": "buildc --deps-only -- wxt build",
     "check": "pnpm build && check",
     "build": "buildc -- tsdown",
-    "prepack": "pnpm -s build",
+    "prepack": "pnpm build",
     "prepare": "buildc --deps-only -- wxt prepare"
   },
   "dependencies": {
