@@ -38,7 +38,8 @@
     "dev": "wxt",
     "check": "pnpm build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "webextension-polyfill": "*",

@@ -42,7 +42,8 @@
     "dev": "wxt",
     "check": "pnpm build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "vite": "^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0",
