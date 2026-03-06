@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.2.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.5...module-react-v1.2.0)
+
+### 🚀 Enhancements
+
+- Add `vitePluginsBefore` option ([#2170](https://github.com/wxt-dev/wxt/pull/2170))
+- Vite 8 support ([bfd4af5d](https://github.com/wxt-dev/wxt/commit/bfd4af5d))
+
+### 🏡 Chore
+
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Martin Broder <hello@martinbroder.com>
+
 ## v1.1.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.4...module-react-v1.1.5)
