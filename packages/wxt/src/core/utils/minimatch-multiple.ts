@@ -1,7 +1,7 @@
-import { minimatch, MinimatchOptions } from 'minimatch';
+import { isMatch } from 'picomatch';
 
 /**
- * Run [`minimatch`](https://npmjs.com/package/minimatch) against multiple
+ * Run [`picomatch`](https://npmjs.com/package/picomatch) against multiple
  * patterns.
  *
  * Supports negated patterns, the order does not matter. If your `search` string
@@ -16,7 +16,6 @@ import { minimatch, MinimatchOptions } from 'minimatch';
 export function minimatchMultiple(
   search: string,
   patterns: string[] | undefined,
-  options?: MinimatchOptions,
 ): boolean {
   if (patterns == null) return false;
 
@@ -27,14 +26,10 @@ export function minimatchMultiple(
     else positivePatterns.push(pattern);
   }
 
-  if (
-    negatePatterns.some((negatePattern) =>
-      minimatch(search, negatePattern, options),
-    )
-  )
+  if (negatePatterns.some((negatePattern) => isMatch(search, negatePattern)))
     return false;
 
   return positivePatterns.some((positivePattern) =>
-    minimatch(search, positivePattern, options),
+    isMatch(search, positivePattern),
   );
 }
