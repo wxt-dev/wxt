@@ -495,9 +495,6 @@ importers:
       magicast:
         specifier: ^0.5.2
         version: 0.5.2
-      minimatch:
-        specifier: ^10.2.4
-        version: 10.2.4
       nano-spawn:
         specifier: ^2.0.0
         version: 2.0.0
@@ -522,6 +519,9 @@ importers:
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
+      picomatch:
+        specifier: ^4.0.3
+        version: 4.0.3
       prompts:
         specifier: ^2.4.2
         version: 2.4.2

@@ -212,7 +212,7 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
-     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to
+     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
      * include when creating a ZIP of all your source code for Firefox. Patterns
      * are relative to your `config.zip.sourcesRoot`.
      *
@@ -226,7 +226,7 @@ export interface InlineConfig {
      */
     includeSources?: string[];
     /**
-     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to
+     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
      * exclude when creating a ZIP of all your source code for Firefox. Patterns
      * are relative to your `config.zip.sourcesRoot`.
      *
@@ -239,7 +239,7 @@ export interface InlineConfig {
      */
     excludeSources?: string[];
     /**
-     * [Minimatch](https://www.npmjs.com/package/minimatch) patterns of files to
+     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
      * exclude when zipping the extension.
      *
      * @example
