@@ -15,6 +15,7 @@ const chromeExtensionIds = [
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
   'oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
+  'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
   'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
   'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
   'ceicccfeikoipigeghddpocceifjelph', // Plex Skipper
