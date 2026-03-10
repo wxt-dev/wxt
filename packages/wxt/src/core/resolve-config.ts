@@ -79,7 +79,7 @@ export async function resolveConfig(
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
-  await loadEnv(mode, browser); // Load any environment variables used below
+  loadEnv(mode, browser); // Load any environment variables used below
 
   const root = path.resolve(
     inlineConfig.root ?? userConfig.root ?? process.cwd(),

@@ -4,31 +4,29 @@ import { parseEnv } from './parse-env';
 import type { TargetBrowser } from '../../types';
 
 /** Load environment files based on the current mode and browser. */
-export async function loadEnv(mode: string, browser: TargetBrowser) {
+export function loadEnv(mode: string, browser: TargetBrowser) {
+  // Ordered least-specific → most-specific so that later files
+  // overwrite earlier ones via Object.assign.
   const envFiles = [
-    `.env.${mode}.${browser}.local`,
-    `.env.${mode}.${browser}`,
-    `.env.${browser}.local`,
-    `.env.${browser}`,
-    `.env.${mode}.local`,
-    `.env.${mode}`,
-    `.env.local`,
     `.env`,
+    `.env.local`,
+    `.env.${mode}`,
+    `.env.${mode}.local`,
+    `.env.${browser}`,
+    `.env.${browser}.local`,
+    `.env.${mode}.${browser}`,
+    `.env.${mode}.${browser}.local`,
   ];
 
   const parsed: Record<string, string> = {};
 
-  // Load env files in reverse order so that files on top override files below
   for (const file of envFiles) {
     try {
-      const content = fs.readFileSync(file, 'utf-8');
-      const fileParsed = await parseEnv(content);
-      Object.assign(parsed, fileParsed);
+      Object.assign(parsed, parseEnv(fs.readFileSync(file, 'utf-8')));
     } catch {
-      // File doesn't exist or can't be read, skip it
+      // File doesn't exist, skip
     }
   }
 
-  // Apply dotenv-expand to handle variable expansion
   return expand({ parsed });
 }
