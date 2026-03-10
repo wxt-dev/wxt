@@ -44,6 +44,7 @@
     "linkedom": "^0.18.12",
     "magicast": "^0.5.2",
     "nano-spawn": "^2.0.0",
+    "picomatch": "^4.0.3",
     "nanospinner": "^1.2.2",
     "normalize-path": "^3.0.0",
     "nypm": "^0.6.5",
