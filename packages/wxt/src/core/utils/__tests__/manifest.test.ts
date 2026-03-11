@@ -1029,6 +1029,43 @@ describe('Manifest Utils', () => {
           expect(actual).toMatchObject(expected);
         },
       );
+
+      it('should merge user-defined sidebar_action with generated fields for firefox', async () => {
+        const sidepanel = fakeSidepanelEntrypoint({
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput();
+
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'firefox',
+            outDir,
+            manifest: {
+              sidebar_action: {
+                default_title: 'Custom Title',
+                default_icon: 'custom-icon.png',
+                custom_field: 'custom_value',
+              },
+            } as any,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [sidepanel],
+          buildOutput,
+        );
+
+        expect(actual.sidebar_action).toMatchObject({
+          default_panel: 'sidepanel.html',
+          default_title: 'Custom Title',
+          default_icon: 'custom-icon.png',
+          custom_field: 'custom_value',
+          browser_style: sidepanel.options.browserStyle,
+          open_at_install: sidepanel.options.openAtInstall,
+        });
+      });
     });
 
     describe('web_accessible_resources', () => {

@@ -355,6 +355,7 @@ function addEntrypoints(
         default_icon: defaultSidepanel.options.defaultIcon,
         default_title: defaultSidepanel.options.defaultTitle,
         open_at_install: defaultSidepanel.options.openAtInstall,
+        ...manifest.sidebar_action,
       };
     } else if (wxt.config.manifestVersion === 3) {
       manifest.side_panel = {
