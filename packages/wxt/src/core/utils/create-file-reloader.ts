@@ -26,8 +26,8 @@ import { normalizePath } from './paths';
 import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
 
 /**
- * Returns a function responsible for reloading different parts of the extension when a file
- * changes.
+ * Returns a function responsible for reloading different parts of the extension
+ * when a file changes.
  */
 export function createFileReloader(server: WxtDevServer) {
   const fileChangedMutex = new Mutex();
@@ -124,7 +124,7 @@ export function createFileReloader(server: WxtDevServer) {
 
         // Perform reloads
         const needsFullExtensionReload =
-          newEntrypointGroups.length > 0 ||
+          newEntrypointGroups.length ||
           changes.type === 'extension-reload' ||
           changes.type === 'no-change';
         if (needsFullExtensionReload) {
@@ -246,7 +246,8 @@ function getEntrypointGroupKey(group: EntrypointGroup): string {
 }
 
 /**
- * From the server, tell the client to reload content scripts from the provided build step outputs.
+ * From the server, tell the client to reload content scripts from the provided
+ * build step outputs.
  */
 export function reloadContentScripts(
   steps: BuildStepOutput[],

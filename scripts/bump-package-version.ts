@@ -6,7 +6,7 @@ import {
   parseCommits,
 } from 'changelogen';
 import { consola } from 'consola';
-import fs from 'fs-extra';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import spawn from 'nano-spawn';
 import path from 'node:path';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
@@ -41,7 +41,7 @@ if (currentVersion.startsWith('0.')) {
 await spawn('pnpm', ['version', bumpType], {
   cwd: pkgDir,
 });
-const updatedPkgJson = await fs.readJson(pkgJsonPath);
+const updatedPkgJson = JSON.parse(await readFile(pkgJsonPath, 'utf-8'));
 const newVersion: string = updatedPkgJson.version;
 const newTag = getPkgTag(pkg, newVersion);
 consola.info('Bump:', { currentVersion, bumpType, newVersion });
@@ -63,8 +63,7 @@ if (originalBumpType === 'major') {
     `[⚠️ breaking changes](https://wxt.dev/guide/resources/upgrading.html) &bull; [compare changes]`,
   );
 }
-const { releases: prevReleases } = await fs
-  .readFile(changelogPath, 'utf8')
+const { releases: prevReleases } = await readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 const allReleases = [
@@ -80,29 +79,34 @@ const newChangelog =
   allReleases
     .map((release) => [`## v${release.version}`, release.body].join('\n\n'))
     .join('\n\n');
-await fs.writeFile(changelogPath, newChangelog, 'utf8');
+await writeFile(changelogPath, newChangelog, 'utf8');
 consola.success('Updated changelog');
 
 // Update WXT version in templates when releasing wxt package
 const templatePkgJsonPaths: string[] = [];
 if (pkg === 'wxt') {
   const templatesDir = 'templates';
-  const templateDirs = await fs.readdir(templatesDir);
+  const templateDirs = await readdir(templatesDir);
   for (const templateDir of templateDirs) {
     const templatePkgJsonPath = path.join(
       templatesDir,
       templateDir,
       'package.json',
     );
-    if (await fs.pathExists(templatePkgJsonPath)) {
-      const templatePkgJson = await fs.readJson(templatePkgJsonPath);
+    try {
+      const templatePkgJson = JSON.parse(
+        await readFile(templatePkgJsonPath, 'utf-8'),
+      );
       if (templatePkgJson.devDependencies?.wxt) {
         templatePkgJson.devDependencies.wxt = `^${newVersion}`;
-        await fs.writeJson(templatePkgJsonPath, templatePkgJson, { spaces: 2 });
+        await writeFile(
+          templatePkgJsonPath,
+          JSON.stringify(templatePkgJson, null, 2),
+        );
         templatePkgJsonPaths.push(templatePkgJsonPath);
         consola.success(`Updated wxt version in ${templatePkgJsonPath}`);
       }
-    }
+    } catch {}
   }
 }
 

@@ -6,9 +6,7 @@ import { createShadowRootUi } from '../shadow-root';
 import { ContentScriptContext } from '../../content-script-context';
 import { ContentScriptUi } from '../types';
 
-/**
- * Util for floating promise.
- */
+/** Util for floating promise. */
 async function runMicrotasks() {
   return await new Promise((resolve) => setTimeout(resolve, 0));
 }
@@ -489,9 +487,7 @@ describe('Content Script UIs', () => {
     });
   });
 
-  /**
-   * Need call runMicrotasks after floating-promise and append/remove dom
-   */
+  /** Need call runMicrotasks after floating-promise and append/remove dom */
   describe('auto mount', () => {
     const DYNAMIC_CHILD_ID = 'dynamic-child';
     let ui: ContentScriptUi<any>;

@@ -12,13 +12,14 @@ import {
 } from './utils/create-file-reloader';
 
 /**
- * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
+ * Creates a dev server and pre-builds all the files that need to exist before
+ * loading the extension.
  *
  * @example
- * const server = await wxt.createServer({
- *   // Enter config...
- * });
- * await server.start();
+ *   const server = await wxt.createServer({
+ *     // Enter config...
+ *   });
+ *   await server.start();
  */
 export async function createServer(
   inlineConfig?: InlineConfig,
@@ -180,6 +181,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
 /**
  * Based on the current build output, return a list of files that are:
+ *
  * 1. Not in node_modules
  * 2. Not inside project root
  */

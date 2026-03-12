@@ -1,5 +1,59 @@
 # Changelog
 
+## v0.20.18
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.17...wxt-v0.20.18)
+
+### 🚀 Enhancements
+
+- Create tests for all func of `network.ts` ([#2132](https://github.com/wxt-dev/wxt/pull/2132))
+- Use Navigation API for location change detection with polling fallback ([#2136](https://github.com/wxt-dev/wxt/pull/2136))
+- **modules:** Add support for augumenting entrypoint options ([#2149](https://github.com/wxt-dev/wxt/pull/2149))
+- New `@wxt-dev/is-background` package ([#2152](https://github.com/wxt-dev/wxt/pull/2152))
+- Add `globalName` entrypoint option. ([#2017](https://github.com/wxt-dev/wxt/pull/2017))
+
+### 🩹 Fixes
+
+- Add `getAppConfig` as an alias to `useAppConfig` ([#2144](https://github.com/wxt-dev/wxt/pull/2144))
+- Enable mv3 dev mode with firefox 147 ([#2135](https://github.com/wxt-dev/wxt/pull/2135))
+- **types:** Add type safety to `browser.runtime.executeScript` `files` option ([#2142](https://github.com/wxt-dev/wxt/pull/2142))
+- **types:** Include CSS entrypoints in PublicPath generation ([#2150](https://github.com/wxt-dev/wxt/pull/2150))
+- Fix submit command ([#2157](https://github.com/wxt-dev/wxt/pull/2157))
+
+### 📖 Documentation
+
+- Added "Glossy New Tab" to the homepage ([#2133](https://github.com/wxt-dev/wxt/pull/2133))
+- Add All API Hub to showcase extensions ([#2137](https://github.com/wxt-dev/wxt/pull/2137))
+- Add `wxt-local-analytics` to community resources ([#2141](https://github.com/wxt-dev/wxt/pull/2141))
+- Add deep outline to modules page to show recipes ([653608c9](https://github.com/wxt-dev/wxt/commit/653608c9))
+
+### 🏡 Chore
+
+- Add missing `async` to network.ts ([#2107](https://github.com/wxt-dev/wxt/pull/2107))
+- Make type for `__ENTRYPOINT__` of vitest.globalSetup.ts ([#2128](https://github.com/wxt-dev/wxt/pull/2128))
+- Remove unnecessary `@ts-ignore` of `builders/vite` index.ts ([#2127](https://github.com/wxt-dev/wxt/pull/2127))
+- Rename `zipdir` to `zipDir` ([#2126](https://github.com/wxt-dev/wxt/pull/2126))
+- Simplify imports in `wxt/e2e` ([#2122](https://github.com/wxt-dev/wxt/pull/2122))
+- Remove `@ts-expect-error` from manifest.test.ts and fix typo ([#2123](https://github.com/wxt-dev/wxt/pull/2123))
+
+### 🤖 CI
+
+- Fix VHS action ([#2155](https://github.com/wxt-dev/wxt/pull/2155))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Jonathan Viney ([@jviney](https://github.com/jviney))
+- Tam Dang ([@dahomita](https://github.com/dahomita))
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Anthony Ciccarello ([@aciccarello](https://github.com/aciccarello))
+- Henrik Wenz ([@HaNdTriX](https://github.com/HaNdTriX))
+- Sheng Zhang ([@Arktomson](https://github.com/Arktomson))
+- Oleksii ([@Aler1x](https://github.com/Aler1x))
+- Qixing-jk <vq3d5d8c@duck.com>
+- Muzammil ([@oyzamil](https://github.com/oyzamil))
+
 ## v0.20.17
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.16...wxt-v0.20.17)

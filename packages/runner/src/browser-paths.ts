@@ -124,7 +124,8 @@ export const KNOWN_BROWSER_PATHS: Record<
 };
 
 /**
- * When targeting a browser, this map contains the other targets to fall back on when a binary could not be found for the primary target.
+ * When targeting a browser, this map contains the other targets to fall back on
+ * when a binary could not be found for the primary target.
  */
 export const FALLBACK_TARGETS: Partial<Record<KnownTarget, KnownTarget[]>> = {
   chrome: [

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import spawn from 'nano-spawn';
-import { readFile, writeFile } from 'fs-extra';
+import { readFile, writeFile } from 'node:fs/promises';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 

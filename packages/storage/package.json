@@ -1,7 +1,7 @@
 {
   "name": "@wxt-dev/storage",
   "description": "Web extension storage API provided by WXT, supports all browsers.",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "type": "module",
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "test": "buildc --deps-only -- vitest",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
@@ -36,8 +37,8 @@
   },
   "devDependencies": {
     "@webext-core/fake-browser": "^1.3.4",
-    "oxlint": "^1.43.0",
-    "publint": "^0.3.17",
+    "oxlint": "^1.51.0",
+    "publint": "^0.3.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },

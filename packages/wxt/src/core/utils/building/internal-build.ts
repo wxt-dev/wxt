@@ -1,11 +1,11 @@
 import { findEntrypoints } from './find-entrypoints';
 import { BuildOutput, Entrypoint } from '../../../types';
 import pc from 'picocolors';
-import fs from 'fs-extra';
+import { mkdir, rm } from 'node:fs/promises';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '../time';
 import { printBuildSummary } from '../log';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
@@ -20,13 +20,14 @@ import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
 
 /**
- * Builds the extension based on an internal config. No more config discovery is performed, the
- * build is based on exactly what is passed in.
+ * Builds the extension based on an internal config. No more config discovery is
+ * performed, the build is based on exactly what is passed in.
  *
  * This function:
+ *
  * 1. Cleans the output directory
- * 2. Executes the rebuild function with a blank previous output so everything is built (see
- *    `rebuild` for more details)
+ * 2. Executes the rebuild function with a blank previous output so everything is
+ *    built (see `rebuild` for more details)
  * 3. Prints the summary
  */
 export async function internalBuild(): Promise<BuildOutput> {
@@ -42,8 +43,8 @@ export async function internalBuild(): Promise<BuildOutput> {
   const startTime = Date.now();
 
   // Cleanup
-  await fs.rm(wxt.config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(wxt.config.outDir);
+  await rm(wxt.config.outDir, { recursive: true, force: true });
+  await mkdir(wxt.config.outDir, { recursive: true });
 
   const entrypoints = await findEntrypoints();
   wxt.logger.debug('Detected entrypoints:', entrypoints);
@@ -99,6 +100,7 @@ async function combineAnalysisStats(): Promise<void> {
   const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
     cwd: wxt.config.analysis.outputDir,
     absolute: true,
+    expandDirectories: false,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
@@ -109,7 +111,9 @@ async function combineAnalysisStats(): Promise<void> {
   });
 
   if (!wxt.config.analysis.keepArtifacts) {
-    await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+    await Promise.all(
+      absolutePaths.map((statsFile) => rm(statsFile, { force: true })),
+    );
   }
 }
 
