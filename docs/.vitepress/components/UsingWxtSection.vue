@@ -121,6 +121,7 @@ const chromeExtensionIds = [
   'lapnciffpekdengooeolaienkeoilfeo', // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
   'bhgobenflkkhfcgkikejaaejenoddcmo', // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
   'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
+  'pmgehhllikbjmadpenhabejhpemplhmd', // Extension Rank Checker - Extension Ranker
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
