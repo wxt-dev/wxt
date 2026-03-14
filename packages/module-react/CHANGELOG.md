@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.2.1...module-react-v1.2.2)
+
+### 🩹 Fixes
+
+- Add `@vitejs/plugin-react` v6 support ([c61fa8f8](https://github.com/wxt-dev/wxt/commit/c61fa8f8))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v1.2.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.2.0...module-react-v1.2.1)
