@@ -76,6 +76,22 @@ Alternatively, if you're trying to use similar APIs under different names (to su
 });
 ```
 
+### Augmenting the Browser Type
+
+WXT's `browser` types are based on the `@types/chrome` package. That means some Firefox-specific APIs may not be typed, like `browser.sidebarAction`. If you want to add types for these APIs, you can augment the browser type to add them yourself:
+
+```ts
+// <srcDir>/browser-types.d.ts
+import '@wxt-dev/browser';
+import type { SidebarAction } from 'webextension-polyfill';
+
+declare module '@wxt-dev/browser' {
+  namespace Browser {
+    export const sidebarAction: SidebarAction.Static;
+  }
+}
+```
+
 ## Entrypoint Limitations
 
 Because WXT imports your entrypoint files into a NodeJS, non-extension environment, the `chrome`/`browser` variables provided to extensions by the browser **will not be available**.
