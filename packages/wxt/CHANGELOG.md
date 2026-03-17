@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.20.20
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.19...wxt-v0.20.20)
+
+### 🩹 Fixes
+
+- Unlisted script return values broken with Vite 8 sourcemaps ([#2197](https://github.com/wxt-dev/wxt/pull/2197))
+
+### 📖 Documentation
+
+- Add Dymo extension ID to UsingWxtSection.vue ([#2187](https://github.com/wxt-dev/wxt/pull/2187))
+- Add Extension Rank Checker to the list of extensions ([#2193](https://github.com/wxt-dev/wxt/pull/2193))
+
+### 🏡 Chore
+
+- **deps:** Add vite-node 6 support ([64b68671](https://github.com/wxt-dev/wxt/commit/64b68671))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Joseph Hu ([@KiJO94GO](https://github.com/KiJO94GO))
+- FJRG2007 ツ ([@FJRG2007](https://github.com/FJRG2007))
+- Hampus Tågerud ([@hampustagerud](https://github.com/hampustagerud))
+
 ## v0.20.19
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.18...wxt-v0.20.19)

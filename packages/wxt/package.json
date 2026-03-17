@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.20.19",
+  "version": "0.20.20",
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
