@@ -122,6 +122,7 @@ const chromeExtensionIds = [
   'bhgobenflkkhfcgkikejaaejenoddcmo', // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
   'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
   'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
+  'pmgehhllikbjmadpenhabejhpemplhmd', // Extension Rank Checker - Extension Ranker
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
