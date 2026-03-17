@@ -11121,10 +11121,14 @@ export namespace Browser {
             /**
              * The ID of the Split View that the tab belongs to.
 <<<<<<< HEAD
+<<<<<<< HEAD
              * @since Chrome 140
 =======
              * @since Chrome 145
 >>>>>>> 2d2db23c (fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version)
+=======
+             * @since Chrome 140
+>>>>>>> e904e367 (fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version)
              */
             splitViewId?: number | undefined;
             /**
@@ -11206,7 +11210,7 @@ export namespace Browser {
 
         /**
          * An ID that represents the absence of a split tab.
-         * @since Chrome 145
+         * @since Chrome 140
          */
         export const SPLIT_VIEW_ID_NONE: -1;
 
