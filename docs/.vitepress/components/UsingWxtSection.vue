@@ -15,7 +15,6 @@ const chromeExtensionIds = [
   'lknmjhcajhfbbglglccadlfdjbaiifig', // tl;dv - Record, Transcribe & ChatGPT for Google Meet
   'oglffgiaiekgeicdgkdlnlkhliajdlja', // Youtube中文配音
   'agjnjboanicjcpenljmaaigopkgdnihi', // PreMiD
-  'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
   'aiakblgmlabokilgljkglggnpflljdgp', // Markdown Sticky Notes
   'nomnkbngkijpffepcgbbofhcnafpkiep', // DocVersionRedirector
   'ceicccfeikoipigeghddpocceifjelph', // Plex Skipper
@@ -122,6 +121,7 @@ const chromeExtensionIds = [
   'lapnciffpekdengooeolaienkeoilfeo', // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
   'bhgobenflkkhfcgkikejaaejenoddcmo', // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
   'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
+  'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
