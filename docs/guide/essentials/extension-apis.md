@@ -92,6 +92,12 @@ declare module '@wxt-dev/browser' {
 }
 ```
 
+> For this to work, you may need to install `@wxt-dev/browser` as a direct dependency.
+>
+> ```sh
+> pnpm add @wxt-dev/browser
+> ```
+
 ## Entrypoint Limitations
 
 Because WXT imports your entrypoint files into a NodeJS, non-extension environment, the `chrome`/`browser` variables provided to extensions by the browser **will not be available**.
