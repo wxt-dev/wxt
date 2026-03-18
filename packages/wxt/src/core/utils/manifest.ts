@@ -699,6 +699,8 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
+    if (wxt.config.browser === 'chrome')
+      keysToRemove.push(...chromeMv2OnlyKeys);
   }
 
   keysToRemove.forEach((key) => {
@@ -707,7 +709,6 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
 }
 
 const mv2OnlyKeys = [
-  'page_action',
   'browser_action',
   'automation',
   'content_capabilities',
@@ -732,6 +733,7 @@ const mv3OnlyKeys = [
   'optional_host_permissions',
   'side_panel',
 ];
+const chromeMv2OnlyKeys = ['page_action'];
 const firefoxMv3OnlyKeys = ['host_permissions'];
 
 const DEFAULT_MV3_EXTENSION_PAGES_CSP =
