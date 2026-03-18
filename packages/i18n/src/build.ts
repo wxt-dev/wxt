@@ -16,6 +16,10 @@ export { SUPPORTED_LOCALES } from './supported-locales';
 // TYPES
 //
 
+export type SimpleMessage = string;
+
+export type PluralMessage = Record<'n' | number, string>;
+
 export interface ChromeMessage {
   message: string;
   description?: string;
@@ -45,6 +49,15 @@ export type ParsedMessage =
   | ParsedPluralMessage;
 
 export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
+
+type Message =
+  | SimpleMessage
+  | PluralMessage
+  | ChromeMessage
+  | Message[]
+  | { [key: string]: Message };
+
+type MessagesObject = Record<string, Message>;
 
 //
 // CONSTANTS
@@ -95,7 +108,7 @@ const EXT_FORMATS_MAP: Record<string, MessageFormat> = {
   '.toml': 'TOML',
 };
 
-const PARSERS: Record<MessageFormat, (text: string) => any> = {
+const PARSERS: Record<MessageFormat, (text: string) => MessagesObject> = {
   YAML: parseYAML,
   JSON5: parseJSON5,
   TOML: parseTOML,
@@ -117,6 +130,7 @@ export async function parseMessagesFile(
 ): Promise<ParsedMessage[]> {
   const text = await readFile(file, 'utf8');
   const ext = extname(file).toLowerCase();
+
   return parseMessagesText(text, EXT_FORMATS_MAP[ext] ?? 'JSON5');
 }
 
@@ -129,7 +143,7 @@ export function parseMessagesText(
 }
 
 /** Given the JS object form of a raw messages file, extract the messages. */
-export function parseMessagesObject(object: any): ParsedMessage[] {
+export function parseMessagesObject(object: MessagesObject): ParsedMessage[] {
   return _parseMessagesObject(
     [],
     {
@@ -142,7 +156,7 @@ export function parseMessagesObject(object: any): ParsedMessage[] {
 
 function _parseMessagesObject(
   path: string[],
-  object: any,
+  object: Message,
   depth: number,
 ): ParsedMessage[] {
   switch (typeof object) {
@@ -163,15 +177,17 @@ function _parseMessagesObject(
       ];
     }
     case 'object':
-      if ([null, undefined].includes(object)) {
+      if (object == null) {
         throw new Error(
           `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
       }
+
       if (Array.isArray(object))
         return object.flatMap((item, i) =>
           _parseMessagesObject(path.concat(String(i)), item, depth + 1),
         );
+
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
         const substitutions = getSubstitutionCount(message);
@@ -184,6 +200,7 @@ function _parseMessagesObject(
           },
         ];
       }
+
       if (depth === 1 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
         const substitutions = getSubstitutionCount(message);
@@ -196,6 +213,7 @@ function _parseMessagesObject(
           },
         ];
       }
+
       return Object.entries(object).flatMap(([key, value]) =>
         _parseMessagesObject(path.concat(key), value, depth + 1),
       );
@@ -204,13 +222,13 @@ function _parseMessagesObject(
   }
 }
 
-function isPluralMessage(object: any): object is Record<number | 'n', string> {
+function isPluralMessage(object: Message): object is PluralMessage {
   return Object.keys(object).every(
     (key) => key === 'n' || isFinite(Number(key)),
   );
 }
 
-function isChromeMessage(object: any): object is ChromeMessage {
+function isChromeMessage(object: Message): object is ChromeMessage {
   return Object.keys(object).every((key) =>
     ALLOWED_CHROME_MESSAGE_KEYS.has(key),
   );
@@ -222,7 +240,7 @@ function isChromeMessage(object: any): object is ChromeMessage {
 
 export function generateTypeText(messages: ParsedMessage[]): string {
   const renderMessageEntry = (message: ParsedMessage): string => {
-    // Use . for deep keys at runtime and types
+    // Use '.' for deep keys at runtime and types
     const key = message.key.join('.');
 
     const features = [
