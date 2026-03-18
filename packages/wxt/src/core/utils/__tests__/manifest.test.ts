@@ -1464,7 +1464,11 @@ describe('Manifest Utils', () => {
         ['chrome', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['safari', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['edge', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
-        ['firefox', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        [
+          'firefox',
+          3,
+          { ...mv3Manifest, ...hostPermissionsManifest, page_action: {} },
+        ],
         ['chrome', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['safari', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['edge', 3, { ...mv3Manifest, ...hostPermissionsManifest }],

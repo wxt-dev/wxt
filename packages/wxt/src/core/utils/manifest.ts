@@ -699,7 +699,7 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
-    if (wxt.config.browser === 'chrome')
+    if (wxt.config.browser !== 'firefox')
       keysToRemove.push(...chromeMv2OnlyKeys);
   }
 
