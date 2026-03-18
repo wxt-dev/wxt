@@ -26,6 +26,15 @@ export interface ChromeMessage {
   placeholders?: Record<string, { content: string; example?: string }>;
 }
 
+export type Message =
+  | SimpleMessage
+  | PluralMessage
+  | ChromeMessage
+  | Message[]
+  | { [key: string]: Message };
+
+export type MessagesObject = Record<string, Message>;
+
 export interface ParsedBaseMessage {
   key: string[];
   substitutions: number;
@@ -49,15 +58,6 @@ export type ParsedMessage =
   | ParsedPluralMessage;
 
 export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
-
-type Message =
-  | SimpleMessage
-  | PluralMessage
-  | ChromeMessage
-  | Message[]
-  | { [key: string]: Message };
-
-type MessagesObject = Record<string, Message>;
 
 //
 // CONSTANTS
