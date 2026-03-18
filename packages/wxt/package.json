@@ -74,6 +74,7 @@
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.17.6",
     "@types/normalize-path": "^3.0.2",
+    "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
     "eslint": "^10.0.0",
     "extract-zip": "^2.0.1",

@@ -32,14 +32,3 @@ declare module 'web-ext-run/util/logger' {
   }
   export const consoleStream: IConsoleStream;
 }
-
-declare module 'picomatch' {
-  export interface PicomatchOptions {
-    [key: string]: unknown;
-  }
-
-  export default function picomatch(
-    glob: string | readonly string[],
-    options?: PicomatchOptions,
-  ): (input: string) => boolean;
-}
