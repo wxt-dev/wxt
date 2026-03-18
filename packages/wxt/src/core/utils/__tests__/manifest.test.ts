@@ -107,6 +107,29 @@ describe('Manifest Utils', () => {
         },
       );
 
+      it('should allow page_action for Firefox MV3', async () => {
+        const popup = popupEntrypoint('page_action');
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+        const expected = {
+          default_icon: popup.options.defaultIcon,
+          default_title: popup.options.defaultTitle,
+          default_popup: 'popup.html',
+        };
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect(actual.page_action).toEqual(expected);
+      });
+
       it('should include default_area for Firefox in mv3', async () => {
         const popup = fakePopupEntrypoint({
           options: {
