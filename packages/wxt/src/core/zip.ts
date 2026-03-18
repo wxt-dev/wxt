@@ -11,7 +11,7 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
-import { minimatchMultiple } from './utils/minimatch-multiple';
+import { picomatchMultiple } from './utils/picomatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -125,8 +125,8 @@ async function zipDir(
     })
   ).filter((relativePath) => {
     return (
-      minimatchMultiple(relativePath, options?.include) ||
-      !minimatchMultiple(relativePath, options?.exclude)
+      picomatchMultiple(relativePath, options?.include) ||
+      !picomatchMultiple(relativePath, options?.exclude)
     );
   });
   const filesToZip = [
