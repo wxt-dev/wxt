@@ -202,5 +202,9 @@
       "types": "./dist/modules.d.mts",
       "default": "./dist/modules.mjs"
     }
+  },
+  "engines": {
+    "node": ">=20.12.0",
+    "bun": ">=1.2.0"
   }
 }
