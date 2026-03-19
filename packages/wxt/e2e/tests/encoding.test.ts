@@ -4,7 +4,9 @@ import { TestProject } from '../utils';
 
 describe('Encoding', () => {
   it('should convert unicode characters to ascii escaped chars', async () => {
-    const KNOWN_BAD_CHAR = '￿'; // This is \uFFFF
+    // See more details about this test, see:
+    // https://github.com/wxt-dev/wxt/issues/353#issuecomment-4093271292
+    const KNOWN_BAD_CHAR = '￿';
     const ESCAPED_BAD_CHAR = '\\uFFFF';
 
     const project = new TestProject();
