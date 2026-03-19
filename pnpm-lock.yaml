@@ -297,7 +297,7 @@ importers:
   packages/module-svelte:
     dependencies:
       '@sveltejs/vite-plugin-svelte':
-        specifier: ^4.0.0 || ^5.0.0 || ^6.0.0
+        specifier: '>=4'
         version: 6.2.4(vite@7.3.1(@types/node@20.19.32)(jiti@2.6.1)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
     devDependencies:
       publint:

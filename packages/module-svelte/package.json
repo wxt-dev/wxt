@@ -48,7 +48,7 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^4.0.0 || ^5.0.0 || ^6.0.0"
+    "@sveltejs/vite-plugin-svelte": ">=4"
   },
   "devDependencies": {
     "publint": "^0.3.18",
