@@ -1,4 +1,10 @@
+import { Hookable } from 'hookable';
+import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
+import { dirname, extname, join, relative } from 'node:path';
 import type * as vite from 'vite';
+import { ViteNodeRunner } from 'vite-node/client';
+import { ViteNodeServer } from 'vite-node/server';
+import { installSourcemapsSupport } from 'vite-node/source-map';
 import {
   BuildStepOutput,
   Entrypoint,
@@ -9,25 +15,19 @@ import {
   WxtDevServer,
   WxtHooks,
 } from '../../../types';
-import * as wxtPlugins from './plugins';
+import { normalizePath } from '../../utils';
+import { toArray } from '../../utils/arrays';
 import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
 } from '../../utils/entrypoints';
+import { createExtensionEnvironment } from '../../utils/environments';
+import { safeVarName } from '../../utils/strings';
 import {
   VirtualEntrypointType,
   VirtualModuleId,
 } from '../../utils/virtual-modules';
-import { Hookable } from 'hookable';
-import { toArray } from '../../utils/arrays';
-import { safeVarName } from '../../utils/strings';
-import { ViteNodeServer } from 'vite-node/server';
-import { ViteNodeRunner } from 'vite-node/client';
-import { installSourcemapsSupport } from 'vite-node/source-map';
-import { createExtensionEnvironment } from '../../utils/environments';
-import { dirname, extname, join, relative } from 'node:path';
-import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
-import { normalizePath } from '../../utils';
+import * as wxtPlugins from './plugins';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -74,6 +74,10 @@ export async function createViteBuilder(
     config.legacy ??= {};
     // @ts-ignore: Untyped option:
     config.legacy.skipWebSocketTokenCheck = true;
+
+    // Solves https://github.com/wxt-dev/wxt/issues/353
+    config.esbuild ??= {};
+    if (config.esbuild) config.esbuild.charset = 'ascii';
 
     const server = getWxtDevServer?.();
 
