@@ -20,8 +20,7 @@ export interface I18n<T extends I18nStructure> {
 
 // prettier-ignore
 export type SubstitutionTuple<T extends SubstitutionCount> =
-    T extends 0 ? []
-  : T extends 1 ? [$1: Substitution]
+    T extends 1 ? [$1: Substitution]
   : T extends 2 ? [$1: Substitution, $2: Substitution]
   : T extends 3 ? [$1: Substitution, $2: Substitution, $3: Substitution]
   : T extends 4 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution]
