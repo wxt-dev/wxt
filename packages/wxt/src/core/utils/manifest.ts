@@ -284,20 +284,19 @@ function addEntrypoints(
     if (popup.options.themeIcons)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.theme_icons = popup.options.themeIcons;
-    if (manifest.manifest_version === 3) {
-      manifest.action = {
-        ...manifest.action,
-        ...options,
-        default_popup,
-      };
-    } else {
-      const key = popup.options.mv2Key ?? 'browser_action';
-      manifest[key] = {
-        ...manifest[key],
-        ...options,
-        default_popup,
-      };
-    }
+
+    const actionKey =
+      manifest.manifest_version === 2
+        ? (popup.options.mv2Key ?? 'browser_action')
+        : wxt.config.browser === 'firefox'
+          ? (popup.options.mv2Key ?? 'action')
+          : 'action';
+
+    manifest[actionKey] = {
+      ...manifest[actionKey],
+      ...options,
+      default_popup,
+    };
   }
 
   if (devtools) {

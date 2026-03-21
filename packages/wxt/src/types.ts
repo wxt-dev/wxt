@@ -721,7 +721,13 @@ export interface ThemeIcon {
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
-  /** Defaults to "browser_action" to be equivalent to MV3's "action" key */
+  /**
+   * Defaults to "browser_action" to be equivalent to MV3's "action" key.
+   *
+   * This option name is bad - it is also respected for Firefox MV3 (though
+   * `browser_action` is converted to `action`) to allow using a `page_action`
+   * in MV3.
+   */
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;

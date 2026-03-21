@@ -107,7 +107,7 @@ describe('Manifest Utils', () => {
         },
       );
 
-      it('should allow page_action for Firefox MV3', async () => {
+      it('should allow converting action to page_action for Firefox MV3', async () => {
         const popup = popupEntrypoint('page_action');
         const buildOutput = fakeBuildOutput();
         setFakeWxt({
