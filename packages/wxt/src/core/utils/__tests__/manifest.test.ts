@@ -114,6 +114,7 @@ describe('Manifest Utils', () => {
           config: {
             manifestVersion: 3,
             outDir,
+            browser: 'firefox',
           },
         });
         const expected = {
