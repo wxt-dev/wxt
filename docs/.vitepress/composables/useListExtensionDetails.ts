@@ -8,6 +8,7 @@ export interface ChromeExtension {
   shortDescription: string;
   storeUrl: string;
   rating: number | undefined;
+  firefoxUrl?: string;
 }
 
 const operationName = 'WxtDocsUsedBy';
