@@ -123,6 +123,9 @@ const chromeExtensionIds = [
   'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
   'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
   'pmgehhllikbjmadpenhabejhpemplhmd', // Extension Rank Checker - Extension Ranker
+  'fppcbkhpahkbgijkdcpjgjmhpfbmfiih', // PlayFaster - Enhanced playback speed control for online videos and audio
+  'eiocjaocpmackhbaffoejkcmnfbdpgpj', // LatTab - Learn Latin With Every New Tab
+  'ngbehgnlcdjkbnihgpkgdangbhemidge', // Vim What? - Interactive Vim command reference
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
