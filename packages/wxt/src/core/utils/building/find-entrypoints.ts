@@ -25,9 +25,9 @@ import {
 } from '../entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
 import { CSS_EXTENSIONS_PATTERN } from '../paths';
-import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
+import { color } from '../color';
 
 /**
  * Return entrypoints and their configuration by looking through the project's
@@ -161,7 +161,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       [
         'The following entrypoints have been skipped:',
         ...skippedEntrypointNames.map(
-          (item) => `${pc.dim('-')} ${pc.cyan(item)}`,
+          (item) => `${color.dim('-')} ${color.cyan(item)}`,
         ),
       ].join('\n'),
     );

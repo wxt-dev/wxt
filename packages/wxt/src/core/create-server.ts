@@ -20,7 +20,6 @@ import {
 } from './utils/building';
 import { createExtensionRunner } from './runners';
 import { Mutex } from 'async-mutex';
-import pc from 'picocolors';
 import { relative } from 'node:path';
 import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
@@ -30,6 +29,7 @@ import {
 } from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
+import { color } from './utils/color';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before
@@ -238,7 +238,7 @@ function createFileReloader(server: WxtDevServer) {
       // Log the entrypoints that were effected
       wxt.logger.info(
         `Changed: ${Array.from(new Set(fileChanges))
-          .map((file) => pc.dim(relative(wxt.config.root, file)))
+          .map((file) => color.dim(relative(wxt.config.root, file)))
           .join(', ')}`,
       );
 
@@ -345,9 +345,9 @@ function reloadHtmlPages(
 function getFilenameList(names: string[]): string {
   return names
     .map((name) => {
-      return pc.cyan(name);
+      return color.cyan(name);
     })
-    .join(pc.dim(', '));
+    .join(color.dim(', '));
 }
 
 /**

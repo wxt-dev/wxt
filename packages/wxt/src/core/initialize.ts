@@ -4,8 +4,7 @@ import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
 import { pathExists } from './utils/fs';
 import path from 'node:path';
-import pc from 'picocolors';
-import { Formatter } from 'picocolors/types';
+import { color, type ColorFormatter } from './utils/color';
 
 export async function initialize(options: {
   directory: string;
@@ -42,10 +41,10 @@ export async function initialize(options: {
         type: () => (options.packageManager == null ? 'select' : undefined),
         message: 'Package Manager',
         choices: [
-          { title: pc.red('npm'), value: 'npm' },
-          { title: pc.yellow('pnpm'), value: 'pnpm' },
-          { title: pc.cyan('yarn'), value: 'yarn' },
-          { title: pc.magenta('bun'), value: 'bun' },
+          { title: color.red('npm'), value: 'npm' },
+          { title: color.yellow('pnpm'), value: 'pnpm' },
+          { title: color.cyan('yarn'), value: 'yarn' },
+          { title: color.magenta('bun'), value: 'bun' },
         ],
       },
     ],
@@ -82,8 +81,8 @@ export async function initialize(options: {
   console.log();
   consola.log('Next steps:');
   let step = 0;
-  if (cdPath !== '') consola.log(`  ${++step}.`, pc.cyan(`cd ${cdPath}`));
-  consola.log(`  ${++step}.`, pc.cyan(`${input.packageManager} install`));
+  if (cdPath !== '') consola.log(`  ${++step}.`, color.cyan(`cd ${cdPath}`));
+  consola.log(`  ${++step}.`, color.cyan(`${input.packageManager} install`));
   console.log();
 }
 
@@ -182,12 +181,12 @@ async function cloneProject({
   }
 }
 
-const TEMPLATE_COLORS: Record<string, Formatter> = {
-  vanilla: pc.blue,
-  vue: pc.green,
-  react: pc.cyan,
-  svelte: pc.red,
-  solid: pc.blue,
+const TEMPLATE_COLORS: Record<string, ColorFormatter> = {
+  vanilla: color.blue,
+  vue: color.green,
+  react: color.cyan,
+  svelte: color.red,
+  solid: color.blue,
 };
 
 const TEMPLATE_SORT_WEIGHT: Record<string, number> = {
