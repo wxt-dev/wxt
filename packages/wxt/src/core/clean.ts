@@ -1,9 +1,9 @@
 import { rm } from 'node:fs/promises';
 import path from 'node:path';
-import pc from 'picocolors';
 import { glob } from 'tinyglobby';
 import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
+import { color } from './utils/color';
 
 /**
  * Remove generated/temp files from the directory.
@@ -42,7 +42,7 @@ export async function clean(config?: string | InlineConfig) {
     '**/.wxt',
     `${path.relative(root, wxt.config.outBaseDir)}/*`,
   ];
-  wxt.logger.debug('Looking for:', tempDirs.map(pc.cyan).join(', '));
+  wxt.logger.debug('Looking for:', tempDirs.map(color.cyan).join(', '));
   const directories = await glob(tempDirs, {
     cwd: root,
     absolute: true,
@@ -57,10 +57,10 @@ export async function clean(config?: string | InlineConfig) {
 
   wxt.logger.debug(
     'Found:',
-    directories.map((dir) => pc.cyan(path.relative(root, dir))).join(', '),
+    directories.map((dir) => color.cyan(path.relative(root, dir))).join(', '),
   );
   for (const directory of directories) {
     await rm(directory, { force: true, recursive: true });
-    wxt.logger.debug('Deleted ' + pc.cyan(path.relative(root, directory)));
+    wxt.logger.debug('Deleted ' + color.cyan(path.relative(root, directory)));
   }
 }

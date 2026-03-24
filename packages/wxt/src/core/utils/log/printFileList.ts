@@ -1,8 +1,8 @@
 import path from 'node:path';
-import pc from 'picocolors';
 import { lstat } from 'node:fs/promises';
 import { filesize } from 'filesize';
 import { printTable } from './printTable';
+import { color, type ColorFormatter } from '../color';
 
 export async function printFileList(
   log: (message: string) => void,
@@ -19,35 +19,37 @@ export async function printFileList(
         path.relative(baseDir, file),
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
-      const color = getChunkColor(file);
+      const chunkColor = getChunkColor(file);
       const stats = await lstat(file);
       totalSize += stats.size;
       const size = String(filesize(stats.size));
       return [
-        `${pc.gray(prefix)} ${pc.dim(parts[0])}${color(parts[1])}`,
-        pc.dim(size),
+        `${color.gray(prefix)} ${color.dim(parts[0])}${chunkColor(parts[1])}`,
+        color.dim(size),
       ];
     }),
   );
 
-  fileRows.push([`${pc.cyan('Σ Total size:')} ${String(filesize(totalSize))}`]);
+  fileRows.push([
+    `${color.cyan('Σ Total size:')} ${String(filesize(totalSize))}`,
+  ]);
 
   printTable(log, header, fileRows);
 }
 
-const DEFAULT_COLOR = pc.blue;
-const CHUNK_COLORS: Record<string, (text: string) => string> = {
-  '.js.map': pc.gray,
-  '.cjs.map': pc.gray,
-  '.mjs.map': pc.gray,
-  '.html': pc.green,
-  '.css': pc.magenta,
-  '.js': pc.cyan,
-  '.cjs': pc.cyan,
-  '.mjs': pc.cyan,
-  '.zip': pc.yellow,
+const DEFAULT_COLOR = color.blue;
+const CHUNK_COLORS: Record<string, ColorFormatter> = {
+  '.js.map': color.gray,
+  '.cjs.map': color.gray,
+  '.mjs.map': color.gray,
+  '.html': color.green,
+  '.css': color.magenta,
+  '.js': color.cyan,
+  '.cjs': color.cyan,
+  '.mjs': color.cyan,
+  '.zip': color.yellow,
 };
-function getChunkColor(filename: string) {
+function getChunkColor(filename: string): ColorFormatter {
   return (
     Object.entries(CHUNK_COLORS).find(([key]) => filename.endsWith(key))?.[1] ??
     DEFAULT_COLOR
