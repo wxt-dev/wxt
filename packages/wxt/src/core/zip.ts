@@ -1,5 +1,6 @@
 import { InlineConfig } from '../types';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { createWriteStream } from 'node:fs';
 import { safeFilename } from './utils/strings';
@@ -76,6 +77,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: excludeSources,
+      useGit: true,
       transform(absolutePath, zipPath, content) {
         if (zipPath.endsWith('package.json')) {
           return addOverridesToPackageJson(absolutePath, content, overrides);
@@ -105,6 +107,7 @@ async function zipDir(
   options?: {
     include?: string[];
     exclude?: string[];
+    useGit?: boolean;
     transform?: (
       absolutePath: string,
       zipPath: string,
@@ -115,15 +118,33 @@ async function zipDir(
   },
 ): Promise<void> {
   const archive = new JSZip();
-  const files = (
-    await glob(['**/*', ...(options?.include || [])], {
+
+  const globFiles = () =>
+    glob(['**/*', ...(options?.include || [])], {
       cwd: directory,
       // Ignore node_modules, otherwise this glob step takes forever
       ignore: ['**/node_modules'],
       onlyFiles: true,
       expandDirectories: false,
-    })
-  ).filter((relativePath) => {
+    });
+
+  let allFiles: string[];
+  if (options?.useGit) {
+    try {
+      allFiles = execSync('git ls-files --recurse-submodules', {
+        cwd: directory,
+        encoding: 'utf-8',
+      })
+        .split('\n')
+        .filter(Boolean);
+    } catch {
+      allFiles = await globFiles();
+    }
+  } else {
+    allFiles = await globFiles();
+  }
+
+  const files = allFiles.filter((relativePath) => {
     return (
       picomatchMultiple(relativePath, options?.include) ||
       !picomatchMultiple(relativePath, options?.exclude)
