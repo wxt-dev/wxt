@@ -33,30 +33,33 @@ export default function useFirefoxAddonDetails(slugs: string[]) {
     };
   }
 
-  Promise.all(
-    slugs.map(async (slug) => {
+  async function fetchOne(slug: string): Promise<FirefoxAddonDisplay | null> {
+    try {
       const res = await fetch(
         `https://addons.mozilla.org/api/v5/addons/addon/${encodeURIComponent(slug)}/`,
       );
       if (!res.ok) {
-        throw new Error(
-          `Firefox addon fetch failed for ${slug}: ${res.status}`,
+        console.warn(
+          `[useFirefoxAddonDetails] ${slug}: HTTP ${res.status} — skipping`,
         );
+        return null;
       }
       const json = (await res.json()) as {
+        slug?: string;
         name?: Record<string, string> | string;
         summary?: Record<string, string> | string;
         icons?: Record<string, string>;
         average_daily_users?: number;
         ratings?: { average?: number; bayesian_average?: number };
       };
+      const canonicalSlug = json.slug ?? slug;
       const name = pickLocalized(json.name);
       const shortDescription = pickLocalized(json.summary);
       const iconUrl =
         json.icons?.['128'] ?? json.icons?.['64'] ?? json.icons?.['32'] ?? '';
       const rating =
         json.ratings?.average ?? json.ratings?.bayesian_average ?? undefined;
-      const firefoxUrl = `https://addons.mozilla.org/firefox/addon/${slug}/?utm_source=wxt.dev`;
+      const firefoxUrl = `https://addons.mozilla.org/firefox/addon/${canonicalSlug}/?utm_source=wxt.dev`;
       return {
         slug,
         name,
@@ -66,16 +69,25 @@ export default function useFirefoxAddonDetails(slugs: string[]) {
         rating,
         firefoxUrl,
       } satisfies FirefoxAddonDisplay;
-    }),
-  )
+    } catch (e) {
+      console.warn(`[useFirefoxAddonDetails] ${slug}:`, e);
+      return null;
+    }
+  }
+
+  Promise.all(slugs.map((slug) => fetchOne(slug)))
     .then((rows) => {
-      data.value = rows;
-      err.value = undefined;
+      const ok = rows.filter((r): r is FirefoxAddonDisplay => r != null);
+      data.value = ok;
+      err.value =
+        ok.length === 0 && slugs.length > 0
+          ? new Error('No Firefox addons could be loaded')
+          : undefined;
       isLoading.value = false;
     })
     .catch((error) => {
       console.error(error);
-      data.value = undefined;
+      data.value = [];
       err.value = error;
       isLoading.value = false;
     });
