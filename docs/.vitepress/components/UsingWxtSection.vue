@@ -1,17 +1,28 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import useListExtensionDetails, {
-  ChromeExtension,
-} from '../composables/useListExtensionDetails';
+import useListExtensionDetails from '../composables/useListExtensionDetails';
+import type { ChromeExtension } from '../composables/useListExtensionDetails';
+import useFirefoxAddonDetails from '../composables/useFirefoxAddonDetails';
 
-interface ExtensionEntry {
-  chromeId: string;
-  firefoxSlug?: string;
+/** At least one of `chromeId` or `firefoxSlug` must be set. */
+type ExtensionEntry =
+  | { chromeId: string; firefoxSlug?: string }
+  | { firefoxSlug: string; chromeId?: string };
+
+interface ListedExtension {
+  id: string;
+  name: string;
+  iconUrl: string;
+  weeklyActiveUsers: number;
+  shortDescription: string;
+  rating: number | undefined;
+  chromeStoreUrl?: string;
+  firefoxUrl?: string;
 }
 
 // Add extension entries to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
-// To include a Firefox Add-on link, add a firefoxSlug field with the slug from https://addons.mozilla.org/firefox/addon/{slug}/
+// Use `chromeId` for the Chrome Web Store listing, `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/). You may set one or both.
 const extensionEntries: ExtensionEntry[] = [
   { chromeId: 'ocfdgncpifmegplaglcnglhioflaimkd' }, // GitHub: Better Line Counts
   { chromeId: 'mgmdkjcljneegjfajchedjpdhbadklcf' }, // Anime Skip Player
@@ -108,7 +119,10 @@ const extensionEntries: ExtensionEntry[] = [
   { chromeId: 'ehmoihnjgkdimihkhokkmfjdgomohjgm' }, // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
   { chromeId: 'alglchohmdikgdjhafiicilegegieafa' }, // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
   { chromeId: 'aamihahiiogceidpbnfgehacgiecephe' }, // ChatSight - Add Table of Contents to ChatGPT
-  { chromeId: 'cndibmoanboadcifjkjbdpjgfedanolh' }, // BetterCampus (prev. BetterCanvas)
+  {
+    chromeId: 'cndibmoanboadcifjkjbdpjgfedanolh',
+    firefoxSlug: 'better-canvas',
+  }, // BetterCampus (prev. BetterCanvas)
   { chromeId: 'hinfimgacobnellbncbcpdlpaapcofaa' }, // Leetcode Fonts - Change fonts in leetcode effortlessly
   { chromeId: 'kbkbfefhhabpkibojinapkkgciiacggg' }, // TranslateManga - Manga Translator & Manga Tracker
   { chromeId: 'emeakbgdecgmdjgegnejpppcnkcnoaen' }, // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
@@ -131,29 +145,61 @@ const extensionEntries: ExtensionEntry[] = [
   { chromeId: 'pmgehhllikbjmadpenhabejhpemplhmd' }, // Extension Rank Checker - Extension Ranker
 ];
 
-const chromeExtensionIds = extensionEntries.map((e) => e.chromeId);
-const firefoxSlugMap = new Map(
-  extensionEntries
-    .filter((e) => e.firefoxSlug)
-    .map((e) => [e.chromeId, e.firefoxSlug!]),
+const chromeExtensionIds = extensionEntries.flatMap((e) =>
+  e.chromeId ? [e.chromeId] : [],
 );
+const firefoxOnlySlugs = extensionEntries.flatMap((e) =>
+  e.firefoxSlug && !e.chromeId ? [e.firefoxSlug] : [],
+);
+const firefoxSlugMap = new Map<string, string>();
+for (const e of extensionEntries) {
+  if (e.chromeId && e.firefoxSlug) {
+    firefoxSlugMap.set(e.chromeId, e.firefoxSlug);
+  }
+}
 
-const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
-const sortedExtensions = computed(() => {
-  if (!data.value?.length) return [];
+const { data: chromeData, isLoading: chromeLoading } =
+  useListExtensionDetails(chromeExtensionIds);
+const { data: firefoxData, isLoading: firefoxLoading } =
+  useFirefoxAddonDetails(firefoxOnlySlugs);
 
-  return [...data.value]
+const isLoading = computed(() => chromeLoading.value || firefoxLoading.value);
+
+const sortedExtensions = computed((): ListedExtension[] => {
+  const chromeRows = (chromeData.value ?? [])
     .filter((item) => item != null)
-    .map((item) => ({
-      ...item,
-      firefoxUrl: firefoxSlugMap.has(item.id)
+    .map((item) => {
+      const chromeStoreUrl = getStoreUrl(item);
+      const firefoxUrl = firefoxSlugMap.has(item.id)
         ? `https://addons.mozilla.org/firefox/addon/${firefoxSlugMap.get(item.id)}/?utm_source=wxt.dev`
-        : undefined,
-      // Sort based on the user count weighted by the rating
-      sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
-    }))
-    .filter((item) => !!item)
-    .sort((l, r) => r.sortKey - l.sortKey);
+        : undefined;
+      return {
+        id: item.id,
+        name: item.name,
+        iconUrl: item.iconUrl,
+        weeklyActiveUsers: item.weeklyActiveUsers,
+        shortDescription: item.shortDescription,
+        rating: item.rating,
+        chromeStoreUrl,
+        firefoxUrl,
+        sortKey: ((item.rating ?? 5) / 5) * item.weeklyActiveUsers,
+      };
+    });
+
+  const firefoxRows = (firefoxData.value ?? []).map((f) => ({
+    id: `firefox:${f.slug}`,
+    name: f.name,
+    iconUrl: f.iconUrl,
+    weeklyActiveUsers: f.weeklyActiveUsers,
+    shortDescription: f.shortDescription,
+    rating: f.rating,
+    firefoxUrl: f.firefoxUrl,
+    sortKey: ((f.rating ?? 5) / 5) * f.weeklyActiveUsers,
+  }));
+
+  return [...chromeRows, ...firefoxRows]
+    .sort((l, r) => r.sortKey - l.sortKey)
+    .map(({ sortKey: _s, ...rest }) => rest);
 });
 
 function getStoreUrl(extension: ChromeExtension) {
@@ -161,12 +207,16 @@ function getStoreUrl(extension: ChromeExtension) {
   url.searchParams.set('utm_source', 'wxt.dev');
   return url.href;
 }
+
+function primaryStoreUrl(extension: ListedExtension) {
+  return extension.chromeStoreUrl ?? extension.firefoxUrl ?? '#';
+}
 </script>
 
 <template>
   <p v-if="isLoading" style="text-align: center; opacity: 50%">Loading...</p>
   <p
-    v-else-if="err || sortedExtensions.length === 0"
+    v-else-if="sortedExtensions.length === 0"
     style="text-align: center; opacity: 50%"
   >
     Failed to load extension details.
@@ -184,7 +234,7 @@ function getStoreUrl(extension: ChromeExtension) {
       />
       <div class="relative">
         <a
-          :href="getStoreUrl(extension)"
+          :href="primaryStoreUrl(extension)"
           target="_blank"
           :title="extension.name"
           class="extension-name"
@@ -203,7 +253,8 @@ function getStoreUrl(extension: ChromeExtension) {
       </p>
       <p class="store-links">
         <a
-          :href="getStoreUrl(extension)"
+          v-if="extension.chromeStoreUrl"
+          :href="extension.chromeStoreUrl"
           target="_blank"
           title="Chrome Web Store"
           class="store-badge"

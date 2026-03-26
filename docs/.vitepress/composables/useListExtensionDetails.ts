@@ -29,6 +29,16 @@ export default function (ids: string[]) {
   const err = ref<unknown>();
   const isLoading = ref(true);
 
+  if (ids.length === 0) {
+    data.value = [];
+    isLoading.value = false;
+    return {
+      data,
+      err,
+      isLoading,
+    };
+  }
+
   fetch('https://queue.wxt.dev/api', {
     method: 'POST',
     body: JSON.stringify({
