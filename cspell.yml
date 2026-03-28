@@ -11,44 +11,94 @@ ignorePaths:
   - patches/**
   - '**/*.snap'
 words:
+  - Aabid
+  - aabidk
   - aklinker
+  - automount
   - avenir
   - bidi
   - buildc
   - bunx
+  - cachable
+  - charmbracelet
+  - chromedriver
+  - Cira
   - comctx
   - confbox
+  - configfile
   - consolas
+  - Cpath
   - crbug
   - crunchyroll
+  - cssinjs
+  - CSUI
+  - Csvg
   - defu
+  - deinit
   - dequal
   - dtrace
   - duckduckgo
   - esbuild
+  - esque
+  - extglob
+  - fieldtrials
   - firefoxdeveloperedition
+  - Florian
   - focusring
+  - frontmatter
   - giget
+  - grayscale
+  - greyscale
   - gtag
+  - hckhakegfgenefhikdcfkaaonnclljmf
   - hookable
   - iconify
   - jsons
+  - Kenobi
+  - keystyle
   - klinker
   - linkedom
   - llms
   - locationchange
+  - magicast
+  - Menlo
+  - menupanel
+  - metas
+  - mktemp
+  - mycompany
+  - nacl
+  - nanospinner
+  - natsu
   - newtab
   - njsproj
+  - nodebuffer
+  - Noto
   - ntvs
   - nypm
   - ohash
   - oklab
   - oxlint
+  - pbbf
+  - personaltoolbar
+  - portaling
   - prebundled
   - prefs
+  - proxified
+  - pWXLO
+  - repost
+  - rxliuli
+  - sandboxed
   - scule
+  - Segoe
   - sidepanel
+  - sidepanels
+  - solidjs
+  - styl
+  - subdependency
+  - tabstrip
+  - teleporting
   - treemap
+  - triaging
   - umami
   - ungh
   - unimport
@@ -56,59 +106,9 @@ words:
   - unrun
   - unstub
   - unwatch
+  - USSS
   - webext
+  - webextension
   - webextrc
   - xcrun
   - xlink
-  - Kenobi
-  - styl
-  - webextension
-  - mycompany
-  - esque
-  - cssinjs
-  - CSUI
-  - sandboxed
-  - metas
-  - charmbracelet
-  - mktemp
-  - frontmatter
-  - triaging
-  - Florian
-  - menupanel
-  - tabstrip
-  - personaltoolbar
-  - Aabid
-  - aabidk
-  - rxliuli
-  - teleporting
-  - portaling
-  - subdependency
-  - greyscale
-  - grayscale
-  - keystyle
-  - USSS
-  - solidjs
-  - fieldtrials
-  - repost
-  - pWXLO
-  - hckhakegfgenefhikdcfkaaonnclljmf
-  - chromedriver
-  - cachable
-  - automount
-  - Cira
-  - pbbf
-  - natsu
-  - magicast
-  - nanospinner
-  - deinit
-  - nacl
-  - extglob
-  - sidepanels
-  - proxified
-  - nodebuffer
-  - configfile
-  - Segoe
-  - Noto
-  - Menlo
-  - Csvg
-  - Cpath
