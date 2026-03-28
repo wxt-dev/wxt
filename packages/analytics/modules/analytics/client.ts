@@ -2,16 +2,48 @@ import { UAParser } from 'ua-parser-js';
 import type {
   Analytics,
   AnalyticsConfig,
+  AnalyticsEventMetadata,
   AnalyticsPageViewEvent,
+  AnalyticsProvider,
   AnalyticsStorageItem,
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
-  AnalyticsEventMetadata,
-  AnalyticsProvider,
 } from './types';
 import { browser } from '@wxt-dev/browser';
+import { isBackground } from '@wxt-dev/is-background';
+
+type AnalyticsMessage = {
+  [K in keyof Analytics]: {
+    fn: K;
+    args: Parameters<Analytics[K]>;
+  };
+}[keyof Analytics];
+
+type AnalyticsMethod =
+  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
+  | undefined;
+
+type MethodForwarder = <K extends keyof Analytics>(
+  fn: K,
+) => (...args: Parameters<Analytics[K]>) => void;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
+
+const INTERACTIVE_TAGS = new Set([
+  'A',
+  'BUTTON',
+  'INPUT',
+  'SELECT',
+  'TEXTAREA',
+]);
+const INTERACTIVE_ROLES = new Set([
+  'button',
+  'link',
+  'checkbox',
+  'menuitem',
+  'tab',
+  'radio',
+]);
 
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
@@ -24,16 +56,14 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
     );
   }
 
-  // TODO: This only works for standard WXT extensions, add a more generic
-  // background script detector that works with non-WXT projects.
-  if (location.pathname === '/background.js')
-    return createBackgroundAnalytics(config);
+  if (isBackground()) return createBackgroundAnalytics(config);
 
   return createFrontendAnalytics();
 }
 
 /**
- * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
+ * Creates an analytics client in the background responsible for uploading
+ * events to the server to avoid CORS errors.
  */
 function createBackgroundAnalytics(
   config: AnalyticsConfig | undefined,
@@ -62,8 +92,8 @@ function createBackgroundAnalytics(
 
   const getBackgroundMeta = () => ({
     timestamp: Date.now(),
-    // Don't track sessions for the background, it can be running
-    // indefinitely, and will inflate session duration stats.
+    // Don't track sessions for the background, it can be running indefinitely
+    // and will inflate session duration stats.
     sessionId: undefined,
     language: navigator.language,
     referrer: undefined,
@@ -75,7 +105,7 @@ function createBackgroundAnalytics(
   const getBaseEvent = async (
     meta: AnalyticsEventMetadata,
   ): Promise<BaseAnalyticsEvent> => {
-    const platform = await platformInfo;
+    const { arch, os } = await platformInfo;
     return {
       meta,
       user: {
@@ -84,8 +114,8 @@ function createBackgroundAnalytics(
           version: config?.version ?? manifest.version_name ?? manifest.version,
           wxtMode: import.meta.env.MODE,
           wxtBrowser: import.meta.env.BROWSER,
-          arch: platform.arch,
-          os: platform.os,
+          arch,
+          os,
           browser: userAgent.browser.name,
           browserVersion: userAgent.browser.version,
           ...(await userProperties),
@@ -147,7 +177,7 @@ function createBackgroundAnalytics(
     },
     track: async (
       eventName: string,
-      eventProperties?: Record<string, string>,
+      eventProperties?: Record<string, string | undefined>,
       meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
       const baseEvent = await getBaseEvent(meta);
@@ -181,9 +211,8 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }) => {
-        // @ts-expect-error: Untyped fn key
-        void analytics[fn]?.(...args);
+      port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
+        void (analytics[fn] as AnalyticsMethod)?.(...args);
       });
     }
   });
@@ -191,9 +220,7 @@ function createBackgroundAnalytics(
   return analytics;
 }
 
-/**
- * Creates an analytics client for non-background contexts.
- */
+/** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
   const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
@@ -201,17 +228,15 @@ function createFrontendAnalytics(): Analytics {
     sessionId,
     timestamp: Date.now(),
     language: navigator.language,
-    referrer: globalThis.document?.referrer || undefined,
-    screen: globalThis.window
-      ? `${globalThis.window.screen.width}x${globalThis.window.screen.height}`
-      : undefined,
+    referrer: document.referrer || undefined,
+    screen: `${window.screen.width}x${window.screen.height}`,
     url: location.href,
     title: document.title || undefined,
   });
 
-  const methodForwarder =
-    (fn: string) =>
-    (...args: any[]) => {
+  const methodForwarder: MethodForwarder =
+    (fn) =>
+    (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
     };
 
@@ -222,11 +247,11 @@ function createFrontendAnalytics(): Analytics {
     setEnabled: methodForwarder('setEnabled'),
     autoTrack: (root) => {
       const onClick = (event: Event) => {
-        const element = event.target as any;
+        const element = event.target as HTMLElement | null;
         if (
           !element ||
           (!INTERACTIVE_TAGS.has(element.tagName) &&
-            !INTERACTIVE_ROLES.has(element.getAttribute('role')))
+            !INTERACTIVE_ROLES.has(element.getAttribute('role') ?? ''))
         )
           return;
 
@@ -235,7 +260,7 @@ function createFrontendAnalytics(): Analytics {
           id: element.id || undefined,
           className: element.className || undefined,
           textContent: element.textContent?.substring(0, 50) || undefined, // Limit text content length
-          href: element.href,
+          href: (element as HTMLAnchorElement).href,
         });
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
@@ -247,32 +272,22 @@ function createFrontendAnalytics(): Analytics {
   return analytics;
 }
 
+function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(
   key: string,
-  defaultValue?: NonNullable<T>,
-): AnalyticsStorageItem<T> {
+  defaultValue: T,
+): AnalyticsStorageItem<T>;
+function defineStorageItem(
+  key: string,
+  defaultValue?: unknown,
+): AnalyticsStorageItem<unknown> {
   return {
     getValue: async () =>
-      (await browser.storage.local.get(key))[key] ?? defaultValue,
+      (await browser.storage.local.get<Record<string, unknown>>(key))[key] ??
+      defaultValue,
     setValue: (newValue) => browser.storage.local.set({ [key]: newValue }),
   };
 }
-
-const INTERACTIVE_TAGS = new Set([
-  'A',
-  'BUTTON',
-  'INPUT',
-  'SELECT',
-  'TEXTAREA',
-]);
-const INTERACTIVE_ROLES = new Set([
-  'button',
-  'link',
-  'checkbox',
-  'menuitem',
-  'tab',
-  'radio',
-]);
 
 export function defineAnalyticsProvider<T = never>(
   definition: (

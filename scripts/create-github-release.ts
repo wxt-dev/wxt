@@ -1,14 +1,15 @@
 import {
   createGithubRelease,
+  GithubRelease,
   loadChangelogConfig,
   parseChangelogMarkdown,
 } from 'changelogen';
-import fs from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import { grabPackageDetails } from './git';
 import consola from 'consola';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx create-github-release.ts <package-name>',
   );
@@ -18,8 +19,7 @@ const { pkgName, prevTag, currentVersion, changelogPath } =
   await grabPackageDetails(pkg);
 consola.info('Creating release for:', { pkg, pkgName, prevTag });
 
-const { releases } = await fs
-  .readFile(changelogPath, 'utf8')
+const { releases } = await readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 
@@ -29,7 +29,6 @@ await createGithubRelease(config, {
   tag_name: prevTag,
   name: `${pkgName} v${currentVersion}`,
   body: releases[0].body,
-  // @ts-expect-error: Not typed in changelogen, but present: https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
   make_latest: String(pkg === 'wxt'),
-});
+} as GithubRelease & { make_latest: string });
 consola.success('Created release');

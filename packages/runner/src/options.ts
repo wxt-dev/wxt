@@ -8,6 +8,7 @@ import { resolve, join } from 'node:path';
 import { homedir, tmpdir } from 'node:os';
 import { debug } from './debug';
 import { mkdtemp, open } from 'node:fs/promises';
+import { styleText } from 'node:util';
 
 const debugOptions = debug.scoped('options');
 
@@ -17,21 +18,46 @@ export type Target = KnownTarget | UnknownTarget;
 export type RunOptions = {
   /** Paths to binaries to use for each target. */
   browserBinaries?: Record<string, string>;
-  /** Customize the arguments passed to the chromium binary. Conflicting arguments with required ones to install extensions are ignored. */
+  /**
+   * Customize the arguments passed to the chromium binary. Conflicting
+   * arguments with required ones to install extensions are ignored.
+   */
   chromiumArgs?: string[];
-  /** Control how data is persisted between launches. Either save data at a user level, project level, or don't persist data at all. Defaults to `project`. */
+  /**
+   * Control how data is persisted between launches. Either save data at a user
+   * level, project level, or don't persist data at all. Defaults to `project`.
+   */
   dataPersistence?: 'user' | 'project' | 'none';
-  /** Customize where your profile's data is stored when using `dataPersistence: 'project'`. Can be absolute or relative to the current working directory. */
+  /**
+   * Customize where your profile's data is stored when using `dataPersistence:
+   * 'project'`. Can be absolute or relative to the current working directory.
+   */
   projectDataDir?: string;
-  /** Customize the port Chrome's debugger is listening on. Defaults to a random open port. */
+  /**
+   * Customize the port Chrome's debugger is listening on. Defaults to a random
+   * open port.
+   */
   chromiumRemoteDebuggingPort?: number;
-  /** Directory where the extension will be installed from. Should contain a `manifest.json` file. Can be relative to the current working directory. Defaults to the current working directory. */
+  /**
+   * Directory where the extension will be installed from. Should contain a
+   * `manifest.json` file. Can be relative to the current working directory.
+   * Defaults to the current working directory.
+   */
   extensionDir?: string;
-  /** Customize the arguments passed to the firefox binary. Conflicting arguments with required ones to install extensions are ignored. */
+  /**
+   * Customize the arguments passed to the firefox binary. Conflicting arguments
+   * with required ones to install extensions are ignored.
+   */
   firefoxArgs?: string[];
-  /** Customize the port Firefox's debugger is listening on. Defaults to a random open port. */
+  /**
+   * Customize the port Firefox's debugger is listening on. Defaults to a random
+   * open port.
+   */
   firefoxRemoteDebuggingPort?: number;
-  /** Specify the browser to open. Defaults to `"chrome"`, but you can pass any string. */
+  /**
+   * Specify the browser to open. Defaults to `"chrome"`, but you can pass any
+   * string.
+   */
   target?: Target;
 };
 
@@ -114,7 +140,7 @@ async function findBrowserBinary(target: string): Promise<string | undefined> {
   for (const target of targets) {
     const potentialPaths = KNOWN_BROWSER_PATHS[target]?.[platform] ?? [];
     for (const path of potentialPaths) {
-      if (await exists(path)) return path;
+      if (await pathExists(path)) return path;
     }
   }
 }
@@ -148,10 +174,8 @@ function resolveChromiumArgs(
     ],
     userArgs,
     {
-      '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom Chromium --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mchromiumRemoteDebuggingPort\x1b[0m option instead.',
-      '--user-data-dir':
-        '\x1b[1m\x1b[33mCustom Chromium --user-data-dir argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
+      '--remote-debugging-port': `${styleText(['bold', 'yellow'], 'Custom Chromium --remote-debugging-port argument ignored.')} Use ${styleText('cyan', 'chromiumRemoteDebuggingPort')} option instead.`,
+      '--user-data-dir': `${styleText(['bold', 'yellow'], 'Custom Chromium --user-data-dir argument ignored.')} Use ${styleText('cyan', 'dataPersistence')} option instead.`,
     },
   );
 }
@@ -175,10 +199,8 @@ function resolveFirefoxArgs(
     ],
     userArgs,
     {
-      '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom Firefox --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mfirefoxDebuggerPort\x1b[0m option instead.',
-      '--profile':
-        '\x1b[1m\x1b[33mCustom Firefox --profile argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
+      '--remote-debugging-port': `${styleText(['bold', 'yellow'], 'Custom Firefox --remote-debugging-port argument ignored.')} Use ${styleText('cyan', 'firefoxRemoteDebuggingPort')} option instead.`,
+      '--profile': `${styleText(['bold', 'yellow'], 'Custom Firefox --profile argument ignored.')} Use ${styleText('cyan', 'dataPersistence')} option instead.`,
     },
   );
 }
@@ -207,7 +229,7 @@ function deduplicateArgs(
   return args;
 }
 
-async function exists(path: string): Promise<boolean> {
+async function pathExists(path: string): Promise<boolean> {
   try {
     await open(path, 'r');
     return true;
@@ -219,8 +241,9 @@ async function exists(path: string): Promise<boolean> {
 }
 
 /**
- * Copied from https://github.com/GoogleChrome/chrome-launcher/blob/main/src/flags.ts
- * with some flags commented out. Run tests after updating to compare.
+ * Copied from
+ * https://github.com/GoogleChrome/chrome-launcher/blob/main/src/flags.ts with
+ * some flags commented out. Run tests after updating to compare.
  */
 const CHROME_LAUNCHER_DEFAULT_FLAGS = [
   '--disable-features=' +

@@ -5,28 +5,30 @@ import {
   ResolvedPublicFile,
 } from '../../../types';
 import { getPublicFiles } from '../fs';
-import fs from 'fs-extra';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
-import type { Ora } from 'ora';
+import type { Spinner } from 'nanospinner';
 import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { toArray } from '../arrays';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
-  spinner: Ora,
+  spinner: Spinner,
 ): Promise<Omit<BuildOutput, 'manifest'>> {
   const steps: BuildStepOutput[] = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const groupNames = toArray(group).map((e) => e.name);
     const groupNameColored = groupNames.join(pc.dim(', '));
-    spinner.text =
-      pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`;
+    spinner.update({
+      text: pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`,
+    });
     try {
       steps.push(await wxt.builder.build(group));
     } catch (err) {
-      spinner.stop().clear();
+      spinner.stop();
+      spinner.clear();
       wxt.logger.error(err);
       throw Error(`Failed to build ${groupNames.join(', ')}`, { cause: err });
     }
@@ -48,11 +50,11 @@ async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
   for (const file of files) {
     const absoluteDest = resolve(wxt.config.outDir, file.relativeDest);
 
-    await fs.ensureDir(dirname(absoluteDest));
+    await mkdir(dirname(absoluteDest), { recursive: true });
     if ('absoluteSrc' in file) {
-      await fs.copyFile(file.absoluteSrc, absoluteDest);
+      await copyFile(file.absoluteSrc, absoluteDest);
     } else {
-      await fs.writeFile(absoluteDest, file.contents, 'utf8');
+      await writeFile(absoluteDest, file.contents, 'utf8');
     }
     publicAssets.push({
       type: 'asset',

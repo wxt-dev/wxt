@@ -1,28 +1,28 @@
+import { rm } from 'node:fs/promises';
 import path from 'node:path';
-import glob from 'fast-glob';
-import fs from 'fs-extra';
 import pc from 'picocolors';
+import { glob } from 'tinyglobby';
 import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
 
 /**
  * Remove generated/temp files from the directory.
  *
- * @param config Optional config that will override your `<root>/wxt.config.ts`.
- *
  * @example
- * await clean();
+ *   await clean();
+ *
+ * @param config Optional config that will override your `<root>/wxt.config.ts`.
  */
 export async function clean(config?: InlineConfig): Promise<void>;
 /**
  * Remove generated/temp files from the directory.
  *
  * @deprecated
- *
- * @param root The directory to look for generated/temp files in. Defaults to `process.cwd()`. Can be relative to `process.cwd()` or absolute.
- *
  * @example
- * await clean();
+ *   await clean();
+ *
+ * @param root The directory to look for generated/temp files in. Defaults to
+ *   `process.cwd()`. Can be relative to `process.cwd()` or absolute.
  */
 export async function clean(root?: string): Promise<void>;
 
@@ -48,6 +48,7 @@ export async function clean(config?: string | InlineConfig) {
     absolute: true,
     onlyDirectories: true,
     deep: 2,
+    expandDirectories: false,
   });
   if (directories.length === 0) {
     wxt.logger.debug('No generated files found.');
@@ -59,7 +60,7 @@ export async function clean(config?: string | InlineConfig) {
     directories.map((dir) => pc.cyan(path.relative(root, dir))).join(', '),
   );
   for (const directory of directories) {
-    await fs.rm(directory, { force: true, recursive: true });
+    await rm(directory, { force: true, recursive: true });
     wxt.logger.debug('Deleted ' + pc.cyan(path.relative(root, directory)));
   }
 }

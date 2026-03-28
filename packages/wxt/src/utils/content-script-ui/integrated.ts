@@ -13,9 +13,8 @@ export function createIntegratedUi<TMounted>(
   options: IntegratedContentScriptUiOptions<TMounted>,
 ): IntegratedContentScriptUi<TMounted> {
   const wrapper = document.createElement(options.tag || 'div');
-  wrapper.setAttribute('data-wxt-integrated', '');
 
-  let mounted: TMounted | undefined = undefined;
+  let mounted: TMounted | undefined;
   const mount = () => {
     applyPosition(wrapper, undefined, options);
     mountUi(wrapper, options);
@@ -49,13 +48,13 @@ export function createIntegratedUi<TMounted>(
 
 /**
  * Shared types for the different `wxt/utils/content-script-ui/*` modules.
+ *
  * @module wxt/utils/content-script-ui/types
  */
-export interface IntegratedContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
-  /**
-   * A wrapper div that assists in positioning.
-   */
+export interface IntegratedContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
+  /** A wrapper div that assists in positioning. */
   wrapper: HTMLElement;
 }
 
@@ -64,14 +63,16 @@ export type IntegratedContentScriptUiOptions<TMounted> =
     /**
      * Tag used to create the wrapper element.
      *
-     * @default "div"
+     * @default 'div'
      */
     tag?: string;
     /**
-     * Callback executed when mounting the UI. This function should create and append the UI to the
-     * `wrapper` element. It is called every time `ui.mount()` is called.
+     * Callback executed when mounting the UI. This function should create and
+     * append the UI to the `wrapper` element. It is called every time
+     * `ui.mount()` is called.
      *
-     * Optionally return a value that can be accessed at `ui.mounted` or in the `onRemove` callback.
+     * Optionally return a value that can be accessed at `ui.mounted` or in the
+     * `onRemove` callback.
      */
     onMount: (wrapper: HTMLElement) => TMounted;
   };

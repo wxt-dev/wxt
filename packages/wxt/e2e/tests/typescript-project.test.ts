@@ -63,6 +63,29 @@ describe('TypeScript Project', () => {
     `);
   });
 
+  it('should include CSS entrypoints in browser.runtime.getURL paths', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.addFile(
+      'entrypoints/plain.css',
+      `body {
+        color: red;
+      }`,
+    );
+    project.addFile(
+      'entrypoints/overlay.content.css',
+      `body {
+        color: blue;
+      }`,
+    );
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/types/paths.d.ts');
+    expect(output).toContain('| "/plain.css"');
+    expect(output).toContain('| "/content-scripts/overlay.css"');
+  });
+
   it('should augment the types for browser.i18n.getMessage', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');
@@ -126,7 +149,7 @@ describe('TypeScript Project', () => {
 
         export interface WxtI18n extends I18n.Static {
           /**
-           * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
+           * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even non-localized extensions can use this message.
            * Note: You can't use this message in a manifest file.
            *
            * "<browser.runtime.id>"

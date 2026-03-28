@@ -24,12 +24,31 @@ describe('Content Script Context', () => {
     const onInvalidated = vi.fn();
 
     ctx.onInvalidated(onInvalidated);
-    // @ts-ignore
+    // @ts-expect-error Deleting `runtime.id` to simulate disconnection
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 
     expect(onInvalidated).toBeCalled();
     expect(isValid).toBe(false);
+  });
+
+  it('should not throw when browser.runtime is undefined (extension context fully invalidated)', () => {
+    const ctx = new ContentScriptContext('test');
+    const onInvalidated = vi.fn();
+
+    ctx.onInvalidated(onInvalidated);
+    // Simulate complete extension context invalidation where browser.runtime becomes undefined
+    const originalRuntime = fakeBrowser.runtime;
+    // @ts-ignore
+    fakeBrowser.runtime = undefined;
+
+    // Should not throw, and should mark as invalid
+    expect(() => ctx.isInvalid).not.toThrow();
+    expect(ctx.isInvalid).toBe(true);
+    expect(onInvalidated).toBeCalled();
+
+    // Restore for other tests
+    fakeBrowser.runtime = originalRuntime;
   });
 
   it('should invalidate the current content script when a new context is created', async () => {

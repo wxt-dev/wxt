@@ -9,9 +9,7 @@ export interface KeyboardShortcutWatcher {
   printHelp(flags: { canReopenBrowser: boolean }): void;
 }
 
-/**
- * Function that creates a keyboard shortcut handler for the extension.
- */
+/** Function that creates a keyboard shortcut handler for the extension. */
 export function createKeyboardShortcuts(
   server: WxtDevServer,
 ): KeyboardShortcutWatcher {
@@ -26,6 +24,8 @@ export function createKeyboardShortcuts(
 
   return {
     start() {
+      this.stop();
+
       rl ??= readline.createInterface({
         input: process.stdin,
         terminal: false, // Don't intercept ctrl+C, ctrl+Z, etc

@@ -108,7 +108,7 @@ describe('User Config', () => {
     await project.build({ configFile: 'test.config.ts' });
 
     expect(
-      await project.fileExists('.custom-output/chrome-mv3/background.js'),
+      await project.pathExists('.custom-output/chrome-mv3/background.js'),
     ).toBe(true);
   });
 
@@ -129,27 +129,25 @@ describe('User Config', () => {
     await project.build();
 
     expect(
-      await project.fileExists('.output/test-chrome-mv3-production-build'),
+      await project.pathExists('.output/test-chrome-mv3-production-build'),
     ).toBe(true);
 
     await project.build({ mode: 'development' });
 
     expect(
-      await project.fileExists('.output/test-chrome-mv3-development-dev-build'),
+      await project.pathExists('.output/test-chrome-mv3-development-dev-build'),
     ).toBe(true);
   });
 
-  it('should throw error when config file not exist', async () => {
+  it('should not throw error when config file not exist', async () => {
     const project = new TestProject();
     project.addFile(
-      'src/entrypoints/background.ts',
+      'entrypoints/background.ts',
       `export default defineBackground(
         () => console.log('Hello background'),
       );`,
     );
 
-    await expect(
-      project.build({ configFile: 'foo.config.ts' }),
-    ).rejects.toThrowError(/not found/);
+    await project.build({ configFile: 'foo.config.ts' });
   });
 });

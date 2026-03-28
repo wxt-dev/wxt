@@ -5,11 +5,11 @@ import {
   updateGithubRelease,
 } from 'changelogen';
 import { getPkgTag, grabPackageDetails } from './git';
-import fs from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import consola from 'consola';
 
 const pkg = process.argv[2];
-if (pkg == null) {
+if (!pkg) {
   throw Error(
     'Package name missing. Usage: tsx sync-releases.ts <package-name>',
   );
@@ -17,8 +17,7 @@ if (pkg == null) {
 
 // Update
 const { changelogPath, pkgName } = await grabPackageDetails(pkg);
-const { releases } = await fs
-  .readFile(changelogPath, 'utf8')
+const { releases } = await readFile(changelogPath, 'utf8')
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 const config = await loadChangelogConfig(process.cwd());

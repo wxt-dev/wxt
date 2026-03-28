@@ -1,7 +1,8 @@
 import prompts from 'prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
-import fs from 'fs-extra';
+import { readdir, rename } from 'node:fs/promises';
+import { pathExists } from './utils/fs';
 import path from 'node:path';
 import pc from 'picocolors';
 import { Formatter } from 'picocolors/types';
@@ -56,10 +57,10 @@ export async function initialize(options: {
   input.template ??= defaultTemplate;
   input.packageManager ??= options.packageManager;
 
-  const isExists = await fs.pathExists(input.directory);
+  const isExists = await pathExists(input.directory);
   if (isExists) {
     const isEmpty =
-      (await fs.readdir(input.directory)).filter((dir) => dir !== '.git')
+      (await readdir(input.directory)).filter((dir) => dir !== '.git')
         .length === 0;
     if (!isEmpty) {
       consola.error(
@@ -87,13 +88,9 @@ export async function initialize(options: {
 }
 
 interface Template {
-  /**
-   * Template's name.
-   */
+  /** Template's name. */
   name: string;
-  /**
-   * Path to template directory in github repo.
-   */
+  /** Path to template directory in github repo. */
   path: string;
 }
 
@@ -161,8 +158,8 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { default: ora } = await import('ora');
-  const spinner = ora('Downloading template').start();
+  const { createSpinner } = await import('nanospinner');
+  const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
     await downloadTemplate(`gh:${REPO}/${template.path}`, {
@@ -171,18 +168,16 @@ async function cloneProject({
     });
 
     // 2. Move _gitignore -> .gitignore
-    await fs
-      .move(
-        path.join(directory, '_gitignore'),
-        path.join(directory, '.gitignore'),
-      )
-      .catch((err) =>
-        consola.warn('Failed to move _gitignore to .gitignore:', err),
-      );
+    await rename(
+      path.join(directory, '_gitignore'),
+      path.join(directory, '.gitignore'),
+    ).catch((err) =>
+      consola.warn('Failed to move _gitignore to .gitignore:', err),
+    );
 
-    spinner.succeed();
+    spinner.success();
   } catch (err) {
-    spinner.fail();
+    spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
   }
 }

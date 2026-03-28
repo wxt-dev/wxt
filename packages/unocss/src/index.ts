@@ -38,12 +38,11 @@ export default defineWxtModule<UnoCSSOptions>({
   },
 });
 
-/**
- * Options for the UnoCSS module
- */
+/** Options for the UnoCSS module */
 export interface UnoCSSOptions<Theme extends object = object> {
   /**
    * Enable UnoCSS
+   *
    * @default true
    */
   enabled?: boolean;
@@ -51,12 +50,17 @@ export interface UnoCSSOptions<Theme extends object = object> {
    * List of entrypoint names that UnoCSS is not used in. By default, the UnoCSS
    * vite plugin is added to all build steps, but this option is used to exclude
    * it from specific builds.
-   * @example ["popup", "options"]
-   * @default []
+   *
+   * @example
+   *   {undefined} ('popup',
+   *   'options');
+   *
+   * @default [ ]
    */
   excludeEntrypoints?: string[];
   /**
-   * The path to your `unocss.config.ts` file, relative to <rootDir>, or inline configuration.
+   * The path to your `unocss.config.ts` file, relative to <rootDir>, or inline
+   * configuration.
    */
   configOrPath?: Parameters<typeof UnoCSS<Theme>>[0];
 }

@@ -1,5 +1,50 @@
 # Changelog
 
+## v2.0.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.4...module-svelte-v2.0.5)
+
+### 🩹 Fixes
+
+- Update `@sveltejs/vite-plugin-svelte` version range to support Vite 8 ([48571f50](https://github.com/wxt-dev/wxt/commit/48571f50))
+
+### 🏡 Chore
+
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Add prepack script to all packages ([032f7931](https://github.com/wxt-dev/wxt/commit/032f7931))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v2.0.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.3...module-svelte-v2.0.4)
+
+### 🩹 Fixes
+
+- Add support for @sveltejs/vite-plugin-svelte@6 ([459f73fd](https://github.com/wxt-dev/wxt/commit/459f73fd))
+
+### 🏡 Chore
+
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- **deps:** Upgrade typescript from 5.8.3 to 5.9.2 ([a6eef643](https://github.com/wxt-dev/wxt/commit/a6eef643))
+- Create script for managing dependency upgrades ([#1875](https://github.com/wxt-dev/wxt/pull/1875))
+- **deps:** Upgrade all dev dependencies ([#1876](https://github.com/wxt-dev/wxt/pull/1876))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Okinea Dev <hi@okinea.dev>
+
 ## v2.0.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.2...module-svelte-v2.0.3)
