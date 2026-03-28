@@ -220,7 +220,7 @@ function removeSideEffectImports(mod: ProxifiedModule): void {
 
 /**
  * Util to get the AST as a simple JSON object, stripping out large objects and
- * file locations to keep it readible
+ * file locations to keep it readable.
  */
 function getSimpleAstJson(ast: any): any {
   if (!ast) {

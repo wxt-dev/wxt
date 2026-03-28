@@ -149,7 +149,7 @@ describe('TypeScript Project', () => {
 
         export interface WxtI18n extends I18n.Static {
           /**
-           * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.
+           * The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even non-localized extensions can use this message.
            * Note: You can't use this message in a manifest file.
            *
            * "<browser.runtime.id>"

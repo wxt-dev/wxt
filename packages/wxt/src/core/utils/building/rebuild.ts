@@ -49,7 +49,7 @@ export async function rebuild(
   const newOutput = await buildEntrypoints(entrypointGroups, spinner);
   const mergedOutput: Omit<BuildOutput, 'manifest'> = {
     steps: [...existingOutput.steps, ...newOutput.steps],
-    // Do not merge existing because all publicAssets copied everytime
+    // Do not merge existing because all publicAssets copied every time
     publicAssets: newOutput.publicAssets,
   };
 

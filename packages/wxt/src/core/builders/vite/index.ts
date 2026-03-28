@@ -421,7 +421,7 @@ function getRollupEntry(entrypoint: Entrypoint): string {
 }
 
 /**
- * Ensures the HTML files output by a multipage build are in the correct
+ * Ensures the HTML files output by a multi-page build are in the correct
  * location. This does two things:
  *
  * 1. Moves the HTML files to their final location at
