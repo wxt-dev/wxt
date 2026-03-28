@@ -15,7 +15,7 @@ WXT is two things:
 
 The long term goal of WXT is provide an opinionated build tool that keeps WXT projects standard, while providing light-weight runtime utils that simplify a lot of the boilerplate/overhead when setting up a new extension.
 
-I also want to provide a way for developers to use either one of those two things independently, and not require them to use both. This is why all of WXT's runtime utils are shipped as their own NPM packages, most of them not bundled inside the core `wxt` package. If you just want to use the packages, they're availalbe, and if you just want to use WXT's built tool, you don't have to import any of WXT's utilities, you can use your own.
+I also want to provide a way for developers to use either one of those two things independently, and not require them to use both. This is why all of WXT's runtime utils are shipped as their own NPM packages, most of them not bundled inside the core `wxt` package. If you just want to use the packages, they're available, and if you just want to use WXT's built tool, you don't have to import any of WXT's utilities, you can use your own.
 
 > The few runtime utils shipped inside WXT are things that should be used by 90% of extensions. That said, they're also legacy utils left in from before I started creating separate NPM packages, and in the future, they may be removed from the core package.
 
@@ -101,7 +101,7 @@ pnpm --filter wxt build
 # CD to the demo directory
 cd packages/wxt-demo
 
-# 1. Generate a flamechart with 0x
+# 1. Generate a flame graph with 0x
 pnpm dlx 0x node_modules/wxt/bin/wxt.mjs build
 # 2. Inspect the process with chrome @ chrome://inspect
 pnpm node --inspect node_modules/wxt/bin/wxt.mjs build
@@ -212,4 +212,4 @@ Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 
 If you're interested in becoming a maintainer, send an email to Aaron at <aaronklinker1@gmail.com> with your github username saying you're interested. The process is very informal, I will add you quickly if you've contributed code or answered questions and helped out the community!
 
-Maintainers don't have to just write code - they can manage issues, answer questsions, review PRs, organize and prioritize work - there's lots of ways for you to help out.
+Maintainers don't have to just write code - they can manage issues, answer questions, review PRs, organize and prioritize work - there's lots of ways for you to help out.

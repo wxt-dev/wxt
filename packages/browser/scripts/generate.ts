@@ -3,15 +3,16 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve, sep } from 'node:path';
 import { sep as posixSep } from 'node:path/posix';
+import { styleText } from 'node:util';
 
 // Fetch latest version
 
-console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
+console.log(`Getting latest version of ${styleText('cyan', '@types/chrome')}`);
 await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome@latest']);
 
 // Generate new package.json
 
-console.log('Generating new \x1b[36mpackage.json\x1b[0m');
+console.log(`Generating new ${styleText('cyan', 'package.json')}`);
 
 const pkgJsonPath = fileURLToPath(
   import.meta.resolve('@types/chrome/package.json'),
@@ -55,12 +56,14 @@ for (const { file, srcPath, destPath } of declarationFileMapping) {
   const destDir = dirname(destPath);
   await mkdir(destDir, { recursive: true });
   await writeFile(destPath, transformedContent);
-  console.log(`  \x1b[2m-\x1b[0m \x1b[36m${file}\x1b[0m`);
+  console.log(`  ${styleText('dim', '-')} ${styleText('cyan', file)}`);
 }
 
 // Done!
 
-console.log('\x1b[32m✔\x1b[0m Done in ' + performance.now().toFixed(0) + ' ms');
+console.log(
+  `${styleText('green', '✔')} Done in ${performance.now().toFixed(0)} ms`,
+);
 
 // Transformations
 

@@ -411,8 +411,8 @@ export interface InlineConfig {
    * set in WXT's config instead of Vite's.
    *
    * This is a function because any vite plugins added need to be recreated for
-   * each individual build step, incase they have internal state causing them to
-   * fail when reused.
+   * each individual build step, in case they have internal state causing them
+   * to fail when reused.
    */
   vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
 }
