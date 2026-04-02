@@ -466,8 +466,8 @@ importers:
         specifier: ^0.27.1
         version: 0.27.3
       filesize:
-        specifier: ^11.0.13
-        version: 11.0.13
+        specifier: ^11.0.15
+        version: 11.0.15
       get-port-please:
         specifier: ^3.2.0
         version: 3.2.0
@@ -3456,8 +3456,8 @@ packages:
     resolution: {integrity: sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ==}
     engines: {node: '>=16.0.0'}
 
-  filesize@11.0.13:
-    resolution: {integrity: sha512-mYJ/qXKvREuO0uH8LTQJ6v7GsUvVOguqxg2VTwQUkyTPXXRRWPdjuUPVqdBrJQhvci48OHlNGRnux+Slr2Rnvw==}
+  filesize@11.0.15:
+    resolution: {integrity: sha512-30TpbYxQxCpi4XdVjkwXYQ37CzZltV38+P7MYroQ+4NK/Dmx9mxixFNrolzcmEIBsjT/uowC9T7kiy2+C12r1A==}
     engines: {node: '>= 10.8.0'}
 
   fill-range@7.1.1:
@@ -8034,7 +8034,7 @@ snapshots:
     dependencies:
       flat-cache: 4.0.1
 
-  filesize@11.0.13: {}
+  filesize@11.0.15: {}
 
   fill-range@7.1.1:
     dependencies:
