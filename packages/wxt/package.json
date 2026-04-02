@@ -75,7 +75,7 @@
     "@types/normalize-path": "^3.0.2",
     "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
-    "eslint": "^10.0.0",
+    "eslint": "^10.1.0",
     "extract-zip": "^2.0.1",
     "happy-dom": "^20.8.3",
     "lodash.merge": "^4.6.2",
