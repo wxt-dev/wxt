@@ -9,10 +9,10 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://wxt.dev" target="_blank">
+        <a href="https://wxt.dev" target="_blank" rel="noopener noreferrer">
           <img src={wxtLogo} className="logo" alt="WXT logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
