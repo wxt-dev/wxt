@@ -706,12 +706,6 @@ export namespace Browser {
         const ROOT_NODE_ID = "0";
 
         /**
-         * The `id` associated with the root level node.
-         * @since Chrome 145
-         */
-        export const ROOT_NODE_ID = "0";
-
-        /**
          * Creates a bookmark or folder under the specified parentId. If url is NULL or missing, it will be a folder.
          *
          * Can return its result via Promise since Chrome 90.
@@ -9231,11 +9225,6 @@ export namespace Browser {
             | "webRequestBlocking"
             | "webRequestAuthProvider";
 
-        /**
-         * @deprecated Use `ManifestPermission` instead.
-         */
-        export type ManifestPermissions = ManifestPermission;
-
         /** Source : https://developer.chrome.com/docs/extensions/reference/api/permissions */
         type ManifestOptionalPermission = Exclude<
             ManifestPermission,
@@ -9634,13 +9623,6 @@ export namespace Browser {
          * @since Chrome 143
          */
         function getVersion(): string;
-
-        /**
-         * Returns the extension's version as declared in the manifest.
-         * @returns The extension's version.
-         * @since Chrome 143
-         */
-        export function getVersion(): string;
 
         /** Reloads the app or extension. This method is not supported in kiosk mode. For kiosk mode, use {@link Browser.runtime.restart()} method. */
         function reload(): void;
@@ -11120,15 +11102,7 @@ export namespace Browser {
             sessionId?: string | undefined;
             /**
              * The ID of the Split View that the tab belongs to.
-<<<<<<< HEAD
-<<<<<<< HEAD
              * @since Chrome 140
-=======
-             * @since Chrome 145
->>>>>>> 2d2db23c (fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version)
-=======
-             * @since Chrome 140
->>>>>>> e904e367 (fix: Upgrade `@wxt-dev/browser` to latest `@types/chrome` version)
              */
             splitViewId?: number | undefined;
             /**
@@ -11207,12 +11181,6 @@ export namespace Browser {
          * @since Chrome 140
          */
         const SPLIT_VIEW_ID_NONE: -1;
-
-        /**
-         * An ID that represents the absence of a split tab.
-         * @since Chrome 140
-         */
-        export const SPLIT_VIEW_ID_NONE: -1;
 
         /**
          * An ID that represents the absence of a browser tab.
@@ -13006,9 +12974,6 @@ export namespace Browser {
         ): Promise<GetFrameResultDetails | null>;
         function getFrame(
             details: GetFrameDetails,
-        ): Promise<GetFrameResultDetails | null>;
-        export function getFrame(
-            details: GetFrameDetails,
             callback: (details: GetFrameResultDetails | null) => void,
         ): void;
 
@@ -14751,12 +14716,6 @@ export namespace Browser {
          */
         function setPanelBehavior(behavior: PanelBehavior): Promise<void>;
         function setPanelBehavior(behavior: PanelBehavior, callback: () => void): void;
-
-        /**
-         * Fired when the extension's side panel is closed.
-         * @since Chrome 142
-         */
-        const onClosed: events.Event<(info: PanelClosedInfo) => void>;
 
         /**
          * Fired when the extension's side panel is closed.
