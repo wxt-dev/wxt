@@ -348,9 +348,10 @@ export namespace Browser {
         export function setIcon(details: TabIconDetails, callback: () => void): void;
 
         /**
-         * Sets the html document to be opened as a popup when the user clicks on the action's icon.
+         * Sets the HTML document to be opened as a popup when the user clicks on the action's icon.
          *
          * Can return its result via Promise.
+         * @since Chrome 96
          */
         export function setPopup(details: PopupDetails): Promise<void>;
         export function setPopup(details: PopupDetails, callback: () => void): void;
@@ -1167,6 +1168,7 @@ export namespace Browser {
          * Clears websites' cache storage data.
          *
          * Can return its result via Promise in Manifest V3 or later since Chrome 96.
+         * @since Chrome 72
          */
         export function removeCacheStorage(options: RemovalOptions): Promise<void>;
         export function removeCacheStorage(options: RemovalOptions, callback: () => void): void;
@@ -2435,7 +2437,17 @@ export namespace Browser {
          * Exactly one of `imageData` or `path` must be specified. Both are dictionaries mapping a number of pixels to an image representation. The image representation in `imageData` is an `ImageData` object; for example, from a `canvas` element, while the image representation in `path` is the path to an image file relative to the extension's manifest. If `scale` screen pixels fit into a device-independent pixel, the `scale * n` icon is used. If that scale is missing, another image is resized to the required size.
          */
         export class SetIcon {
-            constructor(options?: { imageData?: ImageData | { [size: string]: ImageData } | undefined });
+            constructor(
+                options:
+                    | {
+                        imageData: ImageData | { [index: number]: ImageData };
+                        path?: string | { [index: number]: string } | undefined;
+                    }
+                    | {
+                        imageData?: ImageData | { [index: number]: ImageData } | undefined;
+                        path: string | { [index: number]: string };
+                    },
+            );
         }
 
         /** Provides the Declarative Event API consisting of {@link events.Event.addRules addRules}, {@link events.Event.removeRules removeRules}, and {@link events.Event.getRules getRules}. */
@@ -3332,7 +3344,7 @@ export namespace Browser {
             /** Indicates the data type of the option. The requested data type must match the real data type of the underlying option. */
             type: `${OptionType}`;
             /** Indicates the value to set. Leave unset to request automatic setting for options that have `autoSettable` enabled. The data type supplied for `value` must match `type`. */
-            value?: string | number | boolean | number;
+            value?: string | number | boolean | number[];
         }
 
         /**
@@ -3562,6 +3574,8 @@ export namespace Browser {
         /**
          * Performs a document scan and returns a Promise that resolves with a {@link ScanResults} object. If a callback is passed to this function, the returned data is passed to it instead.
          * @param options An object containing scan parameters.
+         *
+         * Can return its result via Promise in Manifest V3 or later since Chrome 96.
          */
         export function scan(options: ScanOptions): Promise<ScanResults>;
         export function scan(options: ScanOptions, callback: (result: ScanResults) => void): void;
@@ -4366,9 +4380,12 @@ export namespace Browser {
         }
 
         /**
-         * Retrieves the network details of the device's default network. If the user is not affiliated or the device is not connected to a network, runtime.lastError will be set with a failure reason.
+         * Retrieves the network details of the device's default network. If the user is not affiliated or the device is not connected to a network, {@link runtime.lastError} will be set with a failure reason.
          * @param callback Called with the device's default network's NetworkDetails.
+         *
+         * Can return its result via Promise in Manifest V3 or later since Chrome 96.
          */
+        export function getNetworkDetails(): Promise<NetworkDetails>;
         export function getNetworkDetails(callback: (networkDetails: NetworkDetails) => void): void;
     }
 
@@ -6310,7 +6327,7 @@ export namespace Browser {
          * This API is different from identity.getAccounts in two ways. The information returned is available offline, and it only applies to the primary account for the profile.
          * @param details Profile options.
          *
-         * Can return its result via Promise since Chrome 105.
+         * Can return its result via Promise since Chrome 106.
          */
         export function getProfileUserInfo(details?: ProfileDetails): Promise<ProfileUserInfo>;
         export function getProfileUserInfo(
@@ -6325,7 +6342,7 @@ export namespace Browser {
          * If an access token is discovered to be invalid, it should be passed to removeCachedAuthToken to remove it from the cache. The app may then retrieve a fresh token with `getAuthToken`.
          * @param details Token information.
          *
-         * Can return its result via Promise since Chrome 105.
+         * Can return its result via Promise since Chrome 106.
          */
         export function removeCachedAuthToken(details: InvalidTokenDetails): Promise<void>;
         export function removeCachedAuthToken(details: InvalidTokenDetails, callback: () => void): void;
@@ -7913,7 +7930,7 @@ export namespace Browser {
 
         export enum ClientCertificateType {
             ECDSA_SIGN = "ecdsaSign",
-            RAS_SIGN = "rasSign",
+            RSA_SIGN = "rsaSign",
         }
 
         export interface SelectDetails {
@@ -8808,7 +8825,7 @@ export namespace Browser {
         export type QueryInfo =
             & {
                 /** String to query with the default search provider. */
-                text?: string | undefined;
+                text: string;
             }
             & (
                 | {
@@ -12144,7 +12161,7 @@ export namespace Browser {
          * Called when the list of {@link TtsVoice} that would be returned by getVoices has changed.
          * @since Chrome 124
          */
-        const onVoicesChanged: Browser.events.Event<() => void>;
+        export const onVoicesChanged: Browser.events.Event<() => void>;
     }
 
     ////////////////////
@@ -13096,7 +13113,7 @@ export namespace Browser {
             EXTRA_HEADERS = "extraHeaders",
         }
 
-        /** @since Chrome 44 */
+        /** @since Chrome 79 */
         export enum OnErrorOccurredOptions {
             /** Specifies that headers can violate Cross-Origin Resource Sharing (CORS). */
             EXTRA_HEADERS = "extraHeaders",
@@ -13288,14 +13305,14 @@ export namespace Browser {
             extends SetPartial<WebRequestDetails, "documentId" | "documentLifecycle" | "frameType">
         {
             /** Contains the HTTP request body data. Only provided if extraInfoSpec contains 'requestBody'. */
-            requestBody: {
+            requestBody?: {
                 /** Errors when obtaining request body data. */
                 error?: string;
                 /** If the request method is POST and the body is a sequence of key-value pairs encoded in UTF8, encoded as either multipart/form-data, or application/x-www-form-urlencoded, this dictionary is present and for each key contains the list of all values for that key. If the data is of another media type, or if it is malformed, the dictionary is not present. An example value of this dictionary is {'key': \['value1', 'value2'\]}. */
                 formData?: { [key: string]: FormDataItem[] };
                 /** If the request method is PUT or POST, and the body is not already parsed in formData, then the unparsed request body elements are contained in this array. */
                 raw?: UploadData[];
-            } | undefined;
+            };
         }
 
         export interface OnBeforeSendHeadersDetails extends WebRequestDetails {
@@ -14347,7 +14364,7 @@ export namespace Browser {
              * The headers provided by a hypothetical response if the request does not get blocked or redirected before it is sent. Represented as an object which maps a header name to a list of string values. If not specified, the hypothetical response would return empty response headers, which can match rules which match on the non-existence of headers. E.g. `{"content-type": ["text/html; charset=utf-8", "multipart/form-data"]}`
              * @since Chrome 129
              */
-            responseHeaders?: { [name: string]: unknown };
+            responseHeaders?: { [name: string]: string[] };
             /** The ID of the tab in which the hypothetical request takes place. Does not need to correspond to a real tab ID. Default is -1, meaning that the request isn't related to a tab. */
             tabId?: number;
             /**
@@ -14685,13 +14702,13 @@ export namespace Browser {
          * Fired when the extension's side panel is closed.
          * @since Chrome 142
          */
-        const onClosed: events.Event<(info: PanelClosedInfo) => void>;
+        export const onClosed: events.Event<(info: PanelClosedInfo) => void>;
 
         /**
          * Fired when the extension's side panel is opened.
          * @since Chrome 141
          */
-        const onOpened: events.Event<(info: PanelOpenedInfo) => void>;
+        export const onOpened: events.Event<(info: PanelOpenedInfo) => void>;
     }
 
     ////////////////////
@@ -14797,7 +14814,7 @@ export namespace Browser {
             /** Specifies wildcard patterns for pages this user script will be injected into. */
             includeGlobs?: string[] | undefined;
             /** The list of ScriptSource objects defining sources of scripts to be injected into matching pages. This property must be specified for {@link register}, and when specified it must be a non-empty array.*/
-            js: ScriptSource[];
+            js?: ScriptSource[] | undefined;
             /** Specifies which pages this user script will be injected into. See Match Patterns for more details on the syntax of these strings. This property must be specified for {@link register}. */
             matches?: string[] | undefined;
             /** Specifies when JavaScript files are injected into the web page. The preferred and default value is `document_idle` */
