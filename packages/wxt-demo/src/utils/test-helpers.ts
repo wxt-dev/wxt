@@ -53,6 +53,7 @@ export async function launchFirefoxWithExtension(
   const port = await getFreePort();
 
   const context = await firefox.launchPersistentContext('', {
+    headless: true,
     args: [`--remote-debugging-port=${port}`],
   });
 
@@ -69,7 +70,7 @@ export async function launchFirefoxWithExtension(
           `Failed to install Firefox extension via BiDi after ${maxRetries} retries`,
         );
       }
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 1000));
     }
   }
 

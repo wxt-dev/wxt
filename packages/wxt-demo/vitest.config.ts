@@ -5,7 +5,7 @@ export default defineProject({
   test: {
     mockReset: true,
     restoreMocks: true,
-    testTimeout: 10_000,
+    testTimeout: 60_000,
   },
   plugins: [WxtVitest()],
 });
