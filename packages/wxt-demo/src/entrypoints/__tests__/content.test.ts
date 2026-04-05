@@ -6,7 +6,7 @@ import {
   buildProject,
   expectConsoleLogs,
   launchFirefoxWithExtension,
-} from '../../utils/test-helpers.ts';
+} from '@/utils/test-helpers.ts';
 
 const wxtDemoEntrypointsDir = resolve(
   import.meta.dirname,
