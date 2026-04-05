@@ -2,7 +2,6 @@ import { TestProject } from '../../../wxt/e2e/utils.ts';
 import { installFirefox } from '../../../runner/src';
 import { createServer } from 'node:net';
 import { type BrowserContext, firefox } from 'playwright';
-import { expect } from 'vitest';
 
 export function buildProject(
   contentSource: string,
@@ -23,7 +22,7 @@ export function buildProject(
       web_accessible_resources: [
         {
           resources: ['unlisted.js'],
-          matches: ['*://*.google.com/*'],
+          matches: ['*://*.example.com/*'],
         },
       ],
     },
@@ -83,7 +82,7 @@ export async function collectConsoleLogs(
 
   const page = context.pages()[0] || (await context.newPage());
   page.on('console', (msg) => consoleLogs.push(msg.text()));
-  await page.goto('https://www.google.com', { waitUntil: 'load' });
+  await page.goto('https://www.example.com', { waitUntil: 'load' });
   await page.waitForTimeout(2000);
 
   return consoleLogs;

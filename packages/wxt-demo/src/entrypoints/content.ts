@@ -1,5 +1,5 @@
 export default defineContentScript({
-  matches: ['*://*.google.com/*'],
+  matches: ['*://*.example.com/*'],
 
   async main() {
     console.log('Injecting...');

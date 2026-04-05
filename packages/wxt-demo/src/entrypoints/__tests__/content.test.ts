@@ -26,7 +26,7 @@ describe('Content Script with injectScript', () => {
   it('should verify content.ts source code matches expected', async () => {
     expect(contentSource).toMatchInlineSnapshot(`
       "export default defineContentScript({
-        matches: ['*://*.google.com/*'],
+        matches: ['*://*.example.com/*'],
 
         async main() {
           console.log('Injecting...');
