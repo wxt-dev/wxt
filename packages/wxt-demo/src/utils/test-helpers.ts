@@ -88,13 +88,3 @@ export async function collectConsoleLogs(
 
   return consoleLogs;
 }
-
-export async function expectConsoleLogs(
-  context: BrowserContext,
-  expectedLogs: string[],
-): Promise<void> {
-  const consoleLogs = await collectConsoleLogs(context);
-  for (const log of expectedLogs) {
-    expect(consoleLogs).toContain(log);
-  }
-}

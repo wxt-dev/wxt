@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { type BrowserContext, chromium } from 'playwright';
 import {
   buildProject,
-  expectConsoleLogs,
+  collectConsoleLogs,
   launchFirefoxWithExtension,
 } from '@/utils/test-helpers.ts';
 
@@ -50,7 +50,7 @@ describe('Content Script with injectScript', () => {
   });
 
   describe('Browser Console Verification', () => {
-    const expectedLogs = ['Injecting...', 'After injection', 'Injected'];
+    const expectedLogs = ['Injecting...', 'Injected', 'After injection'];
     let context: BrowserContext;
 
     afterEach(async () => {
@@ -75,7 +75,8 @@ describe('Content Script with injectScript', () => {
         ],
       });
 
-      await expectConsoleLogs(context, expectedLogs);
+      const consoleLogs = await collectConsoleLogs(context);
+      expect(consoleLogs).toEqual(expectedLogs);
     });
 
     it('Firefox MV2 - should log all expected messages', async () => {
@@ -90,7 +91,8 @@ describe('Content Script with injectScript', () => {
       const extensionPath = project.resolvePath('.output/firefox-mv2/');
       context = await launchFirefoxWithExtension(extensionPath);
 
-      await expectConsoleLogs(context, expectedLogs);
+      const consoleLogs = await collectConsoleLogs(context);
+      expect(consoleLogs).toEqual(expectedLogs);
     });
 
     it('Firefox MV3 - should log all expected messages', async () => {
@@ -105,7 +107,8 @@ describe('Content Script with injectScript', () => {
       const extensionPath = project.resolvePath('.output/firefox-mv3/');
       context = await launchFirefoxWithExtension(extensionPath);
 
-      await expectConsoleLogs(context, expectedLogs);
+      const consoleLogs = await collectConsoleLogs(context);
+      expect(consoleLogs).toEqual(expectedLogs);
     });
   });
 });
