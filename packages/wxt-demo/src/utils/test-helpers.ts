@@ -53,7 +53,6 @@ export async function launchFirefoxWithExtension(
   const port = await getFreePort();
 
   const context = await firefox.launchPersistentContext('', {
-    headless: true,
     args: [`--remote-debugging-port=${port}`],
   });
 

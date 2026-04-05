@@ -68,7 +68,6 @@ describe('Content Script with injectScript', () => {
 
       const extensionPath = project.resolvePath('.output/chrome-mv3/');
       context = await chromium.launchPersistentContext('', {
-        headless: true,
         channel: 'chromium',
         args: [
           `--disable-extensions-except=${extensionPath}`,
