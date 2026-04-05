@@ -46,10 +46,6 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Install Playwright
-        run: pnpm exec playwright install
-        working-directory: packages/wxt-demo
-
       - name: Build
         run: pnpm build:all
         working-directory: packages/wxt-demo
@@ -79,6 +75,9 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
+
+      - name: Install Playwright
+        run: pnpm exec playwright install
 
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
