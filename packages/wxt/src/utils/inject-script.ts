@@ -37,18 +37,18 @@ export async function injectScript(
     script.src = url;
   }
 
+  // For MV2: inline scripts execute synchronously when appended, so we don't need to wait
+  // For MV3: we need to wait for the load event
+  if (isManifestV3) {
+    await makeLoadedPromise(script);
+  }
+  
   await options?.modifyScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
 
   if (!options?.keepInDom) {
     script.remove();
-  }
-
-  // For MV2: inline scripts execute synchronously when appended, so we don't need to wait
-  // For MV3: we need to wait for the load event
-  if (isManifestV3) {
-    await makeLoadedPromise(script);
   }
 
   return {
