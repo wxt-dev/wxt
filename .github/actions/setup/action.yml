@@ -30,4 +30,4 @@ runs:
 
     - name: 🎭 Install Playwright Browsers
       shell: bash
-      run: pnpm --filter wxt-demo exec playwright install --with-deps
+      run: pnpm --filter wxt-demo exec playwright install
