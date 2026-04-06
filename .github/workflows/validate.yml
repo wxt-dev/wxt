@@ -46,10 +46,6 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Install Playwright
-        run: pnpm exec playwright install
-        working-directory: packages/wxt-demo
-
       - name: Build
         run: pnpm build:all
         working-directory: packages/wxt-demo
