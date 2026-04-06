@@ -42,7 +42,7 @@ export async function injectScript(
   if (isManifestV3) {
     await makeLoadedPromise(script);
   }
-  
+
   await options?.modifyScript?.(script);
 
   (document.head ?? document.documentElement).append(script);
