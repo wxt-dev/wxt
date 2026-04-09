@@ -311,8 +311,7 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab,
-      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      open_in_tab: options.options.openInTab ?? false,
       browser_style:
         wxt.config.browser === 'firefox'
           ? options.options.browserStyle
