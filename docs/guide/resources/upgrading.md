@@ -557,6 +557,8 @@ Unlisted scripts must now `export default defineUnlistedScript(...)`.
 
 ### `BackgroundDefinition` Type
 
+<!-- cspell:disable -->
+
 Rename `BackgroundScriptDefintition` to `BackgroundDefinition`.
 
 ## v0.6.0 &rarr; v0.7.0

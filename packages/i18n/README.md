@@ -161,7 +161,7 @@ hello: Hello $1!
 order: Thanks for ordering your $1
 ```
 
-#### Escapting `$`
+#### Escaping `$`
 
 To escape the dollar sign, put another `$` in front of it:
 
