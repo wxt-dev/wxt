@@ -8,6 +8,7 @@ import { resolve, join } from 'node:path';
 import { homedir, tmpdir } from 'node:os';
 import { debug } from './debug';
 import { mkdtemp, open } from 'node:fs/promises';
+import { styleText } from 'node:util';
 
 const debugOptions = debug.scoped('options');
 
@@ -173,10 +174,8 @@ function resolveChromiumArgs(
     ],
     userArgs,
     {
-      '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom Chromium --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mchromiumRemoteDebuggingPort\x1b[0m option instead.',
-      '--user-data-dir':
-        '\x1b[1m\x1b[33mCustom Chromium --user-data-dir argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
+      '--remote-debugging-port': `${styleText(['bold', 'yellow'], 'Custom Chromium --remote-debugging-port argument ignored.')} Use ${styleText('cyan', 'chromiumRemoteDebuggingPort')} option instead.`,
+      '--user-data-dir': `${styleText(['bold', 'yellow'], 'Custom Chromium --user-data-dir argument ignored.')} Use ${styleText('cyan', 'dataPersistence')} option instead.`,
     },
   );
 }
@@ -200,10 +199,8 @@ function resolveFirefoxArgs(
     ],
     userArgs,
     {
-      '--remote-debugging-port':
-        '\x1b[1m\x1b[33mCustom Firefox --remote-debugging-port argument ignored.\x1b[0m Use \x1b[36mfirefoxDebuggerPort\x1b[0m option instead.',
-      '--profile':
-        '\x1b[1m\x1b[33mCustom Firefox --profile argument ignored.\x1b[0m Use \x1b[36mdataPersistence\x1b[0m option instead.',
+      '--remote-debugging-port': `${styleText(['bold', 'yellow'], 'Custom Firefox --remote-debugging-port argument ignored.')} Use ${styleText('cyan', 'firefoxRemoteDebuggingPort')} option instead.`,
+      '--profile': `${styleText(['bold', 'yellow'], 'Custom Firefox --profile argument ignored.')} Use ${styleText('cyan', 'dataPersistence')} option instead.`,
     },
   );
 }

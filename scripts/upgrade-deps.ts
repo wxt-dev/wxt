@@ -2,6 +2,7 @@ import consola from 'consola';
 import spawn from 'nano-spawn';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
+import { styleText } from 'node:util';
 import pMap from 'p-map';
 import * as semver from 'semver';
 import { glob } from 'tinyglobby';
@@ -155,14 +156,14 @@ function validateNoMultipleVersions(
   const maxWidth = Math.max(
     ...depsWithMultipleVersions.map(([name]) => name.length),
   );
-  console.log(maxWidth);
-  const addCyan = (text: string) => `\x1b[36m${text}\x1b[0m`;
 
   consola.info('Found multiple versions of:');
   for (const [name, versions] of depsWithMultipleVersions) {
     console.log(
-      `    \x1b[35m${name.padEnd(maxWidth)}\x1b[0m  ${Array.from(versions)
-        .map(addCyan)
+      `    ${styleText('magenta', name.padEnd(maxWidth))}  ${Array.from(
+        versions,
+      )
+        .map((text) => styleText('cyan', text))
         .join('\t')}`,
     );
   }
@@ -313,24 +314,34 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
 
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
-    const num = `\x1b[2m${(i + 1).toString().padStart(numberPadding)}.\x1b[0m`;
-    const name = `\x1b[35m${upgrade.name.padEnd(namePadding)}\x1b[0m`;
+    const num = styleText(
+      'bold',
+      (i + 1).toString().padStart(numberPadding) + '.',
+    );
+    const name = styleText('magenta', upgrade.name.padEnd(namePadding));
     const color =
       upgrade.diff == null
-        ? '\x1b[2m'
+        ? 'bold'
         : upgrade.diff === 'patch'
-          ? '\x1b[32m'
+          ? 'green'
           : upgrade.diff === 'minor'
-            ? '\x1b[33m'
-            : '\x1b[31m';
-    const currentVersion = `\x1b[2m${upgrade.currentRange.padEnd(currentVersionPadding)}\x1b[0m`;
-    const upgradeToVersion = `${color}${upgrade.upgradeToRange.padEnd(upgradeToVersionPadding)}\x1b[0m`;
+            ? 'yellow'
+            : 'red';
+    const currentVersion = styleText(
+      'bold',
+      upgrade.currentRange.padEnd(currentVersionPadding),
+    );
+    const upgradeToVersion = styleText(
+      color,
+      upgrade.upgradeToRange.padEnd(upgradeToVersionPadding),
+    );
     const latest =
       upgrade.latestVersion !== upgrade.upgradeToVersion
-        ? ` \x1b[2m\x1b[31m(${upgrade.latestVersion} available)\x1b[0m`
+        ? ' ' +
+          styleText(['bold', 'red'], `(${upgrade.latestVersion} available)`)
         : '';
     console.log(
-      `  ${num} ${name}  ${currentVersion}  \x1b[2m→\x1b[0m  ${upgradeToVersion}${latest}`,
+      `  ${num} ${name}  ${currentVersion}  ${styleText('dim', '→')}  ${upgradeToVersion}${latest}`,
     );
   }
   console.log();
