@@ -126,6 +126,8 @@ const chromeExtensionIds = [
   'fppcbkhpahkbgijkdcpjgjmhpfbmfiih', // PlayFaster - Enhanced playback speed control for online videos and audio
   'eiocjaocpmackhbaffoejkcmnfbdpgpj', // LatTab - Learn Latin With Every New Tab
   'ngbehgnlcdjkbnihgpkgdangbhemidge', // Vim What? - Interactive Vim command reference
+  'bjdbcabacnlmbpcmiapcdfancfgcakfn', // FRED - Fraud Recognition Easy Detection
+  'jijfmgoijddfmlcdghopbkdpelbpmjdm', // Clear Wisdom - Gems of wisdom from James Clear's 3-2-1 newsletter
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
