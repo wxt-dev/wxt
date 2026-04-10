@@ -123,6 +123,7 @@ const chromeExtensionIds = [
   'kinlknncggaihnhdcalijdmpbhbflalm', // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
   'ojpakgiekphppgkcdihbjpafobhnhlkp', // Dymo
   'pmgehhllikbjmadpenhabejhpemplhmd', // Extension Rank Checker - Extension Ranker
+  'ggplcohodggmdfpopelnpplhgfjclomi', // Soundcloud Enhanced Pro
 ];
 
 const { data, err, isLoading } = useListExtensionDetails(chromeExtensionIds);
