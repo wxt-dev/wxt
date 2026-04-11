@@ -1,6 +1,6 @@
 # Favicons
 
-[Chrome Docs: How to fetch favicons](https://developer.chrome.com/docs/extensions/how-to/ui/favicons)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/ui/favicons)
 
 Chromium-based browsers expose cached favicons through the `_favicon/` URL served from your extension. To use it, declare the `favicon` permission in your manifest and call `browser.runtime.getURL` with a `_favicon/` path:
 
@@ -25,10 +25,8 @@ function getFaviconUrl(pageUrl: string, size = 16) {
 }
 ```
 
-When `favicon` is in `permissions`, WXT automatically augments `browser.runtime.getURL` so that any `` `/_favicon/${string}` `` path type-checks — you no longer need a `@ts-expect-error`.
-
 ::: warning Chromium only
-The favicon API is only available on Chromium-based browsers. Firefox has no equivalent, so the type augmentation is skipped when building for Firefox, and `/_favicon/` URLs will not resolve at runtime there. If your extension supports both browsers, gate favicon usage behind `import.meta.env.CHROME` (or similar) and declare the permission per-browser.
+The favicon API is only available on Chromium-based browsers. Firefox has no equivalent, so `/_favicon/` URLs will not resolve at runtime there. If your extension supports both browsers, gate favicon usage behind `import.meta.env.CHROME` (or similar) and declare the permission per-browser.
 :::
 
 ## Usage from a content script

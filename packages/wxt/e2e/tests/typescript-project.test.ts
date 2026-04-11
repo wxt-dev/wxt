@@ -462,22 +462,6 @@ describe('TypeScript Project', () => {
     expect(manifest.web_accessible_resources).toBeUndefined();
   });
 
-  it('should NOT type `/_favicon/` paths when building for Firefox', async () => {
-    const project = new TestProject();
-    project.addFile('entrypoints/popup.html', '<html></html>');
-
-    // Firefox does not support the Chromium favicon API, so the type
-    // augmentation must be skipped — otherwise we'd be advertising a
-    // path that 404s at runtime.
-    await project.build({
-      browser: 'firefox',
-      manifest: { permissions: ['favicon'] },
-    });
-
-    const pathsOutput = await project.serializeFile('.wxt/types/paths.d.ts');
-    expect(pathsOutput).not.toContain('/_favicon/');
-  });
-
   it('should set correct import.meta.env.BROWSER type based on targetBrowsers', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');
