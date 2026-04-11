@@ -597,7 +597,7 @@ describe('Manifest Utils', () => {
         ]);
       });
 
-      it('should support every naming pattern (suffix, prefix, with/without folder, with/without widthxheight)', async () => {
+      it('should support every naming pattern (suffix, prefix, with/without folder, with/without WxH)', async () => {
         const popup = firefoxPopup();
         const buildOutput = fakeBuildOutput({
           publicAssets: [
@@ -652,16 +652,16 @@ describe('Manifest Utils', () => {
         ]);
       });
 
-      it('should skip sizes that are missing a light or dark pair', async () => {
+      it('should skip sizes that are missing a light or dark pair and log a warning', async () => {
         const popup = firefoxPopup();
         const buildOutput = fakeBuildOutput({
           publicAssets: [
             // Complete pair — should be kept
             { type: 'asset', fileName: 'icon-light-16.png' },
             { type: 'asset', fileName: 'icon-dark-16.png' },
-            // Only light, no dark — should be dropped
+            // Only light, no dark — should be dropped + warn
             { type: 'asset', fileName: 'icon-light-32.png' },
-            // Only dark, no light — should be dropped
+            // Only dark, no light — should be dropped + warn
             { type: 'asset', fileName: 'icon-dark-48.png' },
           ],
         });
@@ -681,6 +681,50 @@ describe('Manifest Utils', () => {
         expect((actual.action as any).theme_icons).toEqual([
           { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
         ]);
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Skipping theme icon size 32: found light variant',
+          ),
+        );
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Skipping theme icon size 48: found dark variant',
+          ),
+        );
+      });
+
+      it('should warn when different naming patterns resolve to the same (size, variant)', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            // Both of these match the light/16 slot via different regexes.
+            // WXT should keep the first and warn about the second.
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon/light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual([
+          { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
+        ]);
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Multiple theme icon files matched size 16 variant "light"',
+          ),
+        );
       });
 
       it('should not auto-discover theme_icons for non-Firefox browsers', async () => {

@@ -117,10 +117,6 @@ export async function generateManifest(
 
   addEntrypoints(manifest, entrypoints, buildOutput);
 
-  // Auto-discover Firefox theme_icons from paired `-light`/`-dark`
-  // files in the public assets. Runs after `addEntrypoints` so we can
-  // attach to whichever action the popup entrypoint set up, and before
-  // `build:manifestGenerated` so user hooks can still override.
   if (wxt.config.browser === 'firefox') {
     addDiscoveredThemeIcons(manifest, buildOutput);
   }

@@ -1,11 +1,15 @@
 import type { Browser } from '@wxt-dev/browser';
 import type { BuildOutput, ThemeIcon } from '../../types';
 import { normalizePath } from './paths';
+import { wxt } from '../wxt';
 
 /**
- * If the manifest has an action (or browser/page_action) and the user has not
- * already set `theme_icons` on it, discover light/dark icon pairs from the
- * public assets and attach them.
+ * If the manifest has an `action` (MV3) or `browser_action` (MV2) and the user
+ * has not already set `theme_icons` on it, discover light/dark icon pairs from
+ * the public assets and attach them.
+ *
+ * `page_action` is intentionally excluded: Firefox does not honor `theme_icons`
+ * on page actions.
  *
  * Firefox-only; the caller gates on `wxt.config.browser`.
  */
@@ -13,14 +17,7 @@ export function addDiscoveredThemeIcons(
   manifest: Browser.runtime.Manifest,
   buildOutput: Omit<BuildOutput, 'manifest'>,
 ): void {
-  // The popup entrypoint sets `manifest.action` in MV3 and either
-  // `browser_action` or `page_action` in MV2 (see addEntrypoints in
-  // manifest.ts). Users can also declare any of these via wxt.config.ts.
-  // We attach to the one that already exists — the MV2 conversion step
-  // (convertActionToMv2) later copies `action` → `browser_action` if
-  // needed.
-  const action =
-    manifest.action ?? manifest.browser_action ?? manifest.page_action;
+  const action = manifest.action ?? manifest.browser_action;
   if (action == null) return;
 
   // Respect explicit user config or popup entrypoint option.
@@ -36,6 +33,10 @@ export function addDiscoveredThemeIcons(
  * Scan `publicAssets` for paired `-light`/`-dark` icon files and return the
  * sizes where both variants exist, sorted ascending. Returns `undefined` if no
  * complete pairs are found so callers can short-circuit.
+ *
+ * Warnings are logged for mixed-naming collisions and for sizes that are
+ * missing a light or dark pair, so users notice misnamed files rather than
+ * having them silently dropped.
  */
 export function discoverThemeIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
@@ -49,23 +50,44 @@ export function discoverThemeIcons(
       const size = Number(match.groups.size);
       const variant = match.groups.variant as 'light' | 'dark';
       const entry = bySize.get(size) ?? {};
-      entry[variant] = normalizePath(asset.fileName);
+      const incoming = normalizePath(asset.fileName);
+      const existing = entry[variant];
+      if (existing != null && existing !== incoming) {
+        // Multiple files resolved to the same (size, variant) via different
+        // naming conventions — keep the first match and warn so the user
+        // can consolidate to a single pattern.
+        wxt.logger.warn(
+          `Multiple theme icon files matched size ${size} variant "${variant}": keeping "${existing}", ignoring "${incoming}". Use a single naming pattern per (size, variant).`,
+        );
+        break;
+      }
+      entry[variant] = incoming;
       bySize.set(size, entry);
       break;
     }
   }
 
-  const pairs = Array.from(bySize.entries())
-    .filter(
-      (entry): entry is [number, { light: string; dark: string }] =>
-        entry[1].light != null && entry[1].dark != null,
-    )
-    .map(([size, { light, dark }]) => ({ light, dark, size }))
-    .sort((a, b) => a.size - b.size);
+  const pairs: ThemeIcon[] = [];
+  for (const [size, entry] of bySize) {
+    if (entry.light != null && entry.dark != null) {
+      pairs.push({ light: entry.light, dark: entry.dark, size });
+      continue;
+    }
+    const present = entry.light != null ? 'light' : 'dark';
+    const missing = entry.light != null ? 'dark' : 'light';
+    const file = entry.light ?? entry.dark;
+    wxt.logger.warn(
+      `Skipping theme icon size ${size}: found ${present} variant ("${file}") but no matching ${missing} variant. Add the missing file to include this size in theme_icons.`,
+    );
+  }
+  pairs.sort((a, b) => a.size - b.size);
 
   return pairs.length > 0 ? pairs : undefined;
 }
 
+// SVG is not supported yet — Firefox's `theme_icons` accepts SVG, but WXT
+// does not currently discover SVG icons for Firefox in general. Tracked as
+// a follow-up; widen the extension match once SVG icons are supported.
 // prettier-ignore
 // #region snippet
 const themeIconRegex = [
