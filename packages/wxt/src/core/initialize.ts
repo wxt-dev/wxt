@@ -4,8 +4,8 @@ import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
 import { pathExists } from './utils/fs';
 import path from 'node:path';
-import pc from 'picocolors';
-import { Formatter } from 'picocolors/types';
+import { styleText } from 'node:util';
+import { TextStyle } from '../utils/text-style';
 
 export async function initialize(options: {
   directory: string;
@@ -32,8 +32,9 @@ export async function initialize(options: {
         type: () => (defaultTemplate == null ? 'select' : undefined),
         message: 'Choose a template',
         choices: templates.map((template) => ({
-          title:
-            TEMPLATE_COLORS[template.name]?.(template.name) ?? template.name,
+          title: TEMPLATE_COLORS[template.name]
+            ? styleText(TEMPLATE_COLORS[template.name], template.name)
+            : template.name,
           value: template,
         })),
       },
@@ -42,10 +43,10 @@ export async function initialize(options: {
         type: () => (options.packageManager == null ? 'select' : undefined),
         message: 'Package Manager',
         choices: [
-          { title: pc.red('npm'), value: 'npm' },
-          { title: pc.yellow('pnpm'), value: 'pnpm' },
-          { title: pc.cyan('yarn'), value: 'yarn' },
-          { title: pc.magenta('bun'), value: 'bun' },
+          { title: styleText('red', 'npm'), value: 'npm' },
+          { title: styleText('yellow', 'pnpm'), value: 'pnpm' },
+          { title: styleText('cyan', 'yarn'), value: 'yarn' },
+          { title: styleText('magenta', 'bun'), value: 'bun' },
         ],
       },
     ],
@@ -75,15 +76,20 @@ export async function initialize(options: {
   console.log();
   consola.log(
     `✨ WXT project created with the ${
-      TEMPLATE_COLORS[input.template.name]?.(input.template.name) ??
-      input.template.name
+      TEMPLATE_COLORS[input.template.name]
+        ? styleText(TEMPLATE_COLORS[input.template.name], input.template.name)
+        : input.template.name
     } template.`,
   );
   console.log();
   consola.log('Next steps:');
   let step = 0;
-  if (cdPath !== '') consola.log(`  ${++step}.`, pc.cyan(`cd ${cdPath}`));
-  consola.log(`  ${++step}.`, pc.cyan(`${input.packageManager} install`));
+  if (cdPath !== '')
+    consola.log(`  ${++step}.`, styleText('cyan', `cd ${cdPath}`));
+  consola.log(
+    `  ${++step}.`,
+    styleText('cyan', `${input.packageManager} install`),
+  );
   console.log();
 }
 
@@ -182,12 +188,12 @@ async function cloneProject({
   }
 }
 
-const TEMPLATE_COLORS: Record<string, Formatter> = {
-  vanilla: pc.blue,
-  vue: pc.green,
-  react: pc.cyan,
-  svelte: pc.red,
-  solid: pc.blue,
+const TEMPLATE_COLORS: Record<string, TextStyle> = {
+  vanilla: 'blue',
+  vue: 'green',
+  react: 'cyan',
+  svelte: 'red',
+  solid: 'blue',
 };
 
 const TEMPLATE_SORT_WEIGHT: Record<string, number> = {
