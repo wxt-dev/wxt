@@ -18,6 +18,7 @@ import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
 import { color } from '../color';
+import { styleText } from 'node:util';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is
@@ -36,7 +37,8 @@ export async function internalBuild(): Promise<BuildOutput> {
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
   wxt.logger.info(
-    `${verb} ${color.cyan(target)} for ${color.cyan(wxt.config.mode)} with ${color.green(
+    `${verb} ${styleText('cyan', target)} for ${styleText('cyan', wxt.config.mode)} with ${styleText(
+      'green',
       `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
@@ -80,13 +82,17 @@ export async function internalBuild(): Promise<BuildOutput> {
     await combineAnalysisStats();
     const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
     wxt.logger.info(
-      `Analysis complete:\n  ${color.gray('└─')} ${color.yellow(statsPath)}`,
+      `Analysis complete:\n  ${styleText('gray', '└─')} ${styleText('yellow', statsPath)}`,
     );
     if (wxt.config.analysis.open) {
       if (isCI) {
-        wxt.logger.debug(`Skipped opening ${color.yellow(statsPath)} in CI`);
+        wxt.logger.debug(
+          `Skipped opening ${styleText('yellow', statsPath)} in CI`,
+        );
       } else {
-        wxt.logger.info(`Opening ${color.yellow(statsPath)} in browser...`);
+        wxt.logger.info(
+          `Opening ${styleText('yellow', statsPath)} in browser...`,
+        );
         const { default: open } = await import('open');
         await open(wxt.config.analysis.outputFile);
       }
@@ -141,8 +147,13 @@ function printValidationResults({
 
     errors.forEach((err) => {
       const type =
-        err.type === 'error' ? color.red('ERROR') : color.yellow('WARN');
-      const received = color.dim(`(received: ${JSON.stringify(err.value)})`);
+        err.type === 'error'
+          ? styleText('red', 'ERROR')
+          : styleText('yellow', 'WARN');
+      const received = styleText(
+        'dim',
+        `(received: ${JSON.stringify(err.value)})`,
+      );
       wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();

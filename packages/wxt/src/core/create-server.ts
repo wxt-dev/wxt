@@ -29,7 +29,7 @@ import {
 } from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
-import { color } from './utils/color';
+import { styleText } from 'node:util';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before
@@ -238,7 +238,7 @@ function createFileReloader(server: WxtDevServer) {
       // Log the entrypoints that were effected
       wxt.logger.info(
         `Changed: ${Array.from(new Set(fileChanges))
-          .map((file) => color.dim(relative(wxt.config.root, file)))
+          .map((file) => styleText('dim', relative(wxt.config.root, file)))
           .join(', ')}`,
       );
 
@@ -344,10 +344,8 @@ function reloadHtmlPages(
 
 function getFilenameList(names: string[]): string {
   return names
-    .map((name) => {
-      return color.cyan(name);
-    })
-    .join(color.dim(', '));
+    .map((name) => styleText('cyan', name))
+    .join(styleText('dim', ', '));
 }
 
 /**

@@ -28,6 +28,7 @@ import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
 import { color } from '../color';
+import { styleText } from 'node:util';
 
 /**
  * Return entrypoints and their configuration by looking through the project's
@@ -161,7 +162,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       [
         'The following entrypoints have been skipped:',
         ...skippedEntrypointNames.map(
-          (item) => `${color.dim('-')} ${color.cyan(item)}`,
+          (item) => `${styleText('dim', '-')} ${styleText('cyan', item)}`,
         ),
       ].join('\n'),
     );

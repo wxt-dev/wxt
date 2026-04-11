@@ -10,7 +10,7 @@ import { dirname, resolve } from 'path';
 import type { Spinner } from 'nanospinner';
 import { wxt } from '../../wxt';
 import { toArray } from '../arrays';
-import { color } from '../color';
+import { styleText } from 'node:util';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -20,9 +20,11 @@ export async function buildEntrypoints(
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const groupNames = toArray(group).map((e) => e.name);
-    const groupNameColored = groupNames.join(color.dim(', '));
+    const groupNameColored = groupNames.join(styleText('dim', ', '));
     spinner.update({
-      text: color.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`,
+      text:
+        styleText('dim', `[${i + 1}/${groups.length}]`) +
+        ` ${groupNameColored}`,
     });
     try {
       steps.push(await wxt.builder.build(group));
