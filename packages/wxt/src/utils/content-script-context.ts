@@ -179,6 +179,150 @@ export class ContentScriptContext implements AbortController {
   }
 
   /**
+   * Patches common async APIs on the given target (defaults to `window`) so
+   * that any callbacks registered through them become no-ops once the content
+   * script context is invalidated.
+   *
+   * Patched APIs:
+   * - `setTimeout` / `clearTimeout`
+   * - `setInterval` / `clearInterval`
+   * - `requestAnimationFrame` / `cancelAnimationFrame`
+   * - `requestIdleCallback` / `cancelIdleCallback`
+   * - `addEventListener` / `removeEventListener`
+   * - `fetch`
+   * - `XMLHttpRequest`
+   *
+   * @example
+   *   ctx.applyPatch(window);
+   *   // Now window.setTimeout, window.fetch, etc. are safe to use directly.
+   */
+  applyPatch(
+    target: typeof globalThis & { [key: string]: any } = globalThis,
+  ): void {
+    const ctx = this;
+
+    const originalSetTimeout = target.setTimeout.bind(target);
+    const originalClearTimeout = target.clearTimeout.bind(target);
+    target.setTimeout = (handler: TimerHandler, timeout?: number, ...args: any[]) => {
+      const id = originalSetTimeout(
+        (...cbArgs: any[]) => {
+          if (ctx.isValid && typeof handler === 'function') handler(...cbArgs);
+        },
+        timeout,
+        ...args,
+      );
+      ctx.onInvalidated(() => originalClearTimeout(id));
+      return id;
+    };
+
+    const originalSetInterval = target.setInterval.bind(target);
+    const originalClearInterval = target.clearInterval.bind(target);
+    target.setInterval = (handler: TimerHandler, timeout?: number, ...args: any[]) => {
+      const id = originalSetInterval(
+        (...cbArgs: any[]) => {
+          if (ctx.isValid && typeof handler === 'function') handler(...cbArgs);
+        },
+        timeout,
+        ...args,
+      );
+      ctx.onInvalidated(() => originalClearInterval(id));
+      return id;
+    };
+
+    if (target.requestAnimationFrame) {
+      const originalRaf = target.requestAnimationFrame.bind(target);
+      const originalCancelRaf = target.cancelAnimationFrame.bind(target);
+      target.requestAnimationFrame = (callback: FrameRequestCallback) => {
+        const id = originalRaf((...args: any[]) => {
+          if (ctx.isValid) callback(...args);
+        });
+        ctx.onInvalidated(() => originalCancelRaf(id));
+        return id;
+      };
+    }
+
+    if (target.requestIdleCallback) {
+      const originalRic = target.requestIdleCallback.bind(target);
+      const originalCancelRic = target.cancelIdleCallback.bind(target);
+      target.requestIdleCallback = (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions,
+      ) => {
+        const id = originalRic((...args: any[]) => {
+          if (ctx.isValid) callback(...args);
+        }, options);
+        ctx.onInvalidated(() => originalCancelRic(id));
+        return id;
+      };
+    }
+
+    const originalAddEventListener = target.addEventListener.bind(target);
+    const originalRemoveEventListener = target.removeEventListener.bind(target);
+    const patchedListeners = new Map<EventListenerOrEventListenerObject, EventListenerOrEventListenerObject>();
+    target.addEventListener = (
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ) => {
+      const wrapped: EventListener = (event: Event) => {
+        if (!ctx.isValid) return;
+        if (typeof listener === 'function') {
+          listener(event);
+        } else {
+          listener.handleEvent(event);
+        }
+      };
+      patchedListeners.set(listener, wrapped);
+      originalAddEventListener(type, wrapped, options);
+      ctx.onInvalidated(() => originalRemoveEventListener(type, wrapped, options));
+    };
+    target.removeEventListener = (
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions,
+    ) => {
+      const wrapped = patchedListeners.get(listener) ?? listener;
+      patchedListeners.delete(listener);
+      originalRemoveEventListener(type, wrapped, options);
+    };
+
+    if (target.fetch) {
+      const originalFetch = target.fetch.bind(target);
+      target.fetch = (...args: Parameters<typeof fetch>) => {
+        if (!ctx.isValid) return ctx.block<Response>();
+        return originalFetch(...args).then((response) => {
+          if (!ctx.isValid) return ctx.block<Response>();
+          return response;
+        });
+      };
+    }
+
+    if (target.XMLHttpRequest) {
+      const OriginalXHR = target.XMLHttpRequest;
+      target.XMLHttpRequest = class extends OriginalXHR {
+        send(...args: Parameters<XMLHttpRequest['send']>) {
+          if (!ctx.isValid) return;
+          const eventNames: (keyof XMLHttpRequestEventMap)[] = [
+            'load',
+            'loadend',
+            'readystatechange',
+            'error',
+            'abort',
+            'timeout',
+          ];
+          const noopOnInvalid = () => {
+            if (!ctx.isValid) {
+              eventNames.forEach((e) => this.removeEventListener(e, noopOnInvalid));
+            }
+          };
+          eventNames.forEach((e) => this.addEventListener(e, noopOnInvalid));
+          super.send(...args);
+        }
+      };
+    }
+  }
+
+  /**
    * Call `target.addEventListener` and remove the event listener when the
    * context is invalidated.
    *
