@@ -27,7 +27,6 @@ import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
 import { CSS_EXTENSIONS_PATTERN } from '../paths';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
-import { color } from '../color';
 import { styleText } from 'node:util';
 
 /**
