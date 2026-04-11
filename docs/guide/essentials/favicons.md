@@ -27,6 +27,10 @@ function getFaviconUrl(pageUrl: string, size = 16) {
 
 When `favicon` is in `permissions`, WXT automatically augments `browser.runtime.getURL` so that any `` `/_favicon/${string}` `` path type-checks — you no longer need a `@ts-expect-error`.
 
+::: warning Chromium only
+The favicon API is only available on Chromium-based browsers. Firefox has no equivalent, so the type augmentation is skipped when building for Firefox, and `/_favicon/` URLs will not resolve at runtime there. If your extension supports both browsers, gate favicon usage behind `import.meta.env.CHROME` (or similar) and declare the permission per-browser.
+:::
+
 ## Usage from a content script
 
 WXT does **not** add a `web_accessible_resources` entry for `_favicon/*` — not every extension needs one, and adding it unconditionally would expose internals to sites that don't need them. If you want to load a favicon inside a content script (for example, as an `<img src>`), add your own entry in `wxt.config.ts`:
