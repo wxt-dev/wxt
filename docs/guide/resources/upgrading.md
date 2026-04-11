@@ -476,7 +476,7 @@ export default defineConfig({
 
 ### Renamed Undocumented Constants
 
-Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: <https://wxt.dev/guide/multiple-browsers.html#runtime>
+Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: <https://wxt.dev/guide/essentials/config/environment-variables.html#built-in-environment-variables>
 
 - `__BROWSER__` → `import.meta.env.BROWSER`
 - `__COMMAND__` → `import.meta.env.COMMAND`
