@@ -30,9 +30,7 @@ export const KNOWN_BROWSER_PATHS: Record<
     windows: [],
   },
   brave: {
-    mac: [
-      'Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-    ],
+    mac: ['Applications/Brave Browser.app/Contents/MacOS/Brave Browser'],
     linux: [],
     windows: [],
   },
