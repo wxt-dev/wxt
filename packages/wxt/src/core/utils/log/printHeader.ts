@@ -1,7 +1,9 @@
 import { version } from '../../../version';
 import { consola } from 'consola';
-import { color } from '../color';
+import { styleText } from 'node:util';
 
 export function printHeader() {
-  consola.log(`\n${color.gray('WXT')} ${color.gray(color.bold(version))}`);
+  consola.log(
+    `\n${styleText('gray', 'WXT')} ${styleText(['bold', 'grey'], version)}`,
+  );
 }
