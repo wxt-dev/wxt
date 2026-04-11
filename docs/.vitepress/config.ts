@@ -224,6 +224,7 @@ export default defineConfig({
           menuItem('Storage', 'storage.md'),
           menuItem('Messaging', 'messaging.md'),
           menuItem('I18n', 'i18n.md'),
+          menuItem('Favicons', 'favicons.md'),
           menuItem('Scripting', 'scripting.md'),
           menuItem('WXT Modules', 'wxt-modules.md'),
           menuItem('Frontend Frameworks', 'frontend-frameworks.md'),
