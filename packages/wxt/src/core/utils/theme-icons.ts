@@ -4,14 +4,11 @@ import { normalizePath } from './paths';
 import { wxt } from '../wxt';
 
 /**
+ * Firefox only.
+ *
  * If the manifest has an `action` (MV3) or `browser_action` (MV2) and the user
  * has not already set `theme_icons` on it, discover light/dark icon pairs from
  * the public assets and attach them.
- *
- * `page_action` is intentionally excluded: Firefox does not honor `theme_icons`
- * on page actions.
- *
- * Firefox-only; the caller gates on `wxt.config.browser`.
  */
 export function addDiscoveredThemeIcons(
   manifest: Browser.runtime.Manifest,
@@ -33,10 +30,6 @@ export function addDiscoveredThemeIcons(
  * Scan `publicAssets` for paired `-light`/`-dark` icon files and return the
  * sizes where both variants exist, sorted ascending. Returns `undefined` if no
  * complete pairs are found so callers can short-circuit.
- *
- * Warnings are logged for mixed-naming collisions and for sizes that are
- * missing a light or dark pair, so users notice misnamed files rather than
- * having them silently dropped.
  */
 export function discoverThemeIcons(
   buildOutput: Omit<BuildOutput, 'manifest'>,
@@ -47,20 +40,20 @@ export function discoverThemeIcons(
     for (const regex of themeIconRegex) {
       const match = asset.fileName.match(regex);
       if (match?.groups == null) continue;
+
       const size = Number(match.groups.size);
       const variant = match.groups.variant as 'light' | 'dark';
       const entry = bySize.get(size) ?? {};
+
       const incoming = normalizePath(asset.fileName);
       const existing = entry[variant];
       if (existing != null && existing !== incoming) {
-        // Multiple files resolved to the same (size, variant) via different
-        // naming conventions — keep the first match and warn so the user
-        // can consolidate to a single pattern.
         wxt.logger.warn(
           `Multiple theme icon files matched size ${size} variant "${variant}": keeping "${existing}", ignoring "${incoming}". Use a single naming pattern per (size, variant).`,
         );
         break;
       }
+
       entry[variant] = incoming;
       bySize.set(size, entry);
       break;
@@ -85,9 +78,6 @@ export function discoverThemeIcons(
   return pairs.length > 0 ? pairs : undefined;
 }
 
-// SVG is not supported yet — Firefox's `theme_icons` accepts SVG, but WXT
-// does not currently discover SVG icons for Firefox in general. Tracked as
-// a follow-up; widen the extension match once SVG icons are supported.
 // prettier-ignore
 // #region snippet
 const themeIconRegex = [

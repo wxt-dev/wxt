@@ -179,9 +179,7 @@ A size is only included in `theme_icons` if **both** a light and a dark file are
 
 <<< @/../packages/wxt/src/core/utils/theme-icons.ts#snippet
 
-If a size has a light file but no matching dark file (or vice versa), WXT logs a warning so you can fix the pair instead of silently dropping it. The same applies if two different naming patterns resolve to the same `(size, variant)` — WXT keeps the first match and warns about the collision.
-
-Only `.png` files are discovered today. Firefox's `theme_icons` also accepts SVG, but WXT doesn't yet support SVG icons for Firefox — follow [#1120](https://github.com/wxt-dev/wxt/issues/1120) for updates.
+Only `.png` files are discovered today, even though Firefox supports `.svg` - follow [#1120](https://github.com/wxt-dev/wxt/issues/1120) for updates.
 
 If you set `manifest.action.theme_icons` (or `manifest.browser_action.theme_icons`) explicitly in `wxt.config.ts`, WXT will not overwrite it.
 
