@@ -219,6 +219,7 @@ export default defineConfig({
           ),
           menuItem('Extension APIs', 'extension-apis.md'),
           menuItem('Assets', 'assets.md'),
+          menuItem('Favicons', 'favicons.md'),
           menuItem('Target Different Browsers', 'target-different-browsers.md'),
           menuItem('Content Scripts', 'content-scripts.md'),
           menuItem('Storage', 'storage.md'),
