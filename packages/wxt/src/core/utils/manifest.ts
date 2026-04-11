@@ -20,6 +20,7 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { addDiscoveredThemeIcons } from './theme-icons';
 import { ManifestV3WebAccessibleResource } from './types';
 import type { Browser } from '@wxt-dev/browser';
 
@@ -115,6 +116,14 @@ export async function generateManifest(
       : versionName;
 
   addEntrypoints(manifest, entrypoints, buildOutput);
+
+  // Auto-discover Firefox theme_icons from paired `-light`/`-dark`
+  // files in the public assets. Runs after `addEntrypoints` so we can
+  // attach to whichever action the popup entrypoint set up, and before
+  // `build:manifestGenerated` so user hooks can still override.
+  if (wxt.config.browser === 'firefox') {
+    addDiscoveredThemeIcons(manifest, buildOutput);
+  }
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
