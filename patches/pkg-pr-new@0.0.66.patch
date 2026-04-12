@@ -1,35 +1,13 @@
-diff --git a/home/aklinker1/Development/github.com/wxt-dev/wxt/node_modules/pkg-pr-new/.bun-tag-6ecaad20cdbb9f93 b/.bun-tag-6ecaad20cdbb9f93
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
-diff --git a/home/aklinker1/Development/github.com/wxt-dev/wxt/node_modules/pkg-pr-new/.bun-tag-b7bad39436d9f0f b/.bun-tag-b7bad39436d9f0f
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/dist/index.js b/dist/index.js
-index e2626a009efe1ee3cfa6c96fe712341d3501ba1c..3ef3b2f86b3d8ac879327159e5bd69601b25c72d 100644
+index e2626a009efe1ee3cfa6c96fe712341d3501ba1c..f3b45e7cad0bfbbb877eac6a22fdf48051127d11 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -3756,14 +3756,16 @@ async function resolveTarball(pm, p3, pJson) {
-   if (pm === "bun") {
-     const tgzFiles = fsSync.readdirSync(p3).filter((file) => file.endsWith(".tgz"));
-     const bunFilename = stdout2.trim();
--    if (bunFilename) {
--      filename = bunFilename;
--    }
--    console.warn(`[bun pack] stdout:
--${stdout2}`);
--    console.warn(
--      `[bun pack] expected filename: ${filename}; tgz files: ${tgzFiles.join(", ") || "(none)"}`
--    );
-+    console.log({ filename, p3, tgzFiles, bunFilename });
-+    await new Promise(res => setTimeout(res, 3000));
-+//     if (bunFilename) {
-+//       filename = bunFilename;
-+//     }
-+//     console.warn(`[bun pack] stdout:
-+// ${stdout2}`);
-+//     console.warn(
-+//       `[bun pack] expected filename: ${filename}; tgz files: ${tgzFiles.join(", ") || "(none)"}`
-+//     );
+@@ -3743,7 +3743,7 @@ async function resolveTarball(pm, p3, pJson) {
+   if (pm === "yarn") {
+     cmd += ` --filename ${filename}`;
+   } else if (pm === "bun") {
+-    cmd = `bun pm pack --quiet --filename ${filename}`;
++    cmd = `bun pm pack --quiet --filename ${p3}${filename}`;
    }
-   const shasum = createHash("sha1").update(await fs.readFile(path.resolve(p3, filename))).digest("hex");
-   return { filename, shasum };
+   const { stdout: stdout2 } = await ezSpawn.async(cmd, {
+     stdio: "overlapped",
