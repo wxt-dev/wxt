@@ -40,7 +40,8 @@
     "build": "buildc -- tsdown",
     "prepare": "buildc --deps-only -- wxt prepare",
     "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "webextension-polyfill": "*",
@@ -48,9 +49,9 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.7",
-    "@types/webextension-polyfill": "^0.12.4",
-    "publint": "^0.3.17",
-    "tsdown": "^0.20.3",
+    "@types/webextension-polyfill": "^0.12.5",
+    "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"

@@ -17,6 +17,7 @@ import { version as runnerVersion } from '../../packages/runner/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
+import { version as isBackgroundVersion } from '../../packages/is-background/package.json';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
 import { meta, script } from './utils/head';
 import {
@@ -44,6 +45,7 @@ const otherPackages = {
   storage: storageVersion,
   unocss: unocssVersion,
   runner: runnerVersion,
+  'is-background': isBackgroundVersion,
 };
 
 const knowledge = addKnowledge<DefaultTheme.Config>({
@@ -222,6 +224,7 @@ export default defineConfig({
           menuItem('Storage', 'storage.md'),
           menuItem('Messaging', 'messaging.md'),
           menuItem('I18n', 'i18n.md'),
+          menuItem('Favicons', 'favicons.md'),
           menuItem('Scripting', 'scripting.md'),
           menuItem('WXT Modules', 'wxt-modules.md'),
           menuItem('Frontend Frameworks', 'frontend-frameworks.md'),

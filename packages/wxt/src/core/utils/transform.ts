@@ -2,10 +2,13 @@ import { ProxifiedModule, parseModule } from 'magicast';
 
 /**
  * Removes any code used at runtime related to an entrypoint's main function.
+ *
  * 1. Removes or clears out `main` function from returned object
- * 2. Removes any unused functions/variables outside the definition that aren't being called/used
+ * 2. Removes any unused functions/variables outside the definition that aren't
+ *    being called/used
  * 3. Removes unused imports
- * 3. Removes value-less, side-effect only imports (like `import "./styles.css"` or `import "polyfill"`)
+ * 4. Removes value-less, side-effect only imports (like `import "./styles.css"` or
+ *    `import "polyfill"`)
  */
 export function removeMainFunctionCode(code: string): {
   code: string;
@@ -216,7 +219,8 @@ function removeSideEffectImports(mod: ProxifiedModule): void {
 }
 
 /**
- * Util to get the AST as a simple JSON object, stripping out large objects and file locations to keep it readible
+ * Util to get the AST as a simple JSON object, stripping out large objects and
+ * file locations to keep it readable.
  */
 function getSimpleAstJson(ast: any): any {
   if (!ast) {

@@ -1,6 +1,6 @@
-import glob from 'fast-glob';
-import { mkdir, writeJson } from 'fs-extra';
 import spawn from 'nano-spawn';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { glob } from 'tinyglobby';
 import { describe, expect, it } from 'vitest';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
@@ -32,6 +32,7 @@ describe('Init command', () => {
       cwd: project.root,
       onlyFiles: true,
       dot: true,
+      expandDirectories: false,
     });
 
     expect(files.sort()).toMatchInlineSnapshot(`
@@ -63,7 +64,7 @@ describe('Init command', () => {
   it('should throw an error if the directory is not empty', async () => {
     const project = new TestProject();
     await mkdir(project.root, { recursive: true });
-    await writeJson(project.resolvePath('package.json'), {});
+    await writeFile(project.resolvePath('package.json'), JSON.stringify({}));
 
     await expect(() =>
       spawn(

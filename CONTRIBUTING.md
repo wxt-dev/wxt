@@ -15,7 +15,7 @@ WXT is two things:
 
 The long term goal of WXT is provide an opinionated build tool that keeps WXT projects standard, while providing light-weight runtime utils that simplify a lot of the boilerplate/overhead when setting up a new extension.
 
-I also want to provide a way for developers to use either one of those two things independently, and not require them to use both. This is why all of WXT's runtime utils are shipped as their own NPM packages, most of them not bundled inside the core `wxt` package. If you just want to use the packages, they're availalbe, and if you just want to use WXT's built tool, you don't have to import any of WXT's utilities, you can use your own.
+I also want to provide a way for developers to use either one of those two things independently, and not require them to use both. This is why all of WXT's runtime utils are shipped as their own NPM packages, most of them not bundled inside the core `wxt` package. If you just want to use the packages, they're available, and if you just want to use WXT's built tool, you don't have to import any of WXT's utilities, you can use your own.
 
 > The few runtime utils shipped inside WXT are things that should be used by 90% of extensions. That said, they're also legacy utils left in from before I started creating separate NPM packages, and in the future, they may be removed from the core package.
 
@@ -179,6 +179,7 @@ cp -r templates/vanilla templates/<new-template-name>
 
 That's it. Once your template is merged, it will be available inside `wxt init` immediately. You don't need to release a new version of WXT to release a new template.
 
+<<<<<<< HEAD
 All current templates are based on Vite's templates: <https://github.com/vitejs/vite/tree/main/packages/create-vite>
 
 ## Releasing Updates
@@ -187,6 +188,10 @@ Releases are done with GitHub actions:
 
 - Use the [Release workflow](https://github.com/wxt-dev/wxt/actions/workflows/release.yml) to release a single package in the monorepo. This automatically detects the version change with conventional commits, builds and uploads the package to NPM, and creates a GitHub release.
 - Use the [Sync Releases workflow](https://github.com/wxt-dev/wxt/actions/workflows/sync-releases.yml) to sync the GitHub releases with changes to the changelog. To change a release, update the `CHANGELOG.md` file and run the workflow. It will sync the releases of a single package in the monorepo.
+
+=======
+
+> > > > > > > origin/main
 
 ## Upgrading Dependencies
 
@@ -237,4 +242,4 @@ Anyone is welcome to submit a blog post on <https://wxt.dev/blog>!
 
 If you're interested in becoming a maintainer, send an email to Aaron at <aaronklinker1@gmail.com> with your github username saying you're interested. The process is very informal, I will add you quickly if you've contributed code or answered questions and helped out the community!
 
-Maintainers don't have to just write code - they can manage issues, answer questsions, review PRs, organize and prioritize work - there's lots of ways for you to help out.
+Maintainers don't have to just write code - they can manage issues, answer questions, review PRs, organize and prioritize work - there's lots of ways for you to help out.

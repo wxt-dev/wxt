@@ -1,8 +1,8 @@
-import glob from 'fast-glob';
-import fs from 'fs-extra';
 import merge from 'lodash.merge';
-import spawn, { Result as SpawnResult } from 'nano-spawn';
-import { dirname, relative, resolve } from 'node:path';
+import spawn, { Subprocess } from 'nano-spawn';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, relative, resolve } from 'path';
+import { glob } from 'tinyglobby';
 import {
   InlineConfig,
   UserConfig,
@@ -12,6 +12,7 @@ import {
   zip,
 } from '../src';
 import { normalizePath } from '../src/core/utils';
+import { pathExists, readJson } from '../src/core/utils/fs';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -56,9 +57,7 @@ export class TestProject {
     ]);
   }
 
-  /**
-   * Add a `wxt.config.ts` to the project with specific contents.
-   */
+  /** Add a `wxt.config.ts` to the project with specific contents. */
   setConfigFileConfig(config: UserConfig = {}) {
     this.config = config;
     this.files.push([
@@ -106,9 +105,7 @@ export class TestProject {
     return server;
   }
 
-  /**
-   * Call `path.resolve` relative to the project's root directory.
-   */
+  /** Call `path.resolve` relative to the project's root directory. */
   resolvePath(...path: string[]): string {
     return resolve(this.root, ...path);
   }
@@ -120,8 +117,8 @@ export class TestProject {
       const [name, content] = file;
       const filePath = this.resolvePath(name);
       const fileDir = dirname(filePath);
-      await fs.ensureDir(fileDir);
-      await fs.writeFile(filePath, content ?? '', 'utf-8');
+      await mkdir(fileDir, { recursive: true });
+      await writeFile(filePath, content ?? '', 'utf-8');
     }
 
     // Only install dependencies if the project has custom ones - otherwise the
@@ -132,15 +129,17 @@ export class TestProject {
       });
     }
 
-    await fs.ensureDir(resolve(this.root, 'public'));
+    await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
+      () => {},
+    );
   }
 
   /**
-   * Read all the files from the test project's `.output` directory and combine them into a string
-   * that can be used in a snapshot.
+   * Read all the files from the test project's `.output` directory and combine
+   * them into a string that can be used in a snapshot.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   serializeOutput(ignoreContentsOfFilenames?: string[]): Promise<string> {
     return this.serializeDir('.output', ignoreContentsOfFilenames);
@@ -149,8 +148,8 @@ export class TestProject {
   /**
    * Deeply print the filename and contents of all files in a directory.
    *
-   * Optionally, provide a list of filenames whose content is not printed (because it's inconsistent
-   * or not relevant to a test).
+   * Optionally, provide a list of filenames whose content is not printed
+   * (because it's inconsistent or not relevant to a test).
    */
   private async serializeDir(
     dir: string,
@@ -159,6 +158,7 @@ export class TestProject {
     const outputFiles = await glob('**/*', {
       cwd: this.resolvePath(dir),
       ignore: ['**/node_modules', '**/.output'],
+      expandDirectories: false,
     });
     outputFiles.sort();
     const fileContents = [];
@@ -174,31 +174,31 @@ export class TestProject {
 
   /**
    * @param path An absolute path to a file or a path relative to the root.
-   * @param ignoreContents An optional boolean that, when true, causes this function to not print
-   *                       the file contents.
+   * @param ignoreContents An optional boolean that, when true, causes this
+   *   function to not print the file contents.
    */
   async serializeFile(path: string, ignoreContents?: boolean): Promise<string> {
     const absolutePath = this.resolvePath(path);
     return [
       normalizePath(relative(this.root, absolutePath)),
-      ignoreContents ? '<contents-ignored>' : await fs.readFile(absolutePath),
+      ignoreContents
+        ? '<contents-ignored>'
+        : await readFile(absolutePath, 'utf-8'),
     ].join(`\n${''.padEnd(40, '-')}\n`);
   }
 
   pathExists(...path: string[]): Promise<boolean> {
-    return fs.pathExists(this.resolvePath(...path));
+    return pathExists(this.resolvePath(...path));
   }
 
   getOutputManifest(
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
-    return fs.readJson(this.resolvePath(path));
+    return readJson(this.resolvePath(path));
   }
 
-  /**
-   * Run a command using the project's package manager.
-   */
-  async run(...args: string[]): Promise<SpawnResult> {
+  /** Run a command using the project's package manager. */
+  async run(...args: string[]): Promise<Subprocess> {
     return await spawn('bun', args, {
       cwd: this.root,
     });

@@ -11,18 +11,27 @@ permissions:
 jobs:
   vhs:
     name: Create VHS
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     if: ${{ github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref_name }}
       - name: Setup PNPM
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
 
       - name: Setup NodeJS
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           cache: pnpm
+
+      - name: Setup Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
+        with:
+          go-version: '1.25.1'
 
       # This prevents pnpm dlx from downloading WXT in the video
       - name: Pre-install WXT
@@ -31,9 +40,10 @@ jobs:
           pnpm dlx wxt@latest --version
 
       - name: Record VHS
-        uses: charmbracelet/vhs-action@59641cdc7fadf3978db65eb8c6937ea2752f4ec3 # v2.1.0
-        with:
-          path: 'docs/tapes/init-demo.tape'
+        run: |
+          brew install ttyd ffmpeg
+          go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
+          vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
@@ -41,5 +51,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'docs: Update `wxt init` GIF'
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           # https://github.com/charmbracelet/vhs#output
           file_pattern: 'docs/assets/*.gif'

@@ -42,7 +42,8 @@
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
     "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -52,8 +53,8 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.7",
-    "publint": "^0.3.17",
-    "tsdown": "^0.20.3",
+    "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

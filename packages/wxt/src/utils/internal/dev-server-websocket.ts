@@ -27,9 +27,7 @@ export interface WxtWebSocket extends WebSocket {
 
 let ws: WxtWebSocket | undefined;
 
-/**
- * Connect to the websocket and listen for messages.
- */
+/** Connect to the websocket and listen for messages. */
 export function getDevServerWebSocket(): WxtWebSocket {
   if (import.meta.env.COMMAND !== 'serve')
     throw Error(

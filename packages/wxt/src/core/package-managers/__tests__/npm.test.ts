@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { npm } from '../npm';
 import spawn from 'nano-spawn';
-import { pathExists } from 'fs-extra';
+import { pathExists } from '../../utils/fs';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {

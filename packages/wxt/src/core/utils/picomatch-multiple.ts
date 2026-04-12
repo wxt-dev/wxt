@@ -1,22 +1,22 @@
-import { minimatch, MinimatchOptions } from 'minimatch';
+import picomatch, { PicomatchOptions } from 'picomatch';
 
 /**
- * Run [`minimatch`](https://npmjs.com/package/minimatch) against multiple
+ * Run [`picomatch`](https://npmjs.com/package/picomatch) against multiple
  * patterns.
  *
  * Supports negated patterns, the order does not matter. If your `search` string
  * matches any of the negative patterns, it will return `false`.
  *
  * @example
- * ```ts
- * minimatchMultiple('a.json', ['*.json', '!b.json']); // => true
- * minimatchMultiple('b.json', ['*.json', '!b.json']); // => false
- * ```
+ *   ```ts
+ *   picomatchMultiple('a.json', ['*.json', '!b.json']); // => true
+ *   picomatchMultiple('b.json', ['*.json', '!b.json']); // => false
+ *   ```;
  */
-export function minimatchMultiple(
+export function picomatchMultiple(
   search: string,
   patterns: string[] | undefined,
-  options?: MinimatchOptions,
+  options?: PicomatchOptions,
 ): boolean {
   if (patterns == null) return false;
 
@@ -29,12 +29,12 @@ export function minimatchMultiple(
 
   if (
     negatePatterns.some((negatePattern) =>
-      minimatch(search, negatePattern, options),
+      picomatch(negatePattern, options)(search),
     )
   )
     return false;
 
   return positivePatterns.some((positivePattern) =>
-    minimatch(search, positivePattern, options),
+    picomatch(positivePattern, options)(search),
   );
 }

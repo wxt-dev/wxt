@@ -1,5 +1,147 @@
 # Changelog
 
+## v0.20.20
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.19...wxt-v0.20.20)
+
+### 🩹 Fixes
+
+- Unlisted script return values broken with Vite 8 sourcemaps ([#2197](https://github.com/wxt-dev/wxt/pull/2197))
+
+### 📖 Documentation
+
+- Add Dymo extension ID to UsingWxtSection.vue ([#2187](https://github.com/wxt-dev/wxt/pull/2187))
+- Add Extension Rank Checker to the list of extensions ([#2193](https://github.com/wxt-dev/wxt/pull/2193))
+
+### 🏡 Chore
+
+- **deps:** Add vite-node 6 support ([64b68671](https://github.com/wxt-dev/wxt/commit/64b68671))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Joseph Hu ([@KiJO94GO](https://github.com/KiJO94GO))
+- FJRG2007 ツ ([@FJRG2007](https://github.com/FJRG2007))
+- Hampus Tågerud ([@hampustagerud](https://github.com/hampustagerud))
+
+## v0.20.19
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.18...wxt-v0.20.19)
+
+### 🚀 Enhancements
+
+- Vite 8 support ([bfd4af5d](https://github.com/wxt-dev/wxt/commit/bfd4af5d))
+
+### 🔥 Performance
+
+- Use filter to improve plugin performance with rolldown ([#1787](https://github.com/wxt-dev/wxt/pull/1787))
+
+### 🩹 Fixes
+
+- List eslint 10 as supported ([55dc263d](https://github.com/wxt-dev/wxt/commit/55dc263d))
+
+### 📖 Documentation
+
+- Added "Scrape Similar" to the homepage ([#2158](https://github.com/wxt-dev/wxt/pull/2158))
+- Added "isTrust" to the homepage ([#2161](https://github.com/wxt-dev/wxt/pull/2161))
+
+### 🏡 Chore
+
+- Add `prettier-plugin-jsdoc` to project ([#2171](https://github.com/wxt-dev/wxt/pull/2171))
+- Replace fast-glob and ora with lighter alternatives ([#2173](https://github.com/wxt-dev/wxt/pull/2173))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Replace `fs-extra` with `node:fs/promises` ([#2174](https://github.com/wxt-dev/wxt/pull/2174))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](https://github.com/Timeraa))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Etoome ([@etoome](https://github.com/etoome))
+- Kuba ([@zizzfizzix](https://github.com/zizzfizzix))
+
+## v0.20.18
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.17...wxt-v0.20.18)
+
+### 🚀 Enhancements
+
+- Create tests for all func of `network.ts` ([#2132](https://github.com/wxt-dev/wxt/pull/2132))
+- Use Navigation API for location change detection with polling fallback ([#2136](https://github.com/wxt-dev/wxt/pull/2136))
+- **modules:** Add support for augumenting entrypoint options ([#2149](https://github.com/wxt-dev/wxt/pull/2149))
+- New `@wxt-dev/is-background` package ([#2152](https://github.com/wxt-dev/wxt/pull/2152))
+- Add `globalName` entrypoint option. ([#2017](https://github.com/wxt-dev/wxt/pull/2017))
+
+### 🩹 Fixes
+
+- Add `getAppConfig` as an alias to `useAppConfig` ([#2144](https://github.com/wxt-dev/wxt/pull/2144))
+- Enable mv3 dev mode with firefox 147 ([#2135](https://github.com/wxt-dev/wxt/pull/2135))
+- **types:** Add type safety to `browser.runtime.executeScript` `files` option ([#2142](https://github.com/wxt-dev/wxt/pull/2142))
+- **types:** Include CSS entrypoints in PublicPath generation ([#2150](https://github.com/wxt-dev/wxt/pull/2150))
+- Fix submit command ([#2157](https://github.com/wxt-dev/wxt/pull/2157))
+
+### 📖 Documentation
+
+- Added "Glossy New Tab" to the homepage ([#2133](https://github.com/wxt-dev/wxt/pull/2133))
+- Add All API Hub to showcase extensions ([#2137](https://github.com/wxt-dev/wxt/pull/2137))
+- Add `wxt-local-analytics` to community resources ([#2141](https://github.com/wxt-dev/wxt/pull/2141))
+- Add deep outline to modules page to show recipes ([653608c9](https://github.com/wxt-dev/wxt/commit/653608c9))
+
+### 🏡 Chore
+
+- Add missing `async` to network.ts ([#2107](https://github.com/wxt-dev/wxt/pull/2107))
+- Make type for `__ENTRYPOINT__` of vitest.globalSetup.ts ([#2128](https://github.com/wxt-dev/wxt/pull/2128))
+- Remove unnecessary `@ts-ignore` of `builders/vite` index.ts ([#2127](https://github.com/wxt-dev/wxt/pull/2127))
+- Rename `zipdir` to `zipDir` ([#2126](https://github.com/wxt-dev/wxt/pull/2126))
+- Simplify imports in `wxt/e2e` ([#2122](https://github.com/wxt-dev/wxt/pull/2122))
+- Remove `@ts-expect-error` from manifest.test.ts and fix typo ([#2123](https://github.com/wxt-dev/wxt/pull/2123))
+
+### 🤖 CI
+
+- Fix VHS action ([#2155](https://github.com/wxt-dev/wxt/pull/2155))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Jonathan Viney ([@jviney](https://github.com/jviney))
+- Tam Dang ([@dahomita](https://github.com/dahomita))
+- Nick Doan ([@nickbar01234](https://github.com/nickbar01234))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Anthony Ciccarello ([@aciccarello](https://github.com/aciccarello))
+- Henrik Wenz ([@HaNdTriX](https://github.com/HaNdTriX))
+- Sheng Zhang ([@Arktomson](https://github.com/Arktomson))
+- Oleksii ([@Aler1x](https://github.com/Aler1x))
+- Qixing-jk <vq3d5d8c@duck.com>
+- Muzammil ([@oyzamil](https://github.com/oyzamil))
+
+## v0.20.17
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.16...wxt-v0.20.17)
+
+### 🩹 Fixes
+
+- Update left-over CJS require of `publish-browser-extension` to ESM ([#2120](https://github.com/wxt-dev/wxt/pull/2120))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.16
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.15...wxt-v0.20.16)
+
+### 🩹 Fixes
+
+- Revert "rename `name` to `names` prop of `rollup` to fix deprecated warning " ([#2106](https://github.com/wxt-dev/wxt/pull/2106))
+
+### 🏡 Chore
+
+- Speed up E2E tests by skipping `pnpm install` when possible ([#2113](https://github.com/wxt-dev/wxt/pull/2113))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.15
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.14...wxt-v0.20.15)
@@ -78,7 +220,7 @@
 
 - Dareka ([@darekadareka](https://github.com/darekadareka))
 - Mark ([@mjfaga](https://github.com/mjfaga))
-- Ariasuni <aria@ariasuni.eu>
+- ariasuni ([@ariasuni](https://github.com/ariasuni))
 - Aaron ([@aklinker1](https://github.com/aklinker1))
 - Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
 - Bohuslavsemenov ([@bohuslavsemenov](https://github.com/bohuslavsemenov))

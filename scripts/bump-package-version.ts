@@ -6,7 +6,7 @@ import {
   parseCommits,
 } from 'changelogen';
 import { consola } from 'consola';
-import fs from 'fs-extra';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 
@@ -23,7 +23,8 @@ consola.info('Bumping:', { pkg, pkgDir, pkgName, currentVersion });
 // Get commits
 const config = await loadChangelogConfig(process.cwd());
 consola.info('Config:', config);
-const rawCommits = await listCommitsInDir(pkgDir, prevTag);
+const additionalDirs = pkg === 'wxt' ? ['docs'] : [];
+const rawCommits = await listCommitsInDir(pkgDir, prevTag, additionalDirs);
 const commits = parseCommits(rawCommits, config);
 
 // Bump version
@@ -83,7 +84,7 @@ consola.success('Updated changelog');
 const templatePkgJsonPaths: string[] = [];
 if (pkg === 'wxt') {
   const templatesDir = 'templates';
-  const templateDirs = await fs.readdir(templatesDir);
+  const templateDirs = await readdir(templatesDir);
   for (const templateDir of templateDirs) {
     const templatePkgJsonPath = join(templatesDir, templateDir, 'package.json');
     const templatePkgJsonFile = Bun.file(templatePkgJsonPath);

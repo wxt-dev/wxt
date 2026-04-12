@@ -2,39 +2,45 @@ export interface Analytics {
   /** Report a page change. */
   page: (url: string) => void;
   /** Report a custom event. */
-  track: (eventName: string, eventProperties?: Record<string, string>) => void;
+  track: (
+    eventName: string,
+    eventProperties?: Record<string, string | undefined>,
+  ) => void;
   /** Save information about the user. */
   identify: (userId: string, userProperties?: Record<string, string>) => void;
-  /** Automatically setup and track user interactions, returning a function to remove any listeners that were setup. */
+  /**
+   * Automatically setup and track user interactions, returning a function to
+   * remove any listeners that were setup.
+   */
   autoTrack: (root: Document | ShadowRoot | Element) => () => void;
   /** Calls `config.enabled.setValue`. */
   setEnabled: (enabled: boolean) => void;
 }
 
 export interface AnalyticsConfig {
-  /**
-   * Array of providers to send analytics to.
-   */
+  /** Array of providers to send analytics to. */
   providers: AnalyticsProvider[];
-  /**
-   * Enable debug logs and other provider-specific debugging features.
-   */
+  /** Enable debug logs and other provider-specific debugging features. */
   debug?: boolean;
   /**
    * Your extension's version, reported alongside events.
+   *
    * @default browser.runtime.getManifest().version`.
    */
   version?: string;
   /**
-   * Configure how the enabled flag is persisted. Defaults to using `browser.storage.local`.
+   * Configure how the enabled flag is persisted. Defaults to using
+   * `browser.storage.local`.
    */
   enabled?: AnalyticsStorageItem<boolean>;
   /**
-   * Configure how the user Id is persisted. Defaults to using `browser.storage.local`.
+   * Configure how the user Id is persisted. Defaults to using
+   * `browser.storage.local`.
    */
-  userId?: AnalyticsStorageItem<string>;
+  userId?: AnalyticsStorageItem<string | undefined>;
   /**
-   * Configure how user properties are persisted. Defaults to using `browser.storage.local`.
+   * Configure how user properties are persisted. Defaults to using
+   * `browser.storage.local`.
    */
   userProperties?: AnalyticsStorageItem<Record<string, string>>;
 }
@@ -94,6 +100,6 @@ export interface AnalyticsPageViewEvent extends BaseAnalyticsEvent {
 export interface AnalyticsTrackEvent extends BaseAnalyticsEvent {
   event: {
     name: string;
-    properties?: Record<string, string>;
+    properties?: Record<string, string | undefined>;
   };
 }

@@ -77,9 +77,7 @@ export function menuItem(
   return { text, link };
 }
 
-/**
- * Clean up and add badges to typedoc leaf sections
- */
+/** Clean up and add badges to typedoc leaf sections */
 export function prepareTypedocSidebar(items: SidebarItem[]) {
   // skip contents file
   const filtered = items.slice(1);
