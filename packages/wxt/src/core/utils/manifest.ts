@@ -20,6 +20,7 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { addDiscoveredThemeIcons } from './theme-icons';
 import { ManifestV3WebAccessibleResource } from './types';
 import type { Browser } from '@wxt-dev/browser';
 
@@ -115,6 +116,10 @@ export async function generateManifest(
       : versionName;
 
   addEntrypoints(manifest, entrypoints, buildOutput);
+
+  if (wxt.config.browser === 'firefox') {
+    addDiscoveredThemeIcons(manifest, buildOutput);
+  }
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
@@ -311,7 +316,7 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab,
+      open_in_tab: options.options.openInTab ?? false,
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
