@@ -5,10 +5,10 @@
 
 <main>
   <div>
-    <a href="https://wxt.dev" target="_blank" rel="noreferrer">
+    <a href="https://wxt.dev" target="_blank" rel="noopener noreferrer">
       <img src="/wxt.svg" class="logo" alt="WXT Logo" />
     </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
+    <a href="https://svelte.dev" target="_blank" rel="noopener noreferrer">
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>

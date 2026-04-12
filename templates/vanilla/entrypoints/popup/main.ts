@@ -5,10 +5,10 @@ import { setupCounter } from '@/components/counter';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <a href="https://wxt.dev" target="_blank">
+    <a href="https://wxt.dev" target="_blank" rel="noopener noreferrer">
       <img src="${wxtLogo}" class="logo" alt="WXT logo" />
     </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
+    <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">
       <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
     </a>
     <h1>WXT + TypeScript</h1>

@@ -9,10 +9,10 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://wxt.dev" target="_blank">
+        <a href="https://wxt.dev" target="_blank" rel="noopener noreferrer">
           <img src={wxtLogo} class="logo" alt="WXT logo" />
         </a>
-        <a href="https://solidjs.com" target="_blank">
+        <a href="https://solidjs.com" target="_blank" rel="noopener noreferrer">
           <img src={solidLogo} class="logo solid" alt="Solid logo" />
         </a>
       </div>

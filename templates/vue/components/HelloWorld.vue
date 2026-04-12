@@ -21,7 +21,12 @@ const count = ref(0);
 
   <p>
     Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
+    <a
+      href="https://github.com/vuejs/language-tools"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Volar</a
+    >
     in your IDE for a better DX
   </p>
   <p class="read-the-docs">Click on the WXT and Vue logos to learn more</p>
