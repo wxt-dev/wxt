@@ -1,32 +1,28 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import useListExtensionDetails from '../composables/useListExtensionDetails';
-import type { ChromeExtension } from '../composables/useListExtensionDetails';
-import useFirefoxAddonDetails from '../composables/useFirefoxAddonDetails';
 
 /** At least one of `chromeId` or `firefoxSlug` must be set. */
 type ExtensionEntry =
   | { chromeId: string; firefoxSlug?: string }
   | { firefoxSlug: string; chromeId?: string };
 
+interface StoreLink {
+  label: string;
+  url: string;
+}
+
 interface ListedExtension {
   id: string;
   name: string;
   iconUrl: string;
   shortDescription: string;
-  chromeStoreUrl?: string;
-  firefoxUrl?: string;
-  /** Chrome Web Store weekly active users (when listed on Chrome). */
-  chromeUsers?: number;
-  /** Firefox Add-ons average daily users from AMO (when listed on Firefox). */
-  firefoxUsers?: number;
-  /** CWS star rating (1–5), when listed on Chrome. */
-  chromeRating?: number;
-  /** AMO star rating, when listed on Firefox. */
-  firefoxRating?: number;
+  users: number;
+  rating: number | undefined;
+  stores: StoreLink[];
 }
 
-// Add extension entries to end of the list. On the website, extensions will be sorted by a combination of weekly active users and rating.
+// Add extension entries to end of the list. On the website, extensions will be sorted by a combination of users and rating.
 // Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
 // Use `chromeId` for the Chrome Web Store listing, `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/). You may set one or both.
 const extensionEntries: ExtensionEntry[] = [
@@ -247,154 +243,87 @@ const extensionEntries: ExtensionEntry[] = [
   { chromeId: 'pmgehhllikbjmadpenhabejhpemplhmd', firefoxSlug: 'rank-checker' }, // Extension Rank Checker - Extension Ranker
 ];
 
-const chromeExtensionIds = extensionEntries.flatMap((e) =>
+const chromeIds = extensionEntries.flatMap((e) =>
   e.chromeId ? [e.chromeId] : [],
 );
-const firefoxOnlySlugs = extensionEntries.flatMap((e) =>
-  e.firefoxSlug && !e.chromeId ? [e.firefoxSlug] : [],
-);
-const firefoxSlugMap = new Map<string, string>();
+const firefoxSlugs = [
+  ...new Set(
+    extensionEntries.flatMap((e) => (e.firefoxSlug ? [e.firefoxSlug] : [])),
+  ),
+];
+
+// Map chromeId <-> firefoxSlug for dual-listed entries
+const chromeToFirefox = new Map<string, string>();
 for (const e of extensionEntries) {
   if (e.chromeId && e.firefoxSlug) {
-    firefoxSlugMap.set(e.chromeId, e.firefoxSlug);
+    chromeToFirefox.set(e.chromeId, e.firefoxSlug);
   }
 }
 
-/** All AMO slugs we need (Firefox-only listings + dual Chrome+Firefox). */
-const firefoxSlugsToFetch = [
-  ...new Set([...firefoxOnlySlugs, ...firefoxSlugMap.values()]),
-];
+const { data, isLoading } = useListExtensionDetails(chromeIds, firefoxSlugs);
 
-const { data: chromeData, isLoading: chromeLoading } =
-  useListExtensionDetails(chromeExtensionIds);
-const { data: firefoxData, isLoading: firefoxLoading } =
-  useFirefoxAddonDetails(firefoxSlugsToFetch);
-
-const isLoading = computed(() => chromeLoading.value || firefoxLoading.value);
-
-const sortedExtensions = computed((): ListedExtension[] => {
-  const firefoxBySlug = new Map(
-    (firefoxData.value ?? []).map((f) => [f.slug, f]),
-  );
-
-  const chromeRows = (chromeData.value ?? [])
-    .filter((item) => item != null)
-    .map((item) => {
-      const chromeStoreUrl = getStoreUrl(item);
-      const ffSlug = firefoxSlugMap.get(item.id);
-      const ffAddon = ffSlug ? firefoxBySlug.get(ffSlug) : undefined;
-      const firefoxUrl = ffSlug
-        ? `https://addons.mozilla.org/firefox/addon/${ffSlug}/?utm_source=wxt.dev`
-        : undefined;
-      const chromeUsers = item.weeklyActiveUsers;
-      const firefoxUsers = ffAddon?.weeklyActiveUsers;
-      const sortUsers = Math.max(chromeUsers, firefoxUsers ?? 0);
-      return {
-        id: item.id,
-        name: item.name,
-        iconUrl: item.iconUrl,
-        shortDescription: item.shortDescription,
-        chromeStoreUrl,
-        firefoxUrl,
-        chromeUsers,
-        firefoxUsers,
-        chromeRating: item.rating,
-        firefoxRating: ffAddon?.rating,
-        sortKey: ((item.rating ?? 5) / 5) * sortUsers,
-      };
-    });
-
-  const firefoxOnlySet = new Set(firefoxOnlySlugs);
-  const firefoxRows = (firefoxData.value ?? [])
-    .filter((f) => firefoxOnlySet.has(f.slug))
-    .map((f) => ({
-      id: `firefox:${f.slug}`,
-      name: f.name,
-      iconUrl: f.iconUrl,
-      shortDescription: f.shortDescription,
-      firefoxUrl: f.firefoxUrl,
-      firefoxUsers: f.weeklyActiveUsers,
-      firefoxRating: f.rating,
-      sortKey: ((f.rating ?? 5) / 5) * f.weeklyActiveUsers,
-    }));
-
-  return [...chromeRows, ...firefoxRows]
-    .sort((l, r) => r.sortKey - l.sortKey)
-    .map(({ sortKey: _s, ...rest }) => rest);
-});
-
-function getStoreUrl(extension: ChromeExtension) {
-  const url = new URL(extension.storeUrl);
+function addUtmSource(storeUrl: string): string {
+  const url = new URL(storeUrl);
   url.searchParams.set('utm_source', 'wxt.dev');
   return url.href;
 }
 
-function primaryStoreUrl(extension: ListedExtension) {
-  return extension.chromeStoreUrl ?? extension.firefoxUrl ?? '#';
-}
+const sortedExtensions = computed((): ListedExtension[] => {
+  if (!data.value) return [];
 
-/**
- * E.g. 31_791 → "31.8K", 2_000_000 → "2,000K", 842 → "842" — K scale + en-US
- * commas
- */
-function formatCompactCount(n: number): string {
-  if (n >= 1_000) {
-    const v = n / 1_000;
-    const s = v.toLocaleString('en-US', {
-      maximumFractionDigits: 1,
-      minimumFractionDigits: 0,
+  const chromeById = new Map(
+    (data.value.chrome ?? []).filter(Boolean).map((e) => [e.id, e]),
+  );
+  const firefoxBySlug = new Map(
+    (data.value.firefox ?? []).filter(Boolean).map((e) => [e.id, e]),
+  );
+
+  const results: (ListedExtension & { sortKey: number })[] = [];
+
+  for (const entry of extensionEntries) {
+    const chrome = entry.chromeId ? chromeById.get(entry.chromeId) : undefined;
+    const firefox = entry.firefoxSlug
+      ? firefoxBySlug.get(entry.firefoxSlug)
+      : undefined;
+
+    if (!chrome && !firefox) continue;
+
+    const primary = chrome ?? firefox!;
+    const users = (chrome?.users ?? 0) + (firefox?.users ?? 0);
+    const rating = chrome?.rating ?? firefox?.rating;
+
+    const stores: StoreLink[] = [];
+    if (chrome) {
+      stores.push({ label: 'Chrome', url: addUtmSource(chrome.storeUrl) });
+    }
+    if (firefox) {
+      stores.push({ label: 'Firefox', url: addUtmSource(firefox.storeUrl) });
+    }
+
+    results.push({
+      id: entry.chromeId ?? `firefox:${entry.firefoxSlug}`,
+      name: primary.name,
+      iconUrl: primary.iconUrl,
+      shortDescription: primary.shortDescription,
+      users,
+      rating,
+      stores,
+      sortKey: ((rating ?? 5) / 5) * users,
     });
-    return `${s}K`;
   }
-  return n.toLocaleString('en-US');
+
+  return results
+    .sort((a, b) => b.sortKey - a.sortKey)
+    .map(({ sortKey: _s, ...rest }) => rest);
+});
+
+function formatUsers(n: number): string {
+  return `${n.toLocaleString()} users`;
 }
 
-function formatUsers(n: number) {
-  return `${formatCompactCount(n)} users`;
-}
-
-function formatStars(r: number) {
+function formatStars(r: number): string {
   const rounded = Math.round(r * 10) / 10;
   return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)} stars`;
-}
-
-function formatCompactLine(
-  users: number | undefined,
-  rating: number | undefined,
-): string {
-  const parts: string[] = [];
-  if (users != null) parts.push(formatUsers(users));
-  if (rating != null) parts.push(formatStars(rating));
-  return parts.join(', ');
-}
-
-function isDualStore(ext: ListedExtension) {
-  return !!ext.chromeStoreUrl && !!ext.firefoxUrl;
-}
-
-function formatSingleStoreLine(ext: ListedExtension): string {
-  if (ext.chromeStoreUrl && !ext.firefoxUrl) {
-    return formatCompactLine(ext.chromeUsers, ext.chromeRating);
-  }
-  if (ext.firefoxUrl && !ext.chromeStoreUrl) {
-    return formatCompactLine(ext.firefoxUsers, ext.firefoxRating);
-  }
-  return '';
-}
-
-function showStoreStats(ext: ListedExtension): boolean {
-  if (isDualStore(ext)) {
-    return true;
-  }
-  return formatSingleStoreLine(ext) !== '';
-}
-
-function formatCompactLineOrFallback(
-  users: number | undefined,
-  rating: number | undefined,
-) {
-  const line = formatCompactLine(users, rating);
-  return line !== '' ? line : 'View listing';
 }
 </script>
 
@@ -414,89 +343,39 @@ function formatCompactLineOrFallback(
         referrerpolicy="no-referrer"
       />
       <div class="card-content">
-        <a
-          :href="primaryStoreUrl(extension)"
-          target="_blank"
-          :title="extension.name"
-          class="extension-name"
-          >{{ extension.name }}</a
-        >
+        <span class="extension-name" :title="extension.name">{{
+          extension.name
+        }}</span>
         <p class="description" :title="extension.shortDescription">
           {{ extension.shortDescription }}
         </p>
-        <div
-          v-if="showStoreStats(extension)"
-          class="store-stats"
-          :class="{ 'store-stats--dual': isDualStore(extension) }"
-        >
-          <template v-if="isDualStore(extension)">
+        <div v-if="extension.stores.length > 0" class="store-stats">
+          <span class="store-stats-info">
+            <span>{{ formatUsers(extension.users) }}</span>
+            <template v-if="extension.rating">
+              <span class="store-stats-sep" aria-hidden="true">,</span>
+              <span>{{ formatStars(extension.rating) }}</span>
+            </template>
+          </span>
+          <span class="store-stats-sep" aria-hidden="true">&middot;</span>
+          <span class="store-links">
             <a
-              v-if="extension.chromeStoreUrl"
-              :href="extension.chromeStoreUrl"
+              v-for="(store, i) of extension.stores"
+              :key="store.label"
+              :href="store.url"
               target="_blank"
-              class="store-stats-line"
-              title="Chrome Web Store"
+              class="store-link"
+              :title="store.label"
             >
-              <span class="store-stats-label">Chrome</span>
-              <span class="store-stats-copy">{{
-                formatCompactLineOrFallback(
-                  extension.chromeUsers,
-                  extension.chromeRating,
-                )
-              }}</span>
+              {{ store.label
+              }}<span
+                v-if="i < extension.stores.length - 1"
+                class="store-stats-sep"
+                aria-hidden="true"
+                >,&nbsp;</span
+              >
             </a>
-            <span
-              v-if="extension.chromeStoreUrl && extension.firefoxUrl"
-              class="store-stats-sep"
-              aria-hidden="true"
-              >·</span
-            >
-            <a
-              v-if="extension.firefoxUrl"
-              :href="extension.firefoxUrl"
-              target="_blank"
-              class="store-stats-line"
-              title="Firefox Add-ons"
-            >
-              <span class="store-stats-label">Firefox</span>
-              <span class="store-stats-copy">{{
-                formatCompactLineOrFallback(
-                  extension.firefoxUsers,
-                  extension.firefoxRating,
-                )
-              }}</span>
-            </a>
-          </template>
-          <a
-            v-else-if="extension.chromeStoreUrl && !extension.firefoxUrl"
-            :href="extension.chromeStoreUrl"
-            target="_blank"
-            class="store-stats-line"
-            title="Chrome Web Store"
-          >
-            <span class="store-stats-label">Chrome</span>
-            <span class="store-stats-copy">{{
-              formatCompactLineOrFallback(
-                extension.chromeUsers,
-                extension.chromeRating,
-              )
-            }}</span>
-          </a>
-          <a
-            v-else-if="extension.firefoxUrl && !extension.chromeStoreUrl"
-            :href="extension.firefoxUrl"
-            target="_blank"
-            class="store-stats-line"
-            title="Firefox Add-ons"
-          >
-            <span class="store-stats-label">Firefox</span>
-            <span class="store-stats-copy">{{
-              formatCompactLineOrFallback(
-                extension.firefoxUsers,
-                extension.firefoxRating,
-              )
-            }}</span>
-          </a>
+          </span>
         </div>
       </div>
     </li>
@@ -564,10 +443,15 @@ function formatCompactLineOrFallback(
   padding-right: 0;
 }
 
-/* Minimal footer stats — right-aligned, like the original single-line layout */
 .store-stats {
   margin-top: auto;
   padding-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: baseline;
+  column-gap: 6px;
+  row-gap: 4px;
   text-align: right;
   font-size: 12px;
   line-height: 1.45;
@@ -575,47 +459,28 @@ function formatCompactLineOrFallback(
   color: var(--vp-c-text-2);
 }
 
-.store-stats--dual {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: baseline;
-  column-gap: 6px;
-  row-gap: 4px;
+.store-stats-info {
+  display: inline;
 }
 
 .store-stats-sep {
   opacity: 0.45;
   user-select: none;
-  flex: 0 0 auto;
 }
 
-.store-stats-line {
+.store-links {
   display: inline;
-  margin: 0;
-  text-align: right;
+}
+
+.store-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
 }
 
-.store-stats-line:hover {
+.store-link:hover {
   color: var(--vp-c-text-1);
   text-decoration: underline;
-}
-
-.store-stats-label {
-  display: inline-block;
-  margin-right: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: inherit;
-}
-
-.store-stats-copy {
-  color: inherit;
 }
 
 .extension-grid > li .extension-name {
@@ -623,15 +488,9 @@ function formatCompactLineOrFallback(
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  cursor: pointer;
   padding: 0;
   margin: 0;
-  text-decoration: none;
   font-size: large;
-}
-
-.extension-grid > li .extension-name:hover {
-  text-decoration: underline;
 }
 
 .extension-grid > li .description {
