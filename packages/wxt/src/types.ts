@@ -965,10 +965,13 @@ export type UserManifest = {
 } & {
   // Add any Browser-specific or MV2 properties that WXT supports here
   action?: Browser.runtime.ManifestV3['action'] & {
-    browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   browser_action?: Browser.runtime.ManifestV2['browser_action'] & {
     browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   page_action?: Browser.runtime.ManifestV2['page_action'] & {
     browser_style?: boolean;
