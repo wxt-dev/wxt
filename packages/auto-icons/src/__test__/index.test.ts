@@ -8,14 +8,27 @@ import type { Wxt, UserManifest } from 'wxt';
 import autoIconsModule from '../index';
 import type { AutoIconsOptions } from '../index';
 
+const fakePngBuffer = Buffer.from('fake-png-data');
+
 // Mock dependencies
 vi.mock('node:fs/promises', () => ({
   mkdir: vi.fn(),
   access: vi.fn(),
+  readFile: vi.fn(),
 }));
 
 vi.mock('sharp', () => ({
   default: vi.fn(),
+}));
+
+// Use a plain class (not vi.fn()) to avoid issues with restoreMocks: true
+// when Resvg is used as a constructor.
+vi.mock('@resvg/resvg-js', () => ({
+  Resvg: class MockResvg {
+    render() {
+      return { asPng: () => fakePngBuffer };
+    }
+  },
 }));
 
 // Type definitions for better type safety
@@ -88,6 +101,9 @@ describe('auto-icons module', () => {
     );
     vi.mocked(fsPromises.access).mockResolvedValue(undefined);
     vi.mocked(fsPromises.mkdir).mockResolvedValue(undefined as any);
+    vi.mocked(fsPromises.readFile as Mock).mockResolvedValue(
+      Buffer.from('<svg></svg>'),
+    );
   });
 
   describe('module setup', () => {
@@ -625,6 +641,144 @@ describe('auto-icons module', () => {
         resolve('/mock/src', 'assets/custom-icon.png'),
       );
       expect(mockSharpInstance.grayscale).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('SVG icon support', () => {
+    const svgMockWxt: MockWxt = {
+      ...mockWxt,
+      config: {
+        ...mockWxt.config,
+        mode: 'production',
+      },
+    };
+
+    beforeEach(() => {
+      vi.mocked(fsPromises.readFile as Mock).mockResolvedValue(
+        Buffer.from(
+          '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="red" /></svg>',
+        ),
+      );
+    });
+
+    it('should use @resvg/resvg-js for SVG files (reads file and passes buffer to sharp)', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        baseIconPath: 'assets/icon.svg',
+        sizes: [128],
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(svgMockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(svgMockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(svgMockWxt as unknown as Wxt, output);
+      }
+
+      // Should have read the SVG file content
+      expect(fsPromises.readFile).toHaveBeenCalledWith(
+        resolve('/mock/src', 'assets/icon.svg'),
+      );
+
+      // Should have passed the rendered PNG buffer to sharp (not the SVG file path)
+      expect(sharp).toHaveBeenCalledWith(fakePngBuffer);
+      expect(sharp).not.toHaveBeenCalledWith(
+        resolve('/mock/src', 'assets/icon.svg'),
+      );
+    });
+
+    it('should use @resvg/resvg-js for SVG files with .SVG extension (case-insensitive)', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        baseIconPath: 'assets/icon.SVG',
+        sizes: [128],
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(svgMockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(svgMockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(svgMockWxt as unknown as Wxt, output);
+      }
+
+      // Should have read the SVG file (verifies case-insensitive detection)
+      expect(fsPromises.readFile).toHaveBeenCalledWith(
+        resolve('/mock/src', 'assets/icon.SVG'),
+      );
+      expect(sharp).toHaveBeenCalledWith(fakePngBuffer);
+    });
+
+    it('should render SVG at each requested size separately', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        baseIconPath: 'assets/icon.svg',
+        sizes: [96, 64],
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(svgMockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(svgMockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(svgMockWxt as unknown as Wxt, output);
+      }
+
+      // defu merges arrays: [96, 64] + defaults [128, 48, 32, 16] = 6 sizes
+      // Should have read the SVG file once per size (to render at each size separately)
+      expect(fsPromises.readFile).toHaveBeenCalledTimes(6);
+      // Should have called sharp 6 times (once per size) with the rendered buffer
+      expect(sharp).toHaveBeenCalledTimes(6);
+      expect(sharp).toHaveBeenCalledWith(fakePngBuffer);
+      // Verify public assets are generated for all sizes
+      expect(output.publicAssets).toEqual([
+        { type: 'asset', fileName: 'icons/96.png' },
+        { type: 'asset', fileName: 'icons/64.png' },
+        { type: 'asset', fileName: 'icons/128.png' },
+        { type: 'asset', fileName: 'icons/48.png' },
+        { type: 'asset', fileName: 'icons/32.png' },
+        { type: 'asset', fileName: 'icons/16.png' },
+      ]);
+    });
+
+    it('should not use @resvg/resvg-js for PNG files', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        baseIconPath: 'assets/icon.png',
+        sizes: [128],
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(svgMockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(svgMockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(svgMockWxt as unknown as Wxt, output);
+      }
+
+      // Should NOT have read the file (PNG goes directly to sharp)
+      expect(fsPromises.readFile).not.toHaveBeenCalled();
+      // Should have called sharp with the file path directly
+      expect(sharp).toHaveBeenCalledWith(
+        resolve('/mock/src', 'assets/icon.png'),
+      );
     });
   });
 });

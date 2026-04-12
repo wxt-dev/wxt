@@ -47,6 +47,7 @@
     "wxt": ">=0.19.0"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "defu": "^6.1.4",
     "sharp": "^0.34.5"
   },

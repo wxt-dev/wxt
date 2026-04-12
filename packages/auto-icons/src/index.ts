@@ -1,9 +1,10 @@
 import 'wxt';
 import { defineWxtModule } from 'wxt/modules';
-import { resolve, relative } from 'node:path';
+import { resolve, relative, extname } from 'node:path';
 import defu from 'defu';
 import sharp from 'sharp';
-import { access, mkdir } from 'node:fs/promises';
+import { Resvg } from '@resvg/resvg-js';
+import { access, mkdir, readFile } from 'node:fs/promises';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -61,8 +62,23 @@ export default defineWxtModule<AutoIconsOptions>({
     wxt.hooks.hook('build:done', async (wxt, output) => {
       const outputFolder = wxt.config.outDir;
 
+      const isSvg = extname(resolvedPath).toLowerCase() === '.svg';
+
       for (const size of parsedOptions.sizes) {
-        const resizedImage = sharp(resolvedPath).resize(size).png();
+        let resizedImage: sharp.Sharp;
+        if (isSvg) {
+          // Use @resvg/resvg-js for SVG rendering to ensure proper support
+          // for advanced SVG features like linearGradient, radialGradient, etc.
+          // Sharp uses librsvg which may not support these features on all platforms.
+          const svgContent = await readFile(resolvedPath);
+          const resvg = new Resvg(svgContent, {
+            fitTo: { mode: 'width', value: size },
+          });
+          const rendered = resvg.render();
+          resizedImage = sharp(rendered.asPng()).png();
+        } else {
+          resizedImage = sharp(resolvedPath).resize(size).png();
+        }
 
         if (wxt.config.mode === 'development') {
           if (parsedOptions.developmentIndicator === 'grayscale') {
