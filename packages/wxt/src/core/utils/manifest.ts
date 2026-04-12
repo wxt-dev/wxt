@@ -289,20 +289,19 @@ function addEntrypoints(
     if (popup.options.themeIcons)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.theme_icons = popup.options.themeIcons;
-    if (manifest.manifest_version === 3) {
-      manifest.action = {
-        ...manifest.action,
-        ...options,
-        default_popup,
-      };
-    } else {
-      const key = popup.options.actionType ?? 'browser_action';
-      manifest[key] = {
-        ...manifest[key],
-        ...options,
-        default_popup,
-      };
-    }
+
+    const actionKey =
+      manifest.manifest_version === 2
+        ? (popup.options.actionType ?? 'browser_action')
+        : wxt.config.browser === 'firefox'
+          ? (popup.options.actionType ?? 'action')
+          : 'action';
+
+    manifest[actionKey] = {
+      ...manifest[actionKey],
+      ...options,
+      default_popup,
+    };
   }
 
   if (devtools) {
@@ -704,6 +703,8 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
+    if (wxt.config.browser !== 'firefox')
+      keysToRemove.push(...chromeMv2OnlyKeys);
   }
 
   keysToRemove.forEach((key) => {
@@ -712,7 +713,6 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
 }
 
 const mv2OnlyKeys = [
-  'page_action',
   'browser_action',
   'automation',
   'content_capabilities',
@@ -737,6 +737,7 @@ const mv3OnlyKeys = [
   'optional_host_permissions',
   'side_panel',
 ];
+const chromeMv2OnlyKeys = ['page_action'];
 const firefoxMv3OnlyKeys = ['host_permissions'];
 
 const DEFAULT_MV3_EXTENSION_PAGES_CSP =
