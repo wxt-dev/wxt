@@ -22,225 +22,536 @@ interface ListedExtension {
   stores: StoreLink[];
 }
 
-// Add extension entries to end of the list. On the website, extensions will be sorted by a combination of users and rating.
-// Change the commit message or PR title to: "docs: Added "[extension name]" to the homepage"
-// Use `chromeId` for the Chrome Web Store listing, `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/). You may set one or both.
+/**
+ * Add extension entries to end of the list. On the website, extensions will be
+ * sorted by a combination of users and rating.
+ *
+ * Change the commit message or PR title to:
+ *
+ * > "docs: Added "[extension name]" to showcase"
+ *
+ * Use:
+ *
+ * - `chromeId` for the Chrome Web Store listing,
+ * - `firefoxSlug` for Firefox Add-ons (slug from
+ *   https://addons.mozilla.org/firefox/addon/{slug}/)
+ *
+ * You may set one or both.
+ */
 const extensionEntries: ExtensionEntry[] = [
   {
+    // GitHub: Better Line Counts
     chromeId: 'ocfdgncpifmegplaglcnglhioflaimkd',
     firefoxSlug: 'github-better-line-counts',
-  }, // GitHub: Better Line Counts
-  { chromeId: 'mgmdkjcljneegjfajchedjpdhbadklcf', firefoxSlug: 'anime-skip' }, // Anime Skip Player
-  { chromeId: 'bfbnagnphiehemkdgmmficmjfddgfhpl', firefoxSlug: 'ultrawideo' }, // UltraWideo
-  { chromeId: 'elfaihghhjjoknimpccccmkioofjjfkf', firefoxSlug: 'stayfree' }, // StayFree - Website Blocker & Web Analytics
-  { chromeId: 'okifoaikfmpfcamplcfjkpdnhfodpkil' }, // Doozy: Ai Made Easy
-  { chromeId: 'lknmjhcajhfbbglglccadlfdjbaiifig' }, // tl;dv - Record, Transcribe & ChatGPT for Google Meet
-  { chromeId: 'oglffgiaiekgeicdgkdlnlkhliajdlja' }, // Youtube中文配音
-  { chromeId: 'agjnjboanicjcpenljmaaigopkgdnihi' }, // PreMiD
+  },
   {
+    // Anime Skip Player
+    chromeId: 'mgmdkjcljneegjfajchedjpdhbadklcf',
+    firefoxSlug: 'anime-skip',
+  },
+  {
+    // UltraWideo
+    chromeId: 'bfbnagnphiehemkdgmmficmjfddgfhpl',
+    firefoxSlug: 'ultrawideo',
+  },
+  {
+    // StayFree - Website Blocker & Web Analytics
+    chromeId: 'elfaihghhjjoknimpccccmkioofjjfkf',
+    firefoxSlug: 'stayfree',
+  },
+  {
+    // Doozy: Ai Made Easy
+    chromeId: 'okifoaikfmpfcamplcfjkpdnhfodpkil',
+  },
+  {
+    // tl;dv - Record, Transcribe & ChatGPT for Google Meet
+    chromeId: 'lknmjhcajhfbbglglccadlfdjbaiifig',
+  },
+  {
+    // Youtube中文配音
+    chromeId: 'oglffgiaiekgeicdgkdlnlkhliajdlja',
+  },
+  {
+    // PreMiD
+    chromeId: 'agjnjboanicjcpenljmaaigopkgdnihi',
+  },
+  {
+    // Markdown Sticky Notes
     chromeId: 'aiakblgmlabokilgljkglggnpflljdgp',
     firefoxSlug: 'markdown-sticky-notes',
-  }, // Markdown Sticky Notes
-  { chromeId: 'nomnkbngkijpffepcgbbofhcnafpkiep' }, // DocVersionRedirector
-  { chromeId: 'ceicccfeikoipigeghddpocceifjelph', firefoxSlug: 'plex-skipper' }, // Plex Skipper
+  },
   {
+    // DocVersionRedirector
+    chromeId: 'nomnkbngkijpffepcgbbofhcnafpkiep',
+  },
+  {
+    // Plex Skipper
+    chromeId: 'ceicccfeikoipigeghddpocceifjelph',
+    firefoxSlug: 'plex-skipper',
+  },
+  {
+    // GitHub Custom Notifier
     chromeId: 'aelkipgppclpfimeamgmlonimflbhlgf',
     firefoxSlug: 'github-custom-notifier',
-  }, // GitHub Custom Notifier
-  { chromeId: 'djnlaiohfaaifbibleebjggkghlmcpcj' }, // Fluent Read
+  },
   {
+    // Fluent Read
+    chromeId: 'djnlaiohfaaifbibleebjggkghlmcpcj',
+  },
+  {
+    // Facebook Video Controls
     chromeId: 'nhclljcpfmmaiojbhhnkpjcfmacfcian',
     firefoxSlug: 'facebook-video-controls',
-  }, // Facebook Video Controls
-  { chromeId: 'mblkhbaakhbhiimkbcnmeciblfhmafna' }, // ElemSnap - Quick capture of webpage elements and conversion to images,
+  },
   {
+    // ElemSnap - Quick capture of webpage elements and conversion to images,
+    chromeId: 'mblkhbaakhbhiimkbcnmeciblfhmafna',
+  },
+  {
+    // MS Edge TTS (Text to Speech)
     chromeId: 'oajalfneblkfiejoadecnmodfpnaeblh',
     firefoxSlug: 'ms-edge-tts-text-to-speech',
-  }, // MS Edge TTS (Text to Speech)
-  { chromeId: 'nedcanggplmbbgmlpcjiafgjcpdimpea' }, // YTBlock - Block any content from YouTube™
-  { chromeId: 'oadbjpccljkplmhnjekgjamejnbadlne' }, // demo.fun - Interactive product demos that convert
-  { chromeId: 'iopdafdcollfgaoffingmahpffckmjni' }, // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
-  { chromeId: 'khjdmjcmpolknpccmaaipmidphjokhdf' }, // WorkFlowy MultiFlow
-  { chromeId: 'fencadnndhdeggodopebjgdfdlhcimfk' }, // 香草布丁🌿🍮- https://github.com/Xdy1579883916/vanilla-pudding
+  },
   {
+    // YTBlock - Block any content from YouTube™
+    chromeId: 'nedcanggplmbbgmlpcjiafgjcpdimpea',
+  },
+  {
+    // demo.fun - Interactive product demos that convert
+    chromeId: 'oadbjpccljkplmhnjekgjamejnbadlne',
+  },
+  {
+    // SmartEReply: Elevate Your LinkedIn™ Engagement with AI 🚀📈
+    chromeId: 'iopdafdcollfgaoffingmahpffckmjni',
+  },
+  {
+    // WorkFlowy MultiFlow
+    chromeId: 'khjdmjcmpolknpccmaaipmidphjokhdf',
+  },
+  {
+    // 香草布丁🌿🍮- https://github.com/Xdy1579883916/vanilla-pudding
+    chromeId: 'fencadnndhdeggodopebjgdfdlhcimfk',
+  },
+  {
+    // MaxFocus: Link Preview
     chromeId: 'bnacincmbaknlbegecpioobkfgejlojp',
     firefoxSlug: 'maxfocus-link-preview',
-  }, // MaxFocus: Link Preview
-  { chromeId: 'bcpgdpedphodjcjlminjbdeejccjbimp' }, // 汇率转换-中文版本
+  },
   {
+    // 汇率转换-中文版本
+    chromeId: 'bcpgdpedphodjcjlminjbdeejccjbimp',
+  },
+  {
+    // Currency Converter Plus
     chromeId: 'loeilaonggnalkaiiaepbegccilkmjjp',
     firefoxSlug: 'currency-converter-plus',
-  }, // Currency Converter Plus
-  { chromeId: 'npcnninnjghigjfiecefheeibomjpkak' }, // Respond Easy
-  { chromeId: 'cfkdcideecefncbglkhneoflfnmhoicc' }, // mindful - stay focused on your goals
-  { chromeId: 'lnhejcpclabmbgpiiomjbhalblnnbffg' }, // 1Proompt
-  { chromeId: 'fonflmjnjbkigocpoommgmhljdpljain' }, // NiceTab - https://github.com/web-dahuyou/NiceTab
-  { chromeId: 'fcffekbnfcfdemeekijbbmgmkognnmkd' }, // Draftly for LinkedIn
-  { chromeId: 'nkndldfehcidpejfkokbeghpnlbppdmo' }, // YouTube Summarized - Summarize any YouTube video
-  { chromeId: 'dbichmdlbjdeplpkhcejgkakobjbjalc' }, // 社媒助手 - https://github.com/iszhouhua/social-media-copilot
-  { chromeId: 'opepfpjeogkbgeigkbepobceinnfmjdd' }, // Dofollow Links for SEO
-  { chromeId: 'pdnenlnelpdomajfejgapbdpmjkfpjkp' }, // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
-  { chromeId: 'jobnhifpphkgoelnhnopgkdhbdkiadmj' }, // discord message translator
-  { chromeId: 'ncokhechhpjgjonhjnlaneglmdkfkcbj' }, // Habit Tracker app widget for daily habit tracking
+  },
   {
+    // Respond Easy
+    chromeId: 'npcnninnjghigjfiecefheeibomjpkak',
+  },
+  {
+    // mindful - stay focused on your goals
+    chromeId: 'cfkdcideecefncbglkhneoflfnmhoicc',
+  },
+  {
+    // 1Proompt
+    chromeId: 'lnhejcpclabmbgpiiomjbhalblnnbffg',
+  },
+  {
+    // NiceTab - https://github.com/web-dahuyou/NiceTab
+    chromeId: 'fonflmjnjbkigocpoommgmhljdpljain',
+  },
+  {
+    // Draftly for LinkedIn
+    chromeId: 'fcffekbnfcfdemeekijbbmgmkognnmkd',
+  },
+  {
+    // YouTube Summarized - Summarize any YouTube video
+    chromeId: 'nkndldfehcidpejfkokbeghpnlbppdmo',
+  },
+  {
+    // 社媒助手 - https://github.com/iszhouhua/social-media-copilot
+    chromeId: 'dbichmdlbjdeplpkhcejgkakobjbjalc',
+  },
+  {
+    // Dofollow Links for SEO
+    chromeId: 'opepfpjeogkbgeigkbepobceinnfmjdd',
+  },
+  {
+    // ChatGPT Writer: Use AI on Any Site (GPT-4o, Claude, Gemini, and More)
+    chromeId: 'pdnenlnelpdomajfejgapbdpmjkfpjkp',
+  },
+  {
+    // discord message translator
+    chromeId: 'jobnhifpphkgoelnhnopgkdhbdkiadmj',
+  },
+  {
+    // Habit Tracker app widget for daily habit tracking
+    chromeId: 'ncokhechhpjgjonhjnlaneglmdkfkcbj',
+  },
+  {
+    // Catppuccin for GitHub File Explorer Icons
     chromeId: 'lnjaiaapbakfhlbjenjkhffcdpoompki',
     firefoxSlug: 'catppuccin-web-file-icons',
-  }, // Catppuccin for GitHub File Explorer Icons
-  { chromeId: 'cpaedhbidlpnbdfegakhiamfpndhjpgf' }, // WebChat: Chat with anyone on any website
+  },
   {
+    // WebChat: Chat with anyone on any website
+    chromeId: 'cpaedhbidlpnbdfegakhiamfpndhjpgf',
+  },
+  {
+    // YouTube Auto HD + FPS
     chromeId: 'fcphghnknhkimeagdglkljinmpbagone',
     firefoxSlug: 'youtube-auto-hd-fps',
-  }, // YouTube Auto HD + FPS
+  },
   {
+    // MultiViewer Companion
     chromeId: 'lpomjgbicdemjkgmbnkjncgdebogkhlb',
     firefoxSlug: 'multiviewer-companion',
-  }, // MultiViewer Companion
-  { chromeId: 'ggiafipgeeaaahnjamgpjcgkdpanhddg', firefoxSlug: 'syncwatch' }, // Sync Watch - Watch videos together on any site
+  },
   {
+    // Sync Watch - Watch videos together on any site
+    chromeId: 'ggiafipgeeaaahnjamgpjcgkdpanhddg',
+    firefoxSlug: 'syncwatch',
+  },
+  {
+    // Keyword Rank Checker
     chromeId: 'nmldnjcblcihmegipecakhmnieiofmgl',
     firefoxSlug: 'keyword-rank-checker-sa',
-  }, // Keyword Rank Checker
+  },
   {
+    // YouTube Simple View - Hide distractions & more
     chromeId: 'gppllamhaciichleihemgilcpledblpn',
     firefoxSlug: 'youtube-simple-view',
-  }, // YouTube Simple View - Hide distractions & more
-  { chromeId: 'pccbghdfdnnkkbcdcibchpbffdgednkf' }, // Propbar - Property Data Enhancer
+  },
   {
+    // Propbar - Property Data Enhancer
+    chromeId: 'pccbghdfdnnkkbcdcibchpbffdgednkf',
+  },
+  {
+    // Text Search Pro - Search by case and whole-word match!
     chromeId: 'lfknakglefggmdkjdfhhofkjnnolffkh',
     firefoxSlug: 'text-search-pro-ext',
-  }, // Text Search Pro - Search by case and whole-word match!
+  },
   {
+    // Invoice Generator
     chromeId: 'mbenhbocjckkbaojacmaepiameldglij',
     firefoxSlug: 'quick-invoice-generator',
-  }, // Invoice Generator
-  { chromeId: 'phlfhkmdofajnbhgmbmjkbkdgppgoppb' }, // Monthly Bill Tracker
-  { chromeId: 'macmkmchfoclhpbncclinhjflmdkaoom' }, // Wandpen - Instantly improve your writing with AI
-  { chromeId: 'lhmgechokhmdekdpgkkemoeecelcaonm' }, // YouTube Hider - Remove Comments By Keywords, Usernames & Tools
-  { chromeId: 'imgheieooppmahcgniieddodaliodeeg' }, // QA Compass - Record standardized bug reports easily
-  { chromeId: 'npgghjedpchajflknnbngajkjkdhncdo' }, // aesthetic Notion, styled
-  { chromeId: 'hmdcmlfkchdmnmnmheododdhjedfccka', firefoxSlug: 'eye_dropper' }, // Eye Dropper
-  { chromeId: 'eihpmapodnppeemkhkbhikmggfojdkjd' }, // Cursorful - Screen Recorder with Auto Zoom
-  { chromeId: 'hjjkgbibknbahijglkffklflidncplkn' }, // Show IP – Live View of Website IPs for Developers
+  },
   {
+    // Monthly Bill Tracker
+    chromeId: 'phlfhkmdofajnbhgmbmjkbkdgppgoppb',
+  },
+  {
+    // Wandpen - Instantly improve your writing with AI
+    chromeId: 'macmkmchfoclhpbncclinhjflmdkaoom',
+  },
+  {
+    // YouTube Hider - Remove Comments By Keywords, Usernames & Tools
+    chromeId: 'lhmgechokhmdekdpgkkemoeecelcaonm',
+  },
+  {
+    // QA Compass - Record standardized bug reports easily
+    chromeId: 'imgheieooppmahcgniieddodaliodeeg',
+  },
+  {
+    // aesthetic Notion, styled
+    chromeId: 'npgghjedpchajflknnbngajkjkdhncdo',
+  },
+  {
+    // Eye Dropper
+    chromeId: 'hmdcmlfkchdmnmnmheododdhjedfccka',
+    firefoxSlug: 'eye_dropper',
+  },
+  {
+    // Cursorful - Screen Recorder with Auto Zoom
+    chromeId: 'eihpmapodnppeemkhkbhikmggfojdkjd',
+  },
+  {
+    // Show IP – Live View of Website IPs for Developers
+    chromeId: 'hjjkgbibknbahijglkffklflidncplkn',
+  },
+  {
+    // Strong Password Generator
     chromeId: 'ilbikcehnpkmldojkcmlldkoelofnbde',
     firefoxSlug: 'strongpasswordgenerator',
-  }, // Strong Password Generator
-  { chromeId: 'ocllfkhcdopiafndigclebelbecaiocp' }, // ZenGram: Mindful Instagram, Your Way
-  { chromeId: 'odffpjnpocjfcaclnenaaaddghkgijdb' }, // Blync: Preview Links, Selection Search, AI Assistant
-  { chromeId: 'kofbbilhmnkcmibjbioafflgmpkbnmme' }, // HTML to Markdown - Convert webpages to markdown
+  },
   {
+    // ZenGram: Mindful Instagram, Your Way
+    chromeId: 'ocllfkhcdopiafndigclebelbecaiocp',
+  },
+  {
+    // Blync: Preview Links, Selection Search, AI Assistant
+    chromeId: 'odffpjnpocjfcaclnenaaaddghkgijdb',
+  },
+  {
+    // HTML to Markdown - Convert webpages to markdown
+    chromeId: 'kofbbilhmnkcmibjbioafflgmpkbnmme',
+  },
+  {
+    // Walmart WFS Profit Calculator
     chromeId: 'boecmgggeigllcdocgioijmleimjbfkg',
     firefoxSlug: 'walmart-wfs-profit-calculator',
-  }, // Walmart WFS Profit Calculator
+  },
   {
+    // Youtube Live Chat Fullscreen
     chromeId: 'dlnjcbkmomenmieechnmgglgcljhoepd',
     firefoxSlug: 'youtube-live-chat-fullscreen',
-  }, // Youtube Live Chat Fullscreen
+  },
   {
+    // Python Code Runner
     chromeId: 'keiealdacakpnbbljlmhfgcebmaadieg',
     firefoxSlug: 'code-runner-manager',
-  }, // Python Code Runner
-  { chromeId: 'hafcajcllbjnoolpfngclfmmgpikdhlm' }, // Monochromate
-  { chromeId: 'bmoggiinmnodjphdjnmpcnlleamkfedj' }, // AliasVault - Open-Source Password & (Email) Alias Manager
-  { chromeId: 'hlnhhamckimoaiekbglafiebkfimhapb' }, // SnapThePrice: AI-Powered Real-time Lowest Price Finder
-  { chromeId: 'gdjampjdgjmbifnhldgcnccdjkcoicmg' }, // radiofrance - news & broadcasts (French), music (international)
+  },
   {
+    // Monochromate
+    chromeId: 'hafcajcllbjnoolpfngclfmmgpikdhlm',
+  },
+  {
+    // AliasVault - Open-Source Password & (Email) Alias Manager
+    chromeId: 'bmoggiinmnodjphdjnmpcnlleamkfedj',
+  },
+  {
+    // SnapThePrice: AI-Powered Real-time Lowest Price Finder
+    chromeId: 'hlnhhamckimoaiekbglafiebkfimhapb',
+  },
+  {
+    // radiofrance - news & broadcasts (French), music (international)
+    chromeId: 'gdjampjdgjmbifnhldgcnccdjkcoicmg',
+  },
+  {
+    // Blens - Time Tracker and AI Insight
     chromeId: 'jlnhphlghikichhgbnkepenehbmloenb',
     firefoxSlug: 'blens-timetracker-ai-insight',
-  }, // Blens - Time Tracker and AI Insight
-  { chromeId: 'njnammmpdodmfkodnfpammnpdcbhnlcm' }, // Always Light Mode - Setting website always in light mode
+  },
   {
+    // Always Light Mode - Setting website always in light mode
+    chromeId: 'njnammmpdodmfkodnfpammnpdcbhnlcm',
+  },
+  {
+    // DesignPicker - Color Picker & Font Detector
     chromeId: 'lblmfclcfniabobmamfkdogcgdagbhhb',
     firefoxSlug: 'design-colorpicker-fontdetect',
-  }, // DesignPicker - Color Picker & Font Detector
+  },
   {
+    // Web to PDF
     chromeId: 'pamnlaoeobcmhkliljfaofekeddpmfoh',
     firefoxSlug: 'export-web-to-pdf',
-  }, // Web to PDF
-  { chromeId: 'jmbcbeepjfenihlocplnbmbhimcoooka', firefoxSlug: 'csv-viewer' }, // Online CSV Viewer
+  },
   {
+    // Online CSV Viewer
+    chromeId: 'jmbcbeepjfenihlocplnbmbhimcoooka',
+    firefoxSlug: 'csv-viewer',
+  },
+  {
+    // YouTube Video Transcript
     chromeId: 'nkjcoophmpcmmgadnljnlpbpfdfacgbo',
     firefoxSlug: 'youtube-transcript-copy',
-  }, // YouTube Video Transcript
+  },
   {
+    // NetSuite Record Scripts
     chromeId: 'lcaieahkjgeggeiihblhcjbbjlppgieh',
     firefoxSlug: 'netsuite-scripts-manager',
-  }, // NetSuite Record Scripts
-  { chromeId: 'gmocfknjllodfiomnljmaehcplnekhlo' }, // VueTracker
-  { chromeId: 'ggcfemmoabhhelfkhknhbnkmeahloiod' }, // CanCopy - A web extension that allow you to copy any content from website
-  { chromeId: 'modkelfkcfjpgbfmnbnllalkiogfofhb', firefoxSlug: 'intersub' }, // Language Learning with AI
-  { chromeId: 'npfopljnjbamegincfjelhjhnonnjloo' }, // Bilibili Feed History Helper
-  { chromeId: 'edkhpdceeinkcacjdgebjehipmnbomce' }, // NZBDonkey - The ultimate NZB file download tool
-  { chromeId: 'cckggnbnimdbbpmdinkkgbbncopbloob' }, // WeChat Markdown Editor(微信 Markdown 编辑器)
-  { chromeId: 'jcblcjolcojmfopefcighfmkkefbaofg', firefoxSlug: 'tab-grab' }, // Tab Grab
-  { chromeId: 'eehmoikadcijkapfjocnhjclpbaindlb', firefoxSlug: 'browserlens' }, // BrowserLens - https://browserlens.com/
+  },
   {
+    // VueTracker
+    chromeId: 'gmocfknjllodfiomnljmaehcplnekhlo',
+  },
+  {
+    // CanCopy - A web extension that allow you to copy any content from website
+    chromeId: 'ggcfemmoabhhelfkhknhbnkmeahloiod',
+  },
+  {
+    // Language Learning with AI
+    chromeId: 'modkelfkcfjpgbfmnbnllalkiogfofhb',
+    firefoxSlug: 'intersub',
+  },
+  {
+    // Bilibili Feed History Helper
+    chromeId: 'npfopljnjbamegincfjelhjhnonnjloo',
+  },
+  {
+    // NZBDonkey - The ultimate NZB file download tool
+    chromeId: 'edkhpdceeinkcacjdgebjehipmnbomce',
+  },
+  {
+    // WeChat Markdown Editor(微信 Markdown 编辑器)
+    chromeId: 'cckggnbnimdbbpmdinkkgbbncopbloob',
+  },
+  {
+    // Tab Grab
+    chromeId: 'jcblcjolcojmfopefcighfmkkefbaofg',
+    firefoxSlug: 'tab-grab',
+  },
+  {
+    // BrowserLens - https://browserlens.com/
+    chromeId: 'eehmoikadcijkapfjocnhjclpbaindlb',
+    firefoxSlug: 'browserlens',
+  },
+  {
+    // Epic Games Library Extension
     chromeId: 'hfhellofkjebbchcdffmicekjdomkcmc',
     firefoxSlug: 'epic-games-library-extension',
-  }, // Epic Games Library Extension
-  { chromeId: 'gknigcbhlammoakmmdddkblknanpjiac' }, // Zen Analytics Pixel Tracker - zapt.web.app
-  { chromeId: 'cnklededohhcbmjjdlbjdkkihkgoggol' }, // Crypto Pulse - Compose your newtab with nature images, widgets & realtime Crypto Price & Bitcoin RSS.
+  },
   {
+    // Zen Analytics Pixel Tracker - zapt.web.app
+    chromeId: 'gknigcbhlammoakmmdddkblknanpjiac',
+  },
+  {
+    // Crypto Pulse - Compose your newtab with nature images, widgets & realtime Crypto Price & Bitcoin RSS.
+    chromeId: 'cnklededohhcbmjjdlbjdkkihkgoggol',
+  },
+  {
+    // Youtube Video Scheduler
     chromeId: 'miponnamafdenpgjemkknimgjfibicdc',
     firefoxSlug: 'youtube-video-scheduler',
-  }, // Youtube Video Scheduler
-  { chromeId: 'nhmbcmalgpkjbomhlhgdicanmkkaajmg', firefoxSlug: 'chatslator' }, // Chatslator: Livestream Chat Translator
-  { chromeId: 'mbamjfdjbcdgpopfnkkmlohadbbnplhm' }, // 公众号阅读增强器 - https://wxreader.honwhy.wang
-  { chromeId: 'hannhecbnjnnbbafffmogdlnajpcomek', firefoxSlug: '토탐정' }, // 토탐정
+  },
   {
+    // Chatslator: Livestream Chat Translator
+    chromeId: 'nhmbcmalgpkjbomhlhgdicanmkkaajmg',
+    firefoxSlug: 'chatslator',
+  },
+  {
+    // 公众号阅读增强器 - https://wxreader.honwhy.wang
+    chromeId: 'mbamjfdjbcdgpopfnkkmlohadbbnplhm',
+  },
+  {
+    // 토탐정
+    chromeId: 'hannhecbnjnnbbafffmogdlnajpcomek',
+    firefoxSlug: '토탐정',
+  },
+  {
+    // 2FAS Pass - https://2fas.com/
     chromeId: 'ehboaofjncodknjkngdggmpdinhdoijp',
     firefoxSlug: '2fas-pass-browser-extension',
-  }, // 2FAS Pass - https://2fas.com/
-  { chromeId: 'hnjamiaoicaepbkhdoknhhcedjdocpkd', firefoxSlug: 'quick-prompt' }, // Quick Prompt - https://github.com/wenyuanw/quick-prompt
-  { chromeId: 'kacblhilkacgfnkjfodalohcnllcgmjd' }, // Add QR Code Generator Icon Back To Address Bar
+  },
   {
+    // Quick Prompt - https://github.com/wenyuanw/quick-prompt
+    chromeId: 'hnjamiaoicaepbkhdoknhhcedjdocpkd',
+    firefoxSlug: 'quick-prompt',
+  },
+  {
+    // Add QR Code Generator Icon Back To Address Bar
+    chromeId: 'kacblhilkacgfnkjfodalohcnllcgmjd',
+  },
+  {
+    // Piwik PRO Tracking Helper
     chromeId: 'fkbdlogfdjmpfepbbbjcgcfbgbcfcnne',
     firefoxSlug: 'piwik-pro-tracking-helper',
-  }, // Piwik PRO Tracking Helper
-  { chromeId: 'nkbikckldmljjiiajklecmgmajgapbfl' }, // PIPX - Take Control of Picture-in-Picture, Automatically
-  { chromeId: 'hgppdobcpkfkmiegekaglonjajeojmdd' }, // Browsely - AI-powered browser extension
-  { chromeId: 'ehmoihnjgkdimihkhokkmfjdgomohjgm' }, // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
-  { chromeId: 'alglchohmdikgdjhafiicilegegieafa' }, // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
-  { chromeId: 'aamihahiiogceidpbnfgehacgiecephe' }, // ChatSight - Add Table of Contents to ChatGPT
+  },
   {
+    // PIPX - Take Control of Picture-in-Picture, Automatically
+    chromeId: 'nkbikckldmljjiiajklecmgmajgapbfl',
+  },
+  {
+    // Browsely - AI-powered browser extension
+    chromeId: 'hgppdobcpkfkmiegekaglonjajeojmdd',
+  },
+  {
+    // Filmbudd Pro - Simple, private – and synced ratings and watch notes across all your devices
+    chromeId: 'ehmoihnjgkdimihkhokkmfjdgomohjgm',
+  },
+  {
+    // MultiField CopyCat - Copy, Paste & Autofill Web Forms Instantly
+    chromeId: 'alglchohmdikgdjhafiicilegegieafa',
+  },
+  {
+    // ChatSight - Add Table of Contents to ChatGPT
+    chromeId: 'aamihahiiogceidpbnfgehacgiecephe',
+  },
+  {
+    // BetterCampus (prev. BetterCanvas)
     chromeId: 'cndibmoanboadcifjkjbdpjgfedanolh',
     firefoxSlug: 'better-canvas',
-  }, // BetterCampus (prev. BetterCanvas)
-  { chromeId: 'hinfimgacobnellbncbcpdlpaapcofaa' }, // Leetcode Fonts - Change fonts in leetcode effortlessly
-  { chromeId: 'kbkbfefhhabpkibojinapkkgciiacggg' }, // TranslateManga - Manga Translator & Manga Tracker
-  { chromeId: 'emeakbgdecgmdjgegnejpppcnkcnoaen', firefoxSlug: 'sitedata' }, // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
-  { chromeId: 'gpnckbhgpnjciklpoehkmligeaebigaa' }, // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
+  },
   {
+    // Leetcode Fonts - Change fonts in leetcode effortlessly
+    chromeId: 'hinfimgacobnellbncbcpdlpaapcofaa',
+  },
+  {
+    // TranslateManga - Manga Translator & Manga Tracker
+    chromeId: 'kbkbfefhhabpkibojinapkkgciiacggg',
+  },
+  {
+    // SiteData - Free Website Traffic Checker & Reverse AdSense Tool
+    chromeId: 'emeakbgdecgmdjgegnejpppcnkcnoaen',
+    firefoxSlug: 'sitedata',
+  },
+  {
+    // Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
+    chromeId: 'gpnckbhgpnjciklpoehkmligeaebigaa',
+  },
+  {
+    // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
     chromeId: 'fjlalaedpfcojcfpkgkglbjjbbkofgnl',
     firefoxSlug: 'chatgpt-token-counter',
-  }, // ChatGPT Token Counter - Count tokens in real time on chatgpt conversation
+  },
   {
+    // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
     chromeId: 'fbgblmjbeebanackldpbmpacppflgmlj',
     firefoxSlug: 'linux_do-scripts',
-  }, // LinuxDo Scripts - 为 linux.do 用户提供了一些增强功能
-  { chromeId: 'dfacnjidgbagicaekenjgclfnhdnjjdi' }, // Zen Virtual Piano - https://zen-piano.web.app/
-  { chromeId: 'naeibcegmgpofimedkmfgjgphfhfhlab' }, // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
-  { chromeId: 'ffglckbhfbfmdkefdmjbhpnffkcmlhdh' }, // Redirect Web - Automatically redirect pages or open them in another app
-  { chromeId: 'eglpfhbhmelampoihamjomgkeobgdofl' }, // Capture It - Capture & Edit Screenshots
+  },
   {
+    // Zen Virtual Piano - https://zen-piano.web.app/
+    chromeId: 'dfacnjidgbagicaekenjgclfnhdnjjdi',
+  },
+  {
+    // Crypto Pulse price tracker - https://get-crypto-pulse.web.app/
+    chromeId: 'naeibcegmgpofimedkmfgjgphfhfhlab',
+  },
+  {
+    // Redirect Web - Automatically redirect pages or open them in another app
+    chromeId: 'ffglckbhfbfmdkefdmjbhpnffkcmlhdh',
+  },
+  {
+    // Capture It - Capture & Edit Screenshots
+    chromeId: 'eglpfhbhmelampoihamjomgkeobgdofl',
+  },
+  {
+    // Teams Chat Exporter
     chromeId: 'jmghclbfbbapimhbgnpffbimphlpolnm',
     firefoxSlug: 'teams-chat-exporter',
-  }, // Teams Chat Exporter
+  },
   {
+    // Lofi BGM Player - Free lofi focus music for work & study
     chromeId: 'jdcppdokgfbnhiacbeplahgnciahnhck',
     firefoxSlug: 'lofi-bgm-player',
-  }, // Lofi BGM Player - Free lofi focus music for work & study
-  { chromeId: 'cgpmbiiagnehkikhcbnhiagfomajncpa' }, // Margin - Annotate and highlight any webpage, with your notes saved to the decentralized AT Protocol.
-  { chromeId: 'mfjdonmgmgcijagclnkfhmjiblbfjaid' }, // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
+  },
   {
+    // Margin - Annotate and highlight any webpage, with your notes saved to the decentralized AT Protocol.
+    chromeId: 'cgpmbiiagnehkikhcbnhiagfomajncpa',
+  },
+  {
+    // KeyFloat - Floating multilingual keyboard with native key mappings, drag, dark mode, sounds, and dynamic layouts for macOS & Windows
+    chromeId: 'mfjdonmgmgcijagclnkfhmjiblbfjaid',
+  },
+  {
+    // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
     chromeId: 'dhiekgdaipindoapjmcnpompdknjeijf',
     firefoxSlug: 'glossy-new-tab',
-  }, // Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
-  { chromeId: 'lapnciffpekdengooeolaienkeoilfeo', firefoxSlug: 'all-api-hub' }, // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
-  { chromeId: 'bhgobenflkkhfcgkikejaaejenoddcmo' }, // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
-  { chromeId: 'kinlknncggaihnhdcalijdmpbhbflalm' }, // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
-  { chromeId: 'ojpakgiekphppgkcdihbjpafobhnhlkp' }, // Dymo
-  { chromeId: 'pmgehhllikbjmadpenhabejhpemplhmd', firefoxSlug: 'rank-checker' }, // Extension Rank Checker - Extension Ranker
+  },
+  {
+    // All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
+    chromeId: 'lapnciffpekdengooeolaienkeoilfeo',
+    firefoxSlug: 'all-api-hub',
+  },
+  {
+    // Scrape Similar - Extract data from websites into spreadsheets - https://github.com/zizzfizzix/scrape-similar
+    chromeId: 'bhgobenflkkhfcgkikejaaejenoddcmo',
+  },
+  {
+    // isTrust - https://github.com/Internet-Society-Belgium/isTrust/
+    chromeId: 'kinlknncggaihnhdcalijdmpbhbflalm',
+  },
+  {
+    // Dymo
+    chromeId: 'ojpakgiekphppgkcdihbjpafobhnhlkp',
+  },
+  {
+    // Extension Rank Checker - Extension Ranker
+    chromeId: 'pmgehhllikbjmadpenhabejhpemplhmd',
+    firefoxSlug: 'rank-checker',
+  },
 ];
 
 const chromeIds = extensionEntries.flatMap((e) =>
