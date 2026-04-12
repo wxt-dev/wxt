@@ -27,3 +27,8 @@ jobs:
 
       - name: Publish
         run: bun pkg-pr-new publish --compact --bun './packages/*'
+
+      - name: DEBUG
+        if: always()
+        run: ls -lhA
+        working-directory: packages/analytics
