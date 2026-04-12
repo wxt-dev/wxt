@@ -2,6 +2,7 @@ import { ref } from 'vue';
 
 export interface Extension {
   id: string;
+  slug: string;
   name: string;
   iconUrl: string;
   shortDescription: string;
@@ -27,6 +28,7 @@ const query = `query ${operationName}($chromeIds: [String!]!, $firefoxIds: [Stri
 
 fragment ExtensionData on Extension {
   id
+  slug
   name
   iconUrl
   shortDescription

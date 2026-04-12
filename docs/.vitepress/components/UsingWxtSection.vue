@@ -578,11 +578,7 @@ const sortedExtensions = computed((): ListedExtension[] => {
     (data.value.chrome ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
   const firefoxBySlug = new Map(
-    (data.value.firefox ?? []).filter(Boolean).map((e) => {
-      const match = e.storeUrl.match(/\/addon\/([^/]+)/);
-      const slug = match ? match[1] : e.id;
-      return [slug, e];
-    }),
+    (data.value.firefox ?? []).filter(Boolean).map((e) => [e.slug, e]),
   );
 
   const results: ListedExtension[] = [];
