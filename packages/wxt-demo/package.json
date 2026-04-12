@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
+    "dev:firefox": "buildc --deps-only -- wxt -b firefox",
+    "dev:firefox-mv3": "buildc --deps-only -- wxt -b firefox --mv3",
     "build": "buildc --deps-only -- wxt build",
     "build:all": "buildc --deps-only -- pnpm run --reporter-hide-prefix /^build:all:.*/",
     "build:all:chrome-mv3": "wxt build",

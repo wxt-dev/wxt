@@ -721,7 +721,15 @@ export interface ThemeIcon {
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
-  /** Defaults to "browser_action" to be equivalent to MV3's "action" key */
+  /**
+   * The type of action to use in the manifest.
+   *
+   * In MV2, defaults to `"browser_action"`. In MV3, `"browser_action"` is
+   * converted to `"action"`, while `"page_action"` is kept as-is (Firefox MV3
+   * only).
+   */
+  actionType?: PerBrowserOption<'browser_action' | 'page_action'>;
+  /** @deprecated Use `actionType` instead. */
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
