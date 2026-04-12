@@ -19,10 +19,10 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@types/react": "^19.2.13",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@wxt-dev/module-react": "^1.1.5",
     "typescript": "^5.9.3",
-    "wxt": "^0.20.18"
+    "wxt": "^0.20.20"
   }
 }

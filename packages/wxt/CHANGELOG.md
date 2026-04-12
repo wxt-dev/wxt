@@ -1,5 +1,65 @@
 # Changelog
 
+## v0.20.20
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.19...wxt-v0.20.20)
+
+### 🩹 Fixes
+
+- Unlisted script return values broken with Vite 8 sourcemaps ([#2197](https://github.com/wxt-dev/wxt/pull/2197))
+
+### 📖 Documentation
+
+- Add Dymo extension ID to UsingWxtSection.vue ([#2187](https://github.com/wxt-dev/wxt/pull/2187))
+- Add Extension Rank Checker to the list of extensions ([#2193](https://github.com/wxt-dev/wxt/pull/2193))
+
+### 🏡 Chore
+
+- **deps:** Add vite-node 6 support ([64b68671](https://github.com/wxt-dev/wxt/commit/64b68671))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Joseph Hu ([@KiJO94GO](https://github.com/KiJO94GO))
+- FJRG2007 ツ ([@FJRG2007](https://github.com/FJRG2007))
+- Hampus Tågerud ([@hampustagerud](https://github.com/hampustagerud))
+
+## v0.20.19
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.18...wxt-v0.20.19)
+
+### 🚀 Enhancements
+
+- Vite 8 support ([bfd4af5d](https://github.com/wxt-dev/wxt/commit/bfd4af5d))
+
+### 🔥 Performance
+
+- Use filter to improve plugin performance with rolldown ([#1787](https://github.com/wxt-dev/wxt/pull/1787))
+
+### 🩹 Fixes
+
+- List eslint 10 as supported ([55dc263d](https://github.com/wxt-dev/wxt/commit/55dc263d))
+
+### 📖 Documentation
+
+- Added "Scrape Similar" to the homepage ([#2158](https://github.com/wxt-dev/wxt/pull/2158))
+- Added "isTrust" to the homepage ([#2161](https://github.com/wxt-dev/wxt/pull/2161))
+
+### 🏡 Chore
+
+- Add `prettier-plugin-jsdoc` to project ([#2171](https://github.com/wxt-dev/wxt/pull/2171))
+- Replace fast-glob and ora with lighter alternatives ([#2173](https://github.com/wxt-dev/wxt/pull/2173))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Replace `fs-extra` with `node:fs/promises` ([#2174](https://github.com/wxt-dev/wxt/pull/2174))
+
+### ❤️ Contributors
+
+- Florian Metz ([@Timeraa](https://github.com/Timeraa))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Etoome ([@etoome](https://github.com/etoome))
+- Kuba ([@zizzfizzix](https://github.com/zizzfizzix))
+
 ## v0.20.18
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.17...wxt-v0.20.18)

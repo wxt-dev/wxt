@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { MigrationError, type WxtStorageItem, storage } from '../index';
 
 /**
- * This works because fakeBrowser is synchronous, and is will finish any number of chained
- * calls within a single tick of the event loop, ie: a timeout of 0.
+ * This works because fakeBrowser is synchronous, and is will finish any number
+ * of chained calls within a single tick of the event loop, ie: a timeout of 0.
  */
 async function waitForMigrations() {
   return new Promise((res) => setTimeout(res));
@@ -665,7 +665,7 @@ describe('Storage Utils', () => {
       // @ts-expect-error
       await storage.getItem('test').catch(() => {});
       // @ts-expect-error
-      await storage.getItem('loca:test').catch(() => {});
+      await storage.getItem('not-local:test').catch(() => {});
     });
 
     it('should throw an error when using an invalid storage area', async () => {

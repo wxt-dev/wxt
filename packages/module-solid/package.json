@@ -42,7 +42,8 @@
     "dev": "wxt",
     "check": "pnpm build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepare": "buildc --deps-only -- wxt prepare",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -51,7 +52,7 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "publint": "^0.3.17",
+    "publint": "^0.3.18",
     "solid-js": "^1.9.11",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"

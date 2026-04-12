@@ -66,3 +66,29 @@ body {
 .dark .dark-netlify {
   display: inline;
 }
+
+/* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
+.dark .VPHome::before {
+  content: '';
+  background-image: url('/assets/art002e009298.jpg');
+  opacity: 50%;
+  position: absolute;
+  width: 100vw;
+  height: 110vh;
+  background-size: cover;
+  background-position: 90%;
+  pointer-events: none;
+}
+.dark .VPHome::after {
+  content: '';
+  position: absolute;
+  width: 100vw;
+  height: 10vh;
+  top: 100vh;
+  background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
+  pointer-events: none;
+  z-index: 0;
+}
+.item {
+  z-index: 1;
+}

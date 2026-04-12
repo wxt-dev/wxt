@@ -12,11 +12,11 @@ import {
   IsolatedWorldContentScriptEntrypointOptions,
   UnlistedScriptEntrypoint,
 } from '../../../types';
-import fs from 'fs-extra';
-import { minimatch } from 'minimatch';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import picomatch from 'picomatch';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import {
   getEntrypointName,
   isHtmlEntrypoint,
@@ -25,20 +25,21 @@ import {
 } from '../entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
 import { CSS_EXTENSIONS_PATTERN } from '../paths';
-import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
+import { styleText } from 'node:util';
 
 /**
- * Return entrypoints and their configuration by looking through the project's files.
+ * Return entrypoints and their configuration by looking through the project's
+ * files.
  */
 export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
-  await fs.mkdir(wxt.config.wxtDir, { recursive: true });
+  await mkdir(wxt.config.wxtDir, { recursive: true });
   try {
-    await fs.writeJson(
+    await writeFile(
       resolve(wxt.config.wxtDir, 'tsconfig.json'),
-      {},
+      JSON.stringify({}),
       { flag: 'wx' },
     );
   } catch (err) {
@@ -49,6 +50,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
 
   const relativePaths = await glob(Object.keys(PATH_GLOB_TO_TYPE_MAP), {
     cwd: wxt.config.entrypointsDir,
+    expandDirectories: false,
   });
   // Ensure consistent output
   relativePaths.sort();
@@ -59,7 +61,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
       const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
       const matchingGlob = pathGlobs.find((glob) =>
-        minimatch(relativePath, glob),
+        picomatch(glob)(relativePath),
       );
       if (matchingGlob) {
         const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
@@ -159,7 +161,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       [
         'The following entrypoints have been skipped:',
         ...skippedEntrypointNames.map(
-          (item) => `${pc.dim('-')} ${pc.cyan(item)}`,
+          (item) => `${styleText('dim', '-')} ${styleText('cyan', item)}`,
         ),
       ].join('\n'),
     );
@@ -195,11 +197,14 @@ async function importEntrypoints(infos: EntrypointInfo[]) {
   return resMap;
 }
 
-/** Extract `manifest.` and `wxt.` options from meta tags, converting snake_case keys to camelCase */
+/**
+ * Extract `manifest.` and `wxt.` options from meta tags, converting snake_case
+ * keys to camelCase
+ */
 async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {
-  const content = await fs.readFile(info.inputPath, 'utf-8');
+  const content = await readFile(info.inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
   const metaTags = document.querySelectorAll('meta');

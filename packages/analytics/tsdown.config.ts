@@ -10,7 +10,9 @@ export default defineConfig({
       './modules/analytics/providers/google-analytics-4.ts',
     'providers/umami': './modules/analytics/providers/umami.ts',
   },
-  external: ['#analytics'],
+  deps: {
+    neverBundle: ['#analytics'],
+  },
   define: {
     'process.env.NPM': 'true',
   },

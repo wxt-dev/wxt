@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'path';
+import { glob } from 'tinyglobby';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,
@@ -9,21 +12,16 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../../../../types';
-import { resolve } from 'path';
-import { findEntrypoints } from '../find-entrypoints';
-import fs from 'fs-extra';
-import glob from 'fast-glob';
-import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
-import { unnormalizePath } from '../../paths';
 import { wxt } from '../../../wxt';
+import { unnormalizePath } from '../../paths';
+import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
+import { findEntrypoints } from '../find-entrypoints';
 
-vi.mock('fast-glob');
+vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
 
-vi.mock('fs-extra');
-const readFileMock = vi.mocked(
-  fs.readFile as (path: string) => Promise<string>,
-);
+vi.mock('node:fs/promises');
+const readFileMock = vi.mocked(readFile);
 
 describe('findEntrypoints', () => {
   const config = fakeResolvedConfig({

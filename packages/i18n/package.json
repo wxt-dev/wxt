@@ -23,13 +23,14 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest"
+    "test": "buildc --deps-only -- vitest",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
     "chokidar": "^5.0.0",
-    "confbox": "^0.1.8 || ^0.2.2",
-    "fast-glob": "^3.3.3"
+    "confbox": "^0.2.4",
+    "tinyglobby": "^0.2.15"
   },
   "peerDependencies": {
     "wxt": ">=0.19.7"
@@ -41,8 +42,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
-    "oxlint": "^1.43.0",
-    "publint": "^0.3.17",
+    "oxlint": "^1.51.0",
+    "publint": "^0.3.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2",

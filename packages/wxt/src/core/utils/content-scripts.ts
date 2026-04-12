@@ -4,7 +4,8 @@ import { getEntrypointBundlePath } from './entrypoints';
 import { ManifestContentScript } from './types';
 
 /**
- * Returns a unique and consistent string hash based on a content scripts options.
+ * Returns a unique and consistent string hash based on a content scripts
+ * options.
  *
  * It is able to recognize default values,
  */

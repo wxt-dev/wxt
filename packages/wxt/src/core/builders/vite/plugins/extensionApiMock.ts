@@ -3,7 +3,8 @@ import type * as vite from 'vite';
 import { ResolvedConfig } from '../../../../types';
 
 /**
- * Mock `wxt/browser` and stub the global `browser`/`chrome` types with a fake version of the extension APIs
+ * Mock `wxt/browser` and stub the global `browser`/`chrome` types with a fake
+ * version of the extension APIs
  */
 export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
   const virtualSetupModule = 'virtual:wxt-setup';
@@ -32,11 +33,21 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
         },
       };
     },
-    resolveId(id) {
-      if (id.endsWith(virtualSetupModule)) return resolvedVirtualSetupModule;
+    resolveId: {
+      filter: {
+        id: new RegExp(`${virtualSetupModule}$`),
+      },
+      handler() {
+        return resolvedVirtualSetupModule;
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualSetupModule) return setupTemplate;
+    load: {
+      filter: {
+        id: new RegExp(`^${resolvedVirtualSetupModule}$`),
+      },
+      handler() {
+        return setupTemplate;
+      },
     },
   };
 }

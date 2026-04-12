@@ -1,6 +1,4 @@
-/**
- * SHOULD ONLY BE IMPORTED IN TESTS.
- */
+/** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';

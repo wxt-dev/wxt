@@ -4,9 +4,7 @@ import { formatDuration } from '../utils/time';
 import defu from 'defu';
 import { wxt } from '../wxt';
 
-/**
- * Create an `ExtensionRunner` backed by `web-ext`.
- */
+/** Create an `ExtensionRunner` backed by `web-ext`. */
 export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 
@@ -58,7 +56,7 @@ export function createWebExtRunner(): ExtensionRunner {
           wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
         sourceDir: wxt.config.outDir,
         // Don't add a "Reload Manager" extension alongside dev extension, WXT
-        // already handles reloads intenrally.
+        // already handles reloads internally.
         noReloadManagerExtension: true,
         // WXT handles reloads, so disable auto-reload behaviors in web-ext
         noReload: true,
