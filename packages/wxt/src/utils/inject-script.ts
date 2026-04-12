@@ -26,7 +26,7 @@ export async function injectScript(
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
 
-  const manifest = browser.runtime.getManifest()
+  const manifest = browser.runtime.getManifest();
   const isManifestV2 = manifest.manifest_version === 2;
   const isManifestV3 = manifest.manifest_version === 3;
 
@@ -36,12 +36,7 @@ export async function injectScript(
   } else {
     // MV3 requires using src
     script.src = url;
-  }
-
-  // For MV2: inline scripts execute synchronously when appended, so we don't need to wait
-  // For MV3: we need to wait for the load event
-  if (isManifestV3) {
-    await makeLoadedPromise(script);
+    script.async = false;
   }
 
   await options?.modifyScript?.(script);
@@ -50,6 +45,12 @@ export async function injectScript(
 
   if (!options?.keepInDom) {
     script.remove();
+  }
+
+  // For MV2: Inline scripts execute synchronously when appended
+  // For MV3: We need to wait for the load event
+  if (isManifestV3) {
+    await makeLoadedPromise(script);
   }
 
   return {
