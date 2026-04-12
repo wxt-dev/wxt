@@ -26,8 +26,9 @@ export async function injectScript(
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
 
-  const isManifestV2 = browser.runtime.getManifest().manifest_version === 2;
-  const isManifestV3 = browser.runtime.getManifest().manifest_version === 3;
+  const manifest = browser.runtime.getManifest()
+  const isManifestV2 = manifest.manifest_version === 2;
+  const isManifestV3 = manifest.manifest_version === 3;
 
   if (isManifestV2) {
     // MV2 requires using an inline script
