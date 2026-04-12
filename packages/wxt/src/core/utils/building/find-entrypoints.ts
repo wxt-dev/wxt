@@ -274,13 +274,13 @@ async function getPopupEntrypoint(
   options: Record<string, any>,
 ): Promise<PopupEntrypoint> {
   // Extract non-per-browser options
-  const { themeIcons, title, type, actionType, ...perBrowserOptions } = options;
+  const { themeIcons, title, type, ...perBrowserOptions } = options;
 
   const strictOptions: PopupEntrypoint['options'] = resolvePerBrowserOptions(
     {
       ...perBrowserOptions,
       defaultTitle: title,
-      actionType: type ?? actionType,
+      actionType: type,
     },
     wxt.config.browser,
   );
