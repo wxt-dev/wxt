@@ -252,14 +252,6 @@ const firefoxSlugs = [
   ),
 ];
 
-// Map chromeId <-> firefoxSlug for dual-listed entries
-const chromeToFirefox = new Map<string, string>();
-for (const e of extensionEntries) {
-  if (e.chromeId && e.firefoxSlug) {
-    chromeToFirefox.set(e.chromeId, e.firefoxSlug);
-  }
-}
-
 const { data, isLoading } = useListExtensionDetails(chromeIds, firefoxSlugs);
 
 function addUtmSource(storeUrl: string): string {
@@ -282,7 +274,7 @@ const sortedExtensions = computed((): ListedExtension[] => {
     }),
   );
 
-  const results: (ListedExtension & { sortKey: number })[] = [];
+  const results: ListedExtension[] = [];
 
   for (const entry of extensionEntries) {
     const chrome = entry.chromeId ? chromeById.get(entry.chromeId) : undefined;
@@ -312,13 +304,11 @@ const sortedExtensions = computed((): ListedExtension[] => {
       users,
       rating,
       stores,
-      sortKey: ((rating ?? 5) / 5) * users,
     });
   }
 
-  return results
-    .sort((a, b) => b.sortKey - a.sortKey)
-    .map(({ sortKey: _s, ...rest }) => rest);
+  const score = (e: ListedExtension) => ((e.rating ?? 5) / 5) * e.users;
+  return results.sort((a, b) => score(b) - score(a));
 });
 
 function formatUsers(n: number): string {
