@@ -1202,14 +1202,18 @@ export interface WxtHooks {
    *
    * @example
    *   wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
-   *     paths.push('/icons/128.png');
+   *     paths.push('icons/128.png');
+   *     paths.push({
+   *       type: 'templateLiteral',
+   *       path: '_favicon/?${string}',
+   *     });
    *   });
    *
    * @param wxt The configured WXT object
    * @param paths This list of paths TypeScript allows `browser.runtime.getURL`
    *   to be called with.
    */
-  'prepare:publicPaths': (wxt: Wxt, paths: string[]) => HookResult;
+  'prepare:publicPaths': (wxt: Wxt, paths: PublicPathEntry[]) => HookResult;
   /**
    * Called before the build is started in both dev mode and build mode.
    *
@@ -1651,6 +1655,13 @@ export interface GeneratedPublicFile extends ResolvedBasePublicFile {
   /** Text to write to the file. */
   contents: string;
 }
+
+export type PublicPathEntry =
+  | string
+  | {
+      type: 'string' | 'templateLiteral';
+      path: string;
+    };
 
 export type WxtPlugin = () => void;
 
