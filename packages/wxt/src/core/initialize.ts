@@ -1,3 +1,4 @@
+import prompts from 'prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
@@ -5,7 +6,6 @@ import { pathExists } from './utils/fs';
 import path from 'node:path';
 import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
-import prompts from 'prompts';
 
 export async function initialize(options: {
   directory: string;
