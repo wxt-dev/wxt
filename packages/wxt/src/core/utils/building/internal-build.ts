@@ -1,6 +1,5 @@
 import { findEntrypoints } from './find-entrypoints';
 import { BuildOutput, Entrypoint } from '../../../types';
-import pc from 'picocolors';
 import { mkdir, rm } from 'node:fs/promises';
 import { groupEntrypoints } from './group-entrypoints';
 import { formatDuration } from '../time';
@@ -18,6 +17,7 @@ import {
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
+import { styleText } from 'node:util';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is
@@ -36,7 +36,8 @@ export async function internalBuild(): Promise<BuildOutput> {
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
   wxt.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
+    `${verb} ${styleText('cyan', target)} for ${styleText('cyan', wxt.config.mode)} with ${styleText(
+      'green',
       `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
@@ -80,13 +81,17 @@ export async function internalBuild(): Promise<BuildOutput> {
     await combineAnalysisStats();
     const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
     wxt.logger.info(
-      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
+      `Analysis complete:\n  ${styleText('gray', '└─')} ${styleText('yellow', statsPath)}`,
     );
     if (wxt.config.analysis.open) {
       if (isCI) {
-        wxt.logger.debug(`Skipped opening ${pc.yellow(statsPath)} in CI`);
+        wxt.logger.debug(
+          `Skipped opening ${styleText('yellow', statsPath)} in CI`,
+        );
       } else {
-        wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
+        wxt.logger.info(
+          `Opening ${styleText('yellow', statsPath)} in browser...`,
+        );
         const { default: open } = await import('open');
         await open(wxt.config.analysis.outputFile);
       }
@@ -140,8 +145,14 @@ function printValidationResults({
     wxt.logger.log(relative(cwd, entrypoint.inputPath) + '\n');
 
     errors.forEach((err) => {
-      const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
-      const received = pc.dim(`(received: ${JSON.stringify(err.value)})`);
+      const type =
+        err.type === 'error'
+          ? styleText('red', 'ERROR')
+          : styleText('yellow', 'WARN');
+      const received = styleText(
+        'dim',
+        `(received: ${JSON.stringify(err.value)})`,
+      );
       wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();
