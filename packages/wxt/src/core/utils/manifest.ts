@@ -296,7 +296,7 @@ function addEntrypoints(
         default_popup,
       };
     } else {
-      const key = popup.options.mv2Key ?? 'browser_action';
+      const key = popup.options.actionType ?? 'browser_action';
       manifest[key] = {
         ...manifest[key],
         ...options,

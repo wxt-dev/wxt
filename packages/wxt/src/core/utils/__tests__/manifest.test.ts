@@ -38,7 +38,7 @@ describe('Manifest Utils', () => {
         fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined instead of inheriting the random value
-            mv2Key: type ?? null,
+            actionType: type ?? null,
             defaultIcon: {
               '16': '/icon/16.png',
             },
@@ -111,7 +111,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'navbar',
           },
           outputDir: outDir,
@@ -141,7 +141,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             themeIcons,
           },
           outputDir: outDir,
@@ -167,7 +167,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'menupanel',
           },
           outputDir: outDir,
@@ -536,7 +536,7 @@ describe('Manifest Utils', () => {
         fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force undefined instead of the random value
-            mv2Key: null,
+            actionType: null,
           },
           outputDir: outDir,
           skipped: false,
@@ -758,7 +758,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force undefined
-            mv2Key: null,
+            actionType: null,
             themeIcons: userThemeIcons,
           },
           outputDir: outDir,
