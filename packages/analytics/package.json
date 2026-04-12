@@ -9,7 +9,7 @@
     "check": "bun run build && check",
     "build": "buildc -- tsdown",
     "prepack": "bun run build",
-    "prepare": "buildc --deps-only -- wxt prepare",
+    "postinstall": "buildc --deps-only -- wxt prepare",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'"
   },
