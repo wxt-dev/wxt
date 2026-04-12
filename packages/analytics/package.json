@@ -22,6 +22,7 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.18",
     "typescript": "^5.9.3",
