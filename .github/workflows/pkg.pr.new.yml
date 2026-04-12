@@ -26,4 +26,4 @@ jobs:
         run: bun run buildc all
 
       - name: Publish
-        run: bunx pkg-pr-new publish --compact --bun './packages/*'
+        run: bun pkg-pr-new publish --compact --bun './packages/*'

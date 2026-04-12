@@ -385,6 +385,7 @@
     },
   },
   "patchedDependencies": {
+    "pkg-pr-new@0.0.66": "patches/pkg-pr-new@0.0.66.patch",
     "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch",
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
   },
