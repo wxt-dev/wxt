@@ -1,5 +1,4 @@
 import { defineWxtModule } from '../modules';
-import type { WxtDirFileEntry } from '../types';
 
 /**
  * Adds a template-literal type for the `_favicon/` paths served by Chrome's
@@ -16,26 +15,13 @@ import type { WxtDirFileEntry } from '../types';
 export default defineWxtModule({
   name: 'wxt:built-in:favicon-permission',
   setup(wxt) {
-    wxt.hooks.hook('prepare:types', (_, entries) => {
+    wxt.hooks.hook('prepare:publicPaths', (_, paths) => {
       if (!wxt.config.manifest.permissions?.includes('favicon')) return;
 
-      const pathsEntry = entries.find(
-        (entry): entry is WxtDirFileEntry =>
-          'path' in entry && entry.path === 'types/paths.d.ts',
-      );
-      if (!pathsEntry) return;
-
-      // The base generator wraps every public path in double quotes,
-      // producing string-literal union members. Favicon URLs need a
-      // template-literal type so arbitrary query strings type-check, so
-      // we splice a `\`/_favicon/\${string}\`` member into the union
-      // directly. The `HtmlPublicPath` line is a stable anchor emitted
-      // by generate-wxt-dir.ts:getPathsDeclarationEntry.
-      const anchor = '  type HtmlPublicPath';
-      pathsEntry.text = pathsEntry.text.replace(
-        anchor,
-        '    | `/_favicon/${string}`\n' + anchor,
-      );
+      paths.push({
+        type: 'templateLiteral',
+        path: '_favicon/?${string}',
+      });
     });
   },
 });

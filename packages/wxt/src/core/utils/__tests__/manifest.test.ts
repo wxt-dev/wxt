@@ -38,7 +38,7 @@ describe('Manifest Utils', () => {
         fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined instead of inheriting the random value
-            mv2Key: type ?? null,
+            actionType: type ?? null,
             defaultIcon: {
               '16': '/icon/16.png',
             },
@@ -107,11 +107,35 @@ describe('Manifest Utils', () => {
         },
       );
 
+      it('should allow converting action to page_action for Firefox MV3', async () => {
+        const popup = popupEntrypoint('page_action');
+        const buildOutput = fakeBuildOutput();
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            outDir,
+            browser: 'firefox',
+          },
+        });
+        const expected = {
+          default_icon: popup.options.defaultIcon,
+          default_title: popup.options.defaultTitle,
+          default_popup: 'popup.html',
+        };
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect(actual.page_action).toEqual(expected);
+      });
+
       it('should include default_area for Firefox in mv3', async () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'navbar',
           },
           outputDir: outDir,
@@ -141,7 +165,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             themeIcons,
           },
           outputDir: outDir,
@@ -167,7 +191,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'menupanel',
           },
           outputDir: outDir,
@@ -536,7 +560,7 @@ describe('Manifest Utils', () => {
         fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force undefined instead of the random value
-            mv2Key: null,
+            actionType: null,
           },
           outputDir: outDir,
           skipped: false,
@@ -758,7 +782,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force undefined
-            mv2Key: null,
+            actionType: null,
             themeIcons: userThemeIcons,
           },
           outputDir: outDir,
@@ -1752,7 +1776,11 @@ describe('Manifest Utils', () => {
         ['chrome', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['safari', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['edge', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
-        ['firefox', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        [
+          'firefox',
+          3,
+          { ...mv3Manifest, ...hostPermissionsManifest, page_action: {} },
+        ],
         ['chrome', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['safari', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['edge', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
