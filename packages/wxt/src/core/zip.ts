@@ -77,7 +77,6 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: excludeSources,
-      useGit: true,
       transform(absolutePath, zipPath, content) {
         if (zipPath.endsWith('package.json')) {
           return addOverridesToPackageJson(absolutePath, content, overrides);
@@ -107,7 +106,6 @@ async function zipDir(
   options?: {
     include?: string[];
     exclude?: string[];
-    useGit?: boolean;
     transform?: (
       absolutePath: string,
       zipPath: string,
@@ -129,18 +127,17 @@ async function zipDir(
     });
 
   let allFiles: string[];
-  if (options?.useGit) {
-    try {
-      allFiles = execSync('git ls-files --recurse-submodules', {
-        cwd: directory,
-        encoding: 'utf-8',
-      })
-        .split('\n')
-        .filter(Boolean);
-    } catch {
-      allFiles = await globFiles();
-    }
-  } else {
+  try {
+    allFiles = execSync('git ls-files --recurse-submodules', {
+      cwd: directory,
+      encoding: 'utf-8',
+    })
+      .split('\n')
+      .filter(Boolean);
+  } catch {
+    allFiles = [];
+  }
+  if (allFiles.length === 0) {
     allFiles = await globFiles();
   }
 
