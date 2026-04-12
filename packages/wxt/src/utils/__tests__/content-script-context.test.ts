@@ -90,7 +90,6 @@ describe('Content Script Context', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
-      context.addEventListener(window, 'visibilitychange', (_) => {});
     });
 
     it('should infer types correctly for the document target', () => {
