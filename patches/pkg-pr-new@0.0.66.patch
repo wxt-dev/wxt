@@ -18,6 +18,7 @@ index e2626a009efe1ee3cfa6c96fe712341d3501ba1c..384d43b099278edd250c31d5eda36cfc
 -      `[bun pack] expected filename: ${filename}; tgz files: ${tgzFiles.join(", ") || "(none)"}`
 -    );
 +    console.log({ filename, p3, tgzFiles, bunFilename })
++    await new Promise(res => setTimeout(res, 3000))
 +//     if (bunFilename) {
 +//       filename = bunFilename;
 +//     }
