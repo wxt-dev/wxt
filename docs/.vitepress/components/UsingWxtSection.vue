@@ -275,7 +275,11 @@ const sortedExtensions = computed((): ListedExtension[] => {
     (data.value.chrome ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
   const firefoxBySlug = new Map(
-    (data.value.firefox ?? []).filter(Boolean).map((e) => [e.id, e]),
+    (data.value.firefox ?? []).filter(Boolean).map((e) => {
+      const match = e.storeUrl.match(/\/addon\/([^/]+)/);
+      const slug = match ? match[1] : e.id;
+      return [slug, e];
+    }),
   );
 
   const results: (ListedExtension & { sortKey: number })[] = [];
@@ -343,9 +347,13 @@ function formatStars(r: number): string {
         referrerpolicy="no-referrer"
       />
       <div class="card-content">
-        <span class="extension-name" :title="extension.name">{{
-          extension.name
-        }}</span>
+        <a
+          :href="extension.stores[0]?.url ?? '#'"
+          target="_blank"
+          :title="extension.name"
+          class="extension-name"
+          >{{ extension.name }}</a
+        >
         <p class="description" :title="extension.shortDescription">
           {{ extension.shortDescription }}
         </p>
@@ -488,9 +496,15 @@ function formatStars(r: number): string {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  cursor: pointer;
   padding: 0;
   margin: 0;
+  text-decoration: none;
   font-size: large;
+}
+
+.extension-grid > li .extension-name:hover {
+  text-decoration: underline;
 }
 
 .extension-grid > li .description {
