@@ -52,31 +52,8 @@ describe('Dev Mode', () => {
     }
   });
 
-  it('should fall back to the next available port when strictPort is false and the port is occupied', async () => {
-    const port = 4500;
-    const freePort = await occupyPort(port);
-
-    const project = new TestProject();
-    project.addFile(
-      'entrypoints/background.ts',
-      'export default defineBackground(() => {})',
-    );
-
-    const server = await project.startServer({
-      runner: { disabled: true },
-      dev: { server: { port, strictPort: false } },
-    });
-    try {
-      expect(server.port).not.toBe(port);
-      expect(server.port).toBeGreaterThan(port);
-    } finally {
-      await server.stop();
-      await freePort();
-    }
-  });
-
   it('should fall back to the next available port by default when the port is occupied', async () => {
-    const port = 4600;
+    const port = 4500;
     const freePort = await occupyPort(port);
 
     const project = new TestProject();
@@ -94,6 +71,28 @@ describe('Dev Mode', () => {
       expect(server.port).toBeGreaterThan(port);
     } finally {
       await server.stop();
+      await freePort();
+    }
+  });
+
+  it('should throw an error when strictPort is true and the port is occupied', async () => {
+    const port = 4600;
+    const freePort = await occupyPort(port);
+
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {})',
+    );
+
+    try {
+      await expect(
+        project.startServer({
+          runner: { disabled: true },
+          dev: { server: { port, strictPort: true } },
+        }),
+      ).rejects.toThrow();
+    } finally {
       await freePort();
     }
   });
