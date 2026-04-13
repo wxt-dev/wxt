@@ -11,11 +11,10 @@
     "check": "check && bun run --workspaces check",
     "test": "bun run --workspaces test run",
     "test:coverage": "bun run --workspaces test:coverage",
-    "prepare": "simple-git-hooks",
     "docs:gen": "typedoc --options docs/typedoc.json",
-    "docs:dev": "bun run --silent docs:gen && bun run vitepress dev docs",
-    "docs:build": "bun run --silent docs:gen && bun run vitepress build docs",
-    "docs:preview": "bun run --silent docs:gen && bun run vitepress preview docs"
+    "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
+    "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
+    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
   },
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.7",
@@ -53,8 +52,7 @@
     "vitepress-plugin-llms": "^1.12.0",
     "vitest-mock-extended": "^3.1.0",
     "vue": "^3.5.29",
-    "wxt": "workspace:*",
-    "yaml": "^2.8.3"
+    "wxt": "workspace:*"
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",

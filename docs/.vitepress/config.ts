@@ -27,7 +27,6 @@ import {
   navItem,
   prepareTypedocSidebar,
 } from './utils/menus';
-import * as YAML from 'yaml';
 
 const origin = 'https://wxt.dev';
 
@@ -89,7 +88,7 @@ export default defineConfig({
         load: {
           handler: async (id) => {
             if (id.endsWith('.yml') || id.endsWith('.yaml')) {
-              const obj = YAML.parse(await readFile(id, 'utf8'));
+              const obj = Bun.YAML.parse(await readFile(id, 'utf8'));
               return `export default ${JSON.stringify(obj)}`;
             }
           },
