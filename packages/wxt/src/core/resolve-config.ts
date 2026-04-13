@@ -160,12 +160,18 @@ export async function resolveConfig(
       mergedConfig.dev?.server?.origin ??
       mergedConfig.dev?.server?.hostname ??
       'localhost';
+    const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
         // Passing host required for Mac, unsure of Windows/Linux
         host,
         port: 3000,
         portRange: [3001, 3010],
+      });
+    } else if (!strictPort) {
+      port = await getPort({
+        host,
+        port,
       });
     }
     const originWithProtocolAndPort = [
@@ -177,6 +183,7 @@ export async function resolveConfig(
       host,
       port,
       origin: originWithProtocolAndPort,
+      strictPort,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }

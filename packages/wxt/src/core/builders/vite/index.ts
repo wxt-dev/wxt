@@ -348,6 +348,8 @@ export async function createViteBuilder(
         server: {
           host: info.host,
           port: info.port,
+          // The port is already resolved to an available one during config
+          // resolution, and vite needs to use the port the rest of WXT uses.
           strictPort: true,
           origin: info.origin,
         },
