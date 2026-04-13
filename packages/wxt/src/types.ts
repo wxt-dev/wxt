@@ -147,17 +147,18 @@ export interface InlineConfig {
    * Suppress specific warnings during the build process.
    *
    * @example
-   * ```ts
-   * export default defineConfig({
-   *   suppressWarnings: {
-   *     firefoxDataCollection: true,
-   *   },
-   * })
-   * ```
+   *   ```ts
+   *   export default defineConfig({
+   *     suppressWarnings: {
+   *       firefoxDataCollection: true,
+   *     },
+   *   })
+   *   ```;
    */
   suppressWarnings?: {
     /**
-     * Suppress warnings for: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
+     * Suppress warnings for:
+     * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
      */
     firefoxDataCollection?: boolean;
   };
@@ -963,8 +964,8 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
 } & { [key in TOmitted]: T[key] };
 
 /**
- * Firefox data collection permission types for personal data.
- * See: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ * Firefox data collection permission types for personal data. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
  */
 export type FirefoxDataCollectionType =
   | 'locationInfo'
@@ -979,18 +980,20 @@ export type FirefoxDataCollectionType =
   | (string & {});
 
 /**
- * Firefox data collection permissions configuration.
- * See: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ * Firefox data collection permissions configuration. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
  */
 export interface FirefoxDataCollectionPermissions {
   /**
-   * Required data collection permissions. Users must opt in to use the extension.
-   * Can include personal data types or "none" to explicitly indicate no data collection.
+   * Required data collection permissions. Users must opt in to use the
+   * extension. Can include personal data types or "none" to explicitly indicate
+   * no data collection.
    */
   required?: Array<FirefoxDataCollectionType | 'none'>;
   /**
    * Optional data collection permissions. Users can opt in after installation.
-   * Can include personal data types or "technicalAndInteraction" (which can only be optional).
+   * Can include personal data types or "technicalAndInteraction" (which can
+   * only be optional).
    */
   optional?: Array<FirefoxDataCollectionType | 'technicalAndInteraction'>;
 }
@@ -1034,8 +1037,8 @@ export type UserManifest = {
       strict_max_version?: string;
       update_url?: string;
       /**
-       * Firefox data collection permissions configuration.
-       * See: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+       * Firefox data collection permissions configuration. See:
+       * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
        */
       data_collection_permissions?: FirefoxDataCollectionPermissions;
     };
@@ -1498,9 +1501,7 @@ export interface ResolvedConfig {
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
   experimental: {};
-  /**
-   * List of warning identifiers to suppress during the build process.
-   */
+  /** List of warning identifiers to suppress during the build process. */
   suppressWarnings: { firefoxDataCollection?: boolean };
   dev: {
     /** Only defined during dev command */
