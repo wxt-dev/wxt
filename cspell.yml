@@ -10,6 +10,7 @@ ignorePaths:
   - packages/browser/src/gen/**
   - patches/**
   - '**/*.snap'
+  - docs/assets/extension-showcase.yml
 words:
   - Aabid
   - aabidk
