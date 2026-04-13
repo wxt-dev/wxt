@@ -4,14 +4,13 @@ import {
   loadChangelogConfig,
   parseChangelogMarkdown,
 } from 'changelogen';
-import { readFile } from 'node:fs/promises';
 import { grabPackageDetails } from './git';
 import consola from 'consola';
 
 const pkg = process.argv[2];
 if (!pkg) {
   throw Error(
-    'Package name missing. Usage: tsx create-github-release.ts <package-name>',
+    'Package name missing. Usage: bun run scripts/create-github-release.ts <package-name>',
   );
 }
 
@@ -19,7 +18,8 @@ const { pkgName, prevTag, currentVersion, changelogPath } =
   await grabPackageDetails(pkg);
 consola.info('Creating release for:', { pkg, pkgName, prevTag });
 
-const { releases } = await readFile(changelogPath, 'utf8')
+const { releases } = await Bun.file(changelogPath)
+  .text()
   .then(parseChangelogMarkdown)
   .catch(() => ({ releases: [] }));
 

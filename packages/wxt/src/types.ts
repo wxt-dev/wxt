@@ -721,7 +721,15 @@ export interface ThemeIcon {
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
-  /** Defaults to "browser_action" to be equivalent to MV3's "action" key */
+  /**
+   * The type of action to use in the manifest.
+   *
+   * In MV2, defaults to `"browser_action"`. In MV3, `"browser_action"` is
+   * converted to `"action"`, while `"page_action"` is kept as-is (Firefox MV3
+   * only).
+   */
+  actionType?: PerBrowserOption<'browser_action' | 'page_action'>;
+  /** @deprecated Use `actionType` instead. */
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
@@ -957,10 +965,13 @@ export type UserManifest = {
 } & {
   // Add any Browser-specific or MV2 properties that WXT supports here
   action?: Browser.runtime.ManifestV3['action'] & {
-    browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   browser_action?: Browser.runtime.ManifestV2['browser_action'] & {
     browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   page_action?: Browser.runtime.ManifestV2['page_action'] & {
     browser_style?: boolean;
@@ -1202,14 +1213,18 @@ export interface WxtHooks {
    *
    * @example
    *   wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
-   *     paths.push('/icons/128.png');
+   *     paths.push('icons/128.png');
+   *     paths.push({
+   *       type: 'templateLiteral',
+   *       path: '_favicon/?${string}',
+   *     });
    *   });
    *
    * @param wxt The configured WXT object
    * @param paths This list of paths TypeScript allows `browser.runtime.getURL`
    *   to be called with.
    */
-  'prepare:publicPaths': (wxt: Wxt, paths: string[]) => HookResult;
+  'prepare:publicPaths': (wxt: Wxt, paths: PublicPathEntry[]) => HookResult;
   /**
    * Called before the build is started in both dev mode and build mode.
    *
@@ -1651,6 +1666,13 @@ export interface GeneratedPublicFile extends ResolvedBasePublicFile {
   /** Text to write to the file. */
   contents: string;
 }
+
+export type PublicPathEntry =
+  | string
+  | {
+      type: 'string' | 'templateLiteral';
+      path: string;
+    };
 
 export type WxtPlugin = () => void;
 

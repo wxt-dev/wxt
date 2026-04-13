@@ -25,9 +25,9 @@ import {
 } from '../entrypoints';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
 import { CSS_EXTENSIONS_PATTERN } from '../paths';
-import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { camelCase } from 'scule';
+import { styleText } from 'node:util';
 
 /**
  * Return entrypoints and their configuration by looking through the project's
@@ -161,7 +161,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       [
         'The following entrypoints have been skipped:',
         ...skippedEntrypointNames.map(
-          (item) => `${pc.dim('-')} ${pc.cyan(item)}`,
+          (item) => `${styleText('dim', '-')} ${styleText('cyan', item)}`,
         ),
       ].join('\n'),
     );
@@ -280,17 +280,34 @@ async function getPopupEntrypoint(
     {
       ...perBrowserOptions,
       defaultTitle: title,
-      mv2Key: type,
+      actionType: type,
     },
     wxt.config.browser,
   );
-  if (strictOptions.mv2Key && strictOptions.mv2Key !== 'page_action')
-    strictOptions.mv2Key = 'browser_action';
+  if (strictOptions.actionType && strictOptions.actionType !== 'page_action')
+    strictOptions.actionType = 'browser_action';
+
+  // Sync deprecated `mv2Key` with `actionType` via getter/setter so modules
+  // that read or write either property stay in sync.
+  const opts = { ...strictOptions, themeIcons } as PopupEntrypoint['options'];
+  let _actionType = opts.actionType;
+  Object.defineProperty(opts, 'actionType', {
+    get: () => _actionType,
+    set: (v: typeof _actionType) => (_actionType = v),
+    enumerable: true,
+    configurable: true,
+  });
+  Object.defineProperty(opts, 'mv2Key', {
+    get: () => _actionType,
+    set: (v: typeof _actionType) => (_actionType = v),
+    enumerable: true,
+    configurable: true,
+  });
 
   return {
     type: 'popup',
     name: 'popup',
-    options: { ...strictOptions, themeIcons },
+    options: opts,
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };

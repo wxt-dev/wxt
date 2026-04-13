@@ -1,11 +1,10 @@
 import { RawGitCommit, getGitDiff } from 'changelogen';
 import { consola } from 'consola';
-import { readFile } from 'node:fs/promises';
 
 export async function grabPackageDetails(pkg: string) {
   const pkgDir = `packages/${pkg}`;
   const pkgJsonPath = `${pkgDir}/package.json`;
-  const pkgJson = JSON.parse(await readFile(pkgJsonPath, 'utf-8'));
+  const pkgJson = await Bun.file(pkgJsonPath).json();
   const currentVersion: string = pkgJson.version;
   return {
     pkgDir,

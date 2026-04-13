@@ -1,7 +1,7 @@
 import readline from 'node:readline';
 import { WxtDevServer } from '../types';
 import { wxt } from './wxt';
-import pc from 'picocolors';
+import { styleText } from 'node:util';
 
 export interface KeyboardShortcutWatcher {
   start(): void;
@@ -41,7 +41,7 @@ export function createKeyboardShortcuts(
     printHelp(flags) {
       if (flags.canReopenBrowser) {
         wxt.logger.info(
-          `${pc.dim('Press')} ${pc.bold('o + enter')} ${pc.dim('to reopen the browser')}`,
+          `${styleText('dim', 'Press')} ${styleText('bold', 'o + enter')} ${styleText('dim', 'to reopen the browser')}`,
         );
       }
     },
