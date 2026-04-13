@@ -1,5 +1,6 @@
 {
   "name": "bun-ls",
+  "packageManager": "bun@1.3.5",
   "dependencies": {
     "mime-types": "2.1.35"
   },

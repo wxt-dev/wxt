@@ -41,8 +41,10 @@ words:
   - esbuild
   - esque
   - extglob
+  - favicons
   - fieldtrials
   - firefoxdeveloperedition
+  - flamechart
   - Florian
   - focusring
   - frontmatter
@@ -107,6 +109,7 @@ words:
   - unstub
   - unwatch
   - USSS
+  - vitepress
   - webext
   - webextension
   - webextrc

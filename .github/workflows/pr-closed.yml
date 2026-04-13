@@ -15,7 +15,20 @@ jobs:
     if: github.event.pull_request.merged == true
 
     steps:
+      - name: Log PR Author Info
+        run: |
+          echo "PR Author Login: ${{ github.event.pull_request.user.login }}"
+          echo "PR Author ID: ${{ github.event.pull_request.user.id }}"
+          echo "PR Author Type: ${{ github.event.pull_request.user.type }}"
+          echo "PR Author Node ID: ${{ github.event.pull_request.user.node_id }}"
+
       - name: Post Thank You Comment
+        if: >-
+          github.event.pull_request.user.login != 'aklinker1' &&
+          github.event.pull_request.user.login != 'Timeraa' &&
+          github.event.pull_request.user.login != 'PatrykKuniczak' &&
+          github.event.pull_request.user.login != 'dependabot[bot]' &&
+          github.event.pull_request.user.login != 'copilot-swe-agent[bot]'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           comment: Thanks for helping make WXT better!

@@ -8,9 +8,9 @@ import { getPublicFiles } from '../fs';
 import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
 import type { Spinner } from 'nanospinner';
-import pc from 'picocolors';
 import { wxt } from '../../wxt';
 import { toArray } from '../arrays';
+import { styleText } from 'node:util';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],
@@ -20,9 +20,11 @@ export async function buildEntrypoints(
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const groupNames = toArray(group).map((e) => e.name);
-    const groupNameColored = groupNames.join(pc.dim(', '));
+    const groupNameColored = groupNames.join(styleText('dim', ', '));
     spinner.update({
-      text: pc.dim(`[${i + 1}/${groups.length}]`) + ` ${groupNameColored}`,
+      text:
+        styleText('dim', `[${i + 1}/${groups.length}]`) +
+        ` ${groupNameColored}`,
     });
     try {
       steps.push(await wxt.builder.build(group));
