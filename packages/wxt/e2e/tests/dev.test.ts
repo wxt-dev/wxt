@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
-import { createServer as createNetServer, AddressInfo } from 'node:net';
+import { createServer as createNetServer } from 'node:net';
 
 /** Starts a TCP server on the given port and returns a cleanup function. */
 function occupyPort(port: number): Promise<() => Promise<void>> {
