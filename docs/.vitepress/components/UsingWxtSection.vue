@@ -577,6 +577,10 @@ const extensionEntries: ExtensionEntry[] = [
     chromeId: 'jijfmgoijddfmlcdghopbkdpelbpmjdm',
     firefoxSlug: 'clear-wisdom',
   },
+  {
+    // Soundcloud Enhanced Pro
+    chromeId: 'ggplcohodggmdfpopelnpplhgfjclomi',
+  },
 ];
 
 const chromeIds = extensionEntries.flatMap((e) =>
