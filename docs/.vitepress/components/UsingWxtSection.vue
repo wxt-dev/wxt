@@ -581,6 +581,10 @@ const extensionEntries: ExtensionEntry[] = [
     // Soundcloud Enhanced Pro
     chromeId: 'ggplcohodggmdfpopelnpplhgfjclomi',
   },
+  {
+    // AlarmBot: ULTIMATE Web Monitoring & Smart Price Alerts
+    chromeId: 'mpckalcodookackleecihhnngdibelif',
+  },
 ];
 
 const chromeIds = extensionEntries.flatMap((e) =>
