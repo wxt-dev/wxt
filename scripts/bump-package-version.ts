@@ -107,7 +107,10 @@ if (pkg === 'wxt') {
 }
 
 // Commit changes
-await Bun.$`git add "${pkgJsonPath}" "${changelogPath}" ${templatePkgJsonPaths.join(' ')}`;
+await Bun.$`git add "${pkgJsonPath}" "${changelogPath}"`;
+for (const packageJsonPath of templatePkgJsonPaths) {
+  await Bun.$`git add "${packageJsonPath}"`;
+}
 await Bun.$`git commit -m "chore(release): ${pkgName} v${newVersion}"`;
 await Bun.$`git tag ${newTag}`;
 consola.success('Committed version and changelog');
