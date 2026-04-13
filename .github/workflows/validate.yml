@@ -72,9 +72,6 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-        with:
-          # Windows runner fails randomly due to post-install steps, skip since they're not needed for running tests
-          installArgs: --ignore-scripts
 
       - name: Setup PNPM
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
