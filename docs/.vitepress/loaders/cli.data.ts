@@ -50,7 +50,9 @@ function getWxtHelp(command: string): Promise<string> {
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
   // console.error('\n\n\n', await fs.readdir('.'));
-  const res = await getHelp(`publish-extension ${command}`.trim());
+  const res = await getHelp(
+    `bun run --silent publish-extension ${command}`.trim(),
+  );
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
 
