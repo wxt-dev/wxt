@@ -40,8 +40,10 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check",
-    "prepack": "pnpm build"
+    "check": "bun run build && check",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -50,7 +52,9 @@
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   }

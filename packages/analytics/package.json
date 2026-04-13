@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "buildc --deps-only -- wxt",
     "dev:build": "buildc --deps-only -- wxt build",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepack": "pnpm build",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "prepack": "bun run build",
+    "postinstall": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
@@ -20,8 +22,10 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/ua-parser-js": "^0.7.39",
     "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "wxt": "workspace:*"
   },
