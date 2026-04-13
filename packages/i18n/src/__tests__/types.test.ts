@@ -35,14 +35,16 @@ describe('I18n Types', () => {
   });
 
   describe('With type-safety', () => {
-    const i18n = createI18n<{
+    type MyStructure = {
       simple: { plural: false; substitutions: 0 };
       simpleSub1: { plural: false; substitutions: 1 };
       simpleSub2: { plural: false; substitutions: 2 };
       plural: { plural: true; substitutions: 0 };
       pluralSub1: { plural: true; substitutions: 1 };
       pluralSub2: { plural: true; substitutions: 2 };
-    }>();
+    };
+
+    const i18n = createI18n<MyStructure>();
 
     describe('t', () => {
       it('should only allow passing valid combinations of arguments', () => {

@@ -3,19 +3,21 @@ export interface I18nFeatures {
   substitutions: SubstitutionCount;
 }
 
-export type I18nStructure = {
-  [K: string]: I18nFeatures;
+export interface UntypedI18n {
+  t: UntypedTFunction;
+}
+
+export type UntypedTFunction = {
+  (key: string): string;
+  (key: string, substitutions: Substitution[]): string;
+  (key: string, n: number): string;
+  (key: string, n: number, substitutions: Substitution[]): string;
 };
 
-type DefaultTFunction<TKeys extends string> = {
-  (key: TKeys): string;
-  (key: TKeys, substitutions: Substitution[]): string;
-  (key: TKeys, n: number): string;
-  (key: TKeys, n: number, substitutions: Substitution[]): string;
-};
+export type I18nStructure = Record<string, I18nFeatures>;
 
 export interface I18n<T extends I18nStructure> {
-  t: string extends keyof T ? DefaultTFunction<keyof T & string> : TFunction<T>;
+  t: TFunction<T>;
 }
 
 // prettier-ignore
@@ -29,7 +31,7 @@ export type SubstitutionTuple<T extends SubstitutionCount> =
   : T extends 7 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution]
   : T extends 8 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution]
   : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
-  : []
+  : never
 
 export type TFunction<T extends I18nStructure> = {
   // Non-plural, no substitutions
@@ -41,7 +43,7 @@ export type TFunction<T extends I18nStructure> = {
   // Non-plural with substitutions
   <K extends keyof T>(
     // prettier-ignore
-    key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: Exclude<SubstitutionCount, 0>} ? P : never; }[keyof T],
+    key: K & { [P in keyof T]: T[P] extends { plural: false; substitutions: SubstitutionCount } ? P : never; }[keyof T],
     substitutions: T[K] extends I18nFeatures
       ? SubstitutionTuple<T[K]['substitutions']>
       : never,
