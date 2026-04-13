@@ -2,7 +2,6 @@ import { ref } from 'vue';
 
 export interface Extension {
   id: string;
-  slug?: string;
   name: string;
   iconUrl: string;
   shortDescription: string;
@@ -19,16 +18,16 @@ export interface ExtensionResults {
 const operationName = 'WxtDocsUsedBy';
 const query = `query ${operationName}($chromeIds: [String!]!, $firefoxIds: [String!]!) {
   chromeExtensions(ids: $chromeIds) {
+    id
     ...ExtensionData
   }
   firefoxAddons(ids: $firefoxIds) {
+    id: slug
     ...ExtensionData
-    slug
   }
 }
 
 fragment ExtensionData on Extension {
-  id
   name
   iconUrl
   shortDescription

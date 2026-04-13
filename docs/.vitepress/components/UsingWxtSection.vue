@@ -578,7 +578,7 @@ const sortedExtensions = computed((): ListedExtension[] => {
     (data.value.chrome ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
   const firefoxBySlug = new Map(
-    (data.value.firefox ?? []).filter(Boolean).map((e) => [e.slug ?? e.id, e]),
+    (data.value.firefox ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
 
   const results: ListedExtension[] = [];
