@@ -24,7 +24,8 @@
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest",
-    "prepack": "pnpm build"
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
@@ -41,9 +42,11 @@
     }
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/node": "^20.17.6",
     "oxlint": "^1.51.0",
     "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "vitest-plugin-random-seed": "^1.1.2",

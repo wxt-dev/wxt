@@ -1,16 +1,17 @@
-import { beforeAll, describe, expect, it } from 'vitest';
-import path from 'node:path';
-import { pnpm } from '../pnpm';
 import spawn from 'nano-spawn';
+import path from 'node:path';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { pnpm } from '../pnpm';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
 describe('PNPM Package Management Utils', () => {
-  describe('listDependencies', () => {
+  describe('listDependencies', { timeout: 30e3 }, () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
+
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await spawn('pnpm', ['i', '--ignore-workspace'], { cwd });
+      await spawn('pnpm', ['install'], { cwd });
     });
 
     it('should list direct dependencies', async () => {

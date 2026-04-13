@@ -4,11 +4,11 @@ import { isOnline, fetchCached } from '../network';
 import { ResolvedConfig } from '../../../types';
 
 type DnsCallback = (err: NodeJS.ErrnoException | null) => void;
-type MockedFetch = ReturnType<typeof vi.fn>;
 
 vi.mock('node:dns');
 
-global.fetch = vi.fn();
+const fetchMock = vi.fn<typeof fetch>();
+global.fetch = fetchMock;
 
 describe('Network utils', () => {
   describe('isOnline', () => {
@@ -75,11 +75,11 @@ describe('Network utils', () => {
       };
 
       const mockContent = 'cached content';
-      (global.fetch as MockedFetch).mockReturnValueOnce(
+      fetchMock.mockReturnValueOnce(
         Promise.resolve({
           status: 200,
           text: async () => mockContent,
-        }),
+        } as Response),
       );
 
       const result = await fetchCached(
@@ -112,11 +112,11 @@ describe('Network utils', () => {
         },
       };
 
-      (global.fetch as MockedFetch).mockReturnValueOnce(
+      fetchMock.mockReturnValueOnce(
         Promise.resolve({
           status: 500,
           text: async () => '',
-        }),
+        } as Response),
       );
 
       const result = await fetchCached(
@@ -154,7 +154,7 @@ describe('Network utils', () => {
       );
 
       expect(result).toBe('offline cache');
-      expect(global.fetch as MockedFetch).not.toHaveBeenCalled();
+      expect(fetchMock).not.toHaveBeenCalled();
     });
 
     it('should throw error when offline and no cache available', async () => {
