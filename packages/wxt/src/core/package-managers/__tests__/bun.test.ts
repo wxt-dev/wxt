@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { bun } from '../bun';
 
+// TODO: Remove now that bun supports windows?
 describe.skipIf(() => process.platform === 'win32')(
   'Bun Package Management Utils',
   () => {

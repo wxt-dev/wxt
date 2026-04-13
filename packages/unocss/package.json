@@ -34,15 +34,19 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "prepack": "pnpm build"
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "oxlint": "^1.51.0",
     "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "wxt": "workspace:*"

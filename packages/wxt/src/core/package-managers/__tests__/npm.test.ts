@@ -9,7 +9,7 @@ describe('NPM Package Management Utils', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
     beforeAll(async () => {
       // NPM needs the modules installed for 'npm ls' to work
-      await spawn('npm', ['i'], { cwd });
+      await spawn('npm', ['install'], { cwd });
     }, 60e3);
 
     it('should list direct dependencies', async () => {

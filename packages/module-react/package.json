@@ -40,10 +40,12 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare",
-    "prepack": "pnpm build"
+    "postinstall": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "vite": "^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0",
@@ -53,6 +55,7 @@
     "@vitejs/plugin-react": "^4.4.1 || ^5.0.0 || ^6.0.0"
   },
   "devDependencies": {
+    "@aklinker1/buildc": "^1.1.7",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "publint": "^0.3.18",

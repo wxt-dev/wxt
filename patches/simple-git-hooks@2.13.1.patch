@@ -1,0 +1,15 @@
+diff --git a/simple-git-hooks.js b/simple-git-hooks.js
+index 093890d21800c9feb34cb6da5b997b947da812cd..3b11e62bbfcbdf7d2dc8f553237750a220ecae6f 100644
+--- a/simple-git-hooks.js
++++ b/simple-git-hooks.js
+@@ -100,6 +100,10 @@ function getProjectRootDirectoryFromNodeModules(projectPath) {
+     if (indexOfDenoDir > -1) {
+         return projDir.slice(0, indexOfDenoDir - 1).join('/');
+     }
++    const indexOfBunDir = projDir.indexOf('.bun')
++    if (indexOfBunDir > -1) {
++        return projDir.slice(0, indexOfBunDir - 1).join('/');
++    }
+ 
+     const indexOfStoreDir = projDir.indexOf('.store')
+     if (indexOfStoreDir > -1) {

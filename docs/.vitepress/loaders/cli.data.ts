@@ -1,6 +1,6 @@
-import { resolve } from 'node:path';
 import consola from 'consola';
 import spawn from 'nano-spawn';
+import { resolve } from 'node:path';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
 const cliDirGlob = resolve(cliDir, '**');
@@ -38,20 +38,19 @@ export default {
 
 async function getHelp(command: string): Promise<string> {
   const args = command.split(' ');
-  const res = await spawn(args[0], [...args.slice(1), '--help'], {
+  const result = await spawn(args[0], [...args.slice(1), '--help'], {
     cwd: 'packages/wxt',
   });
-  return res.stdout;
+  return result.stdout;
 }
 
 function getWxtHelp(command: string): Promise<string> {
-  return getHelp(`pnpm -s wxt ${command}`.trim());
+  return getHelp(`bun run --silent wxt ${command}`.trim());
 }
 
 async function getPublishExtensionHelp(command: string): Promise<string> {
-  const res = await getHelp(
-    `./node_modules/.bin/publish-extension ${command}`.trim(),
-  );
+  // console.error('\n\n\n', await fs.readdir('.'));
+  const res = await getHelp(`publish-extension ${command}`.trim());
   return res.replace(/\$ publish-extension/g, '$ wxt submit');
 }
 
