@@ -43,7 +43,7 @@
     "check": "bun run build && check",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "pnpm build"
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6",
