@@ -1,6 +1,6 @@
 import { Feed } from 'feed';
 import footnote from 'markdown-it-footnote';
-import fs from 'node:fs/promises';
+import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DefaultTheme, defineConfig } from 'vitepress';
 import addKnowledge from 'vitepress-knowledge';
@@ -83,6 +83,17 @@ export default defineConfig({
           ),
         },
       }),
+      {
+        name: 'yaml-loader',
+        load: {
+          handler: async (id) => {
+            if (id.endsWith('.yml') || id.endsWith('.yaml')) {
+              const obj = Bun.YAML.parse(await readFile(id, 'utf8'));
+              return `export default ${JSON.stringify(obj)}`;
+            }
+          },
+        },
+      },
     ],
   },
   lastUpdated: true,
