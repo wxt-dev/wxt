@@ -1,0 +1,47 @@
+diff --git a/node_modules/pkg-pr-new/.bun-tag-c719f450f9f5410d b/.bun-tag-c719f450f9f5410d
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/index.js b/dist/index.js
+index e2626a009efe1ee3cfa6c96fe712341d3501ba1c..20755fe90b3c8807b28e63e9ebcfb244aea07be9 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -3743,7 +3743,7 @@ async function resolveTarball(pm, p3, pJson) {
+   if (pm === "yarn") {
+     cmd += ` --filename ${filename}`;
+   } else if (pm === "bun") {
+-    cmd = `bun pm pack --quiet --filename ${filename}`;
++    cmd = `bun pm pack --quiet --filename ${p3}${filename}`;
+   }
+   const { stdout: stdout2 } = await ezSpawn.async(cmd, {
+     stdio: "overlapped",
+@@ -3753,18 +3753,18 @@ async function resolveTarball(pm, p3, pJson) {
+   if (pm !== "yarn" && pm !== "bun") {
+     filename = lines[lines.length - 1].trim();
+   }
+-  if (pm === "bun") {
+-    const tgzFiles = fsSync.readdirSync(p3).filter((file) => file.endsWith(".tgz"));
+-    const bunFilename = stdout2.trim();
+-    if (bunFilename) {
+-      filename = bunFilename;
+-    }
+-    console.warn(`[bun pack] stdout:
+-${stdout2}`);
+-    console.warn(
+-      `[bun pack] expected filename: ${filename}; tgz files: ${tgzFiles.join(", ") || "(none)"}`
+-    );
+-  }
++//   if (pm === "bun") {
++//     const tgzFiles = fsSync.readdirSync(p3).filter((file) => file.endsWith(".tgz"));
++//     const bunFilename = stdout2.trim();
++//     if (bunFilename) {
++//       filename = bunFilename;
++//     }
++//     console.warn(`[bun pack] stdout:
++// ${stdout2}`);
++//     console.warn(
++//       `[bun pack] expected filename: ${filename}; tgz files: ${tgzFiles.join(", ") || "(none)"}`
++//     );
++//   }
+   const shasum = createHash("sha1").update(await fs.readFile(path.resolve(p3, filename))).digest("hex");
+   return { filename, shasum };
+ }

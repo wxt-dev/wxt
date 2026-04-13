@@ -23,7 +23,12 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: pnpm buildc all
+        run: bun run buildc all
 
       - name: Publish
-        run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'
+        run: bun pkg-pr-new publish --compact --bun './packages/*'
+
+      - name: DEBUG
+        if: always()
+        run: ls -lhA
+        working-directory: packages/analytics
