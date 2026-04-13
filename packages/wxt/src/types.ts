@@ -388,6 +388,14 @@ export interface InlineConfig {
        */
       origin?: string;
       /**
+       * Whether the dev server should fail if the specified port is already in
+       * use. When `false` and a `port` is specified, the next available port
+       * will be used instead of throwing an error.
+       *
+       * @default false
+       */
+      strictPort?: boolean;
+      /**
        * Hostname to run the dev server on.
        *
        * @deprecated Use `host` to specify the interface to bind to, or use
@@ -1509,6 +1517,7 @@ export interface ResolvedConfig {
       host: string;
       port: number;
       origin: string;
+      strictPort: boolean;
       /**
        * The milliseconds to debounce when a file is saved before reloading. The
        * only way to set this option is to set the `WXT_WATCH_DEBOUNCE`
