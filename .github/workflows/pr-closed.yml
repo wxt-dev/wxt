@@ -26,6 +26,7 @@ jobs:
         if: >-
           github.event.pull_request.user.login != 'aklinker1' &&
           github.event.pull_request.user.login != 'Timeraa' &&
+          github.event.pull_request.user.login != 'PatrykKuniczak' &&
           github.event.pull_request.user.login != 'dependabot[bot]' &&
           github.event.pull_request.user.login != 'copilot-swe-agent[bot]'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
