@@ -51,7 +51,7 @@ export default defineWxtModule({
 
 To add it to your project, place the file in the `modules/` directory at the root of your project. Any module file in this directory is **automatically discovered and loaded** — no additional configuration is needed:
 
-```
+```plaintext
 <rootDir>/
   modules/
     my-module.ts    ← loaded automatically
