@@ -37,7 +37,7 @@ if (currentVersion.startsWith('0.')) {
     bumpType = 'patch';
   }
 }
-await Bun.$`cd "${pkgDir}" && bun pm version ${bumpType}`;
+await Bun.$`bun pm version ${bumpType}`.cwd(pkgDir);
 const updatedPkgJson = await Bun.file(pkgJsonPath).json();
 const newVersion: string = updatedPkgJson.version;
 const newTag = getPkgTag(pkg, newVersion);
@@ -98,6 +98,10 @@ if (pkg === 'wxt') {
         templatePkgJsonPaths.push(templatePkgJsonPath);
         consola.success(`Updated wxt version in ${templatePkgJsonPath}`);
       }
+    } else {
+      console.warn(`No package.json found in ${templatePkgJsonPath}`, {
+        cwd: process.cwd(),
+      });
     }
   }
 }
