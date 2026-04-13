@@ -37,7 +37,7 @@ if (currentVersion.startsWith('0.')) {
     bumpType = 'patch';
   }
 }
-await Bun.$`bun --cwd "${pkgDir}" pm version ${bumpType}`;
+await Bun.$`cd "${pkgDir}" && bun pm version ${bumpType}`;
 const updatedPkgJson = await Bun.file(pkgJsonPath).json();
 const newVersion: string = updatedPkgJson.version;
 const newTag = getPkgTag(pkg, newVersion);
