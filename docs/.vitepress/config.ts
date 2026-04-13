@@ -1,6 +1,6 @@
 import { Feed } from 'feed';
 import footnote from 'markdown-it-footnote';
-import fs from 'node:fs/promises';
+import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DefaultTheme, defineConfig } from 'vitepress';
 import addKnowledge from 'vitepress-knowledge';
@@ -27,6 +27,7 @@ import {
   navItem,
   prepareTypedocSidebar,
 } from './utils/menus';
+import * as YAML from 'yaml';
 
 const origin = 'https://wxt.dev';
 
@@ -83,6 +84,17 @@ export default defineConfig({
           ),
         },
       }),
+      {
+        name: 'yaml-loader',
+        load: {
+          handler: async (id) => {
+            if (id.endsWith('.yml') || id.endsWith('.yaml')) {
+              const obj = YAML.parse(await readFile(id, 'utf8'));
+              return `export default ${JSON.stringify(obj)}`;
+            }
+          },
+        },
+      },
     ],
   },
   lastUpdated: true,

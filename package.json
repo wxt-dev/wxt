@@ -53,7 +53,8 @@
     "vitepress-plugin-llms": "^1.12.0",
     "vitest-mock-extended": "^3.1.0",
     "vue": "^3.5.29",
-    "wxt": "workspace:*"
+    "wxt": "workspace:*",
+    "yaml": "^2.8.3"
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
