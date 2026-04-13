@@ -1578,6 +1578,9 @@ describe('Manifest Utils', () => {
               // @ts-ignore: Purposefully removing version from fake object
               version: null,
             },
+            suppressWarnings: {
+              firefoxDataCollection: true,
+            },
           },
         });
 
@@ -2010,6 +2013,9 @@ describe('Manifest Utils', () => {
             manifestVersion: expectedVersion,
             manifest: {
               manifest_version: 3,
+            },
+            suppressWarnings: {
+              firefoxDataCollection: true,
             },
           },
         });
