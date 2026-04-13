@@ -260,9 +260,9 @@
 - # CanCopy - A web extension that allow you to copy any content from website
   chromeId: ggcfemmoabhhelfkhknhbnkmeahloiod
 
-- # Language Learning with AI
+- # Read Frog
   chromeId: modkelfkcfjpgbfmnbnllalkiogfofhb
-  firefoxSlug: intersub
+  firefoxSlug: read-frog-open-ai-translator
 
 - # Bilibili Feed History Helper
   chromeId: npfopljnjbamegincfjelhjhnonnjloo
