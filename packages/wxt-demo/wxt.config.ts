@@ -10,7 +10,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: ['iframe-src.html', 'unlisted.js'],
-        matches: ['*://*.google.com/*'],
+        matches: ['*://*.google.com/*', '*://*.example.com/*'],
       },
     ],
   },
