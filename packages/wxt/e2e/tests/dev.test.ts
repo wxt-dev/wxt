@@ -6,7 +6,7 @@ import { createServer as createNetServer } from 'node:net';
 function occupyPort(port: number): Promise<() => Promise<void>> {
   return new Promise((resolve, reject) => {
     const srv = createNetServer();
-    srv.listen(port, () => {
+    srv.listen(port, 'localhost', () => {
       resolve(() => new Promise<void>((res) => srv.close(() => res())));
     });
     srv.on('error', reject);
