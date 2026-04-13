@@ -13,6 +13,7 @@ import { fetchCached } from '../../../utils/network';
 export function download(config: ResolvedConfig): Plugin {
   return {
     name: 'wxt:download',
+    enforce: 'pre',
     resolveId: {
       filter: {
         id: /^url:/,

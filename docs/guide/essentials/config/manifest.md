@@ -159,6 +159,30 @@ export default defineConfig({
 
 Alternatively, you can use [`@wxt-dev/auto-icons`](https://www.npmjs.com/package/@wxt-dev/auto-icons) to let WXT generate your icon at the required sizes.
 
+### Firefox `theme_icons`
+
+Firefox supports a [`theme_icons`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#theme_icons) field on the toolbar action that swaps between a light and dark variant based on the current browser theme.
+
+When [targeting Firefox](/guide/essentials/target-different-browsers.md), WXT auto-discovers paired light/dark icons in the `public/` directory and attaches them to `action` (MV3) or `browser_action` (MV2). You only need to drop both variants next to your regular icons:
+
+```plaintext
+public/
+├─ icon-16.png         # regular (default_icon)
+├─ icon-light-16.png   # Firefox light theme
+├─ icon-dark-16.png    # Firefox dark theme
+├─ icon-32.png
+├─ icon-light-32.png
+└─ icon-dark-32.png
+```
+
+A size is only included in `theme_icons` if **both** a light and a dark file are present. The following filename patterns are discovered:
+
+<<< @/../packages/wxt/src/core/utils/theme-icons.ts#snippet
+
+Only `.png` files are discovered today, even though Firefox supports `.svg` - follow [#1120](https://github.com/wxt-dev/wxt/issues/1120) for updates.
+
+If you set `manifest.action.theme_icons` (or `manifest.browser_action.theme_icons`) explicitly in `wxt.config.ts`, WXT will not overwrite it.
+
 ## Permissions
 
 > [Chrome docs](https://developer.chrome.com/docs/extensions/reference/permissions/)

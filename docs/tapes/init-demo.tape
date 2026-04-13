@@ -26,7 +26,7 @@ Set FontSize 32
 # Terminal settings
 Set Shell "bash"
 
-# Terminal prompt. It looks like "● mycommand ..."
+# Terminal prompt. It looks like "● command ..."
 Env PS1 "\e[0;32m●\e[0m "
 
 

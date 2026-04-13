@@ -9,8 +9,8 @@ export default defineConfig({
     default_locale: 'en',
     web_accessible_resources: [
       {
-        resources: ['/iframe-src.html'],
-        matches: ['*://*.google.com/*'],
+        resources: ['iframe-src.html', 'unlisted.js'],
+        matches: ['*://*.google.com/*', '*://*.example.com/*'],
       },
     ],
   },

@@ -20,6 +20,7 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { addDiscoveredThemeIcons } from './theme-icons';
 import { ManifestV3WebAccessibleResource } from './types';
 import type { Browser } from '@wxt-dev/browser';
 
@@ -114,7 +115,25 @@ export async function generateManifest(
       ? undefined
       : versionName;
 
+  // Warn if building for Firefox without data_collection_permissions
+  if (
+    wxt.config.browser === 'firefox' &&
+    !userManifest.browser_specific_settings?.gecko
+      ?.data_collection_permissions &&
+    !wxt.config.suppressWarnings?.firefoxDataCollection
+  ) {
+    wxt.logger.warn(
+      'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
+        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
+        'To suppress this warning, set `suppressWarnings.firefoxDataCollection` to `true` in your wxt config.\n',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
+
+  if (wxt.config.browser === 'firefox') {
+    addDiscoveredThemeIcons(manifest, buildOutput);
+  }
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
@@ -284,20 +303,19 @@ function addEntrypoints(
     if (popup.options.themeIcons)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.theme_icons = popup.options.themeIcons;
-    if (manifest.manifest_version === 3) {
-      manifest.action = {
-        ...manifest.action,
-        ...options,
-        default_popup,
-      };
-    } else {
-      const key = popup.options.mv2Key ?? 'browser_action';
-      manifest[key] = {
-        ...manifest[key],
-        ...options,
-        default_popup,
-      };
-    }
+
+    const actionKey =
+      manifest.manifest_version === 2
+        ? (popup.options.actionType ?? 'browser_action')
+        : wxt.config.browser === 'firefox'
+          ? (popup.options.actionType ?? 'action')
+          : 'action';
+
+    manifest[actionKey] = {
+      ...manifest[actionKey],
+      ...options,
+      default_popup,
+    };
   }
 
   if (devtools) {
@@ -311,7 +329,7 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab,
+      open_in_tab: options.options.openInTab ?? false,
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
@@ -699,6 +717,8 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
+    if (wxt.config.browser !== 'firefox')
+      keysToRemove.push(...chromeMv2OnlyKeys);
   }
 
   keysToRemove.forEach((key) => {
@@ -707,7 +727,6 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
 }
 
 const mv2OnlyKeys = [
-  'page_action',
   'browser_action',
   'automation',
   'content_capabilities',
@@ -732,6 +751,7 @@ const mv3OnlyKeys = [
   'optional_host_permissions',
   'side_panel',
 ];
+const chromeMv2OnlyKeys = ['page_action'];
 const firefoxMv3OnlyKeys = ['host_permissions'];
 
 const DEFAULT_MV3_EXTENSION_PAGES_CSP =

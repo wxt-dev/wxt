@@ -19,7 +19,7 @@ import path from 'node:path';
 import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullablyRequired } from './utils/types';
+import { NullishRequired } from './utils/types';
 import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
 import { glob } from 'tinyglobby';
@@ -227,6 +227,7 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {}),
+    suppressWarnings: mergedConfig.suppressWarnings ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -295,7 +296,7 @@ function resolveZipConfig(
   browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['zip']> {
+): NullishRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
@@ -330,7 +331,7 @@ function resolveZipConfig(
 function resolveAnalysisConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['analysis']> {
+): NullishRequired<ResolvedConfig['analysis']> {
   const analysisOutputFile = path.resolve(
     root,
     mergedConfig.analysis?.outputFile ?? 'stats.html',

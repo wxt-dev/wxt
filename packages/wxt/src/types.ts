@@ -144,6 +144,25 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
+   * Suppress specific warnings during the build process.
+   *
+   * @example
+   *   ```ts
+   *   export default defineConfig({
+   *     suppressWarnings: {
+   *       firefoxDataCollection: true,
+   *     },
+   *   })
+   *   ```;
+   */
+  suppressWarnings?: {
+    /**
+     * Suppress warnings for:
+     * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
+     */
+    firefoxDataCollection?: boolean;
+  };
+  /**
    * Configure browser startup. Options set here can be overridden in a
    * `web-ext.config.ts` file.
    */
@@ -411,8 +430,8 @@ export interface InlineConfig {
    * set in WXT's config instead of Vite's.
    *
    * This is a function because any vite plugins added need to be recreated for
-   * each individual build step, incase they have internal state causing them to
-   * fail when reused.
+   * each individual build step, in case they have internal state causing them
+   * to fail when reused.
    */
   vite?: (env: ConfigEnv) => WxtViteConfig | Promise<WxtViteConfig>;
 }
@@ -721,7 +740,15 @@ export interface ThemeIcon {
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
-  /** Defaults to "browser_action" to be equivalent to MV3's "action" key */
+  /**
+   * The type of action to use in the manifest.
+   *
+   * In MV2, defaults to `"browser_action"`. In MV3, `"browser_action"` is
+   * converted to `"action"`, while `"page_action"` is kept as-is (Firefox MV3
+   * only).
+   */
+  actionType?: PerBrowserOption<'browser_action' | 'page_action'>;
+  /** @deprecated Use `actionType` instead. */
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
@@ -937,6 +964,41 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
 } & { [key in TOmitted]: T[key] };
 
 /**
+ * Firefox data collection permission types for personal data. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ */
+export type FirefoxDataCollectionType =
+  | 'locationInfo'
+  | 'browsingActivity'
+  | 'websiteContent'
+  | 'websiteActivity'
+  | 'searchTerms'
+  | 'bookmarksInfo'
+  | 'healthInfo'
+  | 'contactInfo'
+  | 'socialInfo'
+  | (string & {});
+
+/**
+ * Firefox data collection permissions configuration. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ */
+export interface FirefoxDataCollectionPermissions {
+  /**
+   * Required data collection permissions. Users must opt in to use the
+   * extension. Can include personal data types or "none" to explicitly indicate
+   * no data collection.
+   */
+  required?: Array<FirefoxDataCollectionType | 'none'>;
+  /**
+   * Optional data collection permissions. Users can opt in after installation.
+   * Can include personal data types or "technicalAndInteraction" (which can
+   * only be optional).
+   */
+  optional?: Array<FirefoxDataCollectionType | 'technicalAndInteraction'>;
+}
+
+/**
  * Manifest customization available in the `wxt.config.ts` file. You cannot
  * configure entrypoints here, they are configured inline.
  */
@@ -957,10 +1019,13 @@ export type UserManifest = {
 } & {
   // Add any Browser-specific or MV2 properties that WXT supports here
   action?: Browser.runtime.ManifestV3['action'] & {
-    browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   browser_action?: Browser.runtime.ManifestV2['browser_action'] & {
     browser_style?: boolean;
+    default_area?: 'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar';
+    theme_icons?: ThemeIcon[];
   };
   page_action?: Browser.runtime.ManifestV2['page_action'] & {
     browser_style?: boolean;
@@ -971,6 +1036,11 @@ export type UserManifest = {
       strict_min_version?: string;
       strict_max_version?: string;
       update_url?: string;
+      /**
+       * Firefox data collection permissions configuration. See:
+       * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+       */
+      data_collection_permissions?: FirefoxDataCollectionPermissions;
     };
     gecko_android?: {
       strict_min_version?: string;
@@ -1202,14 +1272,18 @@ export interface WxtHooks {
    *
    * @example
    *   wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
-   *     paths.push('/icons/128.png');
+   *     paths.push('icons/128.png');
+   *     paths.push({
+   *       type: 'templateLiteral',
+   *       path: '_favicon/?${string}',
+   *     });
    *   });
    *
    * @param wxt The configured WXT object
    * @param paths This list of paths TypeScript allows `browser.runtime.getURL`
    *   to be called with.
    */
-  'prepare:publicPaths': (wxt: Wxt, paths: string[]) => HookResult;
+  'prepare:publicPaths': (wxt: Wxt, paths: PublicPathEntry[]) => HookResult;
   /**
    * Called before the build is started in both dev mode and build mode.
    *
@@ -1427,6 +1501,8 @@ export interface ResolvedConfig {
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
   experimental: {};
+  /** List of warning identifiers to suppress during the build process. */
+  suppressWarnings: { firefoxDataCollection?: boolean };
   dev: {
     /** Only defined during dev command */
     server?: {
@@ -1651,6 +1727,13 @@ export interface GeneratedPublicFile extends ResolvedBasePublicFile {
   /** Text to write to the file. */
   contents: string;
 }
+
+export type PublicPathEntry =
+  | string
+  | {
+      type: 'string' | 'templateLiteral';
+      path: string;
+    };
 
 export type WxtPlugin = () => void;
 
