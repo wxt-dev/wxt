@@ -552,6 +552,31 @@ const extensionEntries: ExtensionEntry[] = [
     chromeId: 'pmgehhllikbjmadpenhabejhpemplhmd',
     firefoxSlug: 'rank-checker',
   },
+  {
+    // PlayFaster - Enhanced playback speed control for online videos and audio
+    chromeId: 'fppcbkhpahkbgijkdcpjgjmhpfbmfiih',
+    firefoxSlug: 'playfaster',
+  },
+  {
+    // LatTab - Learn Latin With Every New Tab
+    chromeId: 'eiocjaocpmackhbaffoejkcmnfbdpgpj',
+    firefoxSlug: 'lattab-learn-latin-new-tabs',
+  },
+  {
+    // Vim What? - Interactive Vim command reference
+    chromeId: 'ngbehgnlcdjkbnihgpkgdangbhemidge',
+    firefoxSlug: 'vim-what',
+  },
+  {
+    // FRED - Fraud Recognition Easy Detection
+    chromeId: 'bjdbcabacnlmbpcmiapcdfancfgcakfn',
+    firefoxSlug: 'fred',
+  },
+  {
+    // Clear Wisdom - Gems of wisdom from James Clear's 3-2-1 newsletter
+    chromeId: 'jijfmgoijddfmlcdghopbkdpelbpmjdm',
+    firefoxSlug: 'clear-wisdom',
+  },
 ];
 
 const chromeIds = extensionEntries.flatMap((e) =>
