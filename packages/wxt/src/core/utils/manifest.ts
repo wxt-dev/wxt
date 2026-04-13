@@ -306,9 +306,9 @@ function addEntrypoints(
 
     const actionKey =
       manifest.manifest_version === 2
-        ? (popup.options.mv2Key ?? 'browser_action')
+        ? (popup.options.actionType ?? 'browser_action')
         : wxt.config.browser === 'firefox'
-          ? (popup.options.mv2Key ?? 'action')
+          ? (popup.options.actionType ?? 'action')
           : 'action';
 
     manifest[actionKey] = {

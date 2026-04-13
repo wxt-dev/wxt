@@ -10,6 +10,7 @@ ignorePaths:
   - packages/browser/src/gen/**
   - patches/**
   - '**/*.snap'
+  - docs/assets/extension-showcase.yml
 words:
   - Aabid
   - aabidk
@@ -44,6 +45,7 @@ words:
   - favicons
   - fieldtrials
   - firefoxdeveloperedition
+  - flamechart
   - Florian
   - focusring
   - frontmatter
@@ -108,6 +110,7 @@ words:
   - unstub
   - unwatch
   - USSS
+  - vitepress
   - webext
   - webextension
   - webextrc

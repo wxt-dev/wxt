@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import spawn from 'nano-spawn';
+import spawn, { Subprocess } from 'nano-spawn';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'path';
 import { glob } from 'tinyglobby';
@@ -14,7 +14,7 @@ import {
 import { normalizePath } from '../src/core/utils';
 import { pathExists, readJson } from '../src/core/utils/fs';
 
-// Run "pnpm wxt" to use the "wxt" dev script, not the "wxt" binary from the
+// Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
 // files.
 export const WXT_PACKAGE_DIR = resolve(__dirname, '..');
@@ -48,9 +48,6 @@ export class TestProject {
             name: 'E2E Extension',
             description: 'Example description',
             version: '0.0.0',
-            dependencies: {
-              wxt: '../../..',
-            },
           },
           packageJson,
         ),
@@ -127,7 +124,7 @@ export class TestProject {
     // Only install dependencies if the project has custom ones - otherwise the
     // project will reuse the ones in `packages/wxt/node_modules`!
     if (this.hasCustomDependencies) {
-      await spawn('pnpm', ['--ignore-workspace', 'i', '--ignore-scripts'], {
+      await spawn('bun', ['install', '--ignore-scripts'], {
         cwd: this.root,
       });
     }
@@ -198,5 +195,12 @@ export class TestProject {
     path: string = '.output/chrome-mv3/manifest.json',
   ): Promise<any> {
     return readJson(this.resolvePath(path));
+  }
+
+  /** Run a command using the project's package manager. */
+  async run(...args: string[]): Promise<Subprocess> {
+    return await spawn('bun', args, {
+      cwd: this.root,
+    });
   }
 }

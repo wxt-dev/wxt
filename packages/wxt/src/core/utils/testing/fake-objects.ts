@@ -139,7 +139,7 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
         '64': 'icon/64.png',
       },
     ]),
-    mv2Key: faker.helpers.arrayElement([
+    actionType: faker.helpers.arrayElement([
       'browser_action',
       'page_action',
       undefined,
