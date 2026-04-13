@@ -76,8 +76,12 @@ export async function createViteBuilder(
     config.legacy.skipWebSocketTokenCheck = true;
 
     // Solves https://github.com/wxt-dev/wxt/issues/353
-    config.esbuild ??= {};
-    if (config.esbuild) config.esbuild.charset = 'ascii';
+    if (isRolldownVersion(vite.version)) {
+      // TODO: Add charset ascii when supported by oxc
+    } else {
+      config.esbuild ??= {};
+      if (config.esbuild) config.esbuild.charset = 'ascii';
+    }
 
     const server = getWxtDevServer?.();
 
@@ -493,4 +497,8 @@ export async function removeEmptyDirs(dir: string): Promise<void> {
   } catch {
     // noop on failure - this means the directory was not empty.
   }
+}
+
+function isRolldownVersion(version: string): boolean {
+  return Number(version.split('.')[0]) >= 8;
 }
