@@ -91,7 +91,7 @@
         "@types/har-format": "*",
       },
       "devDependencies": {
-        "@types/chrome": "^0.1.40",
+        "@types/chrome": "0.1.40",
         "@types/node": "^20.0.0",
         "nano-spawn": "^2.0.0",
         "typescript": "^5.9.3",

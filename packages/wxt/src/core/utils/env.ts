@@ -34,9 +34,6 @@ export function loadEnv(mode: string, browser: TargetBrowser) {
 
   expand({
     parsed,
-    // Expand and modify `process.env` directly, see:
-    // https://github.com/wxt-dev/wxt/issues/2266#issuecomment-4244170782
-    processEnv: process.env as Record<string, string>,
   });
 
   return parsed;
