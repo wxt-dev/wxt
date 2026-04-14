@@ -713,6 +713,22 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * @default 'manifest'
    */
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
+  /**
+   * Do not send the `wxt:content-script-started` message via
+   * `window.postMessage`.
+   *
+   * This has been replaced with custom events. The `postMessage` call is kept
+   * for backwards compatibility. For some websites the `postMessage` call is
+   * undesirable, such as those with poorly written message event listeners.
+   *
+   * Setting this to `true` opts into the behaviour that will become the default
+   * in a future version of WXT, where the `postMessage` call is removed
+   * entirely.
+   *
+   * See https://github.com/wxt-dev/wxt/pull/1938 and
+   * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
+   */
+  noScriptStartedPostMessage?: boolean;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
