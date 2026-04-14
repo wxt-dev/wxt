@@ -4,33 +4,21 @@ outline: deep
 
 # WXT Modules
 
-WXT provides a "module system" that let's you run code at different steps in the build process to modify it.
+WXT provides a "module system" that lets you run code at different steps in the build process to modify it.
 
 [[toc]]
 
-## Adding a Module
+## Installing a Module
 
-There are two ways to add a module to your project:
+To use a published module from NPM, install the package and add it to your config:
 
-1. **NPM**: install an NPM package, like [`@wxt-dev/auto-icons`](https://www.npmjs.com/package/@wxt-dev/auto-icons) and add it to your config:
+```ts [wxt.config.ts]
+export default defineConfig({
+  modules: ['@wxt-dev/auto-icons'],
+});
+```
 
-   ```ts [wxt.config.ts]
-   export default defineConfig({
-     modules: ['@wxt-dev/auto-icons'],
-   });
-   ```
-
-   > Searching for ["wxt module"](https://www.npmjs.com/search?q=wxt%20module) on NPM is a good way to find published WXT modules.
-
-2. **Local**: add a file to your project's `modules/` directory:
-
-   ```plaintext
-   <rootDir>/
-     modules/
-       my-module.ts
-   ```
-
-   > To learn more about writing your own modules, read the [Writing Modules](/guide/essentials/wxt-modules) docs.
+> Searching for ["wxt module"](https://www.npmjs.com/search?q=wxt%20module) on NPM is a good way to find published WXT modules.
 
 ## Module Options
 
@@ -49,7 +37,7 @@ Modules are loaded in the same order as hooks are executed. Refer to the [Hooks 
 
 ## Writing Modules
 
-Here's what a basic WXT module looks like:
+If you need custom build logic for your project, you can write your own local module. Here's what a basic WXT module looks like:
 
 ```ts
 import { defineWxtModule } from 'wxt/modules';
@@ -59,6 +47,14 @@ export default defineWxtModule({
     // Your module code here...
   },
 });
+```
+
+To add it to your project, place the file in the `modules/` directory at the root of your project. Any module file in this directory is **automatically discovered and loaded** — no additional configuration is needed:
+
+```plaintext
+<rootDir>/
+  modules/
+    my-module.ts    ← loaded automatically
 ```
 
 Each module's setup function is executed after the `wxt.config.ts` file is loaded. The `wxt` object provides everything you need to write a module:
