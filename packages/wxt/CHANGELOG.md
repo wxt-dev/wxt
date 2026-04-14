@@ -1,5 +1,103 @@
 # Changelog
 
+## v0.20.22
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.21...wxt-v0.20.22)
+
+### 🚀 Enhancements
+
+- Add support for Firefox data collection permissions ([#1976](https://github.com/wxt-dev/wxt/pull/1976))
+- Add `dev.server.strictPort` option ([#2261](https://github.com/wxt-dev/wxt/pull/2261))
+
+### 🩹 Fixes
+
+- Scripts injection for MV2 ([#2232](https://github.com/wxt-dev/wxt/pull/2232))
+- Skip applying `esbuild.charset=ascii` vite 8 ([#2264](https://github.com/wxt-dev/wxt/pull/2264))
+- Apply expanded env to `process.env` ([#2267](https://github.com/wxt-dev/wxt/pull/2267))
+
+### 📖 Documentation
+
+- Fix Read Frog Firefox showcase link ([#2256](https://github.com/wxt-dev/wxt/pull/2256))
+- Add TF2 Trader to the list of extensions ([#2213](https://github.com/wxt-dev/wxt/pull/2213))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Offish ([@offish](https://github.com/offish))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Suvesh Moza <anmolmoza2@gmail.com>
+- GuaGua <readfrogguagua@gmail.com>
+
+## v0.20.21
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.20...wxt-v0.20.21)
+
+### 🚀 Enhancements
+
+- Replace `dotenv` with native `node:util` `parseEnv` ([#2181](https://github.com/wxt-dev/wxt/pull/2181))
+- Type `/_favicon/` paths when `favicon` permission is declared ([#2241](https://github.com/wxt-dev/wxt/pull/2241))
+- Auto-discover Firefox `theme_icons` from public assets ([#2242](https://github.com/wxt-dev/wxt/pull/2242))
+
+### 🩹 Fixes
+
+- Add `engines` field to WXT's `package.json` ([ce551fbd](https://github.com/wxt-dev/wxt/commit/ce551fbd))
+- Output content scripts in ascii to avoid utf8 encoding errors ([#2204](https://github.com/wxt-dev/wxt/pull/2204))
+- Resolve `url:` imports in Vite 8 ([#2218](https://github.com/wxt-dev/wxt/pull/2218))
+- Support template literals in prepare:publicPaths ([#2248](https://github.com/wxt-dev/wxt/pull/2248))
+- Support `page_action` for Firefox MV3 ([#2200](https://github.com/wxt-dev/wxt/pull/2200))
+- Add Firefox action manifest typings ([#2217](https://github.com/wxt-dev/wxt/pull/2217))
+
+### 💅 Refactors
+
+- Rename internal popup `mv2Key` option to `actionType` ([#2249](https://github.com/wxt-dev/wxt/pull/2249))
+
+### 📖 Documentation
+
+- Document augmenting the `browser` type for Firefox ([#2199](https://github.com/wxt-dev/wxt/pull/2199))
+- Add note about adding the browser package as a dependency for module augmentation ([41a687a6](https://github.com/wxt-dev/wxt/commit/41a687a6))
+- Simplify storage docs ([5376cfd6](https://github.com/wxt-dev/wxt/commit/5376cfd6))
+- Add Artemis II photo to hero section ([70fdb04d](https://github.com/wxt-dev/wxt/commit/70fdb04d))
+- Fix undocumented constants link from 0.14.0 -> 0.15.0 migration guide ([#2244](https://github.com/wxt-dev/wxt/pull/2244))
+- Fix deploy command after bun upgrade ([d7cc8dc2](https://github.com/wxt-dev/wxt/commit/d7cc8dc2))
+- Fix non-replaced `{{version}}` in CLI reference ([799bd92b](https://github.com/wxt-dev/wxt/commit/799bd92b))
+- Add Firefox Add-on support to homepage showcase ([#2208](https://github.com/wxt-dev/wxt/pull/2208))
+- Add 5 Whiteboard Works extensions to the homepage ([#2207](https://github.com/wxt-dev/wxt/pull/2207))
+- Added "SoundCloud Enhanced Pro" to the homepage ([#2238](https://github.com/wxt-dev/wxt/pull/2238))
+- Add AlarmBot extension to the list of extensions ([#2251](https://github.com/wxt-dev/wxt/pull/2251))
+- Move homepage extensions to separate YAML file ([#2255](https://github.com/wxt-dev/wxt/pull/2255))
+
+### 🏡 Chore
+
+- Replace minimatch with picomatch ([#2188](https://github.com/wxt-dev/wxt/pull/2188))
+- Add cspell and fix all typos ([6621aaf8](https://github.com/wxt-dev/wxt/commit/6621aaf8))
+- Use `deps.neverBundle` instead of `external` ([8f71e174](https://github.com/wxt-dev/wxt/commit/8f71e174))
+- Replace `picocolors` with builtins ([#2210](https://github.com/wxt-dev/wxt/pull/2210))
+- **deps-dev:** Bump eslint from 10.0.2 to 10.1.0 ([#2224](https://github.com/wxt-dev/wxt/pull/2224))
+- **deps:** Bump filesize from 11.0.13 to 11.0.15 ([#2226](https://github.com/wxt-dev/wxt/pull/2226))
+- **deps:** Bump hookable from 6.0.1 to 6.1.0 ([#2222](https://github.com/wxt-dev/wxt/pull/2222))
+- Migrate monorepo to use Bun instead of PNPM ([#2009](https://github.com/wxt-dev/wxt/pull/2009))
+- Use `bun run --sequential` to simplify package scripts ([#2252](https://github.com/wxt-dev/wxt/pull/2252))
+- Fix flakey test ([#2254](https://github.com/wxt-dev/wxt/pull/2254))
+
+### 🤖 CI
+
+- Enable bun package manager tests on windows ([#2253](https://github.com/wxt-dev/wxt/pull/2253))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Kamer DINC <kamerdinc@gmail.com>
+- Sullivan ([@Epic-R-R](https://github.com/Epic-R-R))
+- Skylar Bolton <skylar.bolton@gmail.com>
+- Vaughn Bosu ([@VaughnBosu](https://github.com/VaughnBosu))
+- SmAsHeD ([@smashedr](https://github.com/smashedr))
+- Eupthere ([@eupthere](https://github.com/eupthere))
+- Ofer Itzhaki <ofer.webdev@gmail.com>
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Alexharding-ux ([@alexharding-ux](https://github.com/alexharding-ux))
+- Harryson ([@HarrysonLadines](https://github.com/HarrysonLadines))
+- Aditi ([@Adiii-15](https://github.com/Adiii-15))
+
 ## v0.20.20
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.19...wxt-v0.20.20)

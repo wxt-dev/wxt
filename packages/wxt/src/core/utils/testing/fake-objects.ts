@@ -26,7 +26,7 @@ import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.test.SEED);
+faker.seed(import.meta.env.TEST_SEED);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -302,6 +302,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     hooks: {},
     vite: () => ({}),
     plugins: [],
+    suppressWarnings: {},
   };
 });
 

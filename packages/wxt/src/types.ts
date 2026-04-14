@@ -144,6 +144,25 @@ export interface InlineConfig {
    */
   manifest?: UserManifest | Promise<UserManifest> | UserManifestFn;
   /**
+   * Suppress specific warnings during the build process.
+   *
+   * @example
+   *   ```ts
+   *   export default defineConfig({
+   *     suppressWarnings: {
+   *       firefoxDataCollection: true,
+   *     },
+   *   })
+   *   ```;
+   */
+  suppressWarnings?: {
+    /**
+     * Suppress warnings for:
+     * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
+     */
+    firefoxDataCollection?: boolean;
+  };
+  /**
    * Configure browser startup. Options set here can be overridden in a
    * `web-ext.config.ts` file.
    */
@@ -368,6 +387,14 @@ export interface InlineConfig {
        * @default 'http://localhost:3000'
        */
       origin?: string;
+      /**
+       * Whether the dev server should fail if the specified port is already in
+       * use. When `false` and a `port` is specified, the next available port
+       * will be used instead of throwing an error.
+       *
+       * @default false
+       */
+      strictPort?: boolean;
       /**
        * Hostname to run the dev server on.
        *
@@ -945,6 +972,41 @@ export type ResolvedPerBrowserOptions<T, TOmitted extends keyof T = never> = {
 } & { [key in TOmitted]: T[key] };
 
 /**
+ * Firefox data collection permission types for personal data. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ */
+export type FirefoxDataCollectionType =
+  | 'locationInfo'
+  | 'browsingActivity'
+  | 'websiteContent'
+  | 'websiteActivity'
+  | 'searchTerms'
+  | 'bookmarksInfo'
+  | 'healthInfo'
+  | 'contactInfo'
+  | 'socialInfo'
+  | (string & {});
+
+/**
+ * Firefox data collection permissions configuration. See:
+ * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+ */
+export interface FirefoxDataCollectionPermissions {
+  /**
+   * Required data collection permissions. Users must opt in to use the
+   * extension. Can include personal data types or "none" to explicitly indicate
+   * no data collection.
+   */
+  required?: Array<FirefoxDataCollectionType | 'none'>;
+  /**
+   * Optional data collection permissions. Users can opt in after installation.
+   * Can include personal data types or "technicalAndInteraction" (which can
+   * only be optional).
+   */
+  optional?: Array<FirefoxDataCollectionType | 'technicalAndInteraction'>;
+}
+
+/**
  * Manifest customization available in the `wxt.config.ts` file. You cannot
  * configure entrypoints here, they are configured inline.
  */
@@ -982,6 +1044,11 @@ export type UserManifest = {
       strict_min_version?: string;
       strict_max_version?: string;
       update_url?: string;
+      /**
+       * Firefox data collection permissions configuration. See:
+       * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/#specifying-data-types
+       */
+      data_collection_permissions?: FirefoxDataCollectionPermissions;
     };
     gecko_android?: {
       strict_min_version?: string;
@@ -1442,12 +1509,15 @@ export interface ResolvedConfig {
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
   experimental: {};
+  /** List of warning identifiers to suppress during the build process. */
+  suppressWarnings: { firefoxDataCollection?: boolean };
   dev: {
     /** Only defined during dev command */
     server?: {
       host: string;
       port: number;
       origin: string;
+      strictPort: boolean;
       /**
        * The milliseconds to debounce when a file is saved before reloading. The
        * only way to set this option is to set the `WXT_WATCH_DEBOUNCE`
