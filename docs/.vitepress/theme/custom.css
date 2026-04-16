@@ -41,18 +41,6 @@ body {
   overflow-y: scroll;
 }
 
-.VPSidebarItem .badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.75em;
-  height: 1.75em;
-  border-radius: 10rem;
-  font-size: 0.8em;
-  margin-left: 0.25rem;
-  background-color: var(--vp-c-default-2);
-}
-
 .light-netlify {
   display: inline;
 }
