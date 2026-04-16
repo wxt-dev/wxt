@@ -42,15 +42,14 @@ body {
 }
 
 .VPSidebarItem .badge {
-  display: inline-block;
-  min-width: 1.6em;
-  padding: 0.3em 0.4em 0.2em;
-  border-radius: 1rem;
-  font-size: 0.75em;
-  line-height: 1;
-  margin-left: 0.5rem;
-  text-align: center;
-  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75em;
+  height: 1.75em;
+  border-radius: 10rem;
+  font-size: 0.8em;
+  margin-left: 0.25rem;
   background-color: var(--vp-c-default-2);
 }
 
