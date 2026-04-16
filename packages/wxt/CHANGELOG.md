@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.20.23
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.22...wxt-v0.20.23)
+
+### 🩹 Fixes
+
+- Use correct color name ([6224ff49](https://github.com/wxt-dev/wxt/commit/6224ff49))
+
+### 📖 Documentation
+
+- Re-structure the WXT Modules documentation ([#2260](https://github.com/wxt-dev/wxt/pull/2260))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.22
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.21...wxt-v0.20.22)
