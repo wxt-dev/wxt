@@ -1,9 +1,21 @@
+/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 /* Colors */
 :root {
   --wxt-c-green-1: #0b8a00;
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
   --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
+
+  --vp-c-brand-1: var(--wxt-c-green-1);
+  --vp-c-brand-2: var(--wxt-c-green-2);
+  --vp-c-brand-3: var(--wxt-c-green-3);
+  --vp-c-brand-soft: var(--wxt-c-green-soft);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .dark {
@@ -13,38 +25,20 @@
   --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
 }
 
-/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
-
-:root {
-  --vp-c-brand-1: var(--wxt-c-green-1);
-  --vp-c-brand-2: var(--wxt-c-green-2);
-  --vp-c-brand-3: var(--wxt-c-green-3);
-  --vp-c-brand-soft: var(--wxt-c-green-soft);
-}
-
 /* Customize Individual Components */
+.vp-doc .no-vertical-dividers {
+  th,
+  td {
+    border: none;
+  }
 
-.vp-doc .no-vertical-dividers th,
-.vp-doc .no-vertical-dividers td {
-  border: none;
-}
-
-.vp-doc .no-vertical-dividers tr {
-  border: 1px solid var(--vp-c-divider);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  tr {
+    border: 1px solid var(--vp-c-divider);
+  }
 }
 
 body {
   overflow-y: scroll;
-}
-
-.VPSidebar {
-  user-select: none;
 }
 
 .VPSidebarItem .badge {
@@ -63,12 +57,15 @@ body {
 .light-netlify {
   display: inline;
 }
+
 .dark .light-netlify {
   display: none;
 }
+
 .dark-netlify {
   display: none;
 }
+
 .dark .dark-netlify {
   display: inline;
 }
@@ -85,6 +82,7 @@ body {
   background-position: 90%;
   pointer-events: none;
 }
+
 .dark .VPHome::after {
   content: '';
   position: absolute;
@@ -95,6 +93,7 @@ body {
   pointer-events: none;
   z-index: 0;
 }
+
 .item {
   z-index: 1;
 }
