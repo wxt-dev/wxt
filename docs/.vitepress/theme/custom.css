@@ -13,6 +13,7 @@
   }
 
   tr {
+    /*noinspection CssUnresolvedCustomProperty*/
     border: 1px solid var(--vp-c-divider);
   }
 }
@@ -56,6 +57,7 @@ body {
   width: 100vw;
   height: 10vh;
   top: 100vh;
+  /*noinspection CssUnresolvedCustomProperty*/
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
   pointer-events: none;
 }
