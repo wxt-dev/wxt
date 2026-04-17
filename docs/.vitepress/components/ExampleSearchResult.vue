@@ -24,38 +24,38 @@ a {
   border: 2px solid var(--vp-c-bg-soft);
   border-radius: 16px;
   gap: 8px;
-}
 
-a:hover {
-  outline: 2px solid var(--vp-c-brand-2);
-}
+  &:hover {
+    outline: 2px solid var(--vp-c-brand);
 
-.name {
-  font-weight: 500;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
+    .link {
+      opacity: 100%;
+    }
+  }
 
-.description {
-  opacity: 70%;
-  font-size: 14px;
-  line-height: 130%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+  .name {
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-.link {
-  opacity: 0;
-  transition: 250ms;
-  color: var(--vp-c-brand-2);
-  font-weight: bold;
-  text-align: right;
-}
+  .description {
+    opacity: 70%;
+    font-size: 14px;
+    line-height: 130%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-a:hover .link {
-  opacity: 100%;
+  .link {
+    opacity: 0;
+    transition: 250ms;
+    color: var(--vp-c-brand);
+    font-weight: bold;
+    text-align: right;
+  }
 }
 </style>
