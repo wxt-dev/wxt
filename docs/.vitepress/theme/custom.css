@@ -45,7 +45,7 @@ body {
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
 .dark .VPHome::before {
   content: '';
-  background-image: url('/assets/art002e009298.jpg');
+  background-image: url('../../assets/art002e009298.jpg');
   opacity: 50%;
   position: absolute;
   width: 100vw;
