@@ -47,10 +47,7 @@ describe('Options', () => {
       });
 
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDir:
-          process.platform === 'win32'
-            ? 'D:\\abs\\path\\to\\extension2'
-            : '/abs/path/to/extension2',
+        extensionDir: resolve('/abs/path/to/extension2'),
       });
     });
   });
