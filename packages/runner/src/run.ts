@@ -61,7 +61,11 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
   });
 
   const baseUrl = await urlRes.promise;
-  await installFirefox(baseUrl, options.extensionDir);
+
+  // TODO: Can this be ran in parallel?
+  for (const extensionDir of options.extensionDirs) {
+    await installFirefox(baseUrl, extensionDir);
+  }
 
   return {
     stop() {
@@ -115,7 +119,10 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
   // Wait for the browser to open before proceeding.
   await opened.promise;
 
-  await installChromium(browserProcess, options.extensionDir);
+  // TODO: Can this be ran in parallel?
+  for (const extensionDir of options.extensionDirs) {
+    await installChromium(browserProcess, extensionDir);
+  }
 
   return {
     stop() {

@@ -22,29 +22,43 @@ describe('Options', () => {
     await mkdir(homedir(), { recursive: true });
   });
 
-  describe('extensionDir', () => {
+  describe('extensionDirs', () => {
     it('should default to the current working directory', async () => {
       const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDir: process.cwd(),
+        extensionDirs: [process.cwd()],
       });
     });
 
     it('should resolve relative to the current working directory', async () => {
       const actual = await resolveRunOptions({
-        extensionDir: './path/to/extension',
+        extensionDirs: ['./path/to/extension'],
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDir: resolve(process.cwd(), './path/to/extension'),
+        extensionDirs: [resolve(process.cwd(), './path/to/extension')],
+      });
+    });
+
+    it('should resolve multiple directories', async () => {
+      const actual = await resolveRunOptions({
+        extensionDirs: ['./path/to/extension1', '/abs/path/to/extension2'],
+      });
+
+      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+        extensionDirs: [
+          resolve(process.cwd(), './path/to/extension1'),
+          '/abs/path/to/extension2',
+        ],
       });
     });
   });
 
   describe('target', () => {
     it('should be "chrome" by default', async () => {
-      const actual = await resolveRunOptions({
-        extensionDir: 'path/to/extension',
-      });
+      const actual = await resolveRunOptions({});
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         target: 'chrome',
       });
@@ -52,12 +66,12 @@ describe('Options', () => {
 
     it('should be what is passed in', async () => {
       const actual = await resolveRunOptions({
-        extensionDir: 'path/to/extension',
         target: 'custom',
         browserBinaries: {
           custom: '/path/to/custom/browser',
         },
       });
+
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
         target: 'custom',
       });
@@ -65,9 +79,9 @@ describe('Options', () => {
 
     it('should throw an error if the target binary could not be found', async () => {
       const actual = resolveRunOptions({
-        extensionDir: 'path/to/extension',
         target: 'custom',
       });
+
       await expect(actual).rejects.toThrow('Could not find "custom" binary.');
     });
   });
@@ -83,7 +97,6 @@ describe('Options', () => {
           ? 'C:\\path\\to\\custom\\browser.exe'
           : path;
       const actual = await resolveRunOptions({
-        extensionDir: 'path/to/extension',
         target: 'custom',
         browserBinaries: {
           custom: path,
@@ -98,9 +111,11 @@ describe('Options', () => {
   describe('chromiumArgs', () => {
     it('should log a warning when --user-data-dir is passed in', async () => {
       const warnSpy = vi.spyOn(console, 'warn');
+
       await resolveRunOptions({
         chromiumArgs: ['--user-data-dir=some/custom/path'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -111,9 +126,11 @@ describe('Options', () => {
 
     it('should log a warning when --remote-debugging-port is passed in', async () => {
       const warnSpy = vi.spyOn(console, 'warn');
+
       await resolveRunOptions({
         chromiumArgs: ['--remote-debugging-port=9222'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -126,6 +143,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         chromiumArgs: ['--window-size=1920,1080'],
       });
+
       expect(actual.chromiumArgs).toEqual([
         // Defaults
         '--disable-features=Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,PrivacySandboxSettings4',
@@ -161,9 +179,11 @@ describe('Options', () => {
   describe('firefoxArgs', () => {
     it('should log a warning when --profile is passed in', async () => {
       const warnSpy = vi.spyOn(console, 'warn');
+
       await resolveRunOptions({
         firefoxArgs: ['--profile=some/custom/path'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Custom Firefox --profile argument ignored'),
@@ -172,9 +192,11 @@ describe('Options', () => {
 
     it('should log a warning when --remote-debugging-port is passed in', async () => {
       const warnSpy = vi.spyOn(console, 'warn');
+
       await resolveRunOptions({
         firefoxArgs: ['--remote-debugging-port=9222'],
       });
+
       expect(warnSpy).toBeCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -187,6 +209,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         firefoxArgs: ['--window-size=1920,1080'],
       });
+
       expect(actual.firefoxArgs).toEqual([
         // Defaults
         '--new-instance',
