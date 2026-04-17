@@ -34,6 +34,7 @@ describe('Manifest Utils', () => {
   describe('generateManifest', () => {
     describe('popup', () => {
       type ActionType = 'browser_action' | 'page_action';
+      type Mv3ActionType = 'action' | 'page_action';
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
@@ -107,29 +108,39 @@ describe('Manifest Utils', () => {
         },
       );
 
-      it('should allow converting action to page_action for Firefox MV3', async () => {
-        const popup = popupEntrypoint('page_action');
-        const buildOutput = fakeBuildOutput();
-        setFakeWxt({
-          config: {
-            manifestVersion: 3,
-            outDir,
-            browser: 'firefox',
-          },
-        });
-        const expected = {
-          default_icon: popup.options.defaultIcon,
-          default_title: popup.options.defaultTitle,
-          default_popup: 'popup.html',
-        };
+      it.each<{
+        inputType: ActionType | undefined;
+        expectedType: Mv3ActionType;
+      }>([
+        { inputType: undefined, expectedType: 'action' },
+        { inputType: 'browser_action', expectedType: 'action' },
+        { inputType: 'page_action', expectedType: 'page_action' },
+      ])(
+        'should use the correct action for Firefox in mv3: %j',
+        async ({ inputType, expectedType }) => {
+          const popup = popupEntrypoint(inputType);
+          const buildOutput = fakeBuildOutput();
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              browser: 'firefox',
+            },
+          });
+          const expected = {
+            default_icon: popup.options.defaultIcon,
+            default_title: popup.options.defaultTitle,
+            default_popup: 'popup.html',
+          };
 
-        const { manifest: actual } = await generateManifest(
-          [popup],
-          buildOutput,
-        );
+          const { manifest: actual } = await generateManifest(
+            [popup],
+            buildOutput,
+          );
 
-        expect(actual.page_action).toEqual(expected);
-      });
+          expect(actual[expectedType]).toEqual(expected);
+        },
+      );
 
       it('should include default_area for Firefox in mv3', async () => {
         const popup = fakePopupEntrypoint({
