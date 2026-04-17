@@ -34,6 +34,7 @@ describe('Manifest Utils', () => {
   describe('generateManifest', () => {
     describe('popup', () => {
       type ActionType = 'browser_action' | 'page_action';
+      type Mv3ActionType = 'action' | 'page_action';
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
@@ -109,7 +110,7 @@ describe('Manifest Utils', () => {
 
       it.each<{
         inputType: ActionType | undefined;
-        expectedType: ActionType;
+        expectedType: Mv3ActionType;
       }>([
         { inputType: undefined, expectedType: 'action' },
         { inputType: 'browser_action', expectedType: 'action' },
