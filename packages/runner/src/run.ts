@@ -137,7 +137,6 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
     // Wait for the browser to open before proceeding.
     await opened.promise;
 
-    // TODO: Can this be ran in parallel?
     await Promise.all(
       options.extensionDirs.map((extensionDir) =>
         installChromium(cdp, extensionDir),
