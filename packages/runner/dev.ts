@@ -11,6 +11,6 @@ import { run } from './src';
 process.env.DEBUG = '@wxt-dev/runner';
 
 await run({
-  extensionDirs: ['demo-extension'],
+  extensionDirs: ['demo-extension-1', 'demo-extension-2'],
   target: process.argv[2],
 });

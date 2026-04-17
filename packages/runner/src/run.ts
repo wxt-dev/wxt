@@ -7,6 +7,8 @@ import {
 import { spawn } from 'node:child_process';
 import { installChromium, installFirefox } from './install';
 import { promiseWithResolvers } from './promises';
+import { BidiConnection, createBidiConnection } from './bidi';
+import { CDPConnection, createCdpConnection } from './cdp';
 
 const debugFirefox = debug.scoped('firefox');
 const debugChrome = debug.scoped('chrome');
@@ -29,104 +31,126 @@ export async function run(options: RunOptions): Promise<Runner> {
 }
 
 async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
-  const urlRes = promiseWithResolvers<string>();
-  const urlTimeout = setTimeout(() => {
-    urlRes.reject(Error('Timed out after 10s waiting for the browser to open'));
-  }, 10e3);
+  let bidi: BidiConnection | undefined;
+  try {
+    const urlRes = promiseWithResolvers<string>();
+    const urlTimeout = setTimeout(() => {
+      urlRes.reject(
+        Error('Timed out after 10s waiting for the browser to open'),
+      );
+    }, 10e3);
 
-  // Firefox notifies the user if an instance is already running, so we don't add any logs for it.
+    // Firefox notifies the user if an instance is already running, so we don't add any logs for it.
 
-  const browserProcess = spawn(
-    `"${options.browserBinary}"`,
-    options.firefoxArgs,
-    {
-      stdio: ['ignore', 'pipe', 'pipe'],
-      shell: true,
-    },
-  );
-  const debugFirefoxStderr = debugFirefox.scoped('stderr');
-  browserProcess.stderr.on('data', (data: string) => {
-    const message = data.toString().trim();
-    debugFirefoxStderr(message);
+    const browserProcess = spawn(
+      `"${options.browserBinary}"`,
+      options.firefoxArgs,
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        shell: true,
+      },
+    );
+    const debugFirefoxStderr = debugFirefox.scoped('stderr');
+    browserProcess.stderr.on('data', (data: string) => {
+      const message = data.toString().trim();
+      debugFirefoxStderr(message);
 
-    if (message.startsWith('WebDriver BiDi listening on ws://')) {
-      clearTimeout(urlTimeout);
-      urlRes.resolve(message.slice(28));
-    }
-  });
-  const debugFirefoxStdout = debugFirefox.scoped('stdout');
-  browserProcess.stdout.on('data', (data: string) => {
-    const message = data.toString().trim();
-    debugFirefoxStdout(message);
-  });
+      if (message.startsWith('WebDriver BiDi listening on ws://')) {
+        clearTimeout(urlTimeout);
+        urlRes.resolve(message.slice(28));
+      }
+    });
+    const debugFirefoxStdout = debugFirefox.scoped('stdout');
+    browserProcess.stdout.on('data', (data: string) => {
+      const message = data.toString().trim();
+      debugFirefoxStdout(message);
+    });
 
-  const baseUrl = await urlRes.promise;
+    const baseUrl = await urlRes.promise;
+    const bidi = await createBidiConnection(baseUrl);
+    await bidi.send<unknown>('session.new', { capabilities: {} });
 
-  // TODO: Can this be ran in parallel?
-  for (const extensionDir of options.extensionDirs) {
-    await installFirefox(baseUrl, extensionDir);
+    await Promise.all(
+      options.extensionDirs.map((extensionDir) =>
+        installFirefox(bidi, extensionDir),
+      ),
+    );
+
+    return {
+      stop() {
+        bidi.close();
+        browserProcess.kill('SIGINT');
+      },
+    };
+  } finally {
+    bidi?.close();
   }
-
-  return {
-    stop() {
-      browserProcess.kill('SIGINT');
-    },
-  };
 }
 
 async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
-  const browserProcess = spawn(
-    `"${options.browserBinary}"`,
-    options.chromiumArgs,
-    {
-      stdio: ['ignore', 'pipe', 'pipe', 'pipe', 'pipe'],
-      shell: true,
-    },
-  );
+  let cdp: CDPConnection | undefined;
 
-  const opened = promiseWithResolvers<void>();
-  const openedTimeout = setTimeout(() => {
-    opened.reject(Error('Timed out after 10s waiting for browser to open.'));
-  }, 10e3);
+  try {
+    const browserProcess = spawn(
+      `"${options.browserBinary}"`,
+      options.chromiumArgs,
+      {
+        stdio: ['ignore', 'pipe', 'pipe', 'pipe', 'pipe'],
+        shell: true,
+      },
+    );
 
-  const debugChromeStderr = debugChrome.scoped('stderr');
-  browserProcess.stderr!.on('data', (data: string) => {
-    const message = data.toString().trim();
-    debugChromeStderr(message);
+    const opened = promiseWithResolvers<void>();
+    const openedTimeout = setTimeout(() => {
+      opened.reject(Error('Timed out after 10s waiting for browser to open.'));
+    }, 10e3);
 
-    // This message signifies Chrome started up correctly.
-    if (message.startsWith('DevTools listening on')) {
-      clearTimeout(openedTimeout);
-      opened.resolve();
-    }
-  });
-  const debugChromeStdout = debugChrome.scoped('stdout');
-  browserProcess.stdout!.on('data', (data: string) => {
-    const message = data.toString().trim();
-    debugChromeStdout(message);
+    const debugChromeStderr = debugChrome.scoped('stderr');
+    browserProcess.stderr!.on('data', (data: string) => {
+      const message = data.toString().trim();
+      debugChromeStderr(message);
 
-    // This message signifies Chrome was already open, and thus we couldn't open the required new instance.
-    if (message === 'Opening in existing browser session.') {
-      clearTimeout(openedTimeout);
-      opened.reject(
-        Error(
-          'An instance of the browser is already running. Close it and try again.',
-        ),
-      );
-    }
-  });
+      // This message signifies Chrome started up correctly.
+      if (message.startsWith('DevTools listening on')) {
+        clearTimeout(openedTimeout);
+        opened.resolve();
+      }
+    });
+    const debugChromeStdout = debugChrome.scoped('stdout');
+    browserProcess.stdout!.on('data', (data: string) => {
+      const message = data.toString().trim();
+      debugChromeStdout(message);
 
-  // Wait for the browser to open before proceeding.
-  await opened.promise;
+      // This message signifies Chrome was already open, and thus we couldn't open the required new instance.
+      if (message === 'Opening in existing browser session.') {
+        clearTimeout(openedTimeout);
+        opened.reject(
+          Error(
+            'An instance of the browser is already running. Close it and try again.',
+          ),
+        );
+      }
+    });
 
-  // TODO: Can this be ran in parallel?
-  for (const extensionDir of options.extensionDirs) {
-    await installChromium(browserProcess, extensionDir);
+    const cdp = createCdpConnection(browserProcess);
+
+    // Wait for the browser to open before proceeding.
+    await opened.promise;
+
+    // TODO: Can this be ran in parallel?
+    await Promise.all(
+      options.extensionDirs.map((extensionDir) =>
+        installChromium(cdp, extensionDir),
+      ),
+    );
+
+    return {
+      stop() {
+        cdp?.close();
+        browserProcess.kill('SIGINT');
+      },
+    };
+  } finally {
+    cdp?.close();
   }
-
-  return {
-    stop() {
-      browserProcess.kill('SIGINT');
-    },
-  };
 }

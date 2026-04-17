@@ -1,6 +1,6 @@
 import type { ChildProcess } from 'node:child_process';
-import { createBidiConnection } from './bidi';
-import { createCdpConnection } from './cdp';
+import { BidiConnection, createBidiConnection } from './bidi';
+import { CDPConnection, createCdpConnection } from './cdp';
 
 /**
  * Install an extension to an already running instance of Firefox.
@@ -11,14 +11,9 @@ import { createCdpConnection } from './cdp';
  *   to be installed.
  */
 export async function installFirefox(
-  debuggerUrl: string,
+  bidi: BidiConnection,
   extensionDir: string,
 ): Promise<BidiWebExtensionInstallResponse> {
-  using bidi = await createBidiConnection(debuggerUrl);
-
-  // Start a session
-  await bidi.send<unknown>('session.new', { capabilities: {} });
-
   // Install the extension
   return await bidi.send<BidiWebExtensionInstallResponse>(
     'webExtension.install',
@@ -46,10 +41,9 @@ export type BidiWebExtensionInstallResponse = {
  * Otherwise it the CDP doesn't have permission to install extensions.
  */
 export async function installChromium(
-  browserProcess: ChildProcess,
+  cdp: CDPConnection,
   extensionDir: string,
 ): Promise<CdpExtensionsLoadUnpackedResponse> {
-  using cdp = createCdpConnection(browserProcess);
   return await cdp.send<CdpExtensionsLoadUnpackedResponse>(
     'Extensions.loadUnpacked',
     {

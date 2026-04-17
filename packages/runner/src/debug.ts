@@ -11,7 +11,7 @@ function createDebug(scopes: string[]): Debug {
       process.env.DEBUG === 'true' ||
       scope.startsWith(process.env.DEBUG ?? '@NOT')
     ) {
-      const params = scope ? [`\x1b[31m${scope}\x1b[0m`, ...args] : args;
+      const params = scope ? [`\x1b[36m${scope}\x1b[0m`, ...args] : args;
       console.log(...params);
     }
   };
