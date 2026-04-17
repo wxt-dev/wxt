@@ -30,7 +30,7 @@ const date = useBlogDate(() => frontmatter.value.date);
 </template>
 
 <style scoped>
-.container-content {
+.container {
   max-width: 1080px;
   padding: 32px;
   margin: auto;
@@ -38,33 +38,27 @@ const date = useBlogDate(() => frontmatter.value.date);
   @media (min-width: 768px) {
     padding: 64px;
   }
-}
 
-.meta-row {
-  display: flex;
-  color: var(--vp-c-text-2);
-  gap: 16px;
-  overflow: hidden;
-  padding-bottom: 32px;
-}
+  .meta-row {
+    display: flex;
+    color: var(--vp-c-text-2);
+    gap: 16px;
+    overflow: hidden;
+    padding-bottom: 32px;
 
-.author {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  color: var(--vp-c-text-2);
-  font-weight: normal;
-  text-decoration: none;
-}
+    .author {
+      display: flex;
+      gap: 8px;
 
-.author img {
-  width: 24px;
-  height: 24px;
-  border-radius: 100%;
-}
+      :hover {
+        text-decoration: underline;
+      }
 
-.author:hover {
-  text-decoration: underline;
-  color: var(--vp-c-text-2);
+      img {
+        width: 24px;
+        border-radius: 100%;
+      }
+    }
+  }
 }
 </style>
