@@ -5,20 +5,20 @@ const props = defineProps<{
 </script>
 
 <template>
-  <table class="no-vertical-dividers entrypoint-patterns">
+  <table class="no-vertical-dividers">
     <thead>
       <tr>
-        <th class="col-filename">Filename</th>
+        <th style="width: 100%">Filename</th>
         <th></th>
         <th>Output Path</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="pattern of patterns" :key="pattern[0]">
-        <td class="cell-input">
+      <tr v-for="pattern of patterns">
+        <td style="white-space: nowrap; padding-right: 8px">
           <code>entrypoints/{{ pattern[0] }}</code>
         </td>
-        <td class="cell-arrow">
+        <td style="padding: 6px; opacity: 50%">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -31,35 +31,10 @@ const props = defineProps<{
             />
           </svg>
         </td>
-        <td class="cell-output">
+        <td style="white-space: nowrap; padding-left: 8px">
           <code>/{{ pattern[1] }}</code>
         </td>
       </tr>
     </tbody>
   </table>
 </template>
-
-<style scoped>
-.entrypoint-patterns {
-  width: 100%;
-
-  .col-filename {
-    width: 100%;
-  }
-
-  .cell-input {
-    white-space: nowrap;
-    padding-right: 8px;
-  }
-
-  .cell-arrow {
-    padding: 6px;
-    opacity: 0.5;
-  }
-
-  .cell-output {
-    white-space: nowrap;
-    padding-left: 8px;
-  }
-}
-</style>
