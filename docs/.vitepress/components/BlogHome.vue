@@ -50,11 +50,13 @@ const posts = computed<Post[]>(() =>
       li {
         padding-top: 16px;
         margin-top: 16px;
+        /*noinspection CssUnresolvedCustomProperty*/
         border-top: 1px solid var(--vp-c-divider);
 
         &:last-child {
           padding-bottom: 16px;
           margin-bottom: 16px;
+          /*noinspection CssUnresolvedCustomProperty*/
           border-bottom: 1px solid var(--vp-c-divider);
         }
       }

@@ -21,6 +21,7 @@ a {
   padding: 16px;
   display: flex;
   flex-direction: column;
+  /*noinspection CssUnresolvedCustomProperty*/
   border: 2px solid var(--vp-c-bg-soft);
   border-radius: 16px;
   gap: 8px;
