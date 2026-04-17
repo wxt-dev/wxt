@@ -47,7 +47,7 @@ describe('Options', () => {
       });
 
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDir: '/abs/path/to/extension2',
+        extensionDir: resolve('/abs/path/to/extension2'),
       });
     });
   });
