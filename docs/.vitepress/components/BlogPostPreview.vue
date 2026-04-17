@@ -16,7 +16,7 @@ const date = useBlogDate(() => props.post.date);
 
 <template>
   <li class="blog-list-item">
-    <a :href="post.url">
+    <a :href="post.url" class="post-link">
       <div class="vp-doc">
         <h3 class="title" v-html="post.title" />
         <p class="description" v-html="post.description" />
@@ -31,31 +31,32 @@ const date = useBlogDate(() => props.post.date);
 </template>
 
 <style scoped>
-li > a > div {
+.post-link .vp-doc {
   display: flex;
   flex-direction: column;
   padding: 16px;
   border-radius: 16px;
+  transition: background 0.2s;
 
   &:hover {
     background: var(--vp-c-default-3);
   }
-}
 
-li .title {
-  color: var(--vp-c-text-1);
-  margin-bottom: 12px;
-}
+  .title {
+    color: var(--vp-c-text-1);
+    margin-bottom: 12px;
+  }
 
-li .description {
-  font-size: 16px;
-  color: var(--vp-c-text-2);
-  margin-bottom: 8px;
-}
+  .description {
+    font-size: 16px;
+    color: var(--vp-c-text-2);
+    margin-bottom: 8px;
+  }
 
-li .meta {
-  font-weight: 400;
-  font-size: 12px;
-  color: var(--vp-c-text-2);
+  .meta {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--vp-c-text-2);
+  }
 }
 </style>
