@@ -17,7 +17,10 @@ const date = useBlogDate(() => frontmatter.value.date);
           :key="author.github"
           :href="`https://github.com/${author.github}`"
         >
-          <img :src="`https://github.com/${author.github}.png?size=96`" />
+          <img
+            :src="`https://github.com/${author.github}.png?size=96`"
+            alt="Author's avatar"
+          />
           <span>{{ author.name }}</span>
         </a>
         <span>&bull;</span>
@@ -40,6 +43,7 @@ const date = useBlogDate(() => frontmatter.value.date);
 
   .meta-row {
     display: flex;
+    /*noinspection CssUnresolvedCustomProperty*/
     color: var(--vp-c-text-2);
     gap: 16px;
     overflow: hidden;
