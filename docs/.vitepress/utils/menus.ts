@@ -89,9 +89,7 @@ export function prepareTypedocSidebar(items: SidebarItem[]) {
     }
   };
 
-  // process
   prepareItems(filtered);
 
-  // return
   return filtered;
 }
