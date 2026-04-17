@@ -71,8 +71,8 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
     await bidi.send<unknown>('session.new', { capabilities: {} });
 
     await Promise.all(
-      options.extensionDirs.map((extensionDir) =>
-        installFirefox(bidi, extensionDir),
+      [options.extensionDir, ...options.firefoxAdditionalExtensionDirs].map(
+        (extensionDir) => installFirefox(bidi, extensionDir),
       ),
     );
 
@@ -132,14 +132,14 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
       }
     });
 
-    const cdp = createCdpConnection(browserProcess);
+    cdp = createCdpConnection(browserProcess);
 
     // Wait for the browser to open before proceeding.
     await opened.promise;
 
     await Promise.all(
-      options.extensionDirs.map((extensionDir) =>
-        installChromium(cdp, extensionDir),
+      [options.extensionDir, ...options.chromiumAdditionalExtensionDirs].map(
+        (extensionDir) => installChromium(cdp!, extensionDir),
       ),
     );
 
