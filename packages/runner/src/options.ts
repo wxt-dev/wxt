@@ -133,7 +133,8 @@ export async function resolveRunOptions(
     dataPersistence,
     chromiumRemoteDebuggingPort,
     chromiumAdditionalExtensionDirs:
-      options?.chromiumAdditionalExtensionDirs ?? [],
+      options?.chromiumAdditionalExtensionDirs?.map((dir) => resolve(dir)) ??
+      [],
     extensionDir: options?.extensionDir
       ? resolve(options.extensionDir)
       : process.cwd(),
@@ -144,7 +145,7 @@ export async function resolveRunOptions(
     ),
     firefoxRemoteDebuggingPort,
     firefoxAdditionalExtensionDirs:
-      options?.firefoxAdditionalExtensionDirs ?? [],
+      options?.firefoxAdditionalExtensionDirs?.map((dir) => resolve(dir)) ?? [],
     target,
   };
   debugOptions('Resolved options:', resolved);
