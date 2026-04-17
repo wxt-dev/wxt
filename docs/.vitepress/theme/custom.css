@@ -1,28 +1,13 @@
 /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 /* Colors */
 :root {
-  --wxt-c-green-1: #0b8a00;
-  --wxt-c-green-2: #096600;
-  --wxt-c-green-3: #096600;
-  --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
-
-  --vp-c-brand-1: var(--wxt-c-green-1);
-  --vp-c-brand-2: var(--wxt-c-green-2);
-  --vp-c-brand-3: var(--wxt-c-green-3);
-  --vp-c-brand-soft: var(--wxt-c-green-soft);
+  --vp-c-brand: #096600;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.dark {
-  --wxt-c-green-1: #67d45e;
-  --wxt-c-green-2: #329929;
-  --wxt-c-green-3: #21651b;
-  --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
 }
 
 /* Customize Individual Components */
@@ -78,9 +63,4 @@ body {
   top: 100vh;
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
   pointer-events: none;
-  z-index: 0;
-}
-
-.item {
-  z-index: 1;
 }
