@@ -216,6 +216,9 @@
     "packages/runner": {
       "name": "@wxt-dev/runner",
       "version": "0.1.2",
+      "dependencies": {
+        "obug": "^2.1.1",
+      },
       "devDependencies": {
         "@aklinker1/buildc": "^1.1.7",
         "oxlint": "^1.51.0",

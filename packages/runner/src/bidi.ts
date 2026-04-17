@@ -1,7 +1,7 @@
 import { openWebSocket } from './web-socket';
-import { debug } from './debug';
+import { runnerDebug } from './debug';
 
-const debugBidi = debug.scoped('bidi');
+const debug = runnerDebug.extend('bidi');
 
 export interface BidiConnection extends Disposable {
   send<T>(method: string, params: any, timeout?: number): Promise<T>;
@@ -12,10 +12,10 @@ export async function createBidiConnection(
   baseUrl: string,
 ): Promise<BidiConnection> {
   const url = new URL('/session', baseUrl);
-  debugBidi('Connecting to BiDi server @', url.href);
+  debug('Connecting to BiDi server @', url.href);
 
   const webSocket = await openWebSocket(url.href);
-  debugBidi('Connected');
+  debug('Connected');
 
   let requestId = 0;
 
@@ -23,7 +23,7 @@ export async function createBidiConnection(
     send(method, params, timeout = 10e3) {
       const id = ++requestId;
       const command = { id, method, params };
-      debugBidi('Sending command:', command);
+      debug('Sending command:', command);
 
       return new Promise((resolve, reject) => {
         const cleanup = () => {
@@ -43,7 +43,7 @@ export async function createBidiConnection(
         const onMessage = (event: MessageEvent) => {
           const data = JSON.parse(event.data);
           if (data.id === id) {
-            debugBidi('Received response:', data);
+            debug('Received response:', data);
             cleanup();
             if (data.type === 'success') resolve(data.result);
             else reject(Error(data.message, { cause: data }));
@@ -62,14 +62,14 @@ export async function createBidiConnection(
     },
 
     close() {
-      debugBidi('Closing connection...');
+      debug('Closing connection...');
       webSocket.close();
-      debugBidi('Closed connection');
+      debug('Closed connection');
     },
     [Symbol.dispose]() {
-      debugBidi('Disposing connection...');
+      debug('Disposing connection...');
       webSocket.close();
-      debugBidi('Disposed connection');
+      debug('Disposed connection');
     },
   };
 }
