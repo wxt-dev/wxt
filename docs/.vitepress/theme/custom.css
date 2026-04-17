@@ -12,6 +12,13 @@
   --vp-c-brand-soft: var(--wxt-c-green-soft);
 }
 
+.dark {
+  --wxt-c-green-1: #67d45e;
+  --wxt-c-green-2: #329929;
+  --wxt-c-green-3: #21651b;
+  --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
+}
+
 * {
   margin: 0;
   padding: 0;
