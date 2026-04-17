@@ -1,4 +1,9 @@
 /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+/* Colors */
+:root {
+  --vp-c-brand: #096600;
+}
+
 * {
   margin: 0;
   padding: 0;
