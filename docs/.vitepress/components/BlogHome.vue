@@ -18,10 +18,8 @@ const posts = computed<Post[]>(() =>
 
 <template>
   <div class="container">
-    <div>
-      <div class="vp-doc">
-        <h1>Blog</h1>
-      </div>
+    <div class="inner-container">
+      <h1>Blog</h1>
 
       <ul>
         <BlogPostPreview v-for="post of posts" :key="post.url" :post />
@@ -35,33 +33,32 @@ const posts = computed<Post[]>(() =>
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.container > div {
-  padding: 32px;
-  max-width: 900px;
-  width: 100%;
-}
+  .inner-container {
+    padding: 32px;
+    max-width: 900px;
+    width: 100%;
 
-h1 {
-  padding-bottom: 16px;
-}
+    h1 {
+      padding-bottom: 16px;
+    }
 
-ul {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-}
+    ul {
+      display: flex;
+      flex-direction: column;
 
-ul li {
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid var(--vp-c-default);
-}
+      li {
+        padding-top: 16px;
+        margin-top: 16px;
+        border-top: 1px solid var(--vp-c-divider);
 
-ul li:last-child {
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--vp-c-default);
+        &:last-child {
+          padding-bottom: 16px;
+          margin-bottom: 16px;
+          border-bottom: 1px solid var(--vp-c-divider);
+        }
+      }
+    }
+  }
 }
 </style>
