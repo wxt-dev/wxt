@@ -116,48 +116,48 @@ const filteredExamples = computed(() => {
     grid-template-columns: 256px 1fr;
     grid-template-rows: auto 1fr;
   }
-}
 
-.search {
-  grid-area: search;
-  background: var(--vp-c-bg-soft);
-  padding: 20px;
-  border-radius: 16px;
-}
-
-.filters {
-  grid-area: filters;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  @media only screen and (min-width: 720px) {
+  .search {
+    grid-area: search;
+    background: var(--vp-c-bg-soft);
+    padding: 20px;
     border-radius: 16px;
-  }
-}
 
-.results {
-  grid-area: results;
-}
-
-.search input {
-  font-size: 16px;
-}
-
-.search-results {
-  display: grid;
-  gap: 16px;
-
-  @media only screen and (min-width: 800px) {
-    grid-template-columns: repeat(2, 1fr);
+    input {
+      font-size: 16px;
+    }
   }
 
-  @media only screen and (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+  .filters {
+    grid-area: filters;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-a {
-  background-color: red;
+    @media only screen and (min-width: 720px) {
+      border-radius: 16px;
+    }
+  }
+
+  .results {
+    grid-area: results;
+
+    .search-results {
+      display: grid;
+      gap: 16px;
+
+      @media only screen and (min-width: 800px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media only screen and (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      a {
+        background-color: red;
+      }
+    }
+  }
 }
 </style>
