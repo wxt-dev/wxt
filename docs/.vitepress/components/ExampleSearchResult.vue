@@ -27,8 +27,7 @@ a {
   gap: 8px;
 
   &:hover {
-    /*noinspection CssUnresolvedCustomProperty*/
-    outline: 2px solid var(--vp-c-brand-1);
+    outline: 2px solid var(--vp-c-brand);
 
     .link {
       opacity: 100%;
@@ -55,8 +54,7 @@ a {
   .link {
     opacity: 0;
     transition: 250ms;
-    /*noinspection CssUnresolvedCustomProperty*/
-    color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand);
     font-weight: bold;
     text-align: right;
   }
