@@ -39,14 +39,11 @@ export type RunOptions = {
    */
   chromiumRemoteDebuggingPort?: number;
   /**
-   * Directories where extension will be installed from. Each should contain a
-   * `manifest.json` file.
-   *
-   * Can be relative to the current working directory.
-   *
-   * @default ['.']
+   * Directory where the extension will be installed from. Should contain a
+   * `manifest.json` file. Can be relative to the current working directory.
+   * Defaults to the current working directory.
    */
-  extensionDirs?: string[];
+  extensionDir?: string;
   /**
    * Customize the arguments passed to the firefox binary. Conflicting arguments
    * with required ones to install extensions are ignored.
@@ -72,8 +69,8 @@ export type ResolvedRunOptions = {
   /** Absolute path to the directory where browser data will be stored. */
   dataDir: string;
   dataPersistence: 'user' | 'project' | 'none';
-  /** Absolute paths to directories containing an extension. */
-  extensionDirs: string[];
+  /** Absolute path to the extension directory. */
+  extensionDir: string;
   firefoxArgs: string[];
   firefoxRemoteDebuggingPort: number;
   target: string;
@@ -110,10 +107,6 @@ export async function resolveRunOptions(
           ? await mkdtemp(join(tmpdir(), 'wxt-runner-'))
           : resolve(dataPersistence);
 
-  const extensionDirs =
-    options?.extensionDirs?.map((dir) => resolve(dir)) ?? [];
-  if (extensionDirs.length === 0) extensionDirs.push(process.cwd());
-
   const resolved: ResolvedRunOptions = {
     browserBinary,
     chromiumArgs: resolveChromiumArgs(
@@ -124,7 +117,7 @@ export async function resolveRunOptions(
     dataDir,
     dataPersistence,
     chromiumRemoteDebuggingPort,
-    extensionDirs,
+    extensionDir: resolve(options?.extensionDir ?? '.'),
     firefoxArgs: resolveFirefoxArgs(
       options?.firefoxArgs,
       firefoxRemoteDebuggingPort,
