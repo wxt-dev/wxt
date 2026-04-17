@@ -79,7 +79,7 @@ WXT is a [MIT-licensed](https://github.com/wxt-dev/wxt/blob/main/LICENSE) open s
 
 <a href="https://github.com/sponsors/wxt-dev"><img alt="WXT Sponsors" src="https://raw.githubusercontent.com/wxt-dev/static/refs/heads/main/sponsorkit/sponsors-wide.svg"></a>
 
-## Put <span style="color: var(--vp-c-brand-1)">Developer Experience</span> First
+## Put Developer Experience First
 
 WXT simplifies the web extension development process by providing tools for zipping and publishing, the best-in-class dev mode, an opinionated project structure, and more. Iterate faster, develop features not build scripts, and use everything the JS ecosystem has to offer.
 
