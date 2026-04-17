@@ -1,5 +1,49 @@
 # Changelog
 
+## v0.20.23
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.22...wxt-v0.20.23)
+
+### 🩹 Fixes
+
+- Use correct color name ([6224ff49](https://github.com/wxt-dev/wxt/commit/6224ff49))
+
+### 📖 Documentation
+
+- Re-structure the WXT Modules documentation ([#2260](https://github.com/wxt-dev/wxt/pull/2260))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.22
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.21...wxt-v0.20.22)
+
+### 🚀 Enhancements
+
+- Add support for Firefox data collection permissions ([#1976](https://github.com/wxt-dev/wxt/pull/1976))
+- Add `dev.server.strictPort` option ([#2261](https://github.com/wxt-dev/wxt/pull/2261))
+
+### 🩹 Fixes
+
+- Scripts injection for MV2 ([#2232](https://github.com/wxt-dev/wxt/pull/2232))
+- Skip applying `esbuild.charset=ascii` vite 8 ([#2264](https://github.com/wxt-dev/wxt/pull/2264))
+- Apply expanded env to `process.env` ([#2267](https://github.com/wxt-dev/wxt/pull/2267))
+
+### 📖 Documentation
+
+- Fix Read Frog Firefox showcase link ([#2256](https://github.com/wxt-dev/wxt/pull/2256))
+- Add TF2 Trader to the list of extensions ([#2213](https://github.com/wxt-dev/wxt/pull/2213))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Offish ([@offish](https://github.com/offish))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Suvesh Moza <anmolmoza2@gmail.com>
+- GuaGua <readfrogguagua@gmail.com>
+
 ## v0.20.21
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.20...wxt-v0.20.21)

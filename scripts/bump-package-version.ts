@@ -6,7 +6,7 @@ import {
   parseCommits,
 } from 'changelogen';
 import { consola } from 'consola';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { getPkgTag, grabPackageDetails, listCommitsInDir } from './git';
 
@@ -106,8 +106,11 @@ if (pkg === 'wxt') {
   }
 }
 
+// Run a bun install to update the lockfile after the version change
+await Bun.$`bun install --ignore-scripts`;
+
 // Commit changes
-await Bun.$`git add "${pkgJsonPath}" "${changelogPath}"`;
+await Bun.$`git add "${pkgJsonPath}" "${changelogPath}" bun.lock`;
 for (const packageJsonPath of templatePkgJsonPaths) {
   await Bun.$`git add "${packageJsonPath}"`;
 }
