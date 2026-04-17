@@ -1,3 +1,5 @@
+import { ContentData } from 'vitepress';
+
 export interface Example {
   name: string;
   description?: string;
@@ -22,4 +24,9 @@ export interface PostFrontmatter {
   description?: string;
   date: Date;
   authors: { name: string; github: string }[];
+}
+
+export interface Post
+  extends Omit<ContentData, 'frontmatter'>, Omit<PostFrontmatter, 'date'> {
+  date: Date;
 }
