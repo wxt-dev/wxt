@@ -29,9 +29,9 @@ function toggleItem(pkg: string) {
       <span>Filter by {{ label }}</span> <span v-if="count">({{ count }})</span>
     </p>
     <div class="scroll-container">
-      <ul>
+      <ul class="items">
         <li v-for="item in items">
-          <label :title="item">
+          <label :title="item" class="item-label">
             <input
               type="checkbox"
               :checked="selectedItems[item]"
@@ -51,41 +51,41 @@ function toggleItem(pkg: string) {
   display: flex;
   flex-direction: column;
   background: var(--vp-c-bg-soft);
-}
 
-.scroll-container {
-  flex: 1;
-  position: relative;
-}
+  .header {
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 50%;
+  }
 
-.scroll-container ul {
-  position: absolute;
-  overflow-y: auto;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: small;
-  padding: 8px 16px 16px;
-}
+  .scroll-container {
+    flex: 1;
+    position: relative;
 
-.header {
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: bold;
-  opacity: 50%;
-}
+    .items {
+      position: absolute;
+      overflow-y: auto;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: small;
+      padding: 8px 16px 16px;
 
-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
+      .item-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
 
-input[type='checkbox'] {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
+        input[type='checkbox'] {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
 }
 </style>
