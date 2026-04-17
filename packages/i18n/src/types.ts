@@ -9,9 +9,9 @@ export type I18nStructure = {
 
 type DefaultTFunction<TKeys extends string> = {
   (key: TKeys): string;
-  (key: TKeys, substitutions: string[]): string;
+  (key: TKeys, substitutions: Substitution[]): string;
   (key: TKeys, n: number): string;
-  (key: TKeys, n: number, substitutions: string[]): string;
+  (key: TKeys, n: number, substitutions: Substitution[]): string;
 };
 
 export interface I18n<T extends I18nStructure> {
