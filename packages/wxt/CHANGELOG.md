@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.24
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.23...wxt-v0.20.24)
+
+### 🩹 Fixes
+
+- Correct `actionKey` for Firefox in MV3 ([#2274](https://github.com/wxt-dev/wxt/pull/2274))
+
+### ❤️ Contributors
+
+- John Wong <john_wong@live.com>
+
 ## v0.20.23
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.22...wxt-v0.20.23)
