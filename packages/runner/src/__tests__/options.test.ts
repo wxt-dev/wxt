@@ -22,35 +22,32 @@ describe('Options', () => {
     await mkdir(homedir(), { recursive: true });
   });
 
-  describe('extensionDirs', () => {
+  describe('extensionDir', () => {
     it('should default to the current working directory', async () => {
       const actual = await resolveRunOptions({});
 
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDirs: [process.cwd()],
+        extensionDir: process.cwd(),
       });
     });
 
     it('should resolve relative to the current working directory', async () => {
       const actual = await resolveRunOptions({
-        extensionDirs: ['./path/to/extension'],
+        extensionDir: './path/to/extension',
       });
 
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDirs: [resolve(process.cwd(), './path/to/extension')],
+        extensionDir: resolve(process.cwd(), './path/to/extension'),
       });
     });
 
-    it('should resolve multiple directories', async () => {
+    it('should use absolute paths as-is', async () => {
       const actual = await resolveRunOptions({
-        extensionDirs: ['./path/to/extension1', '/abs/path/to/extension2'],
+        extensionDir: '/abs/path/to/extension2',
       });
 
       expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
-        extensionDirs: [
-          resolve(process.cwd(), './path/to/extension1'),
-          '/abs/path/to/extension2',
-        ],
+        extensionDir: '/abs/path/to/extension2',
       });
     });
   });
