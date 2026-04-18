@@ -70,12 +70,12 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
     bidi = await createBidiConnection(baseUrl);
     await bidi.send<unknown>('session.new', { capabilities: {} });
 
-    for (const extensionDir of [
-      options.extensionDir,
-      ...options.firefoxAdditionalExtensionDirs,
-    ]) {
-      await installFirefox(bidi, extensionDir);
-    }
+    // BiDi supports sending multiple requests in parallel
+    await Promise.all(
+      [options.extensionDir, ...options.firefoxAdditionalExtensionDirs].map(
+        (extensionDir) => installFirefox(bidi!, extensionDir),
+      ),
+    );
 
     return {
       stop() {
@@ -138,6 +138,7 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
     // Wait for the browser to open before proceeding.
     await opened.promise;
 
+    // CDP doesn't support parrellel commands
     for (const extensionDir of [
       options.extensionDir,
       ...options.chromiumAdditionalExtensionDirs,
