@@ -24,7 +24,7 @@
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "bun run test run --coverage",
-    "dev": "DEBUG=wxt:runner:* bun run dev.ts",
+    "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepack": "bun run build"
   },
