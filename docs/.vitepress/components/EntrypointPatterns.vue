@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{
+defineProps<{
   patterns: Array<[intput: string, output: string]>;
 }>();
 </script>
