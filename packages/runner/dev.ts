@@ -7,10 +7,9 @@
 
 import { run } from './src';
 
-// Uncomment to enable debug logs
-process.env.DEBUG = '@wxt-dev/runner';
-
 await run({
-  extensionDirs: ['demo-extension-1', 'demo-extension-2'],
+  extensionDir: 'demo-extension-1',
+  chromiumAdditionalExtensionDirs: ['demo-extension-2'],
+  // firefoxAdditionalExtensionDirs: ['demo-extension-2'],
   target: process.argv[2],
 });

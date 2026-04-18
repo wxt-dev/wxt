@@ -1,14 +1,14 @@
+import { spawn } from 'node:child_process';
+import { BidiConnection, createBidiConnection } from './bidi';
+import { CDPConnection, createCdpConnection } from './cdp';
 import { runnerDebug } from './debug';
+import { installChromium, installFirefox } from './install';
 import {
   resolveRunOptions,
   type ResolvedRunOptions,
   type RunOptions,
 } from './options';
-import { spawn } from 'node:child_process';
-import { installChromium, installFirefox } from './install';
 import { promiseWithResolvers } from './promises';
-import { BidiConnection, createBidiConnection } from './bidi';
-import { CDPConnection, createCdpConnection } from './cdp';
 
 const debugFirefox = runnerDebug.extend('firefox');
 const debugChrome = runnerDebug.extend('chrome');
@@ -67,18 +67,19 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
     });
 
     const baseUrl = await urlRes.promise;
-    const bidi = await createBidiConnection(baseUrl);
+    bidi = await createBidiConnection(baseUrl);
     await bidi.send<unknown>('session.new', { capabilities: {} });
 
-    await Promise.all(
-      [options.extensionDir, ...options.firefoxAdditionalExtensionDirs].map(
-        (extensionDir) => installFirefox(bidi, extensionDir),
-      ),
-    );
+    for (const extensionDir of [
+      options.extensionDir,
+      ...options.firefoxAdditionalExtensionDirs,
+    ]) {
+      await installFirefox(bidi, extensionDir);
+    }
 
     return {
       stop() {
-        bidi.close();
+        bidi?.close();
         browserProcess.kill('SIGINT');
       },
     };
@@ -137,11 +138,12 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
     // Wait for the browser to open before proceeding.
     await opened.promise;
 
-    await Promise.all(
-      [options.extensionDir, ...options.chromiumAdditionalExtensionDirs].map(
-        (extensionDir) => installChromium(cdp!, extensionDir),
-      ),
-    );
+    for (const extensionDir of [
+      options.extensionDir,
+      ...options.chromiumAdditionalExtensionDirs,
+    ]) {
+      await installChromium(cdp, extensionDir);
+    }
 
     return {
       stop() {

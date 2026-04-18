@@ -1,6 +1,5 @@
-import type { ChildProcess } from 'node:child_process';
-import { BidiConnection, createBidiConnection } from './bidi';
-import { CDPConnection, createCdpConnection } from './cdp';
+import type { BidiConnection } from './bidi';
+import type { CDPConnection } from './cdp';
 
 /**
  * Install an extension to an already running instance of Firefox.
