@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.20.25
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.24...wxt-v0.20.25)
+
+### 🩹 Fixes
+
+- Port change in dev server on reload ([#2283](https://github.com/wxt-dev/wxt/pull/2283))
+
+### 📖 Documentation
+
+- Update `permissions` section with per-browser warning ([#2284](https://github.com/wxt-dev/wxt/pull/2284))
+
+### 🏡 Chore
+
+- Increase PNPM test timeout ([3db3eac6](https://github.com/wxt-dev/wxt/commit/3db3eac6))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.24
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.23...wxt-v0.20.24)
