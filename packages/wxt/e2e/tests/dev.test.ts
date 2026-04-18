@@ -1,17 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { TestProject } from '../utils';
-import { createServer as createNetServer } from 'node:net';
-
-/** Starts a TCP server on the given port and returns a cleanup function. */
-function occupyPort(port: number): Promise<() => Promise<void>> {
-  return new Promise((resolve, reject) => {
-    const srv = createNetServer();
-    srv.listen(port, 'localhost', () => {
-      resolve(() => new Promise<void>((res) => srv.close(() => res())));
-    });
-    srv.on('error', reject);
-  });
-}
+import { describe, expect, it } from 'vitest';
+import { TestProject, occupyPort } from '../utils';
 
 describe('Dev Mode', () => {
   it('should not change ports when restarting the server', async () => {
