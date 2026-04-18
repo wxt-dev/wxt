@@ -6,11 +6,11 @@ import {
 } from './browser-paths';
 import { resolve, join } from 'node:path';
 import { homedir, tmpdir } from 'node:os';
-import { debug } from './debug';
+import { runnerDebug } from './debug';
 import { mkdtemp, open } from 'node:fs/promises';
 import { styleText } from 'node:util';
 
-const debugOptions = debug.scoped('options');
+const debug = runnerDebug.extend('options');
 
 export type UnknownTarget = string & {};
 export type Target = KnownTarget | UnknownTarget;
@@ -94,7 +94,7 @@ export type ResolvedRunOptions = {
 export async function resolveRunOptions(
   options: RunOptions | undefined,
 ): Promise<ResolvedRunOptions> {
-  debugOptions('User options:', options);
+  debug('User options:', options);
 
   const target = options?.target || 'chrome';
 
@@ -148,7 +148,7 @@ export async function resolveRunOptions(
       options?.firefoxAdditionalExtensionDirs?.map((dir) => resolve(dir)) ?? [],
     target,
   };
-  debugOptions('Resolved options:', resolved);
+  debug('Resolved options:', resolved);
   return resolved;
 }
 
