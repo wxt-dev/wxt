@@ -1,9 +1,15 @@
+/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 /* Colors */
 :root {
   --wxt-c-green-1: #0b8a00;
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
   --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
+
+  --vp-c-brand-1: var(--wxt-c-green-1);
+  --vp-c-brand-2: var(--wxt-c-green-2);
+  --vp-c-brand-3: var(--wxt-c-green-3);
+  --vp-c-brand-soft: var(--wxt-c-green-soft);
 }
 
 .dark {
@@ -13,56 +19,41 @@
   --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
 }
 
-/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
-
-:root {
-  --vp-c-brand-1: var(--wxt-c-green-1);
-  --vp-c-brand-2: var(--wxt-c-green-2);
-  --vp-c-brand-3: var(--wxt-c-green-3);
-  --vp-c-brand-soft: var(--wxt-c-green-soft);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Customize Individual Components */
+.vp-doc .no-vertical-dividers {
+  th,
+  td {
+    border: none;
+  }
 
-.vp-doc .no-vertical-dividers th,
-.vp-doc .no-vertical-dividers td {
-  border: none;
-}
-
-.vp-doc .no-vertical-dividers tr {
-  border: 1px solid var(--vp-c-divider);
+  tr {
+    /*noinspection CssUnresolvedCustomProperty*/
+    border: 1px solid var(--vp-c-divider);
+  }
 }
 
 body {
   overflow-y: scroll;
 }
 
-.VPSidebar {
-  user-select: none;
-}
-
-.VPSidebarItem .badge {
-  display: inline-block;
-  min-width: 1.6em;
-  padding: 0.3em 0.4em 0.2em;
-  border-radius: 1rem;
-  font-size: 0.75em;
-  line-height: 1;
-  margin-left: 0.5rem;
-  text-align: center;
-  vertical-align: middle;
-  background-color: var(--vp-c-default-2);
-}
-
 .light-netlify {
   display: inline;
 }
+
 .dark .light-netlify {
   display: none;
 }
+
 .dark-netlify {
   display: none;
 }
+
 .dark .dark-netlify {
   display: inline;
 }
@@ -70,7 +61,7 @@ body {
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
 .dark .VPHome::before {
   content: '';
-  background-image: url('/assets/art002e009298.jpg');
+  background-image: url('../../assets/art002e009298.jpg');
   opacity: 50%;
   position: absolute;
   width: 100vw;
@@ -79,16 +70,18 @@ body {
   background-position: 90%;
   pointer-events: none;
 }
+
 .dark .VPHome::after {
   content: '';
   position: absolute;
   width: 100vw;
   height: 10vh;
   top: 100vh;
+  /*noinspection CssUnresolvedCustomProperty*/
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
   pointer-events: none;
-  z-index: 0;
 }
+
 .item {
   z-index: 1;
 }

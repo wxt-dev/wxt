@@ -107,120 +107,58 @@ const filteredExamples = computed(() => {
 <style scoped>
 .example-layout {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
   grid-template-areas:
-    'search'
-    'results';
+    'filters search'
+    'filters results';
   gap: 16px;
-}
-@media only screen and (min-width: 720px) {
-  .example-layout {
+
+  @media only screen and (min-width: 720px) {
     grid-template-columns: 256px 1fr;
     grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'filters search'
-      'filters results';
   }
-}
-.search {
-  grid-area: search;
-  background: var(--vp-c-bg-soft);
-  padding: 20px;
-  width: 100%;
-  display: flex;
-  border-radius: 16px;
-}
-.filters {
-  display: none;
-  grid-area: filters;
-}
-@media only screen and (min-width: 720px) {
+
+  .search {
+    grid-area: search;
+    /*noinspection CssUnresolvedCustomProperty*/
+    background: var(--vp-c-bg-soft);
+    padding: 20px;
+    border-radius: 16px;
+
+    input {
+      font-size: 16px;
+    }
+  }
+
   .filters {
+    grid-area: filters;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    border-radius: 16px;
-    overflow: hidden;
-    align-self: flex-start;
+    gap: 10px;
+
+    @media only screen and (min-width: 720px) {
+      border-radius: 16px;
+    }
   }
-}
-.results {
-  grid-area: results;
-}
 
-.box {
-  border-radius: 16px;
-  overflow: hidden;
-}
+  .results {
+    grid-area: results;
 
-.search input {
-  min-width: 0;
-  flex: 1;
-  font-size: 16px;
-}
+    .search-results {
+      display: grid;
+      gap: 16px;
 
-.checkbox-col {
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  max-height: 200px;
-  font-size: 14px;
-  gap: 4px;
-}
+      @media only screen and (min-width: 800px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
-.filter-btn {
-  color: var(--vp-c-brand-1);
-}
+      @media only screen and (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-.checkbox-col .header {
-  font-size: 12px;
-  font-weight: bold;
-  opacity: 50%;
-}
-
-.checkbox-col p {
-  display: flex;
-  gap: 4px;
-  align-items: flex-start;
-  text-wrap: wrap;
-  overflow-wrap: anywhere;
-  line-height: 140%;
-}
-
-span {
-  padding-top: 1px;
-}
-
-.checkbox-col input[type='checkbox'] {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-.checkbox-col-container {
-  display: flex;
-}
-
-.search-results {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 16px;
-}
-@media only screen and (min-width: 800px) {
-  .search-results {
-    grid-template-columns: repeat(2, 1fr);
+      a {
+        background-color: red;
+      }
+    }
   }
-}
-@media only screen and (min-width: 1024px) {
-  .search-results {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-a {
-  background-color: red;
 }
 </style>

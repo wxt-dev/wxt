@@ -17,10 +17,8 @@ const posts = computed(() =>
 
 <template>
   <div class="container">
-    <div>
-      <div class="vp-doc">
-        <h1>Blog</h1>
-      </div>
+    <div class="inner-container">
+      <h1>Blog</h1>
 
       <ul>
         <BlogPostPreview v-for="post of posts" :key="post.url" :post />
@@ -34,37 +32,34 @@ const posts = computed(() =>
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.container > div {
-  padding: 32px;
-  max-width: 900px;
-  width: 100%;
-  min-width: 0;
-}
 
-h1 {
-  padding-bottom: 16px;
-}
+  .inner-container {
+    padding: 32px;
+    max-width: 900px;
+    width: 100%;
 
-ul {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-}
-ul,
-li {
-  padding: 0;
-  margin: 0;
-}
+    h1 {
+      padding-bottom: 16px;
+    }
 
-ul li {
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid var(--vp-c-default);
-}
-ul li:last-child {
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--vp-c-default);
+    ul {
+      display: flex;
+      flex-direction: column;
+
+      li {
+        padding-top: 16px;
+        margin-top: 16px;
+        /*noinspection CssUnresolvedCustomProperty*/
+        border-top: 1px solid var(--vp-c-divider);
+
+        &:last-child {
+          padding-bottom: 16px;
+          margin-bottom: 16px;
+          /*noinspection CssUnresolvedCustomProperty*/
+          border-bottom: 1px solid var(--vp-c-divider);
+        }
+      }
+    }
+  }
 }
 </style>
