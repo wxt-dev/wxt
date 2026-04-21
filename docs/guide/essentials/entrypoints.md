@@ -288,7 +288,7 @@ export default defineContentScript({
   cssInjectionMode: undefined | "manifest" | "manual" | "ui",
 
   // Configure how/when content script will be registered
-  registration: undefined | "manifest" | "runtime",
+  registration: undefined | "manifest" | "runtime" | "optional",
 
   main(ctx: ContentScriptContext) {
     // Executed when content script is loaded, can be async
