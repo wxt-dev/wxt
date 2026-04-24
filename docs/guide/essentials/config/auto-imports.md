@@ -26,8 +26,8 @@ To see the complete list of auto-imported APIs, run [`wxt prepare`](/api/cli/wxt
 
 ## TypeScript
 
-For TypeScript and your editor to recognize auto-imported variables, you need to run the [
-`wxt prepare` command](/api/cli/wxt-prepare).
+For TypeScript and your editor to recognize auto-imported variables, you need to run the
+[`wxt prepare` command](/api/cli/wxt-prepare).
 
 Add this command to your `postinstall` script so your editor has everything it needs to report type errors after
 installing dependencies:
@@ -49,7 +49,7 @@ automatically, you can manually tell WXT to generate it.
 
 :::code-group
 
-### ESLint 8
+**ESLint 8**
 
 ```ts [ESLint 8]
 export default defineConfig({
@@ -61,7 +61,7 @@ export default defineConfig({
 });
 ```
 
-### ESLint 9
+**ESLint 9**
 
 ```ts [ESLint 9]
 export default defineConfig({
@@ -79,7 +79,7 @@ Then in your ESLint config, import and use the generated file:
 
 :::code-group
 
-### ESLint 8
+**ESLint 8**
 
 ```js [ESLint 8]
 // .eslintrc.mjs
@@ -89,7 +89,7 @@ export default {
 };
 ```
 
-### ESLint 9
+**ESLint 9**
 
 ```js [ESLint 9]
 // eslint.config.mjs
