@@ -122,7 +122,7 @@ describe('Validation Utils', () => {
       const entrypoint = fakeContentScriptEntrypoint({
         options: {
           registration: 'optional',
-          // @ts-expect-error
+          // @ts-expect-error: Testing validation of invalid `optional` content script without `matches`
           matches: null,
         },
       });
