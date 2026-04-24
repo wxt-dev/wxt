@@ -8,7 +8,7 @@ import type {
 } from '../types';
 import { createUnimport, toExports, type Unimport } from 'unimport';
 import UnimportPlugin from 'unimport/unplugin';
-import { basename, dirname, extname, join } from 'node:path';
+import { extname } from 'node:path';
 
 export default defineWxtModule({
   name: 'wxt:built-in:unimport',
