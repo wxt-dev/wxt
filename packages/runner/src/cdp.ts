@@ -1,8 +1,8 @@
 import type { ChildProcess } from 'node:child_process';
 import type { Readable, Writable } from 'node:stream';
-import { debug } from './debug';
+import { runnerDebug } from './debug';
 
-const debugCdp = debug.scoped('cdp');
+const debug = runnerDebug.extend('cdp');
 
 export interface CDPConnection extends Disposable {
   send<T>(method: string, params: any, timeout?: number): Promise<T>;
@@ -21,7 +21,7 @@ export function createCdpConnection(
     send(method, params, timeout = 10e3) {
       const id = ++requestId;
       const command = { id, method, params };
-      debugCdp('Sending command:', command);
+      debug('Sending command:', command);
 
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
@@ -35,7 +35,7 @@ export function createCdpConnection(
 
           if (res.id !== id) return;
 
-          debugCdp('Received response:', res);
+          debug('Received response:', res);
           clearTimeout(timer);
           outputStream.removeListener('data', onData);
 

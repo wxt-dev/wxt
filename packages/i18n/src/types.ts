@@ -3,13 +3,22 @@ export interface I18nFeatures {
   substitutions: SubstitutionCount;
 }
 
-export type I18nStructure = {
-  [K: string]: I18nFeatures;
+export interface UntypedI18n {
+  t: UntypedTFunction;
+}
+
+export type UntypedTFunction = {
+  (key: string): string;
+  (key: string, substitutions: Substitution[]): string;
+  (key: string, n: number): string;
+  (key: string, n: number, substitutions: Substitution[]): string;
 };
 
-export type DefaultI18nStructure = {
-  [K: string]: any;
-};
+export type I18nStructure = Record<string, I18nFeatures>;
+
+export interface I18n<T extends I18nStructure> {
+  t: TFunction<T>;
+}
 
 // prettier-ignore
 export type SubstitutionTuple<T extends SubstitutionCount> =
@@ -65,10 +74,6 @@ export type TFunction<T extends I18nStructure> = {
       : never,
   ): string;
 };
-
-export interface I18n<T extends DefaultI18nStructure> {
-  t: TFunction<T>;
-}
 
 export type Substitution = string | number;
 

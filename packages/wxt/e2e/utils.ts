@@ -1,6 +1,7 @@
 import merge from 'lodash.merge';
 import spawn, { Subprocess } from 'nano-spawn';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createServer as createNetServer } from 'node:net';
 import { dirname, relative, resolve } from 'path';
 import { glob } from 'tinyglobby';
 import {
@@ -203,4 +204,15 @@ export class TestProject {
       cwd: this.root,
     });
   }
+}
+
+/** Starts a TCP server on the given port and returns a cleanup function. */
+export function occupyPort(port: number): Promise<() => Promise<void>> {
+  return new Promise((resolve, reject) => {
+    const srv = createNetServer();
+    srv.listen(port, 'localhost', () => {
+      resolve(() => new Promise<void>((res) => srv.close(() => res())));
+    });
+    srv.on('error', reject);
+  });
 }

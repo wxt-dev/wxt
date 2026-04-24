@@ -1,10 +1,10 @@
-import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
-import { resolveConfig } from './resolve-config';
 import { createHooks } from 'hookable';
-import { createWxtPackageManager } from './package-managers';
-import { createViteBuilder } from './builders/vite';
-import { builtinModules } from '../builtin-modules';
 import { relative } from 'path';
+import { builtinModules } from '../builtin-modules';
+import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
+import { createViteBuilder } from './builders/vite';
+import { createWxtPackageManager } from './package-managers';
+import { resolveConfig } from './resolve-config';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is
@@ -47,6 +47,7 @@ export async function registerWxt(
         inlineConfig.dev ??= {};
         inlineConfig.dev.server ??= {};
         inlineConfig.dev.server.port = wxt.config.dev.server.port;
+        inlineConfig.dev.server.strictPort = true;
       }
 
       wxt.config = await resolveConfig(inlineConfig, command);

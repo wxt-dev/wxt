@@ -1,5 +1,53 @@
 # Changelog
 
+## v0.20.25
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.24...wxt-v0.20.25)
+
+### 🩹 Fixes
+
+- Port change in dev server on reload ([#2283](https://github.com/wxt-dev/wxt/pull/2283))
+
+### 📖 Documentation
+
+- Update `permissions` section with per-browser warning ([#2284](https://github.com/wxt-dev/wxt/pull/2284))
+
+### 🏡 Chore
+
+- Increase PNPM test timeout ([3db3eac6](https://github.com/wxt-dev/wxt/commit/3db3eac6))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.24
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.23...wxt-v0.20.24)
+
+### 🩹 Fixes
+
+- Correct `actionKey` for Firefox in MV3 ([#2274](https://github.com/wxt-dev/wxt/pull/2274))
+
+### ❤️ Contributors
+
+- John Wong <john_wong@live.com>
+
+## v0.20.23
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.22...wxt-v0.20.23)
+
+### 🩹 Fixes
+
+- Use correct color name ([6224ff49](https://github.com/wxt-dev/wxt/commit/6224ff49))
+
+### 📖 Documentation
+
+- Re-structure the WXT Modules documentation ([#2260](https://github.com/wxt-dev/wxt/pull/2260))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.22
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.21...wxt-v0.20.22)
