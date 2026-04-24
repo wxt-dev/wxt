@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { UnimportOptions, Import } from 'unimport';
+import { Import, UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -1585,10 +1585,11 @@ export interface Eslintrc {
    * - `true`: Same as `8`.
    * - `8`: Generate a config file compatible with ESLint 8.
    * - `9`: Generate a config file compatible with ESLint 9.
+   * - `10`: Generate a config file compatible with ESLint 10.
    *
    * @default 'auto'
    */
-  enabled?: false | true | 'auto' | 8 | 9;
+  enabled?: boolean | 'auto' | 8 | 9 | 10;
   /**
    * File path to save the generated eslint config.
    *
