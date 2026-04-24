@@ -520,7 +520,7 @@ async function getUnimportEslintOptions(
   switch (inlineEnabled) {
     case 'auto':
       if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
+      else if (major <= 8) enabled = 8;
       else if (major >= 9) enabled = major;
       else enabled = false;
       break;
