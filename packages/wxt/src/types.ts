@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { UnimportOptions, Import } from 'unimport';
+import { Import, UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -1579,10 +1579,10 @@ export interface Eslintrc {
    * When true, generates a file that can be used by ESLint to know which
    * variables are valid globals.
    *
+   * - `true`: Version of `package.json``.
    * - `false`: Don't generate the file.
    * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
    *   config file.
-   * - `true`: Same as `8`.
    * - `8`: Generate a config file compatible with ESLint 8.
    * - `9`: Generate a config file compatible with ESLint 9.
    *
