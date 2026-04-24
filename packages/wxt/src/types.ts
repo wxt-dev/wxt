@@ -760,6 +760,11 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
+  /**
+   * Chrome only. Controls the initial enabled/disabled state of the action.
+   *
+   * @see https://developer.chrome.com/docs/extensions/reference/api/action#enabled_state
+   */
   defaultState?: PerBrowserOption<'enabled' | 'disabled'>;
   browserStyle?: PerBrowserOption<boolean>;
   /**
