@@ -103,7 +103,7 @@ async function getImportsModuleEntry(
 
 async function getEslintConfigEntry(
   unimport: Unimport,
-  version: 8 | 9,
+  version: 8 | 9 | 10,
   options: WxtResolvedUnimportOptions,
 ): Promise<WxtDirFileEntry> {
   const globals = (await unimport.getImports())
@@ -116,7 +116,7 @@ async function getEslintConfigEntry(
     }, {});
 
   if (version <= 8) return getEslint8ConfigEntry(options, globals);
-  else return getEslint9ConfigEntry(options, globals);
+  else return getEslint9PlusConfigEntry(options, globals);
 }
 
 export function getEslint8ConfigEntry(
@@ -129,7 +129,7 @@ export function getEslint8ConfigEntry(
   };
 }
 
-export function getEslint9ConfigEntry(
+export function getEslint9PlusConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
 ): WxtDirFileEntry {

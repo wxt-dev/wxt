@@ -1675,10 +1675,11 @@ export interface Eslintrc {
    * - `false`: Don't generate the file.
    * - `8`: Generate a config file compatible with ESLint 8.
    * - `9`: Generate a config file compatible with ESLint 9.
+   * - `10`: Generate a config file compatible with ESLint 10.
    *
    * @default 'auto'
    */
-  enabled?: 'auto' | boolean | 8 | 9;
+  enabled?: boolean | 'auto' | 8 | 9 | 10;
   /**
    * File path to save the generated eslint config.
    *
