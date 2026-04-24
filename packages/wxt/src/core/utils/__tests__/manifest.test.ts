@@ -1914,7 +1914,8 @@ describe('Manifest Utils', () => {
     describe('optional_host_permissions', () => {
       it('should keep optional_host_permissions as-is for MV3', async () => {
         const expectedOptionalHostPermissions = ['https://google.com/*'];
-        const expectedOptionalPermissions = ['cookies' as const];
+        const expectedOptionalPermissions: Browser.runtime.ManifestOptionalPermission[] =
+          ['cookies'];
         setFakeWxt({
           config: {
             manifest: {
