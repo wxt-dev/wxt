@@ -85,7 +85,7 @@ describe('Validation Utils', () => {
           {
             type: 'error',
             message:
-              '`matches` is required for content scripts not registered at runtime',
+              '`matches` is required for content scripts that are not registered at runtime',
             value: null,
             entrypoint,
           },
@@ -131,7 +131,7 @@ describe('Validation Utils', () => {
           {
             type: 'error',
             message:
-              '`matches` is required for content scripts not registered at runtime',
+              '`matches` is required for content scripts that are not registered at runtime',
             value: null,
             entrypoint,
           },
