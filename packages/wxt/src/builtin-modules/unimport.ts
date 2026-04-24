@@ -148,17 +148,9 @@ export default {
 `,
   };
 
-  const javaScriptFileDirname = dirname(options.eslintrc.filePath);
-  const javaScriptFileExtension = extname(options.eslintrc.filePath);
-  const javaScriptFileBasename = basename(
-    options.eslintrc.filePath,
-    javaScriptFileExtension,
-  );
-
-  const typeScriptFilePath = join(
-    javaScriptFileDirname,
-    `${javaScriptFileBasename}.d.ts`,
-  );
+  const typeScriptFilePath =
+    options.eslintrc.filePath.slice(0, -extname(options.eslintrc.filePath)) +
+    '.d.ts';
 
   const typeScriptFileEntry: WxtDirFileEntry = {
     path: typeScriptFilePath,
