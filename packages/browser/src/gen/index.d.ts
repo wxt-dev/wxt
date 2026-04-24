@@ -9132,7 +9132,6 @@ export namespace Browser {
             default_icon?: ManifestIcons | undefined;
             default_title?: string | undefined;
             default_popup?: string | undefined;
-            default_state?: "enabled" | "disabled" | undefined;
         }
 
         /** Source: https://developer.chrome.com/docs/extensions/reference/permissions-list */

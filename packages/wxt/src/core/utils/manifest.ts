@@ -295,6 +295,7 @@ function addEntrypoints(
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
     if (popup.options.defaultState)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Chrome
       options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
