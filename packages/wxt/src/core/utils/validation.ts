@@ -37,7 +37,7 @@ function validateContentScriptEntrypoint(
     errors.push({
       type: 'error',
       message:
-        '`matches` is required for content scripts not registered at runtime',
+        '`matches` is required for content scripts that are not registered at runtime',
       value: definition.options.matches,
       entrypoint: definition,
     });
