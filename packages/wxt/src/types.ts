@@ -1574,6 +1574,8 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
+type EslintSupportedVersions = 8 | 9 | 10;
+
 export interface Eslintrc {
   /**
    * When true, generates a file that can be used by ESLint to know which
@@ -1589,7 +1591,7 @@ export interface Eslintrc {
    *
    * @default 'auto'
    */
-  enabled?: boolean | 'auto' | 8 | 9 | 10;
+  enabled?: boolean | 'auto' | EslintSupportedVersions;
   /**
    * File path to save the generated eslint config.
    *
@@ -1605,7 +1607,7 @@ export interface Eslintrc {
 
 export interface ResolvedEslintrc {
   /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | 8 | 9;
+  enabled: false | EslintSupportedVersions;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;
