@@ -61,13 +61,13 @@ export default defineConfig({
 });
 ```
 
-### ESLint 9+
+### ESLint 9
 
-```ts [ESLint 9+]
+```ts [ESLint 9]
 export default defineConfig({
   imports: {
     eslintrc: {
-      enabled: 9 | 10,
+      enabled: 9,
     },
   },
 });
@@ -89,7 +89,7 @@ export default {
 };
 ```
 
-### ESLint 9+
+### ESLint 9
 
 ```js [ESLint 9]
 // eslint.config.mjs
