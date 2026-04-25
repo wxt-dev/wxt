@@ -129,6 +129,16 @@ export async function generateManifest(
     );
   }
 
+  if (
+    wxt.config.browser === "firefox" &&
+    !manifest.browser_specific_settings?.gecko?.id
+  ) {
+    wxt.logger.warn(
+      "Firefox requires extension ID for MV3 and recommends it for MV2.\n" +
+      "For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings"
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
 
   if (wxt.config.browser === 'firefox') {
