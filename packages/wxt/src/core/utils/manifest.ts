@@ -172,8 +172,6 @@ export async function generateManifest(
       "Manifest 'version' is missing. Either:\n1. Add a version in your <rootDir>/package.json\n2. Pass the version via the manifest option in your wxt.config.ts",
     );
   }
-  
-
 
   return {
     manifest,
