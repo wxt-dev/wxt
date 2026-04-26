@@ -44,8 +44,8 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
           );
           const escapedPath = pathToFileURL(inputPath).href;
           const code = template
-            .replace(`'${userVirtualId}'`, escapedPath)
-            .replace(`"${userVirtualId}"`, escapedPath);
+            .replace(`'${userVirtualId}'`, `"${escapedPath}"`)
+            .replace(`"${userVirtualId}"`, `"${escapedPath}"`);
           if (code === template) {
             throw Error(
               `Failed to resolve virtual module "${name}": expected template import "${userVirtualId}"`,
