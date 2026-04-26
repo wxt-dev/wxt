@@ -32,8 +32,9 @@ await run({
 ## Features
 
 - Supports all Chromium and Firefox based browsers
-- Zero dependencies
+- Minimal dependencies
 - One-line config for persisting data between launches
+- Launch multiple extensions at once
 
 ## Requirements
 
@@ -56,6 +57,7 @@ You also need to have a specific version of the browser installed that supports 
 - [x] Provide install functions to allow hooking into already running instances of Chrome/Firefox
   - [ ] Try to setup E2E tests on Firefox with Puppeteer using this approach
   - [ ] Try to setup E2E tests on Chrome with Puppeteer using this approach
+- [ ] Add a "reload extension" API
 
 ## Options
 
