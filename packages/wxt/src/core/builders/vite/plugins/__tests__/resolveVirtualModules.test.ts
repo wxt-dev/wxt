@@ -43,7 +43,9 @@ describe('resolveVirtualModules', () => {
         '\0virtual:wxt-background-entrypoint?' + inputPath,
       );
 
-      expect(code).toBe(`import definition from "/tmp/foo'bar/background.ts";`);
+      expect(code).toBe(
+        `import definition from file:///tmp/foo'bar/background.ts;`,
+      );
     },
   );
 
@@ -77,7 +79,7 @@ describe('resolveVirtualModules', () => {
       );
 
       expect(code).toBe(
-        `import definition from "/tmp/foo\\"bar/background.ts";`,
+        `import definition from file:///tmp/foo%22bar/background.ts;`,
       );
     },
   );

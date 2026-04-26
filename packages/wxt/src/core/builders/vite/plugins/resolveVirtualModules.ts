@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
@@ -41,7 +42,7 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
             resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
             'utf-8',
           );
-          const escapedPath = JSON.stringify(inputPath);
+          const escapedPath = pathToFileURL(inputPath).href;
           const code = template
             .replace(`'${userVirtualId}'`, escapedPath)
             .replace(`"${userVirtualId}"`, escapedPath);
