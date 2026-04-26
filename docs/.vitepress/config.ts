@@ -1,5 +1,26 @@
+import { Feed } from 'feed';
+// @ts-expect-error; It isn't TypeScript lib
+import footnote from 'markdown-it-footnote';
+import fs, { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { DefaultTheme, defineConfig } from 'vitepress';
+import addKnowledge from 'vitepress-knowledge';
+import {
+  groupIconMdPlugin,
+  groupIconVitePlugin,
+  localIconLoader,
+} from 'vitepress-plugin-group-icons';
+import llmstxt from 'vitepress-plugin-llms';
+import { version as analyticsVersion } from '../../packages/analytics/package.json';
+import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
+import { version as i18nVersion } from '../../packages/i18n/package.json';
+import { version as runnerVersion } from '../../packages/runner/package.json';
+import { version as storageVersion } from '../../packages/storage/package.json';
+import { version as unocssVersion } from '../../packages/unocss/package.json';
+import { version as wxtVersion } from '../../packages/wxt/package.json';
+import { version as isBackgroundVersion } from '../../packages/is-background/package.json';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
+import { meta, script } from './utils/head';
 import {
   menuGroup,
   menuItem,
@@ -7,25 +28,6 @@ import {
   navItem,
   prepareTypedocSidebar,
 } from './utils/menus';
-import { meta, script } from './utils/head';
-import footnote from 'markdown-it-footnote';
-import { version as wxtVersion } from '../../packages/wxt/package.json';
-import { version as i18nVersion } from '../../packages/i18n/package.json';
-import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
-import { version as unocssVersion } from '../../packages/unocss/package.json';
-import { version as storageVersion } from '../../packages/storage/package.json';
-import { version as analyticsVersion } from '../../packages/analytics/package.json';
-import { version as runnerVersion } from '../../packages/runner/package.json';
-import addKnowledge from 'vitepress-knowledge';
-import {
-  groupIconMdPlugin,
-  groupIconVitePlugin,
-  localIconLoader,
-} from 'vitepress-plugin-group-icons';
-import { Feed } from 'feed';
-import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import llmstxt from 'vitepress-plugin-llms';
 
 const origin = 'https://wxt.dev';
 
@@ -44,6 +46,7 @@ const otherPackages = {
   storage: storageVersion,
   unocss: unocssVersion,
   runner: runnerVersion,
+  'is-background': isBackgroundVersion,
 };
 
 const knowledge = addKnowledge<DefaultTheme.Config>({
@@ -71,8 +74,11 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
+    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(
@@ -81,6 +87,17 @@ export default defineConfig({
           ),
         },
       }),
+      {
+        name: 'yaml-loader',
+        load: {
+          handler: async (id) => {
+            if (id.endsWith('.yml') || id.endsWith('.yaml')) {
+              const obj = Bun.YAML.parse(await readFile(id, 'utf8'));
+              return `export default ${JSON.stringify(obj)}`;
+            }
+          },
+        },
+      },
     ],
   },
   lastUpdated: true,
@@ -111,7 +128,7 @@ export default defineConfig({
     });
     // console.log('rss.xml:');
     // console.log(feed.rss2());
-    await writeFile(join(site.outDir, 'rss.xml'), feed.rss2(), 'utf8');
+    await fs.writeFile(join(site.outDir, 'rss.xml'), feed.rss2());
   },
 
   head: [
@@ -222,6 +239,7 @@ export default defineConfig({
           menuItem('Storage', 'storage.md'),
           menuItem('Messaging', 'messaging.md'),
           menuItem('I18n', 'i18n.md'),
+          menuItem('Favicons', 'favicons.md'),
           menuItem('Scripting', 'scripting.md'),
           menuItem('WXT Modules', 'wxt-modules.md'),
           menuItem('Frontend Frameworks', 'frontend-frameworks.md'),

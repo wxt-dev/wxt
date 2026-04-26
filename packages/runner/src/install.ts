@@ -4,8 +4,11 @@ import { createCdpConnection } from './cdp';
 
 /**
  * Install an extension to an already running instance of Firefox.
- * @param debuggerUrl The URL of the Firefox BiDi server (ex: `ws://127.0.0.1:45912`).
- * @param extensionDir Absolute path to the directory containing the extension to be installed.
+ *
+ * @param debuggerUrl The URL of the Firefox BiDi server (ex:
+ *   `ws://127.0.0.1:45912`).
+ * @param extensionDir Absolute path to the directory containing the extension
+ *   to be installed.
  */
 export async function installFirefox(
   debuggerUrl: string,
@@ -33,7 +36,8 @@ export type BidiWebExtensionInstallResponse = {
 };
 
 /**
- * Given a child process of Chrome, install an extension. The process must be started with the following flags:
+ * Given a child process of Chrome, install an extension. The process must be
+ * started with the following flags:
  *
  * - `--remote-debugging-pipe`
  * - `--user-data-dir=...`

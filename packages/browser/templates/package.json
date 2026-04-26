@@ -12,7 +12,9 @@
   },
   "scripts": {
     "check": "check",
-    "gen": "tsx scripts/generate.ts"
+    "gen": "bun run scripts/generate.ts",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "author": {
     "name": "Aaron Klinker",
@@ -24,7 +26,7 @@
   ],
   "devDependencies": {
     "@types/chrome": "{{chromeTypesVersion}}",
-    "fs-extra": "^11.3.3",
+    "@types/node": "^20.0.0",
     "nano-spawn": "^2.0.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

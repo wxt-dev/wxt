@@ -1,3 +1,5 @@
+import { ContentData } from 'vitepress';
+
 export interface Example {
   name: string;
   description?: string;
@@ -16,3 +18,15 @@ export type ExamplesMetadata = {
 };
 
 export type KeySelectedObject = Record<string, boolean | undefined>;
+
+export interface PostFrontmatter {
+  title: string;
+  description?: string;
+  date: Date;
+  authors: { name: string; github: string }[];
+}
+
+export interface Post
+  extends Omit<ContentData, 'frontmatter'>, Omit<PostFrontmatter, 'date'> {
+  date: Date;
+}

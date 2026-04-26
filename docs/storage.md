@@ -4,7 +4,7 @@ outline: deep
 
 # WXT Storage
 
-[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md)
+[Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md) &bull; [API Reference](/api/reference/wxt/utils/storage/interfaces/WxtStorage)
 
 A simplified wrapper around the extension storage APIs.
 
@@ -74,7 +74,7 @@ await storage.watch<number>(
 await storage.getMeta<{ v: number }>('local:installDate');
 ```
 
-For a full list of methods available, see the [API reference](/api/reference/wxt/utils/storage/interfaces/WxtStorage).
+> This approach is fine for one-off storage fields or generic helpers, but [defining storage items](#defining-storage-items) is the recommended way to add type-safety.
 
 ## Watchers
 
@@ -146,7 +146,7 @@ const showChangelogOnUpdate = storage.defineItem<boolean>(
 );
 ```
 
-Now, instead of using the `storage` variable, you can use the helper functions on the storage item you created:
+Now, instead of using the `storage` variable, you can use the storage item instead:
 
 ```ts
 await showChangelogOnUpdate.getValue();
@@ -156,8 +156,6 @@ const unwatch = showChangelogOnUpdate.watch((newValue) => {
   // ...
 });
 ```
-
-For a full list of properties and methods available, see the [API reference](/api/reference/wxt/utils/storage/interfaces/WxtStorageItem).
 
 ### Versioning
 

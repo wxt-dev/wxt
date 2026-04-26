@@ -34,15 +34,16 @@ describe('Manifest Utils', () => {
   describe('generateManifest', () => {
     describe('popup', () => {
       type ActionType = 'browser_action' | 'page_action';
+      type Mv3ActionType = 'action' | 'page_action';
       const popupEntrypoint = (type?: ActionType) =>
         fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined instead of inheriting the random value
-            mv2Key: type ?? null,
+            actionType: type ?? null,
             defaultIcon: {
               '16': '/icon/16.png',
             },
-            defaultTitle: 'Default Iitle',
+            defaultTitle: 'Default Title',
           },
           outputDir: outDir,
           skipped: false,
@@ -107,11 +108,45 @@ describe('Manifest Utils', () => {
         },
       );
 
+      it.each<{
+        inputType: ActionType | undefined;
+        expectedType: Mv3ActionType;
+      }>([
+        { inputType: undefined, expectedType: 'action' },
+        { inputType: 'browser_action', expectedType: 'action' },
+        { inputType: 'page_action', expectedType: 'page_action' },
+      ])(
+        'should use the correct action for Firefox in mv3: %j',
+        async ({ inputType, expectedType }) => {
+          const popup = popupEntrypoint(inputType);
+          const buildOutput = fakeBuildOutput();
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              browser: 'firefox',
+            },
+          });
+          const expected = {
+            default_icon: popup.options.defaultIcon,
+            default_title: popup.options.defaultTitle,
+            default_popup: 'popup.html',
+          };
+
+          const { manifest: actual } = await generateManifest(
+            [popup],
+            buildOutput,
+          );
+
+          expect(actual[expectedType]).toEqual(expected);
+        },
+      );
+
       it('should include default_area for Firefox in mv3', async () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'navbar',
           },
           outputDir: outDir,
@@ -141,7 +176,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             themeIcons,
           },
           outputDir: outDir,
@@ -167,7 +202,7 @@ describe('Manifest Utils', () => {
         const popup = fakePopupEntrypoint({
           options: {
             // @ts-expect-error: Force this to be undefined
-            mv2Key: null,
+            actionType: null,
             defaultArea: 'menupanel',
           },
           outputDir: outDir,
@@ -528,6 +563,294 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.icons).toEqual(expected);
+      });
+    });
+
+    describe('theme_icons auto-discovery (Firefox)', () => {
+      const firefoxPopup = () =>
+        fakePopupEntrypoint({
+          options: {
+            // @ts-expect-error: Force undefined instead of the random value
+            actionType: null,
+          },
+          outputDir: outDir,
+          skipped: false,
+        });
+
+      it('should auto-discover paired light/dark icons and attach them to action in mv3', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+            { type: 'asset', fileName: 'icon-light-32.png' },
+            { type: 'asset', fileName: 'icon-dark-32.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual([
+          { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
+          { light: 'icon-light-32.png', dark: 'icon-dark-32.png', size: 32 },
+        ]);
+      });
+
+      it('should auto-discover and attach theme_icons to browser_action in mv2', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            { type: 'asset', fileName: 'icon/16-light.png' },
+            { type: 'asset', fileName: 'icon/16-dark.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 2,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.browser_action as any).theme_icons).toEqual([
+          { light: 'icon/16-light.png', dark: 'icon/16-dark.png', size: 16 },
+        ]);
+      });
+
+      it('should support every naming pattern (suffix, prefix, with/without folder, with/without WxH)', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            // suffix / no folder
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+            // suffix / WxH / no folder
+            { type: 'asset', fileName: 'icon-light-24x24.png' },
+            { type: 'asset', fileName: 'icon-dark-24x24.png' },
+            // prefix / no folder
+            { type: 'asset', fileName: 'icon-32-light.png' },
+            { type: 'asset', fileName: 'icon-32-dark.png' },
+            // suffix / folder
+            { type: 'asset', fileName: 'icon/light-48.png' },
+            { type: 'asset', fileName: 'icon/dark-48.png' },
+            // prefix / folder
+            { type: 'asset', fileName: 'icons/64-light.png' },
+            { type: 'asset', fileName: 'icons/64-dark.png' },
+            // prefix / WxH / folder
+            { type: 'asset', fileName: 'icon/128x128-light.png' },
+            { type: 'asset', fileName: 'icon/128x128-dark.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual([
+          { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
+          {
+            light: 'icon-light-24x24.png',
+            dark: 'icon-dark-24x24.png',
+            size: 24,
+          },
+          { light: 'icon-32-light.png', dark: 'icon-32-dark.png', size: 32 },
+          { light: 'icon/light-48.png', dark: 'icon/dark-48.png', size: 48 },
+          { light: 'icons/64-light.png', dark: 'icons/64-dark.png', size: 64 },
+          {
+            light: 'icon/128x128-light.png',
+            dark: 'icon/128x128-dark.png',
+            size: 128,
+          },
+        ]);
+      });
+
+      it('should skip sizes that are missing a light or dark pair and log a warning', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            // Complete pair — should be kept
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+            // Only light, no dark — should be dropped + warn
+            { type: 'asset', fileName: 'icon-light-32.png' },
+            // Only dark, no light — should be dropped + warn
+            { type: 'asset', fileName: 'icon-dark-48.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual([
+          { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
+        ]);
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Skipping theme icon size 32: found light variant',
+          ),
+        );
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Skipping theme icon size 48: found dark variant',
+          ),
+        );
+      });
+
+      it('should warn when different naming patterns resolve to the same (size, variant)', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            // Both of these match the light/16 slot via different regexes.
+            // WXT should keep the first and warn about the second.
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon/light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual([
+          { light: 'icon-light-16.png', dark: 'icon-dark-16.png', size: 16 },
+        ]);
+        expect(wxt.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Multiple theme icon files matched size 16 variant "light"',
+          ),
+        );
+      });
+
+      it('should not auto-discover theme_icons for non-Firefox browsers', async () => {
+        const popup = firefoxPopup();
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'chrome',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toBeUndefined();
+      });
+
+      it('should respect user-provided theme_icons and not overwrite them', async () => {
+        const userThemeIcons = [
+          { light: 'custom-light.png', dark: 'custom-dark.png', size: 16 },
+        ];
+        const popup = fakePopupEntrypoint({
+          options: {
+            // @ts-expect-error: Force undefined
+            actionType: null,
+            themeIcons: userThemeIcons,
+          },
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+            { type: 'asset', fileName: 'icon-light-32.png' },
+            { type: 'asset', fileName: 'icon-dark-32.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [popup],
+          buildOutput,
+        );
+
+        expect((actual.action as any).theme_icons).toEqual(userThemeIcons);
+      });
+
+      it('should not attach theme_icons when there is no action at all', async () => {
+        // A background entrypoint with no popup means no action is
+        // declared, so we have nothing to attach theme_icons to.
+        const background = fakeBackgroundEntrypoint({
+          outputDir: outDir,
+          skipped: false,
+        });
+        const buildOutput = fakeBuildOutput({
+          publicAssets: [
+            { type: 'asset', fileName: 'icon-light-16.png' },
+            { type: 'asset', fileName: 'icon-dark-16.png' },
+          ],
+        });
+        setFakeWxt({
+          config: {
+            browser: 'firefox',
+            manifestVersion: 3,
+            outDir,
+          },
+        });
+
+        const { manifest: actual } = await generateManifest(
+          [background],
+          buildOutput,
+        );
+
+        expect(actual.action).toBeUndefined();
+        expect(actual.browser_action).toBeUndefined();
       });
     });
 
@@ -1266,6 +1589,9 @@ describe('Manifest Utils', () => {
               // @ts-ignore: Purposefully removing version from fake object
               version: null,
             },
+            suppressWarnings: {
+              firefoxDataCollection: true,
+            },
           },
         });
 
@@ -1464,7 +1790,11 @@ describe('Manifest Utils', () => {
         ['chrome', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['safari', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
         ['edge', 2, { ...mv2Manifest, ...hostPermissionsManifest }],
-        ['firefox', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
+        [
+          'firefox',
+          3,
+          { ...mv3Manifest, ...hostPermissionsManifest, page_action: {} },
+        ],
         ['chrome', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['safari', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
         ['edge', 3, { ...mv3Manifest, ...hostPermissionsManifest }],
@@ -1694,6 +2024,9 @@ describe('Manifest Utils', () => {
             manifestVersion: expectedVersion,
             manifest: {
               manifest_version: 3,
+            },
+            suppressWarnings: {
+              firefoxDataCollection: true,
             },
           },
         });

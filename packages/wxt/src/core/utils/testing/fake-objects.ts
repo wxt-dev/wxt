@@ -1,6 +1,4 @@
-/**
- * SHOULD ONLY BE IMPORTED IN TESTS.
- */
+/** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
@@ -21,13 +19,14 @@ import {
   Wxt,
   SidepanelEntrypoint,
   BaseEntrypoint,
+  UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.test.SEED);
+faker.seed(import.meta.env.TEST_SEED);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -99,7 +98,7 @@ export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
 );
 
 export const fakeUnlistedScriptEntrypoint =
-  fakeObjectCreator<GenericEntrypoint>(() => ({
+  fakeObjectCreator<UnlistedScriptEntrypoint>(() => ({
     type: 'unlisted-script',
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
@@ -140,7 +139,7 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
         '64': 'icon/64.png',
       },
     ]),
-    mv2Key: faker.helpers.arrayElement([
+    actionType: faker.helpers.arrayElement([
       'browser_action',
       'page_action',
       undefined,
@@ -186,7 +185,6 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
       'newtab',
       'devtools',
       'unlisted-page',
-      'unlisted-script',
     ]),
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
@@ -304,6 +302,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     hooks: {},
     vite: () => ({}),
     plugins: [],
+    suppressWarnings: {},
   };
 });
 

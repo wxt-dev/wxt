@@ -16,7 +16,7 @@ describe('resolveVirtualModules', () => {
     `import definition from 'virtual:user-background-entrypoint';`,
     `import definition from "virtual:user-background-entrypoint";`,
   ])(
-    'should escape input paths when template contains %s',
+    'should escape input paths with apostrophes when encountering: %s',
     async (template) => {
       const wxtModuleDir = await fs.mkdtemp(join(tmpdir(), 'wxt-test-'));
       tempDirs.push(wxtModuleDir);
@@ -39,7 +39,40 @@ describe('resolveVirtualModules', () => {
         '\0virtual:wxt-background-entrypoint?' + inputPath,
       );
 
-      expect(code).toBe(`import definition from ${JSON.stringify(inputPath)};`);
+      expect(code).toBe(`import definition from "/tmp/foo'bar/background.ts";`);
+    },
+  );
+
+  it.each([
+    `import definition from 'virtual:user-background-entrypoint';`,
+    `import definition from "virtual:user-background-entrypoint";`,
+  ])(
+    'should escape input paths with double quotes when encountering: %s',
+    async (template) => {
+      const wxtModuleDir = await fs.mkdtemp(join(tmpdir(), 'wxt-test-'));
+      tempDirs.push(wxtModuleDir);
+
+      await fs.outputFile(
+        join(wxtModuleDir, 'dist/virtual/background-entrypoint.mjs'),
+        template,
+      );
+
+      const plugin = resolveVirtualModules(
+        fakeResolvedConfig({ wxtModuleDir }),
+      ).find(
+        (plugin) => plugin.name === 'wxt:resolve-virtual-background-entrypoint',
+      );
+
+      expect(plugin).toBeDefined();
+
+      const inputPath = `/tmp/foo"bar/background.ts`;
+      const code = await plugin!.load!(
+        '\0virtual:wxt-background-entrypoint?' + inputPath,
+      );
+
+      expect(code).toBe(
+        `import definition from "/tmp/foo\\"bar/background.ts";`,
+      );
     },
   );
 });

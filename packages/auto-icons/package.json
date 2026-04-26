@@ -24,7 +24,7 @@
     }
   ],
   "license": "MIT",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -39,20 +39,26 @@
   ],
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check"
+    "check": "bun run build && check",
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.0"
   },
   "dependencies": {
     "defu": "^6.1.4",
-    "fs-extra": "^11.3.3",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "oxlint": "^1.43.0",
-    "publint": "^0.3.17",
+    "@aklinker1/buildc": "^1.1.7",
+    "@types/fs-extra": "^11.0.4",
+    "oxlint": "^1.51.0",
+    "publint": "^0.3.18",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
+    "vitest": "^4.0.18",
     "wxt": "workspace:*"
   }
 }

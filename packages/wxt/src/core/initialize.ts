@@ -1,10 +1,11 @@
 import prompts from 'prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
-import fs from 'fs-extra';
+import { readdir, rename } from 'node:fs/promises';
+import { pathExists } from './utils/fs';
 import path from 'node:path';
-import pc from 'picocolors';
-import { Formatter } from 'picocolors/types';
+import { styleText } from 'node:util';
+import { TextStyle } from '../utils/text-style';
 
 export async function initialize(options: {
   directory: string;
@@ -31,8 +32,9 @@ export async function initialize(options: {
         type: () => (defaultTemplate == null ? 'select' : undefined),
         message: 'Choose a template',
         choices: templates.map((template) => ({
-          title:
-            TEMPLATE_COLORS[template.name]?.(template.name) ?? template.name,
+          title: TEMPLATE_COLORS[template.name]
+            ? styleText(TEMPLATE_COLORS[template.name], template.name)
+            : template.name,
           value: template,
         })),
       },
@@ -41,10 +43,10 @@ export async function initialize(options: {
         type: () => (options.packageManager == null ? 'select' : undefined),
         message: 'Package Manager',
         choices: [
-          { title: pc.red('npm'), value: 'npm' },
-          { title: pc.yellow('pnpm'), value: 'pnpm' },
-          { title: pc.cyan('yarn'), value: 'yarn' },
-          { title: pc.magenta('bun'), value: 'bun' },
+          { title: styleText('red', 'npm'), value: 'npm' },
+          { title: styleText('yellow', 'pnpm'), value: 'pnpm' },
+          { title: styleText('cyan', 'yarn'), value: 'yarn' },
+          { title: styleText('magenta', 'bun'), value: 'bun' },
         ],
       },
     ],
@@ -56,10 +58,10 @@ export async function initialize(options: {
   input.template ??= defaultTemplate;
   input.packageManager ??= options.packageManager;
 
-  const isExists = await fs.pathExists(input.directory);
+  const isExists = await pathExists(input.directory);
   if (isExists) {
     const isEmpty =
-      (await fs.readdir(input.directory)).filter((dir) => dir !== '.git')
+      (await readdir(input.directory)).filter((dir) => dir !== '.git')
         .length === 0;
     if (!isEmpty) {
       consola.error(
@@ -74,26 +76,27 @@ export async function initialize(options: {
   console.log();
   consola.log(
     `✨ WXT project created with the ${
-      TEMPLATE_COLORS[input.template.name]?.(input.template.name) ??
-      input.template.name
+      TEMPLATE_COLORS[input.template.name]
+        ? styleText(TEMPLATE_COLORS[input.template.name], input.template.name)
+        : input.template.name
     } template.`,
   );
   console.log();
   consola.log('Next steps:');
   let step = 0;
-  if (cdPath !== '') consola.log(`  ${++step}.`, pc.cyan(`cd ${cdPath}`));
-  consola.log(`  ${++step}.`, pc.cyan(`${input.packageManager} install`));
+  if (cdPath !== '')
+    consola.log(`  ${++step}.`, styleText('cyan', `cd ${cdPath}`));
+  consola.log(
+    `  ${++step}.`,
+    styleText('cyan', `${input.packageManager} install`),
+  );
   console.log();
 }
 
 interface Template {
-  /**
-   * Template's name.
-   */
+  /** Template's name. */
   name: string;
-  /**
-   * Path to template directory in github repo.
-   */
+  /** Path to template directory in github repo. */
   path: string;
 }
 
@@ -161,8 +164,8 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { default: ora } = await import('ora');
-  const spinner = ora('Downloading template').start();
+  const { createSpinner } = await import('nanospinner');
+  const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
     await downloadTemplate(`gh:${REPO}/${template.path}`, {
@@ -171,28 +174,26 @@ async function cloneProject({
     });
 
     // 2. Move _gitignore -> .gitignore
-    await fs
-      .move(
-        path.join(directory, '_gitignore'),
-        path.join(directory, '.gitignore'),
-      )
-      .catch((err) =>
-        consola.warn('Failed to move _gitignore to .gitignore:', err),
-      );
+    await rename(
+      path.join(directory, '_gitignore'),
+      path.join(directory, '.gitignore'),
+    ).catch((err) =>
+      consola.warn('Failed to move _gitignore to .gitignore:', err),
+    );
 
-    spinner.succeed();
+    spinner.success();
   } catch (err) {
-    spinner.fail();
+    spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
   }
 }
 
-const TEMPLATE_COLORS: Record<string, Formatter> = {
-  vanilla: pc.blue,
-  vue: pc.green,
-  react: pc.cyan,
-  svelte: pc.red,
-  solid: pc.blue,
+const TEMPLATE_COLORS: Record<string, TextStyle> = {
+  vanilla: 'blue',
+  vue: 'green',
+  react: 'cyan',
+  svelte: 'red',
+  solid: 'blue',
 };
 
 const TEMPLATE_SORT_WEIGHT: Record<string, number> = {

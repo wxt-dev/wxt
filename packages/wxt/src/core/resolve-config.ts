@@ -19,10 +19,10 @@ import path from 'node:path';
 import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullablyRequired } from './utils/types';
-import fs from 'fs-extra';
+import { NullishRequired } from './utils/types';
+import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
@@ -31,11 +31,12 @@ import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 /**
- * Given an inline config, discover the config file if necessary, merge the results, resolve any
- * relative paths, and apply any defaults.
+ * Given an inline config, discover the config file if necessary, merge the
+ * results, resolve any relative paths, and apply any defaults.
  *
- * Inline config always has priority over user config. Cli flags are passed as inline config if set.
- * If unset, undefined is passed in, letting this function decide default values.
+ * Inline config always has priority over user config. Cli flags are passed as
+ * inline config if set. If unset, undefined is passed in, letting this function
+ * decide default values.
  */
 export async function resolveConfig(
   inlineConfig: InlineConfig,
@@ -159,12 +160,18 @@ export async function resolveConfig(
       mergedConfig.dev?.server?.origin ??
       mergedConfig.dev?.server?.hostname ??
       'localhost';
+    const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
         // Passing host required for Mac, unsure of Windows/Linux
         host,
         port: 3000,
         portRange: [3001, 3010],
+      });
+    } else if (!strictPort) {
+      port = await getPort({
+        host,
+        port,
       });
     }
     const originWithProtocolAndPort = [
@@ -176,6 +183,7 @@ export async function resolveConfig(
       host,
       port,
       origin: originWithProtocolAndPort,
+      strictPort,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }
@@ -226,6 +234,7 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {}),
+    suppressWarnings: mergedConfig.suppressWarnings ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -249,7 +258,8 @@ async function resolveManifestConfig(
 }
 
 /**
- * Merge the inline config and user config. Inline config is given priority. Defaults are not applied here.
+ * Merge the inline config and user config. Inline config is given priority.
+ * Defaults are not applied here.
  */
 async function mergeInlineConfig(
   inlineConfig: InlineConfig,
@@ -293,7 +303,7 @@ function resolveZipConfig(
   browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['zip']> {
+): NullishRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
@@ -328,7 +338,7 @@ function resolveZipConfig(
 function resolveAnalysisConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['analysis']> {
+): NullishRequired<ResolvedConfig['analysis']> {
   const analysisOutputFile = path.resolve(
     root,
     mergedConfig.analysis?.outputFile ?? 'stats.html',
@@ -528,9 +538,7 @@ async function getUnimportEslintOptions(
   };
 }
 
-/**
- * Returns the path to `node_modules/wxt`.
- */
+/** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
   // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
   // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
@@ -543,7 +551,7 @@ function resolveWxtModuleDir() {
 }
 
 async function isDirMissing(dir: string) {
-  return !(await fs.pathExists(dir));
+  return !(await pathExists(dir));
 }
 
 function logMissingDir(logger: Logger, name: string, expected: string) {
@@ -554,9 +562,7 @@ function logMissingDir(logger: Logger, name: string, expected: string) {
   );
 }
 
-/**
- * Map of `ConfigEnv` commands to their default modes.
- */
+/** Map of `ConfigEnv` commands to their default modes. */
 const COMMAND_MODES: Record<WxtCommand, string> = {
   build: 'production',
   serve: 'development',
@@ -614,6 +620,7 @@ export async function resolveWxtUserModules(
   const localModulePaths = await glob(['*.[tj]s', '*/index.[tj]s'], {
     cwd: modulesDir,
     onlyFiles: true,
+    expandDirectories: false,
   }).catch(() => []);
   // Sort modules to ensure a consistent execution order
   localModulePaths.sort();

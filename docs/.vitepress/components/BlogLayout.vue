@@ -1,21 +1,22 @@
 <script lang="ts" setup>
 import useBlogDate from '../composables/useBlogDate';
-import { useData } from 'vitepress';
+import { Content, useData } from 'vitepress';
+import { PostFrontmatter } from '../utils/types';
 
-const { frontmatter } = useData();
+const { frontmatter } = useData<PostFrontmatter>();
 const date = useBlogDate(() => frontmatter.value.date);
 </script>
 
 <template>
   <div class="vp-doc">
     <main class="container-content">
-      <h1 v-html="$frontmatter.title" />
+      <h1 v-html="frontmatter.title" />
       <p class="meta-row">
         <a
-          class="author"
-          v-for="author of $frontmatter.authors"
+          v-for="author of frontmatter.authors"
           :key="author.github"
           :href="`https://github.com/${author.github}`"
+          class="author"
         >
           <img :src="`https://github.com/${author.github}.png?size=96`" />
           <span>{{ author.name }}</span>

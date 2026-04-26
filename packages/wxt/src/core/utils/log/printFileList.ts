@@ -1,8 +1,9 @@
 import path from 'node:path';
-import pc from 'picocolors';
-import fs from 'fs-extra';
+import { lstat } from 'node:fs/promises';
 import { filesize } from 'filesize';
 import { printTable } from './printTable';
+import { styleText } from 'node:util';
+import { TextStyle } from '../../../utils/text-style';
 
 export async function printFileList(
   log: (message: string) => void,
@@ -19,35 +20,37 @@ export async function printFileList(
         path.relative(baseDir, file),
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
-      const color = getChunkColor(file);
-      const stats = await fs.lstat(file);
+      const chunkColor = getChunkColor(file);
+      const stats = await lstat(file);
       totalSize += stats.size;
       const size = String(filesize(stats.size));
       return [
-        `${pc.gray(prefix)} ${pc.dim(parts[0])}${color(parts[1])}`,
-        pc.dim(size),
+        `${styleText('gray', prefix)} ${styleText('dim', parts[0])}${styleText(chunkColor, parts[1])}`,
+        styleText('dim', size),
       ];
     }),
   );
 
-  fileRows.push([`${pc.cyan('Σ Total size:')} ${String(filesize(totalSize))}`]);
+  fileRows.push([
+    `${styleText('cyan', 'Σ Total size:')} ${String(filesize(totalSize))}`,
+  ]);
 
   printTable(log, header, fileRows);
 }
 
-const DEFAULT_COLOR = pc.blue;
-const CHUNK_COLORS: Record<string, (text: string) => string> = {
-  '.js.map': pc.gray,
-  '.cjs.map': pc.gray,
-  '.mjs.map': pc.gray,
-  '.html': pc.green,
-  '.css': pc.magenta,
-  '.js': pc.cyan,
-  '.cjs': pc.cyan,
-  '.mjs': pc.cyan,
-  '.zip': pc.yellow,
+const DEFAULT_COLOR: TextStyle = 'blue';
+const CHUNK_COLORS: Record<string, TextStyle> = {
+  '.js.map': 'gray',
+  '.cjs.map': 'gray',
+  '.mjs.map': 'gray',
+  '.html': 'green',
+  '.css': 'magenta',
+  '.js': 'cyan',
+  '.cjs': 'cyan',
+  '.mjs': 'cyan',
+  '.zip': 'yellow',
 };
-function getChunkColor(filename: string) {
+function getChunkColor(filename: string): TextStyle {
   return (
     Object.entries(CHUNK_COLORS).find(([key]) => filename.endsWith(key))?.[1] ??
     DEFAULT_COLOR

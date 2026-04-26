@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "1.1.5",
+  "version": "1.2.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -40,23 +40,29 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "build": "buildc -- tsdown",
-    "prepare": "buildc --deps-only -- wxt prepare"
+    "postinstall": "buildc --deps-only -- wxt prepare",
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'",
+    "prepack": "bun run build"
   },
   "peerDependencies": {
+    "vite": "^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0",
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.4.1 || ^5.0.0"
+    "@vitejs/plugin-react": "^4.4.1 || ^5.0.0 || ^6.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.2.13",
+    "@aklinker1/buildc": "^1.1.7",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "publint": "^0.3.17",
+    "publint": "^0.3.18",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "typescript": "^5.9.3",
+    "vite": "^7.0.0",
     "wxt": "workspace:*"
   }
 }
