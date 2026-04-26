@@ -80,6 +80,7 @@
     "eslint": "^10.1.0",
     "extract-zip": "^2.0.1",
     "happy-dom": "^20.8.3",
+    "jiti": "^2.6.1",
     "lodash.merge": "^4.6.2",
     "oxlint": "^1.51.0",
     "publint": "^0.3.18",
