@@ -286,10 +286,10 @@ export interface InlineConfig {
      *
      * @example
      *   // Correct:
-     *   ['@scope/package-name', 'package-name'][
-     *     // Incorrect, don't include versions!!!
-     *     ('@scope/package-name@1.1.3', 'package-name@^2')
-     *   ];
+     *   ['@scope/package-name', 'package-name'];
+     *
+     *   // Incorrect, don't include versions!!!
+     *   ['@scope/package-name@1.1.3', 'package-name@^2'];
      *
      * @default [ ]
      */
