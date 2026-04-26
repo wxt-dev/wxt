@@ -63,6 +63,29 @@ describe('TypeScript Project', () => {
     `);
   });
 
+  it('should include CSS entrypoints in browser.runtime.getURL paths', async () => {
+    const project = new TestProject();
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+    project.addFile(
+      'entrypoints/plain.css',
+      `body {
+        color: red;
+      }`,
+    );
+    project.addFile(
+      'entrypoints/overlay.content.css',
+      `body {
+        color: blue;
+      }`,
+    );
+
+    await project.prepare();
+
+    const output = await project.serializeFile('.wxt/types/paths.d.ts');
+    expect(output).toContain('| "/plain.css"');
+    expect(output).toContain('| "/content-scripts/overlay.css"');
+  });
+
   it('should augment the types for browser.i18n.getMessage', async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');

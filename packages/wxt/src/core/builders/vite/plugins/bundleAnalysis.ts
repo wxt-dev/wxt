@@ -12,11 +12,11 @@ export function bundleAnalysis(config: ResolvedConfig): vite.Plugin {
       config.analysis.outputDir,
       `${config.analysis.outputName}-${increment++}.json`,
     ),
-  });
+  }) as vite.Plugin;
 }
 
 /**
- * @deprecated FOR TESTING ONLY.
+ * @internal FOR TESTING ONLY.
  */
 export function resetBundleIncrement() {
   increment = 0;

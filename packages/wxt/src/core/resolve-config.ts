@@ -14,6 +14,7 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   ResolvedEslintrc,
+  ExtensionRunner,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -21,7 +22,7 @@ import consola, { LogLevels } from 'consola';
 import defu from 'defu';
 import { NullablyRequired } from './utils/types';
 import fs from 'fs-extra';
-import { normalizePath } from './utils/paths';
+import { normalizePath } from './utils';
 import glob from 'fast-glob';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
@@ -29,6 +30,10 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createSafariRunner } from './runners/safari';
+import isWsl from 'is-wsl';
+import { createWslRunner } from './runners/wsl';
+import { createManualRunner } from './runners/manual';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the results, resolve any
@@ -50,11 +55,7 @@ export async function resolveConfig(
       configFile: inlineConfig.configFile,
       name: 'wxt',
       cwd: inlineConfig.root ?? process.cwd(),
-      rcFile: false,
     });
-    if (inlineConfig.configFile && metadata.layers?.length === 0) {
-      throw Error(`Config file "${inlineConfig.configFile}" not found`);
-    }
     userConfig = loadedConfig ?? {};
     userConfigMetadata = metadata;
   }
@@ -128,7 +129,7 @@ export async function resolveConfig(
       '`InlineConfig#runner` is deprecated, use `InlineConfig#webExt` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
     );
   }
-  const runnerConfig = await loadConfig<WebExtConfig>({
+  const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
@@ -221,7 +222,12 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig,
+    runnerConfig: webExt,
+    webExt,
+    runner:
+      command === 'serve'
+        ? await resolveRunner(browser, logger, mergedConfig)
+        : createManualRunner(),
     srcDir,
     typesDir,
     wxtDir,
@@ -301,8 +307,9 @@ function resolveZipConfig(
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
-    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesTemplate: '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip',
+    artifactTemplate:
+      '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
@@ -391,7 +398,7 @@ async function getUnimportOptions(
       },
       {
         from: 'wxt/utils/app-config',
-        imports: defineImportsAndTypes(['useAppConfig'], []),
+        imports: defineImportsAndTypes(['getAppConfig', 'useAppConfig'], []),
       },
       {
         from: 'wxt/utils/content-script-context',
@@ -536,17 +543,10 @@ async function getUnimportEslintOptions(
  * Returns the path to `node_modules/wxt`.
  */
 function resolveWxtModuleDir() {
-  // TODO: Drop the __filename expression once we're fully running in ESM
-  // (see https://github.com/wxt-dev/wxt/issues/277)
-  const importer =
-    typeof __filename === 'string'
-      ? pathToFileURL(__filename).href
-      : import.meta.url;
-
   // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
   // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
   // have it.
-  const url = esmResolve('wxt', importer);
+  const url = esmResolve('wxt', import.meta.url);
 
   // esmResolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
@@ -554,7 +554,7 @@ function resolveWxtModuleDir() {
 }
 
 async function isDirMissing(dir: string) {
-  return !(await fs.exists(dir));
+  return !(await fs.pathExists(dir));
 }
 
 function logMissingDir(logger: Logger, name: string, expected: string) {
@@ -584,8 +584,8 @@ export async function mergeBuilderConfig(
   if (vite) {
     return {
       vite: async (env) => {
-        const resolvedInlineConfig = (await inlineConfig.vite?.(env)) ?? {};
-        const resolvedUserConfig = (await userConfig.vite?.(env)) ?? {};
+        const [resolvedInlineConfig = {}, resolvedUserConfig = {}] =
+          await Promise.all([inlineConfig.vite?.(env), userConfig.vite?.(env)]);
         return vite.mergeConfig(resolvedUserConfig, resolvedInlineConfig);
       },
     };
@@ -653,4 +653,29 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
+}
+
+async function resolveRunner(
+  browser: string,
+  logger: Logger,
+  mergedConfig: InlineConfig,
+): Promise<ExtensionRunner> {
+  if (browser === 'safari') return createSafariRunner();
+
+  if (isWsl) return createWslRunner();
+
+  try {
+    // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
+    const { createWebExtRunner } = await import('./runners/web-ext');
+    return mergedConfig.webExt?.disabled
+      ? createManualRunner()
+      : createWebExtRunner();
+  } catch (err: any) {
+    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+
+    console.log('error', err);
+    logger.debug('Error loading the web-ext runner', err);
+  }
+
+  return createManualRunner();
 }

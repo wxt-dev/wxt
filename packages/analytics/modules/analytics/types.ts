@@ -2,7 +2,10 @@ export interface Analytics {
   /** Report a page change. */
   page: (url: string) => void;
   /** Report a custom event. */
-  track: (eventName: string, eventProperties?: Record<string, string>) => void;
+  track: (
+    eventName: string,
+    eventProperties?: Record<string, string | undefined>,
+  ) => void;
   /** Save information about the user. */
   identify: (userId: string, userProperties?: Record<string, string>) => void;
   /** Automatically setup and track user interactions, returning a function to remove any listeners that were setup. */
@@ -32,7 +35,7 @@ export interface AnalyticsConfig {
   /**
    * Configure how the user Id is persisted. Defaults to using `browser.storage.local`.
    */
-  userId?: AnalyticsStorageItem<string>;
+  userId?: AnalyticsStorageItem<string | undefined>;
   /**
    * Configure how user properties are persisted. Defaults to using `browser.storage.local`.
    */
@@ -94,6 +97,6 @@ export interface AnalyticsPageViewEvent extends BaseAnalyticsEvent {
 export interface AnalyticsTrackEvent extends BaseAnalyticsEvent {
   event: {
     name: string;
-    properties?: Record<string, string>;
+    properties?: Record<string, string | undefined>;
   };
 }

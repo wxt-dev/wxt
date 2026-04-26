@@ -21,7 +21,7 @@ export interface InlineConfig {
    * Directory containing all source code. Set to `"src"` to move all source code to a `src/`
    * directory.
    *
-   * After changing, don't forget to move the `public/` and `entrypoints/` directories into the new
+   * After changing, remember to move the `public/` and `entrypoints/` directories into the new
    * source dir.
    *
    * @default config.root
@@ -151,9 +151,10 @@ export interface InlineConfig {
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-{{browser}}.zip"
+     * @default "{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip"
      */
     artifactTemplate?: string;
     /**
@@ -177,9 +178,10 @@ export interface InlineConfig {
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default "{{name}}-{{version}}-sources.zip"
+     * @default "{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip"
      */
     sourcesTemplate?: string;
     /**
@@ -202,7 +204,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
+     *   "coverage", // Include the coverage directory in the `sourcesRoot`
      * ]
      */
     includeSources?: string[];
@@ -215,7 +217,7 @@ export interface InlineConfig {
      *
      * @example
      * [
-     *   "coverage", // Include the coverage directory in the `sourcesRoot`
+     *   "coverage", // Ignore the coverage directory in the `sourcesRoot`
      * ]
      */
     excludeSources?: string[];
@@ -464,8 +466,7 @@ export interface BuildStepOutput {
 }
 
 export interface WxtDevServer
-  extends Omit<WxtBuilderServer, 'listen' | 'close'>,
-    ServerInfo {
+  extends Omit<WxtBuilderServer, 'listen' | 'close'>, ServerInfo {
   /**
    * Stores the current build output of the server.
    */
@@ -569,8 +570,28 @@ export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {
   type?: PerBrowserOption<'module'>;
 }
 
-export interface BaseContentScriptEntrypointOptions
-  extends BaseEntrypointOptions {
+export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
+  /**
+   * The variable name for the IIFE in the output bundle.
+   *
+   * This option is relevant for scripts inserted into the page context where the default IIFE
+   * variable name may conflict with an existing variable on the target page. This applies to content
+   * scripts with world=MAIN, and others, such as unlisted scripts, that could be dynamically injected
+   * into the page with a <script> tag.
+   *
+   * Available options:
+   * - `true`: automatically generate a name for the IIFE based on the entrypoint name
+   * - `false`: Output the IIFE without a variable name, making it anonymous. This is the safest option
+   *  to avoid conflicts with existing variables on the page. This will become the default in a future version of WXT.
+   * - `string`: Use the provided string as the global variable name.
+   * - `function`: A function that receives the entrypoint and returns a string to use as the variable name.
+   *
+   * @default true
+   */
+  globalName?: string | boolean | ((entrypoint: Entrypoint) => string);
+}
+
+export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypointOptions {
   matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -637,21 +658,32 @@ export interface BaseContentScriptEntrypointOptions
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
 }
 
-export interface MainWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    */
   world: 'MAIN';
 }
 
-export interface IsolatedWorldContentScriptEntrypointOptions
-  extends BaseContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
   /**
    * See https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    * @default "ISOLATED"
    */
   world?: 'ISOLATED';
+}
+
+/**
+ * Firefox theme icon definition for light/dark mode support.
+ * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action#theme_icons
+ */
+export interface ThemeIcon {
+  /** Path to the icon shown when the browser uses a light theme. */
+  light: string;
+  /** Path to the icon shown when the browser uses a dark theme. */
+  dark: string;
+  /** Icon size in pixels. */
+  size: number;
 }
 
 export interface PopupEntrypointOptions extends BaseEntrypointOptions {
@@ -662,9 +694,22 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
   browserStyle?: PerBrowserOption<boolean>;
+  /**
+   * Firefox only. Defines the part of the browser in which the button is initially placed.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#default_area
+   */
+  defaultArea?: PerBrowserOption<
+    'navbar' | 'menupanel' | 'tabstrip' | 'personaltoolbar'
+  >;
+  /**
+   * Firefox only. Icons for light and dark themes.
+   * @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action#theme_icons
+   */
+  themeIcons?: ThemeIcon[];
 }
 
 export interface OptionsEntrypointOptions extends BaseEntrypointOptions {
+  title?: string;
   openInTab?: PerBrowserOption<boolean>;
   browserStyle?: PerBrowserOption<boolean>;
   chromeStyle?: PerBrowserOption<boolean>;
@@ -729,10 +774,14 @@ export interface GenericEntrypoint extends BaseEntrypoint {
     | 'newtab'
     | 'devtools'
     | 'unlisted-page'
-    | 'unlisted-script'
     | 'unlisted-style'
     | 'content-script-style';
   options: ResolvedPerBrowserOptions<BaseEntrypointOptions>;
+}
+
+export interface UnlistedScriptEntrypoint extends BaseEntrypoint {
+  type: 'unlisted-script';
+  options: ResolvedPerBrowserOptions<BaseScriptEntrypointOptions>;
 }
 
 export interface BackgroundEntrypoint extends BaseEntrypoint {
@@ -766,6 +815,7 @@ export interface SidepanelEntrypoint extends BaseEntrypoint {
 export type Entrypoint =
   | GenericEntrypoint
   | BackgroundEntrypoint
+  | UnlistedScriptEntrypoint
   | ContentScriptEntrypoint
   | PopupEntrypoint
   | OptionsEntrypoint
@@ -782,8 +832,7 @@ export type EntrypointGroup = Entrypoint | Entrypoint[];
 
 export type OnContentScriptStopped = (cb: () => void) => void;
 
-export interface IsolatedWorldContentScriptDefinition
-  extends IsolatedWorldContentScriptEntrypointOptions {
+export interface IsolatedWorldContentScriptDefinition extends IsolatedWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -794,8 +843,7 @@ export interface IsolatedWorldContentScriptDefinition
   main(ctx: ContentScriptContext): any | Promise<any>;
 }
 
-export interface MainWorldContentScriptDefinition
-  extends MainWorldContentScriptEntrypointOptions {
+export interface MainWorldContentScriptDefinition extends MainWorldContentScriptEntrypointOptions {
   /**
    * Main function executed when the content script is loaded.
    *
@@ -817,7 +865,7 @@ export interface BackgroundDefinition extends BackgroundEntrypointOptions {
   main(): void;
 }
 
-export interface UnlistedScriptDefinition extends BaseEntrypointOptions {
+export interface UnlistedScriptDefinition extends BaseScriptEntrypointOptions {
   /**
    * Main function executed when the unlisted script is ran.
    *
@@ -1000,7 +1048,7 @@ export interface WebExtConfig {
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#pref
    */
-  firefoxPrefs?: Record<string, string>;
+  firefoxPref?: Record<string, boolean | number | string>;
   /**
    * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#args
    */
@@ -1031,7 +1079,7 @@ export interface WxtBuilder {
   /**
    * Import a JS entrypoint file, returning the default export containing the options.
    */
-  importEntrypoint<T>(path: string): Promise<T>;
+  importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
   /**
    * Import a list of JS entrypoint files, returning their options.
    */
@@ -1328,7 +1376,10 @@ export interface ResolvedConfig {
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
+  /** @deprecated - Use {@link webExt} instead. */
   runnerConfig: C12ResolvedConfig<WebExtConfig>;
+  webExt: C12ResolvedConfig<WebExtConfig>;
+  runner: ExtensionRunner;
   zip: {
     name?: string;
     artifactTemplate: string;
@@ -1411,7 +1462,9 @@ export interface FsCache {
 
 export interface ExtensionRunner {
   openBrowser(): Promise<void>;
-  closeBrowser(): Promise<void>;
+
+  closeBrowser?(): Promise<void>;
+
   /** Whether or not this runner actually opens the browser. */
   canOpen?(): boolean;
 }
@@ -1546,8 +1599,9 @@ export interface WxtModule<TOptions extends WxtModuleOptions> {
   setup?: WxtModuleSetup<TOptions>;
 }
 
-export interface WxtModuleWithMetadata<TOptions extends WxtModuleOptions>
-  extends WxtModule<TOptions> {
+export interface WxtModuleWithMetadata<
+  TOptions extends WxtModuleOptions,
+> extends WxtModule<TOptions> {
   type: 'local' | 'node_module';
   id: string;
 }

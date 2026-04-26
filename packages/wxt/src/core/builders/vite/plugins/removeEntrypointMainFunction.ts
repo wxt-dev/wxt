@@ -1,6 +1,6 @@
 import { ResolvedConfig } from '../../../../types';
-import * as vite from 'vite';
-import { normalizePath } from '../../../utils/paths';
+import type * as vite from 'vite';
+import { normalizePath } from '../../../utils';
 import { removeMainFunctionCode } from '../../../utils/transform';
 import { resolve } from 'node:path';
 
@@ -19,7 +19,7 @@ export function removeEntrypointMainFunction(
       handler(code, id) {
         if (id === absPath) {
           const newCode = removeMainFunctionCode(code);
-          config.logger.debug('vite-node transformed entrypoint', path);
+          config.logger.debug('transformed entrypoint', path);
           config.logger.debug(`Original:\n---\n${code}\n---`);
           config.logger.debug(`Transformed:\n---\n${newCode.code}\n---`);
           return newCode;

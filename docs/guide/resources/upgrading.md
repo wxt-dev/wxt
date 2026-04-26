@@ -35,6 +35,41 @@ Listed below are all the breaking changes you should address when upgrading to a
 
 Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`, are considered major and have breaking changes. Once v1 is released, only major version bumps will have breaking changes.
 
+## v0.20.0 &rarr; vX.Y.Z
+
+### Dev Browser Startup
+
+The package used to open the browser on startup has changed. Previously, WXT used `web-ext-run` as a direct dependency, but now we use `web-ext` as a peer dependency.
+
+:::details
+
+`web-ext-run` was a light-weight fork of `web-ext`, but it was difficult to maintain and quickly got out-of-date compared to `web-ext`.
+
+:::
+
+In v0.20, how automatic startup is enabled/disabled has changed:
+
+- To continue opening the browser automatically, add `web-ext` as a dependency. No changes are required in your `web-ext.config.ts` files.
+
+  ```sh
+  pnpm add -D web-ext
+  ```
+
+- To disable the browser automatically, **_DON'T_** add `web-ext` as a dependency. Additionally, you can remove any `web-ext.config.ts` files since they're not used if `web-ext` isn't installed:
+
+  ```sh
+  rm web-ext.config.ts
+
+  # Keep the config in your home dir until all your projects have been upgraded
+  rm ~/web-ext.config.ts
+  ```
+
+## New Deprecations in v0.20
+
+Deprecated APIs will be removed in the next major release.
+
+- `wxt.config.runnerConfig` renamed to `wxt.config.webExt`.
+
 ## v0.19.0 &rarr; v0.20.0
 
 v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.
@@ -54,7 +89,6 @@ See <https://github.com/wxt-dev/wxt/issues/784>
 To upgrade, you have two options:
 
 1. **Stop using the polyfill**
-
    - If you're already using `extensionApi: "chrome"`, then you're not using the polyfill and there is nothing to change!
    - Otherwise there is only one change: `browser.runtime.onMessage` no longer supports using promises to return a response:
 
@@ -71,7 +105,6 @@ To upgrade, you have two options:
      ```
 
 2. **Continue using the polyfill** - If you want to keep using the polyfill, you can! One less thing to worry about during this upgrade.
-
    - Install `webextension-polyfill` and WXT's [new polyfill module](https://www.npmjs.com/package/@wxt-dev/webextension-polyfill):
 
      ```sh
@@ -129,7 +162,6 @@ The default location for the `public/` and `modules/` directories have changed t
 
 - If you follow the default folder structure, you don't need to make any changes.
 - If you set a custom `srcDir`, you have two options:
-
   1. Move the your `public/` and `modules/` directories to the project root:
      <!-- prettier-ignore -->
      ```html
@@ -180,7 +212,7 @@ import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
 import { storage } from '#imports'; // [!code ++]
 import { defineContentScript } from '#imports'; // [!code ++]
-import { ContentScriptContext, useAppConfig } from '#imports'; // [!code ++]
+import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
 ```
 
 You can combine the imports into a single import statement, but it's easier to just find/replace each statement.
@@ -194,7 +226,7 @@ import {
   storage, // [!code ++]
   defineContentScript, // [!code ++]
   ContentScriptContext, // [!code ++]
-  useAppConfig, // [!code ++]
+  getAppConfig, // [!code ++]
 } from '#imports'; // [!code ++]
 ```
 

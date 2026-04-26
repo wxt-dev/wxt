@@ -27,7 +27,7 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
           ],
         },
         ssr: {
-          // Inline all WXT modules subdependencies can be mocked
+          // Inline all WXT modules sub-dependencies can be mocked
           noExternal: ['wxt'],
         },
       };
@@ -43,7 +43,7 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
 
 const setupTemplate = `
   import { vi } from 'vitest';
-  import { fakeBrowser } from 'wxt/testing';
+  import { fakeBrowser } from 'wxt/testing/fake-browser';
 
   vi.stubGlobal("chrome", fakeBrowser);
   vi.stubGlobal("browser", fakeBrowser);

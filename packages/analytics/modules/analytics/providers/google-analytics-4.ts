@@ -4,6 +4,7 @@ import type { BaseAnalyticsEvent } from '../types';
 const DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
 
 export interface GoogleAnalytics4ProviderOptions {
+  apiUrl?: string;
   apiSecret: string;
   measurementId: string;
 }
@@ -18,7 +19,7 @@ export const googleAnalytics4 =
       ): Promise<void> => {
         const url = new URL(
           config?.debug ? '/debug/mp/collect' : '/mp/collect',
-          'https://www.google-analytics.com',
+          options.apiUrl ?? 'https://www.google-analytics.com',
         );
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
@@ -46,6 +47,7 @@ export const googleAnalytics4 =
               ad_personalization: 'DENIED',
             },
             user_properties: mappedUserProperties,
+            user_agent: navigator.userAgent,
             events: [
               {
                 name: eventName,

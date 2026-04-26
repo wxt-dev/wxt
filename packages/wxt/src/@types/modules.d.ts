@@ -1,23 +1,6 @@
 // Custom TS definitions for non-TS packages
 
-declare module 'zip-dir' {
-  // Represents the options object for zipdir function
-  interface ZipDirOptions {
-    saveTo?: string;
-    filter?: (path: string, stat: import('fs').Stats) => boolean;
-    each?: (path: string) => void;
-  }
-
-  function zipdir(
-    dirPath: string,
-    options?: ZipDirOptions,
-    callback?: (error: Error | null, buffer: Buffer) => void,
-  ): Promise<Buffer>;
-
-  export = zipdir;
-}
-
-declare module 'web-ext-run' {
+declare module 'web-ext' {
   export interface WebExtRunInstance {
     reloadAllExtensions(): Promise<void>;
     exit(): Promise<void>;
@@ -31,7 +14,7 @@ declare module 'web-ext-run' {
   export default webExt;
 }
 
-declare module 'web-ext-run/util/logger' {
+declare module 'web-ext/util/logger' {
   // https://github.com/mozilla/web-ext/blob/e37e60a2738478f512f1255c537133321f301771/src/util/logger.js#L43
   export interface IConsoleStream {
     stopCapturing(): void;

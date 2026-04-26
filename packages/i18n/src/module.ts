@@ -44,7 +44,7 @@ export default defineWxtModule<I18nOptions>({
       options ?? {};
 
     const getLocalizationFiles = async () => {
-      const files = await glob('*.{json,json5,yml,yaml,toml}', {
+      const files = await glob('*.{json,json5,jsonc,yml,yaml,toml}', {
         cwd: localesDir,
         absolute: true,
       });
@@ -88,7 +88,7 @@ export default defineWxtModule<I18nOptions>({
       )!;
       if (defaultLocaleFile == null) {
         throw Error(
-          `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|yml|yaml|toml}\``,
+          `\`[i18n]\` Required localization file does not exist: \`<localesDir>/${wxt.config.manifest.default_locale}.{json|json5|jsonc|yml|yaml|toml}\``,
         );
       }
 

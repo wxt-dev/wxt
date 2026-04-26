@@ -11,7 +11,7 @@ export default defineConfig({
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
       if (wxt.config.mode === 'development') {
-        manifest.title += ' (DEV)';
+        manifest.name += ' (DEV)';
       }
     },
   },
@@ -19,6 +19,8 @@ export default defineConfig({
 ```
 
 Most hooks provide the `wxt` object as the first argument. It contains the resolved config and other info about the current build. The other arguments can be modified by reference to change different parts of the build system.
+
+You can find the [list of all available hooks](/api/reference/wxt/interfaces/WxtHooks) in the API reference.
 
 Putting one-off hooks like this in your config file is simple, but if you find yourself writing lots of hooks, you should extract them into [WXT Modules](/guide/essentials/wxt-modules) instead.
 

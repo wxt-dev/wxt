@@ -4,8 +4,8 @@ import {
   EntrypointGroup,
   OutputFile,
 } from '../../../types';
-import { every, some } from '../../utils/arrays';
-import { normalizePath } from '../../utils/paths';
+import { every, some } from '../arrays';
+import { normalizePath } from '../paths';
 import { wxt } from '../../wxt';
 
 /**
@@ -206,10 +206,6 @@ interface HtmlReload extends RebuildChange {
 interface ExtensionReload extends RebuildChange {
   type: 'extension-reload';
 }
-
-// interface BrowserRestart extends RebuildChange {
-//   type: 'browser-restart';
-// }
 
 interface ContentScriptReload extends RebuildChange {
   type: 'content-script-reload';

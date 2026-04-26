@@ -48,7 +48,6 @@ export async function createShadowRootUi<TMounted>(
     mode: options.mode ?? 'open',
     isolateEvents: options.isolateEvents,
   });
-  shadowHost.setAttribute('data-wxt-shadow-root', '');
 
   let mounted: TMounted | undefined;
 
@@ -135,8 +134,9 @@ async function loadCss(): Promise<string> {
   }
 }
 
-export interface ShadowRootContentScriptUi<TMounted>
-  extends ContentScriptUi<TMounted> {
+export interface ShadowRootContentScriptUi<
+  TMounted,
+> extends ContentScriptUi<TMounted> {
   /**
    * The `HTMLElement` hosting the shadow root used to isolate the UI's styles. This is the element
    * that get's added to the DOM. This element's style is not isolated from the webpage.

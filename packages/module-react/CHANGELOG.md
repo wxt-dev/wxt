@@ -1,5 +1,43 @@
 # Changelog
 
+## v1.1.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.4...module-react-v1.1.5)
+
+### 🏡 Chore
+
+- **deps:** Support @vitejs/plugin-react@5 ([9170159b](https://github.com/wxt-dev/wxt/commit/9170159b))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v1.1.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.3...module-react-v1.1.4)
+
+### 🩹 Fixes
+
+- Add support for WXT v0.20.0 ([c9dca022](https://github.com/wxt-dev/wxt/commit/c9dca022))
+
+### 🏡 Chore
+
+- Add funding links to `package.json` files ([#1446](https://github.com/wxt-dev/wxt/pull/1446))
+- Use PNPM 10's new catelog feature ([#1493](https://github.com/wxt-dev/wxt/pull/1493))
+- Move production dependencies to PNPM 10 catelog ([#1494](https://github.com/wxt-dev/wxt/pull/1494))
+- **deps:** Upgrade to Vite 6 and related dependencies ([#1496](https://github.com/wxt-dev/wxt/pull/1496))
+- Stop using PNPM catalog ([#1644](https://github.com/wxt-dev/wxt/pull/1644))
+- Upgrade `@aklinker1/check` to v2 ([#1647](https://github.com/wxt-dev/wxt/pull/1647))
+- **deps:** Update all dependencies ([#1648](https://github.com/wxt-dev/wxt/pull/1648))
+- **deps:** Upgrade typescript from 5.8.3 to 5.9.2 ([a6eef643](https://github.com/wxt-dev/wxt/commit/a6eef643))
+- Create script for managing dependency upgrades ([#1875](https://github.com/wxt-dev/wxt/pull/1875))
+- **deps:** Upgrade all dev dependencies ([#1876](https://github.com/wxt-dev/wxt/pull/1876))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Okinea Dev <hi@okinea.dev>
+
 ## v1.1.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-react-v1.1.2...module-react-v1.1.3)
