@@ -1,1 +1,1 @@
-console.log('Hello background!');
+console.log('Hello background 2!');
