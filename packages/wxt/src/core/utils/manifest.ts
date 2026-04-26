@@ -294,7 +294,7 @@ function addEntrypoints(
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
-    if (popup.options.defaultState)
+    if (popup.options.defaultState && wxt.config.manifestVersion === 3)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Chrome
       options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
