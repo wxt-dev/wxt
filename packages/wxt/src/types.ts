@@ -68,7 +68,7 @@ export interface InlineConfig {
    *   'serve')
    *
    * @example
-   *   {{browser}} -mv{{manifestVersion}}
+   *   '{{browser}}-mv{{manifestVersion}}';
    *
    * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"`</span>
    */
@@ -147,13 +147,11 @@ export interface InlineConfig {
    * Suppress specific warnings during the build process.
    *
    * @example
-   *   ```ts
    *   export default defineConfig({
    *     suppressWarnings: {
    *       firefoxDataCollection: true,
    *     },
-   *   })
-   *   ```;
+   *   });
    */
   suppressWarnings?: {
     /**
