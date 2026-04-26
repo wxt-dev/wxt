@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -8,7 +8,9 @@ import { fakeResolvedConfig } from '../../../../utils/testing/fake-objects';
 const tempDirs: string[] = [];
 
 afterEach(async () => {
-  await Promise.all(tempDirs.splice(0).map((dir) => fs.remove(dir)));
+  await Promise.all(
+    tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })),
+  );
 });
 
 describe('resolveVirtualModules', () => {
@@ -18,13 +20,15 @@ describe('resolveVirtualModules', () => {
   ])(
     'should escape input paths with apostrophes when encountering: %s',
     async (template) => {
-      const wxtModuleDir = await fs.mkdtemp(join(tmpdir(), 'wxt-test-'));
+      const wxtModuleDir = await mkdtemp(join(tmpdir(), 'wxt-test-'));
       tempDirs.push(wxtModuleDir);
 
-      await fs.outputFile(
-        join(wxtModuleDir, 'dist/virtual/background-entrypoint.mjs'),
-        template,
+      const filePath = join(
+        wxtModuleDir,
+        'dist/virtual/background-entrypoint.mjs',
       );
+      await mkdir(join(wxtModuleDir, 'dist/virtual'), { recursive: true });
+      await writeFile(filePath, template);
 
       const plugin = resolveVirtualModules(
         fakeResolvedConfig({ wxtModuleDir }),
@@ -35,7 +39,7 @@ describe('resolveVirtualModules', () => {
       expect(plugin).toBeDefined();
 
       const inputPath = `/tmp/foo'bar/background.ts`;
-      const code = await plugin!.load!(
+      const code = await plugin!.load!.handler!(
         '\0virtual:wxt-background-entrypoint?' + inputPath,
       );
 
@@ -49,13 +53,15 @@ describe('resolveVirtualModules', () => {
   ])(
     'should escape input paths with double quotes when encountering: %s',
     async (template) => {
-      const wxtModuleDir = await fs.mkdtemp(join(tmpdir(), 'wxt-test-'));
+      const wxtModuleDir = await mkdtemp(join(tmpdir(), 'wxt-test-'));
       tempDirs.push(wxtModuleDir);
 
-      await fs.outputFile(
-        join(wxtModuleDir, 'dist/virtual/background-entrypoint.mjs'),
-        template,
+      const filePath = join(
+        wxtModuleDir,
+        'dist/virtual/background-entrypoint.mjs',
       );
+      await mkdir(join(wxtModuleDir, 'dist/virtual'), { recursive: true });
+      await writeFile(filePath, template);
 
       const plugin = resolveVirtualModules(
         fakeResolvedConfig({ wxtModuleDir }),
@@ -66,7 +72,7 @@ describe('resolveVirtualModules', () => {
       expect(plugin).toBeDefined();
 
       const inputPath = `/tmp/foo"bar/background.ts`;
-      const code = await plugin!.load!(
+      const code = await plugin!.load!.handler!(
         '\0virtual:wxt-background-entrypoint?' + inputPath,
       );
 
