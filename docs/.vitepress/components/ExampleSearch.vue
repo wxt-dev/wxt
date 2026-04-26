@@ -4,7 +4,7 @@ import ExampleSearchFilterByItem from './ExampleSearchFilterByItem.vue';
 import ExampleSearchResult from './ExampleSearchResult.vue';
 import { ExamplesMetadata, KeySelectedObject } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   tag?: string;
 }>();
 
