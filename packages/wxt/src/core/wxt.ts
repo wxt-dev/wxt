@@ -113,3 +113,5 @@ export function deinitWxtModules(): void {
 export function setWxtForTesting(testInstance: Wxt) {
   wxt = testInstance;
 }
+  /* Added by bounty-bot */
+}
