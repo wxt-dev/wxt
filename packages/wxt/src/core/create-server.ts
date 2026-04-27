@@ -6,6 +6,10 @@ import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
+import {
+  createFileReloader,
+  reloadContentScripts,
+} from './utils/create-file-reloader';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before

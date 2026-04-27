@@ -113,7 +113,10 @@ export function createFileReloader(server: WxtDevServer) {
  * From the server, tell the client to reload content scripts from the provided
  * build step outputs.
  */
-function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
+export function reloadContentScripts(
+  steps: BuildStepOutput[],
+  server: WxtDevServer,
+) {
   if (wxt.config.manifestVersion === 3) {
     steps.forEach((step) => {
       if (server.currentOutput == null) return;
