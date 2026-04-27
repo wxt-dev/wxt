@@ -1,19 +1,19 @@
 import { loadConfig } from 'c12';
 import { resolve as esmResolve } from 'import-meta-resolve';
 import {
-  InlineConfig,
-  ResolvedConfig,
-  UserConfig,
   ConfigEnv,
-  UserManifestFn,
-  UserManifest,
-  WebExtConfig,
-  WxtResolvedUnimportOptions,
+  InlineConfig,
   Logger,
+  ResolvedConfig,
+  ResolvedEslintrc,
+  UserConfig,
+  UserManifest,
+  UserManifestFn,
+  WebExtConfig,
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
-  ResolvedEslintrc,
+  WxtResolvedUnimportOptions,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -511,18 +511,21 @@ async function getUnimportEslintOptions(
     options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
 
   let enabled: ResolvedEslintrc['enabled'];
+  const version = await getEslintVersion();
+  let major = parseInt(version[0]) as Exclude<
+    ResolvedEslintrc['enabled'],
+    false
+  >;
+
   switch (inlineEnabled) {
     case 'auto':
-      const version = await getEslintVersion();
-      let major = parseInt(version[0]);
       if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
-      // NaN
+      else if (major <= 8) enabled = 8;
+      else if (major >= 9) enabled = major;
       else enabled = false;
       break;
     case true:
-      enabled = 8;
+      enabled = major;
       break;
     default:
       enabled = inlineEnabled;
@@ -532,7 +535,7 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
+      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
     ),
     globalsPropValue: true,
   };
