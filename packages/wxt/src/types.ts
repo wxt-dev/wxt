@@ -68,7 +68,7 @@ export interface InlineConfig {
    *   'serve')
    *
    * @example
-   *   {{browser}} -mv{{manifestVersion}}
+   *   '{{browser}}-mv{{manifestVersion}}';
    *
    * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"`</span>
    */
@@ -147,13 +147,11 @@ export interface InlineConfig {
    * Suppress specific warnings during the build process.
    *
    * @example
-   *   ```ts
    *   export default defineConfig({
    *     suppressWarnings: {
    *       firefoxDataCollection: true,
    *     },
-   *   })
-   *   ```;
+   *   });
    */
   suppressWarnings?: {
     /**
@@ -288,10 +286,10 @@ export interface InlineConfig {
      *
      * @example
      *   // Correct:
-     *   ['@scope/package-name', 'package-name'][
-     *     // Incorrect, don't include versions!!!
-     *     ('@scope/package-name@1.1.3', 'package-name@^2')
-     *   ];
+     *   ['@scope/package-name', 'package-name'];
+     *
+     *   // Incorrect, don't include versions!!!
+     *   ['@scope/package-name@1.1.3', 'package-name@^2'];
      *
      * @default [ ]
      */
@@ -760,6 +758,12 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
+  /**
+   * Chrome only. Controls the initial enabled/disabled state of the action.
+   *
+   * @see https://developer.chrome.com/docs/extensions/reference/api/action#enabled_state
+   */
+  defaultState?: PerBrowserOption<'enabled' | 'disabled'>;
   browserStyle?: PerBrowserOption<boolean>;
   /**
    * Firefox only. Defines the part of the browser in which the button is

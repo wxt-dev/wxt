@@ -52,8 +52,7 @@ export interface UnoCSSOptions<Theme extends object = object> {
    * it from specific builds.
    *
    * @example
-   *   {undefined} ('popup',
-   *   'options');
+   *   ['popup', 'options'];
    *
    * @default [ ]
    */
