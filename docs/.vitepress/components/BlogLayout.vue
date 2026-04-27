@@ -44,7 +44,6 @@ const date = useBlogDate(() => frontmatter.value.date);
 
   .meta-row {
     display: flex;
-    /*noinspection CssUnresolvedCustomProperty*/
     color: var(--vp-c-text-2);
     gap: 16px;
     overflow: hidden;

@@ -39,19 +39,16 @@ const date = useBlogDate(() => props.post.date);
   transition: background 0.2s;
 
   &:hover {
-    /*noinspection CssUnresolvedCustomProperty*/
     background: var(--vp-c-default-3);
   }
 
   .title {
-    /*noinspection CssUnresolvedCustomProperty*/
     color: var(--vp-c-text-1);
     margin-bottom: 12px;
   }
 
   .description {
     font-size: 16px;
-    /*noinspection CssUnresolvedCustomProperty*/
     color: var(--vp-c-text-2);
     margin-bottom: 8px;
   }
@@ -59,7 +56,6 @@ const date = useBlogDate(() => props.post.date);
   .meta {
     font-weight: 400;
     font-size: 12px;
-    /*noinspection CssUnresolvedCustomProperty*/
     color: var(--vp-c-text-2);
   }
 }

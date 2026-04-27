@@ -119,7 +119,6 @@ const filteredExamples = computed(() => {
 
   .search {
     grid-area: search;
-    /*noinspection CssUnresolvedCustomProperty*/
     background: var(--vp-c-bg-soft);
     padding: 20px;
     border-radius: 16px;

@@ -170,7 +170,6 @@ function formatStars(r: number): string {
   height: 116px;
   padding: 16px;
   border-radius: 8px;
-  /*noinspection CssUnresolvedCustomProperty*/
   background-color: var(--vp-c-default-soft);
 }
 
@@ -193,7 +192,6 @@ function formatStars(r: number): string {
   margin: 0 !important;
   padding: 16px;
   display: flex;
-  /*noinspection CssUnresolvedCustomProperty*/
   background-color: var(--vp-c-bg-soft);
   border-radius: 12px;
   flex: 1;
@@ -232,7 +230,6 @@ function formatStars(r: number): string {
   font-size: 12px;
   line-height: 1.45;
   opacity: 0.72;
-  /*noinspection CssUnresolvedCustomProperty*/
   color: var(--vp-c-text-2);
 }
 
@@ -256,7 +253,6 @@ function formatStars(r: number): string {
 }
 
 .store-link:hover {
-  /*noinspection CssUnresolvedCustomProperty*/
   color: var(--vp-c-text-1);
   text-decoration: underline;
 }

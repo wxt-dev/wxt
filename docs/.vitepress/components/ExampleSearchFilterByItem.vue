@@ -50,7 +50,6 @@ function toggleItem(pkg: string) {
   height: 300px;
   display: flex;
   flex-direction: column;
-  /*noinspection CssUnresolvedCustomProperty*/
   background: var(--vp-c-bg-soft);
 
   .header {
