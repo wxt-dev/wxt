@@ -18,6 +18,7 @@ import {
   ContentScriptEntrypoint,
   Entrypoint,
   OutputAsset,
+  TargetManifestVersion,
 } from '../../../types';
 import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
@@ -196,6 +197,74 @@ describe('Manifest Utils', () => {
         );
 
         expect((actual.action as any).theme_icons).toEqual(themeIcons);
+      });
+
+      describe('default_state', () => {
+        it.each<{
+          browser: string;
+          manifestVersion: TargetManifestVersion;
+          type: 'browser_action' | 'action' | 'page_action';
+          shouldExist: boolean;
+        }>([
+          {
+            browser: 'chrome',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'chrome',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+        ])(
+          'should configure default_state: $defaultState based on the $browser and mv$manifestVersion',
+          async ({ browser, manifestVersion, type, shouldExist }) => {
+            const popup = fakePopupEntrypoint({
+              options: {
+                // @ts-expect-error: Force this to be undefined when null
+                actionType: manifestVersion === 3 ? null : type,
+                defaultState: 'enabled',
+              },
+              outputDir: outDir,
+              skipped: false,
+            });
+            const buildOutput = fakeBuildOutput();
+            setFakeWxt({
+              config: {
+                browser,
+                manifestVersion,
+                outDir,
+              },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [popup],
+              buildOutput,
+            );
+
+            if (shouldExist) {
+              expect(actual[type]).toMatchObject({
+                default_state: 'enabled',
+              });
+            } else {
+              expect(actual[type].default_state).toBeUndefined();
+            }
+          },
+        );
       });
 
       it('should include default_area for Firefox in mv2', async () => {

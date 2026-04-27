@@ -58,6 +58,8 @@ for (const { file, srcPath, destPath } of declarationFileMapping) {
   console.log(`  ${styleText('dim', '-')} ${styleText('cyan', file)}`);
 }
 
+await Bun.$`bun install --ignore-scripts`;
+
 // Done!
 
 console.log(
