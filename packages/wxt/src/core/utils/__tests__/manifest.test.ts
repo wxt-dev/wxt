@@ -445,6 +445,28 @@ describe('Manifest Utils', () => {
 
         expect(actual.options_ui).toEqual(expected);
       });
+
+      it('should exclude open_in_tab for safari', async () => {
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'safari',
+            outDir,
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest(
+          [options],
+          buildOutput,
+        );
+
+        expect(actual.options_ui).toEqual({
+          chrome_style: true,
+          page: 'options.html',
+        });
+        expect(actual.options_ui?.open_in_tab).toBeUndefined();
+      });
     });
 
     describe('background', () => {
