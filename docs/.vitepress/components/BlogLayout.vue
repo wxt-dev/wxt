@@ -9,7 +9,7 @@ const date = useBlogDate(() => frontmatter.value.date);
 
 <template>
   <div>
-    <main class="container-content">
+    <main class="container">
       <h1 v-html="frontmatter.title" />
       <p class="meta-row">
         <a
