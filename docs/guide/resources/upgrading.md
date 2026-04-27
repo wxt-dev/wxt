@@ -66,7 +66,7 @@ In v0.20, how automatic startup is enabled/disabled has changed:
 
 ### `{{version}}` Template Variable Changes
 
-The `{{version}}` template var in `artifactTemplate` and `sourcesTemplate` used to equal `manifest.version_name ?? manifest.version`. It now equals `{{manifest.version}}`. 
+The `{{version}}` template var in `artifactTemplate` and `sourcesTemplate` used to equal `manifest.version_name ?? manifest.version`. It now equals `{{manifest.version}}`.
 
 If you have a custom template for one of these options, replace `{{version}}` with `{{versionName}}` to maintain the same behavior.
 
