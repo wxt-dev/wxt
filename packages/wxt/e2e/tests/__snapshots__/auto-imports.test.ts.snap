@@ -1,62 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Auto Imports > eslintrc > "enabled: 8" should output a JSON config file compatible with ESlint 8 1`] = `
-".wxt/eslintrc-auto-import.json
-----------------------------------------
-{
-  "globals": {
-    "AutoMount": true,
-    "AutoMountOptions": true,
-    "Browser": true,
-    "ContentScriptAnchoredOptions": true,
-    "ContentScriptAppendMode": true,
-    "ContentScriptContext": true,
-    "ContentScriptInlinePositioningOptions": true,
-    "ContentScriptModalPositioningOptions": true,
-    "ContentScriptOverlayAlignment": true,
-    "ContentScriptOverlayPositioningOptions": true,
-    "ContentScriptPositioningOptions": true,
-    "ContentScriptUi": true,
-    "ContentScriptUiOptions": true,
-    "IframeContentScriptUi": true,
-    "IframeContentScriptUiOptions": true,
-    "InjectScriptOptions": true,
-    "IntegratedContentScriptUi": true,
-    "IntegratedContentScriptUiOptions": true,
-    "InvalidMatchPattern": true,
-    "MatchPattern": true,
-    "MigrationError": true,
-    "ScriptPublicPath": true,
-    "ShadowRootContentScriptUi": true,
-    "ShadowRootContentScriptUiOptions": true,
-    "StopAutoMount": true,
-    "StorageArea": true,
-    "StorageAreaChanges": true,
-    "StorageItemKey": true,
-    "WxtAppConfig": true,
-    "WxtStorage": true,
-    "WxtStorageItem": true,
-    "WxtWindowEventMap": true,
-    "browser": true,
-    "createIframeUi": true,
-    "createIntegratedUi": true,
-    "createShadowRootUi": true,
-    "defineAppConfig": true,
-    "defineBackground": true,
-    "defineContentScript": true,
-    "defineUnlistedScript": true,
-    "defineWxtPlugin": true,
-    "fakeBrowser": true,
-    "getAppConfig": true,
-    "injectScript": true,
-    "storage": true,
-    "useAppConfig": true
-  }
-}
-"
-`;
-
-exports[`Auto Imports > eslintrc > "enabled: 9" should output a flat config file compatible with ESlint 9 1`] = `
+exports[`Auto Imports > eslintrc > "enabled: "flat" should output a flat config file compatible with ESlint >= 9 1`] = `
 ".wxt/eslint-auto-imports.mjs
 ----------------------------------------
 const globals = {
@@ -119,7 +63,7 @@ export default {
 "
 `;
 
-exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config file compatible with ESlint 8 1`] = `
+exports[`Auto Imports > eslintrc > "enabled: "old" should output a JSON config file compatible with ESlint <= 8 1`] = `
 ".wxt/eslintrc-auto-import.json
 ----------------------------------------
 {
@@ -175,58 +119,128 @@ exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config f
 "
 `;
 
+exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config file compatible with ESlint <= 8 1`] = `
+".wxt/eslintrc-auto-import.json
+----------------------------------------
+const globals = {
+  "AutoMount": true,
+  "AutoMountOptions": true,
+  "Browser": true,
+  "ContentScriptAnchoredOptions": true,
+  "ContentScriptAppendMode": true,
+  "ContentScriptContext": true,
+  "ContentScriptInlinePositioningOptions": true,
+  "ContentScriptModalPositioningOptions": true,
+  "ContentScriptOverlayAlignment": true,
+  "ContentScriptOverlayPositioningOptions": true,
+  "ContentScriptPositioningOptions": true,
+  "ContentScriptUi": true,
+  "ContentScriptUiOptions": true,
+  "IframeContentScriptUi": true,
+  "IframeContentScriptUiOptions": true,
+  "InjectScriptOptions": true,
+  "IntegratedContentScriptUi": true,
+  "IntegratedContentScriptUiOptions": true,
+  "InvalidMatchPattern": true,
+  "MatchPattern": true,
+  "MigrationError": true,
+  "ScriptPublicPath": true,
+  "ShadowRootContentScriptUi": true,
+  "ShadowRootContentScriptUiOptions": true,
+  "StopAutoMount": true,
+  "StorageArea": true,
+  "StorageAreaChanges": true,
+  "StorageItemKey": true,
+  "WxtAppConfig": true,
+  "WxtStorage": true,
+  "WxtStorageItem": true,
+  "WxtWindowEventMap": true,
+  "browser": true,
+  "createIframeUi": true,
+  "createIntegratedUi": true,
+  "createShadowRootUi": true,
+  "defineAppConfig": true,
+  "defineBackground": true,
+  "defineContentScript": true,
+  "defineUnlistedScript": true,
+  "defineWxtPlugin": true,
+  "fakeBrowser": true,
+  "getAppConfig": true,
+  "injectScript": true,
+  "storage": true,
+  "useAppConfig": true
+}
+
+export default {
+  name: "wxt/auto-imports",
+  languageOptions: {
+    globals,
+    /** @type {import('eslint').Linter.SourceType} */
+    sourceType: "module",
+  },
+};
+"
+`;
+
 exports[`Auto Imports > eslintrc > should allow customizing the output 1`] = `
 "example.json
 ----------------------------------------
-{
-  "globals": {
-    "AutoMount": "readonly",
-    "AutoMountOptions": "readonly",
-    "Browser": "readonly",
-    "ContentScriptAnchoredOptions": "readonly",
-    "ContentScriptAppendMode": "readonly",
-    "ContentScriptContext": "readonly",
-    "ContentScriptInlinePositioningOptions": "readonly",
-    "ContentScriptModalPositioningOptions": "readonly",
-    "ContentScriptOverlayAlignment": "readonly",
-    "ContentScriptOverlayPositioningOptions": "readonly",
-    "ContentScriptPositioningOptions": "readonly",
-    "ContentScriptUi": "readonly",
-    "ContentScriptUiOptions": "readonly",
-    "IframeContentScriptUi": "readonly",
-    "IframeContentScriptUiOptions": "readonly",
-    "InjectScriptOptions": "readonly",
-    "IntegratedContentScriptUi": "readonly",
-    "IntegratedContentScriptUiOptions": "readonly",
-    "InvalidMatchPattern": "readonly",
-    "MatchPattern": "readonly",
-    "MigrationError": "readonly",
-    "ScriptPublicPath": "readonly",
-    "ShadowRootContentScriptUi": "readonly",
-    "ShadowRootContentScriptUiOptions": "readonly",
-    "StopAutoMount": "readonly",
-    "StorageArea": "readonly",
-    "StorageAreaChanges": "readonly",
-    "StorageItemKey": "readonly",
-    "WxtAppConfig": "readonly",
-    "WxtStorage": "readonly",
-    "WxtStorageItem": "readonly",
-    "WxtWindowEventMap": "readonly",
-    "browser": "readonly",
-    "createIframeUi": "readonly",
-    "createIntegratedUi": "readonly",
-    "createShadowRootUi": "readonly",
-    "defineAppConfig": "readonly",
-    "defineBackground": "readonly",
-    "defineContentScript": "readonly",
-    "defineUnlistedScript": "readonly",
-    "defineWxtPlugin": "readonly",
-    "fakeBrowser": "readonly",
-    "getAppConfig": "readonly",
-    "injectScript": "readonly",
-    "storage": "readonly",
-    "useAppConfig": "readonly"
-  }
+const globals = {
+  "AutoMount": "readonly",
+  "AutoMountOptions": "readonly",
+  "Browser": "readonly",
+  "ContentScriptAnchoredOptions": "readonly",
+  "ContentScriptAppendMode": "readonly",
+  "ContentScriptContext": "readonly",
+  "ContentScriptInlinePositioningOptions": "readonly",
+  "ContentScriptModalPositioningOptions": "readonly",
+  "ContentScriptOverlayAlignment": "readonly",
+  "ContentScriptOverlayPositioningOptions": "readonly",
+  "ContentScriptPositioningOptions": "readonly",
+  "ContentScriptUi": "readonly",
+  "ContentScriptUiOptions": "readonly",
+  "IframeContentScriptUi": "readonly",
+  "IframeContentScriptUiOptions": "readonly",
+  "InjectScriptOptions": "readonly",
+  "IntegratedContentScriptUi": "readonly",
+  "IntegratedContentScriptUiOptions": "readonly",
+  "InvalidMatchPattern": "readonly",
+  "MatchPattern": "readonly",
+  "MigrationError": "readonly",
+  "ScriptPublicPath": "readonly",
+  "ShadowRootContentScriptUi": "readonly",
+  "ShadowRootContentScriptUiOptions": "readonly",
+  "StopAutoMount": "readonly",
+  "StorageArea": "readonly",
+  "StorageAreaChanges": "readonly",
+  "StorageItemKey": "readonly",
+  "WxtAppConfig": "readonly",
+  "WxtStorage": "readonly",
+  "WxtStorageItem": "readonly",
+  "WxtWindowEventMap": "readonly",
+  "browser": "readonly",
+  "createIframeUi": "readonly",
+  "createIntegratedUi": "readonly",
+  "createShadowRootUi": "readonly",
+  "defineAppConfig": "readonly",
+  "defineBackground": "readonly",
+  "defineContentScript": "readonly",
+  "defineUnlistedScript": "readonly",
+  "defineWxtPlugin": "readonly",
+  "fakeBrowser": "readonly",
+  "getAppConfig": "readonly",
+  "injectScript": "readonly",
+  "storage": "readonly",
+  "useAppConfig": "readonly"
 }
+
+export default {
+  name: "wxt/auto-imports",
+  languageOptions: {
+    globals,
+    /** @type {import('eslint').Linter.SourceType} */
+    sourceType: "module",
+  },
+};
 "
 `;
