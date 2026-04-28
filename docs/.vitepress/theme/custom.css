@@ -33,6 +33,10 @@
   border: 1px solid var(--vp-c-divider);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   overflow-y: scroll;
 }
