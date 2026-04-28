@@ -3,23 +3,23 @@ import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
 import {
-  FsCache,
-  ResolvedConfig,
-  WxtDevServer,
   BackgroundEntrypoint,
-  ContentScriptEntrypoint,
-  GenericEntrypoint,
-  OptionsEntrypoint,
-  PopupEntrypoint,
-  OutputChunk,
-  OutputAsset,
+  BaseEntrypoint,
   BuildOutput,
   BuildStepOutput,
+  ContentScriptEntrypoint,
+  FsCache,
+  GenericEntrypoint,
+  OptionsEntrypoint,
+  OutputAsset,
+  OutputChunk,
+  PopupEntrypoint,
+  ResolvedConfig,
+  SidepanelEntrypoint,
+  UnlistedScriptEntrypoint,
   UserManifest,
   Wxt,
-  SidepanelEntrypoint,
-  BaseEntrypoint,
-  UnlistedScriptEntrypoint,
+  WxtDevServer,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
@@ -243,7 +243,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     imports: {
       disabled: faker.datatype.boolean(),
       eslintrc: {
-        enabled: faker.helpers.arrayElement([false, 8, 9]),
+        enabled: faker.helpers.arrayElement([false, 'old', 'flat']),
         filePath: fakeFile(),
         globalsPropValue: faker.helpers.arrayElement([
           true,

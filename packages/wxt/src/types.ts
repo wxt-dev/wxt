@@ -1578,7 +1578,7 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
-type EslintSupportedVersions = 8 | 9 | 10;
+export type EslintSupportedVersions = 'old' | 'flat';
 
 export interface Eslintrc {
   /**
@@ -1589,9 +1589,8 @@ export interface Eslintrc {
    * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
    *   config file.
    * - `true`: Same as `8`.
-   * - `8`: Generate a config file compatible with ESLint 8.
-   * - `9`: Generate a config file compatible with ESLint 9.
-   * - `10`: Generate a config file compatible with ESLint 10.
+   * - `old`: Generate a config file compatible with ESLint &lte; 8.
+   * - `flat`: Generate a config file compatible with ESLint &gte; 9.
    *
    * @default 'auto'
    */
@@ -1601,8 +1600,8 @@ export interface Eslintrc {
    *
    * Default depends on version of ESLint used:
    *
-   * - 9 and above: './.wxt/eslint-auto-imports.mjs'
-   * - 8 and below: './.wxt/eslintrc-auto-import.json'
+   * - &gte; 9: './.wxt/eslint-auto-imports.mjs'
+   * - &lte; 8: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /** @default true */
