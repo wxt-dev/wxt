@@ -522,9 +522,9 @@ async function getUnimportEslintOptions(
         }
         enabled = false;
       } else if (major <= 8) {
-        enabled = 8;
+        enabled = 'old';
       } else if (major >= 9) {
-        enabled = 9;
+        enabled = 'flat';
       } else {
         enabled = false;
       }
@@ -537,7 +537,9 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
+      enabled === 'flat'
+        ? 'eslint-auto-imports.mjs'
+        : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };
