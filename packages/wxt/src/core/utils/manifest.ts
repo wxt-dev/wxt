@@ -336,6 +336,7 @@ function addEntrypoints(
       ...(wxt.config.browser !== 'safari' && {
         open_in_tab: options.options.openInTab ?? false,
       }),
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
           ? options.options.browserStyle
