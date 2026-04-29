@@ -1,24 +1,24 @@
-import spawn from 'nano-spawn';
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve, sep } from 'node:path';
 import { sep as posixSep } from 'node:path/posix';
+import { readdir, mkdir } from 'node:fs/promises';
+import { styleText } from 'node:util';
 
 // Fetch latest version
 
-console.log('Getting latest version of \x1b[36m@types/chrome\x1b[0m');
-await spawn('pnpm', ['i', '--ignore-scripts', '-D', '@types/chrome@latest']);
+console.log(`Getting latest version of ${styleText('cyan', '@types/chrome')}`);
+await Bun.$`bun install --ignore-scripts -D @types/chrome@latest`;
 
 // Generate new package.json
 
-console.log('Generating new \x1b[36mpackage.json\x1b[0m');
+console.log(`Generating new ${styleText('cyan', 'package.json')}`);
 
 const pkgJsonPath = fileURLToPath(
   import.meta.resolve('@types/chrome/package.json'),
 );
 const pkgDir = dirname(pkgJsonPath);
-const pkgJson = JSON.parse(await readFile(pkgJsonPath, 'utf-8'));
-const pkgJsonTemplate = await readFile('templates/package.json', 'utf8');
+const pkgJson = await Bun.file(pkgJsonPath).json();
+const pkgJsonTemplate = await Bun.file('templates/package.json').text();
 const newPkgJson = JSON.parse(
   pkgJsonTemplate.replaceAll('{{chromeTypesVersion}}', pkgJson.version),
 );
@@ -27,8 +27,8 @@ newPkgJson.peerDependencies = pkgJson.peerDependencies;
 newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
 const outPkgJsonPath = resolve('package.json');
-await writeFile(outPkgJsonPath, JSON.stringify(newPkgJson, null, 2));
-await spawn('pnpm', ['-w', 'prettier', '--write', outPkgJsonPath]);
+await Bun.write(outPkgJsonPath, JSON.stringify(newPkgJson));
+await Bun.$`bun run --cwd ../.. prettier --write "${outPkgJsonPath}"`;
 
 // Generate declaration files
 
@@ -50,17 +50,21 @@ const declarationFileMapping = (
   }));
 
 for (const { file, srcPath, destPath } of declarationFileMapping) {
-  const content = await readFile(srcPath, 'utf8');
+  const content = await Bun.file(srcPath).text();
   const transformedContent = transformFile(file, content);
   const destDir = dirname(destPath);
   await mkdir(destDir, { recursive: true });
-  await writeFile(destPath, transformedContent);
-  console.log(`  \x1b[2m-\x1b[0m \x1b[36m${file}\x1b[0m`);
+  await Bun.write(destPath, transformedContent);
+  console.log(`  ${styleText('dim', '-')} ${styleText('cyan', file)}`);
 }
+
+await Bun.$`bun install --ignore-scripts`;
 
 // Done!
 
-console.log('\x1b[32m✔\x1b[0m Done in ' + performance.now().toFixed(0) + ' ms');
+console.log(
+  `${styleText('green', '✔')} Done in ${performance.now().toFixed(0)} ms`,
+);
 
 // Transformations
 

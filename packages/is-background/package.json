@@ -6,10 +6,10 @@
   "license": "MIT",
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test run --coverage",
-    "prepack": "pnpm build"
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^"

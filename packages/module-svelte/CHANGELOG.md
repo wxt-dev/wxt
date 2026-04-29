@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.0.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.4...module-svelte-v2.0.5)
+
+### 🩹 Fixes
+
+- Update `@sveltejs/vite-plugin-svelte` version range to support Vite 8 ([48571f50](https://github.com/wxt-dev/wxt/commit/48571f50))
+
+### 🏡 Chore
+
+- Upgrade dev and non-major prod dependencies ([#2000](https://github.com/wxt-dev/wxt/pull/2000))
+- Use `tsdown` to build packages ([#2006](https://github.com/wxt-dev/wxt/pull/2006))
+- Move script-only dev dependencies to top-level `package.json` ([#2007](https://github.com/wxt-dev/wxt/pull/2007))
+- Update dependencies ([#2069](https://github.com/wxt-dev/wxt/pull/2069))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Add prepack script to all packages ([032f7931](https://github.com/wxt-dev/wxt/commit/032f7931))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v2.0.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/module-svelte-v2.0.3...module-svelte-v2.0.4)

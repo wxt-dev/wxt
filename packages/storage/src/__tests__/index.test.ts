@@ -665,7 +665,7 @@ describe('Storage Utils', () => {
       // @ts-expect-error
       await storage.getItem('test').catch(() => {});
       // @ts-expect-error
-      await storage.getItem('loca:test').catch(() => {});
+      await storage.getItem('not-local:test').catch(() => {});
     });
 
     it('should throw an error when using an invalid storage area', async () => {

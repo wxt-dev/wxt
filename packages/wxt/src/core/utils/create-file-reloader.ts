@@ -1,5 +1,4 @@
 import { Mutex } from 'async-mutex';
-import pc from 'picocolors';
 import { relative } from 'node:path';
 import {
   BuildOutput,
@@ -21,9 +20,10 @@ import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
 } from './content-scripts';
+import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
+import { styleText } from 'node:util';
 import { filterTruthy, toArray } from './arrays';
 import { normalizePath } from './paths';
-import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
 
 /**
  * Returns a function responsible for reloading different parts of the extension
@@ -97,7 +97,7 @@ export function createFileReloader(server: WxtDevServer) {
       // Log the entrypoints that were effected
       wxt.logger.info(
         `Changed: ${changedFilesToLog
-          .map((file) => pc.dim(relative(wxt.config.root, file)))
+          .map((file) => styleText('dim', relative(wxt.config.root, file)))
           .join(', ')}`,
       );
 
@@ -297,8 +297,6 @@ function reloadHtmlPages(
 
 function getFilenameList(names: string[]): string {
   return names
-    .map((name) => {
-      return pc.cyan(name);
-    })
-    .join(pc.dim(', '));
+    .map((name) => styleText('cyan', name))
+    .join(styleText('dim', ', '));
 }

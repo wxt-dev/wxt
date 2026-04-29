@@ -26,7 +26,9 @@ export async function injectScript(
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
 
-  if (browser.runtime.getManifest().manifest_version === 2) {
+  const isManifestV2 = browser.runtime.getManifest().manifest_version === 2;
+
+  if (isManifestV2) {
     // MV2 requires using an inline script
     script.text = await fetch(url).then((res) => res.text());
   } else {
@@ -34,7 +36,9 @@ export async function injectScript(
     script.src = url;
   }
 
-  const loadedPromise = makeLoadedPromise(script);
+  // For MV2: Inline scripts execute synchronously when appended
+  // For MV3: We need to wait for the load event
+  const loadedPromise = isManifestV2 ? undefined : makeLoadedPromise(script);
 
   await options?.modifyScript?.(script);
 

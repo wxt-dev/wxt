@@ -2,6 +2,7 @@ export type BrowserPlatform = 'windows' | 'mac' | 'linux';
 
 export type KnownTarget =
   | 'arc'
+  | 'brave'
   | 'chromium'
   | 'chrome'
   | 'chrome-beta'
@@ -25,6 +26,11 @@ export const KNOWN_BROWSER_PATHS: Record<
 
   arc: {
     mac: ['/Applications/Arc.app/Contents/MacOS/Arc'],
+    linux: [],
+    windows: [],
+  },
+  brave: {
+    mac: ['Applications/Brave Browser.app/Contents/MacOS/Brave Browser'],
     linux: [],
     windows: [],
   },
@@ -129,11 +135,12 @@ export const KNOWN_BROWSER_PATHS: Record<
  */
 export const FALLBACK_TARGETS: Partial<Record<KnownTarget, KnownTarget[]>> = {
   chrome: [
-    'arc',
     'chromium',
     'chrome-canary',
     'chrome-beta',
     'chrome-dev',
+    'brave',
+    'arc',
     'dia',
     'edge',
     'edge-canary',

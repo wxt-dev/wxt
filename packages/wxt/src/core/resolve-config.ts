@@ -19,7 +19,7 @@ import path from 'node:path';
 import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullablyRequired } from './utils/types';
+import { NullishRequired } from './utils/types';
 import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
 import { glob } from 'tinyglobby';
@@ -160,12 +160,18 @@ export async function resolveConfig(
       mergedConfig.dev?.server?.origin ??
       mergedConfig.dev?.server?.hostname ??
       'localhost';
+    const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
         // Passing host required for Mac, unsure of Windows/Linux
         host,
         port: 3000,
         portRange: [3001, 3010],
+      });
+    } else if (!strictPort) {
+      port = await getPort({
+        host,
+        port,
       });
     }
     const originWithProtocolAndPort = [
@@ -177,6 +183,7 @@ export async function resolveConfig(
       host,
       port,
       origin: originWithProtocolAndPort,
+      strictPort,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }
@@ -227,6 +234,7 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {}),
+    suppressWarnings: mergedConfig.suppressWarnings ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -295,7 +303,7 @@ function resolveZipConfig(
   browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['zip']> {
+): NullishRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
@@ -330,7 +338,7 @@ function resolveZipConfig(
 function resolveAnalysisConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['analysis']> {
+): NullishRequired<ResolvedConfig['analysis']> {
   const analysisOutputFile = path.resolve(
     root,
     mergedConfig.analysis?.outputFile ?? 'stats.html',
