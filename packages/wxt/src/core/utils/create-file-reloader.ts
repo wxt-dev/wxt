@@ -124,9 +124,7 @@ export function createFileReloader(server: WxtDevServer) {
 
         // Perform reloads
         const needsFullExtensionReload =
-          newEntrypointGroups.length ||
-          changes.type === 'extension-reload' ||
-          changes.type === 'no-change';
+          newEntrypointGroups.length || changes.type === 'extension-reload';
         if (needsFullExtensionReload) {
           server.reloadExtension();
           wxt.logger.success(`Reloaded extension`);
