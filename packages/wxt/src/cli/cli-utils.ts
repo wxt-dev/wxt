@@ -82,8 +82,12 @@ export function createAliasedCommand(
   bin: string,
   docsUrl: string,
 ) {
+  // Declare a variadic positional arg so cac forwards subcommands like `wxt
+  // submit init` instead of rejecting them as unused args. `.allowUnknownOptions`
+  // only relaxes flag checks, not positional args. Required since cac@7, which
+  // throws on unused positional args (see cacjs/cac#135).
   const aliasedCommand = base
-    .command(name, `Alias for ${alias} (${docsUrl})`)
+    .command(`${name} [...args]`, `Alias for ${alias} (${docsUrl})`)
     .allowUnknownOptions()
     .action(async () => {
       try {
