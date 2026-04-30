@@ -1,42 +1,40 @@
 import definition from 'virtual:user-unlisted-script-entrypoint';
 import { logger } from '../utils/internal/logger';
+import {
+  dispatchScriptSuccessEvent,
+  dispatchScriptErrorEvent,
+} from '../utils/internal/script-result';
 import { initPlugins } from 'virtual:wxt-plugins';
 
-const result = (() => {
-  try {
-    initPlugins();
-  } catch (err) {
-    logger.error(
-      `Failed to initialize plugins for "${import.meta.env.ENTRYPOINT}"`,
-      err,
-    );
-    throw err;
-  }
-  let result;
-  try {
-    result = definition.main();
+// TODO: This only works with injectScript, not the scripting API.
 
-    if (result instanceof Promise) {
-      result = (result as Promise<any>).catch((err) => {
-        logger.error(
-          `The unlisted script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
-          err,
-        );
-        throw err;
-      });
+(async () => {
+  try {
+    const script = document.currentScript;
+    if (script === null) {
+      // This should never happen.
+      throw new Error(`\`document.currentScript\` is null!`);
     }
-  } catch (err) {
+
+    try {
+      initPlugins();
+      const result = await definition.main();
+      dispatchScriptSuccessEvent(script, result);
+    } catch (error) {
+      dispatchScriptErrorEvent(
+        script,
+        error instanceof Error ? error : new Error(`${error}`),
+      );
+    }
+  } catch (outerError) {
+    // This should never happen.
     logger.error(
       `The unlisted script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,
-      err,
+      outerError,
     );
-    throw err;
+    throw outerError;
   }
-  return result;
 })();
 
-// Return the main function's result to the background when executed via the
-// scripting API. Default export causes the IIFE to return a value.
-// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
-// Tested on both Chrome and Firefox
-export default result;
+// TODO: Also support the scripting API.
+export default undefined;
