@@ -159,6 +159,11 @@ export interface InlineConfig {
      * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
      */
     firefoxDataCollection?: boolean;
+    /**
+     * Suppress warnings when the Firefox extension ID is missing.
+     * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id
+     */
+    firefoxId?: boolean;
   };
   /**
    * Configure browser startup. Options set here can be overridden in a
@@ -1514,7 +1519,10 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {};
   /** List of warning identifiers to suppress during the build process. */
-  suppressWarnings: { firefoxDataCollection?: boolean };
+  suppressWarnings: {
+    firefoxDataCollection?: boolean;
+    firefoxId?: boolean;
+  };
   dev: {
     /** Only defined during dev command */
     server?: {
