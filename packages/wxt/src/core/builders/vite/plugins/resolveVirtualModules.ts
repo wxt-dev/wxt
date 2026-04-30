@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
@@ -15,6 +16,7 @@ import {
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {
     const virtualId: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
+    const userVirtualId = `virtual:user-${name}`;
     const resolvedVirtualId = '\0' + virtualId;
 
     return {
@@ -40,7 +42,16 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
             resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
             'utf-8',
           );
-          return template.replace(`virtual:user-${name}`, inputPath);
+          const escapedPath = pathToFileURL(inputPath).href;
+          const code = template
+            .replace(`'${userVirtualId}'`, `"${escapedPath}"`)
+            .replace(`"${userVirtualId}"`, `"${escapedPath}"`);
+          if (code === template) {
+            throw Error(
+              `Failed to resolve virtual module "${name}": expected template import "${userVirtualId}"`,
+            );
+          }
+          return code;
         },
       },
     };
