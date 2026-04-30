@@ -252,6 +252,60 @@ describe('Detect Dev Changes', () => {
       expect(actual).toEqual(expected);
     });
 
+    it('should ignore unrelated changed files when checking html-only reloads', async () => {
+      const changedPath = '/root/page1.html';
+      const unrelatedPath =
+        '/root/private/.dev-profile/Default/Cache/Cache_Data/1004_0';
+      const htmlPage1 = fakePopupEntrypoint({
+        inputPath: changedPath,
+      });
+      const htmlPage2 = fakeOptionsEntrypoint({
+        inputPath: '/root/page2.html',
+      });
+      const htmlPage3 = fakeGenericEntrypoint({
+        type: 'sandbox',
+        inputPath: '/root/page3.html',
+      });
+
+      const step1: BuildStepOutput = {
+        entrypoints: [htmlPage1, htmlPage2],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page1.html',
+          }),
+        ],
+      };
+      const step2: BuildStepOutput = {
+        entrypoints: [htmlPage3],
+        chunks: [
+          fakeOutputAsset({
+            fileName: 'page2.html',
+          }),
+        ],
+      };
+
+      const currentOutput: BuildOutput = {
+        manifest: fakeManifest(),
+        publicAssets: [],
+        steps: [step1, step2],
+      };
+      const expected: DevModeChange = {
+        type: 'html-reload',
+        cachedOutput: {
+          ...currentOutput,
+          steps: [step2],
+        },
+        rebuildGroups: [[htmlPage1, htmlPage2]],
+      };
+
+      const actual = detectDevChanges(
+        [unrelatedPath, changedPath],
+        currentOutput,
+      );
+
+      expect(actual).toEqual(expected);
+    });
+
     it('should detect changes to entrypoints/<name>/index.html files', async () => {
       const changedPath = '/root/page1/index.html';
       const htmlPage1 = fakePopupEntrypoint({
