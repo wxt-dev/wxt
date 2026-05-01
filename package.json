@@ -51,7 +51,7 @@
     "vitepress-knowledge": "^0.4.1",
     "vitepress-plugin-group-icons": "^1.7.3",
     "vitepress-plugin-llms": "^1.12.0",
-    "vitest-mock-extended": "^3.1.0",
+    "vitest-mock-extended": "^4.0.0",
     "vue": "^3.5.29",
     "wxt": "workspace:*"
   },
