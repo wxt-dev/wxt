@@ -291,6 +291,41 @@ describe('Output Directory Structure', () => {
       `);
   });
 
+  it('should not duplicate content script CSS in assets/ directory', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/content.content/index.ts',
+      `import './style.css';
+      export default defineContentScript({
+        matches: ["*://*/*"],
+        main: () => {},
+      })`,
+    );
+    project.addFile(
+      'entrypoints/content.content/style.css',
+      `body { color: blue; }`,
+    );
+
+    await project.build();
+
+    // Verify CSS only exists in content-scripts/, not in assets/
+    expect(
+      await project.pathExists(
+        '.output/chrome-mv3/content-scripts/content.css',
+      ),
+    ).toBe(true);
+    expect(
+      await project.pathExists('.output/chrome-mv3/assets/content.css'),
+    ).toBe(false);
+
+    // Verify the manifest references the correct CSS file
+    const manifest = await project.serializeFile(
+      '.output/chrome-mv3/manifest.json',
+    );
+    expect(manifest).toContain('content-scripts/content.css');
+    expect(manifest).not.toContain('assets/content.css');
+  });
+
   it("should output to a custom directory when overriding 'outDir'", async () => {
     const project = new TestProject();
     project.addFile('entrypoints/unlisted.html', '<html></html>');
