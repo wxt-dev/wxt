@@ -32,7 +32,7 @@
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.48.0",
     "nano-spawn": "^2.0.0",
-    "nano-staged": "^0.8.0",
+    "nano-staged": "^1.0.2",
     "p-map": "^7.0.4",
     "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.1",
