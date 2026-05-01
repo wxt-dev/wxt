@@ -134,6 +134,7 @@
       "devDependencies": {
         "oxlint": "^1.51.0",
         "publint": "^0.3.18",
+        "tsdown": "^0.21.0",
         "typescript": "^5.9.3",
         "vitest": "^4.0.18",
       },
@@ -151,6 +152,7 @@
         "publint": "^0.3.18",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
+        "tsdown": "^0.21.0",
         "typescript": "^5.9.3",
         "vite": "^7.0.0",
         "wxt": "workspace:*",
