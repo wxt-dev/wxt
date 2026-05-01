@@ -34,7 +34,7 @@
     "nano-spawn": "^2.0.0",
     "nano-staged": "^0.8.0",
     "p-map": "^7.0.4",
-    "pkg-pr-new": "^0.0.66",
+    "pkg-pr-new": "^0.0.69",
     "prettier": "^3.8.1",
     "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
