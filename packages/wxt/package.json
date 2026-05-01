@@ -31,7 +31,7 @@
     "consola": "^3.4.2",
     "defu": "^6.1.4",
     "dotenv-expand": "^12.0.3",
-    "esbuild": "^0.27.1",
+    "esbuild": "^0.28.0",
     "filesize": "^11.0.15",
     "get-port-please": "^3.2.0",
     "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
