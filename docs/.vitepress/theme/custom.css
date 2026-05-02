@@ -60,14 +60,13 @@ body {
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
 .dark .VPHome::before {
   content: '';
+  position: absolute;
   background-image: url('../../assets/art002e009298.jpg');
   opacity: 50%;
-  position: absolute;
   width: 100vw;
   height: 110vh;
   background-size: cover;
   background-position: 90%;
-  pointer-events: none;
 }
 
 .dark .VPHome::after {
@@ -77,7 +76,6 @@ body {
   height: 10vh;
   top: 100vh;
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
-  pointer-events: none;
 }
 
 .item {
