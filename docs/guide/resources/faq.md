@@ -164,6 +164,12 @@ Both issues have the same cause: the library puts something outside the `ShadowR
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
 
+## My content script UI looks too big or too small on certain websites
+
+If your `createShadowRootUi` looks correct on most sites but appears at the wrong size on others (e.g., Reddit), the issue is likely caused by `rem` units. The `rem` unit is relative to the `<html>` element's `font-size`, which lives outside the Shadow DOM. When a website overrides it, your UI scales incorrectly.
+
+The fix is to convert `rem` units to `px` at build time using a PostCSS plugin. See the [Shadow Root section in Content Scripts](/guide/essentials/content-scripts#shadow-root) for the full solution.
+
 ## Does WXT provide docs for LLMs?
 
 Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).
