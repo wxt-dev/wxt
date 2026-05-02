@@ -449,6 +449,65 @@ Full examples:
 - [react-content-script-ui](https://github.com/wxt-dev/examples/tree/main/examples/react-content-script-ui)
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
 
+:::warning `rem` Units Are Not Fully Isolated
+While `createShadowRootUi` isolates most CSS, **`rem` units are not isolated** inside the Shadow DOM. This is because `rem` is relative to the root `<html>` element's `font-size`, which lives _outside_ the Shadow Root. WXT v0.20+ applies `all: initial` to reset inherited properties like `visibility`, `color`, and `font-size`, but this does **not** affect how `rem` values are computed.
+
+If the host website sets a custom `font-size` on the `<html>` element (e.g., Reddit uses `font-size: 10px`, some sites use `62.5%`), all `rem`-based styles inside your Shadow Root UI will scale incorrectly — making your extension UI appear too large or too small depending on the website.
+
+This affects any CSS framework that uses `rem` units by default, including **Tailwind CSS**.
+
+**Fix: Convert `rem` to `px` at build time**
+
+Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-rem-to-responsive-pixel) to automatically convert `rem` units to `px` during the build, eliminating the dependency on the host page's root font-size.
+
+1. Install the package:
+
+   ```sh
+   npm i -D postcss-rem-to-responsive-pixel
+   ```
+
+2. Configure your PostCSS config:
+
+   :::code-group
+
+   ```js [postcss.config.mjs (ESM)]
+   import tailwindcss from '@tailwindcss/postcss';
+   import postcssRemToResponsivePx from 'postcss-rem-to-responsive-pixel';
+
+   export default {
+     plugins: [
+       tailwindcss({}),
+       postcssRemToResponsivePx({
+         rootValue: 16,
+         propList: ['*'],
+         transformUnit: 'px',
+       }),
+     ],
+   };
+   ```
+
+   ```js [postcss.config.cjs (CJS)]
+   module.exports = {
+     plugins: [
+       require('@tailwindcss/postcss')({}),
+       require('postcss-rem-to-responsive-pixel')({
+         rootValue: 16,
+         propList: ['*'],
+         transformUnit: 'px',
+       }),
+     ],
+   };
+   ```
+
+   :::
+
+   > Set `rootValue` to `16` (the browser default) so that `1rem` converts to `16px`. Adjust if your design system uses a different base.
+   >
+   > If you are not using Tailwind CSS, remove the `tailwindcss` plugin line and keep only `postcssRemToResponsivePx`.
+
+See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional context on this behavior.
+:::
+
 ### IFrame
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
