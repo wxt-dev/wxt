@@ -35,6 +35,7 @@
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
     "vitest": "^4.0.18",
+    "postcss-rem-to-responsive-pixel": "^7.0.4",
     "vitest-plugin-random-seed": "^1.1.2",
     "wxt": "workspace:*"
   },

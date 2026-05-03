@@ -1,0 +1,30 @@
+/*
+ * These rem values will be converted to px at build time
+ * by postcss-rem-to-responsive-pixel, making this UI immune
+ * to host page font-size overrides.
+ */
+.rem-fix-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border: 1px solid #45475a;
+  max-width: 20rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
+}
+
+.rem-fix-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #a6e3a1;
+}
+
+.rem-fix-card p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #a6adc8;
+}

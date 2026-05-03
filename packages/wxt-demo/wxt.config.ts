@@ -38,6 +38,7 @@ export default defineConfig({
       'iframe',
       'location-change',
       'main-world',
+      'rem-fix',
       'sandbox',
       'sidepanel',
       'unlisted',
