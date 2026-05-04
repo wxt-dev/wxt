@@ -20,7 +20,7 @@ export default defineContentScript({
         const desc = document.createElement('p');
         desc.textContent =
           'This UI uses rem units in CSS, converted to px at build time by postcss-rem-to-responsive-pixel. ' +
-          'It will render at the same size regardless of the host page\'s root font-size.';
+          'It will render at the same size regardless of the host pages root font-size.';
 
         card.append(title, desc);
         container.append(card);
