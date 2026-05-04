@@ -14,17 +14,17 @@
   border: 1px solid #45475a;
   max-width: 20rem;
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
+
+  h3 {
+    margin-right:0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #a6e3a1;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: #a6adc8;
+  }
 }
 
-.rem-fix-card h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #a6e3a1;
-}
-
-.rem-fix-card p {
-  margin: 0;
-  font-size: 0.75rem;
-  color: #a6adc8;
-}
