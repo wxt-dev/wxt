@@ -470,12 +470,10 @@ Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-re
    :::code-group
 
    ```js [postcss.config.mjs (ESM)]
-   import tailwindcss from '@tailwindcss/postcss';
    import postcssRemToResponsivePx from 'postcss-rem-to-responsive-pixel';
 
    export default {
      plugins: [
-       tailwindcss({}),
        postcssRemToResponsivePx({
          rootValue: 16,
          propList: ['*'],
@@ -483,26 +481,6 @@ Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-re
        }),
      ],
    };
-   ```
-
-   ```js [postcss.config.cjs (CJS)]
-   module.exports = {
-     plugins: [
-       require('@tailwindcss/postcss')({}),
-       require('postcss-rem-to-responsive-pixel')({
-         rootValue: 16,
-         propList: ['*'],
-         transformUnit: 'px',
-       }),
-     ],
-   };
-   ```
-
-   :::
-
-   > Set `rootValue` to `16` (the browser default) so that `1rem` converts to `16px`. Adjust if your design system uses a different base.
-   >
-   > If you are not using Tailwind CSS, remove the `tailwindcss` plugin line and keep only `postcssRemToResponsivePx`.
 
 See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional context on this behavior.
 :::
