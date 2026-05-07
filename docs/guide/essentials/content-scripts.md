@@ -450,7 +450,8 @@ Full examples:
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
 
 :::warning `rem` Units Are Not Fully Isolated
-While `createShadowRootUi` isolates most CSS, **`rem` units are not isolated** inside the Shadow DOM. This is because `rem` is relative to the root `<html>` element's `font-size`, which lives _outside_ the Shadow Root. WXT v0.20+ applies `all: initial` to reset inherited properties like `visibility`, `color`, and `font-size`, but this does **not** affect how `rem` values are computed.
+While `createShadowRootUi` isolates most CSS, **`rem` units aren't isolated** inside the Shadow DOM. That's because `rem` is relative to the root `<html>` element's `font-size`, which lives _outside_ the Shadow Root.
+Property `all: initial` **doesn't** affect how `rem` values.
 
 If the host website sets a custom `font-size` on the `<html>` element (e.g., Reddit uses `font-size: 10px`, some sites use `62.5%`), all `rem`-based styles inside your Shadow Root UI will scale incorrectly — making your extension UI appear too large or too small depending on the website.
 
