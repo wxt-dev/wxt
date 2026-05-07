@@ -449,41 +449,39 @@ Full examples:
 - [react-content-script-ui](https://github.com/wxt-dev/examples/tree/main/examples/react-content-script-ui)
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
 
-:::warning `rem` Units Are Not Fully Isolated
-While `createShadowRootUi` isolates most CSS, **`rem` units aren't isolated** inside the Shadow DOM. That's because `rem` is relative to the root `<html>` element's `font-size`, which lives _outside_ the Shadow Root.
-Property `all: initial` **doesn't** affect how `rem` values.
-
-This affects any CSS framework that uses `rem` units by default, including **Tailwind CSS**.
-
-**Fix: Convert `rem` to `px` at build time**
-
-Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-rem-to-responsive-pixel) to automatically convert `rem` units to `px` during the build, eliminating the dependency on the host page's root font-size.
-
-1. Install the package:
-
-   ```sh
-   bun i -D postcss-rem-to-responsive-pixel
-   ```
-
-2. Configure your PostCSS config:
-
-   :::code-group
-
-   ```js [postcss.config.mjs (ESM)]
-   import postcssRemToResponsivePx from 'postcss-rem-to-responsive-pixel';
-
-   export default {
-     plugins: [
-       postcssRemToResponsivePx({
-         rootValue: 16,
-         propList: ['*'],
-         transformUnit: 'px',
-       }),
-     ],
-   };
-
-See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional context on this behavior.
-:::
+> [!WARNING] `rem` Units Are Not Fully Isolated
+> While `createShadowRootUi` isolates most CSS, **`rem` units aren't isolated** inside the Shadow DOM. That's because `rem` is relative to the root `<html>` element's `font-size`, which lives _outside_ the Shadow Root.
+> Property `all: initial` **doesn't** affect how `rem` values.
+>
+> This affects any CSS framework that uses `rem` units by default, including **Tailwind CSS**.
+>
+> **Fix: Convert `rem` to `px` at build time**
+>
+> Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-rem-to-responsive-pixel) to automatically convert `rem` units to `px` during the build, eliminating the dependency on the host page's root font-size.
+>
+> 1. Install the package:
+>
+>    ```sh
+>    bun i -D postcss-rem-to-responsive-pixel
+>    ```
+>
+> 2. Configure your PostCSS config:
+>
+>    ```js [postcss.config.mjs]
+>    import postcssRemToResponsivePx from 'postcss-rem-to-responsive-pixel';
+>
+>    export default {
+>      plugins: [
+>        postcssRemToResponsivePx({
+>          rootValue: 16,
+>          propList: ['*'],
+>          transformUnit: 'px',
+>        }),
+>      ],
+>    };
+>    ```
+>
+> See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional context on this behavior.
 
 ### IFrame
 
