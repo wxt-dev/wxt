@@ -57,7 +57,8 @@ Vite provides two other environment variables, but they aren't useful in WXT pro
 
 - `import.meta.env.BASE_URL`: Use `browser.runtime.getURL` instead.
 - `import.meta.env.SSR`: Always `false`.
-  :::
+
+:::
 
 ## Manifest
 

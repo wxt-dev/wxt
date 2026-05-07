@@ -27,9 +27,8 @@ export default defineBackground({
 
 This will change the output format to ESM, enable code-splitting between your background script and HTML pages, and set `"type": "module"` in your manifest.
 
-:::warning
-Only MV3 supports ESM background scripts/service workers. When targeting MV2, the `type` option is ignored and the background is always bundled into a single file as IIFE.
-:::
+> [!WARNING]
+> Only MV3 supports ESM background scripts/service workers. When targeting MV2, the `type` option is ignored and the background is always bundled into a single file as IIFE.
 
 ## Content Scripts
 

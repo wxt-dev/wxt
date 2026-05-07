@@ -242,9 +242,8 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV3[]>( // [!code
 
 :::
 
-:::info
-Internally, this uses a metadata property called `v` to track the value's current version.
-:::
+> [!NOTE]
+> Internally, this uses a metadata property called `v` to track the value's current version.
 
 In this case, we thought that the ignored website list might change in the future, and were able to set up a versioned storage item from the start.
 

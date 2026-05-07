@@ -15,10 +15,9 @@ cd path/to/your/project
 pnpm dlx wxt@latest init example-wxt --template vanilla
 ```
 
-:::tip
-We recommend reviewing [project structure](/guide/essentials/project-structure.md) before you get started.
-You can customize directory names in `wxt.config.ts` to match your project's needs.
-:::
+> [!TIP]
+> We recommend reviewing [project structure](/guide/essentials/project-structure.md) before you get started.
+> You can customize directory names in `wxt.config.ts` to match your project's needs.
 
 In general, you'll need to:
 
@@ -32,9 +31,8 @@ In general, you'll need to:
 &ensp;<input type="checkbox" /> Add a default export to JS entrypoints (`defineBackground`, `defineContentScript`, or `defineUnlistedScript`)<br />
 &ensp;<input type="checkbox" /> Use the `browser` global instead of `chrome`<br />
 &ensp;<input type="checkbox" /> ⚠️ Compare final `manifest.json` files, making sure permissions and host permissions are unchanged<br/>
-:::warning
-If your extension is already live on the Chrome Web Store, use [Google's update testing tool](https://github.com/GoogleChromeLabs/extension-update-testing-tool) to make sure no new permissions are being requested.
-:::
+> [!WARNING]
+> If your extension is already live on the Chrome Web Store, use [Google's update testing tool](https://github.com/GoogleChromeLabs/extension-update-testing-tool) to make sure no new permissions are being requested.
 
 Every project is different, so there's no one-solution-fits-all to migrating your project. Just make sure `wxt dev` runs, `wxt build` results in a working extension, and the list of permissions in the `manifest.json` hasn't changed. If all that looks good, you've finished migrating your extension!
 

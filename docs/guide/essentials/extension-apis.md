@@ -14,9 +14,8 @@ browser.action.onClicked.addListener(() => {
 });
 ```
 
-:::tip
-With auto-imports enabled, you don't even need to import this variable from `wxt/browser`!
-:::
+> [!TIP]
+> With auto-imports enabled, you don't even need to import this variable from `wxt/browser`!
 
 The `browser` variable WXT provides is a simple export of the `browser` or `chrome` globals provided by the browser at runtime:
 
@@ -46,9 +45,8 @@ See it's [Installation Guide](https://github.com/wxt-dev/wxt/blob/main/packages/
 
 Depending on the manifest version, browser, and permissions, some APIs are not available at runtime. If an API is not available, it will be `undefined`.
 
-:::warning
-Types will not help you here. The types WXT provides for `browser` assume all APIs exist. You are responsible for knowing whether an API is available or not.
-:::
+> [!WARNING]
+> Types will not help you here. The types WXT provides for `browser` assume all APIs exist. You are responsible for knowing whether an API is available or not.
 
 To check if an API is available, use feature detection:
 

@@ -12,8 +12,7 @@ WXT does several pre-processing steps to try and prevent errors during this proc
 
 However, this process is not perfect. It doesn't setup all the globals found in the browser and the APIs may behave differently. As such, **_you should avoid using browser or extension APIs outside the `main` function of your entrypoints!_** See [Entrypoint Limitations](/guide/essentials/extension-apis#entrypoint-limitations) for more details.
 
-:::tip
-If you're running into errors while importing entrypoints, run `wxt prepare --debug` to see more details about this process. When debugging, WXT will print out the pre-processed code to help you identify issues.
-:::
+> [!TIP]
+> If you're running into errors while importing entrypoints, run `wxt prepare --debug` to see more details about this process. When debugging, WXT will print out the pre-processed code to help you identify issues.
 
 Once the environment has been polyfilled and your code pre-processed, it's up the entrypoint loader to import your code, extracting the options from the default export.

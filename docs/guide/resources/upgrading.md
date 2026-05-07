@@ -39,9 +39,8 @@ Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`
 
 v0.20 is a big release! There are lots of breaking changes because this version is intended to be a release candidate for v1.0. If all goes well, v1.0 will be released with no additional breaking changes.
 
-:::tip
-Read through all the changes once before updating your code.
-:::
+> [!TIP]
+> Read through all the changes once before updating your code.
 
 ### `webextension-polyfill` Removed
 
@@ -195,17 +194,15 @@ import {
 } from '#imports'; // [!code ++]
 ```
 
-:::tip
-Before types will work, you'll need to run `wxt prepare` after installing v0.20 to generate the new TypeScript declarations.
-:::
+> [!TIP]
+> Before types will work, you'll need to run `wxt prepare` after installing v0.20 to generate the new TypeScript declarations.
 
 ### `createShadowRootUi` CSS Changes
 
 WXT now resets styles inherited from the webpage (`visibility`, `color`, `font-size`, etc.) by setting `all: initial` inside the shadow root.
 
-:::warning
-This doesn't effect `rem` units. You should continue using `postcss-rem-to-px` or an equivalent library if the webpage sets the HTML element's `font-size`.
-:::
+> [!WARNING]
+> This doesn't effect `rem` units. You should continue using `postcss-rem-to-px` or an equivalent library if the webpage sets the HTML element's `font-size`.
 
 If you use `createShadowRootUi`:
 
@@ -246,9 +243,8 @@ export default defineConfig({
 });
 ```
 
-:::warning
-If you've previously loaded the extension into your browser manually for development, you'll need to uninstall and re-install it from the new dev output directory.
-:::
+> [!WARNING]
+> If you've previously loaded the extension into your browser manually for development, you'll need to uninstall and re-install it from the new dev output directory.
 
 ### Deprecated APIs Removed
 
@@ -360,9 +356,8 @@ export default defineConfig({
 });
 ```
 
-:::warning
-`entrypointLoader: "jiti"` is deprecated and will be removed in the next major version.
-:::
+> [!WARNING]
+> `entrypointLoader: "jiti"` is deprecated and will be removed in the next major version.
 
 ### Drop CJS Support
 

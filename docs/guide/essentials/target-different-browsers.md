@@ -31,9 +31,9 @@ Read about [Built-in Environment Variables](/guide/essentials/config/environment
 
 To target specific manifest versions, use the `--mv2` or `--mv3` CLI flags.
 
-:::tip Default Manifest Version
-By default, WXT will target MV2 for Safari and Firefox and MV3 for all other browsers.
-:::
+> [!TIP]
+> **Default Manifest Version**
+> By default, WXT will target MV2 for Safari and Firefox and MV3 for all other browsers.
 
 Similar to the browser, you can get the target manifest version at runtime using the [built-in environment variable](/guide/essentials/config/environment-variables.html#built-in-environment-variables):
 

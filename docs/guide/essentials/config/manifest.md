@@ -200,22 +200,21 @@ export default defineConfig({
 });
 ```
 
-:::warning
-
-Different browsers support different permissions. You are responsible for passing only the permissions required for each browser:
-
-```ts
-export default defineConfig({
-  manifest: ({ browser }) => ({
-    permissions:
-      browser === 'chrome'
-        ? ['storage', 'favicon', 'declarativeNetRequest']
-        : ['storage', 'webRequest'],
-  }),
-});
-```
-
-:::
+> [!WARNING]
+>
+> Different browsers support different permissions. You are responsible for passing only the permissions required for each browser:
+>
+> ```ts
+> export default defineConfig({
+>   manifest: ({ browser }) => ({
+>     permissions:
+>       browser === 'chrome'
+>         ? ['storage', 'favicon', 'declarativeNetRequest']
+>         : ['storage', 'webRequest'],
+>   }),
+> });
+> ```
+>
 
 ## Host Permissions
 
@@ -229,18 +228,17 @@ export default defineConfig({
 });
 ```
 
-:::warning
-If you use host permissions and target both MV2 and MV3, make sure to only include the required host permissions for each version:
-
-```ts
-export default defineConfig({
-  manifest: ({ manifestVersion }) => ({
-    host_permissions: manifestVersion === 2 ? [...] : [...],
-  }),
-});
-```
-
-:::
+> [!WARNING]
+> If you use host permissions and target both MV2 and MV3, make sure to only include the required host permissions for each version:
+>
+> ```ts
+> export default defineConfig({
+>   manifest: ({ manifestVersion }) => ({
+>     host_permissions: manifestVersion === 2 ? [...] : [...],
+>   }),
+> });
+> ```
+>
 
 ## Default Locale
 

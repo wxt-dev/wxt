@@ -11,9 +11,9 @@ Check out the [comparison](/guide/resources/compare) to see how WXT compares to 
 
 These docs assume you have a basic knowledge of how web extensions are structured and how you access the extension APIs.
 
-:::warning New to extension development?
-If you have never written an extension before, follow Chrome's [Hello World tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) to first **_create an extension without WXT_**, then come back here.
-:::
+> [!WARNING]
+> **New to extension development?**
+> If you have never written an extension before, follow Chrome's [Hello World tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) to first **_create an extension without WXT_**, then come back here.
 
 You should also be aware of [Chrome's extension docs](https://developer.chrome.com/docs/extensions) and [Mozilla's extension docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions). WXT does not change how you use the extension APIs, and you'll need to refer to these docs often when using specific APIs.
 

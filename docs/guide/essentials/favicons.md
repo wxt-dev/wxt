@@ -25,9 +25,9 @@ function getFaviconUrl(pageUrl: string, size = 16) {
 }
 ```
 
-::: warning Chromium only
-The favicon API is only available on Chromium-based browsers. Firefox has no equivalent, so `/_favicon/` URLs will not resolve at runtime there. If your extension supports both browsers, gate favicon usage behind `import.meta.env.CHROME` (or similar) and declare the permission per-browser.
-:::
+> [!WARNING]
+> **Chromium only**
+> The favicon API is only available on Chromium-based browsers. Firefox has no equivalent, so `/_favicon/` URLs will not resolve at runtime there. If your extension supports both browsers, gate favicon usage behind `import.meta.env.CHROME` (or similar) and declare the permission per-browser.
 
 ## Usage from a content script
 

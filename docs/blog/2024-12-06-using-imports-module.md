@@ -40,9 +40,9 @@ Think of `#imports` as a convenient way to access all of WXT's APIs from one pla
 
 This enables better tree-shaking compared to v0.19 and below.
 
-:::tip Need to lookup the full import path of an API?
-Open up your project's `.wxt/types/imports-module.d.ts` file.
-:::
+> [!TIP]
+> **Need to lookup the full import path of an API?**
+> Open up your project's `.wxt/types/imports-module.d.ts` file.
 
 ## Mocking
 

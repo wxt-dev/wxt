@@ -585,11 +585,11 @@ export default defineConfig({
 
 `injectScript` returns a promise, that when resolved, means the script has been evaluated by the browser and you can start communicating with it.
 
-:::warning Warning: `run_at` Caveat
-For MV3, `injectScript` is synchronous and the injected script will be evaluated at the same time as your the content script's `run_at`.
-
-However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
-:::
+> [!WARNING]
+> **`run_at` Caveat**
+> For MV3, `injectScript` is synchronous and the injected script will be evaluated at the same time as your the content script's `run_at`.
+>
+> However for MV2, `injectScript` has to `fetch` the script's text content and create an inline `<script>` block. This means for MV2, your script is injected asynchronously and it will not be evaluated at the same time as your content script's `run_at`.
 
 The `script` element can be modified just before it is added to the DOM by using the `modifyScript` option. This can be used to e.g. modify `script.async`/`script.defer`, add event listeners to the element, or pass data to the script via `script.dataset`. An example:
 
@@ -688,9 +688,8 @@ export default defineContentScript({
 });
 ```
 
-:::tip
-When the `ui.remove` is called, `autoMount` also stops.
-:::
+> [!TIP]
+> When the `ui.remove` is called, `autoMount` also stops.
 
 See the [API Reference](/api/reference/wxt/utils/content-script-ui/types/interfaces/ContentScriptUi#automount) for the complete list of options.
 

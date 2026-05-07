@@ -54,9 +54,8 @@ wxt submit \
   --edge-zip .output/{your-extension}-{version}-chrome.zip
 ```
 
-:::warning
-See the [Firefox Addon Store](#firefox-addon-store) section for more details about the `--firefox-sources-zip` option.
-:::
+> [!WARNING]
+> See the [Firefox Addon Store](#firefox-addon-store) section for more details about the `--firefox-sources-zip` option.
 
 ## GitHub Action
 
@@ -173,11 +172,10 @@ Ensure that you have a `README.md` or `SOURCE_CODE_REVIEW.md` file with the abov
 
 Make sure the build output is the exact same when running `wxt build -b firefox` in your main project and inside the zipped sources.
 
-:::warning
-If you use a `.env` files, they can affect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/reference/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
-
-See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
-:::
+> [!WARNING]
+> If you use a `.env` files, they can affect the chunk hashes in the output directory. Either delete the .env file before running `wxt zip -b firefox`, or include it in your sources zip with the [`zip.includeSources`](/api/reference/wxt/interfaces/InlineConfig#includesources) option. Be careful to not include any secrets in your `.env` files.
+>
+> See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 
 #### Private Packages
 
@@ -196,9 +194,8 @@ export default defineConfig({
 
 Depending on your package manager, the `package.json` in the sources zip will be modified to use the downloaded dependencies via the `overrides` or `resolutions` field.
 
-:::warning
-WXT uses the command `npm pack <package-name>` to download the package. That means regardless of your package manager, you need to properly setup a `.npmrc` file. NPM and PNPM both respect `.npmrc` files, but Yarn and Bun have their own ways of authorizing private registries, so you'll need to add a `.npmrc` file.
-:::
+> [!WARNING]
+> WXT uses the command `npm pack <package-name>` to download the package. That means regardless of your package manager, you need to properly setup a `.npmrc` file. NPM and PNPM both respect `.npmrc` files, but Yarn and Bun have their own ways of authorizing private registries, so you'll need to add a `.npmrc` file.
 
 ### Safari
 

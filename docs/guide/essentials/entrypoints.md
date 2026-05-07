@@ -68,24 +68,23 @@ When using an entrypoint directory, `entrypoints/{name}/index.{ext}`, you can ad
       📄 style.css
 ```
 
-:::danger
-**DO NOT** put files related to an entrypoint directly inside the `entrypoints/` directory. WXT will treat them as entrypoints and try to build them, usually resulting in an error.
-
-Instead, use a directory for that entrypoint:
-
-<!-- prettier-ignore -->
-```html
-📂 entrypoints/
-   📄 popup.html <!-- [!code --] -->
-   📄 popup.ts <!-- [!code --] -->
-   📄 popup.css <!-- [!code --] -->
-   📂 popup/ <!-- [!code ++] -->
-      📄 index.html <!-- [!code ++] -->
-      📄 main.ts <!-- [!code ++] -->
-      📄 style.css <!-- [!code ++] -->
-```
-
-:::
+> [!CAUTION]
+> **DO NOT** put files related to an entrypoint directly inside the `entrypoints/` directory. WXT will treat them as entrypoints and try to build them, usually resulting in an error.
+>
+> Instead, use a directory for that entrypoint:
+>
+> <!-- prettier-ignore -->
+> ```html
+> 📂 entrypoints/
+>    📄 popup.html <!-- [!code --] -->
+>    📄 popup.ts <!-- [!code --] -->
+>    📄 popup.css <!-- [!code --] -->
+>    📂 popup/ <!-- [!code ++] -->
+>       📄 index.html <!-- [!code ++] -->
+>       📄 main.ts <!-- [!code ++] -->
+>       📄 style.css <!-- [!code ++] -->
+> ```
+>
 
 ### Deeply Nested Entrypoints
 
@@ -498,9 +497,9 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/manifest/sandbox/)
 
-:::warning Chromium Only
-Firefox does not support sandboxed pages.
-:::
+> [!WARNING]
+> **Chromium Only**
+> Firefox does not support sandboxed pages.
 
 <EntrypointPatterns
   :patterns="[

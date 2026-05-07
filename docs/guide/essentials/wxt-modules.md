@@ -256,9 +256,8 @@ const res = await fetch(browser.runtime.getURL('/some-text.txt'));
 
 Once the existing files under the `entrypoints/` directory have been discovered, the `entrypoints:found` hook can be used to add custom entrypoints.
 
-:::info
-The `entrypoints:found` hook is triggered before validation is carried out on the list of entrypoints. Thus, any custom entrypoints will still be checked for duplicate names and logged during debugging.
-:::
+> [!NOTE]
+> The `entrypoints:found` hook is triggered before validation is carried out on the list of entrypoints. Thus, any custom entrypoints will still be checked for duplicate names and logged during debugging.
 
 ```ts
 import { defineWxtModule } from 'wxt/modules';
