@@ -308,7 +308,7 @@ function addEntrypoints(
       options.theme_icons = popup.options.themeIcons;
 
     const actionKey =
-      manifest.manifest_version === 2
+      wxt.config.manifestVersion === 2
         ? (popup.options.actionType ?? 'browser_action')
         : wxt.config.browser === 'firefox' &&
             popup.options.actionType === 'page_action'
@@ -493,7 +493,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
-  if (manifest.manifest_version === 3) {
+  if (wxt.config.manifestVersion === 3) {
     addHostPermission(manifest, permission);
   } else {
     addPermission(manifest, permission);
@@ -502,7 +502,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const extensionPagesCsp = new ContentSecurityPolicy(
     // @ts-expect-error: extension_pages exists, we convert MV2 CSPs to this earlier in the process
     manifest.content_security_policy?.extension_pages ??
-      (manifest.manifest_version === 3
+      (wxt.config.manifestVersion === 3
         ? DEFAULT_MV3_EXTENSION_PAGES_CSP
         : DEFAULT_MV2_CSP),
   );
