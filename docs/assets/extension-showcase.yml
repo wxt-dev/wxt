@@ -436,3 +436,11 @@
 
 - # TF2 Trader - TF2 & Steam Trading Extension - https://github.com/offish/tf2-trader
   chromeId: gmicpekfpbikhibodgokfpghadkclhoe
+  
+- # Modrinth Extras - https://github.com/creeperkatze/modrinth-extras
+  chromeId: ajmkilipadfpaefpcjfgnkejalmhdlcj
+  firefoxSlug: modrinth-extras
+
+- # Pi-hole In One - https://github.com/creeperkatze/pihole-in-one
+  chromeId: gaaobidjebianpcngcfpkniaocibidhe
+  firefoxSlug: pihole-in-one
