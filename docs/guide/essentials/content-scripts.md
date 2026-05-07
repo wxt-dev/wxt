@@ -462,7 +462,7 @@ Use [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-re
 1. Install the package:
 
    ```sh
-   npm i -D postcss-rem-to-responsive-pixel
+   bun i -D postcss-rem-to-responsive-pixel
    ```
 
 2. Configure your PostCSS config:
