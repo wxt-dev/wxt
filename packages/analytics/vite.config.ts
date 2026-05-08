@@ -21,7 +21,11 @@ export default defineConfig({
   run: {
     tasks: {
       postinstall: {
-        dependsOn: ['wxt#build', '@wxt-dev/is-background#build'],
+        dependsOn: [
+          'wxt#build',
+          '@wxt-dev/storage#build',
+          '@wxt-dev/is-background#build',
+        ],
         input: [{ auto: true }, '!.wxt/**'],
         command: 'vpx wxt prepare',
       },

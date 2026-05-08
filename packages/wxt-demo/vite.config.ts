@@ -9,6 +9,7 @@ export default defineConfig({
           '@wxt-dev/auto-icons#build',
           '@wxt-dev/i18n#build',
           '@wxt-dev/unocss#build',
+          '@wxt-dev/storage#build',
         ],
         input: [{ auto: true }, '!.wxt/**'],
         command: 'vpx wxt prepare',
