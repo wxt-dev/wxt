@@ -4,7 +4,12 @@ export default defineConfig({
   run: {
     tasks: {
       postinstall: {
-        dependsOn: ['wxt#build'],
+        dependsOn: [
+          'wxt#build',
+          '@wxt-dev/auto-icons#build',
+          '@wxt-dev/i18n#build',
+          '@wxt-dev/unocss#build',
+        ],
         input: [{ auto: true }, '!.wxt/**'],
         command: 'vpx wxt prepare',
       },
