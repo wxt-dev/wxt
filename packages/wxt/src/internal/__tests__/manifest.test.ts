@@ -1,5 +1,5 @@
 import type { Browser } from '@wxt-dev/browser';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 
 import {

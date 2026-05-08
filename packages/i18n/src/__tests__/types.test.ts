@@ -1,10 +1,10 @@
 import { browser } from '@wxt-dev/browser';
-import { beforeEach, describe, it, vi } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vite-plus/test';
 
 import { createI18n } from '..';
 
 vi.mock('@wxt-dev/browser', async () => {
-  const { vi } = await import('vitest');
+  const { vi } = await import('vite-plus/test');
   return {
     browser: {
       i18n: {

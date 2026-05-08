@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import readline from 'node:readline';
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 
 import type { WxtDevServer } from '../../types';

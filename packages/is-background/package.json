@@ -38,19 +38,18 @@
     }
   },
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1"
   },
   "devDependencies": {
-    "oxlint": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
   }
 }

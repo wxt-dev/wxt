@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 
 import { glob } from 'tinyglobby';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import { exec } from '../../src/internal-utils/testing/exec';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';

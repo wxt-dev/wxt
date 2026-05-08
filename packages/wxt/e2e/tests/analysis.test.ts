@@ -1,5 +1,5 @@
 import open from 'tiny-open';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vite-plus/test';
 
 import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
 import { TestProject } from '../utils';

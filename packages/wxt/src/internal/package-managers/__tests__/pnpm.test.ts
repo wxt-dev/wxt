@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vite-plus/test';
 
 import { exec } from '../../../internal-utils/testing/exec';
 import { describeWithBin } from '../../../internal-utils/testing/fixtures';

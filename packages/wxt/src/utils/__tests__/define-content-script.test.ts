@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 
 import { ContentScriptDefinition } from '../../types';
 import { defineContentScript } from '../define-content-script';

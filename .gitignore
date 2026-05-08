@@ -26,3 +26,6 @@ stats.html
 *-stats.txt
 /packages/wxt/inline
 .screenshots
+.vite-hooks/_
+CLAUDE.md
+**/CLAUDE.md

@@ -96,6 +96,7 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
+    // eslint-disable-next-line typescript-eslint/no-redundant-type-constituents
     properties: any | undefined,
   ) => {
     const metaKey = getMetaKey(driverKey);
@@ -522,7 +523,7 @@ function createStorage(): WxtStorage {
         });
 
       // Initialize the value once migrations have finished
-      migrationsDone.then(getOrInitValue);
+      void migrationsDone.then(getOrInitValue);
 
       return {
         key,
@@ -678,6 +679,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
           newValue?: any;
+          // eslint-disable-next-line typescript-eslint/no-redundant-type-constituents
           oldValue?: any | null;
         } | null;
 

@@ -36,18 +36,16 @@
   },
   "scripts": {
     "dev": "wxt",
-    "check": "bun run build && check",
-    "build": "buildc -- tsdown",
-    "postinstall": "buildc --deps-only -- wxt prepare",
+    "build": "vp pack",
     "test": "echo 'noop'",
-    "prepack": "bun run build"
+    "test:coverage": "echo 'noop'",
+    "prepack": "vpr build"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "@types/webextension-polyfill": "^0.12.5",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"
   },

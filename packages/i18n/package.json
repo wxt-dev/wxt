@@ -59,11 +59,12 @@
     }
   },
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
-    "bench": "buildc --deps-only -- bun run bench/run.ts",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "check": "check",
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
+    "bench": "bun run bench/run.ts",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
@@ -72,13 +73,11 @@
     "tinyglobby": "^0.2.16"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "@types/node": "catalog:",
-    "oxlint": "catalog:",
     "publint": "catalog:",
     "tinybench": "^6.0.1",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
     "wxt": "workspace:*"

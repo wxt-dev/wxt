@@ -1,0 +1,7 @@
+{
+  "include": ["scripts/**/*", "packages/browser/scripts/**/*"],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["bun"]
+  }
+}

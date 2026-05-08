@@ -21,7 +21,8 @@
   "scripts": {
     "check": "check",
     "gen": "bun run scripts/generate.ts",
-    "test": "echo 'noop'"
+    "test": "echo 'noop'",
+    "test:coverage": "echo 'noop'"
   },
   "dependencies": {
     "@types/har-format": "*"
@@ -30,6 +31,7 @@
     "@types/chrome": "0.3.7",
     "@types/node": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {}

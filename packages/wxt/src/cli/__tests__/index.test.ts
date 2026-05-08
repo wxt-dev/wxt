@@ -1,5 +1,5 @@
 import consola, { LogLevels } from 'consola';
-import { describe, it, vi, beforeEach, expect } from 'vitest';
+import { describe, it, vi, beforeEach, expect } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 
 import { build, createServer, zip, prepare, clean, initialize } from '../../';

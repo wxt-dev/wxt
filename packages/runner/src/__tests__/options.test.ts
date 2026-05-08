@@ -2,12 +2,12 @@ import { mkdir } from 'node:fs/promises';
 import { tmpdir, homedir } from 'node:os';
 import { resolve, join } from 'node:path';
 
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeAll } from 'vite-plus/test';
 
 import { ResolvedRunOptions, resolveRunOptions } from '../options';
 
 vi.mock('node:os', async () => {
-  const { vi } = await import('vitest');
+  const { vi } = await import('vite-plus/test');
   const os: any = await vi.importActual('node:os');
   const { join } = await import('node:path');
   return {

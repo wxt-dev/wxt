@@ -2,7 +2,7 @@ import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import webExt, { WebExtRunInstance } from 'web-ext';
 import logger from 'web-ext/util/logger';
