@@ -23,4 +23,6 @@ runs:
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bun ci ${{ inputs.installArgs }}
+      env:
+        INSTALL_ARGS: ${{ inputs.installArgs }}
+      run: vp install --frozen-lockfile $INSTALL_ARGS
