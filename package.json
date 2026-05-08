@@ -14,7 +14,7 @@
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
     "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs",
-    "postinstall": "if [ \"$NETLIFY\" != \"true\" ]; then vp run --filter \"./packages/*\" postinstall; fi"
+    "postinstall": "node scripts/postinstall.mjs"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.4.3",
