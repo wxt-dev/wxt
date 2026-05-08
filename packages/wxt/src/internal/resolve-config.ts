@@ -382,7 +382,6 @@ async function getUnimportOptions(
             'StorageArea',
             'WxtStorage',
             'WxtStorageItem',
-            'StorageArea',
             'StorageItemKey',
             'StorageAreaChanges',
             'MigrationError',
