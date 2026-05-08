@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Basic Checks
-        run: bun run check
+        run: vp check
 
   builds:
     name: Builds
@@ -34,7 +34,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun run buildc all
+        run: vpr -r build
 
   build-demo:
     name: Build Demo
@@ -47,11 +47,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: bun run build:all
+        run: vpr build:all
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: bun run wxt zip
+        run: vpx wxt zip
         working-directory: packages/wxt-demo
 
   tests:
@@ -80,11 +80,11 @@ jobs:
 
       - name: Run Tests
         if: ${{ ! matrix.coverage }}
-        run: bun run test
+        run: vpr -r test run
 
       - name: Run Tests (Coverage)
         if: matrix.coverage
-        run: bun run test:coverage --reporter=default --reporter=hanging-process
+        run: vpr -r test:coverage --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
         if: matrix.coverage
@@ -112,7 +112,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Pack WXT package
-        run: bun pm pack
+        run: vp pm pack
         working-directory: packages/wxt
 
       - name: Install Dependencies
