@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { every, some } from '../arrays';
 
 describe('Array Utils', () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vite-plus/test';
 import { resolve } from 'node:path';
 import * as fsPromises from 'node:fs/promises';
 import sharp from 'sharp';

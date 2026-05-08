@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, vi } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vite-plus/test';
 import { createI18n } from '..';
 import { browser } from '@wxt-dev/browser';
 

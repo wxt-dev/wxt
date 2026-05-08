@@ -15,6 +15,11 @@ runs:
       with:
         bun-version-file: '.tool-versions'
 
+    - uses: voidzero-dev/setup-vp@v1
+      with:
+        node-version-file: .node-version
+        cache: true
+
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash

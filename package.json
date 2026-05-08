@@ -8,21 +8,19 @@
     "packages/*"
   ],
   "scripts": {
-    "check": "check && bun run --workspaces check",
-    "test": "bun run --workspaces test run",
-    "test:coverage": "bun run --workspaces test:coverage",
-    "prepare": "simple-git-hooks",
+    "test": "vpr -r test run",
+    "test:coverage": "vpr -r test:coverage",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
-    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
+    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs",
+    "postinstall": "vpr -r postinstall"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "@aklinker1/check": "^2.4.0",
     "@commitlint/config-conventional": "^20.4.3",
     "@commitlint/types": "^20.4.3",
     "@types/bun": "^1.3.5",
+    "@types/markdown-it-footnote": "^3.0.4",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^4.0.18",
     "changelogen": "^0.6.2",
@@ -32,38 +30,38 @@
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.48.0",
     "nano-spawn": "^2.0.0",
-    "nano-staged": "^0.8.0",
     "p-map": "^7.0.4",
     "pkg-pr-new": "^0.0.66",
-    "prettier": "^3.8.1",
-    "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
-    "simple-git-hooks": "^2.13.1",
     "tinyglobby": "^0.2.15",
-    "tsdown": "^0.21.0",
     "tsx": "4.21.0",
     "typedoc": "^0.25.4",
     "typedoc-plugin-frontmatter": "^1.3.1",
     "typedoc-plugin-markdown": "4.0.0-next.23",
     "typedoc-vitepress-theme": "1.0.0-next.3",
     "typescript": "^5.9.3",
+    "vite-plus": "catalog:",
     "vitepress": "^1.6.4",
     "vitepress-knowledge": "^0.4.1",
     "vitepress-plugin-group-icons": "^1.7.3",
     "vitepress-plugin-llms": "^1.12.0",
+    "vitest": "catalog:",
     "vitest-mock-extended": "^3.1.0",
     "vue": "^3.5.29",
     "wxt": "workspace:*"
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch",
     "pkg-pr-new@0.0.66": "patches/pkg-pr-new@0.0.66.patch"
   },
-  "simple-git-hooks": {
-    "pre-commit": "./node_modules/.bin/nano-staged"
+  "packageManager": "bun@1.3.12",
+  "catalog": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.20",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.20",
+    "vite-plus": "^0.1.20"
   },
-  "nano-staged": {
-    "*": "prettier --ignore-unknown --write"
+  "overrides": {
+    "vite": "catalog:",
+    "vitest": "catalog:"
   }
 }

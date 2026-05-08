@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { getPackageJson } from '../package';
 import { setFakeWxt } from '../testing/fake-objects';
 import { mock } from 'vitest-mock-extended';

@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/module-solid",
-  "description": "WXT module to enable SolidJS support",
+  "description": "vpx wxt module to enable SolidJS support",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
@@ -40,12 +40,10 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "bun run build && check",
-    "build": "buildc -- tsdown",
-    "postinstall": "buildc --deps-only -- wxt prepare",
+    "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "bun run build"
+    "prepack": "vpr build"
   },
   "peerDependencies": {
     "wxt": ">=0.19.16"
@@ -54,11 +52,10 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
     "publint": "^0.3.18",
     "solid-js": "^1.9.11",
-    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
-    "wxt": "workspace:*"
+    "wxt": "workspace:*",
+    "vite-plus": "catalog:"
   }
 }

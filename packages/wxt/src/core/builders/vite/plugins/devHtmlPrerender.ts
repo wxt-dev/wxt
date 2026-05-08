@@ -61,6 +61,8 @@ export function devHtmlPrerender(
           reloader.type = 'module';
           document.head.appendChild(reloader);
 
+          // linkedom overrides toString to serialize HTML (doctype + outerHTML)
+          // eslint-disable-next-line typescript-eslint/no-base-to-string
           const newHtml = document.toString();
           config.logger.debug('transform ' + id);
           config.logger.debug('Old HTML:\n' + code);
@@ -104,6 +106,8 @@ export function devHtmlPrerender(
           viteClientScript.src = `${server.origin}${viteClientScript.src}`;
         }
 
+        // linkedom overrides toString to serialize HTML (doctype + outerHTML)
+        // eslint-disable-next-line typescript-eslint/no-base-to-string
         const newHtml = document.toString();
         config.logger.debug('transformIndexHtml ' + ctx.filename);
         config.logger.debug('Old HTML:\n' + html);

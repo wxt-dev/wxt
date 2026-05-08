@@ -1,3 +1,4 @@
+import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
 import Icon from '../components/Icon.vue';
 import EntrypointPatterns from '../components/EntrypointPatterns.vue';
@@ -18,4 +19,4 @@ export default {
       .component('ExampleSearch', ExampleSearch)
       .component('blog', BlogLayout);
   },
-};
+} satisfies Theme;

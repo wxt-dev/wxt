@@ -1,5 +1,4 @@
 import { Feed } from 'feed';
-// @ts-expect-error; It isn't TypeScript lib
 import footnote from 'markdown-it-footnote';
 import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -74,11 +73,8 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
-    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
-      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
-      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(

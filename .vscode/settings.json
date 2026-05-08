@@ -1,15 +1,15 @@
 {
-  // Set default formatter
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-
-  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-
-  // Additional guidelines for Copilot
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "github.copilot.chat.codeGeneration.instructions": [
-    { "file": "CONTRIBUTING.md" }
+    {
+      "file": "CONTRIBUTING.md"
+    }
   ],
-  "oxc.enable": true
+  "oxc.enable": true,
+  "oxc.fmt.configPath": "./vite.config.ts",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  }
 }

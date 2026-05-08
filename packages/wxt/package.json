@@ -6,14 +6,14 @@
   "license": "MIT",
   "scripts": {
     "wxt": "bun run src/cli/index.ts",
-    "build": "buildc -- bun run tsdown --config-loader unrun",
-    "check": "bun run build && bun run --sequential 'check:*'",
+    "build": "vp pack --config-loader unrun",
+    "check": "vpr build && vpr --sequential 'check:*'",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
-    "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
-    "sync-releases": "pnpx changelogen@latest gh release",
-    "prepack": "bun run build"
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
+    "sync-releases": "vpx changelogen@latest gh release",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "@1natsu/wait-element": "^4.1.2",
@@ -55,7 +55,7 @@
     "scule": "^1.3.0",
     "tinyglobby": "^0.2.15",
     "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0 || ^6.0.0",
-    "vite": "^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0",
+    "vite": "catalog:",
     "vite-node": "^3.2.4 || ^5.0.0 || ^6.0.0",
     "web-ext-run": "^0.2.4"
   },
@@ -68,7 +68,6 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
     "@faker-js/faker": "^10.3.0",
     "@types/bun": "^1.3.5",
     "@types/fs-extra": "^11.0.4",
@@ -77,15 +76,15 @@
     "@types/normalize-path": "^3.0.2",
     "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
+    "@vitest/ui": "0.1.18",
     "eslint": "^10.1.0",
     "extract-zip": "^2.0.1",
     "happy-dom": "^20.8.3",
     "lodash.merge": "^4.6.2",
-    "oxlint": "^1.51.0",
     "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
     "vitest-plugin-random-seed": "^1.1.2"
   },
   "repository": {
@@ -113,7 +112,7 @@
   ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
-    "wxt-publish-extension": "./bin/wxt-publish-extension.mjs"
+    "vpx wxt-publish-extension": "./bin/wxt-publish-extension.mjs"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",

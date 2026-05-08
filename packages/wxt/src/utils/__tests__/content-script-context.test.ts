@@ -1,6 +1,6 @@
 /** @vitest-environment happy-dom */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vite-plus/test';
 import { ContentScriptContext } from '../content-script-context';
 import { fakeBrowser } from '@webext-core/fake-browser';
 
@@ -90,7 +90,6 @@ describe('Content Script Context', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
-      // @ts-expect-error
       context.addEventListener(window, 'visibilitychange', (_) => {});
     });
 

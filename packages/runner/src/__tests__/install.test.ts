@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 import { createCdpConnection, type CDPConnection } from '../cdp';
 import { createBidiConnection, type BidiConnection } from '../bidi';

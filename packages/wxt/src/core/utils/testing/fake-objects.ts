@@ -22,11 +22,11 @@ import {
   UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
-import { vi } from 'vitest';
+import { vi } from 'vite-plus/test';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.env.TEST_SEED);
+faker.seed(import.meta.env.TEST_SEED as unknown as number);
 
 type DeepPartial<T> = T extends object
   ? {

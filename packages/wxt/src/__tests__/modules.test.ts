@@ -1,6 +1,6 @@
 import { fakeWxt } from '../core/utils/testing/fake-objects';
 import { addImportPreset, addViteConfig } from '../modules';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { createHooks } from 'hookable';
 
 describe('Module Utilities', () => {

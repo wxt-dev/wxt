@@ -5,20 +5,18 @@
   "description": "Check if the current context is the background or not.",
   "license": "MIT",
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "test:coverage": "vp test --coverage",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^"
   },
   "devDependencies": {
-    "oxlint": "^1.51.0",
     "publint": "^0.3.18",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "catalog:",
+    "vite-plus": "catalog:"
   },
   "repository": {
     "type": "git",

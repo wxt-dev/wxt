@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 import { glob } from 'tinyglobby';
-import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vite-plus/test';
 import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,

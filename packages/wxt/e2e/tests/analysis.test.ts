@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vite-plus/test';
 import { TestProject } from '../utils';
 import { resetBundleIncrement } from '../../src/core/builders/vite/plugins';
 import open from 'open';

@@ -6,6 +6,7 @@ import { initPlugins } from 'virtual:wxt-plugins';
 const result = (async () => {
   try {
     initPlugins();
+    // eslint-disable-next-line typescript-eslint/unbound-method
     const { main, ...options } = definition;
     const ctx = new ContentScriptContext(import.meta.env.ENTRYPOINT, options);
 

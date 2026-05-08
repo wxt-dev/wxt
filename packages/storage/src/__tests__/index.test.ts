@@ -1,6 +1,13 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
-import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  expectTypeOf,
+  it,
+  vi,
+} from 'vite-plus/test';
 import { MigrationError, type WxtStorageItem, storage } from '../index';
 
 /**

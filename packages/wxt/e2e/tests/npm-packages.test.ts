@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest';
+import { test, expect } from 'vite-plus/test';
 import spawn from 'nano-spawn';
 
 // Tests to ensure the total size of the WXT module is as small as possible

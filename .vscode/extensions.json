@@ -1,7 +1,7 @@
 {
   "recommendations": [
     "davidanson.vscode-markdownlint",
-    "esbenp.prettier-vscode",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
+    "VoidZero.vite-plus-extension-pack"
   ]
 }

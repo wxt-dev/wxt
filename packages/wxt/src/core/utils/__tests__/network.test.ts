@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 import * as dns from 'node:dns';
 import { isOnline, fetchCached } from '../network';
 import { ResolvedConfig } from '../../../types';

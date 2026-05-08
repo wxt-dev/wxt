@@ -4,20 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "buildc --deps-only -- wxt",
-    "dev:firefox": "buildc --deps-only -- wxt -b firefox",
-    "dev:firefox-mv3": "buildc --deps-only -- wxt -b firefox --mv3",
-    "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- bun run --sequential 'build:*-*'",
-    "build:chrome-mv3": "wxt build",
-    "build:chrome-mv2": "wxt build --mv2",
-    "build:firefox-mv3": "wxt build -b firefox --mv3",
-    "build:firefox-mv2": "wxt build -b firefox",
-    "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
-    "zip": "buildc --deps-only -- wxt zip",
-    "check": "buildc --deps-only -- check",
-    "postinstall": "buildc --deps-only -- wxt prepare"
+    "dev": "wxt",
+    "dev:firefox": "vpx wxt -b firefox",
+    "dev:firefox-mv3": "vpx wxt -b firefox --mv3",
+    "test": "vp test",
+    "test:coverage": "vpr test run --coverage",
+    "zip": "vpx wxt zip",
+    "check": "check"
   },
   "dependencies": {
     "@wxt-dev/i18n": "workspace:*",
@@ -25,7 +18,6 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^2.2.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -34,11 +26,9 @@
     "sass": "^1.97.3",
     "typescript": "^5.9.3",
     "unocss": "^0.64.0 || ^0.65.0 || ^65.0.0 || ^66.0.0",
-    "vitest": "^4.0.18",
+    "vitest": "catalog:",
     "vitest-plugin-random-seed": "^1.1.2",
-    "wxt": "workspace:*"
-  },
-  "buildc": {
-    "cachable": false
+    "wxt": "workspace:*",
+    "vite-plus": "catalog:"
   }
 }

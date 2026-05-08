@@ -36,24 +36,21 @@
   ],
   "scripts": {
     "dev": "wxt",
-    "check": "bun run build && check",
-    "build": "buildc -- tsdown",
-    "postinstall": "buildc --deps-only -- wxt prepare",
+    "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "bun run build"
+    "prepack": "vpr build"
   },
   "peerDependencies": {
     "webextension-polyfill": "*",
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
     "@types/webextension-polyfill": "^0.12.5",
     "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
     "webextension-polyfill": "^0.12.0",
-    "wxt": "workspace:*"
+    "wxt": "workspace:*",
+    "vite-plus": "catalog:"
   }
 }
