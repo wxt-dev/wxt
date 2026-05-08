@@ -561,10 +561,10 @@ describe('auto-icons module', () => {
 
       const output: BuildOutput = { publicAssets: [] };
 
-      // The module doesn't await ensureDir, so it won't throw
       if (buildHook) {
-        await buildHook(mockWxt as unknown as Wxt, output);
-        // But ensureDir should have been called
+        await expect(
+          buildHook(mockWxt as unknown as Wxt, output),
+        ).rejects.toThrow('Directory creation failed');
         expect(mkdirMock).toHaveBeenCalled();
       }
     });
