@@ -30,6 +30,9 @@ jobs:
             exit 1
           fi
 
+      - name: Generate Docs
+        run: vpr docs:gen
+
       - name: Basic Checks
         run: vp check
 
@@ -86,7 +89,7 @@ jobs:
       # Every package is sharded the same way; `--passWithNoTests` covers
       # packages with fewer test files than shards.
       - name: Run Tests
-        run: vpr -r test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
+        run: vpr -r test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default
 
   # Required status check: passes only if every shard passed.
   linux-tests:
