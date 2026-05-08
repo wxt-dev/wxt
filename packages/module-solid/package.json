@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/module-solid",
-  "description": "vpx wxt module to enable SolidJS support",
+  "description": "WXT module to enable SolidJS support",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

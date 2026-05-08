@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wxt",
-    "dev:build": "vpx wxt build",
+    "dev:build": "vp exec wxt build",
     "build": "vp pack",
     "prepack": "vpr build",
     "test": "echo 'noop'",

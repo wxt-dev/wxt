@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/auto-icons",
-  "description": "vpx wxt module for automatically generating extension icons in different sizes",
+  "description": "WXT module for automatically generating extension icons in different sizes",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

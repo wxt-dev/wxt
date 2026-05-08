@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/module-vue",
-  "description": "vpx wxt module to enable Vue support",
+  "description": "WXT module to enable Vue support",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

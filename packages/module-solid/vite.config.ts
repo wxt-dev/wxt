@@ -19,7 +19,7 @@ export default defineConfig({
       postinstall: {
         dependsOn: ['wxt#build', '@wxt-dev/storage#build'],
         input: [{ auto: true }, '!.wxt/**'],
-        command: 'vpx wxt prepare',
+        command: 'vp exec wxt prepare',
       },
     },
   },

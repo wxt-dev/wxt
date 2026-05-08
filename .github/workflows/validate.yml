@@ -54,7 +54,7 @@ jobs:
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: vpx wxt zip
+        run: vp exec wxt zip
         working-directory: packages/wxt-demo
 
   tests:

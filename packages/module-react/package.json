@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/module-react",
-  "description": "vpx wxt module to enable React support",
+  "description": "WXT module to enable React support",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",

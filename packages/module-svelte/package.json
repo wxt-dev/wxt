@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/module-svelte",
-  "description": "vpx wxt module to enable Svelte support",
+  "description": "WXT module to enable Svelte support",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
