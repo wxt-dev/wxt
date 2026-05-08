@@ -29,7 +29,7 @@ export default defineConfig({
           '@wxt-dev/is-background#build',
         ],
         input: [{ auto: true }, '!.wxt/**'],
-        command: 'vpx wxt prepare',
+        command: 'vp exec wxt prepare',
       },
     },
   },

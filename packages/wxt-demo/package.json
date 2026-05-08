@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "wxt",
-    "dev:firefox": "vpx wxt -b firefox",
-    "dev:firefox-mv3": "vpx wxt -b firefox --mv3",
+    "dev:firefox": "vp exec wxt -b firefox",
+    "dev:firefox-mv3": "vp exec wxt -b firefox --mv3",
     "test": "vp test",
     "test:coverage": "vpr test run --coverage",
-    "zip": "vpx wxt zip",
+    "zip": "vp exec wxt zip",
     "check": "check"
   },
   "dependencies": {
