@@ -71,7 +71,7 @@ export function getDevServerWebSocket(): WxtWebSocket {
 }
 
 export interface ReloadContentScriptPayload {
-  registration?: 'manifest' | 'runtime';
+  registration?: 'manifest' | 'runtime' | 'optional';
   contentScript: {
     matches: string[];
     js?: string[];

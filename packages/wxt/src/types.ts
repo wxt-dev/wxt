@@ -707,10 +707,14 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * - `"runtime"`: The content script's `matches` is added to `host_permissions`
    *   and you are responsible for using the scripting API to register/execute
    *   the content script dynamically at runtime.
+   * - `"optional"`: The content script's `matches` is added to
+   *   `optional_host_permissions` and you are responsible for requesting access
+   *   and using the scripting API to register/execute the content script at
+   *   runtime.
    *
    * @default 'manifest'
    */
-  registration?: PerBrowserOption<'manifest' | 'runtime'>;
+  registration?: PerBrowserOption<'manifest' | 'runtime' | 'optional'>;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {

@@ -145,6 +145,7 @@ export async function generateManifest(
     convertActionToMv2(manifest);
     convertCspToMv2(manifest);
     moveHostPermissionsToPermissions(manifest);
+    moveOptionalHostPermissionsToOptionalPermissions(manifest);
   }
 
   if (wxt.config.manifestVersion === 3) {
@@ -398,13 +399,21 @@ function addEntrypoints(
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
         script.options.matches?.forEach((matchPattern) => {
-          addHostPermission(manifest, matchPattern);
+          if (script.options.registration === 'optional') {
+            addOptionalHostPermission(manifest, matchPattern);
+          } else {
+            addHostPermission(manifest, matchPattern);
+          }
         });
       });
     } else {
       // Manifest scripts
       const hashToEntrypointsMap = contentScripts
-        .filter((cs) => cs.options.registration !== 'runtime')
+        .filter(
+          (cs) =>
+            cs.options.registration !== 'runtime' &&
+            cs.options.registration !== 'optional',
+        )
         .reduce((map, script) => {
           const hash = hashContentScriptOptions(script.options);
           if (map.has(hash)) map.get(hash)?.push(script);
@@ -434,6 +443,16 @@ function addEntrypoints(
       runtimeContentScripts.forEach((script) => {
         script.options.matches?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
+        });
+      });
+
+      // Optional runtime content scripts
+      const optionalContentScripts = contentScripts.filter(
+        (cs) => cs.options.registration === 'optional',
+      );
+      optionalContentScripts.forEach((script) => {
+        script.options.matches?.forEach((matchPattern) => {
+          addOptionalHostPermission(manifest, matchPattern);
         });
       });
     }
@@ -619,6 +638,17 @@ function addPermission(
   manifest.permissions.push(permission);
 }
 
+function addOptionalPermission(
+  manifest: Browser.runtime.Manifest,
+  permission: string,
+): void {
+  manifest.optional_permissions ??= [];
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
+  if (manifest.optional_permissions.includes(permission)) return;
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
+  manifest.optional_permissions.push(permission);
+}
+
 function addHostPermission(
   manifest: Browser.runtime.Manifest,
   hostPermission: string,
@@ -626,6 +656,15 @@ function addHostPermission(
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;
   manifest.host_permissions.push(hostPermission);
+}
+
+function addOptionalHostPermission(
+  manifest: Browser.runtime.Manifest,
+  hostPermission: string,
+): void {
+  manifest.optional_host_permissions ??= [];
+  if (manifest.optional_host_permissions.includes(hostPermission)) return;
+  manifest.optional_host_permissions.push(hostPermission);
 }
 
 /**
@@ -670,6 +709,17 @@ function moveHostPermissionsToPermissions(
     addPermission(manifest, permission),
   );
   delete manifest.host_permissions;
+}
+
+function moveOptionalHostPermissionsToOptionalPermissions(
+  manifest: Browser.runtime.Manifest,
+): void {
+  if (!manifest.optional_host_permissions?.length) return;
+
+  manifest.optional_host_permissions.forEach((permission: string) =>
+    addOptionalPermission(manifest, permission),
+  );
+  delete manifest.optional_host_permissions;
 }
 
 function convertActionToMv2(manifest: Browser.runtime.Manifest): void {

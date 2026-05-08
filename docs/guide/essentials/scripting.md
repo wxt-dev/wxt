@@ -27,3 +27,9 @@ export default defineContentScript({
   },
 });
 ```
+
+## Optional Host Registration
+
+When using `registration: 'optional'`, WXT adds the script's `matches` to
+`optional_host_permissions` instead of `host_permissions`. You must request host
+access before registering/executing the script at runtime.

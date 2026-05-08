@@ -16,7 +16,7 @@ export async function reloadContentScriptMv3({
   registration,
   contentScript,
 }: ReloadContentScriptPayload) {
-  if (registration === 'runtime') {
+  if (registration === 'runtime' || registration === 'optional') {
     await reloadRuntimeContentScriptMv3(contentScript);
   } else {
     await reloadManifestContentScriptMv3(contentScript);

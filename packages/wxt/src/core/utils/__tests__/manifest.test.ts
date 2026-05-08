@@ -1350,6 +1350,47 @@ describe('Manifest Utils', () => {
           expect(actual.content_scripts).toEqual([]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
+
+        it('should add optional_host_permissions instead of content_scripts when registration=optional', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              registration: 'optional',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.content_scripts).toEqual([]);
+          expect(actual.optional_host_permissions).toEqual([
+            '*://google.com/*',
+          ]);
+        });
       });
     });
 
@@ -1936,6 +1977,64 @@ describe('Manifest Utils', () => {
 
         expect(actual.permissions).toEqual(expectedPermissions);
         expect(actual.host_permissions).toBeUndefined();
+      });
+    });
+
+    describe('optional_host_permissions', () => {
+      it('should keep optional_host_permissions as-is for MV3', async () => {
+        const expectedOptionalHostPermissions = ['https://google.com/*'];
+        const expectedOptionalPermissions: Browser.runtime.ManifestOptionalPermission[] =
+          ['cookies'];
+        setFakeWxt({
+          config: {
+            manifest: {
+              optional_host_permissions: expectedOptionalHostPermissions,
+              optional_permissions: expectedOptionalPermissions,
+            },
+            manifestVersion: 3,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.optional_permissions).toEqual(
+          expectedOptionalPermissions,
+        );
+        expect(actual.optional_host_permissions).toEqual(
+          expectedOptionalHostPermissions,
+        );
+      });
+
+      it('should move optional_host_permissions to optional_permissions for MV2, ignoring duplicates', async () => {
+        const expectedOptionalPermissions = [
+          'cookies',
+          'https://google.com/*',
+          '*://*.youtube.com/*',
+        ];
+        setFakeWxt({
+          config: {
+            manifest: {
+              optional_host_permissions: [
+                'https://google.com/*',
+                'https://google.com/*',
+                '*://*.youtube.com/*',
+              ],
+              optional_permissions: ['cookies'],
+            },
+            manifestVersion: 2,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.optional_permissions).toEqual(
+          expectedOptionalPermissions,
+        );
+        expect(actual.optional_host_permissions).toBeUndefined();
       });
     });
 
