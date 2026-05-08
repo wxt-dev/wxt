@@ -8,13 +8,13 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "vpr -r test run",
-    "test:coverage": "vpr -r test:coverage",
+    "test": "vp run -r test run",
+    "test:coverage": "vp run -r test:coverage",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
     "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs",
-    "postinstall": "vpr -r postinstall"
+    "postinstall": "[ \"$NETLIFY\" = \"true\" ] || vp run -r postinstall"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.4.3",
