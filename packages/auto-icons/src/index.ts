@@ -86,7 +86,7 @@ export default defineWxtModule<AutoIconsOptions>({
           }
         }
 
-        mkdir(resolve(outputFolder, 'icons'), { recursive: true });
+        await mkdir(resolve(outputFolder, 'icons'), { recursive: true });
         await resizedImage.toFile(resolve(outputFolder, `icons/${size}.png`));
 
         output.publicAssets.push({

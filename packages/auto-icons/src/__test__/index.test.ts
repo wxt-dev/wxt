@@ -2,7 +2,7 @@ import { access, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vite-plus/test';
 import type { Wxt, UserManifest } from 'wxt';
 
 import autoIconsModule, { type AutoIconsOptions } from '../index';

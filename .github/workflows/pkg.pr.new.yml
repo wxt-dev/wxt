@@ -23,7 +23,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun run buildc all
+        run: vpr -r build
 
       # pkg-pr-new rewrites each package.json before running `bun pm pack`,
       # which changes buildc's cache hash and makes every `prepack` do a full

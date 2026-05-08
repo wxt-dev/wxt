@@ -39,19 +39,18 @@
     }
   },
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "bun run build && check",
+    "build": "vp pack",
     "test": "echo 'noop'",
-    "prepack": "bun run build"
+    "test:coverage": "echo 'noop'",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "@sveltejs/vite-plugin-svelte": ">=4"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

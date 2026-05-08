@@ -32,22 +32,21 @@
     }
   },
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check",
+    "build": "vp pack",
+    "check": "check",
     "test": "echo 'noop'",
-    "prepack": "bun run build"
+    "test:coverage": "echo 'noop'",
+    "prepack": "vpr build"
   },
   "dependencies": {
     "defu": "^6.1.4",
     "tinyglobby": "^0.2.16"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
-    "oxlint": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
     "unocss": "catalog:",
+    "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 
 import { WXT_PACKAGE_DIR } from '../../../e2e/utils';

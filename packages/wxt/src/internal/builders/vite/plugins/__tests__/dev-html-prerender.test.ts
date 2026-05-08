@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 
 import { parseHTML } from 'linkedom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import { normalizePath } from '../../../../../internal-utils/path-utils';
 import {
