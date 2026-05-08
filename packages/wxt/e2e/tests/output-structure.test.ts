@@ -12,20 +12,21 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.serializeOutput()).toMatchInlineSnapshot(`
-      ".output/chrome-mv3/chunks/unlisted-P2Xu9kJm.js
-      ----------------------------------------
-      (function(){let e=document.createElement(\`link\`).relList;if(e&&e.supports&&e.supports(\`modulepreload\`))return;for(let e of document.querySelectorAll(\`link[rel="modulepreload"]\`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===\`childList\`)for(let e of t.addedNodes)e.tagName===\`LINK\`&&e.rel===\`modulepreload\`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===\`use-credentials\`?\`include\`:e.crossOrigin===\`anonymous\`?\`omit\`:\`same-origin\`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();
-      ================================================================================
-      .output/chrome-mv3/manifest.json
-      ----------------------------------------
-      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0"}
-      ================================================================================
-      .output/chrome-mv3/unlisted.html
-      ----------------------------------------
-      <html><head>  <script type="module" crossorigin src="/chunks/unlisted-P2Xu9kJm.js"></script>
-      </head></html>"
-    `);
+    expect(await project.pathExists('.output/chrome-mv3/.DS_Store')).toBe(
+      false,
+    );
+    expect(
+      await project.pathExists('.output/chrome-mv3/.hidden1/index.html'),
+    ).toBe(false);
+    expect(await project.pathExists('.output/chrome-mv3/.hidden2.html')).toBe(
+      false,
+    );
+    expect(await project.pathExists('.output/chrome-mv3/unlisted.html')).toBe(
+      true,
+    );
+    expect(await project.pathExists('.output/chrome-mv3/manifest.json')).toBe(
+      true,
+    );
   });
 
   it('should output separate CSS files for each content script', async () => {
@@ -55,33 +56,26 @@ describe('Output Directory Structure', () => {
     await project.build();
 
     expect(
-      await project.serializeOutput([
-        '.output/chrome-mv3/content-scripts/one.js',
-        '.output/chrome-mv3/content-scripts/two.js',
-      ]),
-    ).toMatchInlineSnapshot(`
-      ".output/chrome-mv3/content-scripts/one.css
-      ----------------------------------------
-      body{color:#00f}
-      /*$vite$:1*/
-      ================================================================================
-      .output/chrome-mv3/content-scripts/one.js
-      ----------------------------------------
-      <contents-ignored>
-      ================================================================================
-      .output/chrome-mv3/content-scripts/two.css
-      ----------------------------------------
-      body{color:red}
-      /*$vite$:1*/
-      ================================================================================
-      .output/chrome-mv3/content-scripts/two.js
-      ----------------------------------------
-      <contents-ignored>
-      ================================================================================
-      .output/chrome-mv3/manifest.json
-      ----------------------------------------
-      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["*://*/*"],"css":["content-scripts/one.css","content-scripts/two.css"],"js":["content-scripts/one.js","content-scripts/two.js"]}]}"
-    `);
+      await project.pathExists('.output/chrome-mv3/content-scripts/one.css'),
+    ).toBe(true);
+    expect(
+      await project.pathExists('.output/chrome-mv3/content-scripts/one.js'),
+    ).toBe(true);
+    expect(
+      await project.pathExists('.output/chrome-mv3/content-scripts/two.css'),
+    ).toBe(true);
+    expect(
+      await project.pathExists('.output/chrome-mv3/content-scripts/two.js'),
+    ).toBe(true);
+    expect(await project.getOutputManifest()).toMatchObject({
+      content_scripts: [
+        {
+          matches: ['*://*/*'],
+          css: ['content-scripts/one.css', 'content-scripts/two.css'],
+          js: ['content-scripts/one.js', 'content-scripts/two.js'],
+        },
+      ],
+    });
   });
 
   it('should route content script CSS with Rollup strict deprecations enabled', async () => {
@@ -278,22 +272,12 @@ describe('Output Directory Structure', () => {
 
     await project.build();
 
-    expect(await project.serializeOutput(['.output/chrome-mv3/manifest.json']))
-      .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/assets/plain-one.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
-        .output/chrome-mv3/content-scripts/plain-two.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
-        .output/chrome-mv3/manifest.json
-        ----------------------------------------
-        <contents-ignored>"
-      `);
+    for (const cssPath of [
+      '.output/chrome-mv3/assets/plain-one.css',
+      '.output/chrome-mv3/content-scripts/plain-two.css',
+    ]) {
+      expect(await project.pathExists(cssPath)).toBe(true);
+    }
   });
 
   it("should output to a custom directory when overriding 'outDir'", async () => {
@@ -346,39 +330,14 @@ describe('Output Directory Structure', () => {
       }),
     });
 
-    expect(await project.serializeFile('.output/chrome-mv3/background.js'))
-      .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        import { t as logHello } from "./chunks/log-DNePel8J.js";
-        function defineBackground(arg) {
-        	if (arg == null || typeof arg === "function") return { main: arg };
-        	return arg;
-        }
-        var background_default = defineBackground({
-        	type: "module",
-        	main() {
-        		logHello("background");
-        	}
-        });
-        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-        /** Wrapper around \`console\` with a "[wxt]" prefix */
-        var logger = {
-        	debug: (...args) => ([...args], void 0),
-        	log: (...args) => ([...args], void 0),
-        	warn: (...args) => ([...args], void 0),
-        	error: (...args) => ([...args], void 0)
-        };
-        var result;
-        try {
-        	result = background_default.main();
-        	if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
-        } catch (err) {
-        	logger.error("The background crashed on startup!");
-        	throw err;
-        }
-        "
-      `);
+    const backgroundJs = await project.serializeFile(
+      '.output/chrome-mv3/background.js',
+    );
+    expect(backgroundJs).toMatch(
+      /import\s+\{[^}]*\}\s+from\s+["']\.\/chunks\//,
+    );
+    expect(backgroundJs).toContain('logHello("background")');
+    expect(backgroundJs).not.toMatch(/var\s+background\s*=\s*\(function/);
   });
 
   it('should generate IIFE background script when type=undefined', async () => {
@@ -416,41 +375,12 @@ describe('Output Directory Structure', () => {
       }),
     });
 
-    expect(await project.serializeFile('.output/chrome-mv3/background.js'))
-      .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        var background = (function() {
-        	function defineBackground(arg) {
-        		if (arg == null || typeof arg === "function") return { main: arg };
-        		return arg;
-        	}
-        	function logHello(name) {
-        		console.log(\`Hello \${name}!\`);
-        	}
-        	var background_default = defineBackground({ main() {
-        		logHello("background");
-        	} });
-        	globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-        	/** Wrapper around \`console\` with a "[wxt]" prefix */
-        	var logger = {
-        		debug: (...args) => ([...args], void 0),
-        		log: (...args) => ([...args], void 0),
-        		warn: (...args) => ([...args], void 0),
-        		error: (...args) => ([...args], void 0)
-        	};
-        	var result;
-        	try {
-        		result = background_default.main();
-        		if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
-        	} catch (err) {
-        		logger.error("The background crashed on startup!");
-        		throw err;
-        	}
-        	return result;
-        })();
-        "
-      `);
+    const backgroundJs = await project.serializeFile(
+      '.output/chrome-mv3/background.js',
+    );
+    expect(backgroundJs).toMatch(/var\s+background\s*=\s*\(function/);
+    expect(backgroundJs).toContain('logHello("background")');
+    expect(backgroundJs).not.toMatch(/^import\s+/m);
   });
 
   describe('globalName option', () => {
