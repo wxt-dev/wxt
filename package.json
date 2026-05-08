@@ -14,7 +14,7 @@
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
     "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs",
-    "postinstall": "vpr -r build && vpr -r postinstall"
+    "postinstall": "vpr -r postinstall"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.4.3",
