@@ -44,7 +44,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.7",
     "@types/node": "^20.17.6",
-    "oxlint": "^1.51.0",
+    "oxlint": "^1.63.0",
     "publint": "^0.3.18",
     "tsdown": "^0.21.0",
     "typescript": "^6.0.3",

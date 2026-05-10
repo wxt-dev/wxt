@@ -39,7 +39,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "^1.1.7",
     "@webext-core/fake-browser": "^1.3.4",
-    "oxlint": "^1.51.0",
+    "oxlint": "^1.63.0",
     "publint": "^0.3.18",
     "tsdown": "^0.21.0",
     "typescript": "^6.0.3",
