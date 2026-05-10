@@ -26,10 +26,10 @@
   ],
   "devDependencies": {
     "@types/chrome": "0.1.42",
-    "@types/node": "^20.0.0",
-    "nano-spawn": "^2.0.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.0.18"
+    "@types/node": "catalog:",
+    "nano-spawn": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@types/filesystem": "*",

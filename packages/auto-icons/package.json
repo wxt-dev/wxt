@@ -52,13 +52,12 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "@types/fs-extra": "^11.0.4",
-    "oxlint": "^1.63.0",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.0.18",
+    "@aklinker1/buildc": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
     "wxt": "workspace:*"
   }
 }

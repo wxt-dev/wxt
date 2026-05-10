@@ -52,10 +52,10 @@
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^6.0.3",
+    "@aklinker1/buildc": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
     "wxt": "workspace:*"
   }
 }
