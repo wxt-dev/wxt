@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vite-plus/test';
 import path from 'node:path';
 import { npm } from '../npm';
 import spawn from 'nano-spawn';

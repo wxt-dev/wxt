@@ -212,7 +212,7 @@ function createBackgroundAnalytics(
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
       port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
-        void (analytics[fn] as AnalyticsMethod)?.(...args);
+        (analytics[fn] as AnalyticsMethod)?.(...args);
       });
     }
   });
@@ -255,7 +255,7 @@ function createFrontendAnalytics(): Analytics {
         )
           return;
 
-        void analytics.track('click', {
+        analytics.track('click', {
           tagName: element.tagName?.toLowerCase(),
           id: element.id || undefined,
           className: element.className || undefined,

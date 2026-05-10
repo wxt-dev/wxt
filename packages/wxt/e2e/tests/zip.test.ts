@@ -1,6 +1,6 @@
 import extract from 'extract-zip';
 import spawn from 'nano-spawn';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { TestProject } from '../utils';
 
 describe('Zipping', () => {

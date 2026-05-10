@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from 'vitest';
+import { describe, it, vi, expect } from 'vite-plus/test';
 import { getIsBackground } from '../getter';
 
 let mockBrowser: any;

@@ -1,5 +1,12 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  beforeEach,
+  vi,
+  expect,
+  afterEach,
+} from 'vite-plus/test';
 import { createIntegratedUi } from '../integrated';
 import { createIframeUi } from '../iframe';
 import { createShadowRootUi } from '../shadow-root';
@@ -47,7 +54,7 @@ describe('Content Script UIs', () => {
         <p id="three"></p>
       </div>
     `;
-    window.fetch = fetch;
+    window.fetch = fetch as unknown as typeof window.fetch;
     fetch.mockResolvedValue({ text: () => Promise.resolve('') });
     ctx = new ContentScriptContext('test');
   });

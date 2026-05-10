@@ -24,3 +24,6 @@ docs/api/reference
 stats.html
 .cache
 *-stats.txt
+.vite-hooks/_
+CLAUDE.md
+**/CLAUDE.md

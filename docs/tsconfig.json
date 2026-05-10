@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.base.json",
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "shims.d.ts"],
+  "compilerOptions": {
+    "types": ["bun"]
+  }
+}

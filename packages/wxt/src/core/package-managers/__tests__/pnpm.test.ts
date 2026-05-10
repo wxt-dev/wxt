@@ -1,6 +1,6 @@
 import spawn from 'nano-spawn';
 import path from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vite-plus/test';
 import { pnpm } from '../pnpm';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';

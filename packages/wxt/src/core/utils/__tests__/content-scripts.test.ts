@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vite-plus/test';
 import { hashContentScriptOptions } from '../content-scripts';
 import { setFakeWxt } from '../testing/fake-objects';
 

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite-plus';
 import path from 'node:path';
 import RandomSeed from 'vitest-plugin-random-seed';
 

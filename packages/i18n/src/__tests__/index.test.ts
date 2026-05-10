@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vite-plus/test';
 import { createI18n } from '../index';
 import { browser } from '@wxt-dev/browser';
 
 vi.mock('@wxt-dev/browser', async () => {
-  const { vi } = await import('vitest');
+  const { vi } = await import('vite-plus/test');
   return {
     browser: {
       i18n: {

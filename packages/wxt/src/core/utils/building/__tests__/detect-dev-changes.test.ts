@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vite-plus/test';
 import { DevModeChange, detectDevChanges } from '../detect-dev-changes';
 import {
   fakeBackgroundEntrypoint,

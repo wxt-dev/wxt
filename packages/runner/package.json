@@ -21,20 +21,17 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
   "scripts": {
-    "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
     "dev": "bun run dev.ts",
-    "build": "buildc -- tsdown",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "prepack": "vpr build"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "oxlint": "^1.51.0",
     "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "catalog:",
+    "vite-plus": "catalog:"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",

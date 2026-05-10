@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vite-plus/test';
 import { TestProject } from '../utils';
 import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
 import { readFile } from 'node:fs/promises';
