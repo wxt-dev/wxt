@@ -43,12 +43,12 @@
     "wxt": ">=0.19.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "oxlint": "^1.51.0",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^6.0.3",
-    "unocss": "^66.6.8",
+    "@aklinker1/buildc": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "unocss": "catalog:",
     "wxt": "workspace:*"
   },
   "dependencies": {

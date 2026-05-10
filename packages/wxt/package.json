@@ -68,12 +68,11 @@
     }
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
+    "@aklinker1/buildc": "catalog:",
     "@faker-js/faker": "^10.3.0",
-    "@types/bun": "^1.3.5",
-    "@types/fs-extra": "^11.0.4",
+    "@types/bun": "catalog:",
     "@types/lodash.merge": "^4.6.9",
-    "@types/node": "^20.17.6",
+    "@types/node": "catalog:",
     "@types/normalize-path": "^3.0.2",
     "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
@@ -81,12 +80,12 @@
     "extract-zip": "^2.0.1",
     "happy-dom": "^20.8.3",
     "lodash.merge": "^4.6.2",
-    "oxlint": "^1.51.0",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.0.18",
-    "vitest-plugin-random-seed": "^1.1.2"
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-plugin-random-seed": "catalog:"
   },
   "repository": {
     "type": "git",
