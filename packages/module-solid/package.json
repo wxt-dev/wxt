@@ -58,7 +58,7 @@
     "publint": "^0.3.18",
     "solid-js": "^1.9.11",
     "tsdown": "^0.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "wxt": "workspace:*"
   }
 }

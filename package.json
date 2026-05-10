@@ -34,7 +34,6 @@
     "nano-spawn": "^2.0.0",
     "nano-staged": "^0.8.0",
     "p-map": "^7.0.4",
-    "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.1",
     "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
@@ -46,19 +45,18 @@
     "typedoc-plugin-frontmatter": "^1.3.1",
     "typedoc-plugin-markdown": "4.0.0-next.23",
     "typedoc-vitepress-theme": "1.0.0-next.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitepress": "^1.6.4",
     "vitepress-knowledge": "^0.4.1",
     "vitepress-plugin-group-icons": "^1.7.3",
     "vitepress-plugin-llms": "^1.12.0",
     "vitest-mock-extended": "^3.1.0",
-    "vue": "^3.5.29",
+    "vue": "^3.5.34",
     "wxt": "workspace:*"
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch",
-    "pkg-pr-new@0.0.66": "patches/pkg-pr-new@0.0.66.patch"
+    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged"
