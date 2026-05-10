@@ -5,6 +5,15 @@ updates:
     directory: /
     schedule:
       interval: 'daily'
+      groups:
+        production-updates:
+          applies-to: version-updates
+          dependency-type: production
+          update-types: [minor, patch]
+        dev-updates:
+          applies-to: version-updates
+          dependency-type: development
+          update-types: [minor, patch]
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
