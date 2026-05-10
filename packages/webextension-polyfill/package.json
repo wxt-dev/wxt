@@ -52,7 +52,7 @@
     "@types/webextension-polyfill": "^0.12.5",
     "publint": "^0.3.18",
     "tsdown": "^0.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"
   }
