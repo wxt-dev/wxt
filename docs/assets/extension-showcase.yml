@@ -454,3 +454,7 @@
 
 - # Headstart – Supercharge your browsing efficiency https://useheadstart.app/
   chromeId: fhhldbfombjdnjnpeojjohloohmbanda
+
+- # Redmine Time Tracking
+  chromeId: ldcanhhkffokndenejhafhlkapflgcjg
+  firefoxSlug: redmine-time-tracking
