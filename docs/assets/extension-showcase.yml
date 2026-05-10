@@ -437,6 +437,24 @@
 - # TF2 Trader - TF2 & Steam Trading Extension - https://github.com/offish/tf2-trader
   chromeId: gmicpekfpbikhibodgokfpghadkclhoe
 
+- # Mimik
+  chromeId: jmfohdaflahliammccpiadmkcibohgha
+  firefoxSlug: mimik
+
+- # Modrinth Extras - https://github.com/creeperkatze/modrinth-extras
+  chromeId: ajmkilipadfpaefpcjfgnkejalmhdlcj
+  firefoxSlug: modrinth-extras
+
+- # Pi-hole In One - https://github.com/creeperkatze/pihole-in-one
+  chromeId: gaaobidjebianpcngcfpkniaocibidhe
+  firefoxSlug: pihole-in-one
+
+- # QIE Wallet – Non-Custodial Multi-Chain Crypto Wallet
+  chromeId: oljchdcgmibnjbbopolafbjncfhdacjb
+
+- # Headstart – Supercharge your browsing efficiency https://useheadstart.app/
+  chromeId: fhhldbfombjdnjnpeojjohloohmbanda
+
 - # Redmine Time Tracking
   chromeId: ldcanhhkffokndenejhafhlkapflgcjg
   firefoxSlug: redmine-time-tracking
