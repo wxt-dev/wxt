@@ -34,7 +34,6 @@
     "nano-spawn": "^2.0.0",
     "nano-staged": "^0.8.0",
     "p-map": "^7.0.4",
-    "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.1",
     "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
@@ -57,8 +56,7 @@
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch",
-    "pkg-pr-new@0.0.66": "patches/pkg-pr-new@0.0.66.patch"
+    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged"
