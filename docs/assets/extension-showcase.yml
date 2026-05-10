@@ -436,7 +436,11 @@
 
 - # TF2 Trader - TF2 & Steam Trading Extension - https://github.com/offish/tf2-trader
   chromeId: gmicpekfpbikhibodgokfpghadkclhoe
-  
+
+- # Mimik
+  chromeId: jmfohdaflahliammccpiadmkcibohgha
+  firefoxSlug: mimik
+
 - # Modrinth Extras - https://github.com/creeperkatze/modrinth-extras
   chromeId: ajmkilipadfpaefpcjfgnkejalmhdlcj
   firefoxSlug: modrinth-extras
