@@ -54,11 +54,11 @@
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "publint": "^0.3.18",
+    "@aklinker1/buildc": "catalog:",
+    "publint": "catalog:",
     "solid-js": "^1.9.11",
-    "tsdown": "^0.21.0",
-    "typescript": "^5.9.3",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
     "wxt": "workspace:*"
   }
 }
