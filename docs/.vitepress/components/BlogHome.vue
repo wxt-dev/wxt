@@ -3,8 +3,9 @@ import { computed } from 'vue';
 // @ts-expect-error: Vitepress data-loader magic, this import is correct
 import { data } from '../loaders/blog.data';
 import BlogPostPreview from './BlogPostPreview.vue';
+import { Post } from '../utils/types';
 
-const posts = computed(() =>
+const posts = computed<Post[]>(() =>
   data
     .map((post) => ({
       ...post,

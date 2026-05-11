@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed, toRaw, Ref } from 'vue';
+import { computed, onMounted, ref, Ref, toRaw } from 'vue';
 import ExampleSearchFilterByItem from './ExampleSearchFilterByItem.vue';
 import ExampleSearchResult from './ExampleSearchResult.vue';
 import { ExamplesMetadata, KeySelectedObject } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   tag?: string;
 }>();
 
@@ -48,7 +48,7 @@ function doesExampleMatchSelected(
 
 const filteredExamples = computed(() => {
   const text = searchText.value.toLowerCase();
-  return exampleMetadata.value.examples.filter((example) => {
+  return exampleMetadata.value?.examples.filter((example) => {
     const matchesText = example.searchText.toLowerCase().includes(text);
     const matchesApis = doesExampleMatchSelected(example.apis, requiredApis);
     const matchesPermissions = doesExampleMatchSelected(

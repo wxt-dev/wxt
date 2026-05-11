@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Example } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   example: Example;
 }>();
 </script>

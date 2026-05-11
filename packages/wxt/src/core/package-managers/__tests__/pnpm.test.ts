@@ -6,13 +6,13 @@ import { pnpm } from '../pnpm';
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
 describe('PNPM Package Management Utils', () => {
-  describe('listDependencies', { timeout: 30e3 }, () => {
+  describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
 
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
       await spawn('pnpm', ['install'], { cwd });
-    });
+    }, 30e3);
 
     it('should list direct dependencies', async () => {
       const actual = await pnpm.listDependencies({ cwd });

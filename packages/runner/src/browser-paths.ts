@@ -135,11 +135,12 @@ export const KNOWN_BROWSER_PATHS: Record<
  */
 export const FALLBACK_TARGETS: Partial<Record<KnownTarget, KnownTarget[]>> = {
   chrome: [
-    'arc',
     'chromium',
     'chrome-canary',
     'chrome-beta',
     'chrome-dev',
+    'brave',
+    'arc',
     'dia',
     'edge',
     'edge-canary',
