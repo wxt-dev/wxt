@@ -8,7 +8,7 @@ const date = useBlogDate(() => frontmatter.value.date);
 </script>
 
 <template>
-  <div>
+  <div class="vp-doc">
     <main class="container">
       <h1 v-html="frontmatter.title" />
       <p class="meta-row">
@@ -33,13 +33,17 @@ const date = useBlogDate(() => frontmatter.value.date);
 </template>
 
 <style scoped>
-.container {
-  max-width: 1080px;
-  padding: 32px;
-  margin: auto;
+.vp-doc {
+  display: flex;
 
-  @media (min-width: 768px) {
-    padding: 64px;
+  .container {
+    max-width: 1080px;
+    padding: 32px;
+    margin: auto;
+
+    @media (min-width: 768px) {
+      padding: 64px;
+    }
   }
 
   .meta-row {
@@ -52,6 +56,10 @@ const date = useBlogDate(() => frontmatter.value.date);
     .author {
       display: flex;
       gap: 8px;
+      align-items: center;
+      color: var(--vp-c-text-2);
+      font-weight: normal;
+      text-decoration: none;
 
       :hover {
         text-decoration: underline;
