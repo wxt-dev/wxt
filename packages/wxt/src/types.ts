@@ -721,7 +721,7 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * for backwards compatibility. For some websites the `postMessage` call is
    * undesirable, such as those with poorly written message event listeners.
    *
-   * Setting this to `true` opts into the behaviour that will become the default
+   * Setting this to `true` opts into the behavior that will become the default
    * in a future version of WXT, where the `postMessage` call is removed
    * entirely.
    *
