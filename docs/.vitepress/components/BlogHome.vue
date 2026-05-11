@@ -40,6 +40,9 @@ const posts = computed<Post[]>(() =>
     width: 100%;
 
     h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-top: 10px;
       padding-bottom: 16px;
     }
 
@@ -50,12 +53,10 @@ const posts = computed<Post[]>(() =>
       li {
         padding-top: 16px;
         margin-top: 16px;
-        border-top: 1px solid var(--vp-c-divider);
 
         &:last-child {
           padding-bottom: 16px;
           margin-bottom: 16px;
-          border-bottom: 1px solid var(--vp-c-divider);
         }
       }
     }
