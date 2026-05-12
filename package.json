@@ -55,7 +55,7 @@
     "prettier-plugin-jsdoc": "^1.8.0",
     "semver": "^7.7.4",
     "simple-git-hooks": "^2.13.1",
-    "tinyglobby": "^0.2.15",
+    "tinyglobby": "^0.2.16",
     "tsdown": "catalog:",
     "tsx": "4.21.0",
     "typedoc": "^0.25.4",
