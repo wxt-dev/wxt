@@ -286,7 +286,7 @@
     },
     "packages/wxt": {
       "name": "wxt",
-      "version": "0.20.25",
+      "version": "0.20.26",
       "bin": {
         "wxt": "./bin/wxt.mjs",
         "wxt-publish-extension": "./bin/wxt-publish-extension.mjs",
