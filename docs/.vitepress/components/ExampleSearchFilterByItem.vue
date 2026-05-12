@@ -33,8 +33,8 @@ function toggleItem(pkg: string) {
         <li v-for="item in items">
           <label :title="item" class="item-label">
             <input
-              type="checkbox"
               :checked="selectedItems[item]"
+              type="checkbox"
               @input="toggleItem(item)"
             />
             <span>{{ item }}</span>
@@ -52,6 +52,9 @@ function toggleItem(pkg: string) {
   flex-direction: column;
   background: var(--vp-c-bg-soft);
   border-radius: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-brand-3) transparent;
+  padding-bottom: 10px;
 
   .header {
     padding: 8px 16px;
