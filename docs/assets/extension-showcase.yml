@@ -458,3 +458,7 @@
 - # Redmine Time Tracking
   chromeId: ldcanhhkffokndenejhafhlkapflgcjg
   firefoxSlug: redmine-time-tracking
+
+- # Telsia: Eye Strain Reduction
+  chromeId: iakkmikmbknfcffhalijnhijblikoldc
+  firefoxSlug: telsia-eye-strain-reduction
