@@ -51,6 +51,7 @@ function toggleItem(pkg: string) {
   display: flex;
   flex-direction: column;
   background: var(--vp-c-bg-soft);
+  border-radius: 20px;
 
   .header {
     padding: 8px 16px;

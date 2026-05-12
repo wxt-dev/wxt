@@ -72,19 +72,19 @@ const filteredExamples = computed(() => {
 
     <div class="filters">
       <ExampleSearchFilterByItem
-        label="APIs"
-        :items="exampleMetadata?.allApis"
         v-model="selectedApis"
+        :items="exampleMetadata?.allApis"
+        label="APIs"
       />
       <ExampleSearchFilterByItem
-        label="Permissions"
-        :items="exampleMetadata?.allPermissions"
         v-model="selectedPermissions"
+        :items="exampleMetadata?.allPermissions"
+        label="Permissions"
       />
       <ExampleSearchFilterByItem
-        label="Packages"
-        :items="exampleMetadata?.allPackages"
         v-model="selectedPackages"
+        :items="exampleMetadata?.allPackages"
+        label="Packages"
       />
     </div>
 
@@ -112,7 +112,7 @@ const filteredExamples = computed(() => {
     'filters results';
   gap: 16px;
 
-  @media only screen and (min-width: 720px) {
+  @media only screen and (min-width: 710px) {
     grid-template-columns: 256px 1fr;
     grid-template-rows: auto 1fr;
   }
@@ -134,7 +134,7 @@ const filteredExamples = computed(() => {
     flex-direction: column;
     gap: 10px;
 
-    @media only screen and (min-width: 720px) {
+    @media only screen and (min-width: 710px) {
       border-radius: 16px;
     }
   }
