@@ -451,7 +451,7 @@ Full examples:
 
 :::warning `rem` Units Are Not Fully Isolated
 
-WXT resets most inherited styles via `all: initial`. This doesn't reset the `<html>` element's font size, which determins the relative size of `rem` units.
+WXT resets most inherited styles via `all: initial`. This doesn't reset the `<html>` element's font size, which determines the relative size of `rem` units.
 
 If your CSS framework uses `rem` units, like Tailwind CSS, you may notice your UI's scale changing on different websites.
 
