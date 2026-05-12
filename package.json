@@ -38,7 +38,7 @@
     "@aklinker1/buildc": "catalog:",
     "@aklinker1/check": "catalog:",
     "@commitlint/config-conventional": "^20.4.3",
-    "@commitlint/types": "^20.4.3",
+    "@commitlint/types": "^21.0.0",
     "@types/bun": "catalog:",
     "@types/semver": "^7.7.1",
     "@vitest/coverage-v8": "^4.1.6",
