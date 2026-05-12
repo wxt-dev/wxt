@@ -63,7 +63,7 @@ body {
   position: absolute;
   background-image: url('../../assets/art002e009298.jpg');
   opacity: 50%;
-  width: 100vw;
+  width: 100%;
   height: 110vh;
   background-size: cover;
   background-position: 90%;
@@ -72,7 +72,7 @@ body {
 .dark .VPHome::after {
   content: '';
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 10vh;
   top: 100vh;
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));

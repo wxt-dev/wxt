@@ -37,13 +37,13 @@
     "dequal": "^2.0.3"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
-    "@webext-core/fake-browser": "^1.3.4",
-    "oxlint": "^1.51.0",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "@aklinker1/buildc": "catalog:",
+    "@webext-core/fake-browser": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
