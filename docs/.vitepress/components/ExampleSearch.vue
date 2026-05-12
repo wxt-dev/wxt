@@ -8,7 +8,12 @@ defineProps<{
   tag?: string;
 }>();
 
-const exampleMetadata = ref<ExamplesMetadata>();
+const exampleMetadata = ref<ExamplesMetadata>({
+  allApis: [],
+  allPackages: [],
+  allPermissions: [],
+  examples: [],
+});
 onMounted(async () => {
   const res = await fetch(
     'https://raw.githubusercontent.com/wxt-dev/examples/main/metadata.json',
