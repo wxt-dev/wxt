@@ -62,14 +62,18 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            await github.rest.issues.addAssignees({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              assignees: ['${{ steps.check.outputs.author }}']
-            });
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                assignees: ['${{ steps.check.outputs.author }}']
+              });
 
-            console.log('Assigned PR author: ${{ steps.check.outputs.author }}');
+              console.log('Assigned PR author: ${{ steps.check.outputs.author }}');
+            } catch (err) {
+              console.warn("Error assigning author:", err);
+            }
 
       - name: Sync Labels
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
