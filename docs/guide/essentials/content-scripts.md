@@ -455,7 +455,7 @@ WXT resets most inherited styles via `all: initial`. This doesn't reset the `<ht
 
 If your CSS framework uses `rem` units, like Tailwind CSS, you may notice your UI's scale changing on different websites.
 
-See the [FAQ](/resources/faq) for a fix.
+See the [FAQ](/resources/faq#my-content-script-UI-looks-different-on-certain-websites) for a fix.
 :::
 
 ### IFrame
