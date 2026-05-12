@@ -60,7 +60,7 @@
     "@types/react-dom": "catalog:",
     "publint": "catalog:",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.2.6",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vite": "^7.0.0",
