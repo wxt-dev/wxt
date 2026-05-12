@@ -308,7 +308,7 @@
         "defu": "^6.1.4",
         "dotenv-expand": "^12.0.3",
         "esbuild": "^0.27.1",
-        "filesize": "^11.0.15",
+        "filesize": "^11.0.17",
         "get-port-please": "^3.2.0",
         "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
         "hookable": "^6.1.0",
@@ -1602,7 +1602,7 @@
 
     "file-entry-cache": ["file-entry-cache@8.0.0", "", { "dependencies": { "flat-cache": "^4.0.0" } }, "sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ=="],
 
-    "filesize": ["filesize@11.0.15", "", {}, "sha512-30TpbYxQxCpi4XdVjkwXYQ37CzZltV38+P7MYroQ+4NK/Dmx9mxixFNrolzcmEIBsjT/uowC9T7kiy2+C12r1A=="],
+    "filesize": ["filesize@11.0.17", "", {}, "sha512-oHLTvMLw6imZUl1se/RBQrFlyy50nXce4sU7yGR6Qc0JgCwqnfiFsAnEwotdGmfKLD7SArGUk2/5STU0k8LOBQ=="],
 
     "fill-range": ["fill-range@7.1.1", "", { "dependencies": { "to-regex-range": "^5.0.1" } }, "sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg=="],
 
