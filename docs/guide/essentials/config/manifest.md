@@ -200,6 +200,23 @@ export default defineConfig({
 });
 ```
 
+:::warning
+
+Different browsers support different permissions. You are responsible for passing only the permissions required for each browser:
+
+```ts
+export default defineConfig({
+  manifest: ({ browser }) => ({
+    permissions:
+      browser === 'chrome'
+        ? ['storage', 'favicon', 'declarativeNetRequest']
+        : ['storage', 'webRequest'],
+  }),
+});
+```
+
+:::
+
 ## Host Permissions
 
 > [Chrome docs](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions#host-permissions)

@@ -164,6 +164,36 @@ Both issues have the same cause: the library puts something outside the `ShadowR
 
 Both issues have the same fix: tell the library to put elements inside the `ShadowRoot`, not outside it. See the details above for more information and example fixes for each problem.
 
+## My content script UI looks different on certain websites
+
+If your `createShadowRootUi` looks correct on most sites but appears at the wrong size on others (e.g., Reddit), it's because `rem` unit is relative to the `<html>` element's `font-size`, which lives outside the Shadow DOM. When a website overrides it, your UI scales incorrectly.
+
+The fix is to convert `rem` units to `px` at build time using [`postcss-rem-to-responsive-pixel`](https://www.npmjs.com/package/postcss-rem-to-responsive-pixel). This eliminates the dependency on the host page's root font-size.
+
+1. Install the package:
+
+   ```sh
+   bun i -D postcss-rem-to-responsive-pixel
+   ```
+
+2. Configure your PostCSS config:
+
+   ```js [postcss.config.mjs]
+   import remToPx from 'postcss-rem-to-responsive-pixel';
+
+   export default {
+     plugins: [
+       remToPx({
+         rootValue: 16,
+         propList: ['*'],
+         transformUnit: 'px',
+       }),
+     ],
+   };
+   ```
+
+See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional context on this behavior.
+
 ## Does WXT provide docs for LLMs?
 
 Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).

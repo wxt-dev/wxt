@@ -2,7 +2,7 @@
 import { computed, toRaw } from 'vue';
 import { KeySelectedObject } from '../utils/types';
 
-const props = defineProps<{
+defineProps<{
   label: string;
   items?: string[];
 }>();

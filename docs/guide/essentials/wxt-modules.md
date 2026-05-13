@@ -137,6 +137,35 @@ console.log(config.myModule);
 
 This is very useful when [generating runtime code](#generate-runtime-module).
 
+#### Logging
+
+There are two "correct" ways to add console logs to your modules:
+
+1. Use `wxt.logger` for info, warnings, and errors
+2. Install [`obug`](https://www.npmjs.com/package/obug) for debug messages
+
+```ts
+import { defineWxtModule } from 'wxt/modules';
+import { createDebug } from 'obug';
+
+const debug = createDebug('my-module');
+
+export default defineWxtModule({
+  setup(wxt) {
+    wxt.logger.info('Module loaded');
+    debug('Debug details');
+  },
+});
+```
+
+`wxt.logger` is great for formatted, pretty messages that match the rest of WXT's logs.
+
+`obug` makes it easy for devs to enable and filter debug logs when necessary:
+
+```sh
+DEBUG=my-module wxt dev
+```
+
 #### Add custom entrypoint options
 
 Modules can add custom options to entrypoints by augmenting the entrypoint options types. This allows you to add custom configuration that can be accessed during the build process.

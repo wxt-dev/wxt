@@ -1,4 +1,4 @@
-import { debug } from './debug';
+import { runnerDebug } from './debug';
 import {
   resolveRunOptions,
   type ResolvedRunOptions,
@@ -8,8 +8,8 @@ import { spawn } from 'node:child_process';
 import { installChromium, installFirefox } from './install';
 import { promiseWithResolvers } from './promises';
 
-const debugFirefox = debug.scoped('firefox');
-const debugChrome = debug.scoped('chrome');
+const debugFirefox = runnerDebug.extend('firefox');
+const debugChrome = runnerDebug.extend('chrome');
 
 export interface Runner {
   stop(): void;
@@ -44,7 +44,7 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
       shell: true,
     },
   );
-  const debugFirefoxStderr = debugFirefox.scoped('stderr');
+  const debugFirefoxStderr = debugFirefox.extend('stderr');
   browserProcess.stderr.on('data', (data: string) => {
     const message = data.toString().trim();
     debugFirefoxStderr(message);
@@ -54,7 +54,7 @@ async function runFirefox(options: ResolvedRunOptions): Promise<Runner> {
       urlRes.resolve(message.slice(28));
     }
   });
-  const debugFirefoxStdout = debugFirefox.scoped('stdout');
+  const debugFirefoxStdout = debugFirefox.extend('stdout');
   browserProcess.stdout.on('data', (data: string) => {
     const message = data.toString().trim();
     debugFirefoxStdout(message);
@@ -85,7 +85,7 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
     opened.reject(Error('Timed out after 10s waiting for browser to open.'));
   }, 10e3);
 
-  const debugChromeStderr = debugChrome.scoped('stderr');
+  const debugChromeStderr = debugChrome.extend('stderr');
   browserProcess.stderr!.on('data', (data: string) => {
     const message = data.toString().trim();
     debugChromeStderr(message);
@@ -96,7 +96,7 @@ async function runChromium(options: ResolvedRunOptions): Promise<Runner> {
       opened.resolve();
     }
   });
-  const debugChromeStdout = debugChrome.scoped('stdout');
+  const debugChromeStdout = debugChrome.extend('stdout');
   browserProcess.stdout!.on('data', (data: string) => {
     const message = data.toString().trim();
     debugChromeStdout(message);

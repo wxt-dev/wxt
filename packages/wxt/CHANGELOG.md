@@ -1,5 +1,108 @@
 # Changelog
 
+## v0.20.26
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.25...wxt-v0.20.26)
+
+### 🚀 Enhancements
+
+- Add `default_state` option to popup actions ([#2010](https://github.com/wxt-dev/wxt/pull/2010))
+- Add content script `noScriptStartedPostMessage` option ([#2265](https://github.com/wxt-dev/wxt/pull/2265))
+
+### 🩹 Fixes
+
+- Use `manifestVersion` from CLI during manifest generation ([#2306](https://github.com/wxt-dev/wxt/pull/2306))
+- Modify command to support variadic positional args ([#2317](https://github.com/wxt-dev/wxt/pull/2317))
+- Bump `publish-browser-extension` to `v4.0.5`, to resolve Chrome Web Store submission issue ([#2331](https://github.com/wxt-dev/wxt/pull/2331))
+- Avoid errors when files are removed during build ([#2343](https://github.com/wxt-dev/wxt/pull/2343))
+- **manifest:** Exclude `open_in_tab` from `options_ui` for Safari ([#2311](https://github.com/wxt-dev/wxt/pull/2311))
+
+### 📖 Documentation
+
+- **wxt-modules:** Add logging examples/best practices ([57e3748d](https://github.com/wxt-dev/wxt/commit/57e3748d))
+- Correct entrypoints icon example code ([#2302](https://github.com/wxt-dev/wxt/pull/2302))
+- Add types for components ([#2273](https://github.com/wxt-dev/wxt/pull/2273))
+- Fix JSDoc example formatting ([2a8ec0d7](https://github.com/wxt-dev/wxt/commit/2a8ec0d7))
+- Remove unused code ([#2275](https://github.com/wxt-dev/wxt/pull/2275))
+- Fix horizontal scrollbar displaying on landing page ([#2329](https://github.com/wxt-dev/wxt/pull/2329))
+- Add Mimik extension to the list of extensions ([#2319](https://github.com/wxt-dev/wxt/pull/2319))
+- Added modrinth extras and pi-hole in one to showcase ([#2337](https://github.com/wxt-dev/wxt/pull/2337))
+- Added "QIE Wallet" to showcase ([#2341](https://github.com/wxt-dev/wxt/pull/2341))
+- Update Safari publishing instructions to match Apple docs ([#2314](https://github.com/wxt-dev/wxt/pull/2314))
+- Add "Redmine Time Tracking" to extension showcase ([#2312](https://github.com/wxt-dev/wxt/pull/2312))
+
+### 🏡 Chore
+
+- More JSDoc fixes ([9b59f38c](https://github.com/wxt-dev/wxt/commit/9b59f38c))
+- Move `createFileReloader` into it's own file ([#2307](https://github.com/wxt-dev/wxt/pull/2307))
+- Remove ts-expect-error that are no longer needed ([#2344](https://github.com/wxt-dev/wxt/pull/2344))
+- **deps-dev:** Bump typescript from 5.9.3 to 6.0.3 ([#2325](https://github.com/wxt-dev/wxt/pull/2325))
+- **deps-dev:** Bump oxlint from 1.59.0 to 1.63.0 ([#2356](https://github.com/wxt-dev/wxt/pull/2356))
+- Use `catalog:` for dev dependencies ([#2357](https://github.com/wxt-dev/wxt/pull/2357))
+
+### ❤️ Contributors
+
+- Jonathan Viney ([@jviney](https://github.com/jviney))
+- Rxliuli ([@rxliuli](https://github.com/rxliuli))
+- CrawlerCode ([@CrawlerCode](https://github.com/CrawlerCode))
+- Thomas Howlett ([@howlettt](https://github.com/howlettt))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Brian Zhou ([@aiktb](https://github.com/aiktb))
+- Soaib Haque ([@SoaibHaque](https://github.com/SoaibHaque))
+- Arthur <creeperkatze.dev@gmail.com>
+- Luis Ortiz ([@KiryuuLight](https://github.com/KiryuuLight))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Laplace-anon ([@laplace-anon](https://github.com/laplace-anon))
+- Kairi ([@kairi003](https://github.com/kairi003))
+
+## v0.20.25
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.24...wxt-v0.20.25)
+
+### 🩹 Fixes
+
+- Port change in dev server on reload ([#2283](https://github.com/wxt-dev/wxt/pull/2283))
+
+### 📖 Documentation
+
+- Update `permissions` section with per-browser warning ([#2284](https://github.com/wxt-dev/wxt/pull/2284))
+
+### 🏡 Chore
+
+- Increase PNPM test timeout ([3db3eac6](https://github.com/wxt-dev/wxt/commit/3db3eac6))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
+## v0.20.24
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.23...wxt-v0.20.24)
+
+### 🩹 Fixes
+
+- Correct `actionKey` for Firefox in MV3 ([#2274](https://github.com/wxt-dev/wxt/pull/2274))
+
+### ❤️ Contributors
+
+- John Wong <john_wong@live.com>
+
+## v0.20.23
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.22...wxt-v0.20.23)
+
+### 🩹 Fixes
+
+- Use correct color name ([6224ff49](https://github.com/wxt-dev/wxt/commit/6224ff49))
+
+### 📖 Documentation
+
+- Re-structure the WXT Modules documentation ([#2260](https://github.com/wxt-dev/wxt/pull/2260))
+
+### ❤️ Contributors
+
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+
 ## v0.20.22
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.21...wxt-v0.20.22)
