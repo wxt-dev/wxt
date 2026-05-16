@@ -734,7 +734,7 @@ const watchPattern = new MatchPattern('*://*.youtube.com/watch*');
 export default defineContentScript({
   matches: ['*://*.youtube.com/*'],
   main(ctx) {
-    ctx.locationWatcher.run()
+    ctx.locationWatcher.run();
     ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl }) => {
       if (watchPattern.includes(newUrl)) mainWatch(ctx);
     });
