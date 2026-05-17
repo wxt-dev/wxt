@@ -42,7 +42,7 @@
     "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "peerDependencies": {
     "wxt": ">=0.18.6",

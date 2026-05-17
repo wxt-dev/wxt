@@ -36,7 +36,7 @@
     "check": "check",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "peerDependencies": {
     "unocss": ">=0.60.0",

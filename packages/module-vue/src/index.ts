@@ -9,7 +9,7 @@ export default defineWxtModule<VueModuleOptions>({
     const { vite } = options ?? {};
 
     // Add plugin & set sourcemap option
-    addViteConfig(wxt, () => ({
+    addViteConfig(wxt, ({ command }) => ({
       // @ts-ignore: Ignore vite version issues
       plugins: [vue(vite)],
       build: {

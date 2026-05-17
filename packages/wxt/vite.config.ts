@@ -7,15 +7,19 @@ import {
 } from './src/core/utils/virtual-modules';
 import { UserConfig } from 'vite/pack';
 
+type PackageExport = { types?: string; default?: string };
+
 export default defineConfig({
   pack: [
     // Non-virtual modules can be transpiled in-place to make debugging in node_modules easier
     {
       entry: [
         // Exports
-        ...Object.values(pkgJson.exports)
-          .filter((ex: any) => ex.default)
-          .map((ex: any) =>
+        ...Object.values<PackageExport>(pkgJson.exports)
+          .filter((ex): ex is PackageExport & { default: string } =>
+            Boolean(ex.default),
+          )
+          .map((ex) =>
             ex.default.replace('./dist', 'src').replace('.mjs', '.ts'),
           ),
 

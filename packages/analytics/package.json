@@ -7,7 +7,7 @@
     "dev": "wxt",
     "dev:build": "vp exec wxt build",
     "build": "vp pack",
-    "prepack": "vpr build",
+    "prepack": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'"
   },

@@ -39,7 +39,7 @@
     "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "peerDependencies": {
     "webextension-polyfill": "*",

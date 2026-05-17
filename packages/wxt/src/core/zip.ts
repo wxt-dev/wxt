@@ -88,7 +88,6 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   }
 
   await printFileList(
-    // eslint-disable-next-line typescript-eslint/unbound-method
     wxt.logger.success,
     `Zipped extension in ${formatDuration(Date.now() - start)}`,
     wxt.config.outBaseDir,

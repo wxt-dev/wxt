@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it } from 'vitest';
 import { registerWxt, wxt } from '../../src/core/wxt';
 import { TestProject, occupyPort } from '../utils';
 

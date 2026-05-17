@@ -22,7 +22,7 @@ import {
   UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
-import { vi } from 'vite-plus/test';
+import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 

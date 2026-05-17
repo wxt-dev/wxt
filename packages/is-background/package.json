@@ -7,7 +7,7 @@
   "scripts": {
     "build": "vp pack",
     "test:coverage": "vp test --coverage",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^"

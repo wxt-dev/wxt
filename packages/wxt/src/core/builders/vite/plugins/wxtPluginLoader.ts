@@ -84,8 +84,6 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
         }
 
         document.head?.prepend(script);
-        // linkedom overrides toString to serialize HTML (doctype + outerHTML)
-        // eslint-disable-next-line typescript-eslint/no-base-to-string
         return document.toString();
       },
     },

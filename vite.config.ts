@@ -20,7 +20,6 @@ export default defineConfig({
       'CHANGELOG.md',
       'packages/browser/src/gen/**',
       'templates/**',
-      '**/CLAUDE.md',
     ],
     overrides: [
       {
@@ -47,7 +46,6 @@ export default defineConfig({
       'pnpm-lock.yaml',
       'CHANGELOG.md',
       'packages/browser/src/gen',
-      '**/CLAUDE.md',
     ],
   },
 });

@@ -25,7 +25,7 @@
     "check": "check",
     "test": "vp test",
     "test:coverage": "vp test --coverage",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
