@@ -42,7 +42,7 @@
     "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"

@@ -71,7 +71,6 @@ export async function internalBuild(): Promise<BuildOutput> {
 
   // Post-build
   await printBuildSummary(
-    // eslint-disable-next-line typescript-eslint/unbound-method
     wxt.logger.success,
     `Built extension in ${formatDuration(Date.now() - startTime)}`,
     output,
@@ -130,7 +129,6 @@ function printValidationResults({
   errors,
   warningCount,
 }: ValidationResults) {
-  // eslint-disable-next-line typescript-eslint/unbound-method
   (errorCount > 0 ? wxt.logger.error : wxt.logger.warn)(
     `Entrypoint validation failed: ${errorCount} error${
       errorCount === 1 ? '' : 's'

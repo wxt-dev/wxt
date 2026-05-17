@@ -128,7 +128,7 @@
     "test": "vp test",
     "test:coverage": "vp test --coverage",
     "sync-releases": "vpx changelogen@latest gh release",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@1natsu/wait-element": "^5.0.0",

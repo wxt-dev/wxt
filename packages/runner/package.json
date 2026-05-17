@@ -36,7 +36,7 @@
     "test:coverage": "vp test --coverage",
     "dev": "bun run dev.ts",
     "build": "vp pack",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "obug": "^3.0.0"
