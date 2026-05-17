@@ -39,7 +39,7 @@ export function createFileReloader(server: WxtDevServer) {
 
       if (changes.type === 'full-restart') {
         wxt.logger.info('Config changed, restarting server...');
-        void server.restart();
+        server.restart();
         return;
       }
 

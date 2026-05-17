@@ -154,7 +154,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       await new Promise<void>((resolve) => {
         const watcher = chokidar.watch(err.id, { ignoreInitial: true });
         watcher.on('all', () => {
-          void watcher.close();
+          watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');
           resolve();
         });

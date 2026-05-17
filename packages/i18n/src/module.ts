@@ -174,7 +174,6 @@ export { type GeneratedI18nStructure }
       wxt.hooks.hookOnce('build:done', () => {
         const watcher = watch(localesDir);
         watcher.on('change', (path) => {
-          // eslint-disable-next-line typescript-eslint/unbound-method
           updateLocalizations(path).catch(wxt.logger.error);
         });
       });

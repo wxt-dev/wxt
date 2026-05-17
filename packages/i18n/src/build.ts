@@ -179,7 +179,7 @@ function _parseMessagesObject(
     case 'object':
       if (object == null) {
         throw new Error(
-          `Messages file should not contain \`${String(object)}\` (found at "${path.join('.')}")`,
+          `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
       }
 
