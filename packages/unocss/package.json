@@ -36,7 +36,7 @@
     "check": "check",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "defu": "^6.1.4",

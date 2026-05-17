@@ -1012,7 +1012,6 @@ export interface IsolatedWorldContentScriptDefinition extends IsolatedWorldConte
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  // eslint-disable-next-line typescript-eslint/no-redundant-type-constituents
   main(ctx: ContentScriptContext): any | Promise<any>;
 }
 
@@ -1024,7 +1023,6 @@ export interface MainWorldContentScriptDefinition extends MainWorldContentScript
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  // eslint-disable-next-line typescript-eslint/no-redundant-type-constituents
   main(): any | Promise<any>;
 }
 
@@ -1048,7 +1046,6 @@ export interface UnlistedScriptDefinition extends BaseScriptEntrypointOptions {
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  // eslint-disable-next-line typescript-eslint/no-redundant-type-constituents
   main(): any | Promise<any>;
 }
 

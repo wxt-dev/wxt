@@ -2,7 +2,7 @@
 import { resolve } from 'path';
 
 import type { Browser } from '@wxt-dev/browser';
-import { vi } from 'vite-plus/test';
+import { vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
 import { setWxtForTesting } from '../../internal/wxt';

@@ -64,7 +64,7 @@
     "test": "vp test",
     "test:coverage": "vp test --coverage",
     "bench": "bun run bench/run.ts",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",

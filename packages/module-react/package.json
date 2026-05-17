@@ -43,7 +43,7 @@
     "build": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
-    "prepack": "vpr build"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.4.1 || ^5.0.0 || ^6.0.0"

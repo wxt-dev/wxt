@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect, afterEach } from 'vite-plus/test';
+import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
 
 import { ContentScriptContext } from '../../content-script-context';
 import { createIframeUi } from '../iframe';
