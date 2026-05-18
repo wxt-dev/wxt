@@ -54,8 +54,18 @@ body {
   background-color: var(--vp-c-default-2);
 }
 
+.netlify-badge {
+  display: inline-flex;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.netlify-badge img {
+  display: block;
+}
+
 .light-netlify {
-  display: inline;
+  display: inline-flex;
 }
 .dark .light-netlify {
   display: none;
@@ -64,7 +74,7 @@ body {
   display: none;
 }
 .dark .dark-netlify {
-  display: inline;
+  display: inline-flex;
 }
 
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
