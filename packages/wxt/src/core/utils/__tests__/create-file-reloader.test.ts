@@ -141,5 +141,40 @@ describe('createFileReloader', () => {
     ).toBe(true);
     expect(cachedOutput).toEqual(currentOutput);
     expect(server.reloadExtension).toBeCalledTimes(1);
+    expect(server.reloadContentScript).not.toBeCalled();
+  });
+
+  it('should ignore entrypoint directory changes when no new entrypoints are found', async () => {
+    const backgroundFile = '/root/src/entrypoints/background.ts';
+    const ignoredEntrypointDirFile = '/root/src/entrypoints/.DS_Store';
+    const backgroundEntrypoint = fakeBackgroundEntrypoint({
+      inputPath: backgroundFile,
+      skipped: false,
+    });
+    const currentOutput = fakeBuildOutput({
+      steps: [
+        {
+          entrypoints: backgroundEntrypoint,
+          chunks: [fakeOutputChunk({ moduleIds: [backgroundFile] })],
+        },
+      ],
+      publicAssets: [],
+    });
+    const server = fakeDevServer({
+      currentOutput,
+      reloadContentScript: vi.fn(),
+      reloadExtension: vi.fn(),
+    });
+
+    vi.mocked(findEntrypoints).mockResolvedValue([backgroundEntrypoint]);
+
+    const reloadOnChange = createFileReloader(server);
+    const trigger = reloadOnChange('add', ignoredEntrypointDirFile);
+    await vi.advanceTimersByTimeAsync(500);
+    await trigger;
+
+    expect(rebuild).not.toBeCalled();
+    expect(server.reloadContentScript).not.toBeCalled();
+    expect(server.reloadExtension).not.toBeCalled();
   });
 });

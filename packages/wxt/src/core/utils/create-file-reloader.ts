@@ -82,8 +82,8 @@ export function createFileReloader(server: WxtDevServer) {
         server.restartBrowser();
         return;
       }
-      if (changes.type === 'no-change' && newEntrypointGroups.length === 0)
-        return;
+      const hasNewEntrypoints = newEntrypointGroups.length > 0;
+      if (changes.type === 'no-change' && !hasNewEntrypoints) return;
 
       const changedFilesToLog = Array.from(
         new Set([
@@ -123,15 +123,13 @@ export function createFileReloader(server: WxtDevServer) {
         server.currentOutput = newOutput;
 
         // Perform reloads
-        const needsFullExtensionReload =
-          newEntrypointGroups.length || changes.type === 'extension-reload';
-        if (needsFullExtensionReload) {
+        if (hasNewEntrypoints || changes.type === 'extension-reload') {
           server.reloadExtension();
           wxt.logger.success(`Reloaded extension`);
         } else if (changes.type === 'html-reload') {
           const { reloadedNames } = reloadHtmlPages(rebuildGroups, server);
           wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
-        } else {
+        } else if (changes.type === 'content-script-reload') {
           reloadContentScripts(changes.changedSteps, server);
 
           const rebuiltNames = rebuildGroups.flat().map((entry) => entry.name);
