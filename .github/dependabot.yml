@@ -1,15 +1,20 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
-  - package-ecosystem: npm
+  - package-ecosystem: bun
     directory: /
     schedule:
-      interval: 'monthly'
+      interval: 'daily'
+      groups:
+        production-updates:
+          applies-to: version-updates
+          dependency-type: production
+          update-types: [minor, patch]
+        dev-updates:
+          applies-to: version-updates
+          dependency-type: development
+          update-types: [minor, patch]
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'monthly'
+      interval: 'daily'

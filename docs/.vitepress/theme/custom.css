@@ -54,8 +54,18 @@ body {
   background-color: var(--vp-c-default-2);
 }
 
+.netlify-badge {
+  display: inline-flex;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.netlify-badge img {
+  display: block;
+}
+
 .light-netlify {
-  display: inline;
+  display: inline-flex;
 }
 .dark .light-netlify {
   display: none;
@@ -64,7 +74,7 @@ body {
   display: none;
 }
 .dark .dark-netlify {
-  display: inline;
+  display: inline-flex;
 }
 
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
@@ -73,7 +83,7 @@ body {
   background-image: url('/assets/art002e009298.jpg');
   opacity: 50%;
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 110vh;
   background-size: cover;
   background-position: 90%;
@@ -82,7 +92,7 @@ body {
 .dark .VPHome::after {
   content: '';
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 10vh;
   top: 100vh;
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));

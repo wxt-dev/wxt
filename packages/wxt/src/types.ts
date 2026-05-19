@@ -159,6 +159,11 @@ export interface InlineConfig {
      * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
      */
     firefoxDataCollection?: boolean;
+    /**
+     * Suppress warnings when the Firefox extension ID is missing.
+     * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id
+     */
+    firefoxId?: boolean;
   };
   /**
    * Configure browser startup. Options set here can be overridden in a
@@ -711,6 +716,22 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * @default 'manifest'
    */
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
+  /**
+   * Do not send the `wxt:content-script-started` message via
+   * `window.postMessage`.
+   *
+   * This has been replaced with custom events. The `postMessage` call is kept
+   * for backwards compatibility. For some websites the `postMessage` call is
+   * undesirable, such as those with poorly written message event listeners.
+   *
+   * Setting this to `true` opts into the behavior that will become the default
+   * in a future version of WXT, where the `postMessage` call is removed
+   * entirely.
+   *
+   * See https://github.com/wxt-dev/wxt/pull/1938 and
+   * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
+   */
+  noScriptStartedPostMessage?: boolean;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
@@ -1514,7 +1535,10 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {};
   /** List of warning identifiers to suppress during the build process. */
-  suppressWarnings: { firefoxDataCollection?: boolean };
+  suppressWarnings: {
+    firefoxDataCollection?: boolean;
+    firefoxId?: boolean;
+  };
   dev: {
     /** Only defined during dev command */
     server?: {
