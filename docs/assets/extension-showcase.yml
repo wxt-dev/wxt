@@ -217,6 +217,7 @@
 
 - # Monochromate
   chromeId: hafcajcllbjnoolpfngclfmmgpikdhlm
+  firefoxSlug: monochromate
 
 - # AliasVault - Open-Source Password & (Email) Alias Manager
   chromeId: bmoggiinmnodjphdjnmpcnlleamkfedj
@@ -462,3 +463,9 @@
 - # Telsia: Eye Strain Reduction
   chromeId: iakkmikmbknfcffhalijnhijblikoldc
   firefoxSlug: telsia-eye-strain-reduction
+
+- # Sound Booster & Equalizer
+  chromeId: podnfipggfpfcpglhjebcefinglohbhn
+
+- # Link Later
+  chromeId: gpehbbegbcpjmipphokcmfhkchhcpfam

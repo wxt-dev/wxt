@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/chrome-manifest",
+  "name": "WXT I18n Benchmark",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "default_locale": "en",
+  "background": {
+    "type": "module",
+    "service_worker": "dist/background.js"
+  }
+}

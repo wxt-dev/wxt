@@ -42,7 +42,7 @@ body {
 }
 
 .light-netlify {
-  display: inline;
+  display: inline-flex;
 }
 
 .dark .light-netlify {
@@ -54,7 +54,7 @@ body {
 }
 
 .dark .dark-netlify {
-  display: inline;
+  display: inline-flex;
 }
 
 /* Add Aaron's favorite pic from Artemis II to the hero section because it's cool. */
