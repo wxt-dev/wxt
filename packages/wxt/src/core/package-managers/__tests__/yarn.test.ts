@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
-import { yarn } from '../yarn';
+import { isYarnInstalled, yarn } from '../yarn';
 
-describe('Yarn Package Management Utils', () => {
+const shouldSkip = !(await isYarnInstalled());
+
+describe.skipIf(shouldSkip)('Yarn Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-yarn-project');
 
