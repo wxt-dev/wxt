@@ -244,6 +244,7 @@ export async function resolveConfig(
     builtinModules,
     userModules,
     plugins: [],
+    watchOptions: mergedConfig.watchOptions,
     ...moduleOptions,
   };
 }

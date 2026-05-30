@@ -1,3 +1,4 @@
+import type { InlineConfig } from 'vite';
 import { describe, expect, it } from 'vitest';
 import { TestProject, occupyPort } from '../utils';
 
@@ -82,6 +83,58 @@ describe('Dev Mode', () => {
       ).rejects.toThrow();
     } finally {
       await freePort();
+    }
+  });
+  it('should pass watchOptions to the Vite dev server watcher', async () => {
+    let watcherOptions: NonNullable<InlineConfig['server']>['watch'];
+
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/background.ts',
+      'export default defineBackground(() => {})',
+    );
+
+    const server = await project.startServer({
+      runner: { disabled: true },
+      vite: () => ({
+        server: {
+          watch: {
+            awaitWriteFinish: true,
+            ignored: ['vite-ignore/**'],
+          },
+        },
+      }),
+      watchOptions: {
+        usePolling: true,
+        interval: 1000,
+        ignored: ['custom-ignore/**'],
+      },
+      hooks: {
+        'vite:devServer:extendConfig': (config) => {
+          watcherOptions = config.server?.watch;
+        },
+      },
+    });
+
+    try {
+      expect(watcherOptions).toMatchObject({
+        awaitWriteFinish: true,
+        usePolling: true,
+        interval: 1000,
+      });
+
+      expect(watcherOptions).toEqual(
+        expect.objectContaining({
+          ignored: expect.arrayContaining([
+            expect.stringContaining('.output'),
+            expect.stringContaining('.wxt'),
+            'vite-ignore/**',
+            'custom-ignore/**',
+          ]),
+        }),
+      );
+    } finally {
+      await server.stop();
     }
   });
 });
