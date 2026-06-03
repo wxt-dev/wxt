@@ -5,8 +5,9 @@ import spawn from 'nano-spawn';
 
 export async function isYarnInstalled(): Promise<boolean> {
   try {
-    await spawn('yarn', ['--version']);
-    return true;
+    const { stdout } = await spawn('yarn', ['--version']);
+    const version = stdout.trim();
+    return version !== '' && /^\d+\.\d+\.\d+/.test(version);
   } catch {
     return false;
   }
