@@ -25,7 +25,7 @@ type AnalyticsMethod =
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;
+) => (...args: Parameters<Analytics[K]>) => Promise<void>;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -238,6 +238,7 @@ function createFrontendAnalytics(): Analytics {
     (fn) =>
     (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      return Promise.resolve();
     };
 
   const analytics: Analytics = {
