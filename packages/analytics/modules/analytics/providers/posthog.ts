@@ -72,7 +72,7 @@ export const posthog = defineAnalyticsProvider<PostHogProviderOptions>(
   },
 );
 
-/** @see https://posthog.com/docs/api/capture-overview */
+/** @see https://posthog.com/docs/api/capture */
 interface PostHogCaptureBody {
   api_key: string;
   distinct_id: string;
