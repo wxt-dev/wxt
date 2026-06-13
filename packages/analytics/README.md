@@ -5,6 +5,7 @@ Report analytics events from your web extension extension.
 ## Supported Analytics Providers
 
 - [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
+- [PostHog](#posthog)
 - [Umami](#umami)
 
 ## Install With WXT
@@ -114,6 +115,35 @@ export default defineAppConfig({
       googleAnalytics4({
         apiSecret: import.meta.env.WXT_GA_API_SECRET,
         measurementId: '...',
+      }),
+    ],
+  },
+});
+```
+
+### PostHog
+
+[PostHog](https://posthog.com/) is an open source product analytics platform. It supports event tracking, session recording, feature flags, surveys, and more.
+
+In your PostHog project settings, find your **Project API key** and save it to your `.env` file:
+
+```dotenv
+WXT_POSTHOG_API_KEY='phc_...'
+```
+
+Then add the `posthog` provider to your `<srcDir>/app.config.ts` file:
+
+```ts
+import { posthog } from '@wxt-dev/analytics/providers/posthog';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      posthog({
+        apiKey: import.meta.env.WXT_POSTHOG_API_KEY,
+        // apiHost defaults to 'https://us.i.posthog.com'.
+        // Change to 'https://eu.i.posthog.com' for EU Cloud, or your self-hosted URL.
+        apiHost: 'https://eu.i.posthog.com',
       }),
     ],
   },
