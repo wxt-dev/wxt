@@ -36,7 +36,7 @@ export const posthog = defineAnalyticsProvider<PostHogProviderOptions>(
         properties,
         timestamp: new Date().toISOString(),
       };
-      await fetch(`${apiHost}/capture/`, {
+      await fetch(`${apiHost}/i/v0/e/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -53,6 +53,7 @@ export const posthog = defineAnalyticsProvider<PostHogProviderOptions>(
         await capture(event.user.id, '$pageview', {
           $current_url: event.page.url,
           $title: event.page.title,
+          $session_id: event.meta.sessionId,
           $screen: event.meta.screen,
           $language: event.meta.language,
           $referrer: event.meta.referrer,
