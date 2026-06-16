@@ -139,6 +139,22 @@
   chromeId: fcphghnknhkimeagdglkljinmpbagone
   firefoxSlug: youtube-auto-hd-fps
 
+- # YouTube Auto Feed
+  chromeId: jcdebdlnakhdinkindpogcehnhggbfad
+  firefoxSlug: youtube-auto-feed
+
+- # YouTube Like-Dislike Shortcut
+  chromeId: fdkpkpelkkdkjhpacficichkfifijipc
+  firefoxSlug: youtube-like-dislike-shortcut
+
+- # Twitch Channel Points Bonus Collector
+  chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
+  firefoxSlug: twitch-cp-bonus-collector
+
+- # Skillshare Player Control
+  chromeId: agbhgcomfpcfboebbfmefbicfkpnlfeg
+  firefoxSlug: skillshare-player-control
+
 - # MultiViewer Companion
   chromeId: lpomjgbicdemjkgmbnkjncgdebogkhlb
   firefoxSlug: multiviewer-companion
