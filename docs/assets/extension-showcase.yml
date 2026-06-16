@@ -105,6 +105,7 @@
 
 - # NiceTab - https://github.com/web-dahuyou/NiceTab
   chromeId: fonflmjnjbkigocpoommgmhljdpljain
+  firefoxSlug: nice-tab-manager
 
 - # Draftly for LinkedIn
   chromeId: fcffekbnfcfdemeekijbbmgmkognnmkd
