@@ -7,7 +7,10 @@ export interface Analytics {
     eventProperties?: Record<string, string | undefined>,
   ) => Promise<void>;
   /** Save information about the user. */
-  identify: (userId: string, userProperties?: Record<string, string>) => Promise<void>;
+  identify: (
+    userId: string,
+    userProperties?: Record<string, string>,
+  ) => Promise<void>;
   /**
    * Automatically setup and track user interactions, returning a function to
    * remove any listeners that were setup.
