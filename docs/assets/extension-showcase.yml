@@ -11,6 +11,10 @@
 #
 # You may include one or more of these fields for your extension.
 
+- # Anylang Translator
+  chromeId: injdenmpjncknciccmjjmjlgbmnkince
+  firefoxSlug: anylang-translator
+
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
   firefoxSlug: github-better-line-counts
