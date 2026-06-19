@@ -8,7 +8,7 @@ import './custom.css';
 import 'virtual:group-icons.css';
 import type { EnhanceAppContext } from 'vitepress/client';
 
-const codeGroupSelectors = {
+const CODE_GROUP_SELECTORS = {
   root: '.vp-code-group',
   input: '.vp-code-group .tabs input',
   label: '.tabs label',
@@ -50,8 +50,7 @@ function syncCodeGroupSelection(group: HTMLElement, title: string) {
 
 function syncCodeGroupTabs(event: Event) {
   const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return;
-  if (!target.matches(codeGroupSelectors.input)) return;
+  if (!(target instanceof HTMLInputElement) || !target.matches(codeGroupSelectors.input)) return;
 
   const activeGroup = target.closest(codeGroupSelectors.root);
   const activeTitle = getCodeGroupTitle(target);
