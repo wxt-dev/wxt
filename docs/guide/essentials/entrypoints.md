@@ -296,6 +296,30 @@ export default defineContentScript({
 });
 ```
 
+Some entrypoint options can also be specified per-browser by passing an object of browser-specific values. This is useful for targeting different match patterns, run timings, or execution modes across browsers.
+
+```ts
+export default defineContentScript({
+  matches: {
+    chrome: ['*://chrome.example.com/*'],
+    firefox: ['*://firefox.example.com/*'],
+  },
+  runAt: {
+    chrome: 'document_start',
+    firefox: 'document_end',
+  },
+
+  // Optional: use main world only in Firefox
+  world: {
+    firefox: 'MAIN',
+  },
+
+  main(ctx) {
+    // Executed when content script is loaded, can be async
+  },
+});
+```
+
 When defining content script entrypoints, keep in mind that WXT will import this file in a NodeJS environment during the build process. That means you cannot place any runtime code outside the `main` function.
 
 <!-- prettier-ignore -->
