@@ -119,8 +119,8 @@ export default {
 "
 `;
 
-exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config file compatible with ESlint 8 1`] = `
-".wxt/eslintrc-auto-import.json
+exports[`Auto Imports > eslintrc > "enabled: true" should output a JSON config file compatible with ESlint of package.json 1`] = `
+".wxt/eslint-auto-imports.mjs
 ----------------------------------------
 {
   "globals": {
