@@ -1085,7 +1085,7 @@ export type UserManifest = {
     };
   };
   permissions?: (
-    | Browser.runtime.ManifestPermissions
+    | Browser.runtime.ManifestPermission
     | (string & Record<never, never>)
   )[];
   web_accessible_resources?:
