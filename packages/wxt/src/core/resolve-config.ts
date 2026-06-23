@@ -1,19 +1,19 @@
 import { loadConfig } from 'c12';
 import { resolve as esmResolve } from 'import-meta-resolve';
 import {
-  InlineConfig,
-  ResolvedConfig,
-  UserConfig,
   ConfigEnv,
-  UserManifestFn,
-  UserManifest,
-  WebExtConfig,
-  WxtResolvedUnimportOptions,
+  InlineConfig,
   Logger,
+  ResolvedConfig,
+  ResolvedEslintrc,
+  UserConfig,
+  UserManifest,
+  UserManifestFn,
+  WebExtConfig,
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
-  ResolvedEslintrc,
+  WxtResolvedUnimportOptions,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -516,13 +516,13 @@ async function getUnimportEslintOptions(
       const version = await getEslintVersion();
       let major = parseInt(version[0]);
       if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
+      if (major <= 8) enabled = 'old';
+      else if (major >= 9) enabled = 'flat';
       // NaN
       else enabled = false;
       break;
     case true:
-      enabled = 8;
+      enabled = 'old';
       break;
     default:
       enabled = inlineEnabled;
@@ -532,7 +532,9 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
+      enabled === 'flat'
+        ? 'eslint-auto-imports.mjs'
+        : 'eslintrc-auto-import.json',
     ),
     globalsPropValue: true,
   };
