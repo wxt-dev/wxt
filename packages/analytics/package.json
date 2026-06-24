@@ -58,6 +58,10 @@
     "./providers/umami": {
       "types": "./dist/providers/umami.d.mts",
       "default": "./dist/providers/umami.mjs"
+    },
+    "./providers/posthog": {
+      "types": "./dist/providers/posthog.d.mts",
+      "default": "./dist/providers/posthog.mjs"
     }
   },
   "module": "./dist/index.mjs",
