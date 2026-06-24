@@ -39,7 +39,7 @@ export async function clean(config?: string | InlineConfig) {
   const tempDirs = [
     'node_modules/.vite',
     'node_modules/.cache',
-    '**/.wxt',
+    '{,**/}.wxt',
     `${path.relative(root, wxt.config.outBaseDir)}/*`,
   ];
   wxt.logger.debug(
