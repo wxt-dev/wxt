@@ -3,6 +3,16 @@ import { WxtPackageManagerImpl } from './types';
 import { dedupeDependencies, npm } from './npm';
 import spawn from 'nano-spawn';
 
+export async function isYarnInstalled(): Promise<boolean> {
+  try {
+    const { stdout } = await spawn('yarn', ['--version']);
+    const version = stdout.trim();
+    return version !== '' && /^\d+\.\d+\.\d+/.test(version);
+  } catch {
+    return false;
+  }
+}
+
 export const yarn: WxtPackageManagerImpl = {
   overridesKey: 'resolutions',
   downloadDependency(...args) {
