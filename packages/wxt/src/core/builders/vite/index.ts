@@ -1,6 +1,6 @@
 import { Hookable } from 'hookable';
 import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
-import { dirname, extname, join, relative } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import type * as vite from 'vite';
 import { ViteNodeRunner } from 'vite-node/client';
 import { ViteNodeServer } from 'vite-node/server';
@@ -67,7 +67,11 @@ export async function createViteBuilder(
 
     config.server ??= {};
     config.server.watch = {
-      ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
+      ignored: [
+        `${wxtConfig.outBaseDir}/**`,
+        `${wxtConfig.wxtDir}/**`,
+        ...getRunnerProfileWatchIgnores(wxtConfig),
+      ],
     };
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
@@ -390,6 +394,59 @@ export async function createViteBuilder(
       return server;
     },
   };
+}
+
+export function getRunnerProfileWatchIgnores(
+  wxtConfig: ResolvedConfig,
+): string[] {
+  const root = normalizePath(wxtConfig.root);
+  const chromiumArgProfiles = extractPathArgs(
+    wxtConfig.runnerConfig.config?.chromiumArgs,
+    '--user-data-dir',
+  );
+  const firefoxArgProfiles = extractPathArgs(
+    wxtConfig.runnerConfig.config?.firefoxArgs,
+    '-profile',
+  );
+  const profiles = [
+    wxtConfig.runnerConfig.config?.chromiumProfile,
+    wxtConfig.runnerConfig.config?.firefoxProfile,
+    ...chromiumArgProfiles,
+    ...firefoxArgProfiles,
+  ].filter((profile): profile is string => typeof profile === 'string');
+
+  return Array.from(
+    new Set(
+      profiles
+        .map((profile) => normalizePath(resolve(wxtConfig.root, profile)))
+        // Avoid accidentally disabling all file watching.
+        .filter((profilePath) => profilePath !== root)
+        .map((profilePath) => `${profilePath}/**`),
+    ),
+  );
+}
+
+function extractPathArgs(args: string[] | undefined, flag: string): string[] {
+  if (!args?.length) return [];
+
+  const paths: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+
+    if (arg.startsWith(`${flag}=`)) {
+      const value = arg.slice(flag.length + 1).trim();
+      if (value) paths.push(value);
+      continue;
+    }
+
+    if (arg === flag) {
+      const nextValue = args[i + 1]?.trim();
+      if (nextValue) paths.push(nextValue);
+      i += 1;
+    }
+  }
+
+  return paths;
 }
 
 function getBuildOutputChunks(
