@@ -10,6 +10,7 @@ import {
   createFileReloader,
   reloadContentScripts,
 } from './utils/create-file-reloader';
+import { resolveWatchOptions } from './utils/watch-options';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before
@@ -152,7 +153,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       logBabelSyntaxError(err);
       wxt.logger.info('Waiting for syntax error to be fixed...');
       await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        const watcher = chokidar.watch(err.id, {
+          ...resolveWatchOptions(wxt.config),
+          ignoreInitial: true,
+        });
         watcher.on('all', () => {
           watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');

@@ -28,6 +28,7 @@ import {
   VirtualModuleId,
 } from '../../utils/virtual-modules';
 import * as wxtPlugins from './plugins';
+import { resolveWatchOptions } from '../../utils/watch-options';
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -66,9 +67,8 @@ export async function createViteBuilder(
     }
 
     config.server ??= {};
-    config.server.watch = {
-      ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
-    };
+
+    config.server.watch = resolveWatchOptions(wxtConfig, config.server.watch);
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};

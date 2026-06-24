@@ -429,6 +429,12 @@ export interface InlineConfig {
    * "wxt-module-analytics").
    */
   modules?: string[];
+
+  /**
+   * Configure file watching behavior during development. These options are
+   * passed to Vite's dev server watcher.
+   */
+  watchOptions?: WxtWatchOptions;
 }
 
 // TODO: Extract to @wxt/vite-builder and use module augmentation to include the vite field
@@ -1571,6 +1577,7 @@ export interface ResolvedConfig {
   hooks: NestedHooks<WxtHooks>;
   builtinModules: WxtModule<any>[];
   userModules: WxtModuleWithMetadata<any>[];
+  watchOptions?: WxtWatchOptions;
   /**
    * An array of string to import plugins from. These paths should be resolvable
    * by vite, and they should `export default defineWxtPlugin(...)`.
@@ -1801,3 +1808,5 @@ export interface WxtDirFileEntry {
   /** Set to `true` to add a reference to this file in `.wxt/wxt.d.ts`. */
   tsReference?: boolean;
 }
+
+export type WxtWatchOptions = NonNullable<vite.ServerOptions['watch']>;
