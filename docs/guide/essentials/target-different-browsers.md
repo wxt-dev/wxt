@@ -81,49 +81,25 @@ Alternatively, you can use the [`filterEntrypoints` config](/api/reference/wxt/i
 
 ## Per-Browser Options
 
-Many entrypoint config options accept either a single value (applied to every browser build) or a per-browser map (a different value per build target). These are typed as `PerBrowserOption<T>` in the WXT source:
-
-```ts
-export type PerBrowserOption<T> = T | PerBrowserMap<T>;
-export type PerBrowserMap<T> = { [browser: TargetBrowser]: T };
-```
-
-This applies to fields like `matches`, `runAt`, `matchAboutBlank`, `excludeMatches`, `includeGlobs`, `excludeGlobs`, `allFrames`, `matchOriginAsFallback`, `cssInjectionMode`, `registration`, `defaultTitle`, `defaultArea`, `persistent`, and several others on `BackgroundEntrypointOptions`, `BaseContentScriptEntrypointOptions`, `PopupEntrypointOptions`, `OptionsEntrypointOptions`, and `SidepanelEntrypointOptions`.
-
-### Apply the same value to every build
-
-Pass the value directly:
-
-```ts
-export default defineContentScript({
-  matches: ['*://*.example.com/*'],
-  runAt: 'document_idle',
-  // ...
-});
-```
-
-### Use a different value per browser
-
-Pass a `PerBrowserMap` keyed by the [build target](/guide/essentials/target-different-browsers#target-a-browser) (`chrome`, `firefox`, `safari`, `edge`, `opera`, `custom`, or a custom target from `webExt.config.browserTargets`):
+Some entrypoint options can be customized per build target by passing an object keyed by the [target browser](/guide/essentials/target-different-browsers#target-a-browser) instead of a single value. This is useful when different browsers need different match patterns, run timings, or other entrypoint behavior:
 
 ```ts
 export default defineContentScript({
   matches: {
-    chrome: ['*://*.example.com/*'],
-    firefox: ['*://*.example.org/*'],
+    chrome: ['*://chrome.example.com/*'],
+    firefox: ['*://firefox.example.com/*'],
   },
   runAt: {
     chrome: 'document_start',
-    firefox: 'document_idle',
+    firefox: 'document_end',
   },
-  // ...
+
+  world: {
+    firefox: 'MAIN',
+  },
+
+  main(ctx) {
+    // ...
+  },
 });
 ```
-
-If a build target is omitted from the map, that build inherits the build's default for that field (typically the same as if you didn't set the option at all). For example, the `safari` build above would fall back to WXT's default `runAt`.
-
-:::tip Mixed forms
-You can mix both styles inside the same entrypoint — some fields can be plain values and others maps — as long as each individual field is either a `T` or a `PerBrowserMap<T>`.
-:::
-
-For the manifest-level `default_icon` (a nested `Record<resolution, iconPath>` that doesn't fit the per-key shape), see [Manifest config](/guide/essentials/config/manifest) for the manual per-browser workaround.
