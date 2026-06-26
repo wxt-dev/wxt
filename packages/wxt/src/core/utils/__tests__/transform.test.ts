@@ -170,5 +170,20 @@ export default defineBackground();`;
       const actual = removeMainFunctionCode(input).code;
       expect(actual).toEqual(expected);
     });
+
+    it('should remove main field when object contains spread properties', () => {
+      const input = `
+        export default defineContentScript({
+        ...SHARED_CONFIG,
+        main: () => {},
+      })
+      `;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toContain('...SHARED_CONFIG');
+      expect(actual).not.toContain('main:');
+    });
+
   });
 });
