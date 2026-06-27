@@ -7,7 +7,7 @@ import BlogLayout from '../components/BlogLayout.vue';
 import './custom.css';
 import 'virtual:group-icons.css';
 import type { EnhanceAppContext } from 'vitepress/client';
-import { setupCodeGroupSync } from '../utils/code-groups';
+import { setupCodeGroupSync } from '../utils/code-groups-sync';
 
 export default {
   extends: DefaultTheme,
