@@ -93,14 +93,6 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', async (...args) => {
         await reloadOnChange(args[0], args[1]);
-
-        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
-        keyboardShortcuts.start();
-      });
-
-      keyboardShortcuts.printHelp({
-        canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
       });
     },
 
@@ -137,6 +129,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       runner = await createExtensionRunner();
       await runner.openBrowser();
       keyboardShortcuts.start();
+      keyboardShortcuts.printHelp({
+        canReopenBrowser:
+          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+      });
     },
   };
   const keyboardShortcuts = createKeyboardShortcuts(server);
@@ -172,6 +168,11 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
     // Open browser after everything is ready to go.
     await runner.openBrowser();
+    keyboardShortcuts.start();
+    keyboardShortcuts.printHelp({
+      canReopenBrowser:
+        !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
+    });
   };
 
   builderServer.on?.('close', () => keyboardShortcuts.stop());
