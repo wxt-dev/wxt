@@ -561,11 +561,6 @@ export interface WxtDevServer
   restartBrowser: () => void;
 }
 
-export interface KeyboardShortcutWatcher {
-  start(): void;
-  stop(): void;
-}
-
 export interface ReloadContentScriptPayload {
   registration?: BaseContentScriptEntrypointOptions['registration'];
   contentScript: Omit<Browser.scripting.RegisteredContentScript, 'id'>;
