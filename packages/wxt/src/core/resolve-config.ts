@@ -235,6 +235,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {}),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
+    watchOptions: mergedConfig.watchOptions ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
