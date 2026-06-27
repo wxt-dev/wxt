@@ -152,7 +152,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       logBabelSyntaxError(err);
       wxt.logger.info('Waiting for syntax error to be fixed...');
       await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        const watcher = chokidar.watch(err.id, {
+          ...wxt.config.watchOptions,
+          ignoreInitial: true,
+        });
         watcher.on('all', () => {
           watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');

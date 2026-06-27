@@ -132,6 +132,20 @@ export interface InlineConfig {
    */
   manifestVersion?: TargetManifestVersion;
   /**
+   * Chokidar options used by dev-mode file watchers. This is useful in
+   * containers, WSL, and network file systems where native file events can be
+   * unreliable.
+   *
+   * @example
+   *   export default defineConfig({
+   *     watchOptions: {
+   *       usePolling: true,
+   *       interval: 1000,
+   *     },
+   *   });
+   */
+  watchOptions?: vite.WatchOptions;
+  /**
    * Override the logger used.
    *
    * @default
@@ -1539,6 +1553,8 @@ export interface ResolvedConfig {
     firefoxDataCollection?: boolean;
     firefoxId?: boolean;
   };
+  /** Chokidar options used by dev-mode file watchers. */
+  watchOptions: vite.WatchOptions;
   dev: {
     /** Only defined during dev command */
     server?: {
