@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { yarn } from '../yarn';
+
+const itWithYarn = hasYarnInstalled() ? it : it.skip;
 
 describe('Yarn Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-yarn-project');
 
-    it('should list direct dependencies', async () => {
+    itWithYarn('should list direct dependencies', async () => {
       const actual = await yarn.listDependencies({ cwd });
       expect(actual).toEqual([
         { name: 'mime-db', version: '1.52.0' },
@@ -15,7 +18,7 @@ describe('Yarn Package Management Utils', () => {
       ]);
     });
 
-    it('should list all dependencies', async () => {
+    itWithYarn('should list all dependencies', async () => {
       const actual = await yarn.listDependencies({ cwd, all: true });
       expect(actual).toEqual([
         { name: 'mime-db', version: '1.52.0' },
@@ -25,3 +28,8 @@ describe('Yarn Package Management Utils', () => {
     });
   });
 });
+
+function hasYarnInstalled(): boolean {
+  const checkCommand = process.platform === 'win32' ? 'where' : 'which';
+  return spawnSync(checkCommand, ['yarn'], { stdio: 'ignore' }).status === 0;
+}
