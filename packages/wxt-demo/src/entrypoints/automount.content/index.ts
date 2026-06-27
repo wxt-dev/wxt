@@ -28,9 +28,10 @@ export default defineContentScript({
       append: 'after',
       anchor: '#automount-anchor',
       onMount: (container) => {
+        container.classList.add('flex', 'items-start', 'justify-start');
         const app = document.createElement('div');
         app.id = 'automount-ui';
-        app.classList.add('m-0', 'text-center', 'text-blue-500');
+        app.classList.add('m-8', 'text-center', 'text-blue-500');
         app.textContent = `Hello, I'm automount UI.`;
         container.append(app);
       },
