@@ -11,6 +11,10 @@
 #
 # You may include one or more of these fields for your extension.
 
+- # Anylang Translator
+  chromeId: injdenmpjncknciccmjjmjlgbmnkince
+  firefoxSlug: anylang-translator
+
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
   firefoxSlug: github-better-line-counts
@@ -105,6 +109,7 @@
 
 - # NiceTab - https://github.com/web-dahuyou/NiceTab
   chromeId: fonflmjnjbkigocpoommgmhljdpljain
+  firefoxSlug: nice-tab-manager
 
 - # Draftly for LinkedIn
   chromeId: fcffekbnfcfdemeekijbbmgmkognnmkd
@@ -137,6 +142,22 @@
 - # YouTube Auto HD + FPS
   chromeId: fcphghnknhkimeagdglkljinmpbagone
   firefoxSlug: youtube-auto-hd-fps
+
+- # YouTube Auto Feed
+  chromeId: jcdebdlnakhdinkindpogcehnhggbfad
+  firefoxSlug: youtube-auto-feed
+
+- # YouTube Like-Dislike Shortcut
+  chromeId: fdkpkpelkkdkjhpacficichkfifijipc
+  firefoxSlug: youtube-like-dislike-shortcut
+
+- # Twitch Channel Points Bonus Collector
+  chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
+  firefoxSlug: twitch-cp-bonus-collector
+
+- # Skillshare Player Control
+  chromeId: agbhgcomfpcfboebbfmefbicfkpnlfeg
+  firefoxSlug: skillshare-player-control
 
 - # MultiViewer Companion
   chromeId: lpomjgbicdemjkgmbnkjncgdebogkhlb
@@ -217,6 +238,7 @@
 
 - # Monochromate
   chromeId: hafcajcllbjnoolpfngclfmmgpikdhlm
+  firefoxSlug: monochromate
 
 - # AliasVault - Open-Source Password & (Email) Alias Manager
   chromeId: bmoggiinmnodjphdjnmpcnlleamkfedj
@@ -462,3 +484,31 @@
 - # Telsia: Eye Strain Reduction
   chromeId: iakkmikmbknfcffhalijnhijblikoldc
   firefoxSlug: telsia-eye-strain-reduction
+
+- # Sound Booster & Equalizer
+  chromeId: podnfipggfpfcpglhjebcefinglohbhn
+
+- # Link Later
+  chromeId: gpehbbegbcpjmipphokcmfhkchhcpfam
+
+- # Google Cloud Skills Boost - Helper
+  chromeId: lmbhjioadhcoebhgapaidogodllonbgg
+  firefoxSlug: cloud-skills-boost-helper
+
+- # Property Track - https://www.propertytrack.co
+  chromeId: ahknifalnhmbanoclebllcolcdomfdop
+  firefoxSlug: propertytrack
+
+- # WageSlav3
+  chromeId: anhkcmapjhiiofpcgglfljphdgppilof
+
+- # LinkedIn Games Solver
+  chromeId: jnhgapnkejaijibcdhcldhdfikjmdaph
+  firefoxSlug: linkedin-games-solver-addon
+
+- # Hayami: Anime comments & discussions
+  chromeId: nhkggpiaeaeeeimohfpchnjobbamfcbg
+  firefoxSlug: hayami
+
+- # CopyApes Assistant
+  chromeId: affmjifigldmicnbgpghddaneomejmfo
