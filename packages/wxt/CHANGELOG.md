@@ -1,5 +1,61 @@
 # Changelog
 
+## v0.20.27
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.26...wxt-v0.20.27)
+
+### 🚀 Enhancements
+
+- Add warning for missing Firefox extension ID in manifest ([#2293](https://github.com/wxt-dev/wxt/pull/2293))
+
+### 🩹 Fixes
+
+- Correct broken link at react router in createhashrouter ([#2411](https://github.com/wxt-dev/wxt/pull/2411))
+- Rename `ManifestPermissions` to `ManifestPermission` of types.ts in `wxt` package ([#2430](https://github.com/wxt-dev/wxt/pull/2430))
+
+### 📖 Documentation
+
+- Add Telsia extension to Showcase ([#2368](https://github.com/wxt-dev/wxt/pull/2368))
+- Add warning about rem unit inheritance in Shadow Root UI ([#2330](https://github.com/wxt-dev/wxt/pull/2330))
+- Added "Sound Booster & Equalizer" to showcase ([#2381](https://github.com/wxt-dev/wxt/pull/2381))
+- Clarify SPA navigation setup with locationWatcher.run() ([#2380](https://github.com/wxt-dev/wxt/pull/2380))
+- Self-host Netlify footer badge ([#2386](https://github.com/wxt-dev/wxt/pull/2386))
+- Added "Link Later" to showcase" ([#2392](https://github.com/wxt-dev/wxt/pull/2392))
+- Added Property Track to showcase ([#2404](https://github.com/wxt-dev/wxt/pull/2404))
+- Added "WageSlav3" to showcase ([#2405](https://github.com/wxt-dev/wxt/pull/2405))
+- Added "LinkedIn Games Solver" to showcase ([#2410](https://github.com/wxt-dev/wxt/pull/2410))
+- Added NiceTab firefoxslug to extension showcase ([#2417](https://github.com/wxt-dev/wxt/pull/2417))
+- Added 4 extensions to the homepage ([#2419](https://github.com/wxt-dev/wxt/pull/2419))
+- Added Hayami to showcase ([#2422](https://github.com/wxt-dev/wxt/pull/2422))
+- Added anylang translator to showcase ([#2426](https://github.com/wxt-dev/wxt/pull/2426))
+
+### 🏡 Chore
+
+- **deps:** Bump c12 from 3.3.3 to 3.3.4 ([#2364](https://github.com/wxt-dev/wxt/pull/2364))
+- **deps:** Bump filesize from 11.0.15 to 11.0.17 ([#2363](https://github.com/wxt-dev/wxt/pull/2363))
+- **deps:** Bump tinyglobby from 0.2.15 to 0.2.16 ([#2366](https://github.com/wxt-dev/wxt/pull/2366))
+- Add Google Cloud Skills Boost - Helper extension to showcase ([#2401](https://github.com/wxt-dev/wxt/pull/2401))
+
+### ❤️ Contributors
+
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- RenovZ ([@RenovZ](https://github.com/RenovZ))
+- Nicholas Yoannou ([@nicholasyoannou](https://github.com/nicholasyoannou))
+- Avi ([@avi12](https://github.com/avi12))
+- Peter Wong <www121ppp@gmail.com>
+- ChamikaUluwatta ([@ChamikaUluwatta](https://github.com/ChamikaUluwatta))
+- Muhammed Mustafa AKŞAM ([@muhammedaksam](https://github.com/muhammedaksam))
+- Slovakian ([@slovakian](https://github.com/slovakian))
+- Oliver Benns ([@oliverbenns](https://github.com/oliverbenns))
+- David Nguyen <h250694@gmail.com>
+- Esteban Vera <minos_93105@hotmail.com>
+- Sean Kenneth Doherty <Smaster7772@gmail.com>
+- Muhammad Umer Farooq ([@mrumerf](https://github.com/mrumerf))
+- Muzammil ([@oyzamil](https://github.com/oyzamil))
+- Aniket Lodh ([@Aniket-lodh](https://github.com/Aniket-lodh))
+- George Forse <george@gforse.uk>
+- Shubhrajit Sadhukhan <champa.281982@gmail.com>
+
 ## v0.20.26
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.25...wxt-v0.20.26)

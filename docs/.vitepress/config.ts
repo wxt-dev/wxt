@@ -163,8 +163,7 @@ export default defineConfig({
 
     footer: {
       message: [
-        '<a class="light-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-bg.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
-        '<a class="dark-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-accent.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
+        '<span class="netlify-badge"><a class="light-netlify" href="https://www.netlify.com"><img src="/netlify-badge-light.svg" alt="Deploys by Netlify" /></a><a class="dark-netlify" href="https://www.netlify.com"><img src="/netlify-badge-dark.svg" alt="Deploys by Netlify" /></a></span>',
         'Released under the <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE">MIT License</a>.',
       ].join('<br/>'),
       copyright:
