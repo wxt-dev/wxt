@@ -123,6 +123,47 @@ describe('Content Script UIs', () => {
           expect(ui.shadow.mode).toBe(expected);
         },
       );
+
+      it('should scope document-level CSS properties by runtime ID', async () => {
+        const ui = await createShadowRootUi(ctx, {
+          position: 'inline',
+          name: 'test-component',
+          css: `
+            :host {
+              --tw-gradient-from: red;
+              color: var(--tw-gradient-from);
+            }
+
+            @property --tw-gradient-from {
+              syntax: "<color>";
+              inherits: false;
+              initial-value: #0000;
+            }
+          `,
+          onMount(uiContainer) {
+            appendTestApp(uiContainer);
+          },
+        });
+
+        ui.mount();
+
+        const documentStyle = document.querySelector(
+          'style[wxt-shadow-root-document-styles]',
+        );
+        const shadowStyle = ui.shadow.querySelector('style');
+
+        expect(documentStyle?.textContent).toContain(
+          '@property --wxt-test-extension-id-tw-gradient-from',
+        );
+        expect(shadowStyle?.textContent).toContain(
+          '--wxt-test-extension-id-tw-gradient-from: red',
+        );
+        expect(shadowStyle?.textContent).toContain(
+          'var(--wxt-test-extension-id-tw-gradient-from)',
+        );
+
+        ui.remove();
+      });
     });
   });
 

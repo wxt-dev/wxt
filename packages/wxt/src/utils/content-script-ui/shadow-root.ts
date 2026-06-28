@@ -35,7 +35,9 @@ export async function createShadowRootUi<TMounted>(
   }
 
   // Some rules must be applied outside the shadow root, so split the CSS apart
-  const { shadowCss, documentCss } = splitShadowRootCss(css.join('\n').trim());
+  const { shadowCss, documentCss } = splitShadowRootCss(css.join('\n').trim(), {
+    propertyPrefix: getRuntimePropertyPrefix(),
+  });
 
   const {
     isolatedElement: uiContainer,
@@ -131,6 +133,14 @@ async function loadCss(): Promise<string> {
     );
     return '';
   }
+}
+
+function getRuntimePropertyPrefix() {
+  const runtimeId = browser.runtime?.id;
+  if (!runtimeId) return undefined;
+
+  const id = runtimeId.replace(/[^-_a-zA-Z0-9]/g, '-');
+  return id ? `wxt-${id}` : undefined;
 }
 
 export interface ShadowRootContentScriptUi<

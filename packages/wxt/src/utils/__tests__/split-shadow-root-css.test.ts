@@ -69,5 +69,58 @@ describe('Shadow Root Utils', () => {
         documentCss: expectedDocumentCss,
       });
     });
+
+    it('should scope properties registered outside the shadow root', () => {
+      const css = `
+:host {
+  --tw-gradient-from: red;
+  color: var(--tw-gradient-from);
+  border-color: var(--tw-gradient-from-position);
+  background: var(--unregistered);
+}
+
+@property --tw-gradient-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+
+@property --tw-gradient-from-position {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.button {
+  transition-property: --tw-gradient-from;
+}
+      `.trim();
+
+      const actual = splitShadowRootCss(css, {
+        propertyPrefix: 'wxt-test-extension-id',
+      });
+
+      expect(actual.documentCss).toContain(
+        '@property --wxt-test-extension-id-tw-gradient-from {',
+      );
+      expect(actual.documentCss).toContain(
+        '@property --wxt-test-extension-id-tw-gradient-from-position {',
+      );
+      expect(actual.shadowCss).toContain(
+        '--wxt-test-extension-id-tw-gradient-from: red;',
+      );
+      expect(actual.shadowCss).toContain(
+        'var(--wxt-test-extension-id-tw-gradient-from)',
+      );
+      expect(actual.shadowCss).toContain(
+        'var(--wxt-test-extension-id-tw-gradient-from-position)',
+      );
+      expect(actual.shadowCss).toContain(
+        'transition-property: --wxt-test-extension-id-tw-gradient-from;',
+      );
+      expect(actual.shadowCss).toContain('var(--unregistered)');
+      expect(actual.shadowCss).not.toContain('--tw-gradient-from');
+      expect(actual.documentCss).not.toContain('--tw-gradient-from');
+    });
   });
 });
