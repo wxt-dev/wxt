@@ -1,9 +1,10 @@
 import prompts from 'prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
-import { readdir, rename } from 'node:fs/promises';
+import { cp, mkdtemp, readdir, rename, rm } from 'node:fs/promises';
 import { pathExists } from './utils/fs';
 import path from 'node:path';
+import { tmpdir } from 'node:os';
 import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
 
@@ -166,25 +167,37 @@ async function cloneProject({
 }) {
   const { createSpinner } = await import('nanospinner');
   const spinner = createSpinner('Downloading template').start();
+  let templateDir: string | undefined;
   try {
-    // 1. Clone repo
+    // Download away from the target path so existing empty directories inside
+    // parent Git repos get the same files as newly created project paths.
+    templateDir = await mkdtemp(path.join(tmpdir(), 'wxt-init-'));
+
     await downloadTemplate(`gh:${REPO}/${template.path}`, {
-      dir: directory,
+      dir: templateDir,
       force: true,
     });
 
-    // 2. Move _gitignore -> .gitignore
-    await rename(
-      path.join(directory, '_gitignore'),
-      path.join(directory, '.gitignore'),
-    ).catch((err) =>
-      consola.warn('Failed to move _gitignore to .gitignore:', err),
-    );
+    await moveGitignore(templateDir);
+    await cp(templateDir, directory, { recursive: true, force: true });
 
     spinner.success();
   } catch (err) {
     spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
+  } finally {
+    if (templateDir) await rm(templateDir, { recursive: true, force: true });
+  }
+}
+
+async function moveGitignore(directory: string) {
+  const gitignoreSource = path.join(directory, '_gitignore');
+  const gitignoreTarget = path.join(directory, '.gitignore');
+
+  if (await pathExists(gitignoreSource)) {
+    await rename(gitignoreSource, gitignoreTarget);
+  } else if (!(await pathExists(gitignoreTarget))) {
+    consola.warn('Template did not include _gitignore');
   }
 }
 
