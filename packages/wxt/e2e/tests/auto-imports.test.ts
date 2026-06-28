@@ -130,6 +130,108 @@ describe('Auto Imports', () => {
           "
         `);
     });
+
+    it('extends default project dirs with imports.dirs', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: {
+          dirs: ['shared'],
+        },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          return date
+        }`,
+      );
+      project.addFile(
+        'shared/session.ts',
+        `export function getSession() {
+          return "session"
+        }`,
+      );
+
+      await project.prepare();
+
+      const importsModule = await project.serializeFile(
+        '.wxt/types/imports-module.d.ts',
+      );
+      expect(importsModule).toContain(
+        "export { startOfDay } from '../utils/time';",
+      );
+      expect(importsModule).toContain(
+        "export { getSession } from '../shared/session';",
+      );
+    });
+
+    it('allows disabling default project dirs without disabling auto-imports', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: {
+          defaultDirs: false,
+          dirs: ['shared'],
+        },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          return date
+        }`,
+      );
+      project.addFile(
+        'shared/session.ts',
+        `export function getSession() {
+          return "session"
+        }`,
+      );
+
+      await project.prepare();
+
+      const importsModule = await project.serializeFile(
+        '.wxt/types/imports-module.d.ts',
+      );
+      expect(importsModule).toContain(
+        "export { browser, Browser } from 'wxt/browser';",
+      );
+      expect(importsModule).toContain(
+        "export { getSession } from '../shared/session';",
+      );
+      expect(importsModule).not.toContain('startOfDay');
+    });
+
+    it('allows replacing default project dirs', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: {
+          defaultDirs: ['shared'],
+        },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          return date
+        }`,
+      );
+      project.addFile(
+        'shared/session.ts',
+        `export function getSession() {
+          return "session"
+        }`,
+      );
+
+      await project.prepare();
+
+      const importsModule = await project.serializeFile(
+        '.wxt/types/imports-module.d.ts',
+      );
+      expect(importsModule).toContain(
+        "export { getSession } from '../shared/session';",
+      );
+      expect(importsModule).not.toContain('startOfDay');
+    });
   });
 
   describe('imports: false', () => {

@@ -30,6 +30,13 @@ import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+const DEFAULT_AUTO_IMPORT_DIRS = [
+  'components',
+  'composables',
+  'hooks',
+  'utils',
+];
+
 /**
  * Given an inline config, discover the config file if necessary, merge the
  * results, resolve any relative paths, and apply any defaults.
@@ -266,12 +273,7 @@ async function mergeInlineConfig(
   userConfig: UserConfig,
 ): Promise<InlineConfig> {
   // Merge imports option
-  const imports: InlineConfig['imports'] =
-    inlineConfig.imports === false || userConfig.imports === false
-      ? false
-      : userConfig.imports == null && inlineConfig.imports == null
-        ? undefined
-        : defu(inlineConfig.imports ?? {}, userConfig.imports ?? {});
+  const imports = mergeImportOptions(inlineConfig.imports, userConfig.imports);
 
   // Merge manifest option
   const manifest: UserManifestFn = async (env) => {
@@ -296,6 +298,26 @@ async function mergeInlineConfig(
     manifest,
     ...builderConfig,
   };
+}
+
+function mergeImportOptions(
+  inlineImports: InlineConfig['imports'],
+  userImports: UserConfig['imports'],
+): InlineConfig['imports'] {
+  if (inlineImports === false || userImports === false) return false;
+  if (userImports == null && inlineImports == null) return undefined;
+
+  const merged = defu(inlineImports ?? {}, userImports ?? {});
+  const defaultDirs =
+    inlineImports != null && 'defaultDirs' in inlineImports
+      ? inlineImports.defaultDirs
+      : userImports != null && 'defaultDirs' in userImports
+        ? userImports.defaultDirs
+        : undefined;
+
+  if (defaultDirs !== undefined) merged.defaultDirs = defaultDirs;
+
+  return merged;
 }
 
 function resolveZipConfig(
@@ -365,6 +387,9 @@ async function getUnimportOptions(
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  const userImportOptions =
+    config.imports === false || config.imports == null ? {} : config.imports;
+  const { defaultDirs, ...unimportOptions } = userImportOptions;
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
 
@@ -493,14 +518,26 @@ async function getUnimportOptions(
       cwd: srcDir,
     },
     eslintrc,
-    dirs: disabled ? [] : ['components', 'composables', 'hooks', 'utils'],
+    dirs: disabled ? [] : resolveDefaultAutoImportDirs(defaultDirs),
     disabled,
   };
 
   return defu<WxtResolvedUnimportOptions, [WxtResolvedUnimportOptions]>(
-    config.imports ?? {},
+    unimportOptions,
     defaultOptions,
   );
+}
+
+function resolveDefaultAutoImportDirs(
+  defaultDirs: Exclude<
+    InlineConfig['imports'],
+    false | undefined
+  >['defaultDirs'],
+): NonNullable<WxtResolvedUnimportOptions['dirs']> {
+  if (defaultDirs === false) return [];
+  if (Array.isArray(defaultDirs)) return defaultDirs;
+
+  return [...DEFAULT_AUTO_IMPORT_DIRS];
 }
 
 async function getUnimportEslintOptions(

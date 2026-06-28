@@ -1640,6 +1640,17 @@ export interface ResolvedEslintrc {
 
 export type WxtUnimportOptions = Partial<UnimportOptions> & {
   /**
+   * Configure WXT's default project directories.
+   *
+   * Defaults to `true`, which scans `components`, `composables`, `hooks`, and
+   * `utils`. Set to `false` to keep WXT API auto-imports and explicit `dirs`
+   * entries without scanning those project directories. Provide an array to
+   * replace the default project directory list.
+   *
+   * @default true
+   */
+  defaultDirs?: boolean | NonNullable<UnimportOptions['dirs']>;
+  /**
    * When using ESLint, auto-imported variables are linted as "undeclared
    * globals". This option lets you configure a base eslintrc that, when
    * extended, fixes these lint errors.

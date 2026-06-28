@@ -22,6 +22,39 @@ All named and default exports from files in these directories are available ever
 
 To see the complete list of auto-imported APIs, run [`wxt prepare`](/api/cli/wxt-prepare) and look at your project's `.wxt/types/imports-module.d.ts` file.
 
+## Project Directories
+
+Use `imports.dirs` to add project directories while keeping WXT's default project directories:
+
+```ts
+export default defineConfig({
+  imports: {
+    dirs: ['stores'],
+  },
+});
+```
+
+Use `imports.defaultDirs` to change WXT's default project directories. Set it to `false` to keep WXT API auto-imports and any explicit `dirs` entries, but stop scanning `components`, `composables`, `hooks`, and `utils`:
+
+```ts
+export default defineConfig({
+  imports: {
+    defaultDirs: false,
+    dirs: ['shared'],
+  },
+});
+```
+
+You can also replace WXT's default project directories with another list:
+
+```ts
+export default defineConfig({
+  imports: {
+    defaultDirs: ['shared'],
+  },
+});
+```
+
 ## TypeScript
 
 For TypeScript and your editor to recognize auto-imported variables, you need to run the [`wxt prepare` command](/api/cli/wxt-prepare).
