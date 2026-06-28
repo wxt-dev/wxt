@@ -1310,7 +1310,7 @@ export interface WxtHooks {
    * @since 0.20.28
    * @example
    *   wxt.hooks.hook('prepare:tsconfig', (wxt, { tsconfig }) => {
-   *     tsconfig.compilerOptions.lib = ['DOM', 'WebWorker'];
+   *     tsconfig.compilerOptions.lib.push('WebWorker');
    *   });
    */
   'prepare:tsconfig': (wxt: Wxt, configs: PrepareTsconfigs) => HookResult;
