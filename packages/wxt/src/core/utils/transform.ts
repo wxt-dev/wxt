@@ -41,10 +41,18 @@ function emptyMainFunction(mod: ProxifiedModule): void {
       // ex: "fn({ ..., main: () => {} })" to "fn({ ... })"
       mod.exports.default.$ast.arguments[0].properties =
         mod.exports.default.$ast.arguments[0].properties.filter(
-          (prop: any) => prop.key.name !== 'main',
+          (prop: any) => !isMainProperty(prop),
         );
     }
   }
+}
+
+function isMainProperty(prop: any): boolean {
+  if (!prop?.key || prop.computed) {
+    return false;
+  }
+
+  return prop.key.name === 'main' || prop.key.value === 'main';
 }
 
 function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
