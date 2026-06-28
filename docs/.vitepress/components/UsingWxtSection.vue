@@ -21,6 +21,7 @@ interface ListedExtension {
 const extensionEntries = _extensionEntries as Array<{
   chromeId?: string;
   firefoxSlug?: string;
+  edgeId?: string;
 }>;
 
 const chromeIds = extensionEntries.flatMap((e) =>
@@ -31,8 +32,13 @@ const firefoxSlugs = [
     extensionEntries.flatMap((e) => (e.firefoxSlug ? [e.firefoxSlug] : [])),
   ),
 ];
+const edgeIds = extensionEntries.flatMap((e) => (e.edgeId ? [e.edgeId] : []));
 
-const { data, isLoading } = useListExtensionDetails(chromeIds, firefoxSlugs);
+const { data, isLoading } = useListExtensionDetails(
+  chromeIds,
+  firefoxSlugs,
+  edgeIds,
+);
 
 function addUtmSource(storeUrl: string): string {
   const url = new URL(storeUrl);
@@ -49,6 +55,9 @@ const sortedExtensions = computed((): ListedExtension[] => {
   const firefoxBySlug = new Map(
     (data.value.firefox ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
+  const edgeById = new Map(
+    (data.value.edge ?? []).filter(Boolean).map((e) => [e.id, e]),
+  );
 
   const results: ListedExtension[] = [];
 
@@ -57,12 +66,14 @@ const sortedExtensions = computed((): ListedExtension[] => {
     const firefox = entry.firefoxSlug
       ? firefoxBySlug.get(entry.firefoxSlug)
       : undefined;
+    const edge = entry.edgeId ? edgeById.get(entry.edgeId) : undefined;
 
-    if (!chrome && !firefox) continue;
+    if (!chrome && !firefox && !edge) continue;
 
-    const primary = chrome ?? firefox!;
-    const users = (chrome?.users ?? 0) + (firefox?.users ?? 0);
-    const rating = chrome?.rating ?? firefox?.rating;
+    const primary = chrome ?? firefox ?? edge!;
+    const users =
+      (chrome?.users ?? 0) + (firefox?.users ?? 0) + (edge?.users ?? 0);
+    const rating = chrome?.rating ?? firefox?.rating ?? edge?.rating;
 
     const stores: StoreLink[] = [];
     if (chrome) {
@@ -71,9 +82,16 @@ const sortedExtensions = computed((): ListedExtension[] => {
     if (firefox) {
       stores.push({ label: 'Firefox', url: addUtmSource(firefox.storeUrl) });
     }
+    if (edge) {
+      stores.push({ label: 'Edge', url: addUtmSource(edge.storeUrl) });
+    }
 
     results.push({
-      id: entry.chromeId ?? `firefox:${entry.firefoxSlug}`,
+      id:
+        entry.chromeId ??
+        (entry.firefoxSlug
+          ? `firefox:${entry.firefoxSlug}`
+          : `edge:${entry.edgeId}`),
       name: primary.name,
       iconUrl: primary.iconUrl,
       shortDescription: primary.shortDescription,
