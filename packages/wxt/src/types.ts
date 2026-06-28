@@ -1313,12 +1313,7 @@ export interface WxtHooks {
    *     tsconfig.compilerOptions.lib = ['DOM', 'WebWorker'];
    *   });
    */
-  'prepare:tsconfig': (
-    wxt: Wxt,
-    configs: {
-      tsconfig: Record<string, any>;
-    },
-  ) => HookResult;
+  'prepare:tsconfig': (wxt: Wxt, configs: PrepareTsconfigs) => HookResult;
   /**
    * Called before generating the list of public paths inside
    * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative to
