@@ -283,41 +283,39 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
     if (res.startsWith('.') || res.startsWith('/')) return res;
     return './' + res;
   };
-  const paths = Object.entries(wxt.config.alias)
-    .flatMap(([alias, absolutePath]) => {
-      const aliasPath = getTsconfigPath(absolutePath);
-      return [
-        `"${alias}": ["${aliasPath}"]`,
-        `"${alias}/*": ["${aliasPath}/*"]`,
-      ];
-    })
-    .map((line) => `      ${line}`)
-    .join(',\n');
 
-  const text = `{
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "paths": {
-${paths}
-    }
-  },
-  "include": [
-    "${getTsconfigPath(wxt.config.root)}/**/*",
-    "./wxt.d.ts"
-  ],
-  "exclude": ["${getTsconfigPath(wxt.config.outBaseDir)}"]
-}`;
+  const paths = Object.fromEntries(
+    Object.entries(wxt.config.alias)
+      .map(([alias, absolutePath]) => [alias, getTsconfigPath(absolutePath)])
+      .flatMap(([alias, path]) => [
+        // Add alias for files
+        [alias, [path]],
+        // Add alias for all files in a directory
+        [alias + '/*', [path + '/*']],
+      ]),
+  );
+
+  const tsconfig = {
+    compilerOptions: {
+      target: 'ESNext',
+      module: 'ESNext',
+      moduleResolution: 'Bundler',
+      noEmit: true,
+      esModuleInterop: true,
+      forceConsistentCasingInFileNames: true,
+      resolveJsonModule: true,
+      strict: true,
+      skipLibCheck: true,
+      paths,
+    },
+    include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],
+    exclude: ['**/node_modules', '**/.*/'],
+  };
+
+  await wxt.hooks.callHook('prepare:tsconfig', wxt, { tsconfig });
 
   return {
     path: 'tsconfig.json',
-    text,
+    text: JSON.stringify(tsconfig, null, 2),
   };
 }

@@ -1259,6 +1259,11 @@ export interface ServerInfo {
   origin: string;
 }
 
+export type PrepareTsconfigs = {
+  /** The JSON contents of the `.wxt/tsconfig.json` file. */
+  tsconfig: any;
+};
+
 export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
@@ -1298,6 +1303,22 @@ export interface WxtHooks {
    *   });
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
+   * Called before WXT writes your tsconfig to the disk, allowing full
+   * customization by modifying the object by reference.
+   *
+   * @since 0.20.28
+   * @example
+   *   wxt.hooks.hook('prepare:tsconfig', (wxt, { tsconfig }) => {
+   *     tsconfig.compilerOptions.lib = ['DOM', 'WebWorker'];
+   *   });
+   */
+  'prepare:tsconfig': (
+    wxt: Wxt,
+    configs: {
+      tsconfig: Record<string, any>;
+    },
+  ) => HookResult;
   /**
    * Called before generating the list of public paths inside
    * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative to

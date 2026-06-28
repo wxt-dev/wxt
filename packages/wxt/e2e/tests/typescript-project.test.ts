@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { readFile } from 'node:fs/promises';
 
 describe('TypeScript Project', () => {
   it('should generate defined constants correctly', async () => {
@@ -319,37 +320,75 @@ describe('TypeScript Project', () => {
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
-      ".wxt/tsconfig.json
-      ----------------------------------------
-      {
-        "compilerOptions": {
-          "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
-          "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
-          "strict": true,
-          "skipLibCheck": true,
-          "paths": {
-            "@": [".."],
-            "@/*": ["../*"],
-            "~": [".."],
-            "~/*": ["../*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
-          }
+        ".wxt/tsconfig.json
+        ----------------------------------------
+        {
+          "compilerOptions": {
+            "target": "ESNext",
+            "module": "ESNext",
+            "moduleResolution": "Bundler",
+            "noEmit": true,
+            "esModuleInterop": true,
+            "forceConsistentCasingInFileNames": true,
+            "resolveJsonModule": true,
+            "strict": true,
+            "skipLibCheck": true,
+            "paths": {
+              "@": [
+                ".."
+              ],
+              "@/*": [
+                "../*"
+              ],
+              "~": [
+                ".."
+              ],
+              "~/*": [
+                "../*"
+              ],
+              "@@": [
+                ".."
+              ],
+              "@@/*": [
+                "../*"
+              ],
+              "~~": [
+                ".."
+              ],
+              "~~/*": [
+                "../*"
+              ]
+            }
+          },
+          "include": [
+            "../**/*",
+            "./wxt.d.ts"
+          ],
+          "exclude": [
+            "**/node_modules",
+            "**/.*/"
+          ]
+        }"
+      `);
+  });
+
+  it("should allow updating the project's tsconfig via hooks", async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({});
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+
+    await project.prepare({
+      hooks: {
+        'prepare:tsconfig': (_, { tsconfig }) => {
+          tsconfig.test = 'test';
         },
-        "include": [
-          "../**/*",
-          "./wxt.d.ts"
-        ],
-        "exclude": ["../.output"]
-      }"
-    `);
+      },
+    });
+
+    const actual = JSON.parse(
+      await readFile(project.resolvePath('.wxt/tsconfig.json'), 'utf-8'),
+    );
+    expect(actual).toMatchObject({ test: 'test' });
   });
 
   it('should generate correct path aliases for a custom srcDir', async () => {
@@ -363,37 +402,56 @@ describe('TypeScript Project', () => {
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
-      ".wxt/tsconfig.json
-      ----------------------------------------
-      {
-        "compilerOptions": {
-          "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
-          "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
-          "strict": true,
-          "skipLibCheck": true,
-          "paths": {
-            "@": ["../src"],
-            "@/*": ["../src/*"],
-            "~": ["../src"],
-            "~/*": ["../src/*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
-          }
-        },
-        "include": [
-          "../**/*",
-          "./wxt.d.ts"
-        ],
-        "exclude": ["../.output"]
-      }"
-    `);
+          ".wxt/tsconfig.json
+          ----------------------------------------
+          {
+            "compilerOptions": {
+              "target": "ESNext",
+              "module": "ESNext",
+              "moduleResolution": "Bundler",
+              "noEmit": true,
+              "esModuleInterop": true,
+              "forceConsistentCasingInFileNames": true,
+              "resolveJsonModule": true,
+              "strict": true,
+              "skipLibCheck": true,
+              "paths": {
+                "@": [
+                  "../src"
+                ],
+                "@/*": [
+                  "../src/*"
+                ],
+                "~": [
+                  "../src"
+                ],
+                "~/*": [
+                  "../src/*"
+                ],
+                "@@": [
+                  ".."
+                ],
+                "@@/*": [
+                  "../*"
+                ],
+                "~~": [
+                  ".."
+                ],
+                "~~/*": [
+                  "../*"
+                ]
+              }
+            },
+            "include": [
+              "../**/*",
+              "./wxt.d.ts"
+            ],
+            "exclude": [
+              "**/node_modules",
+              "**/.*/"
+            ]
+          }"
+        `);
   });
 
   it('should add additional path aliases listed in the alias config, preventing defaults from being overridden', async () => {
@@ -411,39 +469,62 @@ describe('TypeScript Project', () => {
 
     const output = await project.serializeFile('.wxt/tsconfig.json');
     expect(output).toMatchInlineSnapshot(`
-      ".wxt/tsconfig.json
-      ----------------------------------------
-      {
-        "compilerOptions": {
-          "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
-          "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
-          "strict": true,
-          "skipLibCheck": true,
-          "paths": {
-            "example": ["../example"],
-            "example/*": ["../example/*"],
-            "@": ["../src"],
-            "@/*": ["../src/*"],
-            "~": ["../src"],
-            "~/*": ["../src/*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
-          }
-        },
-        "include": [
-          "../**/*",
-          "./wxt.d.ts"
-        ],
-        "exclude": ["../.output"]
-      }"
-    `);
+              ".wxt/tsconfig.json
+              ----------------------------------------
+              {
+                "compilerOptions": {
+                  "target": "ESNext",
+                  "module": "ESNext",
+                  "moduleResolution": "Bundler",
+                  "noEmit": true,
+                  "esModuleInterop": true,
+                  "forceConsistentCasingInFileNames": true,
+                  "resolveJsonModule": true,
+                  "strict": true,
+                  "skipLibCheck": true,
+                  "paths": {
+                    "example": [
+                      "../example"
+                    ],
+                    "example/*": [
+                      "../example/*"
+                    ],
+                    "@": [
+                      "../src"
+                    ],
+                    "@/*": [
+                      "../src/*"
+                    ],
+                    "~": [
+                      "../src"
+                    ],
+                    "~/*": [
+                      "../src/*"
+                    ],
+                    "@@": [
+                      ".."
+                    ],
+                    "@@/*": [
+                      "../*"
+                    ],
+                    "~~": [
+                      ".."
+                    ],
+                    "~~/*": [
+                      "../*"
+                    ]
+                  }
+                },
+                "include": [
+                  "../**/*",
+                  "./wxt.d.ts"
+                ],
+                "exclude": [
+                  "**/node_modules",
+                  "**/.*/"
+                ]
+              }"
+            `);
   });
 
   it('should start path aliases with "./" for paths inside the .wxt dir', async () => {
