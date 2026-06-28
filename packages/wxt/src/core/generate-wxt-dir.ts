@@ -311,7 +311,7 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
     include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],
     exclude: [
       getTsconfigPath(wxt.config.root) + '/**/node_modules',
-      getTsconfigPath(wxt.config.root) + '/**/.*/',
+      getTsconfigPath(wxt.config.outBaseDir),
     ],
   };
 

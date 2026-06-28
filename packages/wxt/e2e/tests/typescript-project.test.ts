@@ -366,7 +366,7 @@ describe('TypeScript Project', () => {
         ],
         "exclude": [
           "../**/node_modules",
-          "../**/.*/"
+          "../.output"
         ]
       }"
     `);
@@ -448,7 +448,7 @@ describe('TypeScript Project', () => {
         ],
         "exclude": [
           "../**/node_modules",
-          "../**/.*/"
+          "../.output"
         ]
       }"
     `);
@@ -521,7 +521,7 @@ describe('TypeScript Project', () => {
         ],
         "exclude": [
           "../**/node_modules",
-          "../**/.*/"
+          "../.output"
         ]
       }"
     `);
