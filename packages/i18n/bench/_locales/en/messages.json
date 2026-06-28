@@ -5,6 +5,9 @@
   "substitution": {
     "message": "Includes one substitution: $1"
   },
+  "namedSubstitution": {
+    "message": "Includes one named substitution: {value}"
+  },
   "singular": {
     "message": "There is $1 item"
   },
