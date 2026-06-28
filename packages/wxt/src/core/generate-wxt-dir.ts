@@ -309,7 +309,10 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
       paths,
     },
     include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],
-    exclude: ['**/node_modules', '**/.*/'],
+    exclude: [
+      getTsconfigPath(wxt.config.root) + '/**/node_modules',
+      getTsconfigPath(wxt.config.root) + '/**/.*/',
+    ],
   };
 
   await wxt.hooks.callHook('prepare:tsconfig', wxt, { tsconfig });
