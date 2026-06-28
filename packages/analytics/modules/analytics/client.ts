@@ -12,20 +12,49 @@ import type {
 import { browser } from '@wxt-dev/browser';
 import { isBackground } from '@wxt-dev/is-background';
 
-type AnalyticsMessage = {
-  [K in keyof Analytics]: {
+type AsyncAnalyticsMethod = 'identify' | 'page' | 'track' | 'setEnabled';
+
+type BackgroundAnalyticsArgs = {
+  identify: [
+    userId: string,
+    userProperties?: Record<string, string>,
+    meta?: AnalyticsEventMetadata,
+  ];
+  page: [location?: string, meta?: AnalyticsEventMetadata];
+  track: [
+    eventName: string,
+    eventProperties?: Record<string, string | undefined>,
+    meta?: AnalyticsEventMetadata,
+  ];
+  setEnabled: [enabled: boolean];
+};
+
+type AnalyticsRequestMessage = {
+  [K in AsyncAnalyticsMethod]: {
+    id: number;
     fn: K;
-    args: Parameters<Analytics[K]>;
+    args: BackgroundAnalyticsArgs[K];
   };
-}[keyof Analytics];
+}[AsyncAnalyticsMethod];
 
-type AnalyticsMethod =
-  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
-  | undefined;
+type AnalyticsRequestPayload = {
+  [K in AsyncAnalyticsMethod]: {
+    fn: K;
+    args: BackgroundAnalyticsArgs[K];
+  };
+}[AsyncAnalyticsMethod];
 
-type MethodForwarder = <K extends keyof Analytics>(
-  fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;
+type AnalyticsResponseMessage =
+  | { id: number; status: 'fulfilled' }
+  | { id: number; status: 'rejected'; error: string };
+
+type AnalyticsPortMessage = AnalyticsRequestMessage | AnalyticsResponseMessage;
+
+type BackgroundAnalytics = {
+  [K in AsyncAnalyticsMethod]: (
+    ...args: BackgroundAnalyticsArgs[K]
+  ) => Promise<void>;
+};
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -44,6 +73,28 @@ const INTERACTIVE_ROLES = new Set([
   'tab',
   'radio',
 ]);
+
+function isAnalyticsResponse(
+  message: AnalyticsPortMessage,
+): message is AnalyticsResponseMessage {
+  return 'status' in message;
+}
+
+async function callBackgroundAnalytics(
+  analytics: BackgroundAnalytics,
+  message: AnalyticsRequestMessage,
+): Promise<void> {
+  switch (message.fn) {
+    case 'identify':
+      return analytics.identify(...message.args);
+    case 'page':
+      return analytics.page(...message.args);
+    case 'track':
+      return analytics.track(...message.args);
+    case 'setEnabled':
+      return analytics.setEnabled(...message.args);
+  }
+}
 
 export function createAnalytics(config?: AnalyticsConfig): Analytics {
   if (!browser?.runtime?.id)
@@ -152,7 +203,7 @@ function createBackgroundAnalytics(
       }
     },
     page: async (
-      location: string,
+      location?: string,
       meta: AnalyticsEventMetadata = getBackgroundMeta(),
     ) => {
       const baseEvent = await getBaseEvent(meta);
@@ -207,12 +258,26 @@ function createBackgroundAnalytics(
 
   const providers =
     config?.providers?.map((provider) => provider(analytics, config)) ?? [];
+  const backgroundAnalytics = analytics as BackgroundAnalytics;
 
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
-        void (analytics[fn] as AnalyticsMethod)?.(...args);
+      port.onMessage.addListener((message: AnalyticsPortMessage) => {
+        if (isAnalyticsResponse(message)) return;
+
+        void (async () => {
+          try {
+            await callBackgroundAnalytics(backgroundAnalytics, message);
+            port.postMessage({ id: message.id, status: 'fulfilled' });
+          } catch (error) {
+            port.postMessage({
+              id: message.id,
+              status: 'rejected',
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        })();
       });
     }
   });
@@ -224,6 +289,11 @@ function createBackgroundAnalytics(
 function createFrontendAnalytics(): Analytics {
   const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
+  let nextMessageId = 0;
+  const pendingMessages = new Map<
+    number,
+    { resolve: () => void; reject: (error: Error) => void }
+  >();
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
     timestamp: Date.now(),
@@ -234,17 +304,61 @@ function createFrontendAnalytics(): Analytics {
     title: document.title || undefined,
   });
 
-  const methodForwarder: MethodForwarder =
-    (fn) =>
-    (...args) => {
-      port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
-    };
+  port.onMessage.addListener((message: AnalyticsPortMessage) => {
+    if (!isAnalyticsResponse(message)) return;
+
+    const pendingMessage = pendingMessages.get(message.id);
+    if (pendingMessage == null) return;
+
+    pendingMessages.delete(message.id);
+    if (message.status === 'fulfilled') {
+      pendingMessage.resolve();
+    } else {
+      pendingMessage.reject(new Error(message.error));
+    }
+  });
+
+  port.onDisconnect?.addListener(() => {
+    for (const { reject } of pendingMessages.values()) {
+      reject(new Error('Analytics background connection closed'));
+    }
+    pendingMessages.clear();
+  });
+
+  const sendRequest = (payload: AnalyticsRequestPayload): Promise<void> =>
+    new Promise<void>((resolve, reject) => {
+      const id = ++nextMessageId;
+      pendingMessages.set(id, { resolve, reject });
+
+      try {
+        port.postMessage({ id, ...payload } as AnalyticsRequestMessage);
+      } catch (error) {
+        pendingMessages.delete(id);
+        reject(error instanceof Error ? error : new Error(String(error)));
+      }
+    });
 
   const analytics: Analytics = {
-    identify: methodForwarder('identify'),
-    page: methodForwarder('page'),
-    track: methodForwarder('track'),
-    setEnabled: methodForwarder('setEnabled'),
+    identify: (userId, userProperties) =>
+      sendRequest({
+        fn: 'identify',
+        args: [userId, userProperties, getFrontendMetadata()],
+      }),
+    page: (location) =>
+      sendRequest({
+        fn: 'page',
+        args: [location, getFrontendMetadata()],
+      }),
+    track: (eventName, eventProperties) =>
+      sendRequest({
+        fn: 'track',
+        args: [eventName, eventProperties, getFrontendMetadata()],
+      }),
+    setEnabled: (enabled) =>
+      sendRequest({
+        fn: 'setEnabled',
+        args: [enabled],
+      }),
     autoTrack: (root) => {
       const onClick = (event: Event) => {
         const element = event.target as HTMLElement | null;

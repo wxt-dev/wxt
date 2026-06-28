@@ -10,8 +10,8 @@
     "build": "buildc -- tsdown",
     "prepack": "bun run build",
     "postinstall": "buildc --deps-only -- wxt prepare",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^",
@@ -27,6 +27,7 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "wxt": "workspace:*"
   },
   "repository": {

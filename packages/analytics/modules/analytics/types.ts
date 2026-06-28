@@ -1,20 +1,23 @@
 export interface Analytics {
   /** Report a page change. */
-  page: (url: string) => void;
+  page: (url?: string) => Promise<void>;
   /** Report a custom event. */
   track: (
     eventName: string,
     eventProperties?: Record<string, string | undefined>,
-  ) => void;
+  ) => Promise<void>;
   /** Save information about the user. */
-  identify: (userId: string, userProperties?: Record<string, string>) => void;
+  identify: (
+    userId: string,
+    userProperties?: Record<string, string>,
+  ) => Promise<void>;
   /**
    * Automatically setup and track user interactions, returning a function to
    * remove any listeners that were setup.
    */
   autoTrack: (root: Document | ShadowRoot | Element) => () => void;
   /** Calls `config.enabled.setValue`. */
-  setEnabled: (enabled: boolean) => void;
+  setEnabled: (enabled: boolean) => Promise<void>;
 }
 
 export interface AnalyticsConfig {
