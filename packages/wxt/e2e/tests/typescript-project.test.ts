@@ -324,15 +324,23 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
+          "module": "Preserve",
+          "moduleDetection": "force",
+          "moduleResolution": "bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "@": [
               ".."
@@ -406,15 +414,23 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
+          "module": "Preserve",
+          "moduleDetection": "force",
+          "moduleResolution": "bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "@": [
               "../src"
@@ -473,15 +489,23 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
-          "moduleResolution": "Bundler",
+          "module": "Preserve",
+          "moduleDetection": "force",
+          "moduleResolution": "bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "example": [
               "../example"
