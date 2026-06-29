@@ -139,8 +139,7 @@ function formatStars(r: number): string {
                 target="_blank"
                 class="store-link"
                 :title="store.label"
-              >
-                {{ store.label }}</a
+                >{{ store.label }}</a
               >
               <span
                 v-if="i < extension.stores.length - 1"
