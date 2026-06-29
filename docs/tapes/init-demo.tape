@@ -47,7 +47,7 @@ Type 'bunx wxt init .' Sleep 1s Enter
 Sleep 3.25s
 Down@750ms Enter@750ms # Select `vue` template
 Sleep 1.25s
-Down@750ms Enter@750ms # Select `pnpm` as a package manager
+Down@500ms Down@500ms Enter@750ms # Select `pnpm` as a package manager
 Sleep 5s
 
 
