@@ -1,0 +1,20 @@
+{
+  "simple": {
+    "message": "Just plain text"
+  },
+  "substitution": {
+    "message": "Includes one substitution: $1"
+  },
+  "namedSubstitution": {
+    "message": "Includes one named substitution: {value}"
+  },
+  "singular": {
+    "message": "There is $1 item"
+  },
+  "plural": {
+    "message": "There are $1 items"
+  },
+  "wxtPlural": {
+    "message": "There is $1 item | There are $1 items"
+  }
+}

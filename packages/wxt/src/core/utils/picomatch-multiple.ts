@@ -8,10 +8,8 @@ import picomatch, { PicomatchOptions } from 'picomatch';
  * matches any of the negative patterns, it will return `false`.
  *
  * @example
- *   ```ts
  *   picomatchMultiple('a.json', ['*.json', '!b.json']); // => true
  *   picomatchMultiple('b.json', ['*.json', '!b.json']); // => false
- *   ```;
  */
 export function picomatchMultiple(
   search: string,

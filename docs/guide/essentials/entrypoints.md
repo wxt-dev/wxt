@@ -463,8 +463,8 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
     <meta
       name="manifest.default_icon"
       content="{
-        16: '/icon-16.png',
-        24: '/icon-24.png',
+        '16': '/icon-16.png',
+        '24': '/icon-24.png',
         ...
       }"
     />
@@ -554,8 +554,8 @@ Firefox does not support sandboxed pages.
     <meta
       name="manifest.default_icon"
       content="{
-        16: '/icon-16.png',
-        24: '/icon-24.png',
+        '16': '/icon-16.png',
+        '24': '/icon-24.png',
         ...
       }"
     />

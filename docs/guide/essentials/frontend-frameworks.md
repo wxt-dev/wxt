@@ -97,7 +97,7 @@ Instead, you need to configure the router to run in "hash" mode, where the routi
 
 Refer to your router's docs for information about hash mode and how to enable it. Here's a non-extensive list of a few popular routers:
 
-- [`react-router`](https://reactrouter.com/en/main/routers/create-hash-router)
+- [`react-router`](https://reactrouter.com/api/data-routers/createHashRouter#createhashrouter)
 - [`vue-router`](https://router.vuejs.org/guide/essentials/history-mode.html#Hash-Mode)
 - [`svelte-spa-router`](https://www.npmjs.com/package/svelte-spa-router#hash-based-routing)
 - [`solid-router`](https://github.com/solidjs/solid-router?tab=readme-ov-file#hash-mode-router)

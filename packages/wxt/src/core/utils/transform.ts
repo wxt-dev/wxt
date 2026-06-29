@@ -41,7 +41,7 @@ function emptyMainFunction(mod: ProxifiedModule): void {
       // ex: "fn({ ..., main: () => {} })" to "fn({ ... })"
       mod.exports.default.$ast.arguments[0].properties =
         mod.exports.default.$ast.arguments[0].properties.filter(
-          (prop: any) => prop.key.name !== 'main',
+          (prop: any) => prop.key?.name !== 'main',
         );
     }
   }

@@ -18,6 +18,7 @@ import {
   ContentScriptEntrypoint,
   Entrypoint,
   OutputAsset,
+  TargetManifestVersion,
 } from '../../../types';
 import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
@@ -198,6 +199,74 @@ describe('Manifest Utils', () => {
         expect((actual.action as any).theme_icons).toEqual(themeIcons);
       });
 
+      describe('default_state', () => {
+        it.each<{
+          browser: string;
+          manifestVersion: TargetManifestVersion;
+          type: 'browser_action' | 'action' | 'page_action';
+          shouldExist: boolean;
+        }>([
+          {
+            browser: 'chrome',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'chrome',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+        ])(
+          'should configure default_state: $defaultState based on the $browser and mv$manifestVersion',
+          async ({ browser, manifestVersion, type, shouldExist }) => {
+            const popup = fakePopupEntrypoint({
+              options: {
+                // @ts-expect-error: Force this to be undefined when null
+                actionType: manifestVersion === 3 ? null : type,
+                defaultState: 'enabled',
+              },
+              outputDir: outDir,
+              skipped: false,
+            });
+            const buildOutput = fakeBuildOutput();
+            setFakeWxt({
+              config: {
+                browser,
+                manifestVersion,
+                outDir,
+              },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [popup],
+              buildOutput,
+            );
+
+            if (shouldExist) {
+              expect(actual[type]).toMatchObject({
+                default_state: 'enabled',
+              });
+            } else {
+              expect(actual[type].default_state).toBeUndefined();
+            }
+          },
+        );
+      });
+
       it('should include default_area for Firefox in mv2', async () => {
         const popup = fakePopupEntrypoint({
           options: {
@@ -375,6 +444,28 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.options_ui).toEqual(expected);
+      });
+
+      it('should exclude open_in_tab for safari', async () => {
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'safari',
+            outDir,
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest(
+          [options],
+          buildOutput,
+        );
+
+        expect(actual.options_ui).toEqual({
+          chrome_style: true,
+          page: 'options.html',
+        });
+        expect(actual.options_ui?.open_in_tab).toBeUndefined();
       });
     });
 
@@ -1602,7 +1693,6 @@ describe('Manifest Utils', () => {
 
         expect(actual.version).toBe('0.0.0');
         expect(actual.version_name).toBeUndefined();
-        expect(wxt.logger.warn).toBeCalledTimes(1);
         expect(wxt.logger.warn).toBeCalledWith(
           expect.stringContaining('Extension version not found'),
         );
@@ -2034,7 +2124,6 @@ describe('Manifest Utils', () => {
         const { manifest } = await generateManifest([], buildOutput);
 
         expect(manifest.manifest_version).toBe(expectedVersion);
-        expect(wxt.logger.warn).toBeCalledTimes(1);
         expect(wxt.logger.warn).toBeCalledWith(
           expect.stringContaining(
             '`manifest.manifest_version` config was set, but ignored',

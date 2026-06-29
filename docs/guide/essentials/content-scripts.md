@@ -449,6 +449,15 @@ Full examples:
 - [react-content-script-ui](https://github.com/wxt-dev/examples/tree/main/examples/react-content-script-ui)
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
 
+:::warning `rem` Units Are Not Fully Isolated
+
+WXT resets most inherited styles via `all: initial`. This doesn't reset the `<html>` element's font size, which determines the relative size of `rem` units.
+
+If your CSS framework uses `rem` units, like Tailwind CSS, you may notice your UI's scale changing on different websites.
+
+See the [FAQ](/guide/resources/faq#my-content-script-ui-looks-different-on-certain-websites) for a fix.
+:::
+
 ### IFrame
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
@@ -725,6 +734,7 @@ const watchPattern = new MatchPattern('*://*.youtube.com/watch*');
 export default defineContentScript({
   matches: ['*://*.youtube.com/*'],
   main(ctx) {
+    ctx.locationWatcher.run();
     ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl }) => {
       if (watchPattern.includes(newUrl)) mainWatch(ctx);
     });

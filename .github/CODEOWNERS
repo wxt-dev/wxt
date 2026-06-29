@@ -7,3 +7,6 @@
 # Creator of specific wxt modules
 /packages/auto-icons/ @Timeraa
 /packages/unocss/ @Timeraa
+
+# Other Directories
+/docs @aklinker1 @PatrykKuniczak

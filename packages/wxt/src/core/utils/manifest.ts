@@ -129,6 +129,17 @@ export async function generateManifest(
     );
   }
 
+  if (
+    wxt.config.browser === 'firefox' &&
+    !manifest.browser_specific_settings?.gecko?.id &&
+    !wxt.config.suppressWarnings?.firefoxId
+  ) {
+    wxt.logger.warn(
+      'Firefox requires extension ID for MV3 and recommends it for MV2.\n' +
+        'For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
 
   if (wxt.config.browser === 'firefox') {
@@ -294,6 +305,9 @@ function addEntrypoints(
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
+    if (popup.options.defaultState && wxt.config.manifestVersion === 3)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Chrome
+      options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
@@ -305,7 +319,7 @@ function addEntrypoints(
       options.theme_icons = popup.options.themeIcons;
 
     const actionKey =
-      manifest.manifest_version === 2
+      wxt.config.manifestVersion === 2
         ? (popup.options.actionType ?? 'browser_action')
         : wxt.config.browser === 'firefox' &&
             popup.options.actionType === 'page_action'
@@ -330,7 +344,9 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab ?? false,
+      ...(wxt.config.browser !== 'safari' && {
+        open_in_tab: options.options.openInTab ?? false,
+      }),
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
@@ -490,7 +506,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
-  if (manifest.manifest_version === 3) {
+  if (wxt.config.manifestVersion === 3) {
     addHostPermission(manifest, permission);
   } else {
     addPermission(manifest, permission);
@@ -499,7 +515,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const extensionPagesCsp = new ContentSecurityPolicy(
     // @ts-expect-error: extension_pages exists, we convert MV2 CSPs to this earlier in the process
     manifest.content_security_policy?.extension_pages ??
-      (manifest.manifest_version === 3
+      (wxt.config.manifestVersion === 3
         ? DEFAULT_MV3_EXTENSION_PAGES_CSP
         : DEFAULT_MV2_CSP),
   );

@@ -6,15 +6,19 @@ import ExampleSearch from '../components/ExampleSearch.vue';
 import BlogLayout from '../components/BlogLayout.vue';
 import './custom.css';
 import 'virtual:group-icons.css';
+import type { EnhanceAppContext } from 'vitepress/client';
+import { setupCodeGroupSync } from '../utils/code-groups-sync';
 
 export default {
   extends: DefaultTheme,
-  enhanceApp(ctx) {
+  enhanceApp(ctx: EnhanceAppContext) {
     ctx.app
       .component('Icon', Icon)
       .component('EntrypointPatterns', EntrypointPatterns)
       .component('UsingWxtSection', UsingWxtSection)
       .component('ExampleSearch', ExampleSearch)
       .component('blog', BlogLayout);
+
+    setupCodeGroupSync();
   },
 };

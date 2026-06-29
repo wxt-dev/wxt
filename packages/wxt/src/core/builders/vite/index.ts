@@ -29,6 +29,11 @@ import {
 } from '../../utils/virtual-modules';
 import * as wxtPlugins from './plugins';
 
+interface RollupAssetNameInfo {
+  name?: string;
+  names?: string[];
+}
+
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
   hooks: Hookable<WxtHooks>,
@@ -166,10 +171,12 @@ export async function createViteBuilder(
             ),
             // Output content script CSS to `content-scripts/`, but all other scripts are written to
             // `assets/`.
-            assetFileNames: ({ name }) => {
+            assetFileNames: (assetInfo) => {
               if (
                 entrypoint.type === 'content-script' &&
-                name?.endsWith('css')
+                getRollupAssetNames(assetInfo).some((name) =>
+                  name.endsWith('css'),
+                )
               ) {
                 return `content-scripts/${entrypoint.name}.[ext]`;
               } else {
@@ -390,6 +397,11 @@ export async function createViteBuilder(
       return server;
     },
   };
+}
+
+function getRollupAssetNames(assetInfo: RollupAssetNameInfo): string[] {
+  if (Array.isArray(assetInfo.names)) return assetInfo.names;
+  return assetInfo.name ? [assetInfo.name] : [];
 }
 
 function getBuildOutputChunks(

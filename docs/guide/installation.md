@@ -10,12 +10,12 @@ Run the [`init` command](/api/cli/wxt-init), and follow the instructions.
 
 :::code-group
 
-```sh [PNPM]
-pnpm dlx wxt@latest init
-```
-
 ```sh [Bun]
 bunx wxt@latest init
+```
+
+```sh [PNPM]
+pnpm dlx wxt@latest init
 ```
 
 ```sh [NPM]
@@ -46,14 +46,14 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 1. Create a new project
    :::code-group
 
-   ```sh [PNPM]
-   cd my-project
-   pnpm init
-   ```
-
    ```sh [Bun]
    cd my-project
    bun init
+   ```
+
+   ```sh [PNPM]
+   cd my-project
+   pnpm init
    ```
 
    ```sh [NPM]
@@ -71,12 +71,12 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 2. Install WXT:
    :::code-group
 
-   ```sh [PNPM]
-   pnpm i -D wxt
-   ```
-
    ```sh [Bun]
    bun add -D wxt
+   ```
+
+   ```sh [PNPM]
+   pnpm i -D wxt
    ```
 
    ```sh [NPM]
@@ -119,12 +119,12 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 5. Run your extension in dev mode
    :::code-group
 
-   ```sh [PNPM]
-   pnpm dev
-   ```
-
    ```sh [Bun]
    bun run dev
+   ```
+
+   ```sh [PNPM]
+   pnpm dev
    ```
 
    ```sh [NPM]

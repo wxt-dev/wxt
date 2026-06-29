@@ -1,4 +1,4 @@
-import { HeadConfig } from 'vitepress/types/shared';
+import type { HeadConfig } from 'vitepress';
 
 export function meta(
   property: string,

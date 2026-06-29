@@ -11,6 +11,7 @@ ignorePaths:
   - patches/**
   - '**/*.snap'
   - docs/assets/extension-showcase.yml
+  - packages/*/stats.html
 words:
   - Aabid
   - aabidk
@@ -21,6 +22,7 @@ words:
   - buildc
   - bunx
   - cachable
+  - cacjs
   - charmbracelet
   - chromedriver
   - Cira
@@ -30,6 +32,7 @@ words:
   - consolas
   - Cpath
   - crbug
+  - cros
   - crunchyroll
   - cssinjs
   - CSUI
@@ -67,6 +70,7 @@ words:
   - Menlo
   - menupanel
   - metas
+  - moderok
   - mktemp
   - mycompany
   - nacl

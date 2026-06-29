@@ -22,11 +22,11 @@
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "^1.1.7",
+    "@aklinker1/buildc": "catalog:",
     "@types/ua-parser-js": "^0.7.39",
-    "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
-    "typescript": "^5.9.3",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
     "wxt": "workspace:*"
   },
   "repository": {
@@ -54,6 +54,10 @@
     "./providers/google-analytics-4": {
       "types": "./dist/providers/google-analytics-4.d.mts",
       "default": "./dist/providers/google-analytics-4.mjs"
+    },
+    "./providers/moderok": {
+      "types": "./dist/providers/moderok.d.mts",
+      "default": "./dist/providers/moderok.mjs"
     },
     "./providers/umami": {
       "types": "./dist/providers/umami.d.mts",
