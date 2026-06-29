@@ -74,7 +74,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Setup PNPM
-        uses: pnpm/action-setup@739bfe42ca9233c5e6aca07c1a25a9d34aca49b0 # v6.0.7
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: latest
 
