@@ -21,7 +21,6 @@ This plugin does several things:
 - Polyfills the extension API, `browser`, with an in-memory implementation using [`@webext-core/fake-browser`](https://webext-core.aklinker1.io/fake-browser/installation)
 - Adds all vite config or plugins in `wxt.config.ts`
 - Configures auto-imports (if enabled)
-- Applies internal WXT vite plugins for things like [bundling remote code](/guide/essentials/remote-code)
 - Sets up global variables provided by WXT (`import.meta.env.BROWSER`, `import.meta.env.MANIFEST_VERSION`, `import.meta.env.IS_CHROME`, etc)
 - Configures aliases (`@/*`, `@@/*`, etc) so imports can be resolved
 
