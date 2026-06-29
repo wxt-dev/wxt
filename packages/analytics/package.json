@@ -55,6 +55,10 @@
       "types": "./dist/providers/google-analytics-4.d.mts",
       "default": "./dist/providers/google-analytics-4.mjs"
     },
+    "./providers/moderok": {
+      "types": "./dist/providers/moderok.d.mts",
+      "default": "./dist/providers/moderok.mjs"
+    },
     "./providers/umami": {
       "types": "./dist/providers/umami.d.mts",
       "default": "./dist/providers/umami.mjs"

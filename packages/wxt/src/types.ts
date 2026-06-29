@@ -132,6 +132,20 @@ export interface InlineConfig {
    */
   manifestVersion?: TargetManifestVersion;
   /**
+   * Chokidar options used by dev-mode file watchers. This is useful in
+   * containers, WSL, and network file systems where native file events can be
+   * unreliable.
+   *
+   * @example
+   *   export default defineConfig({
+   *     watchOptions: {
+   *       usePolling: true,
+   *       interval: 1000,
+   *     },
+   *   });
+   */
+  watchOptions?: vite.WatchOptions;
+  /**
    * Override the logger used.
    *
    * @default
@@ -1259,6 +1273,11 @@ export interface ServerInfo {
   origin: string;
 }
 
+export type PrepareTsconfigs = {
+  /** The JSON contents of the `.wxt/tsconfig.json` file. */
+  tsconfig: any;
+};
+
 export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
@@ -1298,6 +1317,17 @@ export interface WxtHooks {
    *   });
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
+   * Called before WXT writes your tsconfig to the disk, allowing full
+   * customization by modifying the object by reference.
+   *
+   * @since 0.20.28
+   * @example
+   *   wxt.hooks.hook('prepare:tsconfig', (wxt, { tsconfig }) => {
+   *     tsconfig.compilerOptions.lib.push('WebWorker');
+   *   });
+   */
+  'prepare:tsconfig': (wxt: Wxt, configs: PrepareTsconfigs) => HookResult;
   /**
    * Called before generating the list of public paths inside
    * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative to
@@ -1539,6 +1569,8 @@ export interface ResolvedConfig {
     firefoxDataCollection?: boolean;
     firefoxId?: boolean;
   };
+  /** Chokidar options used by dev-mode file watchers. */
+  watchOptions: vite.WatchOptions;
   dev: {
     /** Only defined during dev command */
     server?: {
