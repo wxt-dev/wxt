@@ -24,7 +24,6 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 | Supports all frontend frameworks                        |   ✅    | 🟡 [^c] |   ✅    |
 | Framework specific entrypoints (like `Popup.tsx`)       | 🟡 [^d] | ✅ [^e] |   ❌    |
 | Automated publishing                                    |   ✅    |   ✅    |   ❌    |
-| Remote Code Bundling (Google Analytics)                 |   ✅    |   ✅    |   ❌    |
 | Unlisted HTML Pages                                     |   ✅    |   ✅    |   ✅    |
 | Unlisted Scripts                                        |   ✅    |   ❌    |   ❌    |
 | ESM Content Scripts                                     | ❌ [^l] |   ❌    |   ✅    |

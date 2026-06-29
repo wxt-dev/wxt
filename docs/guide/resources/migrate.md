@@ -51,7 +51,7 @@ Here's specific steps for other popular frameworks/build tools.
 3. Move public `assets/*` into the `public/` directory
 4. If you use CSUI, migrate to WXT's `createContentScriptUi`
 5. Convert Plasmo's custom import resolutions to Vite's
-6. If importing remote code via a URL, add a `url:` prefix so it works with WXT
+6. Importing remote code via a URL is not supported in WXT anymore, see [issue](https://github.com/wxt-dev/wxt/issues/2262). Download the file yourself and host it in the repo yourself.
 7. Replace your [Plasmo tags](https://docs.plasmo.com/framework/workflows/build#with-a-custom-tag) (`--tag`) with [WXT build modes](/guide/essentials/config/build-mode) (`--mode`)
 8. ⚠️ Compare the old production manifest to `.output/*/manifest.json`. They should have the same content as before. If not, tweak your entrypoints and config until they are the same.
 
