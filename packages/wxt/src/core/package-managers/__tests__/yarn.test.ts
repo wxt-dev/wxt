@@ -1,17 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { yarn } from '../yarn';
+import { describeWithBin } from '../../utils/testing/fixtures';
 
-const describeIfYarnInstalled =
-  spawnSync('yarn', ['--version'], {
-    stdio: 'ignore',
-    shell: process.platform === 'win32',
-  }).status === 0
-    ? describe
-    : describe.skip;
-
-describeIfYarnInstalled('Yarn Package Management Utils', () => {
+describeWithBin('yarn', 'Yarn Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-yarn-project');
 
