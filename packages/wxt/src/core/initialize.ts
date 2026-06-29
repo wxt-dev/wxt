@@ -54,7 +54,7 @@ export async function initialize(options: {
       onCancel: () => process.exit(1),
     },
   );
-  input.directory ??= options.directory;
+  input.directory ||= options.directory || '.';
   input.template ??= defaultTemplate;
   input.packageManager ??= options.packageManager;
 
