@@ -27,7 +27,7 @@ jobs:
         with:
           go-version: '1.25.1'
 
-      # This prevents pnpm dlx from downloading WXT in the video
+      # This prevents bunx from downloading WXT in the video
       - name: Build WXT
         working-directory: packages/wxt
         run: bun run build
@@ -37,6 +37,8 @@ jobs:
           brew install ttyd ffmpeg
           go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
           vhs docs/tapes/init-demo.tape
+        env:
+          CI: '' # Use pretty formatter from consola
 
       - name: Save recorded GIF
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
