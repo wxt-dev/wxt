@@ -142,32 +142,31 @@ function formatStars(r: number): string {
           {{ extension.shortDescription }}
         </p>
         <div v-if="extension.stores.length > 0" class="store-stats">
-          <span class="store-stats-info">
+          <p class="store-stats-info">
             <span>{{ formatUsers(extension.users) }}</span>
             <template v-if="extension.rating">
               <span class="store-stats-sep" aria-hidden="true">,</span>
               <span>{{ formatStars(extension.rating) }}</span>
             </template>
-          </span>
-          <span class="store-stats-sep" aria-hidden="true">&middot;</span>
-          <span class="store-links">
-            <a
-              v-for="(store, i) of extension.stores"
-              :key="store.label"
-              :href="store.url"
-              target="_blank"
-              class="store-link"
-              :title="store.label"
-            >
-              {{ store.label
-              }}<span
+          </p>
+          <p class="store-stats-sep" aria-hidden="true">&middot;</p>
+          <p class="store-links">
+            <template v-for="(store, i) of extension.stores" :key="store.label">
+              <a
+                :href="store.url"
+                target="_blank"
+                class="store-link"
+                :title="store.label"
+                >{{ store.label }}</a
+              >
+              <span
                 v-if="i < extension.stores.length - 1"
                 class="store-stats-sep"
                 aria-hidden="true"
                 >,&nbsp;</span
               >
-            </a>
-          </span>
+            </template>
+          </p>
         </div>
       </div>
     </li>
