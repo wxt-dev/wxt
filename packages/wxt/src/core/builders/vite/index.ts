@@ -72,7 +72,12 @@ export async function createViteBuilder(
 
     config.server ??= {};
     config.server.watch = {
-      ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
+      ...wxtConfig.watchOptions,
+      ignored: [
+        `${wxtConfig.outBaseDir}/**`,
+        `${wxtConfig.wxtDir}/**`,
+        ...toArray(wxtConfig.watchOptions.ignored ?? []),
+      ],
     };
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
