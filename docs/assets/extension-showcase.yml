@@ -7,7 +7,8 @@
 # Use:
 #
 # - `chromeId` for the Chrome Web Store listing,
-# - `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/)
+# - `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/),
+# - `edgeId` for the Edge Add-ons listing (ID from https://microsoftedge.microsoft.com/addons/detail/{slug}/{id})
 #
 # You may include one or more of these fields for your extension.
 
@@ -30,6 +31,7 @@
 - # StayFree - Website Blocker & Web Analytics
   chromeId: elfaihghhjjoknimpccccmkioofjjfkf
   firefoxSlug: stayfree
+  edgeId: aghmglalnfmjbipodadgbgpakneabgnp
 
 - # Doozy: Ai Made Easy
   chromeId: okifoaikfmpfcamplcfjkpdnhfodpkil
