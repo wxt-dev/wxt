@@ -55,6 +55,34 @@ describe('Transform Utils', () => {
       expect(actual).toEqual(expected);
     });
 
+    it('should preserve spread config when removing the main field', () => {
+      const input = `
+        const sharedConfig = {
+          matches: ['*://*/*'],
+        };
+
+        export default defineContentScript({
+          ...sharedConfig,
+          runAt: 'document_idle',
+          main(ctx) {
+            console.log(ctx);
+          },
+        })
+      `;
+      const expected = `const sharedConfig = {
+  matches: ['*://*/*'],
+};
+
+export default defineContentScript({
+  ...sharedConfig,
+  runAt: 'document_idle'
+})`;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
+
     it('should remove unused imports', () => {
       const input = `
         import { defineBackground } from "#imports"
