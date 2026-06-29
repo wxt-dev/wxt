@@ -7,9 +7,14 @@
 # Use:
 #
 # - `chromeId` for the Chrome Web Store listing,
-# - `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/)
+# - `firefoxSlug` for Firefox Add-ons (slug from https://addons.mozilla.org/firefox/addon/{slug}/),
+# - `edgeId` for the Edge Add-ons listing (ID from https://microsoftedge.microsoft.com/addons/detail/{slug}/{id})
 #
 # You may include one or more of these fields for your extension.
+
+- # Anylang Translator
+  chromeId: injdenmpjncknciccmjjmjlgbmnkince
+  firefoxSlug: anylang-translator
 
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
@@ -26,6 +31,7 @@
 - # StayFree - Website Blocker & Web Analytics
   chromeId: elfaihghhjjoknimpccccmkioofjjfkf
   firefoxSlug: stayfree
+  edgeId: aghmglalnfmjbipodadgbgpakneabgnp
 
 - # Doozy: Ai Made Easy
   chromeId: okifoaikfmpfcamplcfjkpdnhfodpkil
@@ -138,6 +144,22 @@
 - # YouTube Auto HD + FPS
   chromeId: fcphghnknhkimeagdglkljinmpbagone
   firefoxSlug: youtube-auto-hd-fps
+
+- # YouTube Auto Feed
+  chromeId: jcdebdlnakhdinkindpogcehnhggbfad
+  firefoxSlug: youtube-auto-feed
+
+- # YouTube Like-Dislike Shortcut
+  chromeId: fdkpkpelkkdkjhpacficichkfifijipc
+  firefoxSlug: youtube-like-dislike-shortcut
+
+- # Twitch Channel Points Bonus Collector
+  chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
+  firefoxSlug: twitch-cp-bonus-collector
+
+- # Skillshare Player Control
+  chromeId: agbhgcomfpcfboebbfmefbicfkpnlfeg
+  firefoxSlug: skillshare-player-control
 
 - # MultiViewer Companion
   chromeId: lpomjgbicdemjkgmbnkjncgdebogkhlb
@@ -485,3 +507,10 @@
 - # LinkedIn Games Solver
   chromeId: jnhgapnkejaijibcdhcldhdfikjmdaph
   firefoxSlug: linkedin-games-solver-addon
+
+- # Hayami: Anime comments & discussions
+  chromeId: nhkggpiaeaeeeimohfpchnjobbamfcbg
+  firefoxSlug: hayami
+
+- # CopyApes Assistant
+  chromeId: affmjifigldmicnbgpghddaneomejmfo

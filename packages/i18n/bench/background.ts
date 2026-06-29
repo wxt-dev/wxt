@@ -37,6 +37,15 @@ setTimeout(() => {
   }
 
   {
+    const key = 'namedSubstitution';
+    const value = 'test';
+    const namedSubstitution = new Bench({ name: 'Named substitution' })
+      .add('Vanilla', () => void chrome.i18n.getMessage(key))
+      .add('WXT I18n', () => void i18n.t(key, { value }));
+    await runBench(namedSubstitution);
+  }
+
+  {
     const vanillaPluralKey = 'plural';
     const wxtKey = 'wxtPlural';
     const one = 1;
