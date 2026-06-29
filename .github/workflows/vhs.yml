@@ -38,7 +38,9 @@ jobs:
           go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
           vhs docs/tapes/init-demo.tape
         env:
-          CI: '' # Use pretty formatter from consola
+          # Disable env vars that make consola use it's basic reporter instead of the fancy one
+          CI: ''
+          GITHUB_ACTIONS: ''
 
       - name: Save recorded GIF
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
