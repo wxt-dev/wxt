@@ -7,6 +7,8 @@ import { fetchCached } from '../../../utils/network';
  * they are bundled with the extension instead of depending on remote code at
  * runtime.
  *
+ * @deprecated Don't use this, it can cause potential supply chain attacks. You
+ *   can download the files and host it in your repo instead.
  * @example
  *   import 'url:https://google-tagmanager.com/gtag?id=XYZ';
  */
