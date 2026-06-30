@@ -37,7 +37,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
     "@aklinker1/check": "catalog:",
-    "@commitlint/config-conventional": "^20.4.3",
+    "@commitlint/config-conventional": "^21.2.0",
     "@commitlint/types": "^20.4.3",
     "@types/bun": "catalog:",
     "@types/semver": "^7.7.1",
