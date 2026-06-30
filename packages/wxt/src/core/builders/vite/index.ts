@@ -457,7 +457,7 @@ function extractPathArgs(args: string[] | undefined, flag: string): string[] {
 
   return paths;
 }
-  
+
 function getRollupAssetNames(assetInfo: RollupAssetNameInfo): string[] {
   if (Array.isArray(assetInfo.names)) return assetInfo.names;
   return assetInfo.name ? [assetInfo.name] : [];
