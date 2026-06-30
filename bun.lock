@@ -43,7 +43,7 @@
     },
     "packages/analytics": {
       "name": "@wxt-dev/analytics",
-      "version": "0.5.4",
+      "version": "0.5.5",
       "dependencies": {
         "@wxt-dev/browser": "workspace:^",
         "@wxt-dev/is-background": "workspace:^",
