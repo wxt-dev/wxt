@@ -1,5 +1,6 @@
 import { defineAppConfig } from 'wxt/utils/define-app-config';
 import { googleAnalytics4 } from './modules/analytics/providers/google-analytics-4';
+import { posthog } from './modules/analytics/providers/posthog';
 import { umami } from './modules/analytics/providers/umami';
 
 export default defineAppConfig({
@@ -9,6 +10,9 @@ export default defineAppConfig({
       googleAnalytics4({
         apiSecret: '...',
         measurementId: '...',
+      }),
+      posthog({
+        apiKey: '...',
       }),
       umami({
         apiUrl: 'https://umami.aklinker1.io/api',
