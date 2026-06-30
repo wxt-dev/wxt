@@ -5,8 +5,8 @@ Report analytics events from your web extension extension.
 ## Supported Analytics Providers
 
 - [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
-- [PostHog](#posthog)
 - [Moderok](#moderok)
+- [PostHog](#posthog)
 - [Umami](#umami)
 
 ## Install With WXT
