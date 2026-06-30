@@ -9,6 +9,7 @@ on:
         options:
           - analytics
           - auto-icons
+          - entrypoint-refs
           - i18n
           - is-background
           - module-react

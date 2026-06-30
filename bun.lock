@@ -96,6 +96,22 @@
         "vitest": "catalog:",
       },
     },
+    "packages/entrypoint-refs": {
+      "name": "@wxt-dev/entrypoint-refs",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@aklinker1/buildc": "catalog:",
+        "oxlint": "catalog:",
+        "publint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
+        "wxt": "workspace:*",
+      },
+      "peerDependencies": {
+        "wxt": ">=0.21.0",
+      },
+    },
     "packages/i18n": {
       "name": "@wxt-dev/i18n",
       "version": "0.2.5",
@@ -1236,6 +1252,8 @@
     "@wxt-dev/auto-icons": ["@wxt-dev/auto-icons@workspace:packages/auto-icons"],
 
     "@wxt-dev/browser": ["@wxt-dev/browser@workspace:packages/browser"],
+
+    "@wxt-dev/entrypoint-refs": ["@wxt-dev/entrypoint-refs@workspace:packages/entrypoint-refs"],
 
     "@wxt-dev/i18n": ["@wxt-dev/i18n@workspace:packages/i18n"],
 
