@@ -43,10 +43,10 @@ export async function initialize(options: {
         type: () => (options.packageManager == null ? 'select' : undefined),
         message: 'Package Manager',
         choices: [
+          { title: styleText('magenta', 'bun'), value: 'bun' },
           { title: styleText('red', 'npm'), value: 'npm' },
           { title: styleText('yellow', 'pnpm'), value: 'pnpm' },
           { title: styleText('cyan', 'yarn'), value: 'yarn' },
-          { title: styleText('magenta', 'bun'), value: 'bun' },
         ],
       },
     ],
@@ -54,7 +54,7 @@ export async function initialize(options: {
       onCancel: () => process.exit(1),
     },
   );
-  input.directory ??= options.directory;
+  input.directory ||= options.directory || '.';
   input.template ??= defaultTemplate;
   input.packageManager ??= options.packageManager;
 

@@ -6,6 +6,7 @@ Report analytics events from your web extension extension.
 
 - [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
 - [PostHog](#posthog)
+- [Moderok](#moderok)
 - [Umami](#umami)
 
 ## Install With WXT
@@ -120,6 +121,41 @@ export default defineAppConfig({
   },
 });
 ```
+
+### Moderok
+
+[Moderok](https://moderok.dev) is an analytics platform built specifically for browser extensions. It requires no `host_permissions`, works in Manifest V3 service workers, and collects only anonymous usage data.
+
+Sign up at [moderok.dev](https://moderok.dev) to get your app key, then save it to your `.env` file:
+
+```dotenv
+WXT_MODEROK_APP_KEY='mk_...'
+```
+
+Then add the `moderok` provider to your `<srcDir>/app.config.ts` file:
+
+```ts
+import { moderok } from '@wxt-dev/analytics/providers/moderok';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      moderok({
+        appKey: import.meta.env.WXT_MODEROK_APP_KEY,
+        // Automatically track first open, install, update, and daily ping events (default: true)
+        trackLifecycle: true,
+        // Track when users uninstall the extension (default: false)
+        trackUninstalls: false,
+        // Optional: when trackUninstalls is on, redirect users to this page
+        // after they uninstall (e.g. a feedback survey)
+        uninstallUrl: 'https://example.com/uninstall',
+      }),
+    ],
+  },
+});
+```
+
+For a full walkthrough — module setup, sending events, and all provider options — see the [Moderok WXT guide](https://docs.moderok.dev/guide/wxt).
 
 ### PostHog
 

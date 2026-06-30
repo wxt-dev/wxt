@@ -8,7 +8,11 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
-import { applyChromeMessagePlaceholders, getSubstitutionCount } from './utils';
+import {
+  applyChromeMessagePlaceholders,
+  getNamedSubstitutionNames,
+  getSubstitutionCount,
+} from './utils';
 
 export { SUPPORTED_LOCALES } from './supported-locales';
 
@@ -38,6 +42,7 @@ export type MessagesObject = Record<string, Message>;
 export interface ParsedBaseMessage {
   key: string[];
   substitutions: number;
+  namedSubstitutions: string[];
 }
 
 export interface ParsedChromeMessage extends ParsedBaseMessage, ChromeMessage {
@@ -167,11 +172,13 @@ function _parseMessagesObject(
     case 'symbol': {
       const message = String(object);
       const substitutions = getSubstitutionCount(message);
+      const namedSubstitutions = getNamedSubstitutionNames(message);
       return [
         {
           type: 'simple',
           key: path,
           substitutions,
+          namedSubstitutions,
           message,
         },
       ];
@@ -191,11 +198,13 @@ function _parseMessagesObject(
       if (isPluralMessage(object)) {
         const message = Object.values(object).join('|');
         const substitutions = getSubstitutionCount(message);
+        const namedSubstitutions = getNamedSubstitutionNames(message);
         return [
           {
             type: 'plural',
             key: path,
             substitutions,
+            namedSubstitutions,
             plurals: object,
           },
         ];
@@ -204,11 +213,13 @@ function _parseMessagesObject(
       if (depth === 1 && isChromeMessage(object)) {
         const message = applyChromeMessagePlaceholders(object);
         const substitutions = getSubstitutionCount(message);
+        const namedSubstitutions = getNamedSubstitutionNames(message);
         return [
           {
             type: 'chrome',
             key: path,
             substitutions,
+            namedSubstitutions,
             ...object,
           },
         ];
@@ -247,6 +258,11 @@ export function generateTypeText(messages: ParsedMessage[]): string {
       `substitutions: ${message.substitutions}`,
       `plural: ${message.type === 'plural'}`,
     ];
+    if (message.namedSubstitutions.length > 0) {
+      features.push(
+        `namedSubstitutions: ${JSON.stringify(message.namedSubstitutions)}`,
+      );
+    }
     return `  "${key}": { ${features.join(', ')} };`;
   };
 
