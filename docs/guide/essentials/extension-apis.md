@@ -76,27 +76,33 @@ Alternatively, if you're trying to use similar APIs under different names (to su
 });
 ```
 
-### Augmenting the Browser Type
+## Add Firefox Types
 
-WXT's `browser` types are based on the `@types/chrome` package. That means some Firefox-specific APIs may not be typed, like `browser.sidebarAction`. If you want to add types for these APIs, you can augment the browser type to add them yourself:
+WXT's `browser` types are based on the `@types/chrome` package. That means some Firefox-specific APIs may not be typed, like `browser.sidebarAction`. If you want to add types for these APIs, you can augment the browser type by:
 
-```ts
-// <srcDir>/browser-types.d.ts
-import '@wxt-dev/browser';
-import type { SidebarAction } from 'webextension-polyfill';
+1. Installing `@wxt-dev/browser` as a direct dependency
 
-declare module '@wxt-dev/browser' {
-  namespace Browser {
-    export const sidebarAction: SidebarAction.Static;
-  }
-}
-```
+   ```sh
+   pnpm add @wxt-dev/browser
+   ```
 
-> For this to work, you may need to install `@wxt-dev/browser` as a direct dependency.
->
-> ```sh
-> pnpm add @wxt-dev/browser
-> ```
+2. Augmenting the `Browser` type:
+
+   ```ts
+   // <srcDir>/browser-types.d.ts
+   import '@wxt-dev/browser';
+   import type { SidebarAction } from 'webextension-polyfill';
+
+   declare module '@wxt-dev/browser' {
+     namespace Browser {
+       export const sidebarAction: SidebarAction.Static;
+     }
+   }
+   ```
+
+You can add types from any source: `webextension-polyfill`, `@types/firefox-webext-browser`, or your own custom types.
+
+See TypeScript's documentation on [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) for more information.
 
 ## Entrypoint Limitations
 
@@ -116,41 +122,32 @@ The fix is simple, just move your API usage into the entrypoint's main function:
 
 :::code-group
 
+<!-- prettier-ignore -->
 ```ts [background.ts]
-browser.action.onClicked.addListener(() => {
-  /* ... */
-}); // [!code --]
+browser.action.onClicked.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineBackground(() => {
-  browser.action.onClicked.addListener(() => {
-    /* ... */
-  }); // [!code ++]
+  browser.action.onClicked.addListener(() => { /* ... */ }); // [!code ++]
 });
 ```
 
+<!-- prettier-ignore -->
 ```ts [content.ts]
-browser.runtime.onMessage.addListener(() => {
-  /* ... */
-}); // [!code --]
+browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineContentScript({
   main() {
-    browser.runtime.onMessage.addListener(() => {
-      /* ... */
-    }); // [!code ++]
+    browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code ++]
   },
 });
 ```
 
+<!-- prettier-ignore -->
 ```ts [unlisted.ts]
-browser.runtime.onMessage.addListener(() => {
-  /* ... */
-}); // [!code --]
+browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineUnlistedScript(() => {
-  browser.runtime.onMessage.addListener(() => {
-    /* ... */
-  }); // [!code ++]
+  browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code ++]
 });
 ```
 
