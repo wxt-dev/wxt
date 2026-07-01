@@ -1636,6 +1636,13 @@ export type EslintGlobalsPropValue =
 
 export type EslintSupportedVersions = 'old' | 'flat';
 
+/**
+ * @deprecated Use `EslintSupportedVersions` (`'old'`/`'flat'`) instead. Legacy
+ *   numeric values are supported for backwards compatibility and will be
+ *   removed in the next major version.
+ */
+export type EslintLegacySupportedVersions = 8 | 9 | 10;
+
 export interface Eslintrc {
   /**
    * When true, generates a file that can be used by ESLint to know which
@@ -1647,10 +1654,19 @@ export interface Eslintrc {
    * - `true`: Same as `8`.
    * - `old`: Generate a config file compatible with ESLint &lte; 8.
    * - `flat`: Generate a config file compatible with ESLint &gte; 9.
+   * - `8`: Same as `old`.
+   * - `9`: Same as `flat`.
+   * - `10`: Same as `flat`.
    *
+   * @deprecated Values `8`, `9`, and `10` are legacy aliases and will be
+   *   removed in the next major version.
    * @default 'auto'
    */
-  enabled?: boolean | 'auto' | EslintSupportedVersions;
+  enabled?:
+    | boolean
+    | 'auto'
+    | EslintSupportedVersions
+    | EslintLegacySupportedVersions;
   /**
    * File path to save the generated eslint config.
    *
