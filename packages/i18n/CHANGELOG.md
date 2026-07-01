@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.2.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.5...i18n-v0.2.6)
+
+### 🚀 Enhancements
+
+- Add named substitutions to i18n ([#2440](https://github.com/wxt-dev/wxt/pull/2440))
+
+### 🏡 Chore
+
+- Add `prettier-plugin-jsdoc` to project ([#2171](https://github.com/wxt-dev/wxt/pull/2171))
+- Replace fast-glob and ora with lighter alternatives ([#2173](https://github.com/wxt-dev/wxt/pull/2173))
+- **deps:** Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Add prepack script to all packages ([032f7931](https://github.com/wxt-dev/wxt/commit/032f7931))
+- Remove `any` from `i18n`'s internal types ([#2201](https://github.com/wxt-dev/wxt/pull/2201))
+- Add cspell and fix all typos ([6621aaf8](https://github.com/wxt-dev/wxt/commit/6621aaf8))
+- Migrate monorepo to use Bun instead of PNPM ([#2009](https://github.com/wxt-dev/wxt/pull/2009))
+- Add new types for i18n ([#2121](https://github.com/wxt-dev/wxt/pull/2121))
+- **deps-dev:** Bump typescript from 5.9.3 to 6.0.3 ([#2325](https://github.com/wxt-dev/wxt/pull/2325))
+- **deps-dev:** Bump oxlint from 1.59.0 to 1.63.0 ([#2356](https://github.com/wxt-dev/wxt/pull/2356))
+- Use `catalog:` for dev dependencies ([#2357](https://github.com/wxt-dev/wxt/pull/2357))
+- **deps:** Bump tinyglobby from 0.2.15 to 0.2.16 ([#2366](https://github.com/wxt-dev/wxt/pull/2366))
+- Add benchmarks for i18n vs vanilla usage ([#2372](https://github.com/wxt-dev/wxt/pull/2372))
+
+### ❤️ Contributors
+
+- T ([@cookesan](https://github.com/cookesan))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Florian Metz ([@Timeraa](https://github.com/Timeraa))
+
 ## v0.2.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.4...i18n-v0.2.5)
