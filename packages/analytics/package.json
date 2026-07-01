@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Add analytics to your web extension",
   "type": "module",
   "scripts": {
@@ -62,6 +62,10 @@
     "./providers/umami": {
       "types": "./dist/providers/umami.d.mts",
       "default": "./dist/providers/umami.mjs"
+    },
+    "./providers/posthog": {
+      "types": "./dist/providers/posthog.d.mts",
+      "default": "./dist/providers/posthog.mjs"
     }
   },
   "module": "./dist/index.mjs",
