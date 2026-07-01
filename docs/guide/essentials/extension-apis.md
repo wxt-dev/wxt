@@ -96,7 +96,7 @@ WXT's `browser` types are based on the `@types/chrome` package. That means some 
    // <srcDir>/browser-types.d.ts
    import '@wxt-dev/browser';
    import type { SidebarAction } from 'webextension-polyfill';
-   
+
    declare module '@wxt-dev/browser' {
      namespace Browser {
        export const sidebarAction: SidebarAction.Static;
@@ -126,41 +126,32 @@ The fix is simple, just move your API usage into the entrypoint's main function:
 
 :::code-group
 
+<!-- prettier-ignore -->
 ```ts [background.ts]
-browser.action.onClicked.addListener(() => { // [!code --]
-  /* ... */ // [!code --]
-}); // [!code --]
+browser.action.onClicked.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineBackground(() => {
-  browser.action.onClicked.addListener(() => { // [!code ++]
-    /* ... */ // [!code ++]
-  }); // [!code ++]
+  browser.action.onClicked.addListener(() => { /* ... */ }); // [!code ++]
 });
 ```
 
+<!-- prettier-ignore -->
 ```ts [content.ts]
-browser.runtime.onMessage.addListener(() => { // [!code --]
-  /* ... */ // [!code --]
-}); // [!code --]
+browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineContentScript({
   main() {
-    browser.runtime.onMessage.addListener(() => { // [!code ++]
-      /* ... */ // [!code ++]
-    }); // [!code ++]
+    browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code ++]
   },
 });
 ```
 
+<!-- prettier-ignore -->
 ```ts [unlisted.ts]
-browser.runtime.onMessage.addListener(() => { // [!code --]
-  /* ... */ // [!code --]
-}); // [!code --]
+browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code --]
 
 export default defineUnlistedScript(() => {
-  browser.runtime.onMessage.addListener(() => { // [!code ++]
-    /* ... */ // [!code ++]
-  }); // [!code ++]
+  browser.runtime.onMessage.addListener(() => { /* ... */ }); // [!code ++]
 });
 ```
 
