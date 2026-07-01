@@ -1,6 +1,7 @@
 import type { Plugin } from 'vite';
 import type { ResolvedConfig } from '../../../../types';
 import { fetchCached } from '../../../utils/network';
+import consola from 'consola';
 
 /**
  * Downloads any URL imports, like Google Analytics, into virtual modules so
@@ -31,6 +32,9 @@ export function download(config: ResolvedConfig): Plugin {
       },
       handler(id) {
         const url = id.replace('\0url:', '');
+        consola.warn(
+          'The `url:` import feature is deprecated. See https://github.com/wxt-dev/wxt/issues/2262.',
+        );
         return fetchCached(url, config);
       },
     },
