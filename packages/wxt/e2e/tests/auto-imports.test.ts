@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
+import { EslintSupportedVersions } from '../../src';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -217,7 +218,7 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: true" should output a JSON config file compatible with ESlint <= 8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -234,7 +235,24 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: "old" should output a JSON config file compatible with ESlint <= 8', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 'old',
+          },
+        },
+      });
+
+      expect(
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+      ).toMatchSnapshot();
+    });
+
+    it('"enabled: 8" should fallback to the JSON config', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -246,12 +264,32 @@ describe('Auto Imports', () => {
         },
       });
 
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        false,
+      );
+    });
+
+    it('"enabled: "flat" should output a flat config file compatible with ESlint >= 9', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 'flat',
+          },
+        },
+      });
+
       expect(
-        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
       ).toMatchSnapshot();
     });
 
-    it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
+    it('"enabled: 9" should fallback to the flat config', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -263,9 +301,32 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(
-        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
-      ).toMatchSnapshot();
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
+    });
+
+    it('"enabled: 10" should fallback to the flat config', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 10,
+          },
+        },
+      });
+
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
     });
 
     it('"enabled: false" should NOT output an ESlint config file', async () => {
@@ -308,7 +369,7 @@ describe('Auto Imports', () => {
     describe('Actual linting results', () => {
       async function runEslint(
         project: TestProject,
-        version: boolean | 'auto' | 8 | 9,
+        version: EslintSupportedVersions,
       ) {
         project.addFile(
           'entrypoints/background.js',
@@ -340,7 +401,7 @@ describe('Auto Imports', () => {
             `,
           );
 
-          await expect(runEslint(project, 9)).rejects.toMatchObject({
+          await expect(runEslint(project, 'flat')).rejects.toMatchObject({
             exitCode: 1,
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
@@ -367,7 +428,7 @@ describe('Auto Imports', () => {
             ];
             `,
           );
-          const res = await runEslint(project, 9);
+          const res = await runEslint(project, 'flat');
 
           expect(res).toBeDefined();
         });
@@ -389,7 +450,7 @@ describe('Auto Imports', () => {
             }),
           );
 
-          await expect(runEslint(project, 8)).rejects.toMatchObject({
+          await expect(runEslint(project, 'old')).rejects.toMatchObject({
             exitCode: 1,
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
@@ -414,7 +475,7 @@ describe('Auto Imports', () => {
               ],
             }),
           );
-          const res = await runEslint(project, 8);
+          const res = await runEslint(project, 'old');
 
           expect(res).toBeDefined();
         });
