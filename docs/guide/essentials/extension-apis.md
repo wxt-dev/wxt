@@ -1,7 +1,3 @@
----
-outline: deep
----
-
 # Extension APIs
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api) • [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs)
@@ -80,7 +76,7 @@ Alternatively, if you're trying to use similar APIs under different names (to su
 });
 ```
 
-### Augmenting the Browser Type
+## Add Firefox Types
 
 WXT's `browser` types are based on the `@types/chrome` package. That means some Firefox-specific APIs may not be typed, like `browser.sidebarAction`. If you want to add types for these APIs, you can augment the browser type by:
 
