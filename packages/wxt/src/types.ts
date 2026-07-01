@@ -132,6 +132,20 @@ export interface InlineConfig {
    */
   manifestVersion?: TargetManifestVersion;
   /**
+   * Chokidar options used by dev-mode file watchers. This is useful in
+   * containers, WSL, and network file systems where native file events can be
+   * unreliable.
+   *
+   * @example
+   *   export default defineConfig({
+   *     watchOptions: {
+   *       usePolling: true,
+   *       interval: 1000,
+   *     },
+   *   });
+   */
+  watchOptions?: vite.WatchOptions;
+  /**
    * Override the logger used.
    *
    * @default
@@ -159,6 +173,11 @@ export interface InlineConfig {
      * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
      */
     firefoxDataCollection?: boolean;
+    /**
+     * Suppress warnings when the Firefox extension ID is missing.
+     * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id
+     */
+    firefoxId?: boolean;
   };
   /**
    * Configure browser startup. Options set here can be overridden in a
@@ -711,6 +730,22 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * @default 'manifest'
    */
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
+  /**
+   * Do not send the `wxt:content-script-started` message via
+   * `window.postMessage`.
+   *
+   * This has been replaced with custom events. The `postMessage` call is kept
+   * for backwards compatibility. For some websites the `postMessage` call is
+   * undesirable, such as those with poorly written message event listeners.
+   *
+   * Setting this to `true` opts into the behavior that will become the default
+   * in a future version of WXT, where the `postMessage` call is removed
+   * entirely.
+   *
+   * See https://github.com/wxt-dev/wxt/pull/1938 and
+   * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
+   */
+  noScriptStartedPostMessage?: boolean;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
@@ -1064,7 +1099,7 @@ export type UserManifest = {
     };
   };
   permissions?: (
-    | Browser.runtime.ManifestPermissions
+    | Browser.runtime.ManifestPermission
     | (string & Record<never, never>)
   )[];
   web_accessible_resources?:
@@ -1238,6 +1273,11 @@ export interface ServerInfo {
   origin: string;
 }
 
+export type PrepareTsconfigs = {
+  /** The JSON contents of the `.wxt/tsconfig.json` file. */
+  tsconfig: any;
+};
+
 export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
@@ -1277,6 +1317,17 @@ export interface WxtHooks {
    *   });
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
+   * Called before WXT writes your tsconfig to the disk, allowing full
+   * customization by modifying the object by reference.
+   *
+   * @since 0.20.28
+   * @example
+   *   wxt.hooks.hook('prepare:tsconfig', (wxt, { tsconfig }) => {
+   *     tsconfig.compilerOptions.lib.push('WebWorker');
+   *   });
+   */
+  'prepare:tsconfig': (wxt: Wxt, configs: PrepareTsconfigs) => HookResult;
   /**
    * Called before generating the list of public paths inside
    * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative to
@@ -1514,7 +1565,12 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {};
   /** List of warning identifiers to suppress during the build process. */
-  suppressWarnings: { firefoxDataCollection?: boolean };
+  suppressWarnings: {
+    firefoxDataCollection?: boolean;
+    firefoxId?: boolean;
+  };
+  /** Chokidar options used by dev-mode file watchers. */
+  watchOptions: vite.WatchOptions;
   dev: {
     /** Only defined during dev command */
     server?: {

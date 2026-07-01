@@ -4,6 +4,7 @@ import { filesize } from 'filesize';
 import { printTable } from './printTable';
 import { styleText } from 'node:util';
 import { TextStyle } from '../../../utils/text-style';
+import { wxt } from '../../wxt';
 
 export async function printFileList(
   log: (message: string) => void,
@@ -21,9 +22,16 @@ export async function printFileList(
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
       const chunkColor = getChunkColor(file);
-      const stats = await lstat(file);
-      totalSize += stats.size;
-      const size = String(filesize(stats.size));
+
+      let size = '';
+      try {
+        const stats = await lstat(file);
+        totalSize += stats.size;
+        size = String(filesize(stats.size));
+      } catch (ex) {
+        wxt.logger.warn(`Could not get stats of '${file}' error: ${ex}`);
+      }
+
       return [
         `${styleText('gray', prefix)} ${styleText('dim', parts[0])}${styleText(chunkColor, parts[1])}`,
         styleText('dim', size),

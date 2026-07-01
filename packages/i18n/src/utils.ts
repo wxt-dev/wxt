@@ -1,4 +1,7 @@
-import { ChromeMessage } from './build';
+import type { ChromeMessage } from './build';
+import type { NamedSubstitutions } from './types';
+
+const NAMED_SUBSTITUTION_RE = /\{([A-Za-z0-9_]+)\}/g;
 
 export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
   if (message.placeholders == null) return message.message;
@@ -9,6 +12,24 @@ export function applyChromeMessagePlaceholders(message: ChromeMessage): string {
     },
     message.message,
   );
+}
+
+export function applyNamedSubstitutions(
+  message: string,
+  substitutions: NamedSubstitutions,
+): string {
+  return message.replace(NAMED_SUBSTITUTION_RE, (match, key: string) => {
+    return Object.prototype.hasOwnProperty.call(substitutions, key)
+      ? String(substitutions[key])
+      : match;
+  });
+}
+
+export function getNamedSubstitutionNames(message: string): string[] {
+  return Array.from(
+    message.matchAll(NAMED_SUBSTITUTION_RE),
+    ([, name]) => name,
+  ).filter((name, i, names) => names.indexOf(name) === i);
 }
 
 export function getSubstitutionCount(message: string): number {

@@ -2,10 +2,11 @@ import spawn from 'nano-spawn';
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { pnpm } from '../pnpm';
+import { describeWithBin } from '../../utils/testing/fixtures';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
-describe('PNPM Package Management Utils', () => {
+describeWithBin('pnpm', 'PNPM Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-pnpm-project');
 

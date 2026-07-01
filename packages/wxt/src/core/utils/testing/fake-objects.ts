@@ -296,6 +296,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     userConfigMetadata: {},
     alias: {},
     experimental: {},
+    watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
     },

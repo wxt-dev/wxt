@@ -25,7 +25,7 @@ type AnalyticsMethod =
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;
+) => (...args: Parameters<Analytics[K]>) => Promise<void>;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -84,9 +84,13 @@ function createBackgroundAnalytics(
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
   const userAgent = UAParser();
-  let userId = Promise.resolve(userIdStorage.getValue()).then(
-    (id) => id ?? globalThis.crypto.randomUUID(),
-  );
+  let userId = Promise.resolve(userIdStorage.getValue()).then(async (id) => {
+    if (id != null) return id;
+    // Persist the generated ID so it's stable across service worker restarts.
+    const generatedId = globalThis.crypto.randomUUID();
+    await userIdStorage.setValue?.(generatedId);
+    return generatedId;
+  });
   let userProperties = userPropertiesStorage.getValue();
   const manifest = browser.runtime.getManifest();
 
@@ -238,6 +242,7 @@ function createFrontendAnalytics(): Analytics {
     (fn) =>
     (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      return Promise.resolve();
     };
 
   const analytics: Analytics = {
