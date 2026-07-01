@@ -8,8 +8,9 @@ import consola from 'consola';
  * they are bundled with the extension instead of depending on remote code at
  * runtime.
  *
- * @deprecated Don't use this, it can cause potential supply chain attacks. You
- *   can download the files and host it in your repo instead.
+ * @deprecated This feature is susceptible to supply-chain attacks and will be
+ *   removed in the next major version of WXT. See
+ *   https://github.com/wxt-dev/wxt/issues/2262 for more details.'
  * @example
  *   import 'url:https://google-tagmanager.com/gtag?id=XYZ';
  */
@@ -33,7 +34,7 @@ export function download(config: ResolvedConfig): Plugin {
       handler(id) {
         const url = id.replace('\0url:', '');
         consola.warn(
-          'The `url:` import feature is deprecated. See https://github.com/wxt-dev/wxt/issues/2262.',
+          `Deprecated: This feature is susceptible to supply-chain attacks and will be removed in the next major version of WXT. See https://github.com/wxt-dev/wxt/issues/2262 for more details.`,
         );
         return fetchCached(url, config);
       },
