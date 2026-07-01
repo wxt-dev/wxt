@@ -252,6 +252,26 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
+    it('"enabled: 8" should fallback to the JSON config', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 8,
+          },
+        },
+      });
+
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        false,
+      );
+    });
+
     it('"enabled: "flat" should output a flat config file compatible with ESlint >= 9', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
@@ -267,6 +287,46 @@ describe('Auto Imports', () => {
       expect(
         await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
       ).toMatchSnapshot();
+    });
+
+    it('"enabled: 9" should fallback to the flat config', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 9,
+          },
+        },
+      });
+
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
+    });
+
+    it('"enabled: 10" should fallback to the flat config', async () => {
+      const project = new TestProject();
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+
+      await project.prepare({
+        imports: {
+          eslintrc: {
+            enabled: 10,
+          },
+        },
+      });
+
+      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
+        true,
+      );
+      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
+        false,
+      );
     });
 
     it('"enabled: false" should NOT output an ESlint config file', async () => {

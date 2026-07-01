@@ -529,6 +529,13 @@ async function getUnimportEslintOptions(
         enabled = false;
       }
       break;
+    case 8:
+      enabled = 'old';
+      break;
+    case 9:
+    case 10:
+      enabled = 'flat';
+      break;
     default:
       enabled = inlineEnabled;
   }
