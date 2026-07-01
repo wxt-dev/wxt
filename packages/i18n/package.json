@@ -47,7 +47,7 @@
     "@types/node": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
-    "tinybench": "^6.0.1",
+    "tinybench": "^6.0.2",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
