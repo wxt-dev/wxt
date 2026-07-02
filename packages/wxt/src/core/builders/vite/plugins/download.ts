@@ -1,3 +1,4 @@
+import { wxt } from '../../../wxt';
 import type { Plugin } from 'vite';
 import type { ResolvedConfig } from '../../../../types';
 import { fetchCached } from '../../../utils/network';
@@ -7,6 +8,9 @@ import { fetchCached } from '../../../utils/network';
  * they are bundled with the extension instead of depending on remote code at
  * runtime.
  *
+ * @deprecated This feature is susceptible to supply-chain attacks and will be
+ *   removed in the next major version of WXT. See
+ *   https://github.com/wxt-dev/wxt/issues/2262 for more details.'
  * @example
  *   import 'url:https://google-tagmanager.com/gtag?id=XYZ';
  */
@@ -29,6 +33,9 @@ export function download(config: ResolvedConfig): Plugin {
       },
       handler(id) {
         const url = id.replace('\0url:', '');
+        wxt.logger.warn(
+          `Deprecated: This feature is susceptible to supply-chain attacks and will be removed in the next major version of WXT. See https://github.com/wxt-dev/wxt/issues/2262 for more details.`,
+        );
         return fetchCached(url, config);
       },
     },

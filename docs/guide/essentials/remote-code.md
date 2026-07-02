@@ -1,5 +1,9 @@
 # Remote Code
 
+:::warning Deprecated
+This feature is susceptible to supply-chain attacks and will be removed in the next major version of WXT. See [issue #2262](https://github.com/wxt-dev/wxt/issues/2262) for more details.
+:::
+
 WXT will automatically download and bundle imports with the `url:` prefix so the extension does not depend on remote code, [a requirement from Google for MV3](https://developer.chrome.com/docs/extensions/migrating/improve-security/#remove-remote-code).
 
 ## Google Analytics
