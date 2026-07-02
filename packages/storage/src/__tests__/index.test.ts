@@ -7,7 +7,9 @@ import {
   MigrationError,
   defineSchema,
   storage,
+  type MetaKey,
   type OnValidationError,
+  type StorageItemKey,
   type WxtStorageItem,
   type WxtStorageItemSerializer,
 } from '../index';
@@ -1411,12 +1413,16 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:test`, {
           defaultValue: 123,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
 
         const item2 = storage.defineItem(`local:test`, {
           fallback: 123,
         });
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item2).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
 
       it('should define a nullable value when options are passed with null default value', () => {
@@ -1426,16 +1432,46 @@ describe('Storage Utils', () => {
         expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
       });
 
+      it('MetaKey template-literal type appends `$` at the type level', () => {
+        expectTypeOf<MetaKey<`theme`>>().toEqualTypeOf<`theme$`>();
+        expectTypeOf<MetaKey<`local:count`>>().toEqualTypeOf<`local:count$`>();
+        // Degrades to `${string}$` when the input is the bare `string` type.
+        expectTypeOf<MetaKey<string>>().toEqualTypeOf<`${string}$`>();
+      });
+
+      it('preserves the literal key type when TypeScript infers from a string-literal argument', () => {
+        const item = storage.defineItem(`local:theme`, { fallback: 5 });
+        expectTypeOf(item.key).toEqualTypeOf<`local:theme`>();
+
+        const migrated = storage.defineItem(`sync:profile`, {
+          init: () => ({ name: 'alice' }),
+        });
+        expectTypeOf(migrated.key).toEqualTypeOf<`sync:profile`>();
+      });
+
+      it('widens key to StorageItemKey when the caller supplies an explicit generic', () => {
+        // TypeScript limitation: `const TKey = default` type params do not
+        // infer narrow literals when the caller supplies any explicit generic
+        // argument. Users who need literal-preserved keys must rely on full
+        // inference (no explicit generic).
+        const item = storage.defineItem<number>(`local:test`, {});
+        expectTypeOf(item.key).toEqualTypeOf<StorageItemKey>();
+      });
+
       it('should define a non-null value when options are passed with a non-null init function', () => {
         const item = storage.defineItem(`local:test`, {
           init: () => 123,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
 
         const item2 = storage.defineItem(`local:test`, {
           init: () => Promise.resolve(123),
         });
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item2).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
     });
 
@@ -1457,7 +1493,9 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:test`, {
           schema: numberSchema,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number | null, {}, `local:test`>
+        >();
       });
 
       it('infers TValue from schema output and drops null when fallback is set', () => {
@@ -1465,7 +1503,9 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           fallback: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
 
       it('infers TValue from schema output and drops null when init is set', () => {
@@ -1473,13 +1513,17 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           init: () => 0,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
 
         const item2 = storage.defineItem(`local:test`, {
           schema: numberSchema,
           init: () => Promise.resolve(0),
         });
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item2).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
 
       it('infers TValue from schema output and drops null when defaultValue is set', () => {
@@ -1487,7 +1531,9 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           defaultValue: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
 
       it('defineSchema wraps a sync parser into StandardSchemaV1', () => {
@@ -1501,7 +1547,9 @@ describe('Storage Utils', () => {
           schema: parsed,
           fallback: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item).toEqualTypeOf<
+          WxtStorageItem<number, {}, `local:test`>
+        >();
       });
 
       it('defineSchema wraps an async parser into StandardSchemaV1', () => {

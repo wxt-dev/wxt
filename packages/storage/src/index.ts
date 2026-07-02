@@ -31,7 +31,9 @@ function createStorage(): WxtStorage {
     return driver;
   };
 
-  const resolveKey = (key: StorageItemKey) => {
+  const resolveKey = <const K extends StorageItemKey>(
+    key: K,
+  ): ResolvedKey<K> => {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
 
@@ -42,14 +44,18 @@ function createStorage(): WxtStorage {
       );
     }
 
+    // The runtime substring result is `string`; the compile-time template
+    // literal parse in `ResolvedKey<K>` is what narrows `driverArea` and
+    // `driverKey` at every call site. This is a provable-identity cast —
+    // K's type constraint guarantees the parse succeeds.
     return {
       driverArea,
       driverKey,
       driver: getDriver(driverArea),
-    };
+    } as ResolvedKey<K>;
   };
 
-  const getMetaKey = (key: string) => key + '$';
+  const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
 
   const mergeMeta = (oldMeta: any, newMeta: any): any => {
     const newFields = { ...oldMeta };
@@ -1015,72 +1021,100 @@ export interface WxtStorage {
    *
    * Read full docs: https://wxt.dev/storage.html#defining-storage-items
    */
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-  ): WxtStorageItem<TValue | null, TMetadata>;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
+  ): WxtStorageItem<TValue | null, TMetadata, TKey>;
   // --- schema-carrying overloads ---
   // These sit above the plain overloads so TypeScript picks them up whenever
   // `schema` is present, driving TValue from the schema's output type.
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
   >(
-    key: StorageItemKey,
+    key: TKey,
     options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
       schema: TSchema;
       fallback: StandardSchemaV1.InferOutput<TSchema>;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
   >(
-    key: StorageItemKey,
+    key: TKey,
     options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
       schema: TSchema;
       defaultValue: StandardSchemaV1.InferOutput<TSchema>;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
   >(
-    key: StorageItemKey,
+    key: TKey,
     options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
       schema: TSchema;
       init: () =>
         | StandardSchemaV1.InferOutput<TSchema>
         | Promise<StandardSchemaV1.InferOutput<TSchema>>;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
   >(
-    key: StorageItemKey,
+    key: TKey,
     options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
       schema: TSchema;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema> | null, TMetadata>;
-  // --- non-schema overloads (unchanged) ---
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
+  ): WxtStorageItem<
+    StandardSchemaV1.InferOutput<TSchema> | null,
+    TMetadata,
+    TKey
+  >;
+  // --- non-schema overloads ---
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
     options: WxtStorageItemOptions<TValue> & { fallback: TValue },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
+  ): WxtStorageItem<TValue, TMetadata, TKey>;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
     options: WxtStorageItemOptions<TValue> & { defaultValue: TValue },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
+  ): WxtStorageItem<TValue, TMetadata, TKey>;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
     options: WxtStorageItemOptions<TValue> & {
       init: () => TValue | Promise<TValue>;
     },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
+  ): WxtStorageItem<TValue, TMetadata, TKey>;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
     options: WxtStorageItemOptions<TValue>,
-  ): WxtStorageItem<TValue | null, TMetadata>;
+  ): WxtStorageItem<TValue | null, TMetadata, TKey>;
 }
 
 interface WxtStorageDriver {
@@ -1100,9 +1134,15 @@ interface WxtStorageDriver {
 export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
+  TKey extends StorageItemKey = StorageItemKey,
 > {
-  /** The storage key passed when creating the storage item. */
-  key: StorageItemKey;
+  /**
+   * The storage key passed when creating the storage item. When `defineItem` is
+   * called with a string literal (`'local:theme'`), this is narrowed to that
+   * exact literal; when passed a wider `StorageItemKey` value it stays as the
+   * union.
+   */
+  key: TKey;
 
   /** @deprecated Renamed to fallback, use it instead. */
   defaultValue: TValue;
@@ -1143,6 +1183,33 @@ export interface WxtStorageItem<
 
 export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
 export type StorageItemKey = `${StorageArea}:${string}`;
+
+/**
+ * Template-literal type for a metadata key. Applying `getMetaKey` to a string
+ * literal `K` produces ``${K}$`` at the type level, so downstream callers can
+ * see the exact meta key when the input is known.
+ *
+ * @example
+ *   type Meta = MetaKey<'theme'>; // 'theme$'
+ */
+export type MetaKey<K extends string> = `${K}$`;
+
+/**
+ * The shape returned by the internal `resolveKey` helper, driven by a
+ * template-literal parse of the input `StorageItemKey`. When called with a
+ * literal like `'local:theme'` this narrows `driverArea` to `'local'` and
+ * `driverKey` to `'theme'`; when called with the wider `StorageItemKey` union
+ * it degrades to the base `StorageArea` / `string` pair.
+ *
+ * References the internal `WxtStorageDriver` interface, so this type is
+ * intentionally not exported — exposing it would leak driver internals.
+ *
+ * @internal
+ */
+type ResolvedKey<K extends StorageItemKey> =
+  K extends `${infer A extends StorageArea}:${infer Rest}`
+    ? { driverArea: A; driverKey: Rest; driver: WxtStorageDriver }
+    : never;
 
 export interface GetItemOptions<T> {
   /** @deprecated Renamed to `fallback`, use it instead. */
