@@ -5,5 +5,9 @@ export default defineProject({
     mockReset: true,
     restoreMocks: true,
     setupFiles: ['vitest.setup.ts'],
+    typecheck: {
+      enabled: true,
+      include: ['**/*.test.ts'],
+    },
   },
 });
