@@ -330,6 +330,83 @@ With `storage.defineItem`, there are multiple ways of defining default values:
 
    The value is initialized in storage immediately.
 
+### Schema Validation
+
+Attach a [Standard Schema](https://standardschema.dev/) validator to a storage item so every read and write is checked against a schema at runtime. Any Standard Schema-conformant validator works out of the box: [Zod](https://zod.dev), [Valibot](https://valibot.dev), [ArkType](https://arktype.io), [Effect Schema](https://effect.website/docs/schema/introduction/), and others.
+
+```ts
+import { z } from 'zod';
+
+const theme = storage.defineItem('local:theme', {
+  schema: z.enum(['light', 'dark', 'system']),
+  fallback: 'system',
+});
+
+// Type of getValue() is inferred from the schema.
+const value = await theme.getValue(); // 'light' | 'dark' | 'system'
+```
+
+**Pipelines**
+
+- On read: `raw → migrate → serializer.read? → schema.validate → T`
+- On write: `T → schema.validate → serializer.write? → raw`
+
+**Handling validation failures on read**
+
+Writes always throw a `SchemaError` on validation failure. Reads (including `watch` callbacks) respect the `onValidationError` option:
+
+```ts
+const theme = storage.defineItem('local:theme', {
+  schema: z.enum(['light', 'dark', 'system']),
+  fallback: 'system',
+  onValidationError: 'fallback', // 'throw' | 'fallback' | 'reset' | callback
+});
+```
+
+- `'throw'` (default): throw a `SchemaError` with the schema's issues.
+- `'fallback'`: return `fallback` (or `null` if none set); leave the invalid value in storage.
+- `'reset'`: clear the invalid value from storage and return `fallback`.
+- `(issues, raw) => T`: custom recovery — the returned value becomes the read result; not written back.
+
+### Custom Serialization
+
+`chrome.storage` only accepts JSON-serializable values. To store types like `Set`, `Map`, or `Date`, provide a `serializer` with `write` (required) and `read` (optional):
+
+```ts
+const enabledSites = storage.defineItem<Set<string>>('local:enabled-sites', {
+  serializer: {
+    write: (set) => [...set],
+    read: (raw) => new Set(raw as string[]),
+  },
+});
+```
+
+When paired with a coercing schema like `z.coerce.date()`, `read` can be omitted — the schema handles deserialization:
+
+```ts
+const installDate = storage.defineItem('local:install-date', {
+  schema: z.coerce.date(),
+  serializer: { write: (d) => d.toISOString() },
+});
+```
+
+### Non-Standard-Schema Validators
+
+For validators that aren't Standard Schema-conformant — e.g. [TypeBox](https://github.com/sinclairzx81/typebox) (`Value.Parse`), [io-ts](https://gcanti.github.io/io-ts/) (`.decode`), or hand-rolled parsers — wrap them with `defineSchema`:
+
+```ts
+import { defineSchema, storage } from '#imports';
+import { Type, Value } from '@sinclair/typebox';
+
+const Theme = Type.Union([Type.Literal('light'), Type.Literal('dark')]);
+
+const theme = storage.defineItem('local:theme', {
+  schema: defineSchema<'light' | 'dark'>((v) => Value.Parse(Theme, v)),
+});
+```
+
+The wrapped function must return the parsed value on success or throw on failure. Both synchronous and async parsers are supported.
+
 ## Bulk Operations
 
 When getting or setting multiple values in storage, you can perform bulk operations to improve performance by reducing the number of individual storage calls. The `storage` API provides several methods for performing bulk operations:
