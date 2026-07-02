@@ -156,10 +156,37 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
   version?: number;
 
   /**
-   * A map of version numbers to the functions used to migrate the data to that
-   * version.
+   * Chain of migration functions applied to previously-stored values on read.
+   * The tuple is **ordered by target version**: position `i` (0-indexed)
+   * migrates from version `i + 1` to version `i + 2`. So
+   *
+   * `migrations: [migrateV1toV2, migrateV2toV3]`
+   *
+   * Paired with `version: 3` means: v1 storage runs both functions, v2 storage
+   * runs only the second, v3 storage runs nothing.
+   *
+   * At the type level, TS accepts any tuple of `(oldValue: unknown) =>
+   * unknown`. For chain-checked typing where each migration's return type
+   * matches the next migration's parameter type (and the last matches
+   * `TValue`), use the `defineMigrations<TValue>()` helper.
+   *
+   * ### Alternative designs considered (post-PR aklinker discussion may
+   *
+   * Pick a different one):
+   *
+   * - **A. Tuple, positional (this design).** Fully chained via
+   *   `defineMigrations`. Breaking: users on `Record<number, fn>` object form
+   *   must convert to a positional tuple. No support for non-contiguous version
+   *   numbers.
+   * - **B. `defineMigrations<TValue>({ 2: fn, 3: fn })` builder with per- version
+   *   types.** Keeps arbitrary numeric keys, requires the user to thread
+   *   intermediate types by hand.
+   * - **C. `Record<number, (oldValue: unknown) => unknown>`.** Kills the old
+   *   `any` but leaves the chain unchecked.
+   * - **D. Keep the current `Record<number, (any) => any>`.** Zero-risk, no
+   *   honesty win.
    */
-  migrations?: Record<number, (oldValue: any) => any>;
+  migrations?: ReadonlyArray<(oldValue: unknown) => unknown>;
 
   /**
    * Print debug logs, such as migration process.

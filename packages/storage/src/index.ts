@@ -605,7 +605,7 @@ function createStorage(): WxtStorage {
 
       const {
         version: targetVersion = 1,
-        migrations = {},
+        migrations = [],
         onMigrationComplete,
         debug = false,
       } = opts ?? {};
@@ -662,7 +662,10 @@ function createStorage(): WxtStorage {
         for (const migrateToVersion of migrationsToRun) {
           try {
             migratedValue =
-              (await migrations?.[migrateToVersion]?.(migratedValue)) ??
+              // `migrations` is a positional tuple ordered by target
+              // version: index 0 = v1→v2, index 1 = v2→v3, etc. So the
+              // function that migrates *to* version N sits at index N - 2.
+              (await migrations?.[migrateToVersion - 2]?.(migratedValue)) ??
               migratedValue;
             if (debug) {
               console.debug(
@@ -1381,6 +1384,94 @@ export function defineSchema<T>(
       },
     },
   };
+}
+
+/**
+ * Chain-checked migrations for `WxtStorageItemOptions.migrations`.
+ *
+ * Returns a curried function whose overloads validate that each migration's
+ * return type matches the next migration's parameter type, and that the last
+ * migration's return type matches `TValue`.
+ *
+ * At runtime, this is an identity wrapper — it returns the migrations array
+ * unchanged. All the work is at the type level.
+ *
+ * @example
+ *   ```ts
+ *   storage.defineItem('local:count', {
+ *   version: 3,
+ *   fallback: 0,
+ *   migrations: defineMigrations<number>()(
+ *   (v) => Number(v) * 2,   // v1 → v2 (unknown → number)
+ *   (v) => v + 10,          // v2 → v3 (number → number, must match TValue)
+ *   ),
+ *   });
+ *   ```;
+ */
+export function defineMigrations<TValue>(): {
+  (): readonly [];
+  <A extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+  ): readonly [(v: unknown) => A | Promise<A>];
+  <A, B extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+    f2: (v: A) => B | Promise<B>,
+  ): readonly [(v: unknown) => A | Promise<A>, (v: A) => B | Promise<B>];
+  <A, B, C extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+    f2: (v: A) => B | Promise<B>,
+    f3: (v: B) => C | Promise<C>,
+  ): readonly [
+    (v: unknown) => A | Promise<A>,
+    (v: A) => B | Promise<B>,
+    (v: B) => C | Promise<C>,
+  ];
+  <A, B, C, D extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+    f2: (v: A) => B | Promise<B>,
+    f3: (v: B) => C | Promise<C>,
+    f4: (v: C) => D | Promise<D>,
+  ): readonly [
+    (v: unknown) => A | Promise<A>,
+    (v: A) => B | Promise<B>,
+    (v: B) => C | Promise<C>,
+    (v: C) => D | Promise<D>,
+  ];
+  <A, B, C, D, E extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+    f2: (v: A) => B | Promise<B>,
+    f3: (v: B) => C | Promise<C>,
+    f4: (v: C) => D | Promise<D>,
+    f5: (v: D) => E | Promise<E>,
+  ): readonly [
+    (v: unknown) => A | Promise<A>,
+    (v: A) => B | Promise<B>,
+    (v: B) => C | Promise<C>,
+    (v: C) => D | Promise<D>,
+    (v: D) => E | Promise<E>,
+  ];
+  <A, B, C, D, E, F extends TValue>(
+    f1: (v: unknown) => A | Promise<A>,
+    f2: (v: A) => B | Promise<B>,
+    f3: (v: B) => C | Promise<C>,
+    f4: (v: C) => D | Promise<D>,
+    f5: (v: D) => E | Promise<E>,
+    f6: (v: E) => F | Promise<F>,
+  ): readonly [
+    (v: unknown) => A | Promise<A>,
+    (v: A) => B | Promise<B>,
+    (v: B) => C | Promise<C>,
+    (v: C) => D | Promise<D>,
+    (v: D) => E | Promise<E>,
+    (v: E) => F | Promise<F>,
+  ];
+  // Beyond 6 versions, fall back to the untyped array shape.
+  (
+    ...fns: ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>
+  ): ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>;
+} {
+  return ((...fns: ReadonlyArray<(v: unknown) => unknown>) =>
+    fns) as ReturnType<typeof defineMigrations<TValue>>;
 }
 
 // StorageAreaChanges, NullablePartial, WatchCallback, Unwatch moved to

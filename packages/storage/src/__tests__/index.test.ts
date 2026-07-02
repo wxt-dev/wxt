@@ -701,10 +701,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -722,14 +719,12 @@ describe('Storage Utils', () => {
       });
 
       it('should set the version without running migrations for empty storage items', async () => {
-        const migrate = vi.fn((n: number) => n * 2);
+        const migrate = vi.fn((n: unknown) => (n as number) * 2);
 
         const item = storage.defineItem<number>('local:key', {
           init: () => 1,
           version: 2,
-          migrations: {
-            2: migrate,
-          },
+          migrations: [migrate],
         });
         const value = await item.getValue();
         const meta = await item.getMeta();
@@ -746,13 +741,11 @@ describe('Storage Utils', () => {
         // this value to be migrated and doubled to V2.
         await storage.setItem(key, 1);
 
-        const migrate = vi.fn((n: number) => n * 2);
+        const migrate = vi.fn((n: unknown) => (n as number) * 2);
         const item = storage.defineItem<number>(key, {
           init: () => 1,
           version: 2,
-          migrations: {
-            2: migrate,
-          },
+          migrations: [migrate],
         });
         const value = await item.getValue();
         const meta = await item.getMeta();
@@ -774,10 +767,7 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
           onMigrationComplete,
         });
         await waitForMigrations();
@@ -793,10 +783,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -819,9 +806,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 2,
-          migrations: {
-            2: migrateToV2,
-          },
+          migrations: [migrateToV2],
         });
         await waitForMigrations();
 
@@ -846,10 +831,7 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -868,10 +850,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            1: migrateToV1,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV1, migrateToV3],
         });
         await waitForMigrations();
 
@@ -918,11 +897,11 @@ describe('Storage Utils', () => {
         const expectedError = new MigrationError('local:key', 2, { cause });
         const item = storage.defineItem<number>('local:key', {
           version: 3,
-          migrations: {
-            2: () => {
+          migrations: [
+            () => {
               throw cause;
             },
-          },
+          ],
         });
         await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
 
@@ -941,10 +920,7 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
           debug: true,
         });
         await waitForMigrations();
@@ -979,18 +955,13 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
 
         storage.defineItem<number, { v: number }>(`local:count2`, {
           defaultValue: 0,
           version: 2,
-          migrations: {
-            2: migrateToV2,
-          },
+          migrations: [migrateToV2],
           debug: false,
         });
         await waitForMigrations();
@@ -1002,9 +973,7 @@ describe('Storage Utils', () => {
         const defineTestItem = () =>
           storage.defineItem<number>('local:count', {
             version: 2,
-            migrations: {
-              2: migrateToV2,
-            },
+            migrations: [migrateToV2],
           });
 
         it('should set the version metadata when setting the value for the first time', async () => {
@@ -1813,9 +1782,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:count`, {
           schema: positiveNumberSchema,
           version: 2,
-          migrations: {
-            2: (old: number) => Math.abs(old),
-          },
+          migrations: [(old: unknown) => Math.abs(old as number)],
         });
         expect(await item.getValue()).toBe(1);
       });
