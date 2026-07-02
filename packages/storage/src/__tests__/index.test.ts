@@ -1914,6 +1914,68 @@ describe('Storage Utils', () => {
         expect(calls).toEqual(['deserialize', 'validate']);
       });
     });
+
+    describe('schema + init (write pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : { issues: [{ message: 'not positive' }] },
+        },
+      };
+
+      it('validates init output and stores it (validator schema)', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init: () => 5,
+        });
+        expect(await item.getValue()).toBe(5);
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 5,
+        });
+      });
+
+      it('throws SchemaError when init output fails validation', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init: () => -1,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+        // The invalid value must NOT be written to storage.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({});
+      });
+
+      it('runs serializer.write on init output', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+          init: () => new Set(['x', 'y']),
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Set);
+        expect([...(value ?? [])]).toEqual(['x', 'y']);
+        expect(await fakeBrowser.storage.local.get('enabled')).toEqual({
+          enabled: ['x', 'y'],
+        });
+      });
+
+      it('validates existing storage on init items instead of re-running init', async () => {
+        await fakeBrowser.storage.local.set({ count: 5 });
+        const init = vi.fn(() => 1);
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init,
+        });
+        expect(await item.getValue()).toBe(5);
+        // init must NOT be called when storage already has a valid value.
+        expect(init).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('Multiple Storage Areas', () => {

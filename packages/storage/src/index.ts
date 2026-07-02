@@ -153,15 +153,19 @@ function createStorage(): WxtStorage {
    *
    * Pipeline: `T → schema.validate → serializer.write → raw`.
    *
+   * Returns both the raw wire form (for storage) and the validated runtime
+   * value (for callers that want the schema-transformed form back — e.g. the
+   * init path returns `validated` to the caller after storing `raw`).
+   *
    * Validation is always applied and always throws on failure — writes never
    * respect `onValidationError` (that setting only affects reads). If the
    * schema transforms the input (e.g. `z.number().transform(...)`), the
-   * transformed value is what gets serialized.
+   * transformed value is what gets serialized AND what is returned.
    */
   const processWriteValue = async <T>(
     value: T,
     opts: WxtStorageItemOptions<T> | undefined,
-  ): Promise<unknown> => {
+  ): Promise<{ raw: unknown; validated: T }> => {
     let validated: T = value;
     if (opts?.schema) {
       const result = await opts.schema['~standard'].validate(value);
@@ -170,10 +174,10 @@ function createStorage(): WxtStorage {
       }
       validated = result.value;
     }
-    if (opts?.serializer?.write) {
-      return opts.serializer.write(validated);
-    }
-    return validated;
+    const raw = opts?.serializer?.write
+      ? opts.serializer.write(validated)
+      : validated;
+    return { raw, validated };
   };
 
   const setMeta = async (
@@ -581,20 +585,49 @@ function createStorage(): WxtStorage {
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
-          const value = await driver.getItem<any>(driverKey);
-          // Don't init value if it already exists or the init function isn't provided
-          if (value != null || opts?.init == null) return value;
+          const raw = await driver.getItem<any>(driverKey);
 
-          const newValue = await opts.init();
-          await driver.setItem<any>(driverKey, newValue);
-          if (value == null && targetVersion > 1) {
+          // No init defined — leave the pipeline to the non-init getValue path.
+          // This function is also called eagerly via `migrationsDone.then` for
+          // every item; running the pipeline here would double-fire it against
+          // the same read (once eagerly, once from user getValue).
+          if (opts?.init == null) return raw;
+
+          // Init defined + storage already populated: run the read pipeline
+          // just like non-init getValue does.
+          if (raw != null) {
+            return await processReadValue(raw, opts, driver, driverKey);
+          }
+
+          // Fresh init: run the write pipeline on the init output so a schema
+          // can validate/transform it, and a serializer.write produces the
+          // storage form.
+          const initialized = await opts.init();
+          const { raw: rawToStore, validated } = await processWriteValue(
+            initialized,
+            opts,
+          );
+          await driver.setItem<any>(driverKey, rawToStore);
+          if (targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
           }
-          return newValue;
+          return validated;
         });
 
-      // Initialize the value once migrations have finished
-      migrationsDone.then(getOrInitValue);
+      // Fire-and-forget eager init: kicks off `init()` right after any
+      // migrations resolve so the value is present before the first user
+      // getValue call. Errors here are surfaced when the user actually reads
+      // — they hit the mutex, re-run getOrInitValue, and get the same error
+      // via a properly-awaited promise. Swallow here to avoid unhandled
+      // rejection warnings when the schema on an init item fails.
+      migrationsDone.then(getOrInitValue).catch((err) => {
+        if (debug) {
+          console.debug(
+            `[@wxt-dev/storage] Eager init failed for ${key}; will surface on next read`,
+            err,
+          );
+        }
+      });
 
       return {
         key,
@@ -629,7 +662,7 @@ function createStorage(): WxtStorage {
         setValue: async (value) => {
           await migrationsDone;
 
-          const raw = await processWriteValue(value, opts);
+          const { raw } = await processWriteValue(value, opts);
 
           if (needsVersionSet) {
             needsVersionSet = false;
