@@ -2,6 +2,7 @@ import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { SchemaError } from '@standard-schema/utils';
 import {
   MigrationError,
   defineSchema,
@@ -1552,6 +1553,145 @@ describe('Storage Utils', () => {
         expectTypeOf<Cb>().toEqualTypeOf<
           (issues: readonly StandardSchemaV1.Issue[], raw: unknown) => number
         >();
+      });
+    });
+
+    describe('schema (write pipeline)', () => {
+      // Hand-rolled Standard Schema for tests. Runtime read behaviour lands in
+      // a follow-up commit; here we only verify writes.
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : {
+                  issues: [
+                    {
+                      message: `expected positive number, got ${String(value)}`,
+                    },
+                  ],
+                },
+        },
+      };
+
+      it('stores the validated value when schema succeeds', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await item.setValue(7);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 7 });
+      });
+
+      it('throws a SchemaError when schema validation fails on write', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await expect(item.setValue(-1)).rejects.toBeInstanceOf(SchemaError);
+        // Storage must remain untouched on failed write.
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({});
+      });
+
+      it('SchemaError carries the issues array from the schema', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        try {
+          await item.setValue(-1);
+          expect.fail('expected SchemaError');
+        } catch (error) {
+          expect(error).toBeInstanceOf(SchemaError);
+          const issues = (error as SchemaError).issues;
+          expect(issues).toHaveLength(1);
+          expect(issues[0].message).toMatch(/positive number/);
+        }
+      });
+
+      it('stores the schema-transformed value, not the original input', async () => {
+        const doubling = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v * 2;
+        });
+        const item = storage.defineItem(`local:count`, { schema: doubling });
+        await item.setValue(5);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 10 });
+      });
+    });
+
+    describe('serializer (write pipeline)', () => {
+      it('runs serializer.write and stores the raw form', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+        });
+        await item.setValue(new Set(['a', 'b']));
+        const raw = await fakeBrowser.storage.local.get('enabled');
+        expect(raw).toEqual({ enabled: ['a', 'b'] });
+      });
+
+      it('works when only serializer.write is defined (read omitted)', async () => {
+        const item = storage.defineItem<Date>(`local:date`, {
+          serializer: {
+            write: (d) => d.toISOString(),
+          },
+        });
+        await item.setValue(new Date('2025-01-15T00:00:00.000Z'));
+        const raw = await fakeBrowser.storage.local.get('date');
+        expect(raw).toEqual({ date: '2025-01-15T00:00:00.000Z' });
+      });
+    });
+
+    describe('schema + serializer (write pipeline)', () => {
+      it('validates first, then serializes (order matters)', async () => {
+        const calls: string[] = [];
+        const trackingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              calls.push('validate');
+              return typeof value === 'number'
+                ? { value }
+                : { issues: [{ message: 'not a number' }] };
+            },
+          },
+        };
+        const item = storage.defineItem(`local:count`, {
+          schema: trackingSchema,
+          serializer: {
+            write: (n) => {
+              calls.push('serialize');
+              return `n=${n}`;
+            },
+          },
+        });
+        await item.setValue(42);
+        expect(calls).toEqual(['validate', 'serialize']);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 'n=42' });
+      });
+
+      it('does not call serializer when schema validation fails', async () => {
+        const write = vi.fn((n: number) => `n=${n}`);
+        const failingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: () => ({ issues: [{ message: 'always fail' }] }),
+          },
+        };
+        const item = storage.defineItem(`local:count`, {
+          schema: failingSchema,
+          serializer: { write },
+        });
+        await expect(item.setValue(1)).rejects.toBeInstanceOf(SchemaError);
+        expect(write).not.toHaveBeenCalled();
       });
     });
   });

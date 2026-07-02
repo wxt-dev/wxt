@@ -8,6 +8,7 @@
  */
 import { browser, type Browser } from '@wxt-dev/browser';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { SchemaError } from '@standard-schema/utils';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
 
@@ -90,6 +91,35 @@ function createStorage(): WxtStorage {
     value: any,
   ) => {
     await driver.setItem(driverKey, value ?? null);
+  };
+
+  /**
+   * Turn the runtime value handed to `defineItem().setValue()` into the raw
+   * wire form that hits `driver.setItem`.
+   *
+   * Pipeline: `T → schema.validate → serializer.write → raw`.
+   *
+   * Validation is always applied and always throws on failure — writes never
+   * respect `onValidationError` (that setting only affects reads). If the
+   * schema transforms the input (e.g. `z.number().transform(...)`), the
+   * transformed value is what gets serialized.
+   */
+  const processWriteValue = async <T>(
+    value: T,
+    opts: WxtStorageItemOptions<T> | undefined,
+  ): Promise<unknown> => {
+    let validated: T = value;
+    if (opts?.schema) {
+      const result = await opts.schema['~standard'].validate(value);
+      if (result.issues) {
+        throw new SchemaError(result.issues);
+      }
+      validated = result.value;
+    }
+    if (opts?.serializer?.write) {
+      return opts.serializer.write(validated);
+    }
+    return validated;
   };
 
   const setMeta = async (
@@ -541,17 +571,19 @@ function createStorage(): WxtStorage {
         setValue: async (value) => {
           await migrationsDone;
 
+          const raw = await processWriteValue(value, opts);
+
           if (needsVersionSet) {
             needsVersionSet = false;
             await Promise.all([
               // Note: These calls cannot be done in a single `setItems` call;
               // metadata needs to be merged together with existing data and
               // setItems overwrites the whole value without merging.
-              setItem(driver, driverKey, value),
+              setItem(driver, driverKey, raw),
               setMeta(driver, driverKey, { v: targetVersion }),
             ]);
           } else {
-            await setItem(driver, driverKey, value);
+            await setItem(driver, driverKey, raw);
           }
         },
 
