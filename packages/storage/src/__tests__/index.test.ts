@@ -736,12 +736,8 @@ describe('Storage Utils', () => {
             count: 2,
             count$: { v: badV },
           });
-          const migrateToV2 = vi.fn(
-            (oldCount: unknown) => (oldCount as number) * 2,
-          );
-          const migrateToV3 = vi.fn(
-            (oldCount: unknown) => (oldCount as number) * 3,
-          );
+          const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+          const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
 
           const item = storage.defineItem<number, { v: number }>(
             `local:count`,
@@ -768,7 +764,7 @@ describe('Storage Utils', () => {
       );
 
       it('should set the version without running migrations for empty storage items', async () => {
-        const migrate = vi.fn((n: unknown) => (n as number) * 2);
+        const migrate = vi.fn((n) => n * 2);
 
         const item = storage.defineItem<number>('local:key', {
           init: () => 1,
@@ -790,7 +786,7 @@ describe('Storage Utils', () => {
         // this value to be migrated and doubled to V2.
         await storage.setItem(key, 1);
 
-        const migrate = vi.fn((n: unknown) => (n as number) * 2);
+        const migrate = vi.fn((n) => n * 2);
         const item = storage.defineItem<number>(key, {
           init: () => 1,
           version: 2,
@@ -1831,7 +1827,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:count`, {
           schema: positiveNumberSchema,
           version: 2,
-          migrations: [(old: unknown) => Math.abs(old as number)],
+          migrations: [(old) => Math.abs(old)],
         });
         expect(await item.getValue()).toBe(1);
       });
