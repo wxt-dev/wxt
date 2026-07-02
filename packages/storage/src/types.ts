@@ -25,8 +25,13 @@ export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
  * `'local:theme'` reaches the type system, TypeScript preserves it as the
  * literal; when the type is used bare it degrades to the union of all four
  * area-prefixed template literals.
+ *
+ * `G` is an optional escape-hatch parameter — supply it when you want to pin
+ * the name half to a specific literal or union (`StorageItemKey<'theme'>` =
+ * `${StorageArea}:theme`). Most callers leave it defaulted to `string` and let
+ * per-method `<const K extends StorageItemKey>` do the literal narrowing.
  */
-export type StorageItemKey = `${StorageArea}:${string}`;
+export type StorageItemKey<G extends string = string> = `${StorageArea}:${G}`;
 
 /**
  * Template-literal type for a metadata key. Applying `getMetaKey` to a string
@@ -39,21 +44,16 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 export type MetaKey<K extends string> = `${K}$`;
 
 /**
- * Template-literal parse of a `StorageItemKey` into its area + name halves.
- * Used internally by `resolveKey`; kept as a pure type here so it can be
- * composed elsewhere (batch APIs, migrations chains) without dragging the
- * `WxtStorageDriver` runtime dependency along.
- *
- * @example
- *   type P = KeyParts<'local:theme'>;
- *   // { readonly driverArea: 'local'; readonly driverKey: 'theme' }
- */
-/**
  * Structural parse of a storage-item key into its `driverArea` / `driverKey`
  * parts. Expressed as a mapped-style object type (fields carrying nested
  * conditionals) rather than a top-level conditional, so TS accepts field-level
  * assignment from narrowed strings without requiring an `as unknown as` double
  * cast at every construction site.
+ *
+ * Takes the whole key `K` as a single parameter — TS infers the area and the
+ * name halves internally. Deriving both from one parameter guarantees they stay
+ * correlated (`K = 'local:theme'` ⇒ `driverArea = 'local'`, `driverKey =
+ * 'theme'`, not a Cartesian product of areas × names).
  *
  * @example
  *   ```ts

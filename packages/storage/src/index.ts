@@ -69,53 +69,29 @@ function createStorage(): WxtStorage {
     return driver;
   };
 
-  const resolveKey = <const K extends StorageItemKey>(
-    key: K,
-  ): ResolvedKey<K> => {
+  const resolveKey = <const K extends StorageItemKey>(key: K) => {
     const deliminatorIndex = key.indexOf(':');
-    // K's `StorageArea:${string}` constraint guarantees the prefix is a
-    // valid area. `as` at the field level (single cast, not through
-    // `unknown`) is safe because `string` overlaps `StorageArea` — the
-    // subtype relation makes this a narrowing, not a lie.
     const driverArea = key.substring(
       0,
       deliminatorIndex,
     ) as KeyParts<K>['driverArea'];
-
-    const driverKeyRaw = key.substring(deliminatorIndex + 1);
-    if (driverKeyRaw == null) {
+    const driverKey = key.substring(
+      deliminatorIndex + 1,
+    ) as KeyParts<K>['driverKey'];
+    if (driverKey == null) {
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
       );
     }
-    // Trust boundary: K's constraint parses to `Rest` which is `string`
-    // at the template-literal level, so this is a subtype-consistent
-    // narrowing.
-    const driverKey = driverKeyRaw as KeyParts<K>['driverKey'];
-
-    // Single `as` at the object boundary. Fields are already narrowed
-    // to `KeyParts<K>['driverArea']` and `KeyParts<K>['driverKey']`, but
-    // TS can't structurally match a fresh object literal against
-    // `KeyParts<K>` (a conditional/distributive type). This single cast
-    // packages the narrowing without going through `unknown`.
     return {
       driverArea,
       driverKey,
       driver: getDriver(driverArea),
-    } as ResolvedKey<K>;
+    };
   };
 
   const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
 
-  /**
-   * `Object.entries` widens key types to `string`. This shim preserves the key
-   * type of a `Partial<Record<K, V>>` map, letting downstream loops keep `area:
-   * StorageArea` narrow without a per-call `as StorageArea` cast.
-   *
-   * Safe because `Object.entries` returns exactly the runtime keys of the input
-   * object; the type of those keys is what the input map already declared them
-   * to be.
-   */
   const typedEntries = <K extends string, V>(
     obj: Partial<Record<K, V>>,
   ): Array<[K, V]> => Object.entries(obj) as Array<[K, V]>;
@@ -337,15 +313,17 @@ function createStorage(): WxtStorage {
     driver.watch(driverKey, cb as WatchCallback<unknown>);
 
   return {
-    getItem: (async <T>(
-      key: StorageItemKey,
+    getItem: async <T, const K extends StorageItemKey>(
+      key: K,
       opts?: GetItemOptions<T>,
-    ): Promise<T | null> => {
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       return await getItem(driver, driverKey, opts);
-    }) as WxtStorage['getItem'],
+    },
 
-    getItems: (async (keys) => {
+    getItems: (async <const T extends ReadonlyArray<GetItemsInputElement>>(
+      keys: T,
+    ) => {
       // Build one slot per input element so duplicate keys with different
       // options each get their own fallback applied. A prior implementation
       // stored options in a `Map<string, opts>` keyed by the resolved key,
@@ -393,7 +371,7 @@ function createStorage(): WxtStorage {
             // Template literal narrows automatically: driverArea is
             // StorageArea, driverResult.key is string, so the join is
             // `${StorageArea}:${string}` = StorageItemKey.
-            const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
+            const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
             rawByKey.set(key, driverResult.value);
           });
         }),
@@ -408,12 +386,14 @@ function createStorage(): WxtStorage {
       }));
     }) as WxtStorage['getItems'],
 
-    getMeta: async (key) => {
+    getMeta: (async <const K extends StorageItemKey>(key: K) => {
       const { driver, driverKey } = resolveKey(key);
       return await getMeta(driver, driverKey);
-    },
+    }) as WxtStorage['getMeta'],
 
-    getMetas: (async (args) => {
+    getMetas: (async <const T extends ReadonlyArray<GetMetasInputElement>>(
+      args: T,
+    ) => {
       const keys = args.map((arg) => {
         const key = typeof arg === 'string' ? arg : arg.key;
         const { driverArea, driverKey } = resolveKey(key);
@@ -427,7 +407,17 @@ function createStorage(): WxtStorage {
       });
 
       const areaToDriverMetaKeysMap = keys.reduce<
-        Partial<Record<StorageArea, (typeof keys)[number][]>>
+        Partial<
+          Record<
+            StorageArea,
+            Array<{
+              readonly key: StorageItemKey;
+              readonly driverArea: StorageArea;
+              readonly driverKey: string;
+              readonly driverMetaKey: MetaKey<string>;
+            }>
+          >
+        >
       >((map, key) => {
         map[key.driverArea] ??= [];
         map[key.driverArea]!.push(key);
@@ -452,10 +442,13 @@ function createStorage(): WxtStorage {
       }));
     }) as WxtStorage['getMetas'],
 
-    setItem: async (key, value) => {
+    setItem: (async <const K extends StorageItemKey>(
+      key: K,
+      value: unknown,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       await setItem(driver, driverKey, value);
-    },
+    }) as WxtStorage['setItem'],
 
     setItems: async (items) => {
       const areaToKeyValueMap: Partial<
@@ -480,10 +473,13 @@ function createStorage(): WxtStorage {
       );
     },
 
-    setMeta: async (key, properties) => {
+    setMeta: (async <const K extends StorageItemKey>(
+      key: K,
+      properties: Record<string, unknown> | null,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       await setMeta(driver, driverKey, properties);
-    },
+    }) as WxtStorage['setMeta'],
 
     setMetas: async (items) => {
       const areaToMetaUpdatesMap: Partial<
@@ -527,10 +523,13 @@ function createStorage(): WxtStorage {
       );
     },
 
-    removeItem: async (key, opts) => {
+    removeItem: (async <const K extends StorageItemKey>(
+      key: K,
+      opts?: RemoveItemOptions,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       await removeItem(driver, driverKey, opts);
-    },
+    }) as WxtStorage['removeItem'],
 
     removeItems: async (keys) => {
       const areaToKeysMap: Partial<Record<StorageArea, string[]>> = {};
@@ -577,10 +576,13 @@ function createStorage(): WxtStorage {
       await driver.clear();
     },
 
-    removeMeta: async (key, properties) => {
+    removeMeta: (async <const K extends StorageItemKey>(
+      key: K,
+      properties?: string | string[],
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       await removeMeta(driver, driverKey, properties);
-    },
+    }) as WxtStorage['removeMeta'],
 
     snapshot: async (base, opts) => {
       const driver = getDriver(base);
@@ -599,10 +601,13 @@ function createStorage(): WxtStorage {
       await driver.restoreSnapshot(data);
     },
 
-    watch: (key, cb) => {
+    watch: (<const K extends StorageItemKey>(
+      key: K,
+      cb: WatchCallback<unknown>,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       return watch(driver, driverKey, cb);
-    },
+    }) as WxtStorage['watch'],
 
     unwatch() {
       Object.values(drivers).forEach((driver) => {
@@ -1014,13 +1019,13 @@ export interface WxtStorage {
    *   });
    *   // withFallback: number
    */
-  getItem<TValue>(
-    key: StorageItemKey,
+  getItem<TValue, const K extends StorageItemKey = StorageItemKey>(
+    key: K,
     opts: GetItemOptions<TValue> & { fallback: TValue },
   ): Promise<TValue>;
 
-  getItem(
-    key: StorageItemKey,
+  getItem<const K extends StorageItemKey = StorageItemKey>(
+    key: K,
     opts?: GetItemOptions<unknown>,
   ): Promise<unknown>;
 
@@ -1045,7 +1050,9 @@ export interface WxtStorage {
    * @example
    *   await storage.getMeta('local:installDate');
    */
-  getMeta(key: StorageItemKey): Promise<Record<string, unknown>>;
+  getMeta<const K extends StorageItemKey>(
+    key: K,
+  ): Promise<Record<string, unknown>>;
 
   /**
    * Get the metadata of multiple storage items.
@@ -1067,7 +1074,10 @@ export interface WxtStorage {
    * @example
    *   await storage.setItem('local:installDate', Date.now());
    */
-  setItem(key: StorageItemKey, value: unknown): Promise<void>;
+  setItem<const K extends StorageItemKey>(
+    key: K,
+    value: unknown,
+  ): Promise<void>;
 
   /**
    * Set multiple values in storage. If a value is set to `null` or `undefined`,
@@ -1093,8 +1103,8 @@ export interface WxtStorage {
    * @example
    *   await storage.setMeta('local:installDate', { appVersion });
    */
-  setMeta(
-    key: StorageItemKey,
+  setMeta<const K extends StorageItemKey>(
+    key: K,
     properties: Record<string, unknown> | null,
   ): Promise<void>;
 
@@ -1116,7 +1126,10 @@ export interface WxtStorage {
    * @example
    *   await storage.removeItem('local:installDate');
    */
-  removeItem(key: StorageItemKey, opts?: RemoveItemOptions): Promise<void>;
+  removeItem<const K extends StorageItemKey>(
+    key: K,
+    opts?: RemoveItemOptions,
+  ): Promise<void>;
 
   /** Remove a list of keys from storage. */
   removeItems(
@@ -1141,8 +1154,8 @@ export interface WxtStorage {
    *   // Remove only specific the "v" field
    *   await storage.removeMeta('local:installDate', 'v');
    */
-  removeMeta(
-    key: StorageItemKey,
+  removeMeta<const K extends StorageItemKey>(
+    key: K,
     properties?: string | string[],
   ): Promise<void>;
 
@@ -1163,7 +1176,10 @@ export interface WxtStorage {
   ): Promise<void>;
 
   /** Watch for changes to a specific key in storage. */
-  watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch;
+  watch<const K extends StorageItemKey>(
+    key: K,
+    cb: WatchCallback<unknown>,
+  ): Unwatch;
 
   /** Remove all watch listeners. */
   unwatch(): void;
@@ -1356,17 +1372,6 @@ export interface WxtStorageItem<
    */
   migrate(): Promise<void>;
 }
-
-/**
- * Internal `resolveKey` return shape: pure `KeyParts<K>` (parsed from the
- * template literal) plus the runtime driver handle. Kept in this file because
- * it references `WxtStorageDriver`, an internal interface.
- *
- * @internal
- */
-type ResolvedKey<K extends StorageItemKey> = KeyParts<K> & {
-  driver: WxtStorageDriver;
-};
 
 // GetItemOptions, RemoveItemOptions, SnapshotOptions moved to ./types.
 
