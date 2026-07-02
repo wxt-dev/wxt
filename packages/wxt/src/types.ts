@@ -612,6 +612,15 @@ export interface BaseEntrypointOptions {
    * @default undefined
    */
   exclude?: TargetBrowser[];
+  /**
+   * Stable identifier for this entrypoint, independent of its filename. Modules
+   * like `@wxt-dev/entrypoint-refs` can use it to emit constant names that do
+   * not change when the source file is renamed. Defaults to the entrypoint
+   * name.
+   *
+   * @default undefined
+   */
+  ref?: string;
 }
 
 export interface BackgroundEntrypointOptions extends BaseEntrypointOptions {

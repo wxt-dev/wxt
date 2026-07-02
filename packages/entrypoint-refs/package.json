@@ -1,0 +1,49 @@
+{
+  "name": "@wxt-dev/entrypoint-refs",
+  "description": "WXT module that generates typed constants for all your extension's entrypoint bundle paths",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/entrypoint-refs"
+  },
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/entrypoint-refs/README.md",
+  "keywords": [
+    "wxt",
+    "module",
+    "entrypoints",
+    "browser-extension"
+  ],
+  "license": "MIT",
+  "version": "0.1.0",
+  "type": "module",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "buildc -- tsdown",
+    "check": "bun run build && check",
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.21.0"
+  },
+  "devDependencies": {
+    "@aklinker1/buildc": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "wxt": "workspace:*"
+  }
+}
