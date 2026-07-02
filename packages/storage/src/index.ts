@@ -260,13 +260,14 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    properties: unknown,
+    properties: Record<string, unknown> | null,
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    // `properties` is typed `unknown` because upstream `setMeta<T>` on
-    // WxtStorage is caller-invented (Phase D). Coerce through
-    // `getMetaValue` which enforces the object-shape invariant at runtime.
+    // `getMetaValue` coerces to `Record<string, unknown>` at runtime,
+    // handling the `null` case (=> `{}`) as belt-and-suspenders defense
+    // against non-object metadata that may exist in storage from older
+    // writes or external mutations.
     const incoming = getMetaValue(properties);
     await driver.setItem(metaKey, mergeMeta(existingFields, incoming));
   };
