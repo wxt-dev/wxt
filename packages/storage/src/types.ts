@@ -48,10 +48,25 @@ export type MetaKey<K extends string> = `${K}$`;
  *   type P = KeyParts<'local:theme'>;
  *   // { readonly driverArea: 'local'; readonly driverKey: 'theme' }
  */
-export type KeyParts<K extends StorageItemKey> =
-  K extends `${infer A extends StorageArea}:${infer Rest}`
-    ? { readonly driverArea: A; readonly driverKey: Rest }
+/**
+ * Structural parse of a storage-item key into its `driverArea` / `driverKey`
+ * parts. Expressed as a mapped-style object type (fields carrying nested
+ * conditionals) rather than a top-level conditional, so TS accepts field-level
+ * assignment from narrowed strings without requiring an `as unknown as` double
+ * cast at every construction site.
+ *
+ * @example
+ *   ```ts
+ *   type X = KeyParts<'local:theme'>;
+ *   // { driverArea: 'local'; driverKey: 'theme' }
+ *   ```;
+ */
+export type KeyParts<K extends StorageItemKey> = {
+  readonly driverArea: K extends `${infer A extends StorageArea}:${string}`
+    ? A
     : never;
+  readonly driverKey: K extends `${StorageArea}:${infer R}` ? R : never;
+};
 
 // ─── Watch / change events ────────────────────────────────────────────
 
@@ -185,8 +200,20 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
    *   `any` but leaves the chain unchecked.
    * - **D. Keep the current `Record<number, (any) => any>`.** Zero-risk, no
    *   honesty win.
+   *
+   * NOTE ON THE OPTION TYPE: the array element type is `(oldValue: any) =>
+   * unknown | Promise<unknown>` rather than `(oldValue: unknown) => unknown`.
+   * `any` in the parameter position is intentional and honest for a
+   * heterogeneous chain: each position's fn accepts a different input type
+   * (position 0 accepts the raw stored value; positions 1..N-1 accept the
+   * previous fn's return type). A single- `(oldValue: unknown)` type would
+   * reject narrow-param fns produced by `defineMigrations` because parameters
+   * are contravariant.
    */
-  migrations?: ReadonlyArray<(oldValue: unknown) => unknown>;
+  migrations?: ReadonlyArray<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (oldValue: any) => unknown | Promise<unknown>
+  >;
 
   /**
    * Print debug logs, such as migration process.
@@ -351,7 +378,7 @@ export type GetMetasInputElement = StorageItemKey | WxtStorageItemLike;
  * doesn't type it.
  */
 export type GetMetasResult<T extends ReadonlyArray<GetMetasInputElement>> = {
-  readonly [I in keyof T]: T[I] extends WxtStorageItemLike<any, infer K>
+  readonly [I in keyof T]: T[I] extends WxtStorageItemLike<unknown, infer K>
     ? { readonly key: K; readonly meta: Record<string, unknown> }
     : T[I] extends StorageItemKey
       ? { readonly key: T[I]; readonly meta: Record<string, unknown> }

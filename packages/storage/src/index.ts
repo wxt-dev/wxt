@@ -73,26 +73,36 @@ function createStorage(): WxtStorage {
     key: K,
   ): ResolvedKey<K> => {
     const deliminatorIndex = key.indexOf(':');
-    const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
+    // K's `StorageArea:${string}` constraint guarantees the prefix is a
+    // valid area. `as` at the field level (single cast, not through
+    // `unknown`) is safe because `string` overlaps `StorageArea` — the
+    // subtype relation makes this a narrowing, not a lie.
+    const driverArea = key.substring(
+      0,
+      deliminatorIndex,
+    ) as KeyParts<K>['driverArea'];
 
-    const driverKey = key.substring(deliminatorIndex + 1);
-    if (driverKey == null) {
+    const driverKeyRaw = key.substring(deliminatorIndex + 1);
+    if (driverKeyRaw == null) {
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
       );
     }
+    // Trust boundary: K's constraint parses to `Rest` which is `string`
+    // at the template-literal level, so this is a subtype-consistent
+    // narrowing.
+    const driverKey = driverKeyRaw as KeyParts<K>['driverKey'];
 
-    // The runtime substring result is `string`; the compile-time template
-    // literal parse in `KeyParts<K>` narrows `driverArea` and `driverKey`
-    // at every call site. Trust-boundary cast: K's constraint guarantees
-    // the parse succeeds. Double-cast through `unknown` because
-    // `KeyParts<K>` has `readonly` fields that TS's overlap check treats
-    // as non-assignable from the mutable object literal.
+    // Single `as` at the object boundary. Fields are already narrowed
+    // to `KeyParts<K>['driverArea']` and `KeyParts<K>['driverKey']`, but
+    // TS can't structurally match a fresh object literal against
+    // `KeyParts<K>` (a conditional/distributive type). This single cast
+    // packages the narrowing without going through `unknown`.
     return {
       driverArea,
       driverKey,
       driver: getDriver(driverArea),
-    } as unknown as ResolvedKey<K>;
+    } as ResolvedKey<K>;
   };
 
   const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
@@ -336,12 +346,17 @@ function createStorage(): WxtStorage {
     }) as WxtStorage['getItem'],
 
     getItems: (async (keys) => {
+      // Build one slot per input element so duplicate keys with different
+      // options each get their own fallback applied. A prior implementation
+      // stored options in a `Map<string, opts>` keyed by the resolved key,
+      // which silently overwrote the fallback when the same key appeared
+      // twice in the input tuple.
+      type Slot = {
+        readonly key: StorageItemKey;
+        readonly opts: GetItemOptions<unknown> | undefined;
+      };
+      const slots: Slot[] = [];
       const areaToKeyMap = new Map<StorageArea, string[]>();
-      const keyToOptsMap = new Map<
-        string,
-        GetItemOptions<unknown> | undefined
-      >();
-      const orderedKeys: StorageItemKey[] = [];
 
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
@@ -360,15 +375,16 @@ function createStorage(): WxtStorage {
           opts = key.options;
         }
 
-        orderedKeys.push(keyStr);
+        slots.push({ key: keyStr, opts });
         const { driverArea, driverKey } = resolveKey(keyStr);
         const areaKeys = areaToKeyMap.get(driverArea) ?? [];
 
         areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
-        keyToOptsMap.set(keyStr, opts);
       });
 
-      const resultsMap = new Map<StorageItemKey, unknown>();
+      // Raw values keyed by the full storage-item key; deduped implicitly
+      // by driver.getItems on the per-area unique key list.
+      const rawByKey = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
@@ -378,20 +394,17 @@ function createStorage(): WxtStorage {
             // StorageArea, driverResult.key is string, so the join is
             // `${StorageArea}:${string}` = StorageItemKey.
             const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
-            const opts = keyToOptsMap.get(key);
-            const value = getValueOrFallback(
-              driverResult.value,
-              opts?.fallback ?? opts?.defaultValue,
-            );
-
-            resultsMap.set(key, value);
+            rawByKey.set(key, driverResult.value);
           });
         }),
       );
 
-      return orderedKeys.map((key) => ({
-        key,
-        value: resultsMap.get(key),
+      return slots.map((slot) => ({
+        key: slot.key,
+        value: getValueOrFallback(
+          rawByKey.get(slot.key),
+          slot.opts?.fallback ?? slot.opts?.defaultValue,
+        ),
       }));
     }) as WxtStorage['getItems'],
 
@@ -625,20 +638,32 @@ function createStorage(): WxtStorage {
         // guaranteed by contract but not by the type. Handle the (never-taken)
         // undefined branches without `!` assertions.
         const value = results[0]?.value;
-        // Trust boundary: metadata is stored under `${key}$` and always has
-        // shape `{ v?: number, ... }` at runtime. The driver returns
-        // `unknown` — coerce through a locally-typed alias.
-        const meta = (results[1]?.value ?? {}) as {
-          v?: number;
-          [k: string]: unknown;
-        };
+        // Storage-trust boundary: metadata was written by past runs of
+        // this library under `${key}$`, but a malicious or corrupted
+        // browser profile could hold anything. Runtime-narrow before
+        // reading `v`. `meta.v` is trusted as a positive integer only
+        // when `typeof rawV === 'number' && Number.isInteger(rawV) &&
+        // rawV >= 1`; anything else is treated as "no version set".
+        const rawMetaValue = results[1]?.value;
+        const meta: Record<string, unknown> =
+          rawMetaValue != null &&
+          typeof rawMetaValue === 'object' &&
+          !Array.isArray(rawMetaValue)
+            ? (rawMetaValue as Record<string, unknown>)
+            : {};
+        const rawV = meta['v'];
+        const storedVersion: number | undefined =
+          typeof rawV === 'number' && Number.isInteger(rawV) && rawV >= 1
+            ? rawV
+            : undefined;
 
         // Used in setValue to also set the version when needed
-        needsVersionSet = value == null && meta?.v == null && !!targetVersion;
+        needsVersionSet =
+          value == null && storedVersion == null && !!targetVersion;
 
         if (value == null) return;
 
-        const currentVersion = meta?.v ?? 1;
+        const currentVersion = storedVersion ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
