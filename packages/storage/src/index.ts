@@ -370,8 +370,8 @@ function createStorage(): WxtStorage {
           driverResults.forEach((driverResult) => {
             // Template literal narrows automatically: driverArea is
             // StorageArea, driverResult.key is string, so the join is
-            // `${StorageArea}:${string}` = StorageItemKey.
-            const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
+            // `${StorageArea}:${string}` = StorageItemKey. No cast needed.
+            const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
             rawByKey.set(key, driverResult.value);
           });
         }),
@@ -419,8 +419,10 @@ function createStorage(): WxtStorage {
           >
         >
       >((map, key) => {
-        map[key.driverArea] ??= [];
-        map[key.driverArea]!.push(key);
+        // `??=` returns the resolved (never-undefined) array, so we can push
+        // through it directly without a non-null assertion on the index read.
+        const bucket = (map[key.driverArea] ??= []);
+        bucket.push(key);
         return map;
       }, {});
 
