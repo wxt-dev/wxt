@@ -346,6 +346,40 @@ const theme = storage.defineItem('local:theme', {
 const value = await theme.getValue(); // 'light' | 'dark' | 'system'
 ```
 
+**Validator cookbook**
+
+All four examples below define the same three-variant theme item. `TValue` is inferred from `StandardSchemaV1.InferOutput<TSchema>` — no manual generic needed.
+
+```ts
+// Zod
+import { z } from 'zod';
+const theme = storage.defineItem('local:theme', {
+  schema: z.enum(['light', 'dark', 'system']),
+  fallback: 'system',
+});
+
+// Valibot
+import * as v from 'valibot';
+const theme = storage.defineItem('local:theme', {
+  schema: v.picklist(['light', 'dark', 'system']),
+  fallback: 'system',
+});
+
+// ArkType
+import { type } from 'arktype';
+const theme = storage.defineItem('local:theme', {
+  schema: type("'light' | 'dark' | 'system'"),
+  fallback: 'system',
+});
+
+// Effect Schema
+import { Schema } from 'effect';
+const theme = storage.defineItem('local:theme', {
+  schema: Schema.standardSchemaV1(Schema.Literal('light', 'dark', 'system')),
+  fallback: 'system',
+});
+```
+
 **Pipelines**
 
 - On read: `raw → migrate → serializer.read? → schema.validate → T`
