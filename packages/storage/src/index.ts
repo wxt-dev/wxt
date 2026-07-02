@@ -85,6 +85,60 @@ function createStorage(): WxtStorage {
     return getMetaValue(res);
   };
 
+  /**
+   * Turn the raw wire form read from `driver.getItem` into the runtime value
+   * returned to callers.
+   *
+   * Pipeline: `raw → serializer.read? → schema.validate → T`.
+   *
+   * A null raw means "nothing stored yet" — short-circuit to `fallback` (or
+   * null if no fallback is set). Non-null values are always run through the
+   * full pipeline. On schema failure, the `onValidationError` strategy dictates
+   * recovery:
+   *
+   * - `'throw'` (default): throw a SchemaError
+   * - `'fallback'` : return `fallback` (or null)
+   * - `'reset'` : clear the invalid value from storage, return `fallback`
+   * - Function : return whatever the callback returns
+   */
+  const processReadValue = async <T>(
+    raw: unknown,
+    opts: WxtStorageItemOptions<T> | undefined,
+    driver: WxtStorageDriver,
+    driverKey: string,
+  ): Promise<T | null> => {
+    const fallback = (opts?.fallback ?? opts?.defaultValue ?? null) as T | null;
+
+    if (raw == null) return fallback;
+
+    let value: unknown = raw;
+
+    if (opts?.serializer?.read) {
+      value = opts.serializer.read(raw);
+    }
+
+    if (opts?.schema) {
+      const result = await opts.schema['~standard'].validate(value);
+      if (result.issues) {
+        const strategy = opts.onValidationError ?? 'throw';
+        if (strategy === 'throw') {
+          throw new SchemaError(result.issues);
+        }
+        if (strategy === 'fallback') {
+          return fallback;
+        }
+        if (strategy === 'reset') {
+          await driver.removeItem(driverKey);
+          return fallback;
+        }
+        return strategy(result.issues, raw) as T;
+      }
+      value = result.value;
+    }
+
+    return value as T;
+  };
+
   const setItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
@@ -557,9 +611,13 @@ function createStorage(): WxtStorage {
 
           if (opts?.init) {
             return await getOrInitValue();
-          } else {
-            return await getItem(driver, driverKey, opts);
           }
+
+          // Non-init read path: pull the raw value straight from the driver so
+          // the pipeline (deserialize → validate → onValidationError) sees the
+          // untouched wire form. Fallback logic is handled inside the pipeline.
+          const raw = await driver.getItem(driverKey);
+          return await processReadValue(raw, opts, driver, driverKey);
         },
 
         getMeta: async () => {

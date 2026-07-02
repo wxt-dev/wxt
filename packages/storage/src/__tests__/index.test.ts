@@ -1694,6 +1694,226 @@ describe('Storage Utils', () => {
         expect(write).not.toHaveBeenCalled();
       });
     });
+
+    describe('schema (read pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : {
+                  issues: [
+                    {
+                      message: `expected positive number, got ${String(value)}`,
+                    },
+                  ],
+                },
+        },
+      };
+
+      it('validates and returns the raw value when schema succeeds', async () => {
+        await fakeBrowser.storage.local.set({ count: 42 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        expect(await item.getValue()).toBe(42);
+      });
+
+      it('returns fallback when storage is empty', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 1,
+        });
+        expect(await item.getValue()).toBe(1);
+      });
+
+      it('returns the schema-transformed value on read', async () => {
+        const doubling = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v * 2;
+        });
+        await fakeBrowser.storage.local.set({ count: 3 });
+        const item = storage.defineItem(`local:count`, { schema: doubling });
+        expect(await item.getValue()).toBe(6);
+      });
+
+      it('throws SchemaError by default when validation fails', async () => {
+        await fakeBrowser.storage.local.set({ count: -1 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+      });
+
+      it('validates AFTER migration runs (migration order)', async () => {
+        // Raw value is invalid for the schema; migration to v2 fixes it.
+        await fakeBrowser.storage.local.set({
+          count: -1,
+          count$: { v: 1 },
+        });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          version: 2,
+          migrations: {
+            2: (old: number) => Math.abs(old),
+          },
+        });
+        expect(await item.getValue()).toBe(1);
+      });
+    });
+
+    describe('onValidationError (read pipeline)', () => {
+      const numberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number'
+              ? { value }
+              : { issues: [{ message: 'not a number' }] },
+        },
+      };
+
+      it("'throw' is the default and rejects with SchemaError", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+      });
+
+      it("'fallback' returns the fallback value", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          fallback: 0,
+          onValidationError: 'fallback',
+        });
+        expect(await item.getValue()).toBe(0);
+        // Storage still contains the invalid value.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 'nope',
+        });
+      });
+
+      it("'fallback' returns null when no fallback is set", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          onValidationError: 'fallback',
+        });
+        expect(await item.getValue()).toBeNull();
+      });
+
+      it("'reset' clears the invalid value from storage and returns fallback", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          fallback: 99,
+          onValidationError: 'reset',
+        });
+        expect(await item.getValue()).toBe(99);
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({});
+      });
+
+      it('callback receives issues and raw, and its return becomes the read result', async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const cb = vi.fn(
+          (issues: readonly StandardSchemaV1.Issue[], raw: unknown) => {
+            expect(issues).toHaveLength(1);
+            expect(raw).toBe('nope');
+            return -1;
+          },
+        );
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          onValidationError: cb,
+        });
+        expect(await item.getValue()).toBe(-1);
+        expect(cb).toHaveBeenCalledOnce();
+        // Callback result is not written back to storage.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 'nope',
+        });
+      });
+    });
+
+    describe('serializer (read pipeline)', () => {
+      it('runs serializer.read on the raw storage value', async () => {
+        await fakeBrowser.storage.local.set({ enabled: ['a', 'b'] });
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Set);
+        expect([...(value ?? [])]).toEqual(['a', 'b']);
+      });
+
+      it('bypasses read when only serializer.write is defined (coerce-schema pattern)', async () => {
+        // Value in storage is an ISO string; the schema coerces it to Date on
+        // read while serializer.write handles the reverse on write.
+        const coerceDate: StandardSchemaV1<unknown, Date> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              const d = new Date(value as string);
+              return isNaN(d.getTime())
+                ? { issues: [{ message: 'invalid date' }] }
+                : { value: d };
+            },
+          },
+        };
+        await fakeBrowser.storage.local.set({
+          date: '2025-01-15T00:00:00.000Z',
+        });
+        const item = storage.defineItem(`local:date`, {
+          schema: coerceDate,
+          serializer: {
+            write: (d) => d.toISOString(),
+          },
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Date);
+        expect(value?.toISOString()).toBe('2025-01-15T00:00:00.000Z');
+      });
+    });
+
+    describe('schema + serializer (read pipeline)', () => {
+      it('runs serializer.read BEFORE schema.validate (order matters)', async () => {
+        const calls: string[] = [];
+        const trackingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              calls.push('validate');
+              return typeof value === 'number'
+                ? { value }
+                : { issues: [{ message: 'not a number' }] };
+            },
+          },
+        };
+        await fakeBrowser.storage.local.set({ count: 'n=42' });
+        const item = storage.defineItem(`local:count`, {
+          schema: trackingSchema,
+          serializer: {
+            write: (n) => `n=${n}`,
+            read: (raw) => {
+              calls.push('deserialize');
+              return Number(String(raw).slice(2));
+            },
+          },
+        });
+        expect(await item.getValue()).toBe(42);
+        expect(calls).toEqual(['deserialize', 'validate']);
+      });
+    });
   });
 
   describe('Multiple Storage Areas', () => {
