@@ -217,7 +217,7 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: true" should output a JSON config file compatible with ESlint of package.json', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -230,7 +230,7 @@ describe('Auto Imports', () => {
       });
 
       expect(
-        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
       ).toMatchSnapshot();
     });
 
