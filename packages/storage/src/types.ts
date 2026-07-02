@@ -262,3 +262,74 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
 export type NullablePartial<T> = {
   [key in keyof T]+?: T[key] | undefined | null;
 };
+
+// ─── Batch API mapped tuples ─────────────────────────────────────────
+
+/**
+ * Forward declaration — the real `WxtStorageItem` interface lives in
+ * `./index.ts` and carries method signatures that reference the runtime driver.
+ * This local structural alias captures only what the batch mapped tuples need
+ * (TValue and TKey) so `./types.ts` stays impl-free.
+ *
+ * @internal
+ */
+export type WxtStorageItemLike<
+  TValue = unknown,
+  TKey extends StorageItemKey = StorageItemKey,
+> = {
+  readonly key: TKey;
+  /** Marker discriminant — a plain `{ key }` bag doesn't have `getValue`. */
+  readonly getValue: (...args: readonly unknown[]) => Promise<TValue>;
+  /** Fallback threaded into `getItems` batch reads for this item. */
+  readonly fallback: TValue | null;
+};
+
+/** Element shapes accepted by `WxtStorage.getItems`. */
+export type GetItemsInputElement =
+  | StorageItemKey
+  | WxtStorageItemLike
+  | {
+      readonly key: StorageItemKey;
+      readonly options?: GetItemOptions<unknown>;
+    };
+
+/**
+ * Mapped-tuple return type for `getItems`. Each input element resolves to a `{
+ * key; value }` pair with the narrowest key + value the input permits:
+ *
+ * - `WxtStorageItem<V, _, K>` → `{ key: K; value: V }` (fully typed).
+ * - `{ key: K; options: { fallback: V } }` → `{ key: K; value: V | null }`.
+ * - Bare literal key `'local:x'` → `{ key: 'local:x'; value: unknown }`.
+ * - Wider `StorageItemKey` union → `{ key: StorageItemKey; value: unknown }`.
+ */
+export type GetItemsResult<T extends ReadonlyArray<GetItemsInputElement>> = {
+  readonly [I in keyof T]: T[I] extends WxtStorageItemLike<infer V, infer K>
+    ? { readonly key: K; readonly value: V }
+    : T[I] extends {
+          readonly key: infer K extends StorageItemKey;
+          readonly options?: GetItemOptions<infer V>;
+        }
+      ? { readonly key: K; readonly value: V | null }
+      : T[I] extends StorageItemKey
+        ? { readonly key: T[I]; readonly value: unknown }
+        : { readonly key: StorageItemKey; readonly value: unknown };
+};
+
+/** Element shapes accepted by `WxtStorage.getMetas`. */
+export type GetMetasInputElement = StorageItemKey | WxtStorageItemLike;
+
+/**
+ * Mapped-tuple return type for `getMetas`. Preserves each input's literal key
+ * type; metadata is always `Record<string, unknown>` because the storage layer
+ * doesn't type it.
+ */
+export type GetMetasResult<T extends ReadonlyArray<GetMetasInputElement>> = {
+  readonly [I in keyof T]: T[I] extends WxtStorageItemLike<any, infer K>
+    ? { readonly key: K; readonly meta: Record<string, unknown> }
+    : T[I] extends StorageItemKey
+      ? { readonly key: T[I]; readonly meta: Record<string, unknown> }
+      : {
+          readonly key: StorageItemKey;
+          readonly meta: Record<string, unknown>;
+        };
+};

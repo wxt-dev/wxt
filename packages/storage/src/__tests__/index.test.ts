@@ -2162,6 +2162,32 @@ describe('Storage Utils', () => {
 
   describe('Multiple Storage Areas', () => {
     describe('getItems', () => {
+      it("preserves each input's literal key type in the result tuple", async () => {
+        // Mapped-tuple inference (Phase E): result[0].key narrows to
+        // 'local:a', result[1].key narrows to 'session:b', etc. Every
+        // slot's `value` stays `unknown` because bare keys carry no schema.
+        const result = await storage.getItems([
+          'local:a',
+          'session:b',
+          'sync:c',
+        ] as const);
+        expectTypeOf(result[0].key).toEqualTypeOf<'local:a'>();
+        expectTypeOf(result[1].key).toEqualTypeOf<'session:b'>();
+        expectTypeOf(result[2].key).toEqualTypeOf<'sync:c'>();
+        expectTypeOf(result[0].value).toEqualTypeOf<unknown>();
+      });
+
+      it('threads TValue from WxtStorageItem inputs into result.value', async () => {
+        const num = storage.defineItem('local:num', { fallback: 0 });
+        const str = storage.defineItem('sync:name', { fallback: 'x' });
+        const result = await storage.getItems([num, str] as const);
+        // Fully typed: keys are literals, values match each item's TValue.
+        expectTypeOf(result[0].key).toEqualTypeOf<'local:num'>();
+        expectTypeOf(result[0].value).toEqualTypeOf<number>();
+        expectTypeOf(result[1].key).toEqualTypeOf<'sync:name'>();
+        expectTypeOf(result[1].value).toEqualTypeOf<string>();
+      });
+
       it('should get the values of multiple storage items efficiently', async () => {
         const item1 = storage.defineItem<number>('local:item1');
         const item2 = storage.defineItem<string>('session:item2');

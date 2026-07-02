@@ -13,6 +13,10 @@ import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
 import type {
   GetItemOptions,
+  GetItemsInputElement,
+  GetItemsResult,
+  GetMetasInputElement,
+  GetMetasResult,
   KeyParts,
   MetaKey,
   NullablePartial,
@@ -29,6 +33,10 @@ import type {
 // Re-export public types for API compat with `@wxt-dev/storage` consumers.
 export type {
   GetItemOptions,
+  GetItemsInputElement,
+  GetItemsResult,
+  GetMetasInputElement,
+  GetMetasResult,
   MetaKey,
   OnValidationError,
   RemoveItemOptions,
@@ -327,7 +335,7 @@ function createStorage(): WxtStorage {
       return await getItem(driver, driverKey, opts);
     }) as WxtStorage['getItem'],
 
-    getItems: async (keys) => {
+    getItems: (async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
       const keyToOptsMap = new Map<
         string,
@@ -385,14 +393,14 @@ function createStorage(): WxtStorage {
         key,
         value: resultsMap.get(key),
       }));
-    },
+    }) as WxtStorage['getItems'],
 
     getMeta: async (key) => {
       const { driver, driverKey } = resolveKey(key);
       return await getMeta(driver, driverKey);
     },
 
-    getMetas: async (args) => {
+    getMetas: (async (args) => {
       const keys = args.map((arg) => {
         const key = typeof arg === 'string' ? arg : arg.key;
         const { driverArea, driverKey } = resolveKey(key);
@@ -429,7 +437,7 @@ function createStorage(): WxtStorage {
         key: key.key,
         meta: getMetaValue(resultsMap[key.key]),
       }));
-    },
+    }) as WxtStorage['getMetas'],
 
     setItem: async (key, value) => {
       const { driver, driverKey } = resolveKey(key);
@@ -995,13 +1003,9 @@ export interface WxtStorage {
    * @example
    *   await storage.getItems(['local:installDate', 'session:someCounter']);
    */
-  getItems(
-    keys: ReadonlyArray<
-      | StorageItemKey
-      | WxtStorageItem<any, any>
-      | { key: StorageItemKey; options?: GetItemOptions<unknown> }
-    >,
-  ): Promise<Array<{ key: StorageItemKey; value: unknown }>>;
+  getItems<const T extends ReadonlyArray<GetItemsInputElement>>(
+    keys: T,
+  ): Promise<GetItemsResult<T>>;
 
   /**
    * Return an object containing metadata about the key. Object is stored at
@@ -1021,9 +1025,9 @@ export interface WxtStorage {
    * @param keys List of keys or items to get the metadata of.
    * @returns An array containing storage keys and their metadata.
    */
-  getMetas(
-    keys: ReadonlyArray<StorageItemKey | WxtStorageItem<any, any>>,
-  ): Promise<Array<{ key: StorageItemKey; meta: Record<string, unknown> }>>;
+  getMetas<const T extends ReadonlyArray<GetMetasInputElement>>(
+    keys: T,
+  ): Promise<GetMetasResult<T>>;
 
   /**
    * Set a value in storage. Setting a value to `null` or `undefined` is
