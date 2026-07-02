@@ -7,6 +7,7 @@
  * @module @wxt-dev/storage
  */
 import { browser, type Browser } from '@wxt-dev/browser';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
 
@@ -395,7 +396,10 @@ function createStorage(): WxtStorage {
       });
     },
 
-    defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
+    defineItem: (
+      key: StorageItemKey,
+      opts?: WxtStorageItemOptions<any>,
+    ): WxtStorageItem<any, any> => {
       const { driver, driverKey } = resolveKey(key);
 
       const {
@@ -850,6 +854,41 @@ export interface WxtStorage {
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,
   ): WxtStorageItem<TValue | null, TMetadata>;
+  // --- schema-carrying overloads ---
+  // These sit above the plain overloads so TypeScript picks them up whenever
+  // `schema` is present, driving TValue from the schema's output type.
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = {},
+  >(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+      schema: TSchema;
+      fallback: StandardSchemaV1.InferOutput<TSchema>;
+    },
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = {},
+  >(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+      schema: TSchema;
+      init: () =>
+        | StandardSchemaV1.InferOutput<TSchema>
+        | Promise<StandardSchemaV1.InferOutput<TSchema>>;
+    },
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = {},
+  >(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+      schema: TSchema;
+    },
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema> | null, TMetadata>;
+  // --- non-schema overloads (unchanged) ---
   defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
     key: StorageItemKey,
     options: WxtStorageItemOptions<TValue> & { fallback: TValue },
@@ -993,6 +1032,143 @@ export interface WxtStorageItemOptions<T> {
 
   /** A callback function that runs on migration complete. */
   onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
+
+  /**
+   * A [Standard Schema](https://standardschema.dev/) validator applied to the
+   * deserialized runtime value on read, and to the input value on write.
+   *
+   * Pipeline:
+   *
+   * - Read: `raw → migrate → serializer.read? → schema.validate → T`
+   * - Write: `T → schema.validate → serializer.write? → raw`
+   *
+   * Any Standard Schema-conformant validator works: Zod, Valibot, ArkType,
+   * Effect Schema. For TypeBox, io-ts, or custom parsers, wrap them with
+   * `defineSchema()`.
+   *
+   * @example
+   *   ```ts
+   *   import { z } from 'zod';
+   *   const theme = storage.defineItem('local:theme', {
+   *     schema: z.enum(['light', 'dark', 'system']),
+   *   });
+   *   ```;
+   */
+  schema?: StandardSchemaV1<unknown, T>;
+
+  /**
+   * Convert between the runtime type `T` and the wire form stored in
+   * `chrome.storage`. `write` is required when `serializer` is present; `read`
+   * is optional — omit it when `schema` handles deserialization via coercion
+   * (e.g. `z.coerce.date()`).
+   *
+   * Naming mirrors VueUse's `useStorage` serializer.
+   *
+   * @example
+   *   ```ts
+   *   // Storing a Set: serializer required (Sets aren't JSON-serializable).
+   *   storage.defineItem<Set<string>>('local:enabled-sites', {
+   *   serializer: {
+   *   write: (set) => [...set],
+   *   read: (arr) => new Set(arr as string[]),
+   *   },
+   *   });
+   *
+   *   // Storing a Date with a coerce schema: only `write` needed.
+   *   storage.defineItem('local:install-date', {
+   *   serializer: { write: (d) => d.toISOString() },
+   *   schema: z.coerce.date(),
+   *   });
+   *   ```
+   */
+  serializer?: WxtStorageItemSerializer<T>;
+
+  /**
+   * How to handle a `schema` failure when reading a value from storage. Writes
+   * always throw on schema failure; this option only affects reads and
+   * `watch()` callbacks.
+   *
+   * - `'throw'` (default): throw a `SchemaError` containing the issues.
+   * - `'fallback'`: return `fallback` (or `null` if no fallback is set).
+   * - `'reset'`: clear the invalid value from storage and return `fallback`.
+   * - `(issues, raw) => T`: custom recovery — the returned value becomes the read
+   *   result. The value is **not** written back to storage.
+   *
+   * @default 'throw'
+   */
+  onValidationError?: OnValidationError<T>;
+}
+
+/**
+ * Two-way converter between the runtime value type and the wire form stored in
+ * `chrome.storage`. Naming (`read` / `write`) is verbatim from VueUse's
+ * `useStorage` serializer.
+ *
+ * - `write` is required — it produces the value handed to `chrome.storage.*.set`.
+ * - `read` is optional — if omitted, the raw value is passed straight to
+ *   `schema.validate()`. This lets coerce schemas (e.g. `z.coerce.date()`)
+ *   handle deserialization on their own.
+ */
+export interface WxtStorageItemSerializer<TValue, TRaw = unknown> {
+  /** Convert `TValue` to the wire form written to storage. */
+  write: (value: TValue) => TRaw;
+  /** Convert the wire form read from storage back to `TValue`. */
+  read?: (raw: TRaw) => TValue;
+}
+
+/**
+ * Recovery strategies applied when `schema` validation fails on read. Writes
+ * always throw regardless of this setting.
+ *
+ * The callback form receives the schema issues and the raw pre-validation
+ * value; its return value is used as the read result. `NoInfer` prevents the
+ * callback's return type from widening the item's `TValue`.
+ */
+export type OnValidationError<TValue> =
+  | 'throw'
+  | 'fallback'
+  | 'reset'
+  | ((
+      issues: readonly StandardSchemaV1.Issue[],
+      raw: unknown,
+    ) => NoInfer<TValue>);
+
+/**
+ * Wrap a synchronous or asynchronous parse function into a Standard Schema.
+ *
+ * Use this when your validator does not conform to Standard Schema natively —
+ * for example TypeBox (`Value.Parse`), io-ts (`.decode`), or hand-rolled
+ * parsers. The `parse` function must return the parsed value on success or
+ * throw on failure.
+ *
+ * @example
+ *   ```ts
+ *   import { Type, Value } from '@sinclair/typebox';
+ *   const Theme = Type.Union([Type.Literal('light'), Type.Literal('dark')]);
+ *
+ *   const theme = storage.defineItem('local:theme', {
+ *     schema: defineSchema<'light' | 'dark'>((v) => Value.Parse(Theme, v)),
+ *   });
+ *   ```;
+ */
+export function defineSchema<T>(
+  parse: (value: unknown) => T | Promise<T>,
+): StandardSchemaV1<unknown, T> {
+  return {
+    '~standard': {
+      version: 1,
+      vendor: 'wxt-storage/defineSchema',
+      validate: async (value: unknown): Promise<StandardSchemaV1.Result<T>> => {
+        try {
+          return { value: await parse(value) };
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : String(error);
+          return { issues: [{ message }] };
+        }
+      },
+    },
+  };
 }
 
 export type StorageAreaChanges = {

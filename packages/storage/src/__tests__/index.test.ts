@@ -1,7 +1,15 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { MigrationError, type WxtStorageItem, storage } from '../index';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import {
+  MigrationError,
+  defineSchema,
+  storage,
+  type OnValidationError,
+  type WxtStorageItem,
+  type WxtStorageItemSerializer,
+} from '../index';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number
@@ -1427,6 +1435,123 @@ describe('Storage Utils', () => {
           init: () => Promise.resolve(123),
         });
         expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
+    });
+
+    describe('schema types', () => {
+      // A minimal hand-rolled schema used for typing tests. Runtime behaviour
+      // of schemas is exercised in later steps; here we only verify inference.
+      const numberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number'
+              ? { value }
+              : { issues: [{ message: 'not a number' }] },
+        },
+      };
+
+      it('infers TValue from schema output (nullable when no fallback/init)', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+      });
+
+      it('infers TValue from schema output and drops null when fallback is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          fallback: 0,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
+
+      it('infers TValue from schema output and drops null when init is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          init: () => 0,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+
+        const item2 = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          init: () => Promise.resolve(0),
+        });
+        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
+
+      it('defineSchema wraps a sync parser into StandardSchemaV1', () => {
+        const parsed = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v;
+        });
+        expectTypeOf(parsed).toEqualTypeOf<StandardSchemaV1<unknown, number>>();
+
+        const item = storage.defineItem(`local:test`, {
+          schema: parsed,
+          fallback: 0,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
+
+      it('defineSchema wraps an async parser into StandardSchemaV1', () => {
+        const parsed = defineSchema<string>(async (v) => {
+          if (typeof v !== 'string') throw new Error('not a string');
+          return v;
+        });
+        expectTypeOf(parsed).toEqualTypeOf<StandardSchemaV1<unknown, string>>();
+      });
+
+      it('serializer.write is required and typed against TValue', () => {
+        const s: WxtStorageItemSerializer<Set<string>> = {
+          write: (value) => {
+            expectTypeOf(value).toEqualTypeOf<Set<string>>();
+            return [...value];
+          },
+          read: (raw) => {
+            expectTypeOf(raw).toEqualTypeOf<unknown>();
+            return new Set(raw as string[]);
+          },
+        };
+        expectTypeOf(s.write).toEqualTypeOf<(value: Set<string>) => unknown>();
+      });
+
+      it('serializer.read is optional', () => {
+        const s: WxtStorageItemSerializer<Date> = {
+          write: (d) => d.toISOString(),
+        };
+        expectTypeOf(s.read).toEqualTypeOf<
+          ((raw: unknown) => Date) | undefined
+        >();
+      });
+
+      it('onValidationError accepts each union branch', () => {
+        const throwMode: OnValidationError<number> = 'throw';
+        const fallbackMode: OnValidationError<number> = 'fallback';
+        const resetMode: OnValidationError<number> = 'reset';
+        const fnMode: OnValidationError<number> = (issues, raw) => {
+          expectTypeOf(issues).toEqualTypeOf<
+            readonly StandardSchemaV1.Issue[]
+          >();
+          expectTypeOf(raw).toEqualTypeOf<unknown>();
+          return 0;
+        };
+        // Suppress unused-var warnings; the assignments above are the assertions.
+        void throwMode;
+        void fallbackMode;
+        void resetMode;
+        void fnMode;
+      });
+
+      it('onValidationError callback return type does not widen TValue (NoInfer)', () => {
+        // NoInfer<TValue> in the callback signature blocks the callback's
+        // return from widening TValue. This assertion checks the compiled
+        // callback type keeps TValue narrow to number.
+        type Cb = Exclude<OnValidationError<number>, string>;
+        expectTypeOf<Cb>().toEqualTypeOf<
+          (issues: readonly StandardSchemaV1.Issue[], raw: unknown) => number
+        >();
       });
     });
   });
