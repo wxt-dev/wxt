@@ -89,8 +89,24 @@ function createStorage(): WxtStorage {
 
   const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
 
-  const mergeMeta = (oldMeta: any, newMeta: any): any => {
-    const newFields = { ...oldMeta };
+  /**
+   * `Object.entries` widens key types to `string`. This shim preserves the key
+   * type of a `Partial<Record<K, V>>` map, letting downstream loops keep `area:
+   * StorageArea` narrow without a per-call `as StorageArea` cast.
+   *
+   * Safe because `Object.entries` returns exactly the runtime keys of the input
+   * object; the type of those keys is what the input map already declared them
+   * to be.
+   */
+  const typedEntries = <K extends string, V>(
+    obj: Partial<Record<K, V>>,
+  ): Array<[K, V]> => Object.entries(obj) as Array<[K, V]>;
+
+  const mergeMeta = (
+    oldMeta: Record<string, unknown>,
+    newMeta: Record<string, unknown>,
+  ): Record<string, unknown> => {
+    const newFields: Record<string, unknown> = { ...oldMeta };
 
     Object.entries(newMeta).forEach(([key, value]) => {
       if (value == null) delete newFields[key];
@@ -100,26 +116,33 @@ function createStorage(): WxtStorage {
     return newFields;
   };
 
-  const getValueOrFallback = (value: any, fallback: any) =>
-    value ?? fallback ?? null;
+  const getValueOrFallback = <T>(
+    value: T | null | undefined,
+    fallback: T | null | undefined,
+  ): T | null => value ?? fallback ?? null;
 
-  const getMetaValue = (properties: any) =>
-    typeof properties === 'object' && !Array.isArray(properties)
-      ? properties
+  const getMetaValue = (properties: unknown): Record<string, unknown> =>
+    typeof properties === 'object' &&
+    properties !== null &&
+    !Array.isArray(properties)
+      ? (properties as Record<string, unknown>)
       : {};
 
-  const getItem = async (
+  const getItem = async <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    opts: GetItemOptions<any> | undefined,
-  ) => {
-    const res = await driver.getItem<any>(driverKey);
-    return getValueOrFallback(res, opts?.fallback ?? opts?.defaultValue);
+    opts: GetItemOptions<T> | undefined,
+  ): Promise<T | null> => {
+    const res = await driver.getItem<T>(driverKey);
+    return getValueOrFallback<T>(res, opts?.fallback ?? opts?.defaultValue);
   };
 
-  const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
+  const getMeta = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+  ): Promise<Record<string, unknown>> => {
     const metaKey = getMetaKey(driverKey);
-    const res = await driver.getItem<any>(metaKey);
+    const res = await driver.getItem<unknown>(metaKey);
     return getMetaValue(res);
   };
 
@@ -199,7 +222,7 @@ function createStorage(): WxtStorage {
   const setItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    value: any,
+    value: unknown,
   ) => {
     await driver.setItem(driverKey, value ?? null);
   };
@@ -240,11 +263,15 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    properties: any | undefined,
+    properties: unknown,
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    await driver.setItem(metaKey, mergeMeta(existingFields, properties));
+    // `properties` is typed `unknown` because upstream `setMeta<T>` on
+    // WxtStorage is caller-invented (Phase D). Coerce through
+    // `getMetaValue` which enforces the object-shape invariant at runtime.
+    const incoming = getMetaValue(properties);
+    await driver.setItem(metaKey, mergeMeta(existingFields, incoming));
   };
 
   const removeItem = async (
@@ -276,10 +303,10 @@ function createStorage(): WxtStorage {
     }
   };
 
-  const watch = (
+  const watch = <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    cb: WatchCallback<any>,
+    cb: WatchCallback<T | null>,
   ) => driver.watch(driverKey, cb);
 
   return {
@@ -290,12 +317,15 @@ function createStorage(): WxtStorage {
 
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
-      const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
+      const keyToOptsMap = new Map<
+        string,
+        GetItemOptions<unknown> | undefined
+      >();
       const orderedKeys: StorageItemKey[] = [];
 
       keys.forEach((key) => {
         let keyStr: StorageItemKey;
-        let opts: GetItemOptions<any> | undefined;
+        let opts: GetItemOptions<unknown> | undefined;
 
         if (typeof key === 'string') {
           // key: string
@@ -318,13 +348,16 @@ function createStorage(): WxtStorage {
         keyToOptsMap.set(keyStr, opts);
       });
 
-      const resultsMap = new Map<StorageItemKey, any>();
+      const resultsMap = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
 
           driverResults.forEach((driverResult) => {
-            const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
+            // Template literal narrows automatically: driverArea is
+            // StorageArea, driverResult.key is string, so the join is
+            // `${StorageArea}:${string}` = StorageItemKey.
+            const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
             const opts = keyToOptsMap.get(key);
             const value = getValueOrFallback(
               driverResult.value,
@@ -342,9 +375,14 @@ function createStorage(): WxtStorage {
       }));
     },
 
-    getMeta: async (key) => {
+    getMeta: async <T extends Record<string, unknown>>(
+      key: StorageItemKey,
+    ): Promise<T> => {
       const { driver, driverKey } = resolveKey(key);
-      return await getMeta(driver, driverKey);
+      // Trust boundary: `getMeta` returns `Record<string, unknown>`; the
+      // caller-invented T is asserted here. Golden-Rule violation flagged
+      // for Phase D (kill caller-invented generics).
+      return (await getMeta(driver, driverKey)) as T;
     },
 
     getMetas: async (args) => {
@@ -368,10 +406,10 @@ function createStorage(): WxtStorage {
         return map;
       }, {});
 
-      const resultsMap: Record<string, any> = {};
+      const resultsMap: Record<string, unknown> = {};
       await Promise.all(
-        Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
-          const areaRes = await browser.storage[area as StorageArea].get(
+        typedEntries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
+          const areaRes = await browser.storage[area].get(
             keys.map((key) => key.driverMetaKey),
           );
           keys.forEach((key) => {
@@ -393,7 +431,7 @@ function createStorage(): WxtStorage {
 
     setItems: async (items) => {
       const areaToKeyValueMap: Partial<
-        Record<StorageArea, Array<{ key: string; value: any }>>
+        Record<StorageArea, Array<{ key: string; value: unknown }>>
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
@@ -407,8 +445,8 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToKeyValueMap).map(async ([driverArea, values]) => {
-          const driver = getDriver(driverArea as StorageArea);
+        typedEntries(areaToKeyValueMap).map(async ([driverArea, values]) => {
+          const driver = getDriver(driverArea);
           await driver.setItems(values);
         }),
       );
@@ -421,7 +459,7 @@ function createStorage(): WxtStorage {
 
     setMetas: async (items) => {
       const areaToMetaUpdatesMap: Partial<
-        Record<StorageArea, { key: string; properties: any }[]>
+        Record<StorageArea, { key: string; properties: unknown }[]>
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
@@ -435,9 +473,9 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToMetaUpdatesMap).map(
+        typedEntries(areaToMetaUpdatesMap).map(
           async ([storageArea, updates]) => {
-            const driver = getDriver(storageArea as StorageArea);
+            const driver = getDriver(storageArea);
             const metaKeys = updates.map(({ key }) => getMetaKey(key));
             const existingMetas = await driver.getItems(metaKeys);
             const existingMetaMap = Object.fromEntries(
@@ -448,7 +486,10 @@ function createStorage(): WxtStorage {
               const metaKey = getMetaKey(key);
               return {
                 key: metaKey,
-                value: mergeMeta(existingMetaMap[metaKey] ?? {}, properties),
+                value: mergeMeta(
+                  existingMetaMap[metaKey] ?? {},
+                  getMetaValue(properties),
+                ),
               };
             });
 
@@ -496,8 +537,8 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToKeysMap).map(async ([driverArea, keys]) => {
-          const driver = getDriver(driverArea as StorageArea);
+        typedEntries(areaToKeysMap).map(async ([driverArea, keys]) => {
+          const driver = getDriver(driverArea);
           await driver.removeItems(keys);
         }),
       );
@@ -569,7 +610,13 @@ function createStorage(): WxtStorage {
         // guaranteed by contract but not by the type. Handle the (never-taken)
         // undefined branches without `!` assertions.
         const value = results[0]?.value;
-        const meta = results[1]?.value;
+        // Trust boundary: metadata is stored under `${key}$` and always has
+        // shape `{ v?: number, ... }` at runtime. The driver returns
+        // `unknown` — coerce through a locally-typed alias.
+        const meta = (results[1]?.value ?? {}) as {
+          v?: number;
+          [k: string]: unknown;
+        };
 
         // Used in setValue to also set the version when needed
         needsVersionSet = value == null && meta?.v == null && !!targetVersion;
@@ -644,7 +691,7 @@ function createStorage(): WxtStorage {
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
-          const raw = await driver.getItem<any>(driverKey);
+          const raw = await driver.getItem<unknown>(driverKey);
 
           // No init defined — leave the pipeline to the non-init getValue path.
           // This function is also called eagerly via `migrationsDone.then` for
@@ -666,7 +713,7 @@ function createStorage(): WxtStorage {
             initialized,
             opts,
           );
-          await driver.setItem<any>(driverKey, rawToStore);
+          await driver.setItem<unknown>(driverKey, rawToStore);
           if (targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
           }
@@ -812,13 +859,19 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
 
   return {
-    getItem: async (key) => {
-      const res = await getStorageArea().get<Record<string, any>>(key);
-      return res[key];
+    getItem: async <T>(key: string): Promise<T | null> => {
+      const res = await getStorageArea().get<Record<string, unknown>>(key);
+      // Trust boundary: driver hands back raw wire bytes; the caller-
+      // invented T on WxtStorageDriver.getItem<T> asserts the shape.
+      // Golden-Rule violation flagged for Phase D.
+      return (res[key] as T | null) ?? null;
     },
 
     getItems: async (keys) => {
-      const result = await getStorageArea().get(keys);
+      // `.get` accepts a mutable `string[]`; the driver interface hands us
+      // `readonly string[]`. Copy at the boundary rather than widening the
+      // public contract.
+      const result = await getStorageArea().get([...keys]);
       return keys.map((key) => ({ key, value: result[key] ?? null }));
     },
 
@@ -862,16 +915,23 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
 
-    watch(key, cb) {
+    watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
-          newValue?: any;
-          oldValue?: any | null;
+          newValue?: unknown;
+          oldValue?: unknown;
         } | null;
 
         if (change == null || dequal(change.newValue, change.oldValue)) return;
 
-        cb(change.newValue ?? null, change.oldValue ?? null);
+        // Trust boundary: `chrome.storage.onChanged` hands us raw wire data
+        // typed `unknown`; the caller-invented T on `watch<T>` (see
+        // WxtStorage.watch on the interface) asserts what T should be.
+        // Golden-Rule violation flagged for Phase D.
+        cb(
+          (change.newValue ?? null) as T | null,
+          (change.oldValue ?? null) as T | null,
+        );
       };
 
       getStorageArea().onChanged.addListener(listener);
@@ -1040,7 +1100,10 @@ export interface WxtStorage {
    * the snapshot, they are not overridden. Only values existing in the snapshot
    * are overridden.
    */
-  restoreSnapshot(base: StorageArea, data: any): Promise<void>;
+  restoreSnapshot(
+    base: StorageArea,
+    data: Record<string, unknown>,
+  ): Promise<void>;
 
   /** Watch for changes to a specific key in storage. */
   watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
@@ -1151,9 +1214,13 @@ export interface WxtStorage {
 
 interface WxtStorageDriver {
   getItem<T>(key: string): Promise<T | null>;
-  getItems(keys: string[]): Promise<{ key: string; value: any }[]>;
+  getItems(
+    keys: readonly string[],
+  ): Promise<Array<{ key: string; value: unknown }>>;
   setItem<T>(key: string, value: T | null): Promise<void>;
-  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
+  setItems(
+    values: ReadonlyArray<{ key: string; value: unknown }>,
+  ): Promise<void>;
   removeItem(key: string): Promise<void>;
   removeItems(keys: string[]): Promise<void>;
   clear(): Promise<void>;
