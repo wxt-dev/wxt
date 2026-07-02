@@ -526,10 +526,12 @@ function createStorage(): WxtStorage {
 
       const migrate: WxtStorageItem<any, any>['migrate'] = async () => {
         const driverMetaKey = getMetaKey(driverKey);
-        const [{ value }, { value: meta }] = await driver.getItems([
-          driverKey,
-          driverMetaKey,
-        ]);
+        const results = await driver.getItems([driverKey, driverMetaKey]);
+        // driver.getItems returns one entry per input key; the pair-shape is
+        // guaranteed by contract but not by the type. Handle the (never-taken)
+        // undefined branches without `!` assertions.
+        const value = results[0]?.value;
+        const meta = results[1]?.value;
 
         // Used in setValue to also set the version when needed
         needsVersionSet = value == null && meta?.v == null && !!targetVersion;
@@ -1144,10 +1146,10 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 export interface GetItemOptions<T> {
   /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T;
+  defaultValue?: T | undefined;
 
   /** Default value returned when `getItem` would otherwise return `null`. */
-  fallback?: T;
+  fallback?: T | undefined;
 }
 
 export interface RemoveItemOptions {
@@ -1169,10 +1171,10 @@ export interface SnapshotOptions {
 
 export interface WxtStorageItemOptions<T> {
   /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T;
+  defaultValue?: T | undefined;
 
   /** Default value returned when `getValue` would otherwise return `null`. */
-  fallback?: T;
+  fallback?: T | undefined;
 
   /**
    * If passed, a value in storage will be initialized immediately after

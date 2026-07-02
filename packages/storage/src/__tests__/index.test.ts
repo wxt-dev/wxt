@@ -1614,7 +1614,7 @@ describe('Storage Utils', () => {
           expect(error).toBeInstanceOf(SchemaError);
           const issues = (error as SchemaError).issues;
           expect(issues).toHaveLength(1);
-          expect(issues[0].message).toMatch(/positive number/);
+          expect(issues[0]?.message).toMatch(/positive number/);
         }
       });
 
@@ -2010,7 +2010,9 @@ describe('Storage Utils', () => {
         await waitForInit();
 
         expect(cb).toHaveBeenCalledTimes(1);
-        const [newValue, oldValue] = cb.mock.calls[0];
+        const call = cb.mock.calls[0];
+        expect(call).toBeDefined();
+        const [newValue, oldValue] = call!;
         expect(newValue).toBeInstanceOf(Set);
         expect([...(newValue as Set<string>)]).toEqual(['a', 'b']);
         expect(oldValue).toBeNull();
