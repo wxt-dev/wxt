@@ -1976,6 +1976,75 @@ describe('Storage Utils', () => {
         expect(init).not.toHaveBeenCalled();
       });
     });
+
+    describe('watch (pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : { issues: [{ message: 'not positive' }] },
+        },
+      };
+
+      it('delivers the deserialized value via serializer.read', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await item.setValue(new Set(['a', 'b']));
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        const [newValue, oldValue] = cb.mock.calls[0];
+        expect(newValue).toBeInstanceOf(Set);
+        expect([...(newValue as Set<string>)]).toEqual(['a', 'b']);
+        expect(oldValue).toBeNull();
+      });
+
+      it('skips the callback when the new value fails schema validation (default throw)', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        // Push an invalid value directly through fakeBrowser so setValue's
+        // own write-side validation doesn't reject before the change event
+        // is broadcast.
+        const consoleError = vi
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
+        try {
+          await fakeBrowser.storage.local.set({ count: -1 });
+          await waitForInit();
+          expect(cb).not.toHaveBeenCalled();
+          expect(consoleError).toHaveBeenCalled();
+        } finally {
+          consoleError.mockRestore();
+        }
+      });
+
+      it("calls the callback with fallback when 'fallback' strategy recovers", async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 0,
+          onValidationError: 'fallback',
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await fakeBrowser.storage.local.set({ count: -1 });
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(0, 0);
+      });
+    });
   });
 
   describe('Multiple Storage Areas', () => {

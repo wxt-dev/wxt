@@ -697,9 +697,25 @@ function createStorage(): WxtStorage {
         },
 
         watch: (cb) =>
-          watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getFallback(), oldValue ?? getFallback()),
-          ),
+          watch(driver, driverKey, async (newValueRaw, oldValueRaw) => {
+            // Run both raw values through the read pipeline so the callback
+            // sees the same T that getValue() would produce. If either side
+            // throws (schema failure + onValidationError='throw'), the
+            // callback is skipped and the error is logged. 'fallback' /
+            // 'reset' / callback strategies flow through processReadValue.
+            try {
+              const [newValue, oldValue] = await Promise.all([
+                processReadValue(newValueRaw, opts, driver, driverKey),
+                processReadValue(oldValueRaw, opts, driver, driverKey),
+              ]);
+              cb(newValue ?? getFallback(), oldValue ?? getFallback());
+            } catch (error) {
+              console.error(
+                `[@wxt-dev/storage] watch: pipeline failed for ${key}, callback skipped`,
+                error,
+              );
+            }
+          }),
 
         migrate,
       };
