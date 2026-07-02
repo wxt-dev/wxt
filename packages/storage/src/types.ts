@@ -4,8 +4,8 @@
  *
  * Everything here is `import type`-safe: no runtime values, no dependencies on
  * the driver or the `WxtStorage` interface. Kept out of `index.ts` so later
- * work has a canonical location to add typed utilities (`KeyParts`, `MetaKey`,
- * future `Split`/`Join`/`Replace` helpers).
+ * work has a canonical location to add typed utilities (`MetaKey`, future
+ * `Split`/`Join`/`Replace` helpers).
  *
  * Anything referring to a runtime interface (methods on `WxtStorage`,
  * `WxtStorageItem`, `WxtStorageDriver`) stays in `index.ts` and is composed
@@ -42,31 +42,6 @@ export type StorageItemKey<G extends string = string> = `${StorageArea}:${G}`;
  *   type Meta = MetaKey<'theme'>; // 'theme$'
  */
 export type MetaKey<K extends string> = `${K}$`;
-
-/**
- * Structural parse of a storage-item key into its `driverArea` / `driverKey`
- * parts. Expressed as a mapped-style object type (fields carrying nested
- * conditionals) rather than a top-level conditional, so TS accepts field-level
- * assignment from narrowed strings without requiring an `as unknown as` double
- * cast at every construction site.
- *
- * Takes the whole key `K` as a single parameter — TS infers the area and the
- * name halves internally. Deriving both from one parameter guarantees they stay
- * correlated (`K = 'local:theme'` ⇒ `driverArea = 'local'`, `driverKey =
- * 'theme'`, not a Cartesian product of areas × names).
- *
- * @example
- *   ```ts
- *   type X = KeyParts<'local:theme'>;
- *   // { driverArea: 'local'; driverKey: 'theme' }
- *   ```;
- */
-export type KeyParts<K extends StorageItemKey> = {
-  readonly driverArea: K extends `${infer A extends StorageArea}:${string}`
-    ? A
-    : never;
-  readonly driverKey: K extends `${StorageArea}:${infer R}` ? R : never;
-};
 
 // ─── Watch / change events ────────────────────────────────────────────
 

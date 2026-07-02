@@ -17,7 +17,6 @@ import type {
   GetItemsResult,
   GetMetasInputElement,
   GetMetasResult,
-  KeyParts,
   MetaKey,
   NullablePartial,
   RemoveItemOptions,
@@ -74,10 +73,10 @@ function createStorage(): WxtStorage {
     const driverArea = key.substring(
       0,
       deliminatorIndex,
-    ) as KeyParts<K>['driverArea'];
+    ) as K extends `${infer A extends StorageArea}:${string}` ? A : never;
     const driverKey = key.substring(
       deliminatorIndex + 1,
-    ) as KeyParts<K>['driverKey'];
+    ) as K extends `${StorageArea}:${infer R}` ? R : never;
     if (driverKey == null) {
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
@@ -443,13 +442,10 @@ function createStorage(): WxtStorage {
       }));
     }) as WxtStorage['getMetas'],
 
-    setItem: (async <const K extends StorageItemKey>(
-      key: K,
-      value: unknown,
-    ) => {
+    setItem: async <const K extends StorageItemKey>(key: K, value: unknown) => {
       const { driver, driverKey } = resolveKey(key);
       await setItem(driver, driverKey, value);
-    }) as WxtStorage['setItem'],
+    },
 
     setItems: async (items) => {
       const areaToKeyValueMap: Partial<
@@ -474,13 +470,13 @@ function createStorage(): WxtStorage {
       );
     },
 
-    setMeta: (async <const K extends StorageItemKey>(
+    setMeta: async <const K extends StorageItemKey>(
       key: K,
       properties: Record<string, unknown> | null,
     ) => {
       const { driver, driverKey } = resolveKey(key);
       await setMeta(driver, driverKey, properties);
-    }) as WxtStorage['setMeta'],
+    },
 
     setMetas: async (items) => {
       const areaToMetaUpdatesMap: Partial<
@@ -524,13 +520,13 @@ function createStorage(): WxtStorage {
       );
     },
 
-    removeItem: (async <const K extends StorageItemKey>(
+    removeItem: async <const K extends StorageItemKey>(
       key: K,
       opts?: RemoveItemOptions,
     ) => {
       const { driver, driverKey } = resolveKey(key);
       await removeItem(driver, driverKey, opts);
-    }) as WxtStorage['removeItem'],
+    },
 
     removeItems: async (keys) => {
       const areaToKeysMap: Partial<Record<StorageArea, string[]>> = {};
@@ -577,13 +573,13 @@ function createStorage(): WxtStorage {
       await driver.clear();
     },
 
-    removeMeta: (async <const K extends StorageItemKey>(
+    removeMeta: async <const K extends StorageItemKey>(
       key: K,
       properties?: string | string[],
     ) => {
       const { driver, driverKey } = resolveKey(key);
       await removeMeta(driver, driverKey, properties);
-    }) as WxtStorage['removeMeta'],
+    },
 
     snapshot: async (base, opts) => {
       const driver = getDriver(base);
@@ -602,13 +598,13 @@ function createStorage(): WxtStorage {
       await driver.restoreSnapshot(data);
     },
 
-    watch: (<const K extends StorageItemKey>(
+    watch: <const K extends StorageItemKey>(
       key: K,
       cb: WatchCallback<unknown>,
     ) => {
       const { driver, driverKey } = resolveKey(key);
       return watch(driver, driverKey, cb);
-    }) as WxtStorage['watch'],
+    },
 
     unwatch() {
       Object.values(drivers).forEach((driver) => {
