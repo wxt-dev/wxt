@@ -718,6 +718,55 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it.each([
+        ['string', 'bad'],
+        ['NaN', Number.NaN],
+        ['negative', -3],
+        ['non-integer', 1.5],
+        ['zero', 0],
+      ])(
+        'treats malformed meta.v (%s) as no version set and runs all migrations',
+        async (_label, badV) => {
+          // Regression: an earlier impl cast `meta.v as number` without
+          // narrowing. A corrupted browser profile holding a garbage `v`
+          // could make `targetVersion - currentVersion` yield NaN and
+          // silently skip the migration loop, then still overwrite the
+          // metadata with `{ v: targetVersion }` — masking corruption.
+          await fakeBrowser.storage.local.set({
+            count: 2,
+            count$: { v: badV },
+          });
+          const migrateToV2 = vi.fn(
+            (oldCount: unknown) => (oldCount as number) * 2,
+          );
+          const migrateToV3 = vi.fn(
+            (oldCount: unknown) => (oldCount as number) * 3,
+          );
+
+          const item = storage.defineItem<number, { v: number }>(
+            `local:count`,
+            {
+              defaultValue: 0,
+              version: 3,
+              migrations: [migrateToV2, migrateToV3],
+            },
+          );
+          await waitForMigrations();
+
+          const actualValue = await item.getValue();
+          const actualMeta = await item.getMeta();
+
+          // Both migrations must have run — malformed v treated as "no
+          // version set", so currentVersion falls back to 1.
+          expect(migrateToV2).toBeCalledTimes(1);
+          expect(migrateToV2).toBeCalledWith(2);
+          expect(migrateToV3).toBeCalledTimes(1);
+          expect(migrateToV3).toBeCalledWith(4);
+          expect(actualValue).toEqual(12);
+          expect(actualMeta).toEqual({ v: 3 });
+        },
+      );
+
       it('should set the version without running migrations for empty storage items', async () => {
         const migrate = vi.fn((n: unknown) => (n as number) * 2);
 
@@ -2153,6 +2202,22 @@ describe('Storage Utils', () => {
         expectTypeOf(result[0].value).toEqualTypeOf<number>();
         expectTypeOf(result[1].key).toEqualTypeOf<'sync:name'>();
         expectTypeOf(result[1].value).toEqualTypeOf<string>();
+      });
+
+      it("applies each slot's own fallback when the same key appears twice with different fallbacks", async () => {
+        // Regression: an earlier impl kept a Map<key, opts> and silently
+        // overwrote the fallback on duplicate keys, so both result slots
+        // picked up whichever fallback was written last.
+        // The stored value is missing, so each slot must fall back
+        // independently to its own configured fallback.
+        const result = await storage.getItems([
+          { key: 'local:dup', options: { fallback: 'alpha' } },
+          { key: 'local:dup', options: { fallback: 'beta' } },
+        ]);
+        expect(result).toEqual([
+          { key: 'local:dup', value: 'alpha' },
+          { key: 'local:dup', value: 'beta' },
+        ]);
       });
 
       it('should get the values of multiple storage items efficiently', async () => {
