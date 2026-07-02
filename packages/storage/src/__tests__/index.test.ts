@@ -10,6 +10,7 @@ import {
   type MetaKey,
   type OnValidationError,
   type StorageItemKey,
+  type WatchCallback,
   type WxtStorageItem,
   type WxtStorageItemSerializer,
 } from '../index';
@@ -2328,9 +2329,9 @@ describe('Storage Utils', () => {
       });
     });
 
-    it('should return a nullable type when getItem is called without a fallback', async () => {
-      const res = await storage.getItem<string>('local:test');
-      expectTypeOf(res).toBeNullable();
+    it('should return `unknown` when getItem is called without a fallback', async () => {
+      const res = await storage.getItem('local:test');
+      expectTypeOf(res).toEqualTypeOf<unknown>();
     });
 
     it('should return a non-null type when getItem is called with a fallback', async () => {
@@ -2338,6 +2339,21 @@ describe('Storage Utils', () => {
         fallback: 'test',
       });
       expectTypeOf(res).not.toBeNullable();
+    });
+
+    it('storage.setItem accepts `unknown` (no caller-invented generic)', () => {
+      expectTypeOf(storage.setItem).parameter(1).toEqualTypeOf<unknown>();
+    });
+
+    it('storage.watch callback payload is `unknown` (no caller-invented generic)', () => {
+      expectTypeOf(storage.watch)
+        .parameter(1)
+        .toEqualTypeOf<WatchCallback<unknown>>();
+    });
+
+    it('storage.getMeta returns Record<string, unknown> (no caller-invented generic)', async () => {
+      const meta = await storage.getMeta('local:test');
+      expectTypeOf(meta).toEqualTypeOf<Record<string, unknown>>();
     });
 
     it('should return a non-null type when getItem is called with a fallback and the first type parameter is passed', async () => {

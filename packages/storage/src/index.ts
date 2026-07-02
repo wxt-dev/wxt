@@ -133,8 +133,11 @@ function createStorage(): WxtStorage {
     driverKey: string,
     opts: GetItemOptions<T> | undefined,
   ): Promise<T | null> => {
-    const res = await driver.getItem<T>(driverKey);
-    return getValueOrFallback<T>(res, opts?.fallback ?? opts?.defaultValue);
+    const res = await driver.getItem(driverKey);
+    return getValueOrFallback<T>(
+      res as T | null | undefined,
+      opts?.fallback ?? opts?.defaultValue,
+    );
   };
 
   const getMeta = async (
@@ -142,7 +145,7 @@ function createStorage(): WxtStorage {
     driverKey: string,
   ): Promise<Record<string, unknown>> => {
     const metaKey = getMetaKey(driverKey);
-    const res = await driver.getItem<unknown>(metaKey);
+    const res = await driver.getItem(metaKey);
     return getMetaValue(res);
   };
 
@@ -307,13 +310,22 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     cb: WatchCallback<T | null>,
-  ) => driver.watch(driverKey, cb);
+  ) =>
+    // Contravariance: caller supplies a narrow `WatchCallback<T | null>`;
+    // the driver interface is `WatchCallback<unknown>`. The narrow
+    // callback can accept the driver's wider payload because the read
+    // pipeline validates before invocation (or the caller opted out of
+    // narrowing). Cast the callback shape at the boundary.
+    driver.watch(driverKey, cb as WatchCallback<unknown>);
 
   return {
-    getItem: async (key, opts) => {
+    getItem: (async <T>(
+      key: StorageItemKey,
+      opts?: GetItemOptions<T>,
+    ): Promise<T | null> => {
       const { driver, driverKey } = resolveKey(key);
       return await getItem(driver, driverKey, opts);
-    },
+    }) as WxtStorage['getItem'],
 
     getItems: async (keys) => {
       const areaToKeyMap = new Map<StorageArea, string[]>();
@@ -375,14 +387,9 @@ function createStorage(): WxtStorage {
       }));
     },
 
-    getMeta: async <T extends Record<string, unknown>>(
-      key: StorageItemKey,
-    ): Promise<T> => {
+    getMeta: async (key) => {
       const { driver, driverKey } = resolveKey(key);
-      // Trust boundary: `getMeta` returns `Record<string, unknown>`; the
-      // caller-invented T is asserted here. Golden-Rule violation flagged
-      // for Phase D (kill caller-invented generics).
-      return (await getMeta(driver, driverKey)) as T;
+      return await getMeta(driver, driverKey);
     },
 
     getMetas: async (args) => {
@@ -420,7 +427,7 @@ function createStorage(): WxtStorage {
 
       return keys.map((key) => ({
         key: key.key,
-        meta: resultsMap[key.key],
+        meta: getMetaValue(resultsMap[key.key]),
       }));
     },
 
@@ -691,7 +698,7 @@ function createStorage(): WxtStorage {
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
-          const raw = await driver.getItem<unknown>(driverKey);
+          const raw = await driver.getItem(driverKey);
 
           // No init defined — leave the pipeline to the non-init getValue path.
           // This function is also called eagerly via `migrationsDone.then` for
@@ -713,7 +720,7 @@ function createStorage(): WxtStorage {
             initialized,
             opts,
           );
-          await driver.setItem<unknown>(driverKey, rawToStore);
+          await driver.setItem(driverKey, rawToStore);
           if (targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
           }
@@ -859,12 +866,9 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
 
   return {
-    getItem: async <T>(key: string): Promise<T | null> => {
+    getItem: async (key: string): Promise<unknown> => {
       const res = await getStorageArea().get<Record<string, unknown>>(key);
-      // Trust boundary: driver hands back raw wire bytes; the caller-
-      // invented T on WxtStorageDriver.getItem<T> asserts the shape.
-      // Golden-Rule violation flagged for Phase D.
-      return (res[key] as T | null) ?? null;
+      return res[key] ?? null;
     },
 
     getItems: async (keys) => {
@@ -900,7 +904,10 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     },
 
     removeItems: async (keys) => {
-      await getStorageArea().remove(keys);
+      // `.remove` on browser.storage accepts `string | number | (string |
+      // number)[]`; the driver interface hands us `readonly string[]`.
+      // Copy at the boundary rather than widening the public contract.
+      await getStorageArea().remove([...keys]);
     },
 
     clear: async () => {
@@ -915,7 +922,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
 
-    watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch {
+    watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
           newValue?: unknown;
@@ -924,14 +931,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
 
         if (change == null || dequal(change.newValue, change.oldValue)) return;
 
-        // Trust boundary: `chrome.storage.onChanged` hands us raw wire data
-        // typed `unknown`; the caller-invented T on `watch<T>` (see
-        // WxtStorage.watch on the interface) asserts what T should be.
-        // Golden-Rule violation flagged for Phase D.
-        cb(
-          (change.newValue ?? null) as T | null,
-          (change.oldValue ?? null) as T | null,
-        );
+        cb(change.newValue ?? null, change.oldValue ?? null);
       };
 
       getStorageArea().onChanged.addListener(listener);
@@ -959,15 +959,34 @@ export interface WxtStorage {
    * @example
    *   await storage.getItem<number>('local:installDate');
    */
+  /**
+   * Get an item from storage, or return `null` if it doesn't exist.
+   *
+   * The overload without a `fallback` returns `Promise<unknown>` — the value is
+   * whatever bytes storage happens to hold. Narrow the return type at the call
+   * site with a schema or an explicit assertion.
+   *
+   * When `opts.fallback` is provided, `TValue` is inferred from the fallback
+   * and drives the return type honestly (fallback and return both share
+   * `TValue`), so no cast is needed.
+   *
+   * @example
+   *   const raw = await storage.getItem('local:installDate');
+   *   // raw: unknown
+   *   const withFallback = await storage.getItem('local:count', {
+   *     fallback: 0,
+   *   });
+   *   // withFallback: number
+   */
   getItem<TValue>(
     key: StorageItemKey,
     opts: GetItemOptions<TValue> & { fallback: TValue },
   ): Promise<TValue>;
 
-  getItem<TValue>(
+  getItem(
     key: StorageItemKey,
-    opts?: GetItemOptions<TValue>,
-  ): Promise<TValue | null>;
+    opts?: GetItemOptions<unknown>,
+  ): Promise<unknown>;
 
   /**
    * Get multiple items from storage. The return order is guaranteed to be the
@@ -977,21 +996,24 @@ export interface WxtStorage {
    *   await storage.getItems(['local:installDate', 'session:someCounter']);
    */
   getItems(
-    keys: Array<
+    keys: ReadonlyArray<
       | StorageItemKey
       | WxtStorageItem<any, any>
-      | { key: StorageItemKey; options?: GetItemOptions<any> }
+      | { key: StorageItemKey; options?: GetItemOptions<unknown> }
     >,
-  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
+  ): Promise<Array<{ key: StorageItemKey; value: unknown }>>;
 
   /**
    * Return an object containing metadata about the key. Object is stored at
    * `key + "$"`. If value is not an object, it returns an empty object.
    *
+   * Returns `Record<string, unknown>` — metadata is arbitrary at the storage
+   * layer. Narrow at the call site if you need a specific shape.
+   *
    * @example
    *   await storage.getMeta('local:installDate');
    */
-  getMeta<T extends Record<string, unknown>>(key: StorageItemKey): Promise<T>;
+  getMeta(key: StorageItemKey): Promise<Record<string, unknown>>;
 
   /**
    * Get the metadata of multiple storage items.
@@ -1000,17 +1022,20 @@ export interface WxtStorage {
    * @returns An array containing storage keys and their metadata.
    */
   getMetas(
-    keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
-  ): Promise<Array<{ key: StorageItemKey; meta: any }>>;
+    keys: ReadonlyArray<StorageItemKey | WxtStorageItem<any, any>>,
+  ): Promise<Array<{ key: StorageItemKey; meta: Record<string, unknown> }>>;
 
   /**
    * Set a value in storage. Setting a value to `null` or `undefined` is
    * equivalent to calling `removeItem`.
    *
+   * Accepts `unknown` — the value goes to storage as-is. If you want type-
+   * checked writes, define the item via `defineItem` with a `schema`.
+   *
    * @example
-   *   await storage.setItem<number>('local:installDate', Date.now());
+   *   await storage.setItem('local:installDate', Date.now());
    */
-  setItem<T>(key: StorageItemKey, value: T | null): Promise<void>;
+  setItem(key: StorageItemKey, value: unknown): Promise<void>;
 
   /**
    * Set multiple values in storage. If a value is set to `null` or `undefined`,
@@ -1023,9 +1048,9 @@ export interface WxtStorage {
    *   ]);
    */
   setItems(
-    values: Array<
-      | { key: StorageItemKey; value: any }
-      | { item: WxtStorageItem<any, any>; value: any }
+    values: ReadonlyArray<
+      | { key: StorageItemKey; value: unknown }
+      | { item: WxtStorageItem<any, any>; value: unknown }
     >,
   ): Promise<void>;
 
@@ -1036,9 +1061,9 @@ export interface WxtStorage {
    * @example
    *   await storage.setMeta('local:installDate', { appVersion });
    */
-  setMeta<T extends Record<string, unknown>>(
+  setMeta(
     key: StorageItemKey,
-    properties: T | null,
+    properties: Record<string, unknown> | null,
   ): Promise<void>;
 
   /**
@@ -1047,9 +1072,9 @@ export interface WxtStorage {
    * @param metas List of storage keys or items and metadata to set for each.
    */
   setMetas(
-    metas: Array<
-      | { key: StorageItemKey; meta: Record<string, any> }
-      | { item: WxtStorageItem<any, any>; meta: Record<string, any> }
+    metas: ReadonlyArray<
+      | { key: StorageItemKey; meta: Record<string, unknown> }
+      | { item: WxtStorageItem<any, any>; meta: Record<string, unknown> }
     >,
   ): Promise<void>;
 
@@ -1106,7 +1131,7 @@ export interface WxtStorage {
   ): Promise<void>;
 
   /** Watch for changes to a specific key in storage. */
-  watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
+  watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch;
 
   /** Remove all watch listeners. */
   unwatch(): void;
@@ -1233,20 +1258,20 @@ export interface WxtStorage {
 }
 
 interface WxtStorageDriver {
-  getItem<T>(key: string): Promise<T | null>;
+  getItem(key: string): Promise<unknown>;
   getItems(
     keys: readonly string[],
   ): Promise<Array<{ key: string; value: unknown }>>;
-  setItem<T>(key: string, value: T | null): Promise<void>;
+  setItem(key: string, value: unknown): Promise<void>;
   setItems(
     values: ReadonlyArray<{ key: string; value: unknown }>,
   ): Promise<void>;
   removeItem(key: string): Promise<void>;
-  removeItems(keys: string[]): Promise<void>;
+  removeItems(keys: readonly string[]): Promise<void>;
   clear(): Promise<void>;
   snapshot(): Promise<Record<string, unknown>>;
   restoreSnapshot(data: Record<string, unknown>): Promise<void>;
-  watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
+  watch(key: string, cb: WatchCallback<unknown>): Unwatch;
   unwatch(): void;
 }
 
