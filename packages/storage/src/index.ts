@@ -6,11 +6,41 @@
  *
  * @module @wxt-dev/storage
  */
-import { browser, type Browser } from '@wxt-dev/browser';
+import { browser } from '@wxt-dev/browser';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { SchemaError } from '@standard-schema/utils';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
+import type {
+  GetItemOptions,
+  KeyParts,
+  MetaKey,
+  NullablePartial,
+  RemoveItemOptions,
+  SnapshotOptions,
+  StorageArea,
+  StorageAreaChanges,
+  StorageItemKey,
+  Unwatch,
+  WatchCallback,
+  WxtStorageItemOptions,
+} from './types';
+
+// Re-export public types for API compat with `@wxt-dev/storage` consumers.
+export type {
+  GetItemOptions,
+  MetaKey,
+  OnValidationError,
+  RemoveItemOptions,
+  SnapshotOptions,
+  StorageArea,
+  StorageAreaChanges,
+  StorageItemKey,
+  Unwatch,
+  WatchCallback,
+  WxtStorageItemOptions,
+  WxtStorageItemSerializer,
+} from './types';
 
 export const storage = createStorage();
 
@@ -45,14 +75,16 @@ function createStorage(): WxtStorage {
     }
 
     // The runtime substring result is `string`; the compile-time template
-    // literal parse in `ResolvedKey<K>` is what narrows `driverArea` and
-    // `driverKey` at every call site. This is a provable-identity cast —
-    // K's type constraint guarantees the parse succeeds.
+    // literal parse in `KeyParts<K>` narrows `driverArea` and `driverKey`
+    // at every call site. Trust-boundary cast: K's constraint guarantees
+    // the parse succeeds. Double-cast through `unknown` because
+    // `KeyParts<K>` has `readonly` fields that TS's overlap check treats
+    // as non-assignable from the mutable object literal.
     return {
       driverArea,
       driverKey,
       driver: getDriver(driverArea),
-    } as ResolvedKey<K>;
+    } as unknown as ResolvedKey<K>;
   };
 
   const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
@@ -1181,198 +1213,21 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
-export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
-export type StorageItemKey = `${StorageArea}:${string}`;
-
 /**
- * Template-literal type for a metadata key. Applying `getMetaKey` to a string
- * literal `K` produces ``${K}$`` at the type level, so downstream callers can
- * see the exact meta key when the input is known.
- *
- * @example
- *   type Meta = MetaKey<'theme'>; // 'theme$'
- */
-export type MetaKey<K extends string> = `${K}$`;
-
-/**
- * The shape returned by the internal `resolveKey` helper, driven by a
- * template-literal parse of the input `StorageItemKey`. When called with a
- * literal like `'local:theme'` this narrows `driverArea` to `'local'` and
- * `driverKey` to `'theme'`; when called with the wider `StorageItemKey` union
- * it degrades to the base `StorageArea` / `string` pair.
- *
- * References the internal `WxtStorageDriver` interface, so this type is
- * intentionally not exported — exposing it would leak driver internals.
+ * Internal `resolveKey` return shape: pure `KeyParts<K>` (parsed from the
+ * template literal) plus the runtime driver handle. Kept in this file because
+ * it references `WxtStorageDriver`, an internal interface.
  *
  * @internal
  */
-type ResolvedKey<K extends StorageItemKey> =
-  K extends `${infer A extends StorageArea}:${infer Rest}`
-    ? { driverArea: A; driverKey: Rest; driver: WxtStorageDriver }
-    : never;
+type ResolvedKey<K extends StorageItemKey> = KeyParts<K> & {
+  driver: WxtStorageDriver;
+};
 
-export interface GetItemOptions<T> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T | undefined;
+// GetItemOptions, RemoveItemOptions, SnapshotOptions moved to ./types.
 
-  /** Default value returned when `getItem` would otherwise return `null`. */
-  fallback?: T | undefined;
-}
-
-export interface RemoveItemOptions {
-  /**
-   * Optionally remove metadata when deleting a key.
-   *
-   * @default false
-   */
-  removeMeta?: boolean;
-}
-
-export interface SnapshotOptions {
-  /**
-   * Exclude a list of keys. The storage area prefix should be removed since the
-   * snapshot is for a specific storage area already.
-   */
-  excludeKeys?: string[];
-}
-
-export interface WxtStorageItemOptions<T> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T | undefined;
-
-  /** Default value returned when `getValue` would otherwise return `null`. */
-  fallback?: T | undefined;
-
-  /**
-   * If passed, a value in storage will be initialized immediately after
-   * defining the storage item. This function returns the value that will be
-   * saved to storage during the initialization process if a value doesn't
-   * already exist.
-   */
-  init?: () => T | Promise<T>;
-
-  /**
-   * Provide a version number for the storage item to enable migrations. When
-   * changing the version in the future, migration functions will be ran on
-   * application startup.
-   */
-  version?: number;
-
-  /**
-   * A map of version numbers to the functions used to migrate the data to that
-   * version.
-   */
-  migrations?: Record<number, (oldValue: any) => any>;
-
-  /**
-   * Print debug logs, such as migration process.
-   *
-   * @default false
-   */
-  debug?: boolean;
-
-  /** A callback function that runs on migration complete. */
-  onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
-
-  /**
-   * A [Standard Schema](https://standardschema.dev/) validator applied to the
-   * deserialized runtime value on read, and to the input value on write.
-   *
-   * Pipeline:
-   *
-   * - Read: `raw → migrate → serializer.read? → schema.validate → T`
-   * - Write: `T → schema.validate → serializer.write? → raw`
-   *
-   * Any Standard Schema-conformant validator works: Zod, Valibot, ArkType,
-   * Effect Schema. For TypeBox, io-ts, or custom parsers, wrap them with
-   * `defineSchema()`.
-   *
-   * @example
-   *   ```ts
-   *   import { z } from 'zod';
-   *   const theme = storage.defineItem('local:theme', {
-   *     schema: z.enum(['light', 'dark', 'system']),
-   *   });
-   *   ```;
-   */
-  schema?: StandardSchemaV1<unknown, T>;
-
-  /**
-   * Convert between the runtime type `T` and the wire form stored in
-   * `chrome.storage`. `write` is required when `serializer` is present; `read`
-   * is optional — omit it when `schema` handles deserialization via coercion
-   * (e.g. `z.coerce.date()`).
-   *
-   * Naming mirrors VueUse's `useStorage` serializer.
-   *
-   * @example
-   *   ```ts
-   *   // Storing a Set: serializer required (Sets aren't JSON-serializable).
-   *   storage.defineItem<Set<string>>('local:enabled-sites', {
-   *   serializer: {
-   *   write: (set) => [...set],
-   *   read: (arr) => new Set(arr as string[]),
-   *   },
-   *   });
-   *
-   *   // Storing a Date with a coerce schema: only `write` needed.
-   *   storage.defineItem('local:install-date', {
-   *   serializer: { write: (d) => d.toISOString() },
-   *   schema: z.coerce.date(),
-   *   });
-   *   ```
-   */
-  serializer?: WxtStorageItemSerializer<T>;
-
-  /**
-   * How to handle a `schema` failure when reading a value from storage. Writes
-   * always throw on schema failure; this option only affects reads and
-   * `watch()` callbacks.
-   *
-   * - `'throw'` (default): throw a `SchemaError` containing the issues.
-   * - `'fallback'`: return `fallback` (or `null` if no fallback is set).
-   * - `'reset'`: clear the invalid value from storage and return `fallback`.
-   * - `(issues, raw) => T`: custom recovery — the returned value becomes the read
-   *   result. The value is **not** written back to storage.
-   *
-   * @default 'throw'
-   */
-  onValidationError?: OnValidationError<T>;
-}
-
-/**
- * Two-way converter between the runtime value type and the wire form stored in
- * `chrome.storage`. Naming (`read` / `write`) is verbatim from VueUse's
- * `useStorage` serializer.
- *
- * - `write` is required — it produces the value handed to `chrome.storage.*.set`.
- * - `read` is optional — if omitted, the raw value is passed straight to
- *   `schema.validate()`. This lets coerce schemas (e.g. `z.coerce.date()`)
- *   handle deserialization on their own.
- */
-export interface WxtStorageItemSerializer<TValue, TRaw = unknown> {
-  /** Convert `TValue` to the wire form written to storage. */
-  write: (value: TValue) => TRaw;
-  /** Convert the wire form read from storage back to `TValue`. */
-  read?: (raw: TRaw) => TValue;
-}
-
-/**
- * Recovery strategies applied when `schema` validation fails on read. Writes
- * always throw regardless of this setting.
- *
- * The callback form receives the schema issues and the raw pre-validation
- * value; its return value is used as the read result. `NoInfer` prevents the
- * callback's return type from widening the item's `TValue`.
- */
-export type OnValidationError<TValue> =
-  | 'throw'
-  | 'fallback'
-  | 'reset'
-  | ((
-      issues: readonly StandardSchemaV1.Issue[],
-      raw: unknown,
-    ) => NoInfer<TValue>);
+// WxtStorageItemOptions, WxtStorageItemSerializer, OnValidationError moved
+// to ./types.
 
 /**
  * Wrap a synchronous or asynchronous parse function into a Standard Schema.
@@ -1412,23 +1267,8 @@ export function defineSchema<T>(
   };
 }
 
-export type StorageAreaChanges = {
-  [key: string]: Browser.storage.StorageChange;
-};
-
-/**
- * Same as `Partial`, but includes `| null`. It makes all the properties of an
- * object optional and nullable.
- */
-type NullablePartial<T> = {
-  [key in keyof T]+?: T[key] | undefined | null;
-};
-
-/** Callback called when a value in storage is changed. */
-export type WatchCallback<T> = (newValue: T, oldValue: T) => void;
-
-/** Call to remove a watch listener */
-export type Unwatch = () => void;
+// StorageAreaChanges, NullablePartial, WatchCallback, Unwatch moved to
+// ./types.
 
 export class MigrationError extends Error {
   constructor(
