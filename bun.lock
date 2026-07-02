@@ -83,13 +83,13 @@
     },
     "packages/browser": {
       "name": "@wxt-dev/browser",
-      "version": "0.2.0",
+      "version": "0.2.2",
       "dependencies": {
         "@types/filesystem": "*",
         "@types/har-format": "*",
       },
       "devDependencies": {
-        "@types/chrome": "0.2.0",
+        "@types/chrome": "0.2.2",
         "@types/node": "catalog:",
         "nano-spawn": "catalog:",
         "typescript": "catalog:",
@@ -1062,7 +1062,7 @@
 
     "@types/chai": ["@types/chai@5.2.3", "", { "dependencies": { "@types/deep-eql": "*", "assertion-error": "^2.0.1" } }, "sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA=="],
 
-    "@types/chrome": ["@types/chrome@0.2.0", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-K/i7EKEVSpmyXXjE0ev5oASWBYMY6yM8LFSutG2PkM1DmxJUggZsoaTc0W1RsVwDDKrsZEjpHFAbqqxlRxGsSg=="],
+    "@types/chrome": ["@types/chrome@0.2.2", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-8rSMZ4cvo2xmaSyQg0sN5yRL7oiDkntLoiHxUhfwQnv1mvnkrdoZ25SlNrKWmYKaeP50WvrfWj1pmc02+U9KKw=="],
 
     "@types/debug": ["@types/debug@4.1.12", "", { "dependencies": { "@types/ms": "*" } }, "sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ=="],
 
