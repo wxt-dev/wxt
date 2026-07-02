@@ -1899,15 +1899,31 @@ describe('Storage Utils', () => {
     describe('serializer (read pipeline)', () => {
       it('runs serializer.read on the raw storage value', async () => {
         await fakeBrowser.storage.local.set({ enabled: ['a', 'b'] });
-        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+        // Annotate `write`'s parameter to let TS infer TValue AND TRaw from
+        // the serializer object. `raw` in `read` is then narrowed to the
+        // return type of `write` (here `string[]`) — no `as` cast.
+        const item = storage.defineItem(`local:enabled`, {
           serializer: {
-            write: (set) => [...set],
-            read: (raw) => new Set(raw as string[]),
+            write: (set: Set<string>) => [...set],
+            read: (raw) => new Set(raw),
           },
         });
         const value = await item.getValue();
         expect(value).toBeInstanceOf(Set);
         expect([...(value ?? [])]).toEqual(['a', 'b']);
+      });
+
+      it('infers TRaw from serializer.write return type (fallback path)', () => {
+        // Alternative shape: typed `fallback` fixes TValue; TRaw is then
+        // inferred from `write`'s return type.
+        const item = storage.defineItem(`local:tags`, {
+          fallback: new Set<string>(),
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw),
+          },
+        });
+        expectTypeOf(item.getValue()).resolves.toEqualTypeOf<Set<string>>();
       });
 
       it('bypasses read when only serializer.write is defined (coerce-schema pattern)', async () => {

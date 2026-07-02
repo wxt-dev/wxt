@@ -30,8 +30,8 @@ export type StorageItemKey = `${StorageArea}:${string}`;
 
 /**
  * Template-literal type for a metadata key. Applying `getMetaKey` to a string
- * literal `K` produces ``${K}$`` at the type level, so downstream callers can
- * see the exact meta key when the input is known.
+ * literal `K` produces `${K}$` at the type level, so downstream callers can see
+ * the exact meta key when the input is known.
  *
  * @example
  *   type Meta = MetaKey<'theme'>; // 'theme$'
@@ -133,7 +133,7 @@ export interface SnapshotOptions {
   excludeKeys?: readonly string[];
 }
 
-export interface WxtStorageItemOptions<T> {
+export interface WxtStorageItemOptions<T, TRaw = unknown> {
   /** @deprecated Renamed to `fallback`, use it instead. */
   defaultValue?: T | undefined;
 
@@ -202,24 +202,39 @@ export interface WxtStorageItemOptions<T> {
    *
    * Naming mirrors VueUse's `useStorage` serializer.
    *
+   * ## Type inference
+   *
+   * `TRaw` (the wire form) is inferred from `write`'s return type when TS is
+   * able to run full inference on `defineItem`. That happens when either:
+   *
+   * - `write`'s parameter is annotated, e.g. `write: (set: Set<string>) =>
+   *   [...set]`, OR
+   * - `fallback` / `defaultValue` is typed and drives `TValue`.
+   *
+   * TypeScript cannot infer `TRaw` when the caller supplies an explicit
+   * `defineItem<TValue>(...)` generic — `TRaw`'s default of `unknown` is
+   * committed before TS looks at `write`'s return type. In that case `raw`
+   * inside `read` is `unknown` and the caller must narrow it.
+   *
    * @example
    *   ```ts
-   *   // Storing a Set: serializer required (Sets aren't JSON-serializable).
-   *   storage.defineItem<Set<string>>('local:enabled-sites', {
+   *   // Sets aren't JSON-serialisable — hand-write both directions.
+   *   // `write`'s annotated param makes both TValue and TRaw flow.
+   *   storage.defineItem('local:enabled-sites', {
    *   serializer: {
-   *   write: (set) => [...set],
-   *   read: (arr) => new Set(arr as string[]),
+   *   write: (set: Set<string>) => [...set],
+   *   read: (raw) => new Set(raw),  // raw: string[] — no cast needed
    *   },
    *   });
    *
    *   // Storing a Date with a coerce schema: only `write` needed.
    *   storage.defineItem('local:install-date', {
-   *   serializer: { write: (d) => d.toISOString() },
+   *   serializer: { write: (d: Date) => d.toISOString() },
    *   schema: z.coerce.date(),
    *   });
    *   ```
    */
-  serializer?: WxtStorageItemSerializer<T>;
+  serializer?: WxtStorageItemSerializer<T, TRaw>;
 
   /**
    * How to handle a `schema` failure when reading a value from storage. Writes

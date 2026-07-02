@@ -1130,9 +1130,13 @@ export interface WxtStorage {
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+    options: WxtStorageItemOptions<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TRaw
+    > & {
       schema: TSchema;
       fallback: StandardSchemaV1.InferOutput<TSchema>;
     },
@@ -1141,9 +1145,13 @@ export interface WxtStorage {
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+    options: WxtStorageItemOptions<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TRaw
+    > & {
       schema: TSchema;
       defaultValue: StandardSchemaV1.InferOutput<TSchema>;
     },
@@ -1152,9 +1160,13 @@ export interface WxtStorage {
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+    options: WxtStorageItemOptions<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TRaw
+    > & {
       schema: TSchema;
       init: () =>
         | StandardSchemaV1.InferOutput<TSchema>
@@ -1165,9 +1177,13 @@ export interface WxtStorage {
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+    options: WxtStorageItemOptions<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TRaw
+    > & {
       schema: TSchema;
     },
   ): WxtStorageItem<
@@ -1180,25 +1196,28 @@ export interface WxtStorage {
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue> & { fallback: TValue },
+    options: WxtStorageItemOptions<TValue, TRaw> & { fallback: TValue },
   ): WxtStorageItem<TValue, TMetadata, TKey>;
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue> & { defaultValue: TValue },
+    options: WxtStorageItemOptions<TValue, TRaw> & { defaultValue: TValue },
   ): WxtStorageItem<TValue, TMetadata, TKey>;
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue> & {
+    options: WxtStorageItemOptions<TValue, TRaw> & {
       init: () => TValue | Promise<TValue>;
     },
   ): WxtStorageItem<TValue, TMetadata, TKey>;
@@ -1206,9 +1225,10 @@ export interface WxtStorage {
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue>,
+    options: WxtStorageItemOptions<TValue, TRaw>,
   ): WxtStorageItem<TValue | null, TMetadata, TKey>;
 }
 
