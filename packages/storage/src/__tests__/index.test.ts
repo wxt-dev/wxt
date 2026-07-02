@@ -1482,6 +1482,14 @@ describe('Storage Utils', () => {
         expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
       });
 
+      it('infers TValue from schema output and drops null when defaultValue is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          defaultValue: 0,
+        });
+        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+      });
+
       it('defineSchema wraps a sync parser into StandardSchemaV1', () => {
         const parsed = defineSchema<number>((v) => {
           if (typeof v !== 'number') throw new Error('not a number');
@@ -2043,6 +2051,44 @@ describe('Storage Utils', () => {
 
         expect(cb).toHaveBeenCalledTimes(1);
         expect(cb).toHaveBeenCalledWith(0, 0);
+      });
+
+      it("'reset' inside watch does NOT remove the value from storage (data-loss guard)", async () => {
+        // Regression: writing a valid newValue delivers (validNew, invalidOld)
+        // to watch. The old-value path must NOT trigger driver.removeItem —
+        // otherwise the just-written newValue is wiped from storage.
+        await fakeBrowser.storage.local.set({ count: -1 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 0,
+          onValidationError: 'reset',
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await item.setValue(5);
+        await waitForInit();
+
+        // Callback fired with the valid new value; old value fell back to 0.
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(5, 0);
+        // Critical: storage still holds the newly-written valid value.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 5,
+        });
+      });
+
+      it('callback recovery strategy runs inside watch', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          onValidationError: (_issues, raw) => (raw === -1 ? 999 : 0),
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await fakeBrowser.storage.local.set({ count: -1 });
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(999, null);
       });
     });
   });

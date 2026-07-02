@@ -376,7 +376,7 @@ const theme = storage.defineItem('local:theme', {
 const enabledSites = storage.defineItem<Set<string>>('local:enabled-sites', {
   serializer: {
     write: (set) => [...set],
-    read: (raw) => new Set(raw as string[]),
+    read: (raw) => (Array.isArray(raw) ? new Set(raw as string[]) : new Set()),
   },
 });
 ```
@@ -395,7 +395,8 @@ const installDate = storage.defineItem('local:install-date', {
 For validators that aren't Standard Schema-conformant — e.g. [TypeBox](https://github.com/sinclairzx81/typebox) (`Value.Parse`), [io-ts](https://gcanti.github.io/io-ts/) (`.decode`), or hand-rolled parsers — wrap them with `defineSchema`:
 
 ```ts
-import { defineSchema, storage } from '#imports';
+import { defineSchema } from '@wxt-dev/storage';
+import { storage } from '#imports';
 import { Type, Value } from '@sinclair/typebox';
 
 const Theme = Type.Union([Type.Literal('light'), Type.Literal('dark')]);
@@ -406,6 +407,12 @@ const theme = storage.defineItem('local:theme', {
 ```
 
 The wrapped function must return the parsed value on success or throw on failure. Both synchronous and async parsers are supported.
+
+### Caveats
+
+- **Transforming schemas** (e.g. `z.number().transform(n => n * 2)`) run on every read AND every write. Without an inverse `serializer.write`, storage will hold the transformed form and every subsequent read will re-transform. For non-idempotent transforms, pair the schema with a `serializer.write` that inverts the transform, or use validator-only schemas (`z.number()`).
+- **Bulk operations** (`storage.getItems`, `storage.setItems`, `storage.getMetas`, `storage.setMetas`, `storage.removeItems`) bypass schema and serializer even when called with defined items. Use `item.getValue()` / `item.setValue()` directly when validation is required.
+- **`onValidationError: 'reset'` in watch callbacks** is neutered — an invalid value delivered to a watch listener will not trigger a destructive `driver.removeItem`. This prevents the case where an invalid `oldValue` arriving alongside a freshly-written valid `newValue` would wipe the new value. Reset still applies to direct `getValue` reads.
 
 ## Bulk Operations
 

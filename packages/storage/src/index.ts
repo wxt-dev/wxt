@@ -100,25 +100,32 @@ function createStorage(): WxtStorage {
    * - `'fallback'` : return `fallback` (or null)
    * - `'reset'` : clear the invalid value from storage, return `fallback`
    * - Function : return whatever the callback returns
+   *
+   * When `pipelineOpts.allowReset` is false, the `'reset'` strategy skips the
+   * destructive `driver.removeItem` call and behaves like `'fallback'`. Watch
+   * callbacks pass this so an invalid `oldValue` can't blow away a valid
+   * `newValue` that was just written.
    */
   const processReadValue = async <T>(
     raw: unknown,
     opts: WxtStorageItemOptions<T> | undefined,
     driver: WxtStorageDriver,
     driverKey: string,
+    pipelineOpts: { allowReset?: boolean } = {},
   ): Promise<T | null> => {
-    const fallback = (opts?.fallback ?? opts?.defaultValue ?? null) as T | null;
+    const fallback: T | null = opts?.fallback ?? opts?.defaultValue ?? null;
 
     if (raw == null) return fallback;
 
-    let value: unknown = raw;
-
-    if (opts?.serializer?.read) {
-      value = opts.serializer.read(raw);
-    }
-
+    // Schema path: `schema['~standard'].validate` is the sole source of T so
+    // `result.value` is returned without any type assertion. If a
+    // `serializer.read` is present it deserializes before validation; the
+    // schema is still the type authority.
     if (opts?.schema) {
-      const result = await opts.schema['~standard'].validate(value);
+      const preValidation: unknown = opts.serializer?.read
+        ? opts.serializer.read(raw)
+        : raw;
+      const result = await opts.schema['~standard'].validate(preValidation);
       if (result.issues) {
         const strategy = opts.onValidationError ?? 'throw';
         if (strategy === 'throw') {
@@ -128,15 +135,27 @@ function createStorage(): WxtStorage {
           return fallback;
         }
         if (strategy === 'reset') {
-          await driver.removeItem(driverKey);
+          if (pipelineOpts.allowReset !== false) {
+            await driver.removeItem(driverKey);
+          }
           return fallback;
         }
-        return strategy(result.issues, raw) as T;
+        // strategy is `(issues, raw) => T` after the string checks above.
+        return strategy(result.issues, raw);
       }
-      value = result.value;
+      return result.value;
     }
 
-    return value as T;
+    // Serializer-only path: `serializer.read`'s typed return IS T by
+    // WxtStorageItemSerializer<TValue, TRaw>.
+    if (opts?.serializer?.read) {
+      return opts.serializer.read(raw);
+    }
+
+    // Trust boundary: no schema, no serializer. Same guarantee level as the
+    // existing typed `getItem<T>` helper — the caller asserted T on
+    // defineItem and we hand back whatever storage held.
+    return raw as T;
   };
 
   const setItem = async (
@@ -699,14 +718,18 @@ function createStorage(): WxtStorage {
         watch: (cb) =>
           watch(driver, driverKey, async (newValueRaw, oldValueRaw) => {
             // Run both raw values through the read pipeline so the callback
-            // sees the same T that getValue() would produce. If either side
-            // throws (schema failure + onValidationError='throw'), the
-            // callback is skipped and the error is logged. 'fallback' /
-            // 'reset' / callback strategies flow through processReadValue.
+            // sees the same T that getValue() would produce. `allowReset:
+            // false` disables the destructive 'reset' side effect inside
+            // watch — otherwise an invalid oldValue arriving alongside a
+            // freshly-written valid newValue would wipe the newValue.
             try {
               const [newValue, oldValue] = await Promise.all([
-                processReadValue(newValueRaw, opts, driver, driverKey),
-                processReadValue(oldValueRaw, opts, driver, driverKey),
+                processReadValue(newValueRaw, opts, driver, driverKey, {
+                  allowReset: false,
+                }),
+                processReadValue(oldValueRaw, opts, driver, driverKey, {
+                  allowReset: false,
+                }),
               ]);
               cb(newValue ?? getFallback(), oldValue ?? getFallback());
             } catch (error) {
@@ -1013,6 +1036,16 @@ export interface WxtStorage {
     key: StorageItemKey,
     options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
       schema: TSchema;
+      defaultValue: StandardSchemaV1.InferOutput<TSchema>;
+    },
+  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata>;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = {},
+  >(
+    key: StorageItemKey,
+    options: WxtStorageItemOptions<StandardSchemaV1.InferOutput<TSchema>> & {
+      schema: TSchema;
       init: () =>
         | StandardSchemaV1.InferOutput<TSchema>
         | Promise<StandardSchemaV1.InferOutput<TSchema>>;
@@ -1296,7 +1329,7 @@ export function defineSchema<T>(
   return {
     '~standard': {
       version: 1,
-      vendor: 'wxt-storage/defineSchema',
+      vendor: '@wxt-dev/storage/defineSchema',
       validate: async (value: unknown): Promise<StandardSchemaV1.Result<T>> => {
         try {
           return { value: await parse(value) };
