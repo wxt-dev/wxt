@@ -154,12 +154,11 @@ function createStorage(): WxtStorage {
     fallback: DeepReadonly<T> | null | undefined,
   ): T | null => value ?? (fallback as T | null | undefined) ?? null;
 
+  const isRecord = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v !== null && !Array.isArray(v);
+
   const getMetaValue = (properties: unknown): Record<string, unknown> =>
-    typeof properties === 'object' &&
-    properties !== null &&
-    !Array.isArray(properties)
-      ? (properties as Record<string, unknown>)
-      : {};
+    isRecord(properties) ? properties : {};
 
   const getItem = async <T>(
     driver: WxtStorageDriver,
@@ -759,6 +758,22 @@ function createStorage(): WxtStorage {
               cause: err,
             });
           }
+        }
+        // Validate migrated output against schema BEFORE writing to disk.
+        // Without this, a buggy migration fn writes invalid data with the
+        // bumped version — schema validation on getValue() then fails
+        // permanently (version already advanced, migration won't re-run).
+        // Throwing here leaves the version un-bumped so the next app load
+        // retries the migration from the same starting version.
+        if (opts?.schema) {
+          const migrationValidation =
+            await opts.schema['~standard'].validate(migratedValue);
+          if (migrationValidation.issues) {
+            throw new MigrationError(key, targetVersion, {
+              cause: new SchemaError(migrationValidation.issues),
+            });
+          }
+          migratedValue = migrationValidation.value;
         }
         assertMutable(driver);
         await driver.setItems([
@@ -1642,7 +1657,9 @@ type ReadonlyStorageDriver<TArea extends StorageArea> =
  *
  * WxtStorageDriver<'managed'> → ReadonlyStorageDriver<'managed'>
  * WxtStorageDriver<'local'> → MutableStorageDriver<'local'>
- * WxtStorageDriver<StorageArea> distributes to ReadonlyStorageDriver<'managed'>
+ * WxtStorageDriver<StorageArea> distributes to
+ * ReadonlyStorageDriver<'managed'>
+ *
  * | MutableStorageDriver<'local' | 'sync' | 'session'>
  *
  * So `WxtStorageDriver<'managed'>.setItem` is a compile-time error — the

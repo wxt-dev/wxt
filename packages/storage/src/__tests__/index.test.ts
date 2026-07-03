@@ -2009,13 +2009,18 @@ describe('Storage Utils', () => {
     describe('serializer (read pipeline)', () => {
       it('runs serializer.read on the raw storage value', async () => {
         await fakeBrowser.storage.local.set({ enabled: ['a', 'b'] });
-        // Annotate `write`'s parameter to let TS infer TValue AND TRaw from
-        // the serializer object. `raw` in `read` is then narrowed to the
-        // return type of `write` (here `string[]`) — no `as` cast.
+        // read receives `unknown` (trust boundary). Array.isArray + filter
+        // narrows to string[] — no cast needed.
         const item = storage.defineItem(`local:enabled`, {
           serializer: {
             write: (set: Set<string>) => [...set],
-            read: (raw) => new Set(raw),
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
           },
         });
         const value = await item.getValue();
@@ -2030,7 +2035,13 @@ describe('Storage Utils', () => {
           fallback: new Set<string>(),
           serializer: {
             write: (set) => [...set],
-            read: (raw) => new Set(raw),
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
           },
         });
         expectTypeOf(item.getValue()).resolves.toEqualTypeOf<Set<string>>();

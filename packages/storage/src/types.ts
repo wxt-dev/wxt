@@ -232,8 +232,23 @@ export type StorageAreaChanges = {
 export interface WxtStorageItemSerializer<TValue, TRaw = unknown> {
   /** Convert `TValue` to the wire form written to storage. */
   write: (value: TValue) => TRaw;
-  /** Convert the wire form read from storage back to `TValue`. */
-  read?: (raw: TRaw) => TValue;
+  /**
+   * Convert the wire form read from storage back to `TValue`.
+   *
+   * Declared as a **method** (shorthand syntax) so users may narrow the
+   * parameter to a specific type without a cast:
+   *
+   * Read(raw: MyWireType): TValue { ... } // ✓ no cast needed
+   *
+   * Method parameters are checked bivariantly under `strictFunctionTypes`,
+   * meaning a narrower parameter type is still assignable. The trust boundary
+   * is enforced by the caller (the pipeline passes `unknown` from
+   * `chrome.storage`); the method implementation must narrow `raw` itself using
+   * a schema or type guard. This is identical to the io-ts `Type<A, O, I>`
+   * pattern (decode input is always `I = unknown` at the boundary, but the
+   * implementation may assume a specific shape).
+   */
+  read?(raw: unknown): TValue;
 }
 
 /**
