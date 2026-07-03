@@ -12,6 +12,7 @@ import { SchemaError } from '@standard-schema/utils';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
 import type {
+  DeepReadonly,
   GetItemOptions,
   GetItemsInputElement,
   GetItemsResult,
@@ -19,6 +20,7 @@ import type {
   GetMetasResult,
   MetaKey,
   NullablePartial,
+  OnValidationError,
   RemoveItemOptions,
   SnapshotOptions,
   StorageArea,
@@ -26,10 +28,11 @@ import type {
   StorageItemKey,
   Unwatch,
   WatchCallback,
+  Widen,
+  WritableDeep,
   WxtStorageItemOptions,
 } from './types';
 
-// Re-export public types for API compat with `@wxt-dev/storage` consumers.
 export type {
   GetItemOptions,
   GetItemsInputElement,
@@ -52,12 +55,12 @@ export type {
 export const storage = createStorage();
 
 function createStorage(): WxtStorage {
-  const drivers: Record<StorageArea, WxtStorageDriver> = {
+  const drivers = {
     local: createDriver('local'),
     session: createDriver('session'),
     sync: createDriver('sync'),
     managed: createDriver('managed'),
-  };
+  } as const;
 
   const getDriver = (area: StorageArea) => {
     const driver = drivers[area];
@@ -70,10 +73,7 @@ function createStorage(): WxtStorage {
 
   const resolveKey = <const K extends StorageItemKey>(key: K) => {
     const deliminatorIndex = key.indexOf(':');
-    const driverArea = key.substring(
-      0,
-      deliminatorIndex,
-    ) as K extends `${infer A extends StorageArea}:${string}` ? A : never;
+    const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
     const driverKey = key.substring(
       deliminatorIndex + 1,
     ) as K extends `${StorageArea}:${infer R}` ? R : never;
@@ -109,10 +109,22 @@ function createStorage(): WxtStorage {
     return newFields;
   };
 
+  /**
+   * Merge a raw driver value with the caller's fallback.
+   *
+   * The fallback flows in as `DeepReadonly<T>` via `GetItemOptions.fallback` so
+   * narrow-readonly literals produced by `<const>` inference in `defineItem`
+   * (`fallback: { label: 'Default' } as const`) pass through without a cast at
+   * the call site. Internally we treat both slots as `T | null` because the
+   * pipeline is read-only from here on and the caller already committed to `T`
+   * when they typed the field. This is a covariance boundary: widening from
+   * `DeepReadonly<T>` back to `T` is safe as long as we never mutate the value
+   * — which we don't.
+   */
   const getValueOrFallback = <T>(
     value: T | null | undefined,
-    fallback: T | null | undefined,
-  ): T | null => value ?? fallback ?? null;
+    fallback: DeepReadonly<T> | null | undefined,
+  ): T | null => value ?? (fallback as T | null | undefined) ?? null;
 
   const getMetaValue = (properties: unknown): Record<string, unknown> =>
     typeof properties === 'object' &&
@@ -170,7 +182,9 @@ function createStorage(): WxtStorage {
     driverKey: string,
     pipelineOpts: { allowReset?: boolean } = {},
   ): Promise<T | null> => {
-    const fallback: T | null = opts?.fallback ?? opts?.defaultValue ?? null;
+    // See `getValueOrFallback` for the DeepReadonly→T covariance rationale.
+    const fallback: T | null =
+      ((opts?.fallback ?? opts?.defaultValue) as T | null | undefined) ?? null;
 
     if (raw == null) return fallback;
 
@@ -617,7 +631,7 @@ function createStorage(): WxtStorage {
     defineItem: (
       key: StorageItemKey,
       opts?: WxtStorageItemOptions<any>,
-    ): WxtStorageItem<any, any> => {
+    ): WxtStorageItem<any, any, any, any, any, any, any> => {
       const { driver, driverKey } = resolveKey(key);
 
       const {
@@ -635,7 +649,7 @@ function createStorage(): WxtStorage {
 
       let needsVersionSet = false;
 
-      const migrate: WxtStorageItem<any, any>['migrate'] = async () => {
+      const migrate = async () => {
         const driverMetaKey = getMetaKey(driverKey);
         const results = await driver.getItems([driverKey, driverMetaKey]);
         // driver.getItems returns one entry per input key; the pair-shape is
@@ -784,6 +798,22 @@ function createStorage(): WxtStorage {
 
       return {
         key,
+
+        get version() {
+          return opts?.version ?? 1;
+        },
+
+        get debug() {
+          return opts?.debug ?? false;
+        },
+
+        get onValidationError() {
+          return opts?.onValidationError ?? 'throw';
+        },
+
+        get schema() {
+          return opts?.schema;
+        },
 
         get defaultValue() {
           return getFallback();
@@ -1020,8 +1050,14 @@ export interface WxtStorage {
    */
   getItem<TValue, const K extends StorageItemKey = StorageItemKey>(
     key: K,
-    opts: GetItemOptions<TValue> & { fallback: TValue },
-  ): Promise<TValue>;
+    // Fallback is accepted as `DeepReadonly<TValue>` so narrow-readonly
+    // literals produced by `<const>` inference in `defineItem` flow through
+    // without a cast. Return is `WritableDeep<TValue>` so a narrow-readonly
+    // `TValue` inferred from the fallback widens back to its mutable shape
+    // at the assignment boundary (`const x: T = await getItem(...)` — T is
+    // typically mutable, and the widened return matches).
+    opts: GetItemOptions<TValue> & { fallback: DeepReadonly<TValue> },
+  ): Promise<WritableDeep<TValue>>;
 
   getItem<const K extends StorageItemKey = StorageItemKey>(
     key: K,
@@ -1091,7 +1127,10 @@ export interface WxtStorage {
   setItems(
     values: ReadonlyArray<
       | { key: StorageItemKey; value: unknown }
-      | { item: WxtStorageItem<any, any>; value: unknown }
+      | {
+          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          value: unknown;
+        }
     >,
   ): Promise<void>;
 
@@ -1115,7 +1154,10 @@ export interface WxtStorage {
   setMetas(
     metas: ReadonlyArray<
       | { key: StorageItemKey; meta: Record<string, unknown> }
-      | { item: WxtStorageItem<any, any>; meta: Record<string, unknown> }
+      | {
+          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          meta: Record<string, unknown>;
+        }
     >,
   ): Promise<void>;
 
@@ -1134,9 +1176,12 @@ export interface WxtStorage {
   removeItems(
     keys: Array<
       | StorageItemKey
-      | WxtStorageItem<any, any>
+      | WxtStorageItem<any, any, any, any, any, any, any>
       | { key: StorageItemKey; options?: RemoveItemOptions }
-      | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
+      | {
+          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          options?: RemoveItemOptions;
+        }
     >,
   ): Promise<void>;
 
@@ -1188,120 +1233,234 @@ export interface WxtStorage {
    *
    * Read full docs: https://wxt.dev/storage.html#defining-storage-items
    */
+  // bare — no options, no schema. All narrow slots default to their
+  // no-op literals: TFallback=null, TVersion=number, TDebug=false,
+  // TValidationError='throw', TSchema=undefined.
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
   >(
     key: TKey,
-  ): WxtStorageItem<TValue | null, TMetadata, TKey>;
+  ): WxtStorageItem<
+    TValue | null,
+    TMetadata,
+    TKey,
+    null,
+    number,
+    false,
+    undefined
+  >;
   // --- schema-carrying overloads ---
-  // These sit above the plain overloads so TypeScript picks them up whenever
-  // `schema` is present, driving TValue from the schema's output type.
+  // Each captures via `<const>`:
+  //   TFallback — fallback/defaultValue literal (with intersection guard against schema output)
+  //   TVersion  — numeric literal, length-locks migrations tuple
+  //   TDebug    — boolean literal (true/false, defaults to false)
+  //   TValidationError — 'throw'|'fallback'|'reset' literal OR callback identity
+  //   TSchema   — the schema itself is captured as its exact type
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TFallback = StandardSchemaV1.InferOutput<TSchema>,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
     options: WxtStorageItemOptions<
       StandardSchemaV1.InferOutput<TSchema>,
-      TRaw
+      TRaw,
+      TVersion
     > & {
       schema: TSchema;
-      fallback: StandardSchemaV1.InferOutput<TSchema>;
+      fallback: TFallback & DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
+  ): WxtStorageItem<
+    StandardSchemaV1.InferOutput<TSchema>,
+    TMetadata,
+    TKey,
+    TFallback,
+    TVersion,
+    TDebug,
+    TSchema
+  >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TFallback = StandardSchemaV1.InferOutput<TSchema>,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
     options: WxtStorageItemOptions<
       StandardSchemaV1.InferOutput<TSchema>,
-      TRaw
+      TRaw,
+      TVersion
     > & {
       schema: TSchema;
-      defaultValue: StandardSchemaV1.InferOutput<TSchema>;
+      defaultValue: TFallback &
+        DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
+  ): WxtStorageItem<
+    StandardSchemaV1.InferOutput<TSchema>,
+    TMetadata,
+    TKey,
+    TFallback,
+    TVersion,
+    TDebug,
+    TSchema
+  >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
     options: WxtStorageItemOptions<
       StandardSchemaV1.InferOutput<TSchema>,
-      TRaw
+      TRaw,
+      TVersion
     > & {
       schema: TSchema;
       init: () =>
         | StandardSchemaV1.InferOutput<TSchema>
         | Promise<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
     },
-  ): WxtStorageItem<StandardSchemaV1.InferOutput<TSchema>, TMetadata, TKey>;
+  ): WxtStorageItem<
+    StandardSchemaV1.InferOutput<TSchema>,
+    TMetadata,
+    TKey,
+    null,
+    TVersion,
+    TDebug,
+    TSchema
+  >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
     options: WxtStorageItemOptions<
       StandardSchemaV1.InferOutput<TSchema>,
-      TRaw
+      TRaw,
+      TVersion
     > & {
       schema: TSchema;
+      debug?: TDebug;
     },
   ): WxtStorageItem<
     StandardSchemaV1.InferOutput<TSchema> | null,
     TMetadata,
-    TKey
+    TKey,
+    null,
+    TVersion,
+    TDebug,
+    TSchema
   >;
   // --- non-schema overloads ---
+  // No schema → TSchema slot is `undefined`.
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TFallback = Widen<TValue>,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw> & { fallback: TValue },
-  ): WxtStorageItem<TValue, TMetadata, TKey>;
-  defineItem<
-    TValue,
-    TMetadata extends Record<string, unknown> = {},
-    const TKey extends StorageItemKey = StorageItemKey,
-    TRaw = unknown,
-  >(
-    key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw> & { defaultValue: TValue },
-  ): WxtStorageItem<TValue, TMetadata, TKey>;
-  defineItem<
-    TValue,
-    TMetadata extends Record<string, unknown> = {},
-    const TKey extends StorageItemKey = StorageItemKey,
-    TRaw = unknown,
-  >(
-    key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw> & {
-      init: () => TValue | Promise<TValue>;
+    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+      fallback: TFallback & DeepReadonly<TValue>;
+      debug?: TDebug;
     },
-  ): WxtStorageItem<TValue, TMetadata, TKey>;
+  ): WxtStorageItem<
+    Widen<TValue>,
+    TMetadata,
+    TKey,
+    TFallback,
+    TVersion,
+    TDebug,
+    undefined
+  >;
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
+    const TFallback = Widen<TValue>,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw>,
-  ): WxtStorageItem<TValue | null, TMetadata, TKey>;
+    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+      defaultValue: TFallback & DeepReadonly<TValue>;
+      debug?: TDebug;
+    },
+  ): WxtStorageItem<
+    Widen<TValue>,
+    TMetadata,
+    TKey,
+    TFallback,
+    TVersion,
+    TDebug,
+    undefined
+  >;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+      init: () => TValue | Promise<TValue>;
+      debug?: TDebug;
+    },
+  ): WxtStorageItem<
+    Widen<TValue>,
+    TMetadata,
+    TKey,
+    null,
+    TVersion,
+    TDebug,
+    undefined
+  >;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = {},
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+      debug?: TDebug;
+    },
+  ): WxtStorageItem<
+    Widen<TValue> | null,
+    TMetadata,
+    TKey,
+    null,
+    TVersion,
+    TDebug,
+    undefined
+  >;
 }
 
 interface WxtStorageDriver {
@@ -1326,6 +1485,10 @@ export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
   TKey extends StorageItemKey = StorageItemKey,
+  TFallback = null,
+  TVersion extends number = number,
+  TDebug extends boolean = false,
+  TSchema = undefined,
 > {
   /**
    * The storage key passed when creating the storage item. When `defineItem` is
@@ -1335,11 +1498,44 @@ export interface WxtStorageItem<
    */
   key: TKey;
 
-  /** @deprecated Renamed to fallback, use it instead. */
-  defaultValue: TValue;
+  /**
+   * The current schema version, captured as a numeric literal when passed
+   * directly (`version: 3` → typed `3`). Defaults to `number` when omitted.
+   */
+  readonly version: TVersion;
 
-  /** The value provided by the `fallback` option. */
-  fallback: TValue;
+  /**
+   * The `debug` flag as captured at define-time. `true` or `false` literal when
+   * the caller passed one directly; `false` when omitted.
+   */
+  readonly debug: TDebug;
+
+  /**
+   * The `onValidationError` policy in effect at read-time. Kept as the wide
+   * `OnValidationError<TValue>` union rather than a captured literal — the
+   * complexity of threading a `<const>`-narrowed policy through 8 overloads +
+   * mirror in a future meta-schema PR outweighs the marginal DX benefit (users
+   * typically check via runtime `if (item.onValidationError === 'x')` or don't
+   * inspect at all).
+   */
+  readonly onValidationError: OnValidationError<TValue> | 'throw';
+
+  /**
+   * The schema passed at define-time (`z.object(...)`, a `defineSchema<T>()`
+   * result, etc.), or `undefined` when no schema was provided. Preserves the
+   * exact schema type for downstream introspection.
+   */
+  readonly schema: TSchema;
+
+  /** @deprecated Renamed to fallback, use it instead. */
+  defaultValue: TFallback;
+
+  /**
+   * The value provided by the `fallback` option, preserved as its literal type
+   * where possible (`fallback: 'system' as const` → typed `'system'`). Get/set
+   * methods still use the wider `TValue`.
+   */
+  fallback: TFallback;
 
   /** Get the latest value from storage. */
   getValue(): Promise<TValue>;
@@ -1503,15 +1699,8 @@ export function defineMigrations<TValue>(): {
     fns) as ReturnType<typeof defineMigrations<TValue>>;
 }
 
-// StorageAreaChanges, NullablePartial, WatchCallback, Unwatch moved to
-// ./types.
-
 export class MigrationError extends Error {
-  constructor(
-    public key: string,
-    public version: number,
-    options?: ErrorOptions,
-  ) {
+  constructor(key: string, version: number, options?: ErrorOptions) {
     super(`v${version} migration failed for "${key}"`, options);
   }
 }

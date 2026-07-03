@@ -15,6 +15,145 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import type { Browser } from '@wxt-dev/browser';
 
+// ─── Type-level arithmetic helpers ────────────────────────────────────
+//
+// These support length-locked `migrations` tuples driven by the literal
+// `version` number. Idioms adapted from type-challenges #7561 (Subtract)
+// and Microsoft/TypeScript issue #26223 (TupleOf) — both are tail-recursive
+// (TS 4.5+ raises depth limit to ~1000, so realistic version numbers are
+// nowhere near the ceiling).
+
+/**
+ * Build a mutable tuple of length `L` filled with `unknown`. Used as an
+ * accumulator for `Subtract` and `MigrationTuple`. Tail-recursive shape.
+ */
+type BuildTuple<
+  L extends number,
+  T extends unknown[] = [],
+> = T['length'] extends L ? T : BuildTuple<L, [unknown, ...T]>;
+
+/**
+ * Type-level `M - S` via tuple pattern matching. Returns `never` when `M < S`.
+ * When either operand is the bare `number` type (not a literal), the whole
+ * thing widens to `number` — a graceful escape hatch.
+ */
+export type Subtract<M extends number, S extends number> = number extends M | S
+  ? number
+  : BuildTuple<M> extends [...BuildTuple<S>, ...infer R]
+    ? R['length']
+    : never;
+
+/**
+ * A single migration function shape. `any` in the parameter position is
+ * intentional (heterogeneous chain — each position sees a different input type,
+ * and function parameters are contravariant).
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type MigrationFn = (oldValue: any) => unknown | Promise<unknown>;
+
+/**
+ * Length-locked migrations tuple, derived from the literal `version`.
+ *
+ * - `version: 1` → `readonly []`
+ * - `version: 3` → `readonly [MigrationFn, MigrationFn]`
+ * - `version: number` → `ReadonlyArray<MigrationFn>` (no length check)
+ *
+ * Element type is uniform `MigrationFn`; chain-type enforcement remains the job
+ * of the `defineMigrations<T>()` helper (which produces per-slot typed fns
+ * whose signatures are still assignable to `MigrationFn`).
+ */
+export type MigrationTuple<V extends number> = number extends V
+  ? ReadonlyArray<MigrationFn>
+  : V extends 1
+    ? readonly []
+    : BuildTuple<Subtract<V, 1>> extends infer T extends unknown[]
+      ? { readonly [K in keyof T]: MigrationFn }
+      : never;
+
+/**
+ * Widen primitive literal types back to their base. Used in `defineItem`
+ * non-schema overloads so `TValue` stays wide while `TFallback` stays narrow.
+ * defineItem('x', { fallback: 5 }) → TFallback=5, TValue=number Objects/arrays
+ * pass through unchanged.
+ */
+export type Widen<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends bigint
+        ? bigint
+        : T;
+
+/**
+ * Deep-readonly transform. Applied at library boundaries where narrow readonly
+ * literals produced by `<const>` inference must flow into contexts that would
+ * otherwise reject them on mutability grounds (e.g. a caller copies
+ * `bookmarks.fallback` — typed as `{ readonly label: 'Default'; readonly urls:
+ * readonly [] }` — into `storage.getItem(key, { fallback })`).
+ *
+ * `T` is assignable to `DeepReadonly<T>` (mutable→readonly widening is always
+ * allowed), so declaring a parameter as `DeepReadonly<T>` accepts BOTH
+ * narrow-readonly literals AND full-mutable values — zero cast at the call
+ * site.
+ *
+ * Scope: covers primitives, arrays, tuples, and object literals — the shapes
+ * that actually appear in storage payloads. Maps, Sets, and callables are not
+ * handled (they cannot be JSON-serialised into storage anyway).
+ *
+ * @see type-fest `WritableDeep` for the canonical inverse
+ * @see TypeScript issue #13923 (`DeepReadonly`/`DeepWritable` built-in request)
+ */
+export type DeepReadonly<T> = T extends
+  | null
+  | undefined
+  | boolean
+  | number
+  | string
+  | bigint
+  | symbol
+  ? T
+  : T extends readonly (infer U)[]
+    ? readonly DeepReadonly<U>[]
+    : T extends object
+      ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+      : T;
+
+/**
+ * Strip `readonly` from every top-level property. The inverse of TypeScript's
+ * built-in `Readonly<T>`. See TS issue #24509 for the long-standing request to
+ * add this to `lib.d.ts`.
+ */
+export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+/**
+ * Deep counterpart of `Mutable<T>` — recursively strip `readonly` from objects,
+ * arrays, and tuples. Used at return positions where a narrow deep-readonly
+ * `TValue` (from `<const>` inference) needs to be widened back to its mutable
+ * shape so consumers can assign to mutable targets.
+ *
+ * Modelled on `type-fest`'s `WritableDeep`, trimmed to storage-relevant shapes
+ * (primitives / arrays / tuples / plain objects). See TS issue #13923 for the
+ * general request.
+ */
+export type WritableDeep<T> = T extends
+  | null
+  | undefined
+  | boolean
+  | number
+  | string
+  | bigint
+  | symbol
+  ? T
+  : T extends readonly [infer Head, ...infer Tail]
+    ? [WritableDeep<Head>, ...WritableDeep<Tail>]
+    : T extends readonly (infer U)[]
+      ? WritableDeep<U>[]
+      : T extends object
+        ? { -readonly [K in keyof T]: WritableDeep<T[K]> }
+        : T;
+
 // ─── Storage keys ─────────────────────────────────────────────────────
 
 /** The four `chrome.storage.*` areas supported by the WebExtensions API. */
@@ -31,7 +170,7 @@ export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
  * `${StorageArea}:theme`). Most callers leave it defaulted to `string` and let
  * per-method `<const K extends StorageItemKey>` do the literal narrowing.
  */
-export type StorageItemKey<G extends string = string> = `${StorageArea}:${G}`;
+export type StorageItemKey = `${StorageArea}:${string}`;
 
 /**
  * Template-literal type for a metadata key. Applying `getMetaKey` to a string
@@ -99,11 +238,21 @@ export type OnValidationError<TValue> =
 // ─── Options ──────────────────────────────────────────────────────────
 
 export interface GetItemOptions<T> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T | undefined;
+  /**
+   * @deprecated Renamed to `fallback`, use it instead.
+   *
+   *   Accepts either the mutable `T` or a deep-readonly variant — useful when
+   *   copying a `defineItem`-captured narrow-readonly fallback in directly.
+   */
+  defaultValue?: DeepReadonly<T> | undefined;
 
-  /** Default value returned when `getItem` would otherwise return `null`. */
-  fallback?: T | undefined;
+  /**
+   * Default value returned when `getItem` would otherwise return `null`.
+   *
+   * Accepts either the mutable `T` or a deep-readonly variant — useful when
+   * copying a `defineItem`-captured narrow-readonly fallback in directly.
+   */
+  fallback?: DeepReadonly<T> | undefined;
 }
 
 export interface RemoveItemOptions {
@@ -123,12 +272,26 @@ export interface SnapshotOptions {
   excludeKeys?: readonly string[];
 }
 
-export interface WxtStorageItemOptions<T, TRaw = unknown> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T | undefined;
+export interface WxtStorageItemOptions<
+  T,
+  TRaw = unknown,
+  TVersion extends number = number,
+> {
+  /**
+   * @deprecated Renamed to `fallback`, use it instead.
+   *
+   *   Accepts a deep-readonly variant so narrow readonly literals produced by
+   *   `<const>` inference (e.g. `{ label: 'Default' as const }`) flow through
+   *   without a cast at the call site.
+   */
+  defaultValue?: DeepReadonly<T> | undefined;
 
-  /** Default value returned when `getValue` would otherwise return `null`. */
-  fallback?: T | undefined;
+  /**
+   * Default value returned when `getValue` would otherwise return `null`.
+   *
+   * Accepts a deep-readonly variant — see `defaultValue` comment above.
+   */
+  fallback?: DeepReadonly<T> | undefined;
 
   /**
    * If passed, a value in storage will be initialized immediately after
@@ -142,8 +305,16 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
    * Provide a version number for the storage item to enable migrations. When
    * changing the version in the future, migration functions will be ran on
    * application startup.
+   *
+   * When passed as a numeric literal (`version: 3`) TypeScript captures it as
+   * the literal type `3` via the `<const TVersion extends number>` modifier on
+   * `defineItem`, which:
+   *
+   * 1. Length-locks the `migrations` tuple below to exactly `TVersion - 1`
+   *    entries. Mismatched counts become compile-time errors.
+   * 2. Narrows `WxtStorageItem['version']` to the literal for typed introspection.
    */
-  version?: number;
+  version?: TVersion;
 
   /**
    * Chain of migration functions applied to previously-stored values on read.
@@ -185,10 +356,7 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
    * reject narrow-param fns produced by `defineMigrations` because parameters
    * are contravariant.
    */
-  migrations?: ReadonlyArray<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (oldValue: any) => unknown | Promise<unknown>
-  >;
+  migrations?: MigrationTuple<TVersion>;
 
   /**
    * Print debug logs, such as migration process.
@@ -198,7 +366,7 @@ export interface WxtStorageItemOptions<T, TRaw = unknown> {
   debug?: boolean;
 
   /** A callback function that runs on migration complete. */
-  onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
+  onMigrationComplete?: (migratedValue: T, targetVersion: TVersion) => void;
 
   /**
    * A [Standard Schema](https://standardschema.dev/) validator applied to the

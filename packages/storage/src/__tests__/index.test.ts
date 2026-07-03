@@ -1017,10 +1017,14 @@ describe('Storage Utils', () => {
         const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
         const consoleSpy = vi.spyOn(console, 'debug');
 
-        storage.defineItem<number, { v: number }>(`local:count`, {
+        storage.defineItem(`local:count`, {
           defaultValue: 0,
           version: 3,
           migrations: [migrateToV2, migrateToV3],
+          // `debug: true` narrows to literal `true` via `<const TDebug>`. If
+          // explicit `<number, {v:number}>` generics were provided here, that
+          // capture would be defeated and TDebug would default to `false`,
+          // rejecting `true` (TS PR #55229 semantics).
           debug: true,
         });
         await waitForMigrations();
@@ -1463,43 +1467,51 @@ describe('Storage Utils', () => {
     describe('types', () => {
       it('should define a nullable value when options are not passed', () => {
         const item = storage.defineItem<number>(`local:test`);
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item2 = storage.defineItem<number>(`local:test`, {});
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item3 = storage.defineItem<number>(`local:test`, {
           fallback: undefined,
         });
-        expectTypeOf(item3).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item3.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item4 = storage.defineItem<number>(`local:test`, {
           defaultValue: undefined,
         });
-        expectTypeOf(item4).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item4.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
       });
 
       it('should define a non-null value when options are passed with a nullish default value', () => {
         const item = storage.defineItem(`local:test`, {
           defaultValue: 123,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
 
         const item2 = storage.defineItem(`local:test`, {
           fallback: 123,
         });
-        expectTypeOf(item2).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
       });
 
       it('should define a nullable value when options are passed with null default value', () => {
         const item = storage.defineItem<number | null>(`local:test`, {
           defaultValue: null,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
       });
 
       it('MetaKey template-literal type appends `$` at the type level', () => {
@@ -1532,16 +1544,14 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:test`, {
           init: () => 123,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
 
         const item2 = storage.defineItem(`local:test`, {
           init: () => Promise.resolve(123),
         });
-        expectTypeOf(item2).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
       });
     });
 
@@ -1563,9 +1573,10 @@ describe('Storage Utils', () => {
         const item = storage.defineItem(`local:test`, {
           schema: numberSchema,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number | null, {}, `local:test`>
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
         >();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
       });
 
       it('infers TValue from schema output and drops null when fallback is set', () => {
@@ -1573,9 +1584,8 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           fallback: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
       });
 
       it('infers TValue from schema output and drops null when init is set', () => {
@@ -1583,17 +1593,15 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           init: () => 0,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
 
         const item2 = storage.defineItem(`local:test`, {
           schema: numberSchema,
           init: () => Promise.resolve(0),
         });
-        expectTypeOf(item2).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
       });
 
       it('infers TValue from schema output and drops null when defaultValue is set', () => {
@@ -1601,9 +1609,8 @@ describe('Storage Utils', () => {
           schema: numberSchema,
           defaultValue: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
       });
 
       it('defineSchema wraps a sync parser into StandardSchemaV1', () => {
@@ -1617,9 +1624,8 @@ describe('Storage Utils', () => {
           schema: parsed,
           fallback: 0,
         });
-        expectTypeOf(item).toEqualTypeOf<
-          WxtStorageItem<number, {}, `local:test`>
-        >();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
       });
 
       it('defineSchema wraps an async parser into StandardSchemaV1', () => {
