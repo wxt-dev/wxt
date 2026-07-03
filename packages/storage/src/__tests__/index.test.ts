@@ -3,7 +3,6 @@ import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { SchemaError } from '@standard-schema/utils';
-import { z } from 'zod';
 import {
   MigrationError,
   defineSchema,
@@ -1051,7 +1050,12 @@ describe('Storage Utils', () => {
           count$: { v: 1 },
         });
         const item = storage.defineItem('local:count', {
-          schema: z.number().nonnegative(),
+          schema: defineSchema<number>((v) => {
+            if (typeof v !== 'number' || v < 0) {
+              throw new Error('expected non-negative number');
+            }
+            return v;
+          }),
           version: 2,
           migrations: [(v) => v as number],
         });
@@ -1101,7 +1105,11 @@ describe('Storage Utils', () => {
         });
         const onMigrationComplete = vi.fn();
         const item = storage.defineItem('local:val', {
-          schema: z.coerce.number(),
+          schema: defineSchema<number>((v) => {
+            if (typeof v === 'number') return v;
+            if (typeof v === 'string') return Number(v);
+            throw new Error('expected number or numeric string');
+          }),
           version: 2,
           migrations: [(v) => v as string],
           onMigrationComplete,
@@ -2441,6 +2449,64 @@ describe('Storage Utils', () => {
           { key: item1.key, value: null },
         ]);
       });
+
+      it('routes item slots through schema/serializer instead of raw storage', async () => {
+        await fakeBrowser.storage.local.set({ tags: ['a', 'b'] });
+        const item = storage.defineItem('local:tags', {
+          serializer: {
+            write: (s: Set<string>) => [...s],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+
+        const result = await storage.getItems([item]);
+        expect(result[0]?.value).toBeInstanceOf(Set);
+        expect([...(result[0]?.value as Set<string>)]).toEqual(['a', 'b']);
+      });
+
+      it('waits for item migrations before batch read (no stale data)', async () => {
+        await fakeBrowser.storage.local.set({
+          n: 10,
+          n$: { v: 1 },
+        });
+        const migrate = vi.fn((v: unknown) => (v as number) * 10);
+        const item = storage.defineItem<number>('local:n', {
+          version: 2,
+          migrations: [migrate],
+        });
+
+        const [{ value }] = await storage.getItems([item]);
+        expect(migrate).toHaveBeenCalledOnce();
+        expect(value).toBe(100);
+      });
+
+      it("does not destructively reset on stale batch reads (onValidationError: 'reset')", async () => {
+        await fakeBrowser.storage.local.set({
+          n: 'not-a-number',
+        });
+        const item = storage.defineItem('local:n', {
+          schema: defineSchema<number>((v) => {
+            if (typeof v !== 'number') throw new Error('expected number');
+            return v;
+          }),
+          onValidationError: 'reset',
+        });
+
+        await storage.getItems([item]);
+        // The primary getValue() path is allowed to reset. The batch path
+        // uses allowReset:false so a stale-raw hit during batch cannot
+        // destroy freshly-written data written by another writer between
+        // the batch fetch and the pipeline apply. Direct getValue() still
+        // exercises the destructive path.
+        const stillThere = await fakeBrowser.storage.local.get('n');
+        expect(stillThere).toHaveProperty('n');
+      });
     });
 
     describe('getMetas', () => {
@@ -2539,7 +2605,6 @@ describe('Storage Utils', () => {
           { item: item3, meta: { v: 3 } },
         ]);
 
-        console.log(localGetSpy.mock.calls);
         expect(localGetSpy).toBeCalledTimes(1);
         expect(localGetSpy).toBeCalledWith(['one$', 'three$']);
         expect(sessionGetSpy).toBeCalledTimes(1);

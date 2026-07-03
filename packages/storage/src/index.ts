@@ -55,6 +55,14 @@ export type {
   WxtStorageItemSerializer,
 } from './types';
 
+// Internal per-item batch hooks, keyed by item identity so nothing leaks
+// through the public `WxtStorageItem` interface / generated `.d.ts`.
+interface ItemBatchHooks {
+  ready: () => Promise<void>;
+  processRead: (raw: unknown) => Promise<unknown>;
+}
+const itemBatchHooks = new WeakMap<object, ItemBatchHooks>();
+
 export const storage = createStorage();
 
 function createStorage(): WxtStorage {
@@ -355,6 +363,18 @@ function createStorage(): WxtStorage {
         }
       });
 
+      // Await migrations + eager init for every item slot BEFORE the raw
+      // batch fetch. Otherwise the batch captures pre-migration data and a
+      // subsequent onValidationError: 'reset' could destroy the newly
+      // migrated value.
+      await Promise.all(
+        slots.flatMap((slot) => {
+          if (slot.kind !== 'item') return [];
+          const hooks = itemBatchHooks.get(slot.item);
+          return hooks ? [hooks.ready()] : [];
+        }),
+      );
+
       const rawByKey = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
@@ -370,8 +390,9 @@ function createStorage(): WxtStorage {
         slots.map(async (slot) => {
           if (slot.kind === 'item') {
             const raw = rawByKey.get(slot.key);
-            const value = slot.item._processRead
-              ? await slot.item._processRead(raw)
+            const hooks = itemBatchHooks.get(slot.item);
+            const value = hooks
+              ? await hooks.processRead(raw)
               : await slot.item.getValue();
             return { key: slot.key, value };
           }
@@ -770,10 +791,14 @@ function createStorage(): WxtStorage {
           return validated;
         });
 
-      // Eager init: fires init() after migrations resolve so a value
-      // exists before first user getValue. Errors are surfaced there via
-      // the shared mutex; swallow here to avoid unhandled rejections.
-      migrationsDone.then(getOrInitValue).catch((err) => {
+      // Readiness: migration finish + eager init (init items only). Batch
+      // APIs await this before reading raw so they never see pre-migration
+      // state. Non-init items skip the eager driver.getItem — their
+      // readiness reduces to `migrationsDone`.
+      const readyPromise: Promise<unknown> = opts?.init
+        ? migrationsDone.then(getOrInitValue)
+        : migrationsDone;
+      readyPromise.catch((err) => {
         if (debug) {
           console.debug(
             `[@wxt-dev/storage] Eager init failed for ${key}; will surface on next read`,
@@ -782,7 +807,7 @@ function createStorage(): WxtStorage {
         }
       });
 
-      return {
+      const item: WxtStorageItem<any, any, any, any, any, any, any> = {
         key,
         area: driver.area,
 
@@ -887,18 +912,36 @@ function createStorage(): WxtStorage {
           }),
 
         migrate,
+      };
 
-        _processRead: async (raw) => {
-          await migrationsDone;
+      // Register batch hooks against the item's identity so `getItems`
+      // can route pre-fetched raw values through the pipeline without
+      // exposing internals on the public interface. `allowReset: false`
+      // is a safety belt: if a stale raw reaches processReadValue on the
+      // batch path, we don't destructively `driver.removeItem` on schema
+      // failure (that would delete a value the user just wrote).
+      itemBatchHooks.set(item, {
+        ready: async () => {
+          await readyPromise;
+        },
+        processRead: async (raw) => {
+          if (opts?.init) {
+            // Init items: routing raw through processReadValue would ignore
+            // fresh init state. Delegate to the same code path as getValue().
+            return await getOrInitValue();
+          }
           const processed = await processReadValue(
             raw,
             opts,
             driver,
             driverKey,
+            { allowReset: false },
           );
           return processed ?? getFallback();
         },
-      };
+      });
+
+      return item;
     },
   };
 }
@@ -1683,9 +1726,6 @@ export interface WxtStorageItem<
    * you don't have to call it manually.
    */
   migrate(): Promise<void>;
-
-  /** @internal Batch APIs use this to route pre-fetched raw values through the item's full read pipeline (schema + serializer + onValidationError). Public consumers should call `getValue()` instead. */
-  _processRead(raw: unknown): Promise<TValue>;
 }
 
 // GetItemOptions, RemoveItemOptions, SnapshotOptions moved to ./types.

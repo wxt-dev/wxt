@@ -298,11 +298,6 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 As soon as `storage.defineItem` is called, WXT checks if migrations need to be run, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc.) will automatically wait for the migration process to finish before actually reading or writing values.
 
-Migrations run as a full write pipeline: each migration function's output is passed through the item's `schema` (if any) and `serializer.write` (if any) before being persisted. Two consequences:
-
-- **Schema failure aborts the migration.** If the final migrated value doesn't satisfy `schema`, WXT throws a `MigrationError` (with the `SchemaError` as its `cause`) and leaves the version un-bumped on disk. The next app load retries the migration from the same starting version.
-- **Serializer.write is applied to migrated output.** A serializer-backed item stores the wire form, not the runtime form.
-
 ### Default Values
 
 With `storage.defineItem`, there are multiple ways of defining default values:
@@ -334,124 +329,6 @@ With `storage.defineItem`, there are multiple ways of defining default values:
    ```
 
    The value is initialized in storage immediately.
-
-### Schema Validation
-
-Attach a [Standard Schema](https://standardschema.dev/) validator to a storage item so every read and write is checked against a schema at runtime. Any Standard Schema-conformant validator works out of the box: [Zod](https://zod.dev), [Valibot](https://valibot.dev), [ArkType](https://arktype.io), [Effect Schema](https://effect.website/docs/schema/introduction/), and others.
-
-```ts
-import { z } from 'zod';
-
-const theme = storage.defineItem('local:theme', {
-  schema: z.enum(['light', 'dark', 'system']),
-  fallback: 'system',
-});
-
-// Type of getValue() is inferred from the schema.
-const value = await theme.getValue(); // 'light' | 'dark' | 'system'
-```
-
-**Validator cookbook**
-
-All four examples below define the same three-variant theme item. `TValue` is inferred from `StandardSchemaV1.InferOutput<TSchema>` — no manual generic needed.
-
-```ts
-// Zod
-import { z } from 'zod';
-const theme = storage.defineItem('local:theme', {
-  schema: z.enum(['light', 'dark', 'system']),
-  fallback: 'system',
-});
-
-// Valibot
-import * as v from 'valibot';
-const theme = storage.defineItem('local:theme', {
-  schema: v.picklist(['light', 'dark', 'system']),
-  fallback: 'system',
-});
-
-// ArkType
-import { type } from 'arktype';
-const theme = storage.defineItem('local:theme', {
-  schema: type("'light' | 'dark' | 'system'"),
-  fallback: 'system',
-});
-
-// Effect Schema
-import { Schema } from 'effect';
-const theme = storage.defineItem('local:theme', {
-  schema: Schema.standardSchemaV1(Schema.Literal('light', 'dark', 'system')),
-  fallback: 'system',
-});
-```
-
-**Pipelines**
-
-- On read: `raw → migrate → serializer.read? → schema.validate → T`
-- On write: `T → schema.validate → serializer.write? → raw`
-
-**Handling validation failures on read**
-
-Writes always throw a `SchemaError` on validation failure. Reads (including `watch` callbacks) respect the `onValidationError` option:
-
-```ts
-const theme = storage.defineItem('local:theme', {
-  schema: z.enum(['light', 'dark', 'system']),
-  fallback: 'system',
-  onValidationError: 'fallback', // 'throw' | 'fallback' | 'reset' | callback
-});
-```
-
-- `'throw'` (default): throw a `SchemaError` with the schema's issues.
-- `'fallback'`: return `fallback` (or `null` if none set); leave the invalid value in storage.
-- `'reset'`: clear the invalid value from storage and return `fallback`.
-- `(issues, raw) => T`: custom recovery — the returned value becomes the read result; not written back.
-
-### Custom Serialization
-
-`chrome.storage` only accepts JSON-serializable values. To store types like `Set`, `Map`, or `Date`, provide a `serializer` with `write` (required) and `read` (optional):
-
-```ts
-const enabledSites = storage.defineItem<Set<string>>('local:enabled-sites', {
-  serializer: {
-    write: (set) => [...set],
-    read: (raw) => (Array.isArray(raw) ? new Set(raw as string[]) : new Set()),
-  },
-});
-```
-
-When paired with a coercing schema like `z.coerce.date()`, `read` can be omitted — the schema handles deserialization:
-
-```ts
-const installDate = storage.defineItem('local:install-date', {
-  schema: z.coerce.date(),
-  serializer: { write: (d) => d.toISOString() },
-});
-```
-
-### Non-Standard-Schema Validators
-
-For validators that aren't Standard Schema-conformant — e.g. [TypeBox](https://github.com/sinclairzx81/typebox) (`Value.Parse`), [io-ts](https://gcanti.github.io/io-ts/) (`.decode`), or hand-rolled parsers — wrap them with `defineSchema`:
-
-```ts
-import { defineSchema } from '@wxt-dev/storage';
-import { storage } from '#imports';
-import { Type, Value } from '@sinclair/typebox';
-
-const Theme = Type.Union([Type.Literal('light'), Type.Literal('dark')]);
-
-const theme = storage.defineItem('local:theme', {
-  schema: defineSchema<'light' | 'dark'>((v) => Value.Parse(Theme, v)),
-});
-```
-
-The wrapped function must return the parsed value on success or throw on failure. Both synchronous and async parsers are supported.
-
-### Caveats
-
-- **Transforming schemas** (e.g. `z.number().transform(n => n * 2)`) run on every read AND every write. Without an inverse `serializer.write`, storage will hold the transformed form and every subsequent read will re-transform. For non-idempotent transforms, pair the schema with a `serializer.write` that inverts the transform, or use validator-only schemas (`z.number()`).
-- **Bulk operations** (`storage.getItems`, `storage.setItems`, `storage.getMetas`, `storage.setMetas`, `storage.removeItems`) bypass schema and serializer even when called with defined items. Use `item.getValue()` / `item.setValue()` directly when validation is required.
-- **`onValidationError: 'reset'` in watch callbacks** is neutered — an invalid value delivered to a watch listener will not trigger a destructive `driver.removeItem`. This prevents the case where an invalid `oldValue` arriving alongside a freshly-written valid `newValue` would wipe the new value. Reset still applies to direct `getValue` reads.
 
 ## Bulk Operations
 

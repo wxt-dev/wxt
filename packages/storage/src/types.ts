@@ -318,9 +318,11 @@ export interface WxtStorageItemOptions<
 
   /**
    * Chain of migration functions applied to previously-stored values on read.
-   * Ordered by target version: position `i` migrates from version `i + 1` to `i
-   * + 2`. `migrations: [v1to2, v2to3]` paired with `version: 3` means v1
-   * storage runs both, v2 storage runs only the second, v3 runs nothing.
+   * Ordered by target version: position `i` migrates from version `i + 1` to
+   * `i
+   *
+   * - 2`. `migrations: [v1to2, v2to3]`paired with`version: 3` means v1 storage
+   *   runs both, v2 storage runs only the second, v3 runs nothing.
    *
    * Use `defineMigrations<TValue>()` for chain-checked typing where each
    * migration's return type is verified against the next fn's parameter and the
@@ -436,15 +438,6 @@ export type WxtStorageItemLike<
   readonly key: TKey;
   readonly getValue: (...args: readonly unknown[]) => Promise<TValue>;
   readonly fallback: TValue | null;
-  /**
-   * Apply the item's read pipeline (schema.validate + serializer.read +
-   * onValidationError) to a pre-fetched raw value. Used by batch APIs
-   * (`getItems`) so a single driver round-trip can still route each item
-   * through its typed pipeline.
-   *
-   * @internal
-   */
-  readonly _processRead?: (raw: unknown) => Promise<TValue>;
 };
 
 /** Element shapes accepted by `WxtStorage.getItems`. */
