@@ -298,6 +298,11 @@ export const ignoredWebsites = storage.defineItem<IgnoredWebsiteV2[]>( // [!code
 
 As soon as `storage.defineItem` is called, WXT checks if migrations need to be run, and if so, runs them. Calls to get or update the storage item's value or metadata (`getValue`, `setValue`, `removeValue`, `getMeta`, etc.) will automatically wait for the migration process to finish before actually reading or writing values.
 
+Migrations run as a full write pipeline: each migration function's output is passed through the item's `schema` (if any) and `serializer.write` (if any) before being persisted. Two consequences:
+
+- **Schema failure aborts the migration.** If the final migrated value doesn't satisfy `schema`, WXT throws a `MigrationError` (with the `SchemaError` as its `cause`) and leaves the version un-bumped on disk. The next app load retries the migration from the same starting version.
+- **Serializer.write is applied to migrated output.** A serializer-backed item stores the wire form, not the runtime form.
+
 ### Default Values
 
 With `storage.defineItem`, there are multiple ways of defining default values:

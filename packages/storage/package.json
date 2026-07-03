@@ -29,6 +29,7 @@
     "check": "buildc --deps-only -- check",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "bun run test run --coverage",
+    "test:types": "buildc --deps-only -- vitest run --typecheck --typecheck.only",
     "prepack": "bun run build"
   },
   "dependencies": {
@@ -45,7 +46,8 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "^4.4.3"
   },
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",

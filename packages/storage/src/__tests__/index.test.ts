@@ -3,6 +3,7 @@ import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { SchemaError } from '@standard-schema/utils';
+import { z } from 'zod';
 import {
   MigrationError,
   defineSchema,
@@ -1042,6 +1043,71 @@ describe('Storage Utils', () => {
         await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
 
         await expect(item.migrate()).rejects.toThrow(expectedError);
+      });
+
+      it('should throw MigrationError when migration output fails schema validation', async () => {
+        await fakeBrowser.storage.local.set({
+          count: -5,
+          count$: { v: 1 },
+        });
+        const item = storage.defineItem('local:count', {
+          schema: z.number().nonnegative(),
+          version: 2,
+          migrations: [(v) => v as number],
+        });
+
+        await expect(item.migrate()).rejects.toBeInstanceOf(MigrationError);
+        const stored = await fakeBrowser.storage.local.get(['count', 'count$']);
+        expect(stored['count']).toBe(-5);
+        expect(stored['count$']).toEqual({ v: 1 });
+      });
+
+      it('should route migrated value through serializer.write before persisting', async () => {
+        await fakeBrowser.storage.local.set({
+          set: ['a', 'b'],
+          set$: { v: 1 },
+        });
+        const item = storage.defineItem('local:set', {
+          version: 2,
+          migrations: [
+            (v) =>
+              new Set(
+                Array.isArray(v)
+                  ? v.filter((x): x is string => typeof x === 'string')
+                  : [],
+              ),
+          ],
+          serializer: {
+            write: (s: Set<string>) => [...s, 'c'],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+        await item.migrate();
+        const stored = await fakeBrowser.storage.local.get(['set', 'set$']);
+        expect(stored['set']).toEqual(['a', 'b', 'c']);
+        expect(stored['set$']).toEqual({ v: 2 });
+      });
+
+      it('should use schema-transformed value in onMigrationComplete callback', async () => {
+        await fakeBrowser.storage.local.set({
+          val: '10',
+          val$: { v: 1 },
+        });
+        const onMigrationComplete = vi.fn();
+        const item = storage.defineItem('local:val', {
+          schema: z.coerce.number(),
+          version: 2,
+          migrations: [(v) => v as string],
+          onMigrationComplete,
+        });
+        await item.migrate();
+        expect(onMigrationComplete).toHaveBeenCalledWith(10, 2);
       });
 
       it('should print migration logs if debug option is true', async () => {

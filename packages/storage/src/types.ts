@@ -1,15 +1,6 @@
 /**
  * Pure type primitives, template-literal parsers, and option shapes for the
- * storage package.
- *
- * Everything here is `import type`-safe: no runtime values, no dependencies on
- * the driver or the `WxtStorage` interface. Kept out of `index.ts` so later
- * work has a canonical location to add typed utilities (`MetaKey`, future
- * `Split`/`Join`/`Replace` helpers).
- *
- * Anything referring to a runtime interface (methods on `WxtStorage`,
- * `WxtStorageItem`, `WxtStorageDriver`) stays in `index.ts` and is composed
- * with the primitives from this file.
+ * storage package. Everything here is `import type`-safe: no runtime values.
  */
 
 import type { StandardSchemaV1 } from '@standard-schema/spec';
@@ -89,21 +80,12 @@ export type Widen<T> = T extends string
 /**
  * Deep-readonly transform. Applied at library boundaries where narrow readonly
  * literals produced by `<const>` inference must flow into contexts that would
- * otherwise reject them on mutability grounds (e.g. a caller copies
- * `bookmarks.fallback` — typed as `{ readonly label: 'Default'; readonly urls:
- * readonly [] }` — into `storage.getItem(key, { fallback })`).
+ * otherwise reject them on mutability grounds. `T` is assignable to
+ * `DeepReadonly<T>`, so declaring a parameter as `DeepReadonly<T>` accepts both
+ * narrow-readonly literals and full-mutable values with no cast.
  *
- * `T` is assignable to `DeepReadonly<T>` (mutable→readonly widening is always
- * allowed), so declaring a parameter as `DeepReadonly<T>` accepts BOTH
- * narrow-readonly literals AND full-mutable values — zero cast at the call
- * site.
- *
- * Scope: covers primitives, arrays, tuples, and object literals — the shapes
- * that actually appear in storage payloads. Maps, Sets, and callables are not
- * handled (they cannot be JSON-serialised into storage anyway).
- *
- * @see type-fest `WritableDeep` for the canonical inverse
- * @see TypeScript issue #13923 (`DeepReadonly`/`DeepWritable` built-in request)
+ * Scope: primitives, arrays, tuples, and object literals — the shapes that
+ * appear in storage payloads. Maps/Sets/callables not handled (not JSON).
  */
 export type DeepReadonly<T> = T extends
   | null
@@ -155,20 +137,12 @@ export type WritableDeep<T> = T extends
         : T;
 
 /**
- * Force TypeScript to eagerly resolve every member of a mapped type on hover,
- * instead of displaying unresolved type-parameter references. This is a
- * display-only transform — it does not change assignability or the resolved
- * type. Without it, hovering `bookmarks.version` in an editor shows the
- * interface's declared member (`readonly version: TVersion`); with it, hovering
- * shows the instantiated `3` literal.
+ * Force TypeScript to eagerly resolve every member of a mapped type on hover.
+ * Display-only transform — does not change assignability. Without it, hovering
+ * `bookmarks.version` shows the declared `readonly version: TVersion`; with it,
+ * the instantiated `3` literal.
  *
- * The `& {}` intersection tail prevents TypeScript from short-circuiting the
- * mapped type back to `T` on structurally identical shapes — which would defeat
- * the eager-evaluation purpose.
- *
- * Pattern is often called `Prettify`, `Simplify`, or `Compute` in the TS
- * ecosystem (see type-fest `Simplify`, Matt Pocock's `Prettify`, and the
- * long-running TS issue #47980 for a native compiler hint).
+ * Also known as `Prettify` / `Simplify` / `Compute` in the ecosystem.
  */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -236,17 +210,10 @@ export interface WxtStorageItemSerializer<TValue, TRaw = unknown> {
    * Convert the wire form read from storage back to `TValue`.
    *
    * Declared as a **method** (shorthand syntax) so users may narrow the
-   * parameter to a specific type without a cast:
-   *
-   * Read(raw: MyWireType): TValue { ... } // ✓ no cast needed
-   *
-   * Method parameters are checked bivariantly under `strictFunctionTypes`,
-   * meaning a narrower parameter type is still assignable. The trust boundary
-   * is enforced by the caller (the pipeline passes `unknown` from
-   * `chrome.storage`); the method implementation must narrow `raw` itself using
-   * a schema or type guard. This is identical to the io-ts `Type<A, O, I>`
-   * pattern (decode input is always `I = unknown` at the boundary, but the
-   * implementation may assume a specific shape).
+   * parameter without a cast: `read(raw: MyWireType): TValue { ... }`. Method
+   * params are checked bivariantly. Pipeline passes `unknown` from
+   * `chrome.storage`; the impl must narrow (schema or type guard). Matches the
+   * io-ts `Type<A, O, I>` pattern (decode input = `I = unknown`).
    */
   read?(raw: unknown): TValue;
 }
@@ -351,43 +318,18 @@ export interface WxtStorageItemOptions<
 
   /**
    * Chain of migration functions applied to previously-stored values on read.
-   * The tuple is **ordered by target version**: position `i` (0-indexed)
-   * migrates from version `i + 1` to version `i + 2`. So
+   * Ordered by target version: position `i` migrates from version `i + 1` to `i
+   * + 2`. `migrations: [v1to2, v2to3]` paired with `version: 3` means v1
+   * storage runs both, v2 storage runs only the second, v3 runs nothing.
    *
-   * `migrations: [migrateV1toV2, migrateV2toV3]`
+   * Use `defineMigrations<TValue>()` for chain-checked typing where each
+   * migration's return type is verified against the next fn's parameter and the
+   * final return is verified against `TValue`.
    *
-   * Paired with `version: 3` means: v1 storage runs both functions, v2 storage
-   * runs only the second, v3 storage runs nothing.
-   *
-   * At the type level, TS accepts any tuple of `(oldValue: unknown) =>
-   * unknown`. For chain-checked typing where each migration's return type
-   * matches the next migration's parameter type (and the last matches
-   * `TValue`), use the `defineMigrations<TValue>()` helper.
-   *
-   * ### Alternative designs considered (post-PR aklinker discussion may
-   *
-   * Pick a different one):
-   *
-   * - **A. Tuple, positional (this design).** Fully chained via
-   *   `defineMigrations`. Breaking: users on `Record<number, fn>` object form
-   *   must convert to a positional tuple. No support for non-contiguous version
-   *   numbers.
-   * - **B. `defineMigrations<TValue>({ 2: fn, 3: fn })` builder with per- version
-   *   types.** Keeps arbitrary numeric keys, requires the user to thread
-   *   intermediate types by hand.
-   * - **C. `Record<number, (oldValue: unknown) => unknown>`.** Kills the old
-   *   `any` but leaves the chain unchecked.
-   * - **D. Keep the current `Record<number, (any) => any>`.** Zero-risk, no
-   *   honesty win.
-   *
-   * NOTE ON THE OPTION TYPE: the array element type is `(oldValue: any) =>
-   * unknown | Promise<unknown>` rather than `(oldValue: unknown) => unknown`.
-   * `any` in the parameter position is intentional and honest for a
-   * heterogeneous chain: each position's fn accepts a different input type
-   * (position 0 accepts the raw stored value; positions 1..N-1 accept the
-   * previous fn's return type). A single- `(oldValue: unknown)` type would
-   * reject narrow-param fns produced by `defineMigrations` because parameters
-   * are contravariant.
+   * Note: the parameter type is `any`, not `unknown`. Intentional — each
+   * position accepts a different type (v1 raw at position 0, then previous fn's
+   * return type). `unknown` in a contravariant position would reject
+   * narrow-param fns produced by `defineMigrations`.
    */
   migrations?: MigrationTuple<TVersion>;
 
@@ -426,34 +368,18 @@ export interface WxtStorageItemOptions<
 
   /**
    * Convert between the runtime type `T` and the wire form stored in
-   * `chrome.storage`. `write` is required when `serializer` is present; `read`
-   * is optional — omit it when `schema` handles deserialization via coercion
-   * (e.g. `z.coerce.date()`).
+   * `chrome.storage`. `write` is required; `read` is optional — omit when a
+   * coerce schema handles deserialization (e.g. `z.coerce.date()`).
    *
    * Naming mirrors VueUse's `useStorage` serializer.
    *
-   * ## Type inference
-   *
-   * `TRaw` (the wire form) is inferred from `write`'s return type when TS is
-   * able to run full inference on `defineItem`. That happens when either:
-   *
-   * - `write`'s parameter is annotated, e.g. `write: (set: Set<string>) =>
-   *   [...set]`, OR
-   * - `fallback` / `defaultValue` is typed and drives `TValue`.
-   *
-   * TypeScript cannot infer `TRaw` when the caller supplies an explicit
-   * `defineItem<TValue>(...)` generic — `TRaw`'s default of `unknown` is
-   * committed before TS looks at `write`'s return type. In that case `raw`
-   * inside `read` is `unknown` and the caller must narrow it.
-   *
    * @example
    *   ```ts
-   *   // Sets aren't JSON-serialisable — hand-write both directions.
-   *   // `write`'s annotated param makes both TValue and TRaw flow.
+   *   // Sets aren't JSON-serializable — hand-write both directions.
    *   storage.defineItem('local:enabled-sites', {
    *   serializer: {
    *   write: (set: Set<string>) => [...set],
-   *   read: (raw) => new Set(raw),  // raw: string[] — no cast needed
+   *   read: (raw) => new Set(Array.isArray(raw) ? raw.filter((x): x is string => typeof x === 'string') : []),
    *   },
    *   });
    *
@@ -508,10 +434,17 @@ export type WxtStorageItemLike<
   TKey extends StorageItemKey = StorageItemKey,
 > = {
   readonly key: TKey;
-  /** Marker discriminant — a plain `{ key }` bag doesn't have `getValue`. */
   readonly getValue: (...args: readonly unknown[]) => Promise<TValue>;
-  /** Fallback threaded into `getItems` batch reads for this item. */
   readonly fallback: TValue | null;
+  /**
+   * Apply the item's read pipeline (schema.validate + serializer.read +
+   * onValidationError) to a pre-fetched raw value. Used by batch APIs
+   * (`getItems`) so a single driver round-trip can still route each item
+   * through its typed pipeline.
+   *
+   * @internal
+   */
+  readonly _processRead?: (raw: unknown) => Promise<TValue>;
 };
 
 /** Element shapes accepted by `WxtStorage.getItems`. */

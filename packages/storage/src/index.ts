@@ -33,6 +33,7 @@ import type {
   Widen,
   WritableDeep,
   WxtStorageItemOptions,
+  WxtStorageItemLike,
 } from './types';
 
 export type {
@@ -74,19 +75,9 @@ function createStorage(): WxtStorage {
   };
 
   /**
-   * Runtime guard that narrows a wide `WxtStorageDriver<StorageArea>` (the
-   * distributed union `Readonly<'managed'> | Mutable<...>`) to a
-   * `MutableStorageDriver` when the area is not `'managed'`. The browser's
-   * `chrome.storage.managed` API rejects writes at runtime; this assertion
-   * catches the write attempt at the WXT boundary with a clearer error and,
-   * more importantly, lets internal write helpers safely call `driver.setItem`
-   * etc. on the narrowed type without casts.
-   *
-   * Invoked at every internal write site — the write helpers (setItem/
-   * setMeta/removeItem/removeMeta) call it at their entry, and the singleton
-   * write methods that dispatch on area (setItems/setMetas/removeItems/clear/
-   * restoreSnapshot, plus the item factory's eager-init writes) call it after
-   * resolving the driver.
+   * Runtime guard that narrows `WxtStorageDriver<StorageArea>` to a
+   * `MutableStorageDriver` for non-`'managed'` areas. `chrome.storage.managed`
+   * rejects writes at runtime; this catches them at the WXT boundary.
    */
   function assertMutable(
     driver: WxtStorageDriver,
@@ -138,16 +129,9 @@ function createStorage(): WxtStorage {
   };
 
   /**
-   * Merge a raw driver value with the caller's fallback.
-   *
-   * The fallback flows in as `DeepReadonly<T>` via `GetItemOptions.fallback` so
-   * narrow-readonly literals produced by `<const>` inference in `defineItem`
-   * (`fallback: { label: 'Default' } as const`) pass through without a cast at
-   * the call site. Internally we treat both slots as `T | null` because the
-   * pipeline is read-only from here on and the caller already committed to `T`
-   * when they typed the field. This is a covariance boundary: widening from
-   * `DeepReadonly<T>` back to `T` is safe as long as we never mutate the value
-   * — which we don't.
+   * Merge a raw driver value with the caller's fallback. `DeepReadonly<T>` in
+   * accepts narrow-readonly literals from `<const>` inference at the call site;
+   * internal use widens back to `T` — read-only pipeline, no mutation.
    */
   const getValueOrFallback = <T>(
     value: T | null | undefined,
@@ -182,25 +166,13 @@ function createStorage(): WxtStorage {
   };
 
   /**
-   * Turn the raw wire form read from `driver.getItem` into the runtime value
-   * returned to callers.
+   * Read pipeline: `raw → serializer.read? → schema.validate → T`.
    *
-   * Pipeline: `raw → serializer.read? → schema.validate → T`.
-   *
-   * A null raw means "nothing stored yet" — short-circuit to `fallback` (or
-   * null if no fallback is set). Non-null values are always run through the
-   * full pipeline. On schema failure, the `onValidationError` strategy dictates
-   * recovery:
-   *
-   * - `'throw'` (default): throw a SchemaError
-   * - `'fallback'` : return `fallback` (or null)
-   * - `'reset'` : clear the invalid value from storage, return `fallback`
-   * - Function : return whatever the callback returns
-   *
-   * When `pipelineOpts.allowReset` is false, the `'reset'` strategy skips the
-   * destructive `driver.removeItem` call and behaves like `'fallback'`. Watch
-   * callbacks pass this so an invalid `oldValue` can't blow away a valid
-   * `newValue` that was just written.
+   * `raw == null` short-circuits to `fallback`. Schema failures apply the
+   * `onValidationError` strategy (`'throw'` | `'fallback'` | `'reset'` |
+   * `(issues, raw) => T`). `pipelineOpts.allowReset: false` disables the
+   * destructive `driver.removeItem` in the `'reset'` branch — watch callbacks
+   * pass this so an invalid oldValue can't wipe a freshly-written valid one.
    */
   const processReadValue = async <T>(
     raw: unknown,
@@ -209,16 +181,12 @@ function createStorage(): WxtStorage {
     driverKey: string,
     pipelineOpts: { allowReset?: boolean } = {},
   ): Promise<T | null> => {
-    // See `getValueOrFallback` for the DeepReadonly→T covariance rationale.
+    // DeepReadonly→T covariance boundary. See getValueOrFallback.
     const fallback: T | null =
       ((opts?.fallback ?? opts?.defaultValue) as T | null | undefined) ?? null;
 
     if (raw == null) return fallback;
 
-    // Schema path: `schema['~standard'].validate` is the sole source of T so
-    // `result.value` is returned without any type assertion. If a
-    // `serializer.read` is present it deserializes before validation; the
-    // schema is still the type authority.
     if (opts?.schema) {
       const preValidation: unknown = opts.serializer?.read
         ? opts.serializer.read(raw)
@@ -239,21 +207,16 @@ function createStorage(): WxtStorage {
           }
           return fallback;
         }
-        // strategy is `(issues, raw) => T` after the string checks above.
         return strategy(result.issues, raw);
       }
       return result.value;
     }
 
-    // Serializer-only path: `serializer.read`'s typed return IS T by
-    // WxtStorageItemSerializer<TValue, TRaw>.
     if (opts?.serializer?.read) {
       return opts.serializer.read(raw);
     }
 
-    // Trust boundary: no schema, no serializer. Same guarantee level as the
-    // existing typed `getItem<T>` helper — the caller asserted T on
-    // defineItem and we hand back whatever storage held.
+    // No schema, no serializer: trust the caller's declared T.
     return raw as T;
   };
 
@@ -267,19 +230,11 @@ function createStorage(): WxtStorage {
   };
 
   /**
-   * Turn the runtime value handed to `defineItem().setValue()` into the raw
-   * wire form that hits `driver.setItem`.
+   * Write pipeline: `T → schema.validate → serializer.write → raw`.
    *
-   * Pipeline: `T → schema.validate → serializer.write → raw`.
-   *
-   * Returns both the raw wire form (for storage) and the validated runtime
-   * value (for callers that want the schema-transformed form back — e.g. the
-   * init path returns `validated` to the caller after storing `raw`).
-   *
-   * Validation is always applied and always throws on failure — writes never
-   * respect `onValidationError` (that setting only affects reads). If the
-   * schema transforms the input (e.g. `z.number().transform(...)`), the
-   * transformed value is what gets serialized AND what is returned.
+   * Returns both the raw wire form and the (possibly schema-transformed)
+   * runtime value. Validation always throws on failure — `onValidationError` is
+   * a read-only setting.
    */
   const processWriteValue = async <T>(
     value: T,
@@ -306,10 +261,6 @@ function createStorage(): WxtStorage {
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    // `getMetaValue` coerces to `Record<string, unknown>` at runtime,
-    // handling the `null` case (=> `{}`) as belt-and-suspenders defense
-    // against non-object metadata that may exist in storage from older
-    // writes or external mutations.
     const incoming = getMetaValue(properties);
     assertMutable(driver);
     await driver.setItem(metaKey, mergeMeta(existingFields, incoming));
@@ -352,11 +303,9 @@ function createStorage(): WxtStorage {
     driverKey: string,
     cb: WatchCallback<T | null>,
   ) =>
-    // Contravariance: caller supplies a narrow `WatchCallback<T | null>`;
-    // the driver interface is `WatchCallback<unknown>`. The narrow
-    // callback can accept the driver's wider payload because the read
-    // pipeline validates before invocation (or the caller opted out of
-    // narrowing). Cast the callback shape at the boundary.
+    // Contravariance boundary: driver.watch expects WatchCallback<unknown>,
+    // caller passes narrow WatchCallback<T | null>. Safe because the pipeline
+    // validates before invoking the callback.
     driver.watch(driverKey, cb as WatchCallback<unknown>);
 
   return {
@@ -371,66 +320,70 @@ function createStorage(): WxtStorage {
     getItems: (async <const T extends ReadonlyArray<GetItemsInputElement>>(
       keys: T,
     ) => {
-      // Build one slot per input element so duplicate keys with different
-      // options each get their own fallback applied. A prior implementation
-      // stored options in a `Map<string, opts>` keyed by the resolved key,
-      // which silently overwrote the fallback when the same key appeared
-      // twice in the input tuple.
-      type Slot = {
-        readonly key: StorageItemKey;
-        readonly opts: GetItemOptions<unknown> | undefined;
-      };
+      // One slot per input element — duplicate keys with different
+      // options each apply their own fallback.
+      type Slot =
+        | {
+            readonly kind: 'raw';
+            readonly key: StorageItemKey;
+            readonly opts: GetItemOptions<unknown> | undefined;
+          }
+        | {
+            readonly kind: 'item';
+            readonly key: StorageItemKey;
+            readonly item: WxtStorageItemLike<unknown, StorageItemKey>;
+          };
       const slots: Slot[] = [];
       const areaToKeyMap = new Map<StorageArea, string[]>();
 
-      keys.forEach((key) => {
-        let keyStr: StorageItemKey;
-        let opts: GetItemOptions<unknown> | undefined;
-
-        if (typeof key === 'string') {
-          // key: string
-          keyStr = key;
-        } else if ('getValue' in key) {
-          // key: WxtStorageItem
-          keyStr = key.key;
-          opts = { fallback: key.fallback };
-        } else {
-          // key: { key, options }
-          keyStr = key.key;
-          opts = key.options;
-        }
-
-        slots.push({ key: keyStr, opts });
-        const { driverArea, driverKey } = resolveKey(keyStr);
+      const trackKey = (key: StorageItemKey) => {
+        const { driverArea, driverKey } = resolveKey(key);
         const areaKeys = areaToKeyMap.get(driverArea) ?? [];
-
         areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
+      };
+
+      keys.forEach((key) => {
+        if (typeof key === 'string') {
+          slots.push({ kind: 'raw', key, opts: undefined });
+          trackKey(key);
+        } else if ('getValue' in key) {
+          slots.push({ kind: 'item', key: key.key, item: key });
+          trackKey(key.key);
+        } else {
+          slots.push({ kind: 'raw', key: key.key, opts: key.options });
+          trackKey(key.key);
+        }
       });
 
-      // Raw values keyed by the full storage-item key; deduped implicitly
-      // by driver.getItems on the per-area unique key list.
       const rawByKey = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
-
           driverResults.forEach((driverResult) => {
-            // Template literal narrows automatically: driverArea is
-            // StorageArea, driverResult.key is string, so the join is
-            // `${StorageArea}:${string}` = StorageItemKey. No cast needed.
             const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
             rawByKey.set(key, driverResult.value);
           });
         }),
       );
 
-      return slots.map((slot) => ({
-        key: slot.key,
-        value: getValueOrFallback(
-          rawByKey.get(slot.key),
-          slot.opts?.fallback ?? slot.opts?.defaultValue,
-        ),
-      }));
+      return await Promise.all(
+        slots.map(async (slot) => {
+          if (slot.kind === 'item') {
+            const raw = rawByKey.get(slot.key);
+            const value = slot.item._processRead
+              ? await slot.item._processRead(raw)
+              : await slot.item.getValue();
+            return { key: slot.key, value };
+          }
+          return {
+            key: slot.key,
+            value: getValueOrFallback(
+              rawByKey.get(slot.key),
+              slot.opts?.fallback ?? slot.opts?.defaultValue,
+            ),
+          };
+        }),
+      );
     }) as WxtStorage['getItems'],
 
     getMeta: (async <const K extends StorageItemKey>(key: K) => {
@@ -466,8 +419,6 @@ function createStorage(): WxtStorage {
           >
         >
       >((map, key) => {
-        // `??=` returns the resolved (never-undefined) array, so we can push
-        // through it directly without a non-null assertion on the index read.
         const bucket = (map[key.driverArea] ??= []);
         bucket.push(key);
         return map;
@@ -587,17 +538,13 @@ function createStorage(): WxtStorage {
         let opts: RemoveItemOptions | undefined;
 
         if (typeof key === 'string') {
-          // key: string
           keyStr = key;
         } else if ('getValue' in key) {
-          // key: WxtStorageItem
           keyStr = key.key;
         } else if ('item' in key) {
-          // key: { item, options }
           keyStr = key.item.key;
           opts = key.options;
         } else {
-          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
         }
@@ -690,30 +637,20 @@ function createStorage(): WxtStorage {
       const migrate = async () => {
         const driverMetaKey = getMetaKey(driverKey);
         const results = await driver.getItems([driverKey, driverMetaKey]);
-        // driver.getItems returns one entry per input key; the pair-shape is
-        // guaranteed by contract but not by the type. Handle the (never-taken)
-        // undefined branches without `!` assertions.
         const value = results[0]?.value;
-        // Storage-trust boundary: metadata was written by past runs of
-        // this library under `${key}$`, but a malicious or corrupted
-        // browser profile could hold anything. Runtime-narrow before
-        // reading `v`. `meta.v` is trusted as a positive integer only
-        // when `typeof rawV === 'number' && Number.isInteger(rawV) &&
-        // rawV >= 1`; anything else is treated as "no version set".
+        // meta.v is trusted only when it's a positive integer.
         const rawMetaValue = results[1]?.value;
-        const meta: Record<string, unknown> =
-          rawMetaValue != null &&
-          typeof rawMetaValue === 'object' &&
-          !Array.isArray(rawMetaValue)
-            ? (rawMetaValue as Record<string, unknown>)
-            : {};
+        const meta: Record<string, unknown> = isRecord(rawMetaValue)
+          ? rawMetaValue
+          : {};
         const rawV = meta['v'];
         const storedVersion: number | undefined =
           typeof rawV === 'number' && Number.isInteger(rawV) && rawV >= 1
             ? rawV
             : undefined;
 
-        // Used in setValue to also set the version when needed
+        // Set version alongside the value in setValue when we're on v1+ but
+        // storage is empty.
         needsVersionSet =
           value == null && storedVersion == null && !!targetVersion;
 
@@ -742,10 +679,8 @@ function createStorage(): WxtStorage {
         let migratedValue = value;
         for (const migrateToVersion of migrationsToRun) {
           try {
+            // Positional tuple: index N-2 migrates vN-1 → vN.
             migratedValue =
-              // `migrations` is a positional tuple ordered by target
-              // version: index 0 = v1→v2, index 1 = v2→v3, etc. So the
-              // function that migrates *to* version N sits at index N - 2.
               (await migrations?.[migrateToVersion - 2]?.(migratedValue)) ??
               migratedValue;
             if (debug) {
@@ -759,25 +694,28 @@ function createStorage(): WxtStorage {
             });
           }
         }
-        // Validate migrated output against schema BEFORE writing to disk.
-        // Without this, a buggy migration fn writes invalid data with the
-        // bumped version — schema validation on getValue() then fails
-        // permanently (version already advanced, migration won't re-run).
-        // Throwing here leaves the version un-bumped so the next app load
-        // retries the migration from the same starting version.
-        if (opts?.schema) {
-          const migrationValidation =
-            await opts.schema['~standard'].validate(migratedValue);
-          if (migrationValidation.issues) {
-            throw new MigrationError(key, targetVersion, {
-              cause: new SchemaError(migrationValidation.issues),
-            });
+        // Route migrated value through write pipeline so schema + serializer
+        // apply before persisting. Failures throw MigrationError so the
+        // version stays un-bumped and next load retries.
+        let rawForStorage: unknown = migratedValue;
+        if (opts?.schema || opts?.serializer?.write) {
+          try {
+            const { raw, validated } = await processWriteValue(
+              migratedValue,
+              opts,
+            );
+            rawForStorage = raw;
+            migratedValue = validated;
+          } catch (err) {
+            if (err instanceof SchemaError) {
+              throw new MigrationError(key, targetVersion, { cause: err });
+            }
+            throw err;
           }
-          migratedValue = migrationValidation.value;
         }
         assertMutable(driver);
         await driver.setItems([
-          { key: driverKey, value: migratedValue },
+          { key: driverKey, value: rawForStorage },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
 
@@ -809,21 +747,16 @@ function createStorage(): WxtStorage {
         initMutex.runExclusive(async () => {
           const raw = await driver.getItem(driverKey);
 
-          // No init defined — leave the pipeline to the non-init getValue path.
-          // This function is also called eagerly via `migrationsDone.then` for
-          // every item; running the pipeline here would double-fire it against
-          // the same read (once eagerly, once from user getValue).
+          // Non-init item: skip. Eager `migrationsDone.then(getOrInitValue)`
+          // runs this for every item; the pipeline is left to user getValue.
           if (opts?.init == null) return raw;
 
-          // Init defined + storage already populated: run the read pipeline
-          // just like non-init getValue does.
           if (raw != null) {
             return await processReadValue(raw, opts, driver, driverKey);
           }
 
-          // Fresh init: run the write pipeline on the init output so a schema
-          // can validate/transform it, and a serializer.write produces the
-          // storage form.
+          // Fresh init: run write pipeline so schema validates and
+          // serializer.write produces the storage form.
           const initialized = await opts.init();
           const { raw: rawToStore, validated } = await processWriteValue(
             initialized,
@@ -837,12 +770,9 @@ function createStorage(): WxtStorage {
           return validated;
         });
 
-      // Fire-and-forget eager init: kicks off `init()` right after any
-      // migrations resolve so the value is present before the first user
-      // getValue call. Errors here are surfaced when the user actually reads
-      // — they hit the mutex, re-run getOrInitValue, and get the same error
-      // via a properly-awaited promise. Swallow here to avoid unhandled
-      // rejection warnings when the schema on an init item fails.
+      // Eager init: fires init() after migrations resolve so a value
+      // exists before first user getValue. Errors are surfaced there via
+      // the shared mutex; swallow here to avoid unhandled rejections.
       migrationsDone.then(getOrInitValue).catch((err) => {
         if (debug) {
           console.debug(
@@ -886,9 +816,6 @@ function createStorage(): WxtStorage {
             return await getOrInitValue();
           }
 
-          // Non-init read path: pull the raw value straight from the driver so
-          // the pipeline (deserialize → validate → onValidationError) sees the
-          // untouched wire form. Fallback logic is handled inside the pipeline.
           const raw = await driver.getItem(driverKey);
           return await processReadValue(raw, opts, driver, driverKey);
         },
@@ -938,11 +865,9 @@ function createStorage(): WxtStorage {
 
         watch: (cb) =>
           watch(driver, driverKey, async (newValueRaw, oldValueRaw) => {
-            // Run both raw values through the read pipeline so the callback
-            // sees the same T that getValue() would produce. `allowReset:
-            // false` disables the destructive 'reset' side effect inside
-            // watch — otherwise an invalid oldValue arriving alongside a
-            // freshly-written valid newValue would wipe the newValue.
+            // Route both raws through the read pipeline so the callback sees
+            // the same T as getValue(). `allowReset: false` prevents an invalid
+            // oldValue from wiping a freshly-written valid newValue.
             try {
               const [newValue, oldValue] = await Promise.all([
                 processReadValue(newValueRaw, opts, driver, driverKey, {
@@ -962,6 +887,17 @@ function createStorage(): WxtStorage {
           }),
 
         migrate,
+
+        _processRead: async (raw) => {
+          await migrationsDone;
+          const processed = await processReadValue(
+            raw,
+            opts,
+            driver,
+            driverKey,
+          );
+          return processed ?? getFallback();
+        },
       };
     },
   };
@@ -1475,8 +1411,7 @@ export interface WxtStorage {
       TSchema
     >
   >;
-  // --- non-schema overloads ---
-  // No schema → TSchema slot is `undefined`.
+  // Non-schema overloads.
   defineItem<
     TValue,
     TMetadata extends Record<string, unknown> = {},
@@ -1685,72 +1620,37 @@ export interface WxtStorageItem<
   TSchema = undefined,
 > {
   /**
-   * The storage key passed when creating the storage item. When `defineItem` is
-   * called with a string literal (`'local:theme'`), this is narrowed to that
-   * exact literal; when passed a wider `StorageItemKey` value it stays as the
-   * union.
+   * The storage key passed to `defineItem`. String-literal keys narrow to that
+   * literal; wider `StorageItemKey` values stay as the union.
    */
   key: TKey;
 
   /**
-   * The storage area this item lives in, derived at the type level from the
-   * literal key prefix (`'local:x'` → `'local'`, `'sync:y'` → `'sync'`, etc).
-   * When `TKey` is the wide `StorageItemKey` union, `area` widens to the full
-   * `StorageArea` union.
-   *
-   * Use for area-aware branching without re-parsing the key at runtime:
-   *
-   * ```ts
-   * if (item.area === 'managed') {
-   *   // TS narrows `item.area` to the literal 'managed'
-   * }
-   * ```
-   *
-   * The runtime value is populated by the singleton's `resolveKey` (which
-   * splits the key at the first `:`) and mirrors the underlying driver's
-   * `WxtStorageDriver<TArea>` brand, so `item.area === driver.area` for every
-   * item routed through the same driver.
+   * The storage area, derived at the type level from the key prefix
+   * (`'local:x'` → `'local'`). Runtime value mirrors `driver.area`.
    */
   readonly area: TKey extends `${infer A extends StorageArea}:${string}`
     ? A
     : StorageArea;
 
-  /**
-   * The current schema version, captured as a numeric literal when passed
-   * directly (`version: 3` → typed `3`). Defaults to `number` when omitted.
-   */
+  /** The schema version, captured as a numeric literal when passed directly. */
   readonly version: TVersion;
 
-  /**
-   * The `debug` flag as captured at define-time. `true` or `false` literal when
-   * the caller passed one directly; `false` when omitted.
-   */
+  /** The `debug` flag as captured at define-time. */
   readonly debug: TDebug;
 
-  /**
-   * The `onValidationError` policy in effect at read-time. Kept as the wide
-   * `OnValidationError<TValue>` union rather than a captured literal — the
-   * complexity of threading a `<const>`-narrowed policy through 8 overloads +
-   * mirror in a future meta-schema PR outweighs the marginal DX benefit (users
-   * typically check via runtime `if (item.onValidationError === 'x')` or don't
-   * inspect at all).
-   */
-  readonly onValidationError: OnValidationError<TValue> | 'throw';
+  /** The `onValidationError` policy in effect at read-time. */
+  readonly onValidationError: OnValidationError<TValue>;
 
-  /**
-   * The schema passed at define-time (`z.object(...)`, a `defineSchema<T>()`
-   * result, etc.), or `undefined` when no schema was provided. Preserves the
-   * exact schema type for downstream introspection.
-   */
+  /** The schema passed at define-time, or `undefined`. */
   readonly schema: TSchema;
 
   /** @deprecated Renamed to fallback, use it instead. */
   defaultValue: TFallback;
 
   /**
-   * The value provided by the `fallback` option, preserved as its literal type
-   * where possible (`fallback: 'system' as const` → typed `'system'`). Get/set
-   * methods still use the wider `TValue`.
+   * The `fallback` option value, preserved as its literal type where possible
+   * (`fallback: 'system' as const` → typed `'system'`).
    */
   fallback: TFallback;
 
@@ -1783,6 +1683,9 @@ export interface WxtStorageItem<
    * you don't have to call it manually.
    */
   migrate(): Promise<void>;
+
+  /** @internal Batch APIs use this to route pre-fetched raw values through the item's full read pipeline (schema + serializer + onValidationError). Public consumers should call `getValue()` instead. */
+  _processRead(raw: unknown): Promise<TValue>;
 }
 
 // GetItemOptions, RemoveItemOptions, SnapshotOptions moved to ./types.

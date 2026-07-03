@@ -27,8 +27,8 @@ See `docs/guide/resources/upgrading.md` for before/after snippets covering every
 - **Schema validation.** New `schema` option on `defineItem` accepts any [Standard Schema](https://standardschema.dev/)-conformant validator (Zod, Valibot, ArkType, Effect Schema). Values are validated on read and write. When `schema` is present, `TValue` is inferred from `StandardSchemaV1.InferOutput<TSchema>`.
 - **`defineSchema<T>(fn)`** helper for wrapping non-Standard-Schema validators (Joi, io-ts, TypeBox, ad-hoc parsers) as `StandardSchemaV1<unknown, T>`.
 - **Custom serialization.** New `serializer: { read?, write }` option on `defineItem` for two-way conversion between the runtime value and the wire form written to `chrome.storage`. Enables non-JSON-safe types (Date, Map, Set, bigint, class instances).
-- **`onValidationError` policy.** Reads default to `'throw'`; `'log' | 'ignore' | (err, ctx) => T` variants supported. Writes always throw on validation failure.
-- **`defineMigrations<TValue>()`** helper for chain-typed positional migrations. Each `.add(fn)` verifies the previous migration's return type matches the next migration's parameter; the final return type is verified against `TValue`.
+- **`onValidationError` policy.** Reads default to `'throw'`; `'fallback' | 'reset' | (issues, raw) => TValue` variants supported. Writes always throw on validation failure (including migration writes — an invalid migrated output throws `MigrationError` and leaves the version un-bumped so the next load retries).
+- **`defineMigrations<TValue>()`** helper for chain-typed positional migrations. Called variadically with 1–6 migration fns; each fn's return type is verified against the next fn's parameter type, and the final fn's return is verified against `TValue`. Beyond 6 steps, degrades to an untyped `ReadonlyArray<MigrationFn>`.
 - **Literal key narrowing.** All `WxtStorage` methods now use `<const K extends StorageItemKey>` so string-literal keys are preserved through the type system. `defineItem('local:theme', …)` returns `WxtStorageItem<…, …, 'local:theme'>` where `.key: 'local:theme'` is a literal.
 - **`WxtStorageItem` gained a third type parameter `TKey extends StorageItemKey`** (defaulted for backward compatibility).
 - **`getItems` / `getMetas` accept an item form.** In addition to bare `StorageItemKey`, both methods accept `WxtStorageItem<…>` and per-entry options in `ReadonlyArray` form.
@@ -44,8 +44,8 @@ See `docs/guide/resources/upgrading.md` for before/after snippets covering every
 
 ### 🧪 Tests
 
-- Type-level assertions now run under Vitest's `typecheck` pass (149 type tests, previously runtime-invisible).
-- 316 tests total, 97.89% statement coverage, 94.9% branch coverage.
+- Type-level assertions now run under Vitest's `typecheck` pass (60 type tests, previously runtime-invisible).
+- 367 tests total (runtime), covering all schema/serializer/onValidationError branches, chain-checked migrations, and migration pre-write validation.
 - Runtime redundancy from `describe.each(['local','sync','managed','session'])` collapsed; storage-area routing now covered by one dedicated block.
 
 ### 📖 Documentation
