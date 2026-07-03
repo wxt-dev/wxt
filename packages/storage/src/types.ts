@@ -64,7 +64,7 @@ export type MigrationFn = (oldValue: any) => unknown | Promise<unknown>;
  */
 export type MigrationTuple<V extends number> = number extends V
   ? ReadonlyArray<MigrationFn>
-  : V extends 1
+  : V extends 0 | 1
     ? readonly []
     : BuildTuple<Subtract<V, 1>> extends infer T extends unknown[]
       ? { readonly [K in keyof T]: MigrationFn }
@@ -153,6 +153,24 @@ export type WritableDeep<T> = T extends
       : T extends object
         ? { -readonly [K in keyof T]: WritableDeep<T[K]> }
         : T;
+
+/**
+ * Force TypeScript to eagerly resolve every member of a mapped type on hover,
+ * instead of displaying unresolved type-parameter references. This is a
+ * display-only transform — it does not change assignability or the resolved
+ * type. Without it, hovering `bookmarks.version` in an editor shows the
+ * interface's declared member (`readonly version: TVersion`); with it, hovering
+ * shows the instantiated `3` literal.
+ *
+ * The `& {}` intersection tail prevents TypeScript from short-circuiting the
+ * mapped type back to `T` on structurally identical shapes — which would defeat
+ * the eager-evaluation purpose.
+ *
+ * Pattern is often called `Prettify`, `Simplify`, or `Compute` in the TS
+ * ecosystem (see type-fest `Simplify`, Matt Pocock's `Prettify`, and the
+ * long-running TS issue #47980 for a native compiler hint).
+ */
+export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 // ─── Storage keys ─────────────────────────────────────────────────────
 

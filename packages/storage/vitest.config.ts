@@ -7,7 +7,7 @@ export default defineProject({
     setupFiles: ['vitest.setup.ts'],
     typecheck: {
       enabled: true,
-      include: ['**/*.test.ts'],
+      include: ['**/*.test.ts', '**/*.test-d.ts'],
     },
   },
 });

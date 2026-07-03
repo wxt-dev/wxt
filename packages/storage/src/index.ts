@@ -19,8 +19,10 @@ import type {
   GetMetasInputElement,
   GetMetasResult,
   MetaKey,
+  MigrationTuple,
   NullablePartial,
   OnValidationError,
+  Prettify,
   RemoveItemOptions,
   SnapshotOptions,
   StorageArea,
@@ -1242,14 +1244,16 @@ export interface WxtStorage {
     const TKey extends StorageItemKey = StorageItemKey,
   >(
     key: TKey,
-  ): WxtStorageItem<
-    TValue | null,
-    TMetadata,
-    TKey,
-    null,
-    number,
-    false,
-    undefined
+  ): Prettify<
+    WxtStorageItem<
+      TValue | null,
+      TMetadata,
+      TKey,
+      null,
+      number,
+      false,
+      undefined
+    >
   >;
   // --- schema-carrying overloads ---
   // Each captures via `<const>`:
@@ -1265,26 +1269,34 @@ export interface WxtStorage {
     TRaw = unknown,
     const TFallback = StandardSchemaV1.InferOutput<TSchema>,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<
-      StandardSchemaV1.InferOutput<TSchema>,
-      TRaw,
-      TVersion
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
     > & {
+      migrations?: TMigrations;
       schema: TSchema;
       fallback: TFallback & DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    StandardSchemaV1.InferOutput<TSchema>,
-    TMetadata,
-    TKey,
-    TFallback,
-    TVersion,
-    TDebug,
-    TSchema
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      TSchema
+    >
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
@@ -1293,27 +1305,35 @@ export interface WxtStorage {
     TRaw = unknown,
     const TFallback = StandardSchemaV1.InferOutput<TSchema>,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<
-      StandardSchemaV1.InferOutput<TSchema>,
-      TRaw,
-      TVersion
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
     > & {
+      migrations?: TMigrations;
       schema: TSchema;
       defaultValue: TFallback &
         DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    StandardSchemaV1.InferOutput<TSchema>,
-    TMetadata,
-    TKey,
-    TFallback,
-    TVersion,
-    TDebug,
-    TSchema
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      TSchema
+    >
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
@@ -1321,28 +1341,36 @@ export interface WxtStorage {
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<
-      StandardSchemaV1.InferOutput<TSchema>,
-      TRaw,
-      TVersion
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
     > & {
+      migrations?: TMigrations;
       schema: TSchema;
       init: () =>
         | StandardSchemaV1.InferOutput<TSchema>
         | Promise<StandardSchemaV1.InferOutput<TSchema>>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    StandardSchemaV1.InferOutput<TSchema>,
-    TMetadata,
-    TKey,
-    null,
-    TVersion,
-    TDebug,
-    TSchema
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      TSchema
+    >
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
@@ -1350,25 +1378,33 @@ export interface WxtStorage {
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<
-      StandardSchemaV1.InferOutput<TSchema>,
-      TRaw,
-      TVersion
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
     > & {
+      migrations?: TMigrations;
       schema: TSchema;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    StandardSchemaV1.InferOutput<TSchema> | null,
-    TMetadata,
-    TKey,
-    null,
-    TVersion,
-    TDebug,
-    TSchema
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema> | null,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      TSchema
+    >
   >;
   // --- non-schema overloads ---
   // No schema → TSchema slot is `undefined`.
@@ -1379,21 +1415,29 @@ export interface WxtStorage {
     TRaw = unknown,
     const TFallback = Widen<TValue>,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
       fallback: TFallback & DeepReadonly<TValue>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    Widen<TValue>,
-    TMetadata,
-    TKey,
-    TFallback,
-    TVersion,
-    TDebug,
-    undefined
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      undefined
+    >
   >;
   defineItem<
     TValue,
@@ -1402,21 +1446,29 @@ export interface WxtStorage {
     TRaw = unknown,
     const TFallback = Widen<TValue>,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
       defaultValue: TFallback & DeepReadonly<TValue>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    Widen<TValue>,
-    TMetadata,
-    TKey,
-    TFallback,
-    TVersion,
-    TDebug,
-    undefined
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      undefined
+    >
   >;
   defineItem<
     TValue,
@@ -1424,21 +1476,29 @@ export interface WxtStorage {
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
       init: () => TValue | Promise<TValue>;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    Widen<TValue>,
-    TMetadata,
-    TKey,
-    null,
-    TVersion,
-    TDebug,
-    undefined
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      undefined
+    >
   >;
   defineItem<
     TValue,
@@ -1446,20 +1506,28 @@ export interface WxtStorage {
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
     const TDebug extends boolean = false,
   >(
     key: TKey,
-    options: WxtStorageItemOptions<TValue, TRaw, TVersion> & {
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
       debug?: TDebug;
     },
-  ): WxtStorageItem<
-    Widen<TValue> | null,
-    TMetadata,
-    TKey,
-    null,
-    TVersion,
-    TDebug,
-    undefined
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue> | null,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      undefined
+    >
   >;
 }
 
