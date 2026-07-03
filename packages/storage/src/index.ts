@@ -800,6 +800,7 @@ function createStorage(): WxtStorage {
 
       return {
         key,
+        area: driver.area,
 
         get version() {
           return opts?.version ?? 1;
@@ -912,7 +913,9 @@ function createStorage(): WxtStorage {
   };
 }
 
-function createDriver(storageArea: StorageArea): WxtStorageDriver {
+function createDriver<const TArea extends StorageArea>(
+  storageArea: TArea,
+): WxtStorageDriver<TArea> {
   const getStorageArea = () => {
     if (browser.runtime == null) {
       throw Error(`'wxt/storage' must be loaded in a web extension environment
@@ -938,6 +941,8 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
 
   return {
+    area: storageArea,
+
     getItem: async (key: string): Promise<unknown> => {
       const res = await getStorageArea().get<Record<string, unknown>>(key);
       return res[key] ?? null;
@@ -1531,7 +1536,20 @@ export interface WxtStorage {
   >;
 }
 
-interface WxtStorageDriver {
+interface WxtStorageDriver<TArea extends StorageArea = StorageArea> {
+  /**
+   * The `chrome.storage.*` area this driver wraps. Preserved as a literal via
+   * `<const TArea>` on `createDriver`, so a driver returned by
+   * `createDriver('local')` is typed `WxtStorageDriver<'local'>` — distinct
+   * from `WxtStorageDriver<'managed'>` at compile time even though the method
+   * shape is identical. Callers that want per-area guarantees (e.g. "only
+   * accept a `managed` driver here") can narrow via this brand.
+   *
+   * `TArea` sits in an output-position (`readonly area`), so it's covariant: a
+   * `WxtStorageDriver<'local'>` is assignable to a
+   * `WxtStorageDriver<StorageArea>` (widening is allowed at read sites).
+   */
+  readonly area: TArea;
   getItem(key: string): Promise<unknown>;
   getItems(
     keys: readonly string[],
@@ -1565,6 +1583,29 @@ export interface WxtStorageItem<
    * union.
    */
   key: TKey;
+
+  /**
+   * The storage area this item lives in, derived at the type level from the
+   * literal key prefix (`'local:x'` → `'local'`, `'sync:y'` → `'sync'`, etc).
+   * When `TKey` is the wide `StorageItemKey` union, `area` widens to the full
+   * `StorageArea` union.
+   *
+   * Use for area-aware branching without re-parsing the key at runtime:
+   *
+   * ```ts
+   * if (item.area === 'managed') {
+   *   // TS narrows `item.area` to the literal 'managed'
+   * }
+   * ```
+   *
+   * The runtime value is populated by the singleton's `resolveKey` (which
+   * splits the key at the first `:`) and mirrors the underlying driver's
+   * `WxtStorageDriver<TArea>` brand, so `item.area === driver.area` for every
+   * item routed through the same driver.
+   */
+  readonly area: TKey extends `${infer A extends StorageArea}:${string}`
+    ? A
+    : StorageArea;
 
   /**
    * The current schema version, captured as a numeric literal when passed
