@@ -670,7 +670,7 @@ describe('Storage Utils', () => {
   });
 
   describe('storage area routing', () => {
-    it.each(['local', 'sync', 'managed', 'session'] as const)(
+    it.each(['local', 'sync', 'session'] as const)(
       'routes get/set to browser.storage.%s',
       async (area) => {
         const setSpy = vi.spyOn(fakeBrowser.storage[area], 'set');
@@ -684,6 +684,42 @@ describe('Storage Utils', () => {
         expect(value).toBe(42);
       },
     );
+
+    it('routes reads to browser.storage.managed', async () => {
+      // Managed area is READ-ONLY (see WxtStorageDriver's discriminated-union
+      // brand: `WxtStorageDriver<'managed'>` resolves to
+      // `ReadonlyStorageDriver<'managed'>` at the type level, and writes are
+      // rejected at runtime by `assertMutable`). Seed via the fake browser's
+      // internal set (bypasses the driver's read-only surface), then verify
+      // reads route correctly.
+      const getSpy = vi.spyOn(fakeBrowser.storage.managed, 'get');
+      await fakeBrowser.storage.managed.set({ routed: 42 });
+
+      const value = await storage.getItem('managed:routed');
+      expect(getSpy).toHaveBeenCalledWith('routed');
+      expect(value).toBe(42);
+    });
+
+    it('rejects writes to browser.storage.managed with a clear error', async () => {
+      // Type-level: `storage.setItem('managed:x', ...)` would reach a
+      // `ReadonlyStorageDriver<'managed'>` at the driver layer, whose
+      // `setItem` doesn't exist. The singleton entry accepts any
+      // `StorageItemKey` for now (breaking that would ripple across
+      // consumers), so `assertMutable` catches the write at runtime with
+      // a WXT-branded error instead of the raw browser error.
+      await expect(storage.setItem('managed:blocked', 1)).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.removeItem('managed:blocked')).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.clear('managed')).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.restoreSnapshot('managed', {})).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+    });
   });
 
   describe('Invalid storage areas', () => {

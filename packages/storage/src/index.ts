@@ -73,6 +73,32 @@ function createStorage(): WxtStorage {
     return driver;
   };
 
+  /**
+   * Runtime guard that narrows a wide `WxtStorageDriver<StorageArea>` (the
+   * distributed union `Readonly<'managed'> | Mutable<...>`) to a
+   * `MutableStorageDriver` when the area is not `'managed'`. The browser's
+   * `chrome.storage.managed` API rejects writes at runtime; this assertion
+   * catches the write attempt at the WXT boundary with a clearer error and,
+   * more importantly, lets internal write helpers safely call `driver.setItem`
+   * etc. on the narrowed type without casts.
+   *
+   * Invoked at every internal write site — the write helpers (setItem/
+   * setMeta/removeItem/removeMeta) call it at their entry, and the singleton
+   * write methods that dispatch on area (setItems/setMetas/removeItems/clear/
+   * restoreSnapshot, plus the item factory's eager-init writes) call it after
+   * resolving the driver.
+   */
+  function assertMutable(
+    driver: WxtStorageDriver,
+  ): asserts driver is MutableStorageDriver<Exclude<StorageArea, 'managed'>> {
+    if (driver.area === 'managed') {
+      throw Error(
+        `Cannot write to \`browser.storage.managed\` — it is read-only. ` +
+          `Managed policy is set by admins and cannot be modified from an extension.`,
+      );
+    }
+  }
+
   const resolveKey = <const K extends StorageItemKey>(key: K) => {
     const deliminatorIndex = key.indexOf(':');
     const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
@@ -209,6 +235,7 @@ function createStorage(): WxtStorage {
         }
         if (strategy === 'reset') {
           if (pipelineOpts.allowReset !== false) {
+            assertMutable(driver);
             await driver.removeItem(driverKey);
           }
           return fallback;
@@ -236,6 +263,7 @@ function createStorage(): WxtStorage {
     driverKey: string,
     value: unknown,
   ) => {
+    assertMutable(driver);
     await driver.setItem(driverKey, value ?? null);
   };
 
@@ -284,6 +312,7 @@ function createStorage(): WxtStorage {
     // against non-object metadata that may exist in storage from older
     // writes or external mutations.
     const incoming = getMetaValue(properties);
+    assertMutable(driver);
     await driver.setItem(metaKey, mergeMeta(existingFields, incoming));
   };
 
@@ -292,6 +321,7 @@ function createStorage(): WxtStorage {
     driverKey: string,
     opts: RemoveItemOptions | undefined,
   ) => {
+    assertMutable(driver);
     await driver.removeItem(driverKey);
 
     if (opts?.removeMeta) {
@@ -308,10 +338,12 @@ function createStorage(): WxtStorage {
     const metaKey = getMetaKey(driverKey);
 
     if (properties == null) {
+      assertMutable(driver);
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
       [properties].flat().forEach((field) => delete newFields[field]);
+      assertMutable(driver);
       await driver.setItem(metaKey, newFields);
     }
   };
@@ -483,6 +515,7 @@ function createStorage(): WxtStorage {
       await Promise.all(
         typedEntries(areaToKeyValueMap).map(async ([driverArea, values]) => {
           const driver = getDriver(driverArea);
+          assertMutable(driver);
           await driver.setItems(values);
         }),
       );
@@ -532,6 +565,7 @@ function createStorage(): WxtStorage {
               };
             });
 
+            assertMutable(driver);
             await driver.setItems(metaUpdates);
           },
         ),
@@ -581,6 +615,7 @@ function createStorage(): WxtStorage {
       await Promise.all(
         typedEntries(areaToKeysMap).map(async ([driverArea, keys]) => {
           const driver = getDriver(driverArea);
+          assertMutable(driver);
           await driver.removeItems(keys);
         }),
       );
@@ -588,6 +623,7 @@ function createStorage(): WxtStorage {
 
     clear: async (base) => {
       const driver = getDriver(base);
+      assertMutable(driver);
       await driver.clear();
     },
 
@@ -613,6 +649,7 @@ function createStorage(): WxtStorage {
 
     restoreSnapshot: async (base, data) => {
       const driver = getDriver(base);
+      assertMutable(driver);
       await driver.restoreSnapshot(data);
     },
 
@@ -723,6 +760,7 @@ function createStorage(): WxtStorage {
             });
           }
         }
+        assertMutable(driver);
         await driver.setItems([
           { key: driverKey, value: migratedValue },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
@@ -776,6 +814,7 @@ function createStorage(): WxtStorage {
             initialized,
             opts,
           );
+          assertMutable(driver);
           await driver.setItem(driverKey, rawToStore);
           if (targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
@@ -1026,7 +1065,17 @@ function createDriver<const TArea extends StorageArea>(
       });
       watchListeners.clear();
     },
-  };
+  } as WxtStorageDriver<TArea>;
+  // ^ Documented boundary cast: the runtime object literal always carries the
+  // full mutable surface (setItem/setItems/removeItem/removeItems/clear/
+  // restoreSnapshot). When `TArea = 'managed'`, `WxtStorageDriver<TArea>`
+  // resolves to `ReadonlyStorageDriver`, which type-hides those mutations at
+  // consumer sites — but the impl still HAS them (the browser's own
+  // `chrome.storage.managed` API is what rejects writes at runtime). Object
+  // literals trigger TS excess-property checking against the conditional
+  // Readonly branch, but the underlying value is a valid
+  // `MutableStorageDriver<TArea>` — the cast erases that check at exactly one
+  // boundary and no runtime behavior changes.
 }
 
 export interface WxtStorage {
@@ -1536,24 +1585,39 @@ export interface WxtStorage {
   >;
 }
 
-interface WxtStorageDriver<TArea extends StorageArea = StorageArea> {
+/**
+ * Common surface of every driver — reads and observation. Available on both
+ * mutable areas (`local`/`sync`/`session`) and the read-only `managed` area.
+ */
+interface BaseStorageDriver<TArea extends StorageArea> {
   /**
    * The `chrome.storage.*` area this driver wraps. Preserved as a literal via
    * `<const TArea>` on `createDriver`, so a driver returned by
-   * `createDriver('local')` is typed `WxtStorageDriver<'local'>` — distinct
-   * from `WxtStorageDriver<'managed'>` at compile time even though the method
-   * shape is identical. Callers that want per-area guarantees (e.g. "only
-   * accept a `managed` driver here") can narrow via this brand.
+   * `createDriver('local')` is typed with area `'local'` — distinct from
+   * `'managed'` at compile time even when method surfaces overlap. Callers that
+   * want per-area guarantees can narrow via this brand.
    *
    * `TArea` sits in an output-position (`readonly area`), so it's covariant: a
-   * `WxtStorageDriver<'local'>` is assignable to a
-   * `WxtStorageDriver<StorageArea>` (widening is allowed at read sites).
+   * narrow driver assigns to a wide `<StorageArea>` slot (widening is allowed
+   * at read sites).
    */
   readonly area: TArea;
   getItem(key: string): Promise<unknown>;
   getItems(
     keys: readonly string[],
   ): Promise<Array<{ key: string; value: unknown }>>;
+  snapshot(): Promise<Record<string, unknown>>;
+  watch(key: string, cb: WatchCallback<unknown>): Unwatch;
+  unwatch(): void;
+}
+
+/**
+ * Adds the write methods on top of {@link BaseStorageDriver}. Only mutable areas
+ * (`local` | `sync` | `session`) satisfy this shape.
+ */
+interface MutableStorageDriver<
+  TArea extends StorageArea,
+> extends BaseStorageDriver<TArea> {
   setItem(key: string, value: unknown): Promise<void>;
   setItems(
     values: ReadonlyArray<{ key: string; value: unknown }>,
@@ -1561,11 +1625,38 @@ interface WxtStorageDriver<TArea extends StorageArea = StorageArea> {
   removeItem(key: string): Promise<void>;
   removeItems(keys: readonly string[]): Promise<void>;
   clear(): Promise<void>;
-  snapshot(): Promise<Record<string, unknown>>;
   restoreSnapshot(data: Record<string, unknown>): Promise<void>;
-  watch(key: string, cb: WatchCallback<unknown>): Unwatch;
-  unwatch(): void;
 }
+
+/**
+ * `browser.storage.managed` is read-only — write attempts throw at runtime
+ * (extensions can only READ managed policy set by admins). This alias makes
+ * that invariant type-visible: structurally identical to
+ * {@link BaseStorageDriver}, no mutation methods present.
+ */
+type ReadonlyStorageDriver<TArea extends StorageArea> =
+  BaseStorageDriver<TArea>;
+
+/**
+ * Public driver type, keyed by area. Distributing conditional:
+ *
+ * WxtStorageDriver<'managed'> → ReadonlyStorageDriver<'managed'>
+ * WxtStorageDriver<'local'> → MutableStorageDriver<'local'>
+ * WxtStorageDriver<StorageArea> distributes to ReadonlyStorageDriver<'managed'>
+ * | MutableStorageDriver<'local' | 'sync' | 'session'>
+ *
+ * So `WxtStorageDriver<'managed'>.setItem` is a compile-time error — the
+ * "managed is read-only" invariant is moved from runtime docs into the type
+ * system.
+ *
+ * The wide default `WxtStorageDriver<StorageArea>` is a distributed union, so
+ * only common (read) methods survive without narrowing. Internal callers with
+ * wide area must runtime-narrow via {@link assertMutable} before writing.
+ */
+type WxtStorageDriver<TArea extends StorageArea = StorageArea> =
+  TArea extends 'managed'
+    ? ReadonlyStorageDriver<TArea>
+    : MutableStorageDriver<TArea>;
 
 export interface WxtStorageItem<
   TValue,
