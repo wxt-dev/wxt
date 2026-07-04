@@ -1768,7 +1768,7 @@ export function defineSchema<T>(
  *   });
  *   ```;
  */
-export function defineMigrations<TValue>(): {
+interface DefineMigrations<TValue> {
   (): readonly [];
   <A extends TValue>(
     f1: (v: unknown) => A | Promise<A>,
@@ -1827,11 +1827,13 @@ export function defineMigrations<TValue>(): {
   ];
   // Beyond 6 versions, fall back to the untyped array shape.
   (
-    ...fns: ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>
+    ...migrations: ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>
   ): ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>;
-} {
-  return ((...fns: ReadonlyArray<(v: unknown) => unknown>) =>
-    fns) as ReturnType<typeof defineMigrations<TValue>>;
+}
+
+export function defineMigrations<TValue>(): DefineMigrations<TValue> {
+  return ((...migrations: ReadonlyArray<(v: unknown) => unknown>) =>
+    migrations) as DefineMigrations<TValue>;
 }
 
 export class MigrationError extends Error {

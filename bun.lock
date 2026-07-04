@@ -231,7 +231,7 @@
     },
     "packages/storage": {
       "name": "@wxt-dev/storage",
-      "version": "2.0.0",
+      "version": "1.2.8",
       "dependencies": {
         "@standard-schema/spec": "^1.1.0",
         "@standard-schema/utils": "~0.3.0",
@@ -247,7 +247,6 @@
         "tsdown": "catalog:",
         "typescript": "catalog:",
         "vitest": "catalog:",
-        "zod": "^4.4.3",
       },
     },
     "packages/unocss": {
@@ -302,7 +301,7 @@
         "@webext-core/isolated-element": "^1.1.3",
         "@webext-core/match-patterns": "^1.0.3",
         "@wxt-dev/browser": "workspace:^",
-        "@wxt-dev/storage": "workspace:^2.0.0",
+        "@wxt-dev/storage": "workspace:^1.0.0",
         "async-mutex": "^0.5.0",
         "c12": "^3.3.4",
         "cac": "^6.7.14 || ^7.0.0",
@@ -2501,7 +2500,7 @@
 
     "zip-dir": ["zip-dir@2.0.0", "", { "dependencies": { "async": "^3.2.0", "jszip": "^3.2.2" } }, "sha512-uhlsJZWz26FLYXOD6WVuq+fIcZ3aBPGo/cFdiLlv3KNwpa52IF3ISV8fLhQLiqVu5No3VhlqlgthN6gehil1Dg=="],
 
-    "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
+    "zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
 
     "zwitch": ["zwitch@2.0.4", "", {}, "sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A=="],
 
@@ -2730,8 +2729,6 @@
     "publish-browser-extension/cac": ["cac@6.7.14", "", {}, "sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ=="],
 
     "publish-browser-extension/dotenv": ["dotenv@17.2.4", "", {}, "sha512-mudtfb4zRB4bVvdj0xRo+e6duH1csJRM8IukBqfTRvHotn9+LBXB8ynAidP9zHqoRC/fsllXgk4kCKlR21fIhw=="],
-
-    "publish-browser-extension/zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
 
     "rc/ini": ["ini@1.3.8", "", {}, "sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew=="],
 
