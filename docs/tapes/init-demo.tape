@@ -37,6 +37,9 @@ Hide
 # Create a temporary folder for demo
 Type 'mkdir packages/wxt/init-demo' Enter
 Type 'cd packages/wxt/init-demo' Enter
+# Unset CI variables inherited from the GitHub Actions runner so consola
+# picks its fancy reporter instead of the basic one (#2461)
+Type 'unset CI GITHUB_ACTIONS' Enter
 Type 'clear' Enter
 Show
 
