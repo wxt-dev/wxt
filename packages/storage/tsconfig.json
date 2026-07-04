@@ -2,8 +2,6 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "verbatimModuleSyntax": true,
-
-    /* Strictest type-checking flags on top of `strict: true` from the base */
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,

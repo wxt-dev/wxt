@@ -56,7 +56,7 @@ export type {
 } from './types';
 
 // Internal per-item batch hooks, keyed by item identity so nothing leaks
-// through the public `WxtStorageItem` interface / generated `.d.ts`.
+// through the public `WxtStorageItem` interface or emitted declarations.
 interface ItemBatchHooks {
   ready: () => Promise<void>;
   processRead: (raw: unknown) => Promise<unknown>;
@@ -73,14 +73,17 @@ function createStorage(): WxtStorage {
     managed: createDriver('managed'),
   } as const;
 
-  const getDriver = (area: StorageArea) => {
+  function getDriver<const TArea extends StorageArea>(
+    area: TArea,
+  ): WxtStorageDriver<TArea>;
+  function getDriver(area: StorageArea): WxtStorageDriver {
     const driver = drivers[area];
     if (driver == null) {
       const areaNames = Object.keys(drivers).join(', ');
       throw Error(`Invalid area "${area}". Options: ${areaNames}`);
     }
     return driver;
-  };
+  }
 
   /**
    * Runtime guard that narrows `WxtStorageDriver<StorageArea>` to a
@@ -100,7 +103,10 @@ function createStorage(): WxtStorage {
 
   const resolveKey = <const K extends StorageItemKey>(key: K) => {
     const deliminatorIndex = key.indexOf(':');
-    const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
+    const driverArea = key.substring(
+      0,
+      deliminatorIndex,
+    ) as K extends `${infer S}:${infer _}` ? S : never;
     const driverKey = key.substring(
       deliminatorIndex + 1,
     ) as K extends `${StorageArea}:${infer R}` ? R : never;
@@ -232,7 +238,7 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     value: unknown,
-  ) => {
+  ): Promise<void> => {
     assertMutable(driver);
     await driver.setItem(driverKey, value ?? null);
   };
@@ -266,7 +272,7 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     properties: Record<string, unknown> | null,
-  ) => {
+  ): Promise<void> => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
     const incoming = getMetaValue(properties);
@@ -278,7 +284,7 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     opts: RemoveItemOptions | undefined,
-  ) => {
+  ): Promise<void> => {
     assertMutable(driver);
     await driver.removeItem(driverKey);
 
@@ -292,7 +298,7 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     properties: string | string[] | undefined,
-  ) => {
+  ): Promise<void> => {
     const metaKey = getMetaKey(driverKey);
 
     if (properties == null) {
@@ -310,17 +316,14 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     cb: WatchCallback<T | null>,
-  ) =>
+  ): Unwatch =>
     // Contravariance boundary: driver.watch expects WatchCallback<unknown>,
     // caller passes narrow WatchCallback<T | null>. Safe because the pipeline
     // validates before invoking the callback.
     driver.watch(driverKey, cb as WatchCallback<unknown>);
 
   return {
-    getItem: async <T, const K extends StorageItemKey>(
-      key: K,
-      opts?: GetItemOptions<T>,
-    ) => {
+    getItem: async <T>(key: StorageItemKey, opts?: GetItemOptions<T>) => {
       const { driver, driverKey } = resolveKey(key);
       return await getItem(driver, driverKey, opts);
     },
@@ -407,10 +410,10 @@ function createStorage(): WxtStorage {
       );
     }) as WxtStorage['getItems'],
 
-    getMeta: (async <const K extends StorageItemKey>(key: K) => {
+    getMeta: async (key: StorageItemKey) => {
       const { driver, driverKey } = resolveKey(key);
       return await getMeta(driver, driverKey);
-    }) as WxtStorage['getMeta'],
+    },
 
     getMetas: (async <const T extends ReadonlyArray<GetMetasInputElement>>(
       args: T,
@@ -463,7 +466,7 @@ function createStorage(): WxtStorage {
       }));
     }) as WxtStorage['getMetas'],
 
-    setItem: async <const K extends StorageItemKey>(key: K, value: unknown) => {
+    setItem: async (key: StorageItemKey, value: unknown) => {
       const { driver, driverKey } = resolveKey(key);
       await setItem(driver, driverKey, value);
     },
@@ -492,8 +495,8 @@ function createStorage(): WxtStorage {
       );
     },
 
-    setMeta: async <const K extends StorageItemKey>(
-      key: K,
+    setMeta: async (
+      key: StorageItemKey,
       properties: Record<string, unknown> | null,
     ) => {
       const { driver, driverKey } = resolveKey(key);
@@ -543,10 +546,7 @@ function createStorage(): WxtStorage {
       );
     },
 
-    removeItem: async <const K extends StorageItemKey>(
-      key: K,
-      opts?: RemoveItemOptions,
-    ) => {
+    removeItem: async (key: StorageItemKey, opts?: RemoveItemOptions) => {
       const { driver, driverKey } = resolveKey(key);
       await removeItem(driver, driverKey, opts);
     },
@@ -594,10 +594,7 @@ function createStorage(): WxtStorage {
       await driver.clear();
     },
 
-    removeMeta: async <const K extends StorageItemKey>(
-      key: K,
-      properties?: string | string[],
-    ) => {
+    removeMeta: async (key: StorageItemKey, properties?: string | string[]) => {
       const { driver, driverKey } = resolveKey(key);
       await removeMeta(driver, driverKey, properties);
     },
@@ -620,10 +617,7 @@ function createStorage(): WxtStorage {
       await driver.restoreSnapshot(data);
     },
 
-    watch: <const K extends StorageItemKey>(
-      key: K,
-      cb: WatchCallback<unknown>,
-    ) => {
+    watch: (key: StorageItemKey, cb: WatchCallback<unknown>) => {
       const { driver, driverKey } = resolveKey(key);
       return watch(driver, driverKey, cb);
     },
@@ -916,10 +910,9 @@ function createStorage(): WxtStorage {
 
       // Register batch hooks against the item's identity so `getItems`
       // can route pre-fetched raw values through the pipeline without
-      // exposing internals on the public interface. `allowReset: false`
-      // is a safety belt: if a stale raw reaches processReadValue on the
-      // batch path, we don't destructively `driver.removeItem` on schema
-      // failure (that would delete a value the user just wrote).
+      // exposing internals on the public interface. Batch reads disable
+      // destructive schema-error resets because another writer may have
+      // updated the stored value after the batch fetch.
       itemBatchHooks.set(item, {
         ready: async () => {
           await readyPromise;
@@ -1032,7 +1025,7 @@ function createDriver<const TArea extends StorageArea>(
       await getStorageArea().set(data);
     },
 
-    watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch {
+    watch(key: StorageItemKey, cb: WatchCallback<unknown>) {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
           newValue?: unknown;
@@ -1060,16 +1053,9 @@ function createDriver<const TArea extends StorageArea>(
       watchListeners.clear();
     },
   } as WxtStorageDriver<TArea>;
-  // ^ Documented boundary cast: the runtime object literal always carries the
-  // full mutable surface (setItem/setItems/removeItem/removeItems/clear/
-  // restoreSnapshot). When `TArea = 'managed'`, `WxtStorageDriver<TArea>`
-  // resolves to `ReadonlyStorageDriver`, which type-hides those mutations at
-  // consumer sites — but the impl still HAS them (the browser's own
-  // `chrome.storage.managed` API is what rejects writes at runtime). Object
-  // literals trigger TS excess-property checking against the conditional
-  // Readonly branch, but the underlying value is a valid
-  // `MutableStorageDriver<TArea>` — the cast erases that check at exactly one
-  // boundary and no runtime behavior changes.
+  // The runtime object carries the full driver surface. The conditional
+  // `WxtStorageDriver<TArea>` type hides write methods for `managed` callers,
+  // while runtime writes are still guarded by `assertMutable`.
 }
 
 export interface WxtStorage {
@@ -1098,8 +1084,8 @@ export interface WxtStorage {
    *   });
    *   // withFallback: number
    */
-  getItem<TValue, const K extends StorageItemKey = StorageItemKey>(
-    key: K,
+  getItem<TValue>(
+    key: StorageItemKey,
     // Fallback is accepted as `DeepReadonly<TValue>` so narrow-readonly
     // literals produced by `<const>` inference in `defineItem` flow through
     // without a cast. Return is `WritableDeep<TValue>` so a narrow-readonly
@@ -1109,8 +1095,8 @@ export interface WxtStorage {
     opts: GetItemOptions<TValue> & { fallback: DeepReadonly<TValue> },
   ): Promise<WritableDeep<TValue>>;
 
-  getItem<const K extends StorageItemKey = StorageItemKey>(
-    key: K,
+  getItem(
+    key: StorageItemKey,
     opts?: GetItemOptions<unknown>,
   ): Promise<unknown>;
 
@@ -1135,9 +1121,7 @@ export interface WxtStorage {
    * @example
    *   await storage.getMeta('local:installDate');
    */
-  getMeta<const K extends StorageItemKey>(
-    key: K,
-  ): Promise<Record<string, unknown>>;
+  getMeta(key: StorageItemKey): Promise<Record<string, unknown>>;
 
   /**
    * Get the metadata of multiple storage items.
@@ -1159,10 +1143,7 @@ export interface WxtStorage {
    * @example
    *   await storage.setItem('local:installDate', Date.now());
    */
-  setItem<const K extends StorageItemKey>(
-    key: K,
-    value: unknown,
-  ): Promise<void>;
+  setItem(key: StorageItemKey, value: unknown): Promise<void>;
 
   /**
    * Set multiple values in storage. If a value is set to `null` or `undefined`,
@@ -1178,7 +1159,7 @@ export interface WxtStorage {
     values: ReadonlyArray<
       | { key: StorageItemKey; value: unknown }
       | {
-          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          item: WxtStorageItemLike<unknown, StorageItemKey>;
           value: unknown;
         }
     >,
@@ -1191,8 +1172,8 @@ export interface WxtStorage {
    * @example
    *   await storage.setMeta('local:installDate', { appVersion });
    */
-  setMeta<const K extends StorageItemKey>(
-    key: K,
+  setMeta(
+    key: StorageItemKey,
     properties: Record<string, unknown> | null,
   ): Promise<void>;
 
@@ -1205,7 +1186,7 @@ export interface WxtStorage {
     metas: ReadonlyArray<
       | { key: StorageItemKey; meta: Record<string, unknown> }
       | {
-          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          item: WxtStorageItemLike<unknown, StorageItemKey>;
           meta: Record<string, unknown>;
         }
     >,
@@ -1217,10 +1198,7 @@ export interface WxtStorage {
    * @example
    *   await storage.removeItem('local:installDate');
    */
-  removeItem<const K extends StorageItemKey>(
-    key: K,
-    opts?: RemoveItemOptions,
-  ): Promise<void>;
+  removeItem(key: StorageItemKey, opts?: RemoveItemOptions): Promise<void>;
 
   /** Remove a list of keys from storage. */
   removeItems(
@@ -1248,8 +1226,8 @@ export interface WxtStorage {
    *   // Remove only specific the "v" field
    *   await storage.removeMeta('local:installDate', 'v');
    */
-  removeMeta<const K extends StorageItemKey>(
-    key: K,
+  removeMeta(
+    key: StorageItemKey,
     properties?: string | string[],
   ): Promise<void>;
 
@@ -1270,10 +1248,7 @@ export interface WxtStorage {
   ): Promise<void>;
 
   /** Watch for changes to a specific key in storage. */
-  watch<const K extends StorageItemKey>(
-    key: K,
-    cb: WatchCallback<unknown>,
-  ): Unwatch;
+  watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch;
 
   /** Remove all watch listeners. */
   unwatch(): void;

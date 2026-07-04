@@ -1134,7 +1134,7 @@ describe('Storage Utils', () => {
           // `debug: true` narrows to literal `true` via `<const TDebug>`. If
           // explicit `<number, {v:number}>` generics were provided here, that
           // capture would be defeated and TDebug would default to `false`,
-          // rejecting `true` (TS PR #55229 semantics).
+          // rejecting `true`.
           debug: true,
         });
         await waitForMigrations();

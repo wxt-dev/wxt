@@ -6,53 +6,20 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import type { Browser } from '@wxt-dev/browser';
 
-// ─── Type-level arithmetic helpers ────────────────────────────────────
-//
-// These support length-locked `migrations` tuples driven by the literal
-// `version` number. Idioms adapted from type-challenges #7561 (Subtract)
-// and Microsoft/TypeScript issue #26223 (TupleOf) — both are tail-recursive
-// (TS 4.5+ raises depth limit to ~1000, so realistic version numbers are
-// nowhere near the ceiling).
-
-/**
- * Build a mutable tuple of length `L` filled with `unknown`. Used as an
- * accumulator for `Subtract` and `MigrationTuple`. Tail-recursive shape.
- */
 type BuildTuple<
   L extends number,
   T extends unknown[] = [],
 > = T['length'] extends L ? T : BuildTuple<L, [unknown, ...T]>;
 
-/**
- * Type-level `M - S` via tuple pattern matching. Returns `never` when `M < S`.
- * When either operand is the bare `number` type (not a literal), the whole
- * thing widens to `number` — a graceful escape hatch.
- */
 export type Subtract<M extends number, S extends number> = number extends M | S
   ? number
   : BuildTuple<M> extends [...BuildTuple<S>, ...infer R]
     ? R['length']
     : never;
 
-/**
- * A single migration function shape. `any` in the parameter position is
- * intentional (heterogeneous chain — each position sees a different input type,
- * and function parameters are contravariant).
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type MigrationFn = (oldValue: any) => unknown | Promise<unknown>;
 
-/**
- * Length-locked migrations tuple, derived from the literal `version`.
- *
- * - `version: 1` → `readonly []`
- * - `version: 3` → `readonly [MigrationFn, MigrationFn]`
- * - `version: number` → `ReadonlyArray<MigrationFn>` (no length check)
- *
- * Element type is uniform `MigrationFn`; chain-type enforcement remains the job
- * of the `defineMigrations<T>()` helper (which produces per-slot typed fns
- * whose signatures are still assignable to `MigrationFn`).
- */
 export type MigrationTuple<V extends number> = number extends V
   ? ReadonlyArray<MigrationFn>
   : V extends 0 | 1
@@ -61,12 +28,6 @@ export type MigrationTuple<V extends number> = number extends V
       ? { readonly [K in keyof T]: MigrationFn }
       : never;
 
-/**
- * Widen primitive literal types back to their base. Used in `defineItem`
- * non-schema overloads so `TValue` stays wide while `TFallback` stays narrow.
- * defineItem('x', { fallback: 5 }) → TFallback=5, TValue=number Objects/arrays
- * pass through unchanged.
- */
 export type Widen<T> = T extends string
   ? string
   : T extends number
@@ -77,16 +38,6 @@ export type Widen<T> = T extends string
         ? bigint
         : T;
 
-/**
- * Deep-readonly transform. Applied at library boundaries where narrow readonly
- * literals produced by `<const>` inference must flow into contexts that would
- * otherwise reject them on mutability grounds. `T` is assignable to
- * `DeepReadonly<T>`, so declaring a parameter as `DeepReadonly<T>` accepts both
- * narrow-readonly literals and full-mutable values with no cast.
- *
- * Scope: primitives, arrays, tuples, and object literals — the shapes that
- * appear in storage payloads. Maps/Sets/callables not handled (not JSON).
- */
 export type DeepReadonly<T> = T extends
   | null
   | undefined
@@ -102,23 +53,8 @@ export type DeepReadonly<T> = T extends
       ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
       : T;
 
-/**
- * Strip `readonly` from every top-level property. The inverse of TypeScript's
- * built-in `Readonly<T>`. See TS issue #24509 for the long-standing request to
- * add this to `lib.d.ts`.
- */
 export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
-/**
- * Deep counterpart of `Mutable<T>` — recursively strip `readonly` from objects,
- * arrays, and tuples. Used at return positions where a narrow deep-readonly
- * `TValue` (from `<const>` inference) needs to be widened back to its mutable
- * shape so consumers can assign to mutable targets.
- *
- * Modelled on `type-fest`'s `WritableDeep`, trimmed to storage-relevant shapes
- * (primitives / arrays / tuples / plain objects). See TS issue #13923 for the
- * general request.
- */
 export type WritableDeep<T> = T extends
   | null
   | undefined
@@ -136,14 +72,6 @@ export type WritableDeep<T> = T extends
         ? { -readonly [K in keyof T]: WritableDeep<T[K]> }
         : T;
 
-/**
- * Force TypeScript to eagerly resolve every member of a mapped type on hover.
- * Display-only transform — does not change assignability. Without it, hovering
- * `bookmarks.version` shows the declared `readonly version: TVersion`; with it,
- * the instantiated `3` literal.
- *
- * Also known as `Prettify` / `Simplify` / `Compute` in the ecosystem.
- */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 // ─── Storage keys ─────────────────────────────────────────────────────
@@ -157,10 +85,9 @@ export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
  * literal; when the type is used bare it degrades to the union of all four
  * area-prefixed template literals.
  *
- * `G` is an optional escape-hatch parameter — supply it when you want to pin
- * the name half to a specific literal or union (`StorageItemKey<'theme'>` =
- * `${StorageArea}:theme`). Most callers leave it defaulted to `string` and let
- * per-method `<const K extends StorageItemKey>` do the literal narrowing.
+ * `StorageItemKey` itself is intentionally broad. Literal preservation happens
+ * at call sites that need it (for example `defineItem('local:theme', ...)` and
+ * mapped tuple batch APIs), not by parameterizing the alias itself.
  */
 export type StorageItemKey = `${StorageArea}:${string}`;
 
