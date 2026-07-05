@@ -11,6 +11,9 @@ import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { SchemaError } from '@standard-schema/utils';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
+import { assertMutable, type WxtStorageDriver } from './driver';
+import { MigrationError } from './migrations';
+import { processReadValue, processWriteValue } from './pipeline-adapters';
 import type {
   DeepReadonly,
   GetItemOptions,
@@ -83,22 +86,6 @@ function createStorage(): WxtStorage {
       throw Error(`Invalid area "${area}". Options: ${areaNames}`);
     }
     return driver;
-  }
-
-  /**
-   * Runtime guard that narrows `WxtStorageDriver<StorageArea>` to a
-   * `MutableStorageDriver` for non-`'managed'` areas. `chrome.storage.managed`
-   * rejects writes at runtime; this catches them at the WXT boundary.
-   */
-  function assertMutable(
-    driver: WxtStorageDriver,
-  ): asserts driver is MutableStorageDriver<Exclude<StorageArea, 'managed'>> {
-    if (driver.area === 'managed') {
-      throw Error(
-        `Cannot write to \`browser.storage.managed\` — it is read-only. ` +
-          `Managed policy is set by admins and cannot be modified from an extension.`,
-      );
-    }
   }
 
   const resolveKey = <const K extends StorageItemKey>(key: K) => {
@@ -179,61 +166,6 @@ function createStorage(): WxtStorage {
     return getMetaValue(res);
   };
 
-  /**
-   * Read pipeline: `raw → serializer.read? → schema.validate → T`.
-   *
-   * `raw == null` short-circuits to `fallback`. Schema failures apply the
-   * `onValidationError` strategy (`'throw'` | `'fallback'` | `'reset'` |
-   * `(issues, raw) => T`). `pipelineOpts.allowReset: false` disables the
-   * destructive `driver.removeItem` in the `'reset'` branch — watch callbacks
-   * pass this so an invalid oldValue can't wipe a freshly-written valid one.
-   */
-  const processReadValue = async <T>(
-    raw: unknown,
-    opts: WxtStorageItemOptions<T> | undefined,
-    driver: WxtStorageDriver,
-    driverKey: string,
-    pipelineOpts: { allowReset?: boolean } = {},
-  ): Promise<T | null> => {
-    // DeepReadonly→T covariance boundary. See getValueOrFallback.
-    const fallback: T | null =
-      ((opts?.fallback ?? opts?.defaultValue) as T | null | undefined) ?? null;
-
-    if (raw == null) return fallback;
-
-    if (opts?.schema) {
-      const preValidation: unknown = opts.serializer?.read
-        ? opts.serializer.read(raw)
-        : raw;
-      const result = await opts.schema['~standard'].validate(preValidation);
-      if (result.issues) {
-        const strategy = opts.onValidationError ?? 'throw';
-        if (strategy === 'throw') {
-          throw new SchemaError(result.issues);
-        }
-        if (strategy === 'fallback') {
-          return fallback;
-        }
-        if (strategy === 'reset') {
-          if (pipelineOpts.allowReset !== false) {
-            assertMutable(driver);
-            await driver.removeItem(driverKey);
-          }
-          return fallback;
-        }
-        return strategy(result.issues, raw);
-      }
-      return result.value;
-    }
-
-    if (opts?.serializer?.read) {
-      return opts.serializer.read(raw);
-    }
-
-    // No schema, no serializer: trust the caller's declared T.
-    return raw as T;
-  };
-
   const setItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
@@ -241,31 +173,6 @@ function createStorage(): WxtStorage {
   ): Promise<void> => {
     assertMutable(driver);
     await driver.setItem(driverKey, value ?? null);
-  };
-
-  /**
-   * Write pipeline: `T → schema.validate → serializer.write → raw`.
-   *
-   * Returns both the raw wire form and the (possibly schema-transformed)
-   * runtime value. Validation always throws on failure — `onValidationError` is
-   * a read-only setting.
-   */
-  const processWriteValue = async <T>(
-    value: T,
-    opts: WxtStorageItemOptions<T> | undefined,
-  ): Promise<{ raw: unknown; validated: T }> => {
-    let validated: T = value;
-    if (opts?.schema) {
-      const result = await opts.schema['~standard'].validate(value);
-      if (result.issues) {
-        throw new SchemaError(result.issues);
-      }
-      validated = result.value;
-    }
-    const raw = opts?.serializer?.write
-      ? opts.serializer.write(validated)
-      : validated;
-    return { raw, validated };
   };
 
   const setMeta = async (
@@ -1553,81 +1460,6 @@ export interface WxtStorage {
   >;
 }
 
-/**
- * Common surface of every driver — reads and observation. Available on both
- * mutable areas (`local`/`sync`/`session`) and the read-only `managed` area.
- */
-interface BaseStorageDriver<TArea extends StorageArea> {
-  /**
-   * The `chrome.storage.*` area this driver wraps. Preserved as a literal via
-   * `<const TArea>` on `createDriver`, so a driver returned by
-   * `createDriver('local')` is typed with area `'local'` — distinct from
-   * `'managed'` at compile time even when method surfaces overlap. Callers that
-   * want per-area guarantees can narrow via this brand.
-   *
-   * `TArea` sits in an output-position (`readonly area`), so it's covariant: a
-   * narrow driver assigns to a wide `<StorageArea>` slot (widening is allowed
-   * at read sites).
-   */
-  readonly area: TArea;
-  getItem(key: string): Promise<unknown>;
-  getItems(
-    keys: readonly string[],
-  ): Promise<Array<{ key: string; value: unknown }>>;
-  snapshot(): Promise<Record<string, unknown>>;
-  watch(key: string, cb: WatchCallback<unknown>): Unwatch;
-  unwatch(): void;
-}
-
-/**
- * Adds the write methods on top of {@link BaseStorageDriver}. Only mutable areas
- * (`local` | `sync` | `session`) satisfy this shape.
- */
-interface MutableStorageDriver<
-  TArea extends StorageArea,
-> extends BaseStorageDriver<TArea> {
-  setItem(key: string, value: unknown): Promise<void>;
-  setItems(
-    values: ReadonlyArray<{ key: string; value: unknown }>,
-  ): Promise<void>;
-  removeItem(key: string): Promise<void>;
-  removeItems(keys: readonly string[]): Promise<void>;
-  clear(): Promise<void>;
-  restoreSnapshot(data: Record<string, unknown>): Promise<void>;
-}
-
-/**
- * `browser.storage.managed` is read-only — write attempts throw at runtime
- * (extensions can only READ managed policy set by admins). This alias makes
- * that invariant type-visible: structurally identical to
- * {@link BaseStorageDriver}, no mutation methods present.
- */
-type ReadonlyStorageDriver<TArea extends StorageArea> =
-  BaseStorageDriver<TArea>;
-
-/**
- * Public driver type, keyed by area. Distributing conditional:
- *
- * WxtStorageDriver<'managed'> → ReadonlyStorageDriver<'managed'>
- * WxtStorageDriver<'local'> → MutableStorageDriver<'local'>
- * WxtStorageDriver<StorageArea> distributes to
- * ReadonlyStorageDriver<'managed'>
- *
- * | MutableStorageDriver<'local' | 'sync' | 'session'>
- *
- * So `WxtStorageDriver<'managed'>.setItem` is a compile-time error — the
- * "managed is read-only" invariant is moved from runtime docs into the type
- * system.
- *
- * The wide default `WxtStorageDriver<StorageArea>` is a distributed union, so
- * only common (read) methods survive without narrowing. Internal callers with
- * wide area must runtime-narrow via {@link assertMutable} before writing.
- */
-type WxtStorageDriver<TArea extends StorageArea = StorageArea> =
-  TArea extends 'managed'
-    ? ReadonlyStorageDriver<TArea>
-    : MutableStorageDriver<TArea>;
-
 export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
@@ -1708,136 +1540,7 @@ export interface WxtStorageItem<
 // WxtStorageItemOptions, WxtStorageItemSerializer, OnValidationError moved
 // to ./types.
 
-/**
- * Wrap a synchronous or asynchronous parse function into a Standard Schema.
- *
- * Use this when your validator does not conform to Standard Schema natively —
- * for example TypeBox (`Value.Parse`), io-ts (`.decode`), or hand-rolled
- * parsers. The `parse` function must return the parsed value on success or
- * throw on failure.
- *
- * @example
- *   ```ts
- *   import { Type, Value } from '@sinclair/typebox';
- *   const Theme = Type.Union([Type.Literal('light'), Type.Literal('dark')]);
- *
- *   const theme = storage.defineItem('local:theme', {
- *     schema: defineSchema<'light' | 'dark'>((v) => Value.Parse(Theme, v)),
- *   });
- *   ```;
- */
-export function defineSchema<T>(
-  parse: (value: unknown) => T | Promise<T>,
-): StandardSchemaV1<unknown, T> {
-  return {
-    '~standard': {
-      version: 1,
-      vendor: '@wxt-dev/storage/defineSchema',
-      validate: async (value: unknown): Promise<StandardSchemaV1.Result<T>> => {
-        try {
-          return { value: await parse(value) };
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : String(error);
-          return { issues: [{ message }] };
-        }
-      },
-    },
-  };
-}
+export { defineSchema } from './pipeline';
 
-/**
- * Chain-checked migrations for `WxtStorageItemOptions.migrations`.
- *
- * Returns a curried function whose overloads validate that each migration's
- * return type matches the next migration's parameter type, and that the last
- * migration's return type matches `TValue`.
- *
- * At runtime, this is an identity wrapper — it returns the migrations array
- * unchanged. All the work is at the type level.
- *
- * @example
- *   ```ts
- *   storage.defineItem('local:count', {
- *   version: 3,
- *   fallback: 0,
- *   migrations: defineMigrations<number>()(
- *   (v) => Number(v) * 2,   // v1 → v2 (unknown → number)
- *   (v) => v + 10,          // v2 → v3 (number → number, must match TValue)
- *   ),
- *   });
- *   ```;
- */
-interface DefineMigrations<TValue> {
-  (): readonly [];
-  <A extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-  ): readonly [(v: unknown) => A | Promise<A>];
-  <A, B extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-    f2: (v: A) => B | Promise<B>,
-  ): readonly [(v: unknown) => A | Promise<A>, (v: A) => B | Promise<B>];
-  <A, B, C extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-    f2: (v: A) => B | Promise<B>,
-    f3: (v: B) => C | Promise<C>,
-  ): readonly [
-    (v: unknown) => A | Promise<A>,
-    (v: A) => B | Promise<B>,
-    (v: B) => C | Promise<C>,
-  ];
-  <A, B, C, D extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-    f2: (v: A) => B | Promise<B>,
-    f3: (v: B) => C | Promise<C>,
-    f4: (v: C) => D | Promise<D>,
-  ): readonly [
-    (v: unknown) => A | Promise<A>,
-    (v: A) => B | Promise<B>,
-    (v: B) => C | Promise<C>,
-    (v: C) => D | Promise<D>,
-  ];
-  <A, B, C, D, E extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-    f2: (v: A) => B | Promise<B>,
-    f3: (v: B) => C | Promise<C>,
-    f4: (v: C) => D | Promise<D>,
-    f5: (v: D) => E | Promise<E>,
-  ): readonly [
-    (v: unknown) => A | Promise<A>,
-    (v: A) => B | Promise<B>,
-    (v: B) => C | Promise<C>,
-    (v: C) => D | Promise<D>,
-    (v: D) => E | Promise<E>,
-  ];
-  <A, B, C, D, E, F extends TValue>(
-    f1: (v: unknown) => A | Promise<A>,
-    f2: (v: A) => B | Promise<B>,
-    f3: (v: B) => C | Promise<C>,
-    f4: (v: C) => D | Promise<D>,
-    f5: (v: D) => E | Promise<E>,
-    f6: (v: E) => F | Promise<F>,
-  ): readonly [
-    (v: unknown) => A | Promise<A>,
-    (v: A) => B | Promise<B>,
-    (v: B) => C | Promise<C>,
-    (v: C) => D | Promise<D>,
-    (v: D) => E | Promise<E>,
-    (v: E) => F | Promise<F>,
-  ];
-  // Beyond 6 versions, fall back to the untyped array shape.
-  (
-    ...migrations: ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>
-  ): ReadonlyArray<(v: unknown) => unknown | Promise<unknown>>;
-}
-
-export function defineMigrations<TValue>(): DefineMigrations<TValue> {
-  return ((...migrations: ReadonlyArray<(v: unknown) => unknown>) =>
-    migrations) as DefineMigrations<TValue>;
-}
-
-export class MigrationError extends Error {
-  constructor(key: string, version: number, options?: ErrorOptions) {
-    super(`v${version} migration failed for "${key}"`, options);
-  }
-}
+export { defineMigrations } from './migrations';
+export { MigrationError };
