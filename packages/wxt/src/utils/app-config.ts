@@ -2,7 +2,7 @@
 // @ts-expect-error: Untyped virtual module
 import appConfig from 'virtual:app-config';
 import type { WxtAppConfig } from './define-app-config';
-import { logger } from './internal/logger';
+import { wxt } from '../core/wxt';
 
 /**
  * Get runtime config defined in `<srcDir>/app.config.ts`
@@ -21,7 +21,7 @@ export function getAppConfig(): WxtAppConfig {
  */
 export function useAppConfig(): WxtAppConfig {
   // After v1.0 this function will be removed, and migrate to use only `getAppConfig` instead.
-  logger.warn(
+  wxt.logger.warn(
     '`useAppConfig` is deprecated. Please use `getAppConfig` instead.',
   );
 
