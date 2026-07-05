@@ -7,6 +7,9 @@ import {
 } from './pipeline';
 import type { WxtStorageItemOptions } from './types';
 
+export const cloneFallback = <T>(fallback: T | null | undefined): T | null =>
+  fallback == null ? null : (structuredClone(fallback) as T);
+
 export const processReadValue = async <T>(
   raw: unknown,
   opts: WxtStorageItemOptions<T> | undefined,
@@ -14,14 +17,11 @@ export const processReadValue = async <T>(
   driverKey: string,
   pipelineOpts: { allowReset?: boolean } = {},
 ): Promise<T | null> => {
-  // DeepReadonly→T boundary: opts.fallback is `DeepReadonly<T> | undefined`
-  // at the public API; internal use widens back to T. Read-only pipeline,
-  // no mutation.
   const rawFallback = (opts?.fallback ?? opts?.defaultValue) as
     | T
     | null
     | undefined;
-  const getFallback = (): T | null => rawFallback ?? null;
+  const getFallback = (): T | null => cloneFallback<T>(rawFallback);
 
   if (raw == null) return getFallback();
 

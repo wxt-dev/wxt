@@ -13,7 +13,11 @@ import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
 import { assertMutable, type WxtStorageDriver } from './driver';
 import { MigrationError } from './migrations';
-import { processReadValue, processWriteValue } from './pipeline-adapters';
+import {
+  cloneFallback,
+  processReadValue,
+  processWriteValue,
+} from './pipeline-adapters';
 import type {
   DeepReadonly,
   GetItemOptions,
@@ -137,7 +141,7 @@ function createStorage(): WxtStorage {
   const getValueOrFallback = <T>(
     value: T | null | undefined,
     fallback: DeepReadonly<T> | null | undefined,
-  ): T | null => value ?? (fallback as T | null | undefined) ?? null;
+  ): T | null => value ?? cloneFallback<T>(fallback as T | null | undefined);
 
   const isRecord = (v: unknown): v is Record<string, unknown> =>
     typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -663,7 +667,8 @@ function createStorage(): WxtStorage {
 
       const initMutex = new Mutex();
 
-      const getFallback = () => opts?.fallback ?? opts?.defaultValue ?? null;
+      const getFallback = () =>
+        cloneFallback(opts?.fallback ?? opts?.defaultValue);
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
@@ -1170,7 +1175,7 @@ export interface WxtStorage {
   // TValidationError='throw', TSchema=undefined.
   defineItem<
     TValue,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
   >(
     key: TKey,
@@ -1194,7 +1199,7 @@ export interface WxtStorage {
   //   TSchema   — the schema itself is captured as its exact type
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TFallback = StandardSchemaV1.InferOutput<TSchema>,
@@ -1230,7 +1235,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TFallback = StandardSchemaV1.InferOutput<TSchema>,
@@ -1267,7 +1272,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
@@ -1304,7 +1309,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TSchema extends StandardSchemaV1<unknown, unknown>,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
@@ -1339,7 +1344,7 @@ export interface WxtStorage {
   // Non-schema overloads.
   defineItem<
     TValue,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TFallback = Widen<TValue>,
@@ -1370,7 +1375,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TValue,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TFallback = Widen<TValue>,
@@ -1401,7 +1406,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TValue,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,
@@ -1431,7 +1436,7 @@ export interface WxtStorage {
   >;
   defineItem<
     TValue,
-    TMetadata extends Record<string, unknown> = {},
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
     const TKey extends StorageItemKey = StorageItemKey,
     TRaw = unknown,
     const TVersion extends number = number,

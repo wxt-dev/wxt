@@ -68,6 +68,21 @@ describe('Storage Utils', () => {
         expect(actual).toBeNull();
       });
 
+      it('returns a fresh fallback clone each call so mutations do not leak (#1766)', async () => {
+        const item = storage.defineItem<string[]>(`${storageArea}:list`, {
+          fallback: [],
+        });
+
+        for (let i = 0; i < 3; i++) {
+          await item.removeValue();
+          const list = await item.getValue();
+          expect(list).toEqual([]);
+          list.push('test');
+          await item.setValue(list);
+          expect(await item.getValue()).toEqual(['test']);
+        }
+      });
+
       it('should return the default value if passed in options', async () => {
         const expected = 0;
         const actual = await storage.getItem(`${storageArea}:count`, {
