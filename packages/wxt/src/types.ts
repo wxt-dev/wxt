@@ -184,8 +184,6 @@ export interface InlineConfig {
    * `web-ext.config.ts` file.
    */
   webExt?: WebExtConfig;
-  /** @deprecated Use `webExt` instead. Same option, just renamed. */
-  runner?: WebExtConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
