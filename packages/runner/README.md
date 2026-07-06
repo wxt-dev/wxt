@@ -6,14 +6,11 @@ Programmatically open a browser and install a web extension from a local directo
 
 ### With WXT
 
-> [!WARNING]
-> This package is intended to replace [`web-ext`](https://github.com/mozilla/web-ext) in the future, but it is not ready at the moment. Once it's ready for testing in WXT, more details will be added here.
-
 ```ts
 // ~/wxt.runner.config.ts OR <project>/wxt.runner.config.ts
-import { defineRunnerConfig } from 'wxt';
+import { defineWebExtConfig } from 'wxt';
 
-export default defineRunnerConfig({
+export default defineWebExtConfig({
   // Options go here
 });
 ```

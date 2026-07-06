@@ -1138,9 +1138,6 @@ export interface ConfigEnv {
 
 export type WxtCommand = 'build' | 'serve';
 
-/** @deprecated Use `WebExtConfig` instead. */
-export type ExtensionRunnerConfig = WebExtConfig;
-
 /**
  * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the
  * browser.
