@@ -1,7 +1,8 @@
 import definition from 'virtual:user-content-script-isolated-world-entrypoint';
 import { logger } from '../utils/internal/logger';
-import { ContentScriptContext } from 'wxt/utils/content-script-context';
+import { ContentScriptContext } from '../utils/content-script-context';
 import { initPlugins } from 'virtual:wxt-plugins';
+import { runContentScriptWithSpaSupport } from '../utils/internal/spa-content-script';
 
 const result = (async () => {
   try {
@@ -9,7 +10,12 @@ const result = (async () => {
     const { main, ...options } = definition;
     const ctx = new ContentScriptContext(import.meta.env.ENTRYPOINT, options);
 
-    return await main(ctx);
+    if (options.spa) {
+      runContentScriptWithSpaSupport(ctx, definition);
+      return;
+    }
+
+    return await main(ctx as any);
   } catch (err) {
     logger.error(
       `The content script "${import.meta.env.ENTRYPOINT}" crashed on startup!`,

@@ -117,5 +117,32 @@ describe('Validation Utils', () => {
 
       expect(actual).toEqual(expected);
     });
+
+    it('should return an error when spa is enabled for main world content scripts', () => {
+      const entrypoint = fakeContentScriptEntrypoint({
+        options: {
+          matches: ['*://example.com/*'],
+          spa: true,
+          world: 'MAIN',
+        },
+      });
+      const expected = {
+        errors: [
+          {
+            type: 'error',
+            message:
+              '`spa` is only supported for isolated world content scripts',
+            value: true,
+            entrypoint,
+          },
+        ],
+        errorCount: 1,
+        warningCount: 0,
+      };
+
+      const actual = validateEntrypoints([entrypoint]);
+
+      expect(actual).toEqual(expected);
+    });
   });
 });

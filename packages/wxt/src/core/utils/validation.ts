@@ -41,6 +41,14 @@ function validateContentScriptEntrypoint(
       entrypoint: definition,
     });
   }
+  if (definition.options.spa && definition.options.world === 'MAIN') {
+    errors.push({
+      type: 'error',
+      message: '`spa` is only supported for isolated world content scripts',
+      value: definition.options.spa,
+      entrypoint: definition,
+    });
+  }
   return errors;
 }
 

@@ -53,7 +53,9 @@ export function mapWxtOptionsToContentScript(
   css: string[] | undefined,
 ): ManifestContentScript {
   return {
-    matches: options.matches ?? [],
+    matches: options.spa
+      ? getContentScriptDomainMatches(options.matches)
+      : (options.matches ?? []),
     all_frames: options.allFrames,
     match_about_blank: options.matchAboutBlank,
     exclude_globs: options.excludeGlobs,
@@ -75,7 +77,9 @@ export function mapWxtOptionsToRegisteredContentScript(
   return {
     allFrames: options.allFrames,
     excludeMatches: options.excludeMatches,
-    matches: options.matches,
+    matches: options.spa
+      ? getContentScriptDomainMatches(options.matches)
+      : options.matches,
     runAt: options.runAt,
     js,
     css,
@@ -88,4 +92,22 @@ export function getContentScriptJs(
   entrypoint: ContentScriptEntrypoint,
 ): string[] {
   return [getEntrypointBundlePath(entrypoint, config.outDir, '.js')];
+}
+
+export function getContentScriptDomainMatches(
+  matches: string[] | undefined,
+): string[] {
+  return [...new Set((matches ?? []).map(getContentScriptDomainMatch))];
+}
+
+function getContentScriptDomainMatch(pattern: string): string {
+  if (pattern === '<all_urls>' || pattern.startsWith('file:')) return pattern;
+
+  const schemeSeparatorIndex = pattern.indexOf('://');
+  if (schemeSeparatorIndex === -1) return pattern;
+
+  const pathStartIndex = pattern.indexOf('/', schemeSeparatorIndex + 3);
+  if (pathStartIndex === -1) return pattern;
+
+  return `${pattern.slice(0, pathStartIndex)}/*`;
 }

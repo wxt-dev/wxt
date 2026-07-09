@@ -746,6 +746,19 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
    */
   noScriptStartedPostMessage?: boolean;
+  /**
+   * Re-run this content script when a single-page app changes URL and the new
+   * URL matches one of the configured match patterns.
+   *
+   * When enabled, WXT registers the content script for the match pattern's
+   * whole origin, then filters against the original match patterns at runtime.
+   *
+   * Only supported for isolated world content scripts.
+   *
+   * @default false
+   * @experimental
+   */
+  spa?: PerBrowserOption<boolean>;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {

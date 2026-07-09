@@ -1,5 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { hashContentScriptOptions } from '../content-scripts';
+import {
+  getContentScriptDomainMatches,
+  hashContentScriptOptions,
+  mapWxtOptionsToContentScript,
+} from '../content-scripts';
 import { setFakeWxt } from '../testing/fake-objects';
 
 describe('Content Script Utils', () => {
@@ -28,6 +32,40 @@ describe('Content Script Utils', () => {
       });
 
       expect(hash1).toBe(hash2);
+    });
+  });
+
+  describe('getContentScriptDomainMatches', () => {
+    it('should strip path patterns so SPA content scripts can run on same-origin navigations', () => {
+      expect(
+        getContentScriptDomainMatches([
+          '*://*.youtube.com/watch*',
+          '*://*.youtube.com/shorts/*',
+          'https://example.com/admin/*',
+          '<all_urls>',
+          'file:///*',
+        ]),
+      ).toEqual([
+        '*://*.youtube.com/*',
+        'https://example.com/*',
+        '<all_urls>',
+        'file:///*',
+      ]);
+    });
+  });
+
+  describe('mapWxtOptionsToContentScript', () => {
+    it('should use domain-level matches for SPA content scripts', () => {
+      const actual = mapWxtOptionsToContentScript(
+        {
+          matches: ['*://*.youtube.com/watch*'],
+          spa: true,
+        },
+        ['content-scripts/content.js'],
+        undefined,
+      );
+
+      expect(actual.matches).toEqual(['*://*.youtube.com/*']);
     });
   });
 });
