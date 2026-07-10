@@ -64,9 +64,7 @@ function createStorage(): WxtStorage {
     value ?? fallback ?? null;
 
   const getMetaValue = (properties: any) =>
-    properties != null &&
-    typeof properties === 'object' &&
-    !Array.isArray(properties)
+    typeof properties === 'object' && !Array.isArray(properties)
       ? properties
       : {};
 
@@ -144,8 +142,8 @@ function createStorage(): WxtStorage {
     cb: WatchCallback<any>,
   ) =>
     watch(driver, getMetaKey(driverKey), (newValue, oldValue) => {
-      const newMeta = getMetaValue(newValue);
-      const oldMeta = getMetaValue(oldValue);
+      const newMeta = getMetaValue(newValue) ?? {};
+      const oldMeta = getMetaValue(oldValue) ?? {};
       if (dequal(newMeta, oldMeta)) return;
 
       cb(newMeta, oldMeta);
