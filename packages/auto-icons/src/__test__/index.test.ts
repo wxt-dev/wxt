@@ -259,6 +259,33 @@ describe('auto-icons module', () => {
         '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
       );
     });
+
+    it('should not duplicate icon entries in manifest when sizes overlap defaults', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        sizes: [16, 32, 48, 96, 128],
+      };
+
+      await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
+
+      const manifestHook = vi
+        .mocked(mockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+
+      const manifest: UserManifest = {};
+      if (manifestHook) {
+        await manifestHook(mockWxt as unknown as Wxt, manifest);
+      }
+
+      expect(Object.keys(manifest.icons ?? {})).toHaveLength(5);
+      expect(manifest.icons).toEqual({
+        16: 'icons/16.png',
+        32: 'icons/32.png',
+        48: 'icons/48.png',
+        96: 'icons/96.png',
+        128: 'icons/128.png',
+      });
+    });
   });
 
   describe('icon generation hook', () => {
@@ -417,6 +444,35 @@ describe('auto-icons module', () => {
       }
 
       expect(mockSharpInstance.grayscale).not.toHaveBeenCalled();
+    });
+
+    it('should deduplicate sizes that overlap with defaults', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        sizes: [16, 32, 48, 96, 128], // fully overlaps defaults [128, 48, 32, 16], only 96 is new
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(mockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(mockWxt as unknown as Wxt, output);
+      }
+
+      // Each size should only be resized/written once
+      expect(mockSharpInstance.resize).toHaveBeenCalledTimes(5);
+      expect(output.publicAssets).toEqual([
+        { type: 'asset', fileName: 'icons/16.png' },
+        { type: 'asset', fileName: 'icons/32.png' },
+        { type: 'asset', fileName: 'icons/48.png' },
+        { type: 'asset', fileName: 'icons/96.png' },
+        { type: 'asset', fileName: 'icons/128.png' },
+      ]);
     });
   });
 
