@@ -50,6 +50,7 @@
     "markdownlint-cli": "^0.49.0",
     "nano-spawn": "catalog:",
     "nano-staged": "^1.0.2",
+    "oxlint": "catalog:",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
     "prettier-plugin-jsdoc": "^1.8.0",
