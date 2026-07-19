@@ -13,6 +13,8 @@ import { splitShadowRootCss } from '../split-shadow-root-css';
  *
  * > This function is async because it has to load the CSS via a network call.
  *
+ * @param options - Shadow root options. See {@link ContentScriptUiOptions} for
+ *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#shadow-root
  */
 export async function createShadowRootUi<TMounted>(
