@@ -81,3 +81,7 @@ body {
 .item {
   z-index: 1;
 }
+
+.title {
+  background: #161618;
+}
