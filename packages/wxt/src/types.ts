@@ -675,7 +675,7 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    *   name
    * - `false`: Output the IIFE without a variable name, making it anonymous. This
    *   is the safest option to avoid conflicts with existing variables on the
-   *   page. This will become the default in a future version of WXT.
+   *   page.
    * - `string`: Use the provided string as the global variable name.
    * - `function`: A function that receives the entrypoint and returns a string to
    *   use as the variable name.
