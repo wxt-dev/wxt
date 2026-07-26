@@ -249,7 +249,7 @@ export default defineConfig({
 
 ### `createShadowRootUi` DOM Changes
 
-`@webext-core/isolated-element` was upgraded from v1 to v3. The only breaking change relevant to WXT projects is the changes the internal structure of the shadow root's DOM, simplifying it from a full `<html>` document to just a `div`:
+`@webext-core/isolated-element` was upgraded from v1 to v3. The only breaking change relevant to WXT projects is that the internal structure of the shadow root's is simpler:
 
 :::code-group
 
@@ -275,7 +275,7 @@ export default defineConfig({
 
 :::
 
-Historically, CSS frameworks haven't had good support for shadow roots, so we needed a full `<html>` structure for styles to be applied correctly. But that has change this past few years, frameworks have started to include the `host:` selector alongside `root:`, which is required for base styles to be applied to the shadow root's host element:
+Historically, CSS frameworks haven't had good support for shadow roots, so we needed a full `<html>` structure for styles to be applied correctly. But that has change this past few years, frameworks have started to include the `host:` selector alongside `root:` (which is required for base styles to be applied to the shadow root's host element):
 
 ```css
 :root { /* [!code --] */
@@ -313,7 +313,7 @@ This applies per-entrypoint, to both `defineContentScript` and `defineUnlistedSc
 
 ### ESLint Auto-Import Config Now Detects Your Installed ESLint Version
 
-Setting `imports.eslintrc.enabled: true` used to always assume you wanted the legacy ESLint 8 config format (`.wxt/eslintrc-auto-import.json`), regardless of which ESLint version you actually had installed.
+Setting `imports.eslintrc.enabled: true` used to always assume you wanted the legacy ESLint 8 config format, regardless of which ESLint version you actually had installed.
 
 Now, `true` behaves the same as `'auto'`: WXT detects your installed ESLint version and generates the matching file automatically (ESLint 9+ &rarr; `eslint-auto-imports.mjs`, ESLint &le;8 &rarr; `eslintrc-auto-import.json`).
 
@@ -340,30 +340,28 @@ APIs deprecated in v0.20 have been removed:
 
 ### CWS v2 API Support
 
-`publish-browser-extension` was upgraded to v5, which adds support for the new Chrome Web Store API v2 to `wxt submit`! Instead of using a refresh token, it uses a service account, which is much easier to setup and never expires. It also supports a few other features: <https://developer.chrome.com/blog/cws-api-v2>
+`publish-browser-extension` was upgraded to v5, which adds support for the new Chrome Web Store v2 API to `wxt submit`! Instead of using a refresh token for auth, it uses a service account, which is much easier to setup and never expires. It also supports a few other features: <https://developer.chrome.com/blog/cws-api-v2>
 
 To setup your project to use v2, run `wxt submit init` and go through the setup process for the CWS, selecting v2 when prompted.
 
 v1 will stop working **15th October 2026**, so you have a few months to migrate.
 
-### Other Dependency Upgrades
+### `@webext-core/fake-browser` v2
 
-A few dependencies were bumped to their latest major versions:
+If you use `wxt/testing/fake-browser` (or `@webext-core/fake-browser` directly) in unit tests, note that its types now match `@wxt-dev/browser` instead of `webextension-polyfill`. This is the same change WXT's own `browser` went through in [v0.20](#webextension-polyfill-removed).
 
-- **`@webext-core/fake-browser` v1 &rarr; v2**: If you use `wxt/testing/fake-browser` (or `@webext-core/fake-browser` directly) in unit tests, note that its types now match `@wxt-dev/browser` instead of `webextension-polyfill`. This is the same change WXT's own `browser` went through in [v0.20](#webextension-polyfill-removed). Most notably, **mocking `browser.runtime.onMessage` listeners that return a promise no longer works**, use `sendResponse` instead:
+Most notably, **mocking `browser.runtime.onMessage` listeners that return a promise no longer works**, use `sendResponse` instead:
 
-  ```ts
-  fakeBrowser.runtime.onMessage.addListener(async () => { // [!code --]
-    return await someAsyncWork(); // [!code --]
-  fakeBrowser.runtime.onMessage.addListener((_message, _sender, sendResponse) => { // [!code ++]
-    someAsyncWork().then(sendResponse); // [!code ++]
-    return true; // [!code ++]
-  });
-  ```
+```ts
+fakeBrowser.runtime.onMessage.addListener(async () => { // [!code --]
+  return await someAsyncWork(); // [!code --]
+fakeBrowser.runtime.onMessage.addListener((_message, _sender, sendResponse) => { // [!code ++]
+  someAsyncWork().then(sendResponse); // [!code ++]
+  return true; // [!code ++]
+});
+```
 
-  If you use use a messaging library, it will likely continue working as-is.
-
-- **`@webext-core/match-patterns` v1 &rarr; v2** and **`dotenv-expand` v12 &rarr; v13**: No action needed, non-breaking for WXT's usage.
+If you use use a messaging library, it will likely continue working as-is.
 
 ## New Deprecations in v0.20
 
