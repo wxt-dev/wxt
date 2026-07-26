@@ -38,7 +38,7 @@ jobs:
   #   secrets: inherit
 
   publish:
-    name: Publish
+    name: Publish ${{ case(inputs.dryRun, ' (DRY RUN)', '') }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write # Push version changes
