@@ -8,7 +8,8 @@ import { registerWxt } from '../core/wxt';
 import spawn from 'nano-spawn';
 
 /**
- * Wrap an action handler to add a timer, error handling, and maybe enable debug mode.
+ * Wrap an action handler to add a timer, error handling, and maybe enable debug
+ * mode.
  */
 export function wrapAction(
   cb: (
@@ -54,8 +55,8 @@ export function wrapAction(
 }
 
 /**
- * Array flags, when not passed, are either `undefined` or `[undefined]`. This function filters out
- * the
+ * Array flags, when not passed, are either `undefined` or `[undefined]`. This
+ * function filters out the
  */
 export function getArrayFromFlags<T>(
   flags: any,
@@ -81,8 +82,12 @@ export function createAliasedCommand(
   bin: string,
   docsUrl: string,
 ) {
+  // Declare a variadic positional arg so cac forwards subcommands like `wxt
+  // submit init` instead of rejecting them as unused args. `.allowUnknownOptions`
+  // only relaxes flag checks, not positional args. Required since cac@7, which
+  // throws on unused positional args (see cacjs/cac#135).
   const aliasedCommand = base
-    .command(name, `Alias for ${alias} (${docsUrl})`)
+    .command(`${name} [...args]`, `Alias for ${alias} (${docsUrl})`)
     .allowUnknownOptions()
     .action(async () => {
       try {

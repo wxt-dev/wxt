@@ -1,13 +1,13 @@
 import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import path from 'node:path';
-import { ensureDir } from 'fs-extra';
+import { mkdir } from 'node:fs/promises';
 import spawn from 'nano-spawn';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
   async downloadDependency(id, downloadDir) {
-    await ensureDir(downloadDir);
+    await mkdir(downloadDir, { recursive: true });
     const res = await spawn('npm', ['pack', id, '--json'], {
       cwd: downloadDir,
     });

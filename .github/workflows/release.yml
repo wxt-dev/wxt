@@ -40,7 +40,7 @@ jobs:
       - validate
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }} # https://github.com/sbellone/release-workflow-example
@@ -56,18 +56,18 @@ jobs:
 
       - name: Bump and Tag
         run: |
-          pnpm tsx scripts/bump-package-version.ts ${{ inputs.package }}
+          bun run scripts/bump-package-version.ts ${{ inputs.package }}
           git push
           git push --tags
 
       - name: Publish to NPM
         working-directory: packages/${{ inputs.package }}
         run: |
-          pnpm pack
+          bun pm pack
           sudo npm i -g npm@latest
-          /usr/local/bin/npm publish *.tgz
+          npm publish *.tgz
 
       - name: Create GitHub release
-        run: pnpm tsx scripts/create-github-release.ts ${{ inputs.package }}
+        run: bun run scripts/create-github-release.ts ${{ inputs.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

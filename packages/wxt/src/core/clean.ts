@@ -1,36 +1,19 @@
+import { rm } from 'node:fs/promises';
 import path from 'node:path';
-import glob from 'fast-glob';
-import fs from 'fs-extra';
-import pc from 'picocolors';
+import { glob } from 'tinyglobby';
 import { InlineConfig } from '../types';
 import { registerWxt, wxt } from './wxt';
+import { styleText } from 'node:util';
 
 /**
  * Remove generated/temp files from the directory.
+ *
+ * @example
+ *   await clean();
  *
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
- *
- * @example
- * await clean();
  */
-export async function clean(config?: InlineConfig): Promise<void>;
-/**
- * Remove generated/temp files from the directory.
- *
- * @deprecated
- *
- * @param root The directory to look for generated/temp files in. Defaults to `process.cwd()`. Can be relative to `process.cwd()` or absolute.
- *
- * @example
- * await clean();
- */
-export async function clean(root?: string): Promise<void>;
-
-export async function clean(config?: string | InlineConfig) {
-  if (typeof config === 'string') {
-    config = { root: config };
-  }
-
+export async function clean(config?: InlineConfig): Promise<void> {
   await registerWxt('build', config);
   wxt.logger.info('Cleaning Project');
 
@@ -39,15 +22,19 @@ export async function clean(config?: string | InlineConfig) {
   const tempDirs = [
     'node_modules/.vite',
     'node_modules/.cache',
-    '**/.wxt',
+    '{,**/}.wxt',
     `${path.relative(root, wxt.config.outBaseDir)}/*`,
   ];
-  wxt.logger.debug('Looking for:', tempDirs.map(pc.cyan).join(', '));
+  wxt.logger.debug(
+    'Looking for:',
+    tempDirs.map((dir) => styleText('cyan', dir)).join(', '),
+  );
   const directories = await glob(tempDirs, {
     cwd: root,
     absolute: true,
     onlyDirectories: true,
     deep: 2,
+    expandDirectories: false,
   });
   if (directories.length === 0) {
     wxt.logger.debug('No generated files found.');
@@ -56,10 +43,14 @@ export async function clean(config?: string | InlineConfig) {
 
   wxt.logger.debug(
     'Found:',
-    directories.map((dir) => pc.cyan(path.relative(root, dir))).join(', '),
+    directories
+      .map((dir) => styleText('cyan', path.relative(root, dir)))
+      .join(', '),
   );
   for (const directory of directories) {
-    await fs.rm(directory, { force: true, recursive: true });
-    wxt.logger.debug('Deleted ' + pc.cyan(path.relative(root, directory)));
+    await rm(directory, { force: true, recursive: true });
+    wxt.logger.debug(
+      'Deleted ' + styleText('cyan', path.relative(root, directory)),
+    );
   }
 }

@@ -84,6 +84,51 @@ describe('Output Directory Structure', () => {
     `);
   });
 
+  it('should route content script CSS with Rollup strict deprecations enabled', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/content.content/index.ts',
+      `import './style.css';
+      export default defineContentScript({
+        matches: ["*://*/*"],
+        main: () => {},
+      })`,
+    );
+    project.addFile(
+      'entrypoints/content.content/style.css',
+      `body { color: purple }`,
+    );
+
+    await project.build({
+      vite: () => ({
+        build: {
+          rollupOptions: {
+            strictDeprecations: true,
+          },
+        },
+      }),
+    });
+
+    expect(
+      await project.serializeOutput([
+        '.output/chrome-mv3/content-scripts/content.js',
+      ]),
+    ).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/content-scripts/content.css
+      ----------------------------------------
+      body{color:purple}
+
+      ================================================================================
+      .output/chrome-mv3/content-scripts/content.js
+      ----------------------------------------
+      <contents-ignored>
+      ================================================================================
+      .output/chrome-mv3/manifest.json
+      ----------------------------------------
+      {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","content_scripts":[{"matches":["*://*/*"],"css":["content-scripts/content.css"],"js":["content-scripts/content.js"]}]}"
+    `);
+  });
+
   it('should allow inputs with invalid JS variable names, like dashes', async () => {
     const project = new TestProject();
     project.addFile(

@@ -1,6 +1,4 @@
-/**
- * SHOULD ONLY BE IMPORTED IN TESTS.
- */
+/** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
@@ -28,7 +26,7 @@ import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.test.SEED);
+faker.seed(import.meta.env.TEST_SEED);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -141,7 +139,7 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
         '64': 'icon/64.png',
       },
     ]),
-    mv2Key: faker.helpers.arrayElement([
+    actionType: faker.helpers.arrayElement([
       'browser_action',
       'page_action',
       undefined,
@@ -266,9 +264,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     publicDir: fakeDir(),
     root: fakeDir(),
     wxtModuleDir: fakeDir(),
-    runnerConfig: {
-      config: {},
-    },
     webExt: {
       config: {},
     },
@@ -302,12 +297,14 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     userConfigMetadata: {},
     alias: {},
     experimental: {},
+    watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
     },
     hooks: {},
     vite: () => ({}),
     plugins: [],
+    suppressWarnings: {},
   };
 });
 

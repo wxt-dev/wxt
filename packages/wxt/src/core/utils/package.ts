@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import fs from 'fs-extra';
+import { readJson } from './fs';
 import { wxt } from '../wxt';
 
 /**
@@ -12,7 +12,7 @@ export async function getPackageJson(): Promise<
 > {
   const file = resolve(wxt.config.root, 'package.json');
   try {
-    return await fs.readJson(file);
+    return await readJson(file);
   } catch (err) {
     wxt.logger.debug(
       `Failed to read package.json at: ${file}. Returning undefined.`,

@@ -78,3 +78,28 @@ Here are some examples:
   ```
 
 Alternatively, you can use the [`filterEntrypoints` config](/api/reference/wxt/interfaces/InlineConfig#filterentrypoints) to list all the entrypoints you want to build.
+
+## Per-Browser Options
+
+Some entrypoint options can be customized per build target by passing an object keyed by the [target browser](/guide/essentials/target-different-browsers#target-a-browser) instead of a single value. This is useful when different browsers need different match patterns, run timings, or other entrypoint behavior:
+
+```ts
+export default defineContentScript({
+  matches: {
+    chrome: ['*://chrome.example.com/*'],
+    firefox: ['*://firefox.example.com/*'],
+  },
+  runAt: {
+    chrome: 'document_start',
+    firefox: 'document_end',
+  },
+
+  world: {
+    firefox: 'MAIN',
+  },
+
+  main(ctx) {
+    // ...
+  },
+});
+```

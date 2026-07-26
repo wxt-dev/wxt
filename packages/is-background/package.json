@@ -6,19 +6,20 @@
   "license": "MIT",
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "pnpm build && check",
+    "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "pnpm test run --coverage",
-    "prepack": "pnpm build"
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:^"
   },
   "devDependencies": {
-    "oxlint": "^1.43.0",
-    "publint": "^0.3.17",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "repository": {
     "type": "git",

@@ -61,9 +61,7 @@ vi.mock('is-wsl', () => ({
   },
 }));
 
-/**
- * Imitate a real module not found error - needs the correct `code` property.
- */
+/** Imitate a real module not found error - needs the correct `code` property. */
 class ModuleNotFoundError extends Error {
   code = 'ERR_MODULE_NOT_FOUND';
 

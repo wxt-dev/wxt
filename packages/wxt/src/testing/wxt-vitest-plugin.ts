@@ -2,12 +2,11 @@
  * Contains a Vitest plugin that configures your test environment to work with
  * WXT projects.
  *
- * @module wxt/testing/vitest
+ * @module wxt/testing/vitest-plugin
  */
 
 import type * as vite from 'vite';
 import {
-  download,
   tsconfigPaths,
   globals,
   extensionApiMock,
@@ -18,7 +17,8 @@ import UnimportPlugin from 'unimport/unplugin';
 import { registerWxt, wxt } from '../core/wxt';
 
 /**
- * Vite plugin that configures Vitest with everything required to test a WXT extension, based on the `<root>/wxt.config.ts`
+ * Vite plugin that configures Vitest with everything required to test a WXT
+ * extension, based on the `<root>/wxt.config.ts`
  *
  * ```ts
  * // vitest.config.ts
@@ -30,7 +30,8 @@ import { registerWxt, wxt } from '../core/wxt';
  * });
  * ```
  *
- * @param inlineConfig Customize WXT's config for testing. Any config specified here overrides the config from your `wxt.config.ts` file.
+ * @param inlineConfig Customize WXT's config for testing. Any config specified
+ *   here overrides the config from your `wxt.config.ts` file.
  */
 export async function WxtVitest(
   inlineConfig?: InlineConfig,
@@ -39,7 +40,6 @@ export async function WxtVitest(
 
   const plugins: vite.PluginOption[] = [
     globals(wxt.config),
-    download(wxt.config),
     tsconfigPaths(wxt.config),
     resolveAppConfig(wxt.config),
     extensionApiMock(wxt.config),

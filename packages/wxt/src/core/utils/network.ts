@@ -21,8 +21,8 @@ export async function isOnline(): Promise<boolean> {
 }
 
 /**
- * Fetches a URL with a simple GET request. Grabs it from cache if it doesn't exist, or throws an
- * error if it can't be resolved via the network or cache.
+ * Fetches a URL with a simple GET request. Grabs it from cache if it doesn't
+ * exist, or throws an error if it can't be resolved via the network or cache.
  */
 export async function fetchCached(
   url: string,

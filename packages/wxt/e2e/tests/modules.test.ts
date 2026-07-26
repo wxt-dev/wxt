@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
 import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
-import { readFile } from 'fs-extra';
+import { readFile } from 'node:fs/promises';
 import { normalizePath } from '../../src';
 
 describe('Module Helpers', () => {

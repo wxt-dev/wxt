@@ -72,6 +72,43 @@ If you have a custom template for one of these options, replace `{{version}}` wi
 
 If you don't customize `artifactTemplate` or `sourcesTemplate`, this does not effect you.
 
+## Shadow root UIs no longer include a full HTML document
+
+`@webext-core/isolated-element` was upgraded to v2. This release changes the internal structure of the shadow DOM, simplifying it from a full `<html>` document to just a `div`:
+
+:::code-group
+
+```[Before]
+<html>
+  <head>
+    <style>...</style>
+  </head>
+  <body>
+    ...your app
+  </body>
+</html>
+```
+
+```[After]
+<style>...</style>
+<div>
+  ...your app
+</div>
+```
+
+:::
+
+Most modern CSS frameworks support the simplified "fragment", but if yours doesn't, please open an issue. You'll know if something broke because your content script UI will be unstyled.
+
+If you roll your own CSS, make sure your base styles are applied to shadow root hosts like so:
+
+```css
+:root { /* [!code --] */
+:root, :host { /* [!code ++] */
+    /* base styles... */
+}
+```
+
 ## New Deprecations in v0.20
 
 Deprecated APIs will be removed in the next major release.
@@ -519,7 +556,7 @@ export default defineConfig({
 
 ### Renamed Undocumented Constants
 
-Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: <https://wxt.dev/guide/multiple-browsers.html#runtime>
+Renamed undocumented constants for detecting the build config at runtime in [#380](https://github.com/wxt-dev/wxt/pull/380). Now documented here: <https://wxt.dev/guide/essentials/config/environment-variables.html#built-in-environment-variables>
 
 - `__BROWSER__` → `import.meta.env.BROWSER`
 - `__COMMAND__` → `import.meta.env.COMMAND`
@@ -599,6 +636,8 @@ To add them back to your project, add the following to your project's TSConfig:
 Unlisted scripts must now `export default defineUnlistedScript(...)`.
 
 ### `BackgroundDefinition` Type
+
+<!-- cspell:disable -->
 
 Rename `BackgroundScriptDefintition` to `BackgroundDefinition`.
 

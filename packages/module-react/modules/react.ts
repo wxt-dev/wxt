@@ -1,15 +1,16 @@
 import 'wxt';
 import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 import react, { Options as PluginOptions } from '@vitejs/plugin-react';
+import type { PluginOption } from 'vite';
 
 export default defineWxtModule<ReactModuleOptions>({
   name: '@wxt-dev/module-react',
   configKey: 'react',
   setup(wxt, options) {
-    const { vite } = options ?? {};
+    const { vite, vitePluginsBefore } = options ?? {};
 
     addViteConfig(wxt, () => ({
-      plugins: [react(vite)],
+      plugins: [...(vitePluginsBefore ?? []), react(vite)],
     }));
 
     addImportPreset(wxt, 'react');
@@ -30,6 +31,12 @@ export default defineWxtModule<ReactModuleOptions>({
 
 export interface ReactModuleOptions {
   vite?: PluginOptions;
+  /**
+   * Vite plugins to add before the `react()` plugin. Some plugins like the
+   * `@tanstack/router-plugin` need to be added before `react()` to work
+   * correctly.
+   */
+  vitePluginsBefore?: PluginOption[];
 }
 
 declare module 'wxt' {

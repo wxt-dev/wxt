@@ -1,13 +1,10 @@
-import { describe, expect, it } from 'vitest';
-import { TestProject } from '../utils';
 import extract from 'extract-zip';
 import spawn from 'nano-spawn';
-import { readFile, writeFile } from 'fs-extra';
-
-process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
+import { describe, expect, it } from 'vitest';
+import { TestProject } from '../utils';
 
 describe('Zipping', () => {
-  it('should download packages and produce a valid build when zipping sources', async () => {
+  it('should download packages and include them as overrides in the zipped package.json', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -29,24 +26,15 @@ describe('Zipping', () => {
     expect(await project.pathExists('.output/')).toBe(true);
 
     await extract(sourcesZip, { dir: unzipDir });
-    // Update package json wxt path
-    const packageJsonPath = project.resolvePath(unzipDir, 'package.json');
-    const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
-    packageJson.dependencies.wxt = '../../../../..';
-    await writeFile(
-      packageJsonPath,
-      JSON.stringify(packageJson, null, 2),
-      'utf-8',
-    );
 
     // Build zipped extension
     await expect(
-      spawn('pnpm', ['i', '--ignore-workspace', '--frozen-lockfile', 'false'], {
+      spawn('bun', ['install'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');
     await expect(
-      spawn('pnpm', ['wxt', 'build', '-b', 'firefox'], {
+      spawn('bun', ['wxt', 'build', '-b', 'firefox'], {
         cwd: unzipDir,
       }),
     ).resolves.not.toHaveProperty('exitCode');
@@ -64,10 +52,9 @@ describe('Zipping', () => {
         "description": "Example description",
         "version": "1.0.0",
         "dependencies": {
-          "wxt": "../../../../..",
           "flatten": "1.0.3"
         },
-        "resolutions": {
+        "overrides": {
           "flatten@1.0.3": "file://./.wxt/local_modules/flatten-1.0.3.tgz"
         }
       }"

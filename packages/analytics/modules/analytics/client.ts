@@ -25,7 +25,7 @@ type AnalyticsMethod =
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;
+) => (...args: Parameters<Analytics[K]>) => Promise<void>;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -62,7 +62,8 @@ export function createAnalytics(config?: AnalyticsConfig): Analytics {
 }
 
 /**
- * Creates an analytics client in the background responsible for uploading events to the server to avoid CORS errors.
+ * Creates an analytics client in the background responsible for uploading
+ * events to the server to avoid CORS errors.
  */
 function createBackgroundAnalytics(
   config: AnalyticsConfig | undefined,
@@ -83,9 +84,13 @@ function createBackgroundAnalytics(
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
   const userAgent = UAParser();
-  let userId = Promise.resolve(userIdStorage.getValue()).then(
-    (id) => id ?? globalThis.crypto.randomUUID(),
-  );
+  let userId = Promise.resolve(userIdStorage.getValue()).then(async (id) => {
+    if (id != null) return id;
+    // Persist the generated ID so it's stable across service worker restarts.
+    const generatedId = globalThis.crypto.randomUUID();
+    await userIdStorage.setValue?.(generatedId);
+    return generatedId;
+  });
   let userProperties = userPropertiesStorage.getValue();
   const manifest = browser.runtime.getManifest();
 
@@ -219,9 +224,7 @@ function createBackgroundAnalytics(
   return analytics;
 }
 
-/**
- * Creates an analytics client for non-background contexts.
- */
+/** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
   const port = browser.runtime.connect({ name: ANALYTICS_PORT });
   const sessionId = Date.now();
@@ -239,6 +242,7 @@ function createFrontendAnalytics(): Analytics {
     (fn) =>
     (...args) => {
       port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      return Promise.resolve();
     };
 
   const analytics: Analytics = {

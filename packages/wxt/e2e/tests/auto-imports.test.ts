@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import spawn from 'nano-spawn';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -29,7 +28,7 @@ describe('Auto Imports', () => {
             const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
             const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
             const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
-            const fakeBrowser: typeof import('wxt/testing').fakeBrowser
+            const fakeBrowser: typeof import('wxt/testing/fake-browser').fakeBrowser
             const getAppConfig: typeof import('wxt/utils/app-config').getAppConfig
             const injectScript: typeof import('wxt/utils/inject-script').injectScript
             const storage: typeof import('wxt/utils/storage').storage
@@ -125,7 +124,7 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
             export { startOfDay } from '../utils/time';
           }
           "
@@ -210,7 +209,7 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
           }
           "
         `);
@@ -218,7 +217,7 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: true" should output a JSON config file compatible with ESlint of package.json', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -231,7 +230,7 @@ describe('Auto Imports', () => {
       });
 
       expect(
-        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
       ).toMatchSnapshot();
     });
 
@@ -318,9 +317,8 @@ describe('Auto Imports', () => {
         await project.prepare({
           imports: { eslintrc: { enabled: version } },
         });
-        return await spawn('pnpm', ['eslint', 'entrypoints/background.js'], {
-          cwd: project.root,
-        });
+
+        return await project.run('eslint', 'entrypoints/background.js');
       }
 
       describe('ESLint 9', () => {

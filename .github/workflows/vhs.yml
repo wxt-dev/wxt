@@ -17,23 +17,20 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup
         uses: ./.github/actions/setup
-        with:
-          install: false
 
       - name: Setup Go
-        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
         with:
           go-version: '1.25.1'
 
-      # This prevents pnpm dlx from downloading WXT in the video
-      - name: Pre-install WXT
-        run: |
-          pnpm store add wxt@latest
-          pnpm dlx wxt@latest --version
+      # This prevents bunx from downloading WXT in the video, and it uses the checked-out version
+      - name: Build WXT
+        working-directory: packages/wxt
+        run: bun run build
 
       - name: Record VHS
         run: |
@@ -42,10 +39,13 @@ jobs:
           vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'docs: Update `wxt init` GIF'
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           # https://github.com/charmbracelet/vhs#output
           file_pattern: 'docs/assets/*.gif'

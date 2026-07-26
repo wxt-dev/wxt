@@ -9,57 +9,71 @@ import { normalizePath } from '../paths';
 import { wxt } from '../../wxt';
 
 /**
- * Compare the changed files vs the build output and determine what kind of reload needs to happen:
+ * Compare the changed files vs the build output and determine what kind of
+ * reload needs to happen:
  *
  * - Do nothing
- *   - CSS or JS file associated with an HTML page is changed - this is handled automatically by the
- *     dev server
+ *
+ *   - CSS or JS file associated with an HTML page is changed - this is handled
+ *       automatically by the dev server
  *   - Change isn't used by any of the entrypoints
  * - Reload Content script
+ *
  *   - CSS or JS file associated with a content script
  *   - Background script will be told to reload the content script
  * - Reload HTML file
- *   - HTML file itself is saved - HMR doesn't handle this because the HTML pages are pre-rendered
- *   - Chrome is OK reloading the page when the HTML file is changed without reloading the whole
- *     extension. Not sure about firefox, this might need to change to an extension reload
+ *
+ *   - HTML file itself is saved - HMR doesn't handle this because the HTML pages
+ *       are pre-rendered
+ *   - Chrome is OK reloading the page when the HTML file is changed without
+ *       reloading the whole extension. Not sure about firefox, this might need
+ *       to change to an extension reload
  * - Reload extension
+ *
  *   - Background script is changed
  *   - Manifest is different
  * - Restart browser
- *   - web-ext.config.ts (runner config changes)
+ *
+ *   - Web-ext.config.ts (runner config changes)
  * - Full dev server restart
- *   - wxt.config.ts (main config file)
- *   - modules/* (any file related to WXT modules)
+ *
+ *   - Wxt.config.ts (main config file)
+ *   - Modules/* (any file related to WXT modules)
  *   - .env (environment variable changed could effect build)
  */
 export function detectDevChanges(
   changedFiles: string[],
   currentOutput: BuildOutput,
 ): DevModeChange {
-  const isConfigChange = some(
+  const relevantChangedFiles = getRelevantDevChangedFiles(
     changedFiles,
+    currentOutput,
+  );
+
+  const isConfigChange = some(
+    relevantChangedFiles,
     (file) => file === wxt.config.userConfigMetadata.configFile,
   );
   if (isConfigChange) return { type: 'full-restart' };
 
-  const isWxtModuleChange = some(changedFiles, (file) =>
+  const isWxtModuleChange = some(relevantChangedFiles, (file) =>
     file.startsWith(wxt.config.modulesDir),
   );
   if (isWxtModuleChange) return { type: 'full-restart' };
 
   const isRunnerChange = some(
-    changedFiles,
-    (file) => file === wxt.config.runnerConfig.configFile,
+    relevantChangedFiles,
+    (file) => file === wxt.config.webExt.configFile,
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 
   const changedSteps = new Set(
-    changedFiles.flatMap((changedFile) =>
+    relevantChangedFiles.flatMap((changedFile) =>
       findEffectedSteps(changedFile, currentOutput),
     ),
   );
   if (changedSteps.size === 0) {
-    const hasPublicChange = some(changedFiles, (file) =>
+    const hasPublicChange = some(relevantChangedFiles, (file) =>
       file.startsWith(wxt.config.publicDir),
     );
     if (hasPublicChange) {
@@ -93,8 +107,8 @@ export function detectDevChanges(
   }
 
   const isOnlyHtmlChanges =
-    changedFiles.length > 0 &&
-    every(changedFiles, (file) => file.endsWith('.html'));
+    relevantChangedFiles.length > 0 &&
+    every(relevantChangedFiles, (file) => file.endsWith('.html'));
   if (isOnlyHtmlChanges) {
     return {
       type: 'html-reload',
@@ -125,8 +139,22 @@ export function detectDevChanges(
   };
 }
 
+export function getRelevantDevChangedFiles(
+  changedFiles: string[],
+  currentOutput: BuildOutput,
+): string[] {
+  return Array.from(new Set(changedFiles)).filter((changedFile) => {
+    if (changedFile === wxt.config.userConfigMetadata.configFile) return true;
+    if (changedFile.startsWith(wxt.config.modulesDir)) return true;
+    if (changedFile === wxt.config.webExt.configFile) return true;
+    if (changedFile.startsWith(wxt.config.publicDir)) return true;
+    return findEffectedSteps(changedFile, currentOutput).length > 0;
+  });
+}
+
 /**
- * For a single change, return all the step of the build output that were effected by it.
+ * For a single change, return all the step of the build output that were
+ * effected by it.
  */
 function findEffectedSteps(
   changedFile: string,
@@ -165,8 +193,8 @@ function findEffectedSteps(
 }
 
 /**
- * Contains information about what files changed, what needs rebuilt, and the type of reload that is
- * required.
+ * Contains information about what files changed, what needs rebuilt, and the
+ * type of reload that is required.
  */
 export type DevModeChange =
   | NoChange
@@ -181,13 +209,9 @@ interface NoChange {
 }
 
 interface RebuildChange {
-  /**
-   * The list of entrypoints that need rebuilt.
-   */
+  /** The list of entrypoints that need rebuilt. */
   rebuildGroups: EntrypointGroup[];
-  /**
-   * The previous output stripped of any files are going to change.
-   */
+  /** The previous output stripped of any files are going to change. */
   cachedOutput: BuildOutput;
 }
 

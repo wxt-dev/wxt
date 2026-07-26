@@ -78,7 +78,7 @@ Example PR: <https://github.com/wxt-dev/wxt/pull/2152>
 
    ```sh
    cd packages/<dir-name>
-   pnpm publish --access public
+   bun publish --access public
    ```
 
 7. Create a basic release on GitHub mentioning the new package is available.

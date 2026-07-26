@@ -1,12 +1,14 @@
 .DS_Store
 .env
 .env.*
+!packages/wxt/src/core/utils/__tests__/fixtures/.env
 .idea
 .output
 .webextrc
 .wxt
 .wxt-runner
 *.log
+*.tgz
 /docs/.vitepress/cache
 docs/.vitepress/.temp
 coverage
@@ -20,6 +22,5 @@ templates/*/yarn.lock
 templates/*/package-lock.json
 docs/api/reference
 stats.html
-.tool-versions
 .cache
 *-stats.txt

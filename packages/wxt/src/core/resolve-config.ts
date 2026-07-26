@@ -1,29 +1,29 @@
 import { loadConfig } from 'c12';
 import { resolve as esmResolve } from 'import-meta-resolve';
 import {
-  InlineConfig,
-  ResolvedConfig,
-  UserConfig,
   ConfigEnv,
-  UserManifestFn,
-  UserManifest,
-  WebExtConfig,
-  WxtResolvedUnimportOptions,
+  InlineConfig,
   Logger,
+  ResolvedConfig,
+  ResolvedEslintrc,
+  UserConfig,
+  UserManifest,
+  UserManifestFn,
+  WebExtConfig,
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
-  ResolvedEslintrc,
+  WxtResolvedUnimportOptions,
   ExtensionRunner,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullablyRequired } from './utils/types';
-import fs from 'fs-extra';
+import { NullishRequired } from './utils/types';
+import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
-import glob from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
@@ -36,11 +36,12 @@ import { createWslRunner } from './runners/wsl';
 import { createManualRunner } from './runners/manual';
 
 /**
- * Given an inline config, discover the config file if necessary, merge the results, resolve any
- * relative paths, and apply any defaults.
+ * Given an inline config, discover the config file if necessary, merge the
+ * results, resolve any relative paths, and apply any defaults.
  *
- * Inline config always has priority over user config. Cli flags are passed as inline config if set.
- * If unset, undefined is passed in, letting this function decide default values.
+ * Inline config always has priority over user config. Cli flags are passed as
+ * inline config if set. If unset, undefined is passed in, letting this function
+ * decide default values.
  */
 export async function resolveConfig(
   inlineConfig: InlineConfig,
@@ -123,19 +124,13 @@ export async function resolveConfig(
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-
-  if (inlineConfig.runner != null || userConfig.runner != null) {
-    logger.warn(
-      '`InlineConfig#runner` is deprecated, use `InlineConfig#webExt` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
-    );
-  }
   const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
     rcFile: '.webextrc',
-    overrides: inlineConfig.webExt ?? inlineConfig.runner,
-    defaults: userConfig.webExt ?? userConfig.runner,
+    overrides: inlineConfig.webExt,
+    defaults: userConfig.webExt,
   });
   // Make sure alias are absolute
   const alias = Object.fromEntries(
@@ -150,26 +145,21 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
-    if (mergedConfig.dev?.server?.hostname)
-      logger.warn(
-        `The 'hostname' option is deprecated, please use 'host' or 'origin' depending on your circumstances.`,
-      );
-
-    const host =
-      mergedConfig.dev?.server?.host ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const host = mergedConfig.dev?.server?.host ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
-    const origin =
-      mergedConfig.dev?.server?.origin ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const origin = mergedConfig.dev?.server?.origin ?? 'localhost';
+    const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
         // Passing host required for Mac, unsure of Windows/Linux
         host,
         port: 3000,
         portRange: [3001, 3010],
+      });
+    } else if (!strictPort) {
+      port = await getPort({
+        host,
+        port,
       });
     }
     const originWithProtocolAndPort = [
@@ -181,6 +171,7 @@ export async function resolveConfig(
       host,
       port,
       origin: originWithProtocolAndPort,
+      strictPort,
       watchDebounce: safeStringToNumber(process.env.WXT_WATCH_DEBOUNCE) ?? 800,
     };
   }
@@ -222,7 +213,6 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig: webExt,
     webExt,
     runner:
       command === 'serve'
@@ -236,6 +226,8 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {}),
+    suppressWarnings: mergedConfig.suppressWarnings ?? {},
+    watchOptions: mergedConfig.watchOptions ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -259,7 +251,8 @@ async function resolveManifestConfig(
 }
 
 /**
- * Merge the inline config and user config. Inline config is given priority. Defaults are not applied here.
+ * Merge the inline config and user config. Inline config is given priority.
+ * Defaults are not applied here.
  */
 async function mergeInlineConfig(
   inlineConfig: InlineConfig,
@@ -303,7 +296,7 @@ function resolveZipConfig(
   browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['zip']> {
+): NullishRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
@@ -339,7 +332,7 @@ function resolveZipConfig(
 function resolveAnalysisConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullablyRequired<ResolvedConfig['analysis']> {
+): NullishRequired<ResolvedConfig['analysis']> {
   const analysisOutputFile = path.resolve(
     root,
     mergedConfig.analysis?.outputFile ?? 'stats.html',
@@ -365,7 +358,11 @@ async function getUnimportOptions(
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
-  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  const eslintrc = await getUnimportEslintOptions(
+    logger,
+    wxtDir,
+    config.imports,
+  );
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
 
@@ -375,7 +372,7 @@ async function getUnimportOptions(
   ];
 
   const defaultOptions: WxtResolvedUnimportOptions = {
-    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing/fake-browser' }],
     presets: [
       {
         from: 'wxt/browser',
@@ -505,25 +502,34 @@ async function getUnimportOptions(
 }
 
 async function getUnimportEslintOptions(
+  logger: Logger,
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
     options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
 
+  const version = await getEslintVersion();
+  const major = parseInt(version[0]);
+
   let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
-      const version = await getEslintVersion();
-      let major = parseInt(version[0]);
-      if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
-      // NaN
-      else enabled = false;
-      break;
     case true:
-      enabled = 8;
+      if (isNaN(major)) {
+        if (inlineEnabled === true) {
+          logger.warn(
+            'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
+          );
+        }
+        enabled = false;
+      } else if (major <= 8) {
+        enabled = 8;
+      } else if (major >= 9) {
+        enabled = 9;
+      } else {
+        enabled = false;
+      }
       break;
     default:
       enabled = inlineEnabled;
@@ -533,15 +539,13 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
+      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
     ),
     globalsPropValue: true,
   };
 }
 
-/**
- * Returns the path to `node_modules/wxt`.
- */
+/** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
   // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
   // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
@@ -554,7 +558,7 @@ function resolveWxtModuleDir() {
 }
 
 async function isDirMissing(dir: string) {
-  return !(await fs.pathExists(dir));
+  return !(await pathExists(dir));
 }
 
 function logMissingDir(logger: Logger, name: string, expected: string) {
@@ -565,9 +569,7 @@ function logMissingDir(logger: Logger, name: string, expected: string) {
   );
 }
 
-/**
- * Map of `ConfigEnv` commands to their default modes.
- */
+/** Map of `ConfigEnv` commands to their default modes. */
 const COMMAND_MODES: Record<WxtCommand, string> = {
   build: 'production',
   serve: 'development',
@@ -625,6 +627,7 @@ export async function resolveWxtUserModules(
   const localModulePaths = await glob(['*.[tj]s', '*/index.[tj]s'], {
     cwd: modulesDir,
     onlyFiles: true,
+    expandDirectories: false,
   }).catch(() => []);
   // Sort modules to ensure a consistent execution order
   localModulePaths.sort();

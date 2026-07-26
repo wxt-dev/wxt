@@ -7,7 +7,7 @@ import {
 } from '../virtual-modules';
 
 describe('Virtual Modules', () => {
-  it('should resolve types to litteral values, not string', () => {
+  it('should resolve types to literal values, not string', () => {
     // @ts-expect-error
     const _c: VirtualEntrypointType = '';
     // @ts-expect-error
