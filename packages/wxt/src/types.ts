@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { UnimportOptions, Import } from 'unimport';
+import { Import, UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -199,9 +199,11 @@ export interface InlineConfig {
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
      *   `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev'
+     *   for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default '{{name}}-{{version}}-{{browser}}.zip'
+     * @default '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip'
      */
     artifactTemplate?: string;
     /**
@@ -228,9 +230,11 @@ export interface InlineConfig {
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
      *   `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev'
+     *   for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default '{{name}}-{{version}}-sources.zip'
+     * @default '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip'
      */
     sourcesTemplate?: string;
     /**
@@ -1218,7 +1222,7 @@ export interface WxtBuilder {
    * Import a JS entrypoint file, returning the default export containing the
    * options.
    */
-  importEntrypoint<T>(path: string): Promise<T>;
+  importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
   /** Import a list of JS entrypoint files, returning their options. */
   importEntrypoints(paths: string[]): Promise<Record<string, unknown>[]>;
   /**
@@ -1528,7 +1532,10 @@ export interface ResolvedConfig {
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
+  /** @deprecated - Use {@link webExt} instead. */
   runnerConfig: C12ResolvedConfig<WebExtConfig>;
+  webExt: C12ResolvedConfig<WebExtConfig>;
+  runner: ExtensionRunner;
   zip: {
     name?: string;
     artifactTemplate: string;
@@ -1634,16 +1641,16 @@ export interface Eslintrc {
    * When true, generates a file that can be used by ESLint to know which
    * variables are valid globals.
    *
-   * - `false`: Don't generate the file.
    * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
    *   config file.
-   * - `true`: Same as `8`.
+   * - `true`: Same as `'auto'`.
+   * - `false`: Don't generate the file.
    * - `8`: Generate a config file compatible with ESLint 8.
    * - `9`: Generate a config file compatible with ESLint 9.
    *
    * @default 'auto'
    */
-  enabled?: false | true | 'auto' | 8 | 9;
+  enabled?: 'auto' | boolean | 8 | 9;
   /**
    * File path to save the generated eslint config.
    *

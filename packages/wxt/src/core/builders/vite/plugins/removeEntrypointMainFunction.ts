@@ -22,7 +22,7 @@ export function removeEntrypointMainFunction(
       },
       handler(code) {
         const newCode = removeMainFunctionCode(code);
-        config.logger.debug('vite-node transformed entrypoint', path);
+        config.logger.debug('transformed entrypoint', path);
         config.logger.debug(`Original:\n---\n${code}\n---`);
         config.logger.debug(`Transformed:\n---\n${newCode.code}\n---`);
         return newCode;

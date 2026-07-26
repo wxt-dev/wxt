@@ -1,19 +1,20 @@
 import { loadConfig } from 'c12';
 import { resolve as esmResolve } from 'import-meta-resolve';
 import {
-  InlineConfig,
-  ResolvedConfig,
-  UserConfig,
   ConfigEnv,
-  UserManifestFn,
-  UserManifest,
-  WebExtConfig,
-  WxtResolvedUnimportOptions,
+  InlineConfig,
   Logger,
+  ResolvedConfig,
+  ResolvedEslintrc,
+  UserConfig,
+  UserManifest,
+  UserManifestFn,
+  WebExtConfig,
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
-  ResolvedEslintrc,
+  WxtResolvedUnimportOptions,
+  ExtensionRunner,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -29,6 +30,10 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createSafariRunner } from './runners/safari';
+import isWsl from 'is-wsl';
+import { createWslRunner } from './runners/wsl';
+import { createManualRunner } from './runners/manual';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the
@@ -119,7 +124,7 @@ export async function resolveConfig(
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-  const runnerConfig = await loadConfig<WebExtConfig>({
+  const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
@@ -219,7 +224,11 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig,
+    webExt,
+    runner:
+      command === 'serve'
+        ? await resolveRunner(browser, logger, mergedConfig)
+        : createManualRunner(),
     srcDir,
     typesDir,
     wxtDir,
@@ -302,8 +311,9 @@ function resolveZipConfig(
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
-    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesTemplate: '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip',
+    artifactTemplate:
+      '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
@@ -359,7 +369,11 @@ async function getUnimportOptions(
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
-  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  const eslintrc = await getUnimportEslintOptions(
+    logger,
+    wxtDir,
+    config.imports,
+  );
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
 
@@ -499,25 +513,34 @@ async function getUnimportOptions(
 }
 
 async function getUnimportEslintOptions(
+  logger: Logger,
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
     options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
 
+  const version = await getEslintVersion();
+  const major = parseInt(version[0]);
+
   let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
-      const version = await getEslintVersion();
-      let major = parseInt(version[0]);
-      if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
-      // NaN
-      else enabled = false;
-      break;
     case true:
-      enabled = 8;
+      if (isNaN(major)) {
+        if (inlineEnabled === true) {
+          logger.warn(
+            'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
+          );
+        }
+        enabled = false;
+      } else if (major <= 8) {
+        enabled = 8;
+      } else if (major >= 9) {
+        enabled = 9;
+      } else {
+        enabled = false;
+      }
       break;
     default:
       enabled = inlineEnabled;
@@ -527,7 +550,7 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
+      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
     ),
     globalsPropValue: true,
   };
@@ -644,4 +667,29 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
+}
+
+async function resolveRunner(
+  browser: string,
+  logger: Logger,
+  mergedConfig: InlineConfig,
+): Promise<ExtensionRunner> {
+  if (browser === 'safari') return createSafariRunner();
+
+  if (isWsl) return createWslRunner();
+
+  try {
+    // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
+    const { createWebExtRunner } = await import('./runners/web-ext');
+    return mergedConfig.webExt?.disabled
+      ? createManualRunner()
+      : createWebExtRunner();
+  } catch (err: any) {
+    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+
+    console.log('error', err);
+    logger.debug('Error loading the web-ext runner', err);
+  }
+
+  return createManualRunner();
 }
