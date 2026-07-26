@@ -95,7 +95,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
 
     await printFileList(
-      wxt.logger.success,
+      wxt.logger.info,
       `Sources included in \`${sourcesZipFilename}\``,
       wxt.config.zip.sourcesRoot,
       files,
