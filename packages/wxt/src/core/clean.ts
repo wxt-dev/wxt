@@ -13,9 +13,7 @@ import { styleText } from 'node:util';
  *
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
  */
-export async function clean(config?: InlineConfig): Promise<void>;
-
-export async function clean(config?: InlineConfig) {
+export async function clean(config?: InlineConfig): Promise<void> {
   await registerWxt('build', config);
   wxt.logger.info('Cleaning Project');
 
