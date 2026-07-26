@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { yarn } from '../yarn';
+import { describeWithBin } from '../../utils/testing/fixtures';
 
-describe('Yarn Package Management Utils', () => {
+describeWithBin('yarn', 'Yarn Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-yarn-project');
 

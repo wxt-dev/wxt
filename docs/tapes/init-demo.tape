@@ -7,7 +7,7 @@
 Output docs/assets/init-demo.gif
 
 # The tools we will use
-Require pnpm
+Require bun
 
 
 # === Scene ====
@@ -35,19 +35,19 @@ Env PS1 "\e[0;32m●\e[0m "
 
 Hide
 # Create a temporary folder for demo
-Type 'vhs_sandbox="$(mktemp -d)"' Enter
-Type 'cd "$vhs_sandbox"' Enter
+Type 'mkdir packages/wxt/init-demo' Enter
+Type 'cd packages/wxt/init-demo' Enter
 Type 'clear' Enter
 Show
 
 
 # ===== Actions =====
 
-Type 'pnpm dlx wxt@latest init .' Sleep 1s Enter
+Type 'bunx wxt init .' Sleep 1s Enter
 Sleep 3.25s
 Down@750ms Enter@750ms # Select `vue` template
 Sleep 1.25s
-Down@750ms Enter@750ms # Select `pnpm` as a package manager
+Down@500ms Down@500ms Enter@750ms # Select `pnpm` as a package manager
 Sleep 5s
 
 
@@ -55,5 +55,6 @@ Sleep 5s
 
 Hide
 # Delete the temporary folder
-Type 'rm -rf "$vhs_sandbox"' Enter
+Type 'cd .."' Enter
+Type 'rm -rf init-demo' Enter
 Show

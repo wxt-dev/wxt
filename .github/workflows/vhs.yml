@@ -17,27 +17,20 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: ${{ github.ref_name }}
-      - name: Setup PNPM
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
-        with:
-          cache: pnpm
+      - name: Setup
+        uses: ./.github/actions/setup
 
       - name: Setup Go
-        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
         with:
           go-version: '1.25.1'
 
-      # This prevents pnpm dlx from downloading WXT in the video
-      - name: Pre-install WXT
-        run: |
-          pnpm store add wxt@latest
-          pnpm dlx wxt@latest --version
+      # This prevents bunx from downloading WXT in the video, and it uses the checked-out version
+      - name: Build WXT
+        working-directory: packages/wxt
+        run: bun run build
 
       - name: Record VHS
         run: |
@@ -46,7 +39,7 @@ jobs:
           vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

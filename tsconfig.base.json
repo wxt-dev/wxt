@@ -10,6 +10,7 @@
     /* Type Checking */
     "strict": true,
     "lib": ["DOM", "WebWorker", "ESNext"],
+    "types": ["bun"],
 
     /* Completeness */
     "skipLibCheck": true

@@ -14,6 +14,7 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   WxtResolvedUnimportOptions,
+  ExtensionRunner,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -29,6 +30,10 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createSafariRunner } from './runners/safari';
+import isWsl from 'is-wsl';
+import { createWslRunner } from './runners/wsl';
+import { createManualRunner } from './runners/manual';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the
@@ -125,7 +130,7 @@ export async function resolveConfig(
       '`InlineConfig#runner` is deprecated, use `InlineConfig#webExt` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
     );
   }
-  const runnerConfig = await loadConfig<WebExtConfig>({
+  const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
@@ -225,7 +230,12 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig,
+    runnerConfig: webExt,
+    webExt,
+    runner:
+      command === 'serve'
+        ? await resolveRunner(browser, logger, mergedConfig)
+        : createManualRunner(),
     srcDir,
     typesDir,
     wxtDir,
@@ -235,6 +245,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {}),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
+    watchOptions: mergedConfig.watchOptions ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -307,8 +318,9 @@ function resolveZipConfig(
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
-    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesTemplate: '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip',
+    artifactTemplate:
+      '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
     includeSources: [],
     compressionLevel: 9,
@@ -652,4 +664,29 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
+}
+
+async function resolveRunner(
+  browser: string,
+  logger: Logger,
+  mergedConfig: InlineConfig,
+): Promise<ExtensionRunner> {
+  if (browser === 'safari') return createSafariRunner();
+
+  if (isWsl) return createWslRunner();
+
+  try {
+    // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
+    const { createWebExtRunner } = await import('./runners/web-ext');
+    return mergedConfig.webExt?.disabled
+      ? createManualRunner()
+      : createWebExtRunner();
+  } catch (err: any) {
+    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+
+    console.log('error', err);
+    logger.debug('Error loading the web-ext runner', err);
+  }
+
+  return createManualRunner();
 }

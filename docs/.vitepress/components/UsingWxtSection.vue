@@ -21,6 +21,7 @@ interface ListedExtension {
 const extensionEntries = _extensionEntries as Array<{
   chromeId?: string;
   firefoxSlug?: string;
+  edgeId?: string;
 }>;
 
 const chromeIds = extensionEntries.flatMap((e) =>
@@ -31,8 +32,13 @@ const firefoxSlugs = [
     extensionEntries.flatMap((e) => (e.firefoxSlug ? [e.firefoxSlug] : [])),
   ),
 ];
+const edgeIds = extensionEntries.flatMap((e) => (e.edgeId ? [e.edgeId] : []));
 
-const { data, isLoading } = useListExtensionDetails(chromeIds, firefoxSlugs);
+const { data, isLoading } = useListExtensionDetails(
+  chromeIds,
+  firefoxSlugs,
+  edgeIds,
+);
 
 function addUtmSource(storeUrl: string): string {
   const url = new URL(storeUrl);
@@ -49,6 +55,9 @@ const sortedExtensions = computed((): ListedExtension[] => {
   const firefoxBySlug = new Map(
     (data.value.firefox ?? []).filter(Boolean).map((e) => [e.id, e]),
   );
+  const edgeById = new Map(
+    (data.value.edge ?? []).filter(Boolean).map((e) => [e.id, e]),
+  );
 
   const results: ListedExtension[] = [];
 
@@ -57,12 +66,14 @@ const sortedExtensions = computed((): ListedExtension[] => {
     const firefox = entry.firefoxSlug
       ? firefoxBySlug.get(entry.firefoxSlug)
       : undefined;
+    const edge = entry.edgeId ? edgeById.get(entry.edgeId) : undefined;
 
-    if (!chrome && !firefox) continue;
+    if (!chrome && !firefox && !edge) continue;
 
-    const primary = chrome ?? firefox!;
-    const users = (chrome?.users ?? 0) + (firefox?.users ?? 0);
-    const rating = chrome?.rating ?? firefox?.rating;
+    const primary = chrome ?? firefox ?? edge!;
+    const users =
+      (chrome?.users ?? 0) + (firefox?.users ?? 0) + (edge?.users ?? 0);
+    const rating = chrome?.rating ?? firefox?.rating ?? edge?.rating;
 
     const stores: StoreLink[] = [];
     if (chrome) {
@@ -71,9 +82,16 @@ const sortedExtensions = computed((): ListedExtension[] => {
     if (firefox) {
       stores.push({ label: 'Firefox', url: addUtmSource(firefox.storeUrl) });
     }
+    if (edge) {
+      stores.push({ label: 'Edge', url: addUtmSource(edge.storeUrl) });
+    }
 
     results.push({
-      id: entry.chromeId ?? `firefox:${entry.firefoxSlug}`,
+      id:
+        entry.chromeId ??
+        (entry.firefoxSlug
+          ? `firefox:${entry.firefoxSlug}`
+          : `edge:${entry.edgeId}`),
       name: primary.name,
       iconUrl: primary.iconUrl,
       shortDescription: primary.shortDescription,
@@ -124,32 +142,31 @@ function formatStars(r: number): string {
           {{ extension.shortDescription }}
         </p>
         <div v-if="extension.stores.length > 0" class="store-stats">
-          <span class="store-stats-info">
+          <p class="store-stats-info">
             <span>{{ formatUsers(extension.users) }}</span>
             <template v-if="extension.rating">
               <span class="store-stats-sep" aria-hidden="true">,</span>
               <span>{{ formatStars(extension.rating) }}</span>
             </template>
-          </span>
-          <span class="store-stats-sep" aria-hidden="true">&middot;</span>
-          <span class="store-links">
-            <a
-              v-for="(store, i) of extension.stores"
-              :key="store.label"
-              :href="store.url"
-              target="_blank"
-              class="store-link"
-              :title="store.label"
-            >
-              {{ store.label
-              }}<span
+          </p>
+          <p class="store-stats-sep" aria-hidden="true">&middot;</p>
+          <p class="store-links">
+            <template v-for="(store, i) of extension.stores" :key="store.label">
+              <a
+                :href="store.url"
+                target="_blank"
+                class="store-link"
+                :title="store.label"
+                >{{ store.label }}</a
+              >
+              <span
                 v-if="i < extension.stores.length - 1"
                 class="store-stats-sep"
                 aria-hidden="true"
                 >,&nbsp;</span
               >
-            </a>
-          </span>
+            </template>
+          </p>
         </div>
       </div>
     </li>

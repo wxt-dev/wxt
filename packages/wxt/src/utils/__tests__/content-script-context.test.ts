@@ -84,6 +84,22 @@ describe('Content Script Context', () => {
     expect(ctx.isValid).toBe(true);
   });
 
+  describe('noScriptStartedPostMessage', () => {
+    it('should send window.postMessage by default', async () => {
+      const postMessageSpy = vi.spyOn(window, 'postMessage');
+      new ContentScriptContext('test');
+      expect(postMessageSpy).toHaveBeenCalledOnce();
+      postMessageSpy.mockRestore();
+    });
+
+    it('should not send window.postMessage when noScriptStartedPostMessage is true', async () => {
+      const postMessageSpy = vi.spyOn(window, 'postMessage');
+      new ContentScriptContext('test', { noScriptStartedPostMessage: true });
+      expect(postMessageSpy).not.toHaveBeenCalled();
+      postMessageSpy.mockRestore();
+    });
+  });
+
   describe('addEventListener', () => {
     const context = new ContentScriptContext('test');
     it('should infer types correctly for the window target', () => {

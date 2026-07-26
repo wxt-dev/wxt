@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { ChromeMessage } from '../build';
 import {
+  applyNamedSubstitutions,
   applyChromeMessagePlaceholders,
+  getNamedSubstitutionNames,
   getSubstitutionCount,
   standardizeLocale,
 } from '../utils';
@@ -39,6 +41,34 @@ describe('Utils', () => {
       const actual = applyChromeMessagePlaceholders(input);
 
       expect(actual).toBe(expected);
+    });
+  });
+
+  describe('applyNamedSubstitutions', () => {
+    it('should replace named substitutions', () => {
+      expect(
+        applyNamedSubstitutions('Hello {name}, welcome to {tool}', {
+          name: 'Ada',
+          tool: 'WXT',
+        }),
+      ).toBe('Hello Ada, welcome to WXT');
+    });
+
+    it('should leave missing substitutions unchanged', () => {
+      expect(applyNamedSubstitutions('Hello {name}', {})).toBe('Hello {name}');
+    });
+  });
+
+  describe('getNamedSubstitutionNames', () => {
+    it('should return unique substitution names in order', () => {
+      expect(getNamedSubstitutionNames('{name} uses {tool}: {name}')).toEqual([
+        'name',
+        'tool',
+      ]);
+    });
+
+    it('should return an empty array when no named substitutions are present', () => {
+      expect(getNamedSubstitutionNames('Hello $1')).toEqual([]);
     });
   });
 

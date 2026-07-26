@@ -15,10 +15,11 @@
     "@wxt-dev/browser": "workspace:^"
   },
   "devDependencies": {
-    "oxlint": "^1.51.0",
-    "publint": "^0.3.18",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "repository": {
     "type": "git",

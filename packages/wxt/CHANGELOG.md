@@ -1,5 +1,116 @@
 # Changelog
 
+## v0.20.27
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.26...wxt-v0.20.27)
+
+### 🚀 Enhancements
+
+- Add warning for missing Firefox extension ID in manifest ([#2293](https://github.com/wxt-dev/wxt/pull/2293))
+
+### 🩹 Fixes
+
+- Correct broken link at react router in createhashrouter ([#2411](https://github.com/wxt-dev/wxt/pull/2411))
+- Rename `ManifestPermissions` to `ManifestPermission` of types.ts in `wxt` package ([#2430](https://github.com/wxt-dev/wxt/pull/2430))
+
+### 📖 Documentation
+
+- Add Telsia extension to Showcase ([#2368](https://github.com/wxt-dev/wxt/pull/2368))
+- Add warning about rem unit inheritance in Shadow Root UI ([#2330](https://github.com/wxt-dev/wxt/pull/2330))
+- Added "Sound Booster & Equalizer" to showcase ([#2381](https://github.com/wxt-dev/wxt/pull/2381))
+- Clarify SPA navigation setup with locationWatcher.run() ([#2380](https://github.com/wxt-dev/wxt/pull/2380))
+- Self-host Netlify footer badge ([#2386](https://github.com/wxt-dev/wxt/pull/2386))
+- Added "Link Later" to showcase" ([#2392](https://github.com/wxt-dev/wxt/pull/2392))
+- Added Property Track to showcase ([#2404](https://github.com/wxt-dev/wxt/pull/2404))
+- Added "WageSlav3" to showcase ([#2405](https://github.com/wxt-dev/wxt/pull/2405))
+- Added "LinkedIn Games Solver" to showcase ([#2410](https://github.com/wxt-dev/wxt/pull/2410))
+- Added NiceTab firefoxslug to extension showcase ([#2417](https://github.com/wxt-dev/wxt/pull/2417))
+- Added 4 extensions to the homepage ([#2419](https://github.com/wxt-dev/wxt/pull/2419))
+- Added Hayami to showcase ([#2422](https://github.com/wxt-dev/wxt/pull/2422))
+- Added anylang translator to showcase ([#2426](https://github.com/wxt-dev/wxt/pull/2426))
+
+### 🏡 Chore
+
+- **deps:** Bump c12 from 3.3.3 to 3.3.4 ([#2364](https://github.com/wxt-dev/wxt/pull/2364))
+- **deps:** Bump filesize from 11.0.15 to 11.0.17 ([#2363](https://github.com/wxt-dev/wxt/pull/2363))
+- **deps:** Bump tinyglobby from 0.2.15 to 0.2.16 ([#2366](https://github.com/wxt-dev/wxt/pull/2366))
+- Add Google Cloud Skills Boost - Helper extension to showcase ([#2401](https://github.com/wxt-dev/wxt/pull/2401))
+
+### ❤️ Contributors
+
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- RenovZ ([@RenovZ](https://github.com/RenovZ))
+- Nicholas Yoannou ([@nicholasyoannou](https://github.com/nicholasyoannou))
+- Avi ([@avi12](https://github.com/avi12))
+- Peter Wong <www121ppp@gmail.com>
+- ChamikaUluwatta ([@ChamikaUluwatta](https://github.com/ChamikaUluwatta))
+- Muhammed Mustafa AKŞAM ([@muhammedaksam](https://github.com/muhammedaksam))
+- Slovakian ([@slovakian](https://github.com/slovakian))
+- Oliver Benns ([@oliverbenns](https://github.com/oliverbenns))
+- David Nguyen <h250694@gmail.com>
+- Esteban Vera <minos_93105@hotmail.com>
+- Sean Kenneth Doherty <Smaster7772@gmail.com>
+- Muhammad Umer Farooq ([@mrumerf](https://github.com/mrumerf))
+- Muzammil ([@oyzamil](https://github.com/oyzamil))
+- Aniket Lodh ([@Aniket-lodh](https://github.com/Aniket-lodh))
+- George Forse <george@gforse.uk>
+- Shubhrajit Sadhukhan <champa.281982@gmail.com>
+
+## v0.20.26
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.25...wxt-v0.20.26)
+
+### 🚀 Enhancements
+
+- Add `default_state` option to popup actions ([#2010](https://github.com/wxt-dev/wxt/pull/2010))
+- Add content script `noScriptStartedPostMessage` option ([#2265](https://github.com/wxt-dev/wxt/pull/2265))
+
+### 🩹 Fixes
+
+- Use `manifestVersion` from CLI during manifest generation ([#2306](https://github.com/wxt-dev/wxt/pull/2306))
+- Modify command to support variadic positional args ([#2317](https://github.com/wxt-dev/wxt/pull/2317))
+- Bump `publish-browser-extension` to `v4.0.5`, to resolve Chrome Web Store submission issue ([#2331](https://github.com/wxt-dev/wxt/pull/2331))
+- Avoid errors when files are removed during build ([#2343](https://github.com/wxt-dev/wxt/pull/2343))
+- **manifest:** Exclude `open_in_tab` from `options_ui` for Safari ([#2311](https://github.com/wxt-dev/wxt/pull/2311))
+
+### 📖 Documentation
+
+- **wxt-modules:** Add logging examples/best practices ([57e3748d](https://github.com/wxt-dev/wxt/commit/57e3748d))
+- Correct entrypoints icon example code ([#2302](https://github.com/wxt-dev/wxt/pull/2302))
+- Add types for components ([#2273](https://github.com/wxt-dev/wxt/pull/2273))
+- Fix JSDoc example formatting ([2a8ec0d7](https://github.com/wxt-dev/wxt/commit/2a8ec0d7))
+- Remove unused code ([#2275](https://github.com/wxt-dev/wxt/pull/2275))
+- Fix horizontal scrollbar displaying on landing page ([#2329](https://github.com/wxt-dev/wxt/pull/2329))
+- Add Mimik extension to the list of extensions ([#2319](https://github.com/wxt-dev/wxt/pull/2319))
+- Added modrinth extras and pi-hole in one to showcase ([#2337](https://github.com/wxt-dev/wxt/pull/2337))
+- Added "QIE Wallet" to showcase ([#2341](https://github.com/wxt-dev/wxt/pull/2341))
+- Update Safari publishing instructions to match Apple docs ([#2314](https://github.com/wxt-dev/wxt/pull/2314))
+- Add "Redmine Time Tracking" to extension showcase ([#2312](https://github.com/wxt-dev/wxt/pull/2312))
+
+### 🏡 Chore
+
+- More JSDoc fixes ([9b59f38c](https://github.com/wxt-dev/wxt/commit/9b59f38c))
+- Move `createFileReloader` into it's own file ([#2307](https://github.com/wxt-dev/wxt/pull/2307))
+- Remove ts-expect-error that are no longer needed ([#2344](https://github.com/wxt-dev/wxt/pull/2344))
+- **deps-dev:** Bump typescript from 5.9.3 to 6.0.3 ([#2325](https://github.com/wxt-dev/wxt/pull/2325))
+- **deps-dev:** Bump oxlint from 1.59.0 to 1.63.0 ([#2356](https://github.com/wxt-dev/wxt/pull/2356))
+- Use `catalog:` for dev dependencies ([#2357](https://github.com/wxt-dev/wxt/pull/2357))
+
+### ❤️ Contributors
+
+- Jonathan Viney ([@jviney](https://github.com/jviney))
+- Rxliuli ([@rxliuli](https://github.com/rxliuli))
+- CrawlerCode ([@CrawlerCode](https://github.com/CrawlerCode))
+- Thomas Howlett ([@howlettt](https://github.com/howlettt))
+- Aaron ([@aklinker1](https://github.com/aklinker1))
+- Brian Zhou ([@aiktb](https://github.com/aiktb))
+- Soaib Haque ([@SoaibHaque](https://github.com/SoaibHaque))
+- Arthur <creeperkatze.dev@gmail.com>
+- Luis Ortiz ([@KiryuuLight](https://github.com/KiryuuLight))
+- Patryk Kuniczak ([@PatrykKuniczak](https://github.com/PatrykKuniczak))
+- Laplace-anon ([@laplace-anon](https://github.com/laplace-anon))
+- Kairi ([@kairi003](https://github.com/kairi003))
+
 ## v0.20.25
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.24...wxt-v0.20.25)

@@ -129,6 +129,17 @@ export async function generateManifest(
     );
   }
 
+  if (
+    wxt.config.browser === 'firefox' &&
+    !manifest.browser_specific_settings?.gecko?.id &&
+    !wxt.config.suppressWarnings?.firefoxId
+  ) {
+    wxt.logger.warn(
+      'Firefox requires extension ID for MV3 and recommends it for MV2.\n' +
+        'For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
 
   if (wxt.config.browser === 'firefox') {
@@ -333,7 +344,9 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab ?? false,
+      ...(wxt.config.browser !== 'safari' && {
+        open_in_tab: options.options.openInTab ?? false,
+      }),
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'

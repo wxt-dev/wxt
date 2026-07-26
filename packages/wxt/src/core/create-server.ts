@@ -1,7 +1,6 @@
 import chokidar from 'chokidar';
 import { InlineConfig, ServerInfo, WxtDevServer } from '../types';
 import { internalBuild } from './utils/building';
-import { createExtensionRunner } from './runners';
 import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
@@ -37,10 +36,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     return { host, port, origin };
   };
 
-  let [runner, builderServer] = await Promise.all([
-    createExtensionRunner(),
-    wxt.builder.createServer(getServerInfo()),
-  ]);
+  let builderServer = await wxt.builder.createServer(getServerInfo());
 
   // Used to track if modules need to be re-initialized
   let wasStopped = false;
@@ -67,7 +63,6 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async start() {
       if (wasStopped) {
         await wxt.reloadConfig();
-        runner = await createExtensionRunner();
         builderServer = await wxt.builder.createServer(getServerInfo());
         await initWxtModules();
       }
@@ -93,21 +88,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', async (...args) => {
         await reloadOnChange(args[0], args[1]);
-
-        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
-        keyboardShortcuts.start();
-      });
-
-      keyboardShortcuts.printHelp({
-        canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!runner.canOpen?.(),
       });
     },
 
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await runner.closeBrowser?.();
+      await wxt.config.runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -131,12 +118,16 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await runner.closeBrowser?.();
+      await wxt.config.runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
-      runner = await createExtensionRunner();
-      await runner.openBrowser();
+      await wxt.config.runner.openBrowser();
       keyboardShortcuts.start();
+      keyboardShortcuts.printHelp({
+        canReopenBrowser:
+          !wxt.config.runnerConfig.config.disabled &&
+          !!wxt.config.runner.canOpen?.(),
+      });
     },
   };
   const keyboardShortcuts = createKeyboardShortcuts(server);
@@ -152,7 +143,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       logBabelSyntaxError(err);
       wxt.logger.info('Waiting for syntax error to be fixed...');
       await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        const watcher = chokidar.watch(err.id, {
+          ...wxt.config.watchOptions,
+          ignoreInitial: true,
+        });
         watcher.on('all', () => {
           watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');
@@ -171,7 +165,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
     }
 
     // Open browser after everything is ready to go.
-    await runner.openBrowser();
+    await wxt.config.runner.openBrowser();
+    keyboardShortcuts.start();
+    keyboardShortcuts.printHelp({
+      canReopenBrowser:
+        !wxt.config.runnerConfig.config.disabled &&
+        !!wxt.config.runner.canOpen?.(),
+    });
   };
 
   builderServer.on?.('close', () => keyboardShortcuts.stop());

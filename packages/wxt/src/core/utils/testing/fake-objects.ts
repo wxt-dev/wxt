@@ -267,6 +267,10 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     runnerConfig: {
       config: {},
     },
+    webExt: {
+      config: {},
+    },
+    runner: mock(),
     debug: faker.datatype.boolean(),
     srcDir: fakeDir(),
     typesDir: fakeDir(),
@@ -296,6 +300,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     userConfigMetadata: {},
     alias: {},
     experimental: {},
+    watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
     },
