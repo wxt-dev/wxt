@@ -15,7 +15,7 @@ To upgrade WXT to the latest major version:
    ```
 
 2. Follow the upgrade steps below to fix any breaking changes.
-3. Run `wxt prepare`. It should succeed and type errors will go away afterwords.
+3. Run `wxt prepare`. It should succeed and type errors will go away afterwards.
 
    ```sh
    pnpm wxt prepare
@@ -37,7 +37,7 @@ Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`
 
 ## v0.20.0 &rarr; v0.21.0
 
-This release focuses on trimming WXT's dependency footprint (`vite`, `web-ext`, are now peers) and simplifying project configuration.
+This release focuses on trimming WXT's install footprint (98MB / 366 packages &rarr; 64MB / 320 packages) and simplifying project configuration.
 
 :::tip
 Read through all the changes once before updating your code.
@@ -108,7 +108,7 @@ The generated `.wxt/tsconfig.json` was updated to match Vite's current recommend
 }
 ```
 
-If these changes do cause problems, verbatimModuleSyntax and noUncheckedIndexedAccess are the two most likely cuplrits, it's recommended you fix the issues.
+If these changes do cause problems, `verbatimModuleSyntax` and `noUncheckedIndexedAccess` are the two most likely culprits. It's recommended you fix the issues and leave the new settings enabled.
 
 However, if you want to revert the config back and upgrade to the recommended options at a later time, you can add the following to your `wxt.config.ts` file:
 
@@ -189,7 +189,7 @@ For more info on the difference between `manifest.version` and `manifest.version
 
 ### Sources ZIP: `includeSources`/`excludeSources` Now Behave Like a Standard Allowlist
 
-Previously, `includeSources`/`excludeSources` behaved unintuatively: `all files - excludeSources + includedSources = zipped files`. This is not the standard behavior for allowlist/blocklists.
+Previously, `includeSources`/`excludeSources` behaved counterintuitively: `all files - excludeSources + includedSources = zipped files`. This is not the standard behavior for allowlist/blocklists.
 
 As of v0.21, these options behave as expected: `includedSources - excludeSources = zipped files`.
 
@@ -306,7 +306,7 @@ Now, `true` behaves the same as `'auto'`: WXT detects your installed ESLint vers
 
 See the [ESLint config docs](/guide/essentials/config/auto-imports#eslint) for the full set of options and how to wire up the generated file.
 
-### Deprecated APIs Removed
+### Deprecated APIs Removed From v0.21
 
 APIs deprecated in v0.20 have been removed:
 
