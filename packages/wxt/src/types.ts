@@ -299,7 +299,7 @@ export interface InlineConfig {
      * `true`, then exclude other hidden files/directories in `excludeSources`.
      *
      * **Be very careful when this is enabled - WXT may include files with
-     * secrets in your ZIP you did not intend to share with mozzila or upload to
+     * secrets in your ZIP you did not intend to share with Mozilla or upload to
      * other places**. Make sure all hidden files you don't want to include are
      * added to `excludeSources`.
      *
