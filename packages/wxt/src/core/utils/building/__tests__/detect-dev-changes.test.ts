@@ -103,7 +103,7 @@ describe('Detect Dev Changes', () => {
       const runnerFile = '/root/web-ext.config.ts';
       setFakeWxt({
         config: {
-          runnerConfig: {
+          webExt: {
             configFile: runnerFile,
           },
         },
