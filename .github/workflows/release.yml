@@ -71,7 +71,7 @@ jobs:
           # Include documentation updates in WXT's releases
           additionalDirs: |-
             ${{ case(
-              inputs.package == 'wxt', '../../docs',
+              inputs.package == 'wxt', 'docs',
               ''
             ) }}
           # Use package name in commit message
