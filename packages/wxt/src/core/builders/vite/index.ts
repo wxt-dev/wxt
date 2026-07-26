@@ -1,3 +1,6 @@
+import { Hookable } from 'hookable';
+import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import type * as vite from 'vite';
 import {
   BuildStepOutput,
@@ -9,22 +12,24 @@ import {
   WxtDevServer,
   WxtHooks,
 } from '../../../types';
-import * as wxtPlugins from './plugins';
+import { normalizePath } from '../../utils';
+import { toArray } from '../../utils/arrays';
 import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
 } from '../../utils/entrypoints';
+import { createExtensionEnvironment } from '../../utils/environments';
+import { safeVarName } from '../../utils/strings';
 import {
   VirtualEntrypointType,
   VirtualModuleId,
 } from '../../utils/virtual-modules';
-import { Hookable } from 'hookable';
-import { toArray } from '../../utils/arrays';
-import { safeVarName } from '../../utils/strings';
-import { createExtensionEnvironment } from '../../utils/environments';
-import { dirname, extname, join, relative } from 'node:path';
-import fs from 'fs-extra';
-import { normalizePath } from '../../utils/paths';
+import * as wxtPlugins from './plugins';
+
+interface RollupAssetNameInfo {
+  name?: string;
+  names?: string[];
+}
 
 export async function createViteBuilder(
   wxtConfig: ResolvedConfig,
@@ -34,7 +39,8 @@ export async function createViteBuilder(
   const vite = await import('vite');
 
   /**
-   * Returns the base vite config shared by all builds based on the inline and user config.
+   * Returns the base vite config shared by all builds based on the inline and
+   * user config.
    */
   const getBaseConfig = async (baseConfigOptions?: {
     excludeAnalysisPlugin?: boolean;
@@ -63,12 +69,26 @@ export async function createViteBuilder(
 
     config.server ??= {};
     config.server.watch = {
-      ignored: [`${wxtConfig.outBaseDir}/**`, `${wxtConfig.wxtDir}/**`],
+      ...wxtConfig.watchOptions,
+      ignored: [
+        `${wxtConfig.outBaseDir}/**`,
+        `${wxtConfig.wxtDir}/**`,
+        ...getRunnerProfileWatchIgnores(wxtConfig),
+        ...toArray(wxtConfig.watchOptions.ignored ?? []),
+      ],
     };
 
     // TODO: Remove once https://github.com/wxt-dev/wxt/pull/1411 is merged
     config.legacy ??= {};
     config.legacy.skipWebSocketTokenCheck = true;
+
+    // Solves https://github.com/wxt-dev/wxt/issues/353
+    if (isRolldownVersion(vite.version)) {
+      // TODO: Add charset ascii when supported by oxc
+    } else {
+      config.esbuild ??= {};
+      if (config.esbuild) config.esbuild.charset = 'ascii';
+    }
 
     const server = getWxtDevServer?.();
 
@@ -99,14 +119,15 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building an entrypoint in [lib mode](https://vitejs.dev/guide/build.html#library-mode).
+   * Return the basic config for building an entrypoint in [lib
+   * mode](https://vitejs.dev/guide/build.html#library-mode).
    */
   const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     const entry = getRollupEntry(entrypoint);
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
     ];
-    const iifeReturnValueName = safeVarName(entrypoint.name);
+    let iifeReturnValueName = safeVarName(entrypoint.name);
 
     if (
       entrypoint.type === 'content-script-style' ||
@@ -119,7 +140,17 @@ export async function createViteBuilder(
       entrypoint.type === 'content-script' ||
       entrypoint.type === 'unlisted-script'
     ) {
-      plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      if (typeof entrypoint.options.globalName === 'string') {
+        iifeReturnValueName = entrypoint.options.globalName;
+      } else if (typeof entrypoint.options.globalName === 'function') {
+        iifeReturnValueName = entrypoint.options.globalName(entrypoint);
+      }
+
+      if (entrypoint.options.globalName === false) {
+        plugins.push(wxtPlugins.iifeAnonymous(iifeReturnValueName));
+      } else {
+        plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
+      }
     }
 
     return {
@@ -143,10 +174,12 @@ export async function createViteBuilder(
             ),
             // Output content script CSS to `content-scripts/`, but all other scripts are written to
             // `assets/`.
-            assetFileNames: ({ name }) => {
+            assetFileNames: (assetInfo) => {
               if (
                 entrypoint.type === 'content-script' &&
-                name?.endsWith('css')
+                getRollupAssetNames(assetInfo).some((name) =>
+                  name.endsWith('css'),
+                )
               ) {
                 return `content-scripts/${entrypoint.name}.[ext]`;
               } else {
@@ -164,7 +197,8 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building multiple entrypoints in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building multiple entrypoints in [multi-page
+   * mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
     const htmlEntrypoints = new Set(
@@ -197,7 +231,8 @@ export async function createViteBuilder(
   };
 
   /**
-   * Return the basic config for building a single CSS entrypoint in [multi-page mode](https://vitejs.dev/guide/build.html#multi-page-app).
+   * Return the basic config for building a single CSS entrypoint in [multi-page
+   * mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
   const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
     return {
@@ -348,6 +383,8 @@ export async function createViteBuilder(
         server: {
           host: info.host,
           port: info.port,
+          // The port is already resolved to an available one during config
+          // resolution, and vite needs to use the port the rest of WXT uses.
           strictPort: true,
           origin: info.origin,
         },
@@ -386,6 +423,64 @@ export async function createViteBuilder(
   };
 }
 
+export function getRunnerProfileWatchIgnores(
+  wxtConfig: ResolvedConfig,
+): string[] {
+  const root = normalizePath(wxtConfig.root);
+  const chromiumArgProfiles = extractPathArgs(
+    wxtConfig.runnerConfig.config?.chromiumArgs,
+    '--user-data-dir',
+  );
+  const firefoxArgProfiles = extractPathArgs(
+    wxtConfig.runnerConfig.config?.firefoxArgs,
+    '-profile',
+  );
+  const profiles = [
+    wxtConfig.runnerConfig.config?.chromiumProfile,
+    wxtConfig.runnerConfig.config?.firefoxProfile,
+    ...chromiumArgProfiles,
+    ...firefoxArgProfiles,
+  ].filter((profile): profile is string => typeof profile === 'string');
+
+  return Array.from(
+    new Set(
+      profiles
+        .map((profile) => normalizePath(resolve(wxtConfig.root, profile)))
+        // Avoid accidentally disabling all file watching.
+        .filter((profilePath) => profilePath !== root)
+        .map((profilePath) => `${profilePath}/**`),
+    ),
+  );
+}
+
+function extractPathArgs(args: string[] | undefined, flag: string): string[] {
+  if (!args?.length) return [];
+
+  const paths: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+
+    if (arg.startsWith(`${flag}=`)) {
+      const value = arg.slice(flag.length + 1).trim();
+      if (value) paths.push(value);
+      continue;
+    }
+
+    if (arg === flag) {
+      const nextValue = args[i + 1]?.trim();
+      if (nextValue) paths.push(nextValue);
+      i += 1;
+    }
+  }
+
+  return paths;
+}
+
+function getRollupAssetNames(assetInfo: RollupAssetNameInfo): string[] {
+  if (Array.isArray(assetInfo.names)) return assetInfo.names;
+  return assetInfo.name ? [assetInfo.name] : [];
+}
+
 function getBuildOutputChunks(
   result: Awaited<ReturnType<typeof vite.build>>,
 ): BuildStepOutput['chunks'] {
@@ -395,8 +490,8 @@ function getBuildOutputChunks(
 }
 
 /**
- * Returns the input module ID (virtual or real file) for an entrypoint. The returned string should
- * be passed as an input to rollup.
+ * Returns the input module ID (virtual or real file) for an entrypoint. The
+ * returned string should be passed as an input to rollup.
  */
 function getRollupEntry(entrypoint: Entrypoint): string {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
@@ -421,15 +516,17 @@ function getRollupEntry(entrypoint: Entrypoint): string {
 }
 
 /**
- * Ensures the HTML files output by a multipage build are in the correct location. This does two
- * things:
+ * Ensures the HTML files output by a multi-page build are in the correct
+ * location. This does two things:
  *
- * 1. Moves the HTML files to their final location at `<outDir>/<entrypoint.name>.html`.
- * 2. Updates the bundle so it summarizes the files correctly in the returned build output.
+ * 1. Moves the HTML files to their final location at
+ *    `<outDir>/<entrypoint.name>.html`.
+ * 2. Updates the bundle so it summarizes the files correctly in the returned build
+ *    output.
  *
- * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't need to be modified.
- * HTML files access them via absolute URLs, so we don't need to update any import paths in the HTML
- * files either.
+ * Assets (JS and CSS) are output to the `<outDir>/assets` directory, and don't
+ * need to be modified. HTML files access them via absolute URLs, so we don't
+ * need to update any import paths in the HTML files either.
  */
 async function moveHtmlFiles(
   config: ResolvedConfig,
@@ -457,8 +554,8 @@ async function moveHtmlFiles(
       );
       const oldAbsPath = join(config.outDir, oldBundlePath);
       const newAbsPath = join(config.outDir, newBundlePath);
-      await fs.ensureDir(dirname(newAbsPath));
-      await fs.move(oldAbsPath, newAbsPath, { overwrite: true });
+      await mkdir(dirname(newAbsPath), { recursive: true });
+      await rename(oldAbsPath, newAbsPath);
 
       return {
         ...chunk,
@@ -468,27 +565,29 @@ async function moveHtmlFiles(
   );
 
   // TODO: Optimize and only delete old path directories
-  removeEmptyDirs(config.outDir);
+  await removeEmptyDirs(config.outDir);
 
   return movedChunks;
 }
 
-/**
- * Recursively remove all directories that are empty/
- */
+/** Recursively remove all directories that are empty/ */
 export async function removeEmptyDirs(dir: string): Promise<void> {
-  const files = await fs.readdir(dir);
+  const files = await readdir(dir);
   for (const file of files) {
     const filePath = join(dir, file);
-    const stats = await fs.stat(filePath);
+    const stats = await stat(filePath);
     if (stats.isDirectory()) {
       await removeEmptyDirs(filePath);
     }
   }
 
   try {
-    await fs.rmdir(dir);
+    await rmdir(dir);
   } catch {
     // noop on failure - this means the directory was not empty.
   }
+}
+
+function isRolldownVersion(version: string): boolean {
+  return Number(version.split('.')[0]) >= 8;
 }

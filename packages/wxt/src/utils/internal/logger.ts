@@ -11,9 +11,7 @@ function print(method: (...args: any[]) => void, ...args: any[]) {
   }
 }
 
-/**
- * Wrapper around `console` with a "[wxt]" prefix
- */
+/** Wrapper around `console` with a "[wxt]" prefix */
 export const logger = {
   debug: (...args: any[]) => print(console.debug, ...args),
   log: (...args: any[]) => print(console.log, ...args),

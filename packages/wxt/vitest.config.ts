@@ -19,7 +19,7 @@ export default defineConfig({
       ignored: '**/dist/**',
     },
   },
-  plugins: [RandomSeed()],
+  plugins: [RandomSeed({ define: 'import.meta.env.TEST_SEED' })],
   resolve: {
     alias: {
       'wxt/testing': path.resolve('src/testing'),

@@ -2,14 +2,14 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { npm } from '../npm';
 import spawn from 'nano-spawn';
-import { exists } from 'fs-extra';
+import { pathExists } from '../../utils/fs';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
     beforeAll(async () => {
       // NPM needs the modules installed for 'npm ls' to work
-      await spawn('npm', ['i'], { cwd });
+      await spawn('npm', ['install'], { cwd });
     }, 60e3);
 
     it('should list direct dependencies', async () => {
@@ -41,7 +41,7 @@ describe('NPM Package Management Utils', () => {
       const actual = await npm.downloadDependency(id, downloadDir);
 
       expect(actual).toEqual(expected);
-      expect(await exists(actual)).toBe(true);
+      expect(await pathExists(actual)).toBe(true);
     });
   });
 });

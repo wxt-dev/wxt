@@ -3,9 +3,13 @@
 const AT_RULE_BLOCKS = /(\s*@(property|font-face)[\s\S]*?{[\s\S]*?})/gm;
 
 /**
- * Given a CSS string that will be loaded into a shadow root, split it into two parts:
- * - `documentCss`: CSS that needs to be applied to the document (like `@property`)
+ * Given a CSS string that will be loaded into a shadow root, split it into two
+ * parts:
+ *
+ * - `documentCss`: CSS that needs to be applied to the document (like
+ *   `@property`)
  * - `shadowCss`: CSS that needs to be applied to the shadow root
+ *
  * @param css
  */
 export function splitShadowRootCss(css: string): {

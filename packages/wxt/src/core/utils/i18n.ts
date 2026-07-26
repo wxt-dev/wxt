@@ -8,7 +8,7 @@ const predefinedMessages = {
   '@@extension_id': {
     message: '<browser.runtime.id>',
     description:
-      "The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message.\nNote: You can't use this message in a manifest file.",
+      "The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even non-localized extensions can use this message.\nNote: You can't use this message in a manifest file.",
   },
   '@@ui_locale': {
     message: '<browser.i18n.getUiLocale()>',

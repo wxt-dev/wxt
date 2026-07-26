@@ -1,10 +1,11 @@
-import { exists } from 'fs-extra';
+import { pathExists } from '../../../utils/fs';
 import { resolve } from 'node:path';
 import type * as vite from 'vite';
 import { ResolvedConfig } from '../../../../types';
 
 /**
- * When importing `virtual:app-config`, resolve it to the `app.config.ts` file in the project.
+ * When importing `virtual:app-config`, resolve it to the `app.config.ts` file
+ * in the project.
  */
 export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
   const virtualModuleId = 'virtual:app-config';
@@ -22,15 +23,23 @@ export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
         },
       };
     },
-    async resolveId(id) {
-      if (id !== virtualModuleId) return;
-
-      return (await exists(appConfigFile))
-        ? appConfigFile
-        : resolvedVirtualModuleId;
+    resolveId: {
+      filter: {
+        id: new RegExp(`^${virtualModuleId}$`),
+      },
+      async handler() {
+        return (await pathExists(appConfigFile))
+          ? appConfigFile
+          : resolvedVirtualModuleId;
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualModuleId) return `export default {}`;
+    load: {
+      filter: {
+        id: new RegExp(`^${resolvedVirtualModuleId}$`),
+      },
+      handler() {
+        return `export default {}`;
+      },
     },
   };
 }

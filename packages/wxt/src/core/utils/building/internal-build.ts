@@ -1,12 +1,11 @@
 import { findEntrypoints } from './find-entrypoints';
 import { BuildOutput, Entrypoint } from '../../../types';
-import pc from 'picocolors';
-import fs from 'fs-extra';
+import { mkdir, rm } from 'node:fs/promises';
 import { groupEntrypoints } from './group-entrypoints';
-import { formatDuration } from '../../utils/time';
-import { printBuildSummary } from '../../utils/log';
-import glob from 'fast-glob';
-import { unnormalizePath } from '../../utils/paths';
+import { formatDuration } from '../time';
+import { printBuildSummary } from '../log';
+import { glob } from 'tinyglobby';
+import { unnormalizePath } from '../paths';
 import { rebuild } from './rebuild';
 import { relative } from 'node:path';
 import {
@@ -18,15 +17,17 @@ import {
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
 import { isCI } from 'ci-info';
+import { styleText } from 'node:util';
 
 /**
- * Builds the extension based on an internal config. No more config discovery is performed, the
- * build is based on exactly what is passed in.
+ * Builds the extension based on an internal config. No more config discovery is
+ * performed, the build is based on exactly what is passed in.
  *
  * This function:
+ *
  * 1. Cleans the output directory
- * 2. Executes the rebuild function with a blank previous output so everything is built (see
- *    `rebuild` for more details)
+ * 2. Executes the rebuild function with a blank previous output so everything is
+ *    built (see `rebuild` for more details)
  * 3. Prints the summary
  */
 export async function internalBuild(): Promise<BuildOutput> {
@@ -35,15 +36,16 @@ export async function internalBuild(): Promise<BuildOutput> {
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
   const target = `${wxt.config.browser}-mv${wxt.config.manifestVersion}`;
   wxt.logger.info(
-    `${verb} ${pc.cyan(target)} for ${pc.cyan(wxt.config.mode)} with ${pc.green(
+    `${verb} ${styleText('cyan', target)} for ${styleText('cyan', wxt.config.mode)} with ${styleText(
+      'green',
       `${wxt.builder.name} ${wxt.builder.version}`,
     )}`,
   );
   const startTime = Date.now();
 
   // Cleanup
-  await fs.rm(wxt.config.outDir, { recursive: true, force: true });
-  await fs.ensureDir(wxt.config.outDir);
+  await rm(wxt.config.outDir, { recursive: true, force: true });
+  await mkdir(wxt.config.outDir, { recursive: true });
 
   const entrypoints = await findEntrypoints();
   wxt.logger.debug('Detected entrypoints:', entrypoints);
@@ -79,15 +81,19 @@ export async function internalBuild(): Promise<BuildOutput> {
     await combineAnalysisStats();
     const statsPath = relative(wxt.config.root, wxt.config.analysis.outputFile);
     wxt.logger.info(
-      `Analysis complete:\n  ${pc.gray('└─')} ${pc.yellow(statsPath)}`,
+      `Analysis complete:\n  ${styleText('gray', '└─')} ${styleText('yellow', statsPath)}`,
     );
     if (wxt.config.analysis.open) {
       if (isCI) {
-        wxt.logger.debug(`Skipped opening ${pc.yellow(statsPath)} in CI`);
+        wxt.logger.debug(
+          `Skipped opening ${styleText('yellow', statsPath)} in CI`,
+        );
       } else {
-        wxt.logger.info(`Opening ${pc.yellow(statsPath)} in browser...`);
+        wxt.logger.info(
+          `Opening ${styleText('yellow', statsPath)} in browser...`,
+        );
         const { default: open } = await import('open');
-        open(wxt.config.analysis.outputFile);
+        await open(wxt.config.analysis.outputFile);
       }
     }
   }
@@ -99,6 +105,7 @@ async function combineAnalysisStats(): Promise<void> {
   const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
     cwd: wxt.config.analysis.outputDir,
     absolute: true,
+    expandDirectories: false,
   });
   const absolutePaths = unixFiles.map(unnormalizePath);
 
@@ -109,7 +116,9 @@ async function combineAnalysisStats(): Promise<void> {
   });
 
   if (!wxt.config.analysis.keepArtifacts) {
-    await Promise.all(absolutePaths.map((statsFile) => fs.remove(statsFile)));
+    await Promise.all(
+      absolutePaths.map((statsFile) => rm(statsFile, { force: true })),
+    );
   }
 }
 
@@ -133,12 +142,18 @@ function printValidationResults({
   }, new Map<Entrypoint, ValidationResult[]>());
 
   Array.from(entrypointErrors.entries()).forEach(([entrypoint, errors]) => {
-    wxt.logger.log(relative(cwd, entrypoint.inputPath));
-    console.log();
+    wxt.logger.log(relative(cwd, entrypoint.inputPath) + '\n');
+
     errors.forEach((err) => {
-      const type = err.type === 'error' ? pc.red('ERROR') : pc.yellow('WARN');
-      const recieved = pc.dim(`(recieved: ${JSON.stringify(err.value)})`);
-      wxt.logger.log(`  - ${type} ${err.message} ${recieved}`);
+      const type =
+        err.type === 'error'
+          ? styleText('red', 'ERROR')
+          : styleText('yellow', 'WARN');
+      const received = styleText(
+        'dim',
+        `(received: ${JSON.stringify(err.value)})`,
+      );
+      wxt.logger.log(`  - ${type} ${err.message} ${received}`);
     });
     console.log();
   });

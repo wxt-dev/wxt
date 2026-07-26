@@ -27,12 +27,7 @@ export interface WxtWebSocket extends WebSocket {
 
 let ws: WxtWebSocket | undefined;
 
-/**
- * Connect to the websocket and listen for messages.
- *
- * @param onMessage Optional callback that is called when a message is recieved and we've verified
- *                  it's structure is what we expect.
- */
+/** Connect to the websocket and listen for messages. */
 export function getDevServerWebSocket(): WxtWebSocket {
   if (import.meta.env.COMMAND !== 'serve')
     throw Error(

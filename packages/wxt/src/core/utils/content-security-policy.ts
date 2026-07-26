@@ -1,5 +1,6 @@
 /**
- * Directive names that make up CSPs. There are more, this is all I need for the plugin.
+ * Directive names that make up CSPs. There are more, this is all I need for the
+ * plugin.
  */
 export type CspDirective = 'default-src' | 'script-src' | 'object-src';
 
@@ -25,9 +26,7 @@ export class ContentSecurityPolicy {
     }
   }
 
-  /**
-   * Ensure a set of values are listed under a directive.
-   */
+  /** Ensure a set of values are listed under a directive. */
   add(directive: CspDirective, ...newValues: string[]): ContentSecurityPolicy {
     const values = this.data[directive] ?? [];
     newValues.forEach((newValue) => {

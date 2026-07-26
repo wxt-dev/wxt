@@ -7,7 +7,7 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../../types';
-import fs from 'fs-extra';
+import { mkdir } from 'node:fs/promises';
 import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
@@ -20,12 +20,11 @@ import { normalizePath } from './paths';
 import { writeFileIfDifferent } from './fs';
 import defu from 'defu';
 import { wxt } from '../wxt';
+import { addDiscoveredThemeIcons } from './theme-icons';
 import { ManifestV3WebAccessibleResource } from './types';
 import type { Browser } from '@wxt-dev/browser';
 
-/**
- * Writes the manifest to the output directory and the build output.
- */
+/** Writes the manifest to the output directory and the build output. */
 export async function writeManifest(
   manifest: Browser.runtime.Manifest,
   output: BuildOutput,
@@ -35,7 +34,7 @@ export async function writeManifest(
       ? JSON.stringify(manifest)
       : JSON.stringify(manifest, null, 2);
 
-  await fs.ensureDir(wxt.config.outDir);
+  await mkdir(wxt.config.outDir, { recursive: true });
   await writeFileIfDifferent(resolve(wxt.config.outDir, 'manifest.json'), str);
 
   output.publicAssets.unshift({
@@ -44,9 +43,7 @@ export async function writeManifest(
   });
 }
 
-/**
- * Generates the manifest based on the config and entrypoints.
- */
+/** Generates the manifest based on the config and entrypoints. */
 export async function generateManifest(
   allEntrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
@@ -118,7 +115,36 @@ export async function generateManifest(
       ? undefined
       : versionName;
 
+  // Warn if building for Firefox without data_collection_permissions
+  if (
+    wxt.config.browser === 'firefox' &&
+    !userManifest.browser_specific_settings?.gecko
+      ?.data_collection_permissions &&
+    !wxt.config.suppressWarnings?.firefoxDataCollection
+  ) {
+    wxt.logger.warn(
+      'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
+        'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
+        'To suppress this warning, set `suppressWarnings.firefoxDataCollection` to `true` in your wxt config.\n',
+    );
+  }
+
+  if (
+    wxt.config.browser === 'firefox' &&
+    !manifest.browser_specific_settings?.gecko?.id &&
+    !wxt.config.suppressWarnings?.firefoxId
+  ) {
+    wxt.logger.warn(
+      'Firefox requires extension ID for MV3 and recommends it for MV2.\n' +
+        'For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id',
+    );
+  }
+
   addEntrypoints(manifest, entrypoints, buildOutput);
+
+  if (wxt.config.browser === 'firefox') {
+    addDiscoveredThemeIcons(manifest, buildOutput);
+  }
 
   if (wxt.config.command === 'serve') addDevModeCsp(manifest);
   if (wxt.config.command === 'serve') addDevModePermissions(manifest);
@@ -155,8 +181,9 @@ export async function generateManifest(
 }
 
 /**
- * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't allow), so it's a
- * simple version number, like X or X.Y or X.Y.Z, which browsers allow.
+ * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't
+ * allow), so it's a simple version number, like X or X.Y or X.Y.Z, which
+ * browsers allow.
  */
 function simplifyVersion(versionName: string): string {
   // Regex adapted from here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format
@@ -278,23 +305,32 @@ function addEntrypoints(
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
+    if (popup.options.defaultState && wxt.config.manifestVersion === 3)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Chrome
+      options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
-    if (manifest.manifest_version === 3) {
-      manifest.action = {
-        ...manifest.action,
-        ...options,
-        default_popup,
-      };
-    } else {
-      const key = popup.options.mv2Key ?? 'browser_action';
-      manifest[key] = {
-        ...manifest[key],
-        ...options,
-        default_popup,
-      };
-    }
+    if (popup.options.defaultArea)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.default_area = popup.options.defaultArea;
+    if (popup.options.themeIcons)
+      // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
+      options.theme_icons = popup.options.themeIcons;
+
+    const actionKey =
+      wxt.config.manifestVersion === 2
+        ? (popup.options.actionType ?? 'browser_action')
+        : wxt.config.browser === 'firefox' &&
+            popup.options.actionType === 'page_action'
+          ? 'page_action'
+          : 'action';
+
+    manifest[actionKey] = {
+      ...manifest[actionKey],
+      ...options,
+      default_popup,
+    };
   }
 
   if (devtools) {
@@ -308,7 +344,9 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab,
+      ...(wxt.config.browser !== 'safari' && {
+        open_in_tab: options.options.openInTab ?? false,
+      }),
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
@@ -459,16 +497,16 @@ function discoverIcons(
 }
 
 function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
-  let permissonUrl = wxt.server?.origin;
-  if (permissonUrl) {
-    const permissionUrlInstance = new URL(permissonUrl);
+  let permissionUrl = wxt.server?.origin;
+  if (permissionUrl) {
+    const permissionUrlInstance = new URL(permissionUrl);
     permissionUrlInstance.port = '';
-    permissonUrl = permissionUrlInstance.toString();
+    permissionUrl = permissionUrlInstance.toString();
   }
-  const permission = `${permissonUrl}*`;
+  const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
-  if (manifest.manifest_version === 3) {
+  if (wxt.config.manifestVersion === 3) {
     addHostPermission(manifest, permission);
   } else {
     addPermission(manifest, permission);
@@ -477,7 +515,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const extensionPagesCsp = new ContentSecurityPolicy(
     // @ts-expect-error: extension_pages exists, we convert MV2 CSPs to this earlier in the process
     manifest.content_security_policy?.extension_pages ??
-      (manifest.manifest_version === 3
+      (wxt.config.manifestVersion === 3
         ? DEFAULT_MV3_EXTENSION_PAGES_CSP
         : DEFAULT_MV2_CSP),
   );
@@ -508,8 +546,8 @@ function addDevModePermissions(manifest: Browser.runtime.Manifest) {
 }
 
 /**
- * Returns the bundle paths to CSS files associated with a list of content scripts, or undefined if
- * there is no associated CSS.
+ * Returns the bundle paths to CSS files associated with a list of content
+ * scripts, or undefined if there is no associated CSS.
  */
 export function getContentScriptCssFiles(
   contentScripts: ContentScriptEntrypoint[],
@@ -535,9 +573,9 @@ export function getContentScriptCssFiles(
 }
 
 /**
- * Content scripts configured with `cssInjectionMode: "ui"` need to add their CSS files to web
- * accessible resources so they can be fetched as text and added to shadow roots that the UI is
- * added to.
+ * Content scripts configured with `cssInjectionMode: "ui"` need to add their
+ * CSS files to web accessible resources so they can be fetched as text and
+ * added to shadow roots that the UI is added to.
  */
 export function getContentScriptCssWebAccessibleResources(
   contentScripts: ContentScriptEntrypoint[],
@@ -565,8 +603,8 @@ export function getContentScriptCssWebAccessibleResources(
 }
 
 /**
- * Based on the build output, return a Record of each content script's name to it CSS file if the
- * script includes one.
+ * Based on the build output, return a Record of each content script's name to
+ * it CSS file if the script includes one.
  */
 export function getContentScriptsCssMap(
   buildOutput: Omit<BuildOutput, 'manifest'>,
@@ -604,8 +642,8 @@ function addHostPermission(
 }
 
 /**
- * - "<all_urls>" &rarr; "<all_urls>"
- * - "*://play.google.com/books/*" &rarr; "*://play.google.com/*"
+ * - "<all_urls>" → "<all_urls>"
+ * - "_://play.google.com/books/_" → "_://play.google.com/_"
  */
 export function stripPathFromMatchPattern(pattern: string) {
   const protocolSepIndex = pattern.indexOf('://');
@@ -616,9 +654,10 @@ export function stripPathFromMatchPattern(pattern: string) {
 }
 
 /**
- * Converts all MV3 web accessible resources to their MV2 forms. MV3 web accessible resources are
- * generated in this file, and may be defined by the user in their manifest. In both cases, when
- * targeting MV2, automatically convert their definitions down to the basic MV2 array.
+ * Converts all MV3 web accessible resources to their MV2 forms. MV3 web
+ * accessible resources are generated in this file, and may be defined by the
+ * user in their manifest. In both cases, when targeting MV2, automatically
+ * convert their definitions down to the basic MV2 array.
  */
 export function convertWebAccessibleResourcesToMv2(
   manifest: Browser.runtime.Manifest,
@@ -668,9 +707,7 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
     manifest.content_security_policy.extension_pages;
 }
 
-/**
- * Make sure all resources are in MV3 format. If not, add a wanring
- */
+/** Make sure all resources are in MV3 format. If not, add a warning. */
 function validateMv3WebAccessibleResources(
   manifest: Browser.runtime.Manifest,
 ): void {
@@ -688,9 +725,7 @@ function validateMv3WebAccessibleResources(
   }
 }
 
-/**
- * Remove keys from the manifest based on the build target.
- */
+/** Remove keys from the manifest based on the build target. */
 function stripKeys(manifest: Browser.runtime.Manifest): void {
   let keysToRemove: string[] = [];
   if (wxt.config.manifestVersion === 2) {
@@ -699,6 +734,8 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
+    if (wxt.config.browser !== 'firefox')
+      keysToRemove.push(...chromeMv2OnlyKeys);
   }
 
   keysToRemove.forEach((key) => {
@@ -707,7 +744,6 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
 }
 
 const mv2OnlyKeys = [
-  'page_action',
   'browser_action',
   'automation',
   'content_capabilities',
@@ -732,6 +768,7 @@ const mv3OnlyKeys = [
   'optional_host_permissions',
   'side_panel',
 ];
+const chromeMv2OnlyKeys = ['page_action'];
 const firefoxMv3OnlyKeys = ['host_permissions'];
 
 const DEFAULT_MV3_EXTENSION_PAGES_CSP =

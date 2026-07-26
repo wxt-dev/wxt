@@ -1,6 +1,6 @@
 import { relative } from 'node:path';
-import pc from 'picocolors';
 import { wxt } from '../wxt';
+import { styleText } from 'node:util';
 
 export interface BabelSyntaxError extends SyntaxError {
   code: 'BABEL_PARSER_SYNTAX_ERROR';
@@ -26,7 +26,7 @@ export function logBabelSyntaxError(error: BabelSyntaxError) {
     `(${filename}:${error.loc.line}:${error.loc.column + 1})`,
   );
   if (error.frame) {
-    message += '\n\n' + pc.red(error.frame);
+    message += '\n\n' + styleText('red', error.frame);
   }
   wxt.logger.error(message);
 }

@@ -1,5 +1,6 @@
 /**
- * Utilities for creating [WXT Modules](https://wxt.dev/guide/essentials/wxt-modules.html).
+ * Utilities for creating [WXT
+ * Modules](https://wxt.dev/guide/essentials/wxt-modules.html).
  *
  * @module wxt/modules
  */
@@ -10,8 +11,8 @@ import type {
   WxtModuleOptions,
   WxtModuleSetup,
 } from './types';
-import * as vite from 'vite';
-import glob from 'fast-glob';
+import type * as vite from 'vite';
+import { glob } from 'tinyglobby';
 import { resolve } from 'node:path';
 import type { UnimportOptions } from 'unimport';
 
@@ -37,20 +38,20 @@ export function defineWxtModule<TOptions extends WxtModuleOptions>(
  * To extract entrypoint options from a JS/TS file, use
  * `wxt.builder.importEntrypoint` (see example).
  *
+ * @example
+ *   export default defineWxtModule(async (wxt, options) => {
+ *     const entrypointPath = '/path/to/my-entrypoint.ts';
+ *     addEntrypoint(wxt, {
+ *       type: 'content-script',
+ *       name: 'some-name',
+ *       inputPath: entrypointPath,
+ *       outputDir: wxt.config.outDir,
+ *       options: await wxt.builder.importEntrypoint(entrypointPath),
+ *     });
+ *   });
+ *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param entrypoint The entrypoint to be bundled along with the extension.
- *
- * @example
- * export default defineWxtModule(async (wxt, options) => {
- *   const entrypointPath = "/path/to/my-entrypoint.ts";
- *   addEntrypoint(wxt, {
- *     type: "content-script",
- *     name: "some-name",
- *     inputPath: entrypointPath,
- *     outputDir: wxt.config.outDir,
- *     options: await wxt.builder.importEntrypoint(entrypointPath),
- *   });
- * });
  */
 export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
   wxt.hooks.hook('entrypoints:resolved', (_, entrypoints) => {
@@ -63,17 +64,20 @@ export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
  * extension's output directory. The directory itself is not copied, just the
  * files inside it. If a filename matches an existing one, it is ignored.
  *
+ * @example
+ *   export default defineWxtModule((wxt, options) => {
+ *     addPublicAssets(wxt, './dist/prebundled');
+ *   });
+ *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param dir The directory to copy.
- *
- * @example
- * export default defineWxtModule((wxt, options) => {
- *   addPublicAssets(wxt, "./dist/prebundled");
- * });
  */
 export function addPublicAssets(wxt: Wxt, dir: string): void {
   wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
-    const moreFiles = await glob('**/*', { cwd: dir });
+    const moreFiles = await glob('**/*', {
+      cwd: dir,
+      expandDirectories: false,
+    });
     if (moreFiles.length === 0) {
       wxt.logger.warn('No files to copy in', dir);
       return;
@@ -85,22 +89,22 @@ export function addPublicAssets(wxt: Wxt, dir: string): void {
 }
 
 /**
- * Merge additional vite config for one or more entrypoint "groups" that make
- * up individual builds. Config in the project's `wxt.config.ts` file takes
+ * Merge additional vite config for one or more entrypoint "groups" that make up
+ * individual builds. Config in the project's `wxt.config.ts` file takes
  * precedence over any config added by this function.
+ *
+ * @example
+ *   export default defineWxtModule((wxt, options) => {
+ *   addViteConfig(wxt, () => ({
+ *   build: {
+ *   sourceMaps: true,
+ *   },
+ *   });
+ *   });
  *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param viteConfig A function that returns the vite config the module is
-                     adding. Same format as `vite` in `wxt.config.ts`.
- *
- * @example
- * export default defineWxtModule((wxt, options) => {
- *   addViteConfig(wxt, () => ({
- *     build: {
- *       sourceMaps: true,
- *     },
- *   });
- * });
+ *   adding. Same format as `vite` in `wxt.config.ts`.
  */
 export function addViteConfig(
   wxt: Wxt,
@@ -109,7 +113,10 @@ export function addViteConfig(
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
-      const fromUser = await userVite(env);
+      const [vite, fromUser] = await Promise.all([
+        import('vite'),
+        userVite(env),
+      ]);
       const fromModule = viteConfig(env) ?? {};
       return vite.mergeConfig(fromModule, fromUser);
     };
@@ -117,17 +124,17 @@ export function addViteConfig(
 }
 
 /**
- * Add a runtime plugin to the project. In each entrypoint, before executing
- * the `main` function, plugins are executed.
+ * Add a runtime plugin to the project. In each entrypoint, before executing the
+ * `main` function, plugins are executed.
+ *
+ * @example
+ *   export default defineWxtModule((wxt) => {
+ *     addWxtPlugin(wxt, 'wxt-module-analytics/client-plugin');
+ *   });
  *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param plugin An import from an NPM module, or an absolute file path to the
- *               file to load at runtime.
- *
- * @example
- * export default defineWxtModule((wxt) => {
- *   addWxtPlugin(wxt, "wxt-module-analytics/client-plugin");
- * });
+ *   file to load at runtime.
  */
 export function addWxtPlugin(wxt: Wxt, plugin: string): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
@@ -136,42 +143,42 @@ export function addWxtPlugin(wxt: Wxt, plugin: string): void {
 }
 
 /**
- * Add an Unimport preset ([built-in](https://github.com/unjs/unimport?tab=readme-ov-file#built-in-presets),
+ * Add an Unimport preset
+ * ([built-in](https://github.com/unjs/unimport?tab=readme-ov-file#built-in-presets),
  * [custom](https://github.com/unjs/unimport?tab=readme-ov-file#custom-presets),
- * or [auto-scanned](https://github.com/unjs/unimport?tab=readme-ov-file#exports-auto-scan)),
+ * or
+ * [auto-scanned](https://github.com/unjs/unimport?tab=readme-ov-file#exports-auto-scan)),
  * to the project's list of auto-imported utilities.
  *
  * Some things to note:
- * - This function will only de-duplicate built-in preset names. It will not
- *   stop you adding duplicate custom or auto-scanned presets.
+ *
+ * - This function will only de-duplicate built-in preset names. It will not stop
+ *   you adding duplicate custom or auto-scanned presets.
  * - If the project has disabled imports, this function has no effect.
  *
- * @param wxt The wxt instance provided by the module's setup function.
- * @param preset The preset to add to the project.
- *
  * @example
- * export default defineWxtModule((wxt) => {
+ *   export default defineWxtModule((wxt) => {
  *   // Built-in preset:
  *   addImportPreset(wxt, "vue");
  *   // Custom preset:
  *   addImportPreset(wxt, {
- *     from: "vue",
- *     imports: ["ref", "reactive", ...],
+ *   from: "vue",
+ *   imports: ["ref", "reactive", ...],
  *   });
  *   // Auto-scanned preset:
  *   addImportPreset(wxt, { package: "vue" });
- * });
+ *   });
+ *
+ * @param wxt The wxt instance provided by the module's setup function.
+ * @param preset The preset to add to the project.
  */
 export function addImportPreset(
   wxt: Wxt,
   preset: UnimportOptions['presets'][0],
 ): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
-    // In older versions of WXT, `wxt.config.imports` could be false
-    if (!wxt.config.imports) return;
-
     wxt.config.imports.presets ??= [];
-    // De-dupelicate built-in named presets
+    // De-duplicate built-in named presets
     if (wxt.config.imports.presets.includes(preset)) return;
 
     wxt.config.imports.presets.push(preset);
@@ -179,8 +186,8 @@ export function addImportPreset(
 }
 
 /**
- * Adds an import alias to the project's TSConfig paths and bundler. Path can
- * be absolute or relative to the project's root directory.
+ * Adds an import alias to the project's TSConfig paths and bundler. Path can be
+ * absolute or relative to the project's root directory.
  *
  * Usually, this is used to provide access to some code generated by your
  * module. In the example below, a `i18n` plugin generates a variable that it
@@ -188,22 +195,22 @@ export function addImportPreset(
  * to it.
  *
  * @example
- * import path from 'node:path';
+ *   import path from 'node:path';
  *
- * export default defineWxtModule((wxt) => {
- *   const i18nPath = path.resolve(wxt.config.wxtDir, "i18n.ts");
+ *   export default defineWxtModule((wxt) => {
+ *     const i18nPath = path.resolve(wxt.config.wxtDir, 'i18n.ts');
  *
- *   // Generate the file
- *   wxt.hooks.hook("prepare:types", (_, entries) => {
- *     entries.push({
- *       path: i18nPath,
- *       text: `export const i18n = ...`,
+ *     // Generate the file
+ *     wxt.hooks.hook('prepare:types', (_, entries) => {
+ *       entries.push({
+ *         path: i18nPath,
+ *         text: `export const i18n = ...`,
+ *       });
  *     });
- *   });
  *
- *   // Add alias
- *   addAlias(wxt, "#i18n", i18nPath);
- * });
+ *     // Add alias
+ *     addAlias(wxt, '#i18n', i18nPath);
+ *   });
  */
 export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('config:resolved', (wxt) => {

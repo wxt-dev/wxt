@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
 
 describe('User Config', () => {
@@ -108,7 +108,7 @@ describe('User Config', () => {
     await project.build({ configFile: 'test.config.ts' });
 
     expect(
-      await project.fileExists('.custom-output/chrome-mv3/background.js'),
+      await project.pathExists('.custom-output/chrome-mv3/background.js'),
     ).toBe(true);
   });
 
@@ -129,13 +129,13 @@ describe('User Config', () => {
     await project.build();
 
     expect(
-      await project.fileExists('.output/test-chrome-mv3-production-build'),
+      await project.pathExists('.output/test-chrome-mv3-production-build'),
     ).toBe(true);
 
     await project.build({ mode: 'development' });
 
     expect(
-      await project.fileExists('.output/test-chrome-mv3-development-dev-build'),
+      await project.pathExists('.output/test-chrome-mv3-development-dev-build'),
     ).toBe(true);
   });
 
@@ -149,5 +149,42 @@ describe('User Config', () => {
     );
 
     await project.build({ configFile: 'foo.config.ts' });
+  });
+
+  it('should pass watch options to the dev server', async () => {
+    const project = new TestProject();
+    const extendViteDevServerConfig = vi.fn();
+    project.addFile('entrypoints/popup.html', '<html></html>');
+
+    const server = await project.startServer({
+      watchOptions: {
+        usePolling: true,
+        interval: 1000,
+        ignored: ['**/generated/**'],
+      },
+      hooks: {
+        'vite:devServer:extendConfig': extendViteDevServerConfig,
+      },
+      webExt: {
+        disabled: true,
+      },
+    });
+
+    try {
+      const viteConfig = extendViteDevServerConfig.mock.calls[0]?.[0];
+      expect(viteConfig?.server?.watch).toMatchObject({
+        usePolling: true,
+        interval: 1000,
+      });
+      expect(viteConfig?.server?.watch?.ignored).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining('.output/**'),
+          expect.stringContaining('.wxt/**'),
+          '**/generated/**',
+        ]),
+      );
+    } finally {
+      await server.stop();
+    }
   });
 });

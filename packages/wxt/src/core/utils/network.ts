@@ -1,18 +1,18 @@
 import dns from 'node:dns';
 import { ResolvedConfig } from '../../types';
 import { withTimeout } from './time';
+import consola from 'consola';
 
-function isOffline(): Promise<boolean> {
-  const isOffline = new Promise<boolean>((res) => {
-    dns.resolve('google.com', (err) => {
-      if (err == null) {
-        res(false);
-      } else {
-        res(true);
-      }
+async function isOffline(): Promise<boolean> {
+  try {
+    const isOffline = new Promise<boolean>((res) => {
+      dns.resolve('google.com', (err) => res(err != null));
     });
-  });
-  return withTimeout(isOffline, 1e3).catch(() => true);
+    return await withTimeout(isOffline, 1e3);
+  } catch (error) {
+    consola.error('Error checking offline status:', error);
+    return true;
+  }
 }
 
 export async function isOnline(): Promise<boolean> {
@@ -21,8 +21,8 @@ export async function isOnline(): Promise<boolean> {
 }
 
 /**
- * Fetches a URL with a simple GET request. Grabs it from cache if it doesn't exist, or throws an
- * error if it can't be resolved via the network or cache.
+ * Fetches a URL with a simple GET request. Grabs it from cache if it doesn't
+ * exist, or throws an error if it can't be resolved via the network or cache.
  */
 export async function fetchCached(
   url: string,

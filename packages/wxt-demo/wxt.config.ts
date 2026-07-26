@@ -1,5 +1,5 @@
 import { defineConfig } from 'wxt';
-import { presetUno } from 'unocss';
+import { presetWind3 } from 'unocss';
 
 export default defineConfig({
   srcDir: 'src',
@@ -9,8 +9,8 @@ export default defineConfig({
     default_locale: 'en',
     web_accessible_resources: [
       {
-        resources: ['/iframe-src.html'],
-        matches: ['*://*.google.com/*'],
+        resources: ['iframe-src.html', 'unlisted.js'],
+        matches: ['*://*.google.com/*', '*://*.example.com/*'],
       },
     ],
   },
@@ -53,7 +53,7 @@ export default defineConfig({
           ],
         },
       },
-      presets: [presetUno()],
+      presets: [presetWind3()],
     },
   },
 });

@@ -4,12 +4,8 @@ While WXT is in prerelease, only the latest version will receive security update
 
 <img alt="npm version" src="https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048">
 
-<!--
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability, please email me at <aaronklinker1@gmail.com>. I will respond within a few days to acknowledge receipt of your report.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
--->
+If the vulnerability is accepted, I will open a public issue to track the fix. If the vulnerability is not accepted, no further action will be taken.

@@ -27,8 +27,8 @@ export function getEntrypointOutputFile(
 }
 
 /**
- * Return's the entrypoint's output path relative to the output directory. Used for paths in the
- * manifest and rollup's bundle.
+ * Return's the entrypoint's output path relative to the output directory. Used
+ * for paths in the manifest and rollup's bundle.
  */
 export function getEntrypointBundlePath(
   entrypoint: Entrypoint,
@@ -40,9 +40,7 @@ export function getEntrypointBundlePath(
   );
 }
 
-/**
- * Given an entrypoint option, resolve it's value based on a target browser.
- */
+/** Given an entrypoint option, resolve it's value based on a target browser. */
 export function resolvePerBrowserOption<T>(
   option: PerBrowserOption<T>,
   browser: TargetBrowser,
@@ -55,8 +53,8 @@ export function resolvePerBrowserOption<T>(
 /**
  * Given an entrypoint option, resolve it's value based on a target browser.
  *
- * defaultIcon is special, it's the only key that's a record, which can confuse this function. So
- * it's been manually excluded from resolution.
+ * DefaultIcon is special, it's the only key that's a record, which can confuse
+ * this function. So it's been manually excluded from resolution.
  */
 export function resolvePerBrowserOptions<
   T extends Record<string, any>,
