@@ -250,25 +250,39 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * include when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to include
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
-     * This setting overrides `excludeSources`. So if a file matches both lists,
-     * it is included in the ZIP.
+     * Sources ZIP files are created using standard allowlist/blocklist
+     * behavior:
+     *
+     * - You specify a pattern to "include" (via `includeSources`), then a pattern
+     *   to "exclude" from the included files (via `excludeSources`).
+     *
+     * By default, this option includes all files except for hidden files and
+     * directories (files/directories starting with a `.`).
+     *
+     * If you want to include hidden files/directories in your sources ZIP, see
+     * `InlineConfig.zip.dotSources`.
      *
      * @example
-     *   [
-     *     'coverage', // Include the coverage directory in the `sourcesRoot`
-     *   ];
+     *   ['entrypoints/**', 'wxt.config.ts', 'package.json', 'tsconfig.json'];
      */
     includeSources?: string[];
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
-     * Hidden files, node_modules, and tests are ignored by default.
+     * By default, WXT excludes some files:
+     *
+     * - `node_modules`
+     * - Tests files and directories
+     * - Output directory
+     *
+     * Any values specified in this option will be merged with the ones above -
+     * you cannot replace the default values, only add to them.
      *
      * @example
      *   [
@@ -277,13 +291,31 @@ export interface InlineConfig {
      */
     excludeSources?: string[];
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when zipping the extension.
+     * Include hidden files/directories in your sources ZIP.
+     *
+     * [Tinyglobby](https://npmjs.org/tinyglobby) does not match against files
+     * and directory that start with a `.` by default. For example, if you need
+     * to include a `.env` file, you need to set this to `true`, then exclude
+     * other hidden files/directories in `excludeSources`.
+     *
+     * **Be very careful when this is enabled - WXT may include files with
+     * secrets in your ZIP you did not intend to share with Mozilla or upload to
+     * other places**. Make sure all hidden files you don't want to include are
+     * added to `excludeSources`.
+     *
+     * @default false
+     */
+    dotSources?: boolean;
+    /**
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when zipping the extension.
      *
      * @example
      *   [
      *     '**\/*.map', // Exclude all sourcemaps
      *   ];
+     *
+     * @default [ ]
      */
     exclude?: string[];
     /**
@@ -1533,6 +1565,7 @@ export interface ResolvedConfig {
     sourcesTemplate: string;
     includeSources: string[];
     excludeSources: string[];
+    dotSources: boolean;
     sourcesRoot: string;
     downloadedPackagesDir: string;
     downloadPackages: string[];
@@ -1690,7 +1723,7 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
 
 /**
  * Package management utils built on top of
- * [`nypm`](https://www.npmjs.com/package/nypm)
+ * [`nypm`](https://npmjs.org/package/nypm)
  */
 export interface WxtPackageManager extends Nypm.PackageManager {
   addDependency: typeof Nypm.addDependency;
