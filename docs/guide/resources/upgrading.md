@@ -363,7 +363,7 @@ fakeBrowser.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
 
 If you use use a messaging library, it will likely continue working as-is.
 
-## New Deprecations in v0.20
+### New Deprecations in v0.20
 
 Deprecated APIs will be removed in the next major release.
 
