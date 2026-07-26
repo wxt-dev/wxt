@@ -376,7 +376,11 @@ async function getUnimportOptions(
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
-  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  const eslintrc = await getUnimportEslintOptions(
+    logger,
+    wxtDir,
+    config.imports,
+  );
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
 
@@ -516,28 +520,34 @@ async function getUnimportOptions(
 }
 
 async function getUnimportEslintOptions(
+  logger: Logger,
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
     options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
 
-  let enabled: ResolvedEslintrc['enabled'];
   const version = await getEslintVersion();
-  let major = parseInt(version[0]) as Exclude<
-    ResolvedEslintrc['enabled'],
-    false
-  >;
+  const major = parseInt(version[0]);
 
+  let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
-      if (isNaN(major)) enabled = false;
-      else if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = major;
-      else enabled = false;
-      break;
     case true:
-      enabled = major;
+      if (isNaN(major)) {
+        if (inlineEnabled === true) {
+          logger.warn(
+            'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
+          );
+        }
+        enabled = false;
+      } else if (major <= 8) {
+        enabled = 8;
+      } else if (major >= 9) {
+        enabled = 9;
+      } else {
+        enabled = false;
+      }
       break;
     default:
       enabled = inlineEnabled;
