@@ -44,9 +44,11 @@ Before v0.20, `web-ext` was included as a dependency of WXT so that the browser 
 So in v0.21, `web-ext` is now an optional peer dependency - if it's installed, the browser will be opened automatically. If not, the feature is disabled.
 
 - **To continue opening the browser automatically**: Install `web-ext` as a dependency
+
   ```sh
   pnpm add -D web-ext
   ```
+
 - **If you don't use this feature**: Don't install it and you can delete any `web-ext.config.ts` options and/or remove any `webExt.enabled: false` config
 
 You can still disable this behavior by setting `webExt.enabled: false` in your `wxt.config.ts` file or `web-ext.config.ts` file if the package is present.
