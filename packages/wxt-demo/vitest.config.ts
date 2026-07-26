@@ -1,5 +1,5 @@
 import { defineProject } from 'vitest/config';
-import { WxtVitest } from 'wxt/testing';
+import { WxtVitest } from 'wxt/testing/vitest-plugin';
 
 export default defineProject({
   test: {

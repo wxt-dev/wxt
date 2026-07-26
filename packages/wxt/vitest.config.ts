@@ -22,7 +22,10 @@ export default defineConfig({
   plugins: [RandomSeed({ define: 'import.meta.env.TEST_SEED' })],
   resolve: {
     alias: {
-      'wxt/testing': path.resolve('src/testing'),
+      'wxt/testing/fake-browser': path.resolve('src/testing/fake-browser.ts'),
+      'wxt/testing/vitest-plugin': path.resolve(
+        'src/testing/wxt-vitest-plugin.ts',
+      ),
     },
   },
 });

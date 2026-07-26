@@ -124,19 +124,13 @@ export async function resolveConfig(
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-
-  if (inlineConfig.runner != null || userConfig.runner != null) {
-    logger.warn(
-      '`InlineConfig#runner` is deprecated, use `InlineConfig#webExt` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
-    );
-  }
   const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
     rcFile: '.webextrc',
-    overrides: inlineConfig.webExt ?? inlineConfig.runner,
-    defaults: userConfig.webExt ?? userConfig.runner,
+    overrides: inlineConfig.webExt,
+    defaults: userConfig.webExt,
   });
   // Make sure alias are absolute
   const alias = Object.fromEntries(
@@ -151,20 +145,9 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
-    if (mergedConfig.dev?.server?.hostname)
-      logger.warn(
-        `The 'hostname' option is deprecated, please use 'host' or 'origin' depending on your circumstances.`,
-      );
-
-    const host =
-      mergedConfig.dev?.server?.host ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const host = mergedConfig.dev?.server?.host ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
-    const origin =
-      mergedConfig.dev?.server?.origin ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const origin = mergedConfig.dev?.server?.origin ?? 'localhost';
     const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
@@ -230,7 +213,6 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig: webExt,
     webExt,
     runner:
       command === 'serve'
@@ -390,7 +372,7 @@ async function getUnimportOptions(
   ];
 
   const defaultOptions: WxtResolvedUnimportOptions = {
-    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing/fake-browser' }],
     presets: [
       {
         from: 'wxt/browser',
