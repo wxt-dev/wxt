@@ -125,8 +125,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
       keyboardShortcuts.start();
       keyboardShortcuts.printHelp({
         canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled &&
-          !!wxt.config.runner.canOpen?.(),
+          !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
       });
     },
   };
@@ -169,8 +168,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     keyboardShortcuts.start();
     keyboardShortcuts.printHelp({
       canReopenBrowser:
-        !wxt.config.runnerConfig.config.disabled &&
-        !!wxt.config.runner.canOpen?.(),
+        !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
     });
   };
 
