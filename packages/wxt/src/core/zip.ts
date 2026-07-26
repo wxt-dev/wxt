@@ -69,7 +69,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       ...skippedEntrypoints.map((entry) =>
         path.relative(wxt.config.zip.sourcesRoot, entry.inputPath),
       ),
-    ].map((paths) => paths.replaceAll('\\', '/'));
+    ].map((paths) => paths.replaceAll('\\', '/')); // TODO: Use normalizePath?
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
@@ -87,6 +87,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         }
       },
       additionalFiles: downloadedPackages,
+      dot: wxt.config.zip.dotSources,
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
@@ -117,6 +118,7 @@ async function zipDir(
     ) => Promise<string | undefined | void> | string | undefined | void;
     additionalWork?: (archive: JSZip) => Promise<void> | void;
     additionalFiles?: string[];
+    dot?: boolean;
   },
 ): Promise<void> {
   const archive = new JSZip();
@@ -126,6 +128,7 @@ async function zipDir(
     cwd: directory,
     ignore: options?.exclude ?? [],
     onlyFiles: true,
+    dot: options?.dot,
   });
   const filesToZip = [
     ...files,

@@ -254,13 +254,17 @@ export interface InlineConfig {
      * include when creating a ZIP of all your source code for Firefox. Patterns
      * are relative to your `config.zip.sourcesRoot`.
      *
-     * When specified, ONLY files matching these patterns will be included
-     * (allowlist behavior). This prevents accidental inclusion of sensitive
-     * files like secrets or credentials. Files matching `excludeSources`
-     * patterns are still excluded.
+     * Sources ZIP files are created using standard allowlist/blocklist
+     * behavior:
      *
-     * When not specified, all files are included by default (except hidden
-     * files, node_modules, and files matching `excludeSources`).
+     * - You specify a pattern to "include" (via `includeSources`), then a pattern
+     *   to "exclude" from the included files (via `excludeSources`).
+     *
+     * By default, this option includes all files except for hidden files and
+     * directories (files/directories starting with a `.`).
+     *
+     * If you want to include hidden files/directories in your sources ZIP, see
+     * `InlineConfig.zip.dotSources`.
      *
      * @example
      *   ['entrypoints/**', 'wxt.config.ts', 'package.json', 'tsconfig.json'];
@@ -271,7 +275,14 @@ export interface InlineConfig {
      * exclude when creating a ZIP of all your source code for Firefox. Patterns
      * are relative to your `config.zip.sourcesRoot`.
      *
-     * Hidden files, node_modules, and tests are ignored by default.
+     * By default, WXT excludes some files:
+     *
+     * - `node_modules`
+     * - Tests files and directories
+     * - Output directory
+     *
+     * Any values specified in this option will be merged with the ones above -
+     * you cannot replace the default values, only add to them.
      *
      * @example
      *   [
@@ -279,6 +290,22 @@ export interface InlineConfig {
      *   ];
      */
     excludeSources?: string[];
+    /**
+     * Include hidden files/directories in your sources ZIP.
+     *
+     * [Picomatch](https://www.npmjs.com/package/picomatch) does not match
+     * against files and directory that start with a `.` by default. For
+     * example, if you need to include a `.env` file, you need to set this to
+     * `true`, then exclude other hidden files/directories in `excludeSources`.
+     *
+     * **Be very careful when this is enabled - WXT may include files with
+     * secrets in your ZIP you did not intend to share with mozzila or upload to
+     * other places**. Make sure all hidden files you don't want to include are
+     * added to `excludeSources`.
+     *
+     * @default false
+     */
+    dotSources?: boolean;
     /**
      * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
      * exclude when zipping the extension.
@@ -1536,6 +1563,7 @@ export interface ResolvedConfig {
     sourcesTemplate: string;
     includeSources: string[];
     excludeSources: string[];
+    dotSources: boolean;
     sourcesRoot: string;
     downloadedPackagesDir: string;
     downloadPackages: string[];

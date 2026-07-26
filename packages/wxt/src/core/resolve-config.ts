@@ -314,8 +314,6 @@ function resolveZipConfig(
       '**/node_modules',
       // WXT files
       '**/web-ext.config.ts',
-      // Hidden files
-      '**/.*',
       // Tests
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
@@ -324,6 +322,7 @@ function resolveZipConfig(
       // From user
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
+    dotSources: mergedConfig.zip?.dotSources ?? false,
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
   };
