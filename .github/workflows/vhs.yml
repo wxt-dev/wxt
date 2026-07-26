@@ -36,7 +36,7 @@ jobs:
         run: |
           brew install ttyd ffmpeg
           go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
-          vhs docs/tapes/init-demo.tape
+          env -u CI -u GITHUB_ACTIONS vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
         uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
