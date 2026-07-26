@@ -372,7 +372,7 @@ async function getUnimportOptions(
   ];
 
   const defaultOptions: WxtResolvedUnimportOptions = {
-    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing/fake-browser' }],
     presets: [
       {
         from: 'wxt/browser',
