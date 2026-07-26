@@ -184,8 +184,6 @@ export interface InlineConfig {
    * `web-ext.config.ts` file.
    */
   webExt?: WebExtConfig;
-  /** @deprecated Use `webExt` instead. Same option, just renamed. */
-  runner?: WebExtConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
@@ -416,13 +414,6 @@ export interface InlineConfig {
        * @default false
        */
       strictPort?: boolean;
-      /**
-       * Hostname to run the dev server on.
-       *
-       * @deprecated Use `host` to specify the interface to bind to, or use
-       *   `origin` to specify the dev server hostname.
-       */
-      hostname?: string;
     };
     /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added
@@ -1142,9 +1133,6 @@ export interface ConfigEnv {
 
 export type WxtCommand = 'build' | 'serve';
 
-/** @deprecated Use `WebExtConfig` instead. */
-export type ExtensionRunnerConfig = WebExtConfig;
-
 /**
  * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the
  * browser.
@@ -1537,8 +1525,6 @@ export interface ResolvedConfig {
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  /** @deprecated - Use {@link webExt} instead. */
-  runnerConfig: C12ResolvedConfig<WebExtConfig>;
   webExt: C12ResolvedConfig<WebExtConfig>;
   runner: ExtensionRunner;
   zip: {

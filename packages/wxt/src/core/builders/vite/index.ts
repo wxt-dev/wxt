@@ -427,16 +427,16 @@ export function getRunnerProfileWatchIgnores(
 ): string[] {
   const root = normalizePath(wxtConfig.root);
   const chromiumArgProfiles = extractPathArgs(
-    wxtConfig.runnerConfig.config?.chromiumArgs,
+    wxtConfig.webExt.config?.chromiumArgs,
     '--user-data-dir',
   );
   const firefoxArgProfiles = extractPathArgs(
-    wxtConfig.runnerConfig.config?.firefoxArgs,
+    wxtConfig.webExt.config?.firefoxArgs,
     '-profile',
   );
   const profiles = [
-    wxtConfig.runnerConfig.config?.chromiumProfile,
-    wxtConfig.runnerConfig.config?.firefoxProfile,
+    wxtConfig.webExt.config?.chromiumProfile,
+    wxtConfig.webExt.config?.firefoxProfile,
     ...chromiumArgProfiles,
     ...firefoxArgProfiles,
   ].filter((profile): profile is string => typeof profile === 'string');

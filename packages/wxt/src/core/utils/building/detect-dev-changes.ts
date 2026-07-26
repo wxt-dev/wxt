@@ -63,7 +63,7 @@ export function detectDevChanges(
 
   const isRunnerChange = some(
     relevantChangedFiles,
-    (file) => file === wxt.config.runnerConfig.configFile,
+    (file) => file === wxt.config.webExt.configFile,
   );
   if (isRunnerChange) return { type: 'browser-restart' };
 
@@ -146,7 +146,7 @@ export function getRelevantDevChangedFiles(
   return Array.from(new Set(changedFiles)).filter((changedFile) => {
     if (changedFile === wxt.config.userConfigMetadata.configFile) return true;
     if (changedFile.startsWith(wxt.config.modulesDir)) return true;
-    if (changedFile === wxt.config.runnerConfig.configFile) return true;
+    if (changedFile === wxt.config.webExt.configFile) return true;
     if (changedFile.startsWith(wxt.config.publicDir)) return true;
     return findEffectedSteps(changedFile, currentOutput).length > 0;
   });

@@ -28,7 +28,7 @@ describe('Auto Imports', () => {
             const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
             const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
             const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
-            const fakeBrowser: typeof import('wxt/testing').fakeBrowser
+            const fakeBrowser: typeof import('wxt/testing/fake-browser').fakeBrowser
             const getAppConfig: typeof import('wxt/utils/app-config').getAppConfig
             const injectScript: typeof import('wxt/utils/inject-script').injectScript
             const storage: typeof import('wxt/utils/storage').storage
@@ -124,7 +124,7 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
             export { startOfDay } from '../utils/time';
           }
           "
@@ -209,7 +209,7 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
           }
           "
         `);
