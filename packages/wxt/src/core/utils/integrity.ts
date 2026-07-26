@@ -15,9 +15,9 @@ const URL_IMPORT_RE = /^url(?:#([^:]*))?:(.*)$/s;
 const INTEGRITY_RE = /^([a-z0-9]+)-(.+)$/i;
 
 /**
- * Parses an import specifier like `url#sha256-abc123...:https://example.com/x.js`
- * into its URL and integrity hash. Returns `undefined` if the specifier isn't a
- * URL import.
+ * Parses an import specifier like
+ * `url#sha256-abc123...:https://example.com/x.js` into its URL and integrity
+ * hash. Returns `undefined` if the specifier isn't a URL import.
  */
 export function parseUrlImport(id: string): UrlImport | undefined {
   const match = URL_IMPORT_RE.exec(id);
@@ -44,7 +44,8 @@ export function hashContent(
 
 /**
  * Throws unless `content` matches `integrity`. Accepts both base64 (the
- * [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
+ * [Subresource
+ * Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
  * format used by CDNs) and hex digests.
  */
 export function verifyIntegrity(
