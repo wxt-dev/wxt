@@ -82,6 +82,6 @@ body {
   z-index: 1;
 }
 
-.has-sidebar .title {
+header .has-sidebar .title {
   background: #161618;
 }
