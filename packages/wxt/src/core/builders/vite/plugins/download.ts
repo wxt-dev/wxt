@@ -8,9 +8,8 @@ import {
 } from '../../../utils/integrity';
 
 /**
- * Downloads any URL imports, like Google Analytics, into virtual modules so
- * they are bundled with the extension instead of depending on remote code at
- * runtime.
+ * Downloads any URL imports into virtual modules so they are bundled with the
+ * extension instead of depending on remote code at runtime.
  *
  * Every import must pin an integrity hash. Without one, a compromised CDN could
  * silently ship arbitrary code inside your extension.
@@ -74,6 +73,6 @@ async function missingIntegrityMessage(
   return (
     `${base}\n\n` +
     `  ${suggestion}\n\n` +
-    `Review the file at that URL before pinning it — the hash locks in whatever is served today, it doesn't make untrusted code safe.`
+    `Review the file at that URL before pinning it. A hash locks in whatever is served today, but it doesn't make untrusted code safe.`
   );
 }

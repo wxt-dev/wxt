@@ -23,7 +23,7 @@ URL imports must pin an integrity hash: "url:https://code.jquery.com/jquery-3.7.
 ```
 
 :::warning
-A hash locks in whatever is served today — it does not make untrusted code safe. Review the file before pinning it.
+A hash locks in whatever is served today. It does not make untrusted code safe, so review the file before pinning it.
 :::
 
 When the remote file changes, the build fails instead of silently bundling the new version:
@@ -41,7 +41,11 @@ Run your build on a schedule in CI to find out when a remote dependency changes,
 
 ## Google Analytics
 
-For example, you can import Google Analytics:
+:::tip You might be interested in [`@wxt-dev/analytics`](/analytics)
+It ships a [Google Analytics 4 provider](/analytics#google-analytics-4-measurement-protocol) built on the [Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/ga4), [Google's recommended approach for MV3](https://developer.chrome.com/docs/extensions/how-to/integrate/google-analytics-4#measurement-protocol). No remote code, so there's no hash to pin and keep up to date.
+:::
+
+If you'd still rather bundle `gtag/js` yourself:
 
 ```ts
 // utils/google-analytics.ts
@@ -68,5 +72,5 @@ gtag('event', 'event_name', {
 ```
 
 :::warning
-`gtag/js` is regenerated frequently and its hash changes often, so pinning it means updating the hash regularly. Prefer an NPM package where one exists.
+`gtag/js` is regenerated frequently and its hash changes often, so pinning it means updating the hash regularly.
 :::
