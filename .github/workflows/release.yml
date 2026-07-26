@@ -97,3 +97,4 @@ jobs:
             bun pm pack
             npm publish *.tgz --dry-run
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          latestRelease: ${{ inputs.package == 'wxt' }}
