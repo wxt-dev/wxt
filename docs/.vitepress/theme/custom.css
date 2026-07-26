@@ -81,3 +81,7 @@ body {
 .item {
   z-index: 1;
 }
+
+.VPSidebar .curtain {
+  z-index: 2;
+}

@@ -2,7 +2,12 @@ name: 📼 VHS
 on:
   push:
     paths:
-      - 'docs/tapes/*.tape'
+      - docs/tapes/*.tape
+      - .github/workflows/vhs.yml
+  pull_request:
+    paths:
+      - docs/tapes/*.tape
+      - .github/workflows/vhs.yml
   workflow_dispatch:
 
 permissions:
@@ -18,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup
         uses: ./.github/actions/setup
