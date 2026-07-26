@@ -2,7 +2,12 @@ name: 📼 VHS
 on:
   push:
     paths:
-      - 'docs/tapes/*.tape'
+      - docs/tapes/*.tape
+      - .github/workflows/vhs.yml
+  pull_request:
+    paths:
+      - docs/tapes/*.tape
+      - .github/workflows/vhs.yml
   workflow_dispatch:
 
 permissions:
