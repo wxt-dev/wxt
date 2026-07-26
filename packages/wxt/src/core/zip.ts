@@ -11,6 +11,7 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
+import { relative } from 'node:path/win32';
 
 /**
  * Build and zip the extension for distribution.
@@ -79,7 +80,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       wxt.config.outBaseDir,
       sourcesZipFilename,
     );
-    await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
+    const files = await zipDir(wxt.config.zip.sourcesRoot, sourcesZipPath, {
       include: wxt.config.zip.includeSources,
       exclude: excludeSources,
       transform(absolutePath, zipPath, content) {
@@ -92,6 +93,13 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
+
+    await printFileList(
+      wxt.logger.success,
+      `Sources included in \`${sourcesZipFilename}\``,
+      wxt.config.zip.sourcesRoot,
+      files,
+    );
   }
 
   await printFileList(
@@ -121,7 +129,7 @@ async function zipDir(
     additionalFiles?: string[];
     dot?: boolean;
   },
-): Promise<void> {
+): Promise<string[]> {
   const archive = new JSZip();
   // includeSources patterns are used directly (defaults to ['**/*'] from config)
   // excludeSources patterns are passed to glob's ignore option for efficient filtering
@@ -167,6 +175,8 @@ async function zipDir(
       .on('error', reject)
       .on('close', resolve),
   );
+
+  return filesToZip;
 }
 
 async function downloadPrivatePackages() {
