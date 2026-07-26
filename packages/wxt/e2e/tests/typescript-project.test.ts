@@ -324,15 +324,21 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "@": [
               ".."
@@ -406,15 +412,21 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "@": [
               "../src"
@@ -473,15 +485,21 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
             "example": [
               "../example"
