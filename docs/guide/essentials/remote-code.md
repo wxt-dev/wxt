@@ -26,7 +26,19 @@ URL imports must pin an integrity hash: "url:https://code.jquery.com/jquery-3.7.
 A hash locks in whatever is served today. It does not make untrusted code safe, so review the file before pinning it.
 :::
 
-When the remote file changes, the build fails instead of silently bundling the new version:
+A file that doesn't match its hash is never bundled. What happens next depends on whether you already have a copy that does match.
+
+Downloads are cached in `.wxt/cache`. If the remote file changes and your cached copy still matches the hash, WXT keeps building with the version you pinned and warns you:
+
+```
+[warn] "https://code.jquery.com/jquery-3.7.1.slim.min.js" changed upstream. Using the cached copy
+that matches the expected hash. Review the new file and update your import when you're ready to
+pick it up.
+```
+
+So a remote file changing mid-feature doesn't block you, and you don't silently pick up code you haven't reviewed.
+
+Without a matching cached copy, there's nothing safe to build with, and the build fails:
 
 ```
 Integrity check failed for "https://code.jquery.com/jquery-3.7.1.slim.min.js".
@@ -37,7 +49,7 @@ Integrity check failed for "https://code.jquery.com/jquery-3.7.1.slim.min.js".
 The remote file changed since you added it. Review the new file, and if you trust it, update the hash in your import.
 ```
 
-Run your build on a schedule in CI to find out when a remote dependency changes, rather than at release time.
+Since `.wxt` isn't committed, CI starts from an empty cache and fails on drift rather than warning. Run your build on a schedule there to find out when a remote dependency changes, rather than at release time.
 
 ## Google Analytics
 

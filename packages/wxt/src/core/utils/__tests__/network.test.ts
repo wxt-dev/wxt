@@ -277,7 +277,7 @@ describe('Network utils', () => {
       expect(mockConfig.fsCache.set).not.toHaveBeenCalled();
     });
 
-    it('should fall back to cache when the download fails verification', async () => {
+    it('should fall back to cache and warn when the download fails verification', async () => {
       mockOnline();
 
       const mockConfig = {
@@ -285,7 +285,7 @@ describe('Network utils', () => {
           set: vi.fn(),
           get: vi.fn().mockResolvedValueOnce('trusted'),
         },
-        logger: { debug: vi.fn() },
+        logger: { debug: vi.fn(), warn: vi.fn() },
       };
 
       fetchMock.mockReturnValueOnce(
@@ -307,6 +307,32 @@ describe('Network utils', () => {
 
       expect(result).toBe('trusted');
       expect(mockConfig.fsCache.set).not.toHaveBeenCalled();
+      expect(mockConfig.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('changed upstream'),
+      );
+    });
+
+    it('should not warn when falling back to cache after a failed request', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: {
+          set: vi.fn(),
+          get: vi.fn().mockResolvedValueOnce('from cache'),
+        },
+        logger: { debug: vi.fn(), warn: vi.fn() },
+      };
+
+      fetchMock.mockRejectedValueOnce(new TypeError('fetch failed'));
+
+      const result = await fetchCached(
+        'https://example.com',
+        mockConfig as unknown as ResolvedConfig,
+        { verify: () => {} },
+      );
+
+      expect(result).toBe('from cache');
+      expect(mockConfig.logger.warn).not.toHaveBeenCalled();
     });
 
     it('should verify content read from the cache', async () => {

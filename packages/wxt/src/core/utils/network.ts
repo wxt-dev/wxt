@@ -51,9 +51,6 @@ export async function fetchCached(
         content = downloaded;
       } catch (err) {
         verifyError = err;
-        config.logger.debug(
-          `Downloaded "${url}", but it failed verification, falling back to cache...`,
-        );
       }
       if (content && !noCache) await config.fsCache.set(url, content);
     }
@@ -64,6 +61,11 @@ export async function fetchCached(
     if (cached) {
       verify?.(cached);
       content = cached;
+      if (verifyError) {
+        config.logger.warn(
+          `"${url}" changed upstream. Using the cached copy that matches the expected hash. Review the new file and update your import when you're ready to pick it up.`,
+        );
+      }
     }
   }
 
