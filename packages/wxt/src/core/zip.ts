@@ -11,7 +11,6 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
-import { picomatchMultiple } from './utils/picomatch-multiple';
 
 /**
  * Build and zip the extension for distribution.
@@ -70,7 +69,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       ...skippedEntrypoints.map((entry) =>
         path.relative(wxt.config.zip.sourcesRoot, entry.inputPath),
       ),
-    ].map((paths) => paths.replaceAll('\\', '/'));
+    ].map((paths) => paths.replaceAll('\\', '/')); // TODO: Use normalizePath?
     await wxt.hooks.callHook('zip:sources:start', wxt);
     const { overrides, files: downloadedPackages } =
       await downloadPrivatePackages();
@@ -88,6 +87,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
         }
       },
       additionalFiles: downloadedPackages,
+      dot: wxt.config.zip.dotSources,
     });
     zipFiles.push(sourcesZipPath);
     await wxt.hooks.callHook('zip:sources:done', wxt, sourcesZipPath);
@@ -118,22 +118,17 @@ async function zipDir(
     ) => Promise<string | undefined | void> | string | undefined | void;
     additionalWork?: (archive: JSZip) => Promise<void> | void;
     additionalFiles?: string[];
+    dot?: boolean;
   },
 ): Promise<void> {
   const archive = new JSZip();
-  const files = (
-    await glob(['**/*', ...(options?.include || [])], {
-      cwd: directory,
-      // Ignore node_modules, otherwise this glob step takes forever
-      ignore: ['**/node_modules'],
-      onlyFiles: true,
-      expandDirectories: false,
-    })
-  ).filter((relativePath) => {
-    return (
-      picomatchMultiple(relativePath, options?.include) ||
-      !picomatchMultiple(relativePath, options?.exclude)
-    );
+  // includeSources patterns are used directly (defaults to ['**/*'] from config)
+  // excludeSources patterns are passed to glob's ignore option for efficient filtering
+  const files = await glob(options?.include ?? ['**/*'], {
+    cwd: directory,
+    ignore: options?.exclude ?? [],
+    onlyFiles: true,
+    dot: options?.dot,
   });
   const filesToZip = [
     ...files,
