@@ -71,19 +71,19 @@ jobs:
           # Include documentation updates in WXT's releases
           additionalDirs: |-
             ${{ case(
-              inputs.package == 'wxt', '../../docs'
+              inputs.package == 'wxt', '../../docs',
               ''
             ) }}
           # Use package name in commit message
           commitTemplate: |-
             ${{ case(
-              inputs.package == 'wxt', 'chore(release): wxt v{{version}}'
+              inputs.package == 'wxt', 'chore(release): wxt v{{version}}',
               'chore(release): @wxt-dev/{{dirname}} v{{version}}'
             ) }}
           # Use package name in release name
           releaseNameTemplate: |-
             ${{ case(
-              inputs.package == 'wxt', 'wxt v{{version}}'
+              inputs.package == 'wxt', 'wxt v{{version}}',
               '@wxt-dev/{{dirname}} v{{version}}'
             ) }}
           # Update lockfile with new versions since it includes the package versions
