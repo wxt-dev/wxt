@@ -32,10 +32,11 @@ permissions:
   contents: read
 
 jobs:
-  # validate:
-  #   name: Validate
-  #   uses: './.github/workflows/validate.yml'
-  #   secrets: inherit
+  validate:
+    name: Validate
+    uses: './.github/workflows/validate.yml'
+    secrets: inherit
+    if: ${{ inputs.dryRun != true }}
 
   publish:
     name: Publish ${{ case(inputs.dryRun, ' (dry-run)', '') }}
@@ -43,8 +44,12 @@ jobs:
     permissions:
       contents: write # Push version changes
       id-token: write # OIDC for NPM publishing
-    # needs:
-    #   - validate
+    needs:
+      - validate
+    # Allow dry runs to skip validation but still run this job
+    if: |
+      always() &&
+      (needs.validate.result == 'success' || needs.validate.result == 'skipped')
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
