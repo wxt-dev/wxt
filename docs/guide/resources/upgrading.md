@@ -64,6 +64,14 @@ In v0.20, how automatic startup is enabled/disabled has changed:
   rm ~/web-ext.config.ts
   ```
 
+### `{{version}}` Template Variable Changes
+
+The `{{version}}` template var in `artifactTemplate` and `sourcesTemplate` used to equal `manifest.version_name ?? manifest.version`. It now equals `{{manifest.version}}`.
+
+If you have a custom template for one of these options, replace `{{version}}` with `{{versionName}}` to maintain the same behavior.
+
+If you don't customize `artifactTemplate` or `sourcesTemplate`, this does not effect you.
+
 ## Shadow root UIs no longer include a full HTML document
 
 `@webext-core/isolated-element` was upgraded to v2. This release changes the internal structure of the shadow DOM, simplifying it from a full `<html>` document to just a `div`:

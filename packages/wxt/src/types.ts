@@ -192,8 +192,10 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to
      *   kebab-case
-     * - <span v-pre>`{{version}}`</span> - The version_name or version from the
-     *   manifest
+     * - <span v-pre>`{{version}}`</span> - The version from the manifest
+     * - <span v-pre>`{{versionName}}`</span> - The `version_name` from the
+     *   manifest or, if not set (i.e. if built for Firefox), the `version` from
+     *   the manifest
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the
      *   package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
@@ -223,8 +225,10 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to
      *   kebab-case
-     * - <span v-pre>`{{version}}`</span> - The version_name or version from the
-     *   manifest
+     * - <span v-pre>`{{version}}`</span> - The version from the manifest
+     * - <span v-pre>`{{versionName}}`</span> - The `version_name` from the
+     *   manifest or, if not set (i.e. if built for Firefox), the `version` from
+     *   the manifest
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the
      *   package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
