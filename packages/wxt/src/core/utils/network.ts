@@ -44,9 +44,8 @@ export async function fetchCached(
   let verifyError: unknown;
 
   if (await isOnline()) {
-    const res = await fetch(url).catch(() => undefined);
-    if (res != null && res.status < 300) {
-      const downloaded = await res.text();
+    const downloaded = await download(url, config);
+    if (downloaded != null) {
       try {
         verify?.(downloaded);
         content = downloaded;
@@ -57,10 +56,6 @@ export async function fetchCached(
         );
       }
       if (content && !noCache) await config.fsCache.set(url, content);
-    } else {
-      config.logger.debug(
-        `Failed to download "${url}", falling back to cache...`,
-      );
     }
   }
 
@@ -80,4 +75,22 @@ export async function fetchCached(
   }
 
   return content;
+}
+
+/**
+ * Downloads a URL, returning `undefined` if it can't be retrieved for any
+ * reason: a bad status, a refused connection, or a request that dies partway
+ * through reading the body.
+ */
+async function download(
+  url: string,
+  config: ResolvedConfig,
+): Promise<string | undefined> {
+  try {
+    const res = await fetch(url);
+    if (res.status < 300) return await res.text();
+  } catch {
+    // Fall through to the same debug log as a bad status.
+  }
+  config.logger.debug(`Failed to download "${url}", falling back to cache...`);
 }

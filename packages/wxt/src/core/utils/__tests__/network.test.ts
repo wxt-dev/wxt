@@ -139,6 +139,35 @@ describe('Network utils', () => {
       );
     });
 
+    it('should fall back to cache when the body read throws', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: {
+          set: vi.fn(),
+          get: vi.fn().mockResolvedValueOnce('from cache'),
+        },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        status: 200,
+        text: async () => {
+          throw new TypeError('terminated');
+        },
+      } as unknown as Response);
+
+      const result = await fetchCached(
+        'https://example.com',
+        mockConfig as unknown as ResolvedConfig,
+      );
+
+      expect(result).toBe('from cache');
+      expect(mockConfig.logger.debug).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to download'),
+      );
+    });
+
     it('should fall back to cache when the request throws', async () => {
       mockOnline();
 
