@@ -506,11 +506,30 @@ describe('Output Directory Structure', () => {
   });
 
   describe('globalName option', () => {
-    it('generates an IIFE with a default name', async () => {
+    it('does not generate a IIFE return variable by default', async () => {
       const project = new TestProject();
       project.addFile(
         'entrypoints/content.js',
         `export default defineContentScript({
+          matches: ["*://*/*"],
+          main() {},
+        })`,
+      );
+
+      await project.build({ vite: () => ({ build: { minify: false } }) });
+
+      const output = await project.serializeFile(
+        '.output/chrome-mv3/content-scripts/content.js',
+      );
+      expect(output.includes('var content')).toBe(false);
+    });
+
+    it('does generates the IIFE name based on the entrypoint name when true', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/content.js',
+        `export default defineContentScript({
+          globalName: true,
           matches: ["*://*/*"],
           main() {},
         })`,

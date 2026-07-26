@@ -145,7 +145,7 @@ export async function createViteBuilder(
         iifeReturnValueName = entrypoint.options.globalName(entrypoint);
       }
 
-      if (entrypoint.options.globalName === false) {
+      if (!entrypoint.options.globalName) {
         plugins.push(wxtPlugins.iifeAnonymous(iifeReturnValueName));
       } else {
         plugins.push(wxtPlugins.iifeFooter(iifeReturnValueName));
