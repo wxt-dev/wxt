@@ -50,9 +50,13 @@ describe('Remote Code', () => {
       export default defineUnlistedScript(() => {})`,
     );
 
-    await expect(project.build()).rejects.toThrow(
-      /URL imports must pin an integrity hash/,
-    );
+    await expect(project.build()).rejects.toMatchObject({
+      cause: {
+        message: expect.stringContaining(
+          'URL imports must pin an integrity hash',
+        ),
+      },
+    });
   });
 
   it('should fail the build when the integrity hash does not match', async () => {
@@ -63,7 +67,11 @@ describe('Remote Code', () => {
       export default defineUnlistedScript(() => {})`,
     );
 
-    await expect(project.build()).rejects.toThrow(/Integrity check failed/);
+    await expect(project.build()).rejects.toMatchObject({
+      cause: {
+        message: expect.stringContaining('Integrity check failed'),
+      },
+    });
 
     expect(
       await project.pathExists(`.wxt/cache/${encodeURIComponent(url)}`),
