@@ -37,11 +37,27 @@ Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`
 
 ## v0.20.0 &rarr; v0.21.0
 
-This release focuses on trimming WXT's install footprint (98MB / 366 packages &rarr; 64MB / 320 packages) and simplifying project configuration.
+This release focuses on trimming WXT's install footprint and simplifying project configuration.
 
 :::tip
 Read through all the changes once before updating your code.
 :::
+
+### Install Footprint
+
+When installing `wxt` v0.20, it downloaded 98 MB and 366 packages to your `node_modules`. v0.21 cuts this down to 64 MB / 320 packages - that's 65.3% the previous size! This is a good improvement, but frankly, not good enough. Why?
+
+- `wxt init` is slow for new developers trying it out
+- Less exposure to supply chain attacks
+- More compute and storage used by servers hosting the package and clients downloading it degrades hardware and shortens their life-cycle
+
+If you want to explore WXT's dependencies and why it's so large, here's a few links:
+
+- <https://pkg-size.dev/wxt>
+- <https://npmgraph.js.org/?q=wxt@0.21.0>
+- <https://node-modules.dev/grid/depth#install=wxt@0.21.0>
+
+We'll continue working on minimizing WXT's install footprint.
 
 ### Minimum Node.js, Vite, and TypeScript Versions
 
