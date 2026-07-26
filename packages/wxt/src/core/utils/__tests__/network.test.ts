@@ -139,6 +139,30 @@ describe('Network utils', () => {
       );
     });
 
+    it('should fall back to cache when the request throws', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: {
+          set: vi.fn(),
+          get: vi.fn().mockResolvedValueOnce('from cache'),
+        },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockRejectedValueOnce(new TypeError('fetch failed'));
+
+      const result = await fetchCached(
+        'https://example.com',
+        mockConfig as unknown as ResolvedConfig,
+      );
+
+      expect(result).toBe('from cache');
+      expect(mockConfig.logger.debug).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to download'),
+      );
+    });
+
     it('should use cache when offline', async () => {
       vi.mocked(dns.resolve).mockImplementationOnce(((
         _: string,

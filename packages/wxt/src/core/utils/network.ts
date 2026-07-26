@@ -44,8 +44,8 @@ export async function fetchCached(
   let verifyError: unknown;
 
   if (await isOnline()) {
-    const res = await fetch(url);
-    if (res.status < 300) {
+    const res = await fetch(url).catch(() => undefined);
+    if (res != null && res.status < 300) {
       const downloaded = await res.text();
       try {
         verify?.(downloaded);
