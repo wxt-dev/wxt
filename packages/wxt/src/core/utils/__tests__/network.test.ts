@@ -10,6 +10,15 @@ vi.mock('node:dns');
 const fetchMock = vi.fn<typeof fetch>();
 global.fetch = fetchMock;
 
+function mockOnline() {
+  vi.mocked(dns.resolve).mockImplementationOnce(((
+    _: string,
+    callback: DnsCallback,
+  ) => {
+    callback(null);
+  }) as typeof dns.resolve);
+}
+
 describe('Network utils', () => {
   describe('isOnline', () => {
     it('should return true when online', async () => {
@@ -183,6 +192,122 @@ describe('Network utils', () => {
       ).rejects.toThrow(
         'Offline and "https://example.com" has not been cached. Try again when online.',
       );
+    });
+
+    it('should not cache content that fails verification', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: { set: vi.fn(), get: vi.fn().mockResolvedValueOnce(null) },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockReturnValueOnce(
+        Promise.resolve({
+          status: 200,
+          text: async () => 'malicious',
+        } as Response),
+      );
+
+      await expect(
+        fetchCached(
+          'https://example.com',
+          mockConfig as unknown as ResolvedConfig,
+          {
+            verify: () => {
+              throw Error('Integrity check failed');
+            },
+          },
+        ),
+      ).rejects.toThrow('Integrity check failed');
+
+      expect(mockConfig.fsCache.set).not.toHaveBeenCalled();
+    });
+
+    it('should fall back to cache when the download fails verification', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: {
+          set: vi.fn(),
+          get: vi.fn().mockResolvedValueOnce('trusted'),
+        },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockReturnValueOnce(
+        Promise.resolve({
+          status: 200,
+          text: async () => 'malicious',
+        } as Response),
+      );
+
+      const result = await fetchCached(
+        'https://example.com',
+        mockConfig as unknown as ResolvedConfig,
+        {
+          verify: (content) => {
+            if (content !== 'trusted') throw Error('Integrity check failed');
+          },
+        },
+      );
+
+      expect(result).toBe('trusted');
+      expect(mockConfig.fsCache.set).not.toHaveBeenCalled();
+    });
+
+    it('should verify content read from the cache', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: {
+          set: vi.fn(),
+          get: vi.fn().mockResolvedValueOnce('poisoned'),
+        },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockReturnValueOnce(
+        Promise.resolve({ status: 500, text: async () => '' } as Response),
+      );
+
+      await expect(
+        fetchCached(
+          'https://example.com',
+          mockConfig as unknown as ResolvedConfig,
+          {
+            verify: () => {
+              throw Error('Integrity check failed');
+            },
+          },
+        ),
+      ).rejects.toThrow('Integrity check failed');
+    });
+
+    it('should not touch the cache when noCache is set', async () => {
+      mockOnline();
+
+      const mockConfig = {
+        fsCache: { set: vi.fn(), get: vi.fn() },
+        logger: { debug: vi.fn() },
+      };
+
+      fetchMock.mockReturnValueOnce(
+        Promise.resolve({
+          status: 200,
+          text: async () => 'fresh',
+        } as Response),
+      );
+
+      const result = await fetchCached(
+        'https://example.com',
+        mockConfig as unknown as ResolvedConfig,
+        { noCache: true },
+      );
+
+      expect(result).toBe('fresh');
+      expect(mockConfig.fsCache.set).not.toHaveBeenCalled();
+      expect(mockConfig.fsCache.get).not.toHaveBeenCalled();
     });
   });
 });

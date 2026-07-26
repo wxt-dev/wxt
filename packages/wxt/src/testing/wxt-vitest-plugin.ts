@@ -7,6 +7,7 @@
 
 import type * as vite from 'vite';
 import {
+  download,
   tsconfigPaths,
   globals,
   extensionApiMock,
@@ -40,6 +41,7 @@ export async function WxtVitest(
 
   const plugins: vite.PluginOption[] = [
     globals(wxt.config),
+    download(wxt.config),
     tsconfigPaths(wxt.config),
     resolveAppConfig(wxt.config),
     extensionApiMock(wxt.config),

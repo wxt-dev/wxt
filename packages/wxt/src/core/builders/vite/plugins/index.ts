@@ -1,5 +1,6 @@
 export * from './devHtmlPrerender';
 export * from './devServerGlobals';
+export * from './download';
 export * from './resolveVirtualModules';
 export * from './tsconfigPaths';
 export * from './noopBackground';
