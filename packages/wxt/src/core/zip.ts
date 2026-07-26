@@ -11,7 +11,6 @@ import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
-import { relative } from 'node:path/win32';
 
 /**
  * Build and zip the extension for distribution.
