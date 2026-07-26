@@ -144,7 +144,7 @@ async function zipDir(
     ...(options?.additionalFiles ?? []).map((file) =>
       path.relative(directory, file),
     ),
-  ];
+  ].sort();
   for (const file of filesToZip) {
     const absolutePath = path.resolve(directory, file);
     if (file.endsWith('.json')) {
