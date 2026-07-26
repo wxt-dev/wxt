@@ -414,13 +414,6 @@ export interface InlineConfig {
        * @default false
        */
       strictPort?: boolean;
-      /**
-       * Hostname to run the dev server on.
-       *
-       * @deprecated Use `host` to specify the interface to bind to, or use
-       *   `origin` to specify the dev server hostname.
-       */
-      hostname?: string;
     };
     /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added

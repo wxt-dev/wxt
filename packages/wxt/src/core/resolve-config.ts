@@ -145,20 +145,9 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
-    if (mergedConfig.dev?.server?.hostname)
-      logger.warn(
-        `The 'hostname' option is deprecated, please use 'host' or 'origin' depending on your circumstances.`,
-      );
-
-    const host =
-      mergedConfig.dev?.server?.host ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const host = mergedConfig.dev?.server?.host ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
-    const origin =
-      mergedConfig.dev?.server?.origin ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const origin = mergedConfig.dev?.server?.origin ?? 'localhost';
     const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({

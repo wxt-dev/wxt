@@ -196,10 +196,6 @@
       "types": "./dist/testing/wxt-vitest-plugin.d.mts",
       "default": "./dist/testing/wxt-vitest-plugin.mjs"
     },
-    "./testing": {
-      "types": "./dist/testing/index.d.mts",
-      "default": "./dist/testing/index.mjs"
-    },
     "./vite-builder-env": {
       "types": "./dist/vite-builder-env.d.ts"
     },
