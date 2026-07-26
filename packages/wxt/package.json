@@ -89,7 +89,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
-    "web-ext": "^10.5.0"
+    "web-ext": "^9"
   },
   "repository": {
     "type": "git",
