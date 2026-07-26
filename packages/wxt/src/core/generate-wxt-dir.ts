@@ -313,6 +313,7 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
       noFallthroughCasesInSwitch: true,
       noUncheckedIndexedAccess: true,
       noImplicitOverride: true,
+      // Project settings
       paths,
     },
     include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],
