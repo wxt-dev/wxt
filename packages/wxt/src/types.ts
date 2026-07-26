@@ -250,9 +250,9 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * include when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to include
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
      * Sources ZIP files are created using standard allowlist/blocklist
      * behavior:
@@ -271,9 +271,9 @@ export interface InlineConfig {
      */
     includeSources?: string[];
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
      * By default, WXT excludes some files:
      *
@@ -293,10 +293,10 @@ export interface InlineConfig {
     /**
      * Include hidden files/directories in your sources ZIP.
      *
-     * [Picomatch](https://www.npmjs.com/package/picomatch) does not match
-     * against files and directory that start with a `.` by default. For
-     * example, if you need to include a `.env` file, you need to set this to
-     * `true`, then exclude other hidden files/directories in `excludeSources`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) does not match against files
+     * and directory that start with a `.` by default. For example, if you need
+     * to include a `.env` file, you need to set this to `true`, then exclude
+     * other hidden files/directories in `excludeSources`.
      *
      * **Be very careful when this is enabled - WXT may include files with
      * secrets in your ZIP you did not intend to share with Mozilla or upload to
@@ -307,8 +307,8 @@ export interface InlineConfig {
      */
     dotSources?: boolean;
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when zipping the extension.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when zipping the extension.
      *
      * @example
      *   [
@@ -1723,7 +1723,7 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
 
 /**
  * Package management utils built on top of
- * [`nypm`](https://www.npmjs.com/package/nypm)
+ * [`nypm`](https://npmjs.org/package/nypm)
  */
 export interface WxtPackageManager extends Nypm.PackageManager {
   addDependency: typeof Nypm.addDependency;
