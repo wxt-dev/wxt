@@ -298,7 +298,7 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
   const tsconfig = {
     compilerOptions: {
       // Environment setup & latest features
-      lib: ['ESNext'],
+      lib: ['ESNext', 'DOM', 'DOM.Iterable'],
       target: 'ESNext',
       module: 'Preserve',
       moduleDetection: 'force',

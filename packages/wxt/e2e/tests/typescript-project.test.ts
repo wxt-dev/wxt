@@ -325,7 +325,9 @@ describe('TypeScript Project', () => {
       {
         "compilerOptions": {
           "lib": [
-            "ESNext"
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
           ],
           "target": "ESNext",
           "module": "Preserve",
@@ -413,7 +415,9 @@ describe('TypeScript Project', () => {
       {
         "compilerOptions": {
           "lib": [
-            "ESNext"
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
           ],
           "target": "ESNext",
           "module": "Preserve",
@@ -486,7 +490,9 @@ describe('TypeScript Project', () => {
       {
         "compilerOptions": {
           "lib": [
-            "ESNext"
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
           ],
           "target": "ESNext",
           "module": "Preserve",
