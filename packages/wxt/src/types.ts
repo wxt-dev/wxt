@@ -231,12 +231,11 @@ export interface InlineConfig {
      *   package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
      *   `--browser` CLI flag
-     * - <span v-pre>`{{mode}}`</span> - The current mode <<<<<<< HEAD
+     * - <span v-pre>`{{mode}}`</span> - The current mode
      * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev'
      *   for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip'
      * @default '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip'
      */
     sourcesTemplate?: string;
@@ -1225,17 +1224,8 @@ export interface WxtBuilder {
   /** Version of tool used to build. Ex: "5.0.2" */
   version: string;
   /**
-   * <<<<<<< HEAD Import a JS entrypoint file, returning the default export
-   * containing the options.
-   */
-  importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
-  /**
-   * # Import a list of JS entrypoint files, returning their options.
-   *
    * Import a JS entrypoint file, returning the default export containing the
    * options.
-   *
-   * > > > > > > > Major
    */
   importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
   /** Import a list of JS entrypoint files, returning their options. */
