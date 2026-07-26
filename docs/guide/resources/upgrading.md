@@ -35,53 +35,49 @@ Listed below are all the breaking changes you should address when upgrading to a
 
 Currently, WXT is in pre-release. This means changes to the second digit, `v0.X`, are considered major and have breaking changes. Once v1 is released, only major version bumps will have breaking changes.
 
-## v0.20.0 &rarr; vX.Y.Z
+## v0.20.0 &rarr; v0.21.0
 
-### Dev Browser Startup
+### Opt Into Opening the Browser During Dev Mode
 
-The package used to open the browser on startup has changed. Previously, WXT used `web-ext-run` as a direct dependency, but now we use `web-ext` as a peer dependency.
+Before v0.20, `web-ext` was included as a dependency of WXT so that the browser could open automatically. However, it is quite heavy and not everyone uses this feature.
 
-:::details
+So in v0.21, `web-ext` is now an optional peer dependency - if it's installed, the browser will be opened automatically. If not, the feature is disabled.
 
-`web-ext-run` was a light-weight fork of `web-ext`, but it was difficult to maintain and quickly got out-of-date compared to `web-ext`.
-
-:::
-
-In v0.20, how automatic startup is enabled/disabled has changed:
-
-- To continue opening the browser automatically, add `web-ext` as a dependency. No changes are required in your `web-ext.config.ts` files.
-
+- **To continue opening the browser automatically**: Install `web-ext` as a dependency
   ```sh
   pnpm add -D web-ext
   ```
+- **If you don't use this feature**: Don't install it and you can delete any `web-ext.config.ts` options and/or remove any `webExt.enabled: false` config
 
-- To disable the browser automatically, **_DON'T_** add `web-ext` as a dependency. Additionally, you can remove any `web-ext.config.ts` files since they're not used if `web-ext` isn't installed:
+You can still disable this behavior by setting `webExt.enabled: false` in your `wxt.config.ts` file or `web-ext.config.ts` file if the package is present.
 
-  ```sh
-  rm web-ext.config.ts
+> Projects created with `wxt init` will include `web-ext` in their `package.json`, opting new projects into this feature by default.
 
-  # Keep the config in your home dir until all your projects have been upgraded
-  rm ~/web-ext.config.ts
-  ```
+### Template Variable Changes
 
-### `{{version}}` Template Variable Changes
+The <span v-pre>`{{version}}`</span> variable's value in the `artifactTemplate` and `sourcesTemplate` config has changed:
 
-The `{{version}}` template var in `artifactTemplate` and `sourcesTemplate` used to equal `manifest.version_name ?? manifest.version`. It now equals `{{manifest.version}}`.
-
-If you have a custom template for one of these options, replace `{{version}}` with `{{versionName}}` to maintain the same behavior.
+- Old: `manifest.version_name ?? manifest.version`
+- New: `manifest.version`
 
 If you don't customize `artifactTemplate` or `sourcesTemplate`, this does not effect you.
 
-## Shadow root UIs no longer include a full HTML document
+If you have a custom template for one of these options, replace <span v-pre>`{{version}}`</span> with <span v-pre>`{{versionName}}`</span> to maintain the same behavior as before.
 
-`@webext-core/isolated-element` was upgraded to v2. This release changes the internal structure of the shadow DOM, simplifying it from a full `<html>` document to just a `div`:
+For more info on the difference between `manifest.version_name` and `manifest.version`, see the [Manifest Config docs](/guide/essentials/config/manifest#version-and-version-name).
+
+### `createShadowRoot` DOM Changes
+
+`@webext-core/isolated-element` was upgraded to v3. This release changes the internal structure of the shadow root's DOM, simplifying it from a full `<html>` document to just a `div`:
 
 :::code-group
 
-```[Before]
+```html [Before]
 <html>
   <head>
-    <style>...</style>
+    <style>
+      ...
+    </style>
   </head>
   <body>
     ...your app
@@ -89,24 +85,30 @@ If you don't customize `artifactTemplate` or `sourcesTemplate`, this does not ef
 </html>
 ```
 
-```[After]
-<style>...</style>
-<div>
-  ...your app
-</div>
+```html [After]
+<style>
+  ...
+</style>
+<div>...your app</div>
 ```
 
 :::
 
-Most modern CSS frameworks support the simplified "fragment", but if yours doesn't, please open an issue. You'll know if something broke because your content script UI will be unstyled.
-
-If you roll your own CSS, make sure your base styles are applied to shadow root hosts like so:
+Historically, CSS frameworks haven't had good support for shadow roots, we used to need the full `<html>` structure for styles to be applied correctly. But that has change this past few years, frameworks have started to include the `host:` selector alongside `root:`, which is required for base styles to be applied to the shadow root's host element:
 
 ```css
 :root { /* [!code --] */
 :root, :host { /* [!code ++] */
     /* base styles... */
 }
+```
+
+If you use `createShadowRootUi`, see if your UI looks the same after this update without any changes.
+
+If the styles are broken, you can continue using the full `<html>` structure by installing the v1 of `@webext-core/isolated-element` - WXT will respect whatever version of the package is listed in your `package.json`.
+
+```sh
+pnpm add @webext-core/isolated-element@^1
 ```
 
 ## New Deprecations in v0.20
