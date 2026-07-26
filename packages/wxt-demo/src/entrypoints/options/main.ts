@@ -1,4 +1,5 @@
 console.log(browser.runtime.id);
+logId();
 console.log(2);
 
 console.log('WXT MODE:', {
