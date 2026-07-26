@@ -2,7 +2,6 @@
 // @ts-expect-error: Untyped virtual module
 import appConfig from 'virtual:app-config';
 import type { WxtAppConfig } from './define-app-config';
-import { wxt } from '../core/wxt';
 
 /**
  * Get runtime config defined in `<srcDir>/app.config.ts`
