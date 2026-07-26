@@ -1,12 +1,6 @@
 import chokidar from 'chokidar';
-import {
-  InlineConfig,
-  ServerInfo,
-  WxtDevServer,
-} from '../types';
-import {
-  internalBuild,
-} from './utils/building';
+import { InlineConfig, ServerInfo, WxtDevServer } from '../types';
+import { internalBuild } from './utils/building';
 import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
@@ -131,7 +125,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
       keyboardShortcuts.start();
       keyboardShortcuts.printHelp({
         canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled && !!wxt.config.runner.canOpen?.(),
+          !wxt.config.runnerConfig.config.disabled &&
+          !!wxt.config.runner.canOpen?.(),
       });
     },
   };
@@ -174,7 +169,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
     keyboardShortcuts.start();
     keyboardShortcuts.printHelp({
       canReopenBrowser:
-        !wxt.config.runnerConfig.config.disabled && !!wxt.config.runner.canOpen?.(),
+        !wxt.config.runnerConfig.config.disabled &&
+        !!wxt.config.runner.canOpen?.(),
     });
   };
 
