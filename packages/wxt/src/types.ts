@@ -1646,16 +1646,16 @@ export interface Eslintrc {
    * When true, generates a file that can be used by ESLint to know which
    * variables are valid globals.
    *
-   * - `true`: Version of `package.json``.
-   * - `false`: Don't generate the file.
    * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
    *   config file.
+   * - `true`: Same as `'auto'`.
+   * - `false`: Don't generate the file.
    * - `8`: Generate a config file compatible with ESLint 8.
    * - `9`: Generate a config file compatible with ESLint 9.
    *
    * @default 'auto'
    */
-  enabled?: false | true | 'auto' | 8 | 9;
+  enabled?: 'auto' | boolean | 8 | 9;
   /**
    * File path to save the generated eslint config.
    *
