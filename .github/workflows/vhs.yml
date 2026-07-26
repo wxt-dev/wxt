@@ -11,35 +11,41 @@ permissions:
 jobs:
   vhs:
     name: Create VHS
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     if: ${{ github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup
         uses: ./.github/actions/setup
-        with:
-          install: false
 
-      # This prevents pnpm dlx from downloading WXT in the video
-      - name: Pre-install WXT
-        run: |
-          pnpm store add wxt@latest
-          pnpm dlx wxt@latest --version
+      - name: Setup Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.25.1'
+
+      # This prevents bunx from downloading WXT in the video, and it uses the checked-out version
+      - name: Build WXT
+        working-directory: packages/wxt
+        run: bun run build
 
       - name: Record VHS
-        uses: charmbracelet/vhs-action@59641cdc7fadf3978db65eb8c6937ea2752f4ec3 # v2.1.0
-        with:
-          path: 'docs/tapes/init-demo.tape'
+        run: |
+          brew install ttyd ffmpeg
+          go install github.com/charmbracelet/vhs@517bcda0faf416728bcf6b7fe489eb0e2469d9b5 # v0.10.0
+          vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit_message: 'docs: Update `wxt init` GIF'
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           # https://github.com/charmbracelet/vhs#output
           file_pattern: 'docs/assets/*.gif'

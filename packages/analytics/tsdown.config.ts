@@ -9,8 +9,12 @@ export default defineConfig({
     'providers/google-analytics-4':
       './modules/analytics/providers/google-analytics-4.ts',
     'providers/umami': './modules/analytics/providers/umami.ts',
+    'providers/moderok': './modules/analytics/providers/moderok.ts',
+    'providers/posthog': './modules/analytics/providers/posthog.ts',
   },
-  external: ['#analytics'],
+  deps: {
+    neverBundle: ['#analytics'],
+  },
   define: {
     'process.env.NPM': 'true',
   },

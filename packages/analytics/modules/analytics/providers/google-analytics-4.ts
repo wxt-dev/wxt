@@ -4,6 +4,7 @@ import type { BaseAnalyticsEvent } from '../types';
 const DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
 
 export interface GoogleAnalytics4ProviderOptions {
+  apiUrl?: string;
   apiSecret: string;
   measurementId: string;
 }
@@ -17,8 +18,8 @@ export const googleAnalytics4 =
         eventProperties: Record<string, string | undefined> | undefined,
       ): Promise<void> => {
         const url = new URL(
-          config?.debug ? '/debug/mp/collect' : '/mp/collect',
-          'https://www.google-analytics.com',
+          config.debug ? '/debug/mp/collect' : '/mp/collect',
+          options.apiUrl ?? 'https://www.google-analytics.com',
         );
         if (options.apiSecret)
           url.searchParams.set('api_secret', options.apiSecret);
@@ -37,6 +38,12 @@ export const googleAnalytics4 =
           ]),
         );
 
+        if (config.debug) {
+          console.debug(
+            '[@wxt-dev/analytics] Sending event to Google Analytics 4:',
+            { eventName, eventProperties },
+          );
+        }
         await fetch(url.href, {
           method: 'POST',
           body: JSON.stringify({

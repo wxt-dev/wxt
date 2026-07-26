@@ -23,12 +23,12 @@ export default defineAppConfig({
 This file is committed to the repo, so don't put any secrets here. Instead, use [Environment Variables](/guide/essentials/config/environment-variables)
 :::
 
-To access runtime config, WXT provides the `useAppConfig` function:
+To access runtime config, WXT provides the `getAppConfig` function:
 
 ```ts
-import { useAppConfig } from '#imports';
+import { getAppConfig } from '#imports';
 
-console.log(useAppConfig()); // { theme: "dark" }
+console.log(getAppConfig()); // { theme: "dark" }
 ```
 
 ## Environment Variables in App Config

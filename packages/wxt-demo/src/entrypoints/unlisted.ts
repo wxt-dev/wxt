@@ -1,3 +1,3 @@
 export default defineUnlistedScript(() => {
-  console.log('injected');
+  console.log('Injected');
 });

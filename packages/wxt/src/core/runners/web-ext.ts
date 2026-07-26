@@ -6,9 +6,7 @@ import { wxt } from '../wxt';
 import webExt from 'web-ext';
 import { consoleStream } from 'web-ext/util/logger';
 
-/**
- * Create an `ExtensionRunner` backed by `web-ext`.
- */
+/** Create an `ExtensionRunner` backed by `web-ext`. */
 export function createWebExtRunner(): ExtensionRunner {
   let runner: WebExtRunInstance | undefined;
 
@@ -18,15 +16,6 @@ export function createWebExtRunner(): ExtensionRunner {
     },
     async openBrowser() {
       const startTime = Date.now();
-
-      if (
-        wxt.config.browser === 'firefox' &&
-        wxt.config.manifestVersion === 3
-      ) {
-        throw Error(
-          'Dev mode does not support Firefox MV3. For alternatives, see https://github.com/wxt-dev/wxt/issues/230#issuecomment-1806881653',
-        );
-      }
 
       // Use WXT's logger instead of web-ext's built-in one.
       consoleStream.write = ({ level, msg, name }) => {
@@ -68,7 +57,7 @@ export function createWebExtRunner(): ExtensionRunner {
           wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
         sourceDir: wxt.config.outDir,
         // Don't add a "Reload Manager" extension alongside dev extension, WXT
-        // already handles reloads intenrally.
+        // already handles reloads internally.
         noReloadManagerExtension: true,
         // WXT handles reloads, so disable auto-reload behaviors in web-ext
         noReload: true,
@@ -88,7 +77,7 @@ export function createWebExtRunner(): ExtensionRunner {
     },
 
     async closeBrowser() {
-      return await runner?.exit();
+      await runner?.exit();
     },
   };
 }

@@ -5,19 +5,19 @@ import { browser, type Browser } from '../index';
 describe('browser', () => {
   describe('types', () => {
     it('should provide types via the Browser import', () => {
-      expectTypeOf<Browser.runtime.MessageSender>().toMatchTypeOf<chrome.runtime.MessageSender>();
-      expectTypeOf<Browser.storage.AreaName>().toMatchTypeOf<chrome.storage.AreaName>();
-      expectTypeOf<Browser.i18n.LanguageDetectionResult>().toMatchTypeOf<chrome.i18n.LanguageDetectionResult>();
+      expectTypeOf<Browser.runtime.MessageSender>().toEqualTypeOf<chrome.runtime.MessageSender>();
+      expectTypeOf<Browser.storage.AreaName>().toEqualTypeOf<chrome.storage.AreaName>();
+      expectTypeOf<Browser.i18n.LanguageDetectionResult>().toEqualTypeOf<chrome.i18n.LanguageDetectionResult>();
     });
 
     it('should provide values via the browser import', () => {
-      expectTypeOf(browser.runtime.id).toMatchTypeOf<string>();
+      expectTypeOf(browser.runtime.id).toEqualTypeOf<string>();
       expectTypeOf(
         browser.storage.local,
-      ).toMatchTypeOf<Browser.storage.StorageArea>();
+      ).toEqualTypeOf<Browser.storage.LocalStorageArea>();
       expectTypeOf(
-        browser.i18n.detectLanguage('Hello, world!'),
-      ).resolves.toMatchTypeOf<chrome.i18n.LanguageDetectionResult>();
+        browser.i18n.detectLanguage,
+      ).returns.resolves.toEqualTypeOf<chrome.i18n.LanguageDetectionResult>();
     });
   });
 });

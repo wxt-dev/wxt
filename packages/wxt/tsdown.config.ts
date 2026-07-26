@@ -21,7 +21,9 @@ export default defineConfig([
       'src/cli/index.ts',
     ],
     unbundle: true,
-    external: ['wxt/browser', 'virtual:app-config'],
+    deps: {
+      neverBundle: ['wxt/browser', 'virtual:app-config'],
+    },
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
       // we need to copy it into the out dir manually instead of building it.
@@ -40,12 +42,14 @@ export default defineConfig([
     (moduleName): UserConfig => ({
       entry: `src/virtual/${moduleName}.ts`,
       outDir: 'dist/virtual',
-      external: [
-        ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
-        'virtual:wxt-plugins',
-        'virtual:app-config',
-        ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
-      ],
+      deps: {
+        neverBundle: [
+          ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+          'virtual:wxt-plugins',
+          'virtual:app-config',
+          ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
+        ],
+      },
     }),
   ),
 ]);

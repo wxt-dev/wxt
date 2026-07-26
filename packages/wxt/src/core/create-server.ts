@@ -1,43 +1,24 @@
-import { debounce } from 'perfect-debounce';
 import chokidar from 'chokidar';
-import {
-  BuildStepOutput,
-  EntrypointGroup,
-  InlineConfig,
-  ServerInfo,
-  WxtDevServer,
-} from '../types';
-import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
-import {
-  getContentScriptCssFiles,
-  getContentScriptsCssMap,
-} from './utils/manifest';
-import {
-  internalBuild,
-  detectDevChanges,
-  rebuild,
-  findEntrypoints,
-} from './utils/building';
-import { Mutex } from 'async-mutex';
-import pc from 'picocolors';
-import { relative } from 'node:path';
+import { InlineConfig, ServerInfo, WxtDevServer } from '../types';
+import { internalBuild } from './utils/building';
 import { deinitWxtModules, initWxtModules, registerWxt, wxt } from './wxt';
 import { unnormalizePath } from './utils/paths';
-import {
-  getContentScriptJs,
-  mapWxtOptionsToRegisteredContentScript,
-} from './utils/content-scripts';
 import { createKeyboardShortcuts } from './keyboard-shortcuts';
 import { isBabelSyntaxError, logBabelSyntaxError } from './utils/syntax-errors';
+import {
+  createFileReloader,
+  reloadContentScripts,
+} from './utils/create-file-reloader';
 
 /**
- * Creates a dev server and pre-builds all the files that need to exist before loading the extension.
+ * Creates a dev server and pre-builds all the files that need to exist before
+ * loading the extension.
  *
  * @example
- * const server = await wxt.createServer({
- *   // Enter config...
- * });
- * await server.start();
+ *   const server = await wxt.createServer({
+ *     // Enter config...
+ *   });
+ *   await server.start();
  */
 export async function createServer(
   inlineConfig?: InlineConfig,
@@ -107,22 +88,13 @@ async function createServerInternal(): Promise<WxtDevServer> {
       const reloadOnChange = createFileReloader(server);
       server.watcher.on('all', async (...args) => {
         await reloadOnChange(args[0], args[1]);
-
-        // Restart keyboard shortcuts after file is changed - for some reason they stop working.
-        keyboardShortcuts.start();
-      });
-
-      keyboardShortcuts.printHelp({
-        canReopenBrowser:
-          !wxt.config.runnerConfig.config.disabled &&
-          !!wxt.config.runner.canOpen?.(),
       });
     },
 
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await wxt.config.runner.closeBrowser();
+      await wxt.config.runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -146,11 +118,15 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await wxt.config.runner.closeBrowser();
+      await wxt.config.runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
       await wxt.config.runner.openBrowser();
       keyboardShortcuts.start();
+      keyboardShortcuts.printHelp({
+        canReopenBrowser:
+          !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
+      });
     },
   };
   const keyboardShortcuts = createKeyboardShortcuts(server);
@@ -166,7 +142,10 @@ async function createServerInternal(): Promise<WxtDevServer> {
       logBabelSyntaxError(err);
       wxt.logger.info('Waiting for syntax error to be fixed...');
       await new Promise<void>((resolve) => {
-        const watcher = chokidar.watch(err.id, { ignoreInitial: true });
+        const watcher = chokidar.watch(err.id, {
+          ...wxt.config.watchOptions,
+          ignoreInitial: true,
+        });
         watcher.on('all', () => {
           watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');
@@ -186,6 +165,11 @@ async function createServerInternal(): Promise<WxtDevServer> {
 
     // Open browser after everything is ready to go.
     await wxt.config.runner.openBrowser();
+    keyboardShortcuts.start();
+    keyboardShortcuts.printHelp({
+      canReopenBrowser:
+        !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
+    });
   };
 
   builderServer.on?.('close', () => keyboardShortcuts.stop());
@@ -194,157 +178,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
 }
 
 /**
- * Returns a function responsible for reloading different parts of the extension when a file
- * changes.
- */
-function createFileReloader(server: WxtDevServer) {
-  const fileChangedMutex = new Mutex();
-  const changeQueue: Array<[string, string]> = [];
-
-  const cb = async (event: string, path: string) => {
-    changeQueue.push([event, path]);
-
-    const reloading = fileChangedMutex.runExclusive(async () => {
-      if (server.currentOutput == null) return;
-
-      const fileChanges = changeQueue
-        .splice(0, changeQueue.length)
-        .map(([_, file]) => file);
-      if (fileChanges.length === 0) return;
-
-      await wxt.reloadConfig();
-
-      const changes = detectDevChanges(fileChanges, server.currentOutput);
-      if (changes.type === 'no-change') return;
-
-      if (changes.type === 'full-restart') {
-        wxt.logger.info('Config changed, restarting server...');
-        server.restart();
-        return;
-      }
-
-      if (changes.type === 'browser-restart') {
-        wxt.logger.info('Runner config changed, restarting browser...');
-        server.restartBrowser();
-        return;
-      }
-
-      // Log the entrypoints that were effected
-      wxt.logger.info(
-        `Changed: ${Array.from(new Set(fileChanges))
-          .map((file) => pc.dim(relative(wxt.config.root, file)))
-          .join(', ')}`,
-      );
-
-      // Rebuild entrypoints on change
-      const allEntrypoints = await findEntrypoints();
-      try {
-        const { output: newOutput } = await rebuild(
-          allEntrypoints,
-          // TODO: this excludes new entrypoints, so they're not built until the dev command is restarted
-          changes.rebuildGroups,
-          changes.cachedOutput,
-        );
-        server.currentOutput = newOutput;
-
-        // Perform reloads
-        switch (changes.type) {
-          case 'extension-reload':
-            server.reloadExtension();
-            wxt.logger.success(`Reloaded extension`);
-            break;
-          case 'html-reload':
-            const { reloadedNames } = reloadHtmlPages(
-              changes.rebuildGroups,
-              server,
-            );
-            wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
-            break;
-          case 'content-script-reload':
-            reloadContentScripts(changes.changedSteps, server);
-
-            const rebuiltNames = changes.rebuildGroups
-              .flat()
-              .map((entry) => entry.name);
-            wxt.logger.success(`Reloaded: ${getFilenameList(rebuiltNames)}`);
-            break;
-        }
-      } catch {
-        // Catch build errors instead of crashing. Don't log error either, builder should have already logged it
-      }
-    });
-
-    await reloading.catch((error) => {
-      if (!isBabelSyntaxError(error)) {
-        throw error;
-      }
-      // Log syntax errors without crashing the server.
-      logBabelSyntaxError(error);
-    });
-  };
-
-  return debounce(cb, wxt.config.dev.server!.watchDebounce, {
-    leading: true,
-    trailing: false,
-  });
-}
-
-/**
- * From the server, tell the client to reload content scripts from the provided build step outputs.
- */
-function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
-  if (wxt.config.manifestVersion === 3) {
-    steps.forEach((step) => {
-      if (server.currentOutput == null) return;
-
-      const entry = step.entrypoints;
-      if (Array.isArray(entry) || entry.type !== 'content-script') return;
-
-      const js = getContentScriptJs(wxt.config, entry);
-      const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
-      const css = getContentScriptCssFiles([entry], cssMap);
-
-      server.reloadContentScript({
-        registration: entry.options.registration,
-        contentScript: mapWxtOptionsToRegisteredContentScript(
-          entry.options,
-          js,
-          css,
-        ),
-      });
-    });
-  } else {
-    server.reloadExtension();
-  }
-}
-
-function reloadHtmlPages(
-  groups: EntrypointGroup[],
-  server: WxtDevServer,
-): { reloadedNames: string[] } {
-  // groups might contain other files like background/content scripts, and we only care about the HTMl pages
-  const htmlEntries = groups.flat().filter(isHtmlEntrypoint);
-
-  htmlEntries.forEach((entry) => {
-    const path = getEntrypointBundlePath(entry, wxt.config.outDir, '.html');
-    server.reloadPage(path);
-  });
-
-  return {
-    reloadedNames: htmlEntries.map((entry) => entry.name),
-  };
-}
-
-function getFilenameList(names: string[]): string {
-  return names
-    .map((name) => {
-      return pc.cyan(name);
-    })
-    .join(pc.dim(', '));
-}
-
-/**
  * Based on the current build output, return a list of files that are:
+ *
  * 1. Not in node_modules
  * 2. Not inside project root
  */

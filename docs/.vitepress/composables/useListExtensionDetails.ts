@@ -1,39 +1,71 @@
 import { ref } from 'vue';
 
-export interface ChromeExtension {
+export interface Extension {
   id: string;
   name: string;
   iconUrl: string;
-  weeklyActiveUsers: number;
   shortDescription: string;
   storeUrl: string;
   rating: number | undefined;
+  users: number;
+}
+
+export interface ExtensionResults {
+  chrome: Extension[];
+  firefox: Extension[];
+  edge: Extension[];
 }
 
 const operationName = 'WxtDocsUsedBy';
-const query = `query ${operationName}($ids:[String!]!) {
-  chromeExtensions(ids: $ids) {
+const query = `query ${operationName}($chromeIds: [String!]!, $firefoxIds: [String!]!, $edgeIds: [String!]!) {
+  chromeExtensions(ids: $chromeIds) {
     id
-    name
-    iconUrl
-    weeklyActiveUsers
-    shortDescription
-    storeUrl
-    rating
+    ...ExtensionData
   }
+  firefoxAddons(ids: $firefoxIds) {
+    id: slug
+    ...ExtensionData
+  }
+  edgeAddons(ids: $edgeIds) {
+    id
+    ...ExtensionData
+  }
+}
+
+fragment ExtensionData on Extension {
+  name
+  iconUrl
+  shortDescription
+  storeUrl
+  rating
+  users
 }`;
 
-export default function (ids: string[]) {
-  const data = ref<ChromeExtension[]>();
+export default function (
+  chromeIds: string[],
+  firefoxSlugs: string[],
+  edgeIds: string[],
+) {
+  const data = ref<ExtensionResults>();
   const err = ref<unknown>();
   const isLoading = ref(true);
+
+  if (
+    chromeIds.length === 0 &&
+    firefoxSlugs.length === 0 &&
+    edgeIds.length === 0
+  ) {
+    data.value = { chrome: [], firefox: [], edge: [] };
+    isLoading.value = false;
+    return { data, err, isLoading };
+  }
 
   fetch('https://queue.wxt.dev/api', {
     method: 'POST',
     body: JSON.stringify({
       operationName,
       query,
-      variables: { ids },
+      variables: { chromeIds, firefoxIds: firefoxSlugs, edgeIds },
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -41,10 +73,12 @@ export default function (ids: string[]) {
   })
     .then(async (res) => {
       isLoading.value = false;
-      const {
-        data: { chromeExtensions },
-      } = await res.json();
-      data.value = chromeExtensions;
+      const { data: responseData } = await res.json();
+      data.value = {
+        chrome: responseData.chromeExtensions ?? [],
+        firefox: responseData.firefoxAddons ?? [],
+        edge: responseData.edgeAddons ?? [],
+      };
       err.value = undefined;
     })
     .catch((error) => {
@@ -54,9 +88,5 @@ export default function (ids: string[]) {
       err.value = error;
     });
 
-  return {
-    data,
-    err,
-    isLoading,
-  };
+  return { data, err, isLoading };
 }

@@ -9,8 +9,8 @@ export function defineCommand<TArgs extends any[]>(
   },
 ) {
   return async (...args: TArgs) => {
-    // Enable consola's debug mode globally at the start of all commands when the `--debug` flag is
-    // passed
+    // Enable consola's debug mode globally at the start of all commands when
+    // the `--debug` flag is passed
     const isDebug = !!args.find((arg) => arg?.debug);
     if (isDebug) {
       consola.level = LogLevels.debug;

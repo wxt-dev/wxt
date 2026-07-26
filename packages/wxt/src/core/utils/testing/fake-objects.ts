@@ -1,6 +1,4 @@
-/**
- * SHOULD ONLY BE IMPORTED IN TESTS.
- */
+/** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
@@ -14,7 +12,6 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   OutputChunk,
-  OutputFile,
   OutputAsset,
   BuildOutput,
   BuildStepOutput,
@@ -22,13 +19,14 @@ import {
   Wxt,
   SidepanelEntrypoint,
   BaseEntrypoint,
+  UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
-import { setWxtForTesting } from '../../../core/wxt';
+import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.test.SEED);
+faker.seed(import.meta.env.TEST_SEED);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -100,7 +98,7 @@ export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
 );
 
 export const fakeUnlistedScriptEntrypoint =
-  fakeObjectCreator<GenericEntrypoint>(() => ({
+  fakeObjectCreator<UnlistedScriptEntrypoint>(() => ({
     type: 'unlisted-script',
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
@@ -141,11 +139,15 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
         '64': 'icon/64.png',
       },
     ]),
-    mv2Key: faker.helpers.arrayElement([
+    actionType: faker.helpers.arrayElement([
       'browser_action',
       'page_action',
       undefined,
     ]),
+    // Firefox-specific options - kept undefined by default to avoid breaking existing tests
+    browserStyle: undefined,
+    defaultArea: undefined,
+    themeIcons: undefined,
   },
   skipped: faker.datatype.boolean(),
 }));
@@ -183,7 +185,6 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
       'newtab',
       'devtools',
       'unlisted-page',
-      'unlisted-script',
     ]),
     inputPath: fakeFile('src'),
     name: faker.string.alpha(),
@@ -203,10 +204,6 @@ export const fakeOutputAsset = fakeObjectCreator<OutputAsset>(() => ({
   type: 'asset',
   fileName: fakeFileName(),
 }));
-
-export function fakeOutputFile(): OutputFile {
-  return faker.helpers.arrayElement([fakeOutputAsset(), fakeOutputChunk()]);
-}
 
 export const fakeManifest = fakeObjectCreator<Browser.runtime.Manifest>(() => ({
   manifest_version: faker.helpers.arrayElement([2, 3]),
@@ -267,9 +264,6 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     publicDir: fakeDir(),
     root: fakeDir(),
     wxtModuleDir: fakeDir(),
-    runnerConfig: {
-      config: {},
-    },
     webExt: {
       config: {},
     },
@@ -303,12 +297,14 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     userConfigMetadata: {},
     alias: {},
     experimental: {},
+    watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
     },
     hooks: {},
     vite: () => ({}),
     plugins: [],
+    suppressWarnings: {},
   };
 });
 

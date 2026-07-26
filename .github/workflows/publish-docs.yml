@@ -23,13 +23,13 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup
         uses: ./.github/actions/setup
 
       - name: Login to Docker Registry
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: https://${{ secrets.DOCKER_REGISTRY_HOSTNAME }}
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
@@ -37,11 +37,11 @@ jobs:
 
       - name: Build docs
         run: |
-          pnpm docs:build
+          bun run docs:build
           docker build docs/.vitepress -t ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
 
       - name: Push Image
         run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
 
       - name: Deploy
-        run: curl -X POST -i ${{ secrets.UPDATE_DOCS_WEBHOOK }}
+        run: 'curl -X POST -i -H "X-API-Key: ${{ secrets.DOCS_WEBHOOK_API_KEY }}" https://${{ secrets.DOCS_WEBHOOK_DOMAIN }}/api/webhook/stacks/${{ secrets.DOCS_WEBHOOK_STACK_ID }}'

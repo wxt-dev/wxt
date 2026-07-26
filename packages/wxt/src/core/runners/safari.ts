@@ -3,7 +3,8 @@ import { relative } from 'node:path';
 import { wxt } from '../wxt';
 
 /**
- * The Safari runner just logs a warning message because `web-ext` doesn't work with Safari.
+ * The Safari runner just logs a warning message because `web-ext` doesn't work
+ * with Safari.
  */
 export function createSafariRunner(): ExtensionRunner {
   return {
@@ -14,9 +15,6 @@ export function createSafariRunner(): ExtensionRunner {
           wxt.config.outDir,
         )}" as an unpacked extension manually`,
       );
-    },
-    async closeBrowser() {
-      // noop
     },
   };
 }

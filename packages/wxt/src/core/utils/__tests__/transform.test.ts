@@ -55,6 +55,34 @@ describe('Transform Utils', () => {
       expect(actual).toEqual(expected);
     });
 
+    it('should preserve spread config when removing the main field', () => {
+      const input = `
+        const sharedConfig = {
+          matches: ['*://*/*'],
+        };
+
+        export default defineContentScript({
+          ...sharedConfig,
+          runAt: 'document_idle',
+          main(ctx) {
+            console.log(ctx);
+          },
+        })
+      `;
+      const expected = `const sharedConfig = {
+  matches: ['*://*/*'],
+};
+
+export default defineContentScript({
+  ...sharedConfig,
+  runAt: 'document_idle'
+})`;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
+
     it('should remove unused imports', () => {
       const input = `
         import { defineBackground } from "#imports"
@@ -72,7 +100,7 @@ export default defineBackground();`;
       expect(actual).toEqual(expected);
     });
 
-    it('should remove explict side-effect imports', () => {
+    it('should remove explicit side-effect imports', () => {
       const input = `
         import { defineBackground } from "#imports"
         import "my-polyfill"
@@ -89,7 +117,7 @@ export default defineBackground();`;
       expect(actual).toEqual(expected);
     });
 
-    it("should remove any functions delcared outside the main function that aren't used", () => {
+    it("should remove any functions declared outside the main function that aren't used", () => {
       const input = `
               function getMatches() {
                 return ["*://*/*"]
@@ -117,7 +145,7 @@ export default defineContentScript({
       expect(actual).toEqual(expected);
     });
 
-    it("should remove any variables delcared outside the main function that aren't used", () => {
+    it("should remove any variables declared outside the main function that aren't used", () => {
       const input = `
         const unused1 = "a", matches = ["*://*/*"];
         let unused2 = unused1 + "b";
@@ -138,7 +166,7 @@ export default defineContentScript({
       expect(actual).toEqual(expected);
     });
 
-    it('should not remove any variables delcared outside the main function that are used', () => {
+    it('should not remove any variables declared outside the main function that are used', () => {
       const input = `
         const [ a ] = [ 123, 456 ];
         const { b } = { b: 123 };

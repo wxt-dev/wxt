@@ -24,7 +24,7 @@ describe('Content Script Context', () => {
     const onInvalidated = vi.fn();
 
     ctx.onInvalidated(onInvalidated);
-    // @ts-ignore
+    // @ts-expect-error Deleting `runtime.id` to simulate disconnection
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 
@@ -82,6 +82,22 @@ describe('Content Script Context', () => {
 
     expect(onInvalidated).not.toBeCalled();
     expect(ctx.isValid).toBe(true);
+  });
+
+  describe('noScriptStartedPostMessage', () => {
+    it('should send window.postMessage by default', async () => {
+      const postMessageSpy = vi.spyOn(window, 'postMessage');
+      new ContentScriptContext('test');
+      expect(postMessageSpy).toHaveBeenCalledOnce();
+      postMessageSpy.mockRestore();
+    });
+
+    it('should not send window.postMessage when noScriptStartedPostMessage is true', async () => {
+      const postMessageSpy = vi.spyOn(window, 'postMessage');
+      new ContentScriptContext('test', { noScriptStartedPostMessage: true });
+      expect(postMessageSpy).not.toHaveBeenCalled();
+      postMessageSpy.mockRestore();
+    });
   });
 
   describe('addEventListener', () => {

@@ -1,16 +1,15 @@
-import glob from 'fast-glob';
-import fs from 'fs-extra';
-import * as semver from 'semver';
-import { dirname } from 'node:path';
 import consola from 'consola';
-import spawn from 'nano-spawn';
+import { glob } from 'tinyglobby';
+import { dirname } from 'node:path';
 import pMap from 'p-map';
+import * as semver from 'semver';
+import { styleText } from 'node:util';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
 
 Usage:
-  pnpm tsx scripts/upgrade-deps.ts [options]
+  bun run scripts/upgrade-deps.ts [options]
 
 Options:
   --write, -w       Write changes to package.json files
@@ -77,7 +76,7 @@ async function main(): Promise<never> {
   consola.start('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
   consola.success('Done!');
-  consola.info('\nRun `pnpm i` to install new dependencies\n');
+  consola.info('\nRun `bun install` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -97,11 +96,11 @@ async function getPackageJsonDependencies(
 }> {
   const packageJsonFiles = await glob(
     ['package.json', '*/*/package.json', '!**/node_modules'],
-    { onlyFiles: true },
+    { onlyFiles: true, expandDirectories: false },
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
-      content: await fs.readJson(path),
+      content: await Bun.file(path).json(),
       path,
       folder: dirname(path),
     })),
@@ -155,14 +154,14 @@ function validateNoMultipleVersions(
   const maxWidth = Math.max(
     ...depsWithMultipleVersions.map(([name]) => name.length),
   );
-  console.log(maxWidth);
-  const addCyan = (text: string) => `\x1b[36m${text}\x1b[0m`;
 
   consola.info('Found multiple versions of:');
   for (const [name, versions] of depsWithMultipleVersions) {
     console.log(
-      `    \x1b[35m${name.padEnd(maxWidth)}\x1b[0m  ${Array.from(versions)
-        .map(addCyan)
+      `    ${styleText('magenta', name.padEnd(maxWidth))}  ${Array.from(
+        versions,
+      )
+        .map((text) => styleText('cyan', text))
         .join('\t')}`,
     );
   }
@@ -170,10 +169,38 @@ function validateNoMultipleVersions(
   process.exit(1);
 }
 
+async function spawnJson(cmd: string[]): Promise<any> {
+  const child = Bun.spawn({ cmd });
+  const exitCode = await child.exited;
+  if (exitCode !== 0)
+    throw new Error(`Command failed with exit code ${exitCode}`);
+
+  return JSON.parse(
+    // @ts-ignore: text() is an untyped util Bun provides for ReadableStreams
+    await child.stdout.text(),
+  );
+}
+
 async function fetchPackageInfo(name: string): Promise<PackageInfo> {
-  // Use PNPM instead of API in case dependencies don't come from NPM
-  const res = await spawn('pnpm', ['view', name, '--json']);
-  return JSON.parse(res.stdout);
+  // Use Bun instead of API in case dependencies don't come from NPM.
+  const partial = await spawnJson(['bun', 'info', name, '--json']);
+
+  // Bun doesn't return the dist-tags and time fields by default, have to fetch
+  // them separately.
+  const distTags = await spawnJson([
+    'bun',
+    'info',
+    name,
+    'dist-tags',
+    '--json',
+  ]);
+  const time = await spawnJson(['bun', 'info', name, 'time', '--json']);
+
+  return {
+    ...partial,
+    'dist-tags': distTags,
+    time,
+  };
 }
 
 type PackageInfo = {
@@ -313,24 +340,34 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
 
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
-    const num = `\x1b[2m${(i + 1).toString().padStart(numberPadding)}.\x1b[0m`;
-    const name = `\x1b[35m${upgrade.name.padEnd(namePadding)}\x1b[0m`;
+    const num = styleText(
+      'bold',
+      (i + 1).toString().padStart(numberPadding) + '.',
+    );
+    const name = styleText('magenta', upgrade.name.padEnd(namePadding));
     const color =
       upgrade.diff == null
-        ? '\x1b[2m'
+        ? 'bold'
         : upgrade.diff === 'patch'
-          ? '\x1b[32m'
+          ? 'green'
           : upgrade.diff === 'minor'
-            ? '\x1b[33m'
-            : '\x1b[31m';
-    const currentVersion = `\x1b[2m${upgrade.currentRange.padEnd(currentVersionPadding)}\x1b[0m`;
-    const upgradeToVersion = `${color}${upgrade.upgradeToRange.padEnd(upgradeToVersionPadding)}\x1b[0m`;
+            ? 'yellow'
+            : 'red';
+    const currentVersion = styleText(
+      'bold',
+      upgrade.currentRange.padEnd(currentVersionPadding),
+    );
+    const upgradeToVersion = styleText(
+      color,
+      upgrade.upgradeToRange.padEnd(upgradeToVersionPadding),
+    );
     const latest =
       upgrade.latestVersion !== upgrade.upgradeToVersion
-        ? ` \x1b[2m\x1b[31m(${upgrade.latestVersion} available)\x1b[0m`
+        ? ' ' +
+          styleText(['bold', 'red'], `(${upgrade.latestVersion} available)`)
         : '';
     console.log(
-      `  ${num} ${name}  ${currentVersion}  \x1b[2m→\x1b[0m  ${upgradeToVersion}${latest}`,
+      `  ${num} ${name}  ${currentVersion}  ${styleText('dim', '→')}  ${upgradeToVersion}${latest}`,
     );
   }
   console.log();
@@ -341,7 +378,8 @@ async function writeUpgrades(
   upgrades: UpgradeDetails[],
 ) {
   for (const packageJsonFile of packageJsonFiles) {
-    const oldText = await fs.readFile(packageJsonFile, 'utf8');
+    const file = Bun.file(packageJsonFile);
+    const oldText = await file.text();
     let newText = oldText;
     for (const upgrade of upgrades) {
       const search = `"${upgrade.name}": "${upgrade.currentRange}"`;
@@ -349,7 +387,7 @@ async function writeUpgrades(
       newText = newText.replaceAll(search, replace);
     }
     if (newText !== oldText) {
-      await fs.writeFile(packageJsonFile, newText, 'utf8');
+      await file.write(newText);
     }
   }
 }

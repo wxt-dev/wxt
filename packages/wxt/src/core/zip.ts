@@ -1,18 +1,20 @@
 import { InlineConfig } from '../types';
 import path from 'node:path';
-import fs from 'fs-extra';
+import { mkdir, readFile } from 'node:fs/promises';
+import { createWriteStream } from 'node:fs';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
 import { formatDuration } from './utils/time';
-import { printFileList } from './utils/log/printFileList';
+import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
 import JSZip from 'jszip';
-import glob from 'fast-glob';
-import { normalizePath } from './utils/paths';
+import { glob } from 'tinyglobby';
+import { normalizePath } from './utils';
 
 /**
  * Build and zip the extension for distribution.
+ *
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
  * @returns A list of all files included in the ZIP.
  */
@@ -47,7 +49,7 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
       .replaceAll('{{mode}}', wxt.config.mode)
       .replaceAll('{{manifestVersion}}', `mv${wxt.config.manifestVersion}`);
 
-  await fs.ensureDir(wxt.config.outBaseDir);
+  await mkdir(wxt.config.outBaseDir, { recursive: true });
 
   // ZIP output directory
   await wxt.hooks.callHook('zip:extension:start', wxt);
@@ -134,13 +136,13 @@ async function zipDir(
   for (const file of filesToZip) {
     const absolutePath = path.resolve(directory, file);
     if (file.endsWith('.json')) {
-      const content = await fs.readFile(absolutePath, 'utf-8');
+      const content = await readFile(absolutePath, 'utf-8');
       archive.file(
         file,
         (await options?.transform?.(absolutePath, file, content)) || content,
       );
     } else {
-      const content = await fs.readFile(absolutePath);
+      const content = await readFile(absolutePath);
       archive.file(file, content);
     }
   }
@@ -157,7 +159,7 @@ async function zipDir(
               compressionOptions: { level: wxt.config.zip.compressionLevel },
             }),
       })
-      .pipe(fs.createWriteStream(outputPath))
+      .pipe(createWriteStream(outputPath))
       .on('error', reject)
       .on('close', resolve),
   );
