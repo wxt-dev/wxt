@@ -110,7 +110,7 @@ describe('Zipping', () => {
     expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(false);
   });
 
-  it('should not zip files inside hidden directories if only the directory is specified', async () => {
+  it('should zip hidden files and directories when dotSources is enabled', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -127,17 +127,17 @@ describe('Zipping', () => {
     await project.zip({
       browser: 'firefox',
       zip: {
-        includeSources: ['.hidden-dir'],
+        dotSources: true,
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
-    expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(false);
+    expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(true);
     expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file')).toBe(
-      false,
+      true,
     );
   });
 
-  it('should allow zipping hidden files into sources when explicitly listed', async () => {
+  it('should allow ignoring some hidden files', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -156,21 +156,22 @@ describe('Zipping', () => {
     await project.zip({
       browser: 'firefox',
       zip: {
-        includeSources: ['.env', '.hidden-dir/file', '.hidden-dir/nested/**'],
+        dotSources: true,
+        excludeSources: ['.hidden-dir/nested'],
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.pathExists(unzipDir, '.env')).toBe(true);
     expect(await project.pathExists(unzipDir, '.hidden-dir/file')).toBe(true);
     expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file1')).toBe(
-      true,
+      false,
     );
     expect(await project.pathExists(unzipDir, '.hidden-dir/nested/file2')).toBe(
-      true,
+      false,
     );
   });
 
-  it('should only include specified files when includeSources is provided (allowlist behavior)', async () => {
+  it('should not include all files when includeSources is provided', async () => {
     const project = new TestProject({
       name: 'test',
       version: '1.0.0',
@@ -179,7 +180,7 @@ describe('Zipping', () => {
       'entrypoints/background.ts',
       'export default defineBackground(() => {});',
     );
-    project.addFile('src/utils.ts', 'export const x = 1;');
+    project.addFile('utils/example.ts', 'export const x = 1;');
     project.addFile('secrets/api-key.txt', 'supersecret');
     project.addFile('cache/data.json', '{}');
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
@@ -188,7 +189,7 @@ describe('Zipping', () => {
     await project.zip({
       browser: 'firefox',
       zip: {
-        includeSources: ['entrypoints/**', 'src/**'],
+        includeSources: ['entrypoints/**', 'utils/**'],
       },
     });
     await extract(sourcesZip, { dir: unzipDir });
@@ -197,7 +198,7 @@ describe('Zipping', () => {
     expect(
       await project.pathExists(unzipDir, 'entrypoints/background.ts'),
     ).toBe(true);
-    expect(await project.pathExists(unzipDir, 'src/utils.ts')).toBe(true);
+    expect(await project.pathExists(unzipDir, 'utils/example.ts')).toBe(true);
 
     // Non-included files should NOT be present (allowlist behavior)
     expect(await project.pathExists(unzipDir, 'secrets/api-key.txt')).toBe(
@@ -224,8 +225,7 @@ describe('Zipping', () => {
       `export default defineContentScript({
         matches: ['*://*/*'],
         main(ctx) {},
-      });
-`,
+      });`,
     );
     const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
     const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
@@ -325,7 +325,8 @@ describe('Zipping', () => {
 
     await project.zip({
       zip: {
-        exclude: ['**/*.json', '!manifest.json'],
+        // Exclude all JSON files except for ones named `manifest.json`
+        exclude: ['**/!(manifest).json'],
       },
     });
 

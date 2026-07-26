@@ -314,6 +314,8 @@ export interface InlineConfig {
      *   [
      *     '**\/*.map', // Exclude all sourcemaps
      *   ];
+     *
+     * @default [ ]
      */
     exclude?: string[];
     /**
