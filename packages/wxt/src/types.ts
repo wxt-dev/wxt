@@ -680,7 +680,7 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    * - `function`: A function that receives the entrypoint and returns a string to
    *   use as the variable name.
    *
-   * @default true
+   * @default false
    */
   globalName?: string | boolean | ((entrypoint: Entrypoint) => string);
 }
