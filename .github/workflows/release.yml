@@ -20,6 +20,13 @@ on:
           - unocss
           - webextension-polyfill
           - wxt
+      bump:
+        description: Blank (auto), a version (1.4.1), or major/minor/patch
+        type: string
+      dryRun:
+        description: Do a dry-run and don't publish anything
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -52,22 +59,41 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global push.followTags true
 
-      - name: Bump and Tag
-        run: |
-          bun run scripts/bump-package-version.ts ${{ inputs.package }}
-          git push
-          git push --tags
+      - name: Upgrade NPM for Provence
+        run: sudo npm i -g npm@latest
 
-      - name: Publish to NPM
-        working-directory: packages/${{ inputs.package }}
-        run: |
-          bun pm pack
-          sudo npm i -g npm@latest
-          npm publish *.tgz
-
-      - name: Create GitHub release
-        run: bun run scripts/create-github-release.ts ${{ inputs.package }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bump and Release
+        uses: aklinker1/zero-changelog/actions/release@b6fcca17cebfc45f996b80fe5926da924d8441f8 # 0.2.1
+        with:
+          bump: ${{ inputs.bump }}
+          path: packages/${{ inputs.package }}
+          # Include documentation updates in WXT's releases
+          additionalDirs: |-
+            ${{ case(
+              inputs.package == 'wxt', '../../docs'
+              ''
+            ) }}
+          # Use package name in commit message
+          commitTemplate: |-
+            ${{ case(
+              inputs.package == 'wxt', 'chore(release): wxt v{{version}}'
+              'chore(release): @wxt-dev/{{dirname}} v{{version}}'
+            ) }}
+          # Use package name in release name
+          releaseNameTemplate: |-
+            ${{ case(
+              inputs.package == 'wxt', 'wxt v{{version}}'
+              '@wxt-dev/{{dirname}} v{{version}}'
+            ) }}
+          # Update lockfile with new versions since it includes the package versions
+          preCommitCommands: |-
+            bun i
+          publishCommands: |-
+            bun pm pack
+            npm publish *.tgz
+          dryRun: ${{ inputs.dryRun }}
+          dryRunPublishCommands: |-
+            bun pm pack
+            npm publish *.tgz --dry-run
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
