@@ -20,9 +20,11 @@ export function getAppConfig(): WxtAppConfig {
  */
 export function useAppConfig(): WxtAppConfig {
   // After v1.0 this function will be removed, and migrate to use only `getAppConfig` instead.
-  wxt.logger.warn(
-    '`useAppConfig` is deprecated. Please use `getAppConfig` instead.',
-  );
+  if (import.meta.env.DEV) {
+    console.warn(
+      '[wxt] `useAppConfig` is deprecated. Please use `getAppConfig` instead.',
+    );
+  }
 
   return getAppConfig();
 }
