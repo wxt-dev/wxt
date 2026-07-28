@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.21.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.1...wxt-v0.21.2)
+
+### 🩹 Fixes
+
+- Remove `web-ext-run`, it's unused now ([`859d654`](https://github.com/wxt-dev/wxt/commit/859d654611571941ee0a7aa4011f3ce011787a30))
+
+### 📖 Documentation
+
+- Fix typos and wording of upgrade guide ([`d1ab2d9`](https://github.com/wxt-dev/wxt/commit/d1ab2d923dada60ac4a3ece7d85001ee611f9731))
+- Fix heading level ([`466ae8a`](https://github.com/wxt-dev/wxt/commit/466ae8a33c73436ac2dc06e0046ea949e1982a7f))
+- Update package size links ([`925e97d`](https://github.com/wxt-dev/wxt/commit/925e97d4fc83ecfcc93bbbb357247373b594804f))
+
+### ❤️ Contributors
+
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.21.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.27...wxt-v0.21.1)
@@ -124,7 +143,6 @@
 - [@LUIDevo](https://github.com/LUIDevo)
 - [@dashitongzhi](https://github.com/dashitongzhi)
 - [@fkatsuhiro](https://github.com/fkatsuhiro)
-
 
 ## v0.20.27
 
