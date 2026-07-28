@@ -1,5 +1,4 @@
 import { loadConfig } from 'c12';
-import { resolve as esmResolve } from 'import-meta-resolve';
 import {
   ConfigEnv,
   InlineConfig,
@@ -546,10 +545,7 @@ async function getUnimportEslintOptions(
 
 /** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
-  // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
-  // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
-  // have it.
-  const url = esmResolve('wxt', import.meta.url);
+  const url = import.meta.resolve('wxt', import.meta.url);
 
   // esmResolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
@@ -605,9 +601,7 @@ export async function resolveWxtUserModules(
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      // Resolve before importing to allow for a local WXT clone to be
-      // symlinked into a project.
-      const resolvedModulePath = esmResolve(moduleId, importer);
+      const resolvedModulePath = import.meta.resolve(moduleId, importer);
       const mod: { default: WxtModule<any> } = await import(
         /* @vite-ignore */ resolvedModulePath
       );
