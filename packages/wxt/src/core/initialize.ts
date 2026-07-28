@@ -21,8 +21,9 @@ export async function initialize(options: {
       )?.name
     : undefined;
 
-  let directory = options.directory ?? (await question('Project Directory'));
-  directory ||= '.';
+  const directory =
+    options.directory ??
+    (await question('Project Directory', { defaultValue: '.' }));
 
   const templateName =
     inputTemplateName ??
