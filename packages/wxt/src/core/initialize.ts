@@ -1,4 +1,4 @@
-import prompts from 'prompts';
+import { question, select } from '@topcli/prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
@@ -8,88 +8,78 @@ import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
 
 export async function initialize(options: {
-  directory: string;
-  template: string;
-  packageManager: string;
+  directory?: string;
+  template?: string;
+  packageManager?: string;
 }) {
   consola.info('Initializing new project');
 
   const templates = await listTemplates();
-  const defaultTemplate = templates.find(
-    (template) => template.name === options.template?.toLowerCase().trim(),
-  );
+  const inputTemplateName = options.template
+    ? templates.find(
+        (template) => template.name === options.template!.toLowerCase().trim(),
+      )?.name
+    : undefined;
 
-  const input = await prompts(
-    [
-      {
-        name: 'directory',
-        type: () => (options.directory == null ? 'text' : undefined),
-        message: 'Project Directory',
-        initial: options.directory,
-      },
-      {
-        name: 'template',
-        type: () => (defaultTemplate == null ? 'select' : undefined),
-        message: 'Choose a template',
-        choices: templates.map((template) => ({
-          title: TEMPLATE_COLORS[template.name]
-            ? styleText(TEMPLATE_COLORS[template.name], template.name)
-            : template.name,
-          value: template,
-        })),
-      },
-      {
-        name: 'packageManager',
-        type: () => (options.packageManager == null ? 'select' : undefined),
-        message: 'Package Manager',
-        choices: [
-          { title: styleText('magenta', 'bun'), value: 'bun' },
-          { title: styleText('red', 'npm'), value: 'npm' },
-          { title: styleText('yellow', 'pnpm'), value: 'pnpm' },
-          { title: styleText('cyan', 'yarn'), value: 'yarn' },
-        ],
-      },
-    ],
-    {
-      onCancel: () => process.exit(1),
-    },
-  );
-  input.directory ||= options.directory || '.';
-  input.template ??= defaultTemplate;
-  input.packageManager ??= options.packageManager;
+  const directory =
+    options.directory ??
+    (await question('Project Directory', { defaultValue: '.' }));
+  if (!directory) throw Error('Directory is required');
 
-  const isExists = await pathExists(input.directory);
+  const templateName =
+    inputTemplateName ??
+    (await select('Choose a template', {
+      choices: templates.map((template) => ({
+        label: TEMPLATE_COLORS[template.name]
+          ? styleText(TEMPLATE_COLORS[template.name], template.name)
+          : template.name,
+        value: template.name,
+      })),
+    }));
+  const template = templates.find((t) => t.name === templateName);
+  if (!template) throw Error('Unknown template: ' + templateName);
+
+  const packageManager =
+    options.packageManager ??
+    (await select('Package Manager', {
+      choices: [
+        { label: styleText('magenta', 'bun'), value: 'bun' },
+        { label: styleText('red', 'npm'), value: 'npm' },
+        { label: styleText('yellow', 'pnpm'), value: 'pnpm' },
+        { label: styleText('cyan', 'yarn'), value: 'yarn' },
+      ],
+    }));
+
+  const isExists = await pathExists(directory);
   if (isExists) {
     const isEmpty =
-      (await readdir(input.directory)).filter((dir) => dir !== '.git')
-        .length === 0;
+      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
     if (!isEmpty) {
       consola.error(
-        `The directory ${path.resolve(input.directory)} is not empty. Aborted.`,
+        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
       );
       process.exit(1);
     }
   }
-  await cloneProject(input);
+  await cloneProject({ directory, template });
 
-  const cdPath = path.relative(process.cwd(), path.resolve(input.directory));
+  const cdPath = path.relative(process.cwd(), path.resolve(directory));
   console.log();
   consola.log(
     `✨ WXT project created with the ${
-      TEMPLATE_COLORS[input.template.name]
-        ? styleText(TEMPLATE_COLORS[input.template.name], input.template.name)
-        : input.template.name
+      TEMPLATE_COLORS[template.name]
+        ? styleText(TEMPLATE_COLORS[template.name], template.name)
+        : template.name
     } template.`,
   );
   console.log();
   consola.log('Next steps:');
+
   let step = 0;
   if (cdPath !== '')
     consola.log(`  ${++step}.`, styleText('cyan', `cd ${cdPath}`));
-  consola.log(
-    `  ${++step}.`,
-    styleText('cyan', `${input.packageManager} install`),
-  );
+  consola.log(`  ${++step}.`, styleText('cyan', `${packageManager} install`));
+
   console.log();
 }
 
