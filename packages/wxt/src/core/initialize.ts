@@ -8,16 +8,18 @@ import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
 
 export async function initialize(options: {
-  directory: string;
-  template: string;
-  packageManager: string;
+  directory?: string;
+  template?: string;
+  packageManager?: string;
 }) {
   consola.info('Initializing new project');
 
   const templates = await listTemplates();
-  const inputTemplateName = templates.find(
-    (template) => template.name === options.template.toLowerCase().trim(),
-  )?.name;
+  const inputTemplateName = options.template
+    ? templates.find(
+        (template) => template.name === options.template!.toLowerCase().trim(),
+      )?.name
+    : undefined;
 
   let directory = options.directory ?? (await question('Project Directory'));
   directory ||= '.';
