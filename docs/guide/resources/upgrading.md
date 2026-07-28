@@ -45,7 +45,7 @@ Read through all the changes once before updating your code.
 
 ### Install Footprint
 
-When installing `wxt` v0.20, it downloaded 98 MB and 366 packages to your `node_modules`. v0.21 cuts this down to 64 MB / 320 packages - that's 65.3% the previous size! This is a good improvement, but frankly, not good enough. Why?
+When installing `wxt` v0.20, it downloaded 98 MB and 366 packages to your `node_modules`. v0.21 cuts this down to 46MB / 313 packages - that's 46.9% the previous size! This is a good improvement, but frankly, not good enough. Why?
 
 - `wxt init` is slow for new developers trying it out
 - Less exposure to supply chain attacks
@@ -53,9 +53,9 @@ When installing `wxt` v0.20, it downloaded 98 MB and 366 packages to your `node_
 
 If you want to explore WXT's dependencies and why it's so large, here's a few links:
 
-- <https://pkg-size.dev/wxt>
-- <https://npmgraph.js.org/?q=wxt@0.21.0>
-- <https://node-modules.dev/grid/depth#install=wxt@0.21.0>
+- <https://pkg-size.dev/wxt@%5E0.21?no-peers>
+- <https://npmgraph.js.org/?q=wxt@^0.21>
+- <https://node-modules.dev/grid/depth#install=wxt@^0.21>
 
 We'll continue working on minimizing WXT's install footprint.
 
