@@ -6,40 +6,106 @@
  *
  * @module @wxt-dev/storage
  */
-import { browser, type Browser } from '@wxt-dev/browser';
+import { browser } from '@wxt-dev/browser';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { SchemaError } from '@standard-schema/utils';
 import { Mutex } from 'async-mutex';
 import { dequal } from 'dequal/lite';
+import { assertMutable, type WxtStorageDriver } from './driver';
+import { MigrationError } from './migrations';
+import {
+  cloneFallback,
+  processReadValue,
+  processWriteValue,
+} from './pipeline-adapters';
+import type {
+  DeepReadonly,
+  GetItemOptions,
+  GetItemsInputElement,
+  GetItemsResult,
+  GetMetasInputElement,
+  GetMetasResult,
+  MetaKey,
+  MigrationTuple,
+  NullablePartial,
+  OnValidationError,
+  Prettify,
+  RemoveItemOptions,
+  SnapshotOptions,
+  StorageArea,
+  StorageAreaChanges,
+  StorageItemKey,
+  Unwatch,
+  WatchCallback,
+  Widen,
+  WritableDeep,
+  WxtStorageItemOptions,
+  WxtStorageItemLike,
+} from './types';
+
+export type {
+  GetItemOptions,
+  GetItemsInputElement,
+  GetItemsResult,
+  GetMetasInputElement,
+  GetMetasResult,
+  MetaKey,
+  OnValidationError,
+  RemoveItemOptions,
+  SnapshotOptions,
+  StorageArea,
+  StorageAreaChanges,
+  StorageItemKey,
+  Unwatch,
+  WatchCallback,
+  WxtStorageItemOptions,
+  WxtStorageItemSerializer,
+} from './types';
+
+// Internal per-item batch hooks, keyed by item identity so nothing leaks
+// through the public `WxtStorageItem` interface or emitted declarations.
+interface ItemBatchHooks {
+  ready: () => Promise<void>;
+  processRead: (raw: unknown) => Promise<unknown>;
+}
+const itemBatchHooks = new WeakMap<object, ItemBatchHooks>();
 
 export const storage = createStorage();
 
 function createStorage(): WxtStorage {
-  const drivers: Record<StorageArea, WxtStorageDriver> = {
+  const drivers = {
     local: createDriver('local'),
     session: createDriver('session'),
     sync: createDriver('sync'),
     managed: createDriver('managed'),
-  };
+  } as const;
 
-  const getDriver = (area: StorageArea) => {
+  function getDriver<const TArea extends StorageArea>(
+    area: TArea,
+  ): WxtStorageDriver<TArea>;
+  function getDriver(area: StorageArea): WxtStorageDriver {
     const driver = drivers[area];
     if (driver == null) {
       const areaNames = Object.keys(drivers).join(', ');
       throw Error(`Invalid area "${area}". Options: ${areaNames}`);
     }
     return driver;
-  };
+  }
 
-  const resolveKey = (key: StorageItemKey) => {
+  const resolveKey = <const K extends StorageItemKey>(key: K) => {
     const deliminatorIndex = key.indexOf(':');
-    const driverArea = key.substring(0, deliminatorIndex) as StorageArea;
-
-    const driverKey = key.substring(deliminatorIndex + 1);
+    const driverArea = key.substring(
+      0,
+      deliminatorIndex,
+    ) as K extends `${infer S}:${infer _}` ? S : never;
+    const driverKey = key.substring(
+      deliminatorIndex + 1,
+    ) as K extends `${StorageArea}:${infer R}` ? R : never;
     if (driverKey == null) {
       throw Error(
         `Storage key should be in the form of "area:key", but received "${key}"`,
       );
     }
-
     return {
       driverArea,
       driverKey,
@@ -47,10 +113,17 @@ function createStorage(): WxtStorage {
     };
   };
 
-  const getMetaKey = (key: string) => key + '$';
+  const getMetaKey = <const K extends string>(key: K): MetaKey<K> => `${key}$`;
 
-  const mergeMeta = (oldMeta: any, newMeta: any): any => {
-    const newFields = { ...oldMeta };
+  const typedEntries = <K extends string, V>(
+    obj: Partial<Record<K, V>>,
+  ): Array<[K, V]> => Object.entries(obj) as Array<[K, V]>;
+
+  const mergeMeta = (
+    oldMeta: Record<string, unknown>,
+    newMeta: Record<string, unknown>,
+  ): Record<string, unknown> => {
+    const newFields: Record<string, unknown> = { ...oldMeta };
 
     Object.entries(newMeta).forEach(([key, value]) => {
       if (value == null) delete newFields[key];
@@ -60,52 +133,70 @@ function createStorage(): WxtStorage {
     return newFields;
   };
 
-  const getValueOrFallback = (value: any, fallback: any) =>
-    value ?? fallback ?? null;
+  /**
+   * Merge a raw driver value with the caller's fallback. `DeepReadonly<T>` in
+   * accepts narrow-readonly literals from `<const>` inference at the call site;
+   * internal use widens back to `T` — read-only pipeline, no mutation.
+   */
+  const getValueOrFallback = <T>(
+    value: T | null | undefined,
+    fallback: DeepReadonly<T> | null | undefined,
+  ): T | null => value ?? cloneFallback<T>(fallback as T | null | undefined);
 
-  const getMetaValue = (properties: any) =>
-    typeof properties === 'object' && !Array.isArray(properties)
-      ? properties
-      : {};
+  const isRecord = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v !== null && !Array.isArray(v);
 
-  const getItem = async (
+  const getMetaValue = (properties: unknown): Record<string, unknown> =>
+    isRecord(properties) ? properties : {};
+
+  const getItem = async <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    opts: GetItemOptions<any> | undefined,
-  ) => {
-    const res = await driver.getItem<any>(driverKey);
-    return getValueOrFallback(res, opts?.fallback ?? opts?.defaultValue);
+    opts: GetItemOptions<T> | undefined,
+  ): Promise<T | null> => {
+    const res = await driver.getItem(driverKey);
+    return getValueOrFallback<T>(
+      res as T | null | undefined,
+      opts?.fallback ?? opts?.defaultValue,
+    );
   };
 
-  const getMeta = async (driver: WxtStorageDriver, driverKey: string) => {
+  const getMeta = async (
+    driver: WxtStorageDriver,
+    driverKey: string,
+  ): Promise<Record<string, unknown>> => {
     const metaKey = getMetaKey(driverKey);
-    const res = await driver.getItem<any>(metaKey);
+    const res = await driver.getItem(metaKey);
     return getMetaValue(res);
   };
 
   const setItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    value: any,
-  ) => {
+    value: unknown,
+  ): Promise<void> => {
+    assertMutable(driver);
     await driver.setItem(driverKey, value ?? null);
   };
 
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    properties: any | undefined,
-  ) => {
+    properties: Record<string, unknown> | null,
+  ): Promise<void> => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
-    await driver.setItem(metaKey, mergeMeta(existingFields, properties));
+    const incoming = getMetaValue(properties);
+    assertMutable(driver);
+    await driver.setItem(metaKey, mergeMeta(existingFields, incoming));
   };
 
   const removeItem = async (
     driver: WxtStorageDriver,
     driverKey: string,
     opts: RemoveItemOptions | undefined,
-  ) => {
+  ): Promise<void> => {
+    assertMutable(driver);
     await driver.removeItem(driverKey);
 
     if (opts?.removeMeta) {
@@ -118,90 +209,126 @@ function createStorage(): WxtStorage {
     driver: WxtStorageDriver,
     driverKey: string,
     properties: string | string[] | undefined,
-  ) => {
+  ): Promise<void> => {
     const metaKey = getMetaKey(driverKey);
 
     if (properties == null) {
+      assertMutable(driver);
       await driver.removeItem(metaKey);
     } else {
       const newFields = getMetaValue(await driver.getItem(metaKey));
       [properties].flat().forEach((field) => delete newFields[field]);
+      assertMutable(driver);
       await driver.setItem(metaKey, newFields);
     }
   };
 
-  const watch = (
+  const watch = <T>(
     driver: WxtStorageDriver,
     driverKey: string,
-    cb: WatchCallback<any>,
-  ) => driver.watch(driverKey, cb);
+    cb: WatchCallback<T | null>,
+  ): Unwatch =>
+    // Contravariance boundary: driver.watch expects WatchCallback<unknown>,
+    // caller passes narrow WatchCallback<T | null>. Safe because the pipeline
+    // validates before invoking the callback.
+    driver.watch(driverKey, cb as WatchCallback<unknown>);
 
   return {
-    getItem: async (key, opts) => {
+    getItem: async <T>(key: StorageItemKey, opts?: GetItemOptions<T>) => {
       const { driver, driverKey } = resolveKey(key);
       return await getItem(driver, driverKey, opts);
     },
 
-    getItems: async (keys) => {
+    getItems: (async <const T extends ReadonlyArray<GetItemsInputElement>>(
+      keys: T,
+    ) => {
+      // One slot per input element — duplicate keys with different
+      // options each apply their own fallback.
+      type Slot =
+        | {
+            readonly kind: 'raw';
+            readonly key: StorageItemKey;
+            readonly opts: GetItemOptions<unknown> | undefined;
+          }
+        | {
+            readonly kind: 'item';
+            readonly key: StorageItemKey;
+            readonly item: WxtStorageItemLike<unknown, StorageItemKey>;
+          };
+      const slots: Slot[] = [];
       const areaToKeyMap = new Map<StorageArea, string[]>();
-      const keyToOptsMap = new Map<string, GetItemOptions<any> | undefined>();
-      const orderedKeys: StorageItemKey[] = [];
+
+      const trackKey = (key: StorageItemKey) => {
+        const { driverArea, driverKey } = resolveKey(key);
+        const areaKeys = areaToKeyMap.get(driverArea) ?? [];
+        areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
+      };
 
       keys.forEach((key) => {
-        let keyStr: StorageItemKey;
-        let opts: GetItemOptions<any> | undefined;
-
         if (typeof key === 'string') {
-          // key: string
-          keyStr = key;
+          slots.push({ kind: 'raw', key, opts: undefined });
+          trackKey(key);
         } else if ('getValue' in key) {
-          // key: WxtStorageItem
-          keyStr = key.key;
-          opts = { fallback: key.fallback };
+          slots.push({ kind: 'item', key: key.key, item: key });
+          trackKey(key.key);
         } else {
-          // key: { key, options }
-          keyStr = key.key;
-          opts = key.options;
+          slots.push({ kind: 'raw', key: key.key, opts: key.options });
+          trackKey(key.key);
         }
-
-        orderedKeys.push(keyStr);
-        const { driverArea, driverKey } = resolveKey(keyStr);
-        const areaKeys = areaToKeyMap.get(driverArea) ?? [];
-
-        areaToKeyMap.set(driverArea, areaKeys.concat(driverKey));
-        keyToOptsMap.set(keyStr, opts);
       });
 
-      const resultsMap = new Map<StorageItemKey, any>();
+      // Await migrations + eager init for every item slot BEFORE the raw
+      // batch fetch. Otherwise the batch captures pre-migration data and a
+      // subsequent onValidationError: 'reset' could destroy the newly
+      // migrated value.
+      await Promise.all(
+        slots.flatMap((slot) => {
+          if (slot.kind !== 'item') return [];
+          const hooks = itemBatchHooks.get(slot.item);
+          return hooks ? [hooks.ready()] : [];
+        }),
+      );
+
+      const rawByKey = new Map<StorageItemKey, unknown>();
       await Promise.all(
         Array.from(areaToKeyMap.entries()).map(async ([driverArea, keys]) => {
           const driverResults = await drivers[driverArea].getItems(keys);
-
           driverResults.forEach((driverResult) => {
-            const key = `${driverArea}:${driverResult.key}` as StorageItemKey;
-            const opts = keyToOptsMap.get(key);
-            const value = getValueOrFallback(
-              driverResult.value,
-              opts?.fallback ?? opts?.defaultValue,
-            );
-
-            resultsMap.set(key, value);
+            const key: StorageItemKey = `${driverArea}:${driverResult.key}`;
+            rawByKey.set(key, driverResult.value);
           });
         }),
       );
 
-      return orderedKeys.map((key) => ({
-        key,
-        value: resultsMap.get(key),
-      }));
-    },
+      return await Promise.all(
+        slots.map(async (slot) => {
+          if (slot.kind === 'item') {
+            const raw = rawByKey.get(slot.key);
+            const hooks = itemBatchHooks.get(slot.item);
+            const value = hooks
+              ? await hooks.processRead(raw)
+              : await slot.item.getValue();
+            return { key: slot.key, value };
+          }
+          return {
+            key: slot.key,
+            value: getValueOrFallback(
+              rawByKey.get(slot.key),
+              slot.opts?.fallback ?? slot.opts?.defaultValue,
+            ),
+          };
+        }),
+      );
+    }) as WxtStorage['getItems'],
 
-    getMeta: async (key) => {
+    getMeta: async (key: StorageItemKey) => {
       const { driver, driverKey } = resolveKey(key);
       return await getMeta(driver, driverKey);
     },
 
-    getMetas: async (args) => {
+    getMetas: (async <const T extends ReadonlyArray<GetMetasInputElement>>(
+      args: T,
+    ) => {
       const keys = args.map((arg) => {
         const key = typeof arg === 'string' ? arg : arg.key;
         const { driverArea, driverKey } = resolveKey(key);
@@ -215,17 +342,27 @@ function createStorage(): WxtStorage {
       });
 
       const areaToDriverMetaKeysMap = keys.reduce<
-        Partial<Record<StorageArea, (typeof keys)[number][]>>
+        Partial<
+          Record<
+            StorageArea,
+            Array<{
+              readonly key: StorageItemKey;
+              readonly driverArea: StorageArea;
+              readonly driverKey: string;
+              readonly driverMetaKey: MetaKey<string>;
+            }>
+          >
+        >
       >((map, key) => {
-        map[key.driverArea] ??= [];
-        map[key.driverArea]!.push(key);
+        const bucket = (map[key.driverArea] ??= []);
+        bucket.push(key);
         return map;
       }, {});
 
-      const resultsMap: Record<string, any> = {};
+      const resultsMap: Record<string, unknown> = {};
       await Promise.all(
-        Object.entries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
-          const areaRes = await browser.storage[area as StorageArea].get(
+        typedEntries(areaToDriverMetaKeysMap).map(async ([area, keys]) => {
+          const areaRes = await browser.storage[area].get(
             keys.map((key) => key.driverMetaKey),
           );
           keys.forEach((key) => {
@@ -236,18 +373,18 @@ function createStorage(): WxtStorage {
 
       return keys.map((key) => ({
         key: key.key,
-        meta: resultsMap[key.key],
+        meta: getMetaValue(resultsMap[key.key]),
       }));
-    },
+    }) as WxtStorage['getMetas'],
 
-    setItem: async (key, value) => {
+    setItem: async (key: StorageItemKey, value: unknown) => {
       const { driver, driverKey } = resolveKey(key);
       await setItem(driver, driverKey, value);
     },
 
     setItems: async (items) => {
       const areaToKeyValueMap: Partial<
-        Record<StorageArea, Array<{ key: string; value: any }>>
+        Record<StorageArea, Array<{ key: string; value: unknown }>>
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
@@ -261,21 +398,25 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToKeyValueMap).map(async ([driverArea, values]) => {
-          const driver = getDriver(driverArea as StorageArea);
+        typedEntries(areaToKeyValueMap).map(async ([driverArea, values]) => {
+          const driver = getDriver(driverArea);
+          assertMutable(driver);
           await driver.setItems(values);
         }),
       );
     },
 
-    setMeta: async (key, properties) => {
+    setMeta: async (
+      key: StorageItemKey,
+      properties: Record<string, unknown> | null,
+    ) => {
       const { driver, driverKey } = resolveKey(key);
       await setMeta(driver, driverKey, properties);
     },
 
     setMetas: async (items) => {
       const areaToMetaUpdatesMap: Partial<
-        Record<StorageArea, { key: string; properties: any }[]>
+        Record<StorageArea, { key: string; properties: unknown }[]>
       > = {};
       items.forEach((item) => {
         const { driverArea, driverKey } = resolveKey(
@@ -289,9 +430,9 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToMetaUpdatesMap).map(
+        typedEntries(areaToMetaUpdatesMap).map(
           async ([storageArea, updates]) => {
-            const driver = getDriver(storageArea as StorageArea);
+            const driver = getDriver(storageArea);
             const metaKeys = updates.map(({ key }) => getMetaKey(key));
             const existingMetas = await driver.getItems(metaKeys);
             const existingMetaMap = Object.fromEntries(
@@ -302,17 +443,21 @@ function createStorage(): WxtStorage {
               const metaKey = getMetaKey(key);
               return {
                 key: metaKey,
-                value: mergeMeta(existingMetaMap[metaKey] ?? {}, properties),
+                value: mergeMeta(
+                  existingMetaMap[metaKey] ?? {},
+                  getMetaValue(properties),
+                ),
               };
             });
 
+            assertMutable(driver);
             await driver.setItems(metaUpdates);
           },
         ),
       );
     },
 
-    removeItem: async (key, opts) => {
+    removeItem: async (key: StorageItemKey, opts?: RemoveItemOptions) => {
       const { driver, driverKey } = resolveKey(key);
       await removeItem(driver, driverKey, opts);
     },
@@ -325,17 +470,13 @@ function createStorage(): WxtStorage {
         let opts: RemoveItemOptions | undefined;
 
         if (typeof key === 'string') {
-          // key: string
           keyStr = key;
         } else if ('getValue' in key) {
-          // key: WxtStorageItem
           keyStr = key.key;
         } else if ('item' in key) {
-          // key: { item, options }
           keyStr = key.item.key;
           opts = key.options;
         } else {
-          // key: { key, options }
           keyStr = key.key;
           opts = key.options;
         }
@@ -350,8 +491,9 @@ function createStorage(): WxtStorage {
       });
 
       await Promise.all(
-        Object.entries(areaToKeysMap).map(async ([driverArea, keys]) => {
-          const driver = getDriver(driverArea as StorageArea);
+        typedEntries(areaToKeysMap).map(async ([driverArea, keys]) => {
+          const driver = getDriver(driverArea);
+          assertMutable(driver);
           await driver.removeItems(keys);
         }),
       );
@@ -359,10 +501,11 @@ function createStorage(): WxtStorage {
 
     clear: async (base) => {
       const driver = getDriver(base);
+      assertMutable(driver);
       await driver.clear();
     },
 
-    removeMeta: async (key, properties) => {
+    removeMeta: async (key: StorageItemKey, properties?: string | string[]) => {
       const { driver, driverKey } = resolveKey(key);
       await removeMeta(driver, driverKey, properties);
     },
@@ -381,10 +524,11 @@ function createStorage(): WxtStorage {
 
     restoreSnapshot: async (base, data) => {
       const driver = getDriver(base);
+      assertMutable(driver);
       await driver.restoreSnapshot(data);
     },
 
-    watch: (key, cb) => {
+    watch: (key: StorageItemKey, cb: WatchCallback<unknown>) => {
       const { driver, driverKey } = resolveKey(key);
       return watch(driver, driverKey, cb);
     },
@@ -395,12 +539,15 @@ function createStorage(): WxtStorage {
       });
     },
 
-    defineItem: (key, opts?: WxtStorageItemOptions<any>) => {
+    defineItem: (
+      key: StorageItemKey,
+      opts?: WxtStorageItemOptions<any>,
+    ): WxtStorageItem<any, any, any, any, any, any, any> => {
       const { driver, driverKey } = resolveKey(key);
 
       const {
         version: targetVersion = 1,
-        migrations = {},
+        migrations = [],
         onMigrationComplete,
         debug = false,
       } = opts ?? {};
@@ -413,19 +560,29 @@ function createStorage(): WxtStorage {
 
       let needsVersionSet = false;
 
-      const migrate: WxtStorageItem<any, any>['migrate'] = async () => {
+      const migrate = async () => {
         const driverMetaKey = getMetaKey(driverKey);
-        const [{ value }, { value: meta }] = await driver.getItems([
-          driverKey,
-          driverMetaKey,
-        ]);
+        const results = await driver.getItems([driverKey, driverMetaKey]);
+        const value = results[0]?.value;
+        // meta.v is trusted only when it's a positive integer.
+        const rawMetaValue = results[1]?.value;
+        const meta: Record<string, unknown> = isRecord(rawMetaValue)
+          ? rawMetaValue
+          : {};
+        const rawV = meta['v'];
+        const storedVersion: number | undefined =
+          typeof rawV === 'number' && Number.isInteger(rawV) && rawV >= 1
+            ? rawV
+            : undefined;
 
-        // Used in setValue to also set the version when needed
-        needsVersionSet = value == null && meta?.v == null && !!targetVersion;
+        // Set version alongside the value in setValue when we're on v1+ but
+        // storage is empty.
+        needsVersionSet =
+          value == null && storedVersion == null && !!targetVersion;
 
         if (value == null) return;
 
-        const currentVersion = meta?.v ?? 1;
+        const currentVersion = storedVersion ?? 1;
         if (currentVersion > targetVersion) {
           throw Error(
             `Version downgrade detected (v${currentVersion} -> v${targetVersion}) for "${key}"`,
@@ -448,8 +605,9 @@ function createStorage(): WxtStorage {
         let migratedValue = value;
         for (const migrateToVersion of migrationsToRun) {
           try {
+            // Positional tuple: index N-2 migrates vN-1 → vN.
             migratedValue =
-              (await migrations?.[migrateToVersion]?.(migratedValue)) ??
+              (await migrations?.[migrateToVersion - 2]?.(migratedValue)) ??
               migratedValue;
             if (debug) {
               console.debug(
@@ -462,8 +620,28 @@ function createStorage(): WxtStorage {
             });
           }
         }
+        // Route migrated value through write pipeline so schema + serializer
+        // apply before persisting. Failures throw MigrationError so the
+        // version stays un-bumped and next load retries.
+        let rawForStorage: unknown = migratedValue;
+        if (opts?.schema || opts?.serializer?.write) {
+          try {
+            const { raw, validated } = await processWriteValue(
+              migratedValue,
+              opts,
+            );
+            rawForStorage = raw;
+            migratedValue = validated;
+          } catch (err) {
+            if (err instanceof SchemaError) {
+              throw new MigrationError(key, targetVersion, { cause: err });
+            }
+            throw err;
+          }
+        }
+        assertMutable(driver);
         await driver.setItems([
-          { key: driverKey, value: migratedValue },
+          { key: driverKey, value: rawForStorage },
           { key: driverMetaKey, value: { ...meta, v: targetVersion } },
         ]);
 
@@ -489,27 +667,71 @@ function createStorage(): WxtStorage {
 
       const initMutex = new Mutex();
 
-      const getFallback = () => opts?.fallback ?? opts?.defaultValue ?? null;
+      const getFallback = () =>
+        cloneFallback(opts?.fallback ?? opts?.defaultValue);
 
       const getOrInitValue = () =>
         initMutex.runExclusive(async () => {
-          const value = await driver.getItem<any>(driverKey);
-          // Don't init value if it already exists or the init function isn't provided
-          if (value != null || opts?.init == null) return value;
+          const raw = await driver.getItem(driverKey);
 
-          const newValue = await opts.init();
-          await driver.setItem<any>(driverKey, newValue);
-          if (value == null && targetVersion > 1) {
+          // Non-init item: skip. Eager `migrationsDone.then(getOrInitValue)`
+          // runs this for every item; the pipeline is left to user getValue.
+          if (opts?.init == null) return raw;
+
+          if (raw != null) {
+            return await processReadValue(raw, opts, driver, driverKey);
+          }
+
+          // Fresh init: run write pipeline so schema validates and
+          // serializer.write produces the storage form.
+          const initialized = await opts.init();
+          const { raw: rawToStore, validated } = await processWriteValue(
+            initialized,
+            opts,
+          );
+          assertMutable(driver);
+          await driver.setItem(driverKey, rawToStore);
+          if (targetVersion > 1) {
             await setMeta(driver, driverKey, { v: targetVersion });
           }
-          return newValue;
+          return validated;
         });
 
-      // Initialize the value once migrations have finished
-      migrationsDone.then(getOrInitValue);
+      // Readiness: migration finish + eager init (init items only). Batch
+      // APIs await this before reading raw so they never see pre-migration
+      // state. Non-init items skip the eager driver.getItem — their
+      // readiness reduces to `migrationsDone`.
+      const readyPromise: Promise<unknown> = opts?.init
+        ? migrationsDone.then(getOrInitValue)
+        : migrationsDone;
+      readyPromise.catch((err) => {
+        if (debug) {
+          console.debug(
+            `[@wxt-dev/storage] Eager init failed for ${key}; will surface on next read`,
+            err,
+          );
+        }
+      });
 
-      return {
+      const item: WxtStorageItem<any, any, any, any, any, any, any> = {
         key,
+        area: driver.area,
+
+        get version() {
+          return opts?.version ?? 1;
+        },
+
+        get debug() {
+          return opts?.debug ?? false;
+        },
+
+        get onValidationError() {
+          return opts?.onValidationError ?? 'throw';
+        },
+
+        get schema() {
+          return opts?.schema;
+        },
 
         get defaultValue() {
           return getFallback();
@@ -523,9 +745,10 @@ function createStorage(): WxtStorage {
 
           if (opts?.init) {
             return await getOrInitValue();
-          } else {
-            return await getItem(driver, driverKey, opts);
           }
+
+          const raw = await driver.getItem(driverKey);
+          return await processReadValue(raw, opts, driver, driverKey);
         },
 
         getMeta: async () => {
@@ -537,17 +760,19 @@ function createStorage(): WxtStorage {
         setValue: async (value) => {
           await migrationsDone;
 
+          const { raw } = await processWriteValue(value, opts);
+
           if (needsVersionSet) {
             needsVersionSet = false;
             await Promise.all([
               // Note: These calls cannot be done in a single `setItems` call;
               // metadata needs to be merged together with existing data and
               // setItems overwrites the whole value without merging.
-              setItem(driver, driverKey, value),
+              setItem(driver, driverKey, raw),
               setMeta(driver, driverKey, { v: targetVersion }),
             ]);
           } else {
-            await setItem(driver, driverKey, value);
+            await setItem(driver, driverKey, raw);
           }
         },
 
@@ -570,17 +795,65 @@ function createStorage(): WxtStorage {
         },
 
         watch: (cb) =>
-          watch(driver, driverKey, (newValue, oldValue) =>
-            cb(newValue ?? getFallback(), oldValue ?? getFallback()),
-          ),
+          watch(driver, driverKey, async (newValueRaw, oldValueRaw) => {
+            // Route both raws through the read pipeline so the callback sees
+            // the same T as getValue(). `allowReset: false` prevents an invalid
+            // oldValue from wiping a freshly-written valid newValue.
+            try {
+              const [newValue, oldValue] = await Promise.all([
+                processReadValue(newValueRaw, opts, driver, driverKey, {
+                  allowReset: false,
+                }),
+                processReadValue(oldValueRaw, opts, driver, driverKey, {
+                  allowReset: false,
+                }),
+              ]);
+              cb(newValue ?? getFallback(), oldValue ?? getFallback());
+            } catch (error) {
+              console.error(
+                `[@wxt-dev/storage] watch: pipeline failed for ${key}, callback skipped`,
+                error,
+              );
+            }
+          }),
 
         migrate,
       };
+
+      // Register batch hooks against the item's identity so `getItems`
+      // can route pre-fetched raw values through the pipeline without
+      // exposing internals on the public interface. Batch reads disable
+      // destructive schema-error resets because another writer may have
+      // updated the stored value after the batch fetch.
+      itemBatchHooks.set(item, {
+        ready: async () => {
+          await readyPromise;
+        },
+        processRead: async (raw) => {
+          if (opts?.init) {
+            // Init items: routing raw through processReadValue would ignore
+            // fresh init state. Delegate to the same code path as getValue().
+            return await getOrInitValue();
+          }
+          const processed = await processReadValue(
+            raw,
+            opts,
+            driver,
+            driverKey,
+            { allowReset: false },
+          );
+          return processed ?? getFallback();
+        },
+      });
+
+      return item;
     },
   };
 }
 
-function createDriver(storageArea: StorageArea): WxtStorageDriver {
+function createDriver<const TArea extends StorageArea>(
+  storageArea: TArea,
+): WxtStorageDriver<TArea> {
   const getStorageArea = () => {
     if (browser.runtime == null) {
       throw Error(`'wxt/storage' must be loaded in a web extension environment
@@ -606,13 +879,18 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
   const watchListeners = new Set<(changes: StorageAreaChanges) => void>();
 
   return {
-    getItem: async (key) => {
-      const res = await getStorageArea().get<Record<string, any>>(key);
-      return res[key];
+    area: storageArea,
+
+    getItem: async (key: string): Promise<unknown> => {
+      const res = await getStorageArea().get<Record<string, unknown>>(key);
+      return res[key] ?? null;
     },
 
     getItems: async (keys) => {
-      const result = await getStorageArea().get(keys);
+      // `.get` accepts a mutable `string[]`; the driver interface hands us
+      // `readonly string[]`. Copy at the boundary rather than widening the
+      // public contract.
+      const result = await getStorageArea().get([...keys]);
       return keys.map((key) => ({ key, value: result[key] ?? null }));
     },
 
@@ -641,7 +919,10 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
     },
 
     removeItems: async (keys) => {
-      await getStorageArea().remove(keys);
+      // `.remove` on browser.storage accepts `string | number | (string |
+      // number)[]`; the driver interface hands us `readonly string[]`.
+      // Copy at the boundary rather than widening the public contract.
+      await getStorageArea().remove([...keys]);
     },
 
     clear: async () => {
@@ -656,11 +937,11 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       await getStorageArea().set(data);
     },
 
-    watch(key, cb) {
+    watch(key: StorageItemKey, cb: WatchCallback<unknown>) {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
-          newValue?: any;
-          oldValue?: any | null;
+          newValue?: unknown;
+          oldValue?: unknown;
         } | null;
 
         if (change == null || dequal(change.newValue, change.oldValue)) return;
@@ -683,7 +964,10 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       });
       watchListeners.clear();
     },
-  };
+  } as WxtStorageDriver<TArea>;
+  // The runtime object carries the full driver surface. The conditional
+  // `WxtStorageDriver<TArea>` type hides write methods for `managed` callers,
+  // while runtime writes are still guarded by `assertMutable`.
 }
 
 export interface WxtStorage {
@@ -693,15 +977,40 @@ export interface WxtStorage {
    * @example
    *   await storage.getItem<number>('local:installDate');
    */
+  /**
+   * Get an item from storage, or return `null` if it doesn't exist.
+   *
+   * The overload without a `fallback` returns `Promise<unknown>` — the value is
+   * whatever bytes storage happens to hold. Narrow the return type at the call
+   * site with a schema or an explicit assertion.
+   *
+   * When `opts.fallback` is provided, `TValue` is inferred from the fallback
+   * and drives the return type honestly (fallback and return both share
+   * `TValue`), so no cast is needed.
+   *
+   * @example
+   *   const raw = await storage.getItem('local:installDate');
+   *   // raw: unknown
+   *   const withFallback = await storage.getItem('local:count', {
+   *     fallback: 0,
+   *   });
+   *   // withFallback: number
+   */
   getItem<TValue>(
     key: StorageItemKey,
-    opts: GetItemOptions<TValue> & { fallback: TValue },
-  ): Promise<TValue>;
+    // Fallback is accepted as `DeepReadonly<TValue>` so narrow-readonly
+    // literals produced by `<const>` inference in `defineItem` flow through
+    // without a cast. Return is `WritableDeep<TValue>` so a narrow-readonly
+    // `TValue` inferred from the fallback widens back to its mutable shape
+    // at the assignment boundary (`const x: T = await getItem(...)` — T is
+    // typically mutable, and the widened return matches).
+    opts: GetItemOptions<TValue> & { fallback: DeepReadonly<TValue> },
+  ): Promise<WritableDeep<TValue>>;
 
-  getItem<TValue>(
+  getItem(
     key: StorageItemKey,
-    opts?: GetItemOptions<TValue>,
-  ): Promise<TValue | null>;
+    opts?: GetItemOptions<unknown>,
+  ): Promise<unknown>;
 
   /**
    * Get multiple items from storage. The return order is guaranteed to be the
@@ -710,22 +1019,21 @@ export interface WxtStorage {
    * @example
    *   await storage.getItems(['local:installDate', 'session:someCounter']);
    */
-  getItems(
-    keys: Array<
-      | StorageItemKey
-      | WxtStorageItem<any, any>
-      | { key: StorageItemKey; options?: GetItemOptions<any> }
-    >,
-  ): Promise<Array<{ key: StorageItemKey; value: any }>>;
+  getItems<const T extends ReadonlyArray<GetItemsInputElement>>(
+    keys: T,
+  ): Promise<GetItemsResult<T>>;
 
   /**
    * Return an object containing metadata about the key. Object is stored at
    * `key + "$"`. If value is not an object, it returns an empty object.
    *
+   * Returns `Record<string, unknown>` — metadata is arbitrary at the storage
+   * layer. Narrow at the call site if you need a specific shape.
+   *
    * @example
    *   await storage.getMeta('local:installDate');
    */
-  getMeta<T extends Record<string, unknown>>(key: StorageItemKey): Promise<T>;
+  getMeta(key: StorageItemKey): Promise<Record<string, unknown>>;
 
   /**
    * Get the metadata of multiple storage items.
@@ -733,18 +1041,21 @@ export interface WxtStorage {
    * @param keys List of keys or items to get the metadata of.
    * @returns An array containing storage keys and their metadata.
    */
-  getMetas(
-    keys: Array<StorageItemKey | WxtStorageItem<any, any>>,
-  ): Promise<Array<{ key: StorageItemKey; meta: any }>>;
+  getMetas<const T extends ReadonlyArray<GetMetasInputElement>>(
+    keys: T,
+  ): Promise<GetMetasResult<T>>;
 
   /**
    * Set a value in storage. Setting a value to `null` or `undefined` is
    * equivalent to calling `removeItem`.
    *
+   * Accepts `unknown` — the value goes to storage as-is. If you want type-
+   * checked writes, define the item via `defineItem` with a `schema`.
+   *
    * @example
-   *   await storage.setItem<number>('local:installDate', Date.now());
+   *   await storage.setItem('local:installDate', Date.now());
    */
-  setItem<T>(key: StorageItemKey, value: T | null): Promise<void>;
+  setItem(key: StorageItemKey, value: unknown): Promise<void>;
 
   /**
    * Set multiple values in storage. If a value is set to `null` or `undefined`,
@@ -757,9 +1068,12 @@ export interface WxtStorage {
    *   ]);
    */
   setItems(
-    values: Array<
-      | { key: StorageItemKey; value: any }
-      | { item: WxtStorageItem<any, any>; value: any }
+    values: ReadonlyArray<
+      | { key: StorageItemKey; value: unknown }
+      | {
+          item: WxtStorageItemLike<unknown, StorageItemKey>;
+          value: unknown;
+        }
     >,
   ): Promise<void>;
 
@@ -770,9 +1084,9 @@ export interface WxtStorage {
    * @example
    *   await storage.setMeta('local:installDate', { appVersion });
    */
-  setMeta<T extends Record<string, unknown>>(
+  setMeta(
     key: StorageItemKey,
-    properties: T | null,
+    properties: Record<string, unknown> | null,
   ): Promise<void>;
 
   /**
@@ -781,9 +1095,12 @@ export interface WxtStorage {
    * @param metas List of storage keys or items and metadata to set for each.
    */
   setMetas(
-    metas: Array<
-      | { key: StorageItemKey; meta: Record<string, any> }
-      | { item: WxtStorageItem<any, any>; meta: Record<string, any> }
+    metas: ReadonlyArray<
+      | { key: StorageItemKey; meta: Record<string, unknown> }
+      | {
+          item: WxtStorageItemLike<unknown, StorageItemKey>;
+          meta: Record<string, unknown>;
+        }
     >,
   ): Promise<void>;
 
@@ -799,9 +1116,12 @@ export interface WxtStorage {
   removeItems(
     keys: Array<
       | StorageItemKey
-      | WxtStorageItem<any, any>
+      | WxtStorageItem<any, any, any, any, any, any, any>
       | { key: StorageItemKey; options?: RemoveItemOptions }
-      | { item: WxtStorageItem<any, any>; options?: RemoveItemOptions }
+      | {
+          item: WxtStorageItem<any, any, any, any, any, any, any>;
+          options?: RemoveItemOptions;
+        }
     >,
   ): Promise<void>;
 
@@ -834,10 +1154,13 @@ export interface WxtStorage {
    * the snapshot, they are not overridden. Only values existing in the snapshot
    * are overridden.
    */
-  restoreSnapshot(base: StorageArea, data: any): Promise<void>;
+  restoreSnapshot(
+    base: StorageArea,
+    data: Record<string, unknown>,
+  ): Promise<void>;
 
   /** Watch for changes to a specific key in storage. */
-  watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
+  watch(key: StorageItemKey, cb: WatchCallback<unknown>): Unwatch;
 
   /** Remove all watch listeners. */
   unwatch(): void;
@@ -847,55 +1170,344 @@ export interface WxtStorage {
    *
    * Read full docs: https://wxt.dev/storage.html#defining-storage-items
    */
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-  ): WxtStorageItem<TValue | null, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-    options: WxtStorageItemOptions<TValue> & { fallback: TValue },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-    options: WxtStorageItemOptions<TValue> & { defaultValue: TValue },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-    options: WxtStorageItemOptions<TValue> & {
-      init: () => TValue | Promise<TValue>;
+  // bare — no options, no schema. All narrow slots default to their
+  // no-op literals: TFallback=null, TVersion=number, TDebug=false,
+  // TValidationError='throw', TSchema=undefined.
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+  >(
+    key: TKey,
+  ): Prettify<
+    WxtStorageItem<
+      TValue | null,
+      TMetadata,
+      TKey,
+      null,
+      number,
+      false,
+      undefined
+    >
+  >;
+  // --- schema-carrying overloads ---
+  // Each captures via `<const>`:
+  //   TFallback — fallback/defaultValue literal (with intersection guard against schema output)
+  //   TVersion  — numeric literal, length-locks migrations tuple
+  //   TDebug    — boolean literal (true/false, defaults to false)
+  //   TValidationError — 'throw'|'fallback'|'reset' literal OR callback identity
+  //   TSchema   — the schema itself is captured as its exact type
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TFallback = StandardSchemaV1.InferOutput<TSchema>,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      schema: TSchema;
+      fallback: TFallback & DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
     },
-  ): WxtStorageItem<TValue, TMetadata>;
-  defineItem<TValue, TMetadata extends Record<string, unknown> = {}>(
-    key: StorageItemKey,
-    options: WxtStorageItemOptions<TValue>,
-  ): WxtStorageItem<TValue | null, TMetadata>;
-}
-
-interface WxtStorageDriver {
-  getItem<T>(key: string): Promise<T | null>;
-  getItems(keys: string[]): Promise<{ key: string; value: any }[]>;
-  setItem<T>(key: string, value: T | null): Promise<void>;
-  setItems(values: Array<{ key: string; value: any }>): Promise<void>;
-  removeItem(key: string): Promise<void>;
-  removeItems(keys: string[]): Promise<void>;
-  clear(): Promise<void>;
-  snapshot(): Promise<Record<string, unknown>>;
-  restoreSnapshot(data: Record<string, unknown>): Promise<void>;
-  watch<T>(key: string, cb: WatchCallback<T | null>): Unwatch;
-  unwatch(): void;
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      TSchema
+    >
+  >;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TFallback = StandardSchemaV1.InferOutput<TSchema>,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      schema: TSchema;
+      defaultValue: TFallback &
+        DeepReadonly<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      TSchema
+    >
+  >;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      schema: TSchema;
+      init: () =>
+        | StandardSchemaV1.InferOutput<TSchema>
+        | Promise<StandardSchemaV1.InferOutput<TSchema>>;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema>,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      TSchema
+    >
+  >;
+  defineItem<
+    TSchema extends StandardSchemaV1<unknown, unknown>,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<
+        StandardSchemaV1.InferOutput<TSchema>,
+        TRaw,
+        TVersion
+      >,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      schema: TSchema;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      StandardSchemaV1.InferOutput<TSchema> | null,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      TSchema
+    >
+  >;
+  // Non-schema overloads.
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TFallback = Widen<TValue>,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      fallback: TFallback & DeepReadonly<TValue>;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      undefined
+    >
+  >;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TFallback = Widen<TValue>,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      defaultValue: TFallback & DeepReadonly<TValue>;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      TFallback,
+      TVersion,
+      TDebug,
+      undefined
+    >
+  >;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      init: () => TValue | Promise<TValue>;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue>,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      undefined
+    >
+  >;
+  defineItem<
+    TValue,
+    TMetadata extends Record<string, unknown> = Record<string, unknown>,
+    const TKey extends StorageItemKey = StorageItemKey,
+    TRaw = unknown,
+    const TVersion extends number = number,
+    const TMigrations extends MigrationTuple<TVersion> =
+      MigrationTuple<TVersion>,
+    const TDebug extends boolean = false,
+  >(
+    key: TKey,
+    options: Omit<
+      WxtStorageItemOptions<TValue, TRaw, TVersion>,
+      'migrations'
+    > & {
+      migrations?: TMigrations;
+      debug?: TDebug;
+    },
+  ): Prettify<
+    WxtStorageItem<
+      Widen<TValue> | null,
+      TMetadata,
+      TKey,
+      null,
+      TVersion,
+      TDebug,
+      undefined
+    >
+  >;
 }
 
 export interface WxtStorageItem<
   TValue,
   TMetadata extends Record<string, unknown>,
+  TKey extends StorageItemKey = StorageItemKey,
+  TFallback = null,
+  TVersion extends number = number,
+  TDebug extends boolean = false,
+  TSchema = undefined,
 > {
-  /** The storage key passed when creating the storage item. */
-  key: StorageItemKey;
+  /**
+   * The storage key passed to `defineItem`. String-literal keys narrow to that
+   * literal; wider `StorageItemKey` values stay as the union.
+   */
+  key: TKey;
+
+  /**
+   * The storage area, derived at the type level from the key prefix
+   * (`'local:x'` → `'local'`). Runtime value mirrors `driver.area`.
+   */
+  readonly area: TKey extends `${infer A extends StorageArea}:${string}`
+    ? A
+    : StorageArea;
+
+  /** The schema version, captured as a numeric literal when passed directly. */
+  readonly version: TVersion;
+
+  /** The `debug` flag as captured at define-time. */
+  readonly debug: TDebug;
+
+  /** The `onValidationError` policy in effect at read-time. */
+  readonly onValidationError: OnValidationError<TValue>;
+
+  /** The schema passed at define-time, or `undefined`. */
+  readonly schema: TSchema;
 
   /** @deprecated Renamed to fallback, use it instead. */
-  defaultValue: TValue;
+  defaultValue: TFallback;
 
-  /** The value provided by the `fallback` option. */
-  fallback: TValue;
+  /**
+   * The `fallback` option value, preserved as its literal type where possible
+   * (`fallback: 'system' as const` → typed `'system'`).
+   */
+  fallback: TFallback;
 
   /** Get the latest value from storage. */
   getValue(): Promise<TValue>;
@@ -928,97 +1540,12 @@ export interface WxtStorageItem<
   migrate(): Promise<void>;
 }
 
-export type StorageArea = 'local' | 'session' | 'sync' | 'managed';
-export type StorageItemKey = `${StorageArea}:${string}`;
+// GetItemOptions, RemoveItemOptions, SnapshotOptions moved to ./types.
 
-export interface GetItemOptions<T> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T;
+// WxtStorageItemOptions, WxtStorageItemSerializer, OnValidationError moved
+// to ./types.
 
-  /** Default value returned when `getItem` would otherwise return `null`. */
-  fallback?: T;
-}
+export { defineSchema } from './pipeline';
 
-export interface RemoveItemOptions {
-  /**
-   * Optionally remove metadata when deleting a key.
-   *
-   * @default false
-   */
-  removeMeta?: boolean;
-}
-
-export interface SnapshotOptions {
-  /**
-   * Exclude a list of keys. The storage area prefix should be removed since the
-   * snapshot is for a specific storage area already.
-   */
-  excludeKeys?: string[];
-}
-
-export interface WxtStorageItemOptions<T> {
-  /** @deprecated Renamed to `fallback`, use it instead. */
-  defaultValue?: T;
-
-  /** Default value returned when `getValue` would otherwise return `null`. */
-  fallback?: T;
-
-  /**
-   * If passed, a value in storage will be initialized immediately after
-   * defining the storage item. This function returns the value that will be
-   * saved to storage during the initialization process if a value doesn't
-   * already exist.
-   */
-  init?: () => T | Promise<T>;
-
-  /**
-   * Provide a version number for the storage item to enable migrations. When
-   * changing the version in the future, migration functions will be ran on
-   * application startup.
-   */
-  version?: number;
-
-  /**
-   * A map of version numbers to the functions used to migrate the data to that
-   * version.
-   */
-  migrations?: Record<number, (oldValue: any) => any>;
-
-  /**
-   * Print debug logs, such as migration process.
-   *
-   * @default false
-   */
-  debug?: boolean;
-
-  /** A callback function that runs on migration complete. */
-  onMigrationComplete?: (migratedValue: T, targetVersion: number) => void;
-}
-
-export type StorageAreaChanges = {
-  [key: string]: Browser.storage.StorageChange;
-};
-
-/**
- * Same as `Partial`, but includes `| null`. It makes all the properties of an
- * object optional and nullable.
- */
-type NullablePartial<T> = {
-  [key in keyof T]+?: T[key] | undefined | null;
-};
-
-/** Callback called when a value in storage is changed. */
-export type WatchCallback<T> = (newValue: T, oldValue: T) => void;
-
-/** Call to remove a watch listener */
-export type Unwatch = () => void;
-
-export class MigrationError extends Error {
-  constructor(
-    public key: string,
-    public version: number,
-    options?: ErrorOptions,
-  ) {
-    super(`v${version} migration failed for "${key}"`, options);
-  }
-}
+export { defineMigrations } from './migrations';
+export { MigrationError };

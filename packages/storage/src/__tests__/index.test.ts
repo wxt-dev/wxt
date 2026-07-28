@@ -1,7 +1,19 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { MigrationError, type WxtStorageItem, storage } from '../index';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { SchemaError } from '@standard-schema/utils';
+import {
+  MigrationError,
+  defineSchema,
+  storage,
+  type MetaKey,
+  type OnValidationError,
+  type StorageItemKey,
+  type WatchCallback,
+  type WxtStorageItem,
+  type WxtStorageItemSerializer,
+} from '../index';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number
@@ -28,637 +40,702 @@ describe('Storage Utils', () => {
     fakeBrowser.storage.local.set = vi.spyOn(fakeBrowser.storage.local, 'set');
   });
 
-  describe.each(['local', 'sync', 'managed', 'session'] as const)(
-    'storage - %s',
-    (storageArea) => {
-      describe('getItem', () => {
-        it('should return the value from the correct storage area', async () => {
-          const expected = 123;
-          await fakeBrowser.storage[storageArea].set({ count: expected });
+  describe('storage - local', () => {
+    const storageArea = 'local' as const;
 
-          const actual = await storage.getItem(`${storageArea}:count`);
+    describe('getItem', () => {
+      it('should return the value from the correct storage area', async () => {
+        const expected = 123;
+        await fakeBrowser.storage[storageArea].set({ count: expected });
 
-          expect(actual).toBe(expected);
-        });
+        const actual = await storage.getItem(`${storageArea}:count`);
 
-        it('should return the value if multiple : are used in the key', async () => {
-          const expected = 'value';
-          await fakeBrowser.storage[storageArea].set({ 'some:key': expected });
-
-          const actual = await storage.getItem(`${storageArea}:some:key`);
-
-          expect(actual).toBe(expected);
-        });
-
-        it("should return null if the value doesn't exist", async () => {
-          const actual = await storage.getItem(`${storageArea}:count`);
-
-          expect(actual).toBeNull();
-        });
-
-        it('should return the default value if passed in options', async () => {
-          const expected = 0;
-          const actual = await storage.getItem(`${storageArea}:count`, {
-            defaultValue: expected,
-          });
-
-          expect(actual).toBe(expected);
-        });
+        expect(actual).toBe(expected);
       });
 
-      describe('getItems', () => {
-        it('should get values from multiple storage keys', async () => {
-          const item1 = {
-            key: `${storageArea}:one`,
-            expectedValue: 1,
-          } as const;
-          const item2 = {
-            key: `${storageArea}:two`,
-            expectedValue: null,
-          } as const;
+      it('should return the value if multiple : are used in the key', async () => {
+        const expected = 'value';
+        await fakeBrowser.storage[storageArea].set({ 'some:key': expected });
 
-          await fakeBrowser.storage[storageArea].set({
-            one: item1.expectedValue,
-          });
+        const actual = await storage.getItem(`${storageArea}:some:key`);
 
-          const actual = await storage.getItems([item1.key, item2.key]);
-
-          expect(actual).toEqual([
-            { key: item1.key, value: item1.expectedValue },
-            { key: item2.key, value: item2.expectedValue },
-          ]);
-        });
-
-        it('should get values from multiple storage items', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const expectedValue1 = 1;
-          const item2 = storage.defineItem(`${storageArea}:two`);
-          const expectedValue2 = null;
-
-          await fakeBrowser.storage[storageArea].set({
-            one: expectedValue1,
-          });
-
-          const actual = await storage.getItems([item1, item2]);
-
-          expect(actual).toEqual([
-            { key: item1.key, value: expectedValue1 },
-            { key: item2.key, value: expectedValue2 },
-          ]);
-        });
-
-        it('should get values for a combination of different input types', async () => {
-          const key1 = `${storageArea}:one` as const;
-          const expectedValue1 = 1;
-          const item2 = storage.defineItem<number>(`${storageArea}:two`);
-          const expectedValue2 = 2;
-
-          await fakeBrowser.storage[storageArea].set({
-            one: expectedValue1,
-            two: expectedValue2,
-          });
-
-          const actual = await storage.getItems([key1, item2]);
-
-          expect(actual).toEqual([
-            { key: key1, value: expectedValue1 },
-            { key: item2.key, value: expectedValue2 },
-          ]);
-        });
-
-        it('should return fallback values for keys when provided', async () => {
-          const key1 = `${storageArea}:one` as const;
-          const expectedValue1 = null;
-          const key2 = `${storageArea}:two` as const;
-          const fallback2 = 2;
-          const expectedValue2 = fallback2;
-
-          const actual = await storage.getItems([
-            key1,
-            { key: key2, options: { fallback: fallback2 } },
-          ]);
-
-          expect(actual).toEqual([
-            { key: key1, value: expectedValue1 },
-            { key: key2, value: expectedValue2 },
-          ]);
-        });
-
-        it('should return fallback values for items when provided', async () => {
-          const item1 = storage.defineItem<number>(`${storageArea}:one`);
-          const expectedValue1 = null;
-          const item2 = storage.defineItem(`${storageArea}:two`, {
-            fallback: 2,
-          });
-          const expectedValue2 = item2.fallback;
-
-          const actual = await storage.getItems([item1, item2]);
-
-          expect(actual).toEqual([
-            { key: item1.key, value: expectedValue1 },
-            { key: item2.key, value: expectedValue2 },
-          ]);
-        });
+        expect(actual).toBe(expected);
       });
 
-      describe('getMeta', () => {
-        it('should return item metadata from key+$', async () => {
-          const expected = { v: 1 };
-          await fakeBrowser.storage[storageArea].set({ count$: expected });
+      it("should return null if the value doesn't exist", async () => {
+        const actual = await storage.getItem(`${storageArea}:count`);
 
-          const actual = await storage.getMeta(`${storageArea}:count`);
-
-          expect(actual).toEqual(expected);
-        });
-
-        it('should return an empty object if missing', async () => {
-          const actual = await storage.getMeta(`${storageArea}:count`);
-
-          expect(actual).toEqual({});
-        });
+        expect(actual).toBeNull();
       });
 
-      describe('setItem', () => {
-        it('should set the value in the correct storage area', async () => {
-          const key = `${storageArea}:count` as const;
-          const value = 321;
-
-          await storage.setItem(key, value);
+      it('returns a fresh fallback clone each call so mutations do not leak (#1766)', async () => {
+        const item = storage.defineItem<string[]>(`${storageArea}:list`, {
+          fallback: [],
         });
 
-        it.each([undefined, null])(
-          'should remove the item from storage when setting the value to %s',
-          async (value) => {
-            await fakeBrowser.storage[storageArea].set({ count: 345 });
-            await storage.setItem(`${storageArea}:count`, value as null);
-
-            // For some reason storage sets the value to "null" instead of deleting it. So using
-            // fakeBrowser during the expect fails. Using storage works. I've confirmed that this
-            // doesn't happen in a real extension environment.
-            expect(await storage.getItem(`${storageArea}:count`)).toBeNull();
-          },
-        );
+        for (let i = 0; i < 3; i++) {
+          await item.removeValue();
+          const list = await item.getValue();
+          expect(list).toEqual([]);
+          list.push('test');
+          await item.setValue(list);
+          expect(await item.getValue()).toEqual(['test']);
+        }
       });
 
-      describe('setItems', () => {
-        it('should set multiple items in storage', async () => {
-          const expected = [
-            { key: `${storageArea}:count` as const, value: 234 },
-            { key: `${storageArea}:installDate` as const, value: null },
-          ];
-          await fakeBrowser.storage[storageArea].set({
-            count: 123,
-            installDate: 321,
-          });
+      it('should return the default value if passed in options', async () => {
+        const expected = 0;
+        const actual = await storage.getItem(`${storageArea}:count`, {
+          defaultValue: expected,
+        });
 
-          await storage.setItems(expected);
-          const actual = await storage.getItems(
-            expected.map((item) => item.key),
-          );
+        expect(actual).toBe(expected);
+      });
+    });
 
-          expect(actual).toHaveLength(2);
-          expected.forEach((item) => {
-            expect(actual).toContainEqual(item);
-          });
+    describe('getItems', () => {
+      it('should get values from multiple storage keys', async () => {
+        const item1 = {
+          key: `${storageArea}:one`,
+          expectedValue: 1,
+        } as const;
+        const item2 = {
+          key: `${storageArea}:two`,
+          expectedValue: null,
+        } as const;
+
+        await fakeBrowser.storage[storageArea].set({
+          one: item1.expectedValue,
+        });
+
+        const actual = await storage.getItems([item1.key, item2.key]);
+
+        expect(actual).toEqual([
+          { key: item1.key, value: item1.expectedValue },
+          { key: item2.key, value: item2.expectedValue },
+        ]);
+      });
+
+      it('should get values from multiple storage items', async () => {
+        const item1 = storage.defineItem(`${storageArea}:one`);
+        const expectedValue1 = 1;
+        const item2 = storage.defineItem(`${storageArea}:two`);
+        const expectedValue2 = null;
+
+        await fakeBrowser.storage[storageArea].set({
+          one: expectedValue1,
+        });
+
+        const actual = await storage.getItems([item1, item2]);
+
+        expect(actual).toEqual([
+          { key: item1.key, value: expectedValue1 },
+          { key: item2.key, value: expectedValue2 },
+        ]);
+      });
+
+      it('should get values for a combination of different input types', async () => {
+        const key1 = `${storageArea}:one` as const;
+        const expectedValue1 = 1;
+        const item2 = storage.defineItem<number>(`${storageArea}:two`);
+        const expectedValue2 = 2;
+
+        await fakeBrowser.storage[storageArea].set({
+          one: expectedValue1,
+          two: expectedValue2,
+        });
+
+        const actual = await storage.getItems([key1, item2]);
+
+        expect(actual).toEqual([
+          { key: key1, value: expectedValue1 },
+          { key: item2.key, value: expectedValue2 },
+        ]);
+      });
+
+      it('should return fallback values for keys when provided', async () => {
+        const key1 = `${storageArea}:one` as const;
+        const expectedValue1 = null;
+        const key2 = `${storageArea}:two` as const;
+        const fallback2 = 2;
+        const expectedValue2 = fallback2;
+
+        const actual = await storage.getItems([
+          key1,
+          { key: key2, options: { fallback: fallback2 } },
+        ]);
+
+        expect(actual).toEqual([
+          { key: key1, value: expectedValue1 },
+          { key: key2, value: expectedValue2 },
+        ]);
+      });
+
+      it('should return fallback values for items when provided', async () => {
+        const item1 = storage.defineItem<number>(`${storageArea}:one`);
+        const expectedValue1 = null;
+        const item2 = storage.defineItem(`${storageArea}:two`, {
+          fallback: 2,
+        });
+        const expectedValue2 = item2.fallback;
+
+        const actual = await storage.getItems([item1, item2]);
+
+        expect(actual).toEqual([
+          { key: item1.key, value: expectedValue1 },
+          { key: item2.key, value: expectedValue2 },
+        ]);
+      });
+    });
+
+    describe('getMeta', () => {
+      it('should return item metadata from key+$', async () => {
+        const expected = { v: 1 };
+        await fakeBrowser.storage[storageArea].set({ count$: expected });
+
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual(expected);
+      });
+
+      it('should return an empty object if missing', async () => {
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual({});
+      });
+    });
+
+    describe('setItem', () => {
+      it('should set the value in the correct storage area', async () => {
+        const key = `${storageArea}:count` as const;
+        const value = 321;
+
+        await storage.setItem(key, value);
+      });
+
+      it.each([undefined, null])(
+        'should remove the item from storage when setting the value to %s',
+        async (value) => {
+          await fakeBrowser.storage[storageArea].set({ count: 345 });
+          await storage.setItem(`${storageArea}:count`, value as null);
+
+          // For some reason storage sets the value to "null" instead of deleting it. So using
+          // fakeBrowser during the expect fails. Using storage works. I've confirmed that this
+          // doesn't happen in a real extension environment.
+          expect(await storage.getItem(`${storageArea}:count`)).toBeNull();
+        },
+      );
+    });
+
+    describe('setItems', () => {
+      it('should set multiple items in storage', async () => {
+        const expected = [
+          { key: `${storageArea}:count` as const, value: 234 },
+          { key: `${storageArea}:installDate` as const, value: null },
+        ];
+        await fakeBrowser.storage[storageArea].set({
+          count: 123,
+          installDate: 321,
+        });
+
+        await storage.setItems(expected);
+        const actual = await storage.getItems(expected.map((item) => item.key));
+
+        expect(actual).toHaveLength(2);
+        expected.forEach((item) => {
+          expect(actual).toContainEqual(item);
         });
       });
+    });
 
-      describe('setMeta', () => {
-        it('should set metadata at key+$', async () => {
+    describe('setMeta', () => {
+      it('should set metadata at key+$', async () => {
+        const existing = { v: 1 };
+        await browser.storage[storageArea].set({ count$: existing });
+        const newValues = {
+          date: Date.now(),
+        };
+        const expected = { ...existing, ...newValues };
+
+        await storage.setMeta(`${storageArea}:count`, newValues);
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual(expected);
+      });
+
+      it.each([undefined, null])(
+        'should remove any properties set to %s',
+        async (version) => {
           const existing = { v: 1 };
           await browser.storage[storageArea].set({ count$: existing });
-          const newValues = {
-            date: Date.now(),
-          };
-          const expected = { ...existing, ...newValues };
+          const expected = {};
 
-          await storage.setMeta(`${storageArea}:count`, newValues);
+          await storage.setMeta(`${storageArea}:count`, { v: version });
           const actual = await storage.getMeta(`${storageArea}:count`);
 
           expect(actual).toEqual(expected);
+        },
+      );
+    });
+
+    describe('setMetas', () => {
+      it('should set key metadata correctly', async () => {
+        const key1 = `${storageArea}:one` as const;
+        const initialMeta1 = {};
+        const setMeta1 = { v: 1 };
+        const expectedMeta1 = setMeta1;
+
+        const key2 = `${storageArea}:two` as const;
+        const initialMeta2 = { v: 1 };
+        const setMeta2 = { v: 2 };
+        const expectedMeta2 = setMeta2;
+
+        const key3 = `${storageArea}:three` as const;
+        const initialMeta3 = { v: 1 };
+        const setMeta3 = { d: Date.now() };
+        const expectedMeta3 = { ...initialMeta3, ...setMeta3 };
+
+        await fakeBrowser.storage[storageArea].set({
+          one$: initialMeta1,
+          two$: initialMeta2,
+          three$: initialMeta3,
         });
 
-        it.each([undefined, null])(
-          'should remove any properties set to %s',
-          async (version) => {
-            const existing = { v: 1 };
-            await browser.storage[storageArea].set({ count$: existing });
-            const expected = {};
+        await storage.setMetas([
+          { key: key1, meta: setMeta1 },
+          { key: key2, meta: setMeta2 },
+          { key: key3, meta: setMeta3 },
+        ]);
 
-            await storage.setMeta(`${storageArea}:count`, { v: version });
-            const actual = await storage.getMeta(`${storageArea}:count`);
+        expect(await storage.getMeta(key1)).toEqual(expectedMeta1);
+        expect(await storage.getMeta(key2)).toEqual(expectedMeta2);
+        expect(await storage.getMeta(key3)).toEqual(expectedMeta3);
+      });
 
-            expect(actual).toEqual(expected);
+      it('should set item metadata correctly', async () => {
+        const item1 = storage.defineItem(`${storageArea}:one`);
+        const initialMeta1 = {};
+        const setMeta1 = { v: 1 };
+        const expectedMeta1 = setMeta1;
+
+        const item2 = storage.defineItem(`${storageArea}:two`);
+        const initialMeta2 = { v: 1 };
+        const setMeta2 = { v: 2 };
+        const expectedMeta2 = setMeta2;
+
+        const item3 = storage.defineItem(`${storageArea}:three`);
+        const initialMeta3 = { v: 1 };
+        const setMeta3 = { d: Date.now() };
+        const expectedMeta3 = { ...initialMeta3, ...setMeta3 };
+
+        await fakeBrowser.storage[storageArea].set({
+          one$: initialMeta1,
+          two$: initialMeta2,
+          three$: initialMeta3,
+        });
+
+        await storage.setMetas([
+          { item: item1, meta: setMeta1 },
+          { item: item2, meta: setMeta2 },
+          { item: item3, meta: setMeta3 },
+        ]);
+
+        expect(await item1.getMeta()).toEqual(expectedMeta1);
+        expect(await item2.getMeta()).toEqual(expectedMeta2);
+        expect(await item3.getMeta()).toEqual(expectedMeta3);
+      });
+    });
+
+    describe('removeItem', () => {
+      it('should remove the key from storage', async () => {
+        await fakeBrowser.storage[storageArea].set({ count: 456 });
+
+        await storage.removeItem(`${storageArea}:count`);
+        const actual = await storage.getItem(`${storageArea}:count`);
+
+        expect(actual).toBeNull();
+      });
+
+      it('should not remove the metadata by default', async () => {
+        const expected = { v: 1 };
+        await fakeBrowser.storage[storageArea].set({
+          count$: expected,
+          count: 3,
+        });
+
+        await storage.removeItem(`${storageArea}:count`);
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual(expected);
+      });
+
+      it('should remove the metadata when requested', async () => {
+        await fakeBrowser.storage[storageArea].set({
+          count$: { v: 1 },
+          count: 3,
+        });
+
+        await storage.removeItem(`${storageArea}:count`, {
+          removeMeta: true,
+        });
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual({});
+      });
+    });
+
+    describe('removeItems', () => {
+      it('should remove multiple keys', async () => {
+        const key1 = `${storageArea}:one` as const;
+        const key2 = `${storageArea}:two` as const;
+        await fakeBrowser.storage[storageArea].set({
+          one: 1,
+          two: 2,
+        });
+
+        await storage.removeItems([key1, key2]);
+
+        expect(await storage.getItem(key1)).toBeNull();
+        expect(await storage.getItem(key2)).toBeNull();
+      });
+
+      it('should remove multiple keys and metadata when requested', async () => {
+        const key1 = `${storageArea}:one` as const;
+        const key2 = `${storageArea}:two` as const;
+        await fakeBrowser.storage[storageArea].set({
+          one: 1,
+          one$: { v: 1 },
+          two: 2,
+          two$: { v: 1 },
+        });
+
+        await storage.removeItems([
+          key1,
+          { key: key2, options: { removeMeta: true } },
+        ]);
+
+        expect(await storage.getItem(key1)).toBeNull();
+        expect(await storage.getMeta(key1)).toEqual({ v: 1 });
+        expect(await storage.getItem(key2)).toBeNull();
+        expect(await storage.getMeta(key2)).toEqual({});
+      });
+
+      it('should remove multiple items', async () => {
+        const item1 = storage.defineItem(`${storageArea}:one`);
+        const item2 = storage.defineItem(`${storageArea}:two`);
+        await fakeBrowser.storage[storageArea].set({
+          one: 1,
+          two: 2,
+        });
+
+        await storage.removeItems([item1, item2]);
+
+        expect(await item1.getValue()).toBeNull();
+        expect(await item2.getValue()).toBeNull();
+      });
+
+      it('should remove multiple items and metadata when requested', async () => {
+        const item1 = storage.defineItem(`${storageArea}:one`);
+        const item2 = storage.defineItem(`${storageArea}:two`);
+        await fakeBrowser.storage[storageArea].set({
+          one: 1,
+          one$: { v: 1 },
+          two: 2,
+          two$: { v: 1 },
+        });
+
+        await storage.removeItems([
+          item1,
+          { item: item2, options: { removeMeta: true } },
+        ]);
+
+        expect(await item1.getValue()).toBeNull();
+        expect(await item1.getMeta()).toEqual({ v: 1 });
+        expect(await item2.getValue()).toBeNull();
+        expect(await item2.getMeta()).toEqual({});
+      });
+
+      it('should remove multiple items', async () => {
+        const item1 = storage.defineItem(`${storageArea}:one`);
+        const item2 = storage.defineItem(`${storageArea}:two`);
+
+        await fakeBrowser.storage.local.set({
+          one: 1,
+          two: 2,
+        });
+
+        await storage.removeItems([item1, item2]);
+
+        expect(await item1.getValue()).toBeNull();
+        expect(await item2.getValue()).toBeNull();
+      });
+
+      it('should remove items using { item: WxtStorageItem, options?: RemoveItemOptions } objects', async () => {
+        const item1 = storage.defineItem('local:item1');
+        const item2 = storage.defineItem('session:item2');
+
+        await item1.setValue('value1');
+        await item1.setMeta({ v: 1 });
+        await item2.setValue('value2');
+        await item2.setMeta({ v: 1 });
+
+        await storage.removeItems([
+          { item: item1, options: { removeMeta: true } },
+          { item: item2, options: { removeMeta: false } },
+        ]);
+
+        expect(await item1.getValue()).toBeNull();
+        expect(await item1.getMeta()).toEqual({});
+        expect(await item2.getValue()).toBeNull();
+        expect(await item2.getMeta()).toEqual({ v: 1 });
+      });
+
+      it('should handle a mix of different input types', async () => {
+        const item1 = storage.defineItem('local:item1');
+        const item2 = storage.defineItem('session:item2');
+        const item3 = storage.defineItem('local:item3');
+
+        await item1.setValue('value1');
+        await item2.setValue('value2');
+        await item3.setValue('value3');
+
+        await storage.removeItems([
+          'local:item1',
+          item2,
+          { key: 'local:item3', options: { removeMeta: true } },
+        ]);
+
+        expect(await storage.getItem('local:item1')).toBeNull();
+        expect(await item2.getValue()).toBeNull();
+        expect(await item3.getValue()).toBeNull();
+        expect(await item3.getMeta()).toEqual({});
+      });
+
+      it('should not throw an error when removing non-existent items', async () => {
+        const item = storage.defineItem('local:non_existent');
+
+        await expect(storage.removeItems([item])).resolves.not.toThrow();
+      });
+    });
+
+    describe('clear', () => {
+      it('should remove all items', async () => {
+        await fakeBrowser.storage[storageArea].set({
+          one: 1,
+          two: 2,
+        });
+
+        await storage.clear(storageArea);
+        expect(await fakeBrowser.storage[storageArea].get()).toEqual({});
+      });
+    });
+
+    describe('removeMeta', () => {
+      it('should remove all metadata', async () => {
+        await fakeBrowser.storage[storageArea].set({ count$: { v: 4 } });
+
+        await storage.removeMeta(`${storageArea}:count`);
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual({});
+      });
+
+      it('should only remove specific properties', async () => {
+        await fakeBrowser.storage[storageArea].set({
+          count$: { v: 4, d: Date.now() },
+        });
+
+        await storage.removeMeta(`${storageArea}:count`, ['d']);
+        const actual = await storage.getMeta(`${storageArea}:count`);
+
+        expect(actual).toEqual({ v: 4 });
+      });
+    });
+
+    describe('snapshot', () => {
+      it('should return a snapshot of the entire storage without area prefixes', async () => {
+        const expected = {
+          count: 1,
+          count$: { v: 2 },
+          example: 'test',
+        };
+
+        await fakeBrowser.storage[storageArea].set(expected);
+        const actual = await storage.snapshot(storageArea);
+
+        expect(actual).toEqual(expected);
+      });
+
+      it('should exclude specific properties and their metadata', async () => {
+        const input = {
+          count: 1,
+          count$: { v: 2 },
+          example: 'test',
+        };
+        const excludeKeys = ['count'];
+        const expected = {
+          example: 'test',
+        };
+
+        await fakeBrowser.storage[storageArea].set(input);
+        const actual = await storage.snapshot(storageArea, { excludeKeys });
+
+        expect(actual).toEqual(expected);
+      });
+    });
+
+    describe('restoreSnapshot', () => {
+      it('should restore a snapshot object by setting all values in storage', async () => {
+        const data = {
+          one: 'one',
+          two: 'two',
+        };
+        const existing = {
+          two: 'two-two',
+          three: 'three',
+        };
+        await fakeBrowser.storage[storageArea].set(existing);
+
+        await storage.restoreSnapshot(storageArea, data);
+        const actual = await storage.snapshot(storageArea);
+
+        expect(actual).toEqual({ ...existing, ...data });
+      });
+
+      it('should overwrite, not merge, any metadata keys in the snapshot', async () => {
+        const existing = {
+          count: 1,
+          count$: {
+            v: 2,
           },
-        );
+        };
+        const data = {
+          count$: {
+            restoredAt: Date.now(),
+          },
+        };
+        const expected = {
+          ...existing,
+          count$: data.count$,
+        };
+        await fakeBrowser.storage[storageArea].set(existing);
+
+        await storage.restoreSnapshot(storageArea, data);
+        const actual = await storage.snapshot(storageArea);
+
+        expect(actual).toEqual(expected);
+      });
+    });
+
+    describe('watch', () => {
+      it('should not trigger if the changed key is different from the requested key', async () => {
+        const cb = vi.fn();
+
+        storage.watch(`${storageArea}:key`, cb);
+        await storage.setItem(`${storageArea}:not-the-key`, '123');
+
+        expect(cb).not.toBeCalled();
       });
 
-      describe('setMetas', () => {
-        it('should set key metadata correctly', async () => {
-          const key1 = `${storageArea}:one` as const;
-          const initialMeta1 = {};
-          const setMeta1 = { v: 1 };
-          const expectedMeta1 = setMeta1;
+      it("should not trigger if the value doesn't change", async () => {
+        const cb = vi.fn();
+        const value = '123';
 
-          const key2 = `${storageArea}:two` as const;
-          const initialMeta2 = { v: 1 };
-          const setMeta2 = { v: 2 };
-          const expectedMeta2 = setMeta2;
+        await storage.setItem(`${storageArea}:key`, value);
+        storage.watch(`${storageArea}:key`, cb);
+        await storage.setItem(`${storageArea}:key`, value);
 
-          const key3 = `${storageArea}:three` as const;
-          const initialMeta3 = { v: 1 };
-          const setMeta3 = { d: Date.now() };
-          const expectedMeta3 = { ...initialMeta3, ...setMeta3 };
-
-          await fakeBrowser.storage[storageArea].set({
-            one$: initialMeta1,
-            two$: initialMeta2,
-            three$: initialMeta3,
-          });
-
-          await storage.setMetas([
-            { key: key1, meta: setMeta1 },
-            { key: key2, meta: setMeta2 },
-            { key: key3, meta: setMeta3 },
-          ]);
-
-          expect(await storage.getMeta(key1)).toEqual(expectedMeta1);
-          expect(await storage.getMeta(key2)).toEqual(expectedMeta2);
-          expect(await storage.getMeta(key3)).toEqual(expectedMeta3);
-        });
-
-        it('should set item metadata correctly', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const initialMeta1 = {};
-          const setMeta1 = { v: 1 };
-          const expectedMeta1 = setMeta1;
-
-          const item2 = storage.defineItem(`${storageArea}:two`);
-          const initialMeta2 = { v: 1 };
-          const setMeta2 = { v: 2 };
-          const expectedMeta2 = setMeta2;
-
-          const item3 = storage.defineItem(`${storageArea}:three`);
-          const initialMeta3 = { v: 1 };
-          const setMeta3 = { d: Date.now() };
-          const expectedMeta3 = { ...initialMeta3, ...setMeta3 };
-
-          await fakeBrowser.storage[storageArea].set({
-            one$: initialMeta1,
-            two$: initialMeta2,
-            three$: initialMeta3,
-          });
-
-          await storage.setMetas([
-            { item: item1, meta: setMeta1 },
-            { item: item2, meta: setMeta2 },
-            { item: item3, meta: setMeta3 },
-          ]);
-
-          expect(await item1.getMeta()).toEqual(expectedMeta1);
-          expect(await item2.getMeta()).toEqual(expectedMeta2);
-          expect(await item3.getMeta()).toEqual(expectedMeta3);
-        });
+        expect(cb).not.toBeCalled();
       });
 
-      describe('removeItem', () => {
-        it('should remove the key from storage', async () => {
-          await fakeBrowser.storage[storageArea].set({ count: 456 });
+      it('should call the callback when the value changes', async () => {
+        const cb = vi.fn();
+        const newValue = '123';
+        const oldValue = null;
 
-          await storage.removeItem(`${storageArea}:count`);
-          const actual = await storage.getItem(`${storageArea}:count`);
+        storage.watch(`${storageArea}:key`, cb);
+        await storage.setItem(`${storageArea}:key`, newValue);
 
-          expect(actual).toBeNull();
-        });
-
-        it('should not remove the metadata by default', async () => {
-          const expected = { v: 1 };
-          await fakeBrowser.storage[storageArea].set({
-            count$: expected,
-            count: 3,
-          });
-
-          await storage.removeItem(`${storageArea}:count`);
-          const actual = await storage.getMeta(`${storageArea}:count`);
-
-          expect(actual).toEqual(expected);
-        });
-
-        it('should remove the metadata when requested', async () => {
-          await fakeBrowser.storage[storageArea].set({
-            count$: { v: 1 },
-            count: 3,
-          });
-
-          await storage.removeItem(`${storageArea}:count`, {
-            removeMeta: true,
-          });
-          const actual = await storage.getMeta(`${storageArea}:count`);
-
-          expect(actual).toEqual({});
-        });
+        expect(cb).toBeCalledTimes(1);
+        expect(cb).toBeCalledWith(newValue, oldValue);
       });
 
-      describe('removeItems', () => {
-        it('should remove multiple keys', async () => {
-          const key1 = `${storageArea}:one` as const;
-          const key2 = `${storageArea}:two` as const;
-          await fakeBrowser.storage[storageArea].set({
-            one: 1,
-            two: 2,
-          });
+      it('should remove the listener when calling the returned function', async () => {
+        const cb = vi.fn();
 
-          await storage.removeItems([key1, key2]);
+        const unwatch = storage.watch(`${storageArea}:key`, cb);
+        unwatch();
+        await storage.setItem(`${storageArea}:key`, '123');
 
-          expect(await storage.getItem(key1)).toBeNull();
-          expect(await storage.getItem(key2)).toBeNull();
-        });
-
-        it('should remove multiple keys and metadata when requested', async () => {
-          const key1 = `${storageArea}:one` as const;
-          const key2 = `${storageArea}:two` as const;
-          await fakeBrowser.storage[storageArea].set({
-            one: 1,
-            one$: { v: 1 },
-            two: 2,
-            two$: { v: 1 },
-          });
-
-          await storage.removeItems([
-            key1,
-            { key: key2, options: { removeMeta: true } },
-          ]);
-
-          expect(await storage.getItem(key1)).toBeNull();
-          expect(await storage.getMeta(key1)).toEqual({ v: 1 });
-          expect(await storage.getItem(key2)).toBeNull();
-          expect(await storage.getMeta(key2)).toEqual({});
-        });
-
-        it('should remove multiple items', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const item2 = storage.defineItem(`${storageArea}:two`);
-          await fakeBrowser.storage[storageArea].set({
-            one: 1,
-            two: 2,
-          });
-
-          await storage.removeItems([item1, item2]);
-
-          expect(await item1.getValue()).toBeNull();
-          expect(await item2.getValue()).toBeNull();
-        });
-
-        it('should remove multiple items and metadata when requested', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const item2 = storage.defineItem(`${storageArea}:two`);
-          await fakeBrowser.storage[storageArea].set({
-            one: 1,
-            one$: { v: 1 },
-            two: 2,
-            two$: { v: 1 },
-          });
-
-          await storage.removeItems([
-            item1,
-            { item: item2, options: { removeMeta: true } },
-          ]);
-
-          expect(await item1.getValue()).toBeNull();
-          expect(await item1.getMeta()).toEqual({ v: 1 });
-          expect(await item2.getValue()).toBeNull();
-          expect(await item2.getMeta()).toEqual({});
-        });
-
-        it('should remove multiple items', async () => {
-          const item1 = storage.defineItem(`${storageArea}:one`);
-          const item2 = storage.defineItem(`${storageArea}:two`);
-
-          await fakeBrowser.storage.local.set({
-            one: 1,
-            two: 2,
-          });
-
-          await storage.removeItems([item1, item2]);
-
-          expect(await item1.getValue()).toBeNull();
-          expect(await item2.getValue()).toBeNull();
-        });
-
-        it('should remove items using { item: WxtStorageItem, options?: RemoveItemOptions } objects', async () => {
-          const item1 = storage.defineItem('local:item1');
-          const item2 = storage.defineItem('session:item2');
-
-          await item1.setValue('value1');
-          await item1.setMeta({ v: 1 });
-          await item2.setValue('value2');
-          await item2.setMeta({ v: 1 });
-
-          await storage.removeItems([
-            { item: item1, options: { removeMeta: true } },
-            { item: item2, options: { removeMeta: false } },
-          ]);
-
-          expect(await item1.getValue()).toBeNull();
-          expect(await item1.getMeta()).toEqual({});
-          expect(await item2.getValue()).toBeNull();
-          expect(await item2.getMeta()).toEqual({ v: 1 });
-        });
-
-        it('should handle a mix of different input types', async () => {
-          const item1 = storage.defineItem('local:item1');
-          const item2 = storage.defineItem('session:item2');
-          const item3 = storage.defineItem('local:item3');
-
-          await item1.setValue('value1');
-          await item2.setValue('value2');
-          await item3.setValue('value3');
-
-          await storage.removeItems([
-            'local:item1',
-            item2,
-            { key: 'local:item3', options: { removeMeta: true } },
-          ]);
-
-          expect(await storage.getItem('local:item1')).toBeNull();
-          expect(await item2.getValue()).toBeNull();
-          expect(await item3.getValue()).toBeNull();
-          expect(await item3.getMeta()).toEqual({});
-        });
-
-        it('should not throw an error when removing non-existent items', async () => {
-          const item = storage.defineItem('local:non_existent');
-
-          await expect(storage.removeItems([item])).resolves.not.toThrow();
-        });
+        expect(cb).not.toBeCalled();
       });
+    });
 
-      describe('clear', () => {
-        it('should remove all items', async () => {
-          await fakeBrowser.storage[storageArea].set({
-            one: 1,
-            two: 2,
-          });
+    describe('unwatch', () => {
+      it('should remove all watch listeners', async () => {
+        const cb = vi.fn();
 
-          await storage.clear(storageArea);
-          expect(await fakeBrowser.storage[storageArea].get()).toEqual({});
-        });
+        storage.watch(`${storageArea}:key`, cb);
+        storage.unwatch();
+        await storage.setItem(`${storageArea}:key`, '123');
+
+        expect(cb).not.toBeCalled();
       });
+    });
+  });
 
-      describe('removeMeta', () => {
-        it('should remove all metadata', async () => {
-          await fakeBrowser.storage[storageArea].set({ count$: { v: 4 } });
+  describe('storage area routing', () => {
+    it.each(['local', 'sync', 'session'] as const)(
+      'routes get/set to browser.storage.%s',
+      async (area) => {
+        const setSpy = vi.spyOn(fakeBrowser.storage[area], 'set');
+        const getSpy = vi.spyOn(fakeBrowser.storage[area], 'get');
 
-          await storage.removeMeta(`${storageArea}:count`);
-          const actual = await storage.getMeta(`${storageArea}:count`);
+        await storage.setItem(`${area}:routed`, 42);
+        expect(setSpy).toHaveBeenCalledWith({ routed: 42 });
 
-          expect(actual).toEqual({});
-        });
+        const value = await storage.getItem(`${area}:routed`);
+        expect(getSpy).toHaveBeenCalledWith('routed');
+        expect(value).toBe(42);
+      },
+    );
 
-        it('should only remove specific properties', async () => {
-          await fakeBrowser.storage[storageArea].set({
-            count$: { v: 4, d: Date.now() },
-          });
+    it('routes reads to browser.storage.managed', async () => {
+      // Managed area is READ-ONLY (see WxtStorageDriver's discriminated-union
+      // brand: `WxtStorageDriver<'managed'>` resolves to
+      // `ReadonlyStorageDriver<'managed'>` at the type level, and writes are
+      // rejected at runtime by `assertMutable`). Seed via the fake browser's
+      // internal set (bypasses the driver's read-only surface), then verify
+      // reads route correctly.
+      const getSpy = vi.spyOn(fakeBrowser.storage.managed, 'get');
+      await fakeBrowser.storage.managed.set({ routed: 42 });
 
-          await storage.removeMeta(`${storageArea}:count`, ['d']);
-          const actual = await storage.getMeta(`${storageArea}:count`);
+      const value = await storage.getItem('managed:routed');
+      expect(getSpy).toHaveBeenCalledWith('routed');
+      expect(value).toBe(42);
+    });
 
-          expect(actual).toEqual({ v: 4 });
-        });
-      });
-
-      describe('snapshot', () => {
-        it('should return a snapshot of the entire storage without area prefixes', async () => {
-          const expected = {
-            count: 1,
-            count$: { v: 2 },
-            example: 'test',
-          };
-
-          await fakeBrowser.storage[storageArea].set(expected);
-          const actual = await storage.snapshot(storageArea);
-
-          expect(actual).toEqual(expected);
-        });
-
-        it('should exclude specific properties and their metadata', async () => {
-          const input = {
-            count: 1,
-            count$: { v: 2 },
-            example: 'test',
-          };
-          const excludeKeys = ['count'];
-          const expected = {
-            example: 'test',
-          };
-
-          await fakeBrowser.storage[storageArea].set(input);
-          const actual = await storage.snapshot(storageArea, { excludeKeys });
-
-          expect(actual).toEqual(expected);
-        });
-      });
-
-      describe('restoreSnapshot', () => {
-        it('should restore a snapshot object by setting all values in storage', async () => {
-          const data = {
-            one: 'one',
-            two: 'two',
-          };
-          const existing = {
-            two: 'two-two',
-            three: 'three',
-          };
-          await fakeBrowser.storage[storageArea].set(existing);
-
-          await storage.restoreSnapshot(storageArea, data);
-          const actual = await storage.snapshot(storageArea);
-
-          expect(actual).toEqual({ ...existing, ...data });
-        });
-
-        it('should overwrite, not merge, any metadata keys in the snapshot', async () => {
-          const existing = {
-            count: 1,
-            count$: {
-              v: 2,
-            },
-          };
-          const data = {
-            count$: {
-              restoredAt: Date.now(),
-            },
-          };
-          const expected = {
-            ...existing,
-            count$: data.count$,
-          };
-          await fakeBrowser.storage[storageArea].set(existing);
-
-          await storage.restoreSnapshot(storageArea, data);
-          const actual = await storage.snapshot(storageArea);
-
-          expect(actual).toEqual(expected);
-        });
-      });
-
-      describe('watch', () => {
-        it('should not trigger if the changed key is different from the requested key', async () => {
-          const cb = vi.fn();
-
-          storage.watch(`${storageArea}:key`, cb);
-          await storage.setItem(`${storageArea}:not-the-key`, '123');
-
-          expect(cb).not.toBeCalled();
-        });
-
-        it("should not trigger if the value doesn't change", async () => {
-          const cb = vi.fn();
-          const value = '123';
-
-          await storage.setItem(`${storageArea}:key`, value);
-          storage.watch(`${storageArea}:key`, cb);
-          await storage.setItem(`${storageArea}:key`, value);
-
-          expect(cb).not.toBeCalled();
-        });
-
-        it('should call the callback when the value changes', async () => {
-          const cb = vi.fn();
-          const newValue = '123';
-          const oldValue = null;
-
-          storage.watch(`${storageArea}:key`, cb);
-          await storage.setItem(`${storageArea}:key`, newValue);
-
-          expect(cb).toBeCalledTimes(1);
-          expect(cb).toBeCalledWith(newValue, oldValue);
-        });
-
-        it('should remove the listener when calling the returned function', async () => {
-          const cb = vi.fn();
-
-          const unwatch = storage.watch(`${storageArea}:key`, cb);
-          unwatch();
-          await storage.setItem(`${storageArea}:key`, '123');
-
-          expect(cb).not.toBeCalled();
-        });
-      });
-
-      describe('unwatch', () => {
-        it('should remove all watch listeners', async () => {
-          const cb = vi.fn();
-
-          storage.watch(`${storageArea}:key`, cb);
-          storage.unwatch();
-          await storage.setItem(`${storageArea}:key`, '123');
-
-          expect(cb).not.toBeCalled();
-        });
-      });
-    },
-  );
+    it('rejects writes to browser.storage.managed with a clear error', async () => {
+      // Type-level: `storage.setItem('managed:x', ...)` would reach a
+      // `ReadonlyStorageDriver<'managed'>` at the driver layer, whose
+      // `setItem` doesn't exist. The singleton entry accepts any
+      // `StorageItemKey` for now (breaking that would ripple across
+      // consumers), so `assertMutable` catches the write at runtime with
+      // a WXT-branded error instead of the raw browser error.
+      await expect(storage.setItem('managed:blocked', 1)).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.removeItem('managed:blocked')).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.clear('managed')).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+      await expect(storage.restoreSnapshot('managed', {})).rejects.toThrow(
+        /browser\.storage\.managed.*read-only/,
+      );
+    });
+  });
 
   describe('Invalid storage areas', () => {
     it('should not accept keys without a valid storage area prefix', async () => {
@@ -676,6 +753,47 @@ describe('Storage Utils', () => {
     });
   });
 
+  describe('getStorageArea environment guards', () => {
+    it('throws when browser.runtime is missing (not a web-extension env)', async () => {
+      const original = browser.runtime;
+      try {
+        // @ts-expect-error forcing the misconfigured state under test
+        browser.runtime = undefined;
+        await expect(storage.getItem('local:x')).rejects.toThrow(
+          'must be loaded in a web extension environment',
+        );
+      } finally {
+        browser.runtime = original;
+      }
+    });
+
+    it("throws when browser.storage is missing (no 'storage' permission)", async () => {
+      const original = browser.storage;
+      try {
+        // @ts-expect-error forcing the misconfigured state under test
+        browser.storage = undefined;
+        await expect(storage.getItem('local:x')).rejects.toThrow(
+          "must add the 'storage' permission",
+        );
+      } finally {
+        browser.storage = original;
+      }
+    });
+
+    it('throws when the requested area is undefined on browser.storage', async () => {
+      const original = browser.storage;
+      try {
+        // @ts-expect-error forcing the misconfigured state under test
+        browser.storage = {};
+        await expect(storage.getItem('local:x')).rejects.toThrow(
+          '"browser.storage.local" is undefined',
+        );
+      } finally {
+        browser.storage = original;
+      }
+    });
+  });
+
   describe('defineItem', () => {
     describe('versioning', () => {
       it('should migrate values to the latest when a version upgrade is detected', async () => {
@@ -689,10 +807,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -709,15 +824,58 @@ describe('Storage Utils', () => {
         expect(migrateToV3).toBeCalledWith(4);
       });
 
+      it.each([
+        ['string', 'bad'],
+        ['NaN', Number.NaN],
+        ['negative', -3],
+        ['non-integer', 1.5],
+        ['zero', 0],
+      ])(
+        'treats malformed meta.v (%s) as no version set and runs all migrations',
+        async (_label, badV) => {
+          // Regression: an earlier impl cast `meta.v as number` without
+          // narrowing. A corrupted browser profile holding a garbage `v`
+          // could make `targetVersion - currentVersion` yield NaN and
+          // silently skip the migration loop, then still overwrite the
+          // metadata with `{ v: targetVersion }` — masking corruption.
+          await fakeBrowser.storage.local.set({
+            count: 2,
+            count$: { v: badV },
+          });
+          const migrateToV2 = vi.fn((oldCount) => oldCount * 2);
+          const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
+
+          const item = storage.defineItem<number, { v: number }>(
+            `local:count`,
+            {
+              defaultValue: 0,
+              version: 3,
+              migrations: [migrateToV2, migrateToV3],
+            },
+          );
+          await waitForMigrations();
+
+          const actualValue = await item.getValue();
+          const actualMeta = await item.getMeta();
+
+          // Both migrations must have run — malformed v treated as "no
+          // version set", so currentVersion falls back to 1.
+          expect(migrateToV2).toBeCalledTimes(1);
+          expect(migrateToV2).toBeCalledWith(2);
+          expect(migrateToV3).toBeCalledTimes(1);
+          expect(migrateToV3).toBeCalledWith(4);
+          expect(actualValue).toEqual(12);
+          expect(actualMeta).toEqual({ v: 3 });
+        },
+      );
+
       it('should set the version without running migrations for empty storage items', async () => {
-        const migrate = vi.fn((n: number) => n * 2);
+        const migrate = vi.fn((n) => n * 2);
 
         const item = storage.defineItem<number>('local:key', {
           init: () => 1,
           version: 2,
-          migrations: {
-            2: migrate,
-          },
+          migrations: [migrate],
         });
         const value = await item.getValue();
         const meta = await item.getMeta();
@@ -734,13 +892,11 @@ describe('Storage Utils', () => {
         // this value to be migrated and doubled to V2.
         await storage.setItem(key, 1);
 
-        const migrate = vi.fn((n: number) => n * 2);
+        const migrate = vi.fn((n) => n * 2);
         const item = storage.defineItem<number>(key, {
           init: () => 1,
           version: 2,
-          migrations: {
-            2: migrate,
-          },
+          migrations: [migrate],
         });
         const value = await item.getValue();
         const meta = await item.getMeta();
@@ -762,10 +918,7 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
           onMigrationComplete,
         });
         await waitForMigrations();
@@ -781,10 +934,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -807,9 +957,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 2,
-          migrations: {
-            2: migrateToV2,
-          },
+          migrations: [migrateToV2],
         });
         await waitForMigrations();
 
@@ -834,10 +982,7 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
         await waitForMigrations();
 
@@ -856,10 +1001,7 @@ describe('Storage Utils', () => {
         const item = storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            1: migrateToV1,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV1, migrateToV3],
         });
         await waitForMigrations();
 
@@ -906,15 +1048,89 @@ describe('Storage Utils', () => {
         const expectedError = new MigrationError('local:key', 2, { cause });
         const item = storage.defineItem<number>('local:key', {
           version: 3,
-          migrations: {
-            2: () => {
+          migrations: [
+            () => {
               throw cause;
             },
-          },
+          ],
         });
         await fakeBrowser.storage.local.set({ key: 1, key$: { v: 1 } });
 
         await expect(item.migrate()).rejects.toThrow(expectedError);
+      });
+
+      it('should throw MigrationError when migration output fails schema validation', async () => {
+        await fakeBrowser.storage.local.set({
+          count: -5,
+          count$: { v: 1 },
+        });
+        const item = storage.defineItem('local:count', {
+          schema: defineSchema<number>((v) => {
+            if (typeof v !== 'number' || v < 0) {
+              throw new Error('expected non-negative number');
+            }
+            return v;
+          }),
+          version: 2,
+          migrations: [(v) => v as number],
+        });
+
+        await expect(item.migrate()).rejects.toBeInstanceOf(MigrationError);
+        const stored = await fakeBrowser.storage.local.get(['count', 'count$']);
+        expect(stored['count']).toBe(-5);
+        expect(stored['count$']).toEqual({ v: 1 });
+      });
+
+      it('should route migrated value through serializer.write before persisting', async () => {
+        await fakeBrowser.storage.local.set({
+          set: ['a', 'b'],
+          set$: { v: 1 },
+        });
+        const item = storage.defineItem('local:set', {
+          version: 2,
+          migrations: [
+            (v) =>
+              new Set(
+                Array.isArray(v)
+                  ? v.filter((x): x is string => typeof x === 'string')
+                  : [],
+              ),
+          ],
+          serializer: {
+            write: (s: Set<string>) => [...s, 'c'],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+        await item.migrate();
+        const stored = await fakeBrowser.storage.local.get(['set', 'set$']);
+        expect(stored['set']).toEqual(['a', 'b', 'c']);
+        expect(stored['set$']).toEqual({ v: 2 });
+      });
+
+      it('should use schema-transformed value in onMigrationComplete callback', async () => {
+        await fakeBrowser.storage.local.set({
+          val: '10',
+          val$: { v: 1 },
+        });
+        const onMigrationComplete = vi.fn();
+        const item = storage.defineItem('local:val', {
+          schema: defineSchema<number>((v) => {
+            if (typeof v === 'number') return v;
+            if (typeof v === 'string') return Number(v);
+            throw new Error('expected number or numeric string');
+          }),
+          version: 2,
+          migrations: [(v) => v as string],
+          onMigrationComplete,
+        });
+        await item.migrate();
+        expect(onMigrationComplete).toHaveBeenCalledWith(10, 2);
       });
 
       it('should print migration logs if debug option is true', async () => {
@@ -926,13 +1142,14 @@ describe('Storage Utils', () => {
         const migrateToV3 = vi.fn((oldCount) => oldCount * 3);
         const consoleSpy = vi.spyOn(console, 'debug');
 
-        storage.defineItem<number, { v: number }>(`local:count`, {
+        storage.defineItem(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
+          // `debug: true` narrows to literal `true` via `<const TDebug>`. If
+          // explicit `<number, {v:number}>` generics were provided here, that
+          // capture would be defeated and TDebug would default to `false`,
+          // rejecting `true`.
           debug: true,
         });
         await waitForMigrations();
@@ -967,18 +1184,13 @@ describe('Storage Utils', () => {
         storage.defineItem<number, { v: number }>(`local:count`, {
           defaultValue: 0,
           version: 3,
-          migrations: {
-            2: migrateToV2,
-            3: migrateToV3,
-          },
+          migrations: [migrateToV2, migrateToV3],
         });
 
         storage.defineItem<number, { v: number }>(`local:count2`, {
           defaultValue: 0,
           version: 2,
-          migrations: {
-            2: migrateToV2,
-          },
+          migrations: [migrateToV2],
           debug: false,
         });
         await waitForMigrations();
@@ -990,9 +1202,7 @@ describe('Storage Utils', () => {
         const defineTestItem = () =>
           storage.defineItem<number>('local:count', {
             version: 2,
-            migrations: {
-              2: migrateToV2,
-            },
+            migrations: [migrateToV2],
           });
 
         it('should set the version metadata when setting the value for the first time', async () => {
@@ -1382,57 +1592,827 @@ describe('Storage Utils', () => {
     describe('types', () => {
       it('should define a nullable value when options are not passed', () => {
         const item = storage.defineItem<number>(`local:test`);
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item2 = storage.defineItem<number>(`local:test`, {});
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item3 = storage.defineItem<number>(`local:test`, {
           fallback: undefined,
         });
-        expectTypeOf(item3).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item3.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
 
         const item4 = storage.defineItem<number>(`local:test`, {
           defaultValue: undefined,
         });
-        expectTypeOf(item4).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item4.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
       });
 
       it('should define a non-null value when options are passed with a nullish default value', () => {
         const item = storage.defineItem(`local:test`, {
           defaultValue: 123,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
 
         const item2 = storage.defineItem(`local:test`, {
           fallback: 123,
         });
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
       });
 
       it('should define a nullable value when options are passed with null default value', () => {
         const item = storage.defineItem<number | null>(`local:test`, {
           defaultValue: null,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number | null, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
+      });
+
+      it('MetaKey template-literal type appends `$` at the type level', () => {
+        expectTypeOf<MetaKey<`theme`>>().toEqualTypeOf<`theme$`>();
+        expectTypeOf<MetaKey<`local:count`>>().toEqualTypeOf<`local:count$`>();
+        // Degrades to `${string}$` when the input is the bare `string` type.
+        expectTypeOf<MetaKey<string>>().toEqualTypeOf<`${string}$`>();
+      });
+
+      it('preserves the literal key type when TypeScript infers from a string-literal argument', () => {
+        const item = storage.defineItem(`local:theme`, { fallback: 5 });
+        expectTypeOf(item.key).toEqualTypeOf<`local:theme`>();
+
+        const migrated = storage.defineItem(`sync:profile`, {
+          init: () => ({ name: 'alice' }),
+        });
+        expectTypeOf(migrated.key).toEqualTypeOf<`sync:profile`>();
+      });
+
+      it('widens key to StorageItemKey when the caller supplies an explicit generic', () => {
+        // TypeScript limitation: `const TKey = default` type params do not
+        // infer narrow literals when the caller supplies any explicit generic
+        // argument. Users who need literal-preserved keys must rely on full
+        // inference (no explicit generic).
+        const item = storage.defineItem<number>(`local:test`, {});
+        expectTypeOf(item.key).toEqualTypeOf<StorageItemKey>();
       });
 
       it('should define a non-null value when options are passed with a non-null init function', () => {
         const item = storage.defineItem(`local:test`, {
           init: () => 123,
         });
-        expectTypeOf(item).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
 
         const item2 = storage.defineItem(`local:test`, {
           init: () => Promise.resolve(123),
         });
-        expectTypeOf(item2).toEqualTypeOf<WxtStorageItem<number, {}>>();
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
+      });
+    });
+
+    describe('schema types', () => {
+      // A minimal hand-rolled schema used for typing tests. Runtime behaviour
+      // of schemas is exercised in later steps; here we only verify inference.
+      const numberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number'
+              ? { value }
+              : { issues: [{ message: 'not a number' }] },
+        },
+      };
+
+      it('infers TValue from schema output (nullable when no fallback/init)', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+        });
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<
+          Promise<number | null>
+        >();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
+      });
+
+      it('infers TValue from schema output and drops null when fallback is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          fallback: 0,
+        });
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
+      });
+
+      it('infers TValue from schema output and drops null when init is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          init: () => 0,
+        });
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
+
+        const item2 = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          init: () => Promise.resolve(0),
+        });
+        expectTypeOf(item2.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item2.key).toEqualTypeOf<`local:test`>();
+      });
+
+      it('infers TValue from schema output and drops null when defaultValue is set', () => {
+        const item = storage.defineItem(`local:test`, {
+          schema: numberSchema,
+          defaultValue: 0,
+        });
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
+      });
+
+      it('defineSchema wraps a sync parser into StandardSchemaV1', () => {
+        const parsed = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v;
+        });
+        expectTypeOf(parsed).toEqualTypeOf<StandardSchemaV1<unknown, number>>();
+
+        const item = storage.defineItem(`local:test`, {
+          schema: parsed,
+          fallback: 0,
+        });
+        expectTypeOf(item.getValue).returns.toEqualTypeOf<Promise<number>>();
+        expectTypeOf(item.key).toEqualTypeOf<`local:test`>();
+      });
+
+      it('defineSchema wraps an async parser into StandardSchemaV1', () => {
+        const parsed = defineSchema<string>(async (v) => {
+          if (typeof v !== 'string') throw new Error('not a string');
+          return v;
+        });
+        expectTypeOf(parsed).toEqualTypeOf<StandardSchemaV1<unknown, string>>();
+      });
+
+      it('serializer.write is required and typed against TValue', () => {
+        const s: WxtStorageItemSerializer<Set<string>> = {
+          write: (value) => {
+            expectTypeOf(value).toEqualTypeOf<Set<string>>();
+            return [...value];
+          },
+          read: (raw) => {
+            expectTypeOf(raw).toEqualTypeOf<unknown>();
+            return new Set(raw as string[]);
+          },
+        };
+        expectTypeOf(s.write).toEqualTypeOf<(value: Set<string>) => unknown>();
+      });
+
+      it('serializer.read is optional', () => {
+        const s: WxtStorageItemSerializer<Date> = {
+          write: (d) => d.toISOString(),
+        };
+        expectTypeOf(s.read).toEqualTypeOf<
+          ((raw: unknown) => Date) | undefined
+        >();
+      });
+
+      it('onValidationError accepts each union branch', () => {
+        const throwMode: OnValidationError<number> = 'throw';
+        const fallbackMode: OnValidationError<number> = 'fallback';
+        const resetMode: OnValidationError<number> = 'reset';
+        const fnMode: OnValidationError<number> = (issues, raw) => {
+          expectTypeOf(issues).toEqualTypeOf<
+            readonly StandardSchemaV1.Issue[]
+          >();
+          expectTypeOf(raw).toEqualTypeOf<unknown>();
+          return 0;
+        };
+        // Suppress unused-var warnings; the assignments above are the assertions.
+        void throwMode;
+        void fallbackMode;
+        void resetMode;
+        void fnMode;
+      });
+
+      it('onValidationError callback return type does not widen TValue (NoInfer)', () => {
+        // NoInfer<TValue> in the callback signature blocks the callback's
+        // return from widening TValue. This assertion checks the compiled
+        // callback type keeps TValue narrow to number.
+        type Cb = Exclude<OnValidationError<number>, string>;
+        expectTypeOf<Cb>().toEqualTypeOf<
+          (issues: readonly StandardSchemaV1.Issue[], raw: unknown) => number
+        >();
+      });
+    });
+
+    describe('schema (write pipeline)', () => {
+      // Hand-rolled Standard Schema for tests. Runtime read behaviour lands in
+      // a follow-up commit; here we only verify writes.
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : {
+                  issues: [
+                    {
+                      message: `expected positive number, got ${String(value)}`,
+                    },
+                  ],
+                },
+        },
+      };
+
+      it('stores the validated value when schema succeeds', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await item.setValue(7);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 7 });
+      });
+
+      it('throws a SchemaError when schema validation fails on write', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await expect(item.setValue(-1)).rejects.toBeInstanceOf(SchemaError);
+        // Storage must remain untouched on failed write.
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({});
+      });
+
+      it('SchemaError carries the issues array from the schema', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        try {
+          await item.setValue(-1);
+          expect.fail('expected SchemaError');
+        } catch (error) {
+          expect(error).toBeInstanceOf(SchemaError);
+          const issues = (error as SchemaError).issues;
+          expect(issues).toHaveLength(1);
+          expect(issues[0]?.message).toMatch(/positive number/);
+        }
+      });
+
+      it('stores the schema-transformed value, not the original input', async () => {
+        const doubling = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v * 2;
+        });
+        const item = storage.defineItem(`local:count`, { schema: doubling });
+        await item.setValue(5);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 10 });
+      });
+    });
+
+    describe('serializer (write pipeline)', () => {
+      it('runs serializer.write and stores the raw form', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+        });
+        await item.setValue(new Set(['a', 'b']));
+        const raw = await fakeBrowser.storage.local.get('enabled');
+        expect(raw).toEqual({ enabled: ['a', 'b'] });
+      });
+
+      it('works when only serializer.write is defined (read omitted)', async () => {
+        const item = storage.defineItem<Date>(`local:date`, {
+          serializer: {
+            write: (d) => d.toISOString(),
+          },
+        });
+        await item.setValue(new Date('2025-01-15T00:00:00.000Z'));
+        const raw = await fakeBrowser.storage.local.get('date');
+        expect(raw).toEqual({ date: '2025-01-15T00:00:00.000Z' });
+      });
+    });
+
+    describe('schema + serializer (write pipeline)', () => {
+      it('validates first, then serializes (order matters)', async () => {
+        const calls: string[] = [];
+        const trackingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              calls.push('validate');
+              return typeof value === 'number'
+                ? { value }
+                : { issues: [{ message: 'not a number' }] };
+            },
+          },
+        };
+        const item = storage.defineItem(`local:count`, {
+          schema: trackingSchema,
+          serializer: {
+            write: (n) => {
+              calls.push('serialize');
+              return `n=${n}`;
+            },
+          },
+        });
+        await item.setValue(42);
+        expect(calls).toEqual(['validate', 'serialize']);
+        const raw = await fakeBrowser.storage.local.get('count');
+        expect(raw).toEqual({ count: 'n=42' });
+      });
+
+      it('does not call serializer when schema validation fails', async () => {
+        const write = vi.fn((n: number) => `n=${n}`);
+        const failingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: () => ({ issues: [{ message: 'always fail' }] }),
+          },
+        };
+        const item = storage.defineItem(`local:count`, {
+          schema: failingSchema,
+          serializer: { write },
+        });
+        await expect(item.setValue(1)).rejects.toBeInstanceOf(SchemaError);
+        expect(write).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('schema (read pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : {
+                  issues: [
+                    {
+                      message: `expected positive number, got ${String(value)}`,
+                    },
+                  ],
+                },
+        },
+      };
+
+      it('validates and returns the raw value when schema succeeds', async () => {
+        await fakeBrowser.storage.local.set({ count: 42 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        expect(await item.getValue()).toBe(42);
+      });
+
+      it('returns fallback when storage is empty', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 1,
+        });
+        expect(await item.getValue()).toBe(1);
+      });
+
+      it('returns the schema-transformed value on read', async () => {
+        const doubling = defineSchema<number>((v) => {
+          if (typeof v !== 'number') throw new Error('not a number');
+          return v * 2;
+        });
+        await fakeBrowser.storage.local.set({ count: 3 });
+        const item = storage.defineItem(`local:count`, { schema: doubling });
+        expect(await item.getValue()).toBe(6);
+      });
+
+      it('throws SchemaError by default when validation fails', async () => {
+        await fakeBrowser.storage.local.set({ count: -1 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+      });
+
+      it('validates AFTER migration runs (migration order)', async () => {
+        // Raw value is invalid for the schema; migration to v2 fixes it.
+        await fakeBrowser.storage.local.set({
+          count: -1,
+          count$: { v: 1 },
+        });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          version: 2,
+          migrations: [(old) => Math.abs(old)],
+        });
+        expect(await item.getValue()).toBe(1);
+      });
+    });
+
+    describe('onValidationError (read pipeline)', () => {
+      const numberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number'
+              ? { value }
+              : { issues: [{ message: 'not a number' }] },
+        },
+      };
+
+      it("'throw' is the default and rejects with SchemaError", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+      });
+
+      it("'fallback' returns the fallback value", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          fallback: 0,
+          onValidationError: 'fallback',
+        });
+        expect(await item.getValue()).toBe(0);
+        // Storage still contains the invalid value.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 'nope',
+        });
+      });
+
+      it("'fallback' returns null when no fallback is set", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          onValidationError: 'fallback',
+        });
+        expect(await item.getValue()).toBeNull();
+      });
+
+      it("'reset' clears the invalid value from storage and returns fallback", async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          fallback: 99,
+          onValidationError: 'reset',
+        });
+        expect(await item.getValue()).toBe(99);
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({});
+      });
+
+      it('callback receives issues and raw, and its return becomes the read result', async () => {
+        await fakeBrowser.storage.local.set({ count: 'nope' });
+        const cb = vi.fn(
+          (issues: readonly StandardSchemaV1.Issue[], raw: unknown) => {
+            expect(issues).toHaveLength(1);
+            expect(raw).toBe('nope');
+            return -1;
+          },
+        );
+        const item = storage.defineItem(`local:count`, {
+          schema: numberSchema,
+          onValidationError: cb,
+        });
+        expect(await item.getValue()).toBe(-1);
+        expect(cb).toHaveBeenCalledOnce();
+        // Callback result is not written back to storage.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 'nope',
+        });
+      });
+    });
+
+    describe('serializer (read pipeline)', () => {
+      it('runs serializer.read on the raw storage value', async () => {
+        await fakeBrowser.storage.local.set({ enabled: ['a', 'b'] });
+        // read receives `unknown` (trust boundary). Array.isArray + filter
+        // narrows to string[] — no cast needed.
+        const item = storage.defineItem(`local:enabled`, {
+          serializer: {
+            write: (set: Set<string>) => [...set],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Set);
+        expect([...(value ?? [])]).toEqual(['a', 'b']);
+      });
+
+      it('infers TRaw from serializer.write return type (fallback path)', () => {
+        // Alternative shape: typed `fallback` fixes TValue; TRaw is then
+        // inferred from `write`'s return type.
+        const item = storage.defineItem(`local:tags`, {
+          fallback: new Set<string>(),
+          serializer: {
+            write: (set) => [...set],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+        expectTypeOf(item.getValue()).resolves.toEqualTypeOf<Set<string>>();
+      });
+
+      it('bypasses read when only serializer.write is defined (coerce-schema pattern)', async () => {
+        // Value in storage is an ISO string; the schema coerces it to Date on
+        // read while serializer.write handles the reverse on write.
+        const coerceDate: StandardSchemaV1<unknown, Date> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              const d = new Date(value as string);
+              return isNaN(d.getTime())
+                ? { issues: [{ message: 'invalid date' }] }
+                : { value: d };
+            },
+          },
+        };
+        await fakeBrowser.storage.local.set({
+          date: '2025-01-15T00:00:00.000Z',
+        });
+        const item = storage.defineItem(`local:date`, {
+          schema: coerceDate,
+          serializer: {
+            write: (d) => d.toISOString(),
+          },
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Date);
+        expect(value?.toISOString()).toBe('2025-01-15T00:00:00.000Z');
+      });
+    });
+
+    describe('schema + serializer (read pipeline)', () => {
+      it('runs serializer.read BEFORE schema.validate (order matters)', async () => {
+        const calls: string[] = [];
+        const trackingSchema: StandardSchemaV1<unknown, number> = {
+          '~standard': {
+            version: 1,
+            vendor: 'test',
+            validate: (value) => {
+              calls.push('validate');
+              return typeof value === 'number'
+                ? { value }
+                : { issues: [{ message: 'not a number' }] };
+            },
+          },
+        };
+        await fakeBrowser.storage.local.set({ count: 'n=42' });
+        const item = storage.defineItem(`local:count`, {
+          schema: trackingSchema,
+          serializer: {
+            write: (n) => `n=${n}`,
+            read: (raw) => {
+              calls.push('deserialize');
+              return Number(String(raw).slice(2));
+            },
+          },
+        });
+        expect(await item.getValue()).toBe(42);
+        expect(calls).toEqual(['deserialize', 'validate']);
+      });
+    });
+
+    describe('schema + init (write pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : { issues: [{ message: 'not positive' }] },
+        },
+      };
+
+      it('validates init output and stores it (validator schema)', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init: () => 5,
+        });
+        expect(await item.getValue()).toBe(5);
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 5,
+        });
+      });
+
+      it('throws SchemaError when init output fails validation', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init: () => -1,
+        });
+        await expect(item.getValue()).rejects.toBeInstanceOf(SchemaError);
+        // The invalid value must NOT be written to storage.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({});
+      });
+
+      it('runs serializer.write on init output', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+          init: () => new Set(['x', 'y']),
+        });
+        const value = await item.getValue();
+        expect(value).toBeInstanceOf(Set);
+        expect([...(value ?? [])]).toEqual(['x', 'y']);
+        expect(await fakeBrowser.storage.local.get('enabled')).toEqual({
+          enabled: ['x', 'y'],
+        });
+      });
+
+      it('validates existing storage on init items instead of re-running init', async () => {
+        await fakeBrowser.storage.local.set({ count: 5 });
+        const init = vi.fn(() => 1);
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          init,
+        });
+        expect(await item.getValue()).toBe(5);
+        // init must NOT be called when storage already has a valid value.
+        expect(init).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('watch (pipeline)', () => {
+      const positiveNumberSchema: StandardSchemaV1<unknown, number> = {
+        '~standard': {
+          version: 1,
+          vendor: 'test',
+          validate: (value) =>
+            typeof value === 'number' && value > 0
+              ? { value }
+              : { issues: [{ message: 'not positive' }] },
+        },
+      };
+
+      it('delivers the deserialized value via serializer.read', async () => {
+        const item = storage.defineItem<Set<string>>(`local:enabled`, {
+          serializer: {
+            write: (set) => [...set],
+            read: (raw) => new Set(raw as string[]),
+          },
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await item.setValue(new Set(['a', 'b']));
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        const call = cb.mock.calls[0];
+        expect(call).toBeDefined();
+        const [newValue, oldValue] = call!;
+        expect(newValue).toBeInstanceOf(Set);
+        expect([...(newValue as Set<string>)]).toEqual(['a', 'b']);
+        expect(oldValue).toBeNull();
+      });
+
+      it('skips the callback when the new value fails schema validation (default throw)', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        // Push an invalid value directly through fakeBrowser so setValue's
+        // own write-side validation doesn't reject before the change event
+        // is broadcast.
+        const consoleError = vi
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
+        try {
+          await fakeBrowser.storage.local.set({ count: -1 });
+          await waitForInit();
+          expect(cb).not.toHaveBeenCalled();
+          expect(consoleError).toHaveBeenCalled();
+        } finally {
+          consoleError.mockRestore();
+        }
+      });
+
+      it("calls the callback with fallback when 'fallback' strategy recovers", async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 0,
+          onValidationError: 'fallback',
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await fakeBrowser.storage.local.set({ count: -1 });
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(0, 0);
+      });
+
+      it("'reset' inside watch does NOT remove the value from storage (data-loss guard)", async () => {
+        // Regression: writing a valid newValue delivers (validNew, invalidOld)
+        // to watch. The old-value path must NOT trigger driver.removeItem —
+        // otherwise the just-written newValue is wiped from storage.
+        await fakeBrowser.storage.local.set({ count: -1 });
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          fallback: 0,
+          onValidationError: 'reset',
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await item.setValue(5);
+        await waitForInit();
+
+        // Callback fired with the valid new value; old value fell back to 0.
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(5, 0);
+        // Critical: storage still holds the newly-written valid value.
+        expect(await fakeBrowser.storage.local.get('count')).toEqual({
+          count: 5,
+        });
+      });
+
+      it('callback recovery strategy runs inside watch', async () => {
+        const item = storage.defineItem(`local:count`, {
+          schema: positiveNumberSchema,
+          onValidationError: (_issues, raw) => (raw === -1 ? 999 : 0),
+        });
+        const cb = vi.fn();
+        item.watch(cb);
+        await fakeBrowser.storage.local.set({ count: -1 });
+        await waitForInit();
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(999, null);
       });
     });
   });
 
   describe('Multiple Storage Areas', () => {
     describe('getItems', () => {
+      it("preserves each input's literal key type in the result tuple", async () => {
+        // Mapped-tuple inference (Phase E): result[0].key narrows to
+        // 'local:a', result[1].key narrows to 'session:b', etc. Every
+        // slot's `value` stays `unknown` because bare keys carry no schema.
+        const result = await storage.getItems([
+          'local:a',
+          'session:b',
+          'sync:c',
+        ] as const);
+        expectTypeOf(result[0].key).toEqualTypeOf<'local:a'>();
+        expectTypeOf(result[1].key).toEqualTypeOf<'session:b'>();
+        expectTypeOf(result[2].key).toEqualTypeOf<'sync:c'>();
+        expectTypeOf(result[0].value).toEqualTypeOf<unknown>();
+      });
+
+      it('threads TValue from WxtStorageItem inputs into result.value', async () => {
+        const num = storage.defineItem('local:num', { fallback: 0 });
+        const str = storage.defineItem('sync:name', { fallback: 'x' });
+        const result = await storage.getItems([num, str] as const);
+        // Fully typed: keys are literals, values match each item's TValue.
+        expectTypeOf(result[0].key).toEqualTypeOf<'local:num'>();
+        expectTypeOf(result[0].value).toEqualTypeOf<number>();
+        expectTypeOf(result[1].key).toEqualTypeOf<'sync:name'>();
+        expectTypeOf(result[1].value).toEqualTypeOf<string>();
+      });
+
+      it("applies each slot's own fallback when the same key appears twice with different fallbacks", async () => {
+        // Regression: an earlier impl kept a Map<key, opts> and silently
+        // overwrote the fallback on duplicate keys, so both result slots
+        // picked up whichever fallback was written last.
+        // The stored value is missing, so each slot must fall back
+        // independently to its own configured fallback.
+        const result = await storage.getItems([
+          { key: 'local:dup', options: { fallback: 'alpha' } },
+          { key: 'local:dup', options: { fallback: 'beta' } },
+        ]);
+        expect(result).toEqual([
+          { key: 'local:dup', value: 'alpha' },
+          { key: 'local:dup', value: 'beta' },
+        ]);
+      });
+
       it('should get the values of multiple storage items efficiently', async () => {
         const item1 = storage.defineItem<number>('local:item1');
         const item2 = storage.defineItem<string>('session:item2');
@@ -1483,6 +2463,64 @@ describe('Storage Utils', () => {
           { key: item2.key, value: null },
           { key: item1.key, value: null },
         ]);
+      });
+
+      it('routes item slots through schema/serializer instead of raw storage', async () => {
+        await fakeBrowser.storage.local.set({ tags: ['a', 'b'] });
+        const item = storage.defineItem('local:tags', {
+          serializer: {
+            write: (s: Set<string>) => [...s],
+            read(raw) {
+              return new Set(
+                Array.isArray(raw)
+                  ? raw.filter((x): x is string => typeof x === 'string')
+                  : [],
+              );
+            },
+          },
+        });
+
+        const result = await storage.getItems([item]);
+        expect(result[0]?.value).toBeInstanceOf(Set);
+        expect([...(result[0]?.value as Set<string>)]).toEqual(['a', 'b']);
+      });
+
+      it('waits for item migrations before batch read (no stale data)', async () => {
+        await fakeBrowser.storage.local.set({
+          n: 10,
+          n$: { v: 1 },
+        });
+        const migrate = vi.fn((v: unknown) => (v as number) * 10);
+        const item = storage.defineItem<number>('local:n', {
+          version: 2,
+          migrations: [migrate],
+        });
+
+        const [{ value }] = await storage.getItems([item]);
+        expect(migrate).toHaveBeenCalledOnce();
+        expect(value).toBe(100);
+      });
+
+      it("does not destructively reset on stale batch reads (onValidationError: 'reset')", async () => {
+        await fakeBrowser.storage.local.set({
+          n: 'not-a-number',
+        });
+        const item = storage.defineItem('local:n', {
+          schema: defineSchema<number>((v) => {
+            if (typeof v !== 'number') throw new Error('expected number');
+            return v;
+          }),
+          onValidationError: 'reset',
+        });
+
+        await storage.getItems([item]);
+        // The primary getValue() path is allowed to reset. The batch path
+        // uses allowReset:false so a stale-raw hit during batch cannot
+        // destroy freshly-written data written by another writer between
+        // the batch fetch and the pipeline apply. Direct getValue() still
+        // exercises the destructive path.
+        const stillThere = await fakeBrowser.storage.local.get('n');
+        expect(stillThere).toHaveProperty('n');
       });
     });
 
@@ -1582,7 +2620,6 @@ describe('Storage Utils', () => {
           { item: item3, meta: { v: 3 } },
         ]);
 
-        console.log(localGetSpy.mock.calls);
         expect(localGetSpy).toBeCalledTimes(1);
         expect(localGetSpy).toBeCalledWith(['one$', 'three$']);
         expect(sessionGetSpy).toBeCalledTimes(1);
@@ -1600,9 +2637,9 @@ describe('Storage Utils', () => {
       });
     });
 
-    it('should return a nullable type when getItem is called without a fallback', async () => {
-      const res = await storage.getItem<string>('local:test');
-      expectTypeOf(res).toBeNullable();
+    it('should return `unknown` when getItem is called without a fallback', async () => {
+      const res = await storage.getItem('local:test');
+      expectTypeOf(res).toEqualTypeOf<unknown>();
     });
 
     it('should return a non-null type when getItem is called with a fallback', async () => {
@@ -1610,6 +2647,21 @@ describe('Storage Utils', () => {
         fallback: 'test',
       });
       expectTypeOf(res).not.toBeNullable();
+    });
+
+    it('storage.setItem accepts `unknown` (no caller-invented generic)', () => {
+      expectTypeOf(storage.setItem).parameter(1).toEqualTypeOf<unknown>();
+    });
+
+    it('storage.watch callback payload is `unknown` (no caller-invented generic)', () => {
+      expectTypeOf(storage.watch)
+        .parameter(1)
+        .toEqualTypeOf<WatchCallback<unknown>>();
+    });
+
+    it('storage.getMeta returns Record<string, unknown> (no caller-invented generic)', async () => {
+      const meta = await storage.getMeta('local:test');
+      expectTypeOf(meta).toEqualTypeOf<Record<string, unknown>>();
     });
 
     it('should return a non-null type when getItem is called with a fallback and the first type parameter is passed', async () => {
