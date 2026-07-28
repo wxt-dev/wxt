@@ -234,11 +234,11 @@
       "dependencies": {
         "@wxt-dev/browser": "workspace:^",
         "async-mutex": "^0.5.0",
-        "dequal": "^2.0.3",
       },
       "devDependencies": {
         "@aklinker1/buildc": "catalog:",
         "@webext-core/fake-browser": "catalog:",
+        "dequal": "^2.0.3",
         "oxlint": "catalog:",
         "publint": "catalog:",
         "tsdown": "catalog:",
