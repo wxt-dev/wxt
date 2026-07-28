@@ -24,6 +24,7 @@ export async function initialize(options: {
   const directory =
     options.directory ??
     (await question('Project Directory', { defaultValue: '.' }));
+  if (!directory) throw Error('Directory is required');
 
   const templateName =
     inputTemplateName ??
