@@ -1664,14 +1664,14 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
-export type EslintSupportedVersions = 'old' | 'flat';
+export type EslintSupportedVersions = boolean | 'old' | 'flat';
 
 /**
  * @deprecated Use `EslintSupportedVersions` (`'old'`/`'flat'`) instead. Legacy
- *   numeric values are supported for backwards compatibility and will be
- *   removed in the next major version.
+ *   numeric values and 'auto' are supported for backwards compatibility and
+ *   will be removed in the next major version.
  */
-export type EslintLegacySupportedVersions = 8 | 9 | 10;
+export type EslintLegacySupportedVersions = 8 | 9 | 10 | 'auto';
 
 export interface Eslintrc {
   /**
@@ -1688,15 +1688,11 @@ export interface Eslintrc {
    * - `9`: Same as `flat`.
    * - `10`: Same as `flat`.
    *
-   * @deprecated Values `8`, `9`, and `10` are legacy aliases and will be
-   *   removed in the next major version.
+   * @deprecated Values `8`, `9`, `10`, and `'auto'` are legacy aliases and will
+   *   be removed in the next major version.
    * @default 'auto'
    */
-  enabled?:
-    | boolean
-    | 'auto'
-    | EslintSupportedVersions
-    | EslintLegacySupportedVersions;
+  enabled?: EslintSupportedVersions | EslintLegacySupportedVersions;
   /**
    * File path to save the generated eslint config.
    *
