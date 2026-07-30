@@ -1,10 +1,10 @@
 import { WxtModule } from '../types';
 import faviconPermission from './favicon-permission';
 import unimport from './unimport';
-import escapeUtf8 from './escape-utf8';
+import escapeUnicode from './escape-unicode';
 
 export const builtinModules: WxtModule<any>[] = [
   unimport,
   faviconPermission,
-  escapeUtf8,
+  escapeUnicode,
 ];

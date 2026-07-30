@@ -3,7 +3,7 @@ import { addViteConfig, defineWxtModule } from '../modules';
 import { Wxt } from '../types';
 
 export default defineWxtModule({
-  name: 'wxt:built-in:escape-utf8',
+  name: 'wxt:built-in:escape-unicode',
   setup(wxt) {
     if (!wxt.config.experimental.escapeUtf8) return;
 
@@ -15,7 +15,7 @@ export default defineWxtModule({
 
 function escapeUtf8Plugin(wxt: Wxt): Plugin {
   return {
-    name: 'wxt:escape-utf8',
+    name: 'wxt:escape-unicode',
     generateBundle: (_, bundle) => {
       const start = Date.now();
       for (const key of Object.keys(bundle)) {
