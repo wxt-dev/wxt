@@ -31,7 +31,7 @@ describe('Encoding', () => {
     expect(output).toContain(ESCAPED_BAD_CHAR);
   });
 
-  it('should convert unicode characters to ascii escaped chars when experimental.escapeUnicode=true', async () => {
+  it('should convert unicode characters to ascii escaped chars when experimental.escapeUnicode=false', async () => {
     const output = await buildWithBadChar(false);
     expect(output).not.toContain(ESCAPED_BAD_CHAR);
   });
