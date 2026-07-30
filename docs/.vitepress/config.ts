@@ -243,7 +243,6 @@ export default defineConfig({
           menuItem('WXT Modules', 'wxt-modules.md'),
           menuItem('Frontend Frameworks', 'frontend-frameworks.md'),
           menuItem('ES Modules', 'es-modules.md'),
-          menuItem('Remote Code', 'remote-code.md'),
           menuItem('Unit Testing', 'unit-testing.md'),
           menuItem('E2E Testing', 'e2e-testing.md'),
           menuItem('Publishing', 'publishing.md'),
