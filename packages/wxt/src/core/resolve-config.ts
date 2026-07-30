@@ -225,7 +225,7 @@ export async function resolveConfig(
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
     experimental: defu(mergedConfig.experimental, {
-      escapeUtf8: false,
+      escapeUnicode: false,
     }),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
     watchOptions: mergedConfig.watchOptions ?? {},

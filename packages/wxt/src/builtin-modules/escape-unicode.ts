@@ -5,15 +5,15 @@ import { Wxt } from '../types';
 export default defineWxtModule({
   name: 'wxt:built-in:escape-unicode',
   setup(wxt) {
-    if (!wxt.config.experimental.escapeUtf8) return;
+    if (!wxt.config.experimental.escapeUnicode) return;
 
     addViteConfig(wxt, () => ({
-      plugins: [escapeUtf8Plugin(wxt)],
+      plugins: [escapeUnicodePlugin(wxt)],
     }));
   },
 });
 
-function escapeUtf8Plugin(wxt: Wxt): Plugin {
+function escapeUnicodePlugin(wxt: Wxt): Plugin {
   return {
     name: 'wxt:escape-unicode',
     generateBundle: (_, bundle) => {

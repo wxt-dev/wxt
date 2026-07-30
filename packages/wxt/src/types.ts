@@ -435,7 +435,7 @@ export interface InlineConfig {
      * - https://github.com/wxt-dev/wxt/issues/353
      * - https://github.com/wxt-dev/wxt/issues/2535
      */
-    escapeUtf8?: boolean;
+    escapeUnicode?: boolean;
   };
   /** Config effecting dev mode only. */
   dev?: {
@@ -1610,7 +1610,7 @@ export interface ResolvedConfig {
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
   experimental: {
-    escapeUtf8: boolean;
+    escapeUnicode: boolean;
   };
   /** List of warning identifiers to suppress during the build process. */
   suppressWarnings: {
