@@ -50,7 +50,10 @@ describe("removeEmptyDirs", () => {
 			const raceyFile = join(dir, "inject-scripts", "recorder.js");
 			await writeFile(raceyFile, "x");
 
-			mockedStat.mockImplementation(async (path, ...args: any[]) => {
+			mockedStat.mockImplementation((async (
+				path: Parameters<typeof stat>[0],
+				...args: unknown[]
+			) => {
 				if (path === raceyFile) {
 					const err: NodeJS.ErrnoException = new Error(
 						"ENOENT: no such file or directory",
@@ -58,8 +61,8 @@ describe("removeEmptyDirs", () => {
 					err.code = "ENOENT";
 					throw err;
 				}
-				return (realStat as any)(path, ...args);
-			});
+				return (realStat as (...a: unknown[]) => unknown)(path, ...args);
+			}) as typeof stat);
 
 			await expect(removeEmptyDirs(dir)).resolves.not.toThrow();
 		} finally {
