@@ -292,7 +292,6 @@
         "wxt-publish-extension": "./bin/wxt-publish-extension.mjs",
       },
       "dependencies": {
-        "@aklinker1/zero-zip": "./aklinker1-zero-zip-1.0.0.tgz",
         "@1natsu/wait-element": "^4.1.2",
         "@aklinker1/rollup-plugin-visualizer": "5.12.0",
         "@topcli/prompts": "^4.0.0",
@@ -331,6 +330,7 @@
       },
       "devDependencies": {
         "@aklinker1/buildc": "catalog:",
+        "@aklinker1/zero-zip": "./aklinker1-zero-zip-1.0.0.tgz",
         "@faker-js/faker": "^10.3.0",
         "@types/bun": "catalog:",
         "@types/lodash.merge": "^4.6.9",
