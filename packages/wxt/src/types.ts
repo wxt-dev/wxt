@@ -420,7 +420,23 @@ export interface InlineConfig {
    */
   alias?: Record<string, string>;
   /** Experimental settings - use with caution. */
-  experimental?: {};
+  experimental?: {
+    /**
+     * Some libraries include unicode characters Chrome does not allow in
+     * extensions. If you receive "Could not load content script... it is not
+     * UTF-8 encoded", enable this setting.
+     *
+     * It is not enabled by default because it will slow down your build, and
+     * because it's very rare to have the problematic characters in JS. So not
+     * every extension needs this flag enabled.
+     *
+     * For more details, see:
+     *
+     * - https://github.com/wxt-dev/wxt/issues/353
+     * - https://github.com/wxt-dev/wxt/issues/2535
+     */
+    escapeUtf8?: boolean;
+  };
   /** Config effecting dev mode only. */
   dev?: {
     server?: {
@@ -1593,7 +1609,9 @@ export interface ResolvedConfig {
   userConfigMetadata: Omit<C12ResolvedConfig<UserConfig>, 'config'>;
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
-  experimental: {};
+  experimental: {
+    escapeUtf8: boolean;
+  };
   /** List of warning identifiers to suppress during the build process. */
   suppressWarnings: {
     firefoxDataCollection?: boolean;
