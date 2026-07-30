@@ -59,7 +59,7 @@ export async function generateManifest(
     pkg?.version;
   if (versionName == null) {
     versionName = '0.0.0';
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/key-concepts/manifest.html#version-and-version-name',
     );
   }
@@ -76,7 +76,7 @@ export async function generateManifest(
   const userManifest = wxt.config.manifest;
   if (userManifest.manifest_version) {
     delete userManifest.manifest_version;
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       '`manifest.manifest_version` config was set, but ignored. To change the target manifest version, use the `manifestVersion` option or the `--mv2`/`--mv3` CLI flags.\nSee https://wxt.dev/guide/essentials/target-different-browsers.html#target-a-manifest-version',
     );
   }
@@ -122,7 +122,7 @@ export async function generateManifest(
       ?.data_collection_permissions &&
     !wxt.config.suppressWarnings?.firefoxDataCollection
   ) {
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
         'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
         'To suppress this warning, set `suppressWarnings.firefoxDataCollection` to `true` in your wxt config.\n',
@@ -134,7 +134,7 @@ export async function generateManifest(
     !manifest.browser_specific_settings?.gecko?.id &&
     !wxt.config.suppressWarnings?.firefoxId
   ) {
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       'Firefox requires extension ID for MV3 and recommends it for MV2.\n' +
         'For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id',
     );

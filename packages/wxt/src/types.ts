@@ -643,6 +643,18 @@ export interface Logger {
   level: LogLevel;
 }
 
+/**
+ * The logger available at `wxt.logger`. Extends {@link Logger} with a `warnOnce`
+ * which only logs a message once per process.
+ */
+export interface WxtLogger extends Logger {
+  /**
+   * Same as {@link Logger.warn}, but only logs a given message once per process,
+   * even if called multiple times with the same arguments.
+   */
+  warnOnce(...args: any[]): void;
+}
+
 export interface BaseEntrypointOptions {
   /**
    * List of target browsers to include this entrypoint in. Defaults to being
@@ -1520,8 +1532,8 @@ export interface Wxt {
   hooks: Hookable<WxtHooks>;
   /** Alias for `wxt.hooks.hook(...)`. */
   hook: Hookable<WxtHooks>['hook'];
-  /** Alias for config.logger */
-  logger: Logger;
+  /** Wraps `config.logger`, adding `warnOnce`. */
+  logger: WxtLogger;
   /** Reload config file and update `wxt.config` with the result. */
   reloadConfig: () => Promise<void>;
   /** Package manager utilities. */
