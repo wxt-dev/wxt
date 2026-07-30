@@ -7,7 +7,7 @@ import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
-import { createZip, Zip } from '@aklinker1/zero-zip';
+import { createZip, type Zip } from '@aklinker1/zero-zip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
 
