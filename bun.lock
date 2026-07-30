@@ -233,12 +233,12 @@
       "version": "1.2.8",
       "dependencies": {
         "@wxt-dev/browser": "workspace:^",
-        "dequal": "^2.0.3",
         "superlock": "^1.3.2",
       },
       "devDependencies": {
         "@aklinker1/buildc": "catalog:",
         "@webext-core/fake-browser": "catalog:",
+        "dequal": "^2.0.3",
         "oxlint": "catalog:",
         "publint": "catalog:",
         "tsdown": "catalog:",
