@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.6...i18n-v0.2.7)
+
+### 🏡 Chore
+
+- **deps**: Loosen version range for `@wxt-dev/browser` so projects can use any vesion ([`7946665`](https://github.com/wxt-dev/wxt/commit/794666597a5960a099ca1c54bb1f1cf3f231b990))
+
+### ❤️ Contributors
+
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.2.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.5...i18n-v0.2.6)
