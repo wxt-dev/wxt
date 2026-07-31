@@ -235,7 +235,7 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: "old" should output a JSON config file compatible with ESlint <= 8', async () => {
+    it('"enabled: "eslintrc" should output a JSON config file compatible with ESlint <= 8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 

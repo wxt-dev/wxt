@@ -63,7 +63,7 @@ export default {
 "
 `;
 
-exports[`Auto Imports > eslintrc > "enabled: "old" should output a JSON config file compatible with ESlint <= 8 1`] = `
+exports[`Auto Imports > eslintrc > "enabled: "eslintrc" should output a JSON config file compatible with ESlint <= 8 1`] = `
 ".wxt/eslintrc-auto-import.json
 ----------------------------------------
 {
