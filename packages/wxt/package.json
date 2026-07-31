@@ -40,7 +40,7 @@
     "magicast": "^0.5.2",
     "nanospinner": "^1.2.2",
     "normalize-path": "^3.0.0",
-    "nypm": "^0.6.5",
+    "nypm": "^0.6.9",
     "ohash": "^2.0.11",
     "picomatch": "^4.0.3",
     "publish-browser-extension": "^5.1.0 || ^6.0.0",
