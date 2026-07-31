@@ -1680,19 +1680,19 @@ export type DeprecatedEslintEnabledOption = 8 | 9 | 'auto';
 
 export interface Eslintrc {
   /**
-   * When true, generates a file that can be used by ESLint to know which
-   * variables are valid globals.
+   * Determines if and in what format a config file will be generated to inform
+   * ESLint of unimport globals.
    *
-   * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
-   *   config file.
-   * - `true`: Same as `'auto'`.
-   * - `false`: Don't generate the file.
-   * - `old`: Generate a config file compatible with ESLint &lte; 8.
-   * - `flat`: Generate a config file compatible with ESLint &gte; 9.
-   * - `8`: Same as `old`.
-   * - `9`: Same as `flat`.
+   * - `true`: If eslint is installed, generate a compatible config file based on
+   *   the installed version.
+   * - `false`: Never generate the file.
+   * - `'eslintrc'`: Generate a config file compatible with ESLint &lte; 8.
+   * - `'flat'`: Generate a config file compatible with ESLint &gte; 9.
+   * - `8` (Deprecated): Same as `'eslintrc'`.
+   * - `9` (Deprecated): Same as `'flat'`.
+   * - `'auto'` (Deprecated): Same as `true`.
    *
-   * @default 'auto'
+   * @default true
    */
   enabled?: EslintEnabledOption | DeprecatedEslintEnabledOption;
   /**

@@ -505,7 +505,7 @@ async function getUnimportEslintOptions(
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
-    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+    options === false ? false : (options?.eslintrc?.enabled ?? true);
 
   const version = await getEslintVersion();
   const major = parseInt(version[0]);
