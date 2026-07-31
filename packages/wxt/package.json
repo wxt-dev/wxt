@@ -15,7 +15,7 @@
     "prepack": "bun run build"
   },
   "dependencies": {
-    "@1natsu/wait-element": "^4.1.2",
+    "@1natsu/wait-element": "^4.2.0",
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@aklinker1/zero-zip": "^1.0.1",
     "@topcli/prompts": "^4.0.0",
