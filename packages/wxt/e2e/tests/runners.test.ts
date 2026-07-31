@@ -152,7 +152,7 @@ describe('Runners', () => {
           })
         `,
         );
-        project.registerWxt(cmd);
+        await project.registerWxt(cmd);
 
         expect(wxt.config.runner).toBe(manualRunner);
       },
