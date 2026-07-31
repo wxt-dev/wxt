@@ -17,6 +17,7 @@
   "dependencies": {
     "@1natsu/wait-element": "^4.1.2",
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
+    "@aklinker1/zero-zip": "^1.0.1",
     "@topcli/prompts": "^4.0.0",
     "@webext-core/fake-browser": "^2.0.1",
     "@webext-core/isolated-element": "^1.1.3 || ^2 || ^3",
@@ -35,7 +36,6 @@
     "hookable": "^6.1.0",
     "is-wsl": "^3.1.1",
     "json5": "^2.2.3",
-    "jszip": "^3.10.1",
     "linkedom": "^0.18.12",
     "magicast": "^0.5.2",
     "nano-spawn": "^2.0.0",

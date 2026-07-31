@@ -294,6 +294,7 @@
       "dependencies": {
         "@1natsu/wait-element": "^4.1.2",
         "@aklinker1/rollup-plugin-visualizer": "5.12.0",
+        "@aklinker1/zero-zip": "^1.0.1",
         "@topcli/prompts": "^4.0.0",
         "@webext-core/fake-browser": "^2.0.1",
         "@webext-core/isolated-element": "^1.1.3 || ^2 || ^3",
@@ -312,7 +313,6 @@
         "hookable": "^6.1.0",
         "is-wsl": "^3.1.1",
         "json5": "^2.2.3",
-        "jszip": "^3.10.1",
         "linkedom": "^0.18.12",
         "magicast": "^0.5.2",
         "nano-spawn": "^2.0.0",
@@ -417,6 +417,8 @@
     "@aklinker1/check": ["@aklinker1/check@2.4.0", "", { "bin": { "check": "bin/check.mjs" } }, "sha512-HkISZz9zeE34IVvCJfisvdp544B4blb2mO1a6UQotBof2mjToFs430FzSKX/lamfCPwYlj2xkYyYD8MMnwsuRg=="],
 
     "@aklinker1/rollup-plugin-visualizer": ["@aklinker1/rollup-plugin-visualizer@5.12.0", "", { "dependencies": { "open": "^8.4.0", "picomatch": "^2.3.1", "source-map": "^0.7.4", "yargs": "^17.5.1" }, "peerDependencies": { "rollup": "2.x || 3.x || 4.x" }, "optionalPeers": ["rollup"], "bin": { "rollup-plugin-visualizer": "dist/bin/cli.js" } }, "sha512-X24LvEGw6UFmy0lpGJDmXsMyBD58XmX1bbwsaMLhNoM+UMQfQ3b2RtC+nz4b/NoRK5r6QJSKJHBNVeUdwqybaQ=="],
+
+    "@aklinker1/zero-zip": ["@aklinker1/zero-zip@1.0.1", "", {}, "sha512-07a596Bd1QO0bi3tIyt2xruq6vKk7hCUt9enHBwggvipB0iiycoJ9/CqzN6UFawaKbOi6NBfMlUxUXzIOZ7Dsg=="],
 
     "@algolia/abtesting": ["@algolia/abtesting@1.14.0", "", { "dependencies": { "@algolia/client-common": "5.48.0", "@algolia/requester-browser-xhr": "5.48.0", "@algolia/requester-fetch": "5.48.0", "@algolia/requester-node-http": "5.48.0" } }, "sha512-cZfj+1Z1dgrk3YPtNQNt0H9Rr67P8b4M79JjUKGS0d7/EbFbGxGgSu6zby5f22KXo3LT0LZa4O2c6VVbupJuDg=="],
 

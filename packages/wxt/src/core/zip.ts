@@ -1,14 +1,13 @@
 import { InlineConfig } from '../types';
 import path from 'node:path';
-import { mkdir, readFile } from 'node:fs/promises';
-import { createWriteStream } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { safeFilename } from './utils/strings';
 import { getPackageJson } from './utils/package';
 import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
-import JSZip from 'jszip';
+import { createZip, type Zip } from '@aklinker1/zero-zip';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
 
@@ -124,12 +123,12 @@ async function zipDir(
       zipPath: string,
       content: string,
     ) => Promise<string | undefined | void> | string | undefined | void;
-    additionalWork?: (archive: JSZip) => Promise<void> | void;
+    additionalWork?: (archive: Zip) => Promise<void> | void;
     additionalFiles?: string[];
     dot?: boolean;
   },
 ): Promise<string[]> {
-  const archive = new JSZip();
+  const archive = createZip({ level: wxt.config.zip.compressionLevel });
   // includeSources patterns are used directly (defaults to ['**/*'] from config)
   // excludeSources patterns are passed to glob's ignore option for efficient filtering
   const files = await glob(options?.include ?? ['**/*'], {
@@ -148,32 +147,19 @@ async function zipDir(
     const absolutePath = path.resolve(directory, file);
     if (file.endsWith('.json')) {
       const content = await readFile(absolutePath, 'utf-8');
-      archive.file(
+      archive.addFile(
         file,
         (await options?.transform?.(absolutePath, file, content)) || content,
       );
     } else {
       const content = await readFile(absolutePath);
-      archive.file(file, content);
+      archive.addFile(file, content);
     }
   }
   await options?.additionalWork?.(archive);
 
-  await new Promise<void>((resolve, reject) =>
-    archive
-      .generateNodeStream({
-        type: 'nodebuffer',
-        ...(wxt.config.zip.compressionLevel === 0
-          ? { compression: 'STORE' }
-          : {
-              compression: 'DEFLATE',
-              compressionOptions: { level: wxt.config.zip.compressionLevel },
-            }),
-      })
-      .pipe(createWriteStream(outputPath))
-      .on('error', reject)
-      .on('close', resolve),
-  );
+  const zipBuffer = await archive.toBuffer();
+  await writeFile(outputPath, zipBuffer);
 
   return filesToZip;
 }
