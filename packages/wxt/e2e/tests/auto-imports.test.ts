@@ -342,9 +342,11 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 9)).rejects.toMatchObject({
             exitCode: 1,
-            stdout: expect.stringContaining(
-              "'defineBackground' is not defined",
-            ),
+            output: {
+              stdout: expect.stringContaining(
+                "'defineBackground' is not defined",
+              ),
+            },
           });
         });
 
@@ -391,9 +393,11 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 8)).rejects.toMatchObject({
             exitCode: 1,
-            stdout: expect.stringContaining(
-              "'defineBackground' is not defined",
-            ),
+            output: {
+              stdout: expect.stringContaining(
+                "'defineBackground' is not defined",
+              ),
+            },
           });
         });
 

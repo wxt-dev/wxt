@@ -5,7 +5,7 @@ import { printHeader } from '../core/utils/log';
 import { formatDuration } from '../core/utils/time';
 import { ValidationError } from '../core/utils/validation';
 import { registerWxt } from '../core/wxt';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug
@@ -97,7 +97,8 @@ export function createAliasedCommand(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
         await spawn(bin, args, {
-          stdio: 'inherit',
+          throwOnError: true,
+          nodeOptions: { stdio: 'inherit' },
         });
       } catch {
         // Let the other aliased CLI log errors, just exit

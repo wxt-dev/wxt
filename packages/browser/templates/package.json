@@ -27,7 +27,6 @@
   "devDependencies": {
     "@types/chrome": "{{chromeTypesVersion}}",
     "@types/node": "catalog:",
-    "nano-spawn": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import spawn, { Subprocess } from 'nano-spawn';
+import { Result, x as spawn } from 'tinyexec';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer as createNetServer } from 'node:net';
 import { dirname, relative, resolve } from 'path';
@@ -175,7 +175,10 @@ export class TestProject {
     // project will reuse the ones in `packages/wxt/node_modules`!
     if (this.hasCustomDependencies) {
       await spawn('bun', ['install', '--ignore-scripts'], {
-        cwd: this.root,
+        throwOnError: true,
+        nodeOptions: {
+          cwd: this.root,
+        },
       });
     }
 
@@ -248,9 +251,12 @@ export class TestProject {
   }
 
   /** Run a command using the project's package manager. */
-  async run(...args: string[]): Promise<Subprocess> {
+  async run(...args: string[]): Promise<Result> {
     return await spawn('bun', args, {
-      cwd: this.root,
+      throwOnError: true,
+      nodeOptions: {
+        cwd: this.root,
+      },
     });
   }
 }
