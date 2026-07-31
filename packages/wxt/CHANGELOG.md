@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.21.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.2...wxt-v0.21.3)
+
+### 🚀 Features
+
+- **rolldown**: Provide `experimental.escapeUnicode` option to escape some unicode characters ([#2537](https://github.com/wxt-dev/wxt/pull/2537))
+
+### 📖 Documentation
+
+- Update bundle size for 0.21 ([`574c3bd`](https://github.com/wxt-dev/wxt/commit/574c3bd90ac8cd2b32896e68557197e32a462706))
+- Remove dangling "Remote Code" sidebar link ([#2532](https://github.com/wxt-dev/wxt/pull/2532))
+
+### 🏡 Chore
+
+- Add support for `publish-browser-extension` v6 ([`8dc8fa6`](https://github.com/wxt-dev/wxt/commit/8dc8fa6f5148e008a3843a0389d7c0ee1a2b8e5e))
+- **deps**: Drop `import-meta-resolve` ([#2526](https://github.com/wxt-dev/wxt/pull/2526))
+- **deps**: Replace `open` with `tiny-open` ([#2527](https://github.com/wxt-dev/wxt/pull/2527))
+- **deps**: Replace `prompts` with `@topcli/prompts` ([#2528](https://github.com/wxt-dev/wxt/pull/2528))
+- **deps**: Replace `async-mutex` with `superlock` ([#2529](https://github.com/wxt-dev/wxt/pull/2529))
+- Use Vite 8 for WXT development ([#2540](https://github.com/wxt-dev/wxt/pull/2540))
+- **deps**: Replace `ci-info`  with custom `isCI` function ([#2543](https://github.com/wxt-dev/wxt/pull/2543))
+- **deps**: Replace `jszip` with `@aklinker1/zero-zip` ([#2538](https://github.com/wxt-dev/wxt/pull/2538))
+
+### ❤️ Contributors
+
+- [@rxliuli](https://github.com/rxliuli)
+- [@suveshmoza](https://github.com/suveshmoza)
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.21.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.1...wxt-v0.21.2)
@@ -17,7 +48,6 @@
 ### ❤️ Contributors
 
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v0.21.1
 
