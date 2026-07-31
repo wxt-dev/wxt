@@ -1,5 +1,5 @@
 import consola from 'consola';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 import { resolve } from 'node:path';
 import { version } from '../../../packages/wxt/package.json';
 
@@ -40,9 +40,10 @@ export default {
 async function getHelp(command: string): Promise<string> {
   const args = command.split(' ');
   const result = await spawn(args[0], [...args.slice(1), '--help'], {
-    cwd: 'packages/wxt',
+    throwOnError: true,
+    nodeOptions: { cwd: 'packages/wxt' },
   });
-  return result.stdout;
+  return result.stdout.trimEnd();
 }
 
 async function getWxtHelp(command: string): Promise<string> {

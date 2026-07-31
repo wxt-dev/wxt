@@ -1,4 +1,4 @@
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { pnpm } from '../pnpm';
@@ -12,7 +12,10 @@ describeWithBin('pnpm', 'PNPM Package Management Utils', () => {
 
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await spawn('pnpm', ['install'], { cwd });
+      await spawn('pnpm', ['install'], {
+        throwOnError: true,
+        nodeOptions: { cwd },
+      });
     }, 30e3);
 
     it('should list direct dependencies', async () => {

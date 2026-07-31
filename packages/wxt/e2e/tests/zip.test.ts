@@ -1,5 +1,5 @@
 import extract from 'extract-zip';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
 
@@ -30,14 +30,16 @@ describe('Zipping', () => {
     // Build zipped extension
     await expect(
       spawn('bun', ['install'], {
-        cwd: unzipDir,
+        throwOnError: true,
+        nodeOptions: { cwd: unzipDir },
       }),
-    ).resolves.not.toHaveProperty('exitCode');
+    ).resolves.toMatchObject({ exitCode: 0 });
     await expect(
       spawn('bun', ['wxt', 'build', '-b', 'firefox'], {
-        cwd: unzipDir,
+        throwOnError: true,
+        nodeOptions: { cwd: unzipDir },
       }),
-    ).resolves.not.toHaveProperty('exitCode');
+    ).resolves.toMatchObject({ exitCode: 0 });
 
     await expect(project.pathExists(unzipDir, '.output')).resolves.toBe(true);
     expect(

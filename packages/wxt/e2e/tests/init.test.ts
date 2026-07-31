@@ -1,4 +1,4 @@
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { glob } from 'tinyglobby';
 import { describe, expect, it } from 'vitest';
@@ -23,9 +23,12 @@ describe('Init command', () => {
         'npm',
       ],
       {
-        env: { CI: 'true' },
-        stdio: 'ignore',
-        cwd: WXT_PACKAGE_DIR,
+        throwOnError: true,
+        nodeOptions: {
+          env: { ...process.env, CI: 'true' },
+          stdio: 'ignore',
+          cwd: WXT_PACKAGE_DIR,
+        },
       },
     );
     const files = await glob('**/*', {
@@ -81,11 +84,14 @@ describe('Init command', () => {
           'npm',
         ],
         {
-          env: { CI: 'true' },
-          stdio: 'ignore',
-          cwd: WXT_PACKAGE_DIR,
+          throwOnError: true,
+          nodeOptions: {
+            env: { ...process.env, CI: 'true' },
+            stdio: 'ignore',
+            cwd: WXT_PACKAGE_DIR,
+          },
         },
       ),
-    ).rejects.toThrowError('Command failed with exit code 1:');
+    ).rejects.toThrowError('Process exited with non-zero status (1)');
   });
 });
