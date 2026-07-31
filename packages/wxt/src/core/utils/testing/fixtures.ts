@@ -1,12 +1,13 @@
 import { spawnSync } from 'node:child_process';
 import { describe } from 'vitest';
+import { isCI } from '../env';
 
 export function describeWithBin(
   bin: string,
   title: string,
   callback: () => void,
 ) {
-  if (process.env.CI === 'true') return describe(title, callback);
+  if (isCI()) return describe(title, callback);
 
   const result = spawnSync(bin, ['--version'], {
     stdio: 'ignore',

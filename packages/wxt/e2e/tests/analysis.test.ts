@@ -6,8 +6,9 @@ import open from 'tiny-open';
 vi.mock('tiny-open');
 const openMock = vi.mocked(open);
 
-vi.mock('ci-info', () => ({
-  isCI: false,
+vi.mock('../../src/core/utils/env', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/core/utils/env')>()),
+  isCI: () => false,
 }));
 
 describe('Analysis', () => {
