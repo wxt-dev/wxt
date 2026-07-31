@@ -15,17 +15,25 @@ runs:
       with:
         bun-version-file: '.tool-versions'
 
-    - name: 📦 Cache Dependencies
+    - name: 🔍 Get Bun cache path
       if: ${{ inputs.install == 'true' }}
-      id: cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      id: bun-cache
+      shell: bash
+      run: echo "path=$(bun pm cache)" >> $GITHUB_OUTPUT
+
+    - name: 📦 Cache Bun store
+      if: ${{ inputs.install == 'true' }}
+      uses: actions/cache@v4
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-          packages/*/.wxt
-          .cache/packages
+        path: ${{ steps.bun-cache.outputs.path }}
         key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+
+    - name: 📦 Cache buildc
+      if: ${{ inputs.install == 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: .cache/packages
+        key: ${{ runner.os }}-buildc-${{ hashFiles('bun.lock') }}
 
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
