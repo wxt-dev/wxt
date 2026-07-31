@@ -1,5 +1,5 @@
 import { expect, describe, vi, it, beforeEach } from 'vitest';
-import { ExtensionRunner } from '../../src';
+import { ExtensionRunner, WxtCommand } from '../../src';
 import { createSafariRunner } from '../../src/core/runners/safari';
 import { createManualRunner } from '../../src/core/runners/manual';
 import { createWebExtRunner } from '../../src/core/runners/web-ext';
@@ -75,6 +75,88 @@ describe('Runners', () => {
   beforeEach(() => {
     isWsl = false;
     importWebExtRunnerError = undefined;
+  });
+
+  describe('config', () => {
+    describe('Merging webExt sources', () => {
+      const CONFIG_FILE_VALUE = 'config-file';
+      const INLINE_VALUE = 'inline';
+      const USER_VALUE = 'user';
+
+      async function runTest(
+        inline: boolean,
+        configFile: boolean,
+        user: boolean,
+        expected: string,
+      ) {
+        const project = TestProject.simple();
+        if (configFile)
+          project.addFile(
+            'web-ext.config.ts',
+            `
+            import { defineWebExtConfig } from 'wxt'
+
+            export default defineWebExtConfig({
+              src: "${CONFIG_FILE_VALUE}",
+            })
+          `,
+          );
+        if (user)
+          project.addFile(
+            'wxt.config.ts',
+            `
+            import { defineConfig } from 'wxt'
+
+            export default defineConfig({
+              webExt: {
+                src: "${USER_VALUE}",
+              }
+            })
+          `,
+          );
+
+        await project.prepare({
+          // @ts-expect-error: Random fields should be allowed through
+          webExt: inline ? { src: INLINE_VALUE } : {},
+        });
+
+        expect(wxt.config.webExt.config).toEqual({
+          src: expected,
+        });
+      }
+
+      it('should prioritize the inline config first', async () => {
+        await runTest(true, true, true, INLINE_VALUE);
+      });
+
+      it('should prioritize the config file second', async () => {
+        await runTest(false, true, true, CONFIG_FILE_VALUE);
+      });
+
+      it('should prioritize the user config third', async () => {
+        await runTest(false, false, true, USER_VALUE);
+      });
+    });
+
+    it.each<WxtCommand>(['build', 'serve'])(
+      'should use the manual runner when disabled from web-ext.config.ts file for %s',
+      async (cmd) => {
+        const project = TestProject.simple();
+        project.addFile(
+          'web-ext.config.ts',
+          `
+          import { defineWebExtConfig } from 'wxt'
+
+          export default defineWebExtConfig({
+            disabled: true,
+          })
+        `,
+        );
+        await project.registerWxt(cmd);
+
+        expect(wxt.config.runner).toBe(manualRunner);
+      },
+    );
   });
 
   describe('build', () => {
