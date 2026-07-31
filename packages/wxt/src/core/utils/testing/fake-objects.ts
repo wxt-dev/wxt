@@ -26,7 +26,7 @@ import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.env.TEST_SEED);
+faker.seed(__TEST_SEED__);
 
 type DeepPartial<T> = T extends object
   ? {
