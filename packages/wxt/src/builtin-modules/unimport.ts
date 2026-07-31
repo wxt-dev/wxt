@@ -1,13 +1,13 @@
 import { addViteConfig, defineWxtModule } from '../modules';
-import {
+import type {
   EslintGlobalsPropValue,
-  EslintEnabledOption,
   Wxt,
   WxtDirFileEntry,
   WxtModule,
   WxtResolvedUnimportOptions,
+  EslintConfigVersion,
 } from '../types';
-import { createUnimport, toExports, type Unimport } from 'unimport';
+import { type Unimport, createUnimport, toExports } from 'unimport';
 import UnimportPlugin from 'unimport/unplugin';
 
 export default defineWxtModule({
@@ -104,7 +104,7 @@ async function getImportsModuleEntry(
 
 async function getEslintConfigEntry(
   unimport: Unimport,
-  enabled: EslintEnabledOption,
+  configVersion: EslintConfigVersion,
   options: WxtResolvedUnimportOptions,
 ): Promise<WxtDirFileEntry> {
   const globals = (await unimport.getImports())
@@ -116,11 +116,11 @@ async function getEslintConfigEntry(
       return globals;
     }, {});
 
-  if (enabled == 'eslintrc') return getEslintrcEntry(options, globals);
-  else return getEslintFlatConfigEntry(options, globals);
+  if (configVersion === 8) return getEslint8ConfigEntry(options, globals);
+  return getEslint9ConfigEntry(options, globals);
 }
 
-export function getEslintrcEntry(
+export function getEslint8ConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
 ): WxtDirFileEntry {
@@ -130,7 +130,7 @@ export function getEslintrcEntry(
   };
 }
 
-export function getEslintFlatConfigEntry(
+export function getEslint9ConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
 ): WxtDirFileEntry {

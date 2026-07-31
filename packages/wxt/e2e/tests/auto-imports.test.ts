@@ -218,41 +218,27 @@ describe('Auto Imports', () => {
   });
 
   describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint of package.json', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+    it.each([true, 'auto'] as const)(
+      '"enabled: %s" should output a JSON config file compatible with ESlint of package.json',
+      async (enabled) => {
+        const project = new TestProject();
+        project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: true,
+        await project.prepare({
+          imports: {
+            eslintrc: {
+              enabled,
+            },
           },
-        },
-      });
+        });
 
-      expect(
-        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
-      ).toMatchSnapshot();
-    });
+        expect(
+          await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+        ).toMatchSnapshot();
+      },
+    );
 
-    it('"enabled: "eslintrc" should output a JSON config file compatible with ESlint <= 8', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
-
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: 'eslintrc',
-          },
-        },
-      });
-
-      expect(
-        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
-      ).toMatchSnapshot();
-    });
-
-    it('"enabled: 8" should fallback to the JSON config', async () => {
+    it('"enabled: 8" should output a JSON config file compatible with ESlint <=8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -264,32 +250,12 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
-        true,
-      );
-      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
-        false,
-      );
-    });
-
-    it('"enabled: "flat" should output a flat config file compatible with ESlint >= 9', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
-
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: 'flat',
-          },
-        },
-      });
-
       expect(
-        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
       ).toMatchSnapshot();
     });
 
-    it('"enabled: 9" should fallback to the flat config', async () => {
+    it('"enabled: 9" should output a flat config file compatible with ESlint >=9', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -301,12 +267,9 @@ describe('Auto Imports', () => {
         },
       });
 
-      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
-        true,
-      );
-      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
-        false,
-      );
+      expect(
+        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+      ).toMatchSnapshot();
     });
 
     it('"enabled: false" should NOT output an ESlint config file', async () => {

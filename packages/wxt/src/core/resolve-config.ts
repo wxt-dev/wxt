@@ -513,27 +513,17 @@ async function getUnimportEslintOptions(
   let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
+      logger.warn(
+        `\`imports.eslint.enabled: "auto"\` is deprecated. Use \`true\` instead.`,
+      );
     case true:
-      if (isNaN(major)) {
-        if (inlineEnabled === true) {
-          logger.warn(
-            'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
-          );
-        }
-        enabled = false;
-      } else if (major <= 8) {
-        enabled = 'eslintrc';
+      if (major <= 8) {
+        enabled = 8;
       } else if (major >= 9) {
-        enabled = 'flat';
+        enabled = 9;
       } else {
         enabled = false;
       }
-      break;
-    case 8:
-      enabled = 'eslintrc';
-      break;
-    case 9:
-      enabled = 'flat';
       break;
     default:
       enabled = inlineEnabled;
@@ -543,9 +533,7 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 'flat'
-        ? 'eslint-auto-imports.mjs'
-        : 'eslintrc-auto-import.json',
+      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
     ),
     globalsPropValue: true,
   };

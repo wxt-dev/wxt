@@ -3,30 +3,30 @@ import { resolve } from 'path';
 import { faker } from '@faker-js/faker';
 import merge from 'lodash.merge';
 import {
-  BackgroundEntrypoint,
-  BaseEntrypoint,
-  BuildOutput,
-  BuildStepOutput,
-  ContentScriptEntrypoint,
   FsCache,
+  ResolvedConfig,
+  WxtDevServer,
+  BackgroundEntrypoint,
+  ContentScriptEntrypoint,
   GenericEntrypoint,
   OptionsEntrypoint,
-  OutputAsset,
-  OutputChunk,
   PopupEntrypoint,
-  ResolvedConfig,
-  SidepanelEntrypoint,
-  UnlistedScriptEntrypoint,
+  OutputChunk,
+  OutputAsset,
+  BuildOutput,
+  BuildStepOutput,
   UserManifest,
   Wxt,
-  WxtDevServer,
+  SidepanelEntrypoint,
+  BaseEntrypoint,
+  UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.env.TEST_SEED);
+faker.seed(__TEST_SEED__);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -243,7 +243,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     imports: {
       disabled: faker.datatype.boolean(),
       eslintrc: {
-        enabled: faker.helpers.arrayElement([false, 'eslintrc', 'flat']),
+        enabled: faker.helpers.arrayElement([false, 8, 9]),
         filePath: fakeFile(),
         globalsPropValue: faker.helpers.arrayElement([
           true,
@@ -297,7 +297,9 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     },
     userConfigMetadata: {},
     alias: {},
-    experimental: {},
+    experimental: {
+      escapeUnicode: false,
+    },
     watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
