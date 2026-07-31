@@ -9,7 +9,6 @@
 .wxt-runner
 *.log
 *.tgz
-!packages/wxt/aklinker1-zero-zip-1.0.0.tgz
 /docs/.vitepress/cache
 docs/.vitepress/.temp
 coverage
