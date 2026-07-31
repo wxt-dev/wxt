@@ -52,7 +52,7 @@
     "wxt": ">=0.19.16"
   },
   "dependencies": {
-    "@vitejs/plugin-react": ">=4"
+    "@vitejs/plugin-react": "^4.4.1 || ^5.0.0 || ^6.0.0"
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
@@ -63,7 +63,7 @@
     "react-dom": "^19.2.4",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
+    "vite": "^7.0.0",
     "wxt": "workspace:*"
   }
 }
