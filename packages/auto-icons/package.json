@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "defu": "^6.1.4",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
