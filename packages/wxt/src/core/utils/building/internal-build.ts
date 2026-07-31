@@ -16,7 +16,7 @@ import {
 } from '../validation';
 import { wxt } from '../../wxt';
 import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
-import { isCI } from 'ci-info';
+import { isCI } from '../env';
 import { styleText } from 'node:util';
 import open from 'tiny-open';
 
@@ -85,7 +85,7 @@ export async function internalBuild(): Promise<BuildOutput> {
       `Analysis complete:\n  ${styleText('gray', '└─')} ${styleText('yellow', statsPath)}`,
     );
     if (wxt.config.analysis.open) {
-      if (isCI) {
+      if (isCI()) {
         wxt.logger.debug(
           `Skipped opening ${styleText('yellow', statsPath)} in CI`,
         );
