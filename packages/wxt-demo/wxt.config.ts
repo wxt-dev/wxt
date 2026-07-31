@@ -16,7 +16,6 @@ export default defineConfig({
   },
   zip: {
     downloadPackages: ['sass'],
-    compressionLevel: 0,
   },
   analysis: {
     open: true,
