@@ -8,7 +8,7 @@ import { formatDuration } from './utils/time';
 import { printFileList } from './utils/log';
 import { findEntrypoints, internalBuild } from './utils/building';
 import { registerWxt, wxt } from './wxt';
-import JSZip from 'jszip';
+import * as fflate from 'fflate';
 import { glob } from 'tinyglobby';
 import { normalizePath } from './utils';
 
@@ -124,12 +124,13 @@ async function zipDir(
       zipPath: string,
       content: string,
     ) => Promise<string | undefined | void> | string | undefined | void;
-    additionalWork?: (archive: JSZip) => Promise<void> | void;
+    additionalWork?: (
+      files: Record<string, Uint8Array>,
+    ) => Promise<void> | void;
     additionalFiles?: string[];
     dot?: boolean;
   },
 ): Promise<string[]> {
-  const archive = new JSZip();
   // includeSources patterns are used directly (defaults to ['**/*'] from config)
   // excludeSources patterns are passed to glob's ignore option for efficient filtering
   const files = await glob(options?.include ?? ['**/*'], {
@@ -144,36 +145,42 @@ async function zipDir(
       path.relative(directory, file),
     ),
   ].sort();
+
+  const filesMap: Record<string, Uint8Array> = {};
+
   for (const file of filesToZip) {
     const absolutePath = path.resolve(directory, file);
     if (file.endsWith('.json')) {
       const content = await readFile(absolutePath, 'utf-8');
-      archive.file(
-        file,
-        (await options?.transform?.(absolutePath, file, content)) || content,
-      );
+      const transformed =
+        (await options?.transform?.(absolutePath, file, content)) || content;
+      filesMap[file] = new TextEncoder().encode(transformed);
     } else {
       const content = await readFile(absolutePath);
-      archive.file(file, content);
+      filesMap[file] = new Uint8Array(content);
     }
   }
-  await options?.additionalWork?.(archive);
 
-  await new Promise<void>((resolve, reject) =>
-    archive
-      .generateNodeStream({
-        type: 'nodebuffer',
-        ...(wxt.config.zip.compressionLevel === 0
-          ? { compression: 'STORE' }
-          : {
-              compression: 'DEFLATE',
-              compressionOptions: { level: wxt.config.zip.compressionLevel },
-            }),
-      })
-      .pipe(createWriteStream(outputPath))
-      .on('error', reject)
-      .on('close', resolve),
-  );
+  await options?.additionalWork?.(filesMap);
+
+  await new Promise<void>((resolve, reject) => {
+    const compressionLevel =
+      wxt.config.zip.compressionLevel === 0
+        ? 0
+        : wxt.config.zip.compressionLevel;
+
+    fflate.zip(filesMap, { level: compressionLevel }, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const writeStream = createWriteStream(outputPath);
+      writeStream.write(Buffer.from(data));
+      writeStream.end();
+      writeStream.on('error', reject);
+      writeStream.on('close', resolve);
+    });
+  });
 
   return filesToZip;
 }

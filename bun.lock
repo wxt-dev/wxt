@@ -307,13 +307,13 @@
         "consola": "^3.4.2",
         "defu": "^6.1.4",
         "dotenv-expand": "^13.0.0",
+        "fflate": "^0.8.3",
         "filesize": "^11.0.17",
         "get-port-please": "^3.2.0",
         "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
         "hookable": "^6.1.0",
         "is-wsl": "^3.1.1",
         "json5": "^2.2.3",
-        "jszip": "^3.10.1",
         "linkedom": "^0.18.12",
         "magicast": "^0.5.2",
         "nano-spawn": "^2.0.0",
@@ -1616,6 +1616,8 @@
     "fdir": ["fdir@6.5.0", "", { "peerDependencies": { "picomatch": "^3 || ^4" }, "optionalPeers": ["picomatch"] }, "sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg=="],
 
     "feed": ["feed@5.2.1", "", { "dependencies": { "xml-js": "^1.6.11" } }, "sha512-jTynzYPWs9ALjro0GW8j7sv9y7cJBeOdD4Y88kVqYy/eyusIX3g+499JiTDIlD9Ge/unebx57T4Uzo6vpYvMtA=="],
+
+    "fflate": ["fflate@0.8.3", "", {}, "sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA=="],
 
     "file-entry-cache": ["file-entry-cache@8.0.0", "", { "dependencies": { "flat-cache": "^4.0.0" } }, "sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ=="],
 
