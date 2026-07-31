@@ -1,0 +1,4 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["src/core/utils/building/__tests__/test-entrypoints"],
+}
