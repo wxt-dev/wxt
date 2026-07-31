@@ -23,7 +23,6 @@ export default defineConfig([
     unbundle: true,
     deps: {
       neverBundle: ['wxt/browser', 'virtual:app-config'],
-      alwaysBundle: ['@aklinker1/zero-zip'],
     },
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
