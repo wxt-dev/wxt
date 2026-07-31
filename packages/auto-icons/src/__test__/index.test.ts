@@ -1,22 +1,21 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { resolve } from 'node:path';
-import * as fsPromises from 'node:fs/promises';
-import sharp from 'sharp';
+import { access, mkdir } from 'node:fs/promises';
+import sharp, { type Sharp } from 'sharp';
 import type { Wxt, UserManifest } from 'wxt';
+import autoIconsModule, { type AutoIconsOptions } from '../index';
 
-// Import the actual module
-import autoIconsModule from '../index';
-import type { AutoIconsOptions } from '../index';
-
-// Mock dependencies
 vi.mock('node:fs/promises', () => ({
-  mkdir: vi.fn(),
   access: vi.fn(),
+  mkdir: vi.fn(),
 }));
+const accessMock = vi.mocked(access);
+const mkdirMock = vi.mocked(mkdir);
 
 vi.mock('sharp', () => ({
   default: vi.fn(),
 }));
+const sharpMock = vi.mocked(sharp);
 
 // Type definitions for better type safety
 interface MockWxt {
@@ -83,11 +82,9 @@ describe('auto-icons module', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSharpInstance = createMockSharpInstance();
-    vi.mocked(sharp).mockReturnValue(
-      mockSharpInstance as unknown as sharp.Sharp,
-    );
-    vi.mocked(fsPromises.access).mockResolvedValue(undefined);
-    vi.mocked(fsPromises.mkdir).mockResolvedValue(undefined as any);
+    sharpMock.mockReturnValue(mockSharpInstance as unknown as Sharp);
+    accessMock.mockResolvedValue(undefined);
+    mkdirMock.mockResolvedValue(undefined as any);
   });
 
   describe('module setup', () => {
@@ -158,7 +155,7 @@ describe('auto-icons module', () => {
     });
 
     it('should warn when base icon not found', async () => {
-      vi.mocked(fsPromises.access).mockRejectedValue(new Error('ENOENT'));
+      accessMock.mockRejectedValue(new Error('ENOENT'));
 
       const options: AutoIconsOptions = {
         enabled: true,
@@ -293,10 +290,9 @@ describe('auto-icons module', () => {
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(32);
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(16);
 
-      expect(fsPromises.mkdir).toHaveBeenCalledWith(
-        resolve('/mock/dist', 'icons'),
-        { recursive: true },
-      );
+      expect(mkdirMock).toHaveBeenCalledWith(resolve('/mock/dist', 'icons'), {
+        recursive: true,
+      });
 
       expect(output.publicAssets).toEqual([
         { type: 'asset', fileName: 'icons/128.png' },
@@ -515,9 +511,7 @@ describe('auto-icons module', () => {
       };
 
       // Make ensureDir throw an error
-      vi.mocked(fsPromises.mkdir).mockRejectedValue(
-        new Error('Directory creation failed'),
-      );
+      mkdirMock.mockRejectedValue(new Error('Directory creation failed'));
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
@@ -531,7 +525,7 @@ describe('auto-icons module', () => {
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
         // But ensureDir should have been called
-        expect(fsPromises.mkdir).toHaveBeenCalled();
+        expect(mkdirMock).toHaveBeenCalled();
       }
     });
 
