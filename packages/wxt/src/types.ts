@@ -1664,14 +1664,19 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
-export type EslintSupportedVersions = boolean | 'old' | 'flat';
+export type EslintConfigFormat = 'eslintrc' | 'flat';
+
+export type EslintEnabledOption = boolean | EslintConfigFormat;
+
+/** @deprecated Use `EslintEnabledOption` instead */
+export type EslintSupportedVersions = EslintEnabledOption;
 
 /**
- * @deprecated Use `EslintSupportedVersions` (`'old'`/`'flat'`) instead. Legacy
+ * @deprecated Use `EslintEnabledOption` (`'eslintrc'`/`'flat'`) instead. Legacy
  *   numeric values and 'auto' are supported for backwards compatibility and
  *   will be removed in the next major version.
  */
-export type EslintLegacySupportedVersions = 8 | 9 | 10 | 'auto';
+export type DeprecatedEslintEnabledOption = 8 | 9 | 'auto';
 
 export interface Eslintrc {
   /**
@@ -1686,13 +1691,10 @@ export interface Eslintrc {
    * - `flat`: Generate a config file compatible with ESLint &gte; 9.
    * - `8`: Same as `old`.
    * - `9`: Same as `flat`.
-   * - `10`: Same as `flat`.
    *
-   * @deprecated Values `8`, `9`, `10`, and `'auto'` are legacy aliases and will
-   *   be removed in the next major version.
    * @default 'auto'
    */
-  enabled?: EslintSupportedVersions | EslintLegacySupportedVersions;
+  enabled?: EslintEnabledOption | DeprecatedEslintEnabledOption;
   /**
    * File path to save the generated eslint config.
    *
@@ -1708,7 +1710,7 @@ export interface Eslintrc {
 
 export interface ResolvedEslintrc {
   /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | EslintSupportedVersions;
+  enabled: false | EslintConfigFormat;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;

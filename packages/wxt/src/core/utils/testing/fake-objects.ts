@@ -243,7 +243,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     imports: {
       disabled: faker.datatype.boolean(),
       eslintrc: {
-        enabled: faker.helpers.arrayElement([false, 'old', 'flat']),
+        enabled: faker.helpers.arrayElement([false, 'eslintrc', 'flat']),
         filePath: fakeFile(),
         globalsPropValue: faker.helpers.arrayElement([
           true,

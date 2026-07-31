@@ -522,7 +522,7 @@ async function getUnimportEslintOptions(
         }
         enabled = false;
       } else if (major <= 8) {
-        enabled = 'old';
+        enabled = 'eslintrc';
       } else if (major >= 9) {
         enabled = 'flat';
       } else {
@@ -530,10 +530,9 @@ async function getUnimportEslintOptions(
       }
       break;
     case 8:
-      enabled = 'old';
+      enabled = 'eslintrc';
       break;
     case 9:
-    case 10:
       enabled = 'flat';
       break;
     default:

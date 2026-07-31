@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import { EslintSupportedVersions } from '../../src';
+import { EslintEnabledOption } from '../../src';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -242,7 +242,7 @@ describe('Auto Imports', () => {
       await project.prepare({
         imports: {
           eslintrc: {
-            enabled: 'old',
+            enabled: 'eslintrc',
           },
         },
       });
@@ -309,26 +309,6 @@ describe('Auto Imports', () => {
       );
     });
 
-    it('"enabled: 10" should fallback to the flat config', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
-
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: 10,
-          },
-        },
-      });
-
-      expect(await project.pathExists('.wxt/eslint-auto-imports.mjs')).toBe(
-        true,
-      );
-      expect(await project.pathExists('.wxt/eslintrc-auto-import.json')).toBe(
-        false,
-      );
-    });
-
     it('"enabled: false" should NOT output an ESlint config file', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
@@ -369,14 +349,14 @@ describe('Auto Imports', () => {
     describe('Actual linting results', () => {
       async function runEslint(
         project: TestProject,
-        version: EslintSupportedVersions,
+        enabled: EslintEnabledOption,
       ) {
         project.addFile(
           'entrypoints/background.js',
           `export default defineBackground(() => {})`,
         );
         await project.prepare({
-          imports: { eslintrc: { enabled: version } },
+          imports: { eslintrc: { enabled } },
         });
 
         return await project.run('eslint', 'entrypoints/background.js');
@@ -450,7 +430,7 @@ describe('Auto Imports', () => {
             }),
           );
 
-          await expect(runEslint(project, 'old')).rejects.toMatchObject({
+          await expect(runEslint(project, 'eslintrc')).rejects.toMatchObject({
             exitCode: 1,
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
@@ -475,7 +455,7 @@ describe('Auto Imports', () => {
               ],
             }),
           );
-          const res = await runEslint(project, 'old');
+          const res = await runEslint(project, 'eslintrc');
 
           expect(res).toBeDefined();
         });
