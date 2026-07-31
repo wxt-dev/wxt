@@ -99,15 +99,7 @@ describe('Output Directory Structure', () => {
       `body { color: purple }`,
     );
 
-    await project.build({
-      vite: () => ({
-        build: {
-          rollupOptions: {
-            strictDeprecations: true,
-          },
-        },
-      }),
-    });
+    await project.build();
 
     expect(
       await project.serializeOutput([
