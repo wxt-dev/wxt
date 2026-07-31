@@ -1684,11 +1684,6 @@ export type EslintGlobalsPropValue =
 
 export type EslintConfigVersion = 8 | 9;
 
-export type EslintEnabledOption = boolean | 'auto' | EslintConfigVersion;
-
-/** @deprecated Use `EslintEnabledOption` instead */
-export type EslintSupportedVersions = EslintEnabledOption;
-
 export interface Eslintrc {
   /**
    * Determines if and in what format a config file will be generated to inform
@@ -1703,7 +1698,7 @@ export interface Eslintrc {
    *
    * @default true
    */
-  enabled?: EslintEnabledOption;
+  enabled?: boolean | 'auto' | EslintConfigVersion;
   /**
    * File path to save the generated eslint config.
    *

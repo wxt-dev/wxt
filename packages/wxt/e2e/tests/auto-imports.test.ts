@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import { EslintEnabledOption } from '../../src';
+import { EslintConfigVersion } from '../../src';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -312,7 +312,7 @@ describe('Auto Imports', () => {
     describe('Actual linting results', () => {
       async function runEslint(
         project: TestProject,
-        enabled: EslintEnabledOption,
+        enabled: EslintConfigVersion,
       ) {
         project.addFile(
           'entrypoints/background.js',
