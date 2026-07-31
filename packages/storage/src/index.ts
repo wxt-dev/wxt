@@ -7,7 +7,7 @@
  * @module @wxt-dev/storage
  */
 import { browser, type Browser } from '@wxt-dev/browser';
-import { Mutex } from 'async-mutex';
+import { withLock } from 'superlock';
 import { dequal } from 'dequal/lite';
 
 export const storage = createStorage();
@@ -487,12 +487,12 @@ function createStorage(): WxtStorage {
               );
             });
 
-      const initMutex = new Mutex();
+      const initLock = withLock();
 
       const getFallback = () => opts?.fallback ?? opts?.defaultValue ?? null;
 
       const getOrInitValue = () =>
-        initMutex.runExclusive(async () => {
+        initLock(async () => {
           const value = await driver.getItem<any>(driverKey);
           // Don't init value if it already exists or the init function isn't provided
           if (value != null || opts?.init == null) return value;

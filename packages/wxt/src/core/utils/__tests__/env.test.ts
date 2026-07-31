@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { loadEnv } from '../env';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { isCI, loadEnv } from '../env';
 
 const cwd = process.cwd();
 
@@ -8,6 +8,27 @@ describe('Env Utils', () => {
     if (process.cwd() !== cwd) process.chdir(cwd);
     delete process.env.TEST_VAR;
     delete process.env.EXPANDED;
+  });
+
+  describe('isCI', () => {
+    beforeEach(() => {
+      vi.unstubAllEnvs();
+      vi.stubEnv('CI', '');
+    });
+
+    it('should return false when CI is not set', () => {
+      expect(isCI()).toBe(false);
+    });
+
+    it('should return true when CI is set', () => {
+      vi.stubEnv('CI', 'true');
+      expect(isCI()).toBe(true);
+    });
+
+    it('should return false when CI is explicitly false', () => {
+      vi.stubEnv('CI', 'false');
+      expect(isCI()).toBe(false);
+    });
   });
 
   describe('loadEnv', () => {

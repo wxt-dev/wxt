@@ -1,4 +1,4 @@
-import { Mutex } from 'async-mutex';
+import { withLock } from 'superlock';
 import { relative } from 'node:path';
 import {
   BuildOutput,
@@ -30,12 +30,12 @@ import { normalizePath } from './paths';
  * when a file changes.
  */
 export function createFileReloader(server: WxtDevServer) {
-  const fileChangedMutex = new Mutex();
+  const fileChangedLock = withLock();
   const changeQueue: Array<[string, string]> = [];
   let processLoop: Promise<void> | undefined;
 
   const processQueue = async () => {
-    const reloading = fileChangedMutex.runExclusive(async () => {
+    const reloading = fileChangedLock(async () => {
       const fileChanges = changeQueue
         .splice(0, changeQueue.length)
         .map(([_, file]) => file);

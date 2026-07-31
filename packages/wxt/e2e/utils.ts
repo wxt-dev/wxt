@@ -16,6 +16,7 @@ import {
 import { normalizePath } from '../src/core/utils';
 import { pathExists, readJson } from '../src/core/utils/fs';
 import { registerWxt } from '../src/core/wxt';
+import * as vite from 'vite';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package
@@ -104,27 +105,27 @@ export class TestProject {
    */
   async registerWxt(command: WxtCommand, config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    await registerWxt(command, { ...config, root: this.root });
+    await registerWxt(command, this.generateWxtConfig(config));
   }
 
   async prepare(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    await prepare({ ...config, root: this.root });
+    await prepare(this.generateWxtConfig(config));
   }
 
   async build(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    return await build({ ...config, root: this.root });
+    return await build(this.generateWxtConfig(config));
   }
 
   async zip(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    await zip({ ...config, root: this.root });
+    await zip(this.generateWxtConfig(config));
   }
 
   async startServer(config: InlineConfig = {}) {
     await this.writeProjectToDisk();
-    const server = await createServer({ ...config, root: this.root });
+    const server = await createServer(this.generateWxtConfig(config));
     await server.start();
     return server;
   }
@@ -132,6 +133,31 @@ export class TestProject {
   /** Call `path.resolve` relative to the project's root directory. */
   resolvePath(...path: string[]): string {
     return resolve(this.root, ...path);
+  }
+
+  private generateWxtConfig(inline: InlineConfig): InlineConfig {
+    return {
+      ...inline,
+      vite: async (...args) => {
+        const inlineVite = (await inline.vite?.(...args)) ?? {};
+        return vite.mergeConfig<vite.UserConfig, vite.UserConfig>(
+          {
+            build: {
+              rolldownOptions: {
+                experimental: {
+                  // Disable region comments - sometimes these included the e2e
+                  // project's root, which changes every test, changing the chunk
+                  // hashes and output strings every test run.
+                  attachDebugInfo: 'none',
+                },
+              },
+            },
+          },
+          inlineVite,
+        );
+      },
+      root: this.root,
+    };
   }
 
   private async writeProjectToDisk() {

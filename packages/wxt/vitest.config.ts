@@ -19,7 +19,7 @@ export default defineConfig({
       ignored: '**/dist/**',
     },
   },
-  plugins: [RandomSeed({ define: 'import.meta.env.TEST_SEED' })],
+  plugins: [RandomSeed()],
   resolve: {
     alias: {
       'wxt/testing/fake-browser': path.resolve('src/testing/fake-browser.ts'),
