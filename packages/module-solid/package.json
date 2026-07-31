@@ -56,7 +56,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
     "publint": "catalog:",
-    "solid-js": "^1.9.11",
+    "solid-js": "^1.9.14",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "wxt": "workspace:*"
