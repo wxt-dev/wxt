@@ -52,7 +52,7 @@
     "nano-staged": "^1.0.2",
     "p-map": "^7.0.4",
     "prettier": "^3.8.1",
-    "prettier-plugin-jsdoc": "^1.8.0",
+    "prettier-plugin-jsdoc": "^1.8.1",
     "semver": "^7.8.0",
     "simple-git-hooks": "^2.13.1",
     "tinyexec": "catalog:",
