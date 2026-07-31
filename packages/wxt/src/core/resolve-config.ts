@@ -215,7 +215,7 @@ export async function resolveConfig(
     webExt,
     runner:
       command === 'serve'
-        ? await resolveRunner(browser, logger, mergedConfig)
+        ? await resolveRunner(browser, logger, webExt.config)
         : createManualRunner(),
     srcDir,
     typesDir,
@@ -656,7 +656,7 @@ export async function resolveWxtUserModules(
 async function resolveRunner(
   browser: string,
   logger: Logger,
-  mergedConfig: InlineConfig,
+  webExt: WebExtConfig,
 ): Promise<ExtensionRunner> {
   if (browser === 'safari') return createSafariRunner();
 
@@ -665,9 +665,7 @@ async function resolveRunner(
   try {
     // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
     const { createWebExtRunner } = await import('./runners/web-ext');
-    return mergedConfig.webExt?.disabled
-      ? createManualRunner()
-      : createWebExtRunner();
+    return webExt.disabled ? createManualRunner() : createWebExtRunner();
   } catch (err: any) {
     if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
 
