@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
-    "@faker-js/faker": "^10.3.0",
+    "@faker-js/faker": "^10.5.0",
     "@types/bun": "catalog:",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "catalog:",
