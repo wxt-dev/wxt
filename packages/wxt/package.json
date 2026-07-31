@@ -22,7 +22,7 @@
     "@webext-core/fake-browser": "^2.0.1",
     "@webext-core/isolated-element": "^1.1.3 || ^2 || ^3",
     "@webext-core/match-patterns": "^2.0.0",
-    "@wxt-dev/browser": "workspace:^",
+    "@wxt-dev/browser": "workspace:>=0.1",
     "@wxt-dev/storage": "workspace:^1.0.0",
     "c12": "^3.3.4",
     "cac": "^6.7.14 || ^7.0.0",

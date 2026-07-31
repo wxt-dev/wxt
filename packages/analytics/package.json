@@ -14,7 +14,7 @@
     "test:coverage": "echo 'noop'"
   },
   "dependencies": {
-    "@wxt-dev/browser": "workspace:^",
+    "@wxt-dev/browser": "workspace:>=0.1",
     "@wxt-dev/is-background": "workspace:^",
     "ua-parser-js": "^1.0.40"
   },
