@@ -217,7 +217,7 @@ describe('Auto Imports', () => {
     });
   });
 
-  describe('eslintrc', () => {
+  describe('eslint config', () => {
     it.each([true, 'auto'] as const)(
       '"enabled: %s" should output a JSON config file compatible with ESlint of package.json',
       async (enabled) => {
@@ -344,7 +344,7 @@ describe('Auto Imports', () => {
             `,
           );
 
-          await expect(runEslint(project, 'flat')).rejects.toMatchObject({
+          await expect(runEslint(project, 9)).rejects.toMatchObject({
             exitCode: 1,
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
@@ -371,7 +371,7 @@ describe('Auto Imports', () => {
             ];
             `,
           );
-          const res = await runEslint(project, 'flat');
+          const res = await runEslint(project, 9);
 
           expect(res).toBeDefined();
         });
@@ -393,7 +393,7 @@ describe('Auto Imports', () => {
             }),
           );
 
-          await expect(runEslint(project, 'eslintrc')).rejects.toMatchObject({
+          await expect(runEslint(project, 8)).rejects.toMatchObject({
             exitCode: 1,
             stdout: expect.stringContaining(
               "'defineBackground' is not defined",
@@ -418,7 +418,7 @@ describe('Auto Imports', () => {
               ],
             }),
           );
-          const res = await runEslint(project, 'eslintrc');
+          const res = await runEslint(project, 8);
 
           expect(res).toBeDefined();
         });
