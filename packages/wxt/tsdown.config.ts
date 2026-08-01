@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 // doesn't work in combination with "unbundle" mode - which WXT uses so it's
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
-const inlineDeps = ['normalize-path', 'scule'];
+const inlineDeps = ['normalize-path', 'scule', 'is-wsl', 'ohash'];
 
 console.log();
 consola.info('Transforming inline dependencies...');
