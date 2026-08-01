@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Add analytics to your web extension",
   "type": "module",
   "scripts": {
@@ -14,8 +14,8 @@
     "test:coverage": "echo 'noop'"
   },
   "dependencies": {
-    "@wxt-dev/browser": "workspace:^",
-    "@wxt-dev/is-background": "workspace:^",
+    "@wxt-dev/browser": "workspace:>=0.1",
+    "@wxt-dev/is-background": "workspace:>=1",
     "ua-parser-js": "^1.0.40"
   },
   "peerDependencies": {

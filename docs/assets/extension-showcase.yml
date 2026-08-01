@@ -523,11 +523,15 @@
 - # Adaptive Tab Bar Colour
   firefoxSlug: adaptive-tab-bar-colour
 
-- #ArcPort - Tab Checkpoint
+- # ArcPort - Tab Checkpoint
   chromeId: kajmnfhpmkimleehomeioondgfcjjnbp
 
-- #ArcPort - Tab Rebrand
+- # ArcPort - Tab Rebrand
   chromeId: pgmohcikgaeddapienpncpbiklbmfkgp
 
-- #MindSnap
+- # MindSnap
   chromeId: mdcpckfcphpicfpiopfcpeambjknjabl
+
+- # Video Time Manager
+  chromeId: fpoooibdndpjcnoodfionoeakeojdjaj
+  firefoxSlug: youtube-time-manager@avi12.com

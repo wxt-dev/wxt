@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.2.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.8...storage-v1.2.9)
+
+### 🏡 Chore
+
+- Add `prettier-plugin-jsdoc` to project ([#2171](https://github.com/wxt-dev/wxt/pull/2171))
+- **deps**: Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Add prepack script to all packages ([`032f793`](https://github.com/wxt-dev/wxt/commit/032f7931e843ad4a3a08e84089f80c144dc11495))
+- Add cspell and fix all typos ([`6621aaf`](https://github.com/wxt-dev/wxt/commit/6621aaf8776bcb33f9fbeb6d0d11d60302249d2c))
+- Migrate monorepo to use Bun instead of PNPM ([#2009](https://github.com/wxt-dev/wxt/pull/2009))
+- **deps-dev**: Bump typescript from 5.9.3 to 6.0.3 ([#2325](https://github.com/wxt-dev/wxt/pull/2325))
+- **deps-dev**: Bump oxlint from 1.59.0 to 1.63.0 ([#2356](https://github.com/wxt-dev/wxt/pull/2356))
+- Use `catalog:` for dev dependencies ([#2357](https://github.com/wxt-dev/wxt/pull/2357))
+- **deps**: Replace `async-mutex` with `superlock` ([#2529](https://github.com/wxt-dev/wxt/pull/2529))
+- **deps**: Inline `dequal` ([#2530](https://github.com/wxt-dev/wxt/pull/2530))
+- **deps**: Loosen version range for `@wxt-dev/browser` so projects can use any vesion ([`7946665`](https://github.com/wxt-dev/wxt/commit/794666597a5960a099ca1c54bb1f1cf3f231b990))
+
+### ❤️ Contributors
+
+- [@okineadev](https://github.com/okineadev)
+- [@aklinker1](https://github.com/aklinker1)
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+
 ## v1.2.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.7...storage-v1.2.8)

@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.5.6
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.5...analytics-v0.5.6)
+
+### 🚀 Features
+
+- **analytics**: Add posthog as an analytics provider ([#2414](https://github.com/wxt-dev/wxt/pull/2414))
+
+### 🏡 Chore
+
+- **deps**: Loosen version range for `@wxt-dev/browser` so projects can use any vesion ([`7946665`](https://github.com/wxt-dev/wxt/commit/794666597a5960a099ca1c54bb1f1cf3f231b990))
+
+### ❤️ Contributors
+
+- [@creeperkatze](https://github.com/creeperkatze)
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.5.5
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.4...analytics-v0.5.5)
