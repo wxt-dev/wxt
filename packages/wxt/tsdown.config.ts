@@ -9,7 +9,15 @@ import consola from 'consola';
 import { styleText } from 'node:util';
 import { resolve } from 'node:path';
 
-const inlineDeps = ['@aklinker1/zero-zip', 'normalize-path'];
+// Before doing the actual build, "inline" some dependencies by bundling them
+// individually to ESM and then, when building WXT, resolve them from the
+// bundled local versions instead of listing them as a package dependency.
+//
+// Normally, this is exactly what `deps.alwaysBundle` does, but that option
+// doesn't work in combination with "unbundle" mode - which WXT uses so it's
+// `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
+
+const inlineDeps = ['normalize-path'];
 
 console.log();
 consola.info('Transforming inline dependencies...');
@@ -27,10 +35,19 @@ const res = await Rolldown.build(
     }),
   ),
 );
-for (const output of res)
+for (const output of res) {
   consola.info(`${styleText('dim', 'dist/')}\`${output.output[0].fileName}\``);
+}
 consola.success('Done!');
 console.log();
+
+const resolveInlinePlugin: Rolldown.Plugin = {
+  name: 'resolve-inline',
+  resolveId: {
+    filter: { id: new RegExp(`(${inlineDeps.join('|')})`) },
+    handler: (id) => resolve(`inline/${id}/index.mjs`),
+  },
+};
 
 export default defineConfig([
   // Non-virtual modules can be transpiled in-place to make debugging in node_modules easier
@@ -51,20 +68,7 @@ export default defineConfig([
       neverBundle: ['wxt/browser', 'virtual:app-config'],
       alwaysBundle: inlineDeps,
     },
-    plugins: [
-      {
-        name: 'resolve-inline',
-        resolveId: {
-          filter: {
-            id: new RegExp(`(${inlineDeps.join('|')})`),
-          },
-          handler: (id, importer) => {
-            console.log(id, importer);
-            return resolve(`inline/${id}/index.mjs`);
-          },
-        },
-      },
-    ],
+    plugins: [resolveInlinePlugin],
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
       // we need to copy it into the out dir manually instead of building it.
