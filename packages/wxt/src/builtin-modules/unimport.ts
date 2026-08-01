@@ -116,18 +116,20 @@ async function getEslintConfigEntry(
       return globals;
     }, {});
 
-  if (configVersion === 8) return [getEslint8ConfigEntry(options, globals)];
+  if (configVersion === 8) return getEslint8ConfigEntry(options, globals);
   return getEslint9ConfigEntry(options, globals);
 }
 
 export function getEslint8ConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
-): WxtDirFileEntry {
-  return {
-    path: options.eslintrc.filePath,
-    text: JSON.stringify({ globals }, null, 2) + '\n',
-  };
+): WxtDirFileEntry[] {
+  return [
+    {
+      path: options.eslintrc.filePath,
+      text: JSON.stringify({ globals }, null, 2) + '\n',
+    },
+  ];
 }
 
 export function getEslint9ConfigEntry(
@@ -149,9 +151,10 @@ export default {
 `,
   };
 
-  const typeScriptFilePath =
-    options.eslintrc.filePath.slice(0, -extname(options.eslintrc.filePath)) +
-    '.d.ts';
+  const typeScriptFilePath = options.eslintrc.filePath.replace(
+    extname(options.eslintrc.filePath),
+    '.d.ts',
+  );
 
   const typeScriptFileEntry: WxtDirFileEntry = {
     path: typeScriptFilePath,
