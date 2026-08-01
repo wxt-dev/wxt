@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 // doesn't work in combination with "unbundle" mode - which WXT uses so it's
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
-const inlineDeps = ['normalize-path'];
+const inlineDeps = ['is-wsl', 'normalize-path', 'ohash', 'scule'];
 
 console.log();
 consola.info('Transforming inline dependencies...');
@@ -36,7 +36,9 @@ const res = await Rolldown.build(
   ),
 );
 for (const output of res) {
-  consola.info(`${styleText('dim', 'dist/')}\`${output.output[0].fileName}\``);
+  consola.info(
+    `${styleText('dim', 'inline/')}\`${output.output[0].fileName}\``,
+  );
 }
 consola.success('Done!');
 console.log();
