@@ -574,7 +574,16 @@ export async function removeEmptyDirs(dir: string): Promise<void> {
   const files = await readdir(dir);
   for (const file of files) {
     const filePath = join(dir, file);
-    const stats = await stat(filePath);
+    let stats;
+    try {
+      stats = await stat(filePath);
+    } catch (err: any) {
+      // Ignore files that were moved between readdir and stat due to race
+      // conditions. For more details, see:
+      // https://github.com/wxt-dev/wxt/issues/2533
+      if (err?.code === 'ENOENT') continue;
+      throw err;
+    }
     if (stats.isDirectory()) {
       await removeEmptyDirs(filePath);
     }
