@@ -1,10 +1,15 @@
 import { defineConfig, UserConfig } from 'tsdown';
 import pkgJson from './package.json' with { type: 'json' };
-import { readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
 } from './src/core/utils/virtual-modules';
+import { vendorBundledDependencies } from './build-plugins/vendor-bundled-dependencies';
+
+// Force-bundled into dist/_vendor so consumers don't need these as dependencies.
+// Kept in sync with `deps.alwaysBundle` + `vendorBundledDependencies({ packages })`.
+const alwaysBundle = ['normalize-path'];
 
 export default defineConfig([
   // Non-virtual modules can be transpiled in-place to make debugging in node_modules easier
@@ -23,7 +28,16 @@ export default defineConfig([
     unbundle: true,
     deps: {
       neverBundle: ['wxt/browser', 'virtual:app-config'],
+      alwaysBundle,
     },
+    // Remap alwaysBundle packages to `_vendor/<pkg>` at resolve-time so
+    // unbundle/preserveModules doesn't emit bun/pnpm `node_modules` nests.
+    plugins: [
+      vendorBundledDependencies({
+        packages: alwaysBundle,
+        cwd: import.meta.dirname,
+      }),
+    ],
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
       // we need to copy it into the out dir manually instead of building it.
@@ -34,6 +48,7 @@ export default defineConfig([
       // version to avoid issues with different runtimes handling JSON imports
       // differently.
       await replaceVars('dist/version.mjs', { version: pkgJson.version });
+      await assertNoNodeModulesPaths('dist');
     },
   },
 
@@ -53,6 +68,23 @@ export default defineConfig([
     }),
   ),
 ]);
+
+/**
+ * Bundling a dependency under `unbundle` emits it at its build-time
+ * `node_modules` path unless `vendorBundledDependencies` remaps it. Those paths
+ * depend on the package manager used to build, so they break for consumers.
+ */
+async function assertNoNodeModulesPaths(dir: string): Promise<void> {
+  const entries = await readdir(dir, { recursive: true });
+  const leaked = entries.filter((entry) =>
+    entry.replaceAll('\\', '/').includes('node_modules/'),
+  );
+  if (leaked.length > 0) {
+    throw new Error(
+      `Build emitted files under a node_modules path:\n${leaked.map((entry) => `  ${dir}/${entry}`).join('\n')}`,
+    );
+  }
+}
 
 async function replaceVars(
   file: string,
