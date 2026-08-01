@@ -17,7 +17,13 @@ import { resolve } from 'node:path';
 // doesn't work in combination with "unbundle" mode - which WXT uses so it's
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
-const inlineDeps = ['normalize-path', 'scule', 'is-wsl', 'ohash'];
+const inlineDeps = [
+  '@aklinker1/zero-zip',
+  'is-wsl',
+  'normalize-path',
+  'ohash',
+  'scule',
+];
 
 console.log();
 consola.info('Transforming inline dependencies...');
@@ -46,7 +52,7 @@ console.log();
 const resolveInlinePlugin: Rolldown.Plugin = {
   name: 'resolve-inline',
   resolveId: {
-    filter: { id: new RegExp(`(${inlineDeps.join('|')})`) },
+    filter: { id: new RegExp(`(${inlineDeps.map(RegExp.escape).join('|')})`) },
     handler: (id) => resolve(`inline/${id}/index.mjs`),
   },
 };
