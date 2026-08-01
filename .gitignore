@@ -24,3 +24,4 @@ docs/api/reference
 stats.html
 .cache
 *-stats.txt
+/packages/wxt/inline
