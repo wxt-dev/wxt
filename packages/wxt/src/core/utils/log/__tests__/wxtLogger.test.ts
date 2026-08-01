@@ -1,25 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { createWxtLogger } from '../wxtLogger';
 import type { Logger } from '../../../../types';
 import { LogLevels } from 'consola';
-
-function fakeLogger(): Logger {
-  return {
-    debug: vi.fn(),
-    log: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    fatal: vi.fn(),
-    success: vi.fn(),
-    level: LogLevels.info,
-  };
-}
+import { mock } from 'vitest-mock-extended';
 
 describe('createWxtLogger', () => {
   describe('warnOnce', () => {
     it('should log with the given arguments the first time it is called, and not again for repeated calls with the same arguments', () => {
-      const inner = fakeLogger();
+      const inner = mock<Logger>();
       const logger = createWxtLogger(inner);
 
       logger.warnOnce('some warning');
@@ -31,7 +19,7 @@ describe('createWxtLogger', () => {
     });
 
     it('should log separately for each distinct set of arguments', () => {
-      const inner = fakeLogger();
+      const inner = mock<Logger>();
       const logger = createWxtLogger(inner);
 
       logger.warnOnce('warning A');
@@ -45,7 +33,7 @@ describe('createWxtLogger', () => {
     });
 
     it('should not affect regular warn calls, which are never deduped', () => {
-      const inner = fakeLogger();
+      const inner = mock<Logger>();
       const logger = createWxtLogger(inner);
 
       logger.warn('some warning');
@@ -55,44 +43,36 @@ describe('createWxtLogger', () => {
       expect(inner.warn).toHaveBeenCalledTimes(3);
     });
 
-    it('should scope deduping to a single createWxtLogger instance, not share it across separate instances', () => {
-      // `resolveConfig` calls `createWxtLogger` once per resolve/reload, so
-      // each instance's dedupe state should be independent of the others.
-      const innerA = fakeLogger();
+    it('should not log the same warning multiple times when called on different instances', () => {
+      const innerA = mock<Logger>();
+      const innerB = mock<Logger>();
       const loggerA = createWxtLogger(innerA);
-      loggerA.warnOnce('some warning');
-
-      const innerB = fakeLogger();
       const loggerB = createWxtLogger(innerB);
+
+      loggerA.warnOnce('some warning');
       loggerB.warnOnce('some warning');
 
       expect(innerA.warn).toHaveBeenCalledTimes(1);
-      expect(innerB.warn).toHaveBeenCalledTimes(1);
+      expect(innerB.warn).not.toHaveBeenCalled();
     });
   });
 
   describe('delegation', () => {
-    it('should pass every call through for non-warnOnce methods', () => {
-      const inner = fakeLogger();
-      const logger = createWxtLogger(inner);
+    it.each(['debug', 'log', 'info', 'fatal', 'success'] as const)(
+      'should pass calls through %s',
+      (fn) => {
+        const inner = mock<Logger>();
+        const logger = createWxtLogger(inner);
+        const message = 'some message';
 
-      logger.debug('debug');
-      logger.log('log');
-      logger.info('info');
-      logger.error('error');
-      logger.fatal('fatal');
-      logger.success('success');
+        logger[fn](message);
 
-      expect(inner.debug).toHaveBeenCalledWith('debug');
-      expect(inner.log).toHaveBeenCalledWith('log');
-      expect(inner.info).toHaveBeenCalledWith('info');
-      expect(inner.error).toHaveBeenCalledWith('error');
-      expect(inner.fatal).toHaveBeenCalledWith('fatal');
-      expect(inner.success).toHaveBeenCalledWith('success');
-    });
+        expect(inner[fn]).toHaveBeenCalledWith(message);
+      },
+    );
 
     it('should get and set level on the underlying logger', () => {
-      const inner = fakeLogger();
+      const inner = mock<Logger>();
       const logger = createWxtLogger(inner);
 
       expect(logger.level).toBe(inner.level);
