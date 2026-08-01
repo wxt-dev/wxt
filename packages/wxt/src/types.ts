@@ -1694,28 +1694,30 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
+export type EslintConfigVersion = 8 | 9;
+
 export interface Eslintrc {
   /**
-   * When true, generates a file that can be used by ESLint to know which
-   * variables are valid globals.
+   * Determines if and in what format a config file will be generated to inform
+   * ESLint of unimport globals.
    *
-   * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
-   *   config file.
-   * - `true`: Same as `'auto'`.
-   * - `false`: Don't generate the file.
-   * - `8`: Generate a config file compatible with ESLint 8.
-   * - `9`: Generate a config file compatible with ESLint 9.
+   * - `true`: If eslint is installed, generate a compatible config file based on
+   *   the installed version.
+   * - `false`: Never generate the file.
+   * - `8`: Generate an eslintrc file compatible with ESLint &lte; 8.
+   * - `9`: Generate a flat config file compatible with ESLint &gte; 9.
+   * - `'auto'` (Deprecated): Same as `true`.
    *
-   * @default 'auto'
+   * @default true
    */
-  enabled?: 'auto' | boolean | 8 | 9;
+  enabled?: boolean | 'auto' | EslintConfigVersion;
   /**
    * File path to save the generated eslint config.
    *
    * Default depends on version of ESLint used:
    *
-   * - 9 and above: './.wxt/eslint-auto-imports.mjs'
-   * - 8 and below: './.wxt/eslintrc-auto-import.json'
+   * - &gte; 9: './.wxt/eslint-auto-imports.mjs'
+   * - &lte; 8: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /** @default true */
@@ -1724,7 +1726,7 @@ export interface Eslintrc {
 
 export interface ResolvedEslintrc {
   /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | 8 | 9;
+  enabled: false | EslintConfigVersion;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;

@@ -509,7 +509,7 @@ async function getUnimportEslintOptions(
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
-    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+    options === false ? false : (options?.eslintrc?.enabled ?? true);
 
   const version = await getEslintVersion();
   const major = parseInt(version[0]);
@@ -517,15 +517,11 @@ async function getUnimportEslintOptions(
   let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
+      logger.warn(
+        `\`imports.eslintrc.enabled: "auto"\` is deprecated. Use \`true\` instead.`,
+      );
     case true:
-      if (isNaN(major)) {
-        if (inlineEnabled === true) {
-          logger.warnOnce(
-            'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
-          );
-        }
-        enabled = false;
-      } else if (major <= 8) {
+      if (major <= 8) {
         enabled = 8;
       } else if (major >= 9) {
         enabled = 9;

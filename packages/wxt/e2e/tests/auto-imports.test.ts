@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
+import { EslintConfigVersion } from '../../src';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -216,25 +217,28 @@ describe('Auto Imports', () => {
     });
   });
 
-  describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint of package.json', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+  describe('eslint config', () => {
+    it.each([true, 'auto'] as const)(
+      '"enabled: %s" should output a JSON config file compatible with ESLint of package.json',
+      async (enabled) => {
+        const project = new TestProject();
+        project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: true,
+        await project.prepare({
+          imports: {
+            eslintrc: {
+              enabled,
+            },
           },
-        },
-      });
+        });
 
-      expect(
-        await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
-      ).toMatchSnapshot();
-    });
+        expect(
+          await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+        ).toMatchSnapshot();
+      },
+    );
 
-    it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: 8" should output a JSON config file compatible with ESLint <=8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -251,7 +255,7 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
+    it('"enabled: 9" should output a flat config file compatible with ESLint >=9', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -268,7 +272,7 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: false" should NOT output an ESlint config file', async () => {
+    it('"enabled: false" should NOT output an ESLint config file', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -308,14 +312,14 @@ describe('Auto Imports', () => {
     describe('Actual linting results', () => {
       async function runEslint(
         project: TestProject,
-        version: boolean | 'auto' | 8 | 9,
+        enabled: EslintConfigVersion,
       ) {
         project.addFile(
           'entrypoints/background.js',
           `export default defineBackground(() => {})`,
         );
         await project.prepare({
-          imports: { eslintrc: { enabled: version } },
+          imports: { eslintrc: { enabled } },
         });
 
         return await project.run('eslint', 'entrypoints/background.js');

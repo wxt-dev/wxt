@@ -5,6 +5,7 @@ import type {
   WxtDirFileEntry,
   WxtModule,
   WxtResolvedUnimportOptions,
+  EslintConfigVersion,
 } from '../types';
 import { type Unimport, createUnimport, toExports } from 'unimport';
 import UnimportPlugin from 'unimport/unplugin';
@@ -103,7 +104,7 @@ async function getImportsModuleEntry(
 
 async function getEslintConfigEntry(
   unimport: Unimport,
-  version: 8 | 9,
+  configVersion: EslintConfigVersion,
   options: WxtResolvedUnimportOptions,
 ): Promise<WxtDirFileEntry> {
   const globals = (await unimport.getImports())
@@ -115,8 +116,8 @@ async function getEslintConfigEntry(
       return globals;
     }, {});
 
-  if (version <= 8) return getEslint8ConfigEntry(options, globals);
-  else return getEslint9ConfigEntry(options, globals);
+  if (configVersion === 8) return getEslint8ConfigEntry(options, globals);
+  return getEslint9ConfigEntry(options, globals);
 }
 
 export function getEslint8ConfigEntry(
