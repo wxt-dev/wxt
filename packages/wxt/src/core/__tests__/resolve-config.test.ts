@@ -1,7 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mkdtempSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { resolveConfig } from '../resolve-config';
 import type { Logger } from '../../types';
 import { mock } from 'vitest-mock-extended';
