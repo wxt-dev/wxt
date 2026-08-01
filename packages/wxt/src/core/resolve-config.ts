@@ -516,7 +516,7 @@ async function getUnimportEslintOptions(
   switch (inlineEnabled) {
     case 'auto':
       logger.warn(
-        `\`imports.eslint.enabled: "auto"\` is deprecated. Use \`true\` instead.`,
+        `\`imports.eslintrc.enabled: "auto"\` is deprecated. Use \`true\` instead.`,
       );
     case true:
       if (major <= 8) {
