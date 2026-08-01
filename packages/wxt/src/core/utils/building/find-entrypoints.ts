@@ -13,7 +13,7 @@ import {
   UnlistedScriptEntrypoint,
 } from '../../../types';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import picomatch from 'picomatch';
+import path from 'node:path';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
 import { glob } from 'tinyglobby';
@@ -61,7 +61,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
       const inputPath = resolve(wxt.config.entrypointsDir, relativePath);
       const name = getEntrypointName(wxt.config.entrypointsDir, inputPath);
       const matchingGlob = pathGlobs.find((glob) =>
-        picomatch(glob)(relativePath),
+        path.matchesGlob(relativePath, glob),
       );
       if (matchingGlob) {
         const type = PATH_GLOB_TO_TYPE_MAP[matchingGlob];
