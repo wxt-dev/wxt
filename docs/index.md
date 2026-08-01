@@ -66,11 +66,6 @@ features:
   - icon: 📏
     title: Bundle Analysis
     details: Tools for analyzing the final extension bundle and minimizing your extension's size.
-  - icon: ⬇️
-    title: Bundle Remote Code
-    details: Downloads and bundles remote code imported from URLs.
-    link: /guide/essentials/remote-code
-    linkText: Read docs
 ---
 
 ## Sponsors

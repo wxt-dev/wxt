@@ -401,6 +401,7 @@
 - # Teams Chat Exporter
   chromeId: jmghclbfbbapimhbgnpffbimphlpolnm
   firefoxSlug: teams-chat-exporter
+  edgeId: phlomfiieaggnbfpacmjmidcjdlaiplp
 
 - # Lofi BGM Player - Free lofi focus music for work & study
   chromeId: jdcppdokgfbnhiacbeplahgnciahnhck
@@ -415,6 +416,7 @@
 - # Glossy New Tab - Say Goodbye to Boring Tabs with live wallpapers
   chromeId: dhiekgdaipindoapjmcnpompdknjeijf
   firefoxSlug: glossy-new-tab
+  edgeId: lknbpnnoaobjkghoalchfdiihhllobhj
 
 - # All API Hub – AI Relay & New API Manager - https://github.com/qixing-jk/all-api-hub
   chromeId: lapnciffpekdengooeolaienkeoilfeo
@@ -518,3 +520,19 @@
 
 - # Leetcode Enhancer
   chromeId: cpoclfijojgjiafnlgnhjalkaiabcjch
+
+- # Adaptive Tab Bar Colour
+  firefoxSlug: adaptive-tab-bar-colour
+
+- # ArcPort - Tab Checkpoint
+  chromeId: kajmnfhpmkimleehomeioondgfcjjnbp
+
+- # ArcPort - Tab Rebrand
+  chromeId: pgmohcikgaeddapienpncpbiklbmfkgp
+
+- # MindSnap
+  chromeId: mdcpckfcphpicfpiopfcpeambjknjabl
+
+- # Video Time Manager
+  chromeId: fpoooibdndpjcnoodfionoeakeojdjaj
+  firefoxSlug: youtube-time-manager@avi12.com

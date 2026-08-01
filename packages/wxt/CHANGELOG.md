@@ -1,5 +1,179 @@
 # Changelog
 
+## v0.21.3
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.2...wxt-v0.21.3)
+
+### 🚀 Features
+
+- **rolldown**: Provide `experimental.escapeUnicode` option to escape some unicode characters ([#2537](https://github.com/wxt-dev/wxt/pull/2537))
+
+### 📖 Documentation
+
+- Update bundle size for 0.21 ([`574c3bd`](https://github.com/wxt-dev/wxt/commit/574c3bd90ac8cd2b32896e68557197e32a462706))
+- Remove dangling "Remote Code" sidebar link ([#2532](https://github.com/wxt-dev/wxt/pull/2532))
+
+### 🏡 Chore
+
+- Add support for `publish-browser-extension` v6 ([`8dc8fa6`](https://github.com/wxt-dev/wxt/commit/8dc8fa6f5148e008a3843a0389d7c0ee1a2b8e5e))
+- **deps**: Drop `import-meta-resolve` ([#2526](https://github.com/wxt-dev/wxt/pull/2526))
+- **deps**: Replace `open` with `tiny-open` ([#2527](https://github.com/wxt-dev/wxt/pull/2527))
+- **deps**: Replace `prompts` with `@topcli/prompts` ([#2528](https://github.com/wxt-dev/wxt/pull/2528))
+- **deps**: Replace `async-mutex` with `superlock` ([#2529](https://github.com/wxt-dev/wxt/pull/2529))
+- Use Vite 8 for WXT development ([#2540](https://github.com/wxt-dev/wxt/pull/2540))
+- **deps**: Replace `ci-info`  with custom `isCI` function ([#2543](https://github.com/wxt-dev/wxt/pull/2543))
+- **deps**: Replace `jszip` with `@aklinker1/zero-zip` ([#2538](https://github.com/wxt-dev/wxt/pull/2538))
+
+### ❤️ Contributors
+
+- [@rxliuli](https://github.com/rxliuli)
+- [@suveshmoza](https://github.com/suveshmoza)
+- [@aklinker1](https://github.com/aklinker1)
+
+
+## v0.21.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.1...wxt-v0.21.2)
+
+### 🩹 Fixes
+
+- Remove `web-ext-run`, it's unused now ([`859d654`](https://github.com/wxt-dev/wxt/commit/859d654611571941ee0a7aa4011f3ce011787a30))
+
+### 📖 Documentation
+
+- Fix typos and wording of upgrade guide ([`d1ab2d9`](https://github.com/wxt-dev/wxt/commit/d1ab2d923dada60ac4a3ece7d85001ee611f9731))
+- Fix heading level ([`466ae8a`](https://github.com/wxt-dev/wxt/commit/466ae8a33c73436ac2dc06e0046ea949e1982a7f))
+- Update package size links ([`925e97d`](https://github.com/wxt-dev/wxt/commit/925e97d4fc83ecfcc93bbbb357247373b594804f))
+
+### ❤️ Contributors
+
+- [@aklinker1](https://github.com/aklinker1)
+
+## v0.21.1
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.27...wxt-v0.21.1)
+
+### 🚀 Features
+
+- Add `prepare:tsconfig` hook for updating `.wxt/tsconfig.json` file ([#2450](https://github.com/wxt-dev/wxt/pull/2450))
+- Add watch options config ([#2439](https://github.com/wxt-dev/wxt/pull/2439))
+- Export `getEntrypointBundlePath` from `wxt` ([#2463](https://github.com/wxt-dev/wxt/pull/2463))
+- Add `{{modeSuffix}}` to zip templates and update defaults ([#1623](https://github.com/wxt-dev/wxt/pull/1623))
+- Change default behavior of `getUnimportEslintOptions` true flag ([#2296](https://github.com/wxt-dev/wxt/pull/2296))
+- New template variable `{{versionName}}` and change of the behaviour of `{{version}}` ([#1612](https://github.com/wxt-dev/wxt/pull/1612))
+- **Firefox**: List files in sources zip ([#2513](https://github.com/wxt-dev/wxt/pull/2513))
+
+### 🩹 Fixes
+
+- `wxt clean` removes `.wxt/` directory at project root ([#2415](https://github.com/wxt-dev/wxt/pull/2415))
+- Handle spread content script configs ([#2448](https://github.com/wxt-dev/wxt/pull/2448))
+- Avoid deprecated Rollup asset name access ([#2453](https://github.com/wxt-dev/wxt/pull/2453))
+- **init**: Allow entering an empty directory for project path ([#2458](https://github.com/wxt-dev/wxt/pull/2458))
+- Opening the browser issue in windows. ([#2436](https://github.com/wxt-dev/wxt/pull/2436))
+- File reloading mechanism and add profile watch ignores ([#2112](https://github.com/wxt-dev/wxt/pull/2112))
+- Docs sidebar header, background color issue ([#2504](https://github.com/wxt-dev/wxt/pull/2504))
+- Deprecated `useAppConfig` in favour of `getAppConfig` ([#2487](https://github.com/wxt-dev/wxt/pull/2487))
+- Make `web-ext` a peer dependency ([#2079](https://github.com/wxt-dev/wxt/pull/2079))
+- Handle edge case where eslint version cannot be found ([`ab679ba`](https://github.com/wxt-dev/wxt/commit/ab679ba413772849e0c263315587334b42c25ed0))
+- Remove `url:` import feature ([#2456](https://github.com/wxt-dev/wxt/pull/2456))
+- **zip**: Make `includeSources`/`excludeSources` follow standard allowlist behavior ([#2114](https://github.com/wxt-dev/wxt/pull/2114))
+- Remove `console.log` ([`0b352f6`](https://github.com/wxt-dev/wxt/commit/0b352f6eff1fbb45034b788a134742d03db81816))
+- Loosen version of `@webext-core/isolated-element` ([`7d6caad`](https://github.com/wxt-dev/wxt/commit/7d6caad9b52bc263d0acb4263153fe0e05e24b76))
+- Update content and unlisted script `globalName` default to `false` ([#2511](https://github.com/wxt-dev/wxt/pull/2511))
+- **TS**: Update `.wxt/tsconfig.json` compiler options, require TS >=5.4 ([#2512](https://github.com/wxt-dev/wxt/pull/2512))
+
+### 💅 Refactors
+
+- Make vite a default peer ([#1945](https://github.com/wxt-dev/wxt/pull/1945))
+- Move to module-runner ([#1946](https://github.com/wxt-dev/wxt/pull/1946))
+
+### 📖 Documentation
+
+- Move Bun tabs to first position in installation ([#2428](https://github.com/wxt-dev/wxt/pull/2428))
+- Added package manager tab group synchronization across the entire installation page ([#2421](https://github.com/wxt-dev/wxt/pull/2421))
+- Make vitepress components css files more readable and simply ([#2272](https://github.com/wxt-dev/wxt/pull/2272))
+- Use bright green for example hover and link colors ([`d7f8ebe`](https://github.com/wxt-dev/wxt/commit/d7f8ebec3904ea6efa803c9d7b5dcd9b3ea59a01))
+- Document PerBrowser options for entrypoints (#2304) ([#2403](https://github.com/wxt-dev/wxt/pull/2403))
+- Show Edge Add-ons in showcase ([#2452](https://github.com/wxt-dev/wxt/pull/2452))
+- Don't underline the comma when hovering over showcase item store links ([#2454](https://github.com/wxt-dev/wxt/pull/2454))
+- Fix `undefined` issue for `ExampleSearch.vue` ([#2370](https://github.com/wxt-dev/wxt/pull/2370))
+- Update extension-showcase.yml ([#2457](https://github.com/wxt-dev/wxt/pull/2457))
+- Added "NiceTab" Edge Addons (edgeId) to extension showcase ([#2455](https://github.com/wxt-dev/wxt/pull/2455))
+- Prioritize Bun in package manager options ([#2425](https://github.com/wxt-dev/wxt/pull/2425))
+- Update BlogLayout.vue `useData` to correctly type ([#2369](https://github.com/wxt-dev/wxt/pull/2369))
+- Revert #2380 - locationWatcher ([#2416](https://github.com/wxt-dev/wxt/pull/2416))
+- Added "Teams Chat Exporter" Edge Addons (edgeId) to extension showcase ([#2472](https://github.com/wxt-dev/wxt/pull/2472))
+- Cleanup the "extension APIs" page ([#2473](https://github.com/wxt-dev/wxt/pull/2473))
+- Add MindSnap to showcase ([#2499](https://github.com/wxt-dev/wxt/pull/2499))
+- Use consola's fancy reporter in init demo GIF ([#2485](https://github.com/wxt-dev/wxt/pull/2485))
+- Update `wxt init` GIF ([`13be7c5`](https://github.com/wxt-dev/wxt/commit/13be7c5bfdedc6660fc799ded6d868736dffcb86))
+- Update `wxt init` GIF ([`299b0ad`](https://github.com/wxt-dev/wxt/commit/299b0add803caab65f707ab73a677fc92f8e3379))
+- Cleanup v0.21 migration guide ([`885f8f0`](https://github.com/wxt-dev/wxt/commit/885f8f0b76d8daa635957edcd0783cb3b2a41ade))
+- Finalize migration guide for wxt v0.21 ([#2516](https://github.com/wxt-dev/wxt/pull/2516))
+- Add section about install footprint ([`d8a86e7`](https://github.com/wxt-dev/wxt/commit/d8a86e76336be263271673028ee7677efeecf905))
+
+### 🏡 Chore
+
+- Skip package manager tests when binaries are missing ([#2441](https://github.com/wxt-dev/wxt/pull/2441))
+- **deps**: Bump actions/setup-go from 6.4.0 to 6.5.0 ([#2432](https://github.com/wxt-dev/wxt/pull/2432))
+- Bump minimum supported Node version to >=22 ([`008f5a6`](https://github.com/wxt-dev/wxt/commit/008f5a66c9eb9e01a3dd1db0545e362254641089))
+- **deps**: Remove `esbuild` dependency ([#2506](https://github.com/wxt-dev/wxt/pull/2506))
+- Upgrade `@webext-core/isolated-element` v1 → v3 ([#2098](https://github.com/wxt-dev/wxt/pull/2098))
+- Remove deprecated APIs ([#2488](https://github.com/wxt-dev/wxt/pull/2488))
+- **deps**: Upgrade major dependencies ([#2508](https://github.com/wxt-dev/wxt/pull/2508))
+
+### 🤖 CI
+
+- Fix VHS action ([#2459](https://github.com/wxt-dev/wxt/pull/2459))
+- Use `@aklinker1/zero-changelog` for release notes ([#2515](https://github.com/wxt-dev/wxt/pull/2515))
+
+### ⚠️ Breaking Changes
+
+- Add `{{modeSuffix}}` to zip templates and update defaults
+- Change default behavior of `getUnimportEslintOptions` true flag
+- New template variable `{{versionName}}` and change of the behaviour of `{{version}}`
+- Make `web-ext` a peer dependency
+- Remove `url:` import feature
+- **zip**: Make `includeSources`/`excludeSources` follow standard allowlist behavior
+- [#2511](https://github.com/wxt-dev/wxt/pull/2511): If your script needs to return a value, like for `browser.scripting.executeScript`, set `globalName: true` to maintain the old behavior.
+- [#2512](https://github.com/wxt-dev/wxt/pull/2512): Updates `.wxt/tsconfig.json` defaults to latest recommended settings for vite projects and requires Typescript 5.4 or later. See #2512 for details on what compiler options were changed.
+- Move to module-runner
+- Bump minimum supported Node version to >=22
+- Upgrade `@webext-core/isolated-element` v1 → v3
+- Remove deprecated APIs
+- **deps**: Upgrade major dependencies
+
+### ❤️ Contributors
+
+- [@z1lV3r](https://github.com/z1lV3r)
+- Peter Wong <www121ppp@gmail.com>
+- wangpeng618 <wangpeng618@jd.com>
+- Thribhuvan <thribhuvan003@gmail.com>
+- ТΞNSΛI <tensai@gmx.net>
+- silverfish2525 <silverfish25@proton.me>
+- [@PatrykKuniczak](https://github.com/PatrykKuniczak)
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- Nazım Gediz Aydındoğmuş <nga@hotmail.com.tr>
+- Kai Gritun <kaigritun@gmail.com>
+- Kai Gritun <kai@kaigritun.com>
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- [@ded-furby](https://github.com/ded-furby)
+- [@dashitongzhi](https://github.com/dashitongzhi)
+- [@cookesan](https://github.com/cookesan)
+- Shubhrajit Sadhukhan <champa.281982@gmail.com>
+- BlazerYoo <blazeryoo1921@gmail.com>
+- [@aklinker1](https://github.com/aklinker1)
+- [@lishaduck](https://github.com/lishaduck)
+- [@nnthanh01061999](https://github.com/nnthanh01061999)
+- [@cookesan](https://github.com/cookesan)
+- [@smashedr](https://github.com/smashedr)
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@ded-furby](https://github.com/ded-furby)
+- [@ZerGo0](https://github.com/ZerGo0)
+- [@LUIDevo](https://github.com/LUIDevo)
+- [@dashitongzhi](https://github.com/dashitongzhi)
+- [@fkatsuhiro](https://github.com/fkatsuhiro)
+
 ## v0.20.27
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.20.26...wxt-v0.20.27)

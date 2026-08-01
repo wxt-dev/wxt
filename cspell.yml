@@ -15,20 +15,28 @@ ignorePaths:
 words:
   - Aabid
   - aabidk
+  - AFFFE
+  - AFFFF
   - aklinker
   - automount
   - avenir
+  - BFFFE
+  - BFFFF
   - bidi
+  - blocklists
   - buildc
   - bunx
   - cachable
   - cacjs
+  - CFFFE
+  - CFFFF
   - charmbracelet
   - chromedriver
   - Cira
   - comctx
   - confbox
   - configfile
+  - consola
   - consolas
   - Cpath
   - crbug
@@ -40,12 +48,18 @@ words:
   - defu
   - deinit
   - dequal
+  - DFFFE
+  - DFFFF
   - dtrace
   - duckduckgo
+  - EFFFE
+  - EFFFF
   - esbuild
   - esque
   - extglob
   - favicons
+  - FFFE
+  - FFFFE
   - fieldtrials
   - firefoxdeveloperedition
   - flamechart
@@ -70,8 +84,8 @@ words:
   - Menlo
   - menupanel
   - metas
-  - moderok
   - mktemp
+  - moderok
   - mycompany
   - nacl
   - nanospinner
@@ -89,6 +103,7 @@ words:
   - pbbf
   - personaltoolbar
   - portaling
+  - posthog
   - prebundled
   - prefs
   - proxified
@@ -103,8 +118,11 @@ words:
   - solidjs
   - styl
   - subdependency
+  - superlock
   - tabstrip
   - teleporting
+  - tinyexec
+  - topcli
   - treemap
   - triaging
   - umami

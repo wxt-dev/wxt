@@ -26,7 +26,7 @@ import { vi } from 'vitest';
 import { setWxtForTesting } from '../../wxt';
 import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(import.meta.env.TEST_SEED);
+faker.seed(__TEST_SEED__);
 
 type DeepPartial<T> = T extends object
   ? {
@@ -264,9 +264,10 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     publicDir: fakeDir(),
     root: fakeDir(),
     wxtModuleDir: fakeDir(),
-    runnerConfig: {
+    webExt: {
       config: {},
     },
+    runner: mock(),
     debug: faker.datatype.boolean(),
     srcDir: fakeDir(),
     typesDir: fakeDir(),
@@ -284,6 +285,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       artifactTemplate: '{{name}}-{{version}}.zip',
       includeSources: [],
       excludeSources: [],
+      dotSources: false,
       exclude: [],
       sourcesRoot: fakeDir(),
       sourcesTemplate: '{{name}}-sources.zip',
@@ -295,7 +297,10 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     },
     userConfigMetadata: {},
     alias: {},
-    experimental: {},
+    experimental: {
+      escapeUnicode: false,
+    },
+    watchOptions: {},
     dev: {
       reloadCommand: 'Alt+R',
     },

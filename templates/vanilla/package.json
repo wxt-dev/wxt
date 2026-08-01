@@ -16,6 +16,8 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "wxt": "^0.20.27"
+    "vite": "^8.1.5",
+    "web-ext": "^10.5.0",
+    "wxt": "^0.21.3"
   }
 }

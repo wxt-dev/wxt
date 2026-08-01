@@ -48,7 +48,7 @@
     "prepack": "bun run build"
   },
   "peerDependencies": {
-    "vite": "^5.4.19 || ^6.3.4 || ^7.0.0 || ^8.0.0-0",
+    "vite": "^6.3.4 || ^7.0.0 || ^8.0.0-0",
     "wxt": ">=0.19.16"
   },
   "dependencies": {
@@ -63,7 +63,7 @@
     "react-dom": "^19.2.4",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vite": "^7.0.0",
+    "vite": "catalog:",
     "wxt": "workspace:*"
   }
 }

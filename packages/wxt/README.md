@@ -54,7 +54,6 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 📦 [Module system](https://wxt.dev/guide/essentials/wxt-modules.html#overview) for reusing code between extensions
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
-- ⬇️ Download and bundle remote URL imports
 
 ## Sponsors
 

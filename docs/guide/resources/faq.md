@@ -221,6 +221,18 @@ To run the WXT dev server in a devcontainer, but load the dev build of your exte
 3. **Tell WXT to listen on all network interfaces**
    To enable hot-reloading, your extension has to connect to the WXT dev server running inside your container. WXT will only listen on `localhost` by default, which prevents connections from outside the devcontainer. To fix this you can instruct WXT to listen on all interfaces with `wxt --host 0.0.0.0`.
 
+4. **Enable polling if file changes are not detected**
+   Some container, WSL, and network file system setups do not emit native file events reliably. Configure Chokidar polling in `wxt.config.ts`:
+
+   ```ts
+   export default defineConfig({
+     watchOptions: {
+       usePolling: true,
+       interval: 1000,
+     },
+   });
+   ```
+
 ## How do I use the new Prompt API in Chrome?
 
 The service responsible for the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api) is not enabled by default if you let WXT open the browser during dev mode. When checking `LanguageModel.availability`, you will always receive "unavailable".

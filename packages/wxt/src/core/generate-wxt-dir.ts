@@ -297,15 +297,23 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
 
   const tsconfig = {
     compilerOptions: {
+      // Environment setup & latest features
+      lib: ['ESNext', 'DOM', 'DOM.Iterable'],
       target: 'ESNext',
-      module: 'ESNext',
+      module: 'Preserve',
+      moduleDetection: 'force',
+      // Bundler mode
       moduleResolution: 'Bundler',
+      allowImportingTsExtensions: true,
+      verbatimModuleSyntax: true,
       noEmit: true,
-      esModuleInterop: true,
-      forceConsistentCasingInFileNames: true,
-      resolveJsonModule: true,
+      // Best practices
       strict: true,
       skipLibCheck: true,
+      noFallthroughCasesInSwitch: true,
+      noUncheckedIndexedAccess: true,
+      noImplicitOverride: true,
+      // Project settings
       paths,
     },
     include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],

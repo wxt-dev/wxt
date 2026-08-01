@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
+import { EslintConfigVersion } from '../../src';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -28,7 +29,7 @@ describe('Auto Imports', () => {
             const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
             const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
             const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
-            const fakeBrowser: typeof import('wxt/testing').fakeBrowser
+            const fakeBrowser: typeof import('wxt/testing/fake-browser').fakeBrowser
             const getAppConfig: typeof import('wxt/utils/app-config').getAppConfig
             const injectScript: typeof import('wxt/utils/inject-script').injectScript
             const storage: typeof import('wxt/utils/storage').storage
@@ -124,7 +125,7 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
             export { startOfDay } from '../utils/time';
           }
           "
@@ -209,32 +210,35 @@ describe('Auto Imports', () => {
             export { defineWxtPlugin } from 'wxt/utils/define-wxt-plugin';
             export { injectScript, ScriptPublicPath, InjectScriptOptions } from 'wxt/utils/inject-script';
             export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
-            export { fakeBrowser } from 'wxt/testing';
+            export { fakeBrowser } from 'wxt/testing/fake-browser';
           }
           "
         `);
     });
   });
 
-  describe('eslintrc', () => {
-    it('"enabled: true" should output a JSON config file compatible with ESlint 8', async () => {
-      const project = new TestProject();
-      project.addFile('entrypoints/popup.html', `<html></html>`);
+  describe('eslint config', () => {
+    it.each([true, 'auto'] as const)(
+      '"enabled: %s" should output a JSON config file compatible with ESLint of package.json',
+      async (enabled) => {
+        const project = new TestProject();
+        project.addFile('entrypoints/popup.html', `<html></html>`);
 
-      await project.prepare({
-        imports: {
-          eslintrc: {
-            enabled: true,
+        await project.prepare({
+          imports: {
+            eslintrc: {
+              enabled,
+            },
           },
-        },
-      });
+        });
 
-      expect(
-        await project.serializeFile('.wxt/eslintrc-auto-import.json'),
-      ).toMatchSnapshot();
-    });
+        expect(
+          await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+        ).toMatchSnapshot();
+      },
+    );
 
-    it('"enabled: 8" should output a JSON config file compatible with ESlint 8', async () => {
+    it('"enabled: 8" should output a JSON config file compatible with ESLint <=8', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -251,7 +255,7 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: 9" should output a flat config file compatible with ESlint 9', async () => {
+    it('"enabled: 9" should output a flat config file compatible with ESLint >=9', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -268,7 +272,7 @@ describe('Auto Imports', () => {
       ).toMatchSnapshot();
     });
 
-    it('"enabled: false" should NOT output an ESlint config file', async () => {
+    it('"enabled: false" should NOT output an ESLint config file', async () => {
       const project = new TestProject();
       project.addFile('entrypoints/popup.html', `<html></html>`);
 
@@ -308,14 +312,14 @@ describe('Auto Imports', () => {
     describe('Actual linting results', () => {
       async function runEslint(
         project: TestProject,
-        version: boolean | 'auto' | 8 | 9,
+        enabled: EslintConfigVersion,
       ) {
         project.addFile(
           'entrypoints/background.js',
           `export default defineBackground(() => {})`,
         );
         await project.prepare({
-          imports: { eslintrc: { enabled: version } },
+          imports: { eslintrc: { enabled } },
         });
 
         return await project.run('eslint', 'entrypoints/background.js');
@@ -342,9 +346,11 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 9)).rejects.toMatchObject({
             exitCode: 1,
-            stdout: expect.stringContaining(
-              "'defineBackground' is not defined",
-            ),
+            output: {
+              stdout: expect.stringContaining(
+                "'defineBackground' is not defined",
+              ),
+            },
           });
         });
 
@@ -391,9 +397,11 @@ describe('Auto Imports', () => {
 
           await expect(runEslint(project, 8)).rejects.toMatchObject({
             exitCode: 1,
-            stdout: expect.stringContaining(
-              "'defineBackground' is not defined",
-            ),
+            output: {
+              stdout: expect.stringContaining(
+                "'defineBackground' is not defined",
+              ),
+            },
           });
         });
 

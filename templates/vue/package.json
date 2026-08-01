@@ -20,7 +20,9 @@
   "devDependencies": {
     "@wxt-dev/module-vue": "^1.0.3",
     "typescript": "^5.9.3",
+    "vite": "^8.1.5",
     "vue-tsc": "^3.2.5",
-    "wxt": "^0.20.27"
+    "web-ext": "^10.5.0",
+    "wxt": "^0.21.3"
   }
 }

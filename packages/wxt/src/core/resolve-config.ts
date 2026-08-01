@@ -1,19 +1,20 @@
 import { loadConfig } from 'c12';
-import { resolve as esmResolve } from 'import-meta-resolve';
 import {
-  InlineConfig,
-  ResolvedConfig,
-  UserConfig,
   ConfigEnv,
-  UserManifestFn,
-  UserManifest,
-  WebExtConfig,
-  WxtResolvedUnimportOptions,
+  InlineConfig,
   Logger,
+  ResolvedConfig,
+  ResolvedEslintrc,
+  UserConfig,
+  UserManifest,
+  UserManifestFn,
+  WebExtConfig,
   WxtCommand,
   WxtModule,
   WxtModuleWithMetadata,
-  ResolvedEslintrc,
+  WxtResolvedUnimportOptions,
+  ExtensionRunner,
+  WxtLogger,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -29,6 +30,11 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createSafariRunner } from './runners/safari';
+import isWsl from 'is-wsl';
+import { createWslRunner } from './runners/wsl';
+import { createManualRunner } from './runners/manual';
+import { createWxtLogger } from './utils/log/wxtLogger';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the
@@ -63,7 +69,7 @@ export async function resolveConfig(
   // Apply defaults to make internal config.
 
   const debug = mergedConfig.debug ?? false;
-  const logger = mergedConfig.logger ?? consola;
+  const logger = createWxtLogger(mergedConfig.logger ?? consola);
   if (debug) logger.level = LogLevels.debug;
 
   const browser = mergedConfig.browser ?? 'chrome';
@@ -119,19 +125,13 @@ export async function resolveConfig(
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-
-  if (inlineConfig.runner != null || userConfig.runner != null) {
-    logger.warn(
-      '`InlineConfig#runner` is deprecated, use `InlineConfig#webExt` instead. See https://wxt.dev/guide/resources/upgrading.html#v0-19-0-rarr-v0-20-0',
-    );
-  }
-  const runnerConfig = await loadConfig<WebExtConfig>({
+  const webExt = await loadConfig<WebExtConfig>({
     name: 'web-ext',
     cwd: root,
     globalRc: true,
     rcFile: '.webextrc',
-    overrides: inlineConfig.webExt ?? inlineConfig.runner,
-    defaults: userConfig.webExt ?? userConfig.runner,
+    overrides: inlineConfig.webExt,
+    defaults: userConfig.webExt,
   });
   // Make sure alias are absolute
   const alias = Object.fromEntries(
@@ -146,20 +146,9 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
-    if (mergedConfig.dev?.server?.hostname)
-      logger.warn(
-        `The 'hostname' option is deprecated, please use 'host' or 'origin' depending on your circumstances.`,
-      );
-
-    const host =
-      mergedConfig.dev?.server?.host ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const host = mergedConfig.dev?.server?.host ?? 'localhost';
     let port = mergedConfig.dev?.server?.port;
-    const origin =
-      mergedConfig.dev?.server?.origin ??
-      mergedConfig.dev?.server?.hostname ??
-      'localhost';
+    const origin = mergedConfig.dev?.server?.origin ?? 'localhost';
     const strictPort = mergedConfig.dev?.server?.strictPort ?? false;
     if (port == null || !isFinite(port)) {
       port = await getPort({
@@ -225,7 +214,11 @@ export async function resolveConfig(
     publicDir,
     wxtModuleDir,
     root,
-    runnerConfig,
+    webExt,
+    runner:
+      command === 'serve'
+        ? await resolveRunner(browser, logger, webExt.config)
+        : createManualRunner(),
     srcDir,
     typesDir,
     wxtDir,
@@ -233,8 +226,11 @@ export async function resolveConfig(
     analysis: resolveAnalysisConfig(root, mergedConfig),
     userConfigMetadata: userConfigMetadata ?? {},
     alias,
-    experimental: defu(mergedConfig.experimental, {}),
+    experimental: defu(mergedConfig.experimental, {
+      escapeUnicode: false,
+    }),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
+    watchOptions: mergedConfig.watchOptions ?? {},
     dev: {
       server: devServerConfig,
       reloadCommand,
@@ -307,10 +303,11 @@ function resolveZipConfig(
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
-    sourcesTemplate: '{{name}}-{{version}}-sources.zip',
-    artifactTemplate: '{{name}}-{{version}}-{{browser}}.zip',
+    sourcesTemplate: '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip',
+    artifactTemplate:
+      '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
-    includeSources: [],
+    includeSources: mergedConfig.zip?.includeSources ?? ['**/*'],
     compressionLevel: 9,
     ...mergedConfig.zip,
     zipSources:
@@ -320,8 +317,6 @@ function resolveZipConfig(
       '**/node_modules',
       // WXT files
       '**/web-ext.config.ts',
-      // Hidden files
-      '**/.*',
       // Tests
       '**/__tests__/**',
       '**/*.+(test|spec).?(c|m)+(j|t)s?(x)',
@@ -330,6 +325,7 @@ function resolveZipConfig(
       // From user
       ...(mergedConfig.zip?.excludeSources ?? []),
     ],
+    dotSources: mergedConfig.zip?.dotSources ?? false,
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
   };
@@ -360,11 +356,15 @@ function resolveAnalysisConfig(
 async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
-  logger: Logger,
+  logger: WxtLogger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
-  const eslintrc = await getUnimportEslintOptions(wxtDir, config.imports);
+  const eslintrc = await getUnimportEslintOptions(
+    logger,
+    wxtDir,
+    config.imports,
+  );
   // mlly sometimes picks up things as exports that aren't. That's what this array contains.
   const invalidExports = ['options'];
 
@@ -374,7 +374,7 @@ async function getUnimportOptions(
   ];
 
   const defaultOptions: WxtResolvedUnimportOptions = {
-    imports: [{ name: 'fakeBrowser', from: 'wxt/testing' }],
+    imports: [{ name: 'fakeBrowser', from: 'wxt/testing/fake-browser' }],
     presets: [
       {
         from: 'wxt/browser',
@@ -504,25 +504,30 @@ async function getUnimportOptions(
 }
 
 async function getUnimportEslintOptions(
+  logger: WxtLogger,
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
   const inlineEnabled =
-    options === false ? false : (options?.eslintrc?.enabled ?? 'auto');
+    options === false ? false : (options?.eslintrc?.enabled ?? true);
+
+  const version = await getEslintVersion();
+  const major = parseInt(version[0]);
 
   let enabled: ResolvedEslintrc['enabled'];
   switch (inlineEnabled) {
     case 'auto':
-      const version = await getEslintVersion();
-      let major = parseInt(version[0]);
-      if (isNaN(major)) enabled = false;
-      if (major <= 8) enabled = 8;
-      else if (major >= 9) enabled = 9;
-      // NaN
-      else enabled = false;
-      break;
+      logger.warn(
+        `\`imports.eslintrc.enabled: "auto"\` is deprecated. Use \`true\` instead.`,
+      );
     case true:
-      enabled = 8;
+      if (major <= 8) {
+        enabled = 8;
+      } else if (major >= 9) {
+        enabled = 9;
+      } else {
+        enabled = false;
+      }
       break;
     default:
       enabled = inlineEnabled;
@@ -532,7 +537,7 @@ async function getUnimportEslintOptions(
     enabled,
     filePath: path.resolve(
       wxtDir,
-      enabled === 9 ? 'eslint-auto-imports.mjs' : 'eslintrc-auto-import.json',
+      enabled === 8 ? 'eslintrc-auto-import.json' : 'eslint-auto-imports.mjs',
     ),
     globalsPropValue: true,
   };
@@ -540,10 +545,7 @@ async function getUnimportEslintOptions(
 
 /** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
-  // TODO: Switch to import.meta.resolve() once the parent argument is unflagged
-  // (e.g. --experimental-import-meta-resolve) and all Node.js versions we support
-  // have it.
-  const url = esmResolve('wxt', import.meta.url);
+  const url = import.meta.resolve('wxt', import.meta.url);
 
   // esmResolve() returns the "wxt/dist/index.mjs" file, not the package's root
   // directory, which we want to return from this function.
@@ -554,8 +556,8 @@ async function isDirMissing(dir: string) {
   return !(await pathExists(dir));
 }
 
-function logMissingDir(logger: Logger, name: string, expected: string) {
-  logger.warn(
+function logMissingDir(logger: WxtLogger, name: string, expected: string) {
+  logger.warnOnce(
     `${name} directory not found: ./${normalizePath(
       path.relative(process.cwd(), expected),
     )}`,
@@ -599,9 +601,7 @@ export async function resolveWxtUserModules(
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      // Resolve before importing to allow for a local WXT clone to be
-      // symlinked into a project.
-      const resolvedModulePath = esmResolve(moduleId, importer);
+      const resolvedModulePath = import.meta.resolve(moduleId, importer);
       const mod: { default: WxtModule<any> } = await import(
         /* @vite-ignore */ resolvedModulePath
       );
@@ -649,4 +649,26 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
+}
+
+async function resolveRunner(
+  browser: string,
+  logger: Logger,
+  webExt: WebExtConfig,
+): Promise<ExtensionRunner> {
+  if (browser === 'safari') return createSafariRunner();
+
+  if (isWsl) return createWslRunner();
+
+  try {
+    // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
+    const { createWebExtRunner } = await import('./runners/web-ext');
+    return webExt.disabled ? createManualRunner() : createWebExtRunner();
+  } catch (err: any) {
+    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+
+    logger.debug('Error loading the web-ext runner', err);
+  }
+
+  return createManualRunner();
 }
