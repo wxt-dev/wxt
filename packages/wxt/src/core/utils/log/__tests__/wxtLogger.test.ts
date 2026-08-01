@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { createWxtLogger } from '../wxtLogger';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { clearWarnSetForTesting, createWxtLogger } from '../wxtLogger';
 import type { Logger } from '../../../../types';
 import { LogLevels } from 'consola';
 import { mock } from 'vitest-mock-extended';
 
 describe('createWxtLogger', () => {
+  beforeEach(clearWarnSetForTesting);
+
   describe('warnOnce', () => {
     it('should log with the given arguments the first time it is called, and not again for repeated calls with the same arguments', () => {
       const inner = mock<Logger>();

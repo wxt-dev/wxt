@@ -30,3 +30,8 @@ export function createWxtLogger(logger: Logger): WxtLogger {
     },
   };
 }
+
+/** @internal for testing only */
+export function clearWarnSetForTesting(): void {
+  warned.clear();
+}
