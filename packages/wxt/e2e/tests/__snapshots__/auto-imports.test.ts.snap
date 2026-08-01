@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Auto Imports > eslint config > "enabled: 8" should output a JSON config file compatible with ESlint <=8 1`] = `
+exports[`Auto Imports > eslint config > "enabled: 8" should output a JSON config file compatible with ESLint <=8 1`] = `
 ".wxt/eslintrc-auto-import.json
 ----------------------------------------
 {
@@ -56,7 +56,7 @@ exports[`Auto Imports > eslint config > "enabled: 8" should output a JSON config
 "
 `;
 
-exports[`Auto Imports > eslint config > "enabled: 9" should output a flat config file compatible with ESlint >=9 1`] = `
+exports[`Auto Imports > eslint config > "enabled: 9" should output a flat config file compatible with ESLint >=9 1`] = `
 ".wxt/eslint-auto-imports.mjs
 ----------------------------------------
 const globals = {
@@ -119,7 +119,7 @@ export default {
 "
 `;
 
-exports[`Auto Imports > eslint config > "enabled: auto" should output a JSON config file compatible with ESlint of package.json 1`] = `
+exports[`Auto Imports > eslint config > "enabled: auto" should output a JSON config file compatible with ESLint of package.json 1`] = `
 ".wxt/eslint-auto-imports.mjs
 ----------------------------------------
 const globals = {
@@ -182,7 +182,7 @@ export default {
 "
 `;
 
-exports[`Auto Imports > eslint config > "enabled: true" should output a JSON config file compatible with ESlint of package.json 1`] = `
+exports[`Auto Imports > eslint config > "enabled: true" should output a JSON config file compatible with ESLint of package.json 1`] = `
 ".wxt/eslint-auto-imports.mjs
 ----------------------------------------
 const globals = {
