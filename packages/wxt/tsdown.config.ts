@@ -1,12 +1,34 @@
-import { defineConfig, UserConfig } from 'tsdown';
+import { defineConfig, UserConfig, Rolldown } from 'tsdown';
 import pkgJson from './package.json' with { type: 'json' };
 import { readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
 } from './src/core/utils/virtual-modules';
+import { pathToFileURL } from 'node:url';
+
+const inlineDeps = ['@aklinker1/zero-zip', 'normalize-path'];
+
+const inline: Rolldown.Plugin = {
+  name: 'inline',
+  resolveId: {
+    filter: {
+      id: new RegExp(`(${inlineDeps.join('|')})`),
+    },
+    handler: (id) => pathToFileURL(`dist/inline/${id}/index.mjs`).href,
+  },
+};
 
 export default defineConfig([
+  // tsdown doesn't respect alwaysBundle in unbundle mode. So we need to pre-transform the inline deps and resolve them later
+  ...inlineDeps.map<UserConfig>((id) => ({
+    entry: id,
+    outputOptions: {
+      entryFileNames: `inline/${id}/index.mjs`,
+      format: 'esm',
+    },
+    platform: 'node',
+  })),
   // Non-virtual modules can be transpiled in-place to make debugging in node_modules easier
   {
     entry: [
@@ -20,9 +42,11 @@ export default defineConfig([
       // CLI
       'src/cli/index.ts',
     ],
+    plugins: [inline],
     unbundle: true,
     deps: {
       neverBundle: ['wxt/browser', 'virtual:app-config'],
+      // alwaysBundle: Object.keys(pkgJson.devDependencies)
     },
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
