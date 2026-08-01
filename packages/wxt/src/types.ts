@@ -695,7 +695,7 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    * the default IIFE variable name may conflict with an existing variable on
    * the target page. This applies to content scripts with world=MAIN, and
    * others, such as unlisted scripts, that could be dynamically injected into
-   * the page with a <script> tag.
+   * the page with a `<script>` tag.
    *
    * Available options:
    *
