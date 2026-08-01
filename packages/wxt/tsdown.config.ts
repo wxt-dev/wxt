@@ -5,30 +5,34 @@ import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
 } from './src/core/utils/virtual-modules';
-import { pathToFileURL } from 'node:url';
+import consola from 'consola';
+import { styleText } from 'node:util';
+import { resolve } from 'node:path';
 
 const inlineDeps = ['@aklinker1/zero-zip', 'normalize-path'];
 
-const inline: Rolldown.Plugin = {
-  name: 'inline',
-  resolveId: {
-    filter: {
-      id: new RegExp(`(${inlineDeps.join('|')})`),
-    },
-    handler: (id) => pathToFileURL(`dist/inline/${id}/index.mjs`).href,
-  },
-};
+console.log();
+consola.info('Transforming inline dependencies...');
+const res = await Rolldown.build(
+  inlineDeps.map(
+    (id): Rolldown.BuildOptions => ({
+      input: id,
+      output: {
+        dir: 'inline',
+        entryFileNames: `${id}/index.mjs`,
+        format: 'esm',
+        minify: true,
+      },
+      platform: 'node',
+    }),
+  ),
+);
+for (const output of res)
+  consola.info(`${styleText('dim', 'dist/')}\`${output.output[0].fileName}\``);
+consola.success('Done!');
+console.log();
 
 export default defineConfig([
-  // tsdown doesn't respect alwaysBundle in unbundle mode. So we need to pre-transform the inline deps and resolve them later
-  ...inlineDeps.map<UserConfig>((id) => ({
-    entry: id,
-    outputOptions: {
-      entryFileNames: `inline/${id}/index.mjs`,
-      format: 'esm',
-    },
-    platform: 'node',
-  })),
   // Non-virtual modules can be transpiled in-place to make debugging in node_modules easier
   {
     entry: [
@@ -42,12 +46,25 @@ export default defineConfig([
       // CLI
       'src/cli/index.ts',
     ],
-    plugins: [inline],
     unbundle: true,
     deps: {
       neverBundle: ['wxt/browser', 'virtual:app-config'],
-      // alwaysBundle: Object.keys(pkgJson.devDependencies)
+      alwaysBundle: inlineDeps,
     },
+    plugins: [
+      {
+        name: 'resolve-inline',
+        resolveId: {
+          filter: {
+            id: new RegExp(`(${inlineDeps.join('|')})`),
+          },
+          handler: (id, importer) => {
+            console.log(id, importer);
+            return resolve(`inline/${id}/index.mjs`);
+          },
+        },
+      },
+    ],
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
       // we need to copy it into the out dir manually instead of building it.
