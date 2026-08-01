@@ -19,6 +19,9 @@ export default defineWxtModule<AutoIconsOptions>({
       },
     );
 
+    // Remove duplicates after merging user sizes with defaults.
+    const sizes = Array.from(new Set(parsedOptions.sizes));
+
     // Backward compatibility for the deprecated option
     if (options?.grayscaleOnDevelopment !== undefined) {
       wxt.logger.warn(
@@ -54,14 +57,14 @@ export default defineWxtModule<AutoIconsOptions>({
         );
 
       manifest.icons = Object.fromEntries(
-        parsedOptions.sizes.map((size) => [size, `icons/${size}.png`]),
+        sizes.map((size) => [size, `icons/${size}.png`]),
       );
     });
 
     wxt.hooks.hook('build:done', async (wxt, output) => {
       const outputFolder = wxt.config.outDir;
 
-      for (const size of parsedOptions.sizes) {
+      for (const size of sizes) {
         const resizedImage = sharp(resolvedPath).resize(size).png();
 
         if (wxt.config.mode === 'development') {
@@ -106,7 +109,7 @@ export default defineWxtModule<AutoIconsOptions>({
     });
 
     wxt.hooks.hook('prepare:publicPaths', (wxt, paths) => {
-      for (const size of parsedOptions.sizes) {
+      for (const size of sizes) {
         paths.push(`icons/${size}.png`);
       }
     });
