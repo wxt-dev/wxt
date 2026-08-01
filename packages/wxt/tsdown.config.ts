@@ -46,7 +46,7 @@ console.log();
 const resolveInlinePlugin: Rolldown.Plugin = {
   name: 'resolve-inline',
   resolveId: {
-    filter: { id: new RegExp(`(${inlineDeps.map(RegExp.escape).join('|')})`) },
+    filter: { id: new RegExp(`(${inlineDeps.join('|')})`) },
     handler: (id) => resolve(`inline/${id}/index.mjs`),
   },
 };
