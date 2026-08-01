@@ -1693,7 +1693,7 @@ describe('Manifest Utils', () => {
 
         expect(actual.version).toBe('0.0.0');
         expect(actual.version_name).toBeUndefined();
-        expect(wxt.logger.warn).toBeCalledWith(
+        expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
           expect.stringContaining('Extension version not found'),
         );
       });
@@ -2124,7 +2124,7 @@ describe('Manifest Utils', () => {
         const { manifest } = await generateManifest([], buildOutput);
 
         expect(manifest.manifest_version).toBe(expectedVersion);
-        expect(wxt.logger.warn).toBeCalledWith(
+        expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
           expect.stringContaining(
             '`manifest.manifest_version` config was set, but ignored',
           ),
