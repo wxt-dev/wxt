@@ -5,7 +5,6 @@ import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
 import { createViteBuilder } from './builders/vite';
 import { createWxtPackageManager } from './package-managers';
 import { resolveConfig } from './resolve-config';
-import { createWxtLogger } from './utils/log/wxtLogger';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is
@@ -34,15 +33,13 @@ export async function registerWxt(
     createWxtPackageManager(config.root),
   ]);
 
-  // Created once so `warnOnce`. Reads `wxt.config` so it always delegates to
-  // the latest resolved logger, even after the config is reloaded.
-  const logger = createWxtLogger(() => wxt.config.logger);
-
   wxt = {
     config,
     hooks,
     hook: hooks.hook.bind(hooks),
-    logger,
+    get logger() {
+      return config.logger;
+    },
     async reloadConfig() {
       // Prevent changing the server port when resolving config multiple times
       // get-port-please doesn't always return the same port if it was recently closed.

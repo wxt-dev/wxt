@@ -1585,7 +1585,7 @@ export interface ResolvedConfig {
   targetBrowsers: TargetBrowser[];
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
-  logger: Logger;
+  logger: WxtLogger;
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;

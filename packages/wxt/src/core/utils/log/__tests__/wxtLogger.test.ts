@@ -20,7 +20,7 @@ describe('createWxtLogger', () => {
   describe('warnOnce', () => {
     it('should log with the given arguments the first time it is called, and not again for repeated calls with the same arguments', () => {
       const inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+      const logger = createWxtLogger(inner);
 
       logger.warnOnce('some warning');
       logger.warnOnce('some warning');
@@ -32,7 +32,7 @@ describe('createWxtLogger', () => {
 
     it('should log separately for each distinct set of arguments', () => {
       const inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+      const logger = createWxtLogger(inner);
 
       logger.warnOnce('warning A');
       logger.warnOnce('warning B');
@@ -46,7 +46,7 @@ describe('createWxtLogger', () => {
 
     it('should not affect regular warn calls, which are never deduped', () => {
       const inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+      const logger = createWxtLogger(inner);
 
       logger.warn('some warning');
       logger.warn('some warning');
@@ -55,31 +55,26 @@ describe('createWxtLogger', () => {
       expect(inner.warn).toHaveBeenCalledTimes(3);
     });
 
-    it('should keep deduping by the same key even if the underlying logger changes', () => {
-      // Simulates `wxt.logger.warnOnce` being called before and after
-      // `wxt.reloadConfig()` replaces `wxt.config` (and thus `wxt.config.logger`).
-      let inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+    it('should scope deduping to a single createWxtLogger instance, not share it across separate instances', () => {
+      // `resolveConfig` calls `createWxtLogger` once per resolve/reload, so
+      // each instance's dedupe state should be independent of the others.
+      const innerA = fakeLogger();
+      const loggerA = createWxtLogger(innerA);
+      loggerA.warnOnce('some warning');
 
-      logger.warnOnce('some warning');
-      expect(inner.warn).toHaveBeenCalledTimes(1);
+      const innerB = fakeLogger();
+      const loggerB = createWxtLogger(innerB);
+      loggerB.warnOnce('some warning');
 
-      const newInner = fakeLogger();
-      inner = newInner;
-
-      logger.warnOnce('some warning');
-      expect(newInner.warn).not.toHaveBeenCalled();
-
-      logger.warnOnce('a new warning');
-      expect(newInner.warn).toHaveBeenCalledTimes(1);
-      expect(newInner.warn).toHaveBeenCalledWith('a new warning');
+      expect(innerA.warn).toHaveBeenCalledTimes(1);
+      expect(innerB.warn).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('delegation', () => {
     it('should pass every call through for non-warnOnce methods', () => {
       const inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+      const logger = createWxtLogger(inner);
 
       logger.debug('debug');
       logger.log('log');
@@ -98,7 +93,7 @@ describe('createWxtLogger', () => {
 
     it('should get and set level on the underlying logger', () => {
       const inner = fakeLogger();
-      const logger = createWxtLogger(() => inner);
+      const logger = createWxtLogger(inner);
 
       expect(logger.level).toBe(inner.level);
 

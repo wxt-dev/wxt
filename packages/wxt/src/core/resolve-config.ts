@@ -14,6 +14,7 @@ import {
   WxtModuleWithMetadata,
   WxtResolvedUnimportOptions,
   ExtensionRunner,
+  WxtLogger,
 } from '../types';
 import path from 'node:path';
 import { createFsCache } from './utils/cache';
@@ -33,6 +34,7 @@ import { createSafariRunner } from './runners/safari';
 import isWsl from 'is-wsl';
 import { createWslRunner } from './runners/wsl';
 import { createManualRunner } from './runners/manual';
+import { createWxtLogger } from './utils/log/wxtLogger';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the
@@ -67,7 +69,7 @@ export async function resolveConfig(
   // Apply defaults to make internal config.
 
   const debug = mergedConfig.debug ?? false;
-  const logger = mergedConfig.logger ?? consola;
+  const logger = createWxtLogger(mergedConfig.logger ?? consola);
   if (debug) logger.level = LogLevels.debug;
 
   const browser = mergedConfig.browser ?? 'chrome';
@@ -354,7 +356,7 @@ function resolveAnalysisConfig(
 async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
-  logger: Logger,
+  logger: WxtLogger,
   config: InlineConfig,
 ): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
@@ -502,7 +504,7 @@ async function getUnimportOptions(
 }
 
 async function getUnimportEslintOptions(
-  logger: Logger,
+  logger: WxtLogger,
   wxtDir: string,
   options: InlineConfig['imports'],
 ): Promise<ResolvedEslintrc> {
@@ -518,7 +520,7 @@ async function getUnimportEslintOptions(
     case true:
       if (isNaN(major)) {
         if (inlineEnabled === true) {
-          logger.warn(
+          logger.warnOnce(
             'Could not determine installed ESLint version, `eslint-auto-imports.mjs` not generated',
           );
         }
@@ -558,8 +560,8 @@ async function isDirMissing(dir: string) {
   return !(await pathExists(dir));
 }
 
-function logMissingDir(logger: Logger, name: string, expected: string) {
-  logger.warn(
+function logMissingDir(logger: WxtLogger, name: string, expected: string) {
+  logger.warnOnce(
     `${name} directory not found: ./${normalizePath(
       path.relative(process.cwd(), expected),
     )}`,
