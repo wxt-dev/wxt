@@ -537,8 +537,8 @@ export interface WxtHooks {
    * Called when WXT has created Vite's config for the dev server. Useful if you
    * want to add plugins or update the vite config per entrypoint group.
    *
-   * @param viteConfig The config that will be used to build the entrypoints.
-   *   Can be updated by reference.
+   * @param config The config that will be used to build the entrypoints. Can be
+   *   updated by reference.
    */
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
 }
@@ -1449,7 +1449,7 @@ export interface WxtHooks {
    * Called once all entrypoints have been grouped into their build groups.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of groups to build in each build step
+   * @param groups The list of groups to build in each build step
    */
   'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
   /**
@@ -1457,7 +1457,7 @@ export interface WxtHooks {
    * reference to add or remove public files.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of files that will be copied into the output
+   * @param files The list of files that will be copied into the output
    *   directory
    */
   'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
