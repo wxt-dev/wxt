@@ -26,6 +26,8 @@ export function createKeyboardShortcuts(
     start() {
       this.stop();
 
+      if (!process.stdin.isTTY) return;
+
       rl ??= readline.createInterface({
         input: process.stdin,
         terminal: false, // Don't intercept ctrl+C, ctrl+Z, etc
