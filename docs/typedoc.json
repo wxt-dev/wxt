@@ -1,5 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "name": "API",
   "entryPointStrategy": "packages",
   "docsRoot": ".",
   "navigation": {
@@ -20,5 +21,9 @@
   "readme": "none",
   "frontmatterGlobals": {
     "editLink": false
+  },
+  "textContentMappings": {
+    "breadcrumbs.home": "API",
+    "footer.text": "Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)"
   }
 }
