@@ -62,7 +62,7 @@
     },
     "packages/auto-icons": {
       "name": "@wxt-dev/auto-icons",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "dependencies": {
         "defu": "^6.1.4",
         "sharp": "^0.35.3",
