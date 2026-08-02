@@ -11,7 +11,8 @@
   "plugin": [
     "typedoc-plugin-markdown",
     "typedoc-vitepress-theme",
-    "typedoc-plugin-frontmatter"
+    "typedoc-plugin-frontmatter",
+    "./.vitepress/typedoc-inject-contents.mjs"
   ],
   "out": "./api/reference",
   "githubPages": false,
