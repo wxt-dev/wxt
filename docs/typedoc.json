@@ -24,6 +24,7 @@
   },
   "textContentMappings": {
     "breadcrumbs.home": "API",
-    "footer.text": "Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)"
+    "footer.text": "Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)",
+    "title.modulePage": "{kind}: {name}"
   }
 }
