@@ -57,7 +57,7 @@ const knowledge = addKnowledge<DefaultTheme.Config>({
     '/blog/': 'blog',
   },
   layoutSelectors: {
-    blog: '.container-content',
+    blog: '.vp-doc > .container',
   },
   pageSelectors: {
     'examples.md': '#VPContent > .VPPage',
