@@ -152,7 +152,8 @@ export default {
   };
 
   const ext = extname(options.eslintrc.filePath);
-  const declarationExt = ext === '.mjs' ? '.d.mts' : ext === '.cjs' ? '.d.cts' : '.d.ts';
+  const declarationExt =
+    ext === '.mjs' ? '.d.mts' : ext === '.cjs' ? '.d.cts' : '.d.ts';
   const typeScriptFilePath =
     options.eslintrc.filePath.slice(0, -ext.length) + declarationExt;
 
