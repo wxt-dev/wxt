@@ -12,6 +12,7 @@ ignorePaths:
   - '**/*.snap'
   - docs/assets/extension-showcase.yml
   - packages/*/stats.html
+  - packages/wxt/inline
 words:
   - Aabid
   - aabidk

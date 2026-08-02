@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["vitest-plugin-random-seed/types"]
   },
-  "exclude": ["node_modules", "src/virtual", "e2e/dist", "dist"]
+  "exclude": ["node_modules", "src/virtual", "e2e/dist", "dist", "inline"]
 }
