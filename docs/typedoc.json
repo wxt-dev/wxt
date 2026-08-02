@@ -1,6 +1,11 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "packages",
+  "docsRoot": ".",
+  "navigation": {
+    "includeFolders": false,
+    "includeGroups": true
+  },
   "entryPoints": ["../packages/wxt"],
   "plugin": [
     "typedoc-plugin-markdown",
