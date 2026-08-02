@@ -25,6 +25,12 @@
   "textContentMappings": {
     "breadcrumbs.home": "API",
     "footer.text": "Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)",
+    "title.indexPage": "API",
     "title.modulePage": "{kind}: {name}"
+  },
+  "locales": {
+    "en": {
+      "theme_defined_in": "Source"
+    }
   }
 }
