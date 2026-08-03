@@ -154,7 +154,7 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { createSpinner } = await import('nanospinner');
+  const { createSpinner } = await import('./utils/spinner');
   const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
