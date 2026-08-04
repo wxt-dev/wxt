@@ -89,6 +89,7 @@ export default defineConfig([
     (moduleName): UserConfig => ({
       entry: `src/virtual/${moduleName}.ts`,
       outDir: 'dist/virtual',
+      dts: false,
       deps: {
         neverBundle: [
           ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
