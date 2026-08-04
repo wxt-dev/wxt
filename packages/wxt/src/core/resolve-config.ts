@@ -493,7 +493,10 @@ async function getUnimportOptions(
       cwd: srcDir,
     },
     eslintrc,
-    dirs: disabled ? [] : ['components', 'composables', 'hooks', 'utils'],
+    dirs:
+      disabled || (config.imports !== false && config.imports?.scan === false)
+        ? []
+        : ['components', 'composables', 'hooks', 'utils'],
     disabled,
   };
 
