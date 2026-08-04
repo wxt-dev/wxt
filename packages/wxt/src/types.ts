@@ -1742,6 +1742,27 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
    * [https://wxt.dev/guide/key-concepts/auto-imports.html#eslint](https://wxt.dev/guide/key-concepts/auto-imports.html#eslint)
    */
   eslintrc?: Eslintrc;
+  /**
+   * Set to `false` to stop WXT from scanning its default auto-import
+   * directories (`components`, `composables`, `hooks`, and `utils`, relative to
+   * `srcDir`). Preset/library based imports (from `imports` and `presets`) are
+   * unaffected.
+   *
+   * Combine with `dirs` to replace the default directories with your own,
+   * instead of extending them:
+   *
+   * ```ts
+   * export default defineConfig({
+   *   imports: {
+   *     scan: false,
+   *     dirs: ['some-directory'],
+   *   },
+   * });
+   * ```
+   *
+   * @default true
+   */
+  scan?: boolean;
 };
 
 export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
