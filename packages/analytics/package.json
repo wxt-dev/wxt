@@ -51,10 +51,6 @@
     "./types": {
       "types": "./dist/types.d.mts"
     },
-    "./providers/extport": {
-      "types": "./dist/providers/extport.d.mts",
-      "default": "./dist/providers/extport.mjs"
-    },
     "./providers/google-analytics-4": {
       "types": "./dist/providers/google-analytics-4.d.mts",
       "default": "./dist/providers/google-analytics-4.mjs"
@@ -70,6 +66,10 @@
     "./providers/posthog": {
       "types": "./dist/providers/posthog.d.mts",
       "default": "./dist/providers/posthog.mjs"
+    },
+    "./providers/extport": {
+      "types": "./dist/providers/extport.d.mts",
+      "default": "./dist/providers/extport.mjs"
     }
   },
   "module": "./dist/index.mjs",
