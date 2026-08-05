@@ -4,11 +4,11 @@ Report analytics events from your web extension extension.
 
 ## Supported Analytics Providers
 
-- [extport](#extport)
 - [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
 - [Moderok](#moderok)
 - [PostHog](#posthog)
 - [Umami](#umami)
+- [extport](#extport)
 
 ## Install With WXT
 
@@ -93,29 +93,6 @@ Report analytics events from your web extension extension.
    ```
 
 ## Providers
-
-### extport
-
-[extport](https://extport.dev) is an open, self-hostable platform for browser extension developers — publishing, licensing, and analytics across Chrome, Firefox, Edge, and Safari. Its analytics protocol is a single anonymous daily ping per install: actives, installs, and churn are all derived server-side, and there are no custom events by design (pair another provider like PostHog or Umami if you need event tracking).
-
-Create an extension at [dash.extport.dev](https://dash.extport.dev) to get its `ext_…` id, then add the provider to your `<srcDir>/app.config.ts`:
-
-```ts
-// <srcDir>/app.config.ts
-import { extport } from '@wxt-dev/analytics/providers/extport';
-
-export default defineAppConfig({
-  analytics: {
-    providers: [
-      extport({
-        extensionId: 'ext_...',
-      }),
-    ],
-  },
-});
-```
-
-The provider automatically respects Firefox's built-in data-collection consent (`technicalAndInteraction`) — no extra wiring needed. Self-hosted instances can point elsewhere with the `apiBase` option.
 
 ### Google Analytics 4 (Measurement Protocol)
 
@@ -240,6 +217,29 @@ export default defineAppConfig({
   },
 });
 ```
+
+### extport
+
+[extport](https://extport.dev) is an open, self-hostable platform for browser extension developers — publishing, licensing, and analytics across Chrome, Firefox, Edge, and Safari. Its analytics protocol is a single anonymous daily ping per install: actives, installs, and churn are all derived server-side, and there are no custom events by design (pair another provider like PostHog or Umami if you need event tracking).
+
+Create an extension at [dash.extport.dev](https://dash.extport.dev) to get its `ext_…` id, then add the provider to your `<srcDir>/app.config.ts`:
+
+```ts
+// <srcDir>/app.config.ts
+import { extport } from '@wxt-dev/analytics/providers/extport';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      extport({
+        extensionId: 'ext_...',
+      }),
+    ],
+  },
+});
+```
+
+The provider automatically respects Firefox's built-in data-collection consent (`technicalAndInteraction`) — no extra wiring needed. Self-hosted instances can point elsewhere with the `apiBase` option.
 
 ### Custom Provider
 
