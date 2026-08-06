@@ -1369,7 +1369,57 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.content_scripts).toEqual([]);
+          expect(actual.content_scripts).toBeUndefined();
+          expect(actual.host_permissions).toEqual(['*://google.com/*']);
+        });
+
+        it('should still add manifest-registered content scripts when other content scripts are runtime-registered', async () => {
+          const runtimeCs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              registration: 'runtime',
+            },
+            skipped: false,
+          };
+          const manifestCs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'two',
+            inputPath: 'entrypoints/two.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://bing.com/*'],
+            },
+            skipped: false,
+          };
+
+          const entrypoints = [runtimeCs, manifestCs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints, chunks: [] }],
+          };
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.content_scripts).toEqual([
+            {
+              js: ['content-scripts/two.js'],
+              matches: ['*://bing.com/*'],
+            },
+          ]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
       });

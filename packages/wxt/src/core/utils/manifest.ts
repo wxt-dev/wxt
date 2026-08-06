@@ -434,7 +434,7 @@ function addEntrypoints(
           getContentScriptCssFiles(scripts, cssMap),
         ),
       );
-      if (manifestContentScripts.length >= 0) {
+      if (manifestContentScripts.length > 0) {
         manifest.content_scripts ??= [];
         manifest.content_scripts.push(...manifestContentScripts);
       }
