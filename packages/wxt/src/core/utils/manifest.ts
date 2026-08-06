@@ -590,7 +590,12 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      use_dynamic_url: true,
+      // Chrome-only MV3 field (obscures the resource URL behind a per-session
+      // token); Firefox ignores it, and Safari's web extension converter
+      // rejects it as an unsupported key.
+      ...(wxt.config.browser !== 'firefox' && wxt.config.browser !== 'safari'
+        ? { use_dynamic_url: true }
+        : {}),
       matches:
         script.options.matches?.map((matchPattern) =>
           stripPathFromMatchPattern(matchPattern),
