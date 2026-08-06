@@ -44,6 +44,7 @@ describe('CLI', () => {
   beforeEach(() => {
     vi.resetModules();
     process.argv = ogArgv;
+    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
     createServerMock.mockResolvedValue(mock());
   });
 
@@ -53,6 +54,7 @@ describe('CLI', () => {
       await importCli();
 
       expect(createServerMock).toBeCalledWith({});
+      expect(process.exit).not.toBeCalled();
     });
 
     it('should respect passing a custom root', async () => {
@@ -399,6 +401,7 @@ describe('CLI', () => {
       await importCli();
 
       expect(prepareMock).toBeCalledWith({});
+      expect(process.exit).toBeCalledWith(0);
     });
 
     it('should respect passing a custom root', async () => {
