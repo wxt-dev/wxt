@@ -7,7 +7,7 @@ import {
 import { getPublicFiles } from '../fs';
 import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
-import type { Spinner } from 'nanospinner';
+import type { Spinner } from '../../utils/spinner';
 import { wxt } from '../../wxt';
 import { toArray } from '../arrays';
 import { styleText } from 'node:util';

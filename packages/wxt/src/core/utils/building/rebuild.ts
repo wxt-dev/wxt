@@ -1,5 +1,5 @@
 import type { Browser } from '@wxt-dev/browser';
-import { createSpinner } from 'nanospinner';
+import { createSpinner } from '../../utils/spinner';
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../../../types';
 import { generateWxtDir } from '../../generate-wxt-dir';
 import { generateManifest, writeManifest } from '../../utils/manifest';
