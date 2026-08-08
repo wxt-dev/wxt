@@ -1236,21 +1236,6 @@ export interface WebExtConfig {
    *   default_directory: "/my/custom/dir",
    *   },
    *   }
-   *
-   * @default
-   * // Enable dev mode and allow content script sourcemaps
-   * {
-   *   devtools: {
-   *     synced_preferences_sync_disabled: {
-   *       skipContentScripts: false,
-   *     },
-   *   }
-   *   extensions: {
-   *     ui: {
-   *       developer_mode: true,
-   *     },
-   *   }
-   * }
    */
   chromiumPref?: Record<string, any>;
   /**
