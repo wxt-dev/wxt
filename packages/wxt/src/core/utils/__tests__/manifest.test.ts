@@ -1231,6 +1231,7 @@ describe('Manifest Utils', () => {
               outDir,
               command: 'build',
               manifestVersion: 3,
+              browser: 'chrome',
             },
           });
 
@@ -1315,6 +1316,7 @@ describe('Manifest Utils', () => {
               outDir,
               command: 'build',
               manifestVersion: 3,
+              browser: 'chrome',
             },
           });
 
@@ -1330,6 +1332,53 @@ describe('Manifest Utils', () => {
               use_dynamic_url: true,
             },
           ]);
+        });
+
+        it("should not add `use_dynamic_url` for Firefox or Safari, which don't support it", async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              cssInjectionMode: 'ui',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+
+          for (const browser of ['firefox', 'safari']) {
+            setFakeWxt({
+              config: {
+                outDir,
+                command: 'build',
+                manifestVersion: 3,
+                browser,
+              },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              entrypoints,
+              buildOutput,
+            );
+
+            expect(actual.web_accessible_resources).toEqual([
+              {
+                matches: ['*://google.com/*'],
+                resources: ['content-scripts/one.css'],
+              },
+            ]);
+          }
         });
       });
 
@@ -1523,6 +1572,7 @@ describe('Manifest Utils', () => {
             outDir,
             command: 'build',
             manifestVersion: 3,
+            browser: 'chrome',
             manifest: {
               web_accessible_resources: [
                 { resources: ['one.png'], matches: ['*://one.com/*'] },
