@@ -16,7 +16,7 @@
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
     "@wxt-dev/is-background": "workspace:>=1",
-    "ua-parser-js": "^1.0.40"
+    "ua-parser-js": "^2.0.10"
   },
   "peerDependencies": {
     "wxt": ">=0.20.0"
