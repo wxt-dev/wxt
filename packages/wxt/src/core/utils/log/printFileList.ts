@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { lstat } from 'node:fs/promises';
-import { filesize } from 'filesize';
+import { getBytesDisplay } from '../../utils/fs';
 import { printTable } from './printTable';
 import { styleText } from 'node:util';
 import { TextStyle } from '../../../utils/text-style';
@@ -27,7 +27,7 @@ export async function printFileList(
       try {
         const stats = await lstat(file);
         totalSize += stats.size;
-        size = String(filesize(stats.size));
+        size = getBytesDisplay(stats.size);
       } catch (ex) {
         wxt.logger.warn(`Could not get stats of '${file}' error: ${ex}`);
       }
@@ -40,7 +40,7 @@ export async function printFileList(
   );
 
   fileRows.push([
-    `${styleText('cyan', 'Σ Total size:')} ${String(filesize(totalSize))}`,
+    `${styleText('cyan', 'Σ Total size:')} ${getBytesDisplay(totalSize)}`,
   ]);
 
   printTable(log, header, fileRows);
