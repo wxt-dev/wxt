@@ -44,3 +44,9 @@ export async function getPublicFiles(): Promise<string[]> {
   });
   return files.map(unnormalizePath);
 }
+
+export function getBytesDisplay(bytes: number): string {
+  if (bytes < 1000) return `${bytes} B`;
+  if (bytes < 999995) return `${(bytes / 1e3).toFixed(2)} kB`;
+  return `${(bytes / 1e6).toFixed(2)} MB`;
+}
