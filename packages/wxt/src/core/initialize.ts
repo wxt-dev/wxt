@@ -6,6 +6,7 @@ import { pathExists } from './utils/fs';
 import path from 'node:path';
 import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
+import { createSpinner } from './utils/spinner';
 
 export async function initialize(options: {
   directory?: string;
@@ -154,7 +155,6 @@ async function cloneProject({
   directory: string;
   template: Template;
 }) {
-  const { createSpinner } = await import('./utils/spinner');
   const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
