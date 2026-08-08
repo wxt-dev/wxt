@@ -20,7 +20,6 @@ describe('createKeyboardShortcuts', () => {
     } else {
       delete (process.stdin as Partial<NodeJS.ReadStream>).isTTY;
     }
-    vi.clearAllMocks();
   });
 
   it('should not initialize stdin shortcuts when stdin is non-interactive', () => {
