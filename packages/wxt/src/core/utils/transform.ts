@@ -1,4 +1,22 @@
-import { ProxifiedModule, parseModule } from 'magicast';
+import { parseSync } from 'oxc-parser';
+import { transformSync } from 'oxc-transform';
+
+/** Any node from OXC's ESTree AST. All nodes include `start`/`end` offsets. */
+interface AstNode {
+  type: string;
+  start: number;
+  end: number;
+  [key: string]: any;
+}
+
+/** A range of the original source code to delete. */
+interface Removal {
+  start: number;
+  end: number;
+}
+
+const DEFAULT_FILENAME = 'entrypoint.ts';
+const MAX_PASSES = 10;
 
 /**
  * Removes any code used at runtime related to an entrypoint's main function.
@@ -9,231 +27,263 @@ import { ProxifiedModule, parseModule } from 'magicast';
  * 3. Removes unused imports
  * 4. Removes value-less, side-effect only imports (like `import "./styles.css"` or
  *    `import "polyfill"`)
+ *
+ * @param code The entrypoint's source code.
+ * @param filename Used to detect the language (JS/JSX/TS/TSX) of `code`.
  */
-export function removeMainFunctionCode(code: string): {
+export function removeMainFunctionCode(
+  code: string,
+  filename = DEFAULT_FILENAME,
+): {
   code: string;
   map?: string;
 } {
-  const mod = parseModule(code);
-  emptyMainFunction(mod);
-  let removedCount = 0;
-  let depth = 0;
-  const maxDepth = 10;
-  do {
-    removedCount = 0;
-    removedCount += removeUnusedTopLevelVariables(mod);
-    removedCount += removeUnusedTopLevelFunctions(mod);
-    removedCount += removeUnusedImports(mod);
-  } while (removedCount > 0 && depth++ <= maxDepth);
-  removeSideEffectImports(mod);
-  return mod.generate();
+  let result = removeMainFunction(code, filename);
+
+  // Removing the main function can make imports/variables/functions unused,
+  // and removing those can make even more code unused, so keep going until
+  // nothing else can be removed.
+  for (let i = 0; i < MAX_PASSES; i++) {
+    const next = removeUnusedCode(result, filename);
+    if (next === result) break;
+    result = next;
+  }
+
+  // Deleting source ranges leaves behind odd whitespace, so reprint the file
+  // with OXC. This also strips any TS syntax left over from removed types.
+  const transformed = transformSync(filename, result, { jsx: 'preserve' });
+  assertNoErrors(transformed.errors, filename);
+  return { code: transformed.code.trim() };
 }
 
-function emptyMainFunction(mod: ProxifiedModule): void {
-  if (mod.exports?.default?.$type === 'function-call') {
-    if (mod.exports.default.$ast?.arguments?.[0]?.body) {
-      // Remove body from function
-      // ex: "fn(() => { ... })" to "fn()"
-      // ex: "fn(function () { ... })" to "fn()"
-      delete mod.exports.default.$ast.arguments[0];
-    } else if (mod.exports.default.$ast?.arguments?.[0]?.properties) {
-      // Remove main field from object
-      // ex: "fn({ ..., main: () => {} })" to "fn({ ... })"
-      mod.exports.default.$ast.arguments[0].properties =
-        mod.exports.default.$ast.arguments[0].properties.filter(
-          (prop: any) => prop.key?.name !== 'main',
+function parse(code: string, filename: string) {
+  const result = parseSync(filename, code);
+  assertNoErrors(result.errors, filename);
+  return result.program as unknown as AstNode;
+}
+
+function assertNoErrors(
+  errors: Array<{ severity: string; message: string }>,
+  filename: string,
+): void {
+  const error = errors.find((error) => error.severity === 'Error');
+  if (error)
+    throw Error(`Failed to remove main function from ${filename}`, {
+      cause: Error(error.message),
+    });
+}
+
+/**
+ * Deletes the `main` function from the entrypoint's default export:
+ *
+ * - `export default fn(() => { ... })` becomes `export default fn()`
+ * - `export default fn({ ..., main: () => {} })` becomes `export default fn({ ...
+ *   })`
+ */
+function removeMainFunction(code: string, filename: string): string {
+  const program = parse(code, filename);
+  const defaultExport = program.body.find(
+    (node: AstNode) => node.type === 'ExportDefaultDeclaration',
+  );
+  const call = defaultExport?.declaration;
+  if (call?.type !== 'CallExpression') return code;
+
+  const arg = call.arguments[0];
+  if (
+    arg?.type === 'ArrowFunctionExpression' ||
+    arg?.type === 'FunctionExpression'
+  ) {
+    // Remove the function passed to the definition
+    return applyRemovals(code, [getListItemRemoval(code, call.arguments, 0)]);
+  }
+
+  if (arg?.type === 'ObjectExpression') {
+    // Remove the `main` field from the options passed to the definition
+    const index = arg.properties.findIndex(
+      (prop: AstNode) =>
+        prop.type === 'Property' && getKeyName(prop) === 'main',
+    );
+    if (index >= 0)
+      return applyRemovals(code, [
+        getListItemRemoval(code, arg.properties, index),
+      ]);
+  }
+
+  return code;
+}
+
+/**
+ * Performs a single pass removing all top-level variables, functions, and
+ * imports that aren't referenced anywhere else in the file. Also removes
+ * value-less, side-effect only imports.
+ */
+function removeUnusedCode(code: string, filename: string): string {
+  const program = parse(code, filename);
+  const used = findUsedIdentifiers(program);
+  const isUnused = (node: AstNode | undefined) =>
+    node?.type === 'Identifier' && !used.has(node.name);
+
+  const removals: Removal[] = [];
+  for (const statement of program.body as AstNode[]) {
+    switch (statement.type) {
+      case 'VariableDeclaration': {
+        const unused = statement.declarations.filter((declarator: AstNode) =>
+          getBoundIdentifiers(declarator.id).every(isUnused),
         );
-    }
-  }
-}
-
-function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
-  const simpleAst = getSimpleAstJson(mod.$ast);
-  const usedMap = findUsedIdentifiers(simpleAst);
-
-  let deletedCount = 0;
-  const ast = mod.$ast as any;
-
-  const isUsed = (id: any) => {
-    return id?.type === 'Identifier' && usedMap.get(id.name);
-  };
-
-  const cleanArrayPattern = (pattern: any): boolean => {
-    const elements = pattern.elements;
-    for (let i = elements.length - 1; i >= 0; i--) {
-      const el = elements[i];
-      if (el?.type === 'Identifier' && !isUsed(el)) {
-        elements.splice(i, 1);
-        deletedCount++;
-      }
-    }
-    return elements.length === 0;
-  };
-
-  const cleanObjectPattern = (pattern: any): boolean => {
-    const properties = pattern.properties;
-    for (let i = properties.length - 1; i >= 0; i--) {
-      const prop = properties[i];
-
-      if (prop.type === 'Property') {
-        const value = prop.value;
-        // support nested object
-        if (value.type === 'ObjectPattern') {
-          const isEmpty = cleanObjectPattern(value);
-          if (isEmpty) {
-            properties.splice(i, 1);
+        if (unused.length === statement.declarations.length) {
+          removals.push({ start: statement.start, end: statement.end });
+        } else {
+          for (const declarator of unused) {
+            removals.push(
+              getListItemRemoval(
+                code,
+                statement.declarations,
+                statement.declarations.indexOf(declarator),
+              ),
+            );
           }
-        } else if (value.type === 'ArrayPattern') {
-          const isEmpty = cleanArrayPattern(value);
-          if (isEmpty) {
-            properties.splice(i, 1);
+        }
+        break;
+      }
+
+      case 'FunctionDeclaration':
+      case 'ClassDeclaration': {
+        if (isUnused(statement.id)) {
+          removals.push({ start: statement.start, end: statement.end });
+        }
+        break;
+      }
+
+      case 'ImportDeclaration': {
+        const unused = statement.specifiers.filter((specifier: AstNode) =>
+          isUnused(specifier.local),
+        );
+        // Also removes value-less, side-effect only imports, which never have
+        // any specifiers.
+        if (unused.length === statement.specifiers.length) {
+          removals.push({ start: statement.start, end: statement.end });
+        } else {
+          for (const specifier of unused) {
+            removals.push(
+              getListItemRemoval(
+                code,
+                statement.specifiers,
+                statement.specifiers.indexOf(specifier),
+              ),
+            );
           }
-        } else if (value.type === 'Identifier' && !isUsed(value)) {
-          properties.splice(i, 1);
-          deletedCount++;
         }
-      } else if (prop.type === 'RestElement') {
-        const arg = prop.argument;
-        if (arg.type === 'Identifier' && !isUsed(arg)) {
-          properties.splice(i, 1);
-          deletedCount++;
-        }
+        break;
       }
-    }
-    return properties.length === 0;
-  };
-
-  for (let i = ast.body.length - 1; i >= 0; i--) {
-    if (ast.body[i].type !== 'VariableDeclaration') continue;
-
-    for (let j = ast.body[i].declarations.length - 1; j >= 0; j--) {
-      const id = ast.body[i].declarations[j].id;
-
-      let shouldRemove = false;
-
-      if (id.type === 'Identifier') {
-        shouldRemove = !isUsed(id);
-        if (shouldRemove) deletedCount++;
-      } else if (id.type === 'ArrayPattern') {
-        shouldRemove = cleanArrayPattern(id);
-      } else if (id.type === 'ObjectPattern') {
-        shouldRemove = cleanObjectPattern(id);
-      }
-
-      if (shouldRemove) {
-        ast.body[i].declarations.splice(j, 1);
-      }
-    }
-
-    if (ast.body[i].declarations.length === 0) {
-      ast.body.splice(i, 1);
     }
   }
 
-  return deletedCount;
+  return applyRemovals(code, removals);
 }
 
-function removeUnusedTopLevelFunctions(mod: ProxifiedModule): number {
-  const simpleAst = getSimpleAstJson(mod.$ast);
-  const usedMap = findUsedIdentifiers(simpleAst);
-
-  let deletedCount = 0;
-  const ast = mod.$ast as any;
-  for (let i = ast.body.length - 1; i >= 0; i--) {
-    if (
-      ast.body[i].type === 'FunctionDeclaration' &&
-      !usedMap.get(ast.body[i].id.name)
-    ) {
-      ast.body.splice(i, 1);
-      deletedCount++;
-    }
+/**
+ * Returns every identifier bound by a binding pattern, like the left-hand side
+ * of a variable declarator.
+ */
+function getBoundIdentifiers(pattern: AstNode | undefined): AstNode[] {
+  switch (pattern?.type) {
+    case 'Identifier':
+      return [pattern];
+    case 'ArrayPattern':
+      return pattern.elements.flatMap(getBoundIdentifiers);
+    case 'ObjectPattern':
+      return pattern.properties.flatMap((prop: AstNode) =>
+        getBoundIdentifiers(prop.type === 'Property' ? prop.value : prop),
+      );
+    case 'AssignmentPattern':
+      return getBoundIdentifiers(pattern.left);
+    case 'RestElement':
+      return getBoundIdentifiers(pattern.argument);
+    default:
+      return [];
   }
-  return deletedCount;
 }
 
-function removeUnusedImports(mod: ProxifiedModule): number {
-  const simpleAst = getSimpleAstJson(mod.$ast);
-  const usedMap = findUsedIdentifiers(simpleAst);
-  const importSymbols = Object.keys(mod.imports);
-
-  let deletedCount = 0;
-  importSymbols.forEach((name) => {
-    if (usedMap.get(name)) return;
-
-    delete mod.imports[name];
-    deletedCount++;
-  });
-  return deletedCount;
+function getKeyName(property: AstNode): string | undefined {
+  if (property.computed) return undefined;
+  if (property.key?.type === 'Identifier') return property.key.name;
+  if (property.key?.type === 'Literal') return String(property.key.value);
 }
 
 // TODO: Do a more complex declaration analysis where shadowed variables are detected and ignored.
 // Right now, this code assumes there are no shadowed variables.
-function findUsedIdentifiers(simpleAst: any) {
-  const usedMap = new Map<string, boolean>();
-  const queue: any[] = [simpleAst];
+function findUsedIdentifiers(program: AstNode): Set<string> {
+  const used = new Set<string>();
+  const queue: any[] = [program];
   for (const item of queue) {
-    if (!item) {
+    if (!item || typeof item !== 'object') {
+      continue;
     } else if (Array.isArray(item)) {
       queue.push(...item);
     } else if (item.type === 'ImportDeclaration') {
       // Don't look inside imports, identifiers are only used for declaration
       continue;
     } else if (item.type === 'Identifier') {
-      usedMap.set(item.name, true);
-    } else if (typeof item === 'object') {
-      const filterFns: Record<string, (entry: [string, any]) => boolean> = {
-        // Ignore the function declaration's name
-        FunctionDeclaration: ([key]) => key !== 'id',
-        // Ignore object property names
-        ObjectProperty: ([key]) => key !== 'key',
-        // Ignore variable declaration's name
-        VariableDeclarator: ([key]) => key !== 'id',
-      };
-      queue.push(
-        Object.entries(item)
-          .filter(filterFns[item.type] ?? (() => true))
-          .map(([_, value]) => value),
-      );
+      used.add(item.name);
+    } else {
+      // Skip the parts of a node that declare a name instead of using one
+      const skip = SKIPPED_KEYS[item.type];
+      for (const [key, value] of Object.entries(item)) {
+        if (skip?.includes(key)) continue;
+        if (item.computed !== true && key === 'key') continue;
+        queue.push(value);
+      }
     }
   }
-  return usedMap;
+  return used;
 }
 
-function deleteImportAst(
-  mod: ProxifiedModule,
-  shouldDelete: (node: any) => boolean,
-): void {
-  const importIndexesToDelete: number[] = [];
-  (mod.$ast as any).body.forEach((node: any, index: number) => {
-    if (node.type === 'ImportDeclaration' && shouldDelete(node)) {
-      importIndexesToDelete.push(index);
-    }
-  });
-  importIndexesToDelete.reverse().forEach((i) => {
-    delete (mod.$ast as any).body[i];
-  });
-}
-
-function removeSideEffectImports(mod: ProxifiedModule): void {
-  deleteImportAst(mod, (node) => node.specifiers.length === 0);
-}
+const SKIPPED_KEYS: Record<string, string[]> = {
+  // Ignore the declaration's name
+  FunctionDeclaration: ['id'],
+  ClassDeclaration: ['id'],
+  VariableDeclarator: ['id'],
+};
 
 /**
- * Util to get the AST as a simple JSON object, stripping out large objects and
- * file locations to keep it readable.
+ * Returns the range to delete for an item inside a comma-separated list
+ * (arguments, object properties, variable declarators, import specifiers),
+ * including the comma that separates it from the rest of the list.
  */
-function getSimpleAstJson(ast: any): any {
-  if (!ast) {
-    return ast;
-  } else if (Array.isArray(ast)) {
-    return ast.map(getSimpleAstJson);
-  } else if (typeof ast === 'object') {
-    return Object.fromEntries(
-      Object.entries(ast)
-        .filter(([key]) => key !== 'loc' && key !== 'start' && key !== 'end')
-        .map(([key, value]) => [key, getSimpleAstJson(value)]),
-    );
+function getListItemRemoval(
+  code: string,
+  items: AstNode[],
+  index: number,
+): Removal {
+  const item = items[index];
+  let start = item.start;
+  let end = item.end;
+
+  let after = end;
+  while (after < code.length && /\s/.test(code[after])) after++;
+  if (code[after] === ',') {
+    end = after + 1;
   } else {
-    return ast;
+    // Last item in the list, remove the comma before it instead - trailing
+    // commas aren't allowed everywhere (ex: variable declarations).
+    let before = start - 1;
+    while (before >= 0 && /\s/.test(code[before])) before--;
+    if (code[before] === ',') start = before;
   }
+
+  return { start, end };
+}
+
+/** Delete each range from the code. Ranges must not overlap. */
+function applyRemovals(code: string, removals: Removal[]): string {
+  if (removals.length === 0) return code;
+
+  let result = '';
+  let cursor = 0;
+  for (const { start, end } of removals.sort((l, r) => l.start - r.start)) {
+    if (start < cursor) continue;
+    result += code.slice(cursor, start);
+    cursor = end;
+  }
+  return result + code.slice(cursor);
 }

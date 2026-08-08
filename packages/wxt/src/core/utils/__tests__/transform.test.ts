@@ -46,9 +46,23 @@ describe('Transform Utils', () => {
           main: () => {},
         })
       `;
-      const expected = `export default ${def}({
-  asdf: "asdf"
-})`;
+      const expected = `export default ${def}({ asdf: "asdf" });`;
+
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
+
+    it('should remove the main method from an object', () => {
+      const input = `
+        export default defineContentScript({
+          matches: ["*://*/*"],
+          main(ctx) {
+            console.log(ctx);
+          },
+        })
+      `;
+      const expected = `export default defineContentScript({ matches: ["*://*/*"] });`;
 
       const actual = removeMainFunctionCode(input).code;
 
@@ -69,18 +83,16 @@ describe('Transform Utils', () => {
           },
         })
       `;
-      const expected = `const sharedConfig = {
-  matches: ['*://*/*'],
-};
-
-export default defineContentScript({
-  ...sharedConfig,
-  runAt: 'document_idle'
-})`;
 
       const actual = removeMainFunctionCode(input).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toMatchInlineSnapshot(`
+        "const sharedConfig = { matches: ["*://*/*"] };
+        export default defineContentScript({
+        	...sharedConfig,
+        	runAt: "document_idle"
+        });"
+      `);
     });
 
     it('should remove unused imports', () => {
@@ -91,8 +103,21 @@ export default defineContentScript({
 
         export default defineBackground(() => {})
       `;
-      const expected = `import { defineBackground } from "#imports"
+      const expected = `import { defineBackground } from "#imports";
+export default defineBackground();`;
 
+      const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toEqual(expected);
+    });
+
+    it('should only remove the unused specifiers of an import', () => {
+      const input = `
+        import defineBackground, { unused1, unused2 } from "#imports"
+
+        export default defineBackground(() => {})
+      `;
+      const expected = `import defineBackground from "#imports";
 export default defineBackground();`;
 
       const actual = removeMainFunctionCode(input).code;
@@ -108,8 +133,7 @@ export default defineBackground();`;
 
         export default defineBackground(() => {})
       `;
-      const expected = `import { defineBackground } from "#imports"
-
+      const expected = `import { defineBackground } from "#imports";
 export default defineBackground();`;
 
       const actual = removeMainFunctionCode(input).code;
@@ -132,17 +156,15 @@ export default defineBackground();`;
                 main: () => {},
               })
             `;
-      const expected = `function getMatches() {
-  return ["*://*/*"]
-}
-
-export default defineContentScript({
-  matches: getMatches()
-})`;
 
       const actual = removeMainFunctionCode(input).code;
 
-      expect(actual).toEqual(expected);
+      expect(actual).toMatchInlineSnapshot(`
+        "function getMatches() {
+        	return ["*://*/*"];
+        }
+        export default defineContentScript({ matches: getMatches() });"
+      `);
     });
 
     it("should remove any variables declared outside the main function that aren't used", () => {
@@ -156,10 +178,7 @@ export default defineContentScript({
         })
       `;
       const expected = `const matches = ["*://*/*"];
-
-export default defineContentScript({
-  matches
-})`;
+export default defineContentScript({ matches });`;
 
       const actual = removeMainFunctionCode(input).code;
 
@@ -182,21 +201,53 @@ export default defineContentScript({
         export default defineBackground(() => {
           console.log('Hello background!', { id: browser.runtime.id });
         });`;
-      const expected = `const [ a ] = [ 123, 456 ];
-const { b } = { b: 123 };
-const { c: { d } } = { c: { d: 123 } };
-const { e, ...rest } = { e: 123, f: 456 };
-
-console.log(a);
-console.log(b);
-console.log(d);
-console.log(e);
-console.log(rest);
-
-export default defineBackground();`;
 
       const actual = removeMainFunctionCode(input).code;
+
+      expect(actual).toMatchInlineSnapshot(`
+        "const [a] = [123, 456];
+        const { b } = { b: 123 };
+        const { c: { d } } = { c: { d: 123 } };
+        const { e, ...rest } = {
+        	e: 123,
+        	f: 456
+        };
+        console.log(a);
+        console.log(b);
+        console.log(d);
+        console.log(e);
+        console.log(rest);
+        export default defineBackground();"
+      `);
+    });
+
+    it('should strip TypeScript syntax', () => {
+      const input = `
+        import type { ContentScriptContext } from "#imports";
+
+        interface Options {
+          name: string;
+        }
+
+        const matches: string[] = ["*://*/*"];
+
+        export default defineContentScript({
+          matches,
+          main(ctx: ContentScriptContext) {
+            console.log(ctx);
+          },
+        })
+      `;
+      const expected = `const matches = ["*://*/*"];
+export default defineContentScript({ matches });`;
+
+      const actual = removeMainFunctionCode(input, 'entrypoint.ts').code;
+
       expect(actual).toEqual(expected);
+    });
+
+    it('should throw an error when the code cannot be parsed', () => {
+      expect(() => removeMainFunctionCode('const = ;')).toThrowError();
     });
   });
 });

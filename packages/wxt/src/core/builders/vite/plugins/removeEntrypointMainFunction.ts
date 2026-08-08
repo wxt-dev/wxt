@@ -21,7 +21,7 @@ export function removeEntrypointMainFunction(
         id: new RegExp(`^${absPath}$`),
       },
       handler(code) {
-        const newCode = removeMainFunctionCode(code);
+        const newCode = removeMainFunctionCode(code, absPath);
         config.logger.debug('transformed entrypoint', path);
         config.logger.debug(`Original:\n---\n${code}\n---`);
         config.logger.debug(`Transformed:\n---\n${newCode.code}\n---`);
