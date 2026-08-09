@@ -3,13 +3,20 @@ import { logger } from '../../utils/internal/logger';
 import { MatchPattern } from 'wxt/utils/match-patterns';
 import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server-websocket';
 
-export function reloadContentScript(
-  payload: ReloadContentScriptPayload,
-): Promise<void> {
+const pendingReloads = new Set<Promise<unknown>>();
+
+export function reloadContentScript(payload: ReloadContentScriptPayload): void {
   const manifest = browser.runtime.getManifest();
-  return manifest.manifest_version == 2
-    ? reloadContentScriptMv2(payload)
-    : reloadContentScriptMv3(payload);
+  const promise =
+    manifest.manifest_version == 2
+      ? reloadContentScriptMv2(payload)
+      : reloadContentScriptMv3(payload);
+  pendingReloads.add(promise);
+  promise.finally(() => pendingReloads.delete(promise));
+}
+
+export async function waitForPendingContentScriptReloads(): Promise<void> {
+  await Promise.allSettled(pendingReloads);
 }
 
 export async function reloadContentScriptMv3({
@@ -55,7 +62,7 @@ export async function reloadManifestContentScriptMv3(
     ]);
   }
 
-  await reExecuteInMatchingTabs(contentScript);
+  await reloadTabsForContentScript(contentScript);
 }
 
 export async function reloadRuntimeContentScriptMv3(
@@ -80,24 +87,14 @@ export async function reloadRuntimeContentScriptMv3(
   }
 
   await browser.scripting.updateContentScripts(matches);
-  await reExecuteInMatchingTabs(contentScript);
+  await reloadTabsForContentScript(contentScript);
 }
 
-/**
- * Re-runs a content script's JS files inside tabs that already have it
- * injected, instead of doing a full `tabs.reload()`. A full reload works, but
- * it navigates the page, which clears devtools console output - making it hard
- * to tell whether the reload actually picked up the change. Running the updated
- * files in-place keeps the page (and previous logs) around, so the new console
- * output shows up right next to the old output.
- */
-async function reExecuteInMatchingTabs(contentScript: ContentScript) {
-  if (!contentScript.js?.length) return;
-
+async function reloadTabsForContentScript(contentScript: ContentScript) {
+  const allTabs = await browser.tabs.query({});
   const matchPatterns = contentScript.matches.map(
     (match) => new MatchPattern(match),
   );
-  const allTabs = await browser.tabs.query({});
   const matchingTabs = allTabs.filter((tab) => {
     const url = tab.url;
     if (!url) return false;

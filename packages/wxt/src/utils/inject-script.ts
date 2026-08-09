@@ -24,17 +24,7 @@ export async function injectScript(
 ): Promise<InjectScriptResult> {
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
-
-  // If a previous call left this same script in the DOM (`keepInDom`),
-  // remove it first. Otherwise, calling `injectScript` again for the same
-  // path - e.g. because the content script that called it got re-run -
-  // would leave multiple copies of it running side by side.
-  document.querySelectorAll('script').forEach((el) => {
-    if (el.dataset.wxtInjectedPath === path) el.remove();
-  });
-
   const script = document.createElement('script');
-  script.dataset.wxtInjectedPath = path;
 
   const isManifestV2 = browser.runtime.getManifest().manifest_version === 2;
 
