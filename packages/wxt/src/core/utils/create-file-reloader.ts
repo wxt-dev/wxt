@@ -124,6 +124,10 @@ export function createFileReloader(server: WxtDevServer) {
 
         // Perform reloads
         if (hasNewEntrypoints || changes.type === 'extension-reload') {
+          // `server.reloadExtension()` only reloads the background/manifest -
+          // it doesn't re-inject content scripts into tabs that are already
+          // open, so tell those to reload too.
+          reloadContentScripts(newOutput.steps, server);
           server.reloadExtension();
           wxt.logger.success(`Reloaded extension`);
         } else if (changes.type === 'html-reload') {
