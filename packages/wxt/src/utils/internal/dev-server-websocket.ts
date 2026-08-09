@@ -1,3 +1,4 @@
+import type { Browser } from '@wxt-dev/browser';
 import { logger } from './logger';
 
 interface WebSocketMessage {
@@ -76,5 +77,6 @@ export interface ReloadContentScriptPayload {
     matches: string[];
     js?: string[];
     css?: string[];
+    world?: Browser.scripting.RegisteredContentScript['world'];
   };
 }

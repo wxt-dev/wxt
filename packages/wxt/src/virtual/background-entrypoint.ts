@@ -7,13 +7,20 @@ import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
 import { reloadContentScript } from './utils/reload-content-scripts';
 
 if (import.meta.env.COMMAND === 'serve') {
+  // Content script reloads for an `extension-reload` are sent as separate,
+  // unawaited messages just before it. Track them so `runtime.reload()`
+  // doesn't tear down the background (and its message handling) before
+  // they've had a chance to finish injecting into open tabs.
+  const pendingContentScriptReloads: Promise<unknown>[] = [];
+
   try {
     const ws = getDevServerWebSocket();
-    ws.addWxtEventListener('wxt:reload-extension', () => {
+    ws.addWxtEventListener('wxt:reload-extension', async () => {
+      await Promise.allSettled(pendingContentScriptReloads);
       browser.runtime.reload();
     });
     ws.addWxtEventListener('wxt:reload-content-script', (event) => {
-      reloadContentScript(event.detail);
+      pendingContentScriptReloads.push(reloadContentScript(event.detail));
     });
 
     if (import.meta.env.MANIFEST_VERSION === 3) {
