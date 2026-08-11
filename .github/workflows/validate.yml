@@ -54,18 +54,32 @@ jobs:
         run: bun run wxt zip
         working-directory: packages/wxt-demo
 
-  tests:
-    name: Tests (${{ matrix.title }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - title: 'Linux'
-            os: ubuntu-22.04
-            coverage: true
-          - title: 'Windows'
-            os: windows-latest
-            coverage: false
+  linux-tests:
+    name: Tests (Linux)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: latest
+
+      - name: Run Tests (Coverage)
+        run: bun run test:coverage --reporter=default --reporter=hanging-process
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  windows-tests:
+    name: Tests (Windows)
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -79,18 +93,7 @@ jobs:
           version: latest
 
       - name: Run Tests
-        if: ${{ ! matrix.coverage }}
         run: bun run test
-
-      - name: Run Tests (Coverage)
-        if: matrix.coverage
-        run: bun run test:coverage --reporter=default --reporter=hanging-process
-
-      - name: Upload Coverage
-        if: matrix.coverage
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   template:
     name: Template
