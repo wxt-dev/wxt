@@ -135,6 +135,10 @@
       "types": "./dist/utils/content-script-context.d.mts",
       "default": "./dist/utils/content-script-context.mjs"
     },
+    "./utils/debug-info": {
+      "types": "./dist/utils/debug-info.d.mts",
+      "default": "./dist/utils/debug-info.mjs"
+    },
     "./utils/content-script-ui/types": {
       "types": "./dist/utils/content-script-ui/types.d.mts",
       "default": "./dist/utils/content-script-ui/types.mjs"
