@@ -1,5 +1,61 @@
 # Changelog
 
+## v0.21.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.3...wxt-v0.21.4)
+
+### 🚀 Features
+
+- Log warnings once ([#2536](https://github.com/wxt-dev/wxt/pull/2536))
+- Change behaviour of eslint config ([#2295](https://github.com/wxt-dev/wxt/pull/2295))
+
+### 🩹 Fixes
+
+- Fix regression where `web-ext.config.ts` was not respected ([#2550](https://github.com/wxt-dev/wxt/pull/2550))
+- **vite-builder**: Tolerate `ENOENT` when deleting empty directories ([#2534](https://github.com/wxt-dev/wxt/pull/2534))
+- Don't add an empty content_scripts array for runtime-only content scripts ([#2580](https://github.com/wxt-dev/wxt/pull/2580))
+- Skip keyboard shortcuts for non-interactive stdin ([#2563](https://github.com/wxt-dev/wxt/pull/2563))
+- Don't set `use_dynamic_url` on browsers that don't support it ([#2581](https://github.com/wxt-dev/wxt/pull/2581))
+
+### 📖 Documentation
+
+- Added Video Time Manager ([#2501](https://github.com/wxt-dev/wxt/pull/2501))
+- Link shared content script UI options ([#2497](https://github.com/wxt-dev/wxt/pull/2497))
+- Added Edge ID for Glossy New Tab extension ([#2555](https://github.com/wxt-dev/wxt/pull/2555))
+- Added "GringaChange" to showcase ([#2573](https://github.com/wxt-dev/wxt/pull/2573))
+- Updated outdated defaults for webExt chromium prefs ([`aeb16e7`](https://github.com/wxt-dev/wxt/commit/aeb16e7741d5c2aba77d98c6c301ceb6ba1162fe))
+
+### 🏡 Chore
+
+- **deps**: Replace `nano-spawn` with `tinyexec` ([#2544](https://github.com/wxt-dev/wxt/pull/2544))
+- **deps**: Loosen version range for `@wxt-dev/browser` so projects can use any vesion ([`7946665`](https://github.com/wxt-dev/wxt/commit/794666597a5960a099ca1c54bb1f1cf3f231b990))
+- Use `.oxlintrc.jsonc` for ignored paths ([`3f65967`](https://github.com/wxt-dev/wxt/commit/3f65967b3f830af80218f2ef6a241107322496cd))
+- Fix type error after chrome types update ([`83e9840`](https://github.com/wxt-dev/wxt/commit/83e9840d8fa7218bcdb2765fb76a8cc6404712b1))
+- **deps**: Inline `normalize-path` ([#2557](https://github.com/wxt-dev/wxt/pull/2557))
+- **deps**: Inline small deps ([#2560](https://github.com/wxt-dev/wxt/pull/2560))
+- **deps**: Inline `get-port-please` ([#2576](https://github.com/wxt-dev/wxt/pull/2576))
+- **deps**: Replace `filesize` with DIY function ([#2589](https://github.com/wxt-dev/wxt/pull/2589))
+- **deps**: Inline funtion for cli spinner ([#2567](https://github.com/wxt-dev/wxt/pull/2567))
+
+### ❤️ Contributors
+
+- Loi Nguyen <vanloi999@gmail.com>
+- [@rxliuli](https://github.com/rxliuli)
+- [@PatrykKuniczak](https://github.com/PatrykKuniczak)
+- Oleksandr Kuksenko <oleks.kuksenko@gmail.com>
+- Claude Fable 5 <noreply@anthropic.com>
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@micheldpcarlos](https://github.com/micheldpcarlos)
+- Loi Nguyen <loinguyen@local>
+- [@suveshmoza](https://github.com/suveshmoza)
+- [@avi12](https://github.com/avi12)
+- [@aklinker1](https://github.com/aklinker1)
+- [@PatrickMatthiesen](https://github.com/PatrickMatthiesen)
+- [@Copilot](https://github.com/Copilot)
+- [@oyzamil](https://github.com/oyzamil)
+- [@fkatsuhiro](https://github.com/fkatsuhiro)
+
+
 ## v0.21.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.2...wxt-v0.21.3)
@@ -29,7 +85,6 @@
 - [@rxliuli](https://github.com/rxliuli)
 - [@suveshmoza](https://github.com/suveshmoza)
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v0.21.2
 
