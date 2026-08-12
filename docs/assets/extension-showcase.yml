@@ -539,3 +539,8 @@
 
 - # GringaChange
   chromeId: amkfidglmdkclmhgnnkicocfcgoplanp
+
+- # FlowPick - https://github.com/ezwebtools/flowpick
+  chromeId: mfinfkkabangbkanlfhhbokgfekjklea
+  firefoxSlug: flowpick
+  edgeId: egbfhgcifljmeaomlbhggplohemjombb
