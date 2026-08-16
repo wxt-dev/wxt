@@ -15,6 +15,7 @@
     "src/utils/define-wxt-plugin.ts",
     "src/utils/match-patterns.ts",
     "src/utils/split-shadow-root-css.ts",
+    "src/utils/rename-css-custom-properties.ts",
     "src/utils/storage.ts",
     "src/testing/index.ts",
     "src/testing/fake-browser.ts",
