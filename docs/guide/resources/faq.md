@@ -48,7 +48,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    import ReactDOM from 'react-dom/client';
    import App from './App.tsx';
 
-   const ui = await create`ShadowRoot`Ui(ctx, {
+   const ui = await createShadowRootUi(ctx, {
      // ...
      onMount: (container, shadow) => {
        const cssContainer = shadow.querySelector('head')!;
@@ -80,7 +80,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    import { createApp } from 'vue';
    import App from './App.vue';
 
-   const ui = await create`ShadowRoot`Ui(ctx, {
+   const ui = await createShadowRootUi(ctx, {
      // ...
      onMount: (container, shadow) => {
        const teleportTarget = shadow.querySelector('body')!;
@@ -104,7 +104,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    import App from './App.tsx';
    import PortalTargetContext from '~/hooks/PortalTargetContext';
 
-   const ui = await create`ShadowRoot`Ui(ctx, {
+   const ui = await createShadowRootUi(ctx, {
      // ...
      onMount: (container, shadow) => {
        const portalTarget = shadow.querySelector('body')!;
