@@ -537,8 +537,8 @@ Firefox does not support sandboxed pages.
   :patterns="[
     ['sidepanel.html', 'sidepanel.html'],
     ['sidepanel/index.html', 'sidepanel.html'],
-    ['{name}.sidepanel.html', '{name}.html` '],
-    ['{name}.sidepanel/index.html', '{name}.html` '],
+    ['{name}.sidepanel.html', '{name}.html'],
+    ['{name}.sidepanel/index.html', '{name}.html'],
   ]"
 />
 

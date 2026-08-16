@@ -97,7 +97,7 @@ To create a standalone content script that only includes a CSS file:
 WXT provides 3 built-in utilities for adding UIs to a page from a content script:
 
 - [Integrated](#integrated) - `createIntegratedUi`
-- [Shadow Root](#shadow-root) -`createShadowRootUi`
+- [Shadow Root](#shadow-root) - `createShadowRootUi`
 - [IFrame](#iframe) - `createIframeUi`
 
 Each has their own set of advantages and disadvantages.
