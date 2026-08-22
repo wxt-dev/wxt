@@ -1253,6 +1253,14 @@ export interface WebExtConfig {
   startUrls?: string[];
   /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#keep-profile-changes */
   keepProfileChanges?: boolean;
+  /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#target */
+  target?: 'firefox-desktop' | 'firefox-android' | 'chromium' | (string & {});
+  /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#adb-device */
+  adbDevice?: string;
+  /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#adb-bin */
+  adbBin?: string;
+  /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-apk */
+  firefoxApk?: string;
 }
 
 export interface WxtBuilder {

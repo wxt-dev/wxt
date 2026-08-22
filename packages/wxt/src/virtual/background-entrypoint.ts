@@ -29,7 +29,7 @@ if (import.meta.env.COMMAND === 'serve') {
     logger.error('Failed to setup web socket connection with dev server', err);
   }
 
-  browser.commands.onCommand.addListener((command) => {
+  browser.commands?.onCommand.addListener((command) => {
     if (command === 'wxt:reload-extension') {
       browser.runtime.reload();
     }
