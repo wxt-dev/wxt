@@ -8,7 +8,8 @@ import type {
   EslintConfigVersion,
 } from '../types';
 import { type Unimport, createUnimport, toExports } from 'unimport';
-import UnimportPlugin from 'unimport/unplugin';
+import { defaultExcludes, defaultIncludes } from 'unimport/unplugin';
+import { createFilter, type FilterPattern, type Plugin } from 'vite';
 
 export default defineWxtModule({
   name: 'wxt:built-in:unimport',
@@ -64,10 +65,60 @@ export default defineWxtModule({
 
     // Add vite plugin
     addViteConfig(wxt, () => ({
-      plugins: [UnimportPlugin.vite(wxt.config.imports)],
+      plugins: [unimportPlugin(wxt.config.imports)],
     }));
   },
 });
+
+/**
+ * Vite plugin that injects auto-imports into modules.
+ *
+ * Equivalent to `UnimportPlugin.vite(options)`, but it generates a high
+ * resolution sourcemap. Unimport's unplugin calls `MagicString#generateMap()`
+ * with no options, which produces a line-level map with no `source`. Since
+ * auto-imports are injected at the top of the file, tools that rely on columns
+ * (like V8 code coverage) then see the entire module as a single statement,
+ * silently dropping it from coverage reports.
+ *
+ * `hires: 'boundary'` keeps columns accurate and is cheaper than `hires: true`.
+ *
+ * If unimport passes these options itself, this plugin can be dropped in favor
+ * of `UnimportPlugin.vite(options)` again.
+ *
+ * @see https://github.com/wxt-dev/wxt/issues/2604
+ * @see https://github.com/unjs/unimport/issues/562
+ */
+export function unimportPlugin(options: WxtResolvedUnimportOptions): Plugin {
+  // `include`/`exclude` aren't part of `UnimportOptions`, but unimport's
+  // unplugin accepts them, so keep honoring them.
+  const { include = defaultIncludes, exclude = defaultExcludes } = options as {
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  };
+  const filter = createFilter(include, exclude);
+  const unimport = createUnimport(options);
+  let initialized: Promise<void> | undefined;
+  const init = () => (initialized ??= unimport.init());
+
+  return {
+    name: 'wxt:unimport',
+    // Run after plugins that compile files to JS, like `@vitejs/plugin-vue`.
+    enforce: 'post',
+    buildStart: init,
+    async transform(code, id) {
+      if (!filter(id)) return;
+
+      await init();
+      const injected = await unimport.injectImports(code, id);
+      if (!injected.s.hasChanged()) return;
+
+      return {
+        code: injected.code,
+        map: injected.s.generateMap({ hires: 'boundary', source: id }),
+      };
+    },
+  };
+}
 
 async function getImportsDeclarationEntry(
   unimport: Unimport,

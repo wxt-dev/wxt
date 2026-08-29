@@ -13,7 +13,7 @@ import {
   resolveAppConfig,
 } from '../core/builders/vite/plugins';
 import { InlineConfig } from '../types';
-import UnimportPlugin from 'unimport/unplugin';
+import { unimportPlugin } from '../builtin-modules/unimport';
 import { registerWxt, wxt } from '../core/wxt';
 
 /**
@@ -44,7 +44,7 @@ export async function WxtVitest(
     resolveAppConfig(wxt.config),
     extensionApiMock(wxt.config),
   ];
-  plugins.push(UnimportPlugin.vite(wxt.config.imports));
+  plugins.push(unimportPlugin(wxt.config.imports));
 
   return plugins;
 }
