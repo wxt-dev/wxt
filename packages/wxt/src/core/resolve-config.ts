@@ -29,7 +29,7 @@ import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { createSafariRunner } from './runners/safari';
 import isWsl from 'is-wsl';
 import { createWslRunner } from './runners/wsl';
@@ -545,10 +545,12 @@ async function getUnimportEslintOptions(
 
 /** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
-  const url = import.meta.resolve('wxt', import.meta.url);
+  // Prefer one-arg resolve: Bun's two-arg `import.meta.resolve(spec, parent)`
+  // fails for bare package names (`Cannot find package 'wxt'`). Node accepts both.
+  const url = import.meta.resolve('wxt');
 
-  // esmResolve() returns the "wxt/dist/index.mjs" file, not the package's root
-  // directory, which we want to return from this function.
+  // import.meta.resolve returns the package entry (e.g. dist/index.mjs), not the
+  // package root directory, which we want to return from this function.
   return path.resolve(fileURLToPath(url), '../..');
 }
 
@@ -596,12 +598,12 @@ export async function resolveWxtUserModules(
   modulesDir: string,
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {
-  const importer = pathToFileURL(path.join(root, 'index.js')).href;
-
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      const resolvedModulePath = import.meta.resolve(moduleId, importer);
+      // One-arg: Bun rejects two-arg resolve with a synthetic parent URL
+      // (`file:///…/index.js` that does not exist on disk).
+      const resolvedModulePath = import.meta.resolve(moduleId);
       const mod: { default: WxtModule<any> } = await import(
         /* @vite-ignore */ resolvedModulePath
       );
