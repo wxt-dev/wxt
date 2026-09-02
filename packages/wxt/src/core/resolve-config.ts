@@ -72,24 +72,43 @@ export async function resolveConfig(
   const logger = createWxtLogger(mergedConfig.logger ?? consola);
   if (debug) logger.level = LogLevels.debug;
 
-  const browser = mergedConfig.browser ?? 'chrome';
+  const root = path.resolve(
+    inlineConfig.root ?? userConfig.root ?? process.cwd(),
+  );
+  const webExt = await loadConfig<WebExtConfig>({
+    name: 'web-ext',
+    cwd: root,
+    globalRc: true,
+    rcFile: '.webextrc',
+    overrides: inlineConfig.webExt,
+    defaults: userConfig.webExt,
+  });
+
+  // "firefox-android" is an alias for the firefox build targeting an Android device
+  const requestedBrowser = mergedConfig.browser ?? 'chrome';
+  const isAndroid =
+    requestedBrowser === 'firefox-android' ||
+    webExt.config?.target === 'firefox-android';
+  const browser =
+    requestedBrowser === 'firefox-android' ? 'firefox' : requestedBrowser;
+  if (isAndroid) {
+    webExt.config = { ...webExt.config, target: 'firefox-android' };
+  }
   const targetBrowsers = mergedConfig.targetBrowsers ?? [];
   if (targetBrowsers.length > 0 && !targetBrowsers.includes(browser)) {
     throw new Error(
       `Current target browser \`${browser}\` is not in your \`targetBrowsers\` list!`,
     );
   }
+  // Android must be MV3: dev-mode content script reload is MV3-only
   const manifestVersion =
     mergedConfig.manifestVersion ??
-    (browser === 'firefox' || browser === 'safari' ? 2 : 3);
+    (isAndroid || (browser !== 'firefox' && browser !== 'safari') ? 3 : 2);
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
   loadEnv(mode, browser); // Load any environment variables used below
 
-  const root = path.resolve(
-    inlineConfig.root ?? userConfig.root ?? process.cwd(),
-  );
   const wxtDir = path.resolve(root, '.wxt');
   const wxtModuleDir = resolveWxtModuleDir();
   const srcDir = path.resolve(root, mergedConfig.srcDir ?? root);
@@ -125,14 +144,6 @@ export async function resolveConfig(
 
   const outDir = path.resolve(outBaseDir, outDirTemplate);
   const reloadCommand = mergedConfig.dev?.reloadCommand ?? 'Alt+R';
-  const webExt = await loadConfig<WebExtConfig>({
-    name: 'web-ext',
-    cwd: root,
-    globalRc: true,
-    rcFile: '.webextrc',
-    overrides: inlineConfig.webExt,
-    defaults: userConfig.webExt,
-  });
   // Make sure alias are absolute
   const alias = Object.fromEntries(
     Object.entries({
@@ -146,7 +157,9 @@ export async function resolveConfig(
 
   let devServerConfig: ResolvedConfig['dev']['server'];
   if (command === 'serve') {
-    const host = mergedConfig.dev?.server?.host ?? 'localhost';
+    // Bind IPv4 explicitly for android, "adb reverse" can't reach IPv6-only `::1`
+    const host =
+      mergedConfig.dev?.server?.host ?? (isAndroid ? '127.0.0.1' : 'localhost');
     let port = mergedConfig.dev?.server?.port;
     const origin = mergedConfig.dev?.server?.origin ?? 'localhost';
     const strictPort = mergedConfig.dev?.server?.strictPort ?? false;

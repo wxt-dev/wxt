@@ -157,7 +157,7 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     .filter((item) => item.skipped)
     .map((item) => item.name);
   if (skippedEntrypointNames.length) {
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       [
         'The following entrypoints have been skipped:',
         ...skippedEntrypointNames.map(
