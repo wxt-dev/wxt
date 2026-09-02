@@ -133,6 +133,56 @@ describe('Auto Imports', () => {
     });
   });
 
+  describe('imports: { scan: false }', () => {
+    it('should not auto-import from the default directories, but should keep preset/library imports', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: { scan: false },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          throw Error("TODO")
+        }`,
+      );
+
+      await project.prepare();
+
+      const declaration = await project.serializeFile(
+        '.wxt/types/imports.d.ts',
+      );
+      expect(declaration).not.toContain('startOfDay');
+      expect(declaration).toContain('browser');
+    });
+
+    it('should only auto-import from directories explicitly listed in dirs', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: { scan: false, dirs: ['helpers'] },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          throw Error("TODO")
+        }`,
+      );
+      project.addFile(
+        'helpers/index.ts',
+        `export function helperFn(): void {}`,
+      );
+
+      await project.prepare();
+
+      const declaration = await project.serializeFile(
+        '.wxt/types/imports.d.ts',
+      );
+      expect(declaration).not.toContain('startOfDay');
+      expect(declaration).toContain('helperFn');
+    });
+  });
+
   describe('imports: false', () => {
     it('should not generate a imports.d.ts file', async () => {
       const project = new TestProject();
