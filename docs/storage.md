@@ -72,6 +72,9 @@ await storage.watch<number>(
   },
 );
 await storage.getMeta<{ v: number }>('local:installDate');
+await storage.watchMeta<{ v: number }>('local:installDate', (newMeta) => {
+  // ...
+});
 ```
 
 > This approach is fine for one-off storage fields or generic helpers, but [defining storage items](#defining-storage-items) is the recommended way to add type-safety.
@@ -117,6 +120,17 @@ await storage.setMeta('local:preference', { v: 2 });
 await storage.getMeta('local:preference'); // { v: 2, lastModified: 1703690746007 }
 ```
 
+To listen for metadata changes, use `watchMeta`:
+
+```ts
+const unwatch = storage.watchMeta<{ lastModified: number }>(
+  'local:preference',
+  (newMeta, oldMeta) => {
+    console.log('Preference metadata changed:', { newMeta, oldMeta });
+  },
+);
+```
+
 You can remove all metadata associated with a key, or just specific properties:
 
 ```ts
@@ -153,6 +167,9 @@ await showChangelogOnUpdate.getValue();
 await showChangelogOnUpdate.setValue(false);
 await showChangelogOnUpdate.removeValue();
 const unwatch = showChangelogOnUpdate.watch((newValue) => {
+  // ...
+});
+const unwatchMeta = showChangelogOnUpdate.watchMeta((newMeta) => {
   // ...
 });
 ```
