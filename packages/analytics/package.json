@@ -66,6 +66,10 @@
     "./providers/posthog": {
       "types": "./dist/providers/posthog.d.mts",
       "default": "./dist/providers/posthog.mjs"
+    },
+    "./providers/extport": {
+      "types": "./dist/providers/extport.d.mts",
+      "default": "./dist/providers/extport.mjs"
     }
   },
   "module": "./dist/index.mjs",
