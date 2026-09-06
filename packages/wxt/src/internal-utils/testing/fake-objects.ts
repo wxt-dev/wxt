@@ -324,6 +324,7 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
     findEntrypoints: () => [],
   }),
   runner: mock(),
+  entrypoints: [],
 }));
 
 export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({
