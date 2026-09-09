@@ -2,8 +2,19 @@ import { parseHTML } from 'linkedom';
 import type * as vite from 'vite';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
-import { Entrypoint, ResolvedConfig } from '../../../../types';
+import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
 import { wxt } from '../../../wxt';
+
+export function getPluginModules(
+  plugins: WxtPluginEntry[],
+  entrypoint: Entrypoint | undefined,
+): string[] {
+  return plugins
+    .filter(
+      (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),
+    )
+    .map((plugin) => plugin.module);
+}
 
 /**
  * Resolve and load plugins for each entrypoint. This handles both JS
@@ -27,14 +38,6 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
     return wxt.entrypoints.find(
       (entry) => entry.name === entrypointNameFromQueryParam,
     );
-  }
-
-  function getPluginModules(entrypoint: Entrypoint | undefined): string[] {
-    return config.plugins
-      .filter(
-        (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),
-      )
-      .map((plugin) => plugin.module);
   }
 
   return {
@@ -66,7 +69,7 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
           bareId.startsWith(`${virtualModuleId}?`)
         ) {
           // Import and init only the plugins that apply to this entrypoint
-          const modules = getPluginModules(entrypoint);
+          const modules = getPluginModules(config.plugins, entrypoint);
           const imports = modules
             .map(
               (module, i) =>
