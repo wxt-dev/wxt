@@ -174,10 +174,19 @@ async function cloneProject({
 
     // 3. Initializing Git
     const dir = response.dir;
-    await spawn('git', ['init'], {
-      throwOnError: true,
-      nodeOptions: { cwd: dir },
-    });
+    const { exitCode } = await spawn(
+      'git',
+      ['rev-parse', '--is-inside-work-tree'],
+      { nodeOptions: { cwd: dir } },
+    );
+    if (exitCode === 0) {
+      consola.debug('Git has already been initialized.');
+    } else {
+      await spawn('git', ['init'], {
+        throwOnError: true,
+        nodeOptions: { cwd: dir },
+      });
+    }
 
     spinner.success();
   } catch (err) {
