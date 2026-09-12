@@ -7,6 +7,7 @@ import path from 'node:path';
 import { styleText } from 'node:util';
 import { TextStyle } from '../utils/text-style';
 import { createSpinner } from './utils/spinner';
+import { x as spawn } from 'tinyexec';
 
 export async function initialize(options: {
   directory?: string;
@@ -158,7 +159,7 @@ async function cloneProject({
   const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
-    await downloadTemplate(`gh:${REPO}/${template.path}`, {
+    const response = await downloadTemplate(`gh:${REPO}/${template.path}`, {
       dir: directory,
       force: true,
     });
@@ -170,6 +171,13 @@ async function cloneProject({
     ).catch((err) =>
       consola.warn('Failed to move _gitignore to .gitignore:', err),
     );
+
+    // 3. Initializing Git
+    const dir = response.dir;
+    await spawn('git', ['init'], {
+      throwOnError: true,
+      nodeOptions: { cwd: dir },
+    });
 
     spinner.success();
   } catch (err) {
