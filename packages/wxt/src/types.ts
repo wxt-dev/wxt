@@ -126,6 +126,18 @@ export interface InlineConfig {
    */
   targetBrowsers?: TargetBrowser[];
   /**
+   * Map `--browser` values to the actual browser WXT generates code for.
+   *
+   * WXT makes build-time decisions, like which manifest options to generate,
+   * based on the actual browser, not the `--browser` label. Use this to map
+   * custom `--browser` values to the browser they actually run in. Values not
+   * in the map are not mapped to any browser, so add an entry here for any
+   * custom label.
+   *
+   * @default <span v-pre>`{ chrome: "chromium", edge: "chromium", brave: "chromium", opera: "chromium", chromium: "chromium", firefox: "firefox", safari: "safari", ios: "safari" }`</span>
+   */
+  targetBrowserMap?: TargetBrowserMap;
+  /**
    * Explicitly set a manifest version to target. This will override the default
    * manifest version for each command, and can be overridden by the command
    * line `--mv2` or `--mv3` option.
@@ -629,6 +641,13 @@ export interface ReloadContentScriptPayload {
 
 export type TargetBrowser = string;
 export type TargetManifestVersion = 2 | 3;
+/**
+ * The actual browser WXT generates code for, resolved from the `--browser`
+ * value via `targetBrowserMap`.
+ */
+export type ActualBrowser = 'chromium' | 'firefox' | 'safari';
+/** Maps a `--browser` value to the {@link ActualBrowser} WXT generates code for. */
+export type TargetBrowserMap = Record<TargetBrowser, ActualBrowser>;
 
 export type UserConfig = Omit<InlineConfig, 'configFile'>;
 
@@ -1568,6 +1587,11 @@ export interface ResolvedConfig {
   command: WxtCommand;
   browser: TargetBrowser;
   targetBrowsers: TargetBrowser[];
+  /**
+   * The actual browser WXT generates code for, resolved from `browser` via
+   * `targetBrowserMap`.
+   */
+  actualBrowser: ActualBrowser;
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
   logger: WxtLogger;

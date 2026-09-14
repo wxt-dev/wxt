@@ -1380,6 +1380,52 @@ describe('Manifest Utils', () => {
             ]);
           }
         });
+
+        it('should key browser-specific checks off actualBrowser, not the raw browser label', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              cssInjectionMode: 'ui',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+              manifestVersion: 3,
+              browser: 'ios',
+              actualBrowser: 'safari',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.web_accessible_resources).toEqual([
+            {
+              matches: ['*://google.com/*'],
+              resources: ['content-scripts/one.css'],
+            },
+          ]);
+        });
       });
 
       describe('registration', () => {

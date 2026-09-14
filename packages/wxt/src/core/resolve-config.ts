@@ -24,6 +24,10 @@ import { NullishRequired } from './utils/types';
 import { pathExists } from './utils/fs';
 import { normalizePath } from './utils';
 import { glob } from 'tinyglobby';
+import {
+  defaultTargetBrowserMap,
+  resolveActualBrowser,
+} from './utils/target-browser';
 import { builtinModules } from '../builtin-modules';
 import { getEslintVersion } from './utils/eslint';
 import { safeStringToNumber } from './utils/number';
@@ -79,9 +83,14 @@ export async function resolveConfig(
       `Current target browser \`${browser}\` is not in your \`targetBrowsers\` list!`,
     );
   }
+  const targetBrowserMap = {
+    ...defaultTargetBrowserMap,
+    ...mergedConfig.targetBrowserMap,
+  };
+  const actualBrowser = resolveActualBrowser(browser, targetBrowserMap);
   const manifestVersion =
     mergedConfig.manifestVersion ??
-    (browser === 'firefox' || browser === 'safari' ? 2 : 3);
+    (actualBrowser === 'firefox' || actualBrowser === 'safari' ? 2 : 3);
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
@@ -197,6 +206,7 @@ export async function resolveConfig(
   return {
     browser,
     targetBrowsers,
+    actualBrowser,
     command,
     debug,
     entrypointsDir,
