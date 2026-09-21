@@ -30,6 +30,13 @@ export default defineWxtModule<VueModuleOptions>({
           'Could not enable auto-imports in vue templates when using and array for imports.addons',
         );
       }
+
+      // Enable auto-imports for Vue SFC files
+      wxt.config.imports.dirsScanOptions ??= {};
+      wxt.config.imports.dirsScanOptions.filePatterns = [
+        // Default plus .vue
+        '*.{ts,js,mjs,cjs,mts,cts,vue}',
+      ];
     });
 
     addImportPreset(wxt, 'vue');

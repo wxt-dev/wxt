@@ -27,6 +27,18 @@ export default defineWxtModule<SvelteModuleOptions>({
     }));
 
     addImportPreset(wxt, 'svelte');
+
+    // Enable auto-imports for Svelte component files
+    wxt.hook('config:resolved', (wxt) => {
+      // In older versions of WXT, `wxt.config.imports` could be false
+      if (!wxt.config.imports) return;
+
+      wxt.config.imports.dirsScanOptions ??= {};
+      wxt.config.imports.dirsScanOptions.filePatterns = [
+        // Default plus .svelte
+        '*.{ts,js,mjs,cjs,mts,cts,svelte}',
+      ];
+    });
   },
 });
 
