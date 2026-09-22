@@ -1,5 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { hashContentScriptOptions } from '../content-scripts';
+import {
+  hashContentScriptOptions,
+  mapWxtOptionsToRegisteredContentScript,
+} from '../content-scripts';
 import { setFakeWxt } from '../testing/fake-objects';
 
 describe('Content Script Utils', () => {
@@ -28,6 +31,18 @@ describe('Content Script Utils', () => {
       });
 
       expect(hash1).toBe(hash2);
+    });
+  });
+
+  describe('mapWxtOptionsToRegisteredContentScript', () => {
+    it('should preserve matchOriginAsFallback for runtime registration', () => {
+      const registered = mapWxtOptionsToRegisteredContentScript(
+        { matches: ['https://example.com/*'], matchOriginAsFallback: true },
+        ['content.js'],
+        undefined,
+      );
+
+      expect(registered.matchOriginAsFallback).toBe(true);
     });
   });
 });
