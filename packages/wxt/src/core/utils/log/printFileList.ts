@@ -16,16 +16,20 @@ export async function printFileList(
 
   const fileRows: string[][] = await Promise.all(
     files.map(async (file, i) => {
+      // Files may be absolute or relative to `baseDir` (e.g. the sources zip
+      // lists paths relative to `zip.sourcesRoot`); resolve before reading
+      // stats so lookups never fall back to the process cwd.
+      const absoluteFile = path.resolve(baseDir, file);
       const parts = [
         path.relative(process.cwd(), baseDir) + path.sep,
-        path.relative(baseDir, file),
+        path.relative(baseDir, absoluteFile),
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
       const chunkColor = getChunkColor(file);
 
       let size = '';
       try {
-        const stats = await lstat(file);
+        const stats = await lstat(absoluteFile);
         totalSize += stats.size;
         size = getBytesDisplay(stats.size);
       } catch (ex) {
