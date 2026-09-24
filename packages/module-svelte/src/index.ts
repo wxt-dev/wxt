@@ -36,7 +36,7 @@ export default defineWxtModule<SvelteModuleOptions>({
       wxt.config.imports.dirsScanOptions ??= {};
       wxt.config.imports.dirsScanOptions.filePatterns = [
         // Default plus .svelte
-        '*.{ts,js,mjs,cjs,mts,cts,svelte}',
+        '**/*.{ts,js,mjs,cjs,mts,cts,svelte}',
       ];
     });
   },

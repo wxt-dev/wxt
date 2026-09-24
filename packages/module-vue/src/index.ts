@@ -35,7 +35,7 @@ export default defineWxtModule<VueModuleOptions>({
       wxt.config.imports.dirsScanOptions ??= {};
       wxt.config.imports.dirsScanOptions.filePatterns = [
         // Default plus .vue
-        '*.{ts,js,mjs,cjs,mts,cts,vue}',
+        '**/*.{ts,js,mjs,cjs,mts,cts,vue}',
       ];
     });
 
