@@ -4,7 +4,7 @@ import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 const MODULE_VUE_SRC = resolve(
   WXT_PACKAGE_DIR,
-  '../module-vue/src/index.ts',
+  '../module-vue/modules/vue.ts',
 ).replace(/\\/g, '/');
 
 const MODULE_REACT_SRC = resolve(
@@ -14,7 +14,7 @@ const MODULE_REACT_SRC = resolve(
 
 const MODULE_SVELTE_SRC = resolve(
   WXT_PACKAGE_DIR,
-  '../module-svelte/src/index.ts',
+  '../module-svelte/modules/svelte.ts',
 ).replace(/\\/g, '/');
 
 const MODULE_SOLID_SRC = resolve(
