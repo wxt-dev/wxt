@@ -239,25 +239,30 @@ function createBackgroundAnalytics(
   const providers =
     config?.providers?.map((provider) => provider(analytics, config)) ?? [];
 
+  // Log locally instead of calling captureException again, otherwise a failing
+  // capture would trigger another unhandledrejection and loop forever
+  const logCaptureFailure = (error: unknown) => {
+    console.error('[@wxt-dev/analytics] Failed to capture exception', error);
+  };
+
   // Automatically report unhandled background errors
   if (providers.some((provider) => provider.exception)) {
     globalThis.addEventListener('error', (e: ErrorEvent) => {
-      void analytics.captureException(
-        e.error ?? e.message,
-        undefined,
-        getBackgroundMeta(),
-        false,
-      );
+      analytics
+        .captureException(
+          e.error ?? e.message,
+          undefined,
+          getBackgroundMeta(),
+          false,
+        )
+        .catch(logCaptureFailure);
     });
     globalThis.addEventListener(
       'unhandledrejection',
       (e: PromiseRejectionEvent) => {
-        void analytics.captureException(
-          e.reason,
-          undefined,
-          getBackgroundMeta(),
-          false,
-        );
+        analytics
+          .captureException(e.reason, undefined, getBackgroundMeta(), false)
+          .catch(logCaptureFailure);
       },
     );
   }
