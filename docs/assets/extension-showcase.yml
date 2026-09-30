@@ -439,9 +439,9 @@
   chromeId: fppcbkhpahkbgijkdcpjgjmhpfbmfiih
   firefoxSlug: playfaster
 
-- # LatTab - Learn Latin With Every New Tab
-  chromeId: eiocjaocpmackhbaffoejkcmnfbdpgpj
-  firefoxSlug: lattab-learn-latin-new-tabs
+- # Lexis Arcana - Latin Roots & Proverbs
+  chromeId: lnbjfdfjlppgedgfbplminickpldmcin
+  firefoxSlug: lexis-arcana-latin-new-tab
 
 - # Vim What? - Interactive Vim command reference
   chromeId: ngbehgnlcdjkbnihgpkgdangbhemidge
@@ -544,3 +544,7 @@
   chromeId: mfinfkkabangbkanlfhhbokgfekjklea
   firefoxSlug: flowpick
   edgeId: egbfhgcifljmeaomlbhggplohemjombb
+
+- # TabWatch
+  chromeId: pgjiceamhhcdccdoaiggbfjmmllbhmah
+  firefoxSlug: tabwatch
