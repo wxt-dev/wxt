@@ -27,6 +27,6 @@ export function getIsBackground(): boolean {
   return (
     typeof window !== 'undefined' &&
     typeof browser.extension?.getBackgroundPage === 'function' &&
-    browser.extension.getBackgroundPage() === window
+    !!browser.extension.getBackgroundPage()
   );
 }
