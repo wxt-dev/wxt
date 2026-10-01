@@ -791,6 +791,7 @@ export default defineContentScript({
 ### Limitations
 
 - Isolated world only. `world: 'MAIN'` scripts don't get a `ContentScriptContext`.
+- CSS can't be injected through the manifest, since it would apply to every page of the origin. Use `cssInjectionMode: 'ui'` or `'manual'`.
 - `includeGlobs` and `excludeGlobs` can't be combined with `spa`. The browser applies globs when the document loads, so they'd stop the script loading on pages the user can navigate to. Use `matches`/`excludeMatches` instead.
 - URL changes use the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) where available, falling back to polling once a second. On the polling path `main` can run up to a second late. Either way it runs after the navigation commits, so `location.href` describes the new page.
 - Route changes aren't always enough. Sites that re-render without navigating can still remove the element your UI was anchored to. Use [`autoMount`](#mounting-ui-to-dynamic-element) or a `MutationObserver` inside `main`, which gets torn down with the context.

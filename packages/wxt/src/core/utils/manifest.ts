@@ -14,6 +14,7 @@ import { ContentSecurityPolicy } from './content-security-policy';
 import {
   getRegisteredMatches,
   hashContentScriptOptions,
+  isSpaContentScript,
   mapWxtOptionsToContentScript,
   stripPathFromMatchPattern,
 } from './content-scripts';
@@ -406,6 +407,7 @@ function addEntrypoints(
 
   if (contentScripts?.length) {
     const cssMap = getContentScriptsCssMap(buildOutput, contentScripts);
+    validateSpaContentScriptCss(contentScripts, cssMap);
 
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
@@ -544,6 +546,29 @@ function addDevModePermissions(manifest: Browser.runtime.Manifest) {
 
   // For registering content scripts
   if (wxt.config.manifestVersion === 3) addPermission(manifest, 'scripting');
+}
+
+/**
+ * SPA content scripts are registered for the whole origin, so manifest CSS
+ * would leak.
+ */
+function validateSpaContentScriptCss(
+  contentScripts: ContentScriptEntrypoint[],
+  contentScriptCssMap: Record<string, string | undefined>,
+): void {
+  const names = contentScripts
+    .filter(
+      (script) =>
+        isSpaContentScript(script.options) &&
+        (script.options.cssInjectionMode ?? 'manifest') === 'manifest' &&
+        !!contentScriptCssMap[script.name],
+    )
+    .map((script) => script.name);
+  if (names.length === 0) return;
+
+  throw Error(
+    `\`spa\` content scripts are registered for the whole origin, so manifest-injected CSS would apply to non-matching pages. Set \`cssInjectionMode\` to "ui" or "manual" for: ${names.join(', ')}`,
+  );
 }
 
 /**
