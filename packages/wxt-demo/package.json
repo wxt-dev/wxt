@@ -31,6 +31,7 @@
     "@types/react-dom": "catalog:",
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
+    "jiti": "^2.7.0",
     "sass": "^1.97.3",
     "typescript": "catalog:",
     "unocss": "catalog:",
