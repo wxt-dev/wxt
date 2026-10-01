@@ -17,10 +17,9 @@ function fakeNavigationApi() {
     navigate(to: string) {
       // `navigate` fires while `location.href` is still the old URL...
       listeners['navigate']?.forEach((cb) => cb({ destination: { url: to } }));
-      // ...then the navigation commits...
+      // ...then the navigation commits, firing `currententrychange`.
       setUrl(to);
-      // ...and only then does `navigatesuccess` fire.
-      listeners['navigatesuccess']?.forEach((cb) => cb({}));
+      listeners['currententrychange']?.forEach((cb) => cb({}));
     },
     has(type: string) {
       return (listeners[type]?.length ?? 0) > 0;
@@ -72,7 +71,7 @@ describe('Location Watcher', () => {
 
     navigation.navigate('https://example.com/b');
 
-    expect(navigation.has('navigatesuccess')).toBe(true);
+    expect(navigation.has('currententrychange')).toBe(true);
     expect(seen).toEqual([
       {
         href: 'https://example.com/b',

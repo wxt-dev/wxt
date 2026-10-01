@@ -24,11 +24,10 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
       lastUrl = new URL(location.href);
 
       if (supportsNavigationApi) {
-        // Not `navigate`, which fires before the navigation commits, leaving
-        // `location.href` on the previous page. This also matches the polling
-        // fallback below, which is always post-commit.
+        // Fires on commit. `navigate` is too early, `navigatesuccess` waits on
+        // (and is skipped by failed) intercept handlers.
         (globalThis as any).navigation.addEventListener(
-          'navigatesuccess',
+          'currententrychange',
           () => {
             const newUrl = new URL(location.href);
             if (newUrl.href === lastUrl.href) return;
