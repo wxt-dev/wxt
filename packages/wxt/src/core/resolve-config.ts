@@ -32,7 +32,7 @@ import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createSafariRunner } from './runners/safari';
 import isWsl from 'is-wsl';
-import { createWslRunner } from './runners/wsl';
+import { createWslRunner, isUnusableSnapFirefox } from './runners/wsl';
 import { createManualRunner } from './runners/manual';
 import { createWxtLogger } from './utils/log/wxtLogger';
 
@@ -658,11 +658,18 @@ async function resolveRunner(
 ): Promise<ExtensionRunner> {
   if (browser === 'safari') return createSafariRunner();
 
-  // Firefox launches fine through `web-ext` in WSL (with WSLg), but Chromium
-  // doesn't: `chrome-launcher` rewrites `--user-data-dir` into a Windows UNC
-  // path, which breaks the remote debugging pipe.
-  // See https://github.com/GoogleChrome/chrome-launcher/issues/334
-  if (isWsl && browser !== 'firefox') return createWslRunner();
+  if (isWsl) {
+    // Firefox launches fine through `web-ext` in WSL (with WSLg), but Chromium
+    // doesn't: `chrome-launcher` rewrites `--user-data-dir` into a Windows UNC
+    // path, which breaks the remote debugging pipe.
+    // See https://github.com/GoogleChrome/chrome-launcher/issues/334
+    if (browser !== 'firefox') return createWslRunner('chromium');
+
+    // Ubuntu, the default WSL distro, ships Firefox as a Snap, which can't load
+    // the temporary profile `web-ext` creates.
+    if (await isUnusableSnapFirefox(webExt.binaries?.firefox))
+      return createWslRunner('snap-firefox');
+  }
 
   try {
     // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
