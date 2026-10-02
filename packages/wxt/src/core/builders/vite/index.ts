@@ -97,6 +97,7 @@ export async function createViteBuilder(
       wxtPlugins.devHtmlPrerender(wxtConfig, server),
       wxtPlugins.resolveVirtualModules(wxtConfig),
       wxtPlugins.devServerGlobals(wxtConfig, server),
+      wxtPlugins.devServerWorkers(wxtConfig),
       wxtPlugins.tsconfigPaths(wxtConfig),
       wxtPlugins.noopBackground(),
       wxtPlugins.globals(wxtConfig),
