@@ -26,6 +26,7 @@ export function getIsBackground(): boolean {
   // - ✅ Safari MV2
   return (
     typeof window !== 'undefined' &&
-    typeof browser.extension?.getBackgroundPage === 'function'
+    typeof browser.extension?.getBackgroundPage === 'function' &&
+    browser.extension.getBackgroundPage() === (window as Window | null)
   );
 }
