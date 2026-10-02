@@ -726,7 +726,79 @@ function mountUi(ctx: ContentScriptContext): void {
 
 You're only going to see "YouTube content script loaded" when reloading the watch page or when navigating directly to it from another website.
 
-To get around this, you'll need to manually listen for the path to change and run your content script when the URL matches what you expect it to match.
+### `spa: true`
+
+:::warning Experimental
+`spa` is experimental. It's opt-in, and its API may change or be removed in any minor release. Feedback is welcome in [#1029](https://github.com/wxt-dev/wxt/issues/1029).
+:::
+
+WXT can handle this for you. Enable the experimental flag, then set `spa: true` on the entrypoint:
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  experimental: {
+    spaContentScripts: true,
+  },
+});
+```
+
+```ts
+export default defineContentScript({
+  matches: ['*://*.youtube.com/watch*'],
+  spa: true,
+
+  main(ctx) {
+    // Called once per video, with a fresh `ctx` each time
+    mountUi(ctx);
+  },
+});
+```
+
+Here's what changes:
+
+1. **The script is registered for the whole origin.** WXT strips the path from your `matches`, so the manifest gets `*://*.youtube.com/*`. Your real patterns are evaluated at runtime instead.
+2. **`main` runs once per matching page**, with a new `ContentScriptContext` each time. If the initial URL doesn't match, it isn't called until the user navigates to one that does.
+3. **The previous context is aborted first**, and when navigating to a non-matching URL. Anything registered on it is cleaned up for you.
+
+`excludeMatches` moves to runtime too, so you can exclude paths the user can navigate away from.
+
+:::warning
+The script is now loaded on every page of the site, not just the ones you match. Keep the top level of your entrypoint cheap and do the expensive work inside `main`.
+:::
+
+### Controlling when `main` re-runs
+
+By default, `main` re-runs whenever the URL changes, ignoring the hash. So on YouTube, opening a different video (`?v=` changes) starts a new context, but clicking a link to `#comments` doesn't.
+
+Use `spa.key` when that's not the right granularity. Return the part of the URL you care about, and `main` only re-runs when it changes:
+
+```ts
+export default defineContentScript({
+  matches: ['*://github.com/*/*'],
+  spa: {
+    // "/facebook/react" - so switching between the Issues and Pull requests
+    // tabs of the same repo keeps the UI mounted, but opening a different repo
+    // remounts it.
+    key: (url) => url.pathname.split('/').slice(0, 3).join('/'),
+  },
+
+  main(ctx) {
+    mountUi(ctx);
+  },
+});
+```
+
+### Limitations
+
+- Isolated world only. `world: 'MAIN'` scripts don't get a `ContentScriptContext`.
+- CSS can't be injected through the manifest, since it would apply to every page of the origin. Use `cssInjectionMode: 'ui'` or `'manual'`.
+- `includeGlobs` and `excludeGlobs` can't be combined with `spa`. The browser applies globs when the document loads, so they'd stop the script loading on pages the user can navigate to. Use `matches`/`excludeMatches` instead.
+- URL changes use the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) where available, falling back to polling once a second. On the polling path `main` can run up to a second late. Either way it runs after the navigation commits, so `location.href` describes the new page.
+- Route changes aren't always enough. Sites that re-render without navigating can still remove the element your UI was anchored to. Use [`autoMount`](#mounting-ui-to-dynamic-element) or a `MutationObserver` inside `main`, which gets torn down with the context.
+
+### Handling URL changes manually
+
+If you'd rather not use an experimental option, or you need more control than `spa` gives you, listen for URL changes yourself and run your code when the URL matches:
 
 ```ts
 const watchPattern = new MatchPattern('*://*.youtube.com/watch*');
@@ -744,3 +816,5 @@ function mainWatch(ctx: ContentScriptContext) {
   mountUi(ctx);
 }
 ```
+
+Note that `mainWatch` is handed the _same_ `ctx` every time. It's only invalidated when the extension reloads, so nothing you registered on it - listeners, timers, mounted UIs - is cleaned up when the user navigates to a different video or away from `/watch`. Managing that is up to you, and it's the main thing `spa` does for you.

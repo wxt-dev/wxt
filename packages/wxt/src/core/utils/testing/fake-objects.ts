@@ -299,6 +299,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     alias: {},
     experimental: {
       escapeUnicode: false,
+      spaContentScripts: false,
     },
     watchOptions: {},
     dev: {

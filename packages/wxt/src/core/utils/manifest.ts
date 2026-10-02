@@ -12,8 +12,11 @@ import { resolve } from 'path';
 import { getEntrypointBundlePath } from './entrypoints';
 import { ContentSecurityPolicy } from './content-security-policy';
 import {
+  getRegisteredMatches,
   hashContentScriptOptions,
+  isSpaContentScript,
   mapWxtOptionsToContentScript,
+  stripPathFromMatchPattern,
 } from './content-scripts';
 import { getPackageJson } from './package';
 import { normalizePath } from './paths';
@@ -404,12 +407,13 @@ function addEntrypoints(
 
   if (contentScripts?.length) {
     const cssMap = getContentScriptsCssMap(buildOutput, contentScripts);
+    validateSpaContentScriptCss(contentScripts, cssMap);
 
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
+        getRegisteredMatches(script.options)?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -444,7 +448,7 @@ function addEntrypoints(
         (cs) => cs.options.registration === 'runtime',
       );
       runtimeContentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
+        getRegisteredMatches(script.options)?.forEach((matchPattern) => {
           addHostPermission(manifest, matchPattern);
         });
       });
@@ -542,6 +546,29 @@ function addDevModePermissions(manifest: Browser.runtime.Manifest) {
 
   // For registering content scripts
   if (wxt.config.manifestVersion === 3) addPermission(manifest, 'scripting');
+}
+
+/**
+ * SPA content scripts are registered for the whole origin, so manifest CSS
+ * would leak.
+ */
+function validateSpaContentScriptCss(
+  contentScripts: ContentScriptEntrypoint[],
+  contentScriptCssMap: Record<string, string | undefined>,
+): void {
+  const names = contentScripts
+    .filter(
+      (script) =>
+        isSpaContentScript(script.options) &&
+        (script.options.cssInjectionMode ?? 'manifest') === 'manifest' &&
+        !!contentScriptCssMap[script.name],
+    )
+    .map((script) => script.name);
+  if (names.length === 0) return;
+
+  throw Error(
+    `\`spa\` content scripts are registered for the whole origin, so manifest-injected CSS would apply to non-matching pages. Set \`cssInjectionMode\` to "ui" or "manual" for: ${names.join(', ')}`,
+  );
 }
 
 /**
@@ -643,18 +670,6 @@ function addHostPermission(
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;
   manifest.host_permissions.push(hostPermission);
-}
-
-/**
- * - "<all_urls>" → "<all_urls>"
- * - "_://play.google.com/books/_" → "_://play.google.com/_"
- */
-export function stripPathFromMatchPattern(pattern: string) {
-  const protocolSepIndex = pattern.indexOf('://');
-  if (protocolSepIndex === -1) return pattern;
-
-  const startOfPath = pattern.indexOf('/', protocolSepIndex + 3);
-  return pattern.substring(0, startOfPath) + '/*';
 }
 
 /**

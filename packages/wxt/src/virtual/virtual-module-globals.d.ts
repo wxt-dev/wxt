@@ -10,6 +10,11 @@ declare module 'virtual:user-content-script-isolated-world-entrypoint' {
   export default definition;
 }
 
+declare module 'virtual:user-content-script-isolated-world-spa-entrypoint' {
+  const definition: import('wxt').IsolatedWorldContentScriptDefinition;
+  export default definition;
+}
+
 declare module 'virtual:user-content-script-main-world-entrypoint' {
   const definition: import('wxt').MainWorldContentScriptDefinition;
   export default definition;

@@ -436,6 +436,13 @@ export interface InlineConfig {
      * - https://github.com/wxt-dev/wxt/issues/2535
      */
     escapeUnicode?: boolean;
+    /**
+     * Enable the `spa` option on content script entrypoints. The API is
+     * unstable and may change or be removed in any minor release.
+     *
+     * See https://github.com/wxt-dev/wxt/issues/1029.
+     */
+    spaContentScripts?: boolean;
   };
   /** Config effecting dev mode only. */
   dev?: {
@@ -805,6 +812,38 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
    */
   noScriptStartedPostMessage?: boolean;
+  /**
+   * Run the content script inside single page applications, which don't reload
+   * the document when navigating, so content scripts are never re-executed by
+   * the browser.
+   *
+   * WXT registers the script against the origins of your `matches`, then
+   * evaluates the real patterns itself on every URL change, calling `main` with
+   * a fresh `ContentScriptContext` for each matching page and aborting it when
+   * navigating away.
+   *
+   * Experimental: requires `experimental.spaContentScripts`. Isolated world
+   * only.
+   *
+   * @default false
+   */
+  spa?: boolean | SpaContentScriptOptions;
+}
+
+/** See {@link BaseContentScriptEntrypointOptions.spa}. */
+export interface SpaContentScriptOptions {
+  /**
+   * Reduce a URL to the part the content script cares about. `main` is only
+   * re-run when this value changes between two matching URLs.
+   *
+   * Defaults to everything but the hash, so jumping to an anchor doesn't tear
+   * down your UI, but changing a query param (like YouTube's `?v=`) does.
+   *
+   * @example
+   *   // Don't re-run when switching tabs within the same repo.
+   *   key: (url) => url.pathname.split('/').slice(0, 3).join('/');
+   */
+  key?: (url: URL) => string;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
@@ -813,6 +852,8 @@ export interface MainWorldContentScriptEntrypointOptions extends BaseContentScri
    * https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#isolated_world
    */
   world: 'MAIN';
+  /** Not supported - main world content scripts don't get a context. */
+  spa?: never;
 }
 
 export interface IsolatedWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
@@ -1608,6 +1649,7 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {
     escapeUnicode: boolean;
+    spaContentScripts: boolean;
   };
   /** List of warning identifiers to suppress during the build process. */
   suppressWarnings: {

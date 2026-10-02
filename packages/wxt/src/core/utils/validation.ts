@@ -1,12 +1,18 @@
-import { ContentScriptEntrypoint, Entrypoint } from '../../types';
+import {
+  ContentScriptEntrypoint,
+  Entrypoint,
+  ResolvedConfig,
+} from '../../types';
+import { isSpaContentScript } from './content-scripts';
 
 export function validateEntrypoints(
   entrypoints: Entrypoint[],
+  config: Pick<ResolvedConfig, 'experimental'>,
 ): ValidationResults {
   const errors = entrypoints.flatMap((entrypoint) => {
     switch (entrypoint.type) {
       case 'content-script':
-        return validateContentScriptEntrypoint(entrypoint);
+        return validateContentScriptEntrypoint(entrypoint, config);
       default:
         return validateBaseEntrypoint(entrypoint);
     }
@@ -28,19 +34,61 @@ export function validateEntrypoints(
 
 function validateContentScriptEntrypoint(
   definition: ContentScriptEntrypoint,
+  config: Pick<ResolvedConfig, 'experimental'>,
 ): ValidationResult[] {
   const errors = validateBaseEntrypoint(definition);
-  if (
-    definition.options.registration !== 'runtime' &&
-    definition.options.matches == null
-  ) {
+  const options = definition.options;
+  if (options.registration !== 'runtime' && options.matches == null) {
     errors.push({
       type: 'error',
       message: '`matches` is required for manifest registered content scripts',
-      value: definition.options.matches,
+      value: options.matches,
       entrypoint: definition,
     });
   }
+
+  if (isSpaContentScript(options)) {
+    if (!config.experimental.spaContentScripts) {
+      errors.push({
+        type: 'error',
+        message:
+          '`spa` is experimental. Set `experimental: { spaContentScripts: true }` in your `wxt.config.ts` to use it',
+        value: options.spa,
+        entrypoint: definition,
+      });
+    }
+    if (options.world === 'MAIN') {
+      errors.push({
+        type: 'error',
+        message:
+          '`spa` is not supported for `world: "MAIN"` content scripts - they do not receive a `ContentScriptContext`',
+        value: options.world,
+        entrypoint: definition,
+      });
+    }
+    if (options.matches == null) {
+      errors.push({
+        type: 'error',
+        message:
+          '`matches` is required for `spa` content scripts - it is what the SPA handler matches URLs against at runtime',
+        value: options.matches,
+        entrypoint: definition,
+      });
+    }
+    // Same problem as `excludeMatches`, but WXT has no runtime glob matcher to
+    // move them to.
+    for (const key of ['includeGlobs', 'excludeGlobs'] as const) {
+      if (options[key] != null) {
+        errors.push({
+          type: 'error',
+          message: `\`${key}\` is not supported alongside \`spa\`. Use \`matches\`/\`excludeMatches\`, which the SPA handler re-evaluates on every navigation`,
+          value: options[key],
+          entrypoint: definition,
+        });
+      }
+    }
+  }
+
   return errors;
 }
 

@@ -7,6 +7,13 @@ import {
 } from '../testing/fake-objects';
 import { validateEntrypoints } from '../validation';
 
+const noExperiments = {
+  experimental: { escapeUnicode: false, spaContentScripts: false },
+};
+const spaEnabled = {
+  experimental: { escapeUnicode: false, spaContentScripts: true },
+};
+
 describe('Validation Utils', () => {
   describe('validateEntrypoints', () => {
     it('should return no errors when there are no errors', () => {
@@ -17,7 +24,7 @@ describe('Validation Utils', () => {
         warningCount: 0,
       };
 
-      const actual = validateEntrypoints(entrypoints);
+      const actual = validateEntrypoints(entrypoints, noExperiments);
 
       expect(actual).toEqual(expected);
     });
@@ -42,7 +49,7 @@ describe('Validation Utils', () => {
         warningCount: 0,
       };
 
-      const actual = validateEntrypoints([entrypoint]);
+      const actual = validateEntrypoints([entrypoint], noExperiments);
 
       expect(actual).toEqual(expected);
     });
@@ -67,7 +74,7 @@ describe('Validation Utils', () => {
         warningCount: 0,
       };
 
-      const actual = validateEntrypoints([entrypoint]);
+      const actual = validateEntrypoints([entrypoint], noExperiments);
 
       expect(actual).toEqual(expected);
     });
@@ -94,7 +101,7 @@ describe('Validation Utils', () => {
         warningCount: 0,
       };
 
-      const actual = validateEntrypoints([entrypoint]);
+      const actual = validateEntrypoints([entrypoint], noExperiments);
 
       expect(actual).toEqual(expected);
     });
@@ -113,9 +120,85 @@ describe('Validation Utils', () => {
         warningCount: 0,
       };
 
-      const actual = validateEntrypoints([entrypoint]);
+      const actual = validateEntrypoints([entrypoint], noExperiments);
 
       expect(actual).toEqual(expected);
+    });
+
+    describe('spa', () => {
+      it('should return an error when `spa` is used without the experimental flag', () => {
+        const entrypoint = fakeContentScriptEntrypoint({
+          options: { matches: ['*://*.youtube.com/watch*'], spa: true },
+        });
+
+        const actual = validateEntrypoints([entrypoint], noExperiments);
+
+        expect(actual.errorCount).toBe(1);
+        expect(actual.errors[0].message).toMatch(
+          'Set `experimental: { spaContentScripts: true }`',
+        );
+      });
+
+      it('should return no errors when the experimental flag is enabled', () => {
+        const entrypoint = fakeContentScriptEntrypoint({
+          options: { matches: ['*://*.youtube.com/watch*'], spa: true },
+        });
+
+        const actual = validateEntrypoints([entrypoint], spaEnabled);
+
+        expect(actual.errors).toEqual([]);
+      });
+
+      it('should return an error when combined with `world: "MAIN"`', () => {
+        const entrypoint = fakeContentScriptEntrypoint({
+          options: {
+            matches: ['*://*.youtube.com/watch*'],
+            world: 'MAIN',
+            spa: true,
+          },
+        });
+
+        const actual = validateEntrypoints([entrypoint], spaEnabled);
+
+        expect(actual.errorCount).toBe(1);
+        expect(actual.errors[0].message).toMatch('world: "MAIN"');
+      });
+
+      it.each(['includeGlobs', 'excludeGlobs'] as const)(
+        'should return an error when combined with `%s`',
+        (key) => {
+          const entrypoint = fakeContentScriptEntrypoint({
+            options: {
+              matches: ['*://*.youtube.com/watch*'],
+              spa: true,
+              [key]: ['*watch*'],
+            },
+          });
+
+          const actual = validateEntrypoints([entrypoint], spaEnabled);
+
+          expect(actual.errorCount).toBe(1);
+          expect(actual.errors[0].message).toMatch(key);
+        },
+      );
+
+      it('should return an error when `matches` is missing, even for runtime registration', () => {
+        const entrypoint = fakeContentScriptEntrypoint({
+          options: {
+            registration: 'runtime',
+            // @ts-expect-error: Testing a missing value
+            matches: null,
+            spa: true,
+          },
+        });
+
+        const actual = validateEntrypoints([entrypoint], spaEnabled);
+
+        expect(actual.errorCount).toBe(1);
+        expect(actual.errors[0].message).toMatch(
+          '`matches` is required for `spa` content scripts',
+        );
+      });
     });
   });
 });

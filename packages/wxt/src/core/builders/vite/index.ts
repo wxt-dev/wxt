@@ -20,6 +20,7 @@ import {
 } from '../../utils/entrypoints';
 import { createExtensionEnvironment } from '../../utils/environments';
 import { safeVarName } from '../../utils/strings';
+import { isSpaContentScript } from '../../utils/content-scripts';
 import {
   VirtualEntrypointType,
   VirtualModuleId,
@@ -503,7 +504,9 @@ function getRollupEntry(entrypoint: Entrypoint): string {
       virtualEntrypointType =
         entrypoint.options.world === 'MAIN'
           ? 'content-script-main-world'
-          : 'content-script-isolated-world';
+          : isSpaContentScript(entrypoint.options)
+            ? 'content-script-isolated-world-spa'
+            : 'content-script-isolated-world';
       break;
   }
 
