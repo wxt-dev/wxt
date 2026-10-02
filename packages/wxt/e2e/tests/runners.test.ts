@@ -177,10 +177,18 @@ describe('Runners', () => {
         isWsl = true;
       });
 
-      it('should use the WSL runner', async () => {
+      it('should use the WSL runner for chromium', async () => {
         await TestProject.simple().registerWxt(command);
 
         expect(wxt.config.runner).toBe(wslRunner);
+      });
+
+      it('should use the web-ext runner for firefox', async () => {
+        await TestProject.simple().registerWxt(command, {
+          browser: 'firefox',
+        });
+
+        expect(wxt.config.runner).toBe(webExtRunner);
       });
     });
 

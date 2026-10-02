@@ -658,7 +658,11 @@ async function resolveRunner(
 ): Promise<ExtensionRunner> {
   if (browser === 'safari') return createSafariRunner();
 
-  if (isWsl) return createWslRunner();
+  // Firefox launches fine through `web-ext` in WSL (with WSLg), but Chromium
+  // doesn't: `chrome-launcher` rewrites `--user-data-dir` into a Windows UNC
+  // path, which breaks the remote debugging pipe.
+  // See https://github.com/GoogleChrome/chrome-launcher/issues/334
+  if (isWsl && browser !== 'firefox') return createWslRunner();
 
   try {
     // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
