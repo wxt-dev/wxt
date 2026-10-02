@@ -20,6 +20,9 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Build All Packages
+        run: bun run buildc all
+
       - name: Basic Checks
         run: bun run check
 
