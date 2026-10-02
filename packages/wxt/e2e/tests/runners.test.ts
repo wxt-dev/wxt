@@ -10,6 +10,7 @@ import { wxt } from '../../src/core/wxt';
 // Globals for modifying mock behaviors
 
 let isWsl = false;
+let isUnusableSnapFirefox = false;
 let importWebExtRunnerError: Error | undefined = undefined;
 
 // Mock runners to create constants for checking equality
@@ -48,10 +49,17 @@ vi.mock('../../src/core/runners/web-ext', () => {
 const webExtRunner = createWebExtRunner();
 
 vi.mock('../../src/core/runners/wsl', () => {
-  const runner = createMockExtensionRunner('wsl');
-  return { createWslRunner: () => runner };
+  const runners = {
+    chromium: createMockExtensionRunner('wsl:chromium'),
+    'snap-firefox': createMockExtensionRunner('wsl:snap-firefox'),
+  };
+  return {
+    createWslRunner: (reason: keyof typeof runners) => runners[reason],
+    isUnusableSnapFirefox: async () => isUnusableSnapFirefox,
+  };
 });
-const wslRunner = createWslRunner();
+const wslChromiumRunner = createWslRunner('chromium');
+const wslSnapFirefoxRunner = createWslRunner('snap-firefox');
 
 // Other mocks
 
@@ -74,6 +82,7 @@ class ModuleNotFoundError extends Error {
 describe('Runners', () => {
   beforeEach(() => {
     isWsl = false;
+    isUnusableSnapFirefox = false;
     importWebExtRunnerError = undefined;
   });
 
@@ -177,10 +186,40 @@ describe('Runners', () => {
         isWsl = true;
       });
 
-      it('should use the WSL runner', async () => {
+      it('should use the WSL runner for chromium', async () => {
         await TestProject.simple().registerWxt(command);
 
-        expect(wxt.config.runner).toBe(wslRunner);
+        expect(wxt.config.runner).toBe(wslChromiumRunner);
+      });
+
+      it('should use the web-ext runner for firefox', async () => {
+        await TestProject.simple().registerWxt(command, {
+          browser: 'firefox',
+        });
+
+        expect(wxt.config.runner).toBe(webExtRunner);
+      });
+
+      it('should use the WSL runner for Snap firefox', async () => {
+        isUnusableSnapFirefox = true;
+
+        await TestProject.simple().registerWxt(command, {
+          browser: 'firefox',
+        });
+
+        expect(wxt.config.runner).toBe(wslSnapFirefoxRunner);
+      });
+    });
+
+    describe('outside WSL', () => {
+      it('should not check for Snap firefox', async () => {
+        isUnusableSnapFirefox = true;
+
+        await TestProject.simple().registerWxt(command, {
+          browser: 'firefox',
+        });
+
+        expect(wxt.config.runner).toBe(webExtRunner);
       });
     });
 
