@@ -270,7 +270,7 @@ function createFrontendAnalytics(): Analytics {
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
       return () => {
-        root.removeEventListener('click', onClick);
+        root.removeEventListener('click', onClick, { capture: true });
       };
     },
   };
