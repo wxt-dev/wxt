@@ -13,7 +13,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   WxtResolvedUnimportOptions,
-  ExtensionRunner,
   WxtLogger,
 } from '../types';
 import path from 'node:path';
