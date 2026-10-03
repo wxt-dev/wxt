@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { generateManifest, stripPathFromMatchPattern } from '../manifest';
+import {
+  generateManifest,
+  matchPatternCovers,
+  stripPathFromMatchPattern,
+} from '../manifest';
 import {
   fakeArray,
   fakeBackgroundEntrypoint,
@@ -1377,6 +1381,46 @@ describe('Manifest Utils', () => {
           ]);
         });
 
+        it('should append to user defined optional_host_permissions, skipping covered patterns', async () => {
+          const one = optionalCs(
+            {
+              registration: 'runtime',
+              optionalMatches: [
+                'https://app1.internal.com/some/path/*',
+                'https://other.com/*',
+              ],
+            },
+            'one',
+          );
+          const two = optionalCs(
+            {
+              registration: 'runtime',
+              optionalMatches: ['https://other.com/*', 'https://*.other.com/*'],
+            },
+            'two',
+          );
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                optional_host_permissions: ['https://*.internal.com/*'],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [one, two],
+            buildOutputFor([one, two]),
+          );
+
+          expect(actual.optional_host_permissions).toEqual([
+            'https://*.internal.com/*',
+            'https://*.other.com/*',
+          ]);
+        });
+
         it('should move optionalMatches to optional_permissions for MV2', async () => {
           const cs = optionalCs({
             matches: ['*://required.com/*'],
@@ -2224,6 +2268,31 @@ describe('Manifest Utils', () => {
     ])('should convert "%s" to "%s"', (input, expected) => {
       const actual = stripPathFromMatchPattern(input);
       expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('matchPatternCovers', () => {
+    it.each([
+      ['<all_urls>', 'https://example.com/*', true],
+      ['https://example.com/*', 'https://example.com/*', true],
+      ['*://example.com/*', 'https://example.com/*', true],
+      ['*://example.com/*', 'http://example.com/*', true],
+      ['https://example.com/*', '*://example.com/*', false],
+      ['https://example.com/*', 'http://example.com/*', false],
+      ['*://example.com/*', 'file:///example/*', false],
+      ['https://*/*', 'https://example.com/*', true],
+      ['https://*.example.com/*', 'https://example.com/*', true],
+      ['https://*.example.com/*', 'https://a.b.example.com/*', true],
+      ['https://*.example.com/*', 'https://*.a.example.com/*', true],
+      ['https://*.example.com/*', 'https://notexample.com/*', false],
+      ['https://a.example.com/*', 'https://*.example.com/*', false],
+      ['https://example.com/*', 'https://example.com/path/*', true],
+      ['https://example.com/path/*', 'https://example.com/*', false],
+      ['https://example.com/a*', 'https://example.com/a/b*c', true],
+      ['https://example.com/a.b', 'https://example.com/aXb', false],
+      ['https://example.com/*', '<all_urls>', false],
+    ])('matchPatternCovers("%s", "%s") → %s', (outer, inner, expected) => {
+      expect(matchPatternCovers(outer, inner)).toBe(expected);
     });
   });
 });

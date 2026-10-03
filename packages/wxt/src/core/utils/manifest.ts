@@ -438,11 +438,10 @@ function addEntrypoints(
 
     // Optional matches are never added to `content_scripts`, regardless of
     // `registration`, so new hosts don't trigger a permission escalation
-    contentScripts
-      .flatMap((cs) => cs.options.optionalMatches ?? [])
-      .forEach((matchPattern) => {
-        addOptionalHostPermission(manifest, matchPattern);
-      });
+    addOptionalHostPermissions(
+      manifest,
+      contentScripts.flatMap((cs) => cs.options.optionalMatches ?? []),
+    );
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
       contentScripts,
@@ -645,13 +644,87 @@ function addHostPermission(
   manifest.host_permissions.push(hostPermission);
 }
 
-function addOptionalHostPermission(
+/**
+ * Adds match patterns to `optional_host_permissions`, skipping any pattern
+ * already covered by an existing entry or by another pattern being added.
+ */
+function addOptionalHostPermissions(
   manifest: Browser.runtime.Manifest,
-  hostPermission: string,
+  matchPatterns: string[],
 ): void {
-  manifest.optional_host_permissions ??= [];
-  if (manifest.optional_host_permissions.includes(hostPermission)) return;
-  manifest.optional_host_permissions.push(hostPermission);
+  if (matchPatterns.length === 0) return;
+
+  const existing: string[] = manifest.optional_host_permissions ?? [];
+  let added: string[] = [];
+
+  for (const pattern of matchPatterns) {
+    const isCovered = [...existing, ...added].some((other) =>
+      matchPatternCovers(other, pattern),
+    );
+    if (isCovered) continue;
+
+    // Drop previously added patterns that this broader pattern covers. User
+    // defined entries in `existing` are never removed.
+    added = added.filter((other) => !matchPatternCovers(pattern, other));
+    added.push(pattern);
+  }
+
+  manifest.optional_host_permissions = [...existing, ...added];
+}
+
+/**
+ * Returns `true` when every URL matched by `inner` is also matched by `outer`.
+ * Returns `false` when unsure, so patterns are only skipped when they're
+ * definitely redundant.
+ *
+ * - `("*://*.example.com/*", "https://app.example.com/path/*")` → `true`
+ * - `("https://example.com/*", "*://example.com/*")` → `false`
+ */
+export function matchPatternCovers(outer: string, inner: string): boolean {
+  if (outer === inner || outer === '<all_urls>') return true;
+
+  const outerParts = parseMatchPattern(outer);
+  const innerParts = parseMatchPattern(inner);
+  if (outerParts == null || innerParts == null) return false;
+
+  const schemeCovered =
+    outerParts.scheme === innerParts.scheme ||
+    (outerParts.scheme === '*' &&
+      (innerParts.scheme === 'http' || innerParts.scheme === 'https'));
+  if (!schemeCovered) return false;
+
+  if (outerParts.host !== '*' && outerParts.host !== innerParts.host) {
+    if (!outerParts.host.startsWith('*.')) return false;
+    const outerDomain = outerParts.host.substring(2);
+    const innerDomain = innerParts.host.startsWith('*.')
+      ? innerParts.host.substring(2)
+      : innerParts.host;
+    if (innerDomain !== outerDomain && !innerDomain.endsWith(`.${outerDomain}`))
+      return false;
+  }
+
+  // Treat the inner path's `*` as a literal character: if the outer glob
+  // matches it, the outer glob matches everything the inner glob does
+  return globToRegExp(outerParts.path).test(innerParts.path);
+}
+
+/**
+ * Converts a match pattern path glob, where `*` matches any characters, to a
+ * regular expression.
+ */
+function globToRegExp(glob: string): RegExp {
+  const escapedParts = glob
+    .split('*')
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'));
+  return new RegExp(`^${escapedParts.join('.*')}$`);
+}
+
+function parseMatchPattern(
+  pattern: string,
+): { scheme: string; host: string; path: string } | undefined {
+  const match = /^([^:/]+):\/\/([^/]*)(\/.*)$/.exec(pattern);
+  if (match == null) return;
+  return { scheme: match[1], host: match[2], path: match[3] };
 }
 
 /**
