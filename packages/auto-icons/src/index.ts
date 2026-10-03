@@ -19,8 +19,8 @@ export default defineWxtModule<AutoIconsOptions>({
       },
     );
 
-    // Remove duplicates after merging user sizes with defaults.
-    const sizes = Array.from(new Set(parsedOptions.sizes));
+    // Custom sizes replace defaults. Remove duplicate sizes.
+    const sizes = Array.from(new Set(options?.sizes ?? parsedOptions.sizes));
 
     // Backward compatibility for the deprecated option
     if (options?.grayscaleOnDevelopment !== undefined) {
@@ -150,7 +150,11 @@ export interface AutoIconsOptions {
    */
   grayscaleOnDevelopment?: boolean;
   /**
-   * Sizes to generate icons for
+   * Sizes to generate icons for.
+   *
+   * When provided, replaces the default sizes instead of extending them.
+   * Duplicate sizes are generated only once. An empty array generates no
+   * icons.
    *
    * @default [128, 48, 32, 16]
    */
