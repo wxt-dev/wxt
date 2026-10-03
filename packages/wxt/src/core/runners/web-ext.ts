@@ -35,28 +35,23 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
   }
 
   async openBrowser(): Promise<void> {
-    console.log(1);
     if (wxt.config.browser === 'safari') {
-      console.log(2);
       wxt.logger.warn(
         `Cannot Safari using web-ext. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
       );
       return;
     }
     if (isWsl) {
-      console.log(3);
       wxt.logger.warn(
         `Cannot open browser when using WSL. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
       );
       return;
     }
     if (wxt.config.webExt.config.disabled) {
-      console.log(4);
       return super.openBrowser();
     }
 
     try {
-      console.log(5);
       const startTime = Date.now();
       const webExt = await this.loadWebExt();
       const logger = await this.loadLogger();
@@ -115,13 +110,11 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
       wxt.logger.debug('web-ext config:', finalConfig);
       wxt.logger.debug('web-ext options:', options);
 
-      console.log('called');
       this.webExt = await webExt.cmd.run(finalConfig, options);
 
       const duration = Date.now() - startTime;
       wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
     } catch (err: any) {
-      console.log(6, err);
       if (err?.code === MODULE_NOT_FOUND_CODE) return super.openBrowser();
 
       wxt.logger.warn('Error loading the web-ext runner', err);
