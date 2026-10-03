@@ -1421,6 +1421,34 @@ describe('Manifest Utils', () => {
           ]);
         });
 
+        it('should include optionalMatches in web_accessible_resources when cssInjectionMode=ui', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/path/*'],
+            optionalMatches: ['*://optional.com/path/*'],
+            cssInjectionMode: 'ui',
+          });
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+          setFakeWxt({
+            config: { manifestVersion: 3, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest([cs], {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          });
+
+          expect(actual.web_accessible_resources).toEqual([
+            {
+              matches: ['*://required.com/*', '*://optional.com/*'],
+              resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
+            },
+          ]);
+        });
+
         it('should move optionalMatches to optional_permissions for MV2', async () => {
           const cs = optionalCs({
             matches: ['*://required.com/*'],
