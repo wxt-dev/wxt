@@ -1,6 +1,5 @@
 import isWsl from 'is-wsl';
 import { ExtensionRunner } from '../../types';
-import { wxt } from '../wxt';
 import { ManualRunner } from './manual';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
@@ -22,7 +21,7 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
   private loggerModulePromise: Promise<LoggerModule> | undefined;
 
   async canOpen(): Promise<boolean> {
-    if (wxt.config.browser === 'safari' || isWsl) return false;
+    if (this.config.browser === 'safari' || isWsl) return false;
 
     try {
       await this.loadWebExt();
@@ -35,19 +34,19 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
   }
 
   async openBrowser(): Promise<void> {
-    if (wxt.config.browser === 'safari') {
-      wxt.logger.warn(
+    if (this.config.browser === 'safari') {
+      this.config.logger.warn(
         `Cannot Safari using web-ext. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
       );
       return;
     }
     if (isWsl) {
-      wxt.logger.warn(
+      this.config.logger.warn(
         `Cannot open browser when using WSL. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
       );
       return;
     }
-    if (wxt.config.webExt.config.disabled) {
+    if (this.config.webExt.config.disabled) {
       return super.openBrowser();
     }
 
@@ -58,18 +57,18 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
 
       // Use WXT's logger instead of web-ext's built-in one.
       logger.consoleStream.write = ({ level, msg, name }) => {
-        if (level >= ERROR_LOG_LEVEL) wxt.logger.error(name, msg);
-        if (level >= WARN_LOG_LEVEL) wxt.logger.warn(msg);
+        if (level >= ERROR_LOG_LEVEL) this.config.logger.error(name, msg);
+        if (level >= WARN_LOG_LEVEL) this.config.logger.warn(msg);
       };
 
-      const wxtUserConfig = wxt.config.webExt.config;
+      const wxtUserConfig = this.config.webExt.config;
       const userConfig = {
         browserConsole: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
         chromiumPort: wxtUserConfig?.chromiumPort,
-        ...(wxt.config.browser === 'firefox'
+        ...(this.config.browser === 'firefox'
           ? {
               firefox: wxtUserConfig?.binaries?.firefox,
               firefoxProfile: wxtUserConfig?.firefoxProfile,
@@ -77,7 +76,7 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
               args: wxtUserConfig?.firefoxArgs,
             }
           : {
-              chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
+              chromiumBinary: wxtUserConfig?.binaries?.[this.config.browser],
               chromiumProfile: wxtUserConfig?.chromiumProfile,
               chromiumPref: defu(
                 wxtUserConfig?.chromiumPref,
@@ -93,8 +92,8 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
       const finalConfig = {
         ...userConfig,
         target:
-          wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
-        sourceDir: wxt.config.outDir,
+          this.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
+        sourceDir: this.config.outDir,
         // Don't add a "Reload Manager" extension alongside dev extension, WXT
         // already handles reloads internally.
         noReloadManagerExtension: true,
@@ -107,17 +106,19 @@ export class WebExtRunner extends ManualRunner implements ExtensionRunner {
         shouldExitProgram: false,
       };
 
-      wxt.logger.debug('web-ext config:', finalConfig);
-      wxt.logger.debug('web-ext options:', options);
+      this.config.logger.debug('web-ext config:', finalConfig);
+      this.config.logger.debug('web-ext options:', options);
 
       this.webExt = await webExt.cmd.run(finalConfig, options);
 
       const duration = Date.now() - startTime;
-      wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
+      this.config.logger.success(
+        `Opened browser in ${formatDuration(duration)}`,
+      );
     } catch (err: any) {
       if (err?.code === MODULE_NOT_FOUND_CODE) return super.openBrowser();
 
-      wxt.logger.warn('Error loading the web-ext runner', err);
+      this.config.logger.warn('Error loading the web-ext runner', err);
     }
   }
 

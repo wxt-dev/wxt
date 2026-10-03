@@ -4,6 +4,7 @@ import { WebExtRunner } from '../web-ext';
 import { setFakeWxt } from '../../utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
+import { wxt } from '../../wxt';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
@@ -24,6 +25,10 @@ class ModuleNotFoundError extends Error {
 
 // @ts-expect-error: Overriding the private loadWebExt method
 class TestRunner extends WebExtRunner {
+  constructor() {
+    super(wxt.config);
+  }
+
   private loadWebExt() {
     if (isWebExtInstalled) {
       return Promise.resolve(webExt);

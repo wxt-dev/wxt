@@ -1,6 +1,5 @@
-import type { ExtensionRunner } from '../../types';
+import type { ExtensionRunner, ResolvedConfig } from '../../types';
 import { relative } from 'node:path';
-import { wxt } from '../wxt';
 
 /**
  * Base runner that just tells developers to load the extension into their
@@ -10,19 +9,19 @@ import { wxt } from '../wxt';
  * open the browser.
  */
 export class ManualRunner implements ExtensionRunner {
-  constructor() {}
+  constructor(protected config: ResolvedConfig) {}
 
   canOpen(): Promise<boolean> {
     return Promise.resolve(false);
   }
 
   async openBrowser(): Promise<void> {
-    wxt.logger.info(
+    this.config.logger.info(
       `Load "${this.relativeOutDir()}" as an unpacked extension manually`,
     );
   }
 
   protected relativeOutDir(): string {
-    return relative(process.cwd(), wxt.config.outDir);
+    return relative(process.cwd(), this.config.outDir);
   }
 }
