@@ -150,6 +150,9 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     skipped: isEntrypointSkipped(entry),
   }));
 
+  // Expose the latest entrypoints
+  wxt.entrypoints = entrypoints;
+
   await wxt.hooks.callHook('entrypoints:resolved', wxt, entrypoints);
 
   wxt.logger.debug('All entrypoints:', entrypoints);

@@ -56,6 +56,7 @@ export async function registerWxt(
     pm,
     builder,
     server: undefined,
+    entrypoints: [],
   };
 
   await initWxtModules();

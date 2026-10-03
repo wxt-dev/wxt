@@ -73,9 +73,8 @@ export const analytics = createAnalytics(useAppConfig().analytics);
       }
     });
 
-    // Ensure analytics is initialized in every context, mainly the background.
-    // TODO: Once there's a way to filter which entrypoints a plugin is applied to, only apply this to the background
-    addWxtPlugin(wxt, pluginModuleId);
+    // Ensure analytics is initialized in the background only.
+    addWxtPlugin(wxt, pluginModuleId, (entry) => entry.type === 'background');
 
     // Fix issues with dependencies
     addViteConfig(wxt, () => ({

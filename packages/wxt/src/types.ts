@@ -1527,6 +1527,11 @@ export interface Wxt {
   server?: WxtDevServer;
   /** The module in charge of executing all the build steps. */
   builder: WxtBuilder;
+  /**
+   * Refreshed each time entrypoints are resolved. Empty until initial
+   * resolution.
+   */
+  entrypoints: Entrypoint[];
 }
 
 export interface ResolvedConfig {
@@ -1649,13 +1654,28 @@ export interface ResolvedConfig {
   builtinModules: WxtModule<any>[];
   userModules: WxtModuleWithMetadata<any>[];
   /**
-   * An array of string to import plugins from. These paths should be resolvable
-   * by vite, and they should `export default defineWxtPlugin(...)`.
+   * Plugins registered via `addWxtPlugin`. Each entry's `module` should be
+   * resolvable by vite, and should `export default defineWxtPlugin(...)`. An
+   * optional `apply` function restricts which entrypoints the plugin loads in.
    *
    * @example
-   *   ['@wxt-dev/module-vue/plugin', 'wxt-module-google-analytics/plugin'];
+   *   [{ module: '@wxt-dev/module-vue/plugin' }];
    */
-  plugins: string[];
+  plugins: WxtPluginEntry[];
+}
+
+/**
+ * A plugin registered via `addWxtPlugin`, along with an optional `apply`
+ * function controlling which entrypoints it's loaded in.
+ */
+export interface WxtPluginEntry {
+  /** Import path or absolute file path to the plugin module. */
+  module: string;
+  /**
+   * Return `true` to include the plugin in this entrypoint. When omitted, the
+   * plugin is included in every entrypoint.
+   */
+  apply?: (entrypoint: Entrypoint) => boolean;
 }
 
 export interface FsCache {
