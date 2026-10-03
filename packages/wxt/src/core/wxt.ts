@@ -6,6 +6,7 @@ import { createViteBuilder } from './builders/vite';
 import { createWxtPackageManager } from './package-managers';
 import { resolveConfig } from './resolve-config';
 import { FlatEntrypointFinder } from './entrypoint-finders/flat';
+import { WebExtRunner } from './runners/web-ext';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is
@@ -29,8 +30,6 @@ export async function registerWxt(
 
   const hooks = createHooks<WxtHooks>();
   const config = await resolveConfig(inlineConfig, command);
-  // Imported lazily to avoid a circular import (runners import `wxt`)
-  const { WebExtRunner } = await import('./runners/web-ext');
   const runner = new WebExtRunner(config);
   // TODO: Remove once config.runner is deprecated
   Object.defineProperty(config, 'runner', {
