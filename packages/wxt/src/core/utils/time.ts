@@ -22,7 +22,7 @@ export function withTimeout<T>(
 }
 
 /**
- * @deprecated Don't use in production, just for testing and slowing things
+ * @internal Don't use in production, just for testing and slowing things
  *   down.
  */
 export function sleep(ms: number): Promise<void> {

@@ -6,3 +6,4 @@ docs/.vitepress/cache
 pnpm-lock.yaml
 CHANGELOG.md
 packages/browser/src/gen
+packages/wxt/inline

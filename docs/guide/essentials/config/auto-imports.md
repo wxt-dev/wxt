@@ -43,7 +43,7 @@ ESLint doesn't know about the auto-imported variables unless they are explicitly
 
 :::code-group
 
-```ts [ESLint 9]
+```ts [ESLint >=9]
 export default defineConfig({
   imports: {
     eslintrc: {
@@ -53,7 +53,7 @@ export default defineConfig({
 });
 ```
 
-```ts [ESLint 8]
+```ts [ESLint <=8]
 export default defineConfig({
   imports: {
     eslintrc: {
@@ -69,7 +69,7 @@ Then in your ESLint config, import and use the generated file:
 
 :::code-group
 
-```js [ESLint 9]
+```js [ESLint >=9]
 // eslint.config.mjs
 import autoImports from './.wxt/eslint-auto-imports.mjs';
 
@@ -81,7 +81,7 @@ export default [
 ];
 ```
 
-```js [ESLint 8]
+```js [ESLint <=8]
 // .eslintrc.mjs
 export default {
   extends: ['./.wxt/eslintrc-auto-import.json'],

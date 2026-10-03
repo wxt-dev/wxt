@@ -31,42 +31,23 @@ const date = useBlogDate(() => props.post.date);
 </template>
 
 <style scoped>
-li {
-  padding: 0;
-  margin: 0;
-}
+.vp-doc {
+  * {
+    margin-block: 10px;
+  }
 
-p {
-  margin: 0;
-}
-h3 {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
+  .title {
+    color: var(--vp-c-text-1);
+  }
 
-li > a > div {
-  display: flex;
-  flex-direction: column;
-  margin: 0 -16px;
-  padding: 16px;
-  border-radius: 16px;
-}
-li > a > div:hover {
-  background: var(--vp-c-default);
-}
-li .title {
-  color: var(--vp-c-text);
-  margin-bottom: 12px;
-}
-li .description {
-  font-size: 16px;
-  color: var(--vp-c-text-2);
-  margin-bottom: 8px;
-}
-li .meta {
-  font-weight: 400;
-  font-size: 12px;
-  color: var(--vp-c-text-2);
+  .description {
+    color: var(--vp-c-text-2);
+  }
+
+  .meta {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--vp-c-text-2);
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 import { dedupeDependencies, npm } from './npm';
 import { WxtPackageManagerImpl } from './types';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 
 export const bun: WxtPackageManagerImpl = {
   overridesKey: 'overrides', // But also supports "resolutions"
@@ -12,7 +12,10 @@ export const bun: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--all');
     }
-    const res = await spawn('bun', args, { cwd: options?.cwd });
+    const res = await spawn('bun', args, {
+      throwOnError: true,
+      nodeOptions: { cwd: options?.cwd },
+    });
     return dedupeDependencies(
       res.stdout
         .split('\n')

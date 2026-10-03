@@ -1,9 +1,12 @@
 # Set default
-* @aklinker1
+* @aklinker1 @nishu-murmu @PatrykKuniczak
 
 # Secure Directories
-/.github/ @aklinker1
+/.github/ @aklinker1 @nishu-murmu @PatrykKuniczak
 
 # Creator of specific wxt modules
 /packages/auto-icons/ @Timeraa
 /packages/unocss/ @Timeraa
+
+# Other Directories
+/docs @aklinker1 @PatrykKuniczak @nishu-murmu

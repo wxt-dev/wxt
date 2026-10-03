@@ -5,7 +5,7 @@ import { printHeader } from '../core/utils/log';
 import { formatDuration } from '../core/utils/time';
 import { ValidationError } from '../core/utils/validation';
 import { registerWxt } from '../core/wxt';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug
@@ -82,8 +82,12 @@ export function createAliasedCommand(
   bin: string,
   docsUrl: string,
 ) {
+  // Declare a variadic positional arg so cac forwards subcommands like `wxt
+  // submit init` instead of rejecting them as unused args. `.allowUnknownOptions`
+  // only relaxes flag checks, not positional args. Required since cac@7, which
+  // throws on unused positional args (see cacjs/cac#135).
   const aliasedCommand = base
-    .command(name, `Alias for ${alias} (${docsUrl})`)
+    .command(`${name} [...args]`, `Alias for ${alias} (${docsUrl})`)
     .allowUnknownOptions()
     .action(async () => {
       try {
@@ -93,7 +97,8 @@ export function createAliasedCommand(
           process.argv.indexOf(aliasedCommand.name) + 1,
         );
         await spawn(bin, args, {
-          stdio: 'inherit',
+          throwOnError: true,
+          nodeOptions: { stdio: 'inherit' },
         });
       } catch {
         // Let the other aliased CLI log errors, just exit

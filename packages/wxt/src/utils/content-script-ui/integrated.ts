@@ -6,6 +6,8 @@ import { applyPosition, createMountFunctions, mountUi } from './shared';
 /**
  * Create a content script UI without any isolation.
  *
+ * @param options - Integrated UI options. See {@link ContentScriptUiOptions} for
+ *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#integrated
  */
 export function createIntegratedUi<TMounted>(

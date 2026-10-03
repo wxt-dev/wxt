@@ -173,6 +173,23 @@ dollars: $$$1
 i18n.t('dollars', ['1.00']); // "$1.00"
 ```
 
+#### Named Substitutions
+
+You can also use named substitutions with `{key}` placeholders:
+
+```yml
+welcome: Hello {name}, welcome to {appName}!
+```
+
+```ts
+i18n.t('welcome', {
+  name: 'Ada',
+  appName: 'WXT',
+}); // "Hello Ada, welcome to WXT!"
+```
+
+Missing keys are left unchanged in the returned message.
+
 ### Plural Forms
 
 > [!WARNING]

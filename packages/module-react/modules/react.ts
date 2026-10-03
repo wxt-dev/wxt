@@ -1,6 +1,6 @@
 import 'wxt';
 import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
-import react, { Options as PluginOptions } from '@vitejs/plugin-react';
+import react, { type Options as PluginOptions } from '@vitejs/plugin-react';
 import type { PluginOption } from 'vite';
 
 export default defineWxtModule<ReactModuleOptions>({

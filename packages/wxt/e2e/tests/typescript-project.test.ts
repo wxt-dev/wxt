@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TestProject } from '../utils';
+import { readFile } from 'node:fs/promises';
 
 describe('TypeScript Project', () => {
   it('should generate defined constants correctly', async () => {
@@ -323,33 +324,79 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
-            "@": [".."],
-            "@/*": ["../*"],
-            "~": [".."],
-            "~/*": ["../*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
+            "@": [
+              ".."
+            ],
+            "@/*": [
+              "../*"
+            ],
+            "~": [
+              ".."
+            ],
+            "~/*": [
+              "../*"
+            ],
+            "@@": [
+              ".."
+            ],
+            "@@/*": [
+              "../*"
+            ],
+            "~~": [
+              ".."
+            ],
+            "~~/*": [
+              "../*"
+            ]
           }
         },
         "include": [
           "../**/*",
           "./wxt.d.ts"
         ],
-        "exclude": ["../.output"]
+        "exclude": [
+          "../**/node_modules",
+          "../.output"
+        ]
       }"
     `);
+  });
+
+  it("should allow updating the project's tsconfig via hooks", async () => {
+    const project = new TestProject();
+    project.setConfigFileConfig({});
+    project.addFile('entrypoints/unlisted.html', '<html></html>');
+
+    await project.prepare({
+      hooks: {
+        'prepare:tsconfig': (_, { tsconfig }) => {
+          tsconfig.test = 'test';
+        },
+      },
+    });
+
+    const actual = JSON.parse(
+      await readFile(project.resolvePath('.wxt/tsconfig.json'), 'utf-8'),
+    );
+    expect(actual).toMatchObject({ test: 'test' });
   });
 
   it('should generate correct path aliases for a custom srcDir', async () => {
@@ -367,31 +414,58 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
-            "@": ["../src"],
-            "@/*": ["../src/*"],
-            "~": ["../src"],
-            "~/*": ["../src/*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
+            "@": [
+              "../src"
+            ],
+            "@/*": [
+              "../src/*"
+            ],
+            "~": [
+              "../src"
+            ],
+            "~/*": [
+              "../src/*"
+            ],
+            "@@": [
+              ".."
+            ],
+            "@@/*": [
+              "../*"
+            ],
+            "~~": [
+              ".."
+            ],
+            "~~/*": [
+              "../*"
+            ]
           }
         },
         "include": [
           "../**/*",
           "./wxt.d.ts"
         ],
-        "exclude": ["../.output"]
+        "exclude": [
+          "../**/node_modules",
+          "../.output"
+        ]
       }"
     `);
   });
@@ -415,33 +489,64 @@ describe('TypeScript Project', () => {
       ----------------------------------------
       {
         "compilerOptions": {
+          "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+          ],
           "target": "ESNext",
-          "module": "ESNext",
+          "module": "Preserve",
+          "moduleDetection": "force",
           "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "verbatimModuleSyntax": true,
           "noEmit": true,
-          "esModuleInterop": true,
-          "forceConsistentCasingInFileNames": true,
-          "resolveJsonModule": true,
           "strict": true,
           "skipLibCheck": true,
+          "noFallthroughCasesInSwitch": true,
+          "noUncheckedIndexedAccess": true,
+          "noImplicitOverride": true,
           "paths": {
-            "example": ["../example"],
-            "example/*": ["../example/*"],
-            "@": ["../src"],
-            "@/*": ["../src/*"],
-            "~": ["../src"],
-            "~/*": ["../src/*"],
-            "@@": [".."],
-            "@@/*": ["../*"],
-            "~~": [".."],
-            "~~/*": ["../*"]
+            "example": [
+              "../example"
+            ],
+            "example/*": [
+              "../example/*"
+            ],
+            "@": [
+              "../src"
+            ],
+            "@/*": [
+              "../src/*"
+            ],
+            "~": [
+              "../src"
+            ],
+            "~/*": [
+              "../src/*"
+            ],
+            "@@": [
+              ".."
+            ],
+            "@@/*": [
+              "../*"
+            ],
+            "~~": [
+              ".."
+            ],
+            "~~/*": [
+              "../*"
+            ]
           }
         },
         "include": [
           "../**/*",
           "./wxt.d.ts"
         ],
-        "exclude": ["../.output"]
+        "exclude": [
+          "../**/node_modules",
+          "../.output"
+        ]
       }"
     `);
   });

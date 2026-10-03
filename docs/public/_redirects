@@ -38,6 +38,10 @@
 # 0.19.0
 /guide/go-further/entrypoint-side-effects.html /guide/go-further/entrypoint-loaders.html
 
+# 0.21.0
+# The `url:` import feature was removed, along with its docs page.
+/guide/essentials/remote-code.html /guide/resources/upgrading.html#url-imports-removed
+
 # https://github.com/wxt-dev/wxt/issues/704
 # Generated via `pnpm docs:build && find docs/.vitepress/dist -type f -name "*.html"`
 
@@ -59,7 +63,7 @@
 /guide/go-further/handling-updates.html                       /guide/essentials/testing-updates.html
 /guide/go-further/custom-events.html                          /guide/essentials/content-scripts.html#dealing-with-spas
 /guide/go-further/debugging.html                              /TODO
-/guide/go-further/remote-code.html                            /guide/essentials/remote-code.html
+/guide/go-further/remote-code.html                            /guide/resources/upgrading.html#url-imports-removed
 /guide/go-further/vite.html                                   /guide/essentials/config/vite.html
 /guide/go-further/testing.html                                /guide/essentials/unit-testing.html
 /guide/go-further/how-wxt-works.html                          /guide/resources/how-wxt-works.html

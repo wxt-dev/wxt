@@ -13,6 +13,8 @@ import { splitShadowRootCss } from '../split-shadow-root-css';
  *
  * > This function is async because it has to load the CSS via a network call.
  *
+ * @param options - Shadow root options. See {@link ContentScriptUiOptions} for
+ *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#shadow-root
  */
 export async function createShadowRootUi<TMounted>(
@@ -55,7 +57,7 @@ export async function createShadowRootUi<TMounted>(
   const mount = () => {
     // Add shadow root element to DOM
     mountUi(shadowHost, options);
-    applyPosition(shadowHost, shadow.querySelector('html'), options);
+    applyPosition(shadowHost, uiContainer, options);
 
     // Add document CSS
     if (

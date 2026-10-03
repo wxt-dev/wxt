@@ -59,7 +59,7 @@ export async function generateManifest(
     pkg?.version;
   if (versionName == null) {
     versionName = '0.0.0';
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       'Extension version not found, defaulting to "0.0.0". Add a version to your `package.json` or `wxt.config.ts` file. For more details, see: https://wxt.dev/guide/key-concepts/manifest.html#version-and-version-name',
     );
   }
@@ -76,7 +76,7 @@ export async function generateManifest(
   const userManifest = wxt.config.manifest;
   if (userManifest.manifest_version) {
     delete userManifest.manifest_version;
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       '`manifest.manifest_version` config was set, but ignored. To change the target manifest version, use the `manifestVersion` option or the `--mv2`/`--mv3` CLI flags.\nSee https://wxt.dev/guide/essentials/target-different-browsers.html#target-a-manifest-version',
     );
   }
@@ -122,10 +122,21 @@ export async function generateManifest(
       ?.data_collection_permissions &&
     !wxt.config.suppressWarnings?.firefoxDataCollection
   ) {
-    wxt.logger.warn(
+    wxt.logger.warnOnce(
       'Firefox requires `data_collection_permissions` for new extensions from November 3, 2025. Existing extensions are exempt for now.\n' +
         'For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/\n' +
         'To suppress this warning, set `suppressWarnings.firefoxDataCollection` to `true` in your wxt config.\n',
+    );
+  }
+
+  if (
+    wxt.config.browser === 'firefox' &&
+    !manifest.browser_specific_settings?.gecko?.id &&
+    !wxt.config.suppressWarnings?.firefoxId
+  ) {
+    wxt.logger.warnOnce(
+      'Firefox requires extension ID for MV3 and recommends it for MV2.\n' +
+        'For more details, see: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id',
     );
   }
 
@@ -295,6 +306,8 @@ function addEntrypoints(
       options.default_icon = popup.options.defaultIcon;
     if (popup.options.defaultTitle)
       options.default_title = popup.options.defaultTitle;
+    if (popup.options.defaultState && wxt.config.manifestVersion === 3)
+      options.default_state = popup.options.defaultState;
     if (popup.options.browserStyle)
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       options.browser_style = popup.options.browserStyle;
@@ -306,7 +319,7 @@ function addEntrypoints(
       options.theme_icons = popup.options.themeIcons;
 
     const actionKey =
-      manifest.manifest_version === 2
+      wxt.config.manifestVersion === 2
         ? (popup.options.actionType ?? 'browser_action')
         : wxt.config.browser === 'firefox' &&
             popup.options.actionType === 'page_action'
@@ -331,7 +344,9 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      open_in_tab: options.options.openInTab ?? false,
+      ...(wxt.config.browser !== 'safari' && {
+        open_in_tab: options.options.openInTab ?? false,
+      }),
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
         wxt.config.browser === 'firefox'
@@ -420,7 +435,7 @@ function addEntrypoints(
           getContentScriptCssFiles(scripts, cssMap),
         ),
       );
-      if (manifestContentScripts.length >= 0) {
+      if (manifestContentScripts.length > 0) {
         manifest.content_scripts ??= [];
         manifest.content_scripts.push(...manifestContentScripts);
       }
@@ -498,7 +513,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const permission = `${permissionUrl}*`;
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
-  if (manifest.manifest_version === 3) {
+  if (wxt.config.manifestVersion === 3) {
     addHostPermission(manifest, permission);
   } else {
     addPermission(manifest, permission);
@@ -507,7 +522,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const extensionPagesCsp = new ContentSecurityPolicy(
     // @ts-expect-error: extension_pages exists, we convert MV2 CSPs to this earlier in the process
     manifest.content_security_policy?.extension_pages ??
-      (manifest.manifest_version === 3
+      (wxt.config.manifestVersion === 3
         ? DEFAULT_MV3_EXTENSION_PAGES_CSP
         : DEFAULT_MV2_CSP),
   );
@@ -583,7 +598,12 @@ export function getContentScriptCssWebAccessibleResources(
 
     resources.push({
       resources: [cssFile],
-      use_dynamic_url: true,
+      // Chrome-only MV3 field (obscures the resource URL behind a per-session
+      // token); Firefox ignores it, and Safari's web extension converter
+      // rejects it as an unsupported key.
+      ...(wxt.config.browser !== 'firefox' && wxt.config.browser !== 'safari'
+        ? { use_dynamic_url: true }
+        : {}),
       matches: [
         ...(script.options.matches ?? []),
         ...(script.options.optionalMatches ?? []),

@@ -283,41 +283,50 @@ async function getTsConfigEntry(): Promise<WxtDirFileEntry> {
     if (res.startsWith('.') || res.startsWith('/')) return res;
     return './' + res;
   };
-  const paths = Object.entries(wxt.config.alias)
-    .flatMap(([alias, absolutePath]) => {
-      const aliasPath = getTsconfigPath(absolutePath);
-      return [
-        `"${alias}": ["${aliasPath}"]`,
-        `"${alias}/*": ["${aliasPath}/*"]`,
-      ];
-    })
-    .map((line) => `      ${line}`)
-    .join(',\n');
 
-  const text = `{
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "paths": {
-${paths}
-    }
-  },
-  "include": [
-    "${getTsconfigPath(wxt.config.root)}/**/*",
-    "./wxt.d.ts"
-  ],
-  "exclude": ["${getTsconfigPath(wxt.config.outBaseDir)}"]
-}`;
+  const paths = Object.fromEntries(
+    Object.entries(wxt.config.alias)
+      .map(([alias, absolutePath]) => [alias, getTsconfigPath(absolutePath)])
+      .flatMap(([alias, path]) => [
+        // Add alias for files
+        [alias, [path]],
+        // Add alias for all files in a directory
+        [alias + '/*', [path + '/*']],
+      ]),
+  );
+
+  const tsconfig = {
+    compilerOptions: {
+      // Environment setup & latest features
+      lib: ['ESNext', 'DOM', 'DOM.Iterable'],
+      target: 'ESNext',
+      module: 'Preserve',
+      moduleDetection: 'force',
+      // Bundler mode
+      moduleResolution: 'Bundler',
+      allowImportingTsExtensions: true,
+      verbatimModuleSyntax: true,
+      noEmit: true,
+      // Best practices
+      strict: true,
+      skipLibCheck: true,
+      noFallthroughCasesInSwitch: true,
+      noUncheckedIndexedAccess: true,
+      noImplicitOverride: true,
+      // Project settings
+      paths,
+    },
+    include: [`${getTsconfigPath(wxt.config.root)}/**/*`, './wxt.d.ts'],
+    exclude: [
+      getTsconfigPath(wxt.config.root) + '/**/node_modules',
+      getTsconfigPath(wxt.config.outBaseDir),
+    ],
+  };
+
+  await wxt.hooks.callHook('prepare:tsconfig', wxt, { tsconfig });
 
   return {
     path: 'tsconfig.json',
-    text,
+    text: JSON.stringify(tsconfig, null, 2),
   };
 }

@@ -1,9 +1,10 @@
 import path from 'node:path';
 import { lstat } from 'node:fs/promises';
-import { filesize } from 'filesize';
+import { getBytesDisplay } from '../../utils/fs';
 import { printTable } from './printTable';
 import { styleText } from 'node:util';
 import { TextStyle } from '../../../utils/text-style';
+import { wxt } from '../../wxt';
 
 export async function printFileList(
   log: (message: string) => void,
@@ -21,9 +22,16 @@ export async function printFileList(
       ];
       const prefix = i === files.length - 1 ? '  └─' : '  ├─';
       const chunkColor = getChunkColor(file);
-      const stats = await lstat(file);
-      totalSize += stats.size;
-      const size = String(filesize(stats.size));
+
+      let size = '';
+      try {
+        const stats = await lstat(file);
+        totalSize += stats.size;
+        size = getBytesDisplay(stats.size);
+      } catch (ex) {
+        wxt.logger.warn(`Could not get stats of '${file}' error: ${ex}`);
+      }
+
       return [
         `${styleText('gray', prefix)} ${styleText('dim', parts[0])}${styleText(chunkColor, parts[1])}`,
         styleText('dim', size),
@@ -32,7 +40,7 @@ export async function printFileList(
   );
 
   fileRows.push([
-    `${styleText('cyan', 'Σ Total size:')} ${String(filesize(totalSize))}`,
+    `${styleText('cyan', 'Σ Total size:')} ${getBytesDisplay(totalSize)}`,
   ]);
 
   printTable(log, header, fileRows);

@@ -22,6 +22,7 @@ import {
   ContentScriptEntrypoint,
   Entrypoint,
   OutputAsset,
+  TargetManifestVersion,
 } from '../../../types';
 import { wxt } from '../../wxt';
 import { mock } from 'vitest-mock-extended';
@@ -202,6 +203,74 @@ describe('Manifest Utils', () => {
         expect((actual.action as any).theme_icons).toEqual(themeIcons);
       });
 
+      describe('default_state', () => {
+        it.each<{
+          browser: string;
+          manifestVersion: TargetManifestVersion;
+          type: 'browser_action' | 'action' | 'page_action';
+          shouldExist: boolean;
+        }>([
+          {
+            browser: 'chrome',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'chrome',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 2,
+            type: 'browser_action',
+            shouldExist: false,
+          },
+          {
+            browser: 'firefox',
+            manifestVersion: 3,
+            type: 'action',
+            shouldExist: true,
+          },
+        ])(
+          'should configure default_state: $defaultState based on the $browser and mv$manifestVersion',
+          async ({ browser, manifestVersion, type, shouldExist }) => {
+            const popup = fakePopupEntrypoint({
+              options: {
+                // @ts-expect-error: Force this to be undefined when null
+                actionType: manifestVersion === 3 ? null : type,
+                defaultState: 'enabled',
+              },
+              outputDir: outDir,
+              skipped: false,
+            });
+            const buildOutput = fakeBuildOutput();
+            setFakeWxt({
+              config: {
+                browser,
+                manifestVersion,
+                outDir,
+              },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [popup],
+              buildOutput,
+            );
+
+            if (shouldExist) {
+              expect(actual[type]).toMatchObject({
+                default_state: 'enabled',
+              });
+            } else {
+              expect(actual[type].default_state).toBeUndefined();
+            }
+          },
+        );
+      });
+
       it('should include default_area for Firefox in mv2', async () => {
         const popup = fakePopupEntrypoint({
           options: {
@@ -379,6 +448,28 @@ describe('Manifest Utils', () => {
         );
 
         expect(actual.options_ui).toEqual(expected);
+      });
+
+      it('should exclude open_in_tab for safari', async () => {
+        setFakeWxt({
+          config: {
+            manifestVersion: 3,
+            browser: 'safari',
+            outDir,
+          },
+        });
+        const buildOutput = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest(
+          [options],
+          buildOutput,
+        );
+
+        expect(actual.options_ui).toEqual({
+          chrome_style: true,
+          page: 'options.html',
+        });
+        expect(actual.options_ui?.open_in_tab).toBeUndefined();
       });
     });
 
@@ -1144,6 +1235,7 @@ describe('Manifest Utils', () => {
               outDir,
               command: 'build',
               manifestVersion: 3,
+              browser: 'chrome',
             },
           });
 
@@ -1228,6 +1320,7 @@ describe('Manifest Utils', () => {
               outDir,
               command: 'build',
               manifestVersion: 3,
+              browser: 'chrome',
             },
           });
 
@@ -1243,6 +1336,53 @@ describe('Manifest Utils', () => {
               use_dynamic_url: true,
             },
           ]);
+        });
+
+        it("should not add `use_dynamic_url` for Firefox or Safari, which don't support it", async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              cssInjectionMode: 'ui',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+
+          for (const browser of ['firefox', 'safari']) {
+            setFakeWxt({
+              config: {
+                outDir,
+                command: 'build',
+                manifestVersion: 3,
+                browser,
+              },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              entrypoints,
+              buildOutput,
+            );
+
+            expect(actual.web_accessible_resources).toEqual([
+              {
+                matches: ['*://google.com/*'],
+                resources: ['content-scripts/one.css'],
+              },
+            ]);
+          }
         });
       });
 
@@ -1282,7 +1422,57 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.content_scripts).toEqual([]);
+          expect(actual.content_scripts).toBeUndefined();
+          expect(actual.host_permissions).toEqual(['*://google.com/*']);
+        });
+
+        it('should still add manifest-registered content scripts when other content scripts are runtime-registered', async () => {
+          const runtimeCs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              registration: 'runtime',
+            },
+            skipped: false,
+          };
+          const manifestCs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'two',
+            inputPath: 'entrypoints/two.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://bing.com/*'],
+            },
+            skipped: false,
+          };
+
+          const entrypoints = [runtimeCs, manifestCs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints, chunks: [] }],
+          };
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.content_scripts).toEqual([
+            {
+              js: ['content-scripts/two.js'],
+              matches: ['*://bing.com/*'],
+            },
+          ]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
       });
@@ -1374,7 +1564,7 @@ describe('Manifest Utils', () => {
             buildOutputFor([cs]),
           );
 
-          expect(actual.content_scripts).toEqual([]);
+          expect(actual.content_scripts).toBeUndefined();
           expect(actual.host_permissions).toEqual(['*://required.com/*']);
           expect(actual.optional_host_permissions).toEqual([
             '*://optional.com/*',
@@ -1432,7 +1622,12 @@ describe('Manifest Utils', () => {
             fileName: 'content-scripts/one.css',
           };
           setFakeWxt({
-            config: { manifestVersion: 3, outDir, command: 'build' },
+            config: {
+              browser: 'chrome',
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
           });
 
           const { manifest: actual } = await generateManifest([cs], {
@@ -1567,6 +1762,7 @@ describe('Manifest Utils', () => {
             outDir,
             command: 'build',
             manifestVersion: 3,
+            browser: 'chrome',
             manifest: {
               web_accessible_resources: [
                 { resources: ['one.png'], matches: ['*://one.com/*'] },
@@ -1787,8 +1983,7 @@ describe('Manifest Utils', () => {
 
         expect(actual.version).toBe('0.0.0');
         expect(actual.version_name).toBeUndefined();
-        expect(wxt.logger.warn).toBeCalledTimes(1);
-        expect(wxt.logger.warn).toBeCalledWith(
+        expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
           expect.stringContaining('Extension version not found'),
         );
       });
@@ -2277,8 +2472,7 @@ describe('Manifest Utils', () => {
         const { manifest } = await generateManifest([], buildOutput);
 
         expect(manifest.manifest_version).toBe(expectedVersion);
-        expect(wxt.logger.warn).toBeCalledTimes(1);
-        expect(wxt.logger.warn).toBeCalledWith(
+        expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
           expect.stringContaining(
             '`manifest.manifest_version` config was set, but ignored',
           ),

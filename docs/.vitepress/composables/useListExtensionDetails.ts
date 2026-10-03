@@ -13,16 +13,21 @@ export interface Extension {
 export interface ExtensionResults {
   chrome: Extension[];
   firefox: Extension[];
+  edge: Extension[];
 }
 
 const operationName = 'WxtDocsUsedBy';
-const query = `query ${operationName}($chromeIds: [String!]!, $firefoxIds: [String!]!) {
+const query = `query ${operationName}($chromeIds: [String!]!, $firefoxIds: [String!]!, $edgeIds: [String!]!) {
   chromeExtensions(ids: $chromeIds) {
     id
     ...ExtensionData
   }
   firefoxAddons(ids: $firefoxIds) {
     id: slug
+    ...ExtensionData
+  }
+  edgeAddons(ids: $edgeIds) {
+    id
     ...ExtensionData
   }
 }
@@ -36,13 +41,21 @@ fragment ExtensionData on Extension {
   users
 }`;
 
-export default function (chromeIds: string[], firefoxSlugs: string[]) {
+export default function (
+  chromeIds: string[],
+  firefoxSlugs: string[],
+  edgeIds: string[],
+) {
   const data = ref<ExtensionResults>();
   const err = ref<unknown>();
   const isLoading = ref(true);
 
-  if (chromeIds.length === 0 && firefoxSlugs.length === 0) {
-    data.value = { chrome: [], firefox: [] };
+  if (
+    chromeIds.length === 0 &&
+    firefoxSlugs.length === 0 &&
+    edgeIds.length === 0
+  ) {
+    data.value = { chrome: [], firefox: [], edge: [] };
     isLoading.value = false;
     return { data, err, isLoading };
   }
@@ -52,7 +65,7 @@ export default function (chromeIds: string[], firefoxSlugs: string[]) {
     body: JSON.stringify({
       operationName,
       query,
-      variables: { chromeIds, firefoxIds: firefoxSlugs },
+      variables: { chromeIds, firefoxIds: firefoxSlugs, edgeIds },
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -64,6 +77,7 @@ export default function (chromeIds: string[], firefoxSlugs: string[]) {
       data.value = {
         chrome: responseData.chromeExtensions ?? [],
         firefox: responseData.firefoxAddons ?? [],
+        edge: responseData.edgeAddons ?? [],
       };
       err.value = undefined;
     })

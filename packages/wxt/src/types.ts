@@ -1,5 +1,5 @@
 import type * as vite from 'vite';
-import { UnimportOptions, Import } from 'unimport';
+import { Import, UnimportOptions } from 'unimport';
 import { LogLevel } from 'consola';
 import type { ContentScriptContext } from './utils/content-script-context';
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
@@ -68,7 +68,7 @@ export interface InlineConfig {
    *   'serve')
    *
    * @example
-   *   {{browser}} -mv{{manifestVersion}}
+   *   '{{browser}}-mv{{manifestVersion}}';
    *
    * @default <span v-pre>`"{{browser}}-mv{{manifestVersion}}{{modeSuffix}}"`</span>
    */
@@ -132,6 +132,20 @@ export interface InlineConfig {
    */
   manifestVersion?: TargetManifestVersion;
   /**
+   * Chokidar options used by dev-mode file watchers. This is useful in
+   * containers, WSL, and network file systems where native file events can be
+   * unreliable.
+   *
+   * @example
+   *   export default defineConfig({
+   *     watchOptions: {
+   *       usePolling: true,
+   *       interval: 1000,
+   *     },
+   *   });
+   */
+  watchOptions?: vite.WatchOptions;
+  /**
    * Override the logger used.
    *
    * @default
@@ -147,13 +161,11 @@ export interface InlineConfig {
    * Suppress specific warnings during the build process.
    *
    * @example
-   *   ```ts
    *   export default defineConfig({
    *     suppressWarnings: {
    *       firefoxDataCollection: true,
    *     },
-   *   })
-   *   ```;
+   *   });
    */
   suppressWarnings?: {
     /**
@@ -161,14 +173,17 @@ export interface InlineConfig {
      * https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent
      */
     firefoxDataCollection?: boolean;
+    /**
+     * Suppress warnings when the Firefox extension ID is missing.
+     * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#id
+     */
+    firefoxId?: boolean;
   };
   /**
    * Configure browser startup. Options set here can be overridden in a
    * `web-ext.config.ts` file.
    */
   webExt?: WebExtConfig;
-  /** @deprecated Use `webExt` instead. Same option, just renamed. */
-  runner?: WebExtConfig;
   zip?: {
     /**
      * Configure the filename output when zipping files.
@@ -177,16 +192,20 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to
      *   kebab-case
-     * - <span v-pre>`{{version}}`</span> - The version_name or version from the
-     *   manifest
+     * - <span v-pre>`{{version}}`</span> - The version from the manifest
+     * - <span v-pre>`{{versionName}}`</span> - The `version_name` from the
+     *   manifest or, if not set (i.e. if built for Firefox), the `version` from
+     *   the manifest
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the
      *   package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
      *   `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev'
+     *   for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default '{{name}}-{{version}}-{{browser}}.zip'
+     * @default '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip'
      */
     artifactTemplate?: string;
     /**
@@ -206,16 +225,20 @@ export interface InlineConfig {
      *
      * - <span v-pre>`{{name}}`</span> - The project's name converted to
      *   kebab-case
-     * - <span v-pre>`{{version}}`</span> - The version_name or version from the
-     *   manifest
+     * - <span v-pre>`{{version}}`</span> - The version from the manifest
+     * - <span v-pre>`{{versionName}}`</span> - The `version_name` from the
+     *   manifest or, if not set (i.e. if built for Firefox), the `version` from
+     *   the manifest
      * - <span v-pre>`{{packageVersion}}`</span> - The version from the
      *   package.json
      * - <span v-pre>`{{browser}}`</span> - The target browser from the
      *   `--browser` CLI flag
      * - <span v-pre>`{{mode}}`</span> - The current mode
+     * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev'
+     *   for development, '' for production)
      * - <span v-pre>`{{manifestVersion}}`</span> - Either "2" or "3"
      *
-     * @default '{{name}}-{{version}}-sources.zip'
+     * @default '{{name}}-{{packageVersion}}-sources{{modeSuffix}}.zip'
      */
     sourcesTemplate?: string;
     /**
@@ -231,25 +254,39 @@ export interface InlineConfig {
      */
     sourcesRoot?: string;
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * include when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to include
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
-     * This setting overrides `excludeSources`. So if a file matches both lists,
-     * it is included in the ZIP.
+     * Sources ZIP files are created using standard allowlist/blocklist
+     * behavior:
+     *
+     * - You specify a pattern to "include" (via `includeSources`), then a pattern
+     *   to "exclude" from the included files (via `excludeSources`).
+     *
+     * By default, this option includes all files except for hidden files and
+     * directories (files/directories starting with a `.`).
+     *
+     * If you want to include hidden files/directories in your sources ZIP, see
+     * `InlineConfig.zip.dotSources`.
      *
      * @example
-     *   [
-     *     'coverage', // Include the coverage directory in the `sourcesRoot`
-     *   ];
+     *   ['entrypoints/**', 'wxt.config.ts', 'package.json', 'tsconfig.json'];
      */
     includeSources?: string[];
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when creating a ZIP of all your source code for Firefox. Patterns
-     * are relative to your `config.zip.sourcesRoot`.
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when creating a ZIP of all your source code for Firefox. Patterns are
+     * relative to your `config.zip.sourcesRoot`.
      *
-     * Hidden files, node_modules, and tests are ignored by default.
+     * By default, WXT excludes some files:
+     *
+     * - `node_modules`
+     * - Tests files and directories
+     * - Output directory
+     *
+     * Any values specified in this option will be merged with the ones above -
+     * you cannot replace the default values, only add to them.
      *
      * @example
      *   [
@@ -258,13 +295,31 @@ export interface InlineConfig {
      */
     excludeSources?: string[];
     /**
-     * [Picomatch](https://www.npmjs.com/package/picomatch) patterns of files to
-     * exclude when zipping the extension.
+     * Include hidden files/directories in your sources ZIP.
+     *
+     * [Tinyglobby](https://npmjs.org/tinyglobby) does not match against files
+     * and directory that start with a `.` by default. For example, if you need
+     * to include a `.env` file, you need to set this to `true`, then exclude
+     * other hidden files/directories in `excludeSources`.
+     *
+     * **Be very careful when this is enabled - WXT may include files with
+     * secrets in your ZIP you did not intend to share with Mozilla or upload to
+     * other places**. Make sure all hidden files you don't want to include are
+     * added to `excludeSources`.
+     *
+     * @default false
+     */
+    dotSources?: boolean;
+    /**
+     * [Tinyglobby](https://npmjs.org/tinyglobby) patterns of files to exclude
+     * when zipping the extension.
      *
      * @example
      *   [
      *     '**\/*.map', // Exclude all sourcemaps
      *   ];
+     *
+     * @default [ ]
      */
     exclude?: string[];
     /**
@@ -288,10 +343,10 @@ export interface InlineConfig {
      *
      * @example
      *   // Correct:
-     *   ['@scope/package-name', 'package-name'][
-     *     // Incorrect, don't include versions!!!
-     *     ('@scope/package-name@1.1.3', 'package-name@^2')
-     *   ];
+     *   ['@scope/package-name', 'package-name'];
+     *
+     *   // Incorrect, don't include versions!!!
+     *   ['@scope/package-name@1.1.3', 'package-name@^2'];
      *
      * @default [ ]
      */
@@ -365,7 +420,23 @@ export interface InlineConfig {
    */
   alias?: Record<string, string>;
   /** Experimental settings - use with caution. */
-  experimental?: {};
+  experimental?: {
+    /**
+     * Some libraries include unicode characters Chrome does not allow in
+     * extensions. If you receive "Could not load content script... it is not
+     * UTF-8 encoded", enable this setting.
+     *
+     * It is not enabled by default because it will slow down your build, and
+     * because it's very rare to have the problematic characters in JS. So not
+     * every extension needs this flag enabled.
+     *
+     * For more details, see:
+     *
+     * - https://github.com/wxt-dev/wxt/issues/353
+     * - https://github.com/wxt-dev/wxt/issues/2535
+     */
+    escapeUnicode?: boolean;
+  };
   /** Config effecting dev mode only. */
   dev?: {
     server?: {
@@ -395,13 +466,6 @@ export interface InlineConfig {
        * @default false
        */
       strictPort?: boolean;
-      /**
-       * Hostname to run the dev server on.
-       *
-       * @deprecated Use `host` to specify the interface to bind to, or use
-       *   `origin` to specify the dev server hostname.
-       */
-      hostname?: string;
     };
     /**
      * Controls whether a custom keyboard shortcut command, `Alt+R`, is added
@@ -579,6 +643,18 @@ export interface Logger {
   level: LogLevel;
 }
 
+/**
+ * The logger available at `wxt.logger`. Extends {@link Logger} with a `warnOnce`
+ * which only logs a message once per process.
+ */
+export interface WxtLogger extends Logger {
+  /**
+   * Same as {@link Logger.warn}, but only logs a given message once per process,
+   * even if called multiple times with the same arguments.
+   */
+  warnOnce(...args: any[]): void;
+}
+
 export interface BaseEntrypointOptions {
   /**
    * List of target browsers to include this entrypoint in. Defaults to being
@@ -627,12 +703,12 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    *   name
    * - `false`: Output the IIFE without a variable name, making it anonymous. This
    *   is the safest option to avoid conflicts with existing variables on the
-   *   page. This will become the default in a future version of WXT.
+   *   page.
    * - `string`: Use the provided string as the global variable name.
    * - `function`: A function that receives the entrypoint and returns a string to
    *   use as the variable name.
    *
-   * @default true
+   * @default false
    */
   globalName?: string | boolean | ((entrypoint: Entrypoint) => string);
 }
@@ -727,6 +803,22 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * @default 'manifest'
    */
   registration?: PerBrowserOption<'manifest' | 'runtime'>;
+  /**
+   * Do not send the `wxt:content-script-started` message via
+   * `window.postMessage`.
+   *
+   * This has been replaced with custom events. The `postMessage` call is kept
+   * for backwards compatibility. For some websites the `postMessage` call is
+   * undesirable, such as those with poorly written message event listeners.
+   *
+   * Setting this to `true` opts into the behavior that will become the default
+   * in a future version of WXT, where the `postMessage` call is removed
+   * entirely.
+   *
+   * See https://github.com/wxt-dev/wxt/pull/1938 and
+   * https://github.com/wxt-dev/wxt/pull/2035 for a detailed discussion.
+   */
+  noScriptStartedPostMessage?: boolean;
 }
 
 export interface MainWorldContentScriptEntrypointOptions extends BaseContentScriptEntrypointOptions {
@@ -774,6 +866,12 @@ export interface PopupEntrypointOptions extends BaseEntrypointOptions {
   mv2Key?: PerBrowserOption<'browser_action' | 'page_action'>;
   defaultIcon?: Record<string, string>;
   defaultTitle?: PerBrowserOption<string>;
+  /**
+   * Chrome only. Controls the initial enabled/disabled state of the action.
+   *
+   * @see https://developer.chrome.com/docs/extensions/reference/api/action#enabled_state
+   */
+  defaultState?: PerBrowserOption<'enabled' | 'disabled'>;
   browserStyle?: PerBrowserOption<boolean>;
   /**
    * Firefox only. Defines the part of the browser in which the button is
@@ -1074,7 +1172,7 @@ export type UserManifest = {
     };
   };
   permissions?: (
-    | Browser.runtime.ManifestPermissions
+    | Browser.runtime.ManifestPermission
     | (string & Record<never, never>)
   )[];
   web_accessible_resources?:
@@ -1112,9 +1210,6 @@ export interface ConfigEnv {
 }
 
 export type WxtCommand = 'build' | 'serve';
-
-/** @deprecated Use `WebExtConfig` instead. */
-export type ExtensionRunnerConfig = WebExtConfig;
 
 /**
  * Options for how [`web-ext`](https://github.com/mozilla/web-ext) starts the
@@ -1155,21 +1250,6 @@ export interface WebExtConfig {
    *   default_directory: "/my/custom/dir",
    *   },
    *   }
-   *
-   * @default
-   * // Enable dev mode and allow content script sourcemaps
-   * {
-   *   devtools: {
-   *     synced_preferences_sync_disabled: {
-   *       skipContentScripts: false,
-   *     },
-   *   }
-   *   extensions: {
-   *     ui: {
-   *       developer_mode: true,
-   *     },
-   *   }
-   * }
    */
   chromiumPref?: Record<string, any>;
   /**
@@ -1198,7 +1278,7 @@ export interface WxtBuilder {
    * Import a JS entrypoint file, returning the default export containing the
    * options.
    */
-  importEntrypoint<T>(path: string): Promise<T>;
+  importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T>;
   /** Import a list of JS entrypoint files, returning their options. */
   importEntrypoints(paths: string[]): Promise<Record<string, unknown>[]>;
   /**
@@ -1248,6 +1328,11 @@ export interface ServerInfo {
   origin: string;
 }
 
+export type PrepareTsconfigs = {
+  /** The JSON contents of the `.wxt/tsconfig.json` file. */
+  tsconfig: any;
+};
+
 export type HookResult = Promise<void> | void;
 
 export interface WxtHooks {
@@ -1287,6 +1372,17 @@ export interface WxtHooks {
    *   });
    */
   'prepare:types': (wxt: Wxt, entries: WxtDirEntry[]) => HookResult;
+  /**
+   * Called before WXT writes your tsconfig to the disk, allowing full
+   * customization by modifying the object by reference.
+   *
+   * @since 0.20.28
+   * @example
+   *   wxt.hooks.hook('prepare:tsconfig', (wxt, { tsconfig }) => {
+   *     tsconfig.compilerOptions.lib.push('WebWorker');
+   *   });
+   */
+  'prepare:tsconfig': (wxt: Wxt, configs: PrepareTsconfigs) => HookResult;
   /**
    * Called before generating the list of public paths inside
    * `.wxt/types/paths.d.ts`. Use this hook to add additional paths (relative to
@@ -1435,8 +1531,8 @@ export interface Wxt {
   hooks: Hookable<WxtHooks>;
   /** Alias for `wxt.hooks.hook(...)`. */
   hook: Hookable<WxtHooks>['hook'];
-  /** Alias for config.logger */
-  logger: Logger;
+  /** Wraps `config.logger`, adding `warnOnce`. */
+  logger: WxtLogger;
   /** Reload config file and update `wxt.config` with the result. */
   reloadConfig: () => Promise<void>;
   /** Package manager utilities. */
@@ -1488,17 +1584,19 @@ export interface ResolvedConfig {
   targetBrowsers: TargetBrowser[];
   manifestVersion: TargetManifestVersion;
   env: ConfigEnv;
-  logger: Logger;
+  logger: WxtLogger;
   imports: WxtResolvedUnimportOptions;
   manifest: UserManifest;
   fsCache: FsCache;
-  runnerConfig: C12ResolvedConfig<WebExtConfig>;
+  webExt: C12ResolvedConfig<WebExtConfig>;
+  runner: ExtensionRunner;
   zip: {
     name?: string;
     artifactTemplate: string;
     sourcesTemplate: string;
     includeSources: string[];
     excludeSources: string[];
+    dotSources: boolean;
     sourcesRoot: string;
     downloadedPackagesDir: string;
     downloadPackages: string[];
@@ -1522,9 +1620,16 @@ export interface ResolvedConfig {
   userConfigMetadata: Omit<C12ResolvedConfig<UserConfig>, 'config'>;
   /** Import aliases to absolute paths. */
   alias: Record<string, string>;
-  experimental: {};
+  experimental: {
+    escapeUnicode: boolean;
+  };
   /** List of warning identifiers to suppress during the build process. */
-  suppressWarnings: { firefoxDataCollection?: boolean };
+  suppressWarnings: {
+    firefoxDataCollection?: boolean;
+    firefoxId?: boolean;
+  };
+  /** Chokidar options used by dev-mode file watchers. */
+  watchOptions: vite.WatchOptions;
   dev: {
     /** Only defined during dev command */
     server?: {
@@ -1588,28 +1693,30 @@ export type EslintGlobalsPropValue =
   | 'writable'
   | 'writeable';
 
+export type EslintConfigVersion = 8 | 9;
+
 export interface Eslintrc {
   /**
-   * When true, generates a file that can be used by ESLint to know which
-   * variables are valid globals.
+   * Determines if and in what format a config file will be generated to inform
+   * ESLint of unimport globals.
    *
-   * - `false`: Don't generate the file.
-   * - `'auto'`: Check if eslint is installed, and if it is, generate a compatible
-   *   config file.
-   * - `true`: Same as `8`.
-   * - `8`: Generate a config file compatible with ESLint 8.
-   * - `9`: Generate a config file compatible with ESLint 9.
+   * - `true`: If eslint is installed, generate a compatible config file based on
+   *   the installed version.
+   * - `false`: Never generate the file.
+   * - `8`: Generate an eslintrc file compatible with ESLint &lte; 8.
+   * - `9`: Generate a flat config file compatible with ESLint &gte; 9.
+   * - `'auto'` (Deprecated): Same as `true`.
    *
-   * @default 'auto'
+   * @default true
    */
-  enabled?: false | true | 'auto' | 8 | 9;
+  enabled?: boolean | 'auto' | EslintConfigVersion;
   /**
    * File path to save the generated eslint config.
    *
    * Default depends on version of ESLint used:
    *
-   * - 9 and above: './.wxt/eslint-auto-imports.mjs'
-   * - 8 and below: './.wxt/eslintrc-auto-import.json'
+   * - &gte; 9: './.wxt/eslint-auto-imports.mjs'
+   * - &lte; 8: './.wxt/eslintrc-auto-import.json'
    */
   filePath?: string;
   /** @default true */
@@ -1618,7 +1725,7 @@ export interface Eslintrc {
 
 export interface ResolvedEslintrc {
   /** False if disabled, otherwise the major version of ESLint installed */
-  enabled: false | 8 | 9;
+  enabled: false | EslintConfigVersion;
   /** Absolute path */
   filePath: string;
   globalsPropValue: EslintGlobalsPropValue;
@@ -1651,7 +1758,7 @@ export type WxtResolvedUnimportOptions = Partial<UnimportOptions> & {
 
 /**
  * Package management utils built on top of
- * [`nypm`](https://www.npmjs.com/package/nypm)
+ * [`nypm`](https://npmjs.org/package/nypm)
  */
 export interface WxtPackageManager extends Nypm.PackageManager {
   addDependency: typeof Nypm.addDependency;

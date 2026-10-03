@@ -3,6 +3,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { parseEnv } from 'node:util';
 import type { TargetBrowser } from '../../types';
 
+/** Returns true when running in a CI environment. */
+export function isCI(): boolean {
+  return !!process.env.CI && process.env.CI !== 'false';
+}
+
 /** Load environment files based on the current mode and browser. */
 export function loadEnv(mode: string, browser: TargetBrowser) {
   const envFiles = [

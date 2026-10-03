@@ -2,14 +2,15 @@ import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
 import path from 'node:path';
 import { mkdir } from 'node:fs/promises';
-import spawn from 'nano-spawn';
+import { x as spawn } from 'tinyexec';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
   async downloadDependency(id, downloadDir) {
     await mkdir(downloadDir, { recursive: true });
     const res = await spawn('npm', ['pack', id, '--json'], {
-      cwd: downloadDir,
+      throwOnError: true,
+      nodeOptions: { cwd: downloadDir },
     });
     const packed: PackedDependency[] = JSON.parse(res.stdout);
     return path.resolve(downloadDir, packed[0].filename);
@@ -19,7 +20,10 @@ export const npm: WxtPackageManagerImpl = {
     if (options?.all) {
       args.push('--depth', 'Infinity');
     }
-    const res = await spawn('npm', args, { cwd: options?.cwd });
+    const res = await spawn('npm', args, {
+      throwOnError: true,
+      nodeOptions: { cwd: options?.cwd },
+    });
     const project: NpmListProject = JSON.parse(res.stdout);
 
     return flattenNpmListOutput([project]);

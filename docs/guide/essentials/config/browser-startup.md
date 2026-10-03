@@ -4,11 +4,17 @@ outline: deep
 
 # Browser Startup
 
+During development, WXT will use any of the below packages to automatically open a browser with your extension installed.
+
+- [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext)
+
+Just install the dependency you want WXT to use to open the browser.
+
+## `web-ext` Usage
+
 > See the [API Reference](/api/reference/wxt/interfaces/WebExtConfig) for a full list of config.
 
-During development, WXT uses [`web-ext` by Mozilla](https://www.npmjs.com/package/web-ext) to automatically open a browser window with your extension installed.
-
-## Config Files
+### Config Files
 
 You can configure browser startup in 3 places:
 
@@ -25,9 +31,9 @@ You can configure browser startup in 3 places:
 2. `<rootDir>/wxt.config.ts`: Via the [`webExt` config](/api/reference/wxt/interfaces/InlineConfig#webext), included in version control
 3. `$HOME/web-ext.config.ts`: Provide default values for all WXT projects on your computer
 
-## Recipes
+### Recipes
 
-### Set Browser Binaries
+#### Set Browser Binaries
 
 To set or customize the browser opened during development:
 
@@ -57,7 +63,7 @@ export default defineConfig({
 
 By default, WXT will try to automatically discover where Chrome/Firefox are installed. However, if you have chrome installed in a non-standard location, you need to set it manually as shown above.
 
-### Persist Data
+#### Persist Data
 
 By default, to keep from modifying your browser's existing profiles, `web-ext` creates a brand new profile every time you run the `dev` script.
 
@@ -94,9 +100,9 @@ Now, next time you run the `dev` script, a persistent profile will be created in
 You can use any directory you'd like for `--user-data-dir`, the examples above create a persistent profile for each WXT project. To create a profile for all WXT projects, you can put the `chrome-data` directory inside your user's home directory.
 :::
 
-### Disable Opening Browser
+#### Disable Opening Browser
 
-If you prefer to load the extension into your browser manually, you can disable the auto-open behavior:
+If you don't want to uninstall `web-ext`, like to test in your normal profile, you can do so via `disabled: true`:
 
 ```ts [web-ext.config.ts]
 import { defineWebExtConfig } from 'wxt';

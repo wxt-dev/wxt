@@ -5,9 +5,11 @@ import type {
   WxtDirFileEntry,
   WxtModule,
   WxtResolvedUnimportOptions,
+  EslintConfigVersion,
 } from '../types';
-import { type Unimport, createUnimport, toExports } from 'unimport';
+import { createUnimport, toExports, type Unimport } from 'unimport';
 import UnimportPlugin from 'unimport/unplugin';
+import { extname } from 'node:path';
 
 export default defineWxtModule({
   name: 'wxt:built-in:unimport',
@@ -51,14 +53,13 @@ export default defineWxtModule({
 
       if (!wxt.config.imports.eslintrc.enabled) return;
 
-      // Only generate ESLint config if that feature is enabled
-      entries.push(
-        await getEslintConfigEntry(
-          unimport,
-          wxt.config.imports.eslintrc.enabled,
-          wxt.config.imports,
-        ),
+      const eslintConfigEntries = await getEslintConfigEntry(
+        unimport,
+        wxt.config.imports.eslintrc.enabled,
+        wxt.config.imports,
       );
+
+      entries.push(...eslintConfigEntries);
     });
 
     // Add vite plugin
@@ -103,9 +104,9 @@ async function getImportsModuleEntry(
 
 async function getEslintConfigEntry(
   unimport: Unimport,
-  version: 8 | 9,
+  configVersion: EslintConfigVersion,
   options: WxtResolvedUnimportOptions,
-): Promise<WxtDirFileEntry> {
+): Promise<WxtDirFileEntry[]> {
   const globals = (await unimport.getImports())
     .map((i) => i.as ?? i.name)
     .filter(Boolean)
@@ -115,25 +116,27 @@ async function getEslintConfigEntry(
       return globals;
     }, {});
 
-  if (version <= 8) return getEslint8ConfigEntry(options, globals);
-  else return getEslint9ConfigEntry(options, globals);
+  if (configVersion === 8) return getEslint8ConfigEntry(options, globals);
+  return getEslint9ConfigEntry(options, globals);
 }
 
 export function getEslint8ConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
-): WxtDirFileEntry {
-  return {
-    path: options.eslintrc.filePath,
-    text: JSON.stringify({ globals }, null, 2) + '\n',
-  };
+): WxtDirFileEntry[] {
+  return [
+    {
+      path: options.eslintrc.filePath,
+      text: JSON.stringify({ globals }, null, 2) + '\n',
+    },
+  ];
 }
 
 export function getEslint9ConfigEntry(
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
-): WxtDirFileEntry {
-  return {
+): WxtDirFileEntry[] {
+  const javaScriptFileEntry: WxtDirFileEntry = {
     path: options.eslintrc.filePath,
     text: `const globals = ${JSON.stringify(globals, null, 2)}
 
@@ -147,4 +150,20 @@ export default {
 };
 `,
   };
+
+  const ext = extname(options.eslintrc.filePath);
+  const declarationExt =
+    ext === '.mjs' ? '.d.mts' : ext === '.cjs' ? '.d.cts' : '.d.ts';
+  const typeScriptFilePath =
+    options.eslintrc.filePath.slice(0, -ext.length) + declarationExt;
+
+  const typeScriptFileEntry: WxtDirFileEntry = {
+    path: typeScriptFilePath,
+    text: `import type { ConfigObject } from "@eslint/core";
+declare const config: ConfigObject;
+export default config;
+`,
+  };
+
+  return [javaScriptFileEntry, typeScriptFileEntry];
 }

@@ -22,6 +22,7 @@ describe('Built Tools', () => {
     const fileText = stringifyYAML({
       simple: 'example',
       sub: 'Hello $1',
+      named: 'Hello {name} from {tool}',
       nested: {
         example: 'This is nested',
         array: ['One', 'Two'],
@@ -33,10 +34,18 @@ describe('Built Tools', () => {
         message: 'test 2',
         description: 'test',
       },
+      chromeNamed: {
+        message: 'test {value}',
+        description: 'test',
+      },
       plural0: {
         0: 'Zero items',
         1: 'One item',
         n: '$1 items',
+      },
+      pluralNamed: {
+        1: 'One {item}',
+        n: '$1 {item}',
       },
       plural1: {
         1: 'One item',
@@ -68,6 +77,9 @@ describe('Built Tools', () => {
         "sub": {
           "message": "Hello $1"
         },
+        "named": {
+          "message": "Hello {name} from {tool}"
+        },
         "nested_example": {
           "message": "This is nested"
         },
@@ -84,8 +96,15 @@ describe('Built Tools', () => {
           "message": "test 2",
           "description": "test"
         },
+        "chromeNamed": {
+          "message": "test {value}",
+          "description": "test"
+        },
         "plural0": {
           "message": "Zero items | One item | $1 items"
+        },
+        "pluralNamed": {
+          "message": "One {item} | $1 {item}"
         },
         "plural1": {
           "message": "One item | $1 items"
@@ -103,12 +122,15 @@ describe('Built Tools', () => {
       "export type GeneratedI18nStructure = {
         "simple": { substitutions: 0, plural: false };
         "sub": { substitutions: 1, plural: false };
+        "named": { substitutions: 0, plural: false, namedSubstitutions: ["name","tool"] };
         "nested.example": { substitutions: 0, plural: false };
         "nested.array.0": { substitutions: 0, plural: false };
         "nested.array.1": { substitutions: 0, plural: false };
         "nested.notChrome.message": { substitutions: 0, plural: false };
         "chrome": { substitutions: 0, plural: false };
+        "chromeNamed": { substitutions: 0, plural: false, namedSubstitutions: ["value"] };
         "plural0": { substitutions: 1, plural: true };
+        "pluralNamed": { substitutions: 1, plural: true, namedSubstitutions: ["item"] };
         "plural1": { substitutions: 1, plural: true };
         "pluralN": { substitutions: 1, plural: true };
         "pluralSub": { substitutions: 2, plural: true };

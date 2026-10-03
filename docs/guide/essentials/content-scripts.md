@@ -179,7 +179,7 @@ To create a standalone content script that only includes a CSS file:
 WXT provides 3 built-in utilities for adding UIs to a page from a content script:
 
 - [Integrated](#integrated) - `createIntegratedUi`
-- [Shadow Root](#shadow-root) -`createShadowRootUi`
+- [Shadow Root](#shadow-root) - `createShadowRootUi`
 - [IFrame](#iframe) - `createIframeUi`
 
 Each has their own set of advantages and disadvantages.
@@ -530,6 +530,15 @@ Full examples:
 
 - [react-content-script-ui](https://github.com/wxt-dev/examples/tree/main/examples/react-content-script-ui)
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
+
+:::warning `rem` Units Are Not Fully Isolated
+
+WXT resets most inherited styles via `all: initial`. This doesn't reset the `<html>` element's font size, which determines the relative size of `rem` units.
+
+If your CSS framework uses `rem` units, like Tailwind CSS, you may notice your UI's scale changing on different websites.
+
+See the [FAQ](/guide/resources/faq#my-content-script-ui-looks-different-on-certain-websites) for a fix.
+:::
 
 ### IFrame
 
