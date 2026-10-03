@@ -4,7 +4,7 @@ import { WebExtRunner } from '../web-ext';
 import { setFakeWxt } from '../../utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
-import { wxt } from '../../wxt';
+import { ResolvedConfig } from '../../../types';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
@@ -25,8 +25,8 @@ class ModuleNotFoundError extends Error {
 
 // @ts-expect-error: Overriding the private loadWebExt method
 class TestRunner extends WebExtRunner {
-  constructor() {
-    super(wxt.config);
+  constructor(config: ResolvedConfig) {
+    super(config);
   }
 
   private loadWebExt() {
@@ -57,8 +57,12 @@ vi.mock('web-ext/util/logger', () => ({
 }));
 
 describe('WebExtRunner', () => {
+  function setupRunner() {
+    return new TestRunner(setupWxt().config);
+  }
+
   function setupWxt() {
-    setFakeWxt({
+    return setFakeWxt({
       config: {
         browser: targetBrowser,
         webExt: {
@@ -77,8 +81,7 @@ describe('WebExtRunner', () => {
 
   describe('canOpen', () => {
     async function canOpen() {
-      const runner = new TestRunner();
-      setupWxt();
+      const runner = setupRunner();
       return await runner.canOpen();
     }
 
@@ -118,8 +121,7 @@ describe('WebExtRunner', () => {
 
   describe('openBrowser', () => {
     async function openBrowser() {
-      const runner = new TestRunner();
-      setupWxt();
+      const runner = setupRunner();
       await runner.openBrowser();
     }
     function expectNothing() {
@@ -208,8 +210,7 @@ describe('WebExtRunner', () => {
   });
 
   describe('closeBrowser', () => {
-    async function closeBrowser(runner: TestRunner = new TestRunner()) {
-      setupWxt();
+    async function closeBrowser(runner: TestRunner = setupRunner()) {
       await runner.closeBrowser();
     }
     let instance: MockProxy<WebExtRunInstance>;
@@ -227,7 +228,7 @@ describe('WebExtRunner', () => {
     });
 
     it('should close the browser', async () => {
-      const runner = new TestRunner();
+      const runner = setupRunner();
 
       await runner.openBrowser();
       await closeBrowser(runner);
