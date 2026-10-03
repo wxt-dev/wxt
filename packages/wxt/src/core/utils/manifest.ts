@@ -456,6 +456,11 @@ function addEntrypoints(
     addOptionalHostPermissions(
       manifest,
       contentScripts.flatMap((cs) => cs.options.optionalMatches ?? []),
+      // `matches` are granted at install for both `registration` modes
+      [
+        ...(manifest.host_permissions ?? []),
+        ...contentScripts.flatMap((cs) => cs.options.matches ?? []),
+      ],
     );
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
@@ -666,11 +671,13 @@ function addHostPermission(
 
 /**
  * Adds match patterns to `optional_host_permissions`, skipping any pattern
- * already covered by an existing entry or by another pattern being added.
+ * already covered by a required pattern, an existing entry, or another pattern
+ * being added.
  */
 function addOptionalHostPermissions(
   manifest: Browser.runtime.Manifest,
   matchPatterns: string[],
+  requiredMatchPatterns: string[],
 ): void {
   if (matchPatterns.length === 0) return;
 
@@ -678,8 +685,8 @@ function addOptionalHostPermissions(
   let added: string[] = [];
 
   for (const pattern of matchPatterns) {
-    const isCovered = [...existing, ...added].some((other) =>
-      matchPatternCovers(other, pattern),
+    const isCovered = [...requiredMatchPatterns, ...existing, ...added].some(
+      (other) => matchPatternCovers(other, pattern),
     );
     if (isCovered) continue;
 
@@ -688,6 +695,7 @@ function addOptionalHostPermissions(
     added = added.filter((other) => !matchPatternCovers(pattern, other));
     added.push(pattern);
   }
+  if (added.length === 0) return;
 
   manifest.optional_host_permissions = [...existing, ...added];
 }

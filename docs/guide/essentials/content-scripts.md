@@ -105,7 +105,7 @@ export default defineContentScript({
 });
 ```
 
-`optionalMatches` are always added to `optional_host_permissions` (`optional_permissions` in MV2), regardless of `registration`. Patterns already covered by another entry, like `*://*.partner.com/*`, are not added.
+`optionalMatches` are always added to `optional_host_permissions` (`optional_permissions` in MV2), regardless of `registration`. Patterns already covered by `matches`, `host_permissions`, or another `optional_host_permissions` entry, like `*://*.partner.com/*`, are not added.
 
 You are responsible for requesting access and registering the content script for those hosts:
 

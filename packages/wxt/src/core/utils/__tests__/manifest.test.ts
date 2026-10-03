@@ -1611,6 +1611,74 @@ describe('Manifest Utils', () => {
           ]);
         });
 
+        it.each([
+          {
+            name: 'the same pattern',
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://required.com/*'],
+          },
+          {
+            name: 'a broader pattern',
+            matches: ['https://*.other.com/*'],
+            optionalMatches: ['https://other.com/*'],
+          },
+        ])(
+          'should skip optionalMatches covered by $name in matches',
+          async ({ matches, optionalMatches }) => {
+            const cs = optionalCs({ matches, optionalMatches });
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command: 'build' },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [cs],
+              buildOutputFor([cs]),
+            );
+
+            expect(actual.optional_host_permissions).toBeUndefined();
+          },
+        );
+
+        it('should skip optionalMatches covered by required permissions from other sources', async () => {
+          const one = optionalCs(
+            {
+              matches: ['*://runtime.com/*'],
+              registration: 'runtime',
+            },
+            'one',
+          );
+          const two = optionalCs(
+            {
+              matches: ['*://two.com/*'],
+              optionalMatches: [
+                '*://runtime.com/*',
+                'https://config.com/path/*',
+                '*://optional.com/*',
+              ],
+            },
+            'two',
+          );
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                host_permissions: ['https://config.com/*'],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [one, two],
+            buildOutputFor([one, two]),
+          );
+
+          expect(actual.optional_host_permissions).toEqual([
+            '*://optional.com/*',
+          ]);
+        });
+
         it('should include optionalMatches in web_accessible_resources when cssInjectionMode=ui', async () => {
           const cs = optionalCs({
             matches: ['*://required.com/path/*'],

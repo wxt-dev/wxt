@@ -723,8 +723,9 @@ export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypoint
    * `browser.permissions.request` and using the scripting API to
    * register/execute the content script on these hosts at runtime.
    *
-   * Patterns already covered by another entry in `optional_host_permissions`
-   * are not added.
+   * Patterns already covered by `matches`, `host_permissions`, or another entry
+   * in `optional_host_permissions` are not added, since access to those hosts
+   * is already declared.
    *
    * Unlike `matches`, this option is not affected by `registration`.
    */
