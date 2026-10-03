@@ -9,8 +9,6 @@ The combination of these two makes WXT a "framework". It's really important to t
 
 That said, the runtime utils are all simple, isolated packages. They won't be described here. Instead, let's focus on the build tool.
 
-> Links to source files point to WXT [v0.21.4](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4), the latest version as of October 3, 2026. Files may have moved or changed since. Code snippets are pulled directly from the current source.
-
 ## Vite: Inside or outside?
 
 WXT uses Vite under the hood for bundling JS and as the dev server. However, when projects are based on Vite, you have two options:
