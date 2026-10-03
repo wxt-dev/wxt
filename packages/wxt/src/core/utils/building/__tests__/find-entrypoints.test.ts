@@ -16,6 +16,7 @@ import { wxt } from '../../../wxt';
 import { unnormalizePath } from '../../paths';
 import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
 import { findEntrypoints } from '../find-entrypoints';
+import { FlatEntrypointFinder } from '../../../entrypoint-finders/flat';
 
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
@@ -34,7 +35,10 @@ describe('findEntrypoints', () => {
   let importEntrypointsMock: Mock<typeof wxt.builder.importEntrypoints>;
 
   beforeEach(() => {
-    setFakeWxt({ config });
+    setFakeWxt({
+      config,
+      entrypointFinder: new FlatEntrypointFinder(config),
+    });
     importEntrypointsMock = vi.mocked(wxt.builder.importEntrypoints);
     importEntrypointsMock.mockResolvedValue([]);
   });

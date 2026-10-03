@@ -1,24 +1,68 @@
-import type { WebExtRunInstance } from 'web-ext';
+import isWsl from 'is-wsl';
 import { ExtensionRunner } from '../../types';
+import { wxt } from '../wxt';
+import { ManualRunner } from './manual';
 import { formatDuration } from '../utils/time';
 import defu from 'defu';
-import { wxt } from '../wxt';
-import webExt from 'web-ext';
-import { consoleStream } from 'web-ext/util/logger';
 
-/** Create an `ExtensionRunner` backed by `web-ext`. */
-export function createWebExtRunner(): ExtensionRunner {
-  let runner: WebExtRunInstance | undefined;
+type WebExtModule = (typeof import('web-ext'))['default'];
+type LoggerModule = typeof import('web-ext/util/logger');
+const MODULE_NOT_FOUND_CODE = 'ERR_MODULE_NOT_FOUND';
 
-  return {
-    canOpen() {
+/**
+ * WXT's default `ExtensionRunner` that uses web-ext to open the browser. It
+ * cannot open the browser automatically in some environments, like WSL.
+ *
+ * Because `web-ext` is a peer dependency, this runner falls back on the
+ * `ManualRunner` when the module is not installed.
+ */
+export class WebExtRunner extends ManualRunner implements ExtensionRunner {
+  private webExt: import('web-ext').WebExtRunInstance | undefined;
+  private webExtModulePromise: Promise<WebExtModule> | undefined;
+  private loggerModulePromise: Promise<LoggerModule> | undefined;
+
+  async canOpen(): Promise<boolean> {
+    if (wxt.config.browser === 'safari' || isWsl) return false;
+
+    try {
+      await this.loadWebExt();
       return true;
-    },
-    async openBrowser() {
+    } catch (err: any) {
+      if (err?.code === MODULE_NOT_FOUND_CODE) return false;
+
+      throw err;
+    }
+  }
+
+  async openBrowser(): Promise<void> {
+    console.log(1);
+    if (wxt.config.browser === 'safari') {
+      console.log(2);
+      wxt.logger.warn(
+        `Cannot Safari using web-ext. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
+      );
+      return;
+    }
+    if (isWsl) {
+      console.log(3);
+      wxt.logger.warn(
+        `Cannot open browser when using WSL. Load "${this.relativeOutDir()}" as an unpacked extension manually`,
+      );
+      return;
+    }
+    if (wxt.config.webExt.config.disabled) {
+      console.log(4);
+      return super.openBrowser();
+    }
+
+    try {
+      console.log(5);
       const startTime = Date.now();
+      const webExt = await this.loadWebExt();
+      const logger = await this.loadLogger();
 
       // Use WXT's logger instead of web-ext's built-in one.
-      consoleStream.write = ({ level, msg, name }) => {
+      logger.consoleStream.write = ({ level, msg, name }) => {
         if (level >= ERROR_LOG_LEVEL) wxt.logger.error(name, msg);
         if (level >= WARN_LOG_LEVEL) wxt.logger.warn(msg);
       };
@@ -67,19 +111,36 @@ export function createWebExtRunner(): ExtensionRunner {
         // Don't call `process.exit(0)` after starting web-ext
         shouldExitProgram: false,
       };
+
       wxt.logger.debug('web-ext config:', finalConfig);
       wxt.logger.debug('web-ext options:', options);
 
-      runner = await webExt.cmd.run(finalConfig, options);
+      console.log('called');
+      this.webExt = await webExt.cmd.run(finalConfig, options);
 
       const duration = Date.now() - startTime;
       wxt.logger.success(`Opened browser in ${formatDuration(duration)}`);
-    },
+    } catch (err: any) {
+      console.log(6, err);
+      if (err?.code === MODULE_NOT_FOUND_CODE) return super.openBrowser();
 
-    async closeBrowser() {
-      await runner?.exit();
-    },
-  };
+      wxt.logger.warn('Error loading the web-ext runner', err);
+    }
+  }
+
+  async closeBrowser(): Promise<void> {
+    await this.webExt?.exit();
+  }
+
+  private loadWebExt(): Promise<WebExtModule> {
+    this.webExtModulePromise ??= import('web-ext').then((mod) => mod.default);
+    return this.webExtModulePromise;
+  }
+
+  private loadLogger(): Promise<LoggerModule> {
+    this.loggerModulePromise ??= import('web-ext/util/logger');
+    return this.loggerModulePromise;
+  }
 }
 
 // https://github.com/mozilla/web-ext/blob/e37e60a2738478f512f1255c537133321f301771/src/util/logger.js#L12
