@@ -1475,6 +1475,80 @@ describe('Manifest Utils', () => {
           ]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
+
+        const runtimeCs = (
+          name: string,
+          matches: string[],
+        ): ContentScriptEntrypoint => ({
+          type: 'content-script',
+          name,
+          inputPath: `entrypoints/${name}.content.ts`,
+          outputDir: contentScriptOutDir,
+          options: { matches, registration: 'runtime' },
+          skipped: false,
+        });
+
+        it.each<'build' | 'serve'>(['build', 'serve'])(
+          'should skip host_permissions covered by another pattern (%s)',
+          async (command) => {
+            const one = runtimeCs('one', ['https://other.com/*']);
+            const two = runtimeCs('two', [
+              'https://*.other.com/*',
+              'https://other.com/path/*',
+            ]);
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command },
+              server: fakeWxtDevServer(),
+            });
+
+            const { manifest: actual } = await generateManifest([one, two], {
+              publicAssets: [],
+              steps: [
+                { entrypoints: one, chunks: [] },
+                { entrypoints: two, chunks: [] },
+              ],
+            });
+
+            expect(actual.host_permissions).toContain('https://*.other.com/*');
+            expect(actual.host_permissions).not.toContain(
+              'https://other.com/*',
+            );
+            expect(actual.host_permissions).not.toContain(
+              'https://other.com/path/*',
+            );
+          },
+        );
+
+        it('should keep user defined host_permissions when adding matches', async () => {
+          const cs = runtimeCs('one', [
+            'https://*.other.com/*',
+            'https://app.config.com/*',
+          ]);
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                host_permissions: [
+                  'https://other.com/*',
+                  'https://*.config.com/*',
+                ],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest([cs], {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [] }],
+          });
+
+          expect(actual.host_permissions).toEqual([
+            'https://other.com/*',
+            'https://*.config.com/*',
+            'https://*.other.com/*',
+          ]);
+        });
       });
 
       describe('optionalMatches', () => {

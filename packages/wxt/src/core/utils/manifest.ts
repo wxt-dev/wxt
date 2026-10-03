@@ -409,11 +409,10 @@ function addEntrypoints(
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
-      contentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
-          addHostPermission(manifest, matchPattern);
-        });
-      });
+      addHostPermissions(
+        manifest,
+        contentScripts.flatMap((cs) => cs.options.matches ?? []),
+      );
     } else {
       // Manifest scripts
       const hashToEntrypointsMap = contentScripts
@@ -441,14 +440,12 @@ function addEntrypoints(
       }
 
       // Runtime content scripts
-      const runtimeContentScripts = contentScripts.filter(
-        (cs) => cs.options.registration === 'runtime',
+      addHostPermissions(
+        manifest,
+        contentScripts
+          .filter((cs) => cs.options.registration === 'runtime')
+          .flatMap((cs) => cs.options.matches ?? []),
       );
-      runtimeContentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
-          addHostPermission(manifest, matchPattern);
-        });
-      });
     }
 
     // Optional matches are never added to `content_scripts`, regardless of
@@ -519,7 +516,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (wxt.config.manifestVersion === 3) {
-    addHostPermission(manifest, permission);
+    addHostPermissions(manifest, [permission]);
   } else {
     addPermission(manifest, permission);
   }
@@ -660,13 +657,19 @@ function addOptionalPermission(
   manifest.optional_permissions.push(permission);
 }
 
-function addHostPermission(
+/**
+ * Adds match patterns to `host_permissions`, skipping any pattern already
+ * covered by an existing entry or another pattern being added.
+ */
+function addHostPermissions(
   manifest: Browser.runtime.Manifest,
-  hostPermission: string,
+  matchPatterns: string[],
 ): void {
-  manifest.host_permissions ??= [];
-  if (manifest.host_permissions.includes(hostPermission)) return;
-  manifest.host_permissions.push(hostPermission);
+  const existing: string[] = manifest.host_permissions ?? [];
+  const added = getUncoveredMatchPatterns(matchPatterns, existing);
+  if (added.length === 0) return;
+
+  manifest.host_permissions = [...existing, ...added];
 }
 
 /**
@@ -679,25 +682,38 @@ function addOptionalHostPermissions(
   matchPatterns: string[],
   requiredMatchPatterns: string[],
 ): void {
-  if (matchPatterns.length === 0) return;
-
   const existing: string[] = manifest.optional_host_permissions ?? [];
-  const added = matchPatterns.reduce<string[]>((kept, pattern) => {
-    const isCovered = [...requiredMatchPatterns, ...existing, ...kept].some(
-      (other) => matchPatternCovers(other, pattern),
+  const added = getUncoveredMatchPatterns(matchPatterns, [
+    ...requiredMatchPatterns,
+    ...existing,
+  ]);
+  if (added.length === 0) return;
+
+  manifest.optional_host_permissions = [...existing, ...added];
+}
+
+/**
+ * Returns the match patterns that aren't covered by `coveredBy` or by another
+ * pattern in the list. When one pattern covers another, only the broader one is
+ * kept.
+ */
+function getUncoveredMatchPatterns(
+  matchPatterns: string[],
+  coveredBy: string[],
+): string[] {
+  return matchPatterns.reduce<string[]>((kept, pattern) => {
+    const isCovered = [...coveredBy, ...kept].some((other) =>
+      matchPatternCovers(other, pattern),
     );
     if (isCovered) return kept;
 
-    // Drop previously added patterns that this broader pattern covers. User
-    // defined entries in `existing` are never removed.
+    // Drop previously kept patterns that this broader pattern covers. Patterns
+    // in `coveredBy` are never removed.
     return [
       ...kept.filter((other) => !matchPatternCovers(pattern, other)),
       pattern,
     ];
   }, []);
-  if (added.length === 0) return;
-
-  manifest.optional_host_permissions = [...existing, ...added];
 }
 
 /**
