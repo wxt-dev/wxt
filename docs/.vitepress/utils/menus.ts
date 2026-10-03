@@ -72,7 +72,7 @@ export function menuItem(
 /** Clean up and add badges to typedoc leaf sections */
 export function prepareTypedocSidebar(items: SidebarItem[]) {
   // skip contents file
-  const filtered = items.slice(1);
+  const filtered = items;
 
   // remove Typedoc's collapse: true from text nodes
   const prepareItems = (items: DefaultTheme.SidebarItem[], depth = 0) => {
