@@ -16,7 +16,7 @@ WXT uses Vite under the hood for bundling JS and as the dev server. However, whe
 - Build a plugin and work "inside" Vite's lifecycle, hooking into and reacting to different processes.
 - Build a CLI "outside" Vite, and use its JS APIs to schedule builds or start the dev server whenever the project needs.
 
-If you've used WXT, you probably know that it has its own CLI, `wxt`, and that you don't use a `vite.config.ts` file, you use a `wxt.config.ts` file. So WXT works "outside" the Vite lifecycle. But why?
+If you've used WXT, you probably know that it has its own CLI, `wxt`, and that projects don't use a `vite.config.ts` file, they use a `wxt.config.ts` file. So WXT works "outside" the Vite lifecycle. But why?
 
 When Aaron created WXT, it was not his first foray into the extension build-tool world. He previously created `vite-plugin-web-extension`, which was a Vite plugin that worked inside Vite's lifecycle. There were two problems with this approach:
 
@@ -128,7 +128,7 @@ This means WXT manages a mix of full builds that are rebuilt completely when a f
 
 ### Dev Server Communication
 
-During dev mode, WXT injects additional code into your background script to setup a websocket connection with the dev server. If your extension doesn't have a background script, WXT adds one in dev mode.
+During dev mode, WXT injects additional code into the extension's background script to setup a websocket connection with the dev server. If the extension doesn't have a background script, WXT adds one in dev mode.
 
 The websocket connection is used to perform various types of reloads after a file is saved:
 
