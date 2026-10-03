@@ -396,21 +396,13 @@ function addEntrypoints(
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
         script.options.matches?.forEach((matchPattern) => {
-          if (script.options.registration === 'optional') {
-            addOptionalHostPermission(manifest, matchPattern);
-          } else {
-            addHostPermission(manifest, matchPattern);
-          }
+          addHostPermission(manifest, matchPattern);
         });
       });
     } else {
       // Manifest scripts
       const hashToEntrypointsMap = contentScripts
-        .filter(
-          (cs) =>
-            cs.options.registration !== 'runtime' &&
-            cs.options.registration !== 'optional',
-        )
+        .filter((cs) => cs.options.registration !== 'runtime')
         .reduce((map, script) => {
           const hash = hashContentScriptOptions(script.options);
           if (map.has(hash)) map.get(hash)?.push(script);
@@ -442,17 +434,15 @@ function addEntrypoints(
           addHostPermission(manifest, matchPattern);
         });
       });
-
-      // Optional runtime content scripts
-      const optionalContentScripts = contentScripts.filter(
-        (cs) => cs.options.registration === 'optional',
-      );
-      optionalContentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
-          addOptionalHostPermission(manifest, matchPattern);
-        });
-      });
     }
+
+    // Optional matches are never added to `content_scripts`, regardless of
+    // `registration`, so new hosts don't trigger a permission escalation
+    contentScripts
+      .flatMap((cs) => cs.options.optionalMatches ?? [])
+      .forEach((matchPattern) => {
+        addOptionalHostPermission(manifest, matchPattern);
+      });
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
       contentScripts,

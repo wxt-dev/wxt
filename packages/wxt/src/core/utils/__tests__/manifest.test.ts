@@ -1281,46 +1281,118 @@ describe('Manifest Utils', () => {
           expect(actual.content_scripts).toEqual([]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
+      });
 
-        it('should add optional_host_permissions instead of content_scripts when registration=optional', async () => {
-          const cs: ContentScriptEntrypoint = {
-            type: 'content-script',
-            name: 'one',
-            inputPath: 'entrypoints/one.content.ts',
-            outputDir: contentScriptOutDir,
-            options: {
-              matches: ['*://google.com/*'],
-              registration: 'optional',
-            },
-            skipped: false,
-          };
-          const styles: OutputAsset = {
-            type: 'asset',
-            fileName: 'content-scripts/one.css',
-          };
+      describe('optionalMatches', () => {
+        const optionalCs = (
+          options: Partial<ContentScriptEntrypoint['options']>,
+          name = 'one',
+        ): ContentScriptEntrypoint => ({
+          type: 'content-script',
+          name,
+          inputPath: `entrypoints/${name}.content.ts`,
+          outputDir: contentScriptOutDir,
+          options,
+          skipped: false,
+        });
+        const buildOutputFor = (
+          entrypoints: ContentScriptEntrypoint[],
+        ): Omit<BuildOutput, 'manifest'> => ({
+          publicAssets: [],
+          steps: entrypoints.map((cs) => ({ entrypoints: cs, chunks: [] })),
+        });
 
-          const entrypoints = [cs];
-          const buildOutput: Omit<BuildOutput, 'manifest'> = {
-            publicAssets: [],
-            steps: [{ entrypoints: cs, chunks: [styles] }],
-          };
+        it.each<'build' | 'serve'>(['build', 'serve'])(
+          'should add optionalMatches to optional_host_permissions and not content_scripts (%s)',
+          async (command) => {
+            const cs = optionalCs({
+              registration: 'runtime',
+              optionalMatches: ['*://google.com/*'],
+            });
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command },
+              server: fakeWxtDevServer(),
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [cs],
+              buildOutputFor([cs]),
+            );
+
+            expect(actual.content_scripts ?? []).toEqual([]);
+            expect(actual.host_permissions ?? []).not.toContain(
+              '*://google.com/*',
+            );
+            expect(actual.optional_host_permissions).toEqual([
+              '*://google.com/*',
+            ]);
+          },
+        );
+
+        it('should only add matches to content_scripts when both matches and optionalMatches are set', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+          });
           setFakeWxt({
-            config: {
-              manifestVersion: 3,
-              outDir,
-              command: 'build',
-            },
+            config: { manifestVersion: 3, outDir, command: 'build' },
           });
 
           const { manifest: actual } = await generateManifest(
-            entrypoints,
-            buildOutput,
+            [cs],
+            buildOutputFor([cs]),
+          );
+
+          expect(actual.content_scripts).toEqual([
+            {
+              matches: ['*://required.com/*'],
+              js: ['content-scripts/one.js'],
+            },
+          ]);
+          expect(actual.host_permissions).toBeUndefined();
+          expect(actual.optional_host_permissions).toEqual([
+            '*://optional.com/*',
+          ]);
+        });
+
+        it('should add matches to host_permissions and optionalMatches to optional_host_permissions when registration=runtime', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+            registration: 'runtime',
+          });
+          setFakeWxt({
+            config: { manifestVersion: 3, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [cs],
+            buildOutputFor([cs]),
           );
 
           expect(actual.content_scripts).toEqual([]);
+          expect(actual.host_permissions).toEqual(['*://required.com/*']);
           expect(actual.optional_host_permissions).toEqual([
-            '*://google.com/*',
+            '*://optional.com/*',
           ]);
+        });
+
+        it('should move optionalMatches to optional_permissions for MV2', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+          });
+          setFakeWxt({
+            config: { manifestVersion: 2, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [cs],
+            buildOutputFor([cs]),
+          );
+
+          expect(actual.optional_permissions).toEqual(['*://optional.com/*']);
+          expect(actual.optional_host_permissions).toBeUndefined();
         });
       });
     });
