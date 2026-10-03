@@ -17,11 +17,7 @@ export class ManualRunner implements ExtensionRunner {
 
   async openBrowser(): Promise<void> {
     this.config.logger.info(
-      `Load "${this.relativeOutDir()}" as an unpacked extension manually`,
+      `Load "${relative(process.cwd(), this.config.outDir)}" as an unpacked extension manually`,
     );
-  }
-
-  protected relativeOutDir(): string {
-    return relative(process.cwd(), this.config.outDir);
   }
 }

@@ -1,41 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import webExt, { WebExtRunInstance } from 'web-ext';
+import logger from 'web-ext/util/logger';
 import { WebExtRunner } from '../web-ext';
 import { setFakeWxt } from '../../utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
-import { ResolvedConfig } from '../../../types';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
-const DEFAULT_IS_WEB_EXT_INSTALLED = true;
 const DEFAULT_WEB_EXT_CONFIG = undefined;
 
 let isWsl = DEFAULT_IS_WSL;
 let targetBrowser = DEFAULT_TARGET_BROWSER;
-let isWebExtInstalled = DEFAULT_IS_WEB_EXT_INSTALLED;
 let webExtConfig: WebExtConfig | undefined = DEFAULT_WEB_EXT_CONFIG;
-
-class ModuleNotFoundError extends Error {
-  code = 'ERR_MODULE_NOT_FOUND';
-  constructor() {
-    super('Module not found: web-ext');
-  }
-}
-
-// @ts-expect-error: Overriding the private loadWebExt method
-class TestRunner extends WebExtRunner {
-  constructor(config: ResolvedConfig) {
-    super(config);
-  }
-
-  private loadWebExt() {
-    if (isWebExtInstalled) {
-      return Promise.resolve(webExt);
-    }
-    throw new ModuleNotFoundError();
-  }
-}
 
 vi.mock('is-wsl', () => ({
   get default() {
@@ -53,12 +30,14 @@ vi.mock('web-ext', () => ({
 const webExtCmdRunMock = vi.mocked(webExt.cmd.run);
 
 vi.mock('web-ext/util/logger', () => ({
-  consoleStream: {},
+  default: {
+    consoleStream: {},
+  },
 }));
 
 describe('WebExtRunner', () => {
   function setupRunner() {
-    return new TestRunner(setupWxt().config);
+    return new WebExtRunner(webExt, logger, setupWxt().config);
   }
 
   function setupWxt() {
@@ -75,7 +54,6 @@ describe('WebExtRunner', () => {
   beforeEach(() => {
     isWsl = DEFAULT_IS_WSL;
     targetBrowser = DEFAULT_TARGET_BROWSER;
-    isWebExtInstalled = DEFAULT_IS_WEB_EXT_INSTALLED;
     webExtConfig = DEFAULT_WEB_EXT_CONFIG;
   });
 
@@ -84,35 +62,6 @@ describe('WebExtRunner', () => {
       const runner = setupRunner();
       return await runner.canOpen();
     }
-
-    describe('when in WSL', () => {
-      beforeEach(() => {
-        isWsl = true;
-      });
-
-      it('should return false', async () => {
-        expect(await canOpen()).toBe(false);
-      });
-    });
-
-    describe('when targeting Safari', () => {
-      beforeEach(() => {
-        targetBrowser = 'safari';
-      });
-
-      it('should return false', async () => {
-        expect(await canOpen()).toBe(false);
-      });
-    });
-
-    describe('when web-ext is not installed', () => {
-      beforeEach(() => {
-        isWebExtInstalled = false;
-      });
-      it('should return false', async () => {
-        expect(await canOpen()).toBe(false);
-      });
-    });
 
     it('should return true', async () => {
       expect(await canOpen()).toBe(true);
@@ -142,17 +91,6 @@ describe('WebExtRunner', () => {
     describe('when targeting Safari', () => {
       beforeEach(() => {
         targetBrowser = 'safari';
-      });
-
-      it('should do nothing', async () => {
-        await openBrowser();
-        expectNothing();
-      });
-    });
-
-    describe('when web-ext is not installed', () => {
-      beforeEach(() => {
-        isWebExtInstalled = false;
       });
 
       it('should do nothing', async () => {
@@ -210,7 +148,7 @@ describe('WebExtRunner', () => {
   });
 
   describe('closeBrowser', () => {
-    async function closeBrowser(runner: TestRunner = setupRunner()) {
+    async function closeBrowser(runner: WebExtRunner = setupRunner()) {
       await runner.closeBrowser();
     }
     let instance: MockProxy<WebExtRunInstance>;

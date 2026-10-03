@@ -2,11 +2,11 @@ import { createHooks } from 'hookable';
 import { relative } from 'path';
 import { builtinModules } from '../builtin-modules';
 import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
-import { createViteBuilder } from './builders/vite';
 import { createWxtPackageManager } from './package-managers';
 import { resolveConfig } from './resolve-config';
 import { FlatEntrypointFinder } from './entrypoint-finders/flat';
-import { WebExtRunner } from './runners/web-ext';
+import { detectBuilder } from './utils/detect-builder';
+import { detectRunner } from './utils/detect-runner';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is
@@ -30,7 +30,13 @@ export async function registerWxt(
 
   const hooks = createHooks<WxtHooks>();
   const config = await resolveConfig(inlineConfig, command);
-  const runner = new WebExtRunner(config);
+  const [pm, builder, runner] = await Promise.all([
+    createWxtPackageManager(config.root),
+    detectBuilder(config, hooks, () => wxt.server),
+    detectRunner(config),
+  ]);
+  const entrypointFinder = new FlatEntrypointFinder(config);
+
   // TODO: Remove once config.runner is deprecated
   Object.defineProperty(config, 'runner', {
     get() {
@@ -40,11 +46,6 @@ export async function registerWxt(
       wxt.runner = value;
     },
   });
-  const [builder, pm] = await Promise.all([
-    createViteBuilder(config, hooks, () => wxt.server),
-    createWxtPackageManager(config.root),
-  ]);
-  const entrypointFinder = new FlatEntrypointFinder(config);
 
   wxt = {
     config,

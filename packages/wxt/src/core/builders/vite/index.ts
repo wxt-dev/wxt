@@ -7,6 +7,7 @@ import {
   Entrypoint,
   EntrypointGroup,
   ResolvedConfig,
+  ServerInfo,
   WxtBuilder,
   WxtBuilderServer,
   WxtDevServer,
@@ -31,51 +32,153 @@ interface RollupAssetNameInfo {
   names?: string[];
 }
 
-export async function createViteBuilder(
-  wxtConfig: ResolvedConfig,
-  hooks: Hookable<WxtHooks>,
-  getWxtDevServer?: () => WxtDevServer | undefined,
-): Promise<WxtBuilder> {
-  // TODO: This doesn't need to be async. Convert to class like other overridable services as well.
-  const vite = await import('vite');
+export class ViteBuilder implements WxtBuilder {
+  name = 'Vite';
+  version: string;
+
+  constructor(
+    private vite: typeof import('vite'),
+    private config: ResolvedConfig,
+    private hooks: Hookable<WxtHooks>,
+    private getWxtDevServer: () => WxtDevServer | undefined,
+  ) {
+    this.version = vite.version;
+  }
+
+  async build(group: EntrypointGroup): Promise<BuildStepOutput> {
+    let entryConfig: vite.InlineConfig;
+    if (Array.isArray(group)) entryConfig = this.getMultiPageConfig(group);
+    else if (
+      group.type === 'content-script-style' ||
+      group.type === 'unlisted-style'
+    )
+      entryConfig = this.getCssConfig(group);
+    else entryConfig = this.getLibModeConfig(group);
+
+    const buildConfig: vite.InlineConfig = this.vite.mergeConfig(
+      await this.getBaseConfig(),
+      entryConfig,
+    );
+    await this.hooks.callHook(
+      'vite:build:extendConfig',
+      toArray(group),
+      buildConfig,
+    );
+
+    const result = await this.vite.build(buildConfig);
+    const chunks = getBuildOutputChunks(result);
+    return {
+      entrypoints: group,
+      chunks: await moveHtmlFiles(this.config, group, chunks),
+    };
+  }
+
+  async createServer(info: ServerInfo): Promise<WxtBuilderServer> {
+    const serverConfig: vite.InlineConfig = {
+      server: {
+        host: info.host,
+        port: info.port,
+        // The port is already resolved to an available one during config
+        // resolution, and vite needs to use the port the rest of WXT uses.
+        strictPort: true,
+        origin: info.origin,
+      },
+    };
+    const baseConfig = await this.getBaseConfig();
+    const finalConfig = this.vite.mergeConfig(baseConfig, serverConfig);
+    await this.hooks.callHook('vite:devServer:extendConfig', finalConfig);
+    const viteServer = await this.vite.createServer(finalConfig);
+
+    const server: WxtBuilderServer = {
+      async listen() {
+        await viteServer.listen(info.port);
+      },
+      async close() {
+        await viteServer.close();
+      },
+      transformHtml(...args) {
+        return viteServer.transformIndexHtml(...args);
+      },
+      ws: {
+        send(message, payload) {
+          return viteServer.ws.send(message, payload);
+        },
+        on(message, cb) {
+          viteServer.ws.on(message, cb);
+        },
+      },
+      watcher: viteServer.watcher,
+      on(event, cb) {
+        viteServer.httpServer?.on(event, cb);
+      },
+    };
+
+    return server;
+  }
+
+  async importEntrypoint<T>(this: WxtBuilder, path: string): Promise<T> {
+    const [module] = await this.importEntrypoints([path]);
+
+    return module as any;
+  }
+
+  async importEntrypoints(paths: string[]): Promise<Record<string, unknown>[]> {
+    const context = createExtensionEnvironment();
+    const environment = await this.createImporterEnvironment(paths);
+
+    try {
+      return await context.run(
+        async () =>
+          await Promise.all(
+            paths.map(async (path) => {
+              const module = await environment.runner.import(path);
+              this.requireDefaultExport(path, module);
+              return module.default as any;
+            }),
+          ),
+      );
+    } finally {
+      await environment.close();
+    }
+  }
 
   /**
    * Returns the base vite config shared by all builds based on the inline and
    * user config.
    */
-  const getBaseConfig = async (baseConfigOptions?: {
+  private async getBaseConfig(options?: {
     excludeAnalysisPlugin?: boolean;
-  }) => {
-    const config: vite.InlineConfig = await wxtConfig.vite(wxtConfig.env);
+  }): Promise<vite.InlineConfig> {
+    const config: vite.InlineConfig = await this.config.vite(this.config.env);
 
-    config.root = wxtConfig.root;
+    config.root = this.config.root;
     config.configFile = false;
     config.logLevel = 'warn';
-    config.mode = wxtConfig.mode;
+    config.mode = this.config.mode;
     config.envPrefix ??= ['VITE_', 'WXT_'];
 
     config.build ??= {};
-    config.publicDir = wxtConfig.publicDir;
+    config.publicDir = this.config.publicDir;
     config.build.copyPublicDir = false;
-    config.build.outDir = wxtConfig.outDir;
+    config.build.outDir = this.config.outDir;
     config.build.emptyOutDir = false;
     // Disable minification for the dev command
-    if (config.build.minify == null && wxtConfig.command === 'serve') {
+    if (config.build.minify == null && this.config.command === 'serve') {
       config.build.minify = false;
     }
     // Enable inline sourcemaps for the dev command (so content scripts have sourcemaps)
-    if (config.build.sourcemap == null && wxtConfig.command === 'serve') {
+    if (config.build.sourcemap == null && this.config.command === 'serve') {
       config.build.sourcemap = 'inline';
     }
 
     config.server ??= {};
     config.server.watch = {
-      ...wxtConfig.watchOptions,
+      ...this.config.watchOptions,
       ignored: [
-        `${wxtConfig.outBaseDir}/**`,
-        `${wxtConfig.wxtDir}/**`,
-        ...getRunnerProfileWatchIgnores(wxtConfig),
-        ...toArray(wxtConfig.watchOptions.ignored ?? []),
+        `${this.config.outBaseDir}/**`,
+        `${this.config.wxtDir}/**`,
+        ...getRunnerProfileWatchIgnores(this.config),
+        ...toArray(this.config.watchOptions.ignored ?? []),
       ],
     };
 
@@ -84,45 +187,45 @@ export async function createViteBuilder(
     config.legacy.skipWebSocketTokenCheck = true;
 
     // Solves https://github.com/wxt-dev/wxt/issues/353
-    if (isRolldownVersion(vite.version)) {
+    if (isRolldownVersion(this.vite.version)) {
       // TODO: Add charset ascii when supported by oxc
     } else {
       config.esbuild ??= {};
       if (config.esbuild) config.esbuild.charset = 'ascii';
     }
 
-    const server = getWxtDevServer?.();
+    const server = this.getWxtDevServer?.();
 
     config.plugins ??= [];
     config.plugins.push(
-      wxtPlugins.devHtmlPrerender(wxtConfig, server),
-      wxtPlugins.resolveVirtualModules(wxtConfig),
-      wxtPlugins.devServerGlobals(wxtConfig, server),
-      wxtPlugins.tsconfigPaths(wxtConfig),
+      wxtPlugins.devHtmlPrerender(this.config, server),
+      wxtPlugins.resolveVirtualModules(this.config),
+      wxtPlugins.devServerGlobals(this.config, server),
+      wxtPlugins.tsconfigPaths(this.config),
       wxtPlugins.noopBackground(),
-      wxtPlugins.globals(wxtConfig),
+      wxtPlugins.globals(this.config),
       wxtPlugins.defineImportMeta(),
-      wxtPlugins.wxtPluginLoader(wxtConfig),
-      wxtPlugins.resolveAppConfig(wxtConfig),
+      wxtPlugins.wxtPluginLoader(this.config),
+      wxtPlugins.resolveAppConfig(this.config),
     );
     if (
       // TODO: Should this be migrated to use perEnvironmentState?
-      wxtConfig.analysis.enabled &&
+      this.config.analysis.enabled &&
       // If included, entrypoint loader will increment the
       // bundleAnalysis's internal build index tracker, which we don't want
-      !baseConfigOptions?.excludeAnalysisPlugin
+      !options?.excludeAnalysisPlugin
     ) {
-      config.plugins.push(wxtPlugins.bundleAnalysis(wxtConfig));
+      config.plugins.push(wxtPlugins.bundleAnalysis(this.config));
     }
 
     return config;
-  };
+  }
 
   /**
    * Return the basic config for building an entrypoint in [lib
    * mode](https://vitejs.dev/guide/build.html#library-mode).
    */
-  const getLibModeConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
+  private getLibModeConfig(entrypoint: Entrypoint): vite.InlineConfig {
     const entry = getRollupEntry(entrypoint);
     const plugins: NonNullable<vite.UserConfig['plugins']> = [
       wxtPlugins.entrypointGroupGlobals(entrypoint),
@@ -133,7 +236,7 @@ export async function createViteBuilder(
       entrypoint.type === 'content-script-style' ||
       entrypoint.type === 'unlisted-style'
     ) {
-      plugins.push(wxtPlugins.cssEntrypoints(entrypoint, wxtConfig));
+      plugins.push(wxtPlugins.cssEntrypoints(entrypoint, this.config));
     }
 
     if (
@@ -154,7 +257,7 @@ export async function createViteBuilder(
     }
 
     return {
-      mode: wxtConfig.mode,
+      mode: this.config.mode,
       plugins,
       build: {
         lib: {
@@ -169,7 +272,7 @@ export async function createViteBuilder(
             // entry output (like "content-scripts/overlay.js")
             entryFileNames: getEntrypointBundlePath(
               entrypoint,
-              wxtConfig.outDir,
+              this.config.outDir,
               '.js',
             ),
             // Output content script CSS to `content-scripts/`, but all other scripts are written to
@@ -191,21 +294,21 @@ export async function createViteBuilder(
       },
       define: {
         // See https://github.com/aklinker1/vite-plugin-web-extension/issues/96
-        'process.env.NODE_ENV': JSON.stringify(wxtConfig.mode),
+        'process.env.NODE_ENV': JSON.stringify(this.config.mode),
       },
     } satisfies vite.UserConfig;
-  };
+  }
 
   /**
    * Return the basic config for building multiple entrypoints in [multi-page
    * mode](https://vitejs.dev/guide/build.html#multi-page-app).
    */
-  const getMultiPageConfig = (entrypoints: Entrypoint[]): vite.InlineConfig => {
+  private getMultiPageConfig(entrypoints: Entrypoint[]): vite.InlineConfig {
     const htmlEntrypoints = new Set(
       entrypoints.filter(isHtmlEntrypoint).map((e) => e.name),
     );
     return {
-      mode: wxtConfig.mode,
+      mode: this.config.mode,
       plugins: [wxtPlugins.entrypointGroupGlobals(entrypoints)],
       build: {
         rollupOptions: {
@@ -228,15 +331,11 @@ export async function createViteBuilder(
         },
       },
     };
-  };
+  }
 
-  /**
-   * Return the basic config for building a single CSS entrypoint in [multi-page
-   * mode](https://vitejs.dev/guide/build.html#multi-page-app).
-   */
-  const getCssConfig = (entrypoint: Entrypoint): vite.InlineConfig => {
+  private getCssConfig(entrypoint: Entrypoint): vite.InlineConfig {
     return {
-      mode: wxtConfig.mode,
+      mode: this.config.mode,
       plugins: [wxtPlugins.entrypointGroupGlobals(entrypoint)],
       build: {
         rollupOptions: {
@@ -255,9 +354,12 @@ export async function createViteBuilder(
         },
       },
     };
-  };
-  const createImporterEnvironment = async (paths: string[]) => {
-    const baseConfig = await getBaseConfig({
+  }
+
+  private async createImporterEnvironment(
+    paths: string[],
+  ): Promise<vite.RunnableDevEnvironment> {
+    const baseConfig = await this.getBaseConfig({
       excludeAnalysisPlugin: true,
     });
     // Disable dep optimization, as recommended by vite-node's README
@@ -266,13 +368,13 @@ export async function createViteBuilder(
     baseConfig.optimizeDeps.include = [];
     const envConfig: vite.InlineConfig = {
       plugins: paths.map((path) =>
-        wxtPlugins.removeEntrypointMainFunction(wxtConfig, path),
+        wxtPlugins.removeEntrypointMainFunction(this.config, path),
       ),
     };
-    const importerConfig = vite.mergeConfig(baseConfig, envConfig);
+    const importerConfig = this.vite.mergeConfig(baseConfig, envConfig);
 
-    const config = await vite.resolveConfig(
-      vite.mergeConfig(importerConfig || {}, {
+    const config = await this.vite.resolveConfig(
+      this.vite.mergeConfig(importerConfig || {}, {
         configFile: false,
         envDir: false,
         cacheDir: process.cwd(),
@@ -293,24 +395,28 @@ export async function createViteBuilder(
       'serve',
     );
 
-    const environment = vite.createRunnableDevEnvironment('inline', config, {
-      runnerOptions: {
-        hmr: {
-          logger: false,
+    const environment = this.vite.createRunnableDevEnvironment(
+      'inline',
+      config,
+      {
+        runnerOptions: {
+          hmr: {
+            logger: false,
+          },
         },
+        hot: false,
       },
-      hot: false,
-    });
+    );
     await environment.init();
 
     return environment;
-  };
+  }
 
-  function requireDefaultExport(
+  private requireDefaultExport(
     path: string,
     mod: any,
   ): asserts mod is { default: unknown } {
-    const relativePath = relative(wxtConfig.root, path);
+    const relativePath = relative(this.config.root, path);
     if (mod?.default == null) {
       const defineFn = relativePath.includes('.content')
         ? 'defineContentScript'
@@ -323,104 +429,6 @@ export async function createViteBuilder(
       );
     }
   }
-
-  return {
-    name: 'Vite',
-    version: vite.version,
-    async importEntrypoint(path) {
-      const [module] = await this.importEntrypoints([path]);
-
-      return module as any;
-    },
-    async importEntrypoints(paths) {
-      const context = createExtensionEnvironment();
-      const environment = await createImporterEnvironment(paths);
-
-      try {
-        return await context.run(
-          async () =>
-            await Promise.all(
-              paths.map(async (path) => {
-                const module = await environment.runner.import(path);
-                requireDefaultExport(path, module);
-                return module.default as any;
-              }),
-            ),
-        );
-      } finally {
-        await environment.close();
-      }
-    },
-    async build(group) {
-      let entryConfig: vite.InlineConfig;
-      if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
-      else if (
-        group.type === 'content-script-style' ||
-        group.type === 'unlisted-style'
-      )
-        entryConfig = getCssConfig(group);
-      else entryConfig = getLibModeConfig(group);
-
-      const buildConfig: vite.InlineConfig = vite.mergeConfig(
-        await getBaseConfig(),
-        entryConfig,
-      );
-      await hooks.callHook(
-        'vite:build:extendConfig',
-        toArray(group),
-        buildConfig,
-      );
-
-      const result = await vite.build(buildConfig);
-      const chunks = getBuildOutputChunks(result);
-      return {
-        entrypoints: group,
-        chunks: await moveHtmlFiles(wxtConfig, group, chunks),
-      };
-    },
-    async createServer(info) {
-      const serverConfig: vite.InlineConfig = {
-        server: {
-          host: info.host,
-          port: info.port,
-          // The port is already resolved to an available one during config
-          // resolution, and vite needs to use the port the rest of WXT uses.
-          strictPort: true,
-          origin: info.origin,
-        },
-      };
-      const baseConfig = await getBaseConfig();
-      const finalConfig = vite.mergeConfig(baseConfig, serverConfig);
-      await hooks.callHook('vite:devServer:extendConfig', finalConfig);
-      const viteServer = await vite.createServer(finalConfig);
-
-      const server: WxtBuilderServer = {
-        async listen() {
-          await viteServer.listen(info.port);
-        },
-        async close() {
-          await viteServer.close();
-        },
-        transformHtml(...args) {
-          return viteServer.transformIndexHtml(...args);
-        },
-        ws: {
-          send(message, payload) {
-            return viteServer.ws.send(message, payload);
-          },
-          on(message, cb) {
-            viteServer.ws.on(message, cb);
-          },
-        },
-        watcher: viteServer.watcher,
-        on(event, cb) {
-          viteServer.httpServer?.on(event, cb);
-        },
-      };
-
-      return server;
-    },
-  };
 }
 
 export function getRunnerProfileWatchIgnores(
