@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "wxt": "bun run src/cli/index.ts",
-    "build": "buildc -- bun run tsdown --config-loader unrun",
+    "build": "buildc -- bun --bun tsdown",
     "check": "bun run build && bun run --sequential 'check:*'",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
