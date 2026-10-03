@@ -7,3 +7,6 @@ export * from './initialize';
 export * from './prepare';
 export * from './zip';
 export * from './utils';
+export * from './entrypoint-finders/flat';
+export * from './runners/manual';
+export * from './runners/web-ext';
