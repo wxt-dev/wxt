@@ -1,5 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { hashContentScriptOptions } from '../content-scripts';
+import {
+  hashContentScriptOptions,
+  mapWxtOptionsToRegisteredContentScript,
+} from '../content-scripts';
 import { setFakeWxt } from '../testing/fake-objects';
 
 describe('Content Script Utils', () => {
@@ -28,6 +31,46 @@ describe('Content Script Utils', () => {
       });
 
       expect(hash1).toBe(hash2);
+    });
+  });
+
+  describe('mapWxtOptionsToRegisteredContentScript', () => {
+    it('preserves matchOriginAsFallback for dynamic registration', () => {
+      const contentScript = mapWxtOptionsToRegisteredContentScript(
+        {
+          matches: ['*://example.com/*'],
+          matchOriginAsFallback: true,
+          allFrames: true,
+          runAt: 'document_start',
+          world: 'MAIN',
+        },
+        ['content-scripts/example.js'],
+        undefined,
+      );
+
+      expect(contentScript).toEqual({
+        allFrames: true,
+        excludeMatches: undefined,
+        matchOriginAsFallback: true,
+        matches: ['*://example.com/*'],
+        runAt: 'document_start',
+        js: ['content-scripts/example.js'],
+        css: undefined,
+        world: 'MAIN',
+      });
+    });
+
+    it('preserves false matchOriginAsFallback values', () => {
+      const contentScript = mapWxtOptionsToRegisteredContentScript(
+        {
+          matches: ['*://example.com/*'],
+          matchOriginAsFallback: false,
+        },
+        ['content-scripts/example.js'],
+        [],
+      );
+
+      expect(contentScript.matchOriginAsFallback).toBe(false);
     });
   });
 });
