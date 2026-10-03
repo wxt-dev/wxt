@@ -40,6 +40,7 @@ export function createWebExtRunner(): ExtensionRunner {
           : {
               chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
               chromiumProfile: wxtUserConfig?.chromiumProfile,
+              profileCreateIfMissing: !!wxtUserConfig?.chromiumProfile,
               chromiumPref: defu(
                 wxtUserConfig?.chromiumPref,
                 DEFAULT_CHROMIUM_PREFS,
