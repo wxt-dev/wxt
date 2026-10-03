@@ -320,6 +320,10 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   pm: mock(),
   server: faker.helpers.arrayElement([undefined, fakeWxtDevServer()]),
   builder: mock(),
+  entrypointFinder: mock({
+    findEntrypoints: () => [],
+  }),
+  runner: mock(),
 }));
 
 export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({

@@ -1,17 +1,27 @@
-import { ExtensionRunner } from '../../types';
+import type { ExtensionRunner, ResolvedConfig } from '../../types';
 import { relative } from 'node:path';
-import { wxt } from '../wxt';
 
-/** The manual runner tells the user to load the unpacked extension manually. */
-export function createManualRunner(): ExtensionRunner {
-  return {
-    async openBrowser() {
-      wxt.logger.info(
-        `Load "${relative(
-          process.cwd(),
-          wxt.config.outDir,
-        )}" as an unpacked extension manually`,
-      );
-    },
-  };
+/**
+ * Base runner that just tells developers to load the extension into their
+ * browser manually.
+ *
+ * You can extend this class and call any `super` method when your runner can't
+ * open the browser.
+ */
+export class ManualRunner implements ExtensionRunner {
+  constructor(protected config: ResolvedConfig) {}
+
+  canOpen(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  async openBrowser(): Promise<void> {
+    this.config.logger.info(
+      `Load "${this.relativeOutDir()}" as an unpacked extension manually`,
+    );
+  }
+
+  protected relativeOutDir(): string {
+    return relative(process.cwd(), this.config.outDir);
+  }
 }
