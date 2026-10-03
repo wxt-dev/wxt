@@ -351,6 +351,7 @@ export async function createViteBuilder(
       }
     },
     async build(group) {
+      // #region snippet
       let entryConfig: vite.InlineConfig;
       if (Array.isArray(group)) entryConfig = getMultiPageConfig(group);
       else if (
@@ -359,6 +360,7 @@ export async function createViteBuilder(
       )
         entryConfig = getCssConfig(group);
       else entryConfig = getLibModeConfig(group);
+      // #endregion snippet
 
       const buildConfig: vite.InlineConfig = vite.mergeConfig(
         await getBaseConfig(),

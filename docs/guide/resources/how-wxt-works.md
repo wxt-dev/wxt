@@ -9,6 +9,8 @@ The combination of these two makes WXT a "framework". It's really important to t
 
 That said, the runtime utils are all simple, isolated packages. They won't be described here. Instead, let's focus on the build tool.
 
+> Links to source files point to WXT [v0.21.4](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4), the latest version as of October 3, 2026. Files may have moved or changed since. Code snippets are pulled directly from the current source.
+
 ## Vite: Inside or outside?
 
 WXT uses Vite under the hood for bundling JS and as the dev server. However, when projects are based on Vite, you have two options:
@@ -34,7 +36,7 @@ In fact, these design choices are very similar to the decisions the Nuxt team ma
 
 ## The Build Process
 
-> `internal-build.ts`
+> [`internal-build.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/internal-build.ts)
 
 At a high level, WXT's build process is very simple:
 
@@ -46,16 +48,16 @@ Let's go through each of these steps more in-depth:
 
 ### Entrypoint Discovery
 
-> `find-entrypoints.ts`
+> [`find-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/find-entrypoints.ts)
 
 Entrypoints are discovered by reading the file system and looking at the files in the `wxt.config.entrypointsDir` directory that match specific filename patterns.
 
-Because WXT decided to store config for each entrypoint in the entrypoint itself, rather than in a single location like a manifest file, WXT also needs to import or read the file to extract that info. This is... problematic. For HTML files, it's simple. Just import it, parse the DOM with `linkedom`, then find the `<meta>` elements. CSS files don't have config (as of the day this was written). It's JS entrypoints that are the problem.
+Because WXT decided to store config for each entrypoint in the entrypoint itself, rather than in a single location like a manifest file, WXT also needs to import or read the file to extract that info. This is... problematic. For HTML files, it's simple. Just import it, parse the DOM with `linkedom`, then find the `<meta>` elements. CSS files don't have config (as of October 3, 2026, v0.21.4). It's JS entrypoints that are the problem.
 
 JS entrypoints, like the background or content scripts, are meant to be run in the browser. But to extract their config, we need to import the file into a Node.js environment. That means globals, like `window` and `browser`/`chrome` are not present. So WXT does two things to import the config:
 
-1. Polyfills common globals, like `window`, `document`, and `browser`.
-2. Parses the file, removes the `main` function, and tree-shakes any imports that are no longer necessary.
+1. Polyfills common globals, like `window`, `document`, and `browser`, with the [extension environment utils](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/environments/extension-environment.ts).
+2. Parses the file, removes the `main` function with the [`removeEntrypointMainFunction`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/plugins/removeEntrypointMainFunction.ts) Vite plugin, and tree-shakes any imports that are no longer necessary.
 
 This process allows us to quickly import a minimal version of the entrypoint that contains just a default export of the config.
 
@@ -63,7 +65,7 @@ Once we've read the config from the entrypoint file, the entrypoints get saved a
 
 ### Entrypoint Grouping
 
-> `group-entrypoints.ts`
+> [`group-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/group-entrypoints.ts)
 
 When building extensions, some files can be bundled together with code splitting, some must be bundled independently. WXT calls the process of determining what entrypoints can be bundled together "grouping".
 
@@ -71,20 +73,28 @@ What can be bundled together? There are really three types of groups:
 
 1. ESM: ESM background and non-sandboxed HTML pages (popup, options, unlisted)
 2. Sandboxed ESM: Sandboxed HTML pages
-3. Individual scripts: Non-ESM background, content scripts, and unlisted scripts
+3. Individual entrypoints: Non-ESM background, content scripts, unlisted scripts, and CSS entrypoints
+
+The mapping from entrypoint type to group looks like this:
+
+<<< @/../packages/wxt/src/core/utils/building/group-entrypoints.ts#snippet
 
 Once grouped, we return the result as an [`EntrypointGroup[]`](/api/reference/wxt/type-aliases/EntrypointGroup), which is the same as `Array<Entrypoint | Entrypoint[]>`.
 
 ### Building
 
-> `rebuild.ts`, `vite/index.ts`
+> [`rebuild.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/rebuild.ts), [`build-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/build-entrypoints.ts), [`vite/index.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/index.ts)
 
 Before actually running the Vite builds, we first generate the `.wxt` directory. More on this later, but for now, this directory contains generated code that needs to exist and be up-to-date before the builds will succeed.
 
 Now WXT can run a build for each entrypoint group:
 
-- Groups with a single entrypoint are built individually with [Library Mode](https://vite.dev/guide/build#library-mode), which supports the IIFE output format. IIFEs provide good isolation and support for script return values, making it ideal for content scripts and unlisted scripts.
-- Groups with more than one entrypoint are built as a [Multi-page App](https://vite.dev/guide/build#multi-page-app), which supports code-splitting between HTML and JS entrypoints.
+- Individual groups, which contain a single entrypoint, are built with [Library Mode](https://vite.dev/guide/build#library-mode), which supports the IIFE output format. IIFEs provide good isolation and support for script return values, making it ideal for content scripts and unlisted scripts.
+- ESM groups, even if they only contain one entrypoint, are built as a [Multi-page App](https://vite.dev/guide/build#multi-page-app), which supports code-splitting between HTML and JS entrypoints.
+
+The builder chooses between them based on the shape of the group:
+
+<<< @/../packages/wxt/src/core/builders/vite/index.ts#snippet
 
 By default, Vite's outputs don't work for extensions. WXT applies a lot of plugins to each build; anything from adding return values for lib mode scripts, polyfilling `import.meta.url`, resolving "virtual" modules, or slightly tweaking the output JS.
 
@@ -122,7 +132,7 @@ Vite normally serves all content from its dev server in dev mode. The browser lo
 
 That's not the case for extensions - you need to create a directory with a `manifest.json` and all entrypoints. So WXT needs to do some "pre-rendering", where it generates a minimal version of all entrypoints.
 
-For some entrypoints, like HTML pages, that's just the HTML page. Any URLs in the HTML file are pointed at the dev server on `localhost`. For others, like content scripts or the background script, there is no minimal version of the file and WXT performs a full build.
+For some entrypoints, like HTML pages, that's just the HTML page. Any URLs in the HTML file are pointed at the dev server on `localhost` by the [`devHtmlPrerender`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/plugins/devHtmlPrerender.ts) Vite plugin. For others, like content scripts or the background script, there is no minimal version of the file and WXT performs a full build.
 
 This means WXT manages a mix of full builds that are rebuilt completely when a file changes, pre-rendered HTML files that need to be reloaded when the HTML file changes, and Vite's HMR that handles changes to "assets" of the pre-rendered HTML files.
 
@@ -136,7 +146,7 @@ The websocket connection is used to perform various types of reloads after a fil
 - When an HTML file is changed, the background finds any tabs with that HTML page open, and reloads the tab using `browser.tabs.reload()`.
 - When a content script is added, changed, or removed, the background uses the `browser.scripting` APIs to register and update the content scripts without having to reload the entire extension.
 
-There is a lot of code in WXT dedicated to determining what type of reload is necessary when a file is changed. See `detect-dev-changes.ts` for the actual implementation, and `create-server.ts` for how the changes are communicated to the background script.
+There is a lot of code in WXT dedicated to determining what type of reload is necessary when a file is changed. See [`detect-dev-changes.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/detect-dev-changes.ts) for the actual implementation, and [`create-server.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/create-server.ts) for how the changes are communicated to the background script.
 
 ## `.wxt` Directory
 
@@ -151,7 +161,7 @@ Virtual modules are fundamental to both WXT's build process and dev mode. There 
 - Aliases to fully generated JS modules that are not written to the disk.
 - Aliases to project files whose location varies between projects.
 
-In `wxt/src/virtual/*`, there are some templates for the virtual modules used as the input for different entrypoints. Because these files are meant to be used in projects using WXT, not in WXT itself, they're a separate TS project in the source code. When the package is built for NPM, they are transpiled down to JS and loaded by file path, not by importing them, in Vite plugins.
+In [`wxt/src/virtual/*`](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4/packages/wxt/src/virtual), there are some templates for the virtual modules used as the input for different entrypoints. Because these files are meant to be used in projects using WXT, not in WXT itself, they're a separate TS project in the source code. When the package is built for NPM, they are transpiled down to JS and loaded by file path, not by importing them, in Vite plugins.
 
 Other virtual modules, like `virtual:user-background-entrypoint`, resolve to a project file whose location may vary. In this case, it would resolve to `entrypoints/background.ts` or `entrypoints/background/index.ts`, whichever exists.
 
