@@ -682,19 +682,19 @@ function addOptionalHostPermissions(
   if (matchPatterns.length === 0) return;
 
   const existing: string[] = manifest.optional_host_permissions ?? [];
-  let added: string[] = [];
-
-  for (const pattern of matchPatterns) {
-    const isCovered = [...requiredMatchPatterns, ...existing, ...added].some(
+  const added = matchPatterns.reduce<string[]>((kept, pattern) => {
+    const isCovered = [...requiredMatchPatterns, ...existing, ...kept].some(
       (other) => matchPatternCovers(other, pattern),
     );
-    if (isCovered) continue;
+    if (isCovered) return kept;
 
     // Drop previously added patterns that this broader pattern covers. User
     // defined entries in `existing` are never removed.
-    added = added.filter((other) => !matchPatternCovers(pattern, other));
-    added.push(pattern);
-  }
+    return [
+      ...kept.filter((other) => !matchPatternCovers(pattern, other)),
+      pattern,
+    ];
+  }, []);
   if (added.length === 0) return;
 
   manifest.optional_host_permissions = [...existing, ...added];
