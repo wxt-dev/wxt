@@ -156,6 +156,7 @@ export async function generateManifest(
     convertActionToMv2(manifest);
     convertCspToMv2(manifest);
     moveHostPermissionsToPermissions(manifest);
+    moveOptionalHostPermissionsToOptionalPermissions(manifest);
   }
 
   if (wxt.config.manifestVersion === 3) {
@@ -408,11 +409,10 @@ function addEntrypoints(
     // Don't add content scripts to the manifest in dev mode for MV3 - they're managed and reloaded
     // at runtime
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
-      contentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
-          addHostPermission(manifest, matchPattern);
-        });
-      });
+      addHostPermissions(
+        manifest,
+        contentScripts.flatMap((cs) => cs.options.matches ?? []),
+      );
     } else {
       // Manifest scripts
       const hashToEntrypointsMap = contentScripts
@@ -440,15 +440,25 @@ function addEntrypoints(
       }
 
       // Runtime content scripts
-      const runtimeContentScripts = contentScripts.filter(
-        (cs) => cs.options.registration === 'runtime',
+      addHostPermissions(
+        manifest,
+        contentScripts
+          .filter((cs) => cs.options.registration === 'runtime')
+          .flatMap((cs) => cs.options.matches ?? []),
       );
-      runtimeContentScripts.forEach((script) => {
-        script.options.matches?.forEach((matchPattern) => {
-          addHostPermission(manifest, matchPattern);
-        });
-      });
     }
+
+    // Optional matches are never added to `content_scripts`, regardless of
+    // `registration`, so new hosts don't trigger a permission escalation
+    addOptionalHostPermissions(
+      manifest,
+      contentScripts.flatMap((cs) => cs.options.optionalMatches ?? []),
+      // `matches` are granted at install for both `registration` modes
+      [
+        ...(manifest.host_permissions ?? []),
+        ...contentScripts.flatMap((cs) => cs.options.matches ?? []),
+      ],
+    );
 
     const contentScriptCssResources = getContentScriptCssWebAccessibleResources(
       contentScripts,
@@ -506,7 +516,7 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
   const allowedCsp = wxt.server?.origin ?? 'http://localhost:*';
 
   if (wxt.config.manifestVersion === 3) {
-    addHostPermission(manifest, permission);
+    addHostPermissions(manifest, [permission]);
   } else {
     addPermission(manifest, permission);
   }
@@ -596,10 +606,10 @@ export function getContentScriptCssWebAccessibleResources(
       ...(wxt.config.browser !== 'firefox' && wxt.config.browser !== 'safari'
         ? { use_dynamic_url: true }
         : {}),
-      matches:
-        script.options.matches?.map((matchPattern) =>
-          stripPathFromMatchPattern(matchPattern),
-        ) ?? [],
+      matches: [
+        ...(script.options.matches ?? []),
+        ...(script.options.optionalMatches ?? []),
+      ].map((matchPattern) => stripPathFromMatchPattern(matchPattern)),
     });
   });
 
@@ -636,13 +646,129 @@ function addPermission(
   manifest.permissions.push(permission);
 }
 
-function addHostPermission(
+function addOptionalPermission(
   manifest: Browser.runtime.Manifest,
-  hostPermission: string,
+  permission: string,
 ): void {
-  manifest.host_permissions ??= [];
-  if (manifest.host_permissions.includes(hostPermission)) return;
-  manifest.host_permissions.push(hostPermission);
+  manifest.optional_permissions ??= [];
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
+  if (manifest.optional_permissions.includes(permission)) return;
+  // @ts-expect-error: Allow using strings for permissions for MV2 support
+  manifest.optional_permissions.push(permission);
+}
+
+/**
+ * Adds match patterns to `host_permissions`, skipping any pattern already
+ * covered by an existing entry or another pattern being added.
+ */
+function addHostPermissions(
+  manifest: Browser.runtime.Manifest,
+  matchPatterns: string[],
+): void {
+  const existing: string[] = manifest.host_permissions ?? [];
+  const added = getUncoveredMatchPatterns(matchPatterns, existing);
+  if (added.length === 0) return;
+
+  manifest.host_permissions = [...existing, ...added];
+}
+
+/**
+ * Adds match patterns to `optional_host_permissions`, skipping any pattern
+ * already covered by a required pattern, an existing entry, or another pattern
+ * being added.
+ */
+function addOptionalHostPermissions(
+  manifest: Browser.runtime.Manifest,
+  matchPatterns: string[],
+  requiredMatchPatterns: string[],
+): void {
+  const existing: string[] = manifest.optional_host_permissions ?? [];
+  const added = getUncoveredMatchPatterns(matchPatterns, [
+    ...requiredMatchPatterns,
+    ...existing,
+  ]);
+  if (added.length === 0) return;
+
+  manifest.optional_host_permissions = [...existing, ...added];
+}
+
+/**
+ * Returns the match patterns that aren't covered by `coveredBy` or by another
+ * pattern in the list. When one pattern covers another, only the broader one is
+ * kept.
+ */
+function getUncoveredMatchPatterns(
+  matchPatterns: string[],
+  coveredBy: string[],
+): string[] {
+  return matchPatterns.reduce<string[]>((kept, pattern) => {
+    const isCovered = [...coveredBy, ...kept].some((other) =>
+      matchPatternCovers(other, pattern),
+    );
+    if (isCovered) return kept;
+
+    // Drop previously kept patterns that this broader pattern covers. Patterns
+    // in `coveredBy` are never removed.
+    return [
+      ...kept.filter((other) => !matchPatternCovers(pattern, other)),
+      pattern,
+    ];
+  }, []);
+}
+
+/**
+ * Returns `true` when every URL matched by `inner` is also matched by `outer`.
+ * Returns `false` when unsure, so patterns are only skipped when they're
+ * definitely redundant.
+ *
+ * - `("*://*.example.com/*", "https://app.example.com/path/*")` → `true`
+ * - `("https://example.com/*", "*://example.com/*")` → `false`
+ */
+export function matchPatternCovers(outer: string, inner: string): boolean {
+  if (outer === inner || outer === '<all_urls>') return true;
+
+  const outerParts = parseMatchPattern(outer);
+  const innerParts = parseMatchPattern(inner);
+  if (outerParts == null || innerParts == null) return false;
+
+  const schemeCovered =
+    outerParts.scheme === innerParts.scheme ||
+    (outerParts.scheme === '*' &&
+      (innerParts.scheme === 'http' || innerParts.scheme === 'https'));
+  if (!schemeCovered) return false;
+
+  if (outerParts.host !== '*' && outerParts.host !== innerParts.host) {
+    if (!outerParts.host.startsWith('*.')) return false;
+    const outerDomain = outerParts.host.substring(2);
+    const innerDomain = innerParts.host.startsWith('*.')
+      ? innerParts.host.substring(2)
+      : innerParts.host;
+    if (innerDomain !== outerDomain && !innerDomain.endsWith(`.${outerDomain}`))
+      return false;
+  }
+
+  // Treat the inner path's `*` as a literal character: if the outer glob
+  // matches it, the outer glob matches everything the inner glob does
+  return globToRegExp(outerParts.path).test(innerParts.path);
+}
+
+/**
+ * Converts a match pattern path glob, where `*` matches any characters, to a
+ * regular expression.
+ */
+function globToRegExp(glob: string): RegExp {
+  const escapedParts = glob
+    .split('*')
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'));
+  return new RegExp(`^${escapedParts.join('.*')}$`);
+}
+
+function parseMatchPattern(
+  pattern: string,
+): { scheme: string; host: string; path: string } | undefined {
+  const match = /^([^:/]+):\/\/([^/]*)(\/.*)$/.exec(pattern);
+  if (match == null) return;
+  return { scheme: match[1], host: match[2], path: match[3] };
 }
 
 /**
@@ -687,6 +813,17 @@ function moveHostPermissionsToPermissions(
     addPermission(manifest, permission),
   );
   delete manifest.host_permissions;
+}
+
+function moveOptionalHostPermissionsToOptionalPermissions(
+  manifest: Browser.runtime.Manifest,
+): void {
+  if (!manifest.optional_host_permissions?.length) return;
+
+  manifest.optional_host_permissions.forEach((permission: string) =>
+    addOptionalPermission(manifest, permission),
+  );
+  delete manifest.optional_host_permissions;
 }
 
 function convertActionToMv2(manifest: Browser.runtime.Manifest): void {

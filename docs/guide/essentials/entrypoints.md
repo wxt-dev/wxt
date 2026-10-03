@@ -271,6 +271,7 @@ When you define a Bookmarks entrypoint, WXT will automatically update the manife
 export default defineContentScript({
   // Set manifest options
   matches: string[],
+  optionalMatches: undefined | string[],
   excludeMatches: undefined | [],
   includeGlobs: undefined | [],
   excludeGlobs: undefined | [],

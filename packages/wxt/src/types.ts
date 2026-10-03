@@ -716,6 +716,21 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
 export interface BaseContentScriptEntrypointOptions extends BaseScriptEntrypointOptions {
   matches?: PerBrowserOption<NonNullable<ManifestContentScript['matches']>>;
   /**
+   * Match patterns added to `optional_host_permissions` (or
+   * `optional_permissions` for MV2). They are never added to the manifest's
+   * `content_scripts`, so adding new hosts here does not disable the extension
+   * on update. You are responsible for requesting access with
+   * `browser.permissions.request` and using the scripting API to
+   * register/execute the content script on these hosts at runtime.
+   *
+   * Patterns already covered by `matches`, `host_permissions`, or another entry
+   * in `optional_host_permissions` are not added, since access to those hosts
+   * is already declared.
+   *
+   * Unlike `matches`, this option is not affected by `registration`.
+   */
+  optionalMatches?: PerBrowserOption<string[]>;
+  /**
    * See https://developer.chrome.com/docs/extensions/mv3/content_scripts/
    *
    * @default 'documentIdle'

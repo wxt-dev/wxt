@@ -45,6 +45,88 @@ if (ctx.isInvalid) {
 }
 ```
 
+## Registration
+
+Where WXT puts a content script's match patterns depends on these options:
+
+| Option                               | `content_scripts` | `host_permissions` | `optional_host_permissions` |
+| ------------------------------------ | :---------------: | :----------------: | :-------------------------: |
+| `registration: 'manifest'` (default) |     `matches`     |                    |                             |
+| `registration: 'runtime'`            |                   |     `matches`      |                             |
+| `optionalMatches`                    |                   |                    |      `optionalMatches`      |
+
+### Manifest
+
+By default, content scripts are added to the manifest's `content_scripts` and the browser injects them into every page matching `matches`.
+
+```ts
+export default defineContentScript({
+  matches: ['*://*.example.com/*'],
+  main(ctx) {},
+});
+```
+
+### Runtime
+
+With `registration: 'runtime'`, the content script is not added to `content_scripts`. Instead, its `matches` are added to `host_permissions`, and you are responsible for registering or executing it with the [scripting API](/guide/essentials/scripting).
+
+```ts
+// entrypoints/example.content.ts
+export default defineContentScript({
+  matches: ['*://*.example.com/*'],
+  registration: 'runtime',
+  main(ctx) {},
+});
+```
+
+```ts
+// entrypoints/background.ts
+await browser.scripting.registerContentScripts([
+  {
+    id: 'example',
+    matches: ['*://*.example.com/*'],
+    js: ['content-scripts/example.js'],
+  },
+]);
+```
+
+Since `matches` is only used for permissions, it is optional for runtime content scripts. For example, you can use the `activeTab` permission instead.
+
+### Optional Hosts
+
+Adding a new host to `content_scripts` or `host_permissions` is a permission increase: when users update the extension, Chromium disables it until they accept the new permissions. Optional host permissions do not have this problem, so use `optionalMatches` for hosts the content script should only run on after the user grants access:
+
+```ts
+// entrypoints/example.content.ts
+export default defineContentScript({
+  matches: ['*://my-app.com/*'],
+  optionalMatches: ['*://partner.com/*'],
+  main(ctx) {},
+});
+```
+
+`optionalMatches` are always added to `optional_host_permissions` (`optional_permissions` in MV2), regardless of `registration`. Patterns already covered by `matches`, `host_permissions`, or another `optional_host_permissions` entry, like `*://*.partner.com/*`, are not added.
+
+You are responsible for requesting access and registering the content script for those hosts:
+
+```ts
+// Must be called from a user gesture, like a button click
+const granted = await browser.permissions.request({
+  origins: ['*://partner.com/*'],
+});
+if (granted) {
+  await browser.scripting.registerContentScripts([
+    {
+      id: 'example-optional',
+      matches: ['*://partner.com/*'],
+      js: ['content-scripts/example.js'],
+    },
+  ]);
+}
+```
+
+To only run on optional hosts, omit `matches` and set `registration: 'runtime'`.
+
 ## CSS
 
 In regular web extensions, CSS for content scripts is usually a separate CSS file, that is added to a CSS array in the manifest:
