@@ -36,6 +36,7 @@ export async function createViteBuilder(
   hooks: Hookable<WxtHooks>,
   getWxtDevServer?: () => WxtDevServer | undefined,
 ): Promise<WxtBuilder> {
+  // TODO: This doesn't need to be async. Convert to class like other overridable services as well.
   const vite = await import('vite');
 
   /**
