@@ -148,4 +148,13 @@ The core WXT package generates some per-project config and types. Third party NP
 
 ## Virtual Modules
 
-Virtual modules are fundamental to both of WXT's build process and dev mode. They are JS files generated during the build process, but that are never written to the disk. They are included in the final bundle, but you w
+Virtual modules are fundamental to both of WXT's build process and dev mode. There are two types of virtual modules:
+
+- Aliases to fully generated JS modules that are not written to the disk.
+- Aliases to project files whose location varies between projects.
+
+In the `wxt/src/virtual/*`, there are some templates for the virtual modules used as the input for different entrypoints. Because these files are meant to be used in projects using WXT, not in WXT itself, they're a separate TS project in the source code. When the package is built for NPM, they are transpiled down to JS and loaded by file path, not by importing them, in vite plugins.
+
+Other virtual modules, like `virtual:user-background-entrypoint`, resolve to a project file whose location may vary. In this case, it would resolve to `entrypoints/background.ts` or `entrypoints/background/index.ts`, whichever exists.
+
+All virtual modules are "resolved" in Vite plugins - whenever a virtual module is imported, the plugin either returns a string of JS code or points Vite to a file on disk.
