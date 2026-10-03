@@ -361,7 +361,7 @@ function addEntrypoints(
 
   if (sandboxes?.length) {
     if (wxt.config.browser === 'firefox') {
-      wxt.logger.warn(
+      wxt.logger.warnOnce(
         'Sandboxed pages not supported by Firefox. sandbox.pages was not added to the manifest',
       );
     } else {

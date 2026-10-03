@@ -24,43 +24,59 @@ export function createWebExtRunner(): ExtensionRunner {
       };
 
       const wxtUserConfig = wxt.config.webExt.config;
+      const target =
+        wxtUserConfig?.target ??
+        (wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium');
+
+      // Options for known targets, anything else passes through to web-ext as-is
+      let targetConfig: Record<string, unknown> = {};
+      if (target === 'firefox-desktop') {
+        targetConfig = {
+          firefox: wxtUserConfig?.binaries?.firefox,
+          firefoxProfile: wxtUserConfig?.firefoxProfile,
+          pref: wxtUserConfig?.firefoxPref,
+          args: wxtUserConfig?.firefoxArgs,
+        };
+      } else if (target === 'firefox-android') {
+        targetConfig = {
+          adbDevice: wxtUserConfig?.adbDevice,
+          adbBin: wxtUserConfig?.adbBin,
+          firefoxApk: wxtUserConfig?.firefoxApk ?? 'org.mozilla.fenix',
+          pref: wxtUserConfig?.firefoxPref,
+        };
+      } else if (target === 'chromium') {
+        targetConfig = {
+          chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
+          chromiumProfile: wxtUserConfig?.chromiumProfile,
+          chromiumPref: defu(
+            wxtUserConfig?.chromiumPref,
+            DEFAULT_CHROMIUM_PREFS,
+          ),
+          args: [
+            '--unsafely-disable-devtools-self-xss-warnings',
+            ...(wxtUserConfig?.chromiumArgs ?? []),
+          ],
+        };
+      }
+
       const userConfig = {
         browserConsole: wxtUserConfig?.openConsole,
         devtools: wxtUserConfig?.openDevtools,
         startUrl: wxtUserConfig?.startUrls,
         keepProfileChanges: wxtUserConfig?.keepProfileChanges,
         chromiumPort: wxtUserConfig?.chromiumPort,
-        ...(wxt.config.browser === 'firefox'
-          ? {
-              firefox: wxtUserConfig?.binaries?.firefox,
-              firefoxProfile: wxtUserConfig?.firefoxProfile,
-              pref: wxtUserConfig?.firefoxPref,
-              args: wxtUserConfig?.firefoxArgs,
-            }
-          : {
-              chromiumBinary: wxtUserConfig?.binaries?.[wxt.config.browser],
-              chromiumProfile: wxtUserConfig?.chromiumProfile,
-              chromiumPref: defu(
-                wxtUserConfig?.chromiumPref,
-                DEFAULT_CHROMIUM_PREFS,
-              ),
-              args: [
-                '--unsafely-disable-devtools-self-xss-warnings',
-                ...(wxtUserConfig?.chromiumArgs ?? []),
-              ],
-            }),
+        ...targetConfig,
       };
 
       const finalConfig = {
         ...userConfig,
-        target:
-          wxt.config.browser === 'firefox' ? 'firefox-desktop' : 'chromium',
+        target,
         sourceDir: wxt.config.outDir,
         // Don't add a "Reload Manager" extension alongside dev extension, WXT
         // already handles reloads internally.
         noReloadManagerExtension: true,
-        // WXT handles reloads, so disable auto-reload behaviors in web-ext
-        noReload: true,
+        // WXT handles reloads, except on Android where web-ext must re-push
+        noReload: target !== 'firefox-android',
         noInput: true,
       };
       const options = {
