@@ -3,13 +3,20 @@ import { logger } from '../../utils/internal/logger';
 import { MatchPattern } from 'wxt/utils/match-patterns';
 import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server-websocket';
 
-export function reloadContentScript(payload: ReloadContentScriptPayload) {
+const pendingReloads = new Set<Promise<unknown>>();
+
+export function reloadContentScript(payload: ReloadContentScriptPayload): void {
   const manifest = browser.runtime.getManifest();
-  if (manifest.manifest_version == 2) {
-    void reloadContentScriptMv2(payload);
-  } else {
-    void reloadContentScriptMv3(payload);
-  }
+  const promise =
+    manifest.manifest_version == 2
+      ? reloadContentScriptMv2(payload)
+      : reloadContentScriptMv3(payload);
+  pendingReloads.add(promise);
+  promise.finally(() => pendingReloads.delete(promise));
+}
+
+export async function waitForPendingContentScriptReloads(): Promise<void> {
+  await Promise.allSettled(pendingReloads);
 }
 
 export async function reloadContentScriptMv3({
@@ -96,7 +103,11 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
   await Promise.all(
     matchingTabs.map(async (tab) => {
       try {
-        await browser.tabs.reload(tab.id!);
+        await browser.scripting.executeScript({
+          target: { tabId: tab.id! },
+          files: contentScript.js!,
+          world: contentScript.world,
+        });
       } catch (err) {
         logger.warn('Failed to reload tab:', err);
       }

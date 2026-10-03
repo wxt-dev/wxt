@@ -4,12 +4,17 @@ import { getDevServerWebSocket } from '../utils/internal/dev-server-websocket';
 import { logger } from '../utils/internal/logger';
 import { browser } from 'wxt/browser';
 import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
-import { reloadContentScript } from './utils/reload-content-scripts';
+import {
+  reloadContentScript,
+  waitForPendingContentScriptReloads,
+} from './utils/reload-content-scripts';
 
 if (import.meta.env.COMMAND === 'serve') {
   try {
     const ws = getDevServerWebSocket();
-    ws.addWxtEventListener('wxt:reload-extension', () => {
+    ws.addWxtEventListener('wxt:reload-extension', async () => {
+      // Wait for content script reloads to finish before killing the background.
+      await waitForPendingContentScriptReloads();
       browser.runtime.reload();
     });
     ws.addWxtEventListener('wxt:reload-content-script', (event) => {
