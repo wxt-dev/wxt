@@ -5,6 +5,7 @@ import { generateWxtDir } from '../../generate-wxt-dir';
 import { generateManifest, writeManifest } from '../../utils/manifest';
 import { wxt } from '../../wxt';
 import { buildEntrypoints } from './build-entrypoints';
+import { deduplicateCss } from './deduplicate-css';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output,
@@ -52,6 +53,9 @@ export async function rebuild(
     // Do not merge existing because all publicAssets copied every time
     publicAssets: newOutput.publicAssets,
   };
+
+  // Deduplicate CSS files from assets/ that are identical to content-scripts/
+  await deduplicateCss(mergedOutput);
 
   const { manifest: newManifest, warnings: manifestWarnings } =
     await generateManifest(allEntrypoints, mergedOutput);
