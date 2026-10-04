@@ -553,6 +553,9 @@
   chromeId: pgjiceamhhcdccdoaiggbfjmmllbhmah
   firefoxSlug: tabwatch
 
+- # Interline
+  chromeId: mcefogikngeheopmdmaapfgpnnlgcoid
+
 - # Not for You - https://github.com/preziotte/not-for-you
   chromeId: pakdneaipkfgaahgbafblmdebfoadjca
   firefoxSlug: notforyou
