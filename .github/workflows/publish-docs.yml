@@ -44,4 +44,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_REGISTRY_HOSTNAME }}/wxt/docs:${{ github.event.inputs.tag || 'latest' }}
 
       - name: Deploy
-        run: 'curl -X POST -i -H "X-API-Key: ${{ secrets.DOCS_WEBHOOK_API_KEY }}" https://${{ secrets.DOCS_WEBHOOK_DOMAIN }}/api/webhook/stacks/${{ secrets.DOCS_WEBHOOK_STACK_ID }}'
+        run: 'curl -X POST -i -H "$DEPLOY_HEADER" "$DEPLOY_URL"'
+        env:
+          DEPLOY_HEADER: ${{ secrets.DOCS_DEPLOY_HEADER }}
+          DEPLOY_URL: ${{ secrets.DOCS_DEPLOY_URL }}

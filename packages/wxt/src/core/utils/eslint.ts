@@ -1,9 +1,9 @@
+import { tryImport } from './modules';
+
 export async function getEslintVersion(): Promise<string[]> {
-  try {
-    const { ESLint } = await import('eslint');
-    return ESLint.version?.split('.') ?? [];
-  } catch {
-    // Return an empty version when there's an error importing ESLint
-    return [];
-  }
+  const mod = await tryImport(() => import('eslint'));
+  return mod
+    ? (mod.ESLint.version?.split('.') ?? [])
+    : // Return an empty version when there's an error importing ESLint
+      [];
 }

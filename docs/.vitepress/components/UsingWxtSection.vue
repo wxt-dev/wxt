@@ -252,15 +252,18 @@ function formatStars(r: number): string {
 
 .store-stats-info {
   display: inline;
+  margin: 0;
 }
 
 .store-stats-sep {
   opacity: 0.45;
   user-select: none;
+  margin: 0;
 }
 
 .store-links {
   display: inline;
+  margin: 0;
 }
 
 .store-link {
