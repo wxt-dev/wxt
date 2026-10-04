@@ -13,7 +13,6 @@ import {
   WxtModule,
   WxtModuleWithMetadata,
   WxtResolvedUnimportOptions,
-  ExtensionRunner,
   WxtLogger,
 } from '../types';
 import path from 'node:path';
@@ -30,10 +29,6 @@ import { safeStringToNumber } from './utils/number';
 import { loadEnv } from './utils/env';
 import { getPort } from 'get-port-please';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createSafariRunner } from './runners/safari';
-import isWsl from 'is-wsl';
-import { createWslRunner } from './runners/wsl';
-import { createManualRunner } from './runners/manual';
 import { createWxtLogger } from './utils/log/wxtLogger';
 
 /**
@@ -215,10 +210,7 @@ export async function resolveConfig(
     wxtModuleDir,
     root,
     webExt,
-    runner:
-      command === 'serve'
-        ? await resolveRunner(browser, logger, webExt.config)
-        : createManualRunner(),
+    runner: undefined!, // TODO: Remove this once the deprecated `ResolvedConfig.runner` is removed
     srcDir,
     typesDir,
     wxtDir,
@@ -649,26 +641,4 @@ export async function resolveWxtUserModules(
     }),
   );
   return [...npmModules, ...localModules];
-}
-
-async function resolveRunner(
-  browser: string,
-  logger: Logger,
-  webExt: WebExtConfig,
-): Promise<ExtensionRunner> {
-  if (browser === 'safari') return createSafariRunner();
-
-  if (isWsl) return createWslRunner();
-
-  try {
-    // This module imports `web-ext`, so if it fails, we know `web-ext` isn't installed
-    const { createWebExtRunner } = await import('./runners/web-ext');
-    return webExt.disabled ? createManualRunner() : createWebExtRunner();
-  } catch (err: any) {
-    if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
-
-    logger.debug('Error loading the web-ext runner', err);
-  }
-
-  return createManualRunner();
 }

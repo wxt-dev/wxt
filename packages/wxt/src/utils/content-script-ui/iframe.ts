@@ -57,6 +57,11 @@ export interface IframeContentScriptUi<
   wrapper: HTMLDivElement;
 }
 
+/**
+ * {@inheritDoc wxt/utils/content-script-ui/types!ContentScriptUiOptions}
+ *
+ * @interface
+ */
 export type IframeContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**

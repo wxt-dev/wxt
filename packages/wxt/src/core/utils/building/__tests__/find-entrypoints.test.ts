@@ -16,6 +16,7 @@ import { wxt } from '../../../wxt';
 import { unnormalizePath } from '../../paths';
 import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
 import { findEntrypoints } from '../find-entrypoints';
+import { FlatEntrypointFinder } from '../../../entrypoint-finders/flat';
 
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
@@ -24,17 +25,21 @@ vi.mock('node:fs/promises');
 const readFileMock = vi.mocked(readFile);
 
 describe('findEntrypoints', () => {
-  const config = fakeResolvedConfig({
+  const baseConfig = {
     manifestVersion: 3,
     root: '/',
     entrypointsDir: resolve('/src/entrypoints'),
     outDir: resolve('.output'),
     command: 'build',
-  });
+  } as const;
+  const config = fakeResolvedConfig(baseConfig);
   let importEntrypointsMock: Mock<typeof wxt.builder.importEntrypoints>;
 
   beforeEach(() => {
-    setFakeWxt({ config });
+    setFakeWxt({
+      config,
+      entrypointFinder: new FlatEntrypointFinder(config),
+    });
     importEntrypointsMock = vi.mocked(wxt.builder.importEntrypoints);
     importEntrypointsMock.mockResolvedValue([]);
   });
@@ -359,11 +364,11 @@ describe('findEntrypoints', () => {
   );
 
   it('should remove type=module from MV2 background scripts', async () => {
+    const config = fakeResolvedConfig({ ...baseConfig, manifestVersion: 2 });
     setFakeWxt({
-      config: {
-        manifestVersion: 2,
-      },
+      config,
       builder: wxt.builder,
+      entrypointFinder: new FlatEntrypointFinder(config),
     });
     const options = {
       type: 'module',
@@ -377,11 +382,11 @@ describe('findEntrypoints', () => {
   });
 
   it('should allow type=module for MV3 background service workers', async () => {
+    const config = fakeResolvedConfig({ ...baseConfig, manifestVersion: 3 });
     setFakeWxt({
-      config: {
-        manifestVersion: 3,
-      },
+      config,
       builder: wxt.builder,
+      entrypointFinder: new FlatEntrypointFinder(config),
     });
     const options = {
       type: 'module',
@@ -395,12 +400,11 @@ describe('findEntrypoints', () => {
   });
 
   it("should include a virtual background script so dev reloading works when there isn't a background entrypoint defined by the user", async () => {
+    const serveConfig = fakeResolvedConfig({ ...baseConfig, command: 'serve' });
     setFakeWxt({
-      config: {
-        ...config,
-        command: 'serve',
-      },
+      config: serveConfig,
       builder: wxt.builder,
+      entrypointFinder: new FlatEntrypointFinder(serveConfig),
     });
     globMock.mockResolvedValueOnce(['popup.html']);
 
@@ -944,15 +948,14 @@ describe('findEntrypoints', () => {
         'injected.content/index.ts',
       ]);
       const filterEntrypoints = ['popup', 'ui'];
+      const filterConfig = fakeResolvedConfig({
+        ...baseConfig,
+        filterEntrypoints: new Set(filterEntrypoints),
+      });
       setFakeWxt({
-        config: {
-          root: '/',
-          entrypointsDir: resolve('/src/entrypoints'),
-          outDir: resolve('.output'),
-          command: 'build',
-          filterEntrypoints: new Set(filterEntrypoints),
-        },
+        config: filterConfig,
         builder: wxt.builder,
+        entrypointFinder: new FlatEntrypointFinder(filterConfig),
       });
 
       importEntrypointsMock.mockResolvedValue([{}]);
