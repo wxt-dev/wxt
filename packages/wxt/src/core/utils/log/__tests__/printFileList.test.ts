@@ -8,8 +8,6 @@ import { wxt } from '../../../wxt';
 
 describe('printFileList', () => {
   it('resolves relative files against baseDir instead of the process cwd', async () => {
-    // `wxt zip` lists sources relative to `zip.sourcesRoot`, which can be a
-    // monorepo root instead of the current working directory.
     const baseDir = await mkdtemp(path.join(tmpdir(), 'wxt-sources-'));
     await writeFile(path.join(baseDir, 'wxt-marker-a.txt'), '1234567');
     await mkdir(path.join(baseDir, 'packages/shared'), { recursive: true });
