@@ -4,7 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
-} from './src/core/utils/virtual-modules';
+} from './src/internal/virtual-modules';
 import consola from 'consola';
 import { styleText } from 'node:util';
 import { resolve } from 'node:path';

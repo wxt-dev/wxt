@@ -86,6 +86,17 @@ const unwatch = storage.watch<number>('local:counter', (newCount, oldCount) => {
 });
 ```
 
+Use `storage.watchMeta` to listen for changes to a key's metadata:
+
+```ts
+const unwatchMeta = storage.watchMeta<{ lastModified?: number }>(
+  'local:counter',
+  (newMetadata, oldMetadata) => {
+    console.log('Metadata changed:', { newMetadata, oldMetadata });
+  },
+);
+```
+
 To remove the listener, call the returned `unwatch` function:
 
 ```ts
@@ -153,6 +164,9 @@ await showChangelogOnUpdate.getValue();
 await showChangelogOnUpdate.setValue(false);
 await showChangelogOnUpdate.removeValue();
 const unwatch = showChangelogOnUpdate.watch((newValue) => {
+  // ...
+});
+const unwatchMeta = showChangelogOnUpdate.watchMeta((newMetadata) => {
   // ...
 });
 ```

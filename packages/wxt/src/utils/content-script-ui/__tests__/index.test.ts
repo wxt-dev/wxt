@@ -578,6 +578,28 @@ describe('Content Script UIs', () => {
           expect(onRemove).toHaveBeenCalledTimes(3);
         });
 
+        it('should resolve the anchor once per mutation batch, not once per mutation', async () => {
+          const anchor = vi.fn(() => `#parent > #${DYNAMIC_CHILD_ID}`);
+          ui = await createUiFunction(ctx, {
+            position: 'inline',
+            onMount,
+            anchor,
+            page: name === 'iframe' ? '/page.html' : undefined,
+            name: 'test-component',
+          });
+          ui.autoMount();
+          await runMicrotasks();
+          anchor.mockClear();
+
+          const noise = appendTestElement({ id: 'noise' });
+          for (let index = 0; index < 50; index++) {
+            noise.setAttribute('data-index', String(index));
+          }
+          await runMicrotasks();
+
+          expect(anchor).toHaveBeenCalledTimes(1);
+        });
+
         describe('options', () => {
           it('should auto-mount only once mount and remove when the `once` option is true', async () => {
             const onRemove = vi.fn();
