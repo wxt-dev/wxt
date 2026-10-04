@@ -148,9 +148,41 @@ There is a lot of code in WXT dedicated to determining what type of reload is ne
 
 ## `.wxt` Directory
 
+> [`generate-wxt-dir.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/generate-wxt-dir.ts)
+
 One of the most powerful features of WXT is its extendable build system. Alongside [hooks](/guide/essentials/config/hooks), WXT relies heavily on code generation. Anything from the project's base `tsconfig.json`, dedicated types for each project, or runtime code can be generated inside the `.wxt` directory.
 
 The core WXT package generates some per-project config and types. Third-party NPM packages can generate runtime utils and their own types. Projects can perform module augmentation to change or add to types from NPM packages. They can change how fundamental parts of WXT's build process work, like entrypoint discovery.
+
+### TypeScript Project
+
+One of the things WXT generates here is the `.wxt/tsconfig.json` file. WXT projects extend this file in their own `tsconfig.json`:
+
+```jsonc
+{
+  "extends": "./.wxt/tsconfig.json",
+}
+```
+
+Generating a tsconfig does a few useful things:
+
+1. Prevents projects from being out-of-date with WXT's necessary compiler options
+2. Provides a standard way for generated declaration files to be included in the project's type checking
+
+By default, TS excludes hidden directories (ones that start with a `.`) from being included in the TS project, so `tsc` won't check them for errors, nor include declaration files that may augment modules or add globals. Because `.wxt` is a hidden directory, the generated `tsconfig.json` file also manually includes one file, `.wxt/wxt.d.ts`, in the TS project:
+
+```jsonc
+// .wxt/tsconfig.json
+{
+  "include": ["../**/*", "./wxt.d.ts"],
+}
+```
+
+This file, `.wxt/wxt.d.ts`, is used to include all the global declaration files (that are not modules that can be imported) using [triple-slash references](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) into the TS project. Without manually including the `wxt.d.ts` file, other files like `.wxt/types/paths.d.ts` would be ignored by TS, and projects would lose access to the types for `browser.runtime.getURL`.
+
+Projects can add to the `wxt.d.ts` via the [`prepare:types` hook](/api/reference/wxt/interfaces/WxtHooks.html#prepare-types).
+
+But that only applies to global declarations that are never imported. If a module generates a regular TS file, and the project imports that file, all imported files are added to the TS project without needing to be included in the `.wxt/tsconfig.json`.
 
 ## Virtual Modules
 
