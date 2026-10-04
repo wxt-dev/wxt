@@ -94,7 +94,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async stop() {
       wasStopped = true;
       keyboardShortcuts.stop();
-      await wxt.config.runner.closeBrowser?.();
+      await wxt.runner.closeBrowser?.();
       await builderServer.close();
       await wxt.hooks.callHook('server:closed', wxt, server);
 
@@ -118,14 +118,14 @@ async function createServerInternal(): Promise<WxtDevServer> {
       server.ws.send('wxt:reload-extension');
     },
     async restartBrowser() {
-      await wxt.config.runner.closeBrowser?.();
+      await wxt.runner.closeBrowser?.();
       keyboardShortcuts.stop();
       await wxt.reloadConfig();
-      await wxt.config.runner.openBrowser();
+      await wxt.runner.openBrowser();
       keyboardShortcuts.start();
       keyboardShortcuts.printHelp({
         canReopenBrowser:
-          !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
+          !wxt.config.webExt.config.disabled && !!wxt.runner.canOpen?.(),
       });
     },
   };
@@ -164,11 +164,11 @@ async function createServerInternal(): Promise<WxtDevServer> {
     }
 
     // Open browser after everything is ready to go.
-    await wxt.config.runner.openBrowser();
+    await wxt.runner.openBrowser();
     keyboardShortcuts.start();
     keyboardShortcuts.printHelp({
       canReopenBrowser:
-        !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.(),
+        !wxt.config.webExt.config.disabled && !!wxt.runner.canOpen?.(),
     });
   };
 

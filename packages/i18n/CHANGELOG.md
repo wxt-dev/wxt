@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.8
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.7...i18n-v0.2.8)
+
+### 🩹 Fixes
+
+- **i18n**: Don't treat mustache-style {{tokens}} as named substitutions ([#2486](https://github.com/wxt-dev/wxt/pull/2486))
+
+### ❤️ Contributors
+
+- Thribhuvan <thribhuvan003@gmail.com>
+
+
 ## v0.2.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.6...i18n-v0.2.7)
@@ -11,7 +24,6 @@
 ### ❤️ Contributors
 
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v0.2.6
 
