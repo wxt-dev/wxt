@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { generateManifest, stripPathFromMatchPattern } from '../manifest';
+import {
+  generateManifest,
+  matchPatternCovers,
+  stripPathFromMatchPattern,
+} from '../manifest';
 import {
   fakeArray,
   fakeBackgroundEntrypoint,
@@ -1471,6 +1475,334 @@ describe('Manifest Utils', () => {
           ]);
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
+
+        const runtimeCs = (
+          name: string,
+          matches: string[],
+        ): ContentScriptEntrypoint => ({
+          type: 'content-script',
+          name,
+          inputPath: `entrypoints/${name}.content.ts`,
+          outputDir: contentScriptOutDir,
+          options: { matches, registration: 'runtime' },
+          skipped: false,
+        });
+
+        it.each<'build' | 'serve'>(['build', 'serve'])(
+          'should skip host_permissions covered by another pattern (%s)',
+          async (command) => {
+            const one = runtimeCs('one', ['https://other.com/*']);
+            const two = runtimeCs('two', [
+              'https://*.other.com/*',
+              'https://other.com/path/*',
+            ]);
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command },
+              server: fakeWxtDevServer(),
+            });
+
+            const { manifest: actual } = await generateManifest([one, two], {
+              publicAssets: [],
+              steps: [
+                { entrypoints: one, chunks: [] },
+                { entrypoints: two, chunks: [] },
+              ],
+            });
+
+            expect(actual.host_permissions).toContain('https://*.other.com/*');
+            expect(actual.host_permissions).not.toContain(
+              'https://other.com/*',
+            );
+            expect(actual.host_permissions).not.toContain(
+              'https://other.com/path/*',
+            );
+          },
+        );
+
+        it('should keep user defined host_permissions when adding matches', async () => {
+          const cs = runtimeCs('one', [
+            'https://*.other.com/*',
+            'https://app.config.com/*',
+          ]);
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                host_permissions: [
+                  'https://other.com/*',
+                  'https://*.config.com/*',
+                ],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest([cs], {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [] }],
+          });
+
+          expect(actual.host_permissions).toEqual([
+            'https://other.com/*',
+            'https://*.config.com/*',
+            'https://*.other.com/*',
+          ]);
+        });
+      });
+
+      describe('optionalMatches', () => {
+        const optionalCs = (
+          options: Partial<ContentScriptEntrypoint['options']>,
+          name = 'one',
+        ): ContentScriptEntrypoint => ({
+          type: 'content-script',
+          name,
+          inputPath: `entrypoints/${name}.content.ts`,
+          outputDir: contentScriptOutDir,
+          options,
+          skipped: false,
+        });
+        const buildOutputFor = (
+          entrypoints: ContentScriptEntrypoint[],
+        ): Omit<BuildOutput, 'manifest'> => ({
+          publicAssets: [],
+          steps: entrypoints.map((cs) => ({ entrypoints: cs, chunks: [] })),
+        });
+
+        it.each<'build' | 'serve'>(['build', 'serve'])(
+          'should add optionalMatches to optional_host_permissions and not content_scripts (%s)',
+          async (command) => {
+            const cs = optionalCs({
+              registration: 'runtime',
+              optionalMatches: ['*://google.com/*'],
+            });
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command },
+              server: fakeWxtDevServer(),
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [cs],
+              buildOutputFor([cs]),
+            );
+
+            expect(actual.content_scripts ?? []).toEqual([]);
+            expect(actual.host_permissions ?? []).not.toContain(
+              '*://google.com/*',
+            );
+            expect(actual.optional_host_permissions).toEqual([
+              '*://google.com/*',
+            ]);
+          },
+        );
+
+        it('should only add matches to content_scripts when both matches and optionalMatches are set', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+          });
+          setFakeWxt({
+            config: { manifestVersion: 3, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [cs],
+            buildOutputFor([cs]),
+          );
+
+          expect(actual.content_scripts).toEqual([
+            {
+              matches: ['*://required.com/*'],
+              js: ['content-scripts/one.js'],
+            },
+          ]);
+          expect(actual.host_permissions).toBeUndefined();
+          expect(actual.optional_host_permissions).toEqual([
+            '*://optional.com/*',
+          ]);
+        });
+
+        it('should add matches to host_permissions and optionalMatches to optional_host_permissions when registration=runtime', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+            registration: 'runtime',
+          });
+          setFakeWxt({
+            config: { manifestVersion: 3, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [cs],
+            buildOutputFor([cs]),
+          );
+
+          expect(actual.content_scripts).toBeUndefined();
+          expect(actual.host_permissions).toEqual(['*://required.com/*']);
+          expect(actual.optional_host_permissions).toEqual([
+            '*://optional.com/*',
+          ]);
+        });
+
+        it('should append to user defined optional_host_permissions, skipping covered patterns', async () => {
+          const one = optionalCs(
+            {
+              registration: 'runtime',
+              optionalMatches: [
+                'https://app1.internal.com/some/path/*',
+                'https://other.com/*',
+              ],
+            },
+            'one',
+          );
+          const two = optionalCs(
+            {
+              registration: 'runtime',
+              optionalMatches: ['https://other.com/*', 'https://*.other.com/*'],
+            },
+            'two',
+          );
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                optional_host_permissions: ['https://*.internal.com/*'],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [one, two],
+            buildOutputFor([one, two]),
+          );
+
+          expect(actual.optional_host_permissions).toEqual([
+            'https://*.internal.com/*',
+            'https://*.other.com/*',
+          ]);
+        });
+
+        it.each([
+          {
+            name: 'the same pattern',
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://required.com/*'],
+          },
+          {
+            name: 'a broader pattern',
+            matches: ['https://*.other.com/*'],
+            optionalMatches: ['https://other.com/*'],
+          },
+        ])(
+          'should skip optionalMatches covered by $name in matches',
+          async ({ matches, optionalMatches }) => {
+            const cs = optionalCs({ matches, optionalMatches });
+            setFakeWxt({
+              config: { manifestVersion: 3, outDir, command: 'build' },
+            });
+
+            const { manifest: actual } = await generateManifest(
+              [cs],
+              buildOutputFor([cs]),
+            );
+
+            expect(actual.optional_host_permissions).toBeUndefined();
+          },
+        );
+
+        it('should skip optionalMatches covered by required permissions from other sources', async () => {
+          const one = optionalCs(
+            {
+              matches: ['*://runtime.com/*'],
+              registration: 'runtime',
+            },
+            'one',
+          );
+          const two = optionalCs(
+            {
+              matches: ['*://two.com/*'],
+              optionalMatches: [
+                '*://runtime.com/*',
+                'https://config.com/path/*',
+                '*://optional.com/*',
+              ],
+            },
+            'two',
+          );
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+              manifest: {
+                host_permissions: ['https://config.com/*'],
+              },
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [one, two],
+            buildOutputFor([one, two]),
+          );
+
+          expect(actual.optional_host_permissions).toEqual([
+            '*://optional.com/*',
+          ]);
+        });
+
+        it('should include optionalMatches in web_accessible_resources when cssInjectionMode=ui', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/path/*'],
+            optionalMatches: ['*://optional.com/path/*'],
+            cssInjectionMode: 'ui',
+          });
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+          setFakeWxt({
+            config: {
+              browser: 'chrome',
+              manifestVersion: 3,
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest([cs], {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          });
+
+          expect(actual.web_accessible_resources).toEqual([
+            {
+              matches: ['*://required.com/*', '*://optional.com/*'],
+              resources: ['content-scripts/one.css'],
+              use_dynamic_url: true,
+            },
+          ]);
+        });
+
+        it('should move optionalMatches to optional_permissions for MV2', async () => {
+          const cs = optionalCs({
+            matches: ['*://required.com/*'],
+            optionalMatches: ['*://optional.com/*'],
+          });
+          setFakeWxt({
+            config: { manifestVersion: 2, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [cs],
+            buildOutputFor([cs]),
+          );
+
+          expect(actual.optional_permissions).toEqual(['*://optional.com/*']);
+          expect(actual.optional_host_permissions).toBeUndefined();
+        });
       });
     });
 
@@ -2060,6 +2392,64 @@ describe('Manifest Utils', () => {
       });
     });
 
+    describe('optional_host_permissions', () => {
+      it('should keep optional_host_permissions as-is for MV3', async () => {
+        const expectedOptionalHostPermissions = ['https://google.com/*'];
+        const expectedOptionalPermissions: Browser.runtime.ManifestOptionalPermission[] =
+          ['cookies'];
+        setFakeWxt({
+          config: {
+            manifest: {
+              optional_host_permissions: expectedOptionalHostPermissions,
+              optional_permissions: expectedOptionalPermissions,
+            },
+            manifestVersion: 3,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.optional_permissions).toEqual(
+          expectedOptionalPermissions,
+        );
+        expect(actual.optional_host_permissions).toEqual(
+          expectedOptionalHostPermissions,
+        );
+      });
+
+      it('should move optional_host_permissions to optional_permissions for MV2, ignoring duplicates', async () => {
+        const expectedOptionalPermissions = [
+          'cookies',
+          'https://google.com/*',
+          '*://*.youtube.com/*',
+        ];
+        setFakeWxt({
+          config: {
+            manifest: {
+              optional_host_permissions: [
+                'https://google.com/*',
+                'https://google.com/*',
+                '*://*.youtube.com/*',
+              ],
+              optional_permissions: ['cookies'],
+            },
+            manifestVersion: 2,
+            command: 'build',
+          },
+        });
+        const output = fakeBuildOutput();
+
+        const { manifest: actual } = await generateManifest([], output);
+
+        expect(actual.optional_permissions).toEqual(
+          expectedOptionalPermissions,
+        );
+        expect(actual.optional_host_permissions).toBeUndefined();
+      });
+    });
+
     describe('Dev mode', () => {
       it('should not add any code for production builds', async () => {
         setFakeWxt({
@@ -2242,6 +2632,31 @@ describe('Manifest Utils', () => {
     ])('should convert "%s" to "%s"', (input, expected) => {
       const actual = stripPathFromMatchPattern(input);
       expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('matchPatternCovers', () => {
+    it.each([
+      ['<all_urls>', 'https://example.com/*', true],
+      ['https://example.com/*', 'https://example.com/*', true],
+      ['*://example.com/*', 'https://example.com/*', true],
+      ['*://example.com/*', 'http://example.com/*', true],
+      ['https://example.com/*', '*://example.com/*', false],
+      ['https://example.com/*', 'http://example.com/*', false],
+      ['*://example.com/*', 'file:///example/*', false],
+      ['https://*/*', 'https://example.com/*', true],
+      ['https://*.example.com/*', 'https://example.com/*', true],
+      ['https://*.example.com/*', 'https://a.b.example.com/*', true],
+      ['https://*.example.com/*', 'https://*.a.example.com/*', true],
+      ['https://*.example.com/*', 'https://notexample.com/*', false],
+      ['https://a.example.com/*', 'https://*.example.com/*', false],
+      ['https://example.com/*', 'https://example.com/path/*', true],
+      ['https://example.com/path/*', 'https://example.com/*', false],
+      ['https://example.com/a*', 'https://example.com/a/b*c', true],
+      ['https://example.com/a.b', 'https://example.com/aXb', false],
+      ['https://example.com/*', '<all_urls>', false],
+    ])('matchPatternCovers("%s", "%s") → %s', (outer, inner, expected) => {
+      expect(matchPatternCovers(outer, inner)).toBe(expected);
     });
   });
 });
