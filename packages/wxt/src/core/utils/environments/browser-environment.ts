@@ -12,13 +12,7 @@ export function getBrowserEnvironmentGlobals(): EnvGlobals {
       <body></body>
     </html>
   `);
-  // LinkeDOM gives us `window` and `document` but no `location`. Dependencies
-  // that detect a browser from those two then read `window.location` while
-  // their module is initializing and throw before we can generate types, so
-  // give them something inert and consistent to read instead.
   const location = createBuildTimeLocation('http://localhost/');
-  // `window.location` is typed as `string & Location`, which nothing can
-  // actually satisfy; the cast is only to assign the shim.
   window.location = location as Location & string;
   global.location = location;
   return {

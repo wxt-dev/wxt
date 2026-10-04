@@ -28,10 +28,6 @@ describe('Browser Environment', () => {
 
   describe('createBrowserEnvironment', () => {
     it('should let a dependency that detects a browser read location.href', async () => {
-      // A dependency deciding it is in a browser from `window` and `document`,
-      // then reading location while its module initializes. This threw
-      // "Cannot read properties of undefined (reading 'href')" before location
-      // was defined.
       const env = createBrowserEnvironment();
 
       const href = await env.run(async () => {
