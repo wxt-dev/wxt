@@ -18,6 +18,7 @@ import { resolve } from 'node:path';
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
 const inlineDeps = [
+  'dotenv-expand',
   'is-wsl',
   'get-port-please',
   'normalize-path',

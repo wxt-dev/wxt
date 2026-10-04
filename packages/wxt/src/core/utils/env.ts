@@ -1,4 +1,4 @@
-import { expand } from 'dotenv-expand';
+import dotenvExpand from 'dotenv-expand';
 import { existsSync, readFileSync } from 'node:fs';
 import { parseEnv } from 'node:util';
 import type { TargetBrowser } from '../../types';
@@ -37,7 +37,7 @@ export function loadEnv(mode: string, browser: TargetBrowser) {
     }),
   );
 
-  expand({
+  dotenvExpand.expand({
     parsed,
   });
 
