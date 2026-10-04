@@ -29,7 +29,7 @@ import { safeStringToNumber } from '../internal-utils/number-utils';
 import { loadEnv } from '../internal-utils/env-utils';
 import { getPort } from 'get-port-please';
 import { fileURLToPath } from 'node:url';
-import { createWxtLogger } from '../internal-utils/log/wxtLogger';
+import { createWxtLogger } from '../internal-utils/log/wxt-logger';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the

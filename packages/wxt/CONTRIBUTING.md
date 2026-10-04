@@ -2,7 +2,7 @@
 
 ## Directory Structure
 
-```
+```plaintext
 📁 e2e/
     📁 tests/                      - Contains E2E tests using real projects
     📄 utils.ts                    - Utils for running E2E tests

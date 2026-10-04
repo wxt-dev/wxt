@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { lstat } from 'node:fs/promises';
 import { getBytesDisplay } from '../fs-utils';
-import { printTable } from './printTable';
+import { printTable } from './print-table';
 import { styleText } from 'node:util';
 import { TextStyle } from '../type-utils';
 import { wxt } from '../../internal/wxt';

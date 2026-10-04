@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { clearWarnSetForTesting, createWxtLogger } from '../wxtLogger';
+import { clearWarnSetForTesting, createWxtLogger } from '../wxt-logger';
 import type { Logger } from '../../../types';
 import { LogLevels } from 'consola';
 import { mock } from 'vitest-mock-extended';

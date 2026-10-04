@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { BuildOutput } from '../../types';
-import { printFileList } from './printFileList';
+import { printFileList } from './print-file-list';
 import { wxt } from '../../internal/wxt';
 
 export async function printBuildSummary(
