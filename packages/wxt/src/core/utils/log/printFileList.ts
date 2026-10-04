@@ -16,9 +16,6 @@ export async function printFileList(
 
   const fileRows: string[][] = await Promise.all(
     files.map(async (file, i) => {
-      // Files may be absolute or relative to `baseDir` (e.g. the sources zip
-      // lists paths relative to `zip.sourcesRoot`); resolve before reading
-      // stats so lookups never fall back to the process cwd.
       const absoluteFile = path.resolve(baseDir, file);
       const parts = [
         path.relative(process.cwd(), baseDir) + path.sep,
