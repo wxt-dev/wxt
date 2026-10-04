@@ -152,8 +152,7 @@ export interface AutoIconsOptions {
   /**
    * Sizes to generate icons for.
    *
-   * When provided, replaces the default sizes instead of extending them.
-   * Duplicate sizes are generated only once. An empty array generates no
+   * When provided, replaces the default sizes. An empty array generates no
    * icons.
    *
    * @default [128, 48, 32, 16]
