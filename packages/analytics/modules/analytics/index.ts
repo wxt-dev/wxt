@@ -82,8 +82,6 @@ export const analytics = createAnalytics(useAppConfig().analytics);
       optimizeDeps: {
         // Ensure the "#analytics" import is processed by vite in the background plugin
         exclude: ['@wxt-dev/analytics'],
-        // Ensure the CJS subdependency is preprocessed into ESM
-        include: ['@wxt-dev/analytics > ua-parser-js'],
       },
     }));
   },
