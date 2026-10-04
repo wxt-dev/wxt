@@ -42,9 +42,11 @@ In fact, these design choices are very similar to the decisions the Nuxt team ma
 
 At a high level, WXT's build process is very simple:
 
-1. Discover entrypoints
-2. Group them based on what can be bundled together
-3. Build each group
+```mermaid
+flowchart TD
+    A[Discover entrypoints] --> B[Group them based on what can be bundled together]
+    B --> C[Build each group]
+```
 
 Let's go through each of these steps more in-depth:
 
@@ -112,21 +114,23 @@ After the builds are done, WXT summarizes and outputs all the files that were ge
 
 Dev mode is more complex than building.
 
-1. Start dev server
-2. Pre-render files
-3. Build entrypoint groups that can't be served from the dev server (like content and unlisted scripts)
-4. Open browser (or prompt to manually install)
-5. Start file watcher loop:
-   1. Detect the type of change
-      - Will the extension need to be reloaded?
-      - Which entrypoint groups need to be rebuilt?
-      - Will Vite's HMR handle the change?
-   2. Rebuild affected entrypoints
-   3. Reload based on the type of change
-      - On config changes, restart the dev server
-      - On manifest changes, reload the extension
-      - On rebuild or pre-rendered file change, reload affected pages or content scripts
-      - Or let Vite's HMR handle the change
+```mermaid
+flowchart TD
+    A["Start dev server"] --> B["Pre-render files"]
+    B --> D["Open browser or prompt to manually install"]
+    D --> E
+    subgraph loop ["File watcher loop"]
+        E(("File changed")) --> F["Detect the type of change"]
+        F --> G["Rebuild affected entrypoints"]
+        G --> H{"Type of change"}
+        H -->|"Config"| I["Restart dev server"]
+        H -->|"Manifest"| J["Reload extension"]
+        H -->|"Rebuild or pre-rendered file"| K["Reload affected pages or content scripts"]
+        H -->|"Handled by Vite"| L["Let Vite HMR handle it"]
+    end
+```
+
+When detecting the type of change, WXT determines whether the extension needs to be reloaded, which entrypoint groups need to be rebuilt, and whether Vite's HMR can handle the change.
 
 ### Pre-render Files
 
