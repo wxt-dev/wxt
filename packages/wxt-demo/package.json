@@ -36,6 +36,7 @@
     "jiti": "^2.7.0",
     "sass": "^1.97.3",
     "typescript": "catalog:",
+    "typescript-eslint": "^8.0.0",
     "unocss": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
