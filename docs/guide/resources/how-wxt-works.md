@@ -38,7 +38,7 @@ In fact, these design choices are very similar to the decisions the Nuxt team ma
 
 ## The Build Process
 
-> [`internal-build.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/internal-build.ts)
+> [`internal-build.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/internal-build.ts)
 
 At a high level, WXT's build process is very simple:
 
@@ -50,7 +50,7 @@ Let's go through each of these steps more in-depth:
 
 ### Entrypoint Discovery
 
-> [`find-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/find-entrypoints.ts)
+> [`find-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/find-entrypoints.ts)
 
 Entrypoints are discovered by reading the file system and looking at the files in the `wxt.config.entrypointsDir` directory that match specific filename patterns.
 
@@ -58,8 +58,8 @@ Because WXT decided to store config for each entrypoint in the entrypoint itself
 
 JS entrypoints, like the background or content scripts, are meant to be run in the browser. But to extract their config, we need to import the file into a Node.js environment. That means globals, like `window` and `browser`/`chrome` are not present. So WXT does two things to import the config:
 
-1. Polyfills common globals, like `window`, `document`, and `browser`, with the [extension environment utils](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/environments/extension-environment.ts).
-2. Parses the file, removes the `main` function with the [`removeEntrypointMainFunction`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/plugins/removeEntrypointMainFunction.ts) Vite plugin, and tree-shakes any imports that are no longer necessary.
+1. Polyfills common globals, like `window`, `document`, and `browser`, with the [extension environment utils](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/environments/extension-environment.ts).
+2. Parses the file, removes the `main` function with the [`removeEntrypointMainFunction`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/builders/vite/plugins/remove-entrypoint-main-function.ts) Vite plugin, and tree-shakes any imports that are no longer necessary.
 
 This process allows us to quickly import a minimal version of the entrypoint that contains just a default export of the config.
 
@@ -67,7 +67,7 @@ Once we've read the config from the entrypoint file, the entrypoints get saved a
 
 ### Entrypoint Grouping
 
-> [`group-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/group-entrypoints.ts)
+> [`group-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/group-entrypoints.ts)
 
 When building extensions, some files can be bundled together with code splitting, some must be bundled independently. WXT calls the process of determining what entrypoints can be bundled together "grouping".
 
@@ -79,13 +79,13 @@ What can be bundled together? There are really three types of groups:
 
 The mapping from entrypoint type to group looks like this:
 
-<<< @/../packages/wxt/src/core/utils/building/group-entrypoints.ts#snippet
+<<< @/../packages/wxt/src/internal/group-entrypoints.ts#snippet
 
 Once grouped, we return the result as an [`EntrypointGroup[]`](/api/reference/wxt/type-aliases/EntrypointGroup), which is the same as `Array<Entrypoint | Entrypoint[]>`.
 
 ### Building
 
-> [`rebuild.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/rebuild.ts), [`build-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/build-entrypoints.ts), [`vite/index.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/index.ts)
+> [`rebuild.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/rebuild.ts), [`build-entrypoints.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/build-entrypoints.ts), [`vite/index.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/builders/vite/index.ts)
 
 Before actually running the Vite builds, we first generate the `.wxt` directory. More on this later, but for now, this directory contains generated code that needs to exist and be up-to-date before the builds will succeed.
 
@@ -96,7 +96,7 @@ Now WXT can run a build for each entrypoint group:
 
 The builder chooses between them based on the shape of the group:
 
-<<< @/../packages/wxt/src/core/builders/vite/index.ts#snippet
+<<< @/../packages/wxt/src/internal/builders/vite/index.ts#snippet
 
 By default, Vite's outputs don't work for extensions. WXT applies a lot of plugins to each build; anything from adding return values for lib mode scripts, polyfilling `import.meta.url`, resolving "virtual" modules, or slightly tweaking the output JS.
 
@@ -134,7 +134,7 @@ Vite normally serves all content from its dev server in dev mode. The browser lo
 
 That's not the case for extensions - you need to create a directory with a `manifest.json` and all entrypoints. So WXT needs to do some "pre-rendering", where it generates a minimal version of all entrypoints.
 
-For some entrypoints, like HTML pages, that's just the HTML page. Any URLs in the HTML file are pointed at the dev server on `localhost` by the [`devHtmlPrerender`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/builders/vite/plugins/devHtmlPrerender.ts) Vite plugin. For others, like content scripts or the background script, there is no minimal version of the file and WXT performs a full build.
+For some entrypoints, like HTML pages, that's just the HTML page. Any URLs in the HTML file are pointed at the dev server on `localhost` by the [`devHtmlPrerender`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/builders/vite/plugins/dev-html-prerender.ts) Vite plugin. For others, like content scripts or the background script, there is no minimal version of the file and WXT performs a full build.
 
 This means WXT manages a mix of full builds that are rebuilt completely when a file changes, pre-rendered HTML files that need to be reloaded when the HTML file changes, and Vite's HMR that handles changes to "assets" of the pre-rendered HTML files.
 
@@ -148,11 +148,11 @@ The websocket connection is used to perform various types of reloads after a fil
 - When an HTML file is changed, the background finds any tabs with that HTML page open, and reloads the tab using `browser.tabs.reload()`.
 - When a content script is added, changed, or removed, the background uses the `browser.scripting` APIs to register and update the content scripts without having to reload the entire extension.
 
-There is a lot of code in WXT dedicated to determining what type of reload is necessary when a file is changed. See [`detect-dev-changes.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/utils/building/detect-dev-changes.ts) for the actual implementation, and [`create-server.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/create-server.ts) for how the changes are communicated to the background script.
+There is a lot of code in WXT dedicated to determining what type of reload is necessary when a file is changed. See [`detect-dev-changes.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/detect-dev-changes.ts) for the actual implementation, and [`create-server.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/create-server.ts) for how the changes are communicated to the background script.
 
 ## `.wxt` Directory
 
-> [`generate-wxt-dir.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/generate-wxt-dir.ts)
+> [`generate-wxt-dir.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/generate-wxt-dir.ts)
 
 One of the most powerful features of WXT is its extendable build system. Alongside [hooks](/guide/essentials/config/hooks), WXT relies heavily on code generation. Anything from the project's base `tsconfig.json`, dedicated types for each project, or runtime code can be generated inside the `.wxt` directory.
 
@@ -195,7 +195,7 @@ Virtual modules are fundamental to both WXT's build process and dev mode. There 
 - Aliases to fully generated JS modules that are not written to the disk.
 - Aliases to project files whose location varies between projects.
 
-In [`wxt/src/virtual/*`](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4/packages/wxt/src/virtual), there are some templates for the virtual modules used as the input for different entrypoints. Because these files are meant to be used in projects using WXT, not in WXT itself, they're a separate TS project in the source code. When the package is built for NPM, they are transpiled down to JS and loaded by file path, not by importing them, in Vite plugins.
+In [`wxt/src/virtual/*`](https://github.com/wxt-dev/wxt/tree/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/virtual), there are some templates for the virtual modules used as the input for different entrypoints. Because these files are meant to be used in projects using WXT, not in WXT itself, they're a separate TS project in the source code. When the package is built for NPM, they are transpiled down to JS and loaded by file path, not by importing them, in Vite plugins.
 
 Other virtual modules, like `virtual:user-background-entrypoint`, resolve to a project file whose location may vary. In this case, it would resolve to `entrypoints/background.ts` or `entrypoints/background/index.ts`, whichever exists.
 
@@ -203,7 +203,7 @@ All virtual modules are "resolved" in Vite plugins - whenever a virtual module i
 
 ## Public APIs vs CLI
 
-> [src/index.ts](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/index.ts), [commands.ts](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/cli/commands.ts)
+> [src/index.ts](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/index.ts), [commands.ts](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/cli/commands.ts)
 
 WXT provides a set of public APIs. Anything from small helper utils to the full `build` function. Helper utils are simple, pure functions. This section will focus on the "higher-level" public APIs the CLI uses.
 
@@ -222,15 +222,15 @@ Each command just builds some config based on flags, then calls the appropriate 
 
 These "higher-level" public APIs all have one thing in common: the first thing they do is register the global `wxt` object.
 
-<<< @/../packages/wxt/src/core/prepare.ts#snippet
+<<< @/../packages/wxt/src/prepare.ts#snippet
 
 ### The `wxt` Object
 
-Throughout WXT's source code, you'll see references to this `wxt` object. It is defined in [`core/wxt.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/wxt.ts). Generally, reassigning exported globals like this is a bad practice: it's not always clear when these variables are initialized.
+Throughout WXT's source code, you'll see references to this `wxt` object. It is defined in [`internal/wxt.ts`](https://github.com/wxt-dev/wxt/blob/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal/wxt.ts). Generally, reassigning exported globals like this is a bad practice: it's not always clear when these variables are initialized.
 
 However for WXT, given how deeply nested some functions and code paths are, and the fact that they all need to access certain global values, using a global value saves a lot of function arguments and makes the code much more easier to follow. Additionally, it provides convenient context to hooks and WXT modules.
 
 However, that means it's very important to understand when the variable is initialized and where it can be used in the code base. Thankfully, the rules are very clear:
 
 - As mentioned, it's initialized when any of the higher-level public APIs are called
-- It can be used anywhere in the [`src/core`](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4/packages/wxt/src/core) directory
+- It can be used anywhere in the [`src/internal`](https://github.com/wxt-dev/wxt/tree/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal) directory
