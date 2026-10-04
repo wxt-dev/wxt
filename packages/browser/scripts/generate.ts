@@ -75,7 +75,7 @@ function transformFile(file: string, content: string): string {
       // Remove global type declarations
       .replaceAll('chrome: typeof chrome;', '// chrome: typeof chrome;')
       .replaceAll('browser: typeof chrome;', '// browser: typeof chrome;')
-      .replaceAll('declare const browser: typeof chrome;', '// declare const browser: typeof chrome;')
+      .replaceAll('declare var browser: typeof chrome;', '// declare var browser: typeof chrome;')
       // Rename `chrome` namespace to `Browser` and export it
       .replaceAll('declare namespace chrome', 'export namespace Browser')
       // Update references to `chrome` namespace to `Browser`
