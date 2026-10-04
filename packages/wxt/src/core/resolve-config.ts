@@ -545,8 +545,6 @@ async function getUnimportEslintOptions(
 
 /** Returns the path to `node_modules/wxt`. */
 function resolveWxtModuleDir() {
-  // Prefer one-arg resolve: Bun's two-arg `import.meta.resolve(spec, parent)`
-  // fails for bare package names (`Cannot find package 'wxt'`). Node accepts both.
   const url = import.meta.resolve('wxt');
 
   // import.meta.resolve returns the package entry (e.g. dist/index.mjs), not the
@@ -601,8 +599,6 @@ export async function resolveWxtUserModules(
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      // One-arg: Bun rejects two-arg resolve with a synthetic parent URL
-      // (`file:///…/index.js` that does not exist on disk).
       const resolvedModulePath = import.meta.resolve(moduleId);
       const mod: { default: WxtModule<any> } = await import(
         /* @vite-ignore */ resolvedModulePath
