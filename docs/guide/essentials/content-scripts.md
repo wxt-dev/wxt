@@ -534,10 +534,9 @@ export default defineContentScript({
 });
 ```
 
-However, this approach has several notable drawbacks:
+However, this approach has a few notable drawbacks:
 
 - Doesn't support MV2
-- `world: "MAIN"` is only supported by Chromium browsers
 - Main world content scripts don't have access to the extension API
 
 Instead, WXT recommends injecting a script into the main world manually using it's `injectScript` function. This will address the drawbacks mentioned before.

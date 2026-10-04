@@ -16,6 +16,10 @@
   chromeId: injdenmpjncknciccmjjmjlgbmnkince
   firefoxSlug: anylang-translator
 
+- # YuzuLingo
+  chromeId: lpkcklfgpimaokcfpmfgjnehiinokihd
+  firefoxSlug: yuzulingo
+
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
   firefoxSlug: github-better-line-counts
@@ -544,3 +548,14 @@
   chromeId: mfinfkkabangbkanlfhhbokgfekjklea
   firefoxSlug: flowpick
   edgeId: egbfhgcifljmeaomlbhggplohemjombb
+
+- # Interline
+  chromeId: mcefogikngeheopmdmaapfgpnnlgcoid
+
+- # Not for You - https://github.com/preziotte/not-for-you
+  chromeId: pakdneaipkfgaahgbafblmdebfoadjca
+  firefoxSlug: notforyou
+
+- # thebusyfish 忙鱼
+  chromeId: moagedmcmbdgjhhdkibbiofndehfkinf
+  edgeId: aldfginpggebfcknhgbleklejhiebdcg
