@@ -16,6 +16,10 @@
   chromeId: injdenmpjncknciccmjjmjlgbmnkince
   firefoxSlug: anylang-translator
 
+- # YuzuLingo
+  chromeId: lpkcklfgpimaokcfpmfgjnehiinokihd
+  firefoxSlug: yuzulingo
+
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
   firefoxSlug: github-better-line-counts
@@ -544,3 +548,7 @@
   chromeId: mfinfkkabangbkanlfhhbokgfekjklea
   firefoxSlug: flowpick
   edgeId: egbfhgcifljmeaomlbhggplohemjombb
+
+- # thebusyfish 忙鱼
+  chromeId: moagedmcmbdgjhhdkibbiofndehfkinf
+  edgeId: aldfginpggebfcknhgbleklejhiebdcg
