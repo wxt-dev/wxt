@@ -12,15 +12,15 @@ import {
   fakeSidepanelEntrypoint,
   fakeWxtDevServer,
   setFakeWxt,
-} from '../testing/fake-objects';
+} from '../../internal-utils/testing/fake-objects';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
   Entrypoint,
   OutputAsset,
   TargetManifestVersion,
-} from '../../../types';
-import { wxt } from '../../wxt';
+} from '../../types';
+import { wxt } from '../wxt';
 import { mock } from 'vitest-mock-extended';
 import type { Browser } from '@wxt-dev/browser';
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 import { yarn } from '../yarn';
-import { describeWithBin } from '../../utils/testing/fixtures';
+import { describeWithBin } from '../../../internal-utils/testing/fixtures';
 
 describeWithBin('yarn', 'Yarn Package Management Utils', () => {
   describe('listDependencies', () => {

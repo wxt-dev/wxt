@@ -1,4 +1,4 @@
-import { defineWxtModule } from '../modules';
+import { defineWxtModule } from '../../modules';
 
 /**
  * Adds a template-literal type for the `_favicon/` paths served by Chrome's

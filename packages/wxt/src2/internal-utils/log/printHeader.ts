@@ -1,4 +1,4 @@
-import { version } from '../../../version';
+import { version } from '../../version';
 import { consola } from 'consola';
 import { styleText } from 'node:util';
 

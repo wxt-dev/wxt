@@ -1,10 +1,10 @@
 import path from 'node:path';
 import { lstat } from 'node:fs/promises';
-import { getBytesDisplay } from '../../utils/fs';
+import { getBytesDisplay } from '../fs-utils';
 import { printTable } from './printTable';
 import { styleText } from 'node:util';
-import { TextStyle } from '../../../utils/text-style';
-import { wxt } from '../../wxt';
+import { TextStyle } from '../type-utils';
+import { wxt } from '../../internal/wxt';
 
 export async function printFileList(
   log: (message: string) => void,

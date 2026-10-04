@@ -5,25 +5,28 @@ import {
   BuildStepOutput,
   EntrypointGroup,
   WxtDevServer,
-} from '../../types';
-import { wxt } from '../wxt';
+} from '../types';
+import { wxt } from './wxt';
 import {
   detectDevChanges,
-  findEntrypoints,
   getRelevantDevChangedFiles,
-  groupEntrypoints,
-  rebuild,
-} from './building';
-import { getEntrypointBundlePath, isHtmlEntrypoint } from './entrypoints';
+} from './detect-dev-changes';
+import { findEntrypoints } from './find-entrypoints';
+import { groupEntrypoints } from './group-entrypoints';
+import { rebuild } from './rebuild';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '../internal-utils/entrypoint-utils';
 import { getContentScriptCssFiles, getContentScriptsCssMap } from './manifest';
 import {
   getContentScriptJs,
   mapWxtOptionsToRegisteredContentScript,
-} from './content-scripts';
+} from '../internal-utils/content-script-utils';
 import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
 import { styleText } from 'node:util';
-import { filterTruthy, toArray } from './arrays';
-import { normalizePath } from './paths';
+import { filterTruthy, toArray } from '../internal-utils/array-utils';
+import { normalizePath } from '../internal-utils/path-utils';
 
 /**
  * Returns a function responsible for reloading different parts of the extension

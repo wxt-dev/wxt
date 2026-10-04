@@ -6,8 +6,10 @@ import open from 'tiny-open';
 vi.mock('tiny-open');
 const openMock = vi.mocked(open);
 
-vi.mock('../../src2/internal-utils/env', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('../../src2/internal-utils/env')>()),
+vi.mock('../../src2/internal-utils/env-utils', async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import('../../src2/internal-utils/env-utils')
+  >()),
   isCI: () => false,
 }));
 

@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
-import { readJson } from './fs';
-import { wxt } from '../wxt';
+import { readJson } from '../internal-utils/fs-utils';
+import { wxt } from './wxt';
 
 /**
  * Read the project's package.json.

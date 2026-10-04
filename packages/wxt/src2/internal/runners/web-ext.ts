@@ -1,6 +1,6 @@
 import isWsl from 'is-wsl';
 import { ExtensionRunner, ResolvedConfig } from '../../types';
-import { formatDuration } from '../utils/time';
+import { formatDuration } from '../../internal-utils/time-utils';
 import defu from 'defu';
 import { relative } from 'node:path';
 

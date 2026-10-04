@@ -10,7 +10,7 @@ import type {
   WxtModule,
   WxtModuleOptions,
   WxtModuleSetup,
-} from './types';
+} from '../types';
 import type * as vite from 'vite';
 import { glob } from 'tinyglobby';
 import { resolve } from 'node:path';

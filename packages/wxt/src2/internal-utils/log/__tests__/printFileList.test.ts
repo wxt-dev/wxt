@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { printFileList } from '../printFileList';
 import { setFakeWxt } from '../../testing/fake-objects';
-import { wxt } from '../../../wxt';
+import { wxt } from '../../../internal/wxt';
 
 describe('printFileList', () => {
   it('resolves relative files against baseDir instead of the process cwd', async () => {

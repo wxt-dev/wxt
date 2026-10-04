@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
-import { addViteConfig, defineWxtModule } from '../modules';
-import { Wxt } from '../types';
+import { addViteConfig, defineWxtModule } from '../../modules';
+import { Wxt } from '../../types';
 
 export default defineWxtModule({
   name: 'wxt:built-in:escape-unicode',

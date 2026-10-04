@@ -3,7 +3,7 @@ import {
   kebabCaseAlphanumeric,
   removeImportStatements,
   safeVarName,
-} from '../strings';
+} from '../string-utils';
 
 describe('String utils', () => {
   describe('kebabCaseAlphanumeric', () => {

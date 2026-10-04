@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { isCI, loadEnv } from '../env';
+import { isCI, loadEnv } from '../env-utils';
 
 const cwd = process.cwd();
 

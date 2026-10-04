@@ -3,10 +3,10 @@ import {
   BuildStepOutput,
   EntrypointGroup,
   OutputFile,
-} from '../../../types';
-import { every, some } from '../arrays';
-import { normalizePath } from '../paths';
-import { wxt } from '../../wxt';
+} from '../types';
+import { every, some } from '../internal-utils/array-utils';
+import { normalizePath } from '../internal-utils/path-utils';
+import { wxt } from './wxt';
 
 /**
  * Compare the changed files vs the build output and determine what kind of

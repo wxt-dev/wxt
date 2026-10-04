@@ -4,7 +4,7 @@ import {
   fakeContentScriptEntrypoint,
   fakeEntrypoint,
   fakeGenericEntrypoint,
-} from '../testing/fake-objects';
+} from '../../internal-utils/testing/fake-objects';
 import { validateEntrypoints } from '../validation';
 
 describe('Validation Utils', () => {

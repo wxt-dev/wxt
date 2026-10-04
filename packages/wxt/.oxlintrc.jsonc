@@ -1,7 +1,4 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "ignorePatterns": [
-    "src2/core/utils/building/__tests__/test-entrypoints",
-    "inline",
-  ],
+  "ignorePatterns": ["src2/internal/__tests__/test-entrypoints", "inline"],
 }

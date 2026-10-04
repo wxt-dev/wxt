@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { hashContentScriptOptions } from '../content-scripts';
+import { hashContentScriptOptions } from '../content-script-utils';
 import { setFakeWxt } from '../testing/fake-objects';
 
 describe('Content Script Utils', () => {

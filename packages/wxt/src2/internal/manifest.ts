@@ -6,22 +6,22 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   SidepanelEntrypoint,
-} from '../../types';
+} from '../types';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'path';
-import { getEntrypointBundlePath } from './entrypoints';
-import { ContentSecurityPolicy } from './content-security-policy';
+import { getEntrypointBundlePath } from '../internal-utils/entrypoint-utils';
+import { ContentSecurityPolicy } from '../internal-utils/csp-utils';
 import {
   hashContentScriptOptions,
   mapWxtOptionsToContentScript,
-} from './content-scripts';
+} from '../internal-utils/content-script-utils';
 import { getPackageJson } from './package';
-import { normalizePath } from './paths';
-import { writeFileIfDifferent } from './fs';
+import { normalizePath } from '../internal-utils/path-utils';
+import { writeFileIfDifferent } from '../internal-utils/fs-utils';
 import defu from 'defu';
-import { wxt } from '../wxt';
+import { wxt } from './wxt';
 import { addDiscoveredThemeIcons } from './theme-icons';
-import { ManifestV3WebAccessibleResource } from './types';
+import { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
 import type { Browser } from '@wxt-dev/browser';
 
 /** Writes the manifest to the output directory and the build output. */

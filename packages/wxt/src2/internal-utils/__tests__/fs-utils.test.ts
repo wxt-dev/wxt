@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getBytesDisplay } from '../fs';
+import { getBytesDisplay } from '../fs-utils';
 
 describe('FS Utils', () => {
   describe('getBytesDisplay', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { every, some } from '../arrays';
+import { every, some } from '../array-utils';
 
 describe('Array Utils', () => {
   describe('every', () => {

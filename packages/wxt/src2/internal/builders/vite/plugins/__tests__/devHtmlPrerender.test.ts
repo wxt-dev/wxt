@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { pointToDevServer } from '../devHtmlPrerender';
+import { pointToDevServer } from '../dev-html-prerender';
 import {
   fakeDevServer,
   fakeResolvedConfig,
-} from '../../../../utils/testing/fake-objects';
-import { normalizePath } from '../../../../utils';
+} from '../../../../../internal-utils/testing/fake-objects';
+import { normalizePath } from '../../../../../internal-utils/path-utils';
 import { resolve } from 'node:path';
 import { parseHTML } from 'linkedom';
 

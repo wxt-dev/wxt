@@ -1,4 +1,4 @@
-import { defineBackground } from '../../../../../utils/define-background';
+import { defineBackground } from '../../../utils/define-background';
 
 export const a = {};
 

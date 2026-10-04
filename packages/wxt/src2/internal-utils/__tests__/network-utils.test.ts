@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import * as dns from 'node:dns';
-import { isOnline, fetchCached } from '../network';
-import { ResolvedConfig } from '../../../types';
+import { isOnline, fetchCached } from '../network-utils';
+import { ResolvedConfig } from '../../types';
 
 type DnsCallback = (err: NodeJS.ErrnoException | null) => void;
 

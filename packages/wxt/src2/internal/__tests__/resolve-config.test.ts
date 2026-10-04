@@ -3,9 +3,9 @@ import { resolveConfig } from '../resolve-config';
 import type { Logger } from '../../types';
 import { mock } from 'vitest-mock-extended';
 import { loadConfig } from 'c12';
-import { pathExists } from '../utils/fs';
+import { pathExists } from '../../internal-utils/fs-utils';
 
-vi.mock('../utils/fs');
+vi.mock('../../internal-utils/fs-utils');
 const pathExistsMock = vi.mocked(pathExists);
 
 vi.mock('c12');

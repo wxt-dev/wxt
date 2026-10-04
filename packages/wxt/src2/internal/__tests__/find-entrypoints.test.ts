@@ -11,12 +11,15 @@ import {
   OptionsEntrypoint,
   PopupEntrypoint,
   SidepanelEntrypoint,
-} from '../../../../types';
-import { wxt } from '../../../wxt';
-import { unnormalizePath } from '../../paths';
-import { fakeResolvedConfig, setFakeWxt } from '../../testing/fake-objects';
+} from '../../types';
+import { wxt } from '../wxt';
+import { unnormalizePath } from '../../internal-utils/path-utils';
+import {
+  fakeResolvedConfig,
+  setFakeWxt,
+} from '../../internal-utils/testing/fake-objects';
 import { findEntrypoints } from '../find-entrypoints';
-import { FlatEntrypointFinder } from '../../../entrypoint-finders/flat';
+import { FlatEntrypointFinder } from '../entrypoint-finders/flat';
 
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);

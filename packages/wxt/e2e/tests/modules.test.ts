@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestProject } from '../utils';
-import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
+import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src2';
 import { readFile } from 'node:fs/promises';
-import { normalizePath } from '../../src';
+import { normalizePath } from '../../src2';
 
 describe('Module Helpers', () => {
   describe('options', () => {

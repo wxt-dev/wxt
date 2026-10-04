@@ -1,7 +1,7 @@
 import { glob } from 'tinyglobby';
-import { wxt } from '../wxt';
-import { unnormalizePath } from './paths';
-import { pathExists } from './fs';
+import { wxt } from './wxt';
+import { unnormalizePath } from '../internal-utils/path-utils';
+import { pathExists } from '../internal-utils/fs-utils';
 
 export async function getPublicFiles(): Promise<string[]> {
   if (!(await pathExists(wxt.config.publicDir))) return [];

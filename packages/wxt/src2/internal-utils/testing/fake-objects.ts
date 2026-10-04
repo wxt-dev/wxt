@@ -20,10 +20,10 @@ import {
   SidepanelEntrypoint,
   BaseEntrypoint,
   UnlistedScriptEntrypoint,
-} from '../../../types';
+} from '../../types';
 import { mock } from 'vitest-mock-extended';
 import { vi } from 'vitest';
-import { setWxtForTesting } from '../../wxt';
+import { setWxtForTesting } from '../../internal/wxt';
 import type { Browser } from '@wxt-dev/browser';
 
 faker.seed(__TEST_SEED__);

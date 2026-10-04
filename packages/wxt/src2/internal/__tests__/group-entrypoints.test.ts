@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { Entrypoint } from '../../../../types';
+import { Entrypoint } from '../../types';
 import { groupEntrypoints } from '../group-entrypoints';
 import {
   fakeBackgroundEntrypoint,
   fakeGenericEntrypoint,
   fakePopupEntrypoint,
-} from '../../testing/fake-objects';
+} from '../../internal-utils/testing/fake-objects';
 
 const background: Entrypoint = {
   type: 'background',

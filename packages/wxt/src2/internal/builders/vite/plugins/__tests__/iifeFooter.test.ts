@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { iifeFooter } from '../iifeFooter';
+import { iifeFooter } from '../iife-footer';
 
 interface OutputChunk {
   type: 'chunk';

@@ -2,11 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
-import { normalizePath } from '../../../utils';
-import {
-  VirtualModuleId,
-  virtualModuleNames,
-} from '../../../utils/virtual-modules';
+import { normalizePath } from '../../../../internal-utils/path-utils';
+import { VirtualModuleId, virtualModuleNames } from '../../../virtual-modules';
 
 /**
  * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual`

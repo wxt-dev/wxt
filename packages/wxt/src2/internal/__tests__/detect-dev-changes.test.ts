@@ -12,9 +12,9 @@ import {
   fakeOutputChunk,
   fakeWxt,
   setFakeWxt,
-} from '../../testing/fake-objects';
-import { BuildOutput, BuildStepOutput } from '../../../../types';
-import { setWxtForTesting } from '../../../wxt';
+} from '../../internal-utils/testing/fake-objects';
+import { BuildOutput, BuildStepOutput } from '../../types';
+import { setWxtForTesting } from '../wxt';
 
 describe('Detect Dev Changes', () => {
   beforeEach(() => {

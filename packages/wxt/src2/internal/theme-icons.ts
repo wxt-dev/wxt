@@ -1,7 +1,7 @@
 import type { Browser } from '@wxt-dev/browser';
-import type { BuildOutput, ThemeIcon } from '../../types';
-import { normalizePath } from './paths';
-import { wxt } from '../wxt';
+import type { BuildOutput, ThemeIcon } from '../types';
+import { normalizePath } from '../internal-utils/path-utils';
+import { wxt } from './wxt';
 
 /**
  * Firefox only.

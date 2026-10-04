@@ -30,7 +30,7 @@ function mockArgv(...args: string[]) {
 }
 
 async function importCli() {
-  await import('../../cli');
+  await import('..');
 }
 
 describe('CLI', () => {

@@ -1,12 +1,12 @@
 import { createHooks } from 'hookable';
 import { relative } from 'path';
-import { builtinModules } from '../builtin-modules';
+import { builtinModules } from './builtin-modules';
 import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
 import { createWxtPackageManager } from './package-managers';
 import { resolveConfig } from './resolve-config';
 import { FlatEntrypointFinder } from './entrypoint-finders/flat';
-import { detectBuilder } from './utils/detect-builder';
-import { detectRunner } from './utils/detect-runner';
+import { detectBuilder } from './detect-builder';
+import { detectRunner } from './detect-runner';
 
 /**
  * Global variable set once `createWxt` is called once. Since this variable is

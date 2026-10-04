@@ -8,7 +8,7 @@
 import type * as vite from 'vite';
 import {
   tsconfigPaths,
-  globals,
+  addRuntimeEnvEntries,
   extensionApiMock,
   resolveAppConfig,
 } from '../internal/builders/vite/plugins';
@@ -39,7 +39,7 @@ export async function WxtVitest(
   await registerWxt('serve', inlineConfig ?? {});
 
   const plugins: vite.PluginOption[] = [
-    globals(wxt.config),
+    addRuntimeEnvEntries(wxt.config),
     tsconfigPaths(wxt.config),
     resolveAppConfig(wxt.config),
     extensionApiMock(wxt.config),

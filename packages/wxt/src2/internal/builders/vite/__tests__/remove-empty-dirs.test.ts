@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { removeEmptyDirs } from '../index';
+import { removeEmptyDirs } from '..';
 
 // `stat` is mocked (defaulting to the real implementation) so individual
 // tests can override it to simulate a file disappearing mid-walk.

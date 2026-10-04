@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import webExt, { WebExtRunInstance } from 'web-ext';
 import logger from 'web-ext/util/logger';
 import { WebExtRunner } from '../web-ext';
-import { setFakeWxt } from '../../utils/testing/fake-objects';
+import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
 

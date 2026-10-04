@@ -1,7 +1,7 @@
-import { ExtensionRunner, ResolvedConfig } from '../../types';
-import { ManualRunner } from '../runners/manual';
-import { WebExtRunner } from '../runners/web-ext';
-import { withFirstModule } from './modules';
+import { ExtensionRunner, ResolvedConfig } from '../types';
+import { ManualRunner } from './runners/manual';
+import { WebExtRunner } from './runners/web-ext';
+import { withFirstModule } from '../internal-utils/module-utils';
 
 export async function detectRunner(
   config: ResolvedConfig,

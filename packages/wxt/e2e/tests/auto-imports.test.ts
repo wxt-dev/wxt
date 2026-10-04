@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
-import { EslintConfigVersion } from '../../src';
+import { EslintConfigVersion } from '../../src2';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {

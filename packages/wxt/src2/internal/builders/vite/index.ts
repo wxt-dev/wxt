@@ -13,18 +13,15 @@ import {
   WxtDevServer,
   WxtHooks,
 } from '../../../types';
-import { normalizePath } from '../../utils';
-import { toArray } from '../../utils/arrays';
+import { normalizePath } from '../../../internal-utils/path-utils';
+import { toArray } from '../../../internal-utils/array-utils';
 import {
   getEntrypointBundlePath,
   isHtmlEntrypoint,
-} from '../../utils/entrypoints';
-import { createExtensionEnvironment } from '../../utils/environments';
-import { safeVarName } from '../../utils/strings';
-import {
-  VirtualEntrypointType,
-  VirtualModuleId,
-} from '../../utils/virtual-modules';
+} from '../../../internal-utils/entrypoint-utils';
+import { createExtensionEnvironment } from '../../environments';
+import { safeVarName } from '../../../internal-utils/string-utils';
+import { VirtualEntrypointType, VirtualModuleId } from '../../virtual-modules';
 import * as wxtPlugins from './plugins';
 
 interface RollupAssetNameInfo {
@@ -203,7 +200,7 @@ export class ViteBuilder implements WxtBuilder {
       wxtPlugins.devServerGlobals(this.config, server),
       wxtPlugins.tsconfigPaths(this.config),
       wxtPlugins.noopBackground(),
-      wxtPlugins.globals(this.config),
+      wxtPlugins.addRuntimeEnvEntries(this.config),
       wxtPlugins.defineImportMeta(),
       wxtPlugins.wxtPluginLoader(this.config),
       wxtPlugins.resolveAppConfig(this.config),

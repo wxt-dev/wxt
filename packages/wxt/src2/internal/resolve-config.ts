@@ -16,20 +16,20 @@ import {
   WxtLogger,
 } from '../types';
 import path from 'node:path';
-import { createFsCache } from './utils/cache';
+import { createFsCache } from '../internal-utils/cache-utils';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
-import { NullishRequired } from './utils/types';
-import { pathExists } from './utils/fs';
-import { normalizePath } from './utils';
+import { NullishRequired } from '../internal-utils/type-utils';
+import { pathExists } from '../internal-utils/fs-utils';
+import { normalizePath } from '../internal-utils/path-utils';
 import { glob } from 'tinyglobby';
-import { builtinModules } from '../builtin-modules';
-import { getEslintVersion } from './utils/eslint';
-import { safeStringToNumber } from './utils/number';
-import { loadEnv } from './utils/env';
+import { builtinModules } from './builtin-modules';
+import { getEslintVersion } from '../internal-utils/eslint-utils';
+import { safeStringToNumber } from '../internal-utils/number-utils';
+import { loadEnv } from '../internal-utils/env-utils';
 import { getPort } from 'get-port-please';
 import { fileURLToPath } from 'node:url';
-import { createWxtLogger } from './utils/log/wxtLogger';
+import { createWxtLogger } from '../internal-utils/log/wxtLogger';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the

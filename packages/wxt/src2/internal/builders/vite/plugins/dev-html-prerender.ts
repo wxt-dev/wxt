@@ -1,9 +1,9 @@
 import type * as vite from 'vite';
 import { ResolvedConfig, WxtDevServer } from '../../../../types';
-import { getEntrypointName } from '../../../utils/entrypoints';
+import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
-import { normalizePath } from '../../../utils';
+import { normalizePath } from '../../../../internal-utils/path-utils';
 import { hash } from 'ohash';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.

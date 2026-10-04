@@ -11,7 +11,7 @@ import {
   MainWorldContentScriptEntrypointOptions,
   IsolatedWorldContentScriptEntrypointOptions,
   UnlistedScriptEntrypoint,
-} from '../../../types';
+} from '../types';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { parseHTML } from 'linkedom';
 import JSON5 from 'json5';
@@ -19,9 +19,9 @@ import {
   isHtmlEntrypoint,
   isJsEntrypoint,
   resolvePerBrowserOptions,
-} from '../entrypoints';
-import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
-import { wxt } from '../../wxt';
+} from '../internal-utils/entrypoint-utils';
+import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from './constants';
+import { wxt } from './wxt';
 import { camelCase } from 'scule';
 import { styleText } from 'node:util';
 

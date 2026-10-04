@@ -1,4 +1,4 @@
-import type { Logger, WxtLogger } from '../../../types';
+import type { Logger, WxtLogger } from '../../types';
 
 const warned = new Set<string>();
 

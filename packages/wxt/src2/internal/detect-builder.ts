@@ -4,10 +4,10 @@ import type {
   WxtBuilder,
   WxtDevServer,
   WxtHooks,
-} from '../../types';
-import { ViteBuilder } from '../builders/vite';
-import { UnknownBuilder } from '../builders/unknown';
-import { withFirstModule } from './modules';
+} from '../types';
+import { ViteBuilder } from './builders/vite';
+import { UnknownBuilder } from './builders/unknown';
+import { withFirstModule } from '../internal-utils/module-utils';
 
 export function detectBuilder(
   config: ResolvedConfig,

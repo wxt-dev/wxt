@@ -6,12 +6,19 @@ import {
 } from '../types';
 import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
-import { getEntrypointBundlePath, isHtmlEntrypoint } from './utils/entrypoints';
-import { getEntrypointGlobals, getGlobals } from './utils/globals';
-import { normalizePath } from './utils';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '../internal-utils/entrypoint-utils';
+import {
+  getRuntimeEnvEntries,
+  getEntrypointRuntimeEnvEntries,
+} from './runtime-env-entries';
+import { normalizePath } from '../internal-utils/path-utils';
 import path from 'node:path';
-import { Message, parseI18nMessages } from './utils/i18n';
-import { pathExists, writeFileIfDifferent, getPublicFiles } from './utils/fs';
+import { Message, parseI18nMessages } from './i18n';
+import { pathExists, writeFileIfDifferent } from '../internal-utils/fs-utils';
+import { getPublicFiles } from './get-public-files';
 import { wxt } from './wxt';
 
 /**
@@ -41,7 +48,7 @@ export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
   entries.push(await getI18nDeclarationEntry());
 
   // import.meta.env.*
-  entries.push(await getGlobalsDeclarationEntry());
+  entries.push(await getRuntimeEnvDeclarationEntry());
 
   // tsconfig.json
   entries.push(await getTsConfigEntry());
@@ -241,8 +248,11 @@ declare module "wxt/browser" {
   };
 }
 
-async function getGlobalsDeclarationEntry(): Promise<WxtDirFileEntry> {
-  const globals = [...getGlobals(wxt.config), ...getEntrypointGlobals('')];
+async function getRuntimeEnvDeclarationEntry(): Promise<WxtDirFileEntry> {
+  const globals = [
+    ...getRuntimeEnvEntries(wxt.config),
+    ...getEntrypointRuntimeEnvEntries(''),
+  ];
   return {
     path: 'types/globals.d.ts',
     text: [
