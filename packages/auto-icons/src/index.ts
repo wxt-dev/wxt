@@ -22,19 +22,6 @@ export default defineWxtModule<AutoIconsOptions>({
     // Custom sizes replace defaults. Remove duplicate sizes.
     const sizes = Array.from(new Set(options?.sizes ?? parsedOptions.sizes));
 
-    // Backward compatibility for the deprecated option
-    if (options?.grayscaleOnDevelopment !== undefined) {
-      wxt.logger.warn(
-        '`[auto-icons]` "grayscaleOnDevelopment" is deprecated. Use "developmentIndicator" instead.',
-      );
-
-      if (options?.developmentIndicator === undefined) {
-        parsedOptions.developmentIndicator = options!.grayscaleOnDevelopment
-          ? 'grayscale'
-          : false;
-      }
-    }
-
     const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
     if (!parsedOptions.enabled)
@@ -142,13 +129,7 @@ export interface AutoIconsOptions {
    * @default 'grayscale'
    */
   developmentIndicator?: 'grayscale' | 'overlay' | false;
-  /**
-   * Grayscale the image when in development mode to indicate development
-   *
-   * @deprecated Use `developmentIndicator` instead
-   * @default true
-   */
-  grayscaleOnDevelopment?: boolean;
+
   /**
    * Sizes to generate icons for.
    *
