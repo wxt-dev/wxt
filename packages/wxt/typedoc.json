@@ -19,6 +19,6 @@
     "src/testing/index.ts",
     "src/testing/fake-browser.ts",
     "src/testing/wxt-vitest-plugin.ts",
-    "src/modules.ts"
+    "src/modules/index.ts"
   ]
 }

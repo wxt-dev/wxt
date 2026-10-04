@@ -199,8 +199,8 @@
       "types": "./dist/vite-builder-env.d.ts"
     },
     "./modules": {
-      "types": "./dist/modules.d.mts",
-      "default": "./dist/modules.mjs"
+      "types": "./dist/modules/index.d.mts",
+      "default": "./dist/modules/index.mjs"
     }
   },
   "engines": {
