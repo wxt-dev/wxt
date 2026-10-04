@@ -24,7 +24,7 @@ jobs:
         run: bun run buildc all
 
       - name: Basic Checks
-        run: bun run check
+        run: bun i && bun run check
 
   builds:
     name: Builds
