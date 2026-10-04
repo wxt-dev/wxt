@@ -235,6 +235,9 @@ describe('Auto Imports', () => {
         expect(
           await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
         ).toMatchSnapshot();
+        expect(
+          await project.serializeFile('.wxt/eslint-auto-imports.d.mts'),
+        ).toMatchSnapshot();
       },
     );
 
@@ -269,6 +272,9 @@ describe('Auto Imports', () => {
 
       expect(
         await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+      ).toMatchSnapshot();
+      expect(
+        await project.serializeFile('.wxt/eslint-auto-imports.d.mts'),
       ).toMatchSnapshot();
     });
 
@@ -307,6 +313,7 @@ describe('Auto Imports', () => {
       });
 
       expect(await project.serializeFile('example.json')).toMatchSnapshot();
+      expect(await project.serializeFile('example.d.ts')).toMatchSnapshot();
     });
 
     describe('Actual linting results', () => {
