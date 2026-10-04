@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.9...storage-v1.3.0)
+
+### 🚀 Features
+
+- **storage**: Add metadata watchers ([#2630](https://github.com/wxt-dev/wxt/pull/2630))
+
+### ❤️ Contributors
+
+- vansh <vansh.nagar.dev@gmail.com>
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v1.2.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.8...storage-v1.2.9)
@@ -23,7 +38,6 @@
 - [@okineadev](https://github.com/okineadev)
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
-
 
 ## v1.2.8
 
