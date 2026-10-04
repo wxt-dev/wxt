@@ -12,10 +12,10 @@ import {
   createServer,
   prepare,
   zip,
-} from '../src';
-import { normalizePath } from '../src/core/utils';
-import { pathExists, readJson } from '../src/core/utils/fs';
-import { registerWxt } from '../src/core/wxt';
+} from '../src2';
+import { normalizePath } from '../src2/internal-utils/path-utils';
+import { pathExists, readJson } from '../src2/internal-utils/fs-utils';
+import { registerWxt } from '../src2/internal/wxt';
 import * as vite from 'vite';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the

@@ -5,11 +5,11 @@
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
-    "wxt": "bun run src/cli/index.ts",
+    "wxt": "bun run src2/cli/index.ts",
     "build": "buildc -- bun run tsdown --config-loader unrun",
     "check": "bun run build && bun run --sequential 'check:*'",
     "check:default": "check",
-    "check:tsc-virtual": "tsc --noEmit -p src/virtual",
+    "check:tsc-virtual": "tsc --noEmit -p src2/virtual",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
@@ -199,8 +199,8 @@
       "types": "./dist/vite-builder-env.d.ts"
     },
     "./modules": {
-      "types": "./dist/modules.d.mts",
-      "default": "./dist/modules.mjs"
+      "types": "./dist/modules/index.d.mts",
+      "default": "./dist/modules/index.mjs"
     }
   },
   "engines": {

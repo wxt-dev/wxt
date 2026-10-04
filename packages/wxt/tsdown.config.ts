@@ -4,7 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
-} from './src/core/utils/virtual-modules';
+} from './src2/internal/virtual-modules';
 import consola from 'consola';
 import { styleText } from 'node:util';
 import { resolve } from 'node:path';
@@ -65,11 +65,11 @@ export default defineConfig([
       ...Object.values(pkgJson.exports)
         .filter((ex: any) => ex.default)
         .map((ex: any) =>
-          ex.default.replace('./dist', 'src').replace('.mjs', '.ts'),
+          ex.default.replace('./dist', 'src2').replace('.mjs', '.ts'),
         ),
 
       // CLI
-      'src/cli/index.ts',
+      'src2/cli/index.ts',
     ],
     unbundle: true,
     deps: {
@@ -80,7 +80,7 @@ export default defineConfig([
     copy: [
       // If tsdown bundles this file, it removes the triple-slash reference, so
       // we need to copy it into the out dir manually instead of building it.
-      'src/vite-builder-env.d.ts',
+      'src2/vite-builder-env.d.ts',
     ],
     onSuccess: async () => {
       // Don't rely on importing the package.json file at runtime, hardcode the
@@ -93,7 +93,7 @@ export default defineConfig([
   // Virtual modules must be bundled individually
   ...virtualModuleNames.map(
     (moduleName): UserConfig => ({
-      entry: `src/virtual/${moduleName}.ts`,
+      entry: `src2/virtual/${moduleName}.ts`,
       outDir: 'dist/virtual',
       deps: {
         neverBundle: [
