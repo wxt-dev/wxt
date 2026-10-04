@@ -119,7 +119,7 @@ describe('auto-icons module', () => {
     it('should merge custom options with defaults', async () => {
       const options: AutoIconsOptions = {
         sizes: [64, 32],
-        grayscaleOnDevelopment: false,
+        developmentIndicator: false,
       };
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
@@ -359,7 +359,7 @@ describe('auto-icons module', () => {
     it('should apply grayscale in development mode', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: true,
+        developmentIndicator: 'grayscale',
         sizes: [128],
       };
 
@@ -389,7 +389,7 @@ describe('auto-icons module', () => {
 
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: true,
+        developmentIndicator: 'grayscale',
         sizes: [128],
       };
 
@@ -411,7 +411,7 @@ describe('auto-icons module', () => {
     it('should not apply grayscale when disabled', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: false,
+        developmentIndicator: false,
         sizes: [128],
       };
 
