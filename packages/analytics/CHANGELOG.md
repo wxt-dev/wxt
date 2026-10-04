@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.5.7
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.6...analytics-v0.5.7)
+
+### 🚀 Features
+
+- Impl error analytics ([#2633](https://github.com/wxt-dev/wxt/pull/2633))
+
+### 🩹 Fixes
+
+- Make `autoTrack`'s cleanup function actually remove the click listener ([#2600](https://github.com/wxt-dev/wxt/pull/2600))
+
+### 🏡 Chore
+
+- Loosen version range for `@wxt-dev/is-background` ([`50715c8`](https://github.com/wxt-dev/wxt/commit/50715c894785b55400d3040825a2f72c2dc88a71))
+
+### ❤️ Contributors
+
+- [@creeperkatze](https://github.com/creeperkatze)
+- [@aklinker1](https://github.com/aklinker1)
+- [@Grit03](https://github.com/Grit03)
+
+
 ## v0.5.6
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.5...analytics-v0.5.6)
@@ -16,7 +39,6 @@
 
 - [@creeperkatze](https://github.com/creeperkatze)
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v0.5.5
 
