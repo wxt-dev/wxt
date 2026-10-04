@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # How WXT Works
 
 WXT is two things:
@@ -196,3 +200,37 @@ In [`wxt/src/virtual/*`](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4/package
 Other virtual modules, like `virtual:user-background-entrypoint`, resolve to a project file whose location may vary. In this case, it would resolve to `entrypoints/background.ts` or `entrypoints/background/index.ts`, whichever exists.
 
 All virtual modules are "resolved" in Vite plugins - whenever a virtual module is imported, the plugin either returns a string of JS code or points Vite to a file on disk.
+
+## Public APIs vs CLI
+
+> [src/index.ts](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/index.ts), [commands.ts](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/cli/commands.ts)
+
+WXT provides a set of public APIs. Anything from small helper utils to the full `build` function. Helper utils are simple, pure functions. This section will focus on the "higher-level" public APIs the CLI uses.
+
+The CLI is built on top of the high-level public APIs:
+
+- `wxt` &rarr; `import { createServer } from 'wxt'`
+- `wxt build` &rarr; `import { build } from 'wxt'`
+- `wxt prepare` &rarr; `import { prepare } from 'wxt'`
+- `wxt clean` &rarr; `import { clean } from 'wxt'`
+- `wxt zip` &rarr; `import { zip } from 'wxt'`
+- Etc.
+
+Each command just builds some config based on flags, then calls the appropriate public API:
+
+<<< @/../packages/wxt/src/cli/commands.ts#prepare
+
+These "higher-level" public APIs all have one thing in common: the first thing they do is register the global `wxt` object.
+
+<<< @/../packages/wxt/src/core/prepare.ts#snippet
+
+### The `wxt` Object
+
+Throughout WXT's source code, you'll see references to this `wxt` object. It is defined in [`core/wxt.ts`](https://github.com/wxt-dev/wxt/blob/wxt-v0.21.4/packages/wxt/src/core/wxt.ts). Generally, reassigning exported globals like this is a bad practice: it's not always clear when these variables are initialized.
+
+However for WXT, given how deeply nested some functions and code paths are, and the fact that they all need to access certain global values, using a global value saves a lot of function arguments and makes the code much more easier to follow. Additionally, it provides convenient context to hooks and WXT modules.
+
+However, that means it's very important to understand when the variable is initialized and where it can be used in the code base. Thankfully, the rules are very clear:
+
+- As mentioned, it's initialized when any of the higher-level public APIs are called
+- It can be used anywhere in the [`src/core`](https://github.com/wxt-dev/wxt/tree/wxt-v0.21.4/packages/wxt/src/core) directory

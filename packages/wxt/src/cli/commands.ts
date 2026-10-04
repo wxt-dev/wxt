@@ -119,6 +119,7 @@ cli
     }),
   );
 
+// #region prepare
 // PREPARE
 cli
   .command('prepare [root]', 'prepare typescript project')
@@ -132,6 +133,7 @@ cli
       });
     }),
   );
+// #endregion prepare
 
 // CLEAN
 cli
