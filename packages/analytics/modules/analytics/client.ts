@@ -366,6 +366,7 @@ function serializeError(error: unknown): {
 const BROWSER_IDS = Object.fromEntries(
   Object.entries(Bowser.BROWSER_MAP).map(([id, name]) => [name, id]),
 );
+
 function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(
   key: string,
