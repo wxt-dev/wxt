@@ -29,7 +29,7 @@ on:
         default: false
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ inputs.package }}
   cancel-in-progress: false
 
 permissions:
