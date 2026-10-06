@@ -3,13 +3,25 @@ import { ExtensionRunner, ResolvedConfig } from '../../types';
 import { formatDuration } from '../../internal-utils/time-utils';
 import defu from 'defu';
 import { relative } from 'node:path';
+import {
+  createWslChromiumProfile,
+  findLinuxChromium,
+  hasDisplay,
+  isUnusableSnap,
+  which,
+  WslChromiumProfile,
+} from '../../internal-utils/wsl-utils';
+
+const WSL_DOCS_URL =
+  'https://wxt.dev/guide/essentials/config/browser-startup.html#wsl';
 
 /**
- * WXT's default `ExtensionRunner` that uses web-ext to open the browser. It
- * cannot open the browser automatically in some environments, like WSL.
+ * WXT's default `ExtensionRunner` that uses web-ext to open the browser. In
+ * WSL, it can only open browsers installed inside WSL.
  */
 export class WebExtRunner implements ExtensionRunner {
   private instance: import('web-ext').WebExtRunInstance | undefined;
+  private wslProfile: WslChromiumProfile | undefined;
 
   constructor(
     private webExt: (typeof import('web-ext'))['default'],
@@ -25,11 +37,40 @@ export class WebExtRunner implements ExtensionRunner {
     if (this.config.browser === 'safari') {
       return this.logManualReason('Cannot open Safari using web-ext');
     }
-    if (isWsl) {
-      return this.logManualReason('Cannot open browser when using WSL');
-    }
     if (this.config.webExt.config.disabled) {
       return this.config.logger.info(this.loadManualMessage());
+    }
+
+    const wxtUserConfig = this.config.webExt.config;
+    let chromiumBinary = wxtUserConfig?.binaries?.[this.config.browser];
+    if (isWsl) {
+      if (!hasDisplay()) {
+        return this.logWslReason(
+          'Cannot open a browser when using WSL without a display, like WSLg',
+        );
+      }
+      if (this.config.browser === 'firefox') {
+        const firefox =
+          wxtUserConfig?.binaries?.firefox ?? (await which('firefox'));
+        if (firefox && (await isUnusableSnap(firefox))) {
+          return this.logWslReason(
+            'Cannot open the Snap version of Firefox when using WSL',
+          );
+        }
+      } else {
+        chromiumBinary = await findLinuxChromium(chromiumBinary);
+        if (!chromiumBinary) {
+          return this.logWslReason(
+            'Cannot find a Chromium browser installed inside WSL',
+          );
+        }
+        if (await isUnusableSnap(chromiumBinary)) {
+          return this.logWslReason(
+            'Cannot open the Snap version of Chromium when using WSL',
+          );
+        }
+        await this.prepareWslProfile();
+      }
     }
 
     const startTime = Date.now();
@@ -40,12 +81,13 @@ export class WebExtRunner implements ExtensionRunner {
       if (level >= WARN_LOG_LEVEL) this.config.logger.warn(msg);
     };
 
-    const wxtUserConfig = this.config.webExt.config;
     const userConfig = {
       browserConsole: wxtUserConfig?.openConsole,
       devtools: wxtUserConfig?.openDevtools,
       startUrl: wxtUserConfig?.startUrls,
-      keepProfileChanges: wxtUserConfig?.keepProfileChanges,
+      keepProfileChanges: this.wslProfile
+        ? true
+        : wxtUserConfig?.keepProfileChanges,
       chromiumPort: wxtUserConfig?.chromiumPort,
       ...(this.config.browser === 'firefox'
         ? {
@@ -55,14 +97,17 @@ export class WebExtRunner implements ExtensionRunner {
             args: wxtUserConfig?.firefoxArgs,
           }
         : {
-            chromiumBinary: wxtUserConfig?.binaries?.[this.config.browser],
-            chromiumProfile: wxtUserConfig?.chromiumProfile,
+            chromiumBinary,
+            chromiumProfile:
+              this.wslProfile?.chromiumProfile ??
+              wxtUserConfig?.chromiumProfile,
             chromiumPref: defu(
               wxtUserConfig?.chromiumPref,
               DEFAULT_CHROMIUM_PREFS,
             ),
             args: [
               '--unsafely-disable-devtools-self-xss-warnings',
+              ...(this.wslProfile?.args ?? []),
               ...(wxtUserConfig?.chromiumArgs ?? []),
             ],
           }),
@@ -88,7 +133,12 @@ export class WebExtRunner implements ExtensionRunner {
     this.config.logger.debug('web-ext config:', finalConfig);
     this.config.logger.debug('web-ext options:', options);
 
-    this.instance = await this.webExt.cmd.run(finalConfig, options);
+    try {
+      this.instance = await this.webExt.cmd.run(finalConfig, options);
+    } catch (err) {
+      await this.cleanupWslProfile();
+      throw err;
+    }
 
     const duration = Date.now() - startTime;
     this.config.logger.success(`Opened browser in ${formatDuration(duration)}`);
@@ -96,10 +146,39 @@ export class WebExtRunner implements ExtensionRunner {
 
   async closeBrowser(): Promise<void> {
     await this.instance?.exit();
+    await this.cleanupWslProfile();
+  }
+
+  private async prepareWslProfile(): Promise<void> {
+    const { chromiumProfile, chromiumArgs, keepProfileChanges } =
+      this.config.webExt.config;
+
+    // The user's own `--user-data-dir` comes last and already wins.
+    if (chromiumArgs?.some((arg) => arg.startsWith('--user-data-dir'))) return;
+
+    // `web-ext` copies the profile to a temporary directory WXT can't override.
+    if (chromiumProfile && !keepProfileChanges) {
+      return this.config.logger.warnOnce(
+        `\`chromiumProfile\` is ignored when using WSL unless \`keepProfileChanges\` is enabled. For more details, see: ${WSL_DOCS_URL}`,
+      );
+    }
+
+    this.wslProfile = await createWslChromiumProfile(chromiumProfile);
+  }
+
+  private async cleanupWslProfile(): Promise<void> {
+    await this.wslProfile?.cleanup();
+    this.wslProfile = undefined;
   }
 
   private logManualReason(reason: string): void {
     this.config.logger.warn(`${reason}. ${this.loadManualMessage()}`);
+  }
+
+  private logWslReason(reason: string): void {
+    this.config.logger.warn(
+      `${reason}. ${this.loadManualMessage()}. For more details, see: ${WSL_DOCS_URL}`,
+    );
   }
 
   private loadManualMessage(): string {

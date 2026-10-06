@@ -132,3 +132,14 @@ export default defineWebExtConfig({
 There is no comprehensive list of what feature flags enable what APIs and services.
 
 Alternatively, if you can't find a flag that enables a feature you're looking for, [disable the opening the browser during development](#disable-opening-browser) and use your regular chrome profile for development.
+
+### WSL
+
+On Windows, WXT can open a browser when you run it inside WSL, as long as the browser is installed inside WSL too and WSL can show GUI apps. Windows 11 does this out of the box with WSLg, see [Run Linux GUI apps on WSL](https://learn.microsoft.com/windows/wsl/tutorials/gui-apps). WXT checks for a display through the `DISPLAY` or `WAYLAND_DISPLAY` environment variables, so an X server you set up yourself works too.
+
+- **Chrome**: Install it inside WSL. WXT looks for `google-chrome-stable`, `google-chrome`, `chromium-browser`, and `chromium` on your `PATH`, or [set the binary](#set-browser-binaries) yourself. A browser installed on Windows, like `/mnt/c/.../chrome.exe`, can't be opened from WSL.
+- **Firefox**: Works with a non-Snap install. Ubuntu, the default WSL distro, installs Firefox and Chromium as Snaps, which can't read the temporary profile in `/tmp`. Either [install Firefox without Snap](https://support.mozilla.org/kb/install-firefox-linux) and [set the binary](#set-browser-binaries), or set `TMPDIR` to a directory inside your home directory.
+
+To [persist data](#persist-data) with Chrome in WSL, use `--user-data-dir`, or set `chromiumProfile` together with `keepProfileChanges: true`. A `chromiumProfile` without `keepProfileChanges` is ignored.
+
+If WXT can't open a browser, it logs why. Load the output directory as an unpacked extension manually instead.
