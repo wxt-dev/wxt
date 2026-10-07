@@ -2,6 +2,7 @@ import { UAParser } from 'ua-parser-js';
 import type {
   Analytics,
   AnalyticsConfig,
+  AnalyticsExceptionEvent,
   AnalyticsEventMetadata,
   AnalyticsPageViewEvent,
   AnalyticsProvider,
@@ -200,6 +201,32 @@ function createBackgroundAnalytics(
         );
       }
     },
+    captureException: async (
+      error: unknown,
+      eventProperties?: Record<string, string | undefined>,
+      meta: AnalyticsEventMetadata = getBackgroundMeta(),
+      handled = true,
+    ) => {
+      const baseEvent = await getBaseEvent(meta);
+      const event: AnalyticsExceptionEvent = {
+        ...baseEvent,
+        exception: {
+          ...serializeError(error),
+          handled,
+          properties: eventProperties,
+        },
+      };
+      if (config?.debug) console.debug('[@wxt-dev/analytics] exception', event);
+      if (await enabled.getValue()) {
+        await Promise.allSettled(
+          providers.map((provider) => provider.exception?.(event)),
+        );
+      } else if (config?.debug) {
+        console.debug(
+          '[@wxt-dev/analytics] Analytics disabled, captureException() not uploaded',
+        );
+      }
+    },
     setEnabled: async (newEnabled) => {
       await enabled.setValue?.(newEnabled);
     },
@@ -211,6 +238,34 @@ function createBackgroundAnalytics(
 
   const providers =
     config?.providers?.map((provider) => provider(analytics, config)) ?? [];
+
+  // Log locally instead of calling captureException again, otherwise a failing
+  // capture would trigger another unhandledrejection and loop forever
+  const logCaptureFailure = (error: unknown) => {
+    console.error('[@wxt-dev/analytics] Failed to capture exception', error);
+  };
+
+  // Automatically report unhandled background errors
+  if (providers.some((provider) => provider.exception)) {
+    globalThis.addEventListener('error', (e: ErrorEvent) => {
+      analytics
+        .captureException(
+          e.error ?? e.message,
+          undefined,
+          getBackgroundMeta(),
+          false,
+        )
+        .catch(logCaptureFailure);
+    });
+    globalThis.addEventListener(
+      'unhandledrejection',
+      (e: PromiseRejectionEvent) => {
+        analytics
+          .captureException(e.reason, undefined, getBackgroundMeta(), false)
+          .catch(logCaptureFailure);
+      },
+    );
+  }
 
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
@@ -250,6 +305,14 @@ function createFrontendAnalytics(): Analytics {
     page: methodForwarder('page'),
     track: methodForwarder('track'),
     setEnabled: methodForwarder('setEnabled'),
+    // Errors can't be sent over the port, so send a plain object instead
+    captureException: (error, properties) => {
+      const { type, message, stack } = serializeError(error);
+      return methodForwarder('captureException')(
+        { name: type, message, stack },
+        properties,
+      );
+    },
     autoTrack: (root) => {
       const onClick = (event: Event) => {
         const element = event.target as HTMLElement | null;
@@ -270,11 +333,28 @@ function createFrontendAnalytics(): Analytics {
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
       return () => {
-        root.removeEventListener('click', onClick);
+        root.removeEventListener('click', onClick, { capture: true });
       };
     },
   };
   return analytics;
+}
+
+/** Convert anything thrown into a JSON-safe object. */
+function serializeError(error: unknown): {
+  type: string;
+  message: string;
+  stack: string | undefined;
+} {
+  if (error != null && typeof error === 'object') {
+    const { name, message, stack } = error as Record<string, unknown>;
+    return {
+      type: typeof name === 'string' ? name : 'Error',
+      message: typeof message === 'string' ? message : String(error),
+      stack: typeof stack === 'string' ? stack : undefined,
+    };
+  }
+  return { type: 'Error', message: String(error), stack: undefined };
 }
 
 function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;

@@ -1,7 +1,7 @@
 .DS_Store
 .env
 .env.*
-!packages/wxt/src/core/utils/__tests__/fixtures/.env
+!packages/wxt/src/internal-utils/__tests__/fixtures/.env
 .idea
 .output
 .webextrc
