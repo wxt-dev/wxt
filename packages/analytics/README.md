@@ -186,6 +186,18 @@ export default defineAppConfig({
 });
 ```
 
+To send errors to [PostHog](https://posthog.com/docs/error-tracking), set `errorTracking: true`. Unhandled errors and promise rejections in the background are captured automatically. To report errors from other contexts (or errors you've caught), call `analytics.captureException`:
+
+```ts
+try {
+  await doSomething();
+} catch (error) {
+  await analytics.captureException(error, { feature: 'sync' });
+}
+```
+
+Exceptions are only sent when analytics are enabled. Upload source maps with the [PostHog CLI](https://posthog.com/docs/error-tracking/upload-source-maps/web) to get readable stack traces.
+
 ### Umami
 
 [Umami](https://umami.is/) is a privacy-first, open source analytics platform.
