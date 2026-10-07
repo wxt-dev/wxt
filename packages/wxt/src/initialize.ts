@@ -1,8 +1,9 @@
-import { question, select } from '@topcli/prompts';
+import { question, select, confirm } from '@topcli/prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
 import { pathExists } from './internal-utils/fs-utils';
+import { normalizePath } from './internal-utils/path-utils';
 import path from 'node:path';
 import { styleText } from 'node:util';
 import { TextStyle } from './internal-utils/type-utils';
@@ -13,6 +14,7 @@ export async function initialize(options: {
   directory?: string;
   template?: string;
   packageManager?: string;
+  requireGit?: boolean;
 }) {
   consola.info('Initializing new project');
 
@@ -52,6 +54,11 @@ export async function initialize(options: {
       ],
     }));
 
+  // Asks whether require git initialized or not?
+  const requireGitInitialized =
+    options.requireGit ??
+    (await confirm('Initialize a new git repository?', { initial: true }));
+
   const isExists = await pathExists(directory);
   if (isExists) {
     const isEmpty =
@@ -63,7 +70,7 @@ export async function initialize(options: {
       process.exit(1);
     }
   }
-  await cloneProject({ directory, template });
+  await cloneProject({ directory, template, requireGitInitialized });
 
   const cdPath = path.relative(process.cwd(), path.resolve(directory));
   console.log();
@@ -152,9 +159,11 @@ async function listTemplatesGithub(): Promise<Template[]> {
 async function cloneProject({
   directory,
   template,
+  requireGitInitialized,
 }: {
   directory: string;
   template: Template;
+  requireGitInitialized: boolean;
 }) {
   const spinner = createSpinner('Downloading template').start();
   try {
@@ -173,19 +182,16 @@ async function cloneProject({
     );
 
     // 3. Initializing Git
-    const dir = response.dir;
-    const { exitCode } = await spawn(
-      'git',
-      ['rev-parse', '--is-inside-work-tree'],
-      { nodeOptions: { cwd: dir } },
-    );
-    if (exitCode === 0) {
-      consola.debug('Git has already been initialized.');
-    } else {
-      await spawn('git', ['init'], {
-        throwOnError: true,
-        nodeOptions: { cwd: dir },
-      });
+    if (requireGitInitialized) {
+      try {
+        const dir = response.dir;
+        await spawn('git', ['init'], {
+          throwOnError: true,
+          nodeOptions: { cwd: normalizePath(dir), shell: true },
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     spinner.success();

@@ -149,6 +149,7 @@ cli
   .command('init [directory]', 'initialize a new project')
   .option('-t, --template <template>', 'template to use')
   .option('--pm <packageManager>', 'which package manager to use')
+  .option('--no-git', 'skip initialize git repo')
   .action(
     wrapAction(
       async (directory, flags) => {
@@ -156,6 +157,7 @@ cli
           directory,
           template: flags.template,
           packageManager: flags.pm,
+          requireGit: flags.git,
         });
       },
       { disableFinishedLog: true },
