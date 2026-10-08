@@ -37,9 +37,14 @@ export function loadEnv(mode: string, browser: TargetBrowser) {
     }),
   );
 
-  expand({
-    parsed,
-  });
+  // Expand against the complete parsed set so references are independent of
+  // parseEnv's key order. Existing non-empty process.env values still win.
+  const processEnv = { ...parsed };
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value) processEnv[key] = value;
+  }
+  expand({ parsed, processEnv });
+  Object.assign(process.env, parsed);
 
   return parsed;
 }
