@@ -13,9 +13,9 @@ import {
   prepare,
   zip,
 } from '../src';
-import { normalizePath } from '../src/core/utils';
-import { pathExists, readJson } from '../src/core/utils/fs';
-import { registerWxt } from '../src/core/wxt';
+import { normalizePath } from '../src/internal-utils/path-utils';
+import { pathExists, readJson } from '../src/internal-utils/fs-utils';
+import { registerWxt } from '../src/internal/wxt';
 import * as vite from 'vite';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
