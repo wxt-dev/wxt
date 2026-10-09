@@ -237,4 +237,9 @@ However for WXT, given how deeply nested some functions and code paths are, and 
 However, that means it's very important to understand when the variable is initialized and where it can be used in the code base. Thankfully, the rules are very clear:
 
 - As mentioned, it's initialized when any of the higher-level public APIs are called
+
+  <<< @/../packages/wxt/src/prepare.ts#snippet
+
 - It can be used anywhere in the [`src/internal`](https://github.com/wxt-dev/wxt/tree/0d9c34b59e3f21840c471dec3fd4d9b0cb3b013a/packages/wxt/src/internal) directory
+
+  <<<@/../packages/wxt/src/internal/generate-wxt-dir.ts#snippet
