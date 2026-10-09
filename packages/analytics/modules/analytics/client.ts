@@ -1,4 +1,4 @@
-import { UAParser } from 'ua-parser-js';
+import Bowser from 'bowser';
 import type {
   Analytics,
   AnalyticsConfig,
@@ -84,7 +84,12 @@ function createBackgroundAnalytics(
 
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
-  const userAgent = UAParser();
+  // Client hints identify Chromium-based browsers that share Chrome's user agent, like Brave
+  const browserParser = Bowser.getParser(
+    navigator.userAgent,
+    (navigator as Navigator & { userAgentData?: Bowser.ClientHints })
+      .userAgentData,
+  );
   let userId = Promise.resolve(userIdStorage.getValue()).then(async (id) => {
     if (id != null) return id;
     // Persist the generated ID so it's stable across service worker restarts.
@@ -121,8 +126,8 @@ function createBackgroundAnalytics(
           wxtBrowser: import.meta.env.BROWSER,
           arch,
           os,
-          browser: userAgent.browser.name,
-          browserVersion: userAgent.browser.version,
+          browser: BROWSER_IDS[browserParser.getBrowserName()],
+          browserVersion: browserParser.getBrowserVersion(),
           ...(await userProperties),
         },
       },
@@ -364,6 +369,11 @@ function serializeError(error: unknown): {
   }
   return { type: 'Error', message: String(error), stack: undefined };
 }
+
+// Bowser's names mapped back to its browser IDs, e.g. "Microsoft Edge" -> "edge"
+const BROWSER_IDS = Object.fromEntries(
+  Object.entries(Bowser.BROWSER_MAP).map(([id, name]) => [name, id]),
+);
 
 function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(

@@ -28,6 +28,11 @@ const BROWSER_MAP: Record<string, string> = {
   edge: 'edge',
   firefox: 'firefox',
   chromium: 'other_chromium',
+  brave: 'other_chromium',
+  opera: 'other_chromium',
+  vivaldi: 'other_chromium',
+  yandex: 'other_chromium',
+  naver: 'other_chromium',
 };
 
 function mapOs(wxtOs: string | undefined): string {
