@@ -184,10 +184,10 @@ async function cloneProject({
     // 3. Initializing Git
     if (requireGitInitialized) {
       try {
-        const dir = response.dir;
+        const dirPath = normalizePath(response.dir);
         await spawn('git', ['init'], {
           throwOnError: true,
-          nodeOptions: { cwd: normalizePath(dir), shell: true },
+          nodeOptions: { cwd: dirPath, shell: true },
         });
       } catch (error) {
         console.error(error);
