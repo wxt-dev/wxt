@@ -32,6 +32,7 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
   return groups;
 }
 
+// #region snippet
 const ENTRY_TYPE_TO_GROUP_MAP: Record<Entrypoint['type'], Group> = {
   sandbox: 'sandboxed-esm',
 
@@ -52,3 +53,4 @@ const ENTRY_TYPE_TO_GROUP_MAP: Record<Entrypoint['type'], Group> = {
 };
 
 type Group = 'esm' | 'sandboxed-esm' | 'individual';
+// #endregion snippet
