@@ -3,7 +3,7 @@ import './style.css';
 import manualStyle from './manual-style.css?inline';
 
 export default defineContentScript({
-  matches: ['https://*.duckduckgo.com/*'],
+  matches: ['https://example.com/*'],
   cssInjectionMode: 'ui',
 
   async main(ctx) {
@@ -15,7 +15,7 @@ export default defineContentScript({
       name: 'demo-ui',
       position: 'inline',
       append: 'before',
-      anchor: 'form[role=search]',
+      anchor: 'div',
       onMount: (container) => {
         const app = document.createElement('div');
         app.classList.add('m-4', 'text-red-500');
