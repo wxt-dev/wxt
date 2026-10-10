@@ -23,7 +23,7 @@ export default defineWxtModule<ReactModuleOptions>({
       wxt.config.imports.dirsScanOptions ??= {};
       wxt.config.imports.dirsScanOptions.filePatterns = [
         // Default plus JSX/TSX
-        '*.{ts,js,mjs,cjs,mts,cts,jsx,tsx}',
+        '**/*.{ts,js,mjs,cjs,mts,cts,jsx,tsx}',
       ];
     });
   },
