@@ -43,6 +43,7 @@ export class ViteBuilder implements WxtBuilder {
   }
 
   async build(group: EntrypointGroup): Promise<BuildStepOutput> {
+    // #region snippet
     let entryConfig: vite.InlineConfig;
     if (Array.isArray(group)) entryConfig = this.getMultiPageConfig(group);
     else if (
@@ -51,6 +52,7 @@ export class ViteBuilder implements WxtBuilder {
     )
       entryConfig = this.getCssConfig(group);
     else entryConfig = this.getLibModeConfig(group);
+    // #endregion snippet
 
     const buildConfig: vite.InlineConfig = this.vite.mergeConfig(
       await this.getBaseConfig(),
