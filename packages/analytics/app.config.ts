@@ -9,6 +9,7 @@ export default defineAppConfig({
     debug: true,
     providers: [
       googleAnalytics4({
+        apiUrl: 'https://www.google-analytics.com',
         apiSecret: '...',
         measurementId: '...',
       }),
