@@ -1,17 +1,20 @@
-import { question, select } from '@topcli/prompts';
+import { question, select, confirm } from '@topcli/prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
 import { readdir, rename } from 'node:fs/promises';
 import { pathExists } from './internal-utils/fs-utils';
+import { normalizePath } from './internal-utils/path-utils';
 import path from 'node:path';
 import { styleText } from 'node:util';
 import { TextStyle } from './internal-utils/type-utils';
 import { createSpinner } from './internal/spinner';
+import { x as spawn } from 'tinyexec';
 
 export async function initialize(options: {
   directory?: string;
   template?: string;
   packageManager?: string;
+  requireGit?: boolean;
 }) {
   consola.info('Initializing new project');
 
@@ -51,6 +54,11 @@ export async function initialize(options: {
       ],
     }));
 
+  // Asks whether require git initialized or not?
+  const requireGitInitialized =
+    options.requireGit ??
+    (await confirm('Initialize a new git repository?', { initial: true }));
+
   const isExists = await pathExists(directory);
   if (isExists) {
     const isEmpty =
@@ -62,7 +70,7 @@ export async function initialize(options: {
       process.exit(1);
     }
   }
-  await cloneProject({ directory, template });
+  await cloneProject({ directory, template, requireGitInitialized });
 
   const cdPath = path.relative(process.cwd(), path.resolve(directory));
   console.log();
@@ -151,14 +159,16 @@ async function listTemplatesGithub(): Promise<Template[]> {
 async function cloneProject({
   directory,
   template,
+  requireGitInitialized,
 }: {
   directory: string;
   template: Template;
+  requireGitInitialized: boolean;
 }) {
   const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
-    await downloadTemplate(`gh:${REPO}/${template.path}`, {
+    const response = await downloadTemplate(`gh:${REPO}/${template.path}`, {
       dir: directory,
       force: true,
     });
@@ -170,6 +180,19 @@ async function cloneProject({
     ).catch((err) =>
       consola.warn('Failed to move _gitignore to .gitignore:', err),
     );
+
+    // 3. Initializing Git
+    if (requireGitInitialized) {
+      try {
+        const dirPath = normalizePath(response.dir);
+        await spawn('git', ['init'], {
+          throwOnError: true,
+          nodeOptions: { cwd: dirPath, shell: true },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     spinner.success();
   } catch (err) {
