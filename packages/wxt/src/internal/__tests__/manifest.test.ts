@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { generateManifest, stripPathFromMatchPattern } from '../manifest';
+import { generateManifest } from '../manifest';
 import {
   fakeArray,
   fakeBackgroundEntrypoint,
@@ -1204,6 +1204,82 @@ describe('Manifest Utils', () => {
           },
         );
 
+        it.each([undefined, 'manifest'] as const)(
+          'should throw when an spa script has CSS and cssInjectionMode is %s',
+          async (cssInjectionMode) => {
+            const cs: ContentScriptEntrypoint = {
+              type: 'content-script',
+              name: 'one',
+              inputPath: 'entrypoints/one.content.ts',
+              outputDir: contentScriptOutDir,
+              options: {
+                matches: ['*://google.com/search*'],
+                spa: true,
+                cssInjectionMode,
+              },
+              skipped: false,
+            };
+            const styles: OutputAsset = {
+              type: 'asset',
+              fileName: 'content-scripts/one.css',
+            };
+
+            const entrypoints = [cs];
+            const buildOutput: Omit<BuildOutput, 'manifest'> = {
+              publicAssets: [],
+              steps: [{ entrypoints: cs, chunks: [styles] }],
+            };
+            setFakeWxt({
+              config: {
+                outDir,
+                command: 'build',
+              },
+            });
+
+            await expect(
+              generateManifest(entrypoints, buildOutput),
+            ).rejects.toThrow('cssInjectionMode');
+          },
+        );
+
+        it('should not throw when an spa script has no CSS', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/search*'],
+              spa: true,
+            },
+            skipped: false,
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [] }],
+          };
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.content_scripts).toEqual([
+            {
+              js: ['content-scripts/one.js'],
+              matches: ['*://google.com/*'],
+            },
+          ]);
+        });
+
         it('should add CSS file to `web_accessible_resources` when cssInjectionMode is "ui" for MV3', async () => {
           const cs: ContentScriptEntrypoint = {
             type: 'content-script',
@@ -2230,18 +2306,6 @@ describe('Manifest Utils', () => {
           ),
         );
       });
-    });
-  });
-
-  describe('stripPathFromMatchPattern', () => {
-    it.each([
-      ['<all_urls>', '<all_urls>'],
-      ['*://play.google.com/books/*', '*://play.google.com/*'],
-      ['*://*/*', '*://*/*'],
-      ['https://github.com/wxt-dev/*', 'https://github.com/*'],
-    ])('should convert "%s" to "%s"', (input, expected) => {
-      const actual = stripPathFromMatchPattern(input);
-      expect(actual).toEqual(expected);
     });
   });
 });

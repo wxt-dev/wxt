@@ -220,6 +220,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {
       escapeUnicode: false,
+      spaContentScripts: false,
     }),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
     watchOptions: mergedConfig.watchOptions ?? {},

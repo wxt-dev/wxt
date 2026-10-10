@@ -51,7 +51,7 @@ export async function internalBuild(): Promise<BuildOutput> {
   const entrypoints = await findEntrypoints();
   wxt.logger.debug('Detected entrypoints:', entrypoints);
 
-  const validationResults = validateEntrypoints(entrypoints);
+  const validationResults = validateEntrypoints(entrypoints, wxt.config);
   if (validationResults.errorCount + validationResults.warningCount > 0) {
     printValidationResults(validationResults);
   }
