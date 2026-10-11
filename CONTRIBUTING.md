@@ -125,7 +125,7 @@ Then there are a few different ways to profile WXT commands:
 
 ## Updating Docs
 
-Documentation is written with VitePress, and is located in the `docs/` directory.
+Documentation is written with [VitePress](https://vitepress.dev/guide/getting-started), and is located in the `docs/` directory.
 
 The API reference is generated from JSDoc comments in the source code. If there's a typo or change you want to make in there, you'll need to update the source code instead of a file in the `docs/` directory.
 

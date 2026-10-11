@@ -64,7 +64,9 @@ function createStorage(): WxtStorage {
     value ?? fallback ?? null;
 
   const getMetaValue = (properties: any) =>
-    typeof properties === 'object' && !Array.isArray(properties)
+    properties != null &&
+    typeof properties === 'object' &&
+    !Array.isArray(properties)
       ? properties
       : {};
 
@@ -135,6 +137,15 @@ function createStorage(): WxtStorage {
     driverKey: string,
     cb: WatchCallback<any>,
   ) => driver.watch(driverKey, cb);
+
+  const watchMeta = (
+    driver: WxtStorageDriver,
+    driverKey: string,
+    cb: WatchCallback<any>,
+  ) =>
+    watch(driver, getMetaKey(driverKey), (newValue, oldValue) =>
+      cb(getMetaValue(newValue), getMetaValue(oldValue)),
+    );
 
   return {
     getItem: async (key, opts) => {
@@ -389,6 +400,11 @@ function createStorage(): WxtStorage {
       return watch(driver, driverKey, cb);
     },
 
+    watchMeta: (key, cb) => {
+      const { driver, driverKey } = resolveKey(key);
+      return watchMeta(driver, driverKey, cb);
+    },
+
     unwatch() {
       Object.values(drivers).forEach((driver) => {
         driver.unwatch();
@@ -573,6 +589,8 @@ function createStorage(): WxtStorage {
           watch(driver, driverKey, (newValue, oldValue) =>
             cb(newValue ?? getFallback(), oldValue ?? getFallback()),
           ),
+
+        watchMeta: (cb) => watchMeta(driver, driverKey, cb),
 
         migrate,
       };
@@ -839,6 +857,12 @@ export interface WxtStorage {
   /** Watch for changes to a specific key in storage. */
   watch<T>(key: StorageItemKey, cb: WatchCallback<T | null>): Unwatch;
 
+  /** Watch for changes to a specific key's metadata in storage. */
+  watchMeta<T extends Record<string, unknown>>(
+    key: StorageItemKey,
+    cb: WatchCallback<T>,
+  ): Unwatch;
+
   /** Remove all watch listeners. */
   unwatch(): void;
 
@@ -917,6 +941,9 @@ export interface WxtStorageItem<
 
   /** Listen for changes to the value in storage. */
   watch(cb: WatchCallback<TValue>): Unwatch;
+
+  /** Listen for changes to the metadata in storage. */
+  watchMeta(cb: WatchCallback<NullablePartial<TMetadata>>): Unwatch;
 
   /**
    * If there are migrations defined on the storage item, migrate to the latest
