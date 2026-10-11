@@ -1,0 +1,195 @@
+import { question, select } from '@topcli/prompts';
+import { consola } from 'consola';
+import { downloadTemplate } from 'giget';
+import { readdir, rename } from 'node:fs/promises';
+import { pathExists } from './internal-utils/fs-utils';
+import path from 'node:path';
+import { styleText } from 'node:util';
+import { TextStyle } from './internal-utils/type-utils';
+import { createSpinner } from './internal/spinner';
+
+export async function initialize(options: {
+  directory?: string;
+  template?: string;
+  packageManager?: string;
+}) {
+  consola.info('Initializing new project');
+
+  const templates = await listTemplates();
+  const inputTemplateName = options.template
+    ? templates.find(
+        (template) => template.name === options.template!.toLowerCase().trim(),
+      )?.name
+    : undefined;
+
+  const directory =
+    options.directory ??
+    (await question('Project Directory', { defaultValue: '.' }));
+  if (!directory) throw Error('Directory is required');
+
+  const templateName =
+    inputTemplateName ??
+    (await select('Choose a template', {
+      choices: templates.map((template) => ({
+        label: TEMPLATE_COLORS[template.name]
+          ? styleText(TEMPLATE_COLORS[template.name], template.name)
+          : template.name,
+        value: template.name,
+      })),
+    }));
+  const template = templates.find((t) => t.name === templateName);
+  if (!template) throw Error('Unknown template: ' + templateName);
+
+  const packageManager =
+    options.packageManager ??
+    (await select('Package Manager', {
+      choices: [
+        { label: styleText('magenta', 'bun'), value: 'bun' },
+        { label: styleText('red', 'npm'), value: 'npm' },
+        { label: styleText('yellow', 'pnpm'), value: 'pnpm' },
+        { label: styleText('cyan', 'yarn'), value: 'yarn' },
+      ],
+    }));
+
+  const isExists = await pathExists(directory);
+  if (isExists) {
+    const isEmpty =
+      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
+    if (!isEmpty) {
+      consola.error(
+        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
+      );
+      process.exit(1);
+    }
+  }
+  await cloneProject({ directory, template });
+
+  const cdPath = path.relative(process.cwd(), path.resolve(directory));
+  console.log();
+  consola.log(
+    `✨ WXT project created with the ${
+      TEMPLATE_COLORS[template.name]
+        ? styleText(TEMPLATE_COLORS[template.name], template.name)
+        : template.name
+    } template.`,
+  );
+  console.log();
+  consola.log('Next steps:');
+
+  let step = 0;
+  if (cdPath !== '')
+    consola.log(`  ${++step}.`, styleText('cyan', `cd ${cdPath}`));
+  consola.log(`  ${++step}.`, styleText('cyan', `${packageManager} install`));
+
+  console.log();
+}
+
+interface Template {
+  /** Template's name. */
+  name: string;
+  /** Path to template directory in github repo. */
+  path: string;
+}
+
+async function listTemplates(): Promise<Template[]> {
+  const templates = await listTemplatesUngh().catch((err) => {
+    consola.debug('Failed to load templates via ungh:', err);
+    return listTemplatesGithub();
+  });
+  return templates.sort((l, r) => {
+    const lWeight = TEMPLATE_SORT_WEIGHT[l.name] ?? Number.MAX_SAFE_INTEGER;
+    const rWeight = TEMPLATE_SORT_WEIGHT[r.name] ?? Number.MAX_SAFE_INTEGER;
+    const diff = lWeight - rWeight;
+    if (diff !== 0) return diff;
+    return l.name.localeCompare(r.name);
+  });
+}
+
+async function listTemplatesUngh(): Promise<Template[]> {
+  const res = await fetch('https://ungh.cc/repos/wxt-dev/wxt/files/main');
+  if (res.status !== 200)
+    throw Error(
+      `Request failed with status ${res.status} ${res.statusText}: ${await res.text()}`,
+    );
+
+  const data = (await res.json()) as {
+    meta: {
+      sha: string;
+    };
+    files: Array<{
+      path: string;
+      mode: string;
+      sha: string;
+      size: number;
+    }>;
+  };
+  return data.files
+    .map((item) => item.path.match(/templates\/(.+)\/package\.json/)?.[1])
+    .filter((name) => name != null)
+    .map((name) => ({ name: name!, path: `templates/${name}` }));
+}
+
+async function listTemplatesGithub(): Promise<Template[]> {
+  const res = await fetch(
+    `https://api.github.com/repos/${REPO}/contents/templates`,
+    { headers: { Accept: 'application/vnd.github+json' } },
+  );
+  if (res.status !== 200)
+    throw Error(
+      `Request failed with status ${res.status} ${res.statusText}: ${await res.text()}`,
+    );
+
+  // Schema is Example4 of https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+  return (await res.json()) as Array<{
+    name: string;
+    path: string;
+    sha: string;
+    size: number;
+  }>;
+}
+
+async function cloneProject({
+  directory,
+  template,
+}: {
+  directory: string;
+  template: Template;
+}) {
+  const spinner = createSpinner('Downloading template').start();
+  try {
+    // 1. Clone repo
+    await downloadTemplate(`gh:${REPO}/${template.path}`, {
+      dir: directory,
+      force: true,
+    });
+
+    // 2. Move _gitignore -> .gitignore
+    await rename(
+      path.join(directory, '_gitignore'),
+      path.join(directory, '.gitignore'),
+    ).catch((err) =>
+      consola.warn('Failed to move _gitignore to .gitignore:', err),
+    );
+
+    spinner.success();
+  } catch (err) {
+    spinner.error();
+    throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
+  }
+}
+
+const TEMPLATE_COLORS: Record<string, TextStyle> = {
+  vanilla: 'blue',
+  vue: 'green',
+  react: 'cyan',
+  svelte: 'red',
+  solid: 'blue',
+};
+
+const TEMPLATE_SORT_WEIGHT: Record<string, number> = {
+  vanilla: 0,
+  vue: 1,
+  react: 2,
+};
+
+const REPO = 'wxt-dev/wxt';

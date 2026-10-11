@@ -19,6 +19,7 @@ words:
   - AFFFE
   - AFFFF
   - aklinker
+  - arounds
   - automount
   - avenir
   - BFFFE
@@ -102,10 +103,12 @@ words:
   - oxlint
   - pbbf
   - personaltoolbar
+  - polyfilling
   - portaling
   - posthog
   - prebundled
   - prefs
+  - prerender
   - proxified
   - pWXLO
   - repost

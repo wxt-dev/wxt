@@ -6,7 +6,7 @@ import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualize
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
-import { ManifestContentScript } from './core/utils/types';
+import { ManifestContentScript } from './internal-utils/type-utils';
 import type { Browser } from '@wxt-dev/browser';
 
 export interface InlineConfig {
