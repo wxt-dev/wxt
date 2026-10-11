@@ -268,27 +268,23 @@ function createBackgroundAnalytics(
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
       port.onMessage.addListener((message: AnalyticsMessage) => {
-        const { meta } = message;
+        const { meta, fn } = message;
         // Pass every argument explicitly, so meta doesn't shift into an omitted optional one
-        switch (message.fn) {
+        switch (fn) {
           case 'identify':
-            return void analytics.identify(
-              message.args[0],
-              message.args[1],
-              meta,
-            );
+            return analytics.identify(message.args[0], message.args[1], meta);
           case 'page':
-            return void analytics.page(message.args[0], meta);
+            return analytics.page(message.args[0], meta);
           case 'track':
-            return void analytics.track(message.args[0], message.args[1], meta);
+            return analytics.track(message.args[0], message.args[1], meta);
           case 'captureException':
-            return void analytics.captureException(
+            return analytics.captureException(
               message.args[0],
               message.args[1],
               meta,
             );
           case 'setEnabled':
-            return void analytics.setEnabled(message.args[0]);
+            return analytics.setEnabled(message.args[0]);
         }
       });
     }
