@@ -6,9 +6,9 @@ import {
   type WxtLocationChangeEvent,
   getUniqueEventName,
 } from './internal/custom-events';
+import { createLocationWatcher } from './internal/location-watcher';
 
 export type { WxtLocationChangeEvent };
-import { createLocationWatcher } from './internal/location-watcher';
 
 /**
  * Implements
