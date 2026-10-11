@@ -25,10 +25,32 @@ export async function reloadContentScriptMv3({
 
 type ContentScript = ReloadContentScriptPayload['contentScript'];
 
+/**
+ * Reloads of one script run one after another. Two reloads that overlap can
+ * both read an empty registration list and both register, and the second
+ * registration throws "Duplicate script ID".
+ */
+const manifestReloads = new Map<string, Promise<void>>();
+
 export async function reloadManifestContentScriptMv3(
   contentScript: ContentScript,
 ) {
   const id = `wxt:${contentScript.js![0]}`;
+  const previous = manifestReloads.get(id) ?? Promise.resolve();
+  const reload = previous.then(() =>
+    reloadManifestContentScriptNow(id, contentScript),
+  );
+  manifestReloads.set(
+    id,
+    reload.catch(() => {}),
+  );
+  return reload;
+}
+
+async function reloadManifestContentScriptNow(
+  id: string,
+  contentScript: ContentScript,
+) {
   logger.log('Reloading content script:', contentScript);
   const registered = await browser.scripting.getRegisteredContentScripts();
   logger.debug('Existing scripts:', registered);
@@ -46,30 +68,13 @@ export async function reloadManifestContentScriptMv3(
     ]);
   } else {
     logger.debug('Registering new content script...');
-    try {
-      await browser.scripting.registerContentScripts([
-        {
-          ...contentScript,
-          id,
-          css: contentScript.css ?? [],
-        },
-      ]);
-    } catch (err) {
-      // Two reload events for the same entrypoint can both read an empty
-      // registration above and both register; the loser throws "Duplicate
-      // script ID". The winner is registering this same script and reloads
-      // the tabs once it lands, so the loser has nothing left to do. It must
-      // not fall back to updateContentScripts (the winner's registration is
-      // not complete yet, so that throws "not fully registered") and must not
-      // reload tabs (they would come back before the script is registered).
-      const message = String((err as Error)?.message ?? err);
-      if (!message.includes('Duplicate script ID')) throw err;
-      logger.debug(
-        'Lost a registration race, the concurrent register owns it',
+    await browser.scripting.registerContentScripts([
+      {
+        ...contentScript,
         id,
-      );
-      return;
-    }
+        css: contentScript.css ?? [],
+      },
+    ]);
   }
 
   await reloadTabsForContentScript(contentScript);
