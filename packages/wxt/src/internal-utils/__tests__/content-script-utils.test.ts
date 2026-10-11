@@ -19,11 +19,11 @@ describe('Content Script Utils', () => {
     it('should be consistent regardless of the object ordering and default values', () => {
       const hash1 = hashContentScriptOptions({
         allFrames: true,
-        matches: ['*://google.com/*', '*://duckduckgo.com/*'],
+        matches: ['*://google.com/*', '*://example.com/*'],
         matchAboutBlank: false,
       });
       const hash2 = hashContentScriptOptions({
-        matches: ['*://duckduckgo.com/*', '*://google.com/*'],
+        matches: ['*://example.com/*', '*://google.com/*'],
         allFrames: true,
       });
 
