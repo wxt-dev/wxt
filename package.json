@@ -34,7 +34,8 @@
     "unocss": "^66.6.8",
     "vite": "^8.2.0",
     "vitest": "^4.1.10",
-    "vitest-plugin-random-seed": "^2.0.2"
+    "vitest-plugin-random-seed": "^2.0.2",
+    "web-ext": "^10.5.0"
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",

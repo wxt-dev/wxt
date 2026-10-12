@@ -87,7 +87,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
-    "web-ext": "^10.5.0"
+    "web-ext": "catalog:"
   },
   "repository": {
     "type": "git",
