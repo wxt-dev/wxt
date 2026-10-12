@@ -997,7 +997,7 @@ describe('Manifest Utils', () => {
           inputPath: 'entrypoints/four.content/index.ts',
           outputDir: contentScriptOutDir,
           options: {
-            matches: ['*://duckduckgo.com/*'],
+            matches: ['*://example.com/*'],
             runAt: 'document_end',
           },
           skipped: false,
@@ -1058,7 +1058,7 @@ describe('Manifest Utils', () => {
           js: ['content-scripts/two.js', 'content-scripts/three.js'],
         });
         expect(actual.content_scripts).toContainEqual({
-          matches: ['*://duckduckgo.com/*'],
+          matches: ['*://example.com/*'],
           run_at: 'document_end',
           css: ['content-scripts/four.css'],
           js: ['content-scripts/four.js'],
