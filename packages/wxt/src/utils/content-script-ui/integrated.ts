@@ -60,6 +60,11 @@ export interface IntegratedContentScriptUi<
   wrapper: HTMLElement;
 }
 
+/**
+ * {@inheritDoc wxt/utils/content-script-ui/types!ContentScriptUiOptions}
+ *
+ * @interface
+ */
 export type IntegratedContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**

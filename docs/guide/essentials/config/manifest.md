@@ -139,7 +139,7 @@ public/
 
 Specifically, an icon must match one of these regex to be discovered:
 
-<<< @/../packages/wxt/src/core/utils/manifest.ts#snippet
+<<< @/../packages/wxt/src/internal/manifest.ts#snippet
 
 If you don't like these filename or you're migrating to WXT and don't want to rename the files, you can manually specify an `icon` in your manifest:
 
@@ -177,7 +177,7 @@ public/
 
 A size is only included in `theme_icons` if **both** a light and a dark file are present. The following filename patterns are discovered:
 
-<<< @/../packages/wxt/src/core/utils/theme-icons.ts#snippet
+<<< @/../packages/wxt/src/internal/theme-icons.ts#snippet
 
 Only `.png` files are discovered today, even though Firefox supports `.svg` - follow [#1120](https://github.com/wxt-dev/wxt/issues/1120) for updates.
 

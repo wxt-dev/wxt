@@ -1,5 +1,5 @@
 import cac from 'cac';
-import { build, clean, createServer, initialize, prepare, zip } from '../core';
+import { build, clean, createServer, initialize, prepare, zip } from '../index';
 import {
   createAliasedCommand,
   getArrayFromFlags,
@@ -119,6 +119,7 @@ cli
     }),
   );
 
+// #region prepare
 // PREPARE
 cli
   .command('prepare [root]', 'prepare typescript project')
@@ -132,6 +133,7 @@ cli
       });
     }),
   );
+// #endregion prepare
 
 // CLEAN
 cli

@@ -233,7 +233,7 @@ describe('Output Directory Structure', () => {
     project.addFile(
       'entrypoints/named.content.jsx',
       `export default defineContentScript({
-        matches: ["*://*.duckduckgo.com/*"],
+        matches: ["*://*.example.com/*"],
         main() {},
       })`,
     );
@@ -244,7 +244,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/manifest.json
         ----------------------------------------
-        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.duckduckgo.com/*"],"js":["content-scripts/named.js"]}]}"
+        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.example.com/*"],"js":["content-scripts/named.js"]}]}"
       `);
     expect(await project.pathExists('.output/chrome-mv3/background.js'));
     expect(
