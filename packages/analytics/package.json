@@ -26,6 +26,7 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "web-ext": "catalog:",
     "wxt": "workspace:*"
   },
   "repository": {
