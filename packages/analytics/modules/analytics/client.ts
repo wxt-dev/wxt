@@ -10,7 +10,7 @@ import type {
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
 } from './types';
-import { browser } from '@wxt-dev/browser';
+import { browser, type Browser } from '@wxt-dev/browser';
 import { isBackground } from '@wxt-dev/is-background';
 
 type AnalyticsMessage = {
@@ -281,7 +281,15 @@ function createBackgroundAnalytics(
 
 /** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
-  const port = browser.runtime.connect({ name: ANALYTICS_PORT });
+  // The port disconnects when the background service worker stops, so reconnect when needed
+  let port: Browser.runtime.Port | undefined;
+  const getPort = () => {
+    if (!port) {
+      port = browser.runtime.connect({ name: ANALYTICS_PORT });
+      port.onDisconnect.addListener(() => (port = undefined));
+    }
+    return port;
+  };
   const sessionId = Date.now();
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
@@ -296,7 +304,7 @@ function createFrontendAnalytics(): Analytics {
   const methodForwarder: MethodForwarder =
     (fn) =>
     (...args) => {
-      port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      getPort().postMessage({ fn, args: [...args, getFrontendMetadata()] });
       return Promise.resolve();
     };
 

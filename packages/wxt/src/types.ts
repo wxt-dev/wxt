@@ -537,8 +537,8 @@ export interface WxtHooks {
    * Called when WXT has created Vite's config for the dev server. Useful if you
    * want to add plugins or update the vite config per entrypoint group.
    *
-   * @param viteConfig The config that will be used to build the entrypoints.
-   *   Can be updated by reference.
+   * @param config The config that will be used to build the entrypoints. Can be
+   *   updated by reference.
    */
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
 }
@@ -695,7 +695,7 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    * the default IIFE variable name may conflict with an existing variable on
    * the target page. This applies to content scripts with world=MAIN, and
    * others, such as unlisted scripts, that could be dynamically injected into
-   * the page with a <script> tag.
+   * the page with a `<script>` tag.
    *
    * Available options:
    *
@@ -1189,7 +1189,7 @@ export interface ConfigEnv {
   /**
    * Manifest version passed in from the CLI via the `--mv2` or `--mv3` flags.
    * When not passed, it depends on the target browser. See [the
-   * guide](https://wxt.dev/guide/key-concepts/multiple-browsers.html#target-manifest-version)
+   * guide](https://wxt.dev/guide/essentials/target-different-browsers.html#target-a-manifest-version)
    * for more details.
    */
   manifestVersion: 2 | 3;
@@ -1434,7 +1434,7 @@ export interface WxtHooks {
    * Called once all entrypoints have been grouped into their build groups.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of groups to build in each build step
+   * @param groups The list of groups to build in each build step
    */
   'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
   /**
@@ -1442,7 +1442,7 @@ export interface WxtHooks {
    * reference to add or remove public files.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of files that will be copied into the output
+   * @param files The list of files that will be copied into the output
    *   directory
    */
   'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
