@@ -158,6 +158,14 @@
   chromeId: fdkpkpelkkdkjhpacficichkfifijipc
   firefoxSlug: youtube-like-dislike-shortcut
 
+- # VLC Shortcuts for YouTube
+  chromeId: ccfncalinmelfdbodiediojhddcljnpl
+  firefoxSlug: vlc-shortcuts-for-youtube
+
+- # Cyberpunk 2077 New Tab
+  chromeId: loeholjgiahjakohgpmglbhlfkhegccp
+  firefoxSlug: cyberpunk-2077-new-tab
+
 - # Twitch Channel Points Bonus Collector
   chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
   firefoxSlug: twitch-cp-bonus-collector
