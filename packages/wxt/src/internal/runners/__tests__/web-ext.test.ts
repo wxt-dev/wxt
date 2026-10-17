@@ -5,6 +5,14 @@ import { WebExtRunner } from '../web-ext';
 import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
+import {
+  createWslChromiumProfile,
+  findLinuxChromium,
+  hasDisplay,
+  isUnusableSnap,
+  which,
+  WslChromiumProfile,
+} from '../../../internal-utils/wsl-utils';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
@@ -35,9 +43,22 @@ vi.mock('web-ext/util/logger', () => ({
   },
 }));
 
+vi.mock('../../../internal-utils/wsl-utils', () => ({
+  createWslChromiumProfile: vi.fn(),
+  findLinuxChromium: vi.fn(),
+  hasDisplay: vi.fn(),
+  isUnusableSnap: vi.fn(),
+  which: vi.fn(),
+}));
+const createWslChromiumProfileMock = vi.mocked(createWslChromiumProfile);
+const findLinuxChromiumMock = vi.mocked(findLinuxChromium);
+const hasDisplayMock = vi.mocked(hasDisplay);
+const isUnusableSnapMock = vi.mocked(isUnusableSnap);
+const whichMock = vi.mocked(which);
+
 describe('WebExtRunner', () => {
-  function setupRunner() {
-    return new WebExtRunner(webExt, logger, setupWxt().config);
+  function setupRunner(config = setupWxt().config) {
+    return new WebExtRunner(webExt, logger, config);
   }
 
   function setupWxt() {
@@ -78,13 +99,213 @@ describe('WebExtRunner', () => {
     }
 
     describe('when in WSL', () => {
+      let profile: MockProxy<WslChromiumProfile>;
+
+      function runConfig() {
+        expect(webExtCmdRunMock).toHaveBeenCalledTimes(1);
+        return webExtCmdRunMock.mock.calls[0][0] as Record<string, any>;
+      }
+
       beforeEach(() => {
         isWsl = true;
+        profile = mock<WslChromiumProfile>({
+          chromiumProfile: '/tmp/wxt-chromium-profile-abc',
+          args: ['--user-data-dir=/tmp/wxt-chromium-profile-abc'],
+        });
+        createWslChromiumProfileMock.mockResolvedValue(profile);
+        findLinuxChromiumMock.mockResolvedValue('/usr/bin/google-chrome');
+        hasDisplayMock.mockReturnValue(true);
+        isUnusableSnapMock.mockResolvedValue(false);
+        whichMock.mockResolvedValue('/usr/bin/firefox');
       });
 
-      it('should do nothing', async () => {
-        await openBrowser();
-        expectNothing();
+      describe.each(['chrome', 'firefox'])(
+        'when there is no display for %s',
+        (browser) => {
+          it('should warn and do nothing', async () => {
+            targetBrowser = browser;
+            hasDisplayMock.mockReturnValue(false);
+            const { config } = setupWxt();
+
+            await setupRunner(config).openBrowser();
+
+            expectNothing();
+            expect(findLinuxChromiumMock).not.toHaveBeenCalled();
+            expect(config.logger.warn).toHaveBeenCalledWith(
+              expect.stringContaining('without a display'),
+            );
+          });
+        },
+      );
+
+      describe('when targeting Chromium', () => {
+        it('should open the Linux Chromium with its own profile', async () => {
+          await openBrowser();
+
+          expect(findLinuxChromiumMock).toHaveBeenCalledWith(undefined);
+          expect(createWslChromiumProfileMock).toHaveBeenCalledWith(undefined);
+          expect(runConfig()).toMatchObject({
+            chromiumBinary: '/usr/bin/google-chrome',
+            chromiumProfile: '/tmp/wxt-chromium-profile-abc',
+            keepProfileChanges: true,
+            args: [
+              '--unsafely-disable-devtools-self-xss-warnings',
+              '--user-data-dir=/tmp/wxt-chromium-profile-abc',
+            ],
+          });
+        });
+
+        it('should pass the configured binary to findLinuxChromium', async () => {
+          webExtConfig = { binaries: { chrome: '/opt/chrome/chrome' } };
+
+          await openBrowser();
+
+          expect(findLinuxChromiumMock).toHaveBeenCalledWith(
+            '/opt/chrome/chrome',
+          );
+        });
+
+        it("should keep the user's --user-data-dir", async () => {
+          webExtConfig = {
+            chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
+          };
+
+          await openBrowser();
+
+          expect(createWslChromiumProfileMock).not.toHaveBeenCalled();
+          expect(runConfig().args).toEqual([
+            '--unsafely-disable-devtools-self-xss-warnings',
+            '--user-data-dir=./.wxt/chrome-data',
+          ]);
+        });
+
+        it('should reuse a kept chromiumProfile', async () => {
+          webExtConfig = {
+            chromiumProfile: '/home/user/chrome',
+            keepProfileChanges: true,
+          };
+
+          await openBrowser();
+
+          expect(createWslChromiumProfileMock).toHaveBeenCalledWith(
+            '/home/user/chrome',
+          );
+        });
+
+        it('should warn that a chromiumProfile web-ext copies is ignored', async () => {
+          webExtConfig = { chromiumProfile: '/home/user/chrome' };
+          const { config } = setupWxt();
+
+          await setupRunner(config).openBrowser();
+
+          expect(createWslChromiumProfileMock).not.toHaveBeenCalled();
+          expect(config.logger.warnOnce).toHaveBeenCalledWith(
+            expect.stringContaining('`chromiumProfile` is ignored'),
+          );
+          expect(runConfig().chromiumProfile).toBe('/home/user/chrome');
+        });
+
+        it('should warn and do nothing without a Linux Chromium', async () => {
+          findLinuxChromiumMock.mockResolvedValue(undefined);
+          const { config } = setupWxt();
+
+          await setupRunner(config).openBrowser();
+
+          expectNothing();
+          expect(createWslChromiumProfileMock).not.toHaveBeenCalled();
+          expect(config.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'Cannot find a Chromium browser installed inside WSL',
+            ),
+          );
+        });
+
+        it('should warn and do nothing for a Snap Chromium', async () => {
+          isUnusableSnapMock.mockResolvedValue(true);
+          const { config } = setupWxt();
+
+          await setupRunner(config).openBrowser();
+
+          expectNothing();
+          expect(isUnusableSnapMock).toHaveBeenCalledWith(
+            '/usr/bin/google-chrome',
+          );
+          expect(config.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'Cannot open the Snap version of Chromium when using WSL',
+            ),
+          );
+        });
+
+        it('should clean up the profile when opening the browser fails', async () => {
+          webExtCmdRunMock.mockRejectedValueOnce(Error('test'));
+
+          await expect(openBrowser()).rejects.toThrow('test');
+
+          expect(profile.cleanup).toHaveBeenCalledTimes(1);
+        });
+
+        it('should clean up the profile when closing the browser', async () => {
+          webExtCmdRunMock.mockResolvedValueOnce(mock<WebExtRunInstance>());
+          const runner = setupRunner();
+
+          await runner.openBrowser();
+          await runner.closeBrowser();
+          await runner.closeBrowser();
+
+          expect(profile.cleanup).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe('when targeting Firefox', () => {
+        beforeEach(() => {
+          targetBrowser = 'firefox';
+        });
+
+        it('should open the browser', async () => {
+          await openBrowser();
+
+          expect(webExtCmdRunMock).toHaveBeenCalledTimes(1);
+          expect(createWslChromiumProfileMock).not.toHaveBeenCalled();
+        });
+
+        it('should check the configured binary for Snap', async () => {
+          webExtConfig = { binaries: { firefox: '/opt/firefox/firefox' } };
+
+          await openBrowser();
+
+          expect(whichMock).not.toHaveBeenCalled();
+          expect(isUnusableSnapMock).toHaveBeenCalledWith(
+            '/opt/firefox/firefox',
+          );
+        });
+
+        it('should warn and do nothing for a Snap Firefox', async () => {
+          isUnusableSnapMock.mockResolvedValue(true);
+          const { config } = setupWxt();
+
+          await setupRunner(config).openBrowser();
+
+          expectNothing();
+          expect(isUnusableSnapMock).toHaveBeenCalledWith('/usr/bin/firefox');
+          expect(config.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'Cannot open the Snap version of Firefox when using WSL',
+            ),
+          );
+        });
+      });
+
+      describe('when webExt.disabled=true', () => {
+        it('should not look for a browser', async () => {
+          webExtConfig = { disabled: true };
+
+          await openBrowser();
+
+          expectNothing();
+          expect(findLinuxChromiumMock).not.toHaveBeenCalled();
+          expect(createWslChromiumProfileMock).not.toHaveBeenCalled();
+        });
       });
     });
 
