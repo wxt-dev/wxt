@@ -21,6 +21,7 @@ import {
 } from '../../../internal-utils/entrypoint-utils';
 import { createExtensionEnvironment } from '../../environments';
 import { safeVarName } from '../../../internal-utils/string-utils';
+import { isSpaContentScript } from '../../../internal-utils/content-script-utils';
 import { VirtualEntrypointType, VirtualModuleId } from '../../virtual-modules';
 import * as wxtPlugins from './plugins';
 
@@ -511,7 +512,9 @@ function getRollupEntry(entrypoint: Entrypoint): string {
       virtualEntrypointType =
         entrypoint.options.world === 'MAIN'
           ? 'content-script-main-world'
-          : 'content-script-isolated-world';
+          : isSpaContentScript(entrypoint.options)
+            ? 'content-script-isolated-world-spa'
+            : 'content-script-isolated-world';
       break;
   }
 
