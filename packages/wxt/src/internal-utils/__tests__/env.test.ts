@@ -8,6 +8,11 @@ describe('Env Utils', () => {
     if (process.cwd() !== cwd) process.chdir(cwd);
     delete process.env.TEST_VAR;
     delete process.env.EXPANDED;
+    delete process.env.LOCAL_VAR;
+    delete process.env.EXPANDED_FROM_LOCAL;
+    delete process.env.OVERRIDDEN;
+    delete process.env.EXPANDED_OVERRIDE;
+    delete process.env.UNRESOLVED;
   });
 
   describe('isCI', () => {
@@ -53,11 +58,24 @@ describe('Env Utils', () => {
       expect(process.env.TEST_VAR).toEqual('non-blank');
     });
 
-    // Node doesn't return vars in the same order as they're defined:
-    // https://github.com/nodejs/node/issues/62736
-    it.skip('should expand env vars into the real `process.env`', () => {
+    it('should expand env vars into the real `process.env`', () => {
       loadEnv('testing', 'chrome');
       expect(process.env.EXPANDED).toEqual('expected expanded');
+    });
+
+    it('should expand env vars defined in more specific files', () => {
+      loadEnv('testing', 'chrome');
+      expect(process.env.EXPANDED_FROM_LOCAL).toEqual('local expanded');
+    });
+
+    it('should expand the value from the most specific file', () => {
+      loadEnv('testing', 'chrome');
+      expect(process.env.EXPANDED_OVERRIDE).toEqual('local expanded');
+    });
+
+    it('should expand unresolved env vars to empty strings', () => {
+      loadEnv('testing', 'chrome');
+      expect(process.env.UNRESOLVED).toEqual(' unresolved');
     });
   });
 });
