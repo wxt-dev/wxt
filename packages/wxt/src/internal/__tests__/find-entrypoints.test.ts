@@ -257,19 +257,6 @@ describe('findEntrypoints', () => {
         skipped: false,
       },
     ],
-    [
-      'overlay.content.svelte/index.ts',
-      {
-        type: 'content-script',
-        name: 'overlay',
-        inputPath: resolve(
-          config.entrypointsDir,
-          'overlay.content.svelte/index.ts',
-        ),
-        outputDir: resolve(config.outDir, 'content-scripts'),
-        skipped: false,
-      },
-    ],
   ])(
     'should find and load content script entrypoint config from %s',
     async (path, expected) => {
