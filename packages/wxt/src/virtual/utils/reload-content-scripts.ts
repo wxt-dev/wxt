@@ -25,10 +25,32 @@ export async function reloadContentScriptMv3({
 
 type ContentScript = ReloadContentScriptPayload['contentScript'];
 
+/**
+ * Reloads of one script run one after another. Two reloads that overlap can
+ * both read an empty registration list and both register, and the second
+ * registration throws "Duplicate script ID".
+ */
+const manifestReloads = new Map<string, Promise<void>>();
+
 export async function reloadManifestContentScriptMv3(
   contentScript: ContentScript,
 ) {
   const id = `wxt:${contentScript.js![0]}`;
+  const previous = manifestReloads.get(id) ?? Promise.resolve();
+  const reload = previous.then(() =>
+    reloadManifestContentScriptNow(id, contentScript),
+  );
+  manifestReloads.set(
+    id,
+    reload.catch(() => {}),
+  );
+  return reload;
+}
+
+async function reloadManifestContentScriptNow(
+  id: string,
+  contentScript: ContentScript,
+) {
   logger.log('Reloading content script:', contentScript);
   const registered = await browser.scripting.getRegisteredContentScripts();
   logger.debug('Existing scripts:', registered);
