@@ -1,5 +1,4 @@
 import { Feed } from 'feed';
-// @ts-expect-error; It isn't TypeScript lib
 import footnote from 'markdown-it-footnote';
 import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
