@@ -5,7 +5,13 @@ export default defineConfig({
   // WXT module, we need to disable this to simplify the build process
   imports: false,
 
-  manifest: {
+  manifest: () => ({
     name: 'Analytics Demo',
+    key: import.meta.env.WXT_MANIFEST_KEY,
+  }),
+  webExt: {
+    chromiumPref: {
+      'extensions.pinned_extensions': ['oamekmekgnhdjmindaokbbbedelebjbn'],
+    },
   },
 });
