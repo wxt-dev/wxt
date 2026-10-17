@@ -38,6 +38,10 @@ const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
   'background/index.[jt]s': 'background',
   [VIRTUAL_NOOP_BACKGROUND_MODULE_ID]: 'background',
 
+  'content.svelte.[jt]s?(x)': 'content-script',
+  'content.svelte/index.[jt]s?(x)': 'content-script',
+  '*.content.svelte.[jt]s?(x)': 'content-script',
+  '*.content.svelte/index.[jt]s?(x)': 'content-script',
   'content.[jt]s?(x)': 'content-script',
   'content/index.[jt]s?(x)': 'content-script',
   '*.content.[jt]s?(x)': 'content-script',
