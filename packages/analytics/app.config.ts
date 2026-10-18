@@ -13,6 +13,8 @@ export default defineAppConfig({
       }),
       posthog({
         apiKey: '...',
+        apiHost: '...',
+        errorTracking: true,
       }),
       umami({
         apiUrl: 'https://umami.aklinker1.io/api',

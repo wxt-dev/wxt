@@ -4,7 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
-} from './src/core/utils/virtual-modules';
+} from './src/internal/virtual-modules';
 import consola from 'consola';
 import { styleText } from 'node:util';
 import { resolve } from 'node:path';
@@ -18,6 +18,7 @@ import { resolve } from 'node:path';
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
 const inlineDeps = [
+  'dotenv-expand',
   'is-wsl',
   'get-port-please',
   'normalize-path',

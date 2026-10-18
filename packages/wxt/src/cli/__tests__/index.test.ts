@@ -1,31 +1,24 @@
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import {
-  build,
-  createServer,
-  zip,
-  prepare,
-  clean,
-  initialize,
-} from '../../core';
+import { build, createServer, zip, prepare, clean, initialize } from '../../';
 import { mock } from 'vitest-mock-extended';
 import consola, { LogLevels } from 'consola';
 
-vi.mock('../../core/build');
+vi.mock('../../build');
 const buildMock = vi.mocked(build);
 
-vi.mock('../../core/create-server');
+vi.mock('../../create-server');
 const createServerMock = vi.mocked(createServer);
 
-vi.mock('../../core/zip');
+vi.mock('../../zip');
 const zipMock = vi.mocked(zip);
 
-vi.mock('../../core/prepare');
+vi.mock('../../prepare');
 const prepareMock = vi.mocked(prepare);
 
-vi.mock('../../core/clean');
+vi.mock('../../clean');
 const cleanMock = vi.mocked(clean);
 
-vi.mock('../../core/initialize');
+vi.mock('../../initialize');
 const initializeMock = vi.mocked(initialize);
 
 consola.wrapConsole();
@@ -37,7 +30,7 @@ function mockArgv(...args: string[]) {
 }
 
 async function importCli() {
-  await import('../../cli');
+  await import('..');
 }
 
 describe('CLI', () => {
@@ -498,34 +491,56 @@ describe('CLI', () => {
       mockArgv('init');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({});
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({ requireGit: true }),
+      );
     });
 
     it('should respect the provided folder', async () => {
       mockArgv('init', 'path/to/folder');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        directory: 'path/to/folder',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          directory: 'path/to/folder',
+          requireGit: true,
+        }),
+      );
     });
 
     it('should respect passing --template', async () => {
       mockArgv('init', '-t', 'vue');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        template: 'vue',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          template: 'vue',
+          requireGit: true,
+        }),
+      );
     });
 
     it('should respect passing --pm', async () => {
       mockArgv('init', '--pm', 'pnpm');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        packageManager: 'pnpm',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          packageManager: 'pnpm',
+          requireGit: true,
+        }),
+      );
+    });
+
+    it('should respect passing --no-git', async () => {
+      mockArgv('init', '--no-git');
+      await importCli();
+
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          requireGit: false,
+        }),
+      );
     });
   });
 });
