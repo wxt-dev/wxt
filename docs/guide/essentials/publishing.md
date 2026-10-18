@@ -179,6 +179,22 @@ If you use a `.env` files, they can affect the chunk hashes in the output direct
 See Issue [#377](https://github.com/wxt-dev/wxt/issues/377) for more details.
 :::
 
+#### Automatically Include Sources (Experimental)
+
+Instead of listing files in `zip.includeSources`, you can let WXT detect the files Vite used to build your extension:
+
+```ts [wxt.config.ts]
+export default defineConfig({
+  experimental: {
+    autoIncludeSources: true,
+  },
+});
+```
+
+The sources ZIP will then contain those files, plus the files at the top of your project (`package.json`, lockfile, config files), the public directory, and local modules. `zip.excludeSources` is still applied, and `zip.includeSources` can be used to add any files WXT doesn't detect, like stylesheets loaded via CSS `@import` or files that are only read by a module.
+
+If your extension imports files from elsewhere in a monorepo, set `zip.sourcesRoot` to the monorepo's root so those files are included too.
+
 #### Private Packages
 
 If you use private packages and you don't want to provide your auth token to the Firefox team during the review process, you can use `zip.downloadPackages` to download any private packages and include them in the zip.
