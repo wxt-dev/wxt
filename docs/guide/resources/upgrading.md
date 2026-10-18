@@ -650,7 +650,7 @@ export default defineConfig({
 });
 ```
 
-> [Read the full docs](/guide/essentials/config/entrypoint-loaders#vite-node) for more information.
+> [Read the full docs](/guide/essentials/config/entrypoint-loaders) for more information.
 
 :::details This change enables:
 
