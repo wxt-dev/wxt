@@ -45,6 +45,42 @@ if (ctx.isInvalid) {
 }
 ```
 
+## Svelte Rune Modules
+
+Use a regular TypeScript entrypoint and import rune logic from a `.svelte.ts` module inside its directory. Configure `@wxt-dev/module-svelte` as described in [Frontend Frameworks](/guide/essentials/frontend-frameworks#built-in-modules).
+
+:::code-group
+
+```ts [entrypoints/example.content/index.ts]
+import { createCounter } from './counter.svelte';
+
+export default defineContentScript({
+  matches: ['<all_urls>'],
+  main() {
+    const counter = createCounter();
+    counter.increment();
+    console.log(counter.value);
+  },
+});
+```
+
+```ts [entrypoints/example.content/counter.svelte.ts]
+export function createCounter() {
+  let value = $state(0);
+
+  return {
+    get value() {
+      return value;
+    },
+    increment() {
+      value += 1;
+    },
+  };
+}
+```
+
+:::
+
 ## CSS
 
 In regular web extensions, CSS for content scripts is usually a separate CSS file, that is added to a CSS array in the manifest:
