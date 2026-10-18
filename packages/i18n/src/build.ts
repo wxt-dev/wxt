@@ -58,9 +58,7 @@ export interface ParsedPluralMessage extends ParsedBaseMessage {
 }
 
 export type ParsedMessage =
-  | ParsedChromeMessage
-  | ParsedSimpleMessage
-  | ParsedPluralMessage;
+  ParsedChromeMessage | ParsedSimpleMessage | ParsedPluralMessage;
 
 export type MessageFormat = 'JSON5' | 'YAML' | 'TOML';
 

@@ -33,11 +33,7 @@ import VueRouter from 'unplugin-vue-router/vite';
 
 export default defineConfig({
   vite: () => ({
-    plugins: [
-      VueRouter({
-        /* ... */
-      }),
-    ],
+    plugins: [VueRouter({/* ... */})],
   }),
 });
 ```
