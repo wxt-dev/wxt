@@ -19,6 +19,7 @@ words:
   - AFFFE
   - AFFFF
   - aklinker
+  - arounds
   - automount
   - avenir
   - BFFFE
@@ -52,7 +53,6 @@ words:
   - DFFFE
   - DFFFF
   - dtrace
-  - duckduckgo
   - EFFFE
   - EFFFF
   - esbuild
@@ -89,7 +89,6 @@ words:
   - moderok
   - mycompany
   - nacl
-  - nanospinner
   - natsu
   - newtab
   - njsproj
@@ -103,10 +102,12 @@ words:
   - oxlint
   - pbbf
   - personaltoolbar
+  - polyfilling
   - portaling
   - posthog
   - prebundled
   - prefs
+  - prerender
   - proxified
   - pWXLO
   - repost

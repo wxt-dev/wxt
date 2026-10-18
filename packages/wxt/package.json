@@ -1,7 +1,7 @@
 {
   "name": "wxt",
   "type": "module",
-  "version": "0.21.3",
+  "version": "0.21.4",
   "description": "⚡ Next-gen Web Extension Framework",
   "license": "MIT",
   "scripts": {
@@ -15,7 +15,7 @@
     "prepack": "bun run build"
   },
   "dependencies": {
-    "@1natsu/wait-element": "^4.1.2",
+    "@1natsu/wait-element": "^5.0.0",
     "@aklinker1/rollup-plugin-visualizer": "5.12.0",
     "@aklinker1/zero-zip": "^1.0.1",
     "@topcli/prompts": "^4.0.0",
@@ -29,15 +29,12 @@
     "chokidar": "^5.0.0",
     "consola": "^3.4.2",
     "defu": "^6.1.4",
-    "dotenv-expand": "^13.0.0",
     "filesize": "^11.0.17",
-    "get-port-please": "^3.2.0",
     "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
     "hookable": "^6.1.0",
     "json5": "^2.2.3",
     "linkedom": "^0.18.12",
     "magicast": "^0.5.2",
-    "nanospinner": "^1.2.2",
     "nypm": "^0.6.5",
     "picomatch": "^4.0.3",
     "publish-browser-extension": "^5.1.0 || ^6.0.0",
@@ -73,8 +70,10 @@
     "@types/normalize-path": "^3.0.2",
     "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
+    "dotenv-expand": "^13.0.0",
     "eslint": "^10.1.0",
     "extract-zip": "^2.0.1",
+    "get-port-please": "^3.2.0",
     "happy-dom": "^20.8.3",
     "is-wsl": "^3.1.1",
     "lodash.merge": "^4.6.2",
@@ -88,7 +87,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
-    "web-ext": "^10.5.0"
+    "web-ext": "catalog:"
   },
   "repository": {
     "type": "git",
@@ -200,8 +199,8 @@
       "types": "./dist/vite-builder-env.d.ts"
     },
     "./modules": {
-      "types": "./dist/modules.d.mts",
-      "default": "./dist/modules.mjs"
+      "types": "./dist/modules/index.d.mts",
+      "default": "./dist/modules/index.mjs"
     }
   },
   "engines": {

@@ -153,6 +153,11 @@ export interface ShadowRootContentScriptUi<
   shadow: ShadowRoot;
 }
 
+/**
+ * {@inheritDoc wxt/utils/content-script-ui/types!ContentScriptUiOptions}
+ *
+ * @interface
+ */
 export type ShadowRootContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**

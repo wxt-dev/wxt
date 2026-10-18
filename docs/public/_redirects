@@ -4,6 +4,11 @@
 # Old URLs -> New URLs
 
 # OLD
+# https://github.com/wxt-dev/wxt/issues/1452
+/api/reference/wxt/utils/content-script-ui/integrated/type-aliases/IntegratedContentScriptUiOptions.html /api/reference/wxt/utils/content-script-ui/integrated/interfaces/IntegratedContentScriptUiOptions.html
+/api/reference/wxt/utils/content-script-ui/iframe/type-aliases/IframeContentScriptUiOptions.html /api/reference/wxt/utils/content-script-ui/iframe/interfaces/IframeContentScriptUiOptions.html
+/api/reference/wxt/utils/content-script-ui/shadow-root/type-aliases/ShadowRootContentScriptUiOptions.html /api/reference/wxt/utils/content-script-ui/shadow-root/interfaces/ShadowRootContentScriptUiOptions.html
+
 /config.html                    /api/reference/wxt/interfaces/InlineConfig.html
 /api/config.html                /api/reference/wxt/interfaces/InlineConfig.html
 /api/config                     /api/reference/wxt/interfaces/InlineConfig.html
