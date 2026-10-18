@@ -2,7 +2,7 @@ import { defineAppConfig } from 'wxt/utils/define-app-config';
 import { googleAnalytics4 } from './modules/analytics/providers/google-analytics-4';
 import { posthog } from './modules/analytics/providers/posthog';
 import { umami } from './modules/analytics/providers/umami';
-import { moderok } from './modules/analytics/providers/moderok.ts';
+import { moderok } from './modules/analytics/providers/moderok';
 
 export default defineAppConfig({
   analytics: {
