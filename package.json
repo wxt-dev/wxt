@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "check": "check && bun run --workspaces check",
+    "check": "check && bun run --sequential --workspaces check",
     "test": "bun run --workspaces test run",
     "test:coverage": "bun run --workspaces test:coverage",
     "prepare": "simple-git-hooks",
