@@ -112,6 +112,8 @@ export default defineWebExtConfig({
 });
 ```
 
+See [Load the extension manually](/guide/essentials/development#load-the-extension-manually) for how to load the development output in Chrome or Firefox.
+
 ### Enabling Chrome Features
 
 Some APIs are disabled in Chrome during development because of the default flags `web-ext` uses to launch Chrome, like the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api).
