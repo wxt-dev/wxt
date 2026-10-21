@@ -1756,7 +1756,7 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
    * extended, fixes these lint errors.
    *
    * See
-   * [https://wxt.dev/guide/key-concepts/auto-imports.html#eslint](https://wxt.dev/guide/key-concepts/auto-imports.html#eslint)
+   * [https://wxt.dev/guide/essentials/config/auto-imports.html#eslint](https://wxt.dev/guide/essentials/config/auto-imports.html#eslint)
    */
   eslintrc?: Eslintrc;
 };
