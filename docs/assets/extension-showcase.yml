@@ -580,3 +580,7 @@
 
 - # Retube: Custom YouTube Feeds
   chromeId: elfoingeipkcgkiejbbgghmmoijdeeji
+
+- # Social Media Scheduler and Publisher — BulkPublish
+  chromeId: ghpdoohdjijlbldnlffohjphdailmefh
+  firefoxSlug: social-media-scheduling
