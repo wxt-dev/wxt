@@ -1558,11 +1558,6 @@ export interface Wxt {
    * ```
    */
   runner: ExtensionRunner;
-  /**
-   * Refreshed each time entrypoints are resolved. Empty until initial
-   * resolution.
-   */
-  entrypoints: Entrypoint[];
 }
 
 export interface ResolvedConfig {
@@ -1693,7 +1688,7 @@ export interface ResolvedConfig {
    * @example
    *   [{ module: '@wxt-dev/module-vue/plugin' }];
    */
-  plugins: WxtPluginEntry[];
+  plugins: Array<string | WxtPluginEntry>;
 }
 
 /**

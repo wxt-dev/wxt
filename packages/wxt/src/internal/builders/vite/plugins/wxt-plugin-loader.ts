@@ -3,13 +3,16 @@ import type * as vite from 'vite';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
-import { wxt } from '../../../wxt';
 
 export function getPluginModules(
-  plugins: WxtPluginEntry[],
+  plugins: Array<string | WxtPluginEntry>,
   entrypoint: Entrypoint | undefined,
 ): string[] {
   return plugins
+    .map(
+      (plugin): WxtPluginEntry =>
+        typeof plugin === 'string' ? { module: plugin } : plugin,
+    )
     .filter(
       (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),
     )
@@ -21,8 +24,15 @@ export function getPluginModules(
  * entrypoints via the `virtual:wxt-plugins` import, and HTML files by adding
  * `virtual:wxt-html-plugins` to the document's `<head>`. Accepts an optional
  * `?entrypoint=<name>` query to evaluate plugin `apply` hooks per request.
+ *
+ * @param getEntrypoints Returns the most recently resolved entrypoints.
+ *   Injected by the caller instead of read from a global, so this plugin
+ *   doesn't depend on global `wxt` state.
  */
-export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
+export function wxtPluginLoader(
+  config: ResolvedConfig,
+  getEntrypoints: () => Entrypoint[],
+): vite.Plugin {
   const virtualModuleId = 'virtual:wxt-plugins';
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
   const virtualHtmlModuleId = 'virtual:wxt-html-plugins';
@@ -35,7 +45,7 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
       id.slice(queryIndex),
     ).get('entrypoint');
     if (!entrypointNameFromQueryParam) return undefined;
-    return wxt.entrypoints.find(
+    return getEntrypoints().find(
       (entry) => entry.name === entrypointNameFromQueryParam,
     );
   }
@@ -103,7 +113,7 @@ export function wxtPluginLoader(config: ResolvedConfig): vite.Plugin {
           config.entrypointsDir,
           ctx.filename,
         );
-        const entrypoint = wxt.entrypoints.find(
+        const entrypoint = getEntrypoints().find(
           (entry) => entry.name === entrypointName,
         );
         const query = entrypoint

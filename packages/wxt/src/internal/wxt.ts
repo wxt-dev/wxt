@@ -72,7 +72,6 @@ export async function registerWxt(
     runner,
     entrypointFinder,
     server: undefined,
-    entrypoints: [],
   };
 
   await initWxtModules();
