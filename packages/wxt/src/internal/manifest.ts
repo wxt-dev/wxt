@@ -213,23 +213,19 @@ function addEntrypoints(
   }, {});
 
   const background = entriesByType['background']?.[0] as
-    | BackgroundEntrypoint
-    | undefined;
+    BackgroundEntrypoint | undefined;
   const bookmarks = entriesByType['bookmarks']?.[0];
   const contentScripts = entriesByType['content-script'] as
-    | ContentScriptEntrypoint[]
-    | undefined;
+    ContentScriptEntrypoint[] | undefined;
   const devtools = entriesByType['devtools']?.[0];
   const history = entriesByType['history']?.[0];
   const newtab = entriesByType['newtab']?.[0];
   const options = entriesByType['options']?.[0] as
-    | OptionsEntrypoint
-    | undefined;
+    OptionsEntrypoint | undefined;
   const popup = entriesByType['popup']?.[0] as PopupEntrypoint | undefined;
   const sandboxes = entriesByType['sandbox'];
   const sidepanels = entriesByType['sidepanel'] as
-    | SidepanelEntrypoint[]
-    | undefined;
+    SidepanelEntrypoint[] | undefined;
 
   if (background) {
     const script = getEntrypointBundlePath(

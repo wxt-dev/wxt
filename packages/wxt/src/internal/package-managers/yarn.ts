@@ -44,8 +44,7 @@ export const yarn: WxtPackageManagerImpl = {
 };
 
 type JsonLine =
-  | { type: unknown; data: unknown }
-  | { type: 'tree'; data: JsonLineTree };
+  { type: unknown; data: unknown } | { type: 'tree'; data: JsonLineTree };
 
 interface JsonLineTree {
   type: 'list';

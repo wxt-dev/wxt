@@ -21,8 +21,7 @@ type AnalyticsMessage = {
 }[keyof Analytics];
 
 type AnalyticsMethod =
-  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
-  | undefined;
+  ((...args: Parameters<Analytics[keyof Analytics]>) => void) | undefined;
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,

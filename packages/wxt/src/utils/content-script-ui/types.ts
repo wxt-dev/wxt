@@ -25,10 +25,7 @@ export type ContentScriptUiOptions<TMounted> = ContentScriptPositioningOptions &
   };
 
 export type ContentScriptOverlayAlignment =
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
+  'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 /**
  * [Visualization of different append

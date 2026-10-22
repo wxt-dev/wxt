@@ -29,18 +29,16 @@ const inlineDeps = [
 console.log();
 consola.info('Transforming inline dependencies...');
 const res = await Rolldown.build(
-  inlineDeps.map(
-    (id): Rolldown.BuildOptions => ({
-      input: id,
-      output: {
-        dir: 'inline',
-        entryFileNames: `${id}/index.mjs`,
-        format: 'esm',
-        minify: true,
-      },
-      platform: 'node',
-    }),
-  ),
+  inlineDeps.map((id): Rolldown.BuildOptions => ({
+    input: id,
+    output: {
+      dir: 'inline',
+      entryFileNames: `${id}/index.mjs`,
+      format: 'esm',
+      minify: true,
+    },
+    platform: 'node',
+  })),
 );
 for (const output of res) {
   consola.info(
@@ -92,20 +90,18 @@ export default defineConfig([
   },
 
   // Virtual modules must be bundled individually
-  ...virtualModuleNames.map(
-    (moduleName): UserConfig => ({
-      entry: `src/virtual/${moduleName}.ts`,
-      outDir: 'dist/virtual',
-      deps: {
-        neverBundle: [
-          ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
-          'virtual:wxt-plugins',
-          'virtual:app-config',
-          ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
-        ],
-      },
-    }),
-  ),
+  ...virtualModuleNames.map((moduleName): UserConfig => ({
+    entry: `src/virtual/${moduleName}.ts`,
+    outDir: 'dist/virtual',
+    deps: {
+      neverBundle: [
+        ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+        'virtual:wxt-plugins',
+        'virtual:app-config',
+        ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
+      ],
+    },
+  })),
 ]);
 
 async function replaceVars(
