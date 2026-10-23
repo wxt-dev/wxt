@@ -200,6 +200,7 @@ export class ViteBuilder implements WxtBuilder {
       wxtPlugins.devHtmlPrerender(this.config, server),
       wxtPlugins.resolveVirtualModules(this.config),
       wxtPlugins.devServerGlobals(this.config, server),
+      wxtPlugins.devServerWorkers(this.config),
       wxtPlugins.tsconfigPaths(this.config),
       wxtPlugins.noopBackground(),
       wxtPlugins.addRuntimeEnvEntries(this.config),
