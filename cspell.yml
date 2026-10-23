@@ -26,6 +26,7 @@ words:
   - BFFFF
   - bidi
   - blocklists
+  - bowser
   - buildc
   - bunx
   - cachable
@@ -52,12 +53,10 @@ words:
   - dequal
   - DFFFE
   - DFFFF
-  - dtrace
   - EFFFE
   - EFFFF
   - esbuild
   - esque
-  - extglob
   - favicons
   - FFFE
   - FFFFE
@@ -85,14 +84,12 @@ words:
   - Menlo
   - menupanel
   - metas
-  - mktemp
   - moderok
   - mycompany
   - nacl
   - natsu
   - newtab
   - njsproj
-  - nodebuffer
   - Noto
   - ntvs
   - nypm
@@ -100,7 +97,6 @@ words:
   - ohash
   - oklab
   - oxlint
-  - pbbf
   - personaltoolbar
   - polyfilling
   - portaling
@@ -135,6 +131,7 @@ words:
   - unstub
   - unwatch
   - USSS
+  - verkit
   - vitepress
   - webext
   - webextension
