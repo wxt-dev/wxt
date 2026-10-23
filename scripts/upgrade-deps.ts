@@ -2,8 +2,16 @@ import consola from 'consola';
 import { glob } from 'tinyglobby';
 import { dirname } from 'node:path';
 import pMap from 'p-map';
-import * as semver from 'semver';
 import { styleText } from 'node:util';
+import {
+  difference,
+  findMinimumForRange,
+  IncrementType,
+  isGreaterThan,
+  isStable,
+  normalize,
+  satisfies,
+} from 'verkit';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
@@ -244,7 +252,7 @@ type UpgradeDetails = {
   upgradeToVersion: string;
   upgradeToVersionReleasedAt: Date;
   upgradeToRange: string;
-  diff: semver.ReleaseType | null;
+  diff: IncrementType | null;
   latestVersion: string;
   latestVersionReleasedAt: Date;
 };
@@ -265,7 +273,7 @@ async function detectUpgrades(
 
     const rangePrefix = lastRange.match(/^(.?)(\d+\.\d+\.\d+)/)?.[1] ?? '';
 
-    const currentVersion = semver.minVersion(lastRange)?.version;
+    const currentVersion = normalize(findMinimumForRange(lastRange)!);
     if (currentVersion == null)
       throw Error(`Invalid version specifier: ${dep.name}@${currentRange}`);
 
@@ -281,11 +289,11 @@ async function detectUpgrades(
       : // Otherwise use the last stable version greater than the current version that is not a major release
         (dep.info.versions.findLast(
           (v) =>
-            semver.gt(v, currentVersion) &&
+            isGreaterThan(v, currentVersion) &&
             (isPre1 ? ['patch'] : ['patch', 'minor']).includes(
-              semver.diff(v, currentVersion)!,
+              difference(v, currentVersion)!,
             ) &&
-            semver.prerelease(v) == null,
+            isStable(v),
         ) ?? currentVersion);
     const upgradeToVersionReleasedAt = new Date(
       dep.info.time[upgradeToVersion],
@@ -293,12 +301,12 @@ async function detectUpgrades(
 
     let upgradeToRange = `${rangePrefix}${upgradeToVersion}`;
     upgradeToRange = isUnion
-      ? semver.satisfies(upgradeToVersion, currentRange)
+      ? satisfies(upgradeToVersion, currentRange)
         ? currentRange
         : `${currentRange} || ${upgradeToRange}`
       : upgradeToRange;
 
-    let diff = semver.diff(currentVersion, upgradeToVersion);
+    let diff = difference(currentVersion, upgradeToVersion);
     if (isPre1) {
       if (diff === 'minor') diff = 'major';
       if (diff === 'patch') diff = 'minor';
