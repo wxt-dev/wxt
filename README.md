@@ -1,3 +1,5 @@
+[English](./README.md) | [简体中文](./README_zh.md)
+
 <div align="center">
 
 # <img align="top" width="44" src="https://raw.githubusercontent.com/wxt-dev/wxt/HEAD/docs/public/hero-logo.svg" alt="WXT Logo"> WXT
