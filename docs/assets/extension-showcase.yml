@@ -577,3 +577,10 @@
   chromeId: phoiffgkjjfnjfljnjgmpobmanghlaga
   edgeId: efbmkpkaikodpdndafbijjbdncnphdje
   firefoxSlug: twitter-mark
+
+- # Retube: Custom YouTube Feeds
+  chromeId: elfoingeipkcgkiejbbgghmmoijdeeji
+
+- # Social Media Scheduler and Publisher — BulkPublish
+  chromeId: ghpdoohdjijlbldnlffohjphdailmefh
+  firefoxSlug: social-media-scheduling
