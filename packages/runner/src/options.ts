@@ -24,6 +24,16 @@ export type RunOptions = {
    */
   chromiumArgs?: string[];
   /**
+   * Customize the port Chrome's debugger is listening on. Defaults to a random
+   * open port.
+   */
+  chromiumRemoteDebuggingPort?: number;
+  /**
+   * Additional directories to install extensions from on Chrome. Useful for
+   * installing devtool extensions or other extensions yours depends on.
+   */
+  chromiumAdditionalExtensionDirs?: string[];
+  /**
    * Control how data is persisted between launches. Either save data at a user
    * level, project level, or don't persist data at all. Defaults to `project`.
    */
@@ -34,14 +44,12 @@ export type RunOptions = {
    */
   projectDataDir?: string;
   /**
-   * Customize the port Chrome's debugger is listening on. Defaults to a random
-   * open port.
-   */
-  chromiumRemoteDebuggingPort?: number;
-  /**
    * Directory where the extension will be installed from. Should contain a
-   * `manifest.json` file. Can be relative to the current working directory.
-   * Defaults to the current working directory.
+   * `manifest.json` file.
+   *
+   * Can be relative to the current working directory.
+   *
+   * @default process.cwd()
    */
   extensionDir?: string;
   /**
@@ -55,6 +63,11 @@ export type RunOptions = {
    */
   firefoxRemoteDebuggingPort?: number;
   /**
+   * Additional directories to install extensions from on Firefox. Useful for
+   * installing devtool extensions or other extensions yours depends on.
+   */
+  firefoxAdditionalExtensionDirs?: string[];
+  /**
    * Specify the browser to open. Defaults to `"chrome"`, but you can pass any
    * string.
    */
@@ -66,6 +79,7 @@ export type ResolvedRunOptions = {
   browserBinary: string;
   chromiumArgs: string[];
   chromiumRemoteDebuggingPort: number;
+  chromiumAdditionalExtensionDirs: string[];
   /** Absolute path to the directory where browser data will be stored. */
   dataDir: string;
   dataPersistence: 'user' | 'project' | 'none';
@@ -73,6 +87,7 @@ export type ResolvedRunOptions = {
   extensionDir: string;
   firefoxArgs: string[];
   firefoxRemoteDebuggingPort: number;
+  firefoxAdditionalExtensionDirs: string[];
   target: string;
 };
 
@@ -117,13 +132,20 @@ export async function resolveRunOptions(
     dataDir,
     dataPersistence,
     chromiumRemoteDebuggingPort,
-    extensionDir: resolve(options?.extensionDir ?? '.'),
+    chromiumAdditionalExtensionDirs:
+      options?.chromiumAdditionalExtensionDirs?.map((dir) => resolve(dir)) ??
+      [],
+    extensionDir: options?.extensionDir
+      ? resolve(options.extensionDir)
+      : process.cwd(),
     firefoxArgs: resolveFirefoxArgs(
       options?.firefoxArgs,
       firefoxRemoteDebuggingPort,
       dataDir,
     ),
     firefoxRemoteDebuggingPort,
+    firefoxAdditionalExtensionDirs:
+      options?.firefoxAdditionalExtensionDirs?.map((dir) => resolve(dir)) ?? [],
     target,
   };
   debug('Resolved options:', resolved);
