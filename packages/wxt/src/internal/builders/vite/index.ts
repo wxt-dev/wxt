@@ -130,7 +130,23 @@ export class ViteBuilder implements WxtBuilder {
         async () =>
           await Promise.all(
             paths.map(async (path) => {
-              const module = await environment.runner.import(path);
+              const module = await environment.runner
+                .import(path)
+                .catch((err: unknown) => {
+                  if (
+                    err instanceof ReferenceError &&
+                    err.message.endsWith(' is not defined')
+                  ) {
+                    const relativePath = normalizePath(
+                      relative(this.config.root, path),
+                    );
+                    throw Error(
+                      `${relativePath}: ${err.message}. Entrypoints are imported in a Node.js environment, so browser API calls should be inside the main function. See https://wxt.dev/guide/essentials/config/entrypoint-loaders`,
+                      { cause: err },
+                    );
+                  }
+                  throw err;
+                });
               this.requireDefaultExport(path, module);
               return module.default as any;
             }),
