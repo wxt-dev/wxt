@@ -25,6 +25,7 @@ function installFakeBrowser() {
   const registered = new Map<string, Registered>();
   const registering = new Set<string>();
   const reloadedTabs: number[] = [];
+  const failures = { registerOnce: false };
 
   mockBrowser.scripting = {
     async getRegisteredContentScripts() {
@@ -32,6 +33,10 @@ function installFakeBrowser() {
       return [...registered.values()];
     },
     async registerContentScripts(scripts: Registered[]) {
+      if (failures.registerOnce) {
+        failures.registerOnce = false;
+        throw new Error('Failed to register');
+      }
       for (const script of scripts) {
         if (registered.has(script.id) || registering.has(script.id)) {
           throw new Error(`Duplicate script ID '${script.id}'`);
@@ -72,7 +77,7 @@ function installFakeBrowser() {
     },
   };
 
-  return { registered, reloadedTabs };
+  return { registered, reloadedTabs, failures };
 }
 
 const contentScript = (matches: string[]): ContentScript => ({
@@ -107,6 +112,45 @@ describe('reloadManifestContentScriptMv3', () => {
     expect(
       fake.registered.get('wxt:content-scripts/content.js')?.matches,
     ).toEqual(['https://b.example/*']);
-    expect(fake.reloadedTabs).toContain(2);
+    // The first reload finishes before the second starts: tab 1 matches only the
+    // first payload, tab 2 matches only the second.
+    expect(fake.reloadedTabs).toEqual([1, 2]);
+  });
+
+  it('registers once and updates the registration when two reloads carry the same payload', async () => {
+    const register = vi.spyOn(
+      mockBrowser.scripting as { registerContentScripts: () => unknown },
+      'registerContentScripts',
+    );
+
+    await Promise.all([
+      reloadManifestContentScriptMv3(contentScript(['https://a.example/*'])),
+      reloadManifestContentScriptMv3(contentScript(['https://a.example/*'])),
+    ]);
+
+    expect(register).toHaveBeenCalledTimes(1);
+    expect(
+      fake.registered.get('wxt:content-scripts/content.js')?.matches,
+    ).toEqual(['https://a.example/*']);
+    expect(fake.reloadedTabs).toEqual([1, 1]);
+  });
+
+  it('rejects the failed reload and still runs the reload queued behind it', async () => {
+    fake.failures.registerOnce = true;
+
+    const results = await Promise.allSettled([
+      reloadManifestContentScriptMv3(contentScript(['https://a.example/*'])),
+      reloadManifestContentScriptMv3(contentScript(['https://b.example/*'])),
+    ]);
+
+    expect(results[0]).toMatchObject({
+      status: 'rejected',
+      reason: new Error('Failed to register'),
+    });
+    expect(results[1].status).toBe('fulfilled');
+    expect(
+      fake.registered.get('wxt:content-scripts/content.js')?.matches,
+    ).toEqual(['https://b.example/*']);
+    expect(fake.reloadedTabs).toEqual([2]);
   });
 });
