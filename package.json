@@ -20,7 +20,7 @@
   "catalog": {
     "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^2.4.0",
-    "@types/bun": "^1.4.3",
+    "@types/bun": "^1.4.4",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
