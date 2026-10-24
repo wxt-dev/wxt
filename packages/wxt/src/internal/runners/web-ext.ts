@@ -3,6 +3,7 @@ import { ExtensionRunner, ResolvedConfig } from '../../types';
 import { formatDuration } from '../../internal-utils/time-utils';
 import defu from 'defu';
 import { relative } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 
 /**
  * WXT's default `ExtensionRunner` that uses web-ext to open the browser. It
@@ -41,6 +42,11 @@ export class WebExtRunner implements ExtensionRunner {
     };
 
     const wxtUserConfig = this.config.webExt.config;
+    // web-ext fails when the Chromium profile directory doesn't exist yet, and
+    // its profileCreateIfMissing option can't create missing parent folders.
+    if (this.config.browser !== 'firefox' && wxtUserConfig?.chromiumProfile) {
+      await mkdir(wxtUserConfig.chromiumProfile, { recursive: true });
+    }
     const userConfig = {
       browserConsole: wxtUserConfig?.openConsole,
       devtools: wxtUserConfig?.openDevtools,
