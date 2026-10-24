@@ -5,6 +5,9 @@ import { WebExtRunner } from '../web-ext';
 import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
 import { mock, MockProxy } from 'vitest-mock-extended';
 import { WebExtConfig } from '../../../types';
+import { mkdtemp, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
@@ -113,6 +116,24 @@ describe('WebExtRunner', () => {
     it('should open the browser', async () => {
       await openBrowser();
       expect(webExtCmdRunMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should create a missing Chromium profile directory, including parent directories', async () => {
+      const tmp = await mkdtemp(join(tmpdir(), 'wxt-web-ext-'));
+      const chromiumProfile = join(tmp, 'missing-parent', 'chrome-data');
+      webExtConfig = { chromiumProfile, keepProfileChanges: true };
+
+      try {
+        await openBrowser();
+
+        expect((await stat(chromiumProfile)).isDirectory()).toBe(true);
+        expect(webExtCmdRunMock).toHaveBeenCalledWith(
+          expect.objectContaining({ chromiumProfile }),
+          { shouldExitProgram: false },
+        );
+      } finally {
+        await rm(tmp, { recursive: true, force: true });
+      }
     });
 
     it('should merge the config sources correctly', async () => {
