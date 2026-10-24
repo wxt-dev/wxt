@@ -3,10 +3,12 @@ import { ContentScriptDefinition } from '../types';
 import { browser } from 'wxt/browser';
 import { logger } from './internal/logger';
 import {
-  WxtLocationChangeEvent,
+  type WxtLocationChangeEvent,
   getUniqueEventName,
 } from './internal/custom-events';
 import { createLocationWatcher } from './internal/location-watcher';
+
+export type { WxtLocationChangeEvent };
 
 /**
  * Implements

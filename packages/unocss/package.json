@@ -7,7 +7,7 @@
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/unocss"
   },
-  "homepage": "http://wxt.dev/guide/unocss.html",
+  "homepage": "https://wxt.dev/unocss",
   "keywords": [
     "wxt",
     "module",

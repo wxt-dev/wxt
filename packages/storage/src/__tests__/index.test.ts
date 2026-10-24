@@ -646,6 +646,41 @@ describe('Storage Utils', () => {
         });
       });
 
+      describe('watchMeta', () => {
+        it('should call the callback when metadata changes', async () => {
+          const cb = vi.fn();
+          const newValue = { version: 2 };
+
+          storage.watchMeta(`${storageArea}:key`, cb);
+          await storage.setMeta(`${storageArea}:key`, newValue);
+
+          expect(cb).toBeCalledTimes(1);
+          expect(cb).toBeCalledWith(newValue, {});
+        });
+
+        it('should return an empty object when metadata is removed', async () => {
+          const cb = vi.fn();
+          const oldValue = { version: 2 };
+          await storage.setMeta(`${storageArea}:key`, oldValue);
+
+          storage.watchMeta(`${storageArea}:key`, cb);
+          await storage.removeMeta(`${storageArea}:key`);
+
+          expect(cb).toBeCalledTimes(1);
+          expect(cb).toBeCalledWith({}, oldValue);
+        });
+
+        it('should remove the listener when calling the returned function', async () => {
+          const cb = vi.fn();
+
+          const unwatch = storage.watchMeta(`${storageArea}:key`, cb);
+          unwatch();
+          await storage.setMeta(`${storageArea}:key`, { version: 2 });
+
+          expect(cb).not.toBeCalled();
+        });
+      });
+
       describe('unwatch', () => {
         it('should remove all watch listeners', async () => {
           const cb = vi.fn();
@@ -1290,6 +1325,47 @@ describe('Storage Utils', () => {
         const unwatch = item.watch(cb);
         unwatch();
         await item.setValue('123');
+
+        expect(cb).not.toBeCalled();
+      });
+    });
+
+    describe('watchMeta', () => {
+      it('should call the callback when metadata changes', async () => {
+        const item = storage.defineItem<number, { version: number }>(
+          `local:key`,
+        );
+        const cb = vi.fn();
+        const newValue = { version: 2 };
+
+        item.watchMeta(cb);
+        await item.setMeta(newValue);
+
+        expect(cb).toBeCalledTimes(1);
+        expect(cb).toBeCalledWith(newValue, {});
+      });
+
+      it('should not trigger when the item value changes', async () => {
+        const item = storage.defineItem<number, { version: number }>(
+          `local:key`,
+        );
+        const cb = vi.fn();
+
+        item.watchMeta(cb);
+        await item.setValue(2);
+
+        expect(cb).not.toBeCalled();
+      });
+
+      it('should remove the listener when calling the returned function', async () => {
+        const item = storage.defineItem<number, { version: number }>(
+          `local:key`,
+        );
+        const cb = vi.fn();
+
+        const unwatch = item.watchMeta(cb);
+        unwatch();
+        await item.setMeta({ version: 2 });
 
         expect(cb).not.toBeCalled();
       });

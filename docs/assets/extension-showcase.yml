@@ -16,6 +16,10 @@
   chromeId: injdenmpjncknciccmjjmjlgbmnkince
   firefoxSlug: anylang-translator
 
+- # YuzuLingo
+  chromeId: lpkcklfgpimaokcfpmfgjnehiinokihd
+  firefoxSlug: yuzulingo
+
 - # GitHub: Better Line Counts
   chromeId: ocfdgncpifmegplaglcnglhioflaimkd
   firefoxSlug: github-better-line-counts
@@ -153,6 +157,14 @@
 - # YouTube Like-Dislike Shortcut
   chromeId: fdkpkpelkkdkjhpacficichkfifijipc
   firefoxSlug: youtube-like-dislike-shortcut
+
+- # VLC Shortcuts for YouTube
+  chromeId: ccfncalinmelfdbodiediojhddcljnpl
+  firefoxSlug: vlc-shortcuts-for-youtube
+
+- # Cyberpunk 2077 New Tab
+  chromeId: loeholjgiahjakohgpmglbhlfkhegccp
+  firefoxSlug: cyberpunk-2077-new-tab
 
 - # Twitch Channel Points Bonus Collector
   chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
@@ -374,6 +386,7 @@
 - # SiteData - Free Website Traffic Checker & Reverse AdSense Tool
   chromeId: emeakbgdecgmdjgegnejpppcnkcnoaen
   firefoxSlug: sitedata
+  edgeId: amlclomoobpjnacnfiilnmkkdhaceohi
 
 - # Livestream Chat Reader - Text-to-Speech for YouTube/Twitch chat
   chromeId: gpnckbhgpnjciklpoehkmligeaebigaa
@@ -439,9 +452,9 @@
   chromeId: fppcbkhpahkbgijkdcpjgjmhpfbmfiih
   firefoxSlug: playfaster
 
-- # LatTab - Learn Latin With Every New Tab
-  chromeId: eiocjaocpmackhbaffoejkcmnfbdpgpj
-  firefoxSlug: lattab-learn-latin-new-tabs
+- # Lexis Arcana - Latin Roots & Proverbs
+  chromeId: lnbjfdfjlppgedgfbplminickpldmcin
+  firefoxSlug: lexis-arcana-latin-new-tab
 
 - # Vim What? - Interactive Vim command reference
   chromeId: ngbehgnlcdjkbnihgpkgdangbhemidge
@@ -539,3 +552,35 @@
 
 - # GringaChange
   chromeId: amkfidglmdkclmhgnnkicocfcgoplanp
+
+- # FlowPick - https://github.com/ezwebtools/flowpick
+  chromeId: mfinfkkabangbkanlfhhbokgfekjklea
+  firefoxSlug: flowpick
+  edgeId: egbfhgcifljmeaomlbhggplohemjombb
+
+- # TabWatch
+  chromeId: pgjiceamhhcdccdoaiggbfjmmllbhmah
+  firefoxSlug: tabwatch
+
+- # Interline
+  chromeId: mcefogikngeheopmdmaapfgpnnlgcoid
+
+- # Not for You - https://github.com/preziotte/not-for-you
+  chromeId: pakdneaipkfgaahgbafblmdebfoadjca
+  firefoxSlug: notforyou
+
+- # thebusyfish 忙鱼
+  chromeId: moagedmcmbdgjhhdkibbiofndehfkinf
+  edgeId: aldfginpggebfcknhgbleklejhiebdcg
+
+- # Twitter Mark
+  chromeId: phoiffgkjjfnjfljnjgmpobmanghlaga
+  edgeId: efbmkpkaikodpdndafbijjbdncnphdje
+  firefoxSlug: twitter-mark
+
+- # Retube: Custom YouTube Feeds
+  chromeId: elfoingeipkcgkiejbbgghmmoijdeeji
+
+- # Social Media Scheduler and Publisher — BulkPublish
+  chromeId: ghpdoohdjijlbldnlffohjphdailmefh
+  firefoxSlug: social-media-scheduling

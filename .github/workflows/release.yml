@@ -28,6 +28,10 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.package }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -69,7 +73,7 @@ jobs:
         run: sudo npm i -g npm@latest
 
       - name: Bump and Release
-        uses: aklinker1/zero-changelog/actions/release@e64ae0d840d3036af6c8bc0a7a117593c1467ec9 # 0.2.2
+        uses: aklinker1/zero-changelog/actions/release@580807ccd232072f137084a7817d4213d39dbb99 # 0.2.3
         with:
           bump: ${{ inputs.bump }}
           path: packages/${{ inputs.package }}

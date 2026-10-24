@@ -6,7 +6,7 @@ import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualize
 import { ResolvedConfig as C12ResolvedConfig } from 'c12';
 import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
-import { ManifestContentScript } from './core/utils/types';
+import { ManifestContentScript } from './internal-utils/type-utils';
 import type { Browser } from '@wxt-dev/browser';
 
 export interface InlineConfig {
@@ -537,8 +537,8 @@ export interface WxtHooks {
    * Called when WXT has created Vite's config for the dev server. Useful if you
    * want to add plugins or update the vite config per entrypoint group.
    *
-   * @param viteConfig The config that will be used to build the entrypoints.
-   *   Can be updated by reference.
+   * @param config The config that will be used to build the entrypoints. Can be
+   *   updated by reference.
    */
   'vite:devServer:extendConfig': (config: vite.InlineConfig) => HookResult;
 }
@@ -644,8 +644,8 @@ export interface Logger {
 }
 
 /**
- * The logger available at `wxt.logger`. Extends {@link Logger} with a `warnOnce`
- * which only logs a message once per process.
+ * The logger available at `wxt.logger` and `wxt.config.logger`. Extends
+ * {@link Logger} with a `warnOnce` which only logs a message once per process.
  */
 export interface WxtLogger extends Logger {
   /**
@@ -695,7 +695,7 @@ export interface BaseScriptEntrypointOptions extends BaseEntrypointOptions {
    * the default IIFE variable name may conflict with an existing variable on
    * the target page. This applies to content scripts with world=MAIN, and
    * others, such as unlisted scripts, that could be dynamically injected into
-   * the page with a <script> tag.
+   * the page with a `<script>` tag.
    *
    * Available options:
    *
@@ -1189,7 +1189,7 @@ export interface ConfigEnv {
   /**
    * Manifest version passed in from the CLI via the `--mv2` or `--mv3` flags.
    * When not passed, it depends on the target browser. See [the
-   * guide](https://wxt.dev/guide/key-concepts/multiple-browsers.html#target-manifest-version)
+   * guide](https://wxt.dev/guide/essentials/target-different-browsers.html#target-a-manifest-version)
    * for more details.
    */
   manifestVersion: 2 | 3;
@@ -1236,21 +1236,6 @@ export interface WebExtConfig {
    *   default_directory: "/my/custom/dir",
    *   },
    *   }
-   *
-   * @default
-   * // Enable dev mode and allow content script sourcemaps
-   * {
-   *   devtools: {
-   *     synced_preferences_sync_disabled: {
-   *       skipContentScripts: false,
-   *     },
-   *   }
-   *   extensions: {
-   *     ui: {
-   *       developer_mode: true,
-   *     },
-   *   }
-   * }
    */
   chromiumPref?: Record<string, any>;
   /**
@@ -1449,7 +1434,7 @@ export interface WxtHooks {
    * Called once all entrypoints have been grouped into their build groups.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of groups to build in each build step
+   * @param groups The list of groups to build in each build step
    */
   'entrypoints:grouped': (wxt: Wxt, groups: EntrypointGroup[]) => HookResult;
   /**
@@ -1457,7 +1442,7 @@ export interface WxtHooks {
    * reference to add or remove public files.
    *
    * @param wxt The configured WXT object
-   * @param entrypoints The list of files that will be copied into the output
+   * @param files The list of files that will be copied into the output
    *   directory
    */
   'build:publicAssets': (wxt: Wxt, files: ResolvedPublicFile[]) => HookResult;
@@ -1532,7 +1517,7 @@ export interface Wxt {
   hooks: Hookable<WxtHooks>;
   /** Alias for `wxt.hooks.hook(...)`. */
   hook: Hookable<WxtHooks>['hook'];
-  /** Wraps `config.logger`, adding `warnOnce`. */
+  /** Alias for `config.logger`. */
   logger: WxtLogger;
   /** Reload config file and update `wxt.config` with the result. */
   reloadConfig: () => Promise<void>;
@@ -1540,8 +1525,39 @@ export interface Wxt {
   pm: WxtPackageManager;
   /** If the dev server was started, it will be available. */
   server?: WxtDevServer;
-  /** The module in charge of executing all the build steps. */
+  /**
+   * The module in charge of executing all the build steps.
+   *
+   * To override the entire builder process, set this value in a module's
+   * `setup` function or during the `config:resolved` hook.
+   *
+   * ```ts
+   * wxt.build = new MyBuilder(wxt.config);
+   * ```
+   */
   builder: WxtBuilder;
+  /**
+   * Service responsible for discovering entrypoints in a project.
+   *
+   * To override how entrypoints are discovered, set this value in a module's
+   * `setup` function or during the `config:resolved` hook.
+   *
+   * ```ts
+   * wxt.entrypointFinder = new MyEntrypointFinder(wxt.config);
+   * ```
+   */
+  entrypointFinder: EntrypointFinder;
+  /**
+   * Service responsible for opening the browser during dev mode.
+   *
+   * To override how the browser is opened, set this value in a module's `setup`
+   * function or during the `config:resolved` hook.
+   *
+   * ```ts
+   * wxt.runner = new MyRunner(wxt.config);
+   * ```
+   */
+  runner: ExtensionRunner;
 }
 
 export interface ResolvedConfig {
@@ -1590,6 +1606,7 @@ export interface ResolvedConfig {
   manifest: UserManifest;
   fsCache: FsCache;
   webExt: C12ResolvedConfig<WebExtConfig>;
+  /** @deprecated Use `wxt.runner` instead of `wxt.config.runner` */
   runner: ExtensionRunner;
   zip: {
     name?: string;
@@ -1684,7 +1701,7 @@ export interface ExtensionRunner {
   closeBrowser?(): Promise<void>;
 
   /** Whether or not this runner actually opens the browser. */
-  canOpen?(): boolean;
+  canOpen?(): Promise<boolean>;
 }
 
 export type EslintGlobalsPropValue =
@@ -1739,7 +1756,7 @@ export type WxtUnimportOptions = Partial<UnimportOptions> & {
    * extended, fixes these lint errors.
    *
    * See
-   * [https://wxt.dev/guide/key-concepts/auto-imports.html#eslint](https://wxt.dev/guide/key-concepts/auto-imports.html#eslint)
+   * [https://wxt.dev/guide/essentials/config/auto-imports.html#eslint](https://wxt.dev/guide/essentials/config/auto-imports.html#eslint)
    */
   eslintrc?: Eslintrc;
 };
@@ -1894,4 +1911,12 @@ export interface WxtDirFileEntry {
   text: string;
   /** Set to `true` to add a reference to this file in `.wxt/wxt.d.ts`. */
   tsReference?: boolean;
+}
+
+export interface EntrypointFinder {
+  /**
+   * @returns A list of file paths (absolute or relative to
+   *   `wxt.config.rootDir`) to load as entrypoints for.
+   */
+  findEntrypoints(): Promise<EntrypointInfo[]> | EntrypointInfo[];
 }

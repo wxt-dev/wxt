@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Add analytics to your web extension",
   "type": "module",
   "scripts": {
@@ -16,17 +16,17 @@
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
     "@wxt-dev/is-background": "workspace:>=1",
-    "ua-parser-js": "^1.0.40"
+    "bowser": "^2.14.1"
   },
   "peerDependencies": {
     "wxt": ">=0.20.0"
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
-    "@types/ua-parser-js": "^0.7.39",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "web-ext": "catalog:",
     "wxt": "workspace:*"
   },
   "repository": {

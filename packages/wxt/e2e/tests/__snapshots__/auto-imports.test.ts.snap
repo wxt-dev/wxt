@@ -119,6 +119,15 @@ export default {
 "
 `;
 
+exports[`Auto Imports > eslint config > "enabled: 9" should output a flat config file compatible with ESLint >=9 2`] = `
+".wxt/eslint-auto-imports.d.mts
+----------------------------------------
+import type { ConfigObject } from "@eslint/core";
+declare const config: ConfigObject;
+export default config;
+"
+`;
+
 exports[`Auto Imports > eslint config > "enabled: auto" should output a JSON config file compatible with ESLint of package.json 1`] = `
 ".wxt/eslint-auto-imports.mjs
 ----------------------------------------
@@ -179,6 +188,15 @@ export default {
     sourceType: "module",
   },
 };
+"
+`;
+
+exports[`Auto Imports > eslint config > "enabled: auto" should output a JSON config file compatible with ESLint of package.json 2`] = `
+".wxt/eslint-auto-imports.d.mts
+----------------------------------------
+import type { ConfigObject } from "@eslint/core";
+declare const config: ConfigObject;
+export default config;
 "
 `;
 
@@ -245,6 +263,15 @@ export default {
 "
 `;
 
+exports[`Auto Imports > eslint config > "enabled: true" should output a JSON config file compatible with ESLint of package.json 2`] = `
+".wxt/eslint-auto-imports.d.mts
+----------------------------------------
+import type { ConfigObject } from "@eslint/core";
+declare const config: ConfigObject;
+export default config;
+"
+`;
+
 exports[`Auto Imports > eslint config > should allow customizing the output 1`] = `
 "example.json
 ----------------------------------------
@@ -305,5 +332,14 @@ export default {
     sourceType: "module",
   },
 };
+"
+`;
+
+exports[`Auto Imports > eslint config > should allow customizing the output 2`] = `
+"example.d.ts
+----------------------------------------
+import type { ConfigObject } from "@eslint/core";
+declare const config: ConfigObject;
+export default config;
 "
 `;
