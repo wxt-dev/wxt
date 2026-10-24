@@ -4,7 +4,8 @@ import { presetWind3 } from 'unocss';
 export default defineConfig({
   srcDir: 'src',
   targetBrowsers: ['chrome', 'firefox', 'safari'],
-  manifest: {
+  manifest: () => ({
+    key: import.meta.env.WXT_MANIFEST_KEY,
     permissions: ['storage'],
     default_locale: 'en',
     web_accessible_resources: [
@@ -13,7 +14,7 @@ export default defineConfig({
         matches: ['*://*.google.com/*', '*://*.example.com/*'],
       },
     ],
-  },
+  }),
   zip: {
     downloadPackages: ['sass'],
   },
@@ -21,7 +22,9 @@ export default defineConfig({
     open: true,
   },
   webExt: {
-    startUrls: ['https://example.com'],
+    chromiumPref: {
+      'extensions.pinned_extensions': ['ialddiekpanaiffomfkfchejlohnhhce'],
+    },
   },
   example: {
     a: 'a',
