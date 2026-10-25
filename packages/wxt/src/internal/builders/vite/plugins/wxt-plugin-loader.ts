@@ -107,7 +107,6 @@ export function wxtPluginLoader(
     transformIndexHtml: {
       // Use "pre" so the new script is added before vite bundles all the scripts
       order: 'pre',
-      // `_ctx` -> `ctx` To access entrypoint info for per-page plugin filtering.
       handler(html, ctx) {
         const entrypointName = getEntrypointName(
           config.entrypointsDir,
