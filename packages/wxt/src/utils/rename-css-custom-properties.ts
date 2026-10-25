@@ -1,18 +1,10 @@
 /** @module wxt/utils/rename-css-custom-properties */
 
-/**
- * Options for renaming CSS custom properties.
- */
+/** Options for renaming CSS custom properties. */
 export interface CssPropertyPrefixOptions {
-  /**
-   * The original prefix to match and replace.
-   * @example '--tw-'
-   */
+  /** The original prefix to match and replace, e.g. `"--tw-"`. */
   fromPrefix: string;
-  /**
-   * The new prefix to use as replacement.
-   * @example '--wxt-tw-'
-   */
+  /** The new prefix to use as replacement, e.g. `"--wxt-tw-"`. */
   toPrefix: string;
 }
 
@@ -20,28 +12,26 @@ export interface CssPropertyPrefixOptions {
  * Renames CSS custom properties in a CSS string.
  *
  * This function handles three types of CSS custom property occurrences:
- * 1. `@property` rules: `@property {fromPrefix}xxx { ... }` → `@property {toPrefix}xxx { ... }`
+ *
+ * 1. `@property` rules: `@property {fromPrefix}xxx { ... }` → `@property
+ *    {toPrefix}xxx { ... }`
  * 2. Property declarations: `{fromPrefix}xxx: value` → `{toPrefix}xxx: value`
  * 3. `var()` references: `var({fromPrefix}xxx)` → `var({toPrefix}xxx)`
+ *
+ * @example
+ *   const css =
+ *     '@property --tw-gradient-from { syntax: "<color>"; }' +
+ *     '.class { --tw-gradient-from: red; background: var(--tw-gradient-from); }';
+ *   renameCssCustomProperties(css, {
+ *     fromPrefix: '--tw-',
+ *     toPrefix: '--wxt-tw-',
+ *   });
+ *   // "@property --wxt-tw-gradient-from { syntax: \"<color>\"; }" +
+ *   // ".class { --wxt-tw-gradient-from: red; background: var(--wxt-tw-gradient-from); }"
  *
  * @param css - The CSS string to process
  * @param options - The prefix options
  * @returns The CSS string with renamed custom properties
- *
- * @example
- * ```ts
- * const css = `
- *   @property --tw-gradient-from { syntax: "<color>"; }
- *   .class { --tw-gradient-from: red; background: var(--tw-gradient-from); }
- * `;
- * const result = renameCssCustomProperties(css, {
- *   fromPrefix: '--tw-',
- *   toPrefix: '--wxt-tw-'
- * });
- * // Result:
- * // @property --wxt-tw-gradient-from { syntax: "<color>"; }
- * // .class { --wxt-tw-gradient-from: red; background: var(--wxt-tw-gradient-from); }
- * ```
  */
 export function renameCssCustomProperties(
   css: string,

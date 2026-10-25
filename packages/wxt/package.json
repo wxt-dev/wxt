@@ -180,7 +180,7 @@
       "default": "./dist/utils/split-shadow-root-css.mjs"
     },
     "./utils/rename-css-custom-properties": {
-      "types": "./dist/utils/rename-css-custom-properties.d.ts",
+      "types": "./dist/utils/rename-css-custom-properties.d.mts",
       "default": "./dist/utils/rename-css-custom-properties.mjs"
     },
     "./utils/storage": {
