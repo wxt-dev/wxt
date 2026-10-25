@@ -38,8 +38,6 @@ Here are some examples of conventional commit messages:
 - `chore: fixed typos in code`
 - `docs: updated list of features on homepage`
 
-## Pull Requests
-
 ## Breaking Changes Policy
 
 A quick word on WXT's breaking changes policy. I am willing to make breaking changes, but they have to be for a good enough reason - they have to make WXT better as a whole, they can't be based on one opinion.
