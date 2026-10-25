@@ -9,6 +9,10 @@ This page is dedicated to all the awesome people how have made something for WXT
 - [Building Modern Cross Browser Web Extensions](https://aabidk.dev/tags/wxt/) by Aabid ([@aabidk20](https://github.com/aabidk20))
 - [Building Browser Extensions with WXT](https://rxliuli.com/blog/browser-extension-dev-01-introduction-to-basic-concepts/) by rxliuli ([@rxliuli](https://github.com/rxliuli))
 
+## Starter Templates
+
+- [Keyturn Kit](https://github.com/keyturnkit/keyturn-kit): WXT + React starter for paid extensions, with Lemon Squeezy license keys checked from the extension, offline grace and tests. MIT.
+
 ## NPM Packages
 
 - [`@webext-core/*`](https://webext-core.aklinker1.io/): Easy-to-use utilities for writing and testing web extensions that work on all browsers.
