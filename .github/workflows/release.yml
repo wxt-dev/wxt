@@ -56,7 +56,7 @@ jobs:
       (needs.validate.result == 'success' || needs.validate.result == 'skipped')
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }} # https://github.com/sbellone/release-workflow-example
@@ -73,7 +73,7 @@ jobs:
         run: sudo npm i -g npm@latest
 
       - name: Bump and Release
-        uses: aklinker1/zero-changelog/actions/release@580807ccd232072f137084a7817d4213d39dbb99 # 0.2.3
+        uses: aklinker1/zero-changelog/actions/release@7040a44d413dcea5b8569676b61463ec61fb1cd4 # 0.2.4
         with:
           bump: ${{ inputs.bump }}
           path: packages/${{ inputs.package }}
