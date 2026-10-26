@@ -580,7 +580,14 @@
 
 - # Retube: Custom YouTube Feeds
   chromeId: elfoingeipkcgkiejbbgghmmoijdeeji
+  firefoxSlug: retube-app
+  edgeId: ikfalppmglkdibnlbpdpcgmmgbppnbkn
 
 - # Social Media Scheduler and Publisher — BulkPublish
   chromeId: ghpdoohdjijlbldnlffohjphdailmefh
   firefoxSlug: social-media-scheduling
+
+- # Yeet
+  chromeId: knbfidiiikhjebpijhafdikkjhbgbefe
+  firefoxSlug: get-yeet
+  edgeId: iaiackoabgikdcniiclhbflcnjfhnand

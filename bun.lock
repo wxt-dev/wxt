@@ -43,7 +43,7 @@
     },
     "packages/analytics": {
       "name": "@wxt-dev/analytics",
-      "version": "0.5.7",
+      "version": "0.5.8",
       "dependencies": {
         "@wxt-dev/browser": "workspace:>=0.1",
         "@wxt-dev/is-background": "workspace:>=1",
@@ -285,7 +285,7 @@
     },
     "packages/wxt": {
       "name": "wxt",
-      "version": "0.21.4",
+      "version": "0.21.5",
       "bin": {
         "wxt": "./bin/wxt.mjs",
         "wxt-publish-extension": "./bin/wxt-publish-extension.mjs",
