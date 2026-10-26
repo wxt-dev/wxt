@@ -243,6 +243,77 @@ describe('Module Helpers', () => {
 
       await expect(project.serializeOutput()).resolves.toContain(expectedText);
     });
+
+    it('should apply plugins only to entrypoints matching their filter', async () => {
+      const project = new TestProject();
+      project.addFile(
+        'entrypoints/background.ts',
+        'export default defineBackground(() => {})',
+      );
+      project.addFile(
+        'entrypoints/content.ts',
+        `
+          export default defineContentScript({
+            matches: ["*://*/*"],
+            main: () => {},
+          })
+        `,
+      );
+      project.addFile('entrypoints/popup/index.html', '<html></html>');
+      project.addFile('entrypoints/options/index.html', '<html></html>');
+
+      const backgroundPluginPath = project.addFile(
+        'modules/test/background-plugin.ts',
+        `export default defineWxtPlugin(() => console.log("BACKGROUND_PLUGIN"))`,
+      );
+      const popupPluginPath = project.addFile(
+        'modules/test/popup-plugin.ts',
+        `export default defineWxtPlugin(() => console.log("POPUP_PLUGIN"))`,
+      );
+      project.addFile(
+        'modules/test.ts',
+        `
+          import { defineWxtModule, addWxtPlugin } from 'wxt/modules';
+
+          export default defineWxtModule((wxt) => {
+            addWxtPlugin(wxt, "${normalizePath(backgroundPluginPath)}", (entrypoint) => entrypoint.type === 'background');
+            addWxtPlugin(wxt, "${normalizePath(popupPluginPath)}", (entrypoint) => entrypoint.name === 'popup');
+          });
+        `,
+      );
+
+      await project.build();
+
+      await expect(
+        project.serializeFile('.output/chrome-mv3/background.js'),
+      ).resolves.toContain('BACKGROUND_PLUGIN');
+      await expect(
+        project.serializeFile('.output/chrome-mv3/content-scripts/content.js'),
+      ).resolves.not.toContain('BACKGROUND_PLUGIN');
+
+      const getInjectedScript = async (htmlFile: string) => {
+        const html = await readFile(
+          project.resolvePath('.output/chrome-mv3', htmlFile),
+          'utf-8',
+        );
+        const match = html.match(/<script[^>]*\ssrc="([^"]+)"/);
+        if (!match) throw Error(`No script tag in ${htmlFile}`);
+        return readFile(
+          project.resolvePath(
+            '.output/chrome-mv3',
+            match[1].replace(/^\//, ''),
+          ),
+          'utf-8',
+        );
+      };
+
+      await expect(getInjectedScript('popup.html')).resolves.toContain(
+        'POPUP_PLUGIN',
+      );
+      await expect(getInjectedScript('options.html')).resolves.not.toContain(
+        'POPUP_PLUGIN',
+      );
+    });
   });
 
   describe('imports', () => {
