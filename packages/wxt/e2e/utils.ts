@@ -138,6 +138,11 @@ export class TestProject {
   private generateWxtConfig(inline: InlineConfig): InlineConfig {
     return {
       ...inline,
+      suppressWarnings: {
+        firefoxDataCollection: true,
+        firefoxId: true,
+        ...inline.suppressWarnings,
+      },
       vite: async (...args) => {
         const inlineVite = (await inline.vite?.(...args)) ?? {};
         return vite.mergeConfig<vite.UserConfig, vite.UserConfig>(
