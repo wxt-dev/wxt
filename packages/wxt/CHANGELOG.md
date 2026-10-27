@@ -1,5 +1,154 @@
 # Changelog
 
+## v0.21.5
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.4...wxt-v0.21.5)
+
+### 🚀 Features
+
+- Overridable `runner` and `entrypointFinder` ([#2647](https://github.com/wxt-dev/wxt/pull/2647))
+- **storage**: Add metadata watchers ([#2630](https://github.com/wxt-dev/wxt/pull/2630))
+- Add apply option to addWxtPlugin to filter which endpoint plugin load ([#2613](https://github.com/wxt-dev/wxt/pull/2613))
+
+### 🩹 Fixes
+
+- Eslint auto import type declaration ([#2297](https://github.com/wxt-dev/wxt/pull/2297))
+- **zip**: Resolve sources file list against sourcesRoot for stats ([#2628](https://github.com/wxt-dev/wxt/pull/2628))
+- **entrypoint-loader**: Define location in the entrypoint environment ([#2611](https://github.com/wxt-dev/wxt/pull/2611))
+- Use one-arg `import.meta.resolve` for Bun compatibility ([#2607](https://github.com/wxt-dev/wxt/pull/2607))
+- Initializing git repo on project creation ([#2620](https://github.com/wxt-dev/wxt/pull/2620))
+- **wxt**: Solve redirect link in waring comment and explanation of function part ([#2680](https://github.com/wxt-dev/wxt/pull/2680))
+- Create missing Chromium profile before launch ([#2602](https://github.com/wxt-dev/wxt/pull/2602))
+- **wxt**: Run MV3 dev content script reloads one at a time ([#2652](https://github.com/wxt-dev/wxt/pull/2652))
+
+### 📖 Documentation
+
+- Fix typos in entrypoint patterns and UI utility examples ([#2598](https://github.com/wxt-dev/wxt/pull/2598))
+- **using-wxt**: Remove excess padding from store stats ([#2641](https://github.com/wxt-dev/wxt/pull/2641))
+- Added "YuzuLingo" to showcase ([#2635](https://github.com/wxt-dev/wxt/pull/2635))
+- Added "thebusyfish" to showcase ([#2632](https://github.com/wxt-dev/wxt/pull/2632))
+- Added "Not for You" to showcase ([#2619](https://github.com/wxt-dev/wxt/pull/2619))
+- Flatten content script UI options ([#2618](https://github.com/wxt-dev/wxt/pull/2618))
+- Added "Interline" to showcase ([#2616](https://github.com/wxt-dev/wxt/pull/2616))
+- Added "TabWatch" to showcase and renamed "LatTab" to "Lexis Arcana" ([#2636](https://github.com/wxt-dev/wxt/pull/2636))
+- Added Edge ID for SiteData to showcase ([#2612](https://github.com/wxt-dev/wxt/pull/2612))
+- Fix dead storage links in upgrade guide ([#2657](https://github.com/wxt-dev/wxt/pull/2657))
+- How WXT works page ([#2646](https://github.com/wxt-dev/wxt/pull/2646))
+- Fix two broken links to removed/renamed heading anchors ([#2659](https://github.com/wxt-dev/wxt/pull/2659))
+- Added "Twitter Mark" to showcase ([#2661](https://github.com/wxt-dev/wxt/pull/2661))
+- Fix CRXJS document link ([#2660](https://github.com/wxt-dev/wxt/pull/2660))
+- Ask ai button hiddn in footer ([#2664](https://github.com/wxt-dev/wxt/pull/2664))
+- Fix config page redirect link ([#2666](https://github.com/wxt-dev/wxt/pull/2666))
+- Added "Retube: Custom YouTube Feeds" to showcase ([#2682](https://github.com/wxt-dev/wxt/pull/2682))
+- Added "BulkPublish" to showcase ([#2683](https://github.com/wxt-dev/wxt/pull/2683))
+- Added "Yeet" to showcase ([#2689](https://github.com/wxt-dev/wxt/pull/2689))
+- Added Firefox and Edge IDs for "Retube: Custom YouTube Feeds" to showcase ([#2688](https://github.com/wxt-dev/wxt/pull/2688))
+
+### 🏡 Chore
+
+- Standardize setup of `wxt.*` overridable helpers ([`3be814d`](https://github.com/wxt-dev/wxt/commit/3be814dc984b8e79d4cb857c9422e3c13014608b))
+- **deps**: Upgrade `@1natsu/wait-element` to v5 ([#2642](https://github.com/wxt-dev/wxt/pull/2642))
+- Cleanup `wxt` folder structure ([#2651](https://github.com/wxt-dev/wxt/pull/2651))
+- Change start point of wxt-demo ([#2591](https://github.com/wxt-dev/wxt/pull/2591))
+- **deps**: Upgrade `typedoc` ([#2558](https://github.com/wxt-dev/wxt/pull/2558))
+- Add `web-ext` to `wxt-demo` and `analytics` for development ([#2663](https://github.com/wxt-dev/wxt/pull/2663))
+- Remove `@ts-expect-error` for `markdown-it-footnote` ([#2670](https://github.com/wxt-dev/wxt/pull/2670))
+- **deps**: Inline `dotenv-expand` ([#2575](https://github.com/wxt-dev/wxt/pull/2575))
+- **deps**: Bump publish-browser-extension from 5.1.0 to 6.0.0 ([#2585](https://github.com/wxt-dev/wxt/pull/2585))
+- **docs**: Resolve `Bun` and `Vue` types in VitePress docs ([#2673](https://github.com/wxt-dev/wxt/pull/2673))
+
+### ❤️ Contributors
+
+- [@zhongjiajie](https://github.com/zhongjiajie)
+- vansh <vansh.nagar.dev@gmail.com>
+- Skylar Bolton <skylar.bolton@gmail.com>
+- [@shivam-taneja](https://github.com/shivam-taneja)
+- Fantasy <shine_forever@yeah.net>
+- [@MannXo](https://github.com/MannXo)
+- [@prichey](https://github.com/prichey)
+- [@PatrykKuniczak](https://github.com/PatrykKuniczak)
+- Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- Mathew Preziotte <lowtecky@gmail.com>
+- [@jmcoder1](https://github.com/jmcoder1)
+- [@suveshmoza](https://github.com/suveshmoza)
+- [@ethanstoner](https://github.com/ethanstoner)
+- Dean Norman <dnorman88@gmail.com>
+- [@cursoragent](https://github.com/cursoragent)
+- [@bompus](https://github.com/bompus)
+- [@azeemkafridi](https://github.com/azeemkafridi)
+- [@AIEPhoenix](https://github.com/AIEPhoenix)
+- [@aklinker1](https://github.com/aklinker1)
+- [@SatvikMishra08](https://github.com/SatvikMishra08)
+- [@mundane799699](https://github.com/mundane799699)
+- [@shivam-taneja](https://github.com/shivam-taneja)
+- [@azeemkafridi](https://github.com/azeemkafridi)
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@unrevised6419](https://github.com/unrevised6419)
+- [@Copilot](https://github.com/Copilot)
+- [@AH64-dll](https://github.com/AH64-dll)
+- [@prichey](https://github.com/prichey)
+- [@junaidkbr](https://github.com/junaidkbr)
+- [@fkatsuhiro](https://github.com/fkatsuhiro)
+- [@dvd233](https://github.com/dvd233)
+- [@JoeyTan21](https://github.com/JoeyTan21)
+
+
+## v0.21.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.3...wxt-v0.21.4)
+
+### 🚀 Features
+
+- Log warnings once ([#2536](https://github.com/wxt-dev/wxt/pull/2536))
+- Change behaviour of eslint config ([#2295](https://github.com/wxt-dev/wxt/pull/2295))
+
+### 🩹 Fixes
+
+- Fix regression where `web-ext.config.ts` was not respected ([#2550](https://github.com/wxt-dev/wxt/pull/2550))
+- **vite-builder**: Tolerate `ENOENT` when deleting empty directories ([#2534](https://github.com/wxt-dev/wxt/pull/2534))
+- Don't add an empty content_scripts array for runtime-only content scripts ([#2580](https://github.com/wxt-dev/wxt/pull/2580))
+- Skip keyboard shortcuts for non-interactive stdin ([#2563](https://github.com/wxt-dev/wxt/pull/2563))
+- Don't set `use_dynamic_url` on browsers that don't support it ([#2581](https://github.com/wxt-dev/wxt/pull/2581))
+
+### 📖 Documentation
+
+- Added Video Time Manager ([#2501](https://github.com/wxt-dev/wxt/pull/2501))
+- Link shared content script UI options ([#2497](https://github.com/wxt-dev/wxt/pull/2497))
+- Added Edge ID for Glossy New Tab extension ([#2555](https://github.com/wxt-dev/wxt/pull/2555))
+- Added "GringaChange" to showcase ([#2573](https://github.com/wxt-dev/wxt/pull/2573))
+- Updated outdated defaults for webExt chromium prefs ([`aeb16e7`](https://github.com/wxt-dev/wxt/commit/aeb16e7741d5c2aba77d98c6c301ceb6ba1162fe))
+
+### 🏡 Chore
+
+- **deps**: Replace `nano-spawn` with `tinyexec` ([#2544](https://github.com/wxt-dev/wxt/pull/2544))
+- **deps**: Loosen version range for `@wxt-dev/browser` so projects can use any vesion ([`7946665`](https://github.com/wxt-dev/wxt/commit/794666597a5960a099ca1c54bb1f1cf3f231b990))
+- Use `.oxlintrc.jsonc` for ignored paths ([`3f65967`](https://github.com/wxt-dev/wxt/commit/3f65967b3f830af80218f2ef6a241107322496cd))
+- Fix type error after chrome types update ([`83e9840`](https://github.com/wxt-dev/wxt/commit/83e9840d8fa7218bcdb2765fb76a8cc6404712b1))
+- **deps**: Inline `normalize-path` ([#2557](https://github.com/wxt-dev/wxt/pull/2557))
+- **deps**: Inline small deps ([#2560](https://github.com/wxt-dev/wxt/pull/2560))
+- **deps**: Inline `get-port-please` ([#2576](https://github.com/wxt-dev/wxt/pull/2576))
+- **deps**: Replace `filesize` with DIY function ([#2589](https://github.com/wxt-dev/wxt/pull/2589))
+- **deps**: Inline funtion for cli spinner ([#2567](https://github.com/wxt-dev/wxt/pull/2567))
+
+### ❤️ Contributors
+
+- Loi Nguyen <vanloi999@gmail.com>
+- [@rxliuli](https://github.com/rxliuli)
+- [@PatrykKuniczak](https://github.com/PatrykKuniczak)
+- Oleksandr Kuksenko <oleks.kuksenko@gmail.com>
+- Claude Fable 5 <noreply@anthropic.com>
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@micheldpcarlos](https://github.com/micheldpcarlos)
+- Loi Nguyen <loinguyen@local>
+- [@suveshmoza](https://github.com/suveshmoza)
+- [@avi12](https://github.com/avi12)
+- [@aklinker1](https://github.com/aklinker1)
+- [@PatrickMatthiesen](https://github.com/PatrickMatthiesen)
+- [@Copilot](https://github.com/Copilot)
+- [@oyzamil](https://github.com/oyzamil)
+- [@fkatsuhiro](https://github.com/fkatsuhiro)
+
 ## v0.21.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.2...wxt-v0.21.3)
@@ -29,7 +178,6 @@
 - [@rxliuli](https://github.com/rxliuli)
 - [@suveshmoza](https://github.com/suveshmoza)
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v0.21.2
 

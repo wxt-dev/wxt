@@ -1,10 +1,10 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels, LogType } from 'consola';
-import { filterTruthy, toArray } from '../core/utils/arrays';
-import { printHeader } from '../core/utils/log';
-import { formatDuration } from '../core/utils/time';
-import { ValidationError } from '../core/utils/validation';
-import { registerWxt } from '../core/wxt';
+import { filterTruthy, toArray } from '../internal-utils/array-utils';
+import { printHeader } from '../internal-utils/log';
+import { formatDuration } from '../internal-utils/time-utils';
+import { ValidationError } from '../internal/validation';
+import { registerWxt } from '../internal/wxt';
 import { x as spawn } from 'tinyexec';
 
 /**

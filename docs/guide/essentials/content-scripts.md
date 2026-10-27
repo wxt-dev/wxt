@@ -97,7 +97,7 @@ To create a standalone content script that only includes a CSS file:
 WXT provides 3 built-in utilities for adding UIs to a page from a content script:
 
 - [Integrated](#integrated) - `createIntegratedUi`
-- [Shadow Root](#shadow-root) -`createShadowRootUi`
+- [Shadow Root](#shadow-root) - `createShadowRootUi`
 - [IFrame](#iframe) - `createIframeUi`
 
 Each has their own set of advantages and disadvantages.
@@ -534,10 +534,9 @@ export default defineContentScript({
 });
 ```
 
-However, this approach has several notable drawbacks:
+However, this approach has a few notable drawbacks:
 
 - Doesn't support MV2
-- `world: "MAIN"` is only supported by Chromium browsers
 - Main world content scripts don't have access to the extension API
 
 Instead, WXT recommends injecting a script into the main world manually using it's `injectScript` function. This will address the drawbacks mentioned before.

@@ -19,19 +19,16 @@ I also want to provide a way for developers to use either one of those two thing
 
 > The few runtime utils shipped inside WXT are things that should be used by 90% of extensions. That said, they're also legacy utils left in from before I started creating separate NPM packages, and in the future, they may be removed from the core package.
 
-## Conventional Commits
+## Conventional Commits & PR Titles
 
-This project uses [Conventional Commit format](https://www.conventionalcommits.org/en/v1.0.0/) to automatically generate a changelog and better understand the changes in the project
+This project uses [Conventional Commit format](https://www.conventionalcommits.org/en/v1.0.0/) to automatically generate a changelog and better understand the changes in the project. The title of your pull request should also follow this format, as it will be used as the squashed commit message when merged into the main branch, and ultimately used to generate the changelog for each release.
 
 Here are some examples of conventional commit messages:
 
 - `feat: add new functionality`
-- `fix: correct typos in code`
-- `ci: add GitHub Actions for automated testing`
-
-## Conventional PR Titles
-
-The title of your pull request should follow the [conventional commit format](#conventional-commits). When a pull request is merged to the main branch, all changes are going to be squashed into a single commit. The message of this commit will be the title of the pull request. And for every release, the commit messages are used to generate the changelog.
+- `fix: add optional chaining`
+- `chore: fixed typos in code`
+- `docs: updated list of features on homepage`
 
 ## Breaking Changes Policy
 
@@ -125,7 +122,7 @@ Then there are a few different ways to profile WXT commands:
 
 ## Updating Docs
 
-Documentation is written with VitePress, and is located in the `docs/` directory.
+Documentation is written with [VitePress](https://vitepress.dev/guide/getting-started), and is located in the `docs/` directory.
 
 The API reference is generated from JSDoc comments in the source code. If there's a typo or change you want to make in there, you'll need to update the source code instead of a file in the `docs/` directory.
 
