@@ -22,7 +22,7 @@ All named and default exports from files in these directories are available ever
 
 To see the complete list of auto-imported APIs, run [`wxt prepare`](/api/cli/wxt-prepare) and look at your project's `.wxt/types/imports-module.d.ts` file.
 
-### Extending Default Directories
+## Extending Default Directories
 
 Add additional directories with `imports.dirs`. They're combined with the default directories listed above.
 
