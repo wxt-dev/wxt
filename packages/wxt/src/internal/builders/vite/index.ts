@@ -43,6 +43,7 @@ export class ViteBuilder implements WxtBuilder {
   }
 
   async build(group: EntrypointGroup): Promise<BuildStepOutput> {
+    // #region snippet
     let entryConfig: vite.InlineConfig;
     if (Array.isArray(group)) entryConfig = this.getMultiPageConfig(group);
     else if (
@@ -51,6 +52,7 @@ export class ViteBuilder implements WxtBuilder {
     )
       entryConfig = this.getCssConfig(group);
     else entryConfig = this.getLibModeConfig(group);
+    // #endregion snippet
 
     const buildConfig: vite.InlineConfig = this.vite.mergeConfig(
       await this.getBaseConfig(),
@@ -196,13 +198,11 @@ export class ViteBuilder implements WxtBuilder {
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.devHtmlPrerender(this.config, server),
-      wxtPlugins.resolveVirtualModules(this.config),
       wxtPlugins.devServerGlobals(this.config, server),
       wxtPlugins.tsconfigPaths(this.config),
       wxtPlugins.noopBackground(),
       wxtPlugins.addRuntimeEnvEntries(this.config),
       wxtPlugins.defineImportMeta(),
-      wxtPlugins.wxtPluginLoader(this.config),
       wxtPlugins.resolveAppConfig(this.config),
     );
     if (

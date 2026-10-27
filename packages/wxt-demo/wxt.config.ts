@@ -21,7 +21,7 @@ export default defineConfig({
     open: true,
   },
   webExt: {
-    startUrls: ['https://duckduckgo.com'],
+    startUrls: ['https://example.com'],
   },
   example: {
     a: 'a',

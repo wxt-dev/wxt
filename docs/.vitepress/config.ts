@@ -1,5 +1,4 @@
 import { Feed } from 'feed';
-// @ts-expect-error; It isn't TypeScript lib
 import footnote from 'markdown-it-footnote';
 import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -57,7 +56,7 @@ const knowledge = addKnowledge<DefaultTheme.Config>({
     '/blog/': 'blog',
   },
   layoutSelectors: {
-    blog: '.container-content',
+    blog: '.vp-doc > .container',
   },
   pageSelectors: {
     'examples.md': '#VPContent > .VPPage',

@@ -85,3 +85,8 @@ body {
 .VPSidebar .curtain {
   z-index: 2;
 }
+
+/* Before Ask AI button hidden footer overwrite css to display this */
+.ask-ai-btn {
+  z-index: calc(var(--vp-z-index-footer) + 1) !important;
+}
