@@ -34,7 +34,7 @@ export default defineConfig({
 });
 ```
 
-### Overriding or Disabling Default Directories
+## Overriding or Disabling Default Directories
 
 Set `imports.scan` to `false` to stop WXT from scanning its default directories (`components`, `composables`, `hooks`, and `utils`). Preset/library based imports (like `browser`, `storage`, etc.) are unaffected, so this can be used to keep auto-imports enabled while opting out of directory scanning.
 
