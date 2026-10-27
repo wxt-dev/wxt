@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import * as dns from 'node:dns';
 import { isOnline, fetchCached } from '../network-utils';
 import { ResolvedConfig } from '../../types';
+import consola from 'consola';
 
 type DnsCallback = (err: NodeJS.ErrnoException | null) => void;
 
@@ -9,6 +10,12 @@ vi.mock('node:dns');
 
 const fetchMock = vi.fn<typeof fetch>();
 global.fetch = fetchMock;
+
+vi.mock('consola', () => ({
+  default: {
+    error: vi.fn(),
+  },
+}));
 
 describe('Network utils', () => {
   describe('isOnline', () => {
@@ -43,6 +50,10 @@ describe('Network utils', () => {
 
       const result = await isOnline();
       expect(result).toBe(false);
+      expect(consola.error).toHaveBeenCalledWith(
+        'Error checking offline status:',
+        'Promise timed out after 1000ms',
+      );
     });
 
     it('should handle dns.resolve errors gracefully', async () => {
@@ -52,6 +63,10 @@ describe('Network utils', () => {
 
       const result = await isOnline();
       expect(result).toBe(false);
+      expect(consola.error).toHaveBeenCalledWith(
+        'Error checking offline status:',
+        expect.objectContaining({ message: 'DNS resolution failed' }),
+      );
     });
   });
 
