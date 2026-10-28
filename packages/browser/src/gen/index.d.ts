@@ -11258,10 +11258,9 @@ export namespace Browser {
          * Can return its result via Promise in Manifest V3 or later since Chrome 91.
          * @param flags Options affecting how the information is returned.
          */
+        function getInfo(flags?: GetInfoFlags): Promise<DisplayUnitInfo[]>;
         function getInfo(callback: (displayInfo: DisplayUnitInfo[]) => void): void;
-        function getInfo(flags: GetInfoFlags, callback: (displayInfo: DisplayUnitInfo[]) => void): void;
-        function getInfo(): Promise<DisplayUnitInfo[]>;
-        function getInfo(flags: GetInfoFlags): Promise<DisplayUnitInfo[]>;
+        function getInfo(flags: GetInfoFlags | undefined, callback: (displayInfo: DisplayUnitInfo[]) => void): void;
 
         /**
          * Requests the layout info for all displays
@@ -11270,8 +11269,8 @@ export namespace Browser {
          * @platform ChromeOS only
          * @since Chrome 53
          */
-        function getDisplayLayout(callback: (layouts: DisplayLayout[]) => void): void;
         function getDisplayLayout(): Promise<DisplayLayout[]>;
+        function getDisplayLayout(callback: (layouts: DisplayLayout[]) => void): void;
 
         /**
          * Updates the properties for the display specified by `id`, according to the information provided in `info`. On failure, {@link runtime.lastError} will be set.
@@ -11281,8 +11280,8 @@ export namespace Browser {
          * @param info The information about display properties that should be changed. A property will be changed only if a new value for it is specified in `info`.
          * @platform ChromeOS only
          */
-        function setDisplayProperties(id: string, info: DisplayProperties, callback: () => void): void;
         function setDisplayProperties(id: string, info: DisplayProperties): Promise<void>;
+        function setDisplayProperties(id: string, info: DisplayProperties, callback: () => void): void;
 
         /**
          * Set the layout for all displays. display not included will use the default layout. If a layout would overlap or be otherwise invalid it will be adjusted to a valid layout. After layout is resolved, an onDisplayChanged event will be triggered.
@@ -11292,8 +11291,8 @@ export namespace Browser {
          * @platform ChromeOS only
          * @since Chrome 53
          */
-        function setDisplayLayout(layouts: DisplayLayout[], callback: () => void): void;
         function setDisplayLayout(layouts: DisplayLayout[]): Promise<void>;
+        function setDisplayLayout(layouts: DisplayLayout[], callback: () => void): void;
 
         /**
          * Enables/disables the unified desktop feature. If enabled while mirroring is active, the desktop mode will not change until mirroring is turned off. Otherwise, the desktop mode will switch to unified immediately.
@@ -11344,8 +11343,8 @@ export namespace Browser {
          * @platform ChromeOS only
          * @since Chrome 57
          */
-        function showNativeTouchCalibration(id: string, callback: (success: boolean) => void): void;
         function showNativeTouchCalibration(id: string): Promise<boolean>;
+        function showNativeTouchCalibration(id: string, callback: (success: boolean) => void): void;
 
         /**
          * Starts custom touch calibration for a display. This should be called when using a custom UX for collecting calibration data. If another touch calibration is already in progress this will throw an error.
@@ -11380,11 +11379,11 @@ export namespace Browser {
          * @platform ChromeOS only
          * @since Chrome 65
          */
-        function setMirrorMode(info: MirrorModeInfo, callback: () => void): void;
         function setMirrorMode(info: MirrorModeInfo): Promise<void>;
+        function setMirrorMode(info: MirrorModeInfo, callback: () => void): void;
 
         /** Fired when anything changes to the display configuration. */
-        const onDisplayChanged: Browser.events.Event<() => void>;
+        const onDisplayChanged: events.Event<() => void>;
     }
 
     ////////////////////
@@ -11675,7 +11674,7 @@ export namespace Browser {
          * An ID that represents the absence of a split tab.
          * @since Chrome 140
          */
-        const SPLIT_VIEW_ID_NONE: -1;
+        const SPLIT_VIEW_ID_NONE = -1;
 
         /**
          * An ID that represents the absence of a browser tab.
@@ -11767,7 +11766,7 @@ export namespace Browser {
              * Open a port to a specific document identified by `documentId` instead of all frames in the tab.
              * @since Chrome 106
              */
-            documentId?: string;
+            documentId?: string | undefined;
         }
 
         interface MessageSendOptions {
@@ -11777,7 +11776,7 @@ export namespace Browser {
              * Send a message to a specific document identified by `documentId` instead of all frames in the tab.
              * @since Chrome 106
              */
-            documentId?: string;
+            documentId?: string | undefined;
         }
 
         interface GroupOptions {
@@ -11789,7 +11788,7 @@ export namespace Browser {
             /** The ID of the group to add the tabs to. If not specified, a new group will be created. */
             groupId?: number | undefined;
             /** The tab ID or list of tab IDs to add to the specified group. */
-            tabIds?: number | [number, ...number[]] | undefined;
+            tabIds: number | [number, ...number[]];
         }
 
         interface HighlightInfo {
@@ -12103,18 +12102,17 @@ export namespace Browser {
          * Can return its result via Promise in Manifest V3 or later since Chrome 88.
          * @param windowId The target window. Defaults to the current window.
          */
-        function captureVisibleTab(): Promise<string>;
-        function captureVisibleTab(windowId: number): Promise<string>;
+        function captureVisibleTab(windowId?: number): Promise<string>;
         function captureVisibleTab(options: extensionTypes.ImageDetails): Promise<string>;
-        function captureVisibleTab(windowId: number, options: extensionTypes.ImageDetails): Promise<string>;
+        function captureVisibleTab(windowId: number | undefined, options: extensionTypes.ImageDetails): Promise<string>;
         function captureVisibleTab(callback: (dataUrl: string) => void): void;
-        function captureVisibleTab(windowId: number, callback: (dataUrl: string) => void): void;
+        function captureVisibleTab(windowId: number | undefined, callback: (dataUrl: string) => void): void;
         function captureVisibleTab(
             options: extensionTypes.ImageDetails,
             callback: (dataUrl: string) => void,
         ): void;
         function captureVisibleTab(
-            windowId: number,
+            windowId: number | undefined,
             options: extensionTypes.ImageDetails,
             callback: (dataUrl: string) => void,
         ): void;
@@ -12125,10 +12123,9 @@ export namespace Browser {
          * Can return its result via Promise in Manifest V3 or later since Chrome 88.
          * @param tabId The ID of the tab to reload; defaults to the selected tab of the current window.
          */
-        function reload(): Promise<void>;
-        function reload(tabId: number): Promise<void>;
+        function reload(tabId?: number): Promise<void>;
         function reload(reloadProperties: ReloadProperties): Promise<void>;
-        function reload(tabId: number, reloadProperties: ReloadProperties): Promise<void>;
+        function reload(tabId: number | undefined, reloadProperties: ReloadProperties): Promise<void>;
         function reload(callback: () => void): void;
         function reload(tabId: number | undefined, callback: () => void): void;
         function reload(reloadProperties: ReloadProperties | undefined, callback: () => void): void;
@@ -12635,7 +12632,7 @@ export namespace Browser {
          */
         interface TtsOptions {
             /** The TTS event types that you are interested in listening to. If missing, all event types may be sent. */
-            desiredEventTypes?: string[];
+            desiredEventTypes?: `${EventType}`[];
             /** If true, enqueues this utterance if TTS is already in progress. If false (the default), interrupts any current speech and flushes the speech queue before speaking this new utterance. */
             enqueue?: boolean;
             /** The extension ID of the speech engine to use, if known. */
@@ -12652,7 +12649,7 @@ export namespace Browser {
             /** Speaking rate relative to the default rate for this voice. 1.0 is the default rate, normally around 180 to 220 words per minute. 2.0 is twice as fast, and 0.5 is half as fast. Values below 0.1 or above 10.0 are strictly disallowed, but many voices will constrain the minimum and maximum rates further—for example a particular voice may not actually speak faster than 3 times normal even if you specify a value larger than 3.0. */
             rate?: number;
             /** The TTS event types the voice must support. */
-            requiredEventTypes?: string[];
+            requiredEventTypes?: `${EventType}`[];
             /** The name of the voice to use for synthesis. If empty, uses any available voice. */
             voiceName?: string;
             /** Speaking volume between 0 and 1 inclusive, with 0 being lowest and 1 being highest, with a default of 1.0. */
@@ -12725,7 +12722,7 @@ export namespace Browser {
          */
         function speak(utterance: string, options?: TtsOptions): Promise<void>;
         function speak(utterance: string, callback: () => void): void;
-        function speak(utterance: string, options: TtsOptions, callback: () => void): void;
+        function speak(utterance: string, options: TtsOptions | undefined, callback: () => void): void;
 
         /** Stops any current speech and flushes the queue of any pending utterances. In addition, if speech was paused, it will now be un-paused for the next call to speak. */
         function stop(): void;
@@ -12734,7 +12731,7 @@ export namespace Browser {
          * Called when the list of {@link TtsVoice} that would be returned by getVoices has changed.
          * @since Chrome 124
          */
-        const onVoicesChanged: Browser.events.Event<() => void>;
+        const onVoicesChanged: events.Event<() => void>;
     }
 
     ////////////////////
@@ -13605,7 +13602,7 @@ export namespace Browser {
             /** Value of the HTTP header if it can be represented by UTF-8. */
             value?: string | undefined;
             /** Value of the HTTP header if it cannot be represented by UTF-8, stored as individual byte values (0..255). */
-            binaryValue?: ArrayBuffer | undefined;
+            binaryValue?: number[] | undefined;
         }
 
         /** Returns value for event handlers that have the 'blocking' extraInfoSpec applied. Allows the event handler to modify network requests. */
