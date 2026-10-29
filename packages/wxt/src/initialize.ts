@@ -30,6 +30,18 @@ export async function initialize(options: {
     (await question('Project Directory', { defaultValue: '.' }));
   if (!directory) throw Error('Directory is required');
 
+  const isExists = await pathExists(directory);
+  if (isExists) {
+    const isEmpty =
+      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
+    if (!isEmpty) {
+      consola.error(
+        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
+      );
+      process.exit(1);
+    }
+  }
+
   const templateName =
     inputTemplateName ??
     (await select('Choose a template', {
@@ -59,17 +71,6 @@ export async function initialize(options: {
     options.requireGit ??
     (await confirm('Initialize a new git repository?', { initial: true }));
 
-  const isExists = await pathExists(directory);
-  if (isExists) {
-    const isEmpty =
-      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
-    if (!isEmpty) {
-      consola.error(
-        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
-      );
-      process.exit(1);
-    }
-  }
   await cloneProject({ directory, template, requireGitInitialized });
 
   const cdPath = path.relative(process.cwd(), path.resolve(directory));
