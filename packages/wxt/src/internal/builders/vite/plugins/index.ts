@@ -5,6 +5,7 @@ export * from './css-entrypoints';
 export * from './define-import-meta';
 export * from './dev-html-prerender';
 export * from './dev-server-globals';
+export * from './dev-server-workers';
 export * from './extension-api-mock';
 export * from './iife-anonymous';
 export * from './iife-footer';
