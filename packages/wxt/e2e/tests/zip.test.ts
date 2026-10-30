@@ -1,4 +1,6 @@
 import extract from 'extract-zip';
+import path from 'node:path';
+import { glob } from 'tinyglobby';
 import { x as spawn } from 'tinyexec';
 import { describe, expect, it } from 'vitest';
 import { TestProject } from '../utils';
@@ -334,5 +336,97 @@ describe('Zipping', () => {
 
     await extract(sourcesZip, { dir: unzipDir });
     expect(await project.pathExists(unzipDir, 'manifest.json')).toBe(true);
+  });
+
+  describe('experimental.autoIncludeSources', () => {
+    it('should only zip the files used to build the extension', async () => {
+      const project = new TestProject({
+        name: 'test',
+        version: '1.0.0',
+      });
+      project.addFile(
+        'entrypoints/background.ts',
+        `import { a } from '../lib';
+        export default defineBackground(() => console.log(a));`,
+      );
+      project.addFile(
+        'entrypoints/popup/index.html',
+        '<html><head><link rel="stylesheet" href="./style.css" /></head></html>',
+      );
+      project.addFile('entrypoints/popup/style.css', 'body { color: red; }');
+      // Re-export only, removed from the output chunks by tree-shaking
+      project.addFile('lib/index.ts', `export { a } from './a';`);
+      project.addFile('lib/a.ts', 'export const a = 1;');
+      project.addFile('lib/unused.ts', 'export const b = 2;');
+      project.addFile('public/icon.png');
+      project.addFile('notes/todo.txt');
+      const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+      const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: { autoIncludeSources: true },
+        zip: { includeSources: ['notes/**'] },
+      });
+      await extract(sourcesZip, { dir: unzipDir });
+
+      const files = await glob('**/*', { cwd: unzipDir });
+      expect(files.sort()).toEqual([
+        'entrypoints/background.ts',
+        'entrypoints/popup/index.html',
+        'entrypoints/popup/style.css',
+        'lib/a.ts',
+        'lib/index.ts',
+        'notes/todo.txt',
+        'package.json',
+        'public/icon.png',
+        'wxt.config.ts',
+      ]);
+
+      // The extracted sources should still build
+      await expect(
+        spawn('bun', ['wxt', 'build', '-b', 'firefox'], {
+          throwOnError: true,
+          nodeOptions: { cwd: unzipDir },
+        }),
+      ).resolves.toMatchObject({ exitCode: 0 });
+    });
+
+    it('should include files outside the project root when they are inside zip.sourcesRoot', async () => {
+      const project = new TestProject({
+        name: 'test',
+        version: '1.0.0',
+      });
+      const id = path.basename(project.root);
+      project.addFile(
+        'entrypoints/background.ts',
+        `import { shared } from '../../${id}-shared/index';
+        export default defineBackground(() => console.log(shared));`,
+      );
+      project.addFile(`../${id}-shared/index.ts`, 'export const shared = 1;');
+      project.addFile(`../${id}-shared/unused.ts`, 'export const unused = 1;');
+      const unzipDir = project.resolvePath('.output/test-1.0.0-sources');
+      const sourcesZip = project.resolvePath('.output/test-1.0.0-sources.zip');
+
+      await project.zip({
+        browser: 'firefox',
+        experimental: { autoIncludeSources: true },
+        zip: { sourcesRoot: project.resolvePath('..') },
+      });
+      await extract(sourcesZip, { dir: unzipDir });
+
+      expect(await project.pathExists(unzipDir, `${id}/package.json`)).toBe(
+        true,
+      );
+      expect(
+        await project.pathExists(unzipDir, `${id}/entrypoints/background.ts`),
+      ).toBe(true);
+      expect(await project.pathExists(unzipDir, `${id}-shared/index.ts`)).toBe(
+        true,
+      );
+      expect(await project.pathExists(unzipDir, `${id}-shared/unused.ts`)).toBe(
+        false,
+      );
+    });
   });
 });
