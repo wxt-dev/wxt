@@ -142,6 +142,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 
 ## Next Steps
 
+- Start [developing your extension](/guide/essentials/development) with automatic browser startup or load it manually
 - Keep reading on about WXT's [Project Structure](/guide/essentials/project-structure) and other essential concepts to learn
 - Configure [automatic browser startup](/guide/essentials/config/browser-startup) during dev mode
 - Explore [WXT's example library](/examples) to see how to use specific APIs or perform common tasks
