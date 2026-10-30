@@ -14,6 +14,9 @@ export default defineConfig({
       },
     ],
   },
+  experimental: {
+    spaContentScripts: true,
+  },
   zip: {
     downloadPackages: ['sass'],
   },
@@ -40,6 +43,7 @@ export default defineConfig({
       'main-world',
       'sandbox',
       'sidepanel',
+      'spa',
       'unlisted',
     ],
     configOrPath: {
