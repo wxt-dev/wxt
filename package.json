@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "check": "check && bun run --sequential --workspaces check",
+    "cspell-order:check": "bun run scripts/check-cspell-order.ts",
+    "cspell-order:format": "bun run scripts/format-cspell-order.ts",
     "test": "bun run --workspaces test run",
     "test:coverage": "bun run --workspaces test:coverage",
     "prepare": "simple-git-hooks",
