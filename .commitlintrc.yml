@@ -1,6 +1,21 @@
 extends:
   - '@commitlint/config-conventional'
 rules:
+  # Same as config-conventional, minus `test`. Test changes should use the
+  # type of the change they support (`fix`, `feat`, `chore`, etc).
+  type-enum:
+    - 2
+    - always
+    - - build
+      - chore
+      - ci
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - revert
+      - style
   subject-case:
     - 0
     - always
