@@ -54,5 +54,20 @@ export default defineConfig({
   },
 });
 ```
+## Configuration
 
+The module can be configured via the `autoIcons` config:
+
+```ts
+import { resolve } from 'node:path';
+import { defineConfig } from 'wxt';
+
+export default defineConfig({
+  modules: ['@wxt-dev/auto-icons'],
+  autoIcons: {
+    // Path is relative to the project root.
+    // Use resolve() to reference files outside srcDir.
+    baseIconPath: resolve('public/icon.svg'),
+  },
+});
 Options have JSDocs available in your editor, or you can read them in the source code: [`AutoIconsOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/src/index.ts).
