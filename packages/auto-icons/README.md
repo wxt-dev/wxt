@@ -34,9 +34,6 @@ And finally, save the base icon to `<srcDir>/assets/icon.png`.
 The module can be configured via the `autoIcons` config:
 
 ```ts
-import { defineConfig } from 'wxt';
-import { resolve } from 'node:path';
-
 export default defineConfig({
   modules: ['@wxt-dev/auto-icons'],
   autoIcons: {
