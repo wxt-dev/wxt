@@ -1,8 +1,6 @@
 import { DefaultTheme } from 'vitepress';
 
 type SidebarItem = DefaultTheme.SidebarItem;
-type NavItem = DefaultTheme.NavItem;
-type NavItemWithLink = DefaultTheme.NavItemWithLink;
 type NavItemWithChildren = DefaultTheme.NavItemWithChildren;
 type NavItemChildren = DefaultTheme.NavItemChildren;
 
@@ -19,7 +17,7 @@ export function navItem(text: string, arg2?: unknown): any {
 }
 
 export function menuRoot(items: SidebarItem[]) {
-  return items.map((item, index) => {
+  return items.map((item) => {
     // item.collapsed = false; // uncomment to expand all level-0 items
     return item;
   });
@@ -60,12 +58,6 @@ export function menuGroup(
   throw Error('Unknown overload');
 }
 
-export function menuItems(items: SidebarItem[]) {
-  return {
-    items,
-  };
-}
-
 export function menuItem(
   text: string,
   link: string,
@@ -79,9 +71,6 @@ export function menuItem(
 
 /** Clean up and add badges to typedoc leaf sections */
 export function prepareTypedocSidebar(items: SidebarItem[]) {
-  // skip contents file
-  const filtered = items.slice(1);
-
   // remove Typedoc's collapse: true from text nodes
   const prepareItems = (items: DefaultTheme.SidebarItem[], depth = 0) => {
     for (const item of items) {
@@ -97,9 +86,7 @@ export function prepareTypedocSidebar(items: SidebarItem[]) {
     }
   };
 
-  // process
-  prepareItems(filtered);
+  prepareItems(items);
 
-  // return
-  return filtered;
+  return items;
 }

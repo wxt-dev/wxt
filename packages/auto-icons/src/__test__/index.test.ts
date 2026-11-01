@@ -1,22 +1,21 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { resolve } from 'node:path';
-import * as fsPromises from 'node:fs/promises';
-import sharp from 'sharp';
+import { access, mkdir } from 'node:fs/promises';
+import sharp, { type Sharp } from 'sharp';
 import type { Wxt, UserManifest } from 'wxt';
+import autoIconsModule, { type AutoIconsOptions } from '../index';
 
-// Import the actual module
-import autoIconsModule from '../index';
-import type { AutoIconsOptions } from '../index';
-
-// Mock dependencies
 vi.mock('node:fs/promises', () => ({
-  mkdir: vi.fn(),
   access: vi.fn(),
+  mkdir: vi.fn(),
 }));
+const accessMock = vi.mocked(access);
+const mkdirMock = vi.mocked(mkdir);
 
 vi.mock('sharp', () => ({
   default: vi.fn(),
 }));
+const sharpMock = vi.mocked(sharp);
 
 // Type definitions for better type safety
 interface MockWxt {
@@ -83,11 +82,9 @@ describe('auto-icons module', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSharpInstance = createMockSharpInstance();
-    vi.mocked(sharp).mockReturnValue(
-      mockSharpInstance as unknown as sharp.Sharp,
-    );
-    vi.mocked(fsPromises.access).mockResolvedValue(undefined);
-    vi.mocked(fsPromises.mkdir).mockResolvedValue(undefined as any);
+    sharpMock.mockReturnValue(mockSharpInstance as unknown as Sharp);
+    accessMock.mockResolvedValue(undefined);
+    mkdirMock.mockResolvedValue(undefined as any);
   });
 
   describe('module setup', () => {
@@ -122,7 +119,7 @@ describe('auto-icons module', () => {
     it('should merge custom options with defaults', async () => {
       const options: AutoIconsOptions = {
         sizes: [64, 32],
-        grayscaleOnDevelopment: false,
+        developmentIndicator: false,
       };
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
@@ -158,7 +155,7 @@ describe('auto-icons module', () => {
     });
 
     it('should warn when base icon not found', async () => {
-      vi.mocked(fsPromises.access).mockRejectedValue(new Error('ENOENT'));
+      accessMock.mockRejectedValue(new Error('ENOENT'));
 
       const options: AutoIconsOptions = {
         enabled: true,
@@ -204,10 +201,10 @@ describe('auto-icons module', () => {
       });
     });
 
-    it('should merge custom sizes with defaults', async () => {
+    it('should replace default sizes with custom sizes', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        sizes: [96, 64], // These will be merged with defaults
+        sizes: [96, 64],
       };
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
@@ -223,14 +220,9 @@ describe('auto-icons module', () => {
         await manifestHook(mockWxt as unknown as Wxt, manifest);
       }
 
-      // defu merges arrays, so we get both custom and default sizes
       expect(manifest.icons).toEqual({
         96: 'icons/96.png',
         64: 'icons/64.png',
-        128: 'icons/128.png',
-        48: 'icons/48.png',
-        32: 'icons/32.png',
-        16: 'icons/16.png',
       });
     });
 
@@ -258,6 +250,33 @@ describe('auto-icons module', () => {
       expect(mockWxt.logger.warn).toHaveBeenCalledWith(
         '`[auto-icons]` icons property found in manifest, overwriting with auto-generated icons',
       );
+    });
+
+    it('should not duplicate icon entries in manifest when sizes overlap defaults', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        sizes: [16, 32, 48, 96, 128],
+      };
+
+      await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
+
+      const manifestHook = vi
+        .mocked(mockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+
+      const manifest: UserManifest = {};
+      if (manifestHook) {
+        await manifestHook(mockWxt as unknown as Wxt, manifest);
+      }
+
+      expect(Object.keys(manifest.icons ?? {})).toHaveLength(5);
+      expect(manifest.icons).toEqual({
+        16: 'icons/16.png',
+        32: 'icons/32.png',
+        48: 'icons/48.png',
+        96: 'icons/96.png',
+        128: 'icons/128.png',
+      });
     });
   });
 
@@ -293,10 +312,9 @@ describe('auto-icons module', () => {
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(32);
       expect(mockSharpInstance.resize).toHaveBeenCalledWith(16);
 
-      expect(fsPromises.mkdir).toHaveBeenCalledWith(
-        resolve('/mock/dist', 'icons'),
-        { recursive: true },
-      );
+      expect(mkdirMock).toHaveBeenCalledWith(resolve('/mock/dist', 'icons'), {
+        recursive: true,
+      });
 
       expect(output.publicAssets).toEqual([
         { type: 'asset', fileName: 'icons/128.png' },
@@ -306,7 +324,7 @@ describe('auto-icons module', () => {
       ]);
     });
 
-    it('should generate icons with custom sizes merged with defaults', async () => {
+    it('should generate only custom sizes', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
         sizes: [96, 64],
@@ -327,28 +345,21 @@ describe('auto-icons module', () => {
         await buildHook(mockWxt as unknown as Wxt, output);
       }
 
-      // Should include both custom and default sizes
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(96);
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(64);
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(128);
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(48);
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(32);
-      expect(mockSharpInstance.resize).toHaveBeenCalledWith(16);
+      expect(mockSharpInstance.resize).toHaveBeenCalledTimes(2);
+      expect(mockSharpInstance.resize).toHaveBeenNthCalledWith(1, 96);
+      expect(mockSharpInstance.resize).toHaveBeenNthCalledWith(2, 64);
+      expect(mockSharpInstance.toFile).toHaveBeenCalledTimes(2);
 
       expect(output.publicAssets).toEqual([
         { type: 'asset', fileName: 'icons/96.png' },
         { type: 'asset', fileName: 'icons/64.png' },
-        { type: 'asset', fileName: 'icons/128.png' },
-        { type: 'asset', fileName: 'icons/48.png' },
-        { type: 'asset', fileName: 'icons/32.png' },
-        { type: 'asset', fileName: 'icons/16.png' },
       ]);
     });
 
     it('should apply grayscale in development mode', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: true,
+        developmentIndicator: 'grayscale',
         sizes: [128],
       };
 
@@ -378,7 +389,7 @@ describe('auto-icons module', () => {
 
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: true,
+        developmentIndicator: 'grayscale',
         sizes: [128],
       };
 
@@ -400,7 +411,7 @@ describe('auto-icons module', () => {
     it('should not apply grayscale when disabled', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        grayscaleOnDevelopment: false,
+        developmentIndicator: false,
         sizes: [128],
       };
 
@@ -417,6 +428,35 @@ describe('auto-icons module', () => {
       }
 
       expect(mockSharpInstance.grayscale).not.toHaveBeenCalled();
+    });
+
+    it('should deduplicate repeated custom sizes', async () => {
+      const options: AutoIconsOptions = {
+        enabled: true,
+        sizes: [16, 32, 48, 96, 128, 96, 16],
+      };
+
+      const output: BuildOutput = { publicAssets: [] };
+
+      await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
+
+      const buildHook = vi
+        .mocked(mockWxt.hooks.hook)
+        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+
+      if (buildHook) {
+        await buildHook(mockWxt as unknown as Wxt, output);
+      }
+
+      // Each size should only be resized/written once
+      expect(mockSharpInstance.resize).toHaveBeenCalledTimes(5);
+      expect(output.publicAssets).toEqual([
+        { type: 'asset', fileName: 'icons/16.png' },
+        { type: 'asset', fileName: 'icons/32.png' },
+        { type: 'asset', fileName: 'icons/48.png' },
+        { type: 'asset', fileName: 'icons/96.png' },
+        { type: 'asset', fileName: 'icons/128.png' },
+      ]);
     });
   });
 
@@ -452,7 +492,7 @@ describe('auto-icons module', () => {
     it('should handle empty sizes array', async () => {
       const options: AutoIconsOptions = {
         enabled: true,
-        sizes: [], // Empty array should still merge with defaults
+        sizes: [],
       };
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
@@ -466,13 +506,7 @@ describe('auto-icons module', () => {
         await manifestHook(mockWxt as unknown as Wxt, manifest);
       }
 
-      // Should still have default sizes due to defu merge
-      expect(manifest.icons).toEqual({
-        128: 'icons/128.png',
-        48: 'icons/48.png',
-        32: 'icons/32.png',
-        16: 'icons/16.png',
-      });
+      expect(manifest.icons).toEqual({});
     });
 
     it('should handle sharp processing errors gracefully', async () => {
@@ -515,9 +549,7 @@ describe('auto-icons module', () => {
       };
 
       // Make ensureDir throw an error
-      vi.mocked(fsPromises.mkdir).mockRejectedValue(
-        new Error('Directory creation failed'),
-      );
+      mkdirMock.mockRejectedValue(new Error('Directory creation failed'));
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
@@ -531,7 +563,7 @@ describe('auto-icons module', () => {
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
         // But ensureDir should have been called
-        expect(fsPromises.mkdir).toHaveBeenCalled();
+        expect(mkdirMock).toHaveBeenCalled();
       }
     });
 
@@ -560,71 +592,100 @@ describe('auto-icons module', () => {
   });
 
   describe('integration test', () => {
-    it('should handle full workflow correctly', async () => {
-      const options: AutoIconsOptions = {
-        enabled: true,
-        baseIconPath: 'assets/custom-icon.png',
-        sizes: [96], // Will be merged with defaults
-        grayscaleOnDevelopment: false,
-      };
+    it.each<{ name: string; options: AutoIconsOptions; expected: number[] }>([
+      {
+        name: 'omitted sizes',
+        options: {},
+        expected: [128, 48, 32, 16],
+      },
+      {
+        name: 'undefined sizes',
+        options: { sizes: undefined },
+        expected: [128, 48, 32, 16],
+      },
+      {
+        name: 'one custom size',
+        options: { sizes: [96] },
+        expected: [96],
+      },
+      {
+        name: 'a subset of default sizes',
+        options: { sizes: [32] },
+        expected: [32],
+      },
+      {
+        name: 'overlapping custom and default sizes',
+        options: { sizes: [16, 32, 48, 96, 128] },
+        expected: [16, 32, 48, 96, 128],
+      },
+      {
+        name: 'duplicate custom sizes',
+        options: { sizes: [96, 96, 32] },
+        expected: [96, 32],
+      },
+      {
+        name: 'empty sizes',
+        options: { sizes: [] },
+        expected: [],
+      },
+    ])(
+      'should use $name consistently across all hooks',
+      async ({ options, expected }) => {
+        const customSizesBefore = options.sizes?.slice();
+        const manifest: UserManifest = {};
+        const output: BuildOutput = { publicAssets: [] };
+        const paths: string[] = [];
 
-      const manifest: UserManifest = {};
-      const output: BuildOutput = { publicAssets: [] };
-      const paths: string[] = [];
+        await autoIconsModule.setup!(mockWxt as unknown as Wxt, {
+          enabled: true,
+          baseIconPath: 'assets/custom-icon.png',
+          developmentIndicator: false,
+          ...options,
+        });
 
-      // Setup the module
-      await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
+        const manifestHook = mockWxt.hooks.hook.mock.calls.find(
+          (call) => call[0] === 'build:manifestGenerated',
+        )?.[1];
+        const buildHook = mockWxt.hooks.hook.mock.calls.find(
+          (call) => call[0] === 'build:done',
+        )?.[1];
+        const pathsHook = mockWxt.hooks.hook.mock.calls.find(
+          (call) => call[0] === 'prepare:publicPaths',
+        )?.[1];
 
-      // Execute all hooks
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
-      const pathsHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'prepare:publicPaths')?.[1];
+        expect(manifestHook).toBeTypeOf('function');
+        expect(buildHook).toBeTypeOf('function');
+        expect(pathsHook).toBeTypeOf('function');
 
-      if (manifestHook) {
         await manifestHook(mockWxt as unknown as Wxt, manifest);
-      }
-      if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
-      }
-      if (pathsHook) {
         pathsHook(mockWxt as unknown as Wxt, paths);
-      }
 
-      // Verify results - defu merges arrays
-      expect(manifest.icons).toEqual({
-        96: 'icons/96.png',
-        128: 'icons/128.png',
-        48: 'icons/48.png',
-        32: 'icons/32.png',
-        16: 'icons/16.png',
-      });
-
-      expect(output.publicAssets).toEqual([
-        { type: 'asset', fileName: 'icons/96.png' },
-        { type: 'asset', fileName: 'icons/128.png' },
-        { type: 'asset', fileName: 'icons/48.png' },
-        { type: 'asset', fileName: 'icons/32.png' },
-        { type: 'asset', fileName: 'icons/16.png' },
-      ]);
-
-      expect(paths).toEqual([
-        'icons/96.png',
-        'icons/128.png',
-        'icons/48.png',
-        'icons/32.png',
-        'icons/16.png',
-      ]);
-
-      expect(sharp).toHaveBeenCalledWith(
-        resolve('/mock/src', 'assets/custom-icon.png'),
-      );
-      expect(mockSharpInstance.grayscale).not.toHaveBeenCalled();
-    });
+        const expectedPaths = expected.map((size) => `icons/${size}.png`);
+        expect(manifest.icons).toEqual(
+          Object.fromEntries(
+            expected.map((size) => [size, `icons/${size}.png`]),
+          ),
+        );
+        expect(output.publicAssets).toEqual(
+          expectedPaths.map((fileName) => ({ type: 'asset', fileName })),
+        );
+        expect(paths).toEqual(expectedPaths);
+        expect(sharpMock).toHaveBeenCalledTimes(expected.length);
+        expect(mockSharpInstance.resize.mock.calls).toEqual(
+          expected.map((size) => [size]),
+        );
+        expect(mockSharpInstance.toFile.mock.calls).toEqual(
+          expectedPaths.map((path) => [resolve('/mock/dist', path)]),
+        );
+        if (expected.length > 0) {
+          expect(sharpMock).toHaveBeenCalledWith(
+            resolve('/mock/src', 'assets/custom-icon.png'),
+          );
+        }
+        expect(mockSharpInstance.grayscale).not.toHaveBeenCalled();
+        expect(options.sizes).toEqual(customSizesBefore);
+      },
+    );
   });
 });

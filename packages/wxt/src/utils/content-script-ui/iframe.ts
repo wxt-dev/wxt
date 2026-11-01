@@ -7,6 +7,8 @@ import { applyPosition, createMountFunctions, mountUi } from './shared';
 /**
  * Create a content script UI using an iframe.
  *
+ * @param options - Iframe options. See {@link ContentScriptUiOptions} for shared
+ *   positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#iframe
  */
 export function createIframeUi<TMounted>(
@@ -55,6 +57,11 @@ export interface IframeContentScriptUi<
   wrapper: HTMLDivElement;
 }
 
+/**
+ * {@inheritDoc wxt/utils/content-script-ui/types!ContentScriptUiOptions}
+ *
+ * @interface
+ */
 export type IframeContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["./**/*.ts", "./**/*.vue", "../**/*.md"],
+  "exclude": ["cache", "dist"],
+  "vueCompilerOptions": {
+    "vitePressExtensions": [".md"]
+  }
+}

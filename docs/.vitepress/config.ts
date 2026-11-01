@@ -56,7 +56,7 @@ const knowledge = addKnowledge<DefaultTheme.Config>({
     '/blog/': 'blog',
   },
   layoutSelectors: {
-    blog: '.container-content',
+    blog: '.vp-doc > .container',
   },
   pageSelectors: {
     'examples.md': '#VPContent > .VPPage',
@@ -73,8 +73,11 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
+    //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       llmstxt(),
+      // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
           'wxt.config.ts': localIconLoader(
@@ -159,8 +162,7 @@ export default defineConfig({
 
     footer: {
       message: [
-        '<a class="light-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-bg.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
-        '<a class="dark-netlify" href="https://www.netlify.com"> <img src="https://www.netlify.com/v3/img/components/netlify-color-accent.svg" alt="Deploys by Netlify" style="display: inline;" /></a>',
+        '<span class="netlify-badge"><a class="light-netlify" href="https://www.netlify.com"><img src="/netlify-badge-light.svg" alt="Deploys by Netlify" /></a><a class="dark-netlify" href="https://www.netlify.com"><img src="/netlify-badge-dark.svg" alt="Deploys by Netlify" /></a></span>',
         'Released under the <a href="https://github.com/wxt-dev/wxt/blob/main/LICENSE">MIT License</a>.',
       ].join('<br/>'),
       copyright:
@@ -240,7 +242,6 @@ export default defineConfig({
           menuItem('WXT Modules', 'wxt-modules.md'),
           menuItem('Frontend Frameworks', 'frontend-frameworks.md'),
           menuItem('ES Modules', 'es-modules.md'),
-          menuItem('Remote Code', 'remote-code.md'),
           menuItem('Unit Testing', 'unit-testing.md'),
           menuItem('E2E Testing', 'e2e-testing.md'),
           menuItem('Publishing', 'publishing.md'),

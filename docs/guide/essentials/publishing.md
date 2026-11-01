@@ -206,13 +206,13 @@ WXT uses the command `npm pack <package-name>` to download the package. That mea
 
 WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT does not create yet. For now, if you want to publish to Safari, follow this guide:
 
-- [Converting a web extension for Safari](https://developer.apple.com/documentation/safariservices/safari_web_extensions/converting_a_web_extension_for_safari) - "Convert your existing extension to a Safari web extension using Xcode’s command-line tool."
+- [Packaging a web extension for Safari](https://developer.apple.com/documentation/safariservices/packaging-a-web-extension-for-safari) - "Package your existing extension as a Safari web extension using Xcode’s command-line tool."
 
-When running the `safari-web-extension-converter` CLI tool, pass the `.output/safari-mv2` or `.output/safari-mv3` directory, not your source code directory.
+When running the `safari-web-extension-packager` CLI tool, pass the `.output/safari-mv2` or `.output/safari-mv3` directory, not your source code directory.
 
 ```sh
 pnpm wxt build -b safari
-xcrun safari-web-extension-converter .output/safari-mv2
+xcrun safari-web-extension-packager .output/safari-mv2
 ```
 
 ### Edge Addons

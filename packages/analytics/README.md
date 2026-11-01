@@ -5,6 +5,8 @@ Report analytics events from your web extension extension.
 ## Supported Analytics Providers
 
 - [Google Analytics 4 (Measurement Protocol)](#google-analytics-4-measurement-protocol)
+- [Moderok](#moderok)
+- [PostHog](#posthog)
 - [Umami](#umami)
 
 ## Install With WXT
@@ -119,6 +121,82 @@ export default defineAppConfig({
   },
 });
 ```
+
+### Moderok
+
+[Moderok](https://moderok.dev) is an analytics platform built specifically for browser extensions. It requires no `host_permissions`, works in Manifest V3 service workers, and collects only anonymous usage data.
+
+Sign up at [moderok.dev](https://moderok.dev) to get your app key, then save it to your `.env` file:
+
+```dotenv
+WXT_MODEROK_APP_KEY='mk_...'
+```
+
+Then add the `moderok` provider to your `<srcDir>/app.config.ts` file:
+
+```ts
+import { moderok } from '@wxt-dev/analytics/providers/moderok';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      moderok({
+        appKey: import.meta.env.WXT_MODEROK_APP_KEY,
+        // Automatically track first open, install, update, and daily ping events (default: true)
+        trackLifecycle: true,
+        // Track when users uninstall the extension (default: false)
+        trackUninstalls: false,
+        // Optional: when trackUninstalls is on, redirect users to this page
+        // after they uninstall (e.g. a feedback survey)
+        uninstallUrl: 'https://example.com/uninstall',
+      }),
+    ],
+  },
+});
+```
+
+For a full walkthrough — module setup, sending events, and all provider options — see the [Moderok WXT guide](https://docs.moderok.dev/guide/wxt).
+
+### PostHog
+
+[PostHog](https://posthog.com/) is an open source product analytics platform. It supports event tracking, session recording, feature flags, surveys, and more.
+
+In your PostHog project settings, find your **Project API key** and save it to your `.env` file:
+
+```dotenv
+WXT_POSTHOG_API_KEY='phc_...'
+```
+
+Then add the `posthog` provider to your `<srcDir>/app.config.ts` file:
+
+```ts
+import { posthog } from '@wxt-dev/analytics/providers/posthog';
+
+export default defineAppConfig({
+  analytics: {
+    providers: [
+      posthog({
+        apiKey: import.meta.env.WXT_POSTHOG_API_KEY,
+        // apiHost defaults to 'https://us.i.posthog.com'.
+        // Change to 'https://eu.i.posthog.com' for EU Cloud, or your self-hosted URL.
+        apiHost: 'https://eu.i.posthog.com',
+      }),
+    ],
+  },
+});
+```
+
+To send errors to [PostHog](https://posthog.com/docs/error-tracking), set `errorTracking: true`. Unhandled errors and promise rejections in the background are captured automatically. To report errors from other contexts (or errors you've caught), call `analytics.captureException`:
+
+```ts
+try {
+  await doSomething();
+} catch (error) {
+  await analytics.captureException(error, { feature: 'sync' });
+}
+```
+
+Exceptions are only sent when analytics are enabled. Upload source maps with the [PostHog CLI](https://posthog.com/docs/error-tracking/upload-source-maps/web) to get readable stack traces.
 
 ### Umami
 

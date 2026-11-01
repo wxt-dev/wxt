@@ -10,7 +10,7 @@
 Next-gen framework for developing web extensions.<br/>⚡<br/><q><i>It's like Nuxt, but for Web Extensions</i></q>
 
 [Get Started](https://wxt.dev/guide/installation.html) •
-[Configuration](https://wxt.dev/api/config.html) •
+[Configuration](https://wxt.dev/api/reference/wxt/interfaces/inlineconfig.html) •
 [Examples](https://wxt.dev/examples.html) •
 [Changelog](https://github.com/wxt-dev/wxt/blob/main/packages/wxt/CHANGELOG.md) •
 [Discord](https://discord.gg/ZFsZqGery9)
@@ -53,7 +53,6 @@ Or see the [installation guide](https://wxt.dev/guide/installation.html) to get 
 - 📦 [Module system](https://wxt.dev/guide/essentials/wxt-modules.html#overview) for reusing code between extensions
 - 🖍️ Quickly bootstrap a new project
 - 📏 Bundle analysis
-- ⬇️ Download and bundle remote URL imports
 
 ## Sponsors
 

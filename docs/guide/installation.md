@@ -10,12 +10,12 @@ Run the [`init` command](/api/cli/wxt-init), and follow the instructions.
 
 :::code-group
 
-```sh [PNPM]
-pnpm dlx wxt@latest init
-```
-
 ```sh [Bun]
 bunx wxt@latest init
+```
+
+```sh [PNPM]
+pnpm dlx wxt@latest init
 ```
 
 ```sh [NPM]
@@ -33,6 +33,8 @@ npx wxt@latest init
 [<Icon name="TypeScript" style="margin-left: 16px;" />Vanilla](https://github.com/wxt-dev/wxt/tree/main/templates/vanilla)<br/>[<Icon name="Vue" style="margin-left: 16px;" />Vue](https://github.com/wxt-dev/wxt/tree/main/templates/vue)<br/>[<Icon name="React" style="margin-left: 16px;" />React](https://github.com/wxt-dev/wxt/tree/main/templates/react)<br/>[<Icon name="Svelte" style="margin-left: 16px;" />Svelte](https://github.com/wxt-dev/wxt/tree/main/templates/svelte)<br/>[<Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png"  style="margin-left: 16px;" />Solid](https://github.com/wxt-dev/wxt/tree/main/templates/solid)
 
 <small style="opacity: 50%">All templates use TypeScript by default. To use JavaScript, change the file extensions.</small>
+
+<small style="opacity: 50%">More starters made by the community are listed under [Community, Starter Templates](/guide/resources/community#starter-templates).</small>
 :::
 
 ### Demo
@@ -46,14 +48,14 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 1. Create a new project
    :::code-group
 
-   ```sh [PNPM]
-   cd my-project
-   pnpm init
-   ```
-
    ```sh [Bun]
    cd my-project
    bun init
+   ```
+
+   ```sh [PNPM]
+   cd my-project
+   pnpm init
    ```
 
    ```sh [NPM]
@@ -71,12 +73,12 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 2. Install WXT:
    :::code-group
 
-   ```sh [PNPM]
-   pnpm i -D wxt
-   ```
-
    ```sh [Bun]
    bun add -D wxt
+   ```
+
+   ```sh [PNPM]
+   pnpm i -D wxt
    ```
 
    ```sh [NPM]
@@ -119,12 +121,12 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 5. Run your extension in dev mode
    :::code-group
 
-   ```sh [PNPM]
-   pnpm dev
-   ```
-
    ```sh [Bun]
    bun run dev
+   ```
+
+   ```sh [PNPM]
+   pnpm dev
    ```
 
    ```sh [NPM]

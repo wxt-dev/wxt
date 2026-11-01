@@ -2,14 +2,14 @@ import 'uno.css';
 import './style.css';
 
 export default defineContentScript({
-  matches: ['https://*.duckduckgo.com/*'],
+  matches: ['https://example.com/*'],
   cssInjectionMode: 'manifest',
 
   async main(ctx) {
     const dynamicUI = createIntegratedUi(ctx, {
       position: 'inline',
       append: 'after',
-      anchor: 'form[role=search]',
+      anchor: 'p',
       onMount: (container) => {
         const app = document.createElement('div');
         container.id = 'automount-anchor';
@@ -28,9 +28,15 @@ export default defineContentScript({
       append: 'after',
       anchor: '#automount-anchor',
       onMount: (container) => {
+        container.classList.add(
+          'flex',
+          '-ml-9',
+          'items-start',
+          'justify-start',
+        );
         const app = document.createElement('div');
         app.id = 'automount-ui';
-        app.classList.add('m-0', 'text-center', 'text-blue-500');
+        app.classList.add('mt-9', 'text-center', 'text-blue-500');
         app.textContent = `Hello, I'm automount UI.`;
         container.append(app);
       },
@@ -48,7 +54,7 @@ export default defineContentScript({
     const stopAutoMountButton = createIntegratedUi(ctx, {
       position: 'inline',
       append: 'last',
-      anchor: 'form[role=search]',
+      anchor: 'p',
       onMount: (container) => {
         const app = document.createElement('button');
         container.classList.add('flex', 'flex-justify-center');

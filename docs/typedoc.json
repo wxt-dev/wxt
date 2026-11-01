@@ -1,11 +1,18 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "name": "API",
   "entryPointStrategy": "packages",
+  "docsRoot": ".",
+  "navigation": {
+    "includeFolders": false,
+    "includeGroups": true
+  },
   "entryPoints": ["../packages/wxt"],
   "plugin": [
     "typedoc-plugin-markdown",
     "typedoc-vitepress-theme",
-    "typedoc-plugin-frontmatter"
+    "typedoc-plugin-frontmatter",
+    "./.vitepress/typedoc-inject-contents.mjs"
   ],
   "out": "./api/reference",
   "githubPages": false,
@@ -15,5 +22,16 @@
   "readme": "none",
   "frontmatterGlobals": {
     "editLink": false
+  },
+  "textContentMappings": {
+    "breadcrumbs.home": "API",
+    "footer.text": "Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)",
+    "title.indexPage": "API",
+    "title.modulePage": "{kind}: {name}"
+  },
+  "locales": {
+    "en": {
+      "theme_defined_in": "Source"
+    }
   }
 }

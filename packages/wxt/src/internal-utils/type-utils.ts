@@ -1,0 +1,21 @@
+import type { Browser } from '@wxt-dev/browser';
+import { styleText } from 'node:util';
+
+/**
+ * Remove optional from key, but keep undefined if present
+ *
+ * @example
+ *   type Test = NullishRequired<{ a?: string; b: number }>;
+ *   // type Test = {a: string | undefined, b: number}
+ */
+export type NullishRequired<T> = { [K in keyof Required<T>]: T[K] };
+
+export type ManifestContentScript = NonNullable<
+  Browser.runtime.Manifest['content_scripts']
+>[number];
+
+export type ManifestV3WebAccessibleResource = NonNullable<
+  Browser.runtime.ManifestV3['web_accessible_resources']
+>[number];
+
+export type TextStyle = Parameters<typeof styleText>[0];

@@ -11,25 +11,39 @@ ignorePaths:
   - patches/**
   - '**/*.snap'
   - docs/assets/extension-showcase.yml
+  - packages/*/stats.html
+  - packages/wxt/inline
 words:
   - Aabid
   - aabidk
+  - AFFFE
+  - AFFFF
   - aklinker
+  - arounds
   - automount
   - avenir
+  - BFFFE
+  - BFFFF
   - bidi
+  - blocklists
+  - bowser
   - buildc
   - bunx
   - cachable
+  - cacjs
+  - CFFFE
+  - CFFFF
   - charmbracelet
   - chromedriver
   - Cira
   - comctx
   - confbox
   - configfile
+  - consola
   - consolas
   - Cpath
   - crbug
+  - cros
   - crunchyroll
   - cssinjs
   - CSUI
@@ -37,12 +51,15 @@ words:
   - defu
   - deinit
   - dequal
-  - dtrace
-  - duckduckgo
+  - DFFFE
+  - DFFFF
+  - EFFFE
+  - EFFFF
   - esbuild
   - esque
-  - extglob
   - favicons
+  - FFFE
+  - FFFFE
   - fieldtrials
   - firefoxdeveloperedition
   - flamechart
@@ -59,6 +76,7 @@ words:
   - jsons
   - Kenobi
   - keystyle
+  - keyturn
   - klinker
   - linkedom
   - llms
@@ -67,14 +85,12 @@ words:
   - Menlo
   - menupanel
   - metas
-  - mktemp
+  - moderok
   - mycompany
   - nacl
-  - nanospinner
   - natsu
   - newtab
   - njsproj
-  - nodebuffer
   - Noto
   - ntvs
   - nypm
@@ -82,11 +98,13 @@ words:
   - ohash
   - oklab
   - oxlint
-  - pbbf
   - personaltoolbar
+  - polyfilling
   - portaling
+  - posthog
   - prebundled
   - prefs
+  - prerender
   - proxified
   - pWXLO
   - repost
@@ -97,10 +115,14 @@ words:
   - sidepanel
   - sidepanels
   - solidjs
+  - squeezy
   - styl
   - subdependency
+  - superlock
   - tabstrip
   - teleporting
+  - tinyexec
+  - topcli
   - treemap
   - triaging
   - umami
@@ -111,6 +133,7 @@ words:
   - unstub
   - unwatch
   - USSS
+  - verkit
   - vitepress
   - webext
   - webextension

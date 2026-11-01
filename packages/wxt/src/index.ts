@@ -7,6 +7,15 @@
  *
  * @module wxt
  */
-export * from './core';
+export * from './build';
+export * from './clean';
+export * from './create-server';
+export * from './define-config';
+export * from './define-web-ext-config';
+export * from './initialize';
+export * from './prepare';
 export * from './types';
 export * from './version';
+export * from './zip';
+export { getEntrypointBundlePath } from './internal-utils/entrypoint-utils';
+export { normalizePath } from './internal-utils/path-utils';

@@ -39,9 +39,29 @@ describe('I18n Types', () => {
       simple: { plural: false; substitutions: 0 };
       simpleSub1: { plural: false; substitutions: 1 };
       simpleSub2: { plural: false; substitutions: 2 };
+      named: {
+        plural: false;
+        substitutions: 0;
+        namedSubstitutions: ['name', 'tool'];
+      };
+      mixed: {
+        plural: false;
+        substitutions: 1;
+        namedSubstitutions: ['team'];
+      };
       plural: { plural: true; substitutions: 0 };
       pluralSub1: { plural: true; substitutions: 1 };
       pluralSub2: { plural: true; substitutions: 2 };
+      pluralNamed: {
+        plural: true;
+        substitutions: 1;
+        namedSubstitutions: ['item'];
+      };
+      pluralMixed: {
+        plural: true;
+        substitutions: 2;
+        namedSubstitutions: ['item'];
+      };
     };
 
     const i18n = createI18n<MyStructure>();
@@ -76,6 +96,22 @@ describe('I18n Types', () => {
         // @ts-expect-error
         i18n.t('simpleSub2', n);
 
+        i18n.t('named', { name: 'Ada', tool: 'WXT' });
+        // @ts-expect-error
+        i18n.t('named');
+        // @ts-expect-error
+        i18n.t('named', { name: 'Ada' });
+        // @ts-expect-error
+        i18n.t('named', ['Ada', 'WXT']);
+
+        i18n.t('mixed', ['Ada'], { team: 'WXT' });
+        // @ts-expect-error
+        i18n.t('mixed', { team: 'WXT' });
+        // @ts-expect-error
+        i18n.t('mixed', ['Ada']);
+        // @ts-expect-error
+        i18n.t('mixed', ['Ada'], {});
+
         i18n.t('plural', n);
         // @ts-expect-error
         i18n.t('plural');
@@ -109,6 +145,25 @@ describe('I18n Types', () => {
         i18n.t('pluralSub2', n, ['one', 'two', 'three']);
         // @ts-expect-error
         i18n.t('pluralSub2', n);
+
+        i18n.t('pluralNamed', n, { item: 'files' });
+        i18n.t('pluralNamed', n, ['files'], { item: 'files' });
+        // @ts-expect-error
+        i18n.t('pluralNamed', n);
+        // @ts-expect-error
+        i18n.t('pluralNamed', n, {});
+        // @ts-expect-error
+        i18n.t('pluralNamed', n, ['files']);
+
+        i18n.t('pluralMixed', n, ['1', 'files'], { item: 'reports' });
+        // @ts-expect-error
+        i18n.t('pluralMixed', n, { item: 'reports' });
+        // @ts-expect-error
+        i18n.t('pluralMixed', n, ['1', 'files']);
+        // @ts-expect-error
+        i18n.t('pluralMixed', n, ['1'], { item: 'reports' });
+        // @ts-expect-error
+        i18n.t('pluralMixed', n, ['1', 'files'], {});
       });
     });
   });

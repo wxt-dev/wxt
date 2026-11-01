@@ -22,6 +22,41 @@ All named and default exports from files in these directories are available ever
 
 To see the complete list of auto-imported APIs, run [`wxt prepare`](/api/cli/wxt-prepare) and look at your project's `.wxt/types/imports-module.d.ts` file.
 
+## Extending Default Directories
+
+Add additional directories with `imports.dirs`. They're combined with the default directories listed above.
+
+```ts
+export default defineConfig({
+  imports: {
+    dirs: ['lib'],
+  },
+});
+```
+
+## Overriding or Disabling Default Directories
+
+Set `imports.scan` to `false` to stop WXT from scanning its default directories (`components`, `composables`, `hooks`, and `utils`). Preset/library based imports (like `browser`, `storage`, etc.) are unaffected, so this can be used to keep auto-imports enabled while opting out of directory scanning.
+
+```ts
+export default defineConfig({
+  imports: {
+    scan: false,
+  },
+});
+```
+
+Combine `scan: false` with `dirs` to replace the default directories with your own instead of extending them:
+
+```ts
+export default defineConfig({
+  imports: {
+    scan: false,
+    dirs: ['lib'],
+  },
+});
+```
+
 ## TypeScript
 
 For TypeScript and your editor to recognize auto-imported variables, you need to run the [`wxt prepare` command](/api/cli/wxt-prepare).
@@ -43,7 +78,7 @@ ESLint doesn't know about the auto-imported variables unless they are explicitly
 
 :::code-group
 
-```ts [ESLint 9]
+```ts [ESLint >=9]
 export default defineConfig({
   imports: {
     eslintrc: {
@@ -53,7 +88,7 @@ export default defineConfig({
 });
 ```
 
-```ts [ESLint 8]
+```ts [ESLint <=8]
 export default defineConfig({
   imports: {
     eslintrc: {
@@ -69,7 +104,7 @@ Then in your ESLint config, import and use the generated file:
 
 :::code-group
 
-```js [ESLint 9]
+```js [ESLint >=9]
 // eslint.config.mjs
 import autoImports from './.wxt/eslint-auto-imports.mjs';
 
@@ -81,7 +116,7 @@ export default [
 ];
 ```
 
-```js [ESLint 8]
+```js [ESLint <=8]
 // .eslintrc.mjs
 export default {
   extends: ['./.wxt/eslintrc-auto-import.json'],

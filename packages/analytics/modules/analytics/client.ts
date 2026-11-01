@@ -1,7 +1,8 @@
-import { UAParser } from 'ua-parser-js';
+import Bowser from 'bowser';
 import type {
   Analytics,
   AnalyticsConfig,
+  AnalyticsExceptionEvent,
   AnalyticsEventMetadata,
   AnalyticsPageViewEvent,
   AnalyticsProvider,
@@ -9,7 +10,7 @@ import type {
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
 } from './types';
-import { browser } from '@wxt-dev/browser';
+import { browser, type Browser } from '@wxt-dev/browser';
 import { isBackground } from '@wxt-dev/is-background';
 
 type AnalyticsMessage = {
@@ -25,7 +26,7 @@ type AnalyticsMethod =
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
-) => (...args: Parameters<Analytics[K]>) => void;
+) => (...args: Parameters<Analytics[K]>) => Promise<void>;
 
 const ANALYTICS_PORT = '@wxt-dev/analytics';
 
@@ -83,10 +84,19 @@ function createBackgroundAnalytics(
 
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
-  const userAgent = UAParser();
-  let userId = Promise.resolve(userIdStorage.getValue()).then(
-    (id) => id ?? globalThis.crypto.randomUUID(),
+  // Client hints identify Chromium-based browsers that share Chrome's user agent, like Brave
+  const browserParser = Bowser.getParser(
+    navigator.userAgent,
+    (navigator as Navigator & { userAgentData?: Bowser.ClientHints })
+      .userAgentData,
   );
+  let userId = Promise.resolve(userIdStorage.getValue()).then(async (id) => {
+    if (id != null) return id;
+    // Persist the generated ID so it's stable across service worker restarts.
+    const generatedId = globalThis.crypto.randomUUID();
+    await userIdStorage.setValue?.(generatedId);
+    return generatedId;
+  });
   let userProperties = userPropertiesStorage.getValue();
   const manifest = browser.runtime.getManifest();
 
@@ -116,8 +126,8 @@ function createBackgroundAnalytics(
           wxtBrowser: import.meta.env.BROWSER,
           arch,
           os,
-          browser: userAgent.browser.name,
-          browserVersion: userAgent.browser.version,
+          browser: BROWSER_IDS[browserParser.getBrowserName()],
+          browserVersion: browserParser.getBrowserVersion(),
           ...(await userProperties),
         },
       },
@@ -196,6 +206,32 @@ function createBackgroundAnalytics(
         );
       }
     },
+    captureException: async (
+      error: unknown,
+      eventProperties?: Record<string, string | undefined>,
+      meta: AnalyticsEventMetadata = getBackgroundMeta(),
+      handled = true,
+    ) => {
+      const baseEvent = await getBaseEvent(meta);
+      const event: AnalyticsExceptionEvent = {
+        ...baseEvent,
+        exception: {
+          ...serializeError(error),
+          handled,
+          properties: eventProperties,
+        },
+      };
+      if (config?.debug) console.debug('[@wxt-dev/analytics] exception', event);
+      if (await enabled.getValue()) {
+        await Promise.allSettled(
+          providers.map((provider) => provider.exception?.(event)),
+        );
+      } else if (config?.debug) {
+        console.debug(
+          '[@wxt-dev/analytics] Analytics disabled, captureException() not uploaded',
+        );
+      }
+    },
     setEnabled: async (newEnabled) => {
       await enabled.setValue?.(newEnabled);
     },
@@ -207,6 +243,34 @@ function createBackgroundAnalytics(
 
   const providers =
     config?.providers?.map((provider) => provider(analytics, config)) ?? [];
+
+  // Log locally instead of calling captureException again, otherwise a failing
+  // capture would trigger another unhandledrejection and loop forever
+  const logCaptureFailure = (error: unknown) => {
+    console.error('[@wxt-dev/analytics] Failed to capture exception', error);
+  };
+
+  // Automatically report unhandled background errors
+  if (providers.some((provider) => provider.exception)) {
+    globalThis.addEventListener('error', (e: ErrorEvent) => {
+      analytics
+        .captureException(
+          e.error ?? e.message,
+          undefined,
+          getBackgroundMeta(),
+          false,
+        )
+        .catch(logCaptureFailure);
+    });
+    globalThis.addEventListener(
+      'unhandledrejection',
+      (e: PromiseRejectionEvent) => {
+        analytics
+          .captureException(e.reason, undefined, getBackgroundMeta(), false)
+          .catch(logCaptureFailure);
+      },
+    );
+  }
 
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
@@ -222,7 +286,15 @@ function createBackgroundAnalytics(
 
 /** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
-  const port = browser.runtime.connect({ name: ANALYTICS_PORT });
+  // The port disconnects when the background service worker stops, so reconnect when needed
+  let port: Browser.runtime.Port | undefined;
+  const getPort = () => {
+    if (!port) {
+      port = browser.runtime.connect({ name: ANALYTICS_PORT });
+      port.onDisconnect.addListener(() => (port = undefined));
+    }
+    return port;
+  };
   const sessionId = Date.now();
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
@@ -237,7 +309,8 @@ function createFrontendAnalytics(): Analytics {
   const methodForwarder: MethodForwarder =
     (fn) =>
     (...args) => {
-      port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      getPort().postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      return Promise.resolve();
     };
 
   const analytics: Analytics = {
@@ -245,6 +318,14 @@ function createFrontendAnalytics(): Analytics {
     page: methodForwarder('page'),
     track: methodForwarder('track'),
     setEnabled: methodForwarder('setEnabled'),
+    // Errors can't be sent over the port, so send a plain object instead
+    captureException: (error, properties) => {
+      const { type, message, stack } = serializeError(error);
+      return methodForwarder('captureException')(
+        { name: type, message, stack },
+        properties,
+      );
+    },
     autoTrack: (root) => {
       const onClick = (event: Event) => {
         const element = event.target as HTMLElement | null;
@@ -265,12 +346,34 @@ function createFrontendAnalytics(): Analytics {
       };
       root.addEventListener('click', onClick, { capture: true, passive: true });
       return () => {
-        root.removeEventListener('click', onClick);
+        root.removeEventListener('click', onClick, { capture: true });
       };
     },
   };
   return analytics;
 }
+
+/** Convert anything thrown into a JSON-safe object. */
+function serializeError(error: unknown): {
+  type: string;
+  message: string;
+  stack: string | undefined;
+} {
+  if (error != null && typeof error === 'object') {
+    const { name, message, stack } = error as Record<string, unknown>;
+    return {
+      type: typeof name === 'string' ? name : 'Error',
+      message: typeof message === 'string' ? message : String(error),
+      stack: typeof stack === 'string' ? stack : undefined,
+    };
+  }
+  return { type: 'Error', message: String(error), stack: undefined };
+}
+
+// Bowser's names mapped back to its browser IDs, e.g. "Microsoft Edge" -> "edge"
+const BROWSER_IDS = Object.fromEntries(
+  Object.entries(Bowser.BROWSER_MAP).map(([id, name]) => [name, id]),
+);
 
 function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(

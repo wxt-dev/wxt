@@ -97,7 +97,7 @@ To create a standalone content script that only includes a CSS file:
 WXT provides 3 built-in utilities for adding UIs to a page from a content script:
 
 - [Integrated](#integrated) - `createIntegratedUi`
-- [Shadow Root](#shadow-root) -`createShadowRootUi`
+- [Shadow Root](#shadow-root) - `createShadowRootUi`
 - [IFrame](#iframe) - `createIframeUi`
 
 Each has their own set of advantages and disadvantages.
@@ -449,6 +449,15 @@ Full examples:
 - [react-content-script-ui](https://github.com/wxt-dev/examples/tree/main/examples/react-content-script-ui)
 - [tailwindcss](https://github.com/wxt-dev/examples/tree/main/examples/tailwindcss)
 
+:::warning `rem` Units Are Not Fully Isolated
+
+WXT resets most inherited styles via `all: initial`. This doesn't reset the `<html>` element's font size, which determines the relative size of `rem` units.
+
+If your CSS framework uses `rem` units, like Tailwind CSS, you may notice your UI's scale changing on different websites.
+
+See the [FAQ](/guide/resources/faq#my-content-script-ui-looks-different-on-certain-websites) for a fix.
+:::
+
 ### IFrame
 
 If you don't need to run your UI in the same frame as the content script, you can use an IFrame to host your UI instead. Since an IFrame just hosts an HTML page, **_HMR is supported_**.
@@ -525,10 +534,9 @@ export default defineContentScript({
 });
 ```
 
-However, this approach has several notable drawbacks:
+However, this approach has a few notable drawbacks:
 
 - Doesn't support MV2
-- `world: "MAIN"` is only supported by Chromium browsers
 - Main world content scripts don't have access to the extension API
 
 Instead, WXT recommends injecting a script into the main world manually using it's `injectScript` function. This will address the drawbacks mentioned before.

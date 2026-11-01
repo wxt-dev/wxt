@@ -1,5 +1,34 @@
 # Changelog
 
+## v1.1.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/auto-icons-v1.1.1...auto-icons-v1.1.2)
+
+### 🩹 Fixes
+
+- **auto-icons**: Dedupe merged icon sizes to prevent generating the same size multiple times ([#2493](https://github.com/wxt-dev/wxt/pull/2493))
+
+### 🏡 Chore
+
+- Add `prettier-plugin-jsdoc` to project ([#2171](https://github.com/wxt-dev/wxt/pull/2171))
+- **deps**: Upgrade deps ([#2175](https://github.com/wxt-dev/wxt/pull/2175))
+- Add prepack script to all packages ([`032f793`](https://github.com/wxt-dev/wxt/commit/032f7931e843ad4a3a08e84089f80c144dc11495))
+- Replace `fs-extra` with `node:fs/promises` ([#2174](https://github.com/wxt-dev/wxt/pull/2174))
+- Migrate monorepo to use Bun instead of PNPM ([#2009](https://github.com/wxt-dev/wxt/pull/2009))
+- **deps-dev**: Bump typescript from 5.9.3 to 6.0.3 ([#2325](https://github.com/wxt-dev/wxt/pull/2325))
+- **deps-dev**: Bump oxlint from 1.59.0 to 1.63.0 ([#2356](https://github.com/wxt-dev/wxt/pull/2356))
+- Use `catalog:` for dev dependencies ([#2357](https://github.com/wxt-dev/wxt/pull/2357))
+- Upgrade `sharp` to v0.35 ([`caa3dce`](https://github.com/wxt-dev/wxt/commit/caa3dceb91f67798081d9f846f348f11bcec7ba9))
+
+### ❤️ Contributors
+
+- [@YashNayakk](https://github.com/YashNayakk)
+- [@Timeraa](https://github.com/Timeraa)
+- [@okineadev](https://github.com/okineadev)
+- [@aklinker1](https://github.com/aklinker1)
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+
 ## v1.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/auto-icons-v1.1.0...auto-icons-v1.1.1)

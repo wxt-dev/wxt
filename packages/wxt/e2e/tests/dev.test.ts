@@ -10,7 +10,7 @@ describe('Dev Mode', () => {
     );
 
     const server = await project.startServer({
-      runner: {
+      webExt: {
         disabled: true,
       },
     });
@@ -30,7 +30,7 @@ describe('Dev Mode', () => {
     );
 
     const server = await project.startServer({
-      runner: { disabled: true },
+      webExt: { disabled: true },
       dev: { server: { port: 4400 } },
     });
     try {
@@ -51,7 +51,7 @@ describe('Dev Mode', () => {
     );
 
     const server = await project.startServer({
-      runner: { disabled: true },
+      webExt: { disabled: true },
       dev: { server: { port } },
     });
     try {
@@ -76,7 +76,7 @@ describe('Dev Mode', () => {
     try {
       await expect(
         project.startServer({
-          runner: { disabled: true },
+          webExt: { disabled: true },
           dev: { server: { port, strictPort: true } },
         }),
       ).rejects.toThrow();

@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestProject } from '../utils';
-import { resetBundleIncrement } from '../../src/core/builders/vite/plugins';
-import open from 'open';
+import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
+import open from 'tiny-open';
 
-vi.mock('open');
+vi.mock('tiny-open');
 const openMock = vi.mocked(open);
 
-vi.mock('ci-info', () => ({
-  isCI: false,
+vi.mock('../../src/internal-utils/env-utils', async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import('../../src/internal-utils/env-utils')
+  >()),
+  isCI: () => false,
 }));
 
 describe('Analysis', () => {

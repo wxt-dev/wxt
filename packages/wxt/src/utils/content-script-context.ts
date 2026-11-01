@@ -3,10 +3,12 @@ import { ContentScriptDefinition } from '../types';
 import { browser } from 'wxt/browser';
 import { logger } from './internal/logger';
 import {
-  WxtLocationChangeEvent,
+  type WxtLocationChangeEvent,
   getUniqueEventName,
 } from './internal/custom-events';
 import { createLocationWatcher } from './internal/location-watcher';
+
+export type { WxtLocationChangeEvent };
 
 /**
  * Implements
@@ -258,16 +260,18 @@ export class ContentScriptContext implements AbortController {
       }),
     );
 
-    // Send message using `window.postMessage` for backwards compatibility to invalidate old versions before WXT changed to `document.dispatchEvent`
-    // TODO: Remove this once WXT version using `document.dispatchEvent` has been released for a while
-    window.postMessage(
-      {
-        type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
-        contentScriptName: this.contentScriptName,
-        messageId: this.id,
-      },
-      '*',
-    );
+    if (!this.options?.noScriptStartedPostMessage) {
+      // Send message using `window.postMessage` for backwards compatibility to invalidate old versions before WXT changed to `document.dispatchEvent`
+      // TODO: Remove this once WXT version using `document.dispatchEvent` has been released for a while
+      window.postMessage(
+        {
+          type: ContentScriptContext.SCRIPT_STARTED_MESSAGE_TYPE,
+          contentScriptName: this.contentScriptName,
+          messageId: this.id,
+        },
+        '*',
+      );
+    }
   }
 
   verifyScriptStartedEvent(event: CustomEvent) {
