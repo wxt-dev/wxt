@@ -599,3 +599,8 @@
 - # LoupeKit
   chromeId: ofmfpfegjgffkgchiebfglboklhejjgl
   firefoxSlug: loupekit
+
+- # diffy - Review large PRs without leaving GitHub
+  chromeId: oaakiockkfndnholpbeijclfbnldnpfn
+  firefoxSlug: diffy-pr
+  edgeId: bhdajkggepmgloldkdcglcijikjkfodg
