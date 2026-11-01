@@ -46,14 +46,16 @@ export default defineConfig({
 The module can be configured via the `autoIcons` config:
 
 ```ts
-import { resolve } from 'node:path';
 import { defineConfig } from 'wxt';
+import { resolve } from 'node:path';
 
 export default defineConfig({
   modules: ['@wxt-dev/auto-icons'],
   autoIcons: {
-    // Path is relative to the project root.
-    // Use resolve() to reference files outside srcDir.
+    // See AutoIconsOptions API documentation:
+    // https://npmx.dev/package-docs/@wxt-dev/auto-icons/v/latest#interface-AutoIconsOptions
+
+    // Use an absolute path to reference an icon outside srcDir.
     baseIconPath: resolve('public/icon.svg'),
   },
 });
