@@ -18,12 +18,20 @@ export const defaultTargetBrowserMap: TargetBrowserMap = {
 
 /**
  * Resolve the actual browser to generate code for from a `--browser` value.
- * Unknown values resolve to themselves so their behavior is unchanged until the
- * project maps them to an actual browser.
+ *
+ * Values missing from the map fall back to `chromium`, the code WXT generated
+ * for unrecognized labels before `targetBrowserMap` existed. Projects can opt a
+ * custom label into Firefox or Safari behavior by mapping it.
  */
 export function resolveActualBrowser(
   browser: TargetBrowser,
   targetBrowserMap: TargetBrowserMap = defaultTargetBrowserMap,
 ): ActualBrowser {
-  return targetBrowserMap[browser] ?? (browser as ActualBrowser);
+  // Check own properties, so `--browser constructor` doesn't resolve to
+  // `Object.prototype.constructor`.
+  const mapped = Object.hasOwn(targetBrowserMap, browser)
+    ? targetBrowserMap[browser]
+    : undefined;
+
+  return mapped ?? 'chromium';
 }

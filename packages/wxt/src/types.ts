@@ -130,9 +130,10 @@ export interface InlineConfig {
    *
    * WXT makes build-time decisions, like which manifest options to generate,
    * based on the actual browser, not the `--browser` label. Use this to map
-   * custom `--browser` values to the browser they actually run in. Values not
-   * in the map are not mapped to any browser, so add an entry here for any
-   * custom label.
+   * custom `--browser` values to the browser they actually run in.
+   *
+   * Labels missing from the map fall back to `"chromium"`. Add an entry for
+   * every custom label that runs somewhere else.
    *
    * @default <span v-pre>`{ chrome: "chromium", edge: "chromium", brave: "chromium", opera: "chromium", chromium: "chromium", firefox: "firefox", safari: "safari", ios: "safari" }`</span>
    */
@@ -643,7 +644,8 @@ export type TargetBrowser = string;
 export type TargetManifestVersion = 2 | 3;
 /**
  * The actual browser WXT generates code for, resolved from the `--browser`
- * value via `targetBrowserMap`.
+ * value via `targetBrowserMap`. Labels missing from the map fall back to
+ * `"chromium"`.
  */
 export type ActualBrowser = 'chromium' | 'firefox' | 'safari';
 /** Maps a `--browser` value to the {@link ActualBrowser} WXT generates code for. */
@@ -1620,7 +1622,7 @@ export interface ResolvedConfig {
   targetBrowsers: TargetBrowser[];
   /**
    * The actual browser WXT generates code for, resolved from `browser` via
-   * `targetBrowserMap`.
+   * `targetBrowserMap`. Labels missing from the map resolve to `"chromium"`.
    */
   actualBrowser: ActualBrowser;
   manifestVersion: TargetManifestVersion;

@@ -57,10 +57,10 @@ describe('resolveConfig', () => {
       },
     );
 
-    it('should resolve unknown browsers to themselves', async () => {
+    it('should fall back to chromium for labels missing from the map', async () => {
       const config = await resolveConfig({ browser: 'waterfox' }, 'build');
 
-      expect(config.actualBrowser).toBe('waterfox');
+      expect(config.actualBrowser).toBe('chromium');
     });
 
     it('should let a custom targetBrowserMap entry win over the defaults', async () => {
@@ -73,6 +73,43 @@ describe('resolveConfig', () => {
       );
 
       expect(config.actualBrowser).toBe('firefox');
+    });
+
+    it('should map several custom labels at once', async () => {
+      const targetBrowserMap = {
+        'my-firefox': 'firefox',
+        'my-safari': 'safari',
+      } as const;
+
+      const firefox = await resolveConfig(
+        { browser: 'my-firefox', targetBrowserMap },
+        'build',
+      );
+      const safari = await resolveConfig(
+        { browser: 'my-safari', targetBrowserMap },
+        'build',
+      );
+
+      expect(firefox.actualBrowser).toBe('firefox');
+      expect(safari.actualBrowser).toBe('safari');
+    });
+
+    it('should let a custom targetBrowserMap entry override a default mapping', async () => {
+      const config = await resolveConfig(
+        {
+          browser: 'chrome',
+          targetBrowserMap: { chrome: 'firefox' },
+        },
+        'build',
+      );
+
+      expect(config.actualBrowser).toBe('firefox');
+    });
+
+    it('should not resolve inherited object properties', async () => {
+      const config = await resolveConfig({ browser: 'constructor' }, 'build');
+
+      expect(config.actualBrowser).toBe('chromium');
     });
 
     it('should not change the raw browser label', async () => {
