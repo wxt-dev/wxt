@@ -30,6 +30,8 @@ Here are some examples of conventional commit messages:
 - `chore: fixed typos in code`
 - `docs: updated list of features on homepage`
 
+Allowed types are `feat`, `fix`, `perf`, `refactor`, `docs`, `chore`, `ci`, `build`, `style`, and `revert`. The `test` type is **not** allowed: use the type of the change the tests support instead (e.g. `fix(wxt): ...` for a bug-fix's tests, or `chore: ...` for test-only cleanups). PRs with an invalid title will fail the "Check PR Title" CI job.
+
 ## Breaking Changes Policy
 
 A quick word on WXT's breaking changes policy. I am willing to make breaking changes, but they have to be for a good enough reason - they have to make WXT better as a whole, they can't be based on one opinion.

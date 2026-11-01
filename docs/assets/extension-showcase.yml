@@ -595,3 +595,12 @@
 - # Blue Badge Remover
   chromeId: cjhmbgfnddpcdfmoicfcocekmainhhdm
   firefoxSlug: blue-badge-remover
+
+- # LoupeKit
+  chromeId: ofmfpfegjgffkgchiebfglboklhejjgl
+  firefoxSlug: loupekit
+
+- # diffy - Review large PRs without leaving GitHub
+  chromeId: oaakiockkfndnholpbeijclfbnldnpfn
+  firefoxSlug: diffy-pr
+  edgeId: bhdajkggepmgloldkdcglcijikjkfodg
