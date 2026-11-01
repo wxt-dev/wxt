@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "check": "check && bun run --sequential --workspaces check",
+    "check": "cspell-order:check && check && bun run --sequential --workspaces check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
     "cspell-order:format": "bun run scripts/format-cspell-order.ts",
     "test": "bun run --workspaces test run",
