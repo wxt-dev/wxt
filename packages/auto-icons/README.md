@@ -34,18 +34,6 @@ And finally, save the base icon to `<srcDir>/assets/icon.png`.
 The module can be configured via the `autoIcons` config:
 
 ```ts
-export default defineConfig({
-  modules: ['@wxt-dev/auto-icons'],
-  autoIcons: {
-    // ...
-  },
-});
-```
-## Configuration
-
-The module can be configured via the `autoIcons` config:
-
-```ts
 import { defineConfig } from 'wxt';
 import { resolve } from 'node:path';
 
@@ -59,4 +47,6 @@ export default defineConfig({
     baseIconPath: resolve('public/icon.svg'),
   },
 });
+```
+
 Options have JSDocs available in your editor, or you can read them in the source code: [`AutoIconsOptions`](https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/src/index.ts).
