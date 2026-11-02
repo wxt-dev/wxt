@@ -112,7 +112,13 @@ export default defineWebExtConfig({
 });
 ```
 
-See [Load the extension manually](/guide/essentials/development#load-the-extension-manually) for how to load the development output in Chrome or Firefox.
+With automatic browser startup disabled, start the dev server and load the output manually:
+
+**Chrome:** Open `chrome://extensions`, enable Developer mode, click **Load unpacked**, and select `.output/chrome-mv3-dev`.
+
+**Firefox:** Open `about:debugging`, select **This Firefox**, click **Load Temporary Add-on**, and select `.output/firefox-mv2-dev/manifest.json`.
+
+The dev server still rebuilds and sends updates while you work. If the dev server restarts, reload the extension in the browser to reconnect.
 
 ### Enabling Chrome Features
 

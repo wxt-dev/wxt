@@ -211,7 +211,6 @@ export default defineConfig({
           menuItem('Installation', 'installation.md'),
         ]),
         menuGroup('Essentials', '/guide/essentials/', [
-          menuItem('Development', 'development.md'),
           menuItem('Project Structure', 'project-structure.md'),
           menuItem('Entrypoints', 'entrypoints.md'),
           menuGroup(
