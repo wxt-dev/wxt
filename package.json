@@ -48,7 +48,7 @@
     "@types/markdown-it-footnote": "^3.0.4",
     "@vitest/coverage-v8": "catalog:",
     "consola": "^3.4.2",
-    "cspell": "^9.7.0",
+    "cspell": "^10.4.0",
     "feed": "^6.0.0",
     "markdown-it-footnote": "^4.0.0",
     "markdownlint-cli": "^0.49.0",
