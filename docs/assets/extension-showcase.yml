@@ -158,6 +158,14 @@
   chromeId: fdkpkpelkkdkjhpacficichkfifijipc
   firefoxSlug: youtube-like-dislike-shortcut
 
+- # VLC Shortcuts for YouTube
+  chromeId: ccfncalinmelfdbodiediojhddcljnpl
+  firefoxSlug: vlc-shortcuts-for-youtube
+
+- # Cyberpunk 2077 New Tab
+  chromeId: loeholjgiahjakohgpmglbhlfkhegccp
+  firefoxSlug: cyberpunk-2077-new-tab
+
 - # Twitch Channel Points Bonus Collector
   chromeId: kbbdnbaghpcjpdhbjbccadodjejlkkgg
   firefoxSlug: twitch-cp-bonus-collector
@@ -569,3 +577,30 @@
   chromeId: phoiffgkjjfnjfljnjgmpobmanghlaga
   edgeId: efbmkpkaikodpdndafbijjbdncnphdje
   firefoxSlug: twitter-mark
+
+- # Retube: Custom YouTube Feeds
+  chromeId: elfoingeipkcgkiejbbgghmmoijdeeji
+  firefoxSlug: retube-app
+  edgeId: ikfalppmglkdibnlbpdpcgmmgbppnbkn
+
+- # Social Media Scheduler and Publisher — BulkPublish
+  chromeId: ghpdoohdjijlbldnlffohjphdailmefh
+  firefoxSlug: social-media-scheduling
+
+- # Yeet
+  chromeId: knbfidiiikhjebpijhafdikkjhbgbefe
+  firefoxSlug: get-yeet
+  edgeId: iaiackoabgikdcniiclhbflcnjfhnand
+
+- # Blue Badge Remover
+  chromeId: cjhmbgfnddpcdfmoicfcocekmainhhdm
+  firefoxSlug: blue-badge-remover
+
+- # LoupeKit
+  chromeId: ofmfpfegjgffkgchiebfglboklhejjgl
+  firefoxSlug: loupekit
+
+- # diffy - Review large PRs without leaving GitHub
+  chromeId: oaakiockkfndnholpbeijclfbnldnpfn
+  firefoxSlug: diffy-pr
+  edgeId: bhdajkggepmgloldkdcglcijikjkfodg

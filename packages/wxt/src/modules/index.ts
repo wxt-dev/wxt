@@ -129,16 +129,26 @@ export function addViteConfig(
  *
  * @example
  *   export default defineWxtModule((wxt) => {
- *     addWxtPlugin(wxt, 'wxt-module-analytics/client-plugin');
+ *     addWxtPlugin(
+ *       wxt,
+ *       'wxt-module-analytics/background-plugin',
+ *       (entrypoint) => entrypoint.type === 'background',
+ *     );
  *   });
  *
  * @param wxt The wxt instance provided by the module's setup function.
  * @param plugin An import from an NPM module, or an absolute file path to the
  *   file to load at runtime.
+ * @param apply Optional. Return `true` to load the plugin in the given
+ *   entrypoint. Defaults to loading the plugin in every entrypoint.
  */
-export function addWxtPlugin(wxt: Wxt, plugin: string): void {
+export function addWxtPlugin(
+  wxt: Wxt,
+  plugin: string,
+  apply?: (entrypoint: Entrypoint) => boolean,
+): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
-    wxt.config.plugins.push(plugin);
+    wxt.config.plugins.push({ module: plugin, apply });
   });
 }
 

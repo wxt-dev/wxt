@@ -381,7 +381,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        import { n as logHello } from "./chunks/_virtual_wxt-plugins-BdnAIYoG.js";
+        import { t as logHello } from "./chunks/log-DNePel8J.js";
         function defineBackground(arg) {
         	if (arg == null || typeof arg === "function") return { main: arg };
         	return arg;

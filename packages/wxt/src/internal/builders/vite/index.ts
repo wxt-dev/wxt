@@ -198,13 +198,11 @@ export class ViteBuilder implements WxtBuilder {
     config.plugins ??= [];
     config.plugins.push(
       wxtPlugins.devHtmlPrerender(this.config, server),
-      wxtPlugins.resolveVirtualModules(this.config),
       wxtPlugins.devServerGlobals(this.config, server),
       wxtPlugins.tsconfigPaths(this.config),
       wxtPlugins.noopBackground(),
       wxtPlugins.addRuntimeEnvEntries(this.config),
       wxtPlugins.defineImportMeta(),
-      wxtPlugins.wxtPluginLoader(this.config),
       wxtPlugins.resolveAppConfig(this.config),
     );
     if (
