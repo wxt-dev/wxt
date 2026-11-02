@@ -17,12 +17,9 @@ type AnalyticsMessage = {
   [K in keyof Analytics]: {
     fn: K;
     args: Parameters<Analytics[K]>;
+    meta: AnalyticsEventMetadata;
   };
 }[keyof Analytics];
-
-type AnalyticsMethod =
-  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
-  | undefined;
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
@@ -275,8 +272,25 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
-        void (analytics[fn] as AnalyticsMethod)?.(...args);
+      port.onMessage.addListener((message: AnalyticsMessage) => {
+        const { meta, fn } = message;
+        // Pass every argument explicitly, so meta doesn't shift into an omitted optional one
+        switch (fn) {
+          case 'identify':
+            return analytics.identify(message.args[0], message.args[1], meta);
+          case 'page':
+            return analytics.page(message.args[0], meta);
+          case 'track':
+            return analytics.track(message.args[0], message.args[1], meta);
+          case 'captureException':
+            return analytics.captureException(
+              message.args[0],
+              message.args[1],
+              meta,
+            );
+          case 'setEnabled':
+            return analytics.setEnabled(message.args[0]);
+        }
       });
     }
   });
@@ -309,7 +323,7 @@ function createFrontendAnalytics(): Analytics {
   const methodForwarder: MethodForwarder =
     (fn) =>
     (...args) => {
-      getPort().postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      getPort().postMessage({ fn, args, meta: getFrontendMetadata() });
       return Promise.resolve();
     };
 
