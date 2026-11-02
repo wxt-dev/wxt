@@ -25,8 +25,10 @@ import { wxt } from './wxt';
  * Generate and write all the files inside the `InternalConfig.typesDir`
  * directory.
  */
+// #region snippet
 export async function generateWxtDir(entrypoints: Entrypoint[]): Promise<void> {
   await mkdir(wxt.config.typesDir, { recursive: true });
+  // #endregion snippet
 
   const entries: WxtDirEntry[] = [
     // Hard-coded entries

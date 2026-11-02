@@ -1,4 +1,4 @@
-import { UAParser } from 'ua-parser-js';
+import Bowser from 'bowser';
 import type {
   Analytics,
   AnalyticsConfig,
@@ -10,19 +10,16 @@ import type {
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
 } from './types';
-import { browser } from '@wxt-dev/browser';
+import { browser, type Browser } from '@wxt-dev/browser';
 import { isBackground } from '@wxt-dev/is-background';
 
 type AnalyticsMessage = {
   [K in keyof Analytics]: {
     fn: K;
     args: Parameters<Analytics[K]>;
+    meta: AnalyticsEventMetadata;
   };
 }[keyof Analytics];
-
-type AnalyticsMethod =
-  | ((...args: Parameters<Analytics[keyof Analytics]>) => void)
-  | undefined;
 
 type MethodForwarder = <K extends keyof Analytics>(
   fn: K,
@@ -84,7 +81,12 @@ function createBackgroundAnalytics(
 
   // Cached values
   const platformInfo = browser.runtime.getPlatformInfo();
-  const userAgent = UAParser();
+  // Client hints identify Chromium-based browsers that share Chrome's user agent, like Brave
+  const browserParser = Bowser.getParser(
+    navigator.userAgent,
+    (navigator as Navigator & { userAgentData?: Bowser.ClientHints })
+      .userAgentData,
+  );
   let userId = Promise.resolve(userIdStorage.getValue()).then(async (id) => {
     if (id != null) return id;
     // Persist the generated ID so it's stable across service worker restarts.
@@ -121,8 +123,8 @@ function createBackgroundAnalytics(
           wxtBrowser: import.meta.env.BROWSER,
           arch,
           os,
-          browser: userAgent.browser.name,
-          browserVersion: userAgent.browser.version,
+          browser: BROWSER_IDS[browserParser.getBrowserName()],
+          browserVersion: browserParser.getBrowserVersion(),
           ...(await userProperties),
         },
       },
@@ -270,8 +272,25 @@ function createBackgroundAnalytics(
   // Listen for messages from the rest of the extension
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === ANALYTICS_PORT) {
-      port.onMessage.addListener(({ fn, args }: AnalyticsMessage) => {
-        void (analytics[fn] as AnalyticsMethod)?.(...args);
+      port.onMessage.addListener((message: AnalyticsMessage) => {
+        const { meta, fn } = message;
+        // Pass every argument explicitly, so meta doesn't shift into an omitted optional one
+        switch (fn) {
+          case 'identify':
+            return analytics.identify(message.args[0], message.args[1], meta);
+          case 'page':
+            return analytics.page(message.args[0], meta);
+          case 'track':
+            return analytics.track(message.args[0], message.args[1], meta);
+          case 'captureException':
+            return analytics.captureException(
+              message.args[0],
+              message.args[1],
+              meta,
+            );
+          case 'setEnabled':
+            return analytics.setEnabled(message.args[0]);
+        }
       });
     }
   });
@@ -281,7 +300,15 @@ function createBackgroundAnalytics(
 
 /** Creates an analytics client for non-background contexts. */
 function createFrontendAnalytics(): Analytics {
-  const port = browser.runtime.connect({ name: ANALYTICS_PORT });
+  // The port disconnects when the background service worker stops, so reconnect when needed
+  let port: Browser.runtime.Port | undefined;
+  const getPort = () => {
+    if (!port) {
+      port = browser.runtime.connect({ name: ANALYTICS_PORT });
+      port.onDisconnect.addListener(() => (port = undefined));
+    }
+    return port;
+  };
   const sessionId = Date.now();
   const getFrontendMetadata = (): AnalyticsEventMetadata => ({
     sessionId,
@@ -296,7 +323,7 @@ function createFrontendAnalytics(): Analytics {
   const methodForwarder: MethodForwarder =
     (fn) =>
     (...args) => {
-      port.postMessage({ fn, args: [...args, getFrontendMetadata()] });
+      getPort().postMessage({ fn, args, meta: getFrontendMetadata() });
       return Promise.resolve();
     };
 
@@ -356,6 +383,11 @@ function serializeError(error: unknown): {
   }
   return { type: 'Error', message: String(error), stack: undefined };
 }
+
+// Bowser's names mapped back to its browser IDs, e.g. "Microsoft Edge" -> "edge"
+const BROWSER_IDS = Object.fromEntries(
+  Object.entries(Bowser.BROWSER_MAP).map(([id, name]) => [name, id]),
+);
 
 function defineStorageItem<T>(key: string): AnalyticsStorageItem<T | undefined>;
 function defineStorageItem<T>(

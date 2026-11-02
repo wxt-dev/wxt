@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
 import { normalizePath } from '../../../../internal-utils/path-utils';
+import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { VirtualModuleId, virtualModuleNames } from '../../../virtual-modules';
 
 /**
@@ -37,7 +38,16 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
             resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
             'utf-8',
           );
-          return template.replace(`virtual:user-${name}`, inputPath);
+          const entrypointName = getEntrypointName(
+            config.entrypointsDir,
+            inputPath,
+          );
+          return template
+            .replace(`virtual:user-${name}`, inputPath)
+            .replace(
+              'virtual:wxt-plugins',
+              `virtual:wxt-plugins?entrypoint=${encodeURIComponent(entrypointName)}`,
+            );
         },
       },
     };

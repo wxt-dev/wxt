@@ -491,34 +491,51 @@ describe('CLI', () => {
       mockArgv('init');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({});
+      expect(initializeMock).toBeCalledWith(expect.objectContaining({}));
     });
 
     it('should respect the provided folder', async () => {
       mockArgv('init', 'path/to/folder');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        directory: 'path/to/folder',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          directory: 'path/to/folder',
+        }),
+      );
     });
 
     it('should respect passing --template', async () => {
       mockArgv('init', '-t', 'vue');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        template: 'vue',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          template: 'vue',
+        }),
+      );
     });
 
     it('should respect passing --pm', async () => {
       mockArgv('init', '--pm', 'pnpm');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith({
-        packageManager: 'pnpm',
-      });
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          packageManager: 'pnpm',
+        }),
+      );
+    });
+
+    it('should respect passing --git', async () => {
+      mockArgv('init', '--git');
+      await importCli();
+
+      expect(initializeMock).toBeCalledWith(
+        expect.objectContaining({
+          requireGit: true,
+        }),
+      );
     });
   });
 });
