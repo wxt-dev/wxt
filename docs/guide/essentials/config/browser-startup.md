@@ -112,6 +112,14 @@ export default defineWebExtConfig({
 });
 ```
 
+:::tip
+
+When running the dev server with `disabled: true`, restarting it will disconnect the HMR WebSocket, requiring an extension reload to resume HMR.
+
+Press **`Alt + R`** (**`Option + R`** on Mac) on any page to quickly reload the extension without opening the extension management page.
+
+:::
+
 ### Enabling Chrome Features
 
 Some APIs are disabled in Chrome during development because of the default flags `web-ext` uses to launch Chrome, like the [Prompt API](https://developer.chrome.com/docs/ai/prompt-api).
