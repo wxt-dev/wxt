@@ -141,7 +141,7 @@ export class ViteBuilder implements WxtBuilder {
                       relative(this.config.root, path),
                     );
                     throw Error(
-                      `${relativePath}: ${err.message}. Entrypoints are imported in a Node.js environment, so browser API calls should be inside the main function. See https://wxt.dev/guide/essentials/config/entrypoint-loaders`,
+                      `${relativePath}: ${err.message}. Entrypoints are imported in a Node.js environment. If calling a browser API, move it inside the main function. See https://wxt.dev/guide/essentials/config/entrypoint-loaders`,
                       { cause: err },
                     );
                   }

@@ -31,7 +31,7 @@ export default defineContentScript({ matches: ['<all_urls>'], main() {} });`,
         }),
       });
       await expect(result).rejects.toThrow(
-        /main function.*https:\/\/wxt.dev\/guide\/essentials\/config\/entrypoint-loaders/,
+        /If calling a browser API.*main function.*https:\/\/wxt.dev\/guide\/essentials\/config\/entrypoint-loaders/,
       );
     },
   );
@@ -74,6 +74,27 @@ export default defineBackground(() => {});`,
     );
 
     await expect(project.prepare()).rejects.toBe(error);
+  });
+
+  it('should catch typos and undefined variables at top level', async () => {
+    const project = new TestProject();
+    project.addFile(
+      'entrypoints/background.ts',
+      `undefinedVariable.someMethod();
+export default defineBackground(() => {});`,
+    );
+
+    const result = project.prepare();
+    await expect(result).rejects.toMatchObject({
+      message: expect.stringContaining('entrypoints/background.ts'),
+      cause: expect.objectContaining({
+        name: 'ReferenceError',
+        message: 'undefinedVariable is not defined',
+      }),
+    });
+    await expect(result).rejects.toThrow(
+      /If calling a browser API.*main function.*https:\/\/wxt.dev\/guide\/essentials\/config\/entrypoint-loaders/,
+    );
   });
 
   it('should allow browser globals inside the main function', async () => {
