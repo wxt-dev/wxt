@@ -47,7 +47,7 @@ describe('Content Script UIs', () => {
         <p id="three"></p>
       </div>
     `;
-    window.fetch = fetch;
+    vi.stubGlobal('fetch', fetch);
     fetch.mockResolvedValue({ text: () => Promise.resolve('') });
     ctx = new ContentScriptContext('test');
   });
