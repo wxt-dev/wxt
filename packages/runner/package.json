@@ -48,6 +48,6 @@
     "dist"
   ],
   "dependencies": {
-    "obug": "^2.1.1"
+    "obug": "^3.0.0"
   }
 }
