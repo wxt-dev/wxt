@@ -1223,7 +1223,12 @@ export interface WebExtConfig {
   binaries?: Record<string, string>;
   /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#firefox-profile */
   firefoxProfile?: string;
-  /** @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-profile */
+  /**
+   * In WSL, this is only used together with `keepProfileChanges`.
+   *
+   * @see https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#chromium-profile
+   * @see https://wxt.dev/guide/essentials/config/browser-startup.html#wsl
+   */
   chromiumProfile?: string;
   /**
    * An map of chrome preferences from
