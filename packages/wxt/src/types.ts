@@ -436,6 +436,24 @@ export interface InlineConfig {
      * - https://github.com/wxt-dev/wxt/issues/2535
      */
     escapeUnicode?: boolean;
+    /**
+     * Instead of zipping every file in `zip.sourcesRoot`, only add the files
+     * Vite used to build the extension to the sources ZIP, along with the
+     * project's top-level files (`package.json`, lockfile, config files), the
+     * public directory, and local modules.
+     *
+     * When enabled, `zip.includeSources` defaults to `[]` and can be used to
+     * add files WXT can't detect. `zip.excludeSources` is still applied.
+     *
+     * Files outside `zip.sourcesRoot` are not included. If your extension
+     * imports files from other places in a monorepo, set `zip.sourcesRoot` to
+     * the monorepo's root.
+     *
+     * For more details, see https://github.com/wxt-dev/wxt/issues/1505
+     *
+     * @default false
+     */
+    autoIncludeSources?: boolean;
   };
   /** Config effecting dev mode only. */
   dev?: {
@@ -1640,6 +1658,7 @@ export interface ResolvedConfig {
   alias: Record<string, string>;
   experimental: {
     escapeUnicode: boolean;
+    autoIncludeSources: boolean;
   };
   /** List of warning identifiers to suppress during the build process. */
   suppressWarnings: {

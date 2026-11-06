@@ -220,6 +220,7 @@ export async function resolveConfig(
     alias,
     experimental: defu(mergedConfig.experimental, {
       escapeUnicode: false,
+      autoIncludeSources: false,
     }),
     suppressWarnings: mergedConfig.suppressWarnings ?? {},
     watchOptions: mergedConfig.watchOptions ?? {},
@@ -299,7 +300,9 @@ function resolveZipConfig(
     artifactTemplate:
       '{{name}}-{{packageVersion}}-{{browser}}{{modeSuffix}}.zip',
     sourcesRoot: root,
-    includeSources: mergedConfig.zip?.includeSources ?? ['**/*'],
+    includeSources:
+      mergedConfig.zip?.includeSources ??
+      (mergedConfig.experimental?.autoIncludeSources ? [] : ['**/*']),
     compressionLevel: 9,
     ...mergedConfig.zip,
     zipSources:
