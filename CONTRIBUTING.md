@@ -19,6 +19,14 @@ I also want to provide a way for developers to use either one of those two thing
 
 > The few runtime utils shipped inside WXT are things that should be used by 90% of extensions. That said, they're also legacy utils left in from before I started creating separate NPM packages, and in the future, they may be removed from the core package.
 
+## AI Policy
+
+You are free to use AI agents to contribute to WXT in almost any way you see fit, **except for PR descriptions**.
+
+Please respect the maintainers time by writing the PR description yourself. This forces you to at least attempt to understand what the change does and why to minimize it instead of just trusting the AI's output. This speeds up the human review process. If you're not comfortable writing in English, write the description in your preferred language and maintainers will translate it themselves.
+
+If a maintainer suspects the PR description is AI generated, they have the right to close it. If this happens to you, update the description and reopen it.
+
 ## Conventional Commits & PR Titles
 
 This project uses [Conventional Commit format](https://www.conventionalcommits.org/en/v1.0.0/) to automatically generate a changelog and better understand the changes in the project. The title of your pull request should also follow this format, as it will be used as the squashed commit message when merged into the main branch, and ultimately used to generate the changelog for each release.
