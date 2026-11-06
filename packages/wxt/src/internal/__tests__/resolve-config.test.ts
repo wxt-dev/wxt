@@ -38,6 +38,100 @@ describe('resolveConfig', () => {
     });
   });
 
+  describe('actualBrowser', () => {
+    it.each<[string, string]>([
+      ['chrome', 'chromium'],
+      ['edge', 'chromium'],
+      ['brave', 'chromium'],
+      ['opera', 'chromium'],
+      ['chromium', 'chromium'],
+      ['firefox', 'firefox'],
+      ['safari', 'safari'],
+      ['ios', 'safari'],
+    ])(
+      'should resolve browser "%s" to actualBrowser "%s"',
+      async (browser, expected) => {
+        const config = await resolveConfig({ browser }, 'build');
+
+        expect(config.actualBrowser).toBe(expected);
+      },
+    );
+
+    it('should fall back to chromium for labels missing from the map', async () => {
+      const config = await resolveConfig({ browser: 'waterfox' }, 'build');
+
+      expect(config.actualBrowser).toBe('chromium');
+    });
+
+    it('should let a custom targetBrowserMap entry win over the defaults', async () => {
+      const config = await resolveConfig(
+        {
+          browser: 'waterfox',
+          targetBrowserMap: { waterfox: 'firefox' },
+        },
+        'build',
+      );
+
+      expect(config.actualBrowser).toBe('firefox');
+    });
+
+    it('should map several custom labels at once', async () => {
+      const targetBrowserMap = {
+        'my-firefox': 'firefox',
+        'my-safari': 'safari',
+      } as const;
+
+      const firefox = await resolveConfig(
+        { browser: 'my-firefox', targetBrowserMap },
+        'build',
+      );
+      const safari = await resolveConfig(
+        { browser: 'my-safari', targetBrowserMap },
+        'build',
+      );
+
+      expect(firefox.actualBrowser).toBe('firefox');
+      expect(safari.actualBrowser).toBe('safari');
+    });
+
+    it('should let a custom targetBrowserMap entry override a default mapping', async () => {
+      const config = await resolveConfig(
+        {
+          browser: 'chrome',
+          targetBrowserMap: { chrome: 'firefox' },
+        },
+        'build',
+      );
+
+      expect(config.actualBrowser).toBe('firefox');
+    });
+
+    it('should not resolve inherited object properties', async () => {
+      const config = await resolveConfig({ browser: 'constructor' }, 'build');
+
+      expect(config.actualBrowser).toBe('chromium');
+    });
+
+    it('should not change the raw browser label', async () => {
+      const config = await resolveConfig({ browser: 'ios' }, 'build');
+
+      expect(config.browser).toBe('ios');
+    });
+
+    it('should keep the raw browser label in the output directory', async () => {
+      const config = await resolveConfig({ browser: 'ios' }, 'build');
+
+      expect(config.outDir).toContain(`ios-mv${config.manifestVersion}`);
+    });
+
+    it('should default the manifest version based on the actual browser', async () => {
+      const config = await resolveConfig({ browser: 'ios' }, 'build');
+
+      expect(config.actualBrowser).toBe('safari');
+      expect(config.manifestVersion).toBe(2);
+    });
+  });
+
   describe('imports.dirs', () => {
     const logger = mock<Logger>();
 

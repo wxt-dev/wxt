@@ -111,13 +111,13 @@ export async function generateManifest(
   manifest.version = version;
   manifest.version_name =
     // Firefox doesn't support version_name
-    wxt.config.browser === 'firefox' || versionName === version
+    wxt.config.actualBrowser === 'firefox' || versionName === version
       ? undefined
       : versionName;
 
   // Warn if building for Firefox without data_collection_permissions
   if (
-    wxt.config.browser === 'firefox' &&
+    wxt.config.actualBrowser === 'firefox' &&
     !userManifest.browser_specific_settings?.gecko
       ?.data_collection_permissions &&
     !wxt.config.suppressWarnings?.firefoxDataCollection
@@ -130,7 +130,7 @@ export async function generateManifest(
   }
 
   if (
-    wxt.config.browser === 'firefox' &&
+    wxt.config.actualBrowser === 'firefox' &&
     !manifest.browser_specific_settings?.gecko?.id &&
     !wxt.config.suppressWarnings?.firefoxId
   ) {
@@ -142,7 +142,7 @@ export async function generateManifest(
 
   addEntrypoints(manifest, entrypoints, buildOutput);
 
-  if (wxt.config.browser === 'firefox') {
+  if (wxt.config.actualBrowser === 'firefox') {
     addDiscoveredThemeIcons(manifest, buildOutput);
   }
 
@@ -237,7 +237,10 @@ function addEntrypoints(
       wxt.config.outDir,
       '.js',
     );
-    if (wxt.config.browser === 'firefox' && wxt.config.manifestVersion === 3) {
+    if (
+      wxt.config.actualBrowser === 'firefox' &&
+      wxt.config.manifestVersion === 3
+    ) {
       manifest.background = {
         type: background.options.type,
         scripts: [script],
@@ -256,7 +259,7 @@ function addEntrypoints(
   }
 
   if (bookmarks) {
-    if (wxt.config.browser === 'firefox') {
+    if (wxt.config.actualBrowser === 'firefox') {
       wxt.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.bookmarks was not added to the manifest',
       );
@@ -271,7 +274,7 @@ function addEntrypoints(
   }
 
   if (history) {
-    if (wxt.config.browser === 'firefox') {
+    if (wxt.config.actualBrowser === 'firefox') {
       wxt.logger.warn(
         'Bookmarks are not supported by Firefox. chrome_url_overrides.history was not added to the manifest',
       );
@@ -320,7 +323,7 @@ function addEntrypoints(
     const actionKey =
       wxt.config.manifestVersion === 2
         ? (popup.options.actionType ?? 'browser_action')
-        : wxt.config.browser === 'firefox' &&
+        : wxt.config.actualBrowser === 'firefox' &&
             popup.options.actionType === 'page_action'
           ? 'page_action'
           : 'action';
@@ -343,16 +346,16 @@ function addEntrypoints(
   if (options) {
     const page = getEntrypointBundlePath(options, wxt.config.outDir, '.html');
     manifest.options_ui = {
-      ...(wxt.config.browser !== 'safari' && {
+      ...(wxt.config.actualBrowser !== 'safari' && {
         open_in_tab: options.options.openInTab ?? false,
       }),
       // @ts-expect-error: Not typed by @wxt-dev/browser, but supported by Firefox
       browser_style:
-        wxt.config.browser === 'firefox'
+        wxt.config.actualBrowser === 'firefox'
           ? options.options.browserStyle
           : undefined,
       chrome_style:
-        wxt.config.browser !== 'firefox'
+        wxt.config.actualBrowser !== 'firefox'
           ? options.options.chromeStyle
           : undefined,
       page,
@@ -360,7 +363,7 @@ function addEntrypoints(
   }
 
   if (sandboxes?.length) {
-    if (wxt.config.browser === 'firefox') {
+    if (wxt.config.actualBrowser === 'firefox') {
       wxt.logger.warn(
         'Sandboxed pages not supported by Firefox. sandbox.pages was not added to the manifest',
       );
@@ -382,7 +385,7 @@ function addEntrypoints(
       '.html',
     );
 
-    if (wxt.config.browser === 'firefox') {
+    if (wxt.config.actualBrowser === 'firefox') {
       manifest.sidebar_action = {
         default_panel: page,
         browser_style: defaultSidepanel.options.browserStyle,
@@ -593,7 +596,8 @@ export function getContentScriptCssWebAccessibleResources(
       // Chrome-only MV3 field (obscures the resource URL behind a per-session
       // token); Firefox ignores it, and Safari's web extension converter
       // rejects it as an unsupported key.
-      ...(wxt.config.browser !== 'firefox' && wxt.config.browser !== 'safari'
+      ...(wxt.config.actualBrowser !== 'firefox' &&
+      wxt.config.actualBrowser !== 'safari'
         ? { use_dynamic_url: true }
         : {}),
       matches:
@@ -734,11 +738,11 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
   let keysToRemove: string[] = [];
   if (wxt.config.manifestVersion === 2) {
     keysToRemove.push(...mv3OnlyKeys);
-    if (wxt.config.browser === 'firefox')
+    if (wxt.config.actualBrowser === 'firefox')
       keysToRemove.push(...firefoxMv3OnlyKeys);
   } else {
     keysToRemove.push(...mv2OnlyKeys);
-    if (wxt.config.browser !== 'firefox')
+    if (wxt.config.actualBrowser !== 'firefox')
       keysToRemove.push(...chromeMv2OnlyKeys);
   }
 

@@ -19,10 +19,12 @@ import {
   Entrypoint,
   OutputAsset,
   TargetManifestVersion,
+  ActualBrowser,
 } from '../../types';
 import { wxt } from '../wxt';
 import { mock } from 'vitest-mock-extended';
 import type { Browser } from '@wxt-dev/browser';
+import { resolveActualBrowser } from '../../internal-utils/target-browser';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';
@@ -1380,6 +1382,52 @@ describe('Manifest Utils', () => {
             ]);
           }
         });
+
+        it('should key browser-specific checks off actualBrowser, not the raw browser label', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['*://google.com/*'],
+              cssInjectionMode: 'ui',
+            },
+            skipped: false,
+          };
+          const styles: OutputAsset = {
+            type: 'asset',
+            fileName: 'content-scripts/one.css',
+          };
+
+          const entrypoints = [cs];
+          const buildOutput: Omit<BuildOutput, 'manifest'> = {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [styles] }],
+          };
+
+          setFakeWxt({
+            config: {
+              outDir,
+              command: 'build',
+              manifestVersion: 3,
+              browser: 'ios',
+              actualBrowser: 'safari',
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            entrypoints,
+            buildOutput,
+          );
+
+          expect(actual.web_accessible_resources).toEqual([
+            {
+              matches: ['*://google.com/*'],
+              resources: ['content-scripts/one.css'],
+            },
+          ]);
+        });
       });
 
       describe('registration', () => {
@@ -2230,6 +2278,155 @@ describe('Manifest Utils', () => {
           ),
         );
       });
+    });
+
+    describe('actualBrowser', () => {
+      const background = fakeBackgroundEntrypoint({
+        outputDir: outDir,
+        options: { persistent: true, type: 'module' },
+        skipped: false,
+      });
+      const popup = fakePopupEntrypoint({
+        outputDir: outDir,
+        options: {
+          actionType: 'page_action',
+          defaultIcon: { '16': '/icon/16.png' },
+          defaultTitle: 'Default Title',
+        },
+        skipped: false,
+      });
+      const options = fakeOptionsEntrypoint({
+        outputDir: outDir,
+        options: {
+          openInTab: true,
+          chromeStyle: true,
+          browserStyle: true,
+        },
+        skipped: false,
+      });
+      const sidepanel = fakeSidepanelEntrypoint({
+        outputDir: outDir,
+        options: {
+          browserStyle: true,
+          defaultTitle: 'Sidepanel',
+        },
+        skipped: false,
+      });
+      const styles: OutputAsset = {
+        type: 'asset',
+        fileName: 'content-scripts/one.css',
+      };
+      const contentScript: ContentScriptEntrypoint = {
+        type: 'content-script',
+        name: 'one',
+        inputPath: 'entrypoints/one.content.ts',
+        outputDir: contentScriptOutDir,
+        options: {
+          matches: ['*://google.com/*'],
+          cssInjectionMode: 'ui',
+        },
+        skipped: false,
+      };
+      const entrypoints: Entrypoint[] = [
+        background,
+        popup,
+        options,
+        sidepanel,
+        contentScript,
+      ];
+      const buildOutput: Omit<BuildOutput, 'manifest'> = {
+        publicAssets: [],
+        steps: [{ entrypoints: contentScript, chunks: [styles] }],
+      };
+
+      async function generateFor(params: {
+        browser: string;
+        actualBrowser: ActualBrowser;
+        manifestVersion: TargetManifestVersion;
+      }) {
+        setFakeWxt({
+          config: {
+            outDir,
+            command: 'build',
+            mode: 'production',
+            browser: params.browser,
+            actualBrowser: params.actualBrowser,
+            manifestVersion: params.manifestVersion,
+            manifest: {
+              name: 'wxt-test',
+              version: '1.2.3',
+              version_name: '1.2.3-beta',
+            },
+          },
+        });
+
+        return (await generateManifest(entrypoints, buildOutput)).manifest;
+      }
+
+      const getDynamicUrlFlags = (manifest: Browser.runtime.Manifest) => {
+        const resources = manifest.web_accessible_resources;
+        if (!Array.isArray(resources)) return [];
+
+        return resources.map((resource) =>
+          typeof resource === 'object' && 'use_dynamic_url' in resource
+            ? Boolean(resource.use_dynamic_url)
+            : undefined,
+        );
+      };
+
+      it.each<[TargetManifestVersion]>([[2], [3]])(
+        'should generate the same manifest for an ios build as a safari build (MV%i)',
+        async (manifestVersion) => {
+          const safari = await generateFor({
+            browser: 'safari',
+            actualBrowser: 'safari',
+            manifestVersion,
+          });
+          const ios = await generateFor({
+            browser: 'ios',
+            actualBrowser: resolveActualBrowser('ios'),
+            manifestVersion,
+          });
+
+          expect(ios).toEqual(safari);
+          expect(ios.options_ui?.open_in_tab).toBeUndefined();
+          expect(getDynamicUrlFlags(ios)).toEqual([undefined]);
+        },
+      );
+
+      it('should keep Chrome-only manifest fields when the actual browser is chromium', async () => {
+        const chrome = await generateFor({
+          browser: 'chrome',
+          actualBrowser: 'chromium',
+          manifestVersion: 3,
+        });
+
+        expect(chrome.options_ui?.open_in_tab).toBe(true);
+        expect(getDynamicUrlFlags(chrome)).toEqual([true]);
+      });
+
+      it.each([
+        { label: 'my-firefox', actualBrowser: 'firefox' },
+        { label: 'my-safari', actualBrowser: 'safari' },
+      ] as const)(
+        'should generate the $actualBrowser manifest for the custom label "$label"',
+        async ({ label, actualBrowser }) => {
+          const mapped = await generateFor({
+            browser: label,
+            actualBrowser: resolveActualBrowser(label, {
+              [label]: actualBrowser,
+            }),
+            manifestVersion: 2,
+          });
+          const native = await generateFor({
+            browser: actualBrowser,
+            actualBrowser,
+            manifestVersion: 2,
+          });
+
+          expect(mapped).toEqual(native);
+        },
+      );
     });
   });
 
