@@ -1,3 +1,3 @@
 import { createDebug } from 'obug';
 
-export const runnerDebug = createDebug('wxt:runner', { color: 31 });
+export const runnerDebug = createDebug('wxt:runner');
