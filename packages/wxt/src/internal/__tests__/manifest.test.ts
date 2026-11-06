@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { generateManifest, stripPathFromMatchPattern } from '../manifest';
+import {
+  generateManifest,
+  isFileSchemePattern,
+  stripPathFromMatchPattern,
+} from '../manifest';
 import {
   fakeArray,
   fakeBackgroundEntrypoint,
@@ -2239,9 +2243,133 @@ describe('Manifest Utils', () => {
       ['*://play.google.com/books/*', '*://play.google.com/*'],
       ['*://*/*', '*://*/*'],
       ['https://github.com/wxt-dev/*', 'https://github.com/*'],
+      ['file:///*', 'file:///*'],
+      ['file:///home/user/docs/*', 'file:///*'],
     ])('should convert "%s" to "%s"', (input, expected) => {
       const actual = stripPathFromMatchPattern(input);
       expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('isFileSchemePattern', () => {
+    it.each([
+      ['file:///*', true],
+      ['file:///home/user/*', true],
+      ['file:///C:/*', true],
+      ['https://example.com/*', false],
+      ['*://*.google.com/*', false],
+      ['<all_urls>', false],
+      ['http://localhost/*', false],
+    ])('should return %s for "%s"', (input, expected) => {
+      expect(isFileSchemePattern(input)).toBe(expected);
+    });
+  });
+
+  describe('file:/// content script patterns', () => {
+    it('should not add file:// patterns to host_permissions in MV3 dev mode', async () => {
+      const cs: ContentScriptEntrypoint = {
+        type: 'content-script',
+        name: 'file-cs',
+        inputPath: 'entrypoints/file-cs.content.ts',
+        outputDir: contentScriptOutDir,
+        options: {
+          matches: ['file:///*', '*://example.com/*'],
+        },
+        skipped: false,
+      };
+
+      const entrypoints = [cs];
+      const buildOutput: Omit<BuildOutput, 'manifest'> = {
+        publicAssets: [],
+        steps: [{ entrypoints: cs, chunks: [] }],
+      };
+      setFakeWxt({
+        config: {
+          manifestVersion: 3,
+          outDir,
+          command: 'serve',
+        },
+      });
+
+      const { manifest: actual } = await generateManifest(
+        entrypoints,
+        buildOutput,
+      );
+
+      expect(actual.host_permissions).not.toContain('file:///*');
+      expect(actual.host_permissions).toContain('*://example.com/*');
+    });
+
+    it('should not add file:// patterns to host_permissions for runtime-registered content scripts', async () => {
+      const cs: ContentScriptEntrypoint = {
+        type: 'content-script',
+        name: 'file-cs',
+        inputPath: 'entrypoints/file-cs.content.ts',
+        outputDir: contentScriptOutDir,
+        options: {
+          matches: ['file:///*', '*://google.com/*'],
+          registration: 'runtime',
+        },
+        skipped: false,
+      };
+
+      const entrypoints = [cs];
+      const buildOutput: Omit<BuildOutput, 'manifest'> = {
+        publicAssets: [],
+        steps: [{ entrypoints: cs, chunks: [] }],
+      };
+      setFakeWxt({
+        config: {
+          manifestVersion: 3,
+          outDir,
+          command: 'build',
+        },
+      });
+
+      const { manifest: actual } = await generateManifest(
+        entrypoints,
+        buildOutput,
+      );
+
+      expect(actual.host_permissions).not.toContain('file:///*');
+      expect(actual.host_permissions).toContain('*://google.com/*');
+    });
+
+    it('should include file:// patterns in content_scripts.matches for production builds', async () => {
+      const cs: ContentScriptEntrypoint = {
+        type: 'content-script',
+        name: 'file-cs',
+        inputPath: 'entrypoints/file-cs.content.ts',
+        outputDir: contentScriptOutDir,
+        options: {
+          matches: ['file:///*', '*://example.com/*'],
+        },
+        skipped: false,
+      };
+
+      const entrypoints = [cs];
+      const buildOutput: Omit<BuildOutput, 'manifest'> = {
+        publicAssets: [],
+        steps: [{ entrypoints: cs, chunks: [] }],
+      };
+      setFakeWxt({
+        config: {
+          manifestVersion: 3,
+          outDir,
+          command: 'build',
+        },
+      });
+
+      const { manifest: actual } = await generateManifest(
+        entrypoints,
+        buildOutput,
+      );
+
+      expect(actual.content_scripts?.[0]?.matches).toContain('file:///*');
+      expect(actual.content_scripts?.[0]?.matches).toContain(
+        '*://example.com/*',
+      );
+      expect(actual.host_permissions).toBeUndefined();
     });
   });
 });
