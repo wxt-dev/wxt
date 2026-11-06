@@ -47,17 +47,60 @@ export function hashContentScriptOptions(
   );
 }
 
+/**
+ * - "<all_urls>" → "<all_urls>"
+ * - "_://play.google.com/books/_" → "_://play.google.com/_"
+ */
+export function stripPathFromMatchPattern(pattern: string) {
+  const protocolSepIndex = pattern.indexOf('://');
+  if (protocolSepIndex === -1) return pattern;
+
+  const startOfPath = pattern.indexOf('/', protocolSepIndex + 3);
+  return pattern.substring(0, startOfPath) + '/*';
+}
+
+/** Returns true when the content script opted into SPA support. */
+export function isSpaContentScript(
+  options: ContentScriptEntrypoint['options'],
+): boolean {
+  return !!options.spa;
+}
+
+/**
+ * The match patterns the browser registers the content script against. For SPA
+ * scripts the path is stripped, so the script loads once for the whole origin
+ * and the SPA handler re-checks the real patterns at runtime.
+ */
+export function getRegisteredMatches(
+  options: ContentScriptEntrypoint['options'],
+): string[] | undefined {
+  const matches = options.matches;
+  if (matches == null || !isSpaContentScript(options)) return matches;
+  return Array.from(new Set(matches.map(stripPathFromMatchPattern)));
+}
+
+/**
+ * The browser applies `exclude_matches` when the document loads, so a
+ * path-scoped exclusion would stop an SPA script loading on pages the user can
+ * navigate to. Applied at runtime instead.
+ */
+function getRegisteredExcludeMatches(
+  options: ContentScriptEntrypoint['options'],
+): string[] | undefined {
+  return isSpaContentScript(options) ? undefined : options.excludeMatches;
+}
+
 export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
 ): ManifestContentScript {
   return {
-    matches: options.matches ?? [],
+    matches: getRegisteredMatches(options) ?? [],
     all_frames: options.allFrames,
     match_about_blank: options.matchAboutBlank,
     exclude_globs: options.excludeGlobs,
-    exclude_matches: options.excludeMatches,
+    exclude_matches: getRegisteredExcludeMatches(options),
     include_globs: options.includeGlobs,
     run_at: options.runAt,
     css,
@@ -74,8 +117,8 @@ export function mapWxtOptionsToRegisteredContentScript(
 ): Omit<Browser.scripting.RegisteredContentScript, 'id'> {
   return {
     allFrames: options.allFrames,
-    excludeMatches: options.excludeMatches,
-    matches: options.matches,
+    excludeMatches: getRegisteredExcludeMatches(options),
+    matches: getRegisteredMatches(options),
     runAt: options.runAt,
     js,
     css,
