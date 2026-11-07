@@ -127,10 +127,14 @@ export function createFileReloader(server: WxtDevServer) {
 
         // Perform reloads
         if (hasNewEntrypoints || changes.type === 'extension-reload') {
-          // `server.reloadExtension()` only reloads the background/manifest
-          // reload content scripts into tabs which are already open.
+          // `reloadContentScripts()` already calls `server.reloadExtension()`
+          // internally for Manifest V2 (there's no content-script hot-reload
+          // path there). Only call it again for MV3, where it just reloads
+          // content scripts into tabs that are already open.
           reloadContentScripts(newOutput.steps, server);
-          server.reloadExtension();
+          if (wxt.config.manifestVersion === 3) {
+            server.reloadExtension();
+          }
           wxt.logger.success(`Reloaded extension`);
         } else if (changes.type === 'html-reload') {
           const { reloadedNames } = reloadHtmlPages(rebuildGroups, server);

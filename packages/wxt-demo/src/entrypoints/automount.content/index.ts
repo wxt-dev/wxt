@@ -71,7 +71,7 @@ export default defineContentScript({
 
     stopAutoMountButton.mount();
 
-    setInterval(() => {
+    ctx.setInterval(() => {
       if (dynamicUI.mounted) {
         dynamicUI.remove();
       } else {

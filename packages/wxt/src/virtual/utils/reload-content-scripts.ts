@@ -7,10 +7,13 @@ const pendingReloads = new Set<Promise<unknown>>();
 
 export function reloadContentScript(payload: ReloadContentScriptPayload): void {
   const manifest = browser.runtime.getManifest();
-  const promise =
+  const promise = (
     manifest.manifest_version == 2
       ? reloadContentScriptMv2(payload)
-      : reloadContentScriptMv3(payload);
+      : reloadContentScriptMv3(payload)
+  ).catch((err) => {
+    logger.error('Failed to reload content script:', err);
+  });
   pendingReloads.add(promise);
   promise.finally(() => pendingReloads.delete(promise));
 }
@@ -117,16 +120,31 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
   const matchPatterns = contentScript.matches.map(
     (match) => new MatchPattern(match),
   );
+  const excludeMatchPatterns = (contentScript.excludeMatches ?? []).map(
+    (match) => new MatchPattern(match),
+  );
   const matchingTabs = allTabs.filter((tab) => {
     const url = tab.url;
     if (!url) return false;
-    return !!matchPatterns.find((pattern) => pattern.includes(url));
+    const isMatch = matchPatterns.some((pattern) => pattern.includes(url));
+    if (!isMatch) return false;
+    return !excludeMatchPatterns.some((pattern) => pattern.includes(url));
   });
   await Promise.all(
     matchingTabs.map(async (tab) => {
       try {
+        const target = { tabId: tab.id! };
+        if (contentScript.css?.length) {
+          await browser.scripting
+            .removeCSS({ target, files: contentScript.css })
+            .catch(() => {});
+          await browser.scripting.insertCSS({
+            target,
+            files: contentScript.css,
+          });
+        }
         await browser.scripting.executeScript({
-          target: { tabId: tab.id! },
+          target,
           files: contentScript.js!,
           world: contentScript.world,
         });
