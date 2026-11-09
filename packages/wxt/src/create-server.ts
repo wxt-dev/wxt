@@ -71,8 +71,8 @@ async function createServerInternal(): Promise<WxtDevServer> {
     async start() {
       if (wasStopped) {
         await wxt.reloadConfig();
-        builderServer = await wxt.builder.createServer(getServerInfo());
         await initWxtModules();
+        builderServer = await wxt.builder.createServer(getServerInfo());
       }
 
       await builderServer.listen();
