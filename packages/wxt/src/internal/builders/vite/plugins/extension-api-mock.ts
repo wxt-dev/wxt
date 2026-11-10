@@ -1,22 +1,20 @@
-import path from 'node:path';
 import type * as vite from 'vite';
-import { ResolvedConfig } from '../../../../types';
+import { virtualModules } from '../../../../internal-utils/virtual-modules';
 
 /**
  * Mock `wxt/browser` and stub the global `browser`/`chrome` types with a fake
  * version of the extension APIs
  */
-export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
+export function extensionApiMock(): vite.PluginOption {
   const virtualSetupModule = 'virtual:wxt-setup';
   const resolvedVirtualSetupModule = '\0' + virtualSetupModule;
+  const virtualMockBrowser = 'virtual:wxt-mock-browser';
+  const resolvedVirtualMockBrowser = '\0' + virtualMockBrowser;
 
   return {
     name: 'wxt:extension-api-mock',
     config() {
-      const replacement = path.resolve(
-        config.wxtModuleDir,
-        'dist/virtual/mock-browser',
-      );
+      const replacement = virtualMockBrowser;
       return {
         test: {
           setupFiles: [virtualSetupModule],
@@ -35,18 +33,24 @@ export function extensionApiMock(config: ResolvedConfig): vite.PluginOption {
     },
     resolveId: {
       filter: {
-        id: new RegExp(`${virtualSetupModule}$`),
+        id: new RegExp(`(${virtualSetupModule}|${virtualMockBrowser})$`),
       },
-      handler() {
-        return resolvedVirtualSetupModule;
+      handler(id) {
+        return id.endsWith(virtualMockBrowser)
+          ? resolvedVirtualMockBrowser
+          : resolvedVirtualSetupModule;
       },
     },
     load: {
       filter: {
-        id: new RegExp(`^${resolvedVirtualSetupModule}$`),
+        id: new RegExp(
+          `^(${resolvedVirtualSetupModule}|${resolvedVirtualMockBrowser})$`,
+        ),
       },
-      handler() {
-        return setupTemplate;
+      handler(id) {
+        return id === resolvedVirtualMockBrowser
+          ? virtualModules['mock-browser']
+          : setupTemplate;
       },
     },
   };
