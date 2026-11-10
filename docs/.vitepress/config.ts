@@ -1,7 +1,8 @@
-import { Feed } from 'feed';
-import footnote from 'markdown-it-footnote';
 import fs, { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+
+import { Feed } from 'feed';
+import footnote from 'markdown-it-footnote';
 import { DefaultTheme, defineConfig } from 'vitepress';
 import addKnowledge from 'vitepress-knowledge';
 import {
@@ -10,14 +11,15 @@ import {
   localIconLoader,
 } from 'vitepress-plugin-group-icons';
 import llmstxt from 'vitepress-plugin-llms';
+
 import { version as analyticsVersion } from '../../packages/analytics/package.json';
 import { version as autoIconsVersion } from '../../packages/auto-icons/package.json';
 import { version as i18nVersion } from '../../packages/i18n/package.json';
+import { version as isBackgroundVersion } from '../../packages/is-background/package.json';
 import { version as runnerVersion } from '../../packages/runner/package.json';
 import { version as storageVersion } from '../../packages/storage/package.json';
 import { version as unocssVersion } from '../../packages/unocss/package.json';
 import { version as wxtVersion } from '../../packages/wxt/package.json';
-import { version as isBackgroundVersion } from '../../packages/is-background/package.json';
 import typedocSidebar from '../api/reference/typedoc-sidebar.json';
 import { meta, script } from './utils/head';
 import {

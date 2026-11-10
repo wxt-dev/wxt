@@ -46,8 +46,8 @@ export default defineConfig({
 ```
 
 ```ts
-import { fakeTab } from 'testing/fake-objects';
 import { toLowerCase } from 'strings';
+import { fakeTab } from 'testing/fake-objects';
 ```
 
 ## Custom Options

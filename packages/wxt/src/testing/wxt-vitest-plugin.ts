@@ -5,16 +5,17 @@
  * @module wxt/testing/vitest-plugin
  */
 
+import UnimportPlugin from 'unimport/unplugin';
 import type * as vite from 'vite';
+
 import {
   tsconfigPaths,
   addRuntimeEnvEntries,
   extensionApiMock,
   resolveAppConfig,
 } from '../internal/builders/vite/plugins';
-import { InlineConfig } from '../types';
-import UnimportPlugin from 'unimport/unplugin';
 import { registerWxt, wxt } from '../internal/wxt';
+import { InlineConfig } from '../types';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT

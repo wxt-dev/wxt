@@ -1,13 +1,15 @@
-import { defineConfig, UserConfig, Rolldown } from 'tsdown';
-import pkgJson from './package.json' with { type: 'json' };
 import { readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { styleText } from 'node:util';
+
+import consola from 'consola';
+import { defineConfig, UserConfig, Rolldown } from 'tsdown';
+
+import pkgJson from './package.json' with { type: 'json' };
 import {
   virtualEntrypointModuleNames,
   virtualModuleNames,
 } from './src/internal/virtual-modules';
-import consola from 'consola';
-import { styleText } from 'node:util';
-import { resolve } from 'node:path';
 
 // Before doing the actual build, "inline" some dependencies by bundling them
 // individually to ESM and then, when building WXT, resolve them from the
@@ -29,18 +31,16 @@ const inlineDeps = [
 console.log();
 consola.info('Transforming inline dependencies...');
 const res = await Rolldown.build(
-  inlineDeps.map(
-    (id): Rolldown.BuildOptions => ({
-      input: id,
-      output: {
-        dir: 'inline',
-        entryFileNames: `${id}/index.mjs`,
-        format: 'esm',
-        minify: true,
-      },
-      platform: 'node',
-    }),
-  ),
+  inlineDeps.map((id): Rolldown.BuildOptions => ({
+    input: id,
+    output: {
+      dir: 'inline',
+      entryFileNames: `${id}/index.mjs`,
+      format: 'esm',
+      minify: true,
+    },
+    platform: 'node',
+  })),
 );
 for (const output of res) {
   consola.info(
@@ -92,20 +92,18 @@ export default defineConfig([
   },
 
   // Virtual modules must be bundled individually
-  ...virtualModuleNames.map(
-    (moduleName): UserConfig => ({
-      entry: `src/virtual/${moduleName}.ts`,
-      outDir: 'dist/virtual',
-      deps: {
-        neverBundle: [
-          ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
-          'virtual:wxt-plugins',
-          'virtual:app-config',
-          ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
-        ],
-      },
-    }),
-  ),
+  ...virtualModuleNames.map((moduleName): UserConfig => ({
+    entry: `src/virtual/${moduleName}.ts`,
+    outDir: 'dist/virtual',
+    deps: {
+      neverBundle: [
+        ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+        'virtual:wxt-plugins',
+        'virtual:app-config',
+        ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)), // ./utils/storage => wxt/utils/storage
+      ],
+    },
+  })),
 ]);
 
 async function replaceVars(

@@ -36,6 +36,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    Some component libraries manually add CSS to the page by adding a `<style>` or `<link>` element. They place this element in the document's `<head>` by default. This causes your styles to be placed outside the `ShadowRoot` and it's isolation blocks the styles from being applied to your UI.
 
    When a library does this, **you need to tell the library where to put its styles**. Here's the documentation for a few popular component libraries:
+
    - Ant Design: [`StyleProvider`](https://ant.design/docs/react/compatible-style#shadow-dom-usage)
    - Mantine: [`MantineProvider#getRootElement` and `MantineProvider#cssVariablesSelector`](https://mantine.dev/theming/mantine-provider/)
 
@@ -46,6 +47,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    ```tsx
    import { StyleProvider } from '@ant-design/cssinjs';
    import ReactDOM from 'react-dom/client';
+
    import App from './App.tsx';
 
    const ui = await createShadowRootUi(ctx, {
@@ -78,6 +80,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
 
    ```ts [Vue]
    import { createApp } from 'vue';
+
    import App from './App.vue';
 
    const ui = await createShadowRootUi(ctx, {
@@ -101,8 +104,10 @@ This is usually caused by one of two things (or both) when using `createShadowRo
 
    // entrypoints/example.content.ts
    import ReactDOM from 'react-dom/client';
-   import App from './App.tsx';
+
    import PortalTargetContext from '~/hooks/PortalTargetContext';
+
+   import App from './App.tsx';
 
    const ui = await createShadowRootUi(ctx, {
      // ...
@@ -145,6 +150,7 @@ This is usually caused by one of two things (or both) when using `createShadowRo
    ```tsx [React]
    import { useContext } from 'react';
    import { createPortal } from 'react-dom';
+
    import PortalTargetContext from '~/hooks/PortalTargetContext';
 
    const MyComponent = () => {

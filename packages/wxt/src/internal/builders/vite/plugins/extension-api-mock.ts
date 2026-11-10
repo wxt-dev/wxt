@@ -1,5 +1,7 @@
 import path from 'node:path';
+
 import type * as vite from 'vite';
+
 import { ResolvedConfig } from '../../../../types';
 
 /**

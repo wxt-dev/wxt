@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { getPackageJson } from '../package';
-import { setFakeWxt } from '../../internal-utils/testing/fake-objects';
 import { mock } from 'vitest-mock-extended';
-import { Logger } from '../../types';
+
 import { WXT_PACKAGE_DIR } from '../../../e2e/utils';
+import { setFakeWxt } from '../../internal-utils/testing/fake-objects';
+import { Logger } from '../../types';
+import { getPackageJson } from '../package';
 
 describe('Package JSON Utils', () => {
   describe('getPackageJson', () => {

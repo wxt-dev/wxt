@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, Ref, toRaw } from 'vue';
+
+import { ExamplesMetadata, KeySelectedObject } from '../utils/types';
 import ExampleSearchFilterByItem from './ExampleSearchFilterByItem.vue';
 import ExampleSearchResult from './ExampleSearchResult.vue';
-import { ExamplesMetadata, KeySelectedObject } from '../utils/types';
 
 defineProps<{
   tag?: string;

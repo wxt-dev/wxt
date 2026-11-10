@@ -1,4 +1,5 @@
 import type { Browser } from '@wxt-dev/browser';
+
 import { ContentScriptEntrypoint, ResolvedConfig } from '../types';
 import { getEntrypointBundlePath } from './entrypoint-utils';
 import { ManifestContentScript } from './type-utils';

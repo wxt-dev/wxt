@@ -6,8 +6,10 @@
  */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseYAML, parseJSON5, parseTOML } from 'confbox';
 import { dirname, extname } from 'node:path';
+
+import { parseYAML, parseJSON5, parseTOML } from 'confbox';
+
 import {
   applyChromeMessagePlaceholders,
   getNamedSubstitutionNames,

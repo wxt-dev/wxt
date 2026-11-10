@@ -3,6 +3,8 @@
   "sortTailwindcss": true,
   "sortImports": true,
   "jsdoc": true,
+  "printWidth": 80,
+  "singleQuote": true,
   "ignorePatterns": [
     ".output",
     "coverage",

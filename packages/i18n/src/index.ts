@@ -1,3 +1,5 @@
+import { browser } from '@wxt-dev/browser';
+
 /** @module @wxt-dev/i18n */
 import type {
   I18nStructure,
@@ -6,7 +8,6 @@ import type {
   Substitution,
   UntypedI18n,
 } from './types';
-import { browser } from '@wxt-dev/browser';
 import { applyNamedSubstitutions } from './utils';
 
 export function createI18n(): UntypedI18n;

@@ -1,9 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
+
 import type { Plugin } from 'vite';
-import { ResolvedConfig } from '../../../../types';
-import { normalizePath } from '../../../../internal-utils/path-utils';
+
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { normalizePath } from '../../../../internal-utils/path-utils';
+import { ResolvedConfig } from '../../../../types';
 import { VirtualModuleId, virtualModuleNames } from '../../../virtual-modules';
 
 /**

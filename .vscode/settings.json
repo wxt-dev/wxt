@@ -8,6 +8,8 @@
   "[markdown]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
 
   // Additional guidelines for Copilot
-  "github.copilot.chat.codeGeneration.instructions": [{ "file": "CONTRIBUTING.md" }],
+  "github.copilot.chat.codeGeneration.instructions": [
+    { "file": "CONTRIBUTING.md" }
+  ],
   "oxc.enable": true
 }

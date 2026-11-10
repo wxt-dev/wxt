@@ -1,6 +1,7 @@
 import 'wxt';
-import { addViteConfig, defineWxtModule } from 'wxt/modules';
 import { resolve } from 'node:path';
+
+import { addViteConfig, defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule({
   name: '@wxt-dev/webextension-polyfill',
