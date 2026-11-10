@@ -1,6 +1,7 @@
 name: 📼 VHS
 on:
   push:
+    branches: [main]
     paths:
       - docs/tapes/*.tape
       - .github/workflows/vhs.yml
@@ -13,11 +14,17 @@ on:
 permissions:
   contents: read
 
+# A push to a PR branch fires both `push` and `pull_request` events. Keep only
+# one run alive per branch so both don't record and commit the GIF.
+concurrency:
+  group: vhs-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   vhs:
     name: Create VHS
     runs-on: macos-latest
-    if: ${{ github.repository == 'wxt-dev/wxt' }}
+    if: ${{ github.actor != 'github-actions[bot]' && github.repository == 'wxt-dev/wxt' }}
     permissions:
       contents: write
     steps:
@@ -25,6 +32,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup
         uses: ./.github/actions/setup
