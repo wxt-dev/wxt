@@ -35,7 +35,7 @@ Docs live in the monorepo `wxt-dev/wxt` under `docs/`. Release tags are `wxt-v<v
 
 Raw file URL pattern:
 
-```
+```text
 https://raw.githubusercontent.com/wxt-dev/wxt/wxt-v<version>/docs/<path>.md
 ```
 
