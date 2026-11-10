@@ -1,5 +1,5 @@
-import { createIsolatedElement } from '@webext-core/isolated-element';
 /** @module wxt/utils/content-script-ui/shadow-root */
+import { createIsolatedElement } from '@webext-core/isolated-element';
 import { browser } from 'wxt/browser';
 
 import { ContentScriptContext } from '../content-script-context';

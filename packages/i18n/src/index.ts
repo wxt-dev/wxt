@@ -1,6 +1,6 @@
+/** @module @wxt-dev/i18n */
 import { browser } from '@wxt-dev/browser';
 
-/** @module @wxt-dev/i18n */
 import type {
   I18nStructure,
   I18n,
