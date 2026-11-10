@@ -29,7 +29,7 @@ describe('Content Script Context', () => {
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
     expect(isValid).toBe(false);
   });
 
@@ -46,7 +46,7 @@ describe('Content Script Context', () => {
     // Should not throw, and should mark as invalid
     expect(() => ctx.isInvalid).not.toThrow();
     expect(ctx.isInvalid).toBe(true);
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
 
     // Restore for other tests
     fakeBrowser.runtime = originalRuntime;
@@ -65,7 +65,7 @@ describe('Content Script Context', () => {
     new ContentScriptContext(name);
     await waitForEventsToFire();
 
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
     expect(ctx.isValid).toBe(false);
   });
 
@@ -81,7 +81,7 @@ describe('Content Script Context', () => {
     new ContentScriptContext('test2');
     await waitForEventsToFire();
 
-    expect(onInvalidated).not.toBeCalled();
+    expect(onInvalidated).not.toHaveBeenCalled();
     expect(ctx.isValid).toBe(true);
   });
 
@@ -120,6 +120,99 @@ describe('Content Script Context', () => {
       const button = document.createElement('button');
       context.addEventListener(button, 'click', (_) => {});
       context.addEventListener(button, 'mouseover', (_) => {});
+    });
+  });
+
+  describe('applyPatch', () => {
+    it('should throw when the content script runs in the "MAIN" world', () => {
+      const ctx = new ContentScriptContext('test', { world: 'MAIN' });
+      expect(() => ctx.applyPatch()).toThrow();
+    });
+
+    it('should patch setTimeout so plain calls stop firing after invalidation', async () => {
+      const ctx = new ContentScriptContext('test');
+      const restore = ctx.applyPatch();
+      const handler = vi.fn();
+
+      setTimeout(handler, 10);
+      ctx.notifyInvalidated();
+      await new Promise((res) => setTimeout(res, 20));
+
+      expect(handler).not.toHaveBeenCalled();
+      restore();
+    });
+
+    it('should patch addEventListener so plain listeners are removed after invalidation', () => {
+      const ctx = new ContentScriptContext('test');
+      const restore = ctx.applyPatch();
+      const handler = vi.fn();
+
+      addEventListener('visibilitychange', handler);
+      ctx.notifyInvalidated();
+      window.dispatchEvent(new Event('visibilitychange'));
+
+      expect(handler).not.toHaveBeenCalled();
+      restore();
+    });
+
+    it('should be idempotent, returning the same restore function', () => {
+      const ctx = new ContentScriptContext('test');
+      const restore1 = ctx.applyPatch();
+      const restore2 = ctx.applyPatch();
+
+      expect(restore1).toBe(restore2);
+      restore1();
+    });
+
+    it('should restore the original functions when called', () => {
+      const originalSetTimeout = window.setTimeout;
+      const ctx = new ContentScriptContext('test');
+      const restore = ctx.applyPatch();
+
+      expect(window.setTimeout).not.toBe(originalSetTimeout);
+      restore();
+      expect(window.setTimeout).toBe(originalSetTimeout);
+    });
+
+    it('should automatically restore when the context is invalidated', () => {
+      const originalSetTimeout = window.setTimeout;
+      const ctx = new ContentScriptContext('test');
+      ctx.applyPatch();
+
+      ctx.notifyInvalidated();
+
+      expect(window.setTimeout).toBe(originalSetTimeout);
+    });
+
+    // Regression test: ctx.setTimeout/setInterval/requestAnimationFrame/
+    // requestIdleCallback/addEventListener all call the global API internally.
+    // Once applyPatch replaces that global API with a wrapper that calls back
+    // into the ctx method, calling the ctx method directly (not just through
+    // the patched global) used to recurse infinitely.
+    it('should not recurse infinitely when ctx.setTimeout is called directly while patched', async () => {
+      const ctx = new ContentScriptContext('test');
+      const restore = ctx.applyPatch();
+      const handler = vi.fn();
+
+      expect(() => ctx.setTimeout(handler, 0)).not.toThrow();
+      await new Promise((res) => setTimeout(res, 10));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      restore();
+    });
+
+    it('should not recurse infinitely when ctx.addEventListener is called directly while patched', () => {
+      const ctx = new ContentScriptContext('test');
+      const restore = ctx.applyPatch();
+      const handler = vi.fn();
+
+      expect(() =>
+        ctx.addEventListener(window, 'resize', handler),
+      ).not.toThrow();
+      window.dispatchEvent(new Event('resize'));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      restore();
     });
   });
 });
