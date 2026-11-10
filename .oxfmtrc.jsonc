@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "sortTailwindcss": true,
+  "sortImports": true,
+  "jsdoc": true,
+  "ignorePatterns": [
+    ".output",
+    "coverage",
+    "dist",
+    ".wxt",
+    "docs/.vitepress/cache",
+    "pnpm-lock.yaml",
+    "CHANGELOG.md",
+    "packages/browser/src/gen",
+    "packages/wxt/inline",
+  ],
+}
