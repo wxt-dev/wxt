@@ -62,7 +62,7 @@ Notes:
 
 ## 5. Latest-only shortcuts (use only when the project is on the latest version)
 
-- `https://wxt.dev/llms.txt`: index of all pages. Caveat: the "Configuration" links in it are malformed (the path is duplicated, like `/guide/essentials/config/guide/essentials/config/manifest.md`). Fix them to `/guide/essentials/config/manifest.md`.
+- `https://wxt.dev/llms.txt`: index of all pages.
 - Individual pages: `https://wxt.dev/guide/essentials/<page>.md`
 - `https://wxt.dev/llms-full.txt`: **very large** (the whole site, including the entire API reference). Don't fetch it by default. Fetch individual pages instead.
 - API reference: `https://wxt.dev/api/reference/wxt/interfaces/<Name>.md` (generated from the types and links to source lines on GitHub).
