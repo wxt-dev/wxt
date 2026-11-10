@@ -1,14 +1,13 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { ResolvedConfig } from '../../../../types';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { virtualModules } from '../../../../internal-utils/virtual-modules';
 import { VirtualModuleId, virtualModuleNames } from '../../../virtual-modules';
 
 /**
- * Resolve all the virtual modules to the `node_modules/wxt/dist/virtual`
- * directory.
+ * Resolve all the virtual modules to the templates bundled as strings in
+ * `internal-utils/virtual-modules.ts`.
  */
 export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
   return virtualModuleNames.map((name) => {
@@ -32,12 +31,9 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
         filter: {
           id: new RegExp(`^${resolvedVirtualId}`),
         },
-        async handler(id) {
+        handler(id) {
           const inputPath = id.replace(resolvedVirtualId, '');
-          const template = await readFile(
-            resolve(config.wxtModuleDir, `dist/virtual/${name}.mjs`),
-            'utf-8',
-          );
+          const template = virtualModules[name];
           const entrypointName = getEntrypointName(
             config.entrypointsDir,
             inputPath,

@@ -7,3 +7,4 @@ pnpm-lock.yaml
 CHANGELOG.md
 packages/browser/src/gen
 packages/wxt/inline
+packages/wxt/src/internal-utils/virtual-modules.ts

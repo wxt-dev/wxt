@@ -42,7 +42,7 @@ export async function WxtVitest(
     addRuntimeEnvEntries(wxt.config),
     tsconfigPaths(wxt.config),
     resolveAppConfig(wxt.config),
-    extensionApiMock(wxt.config),
+    extensionApiMock(),
   ];
   plugins.push(UnimportPlugin.vite(wxt.config.imports));
 
