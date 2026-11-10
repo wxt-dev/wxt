@@ -110,7 +110,8 @@
   "funding": "https://github.com/sponsors/wxt-dev",
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "skills"
   ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
