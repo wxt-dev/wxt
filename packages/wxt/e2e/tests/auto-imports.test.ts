@@ -41,7 +41,7 @@ describe('Auto Imports', () => {
             export type { Browser } from 'wxt/browser'
             import('wxt/browser')
             // @ts-ignore
-            export type { StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage'
+            export type { WxtStorage, WxtStorageItem, StorageArea, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage'
             import('wxt/utils/storage')
             // @ts-ignore
             export type { WxtWindowEventMap } from 'wxt/utils/content-script-context'
@@ -111,7 +111,7 @@ describe('Auto Imports', () => {
           // Types for the #import virtual module
           declare module '#imports' {
             export { browser, Browser } from 'wxt/browser';
-            export { storage, StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
+            export { storage, WxtStorage, WxtStorageItem, StorageArea, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
             export { getAppConfig, useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext, WxtWindowEventMap } from 'wxt/utils/content-script-context';
             export { createIframeUi, IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe';
@@ -246,7 +246,7 @@ describe('Auto Imports', () => {
           // Types for the #import virtual module
           declare module '#imports' {
             export { browser, Browser } from 'wxt/browser';
-            export { storage, StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
+            export { storage, WxtStorage, WxtStorageItem, StorageArea, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
             export { getAppConfig, useAppConfig } from 'wxt/utils/app-config';
             export { ContentScriptContext, WxtWindowEventMap } from 'wxt/utils/content-script-context';
             export { createIframeUi, IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe';
