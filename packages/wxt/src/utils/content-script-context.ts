@@ -47,6 +47,21 @@ export class ContentScriptContext implements AbortController {
   private static SCRIPT_STARTED_MESSAGE_TYPE = getUniqueEventName(
     'wxt:content-script-started',
   );
+  private static patchedWindows = new WeakMap<Window, () => void>();
+  /**
+   * Pre-patch implementations, bound to `target`, so `ctx`'s methods can bypass
+   * the patch instead of recursing into it.
+   */
+  private static unpatchedImpls = new WeakMap<
+    Window,
+    {
+      setTimeout: Window['setTimeout'];
+      setInterval: Window['setInterval'];
+      requestAnimationFrame: Window['requestAnimationFrame'];
+      requestIdleCallback?: Window['requestIdleCallback'];
+      addEventListener: Window['addEventListener'];
+    }
+  >();
 
   private id: string;
   private abortController: AbortController;
@@ -125,9 +140,14 @@ export class ContentScriptContext implements AbortController {
    * Intervals can be cleared by calling the normal `clearInterval` function.
    */
   setInterval(handler: () => void, timeout?: number): number {
-    const id = setInterval(() => {
+    const callback = () => {
       if (this.isValid) handler();
-    }, timeout) as unknown as number;
+    };
+    const unpatched =
+      ContentScriptContext.unpatchedImpls.get(window)?.setInterval;
+    const id = (unpatched
+      ? unpatched(callback, timeout)
+      : window.setInterval(callback, timeout)) as unknown as number;
     this.onInvalidated(() => clearInterval(id));
     return id;
   }
@@ -139,9 +159,14 @@ export class ContentScriptContext implements AbortController {
    * Timeouts can be cleared by calling the normal `setTimeout` function.
    */
   setTimeout(handler: () => void, timeout?: number): number {
-    const id = setTimeout(() => {
+    const callback = () => {
       if (this.isValid) handler();
-    }, timeout) as unknown as number;
+    };
+    const unpatched =
+      ContentScriptContext.unpatchedImpls.get(window)?.setTimeout;
+    const id = (unpatched
+      ? unpatched(callback, timeout)
+      : window.setTimeout(callback, timeout)) as unknown as number;
     this.onInvalidated(() => clearTimeout(id));
     return id;
   }
@@ -154,9 +179,14 @@ export class ContentScriptContext implements AbortController {
    * function.
    */
   requestAnimationFrame(callback: FrameRequestCallback): number {
-    const id = requestAnimationFrame((...args) => {
+    const frame: FrameRequestCallback = (...args) => {
       if (this.isValid) callback(...args);
-    });
+    };
+    const unpatched =
+      ContentScriptContext.unpatchedImpls.get(window)?.requestAnimationFrame;
+    const id = unpatched
+      ? unpatched(frame)
+      : window.requestAnimationFrame(frame);
 
     this.onInvalidated(() => cancelAnimationFrame(id));
     return id;
@@ -173,9 +203,14 @@ export class ContentScriptContext implements AbortController {
     callback: IdleRequestCallback,
     options?: IdleRequestOptions,
   ): number {
-    const id = requestIdleCallback((...args) => {
+    const idle: IdleRequestCallback = (...args) => {
       if (!this.signal.aborted) callback(...args);
-    }, options);
+    };
+    const unpatched =
+      ContentScriptContext.unpatchedImpls.get(window)?.requestIdleCallback;
+    const id = unpatched
+      ? unpatched(idle, options)
+      : window.requestIdleCallback(idle, options);
 
     this.onInvalidated(() => cancelIdleCallback(id));
     return id;
@@ -230,14 +265,105 @@ export class ContentScriptContext implements AbortController {
       if (this.isValid) this.locationWatcher.run();
     }
 
-    target.addEventListener?.(
-      type.startsWith('wxt:') ? getUniqueEventName(type) : type,
-      handler,
-      {
-        ...options,
-        signal: this.signal,
-      },
-    );
+    const finalType = type.startsWith('wxt:') ? getUniqueEventName(type) : type;
+    const finalOptions = { ...options, signal: this.signal };
+    const unpatched = ContentScriptContext.unpatchedImpls.get(
+      target as Window,
+    )?.addEventListener;
+
+    if (unpatched) {
+      unpatched(finalType, handler, finalOptions);
+    } else {
+      target.addEventListener?.(finalType, handler, finalOptions);
+    }
+  }
+
+  /**
+   * Patches `target`'s timer and event listener APIs (`setTimeout`,
+   * `setInterval`, `requestAnimationFrame`, `requestIdleCallback`,
+   * `addEventListener`) so plain calls behave like their `ctx`-aware
+   * counterparts, automatically cleaning up when this context is invalidated.
+   *
+   * :::tip Only supported in the `"ISOLATED"` world. In the `"MAIN"` world,
+   * `window` is the page's real global object, shared with the page itself and
+   * other extensions - patching it there could break them, so `applyPatch`
+   * don't work in it. :::
+   *
+   * @example
+   *   ctx.applyPatch(otherWindow);
+   *
+   * @param target - The `window` to patch. Defaults to the global `window`.
+   * @returns A function that restores the original, unpatched functions.
+   */
+  applyPatch(target: Window = window): () => void {
+    if (this.options?.world === 'MAIN') {
+      throw Error(
+        'ctx.applyPatch is not supported in the "MAIN" world, because `window` is shared with the page and other extensions there.',
+      );
+    }
+
+    const existingRestore = ContentScriptContext.patchedWindows.get(target);
+    if (existingRestore) {
+      return existingRestore;
+    }
+
+    const originals = {
+      setTimeout: target.setTimeout,
+      setInterval: target.setInterval,
+      requestAnimationFrame: target.requestAnimationFrame,
+      requestIdleCallback: target.requestIdleCallback,
+      addEventListener: target.addEventListener,
+    };
+
+    ContentScriptContext.unpatchedImpls.set(target, {
+      setTimeout: originals.setTimeout.bind(target),
+      setInterval: originals.setInterval.bind(target),
+      requestAnimationFrame: originals.requestAnimationFrame.bind(target),
+      requestIdleCallback: originals.requestIdleCallback?.bind(target),
+      addEventListener: originals.addEventListener.bind(target),
+    });
+
+    target.setTimeout = ((handler: TimerHandler, timeout?: number) => {
+      return this.setTimeout(handler as () => void, timeout);
+    }) as typeof target.setTimeout;
+
+    target.setInterval = ((handler: TimerHandler, timeout?: number) => {
+      return this.setInterval(handler as () => void, timeout);
+    }) as typeof target.setInterval;
+
+    target.requestAnimationFrame = ((callback: FrameRequestCallback) => {
+      return this.requestAnimationFrame(callback);
+    }) as typeof target.requestAnimationFrame;
+
+    target.requestIdleCallback = ((
+      callback: IdleRequestCallback,
+      options?: IdleRequestOptions,
+    ) => {
+      return this.requestIdleCallback(callback, options);
+    }) as typeof target.requestIdleCallback;
+
+    target.addEventListener = ((
+      type: string,
+      handler: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ) =>
+      this.addEventListener(
+        target,
+        type as any,
+        typeof handler === 'function'
+          ? handler
+          : handler.handleEvent.bind(handler),
+        typeof options === 'object' ? options : undefined,
+      )) as typeof target.addEventListener;
+
+    const restore = () => {
+      Object.assign(target, originals);
+      ContentScriptContext.patchedWindows.delete(target);
+      ContentScriptContext.unpatchedImpls.delete(target);
+    };
+    ContentScriptContext.patchedWindows.set(target, restore);
+    this.onInvalidated(restore);
+    return restore;
   }
 
   /**
