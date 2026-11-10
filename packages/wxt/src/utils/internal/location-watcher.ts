@@ -24,10 +24,12 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
       lastUrl = new URL(location.href);
 
       if (supportsNavigationApi) {
+        // Fires on commit. `navigate` is too early, `navigatesuccess` waits on
+        // (and is skipped by failed) intercept handlers.
         (globalThis as any).navigation.addEventListener(
-          'navigate',
-          (event: any) => {
-            const newUrl = new URL(event.destination.url);
+          'currententrychange',
+          () => {
+            const newUrl = new URL(location.href);
             if (newUrl.href === lastUrl.href) return;
             window.dispatchEvent(new WxtLocationChangeEvent(newUrl, lastUrl));
             lastUrl = newUrl;
