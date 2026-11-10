@@ -1,24 +1,25 @@
+import { mkdir, readFile } from 'node:fs/promises';
+import { dirname, relative, resolve } from 'node:path';
+import path from 'node:path';
+
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '../internal-utils/entrypoint-utils';
+import { pathExists, writeFileIfDifferent } from '../internal-utils/fs-utils';
+import { normalizePath } from '../internal-utils/path-utils';
 import {
   Entrypoint,
   PublicPathEntry,
   WxtDirEntry,
   WxtDirFileEntry,
 } from '../types';
-import { mkdir, readFile } from 'node:fs/promises';
-import { dirname, relative, resolve } from 'node:path';
-import {
-  getEntrypointBundlePath,
-  isHtmlEntrypoint,
-} from '../internal-utils/entrypoint-utils';
+import { getPublicFiles } from './get-public-files';
+import { Message, parseI18nMessages } from './i18n';
 import {
   getRuntimeEnvEntries,
   getEntrypointRuntimeEnvEntries,
 } from './runtime-env-entries';
-import { normalizePath } from '../internal-utils/path-utils';
-import path from 'node:path';
-import { Message, parseI18nMessages } from './i18n';
-import { pathExists, writeFileIfDifferent } from '../internal-utils/fs-utils';
-import { getPublicFiles } from './get-public-files';
 import { wxt } from './wxt';
 
 /**

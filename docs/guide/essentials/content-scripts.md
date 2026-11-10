@@ -140,6 +140,7 @@ export default defineContentScript({
 ```ts [Vue]
 // entrypoints/example-ui.content/index.ts
 import { createApp } from 'vue';
+
 import App from './App.vue';
 
 export default defineContentScript({
@@ -170,6 +171,7 @@ export default defineContentScript({
 ```tsx [React]
 // entrypoints/example-ui.content/index.tsx
 import ReactDOM from 'react-dom/client';
+
 import App from './App.tsx';
 
 export default defineContentScript({
@@ -198,9 +200,10 @@ export default defineContentScript({
 ```
 
 ```ts [Svelte]
+import { mount, unmount } from 'svelte';
+
 // entrypoints/example-ui.content/index.ts
 import App from './App.svelte';
-import { mount, unmount } from 'svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -305,6 +308,7 @@ export default defineContentScript({
 // 1. Import the style
 import './style.css';
 import { createApp } from 'vue';
+
 import App from './App.vue';
 
 export default defineContentScript({
@@ -340,6 +344,7 @@ export default defineContentScript({
 // 1. Import the style
 import './style.css';
 import ReactDOM from 'react-dom/client';
+
 import App from './App.tsx';
 
 export default defineContentScript({
@@ -378,8 +383,9 @@ export default defineContentScript({
 ```ts [Svelte]
 // 1. Import the style
 import './style.css';
-import App from './App.svelte';
 import { mount, unmount } from 'svelte';
+
+import App from './App.svelte';
 
 export default defineContentScript({
   matches: ['<all_urls>'],

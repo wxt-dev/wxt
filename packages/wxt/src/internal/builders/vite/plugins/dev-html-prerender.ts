@@ -1,11 +1,13 @@
-import type * as vite from 'vite';
-import { ResolvedConfig, WxtDevServer } from '../../../../types';
-import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
-import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
-import { virtualModules } from '../../../../internal-utils/virtual-modules';
-import { normalizePath } from '../../../../internal-utils/path-utils';
+
+import { parseHTML } from 'linkedom';
 import { hash } from 'ohash';
+import type * as vite from 'vite';
+
+import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { normalizePath } from '../../../../internal-utils/path-utils';
+import { virtualModules } from '../../../../internal-utils/virtual-modules';
+import { ResolvedConfig, WxtDevServer } from '../../../../types';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
 const inlineScriptContents: Record<string, string> = {};

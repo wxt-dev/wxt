@@ -1,4 +1,5 @@
 import { parseHTML } from 'linkedom';
+
 import { createEnvironment, Environment, EnvGlobals } from './environment';
 
 export function createBrowserEnvironment(): Environment {

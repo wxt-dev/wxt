@@ -1,10 +1,11 @@
 import type { Browser } from '@wxt-dev/browser';
-import { createSpinner } from './spinner';
+
 import { BuildOutput, Entrypoint, EntrypointGroup } from '../types';
+import { buildEntrypoints } from './build-entrypoints';
 import { generateWxtDir } from './generate-wxt-dir';
 import { generateManifest, writeManifest } from './manifest';
+import { createSpinner } from './spinner';
 import { wxt } from './wxt';
-import { buildEntrypoints } from './build-entrypoints';
 
 /**
  * Given a configuration, list of entrypoints, and an existing, partial output,

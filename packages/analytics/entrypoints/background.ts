@@ -1,5 +1,5 @@
-import { defineBackground } from 'wxt/utils/define-background';
 import { browser } from '@wxt-dev/browser';
+import { defineBackground } from 'wxt/utils/define-background';
 
 export default defineBackground(() => {
   // Used by the popup to test automatic error tracking in the background

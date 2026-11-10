@@ -1,9 +1,10 @@
+import { render } from 'solid-js/web';
+
 import {
   defineContentScript,
   ContentScriptContext,
   createShadowRootUi,
 } from '#imports';
-import { render } from 'solid-js/web';
 
 export default defineContentScript({
   matches: ['*://*/*'],

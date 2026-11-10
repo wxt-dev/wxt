@@ -1,4 +1,5 @@
 import type * as vite from 'vite';
+
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
 
 /**

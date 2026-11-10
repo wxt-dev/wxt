@@ -1,9 +1,12 @@
-import merge from 'lodash.merge';
-import { Result, x as spawn } from 'tinyexec';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer as createNetServer } from 'node:net';
 import { dirname, relative, resolve } from 'path';
+
+import merge from 'lodash.merge';
+import { Result, x as spawn } from 'tinyexec';
 import { glob } from 'tinyglobby';
+import * as vite from 'vite';
+
 import {
   InlineConfig,
   UserConfig,
@@ -13,10 +16,9 @@ import {
   prepare,
   zip,
 } from '../src';
-import { normalizePath } from '../src/internal-utils/path-utils';
 import { pathExists, readJson } from '../src/internal-utils/fs-utils';
+import { normalizePath } from '../src/internal-utils/path-utils';
 import { registerWxt } from '../src/internal/wxt';
-import * as vite from 'vite';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
 // wxt package. This uses the TS files instead of the compiled JS package

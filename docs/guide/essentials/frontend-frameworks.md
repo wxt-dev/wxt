@@ -54,8 +54,8 @@ If your framework doesn't have an official WXT module, no worries! WXT supports 
 Just add the Vite plugin to your config and you're good to go! Use the framework in HTML pages or content scripts and it will just work 👍
 
 ```ts
-import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'wxt';
 
 export default defineConfig({
   vite: () => ({

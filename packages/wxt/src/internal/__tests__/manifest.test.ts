@@ -1,5 +1,7 @@
+import type { Browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { generateManifest, stripPathFromMatchPattern } from '../manifest';
+import { mock } from 'vitest-mock-extended';
+
 import {
   fakeArray,
   fakeBackgroundEntrypoint,
@@ -20,9 +22,8 @@ import {
   OutputAsset,
   TargetManifestVersion,
 } from '../../types';
+import { generateManifest, stripPathFromMatchPattern } from '../manifest';
 import { wxt } from '../wxt';
-import { mock } from 'vitest-mock-extended';
-import type { Browser } from '@wxt-dev/browser';
 
 const outDir = '/output';
 const contentScriptOutDir = '/output/content-scripts';

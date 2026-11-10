@@ -1,12 +1,9 @@
 {
   "private": true,
-  "type": "module",
-  "engines": {
-    "bun": ">=1.4.4"
-  },
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "check": "bun run cspell-order:check && check && bun run --sequential --workspaces check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
@@ -18,6 +15,51 @@
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
     "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
+  },
+  "devDependencies": {
+    "@aklinker1/buildc": "catalog:",
+    "@aklinker1/check": "catalog:",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@commitlint/types": "^21.2.0",
+    "@types/bun": "catalog:",
+    "@types/markdown-it-footnote": "^3.0.4",
+    "@vitest/coverage-v8": "catalog:",
+    "consola": "^3.4.2",
+    "cspell": "^10.4.0",
+    "feed": "^6.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdownlint-cli": "^0.49.0",
+    "nano-staged": "^1.0.2",
+    "oxfmt": "^0.78.0",
+    "p-map": "^7.0.4",
+    "simple-git-hooks": "^2.13.1",
+    "tinyexec": "catalog:",
+    "tinyglobby": "^0.2.16",
+    "tsdown": "catalog:",
+    "tsx": "4.21.0",
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-frontmatter": "^1.3.2",
+    "typedoc-plugin-markdown": "^4.13.1",
+    "typedoc-vitepress-theme": "^1.1.4",
+    "typescript": "catalog:",
+    "verkit": "^0.5.0",
+    "vitepress": "^1.6.4",
+    "vitepress-knowledge": "^0.4.1",
+    "vitepress-mermaid-renderer": "^1.2.2",
+    "vitepress-plugin-group-icons": "^1.7.3",
+    "vitepress-plugin-llms": "^1.15.0",
+    "vitest-mock-extended": "^5.1.1",
+    "vue": "^3.5.34",
+    "wxt": "workspace:*"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "./node_modules/.bin/nano-staged"
+  },
+  "nano-staged": {
+    "*": "oxfmt --no-error-on-unmatched-pattern"
+  },
+  "engines": {
+    "bun": ">=1.4.4"
   },
   "catalog": {
     "@aklinker1/buildc": "^1.1.7",
@@ -39,51 +81,8 @@
     "vitest-plugin-random-seed": "^2.0.2",
     "web-ext": "^10.5.0"
   },
-  "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
-    "@aklinker1/check": "catalog:",
-    "@commitlint/config-conventional": "^21.2.0",
-    "@commitlint/types": "^21.2.0",
-    "@types/bun": "catalog:",
-    "@types/markdown-it-footnote": "^3.0.4",
-    "@vitest/coverage-v8": "catalog:",
-    "consola": "^3.4.2",
-    "cspell": "^10.4.0",
-    "feed": "^6.0.0",
-    "markdown-it-footnote": "^4.0.0",
-    "markdownlint-cli": "^0.49.0",
-    "nano-staged": "^1.0.2",
-    "p-map": "^7.0.4",
-    "prettier": "^3.8.1",
-    "prettier-plugin-jsdoc": "^1.8.0",
-    "simple-git-hooks": "^2.13.1",
-    "tinyexec": "catalog:",
-    "tinyglobby": "^0.2.16",
-    "tsdown": "catalog:",
-    "tsx": "4.21.0",
-    "typedoc": "^0.28.20",
-    "typedoc-plugin-frontmatter": "^1.3.2",
-    "typedoc-plugin-markdown": "^4.13.1",
-    "typedoc-vitepress-theme": "^1.1.4",
-    "typescript": "catalog:",
-    "verkit": "^0.5.0",
-    "vitepress": "^1.6.4",
-    "vitepress-knowledge": "^0.4.1",
-    "vitepress-mermaid-renderer": "^1.2.2",
-    "vitepress-plugin-group-icons": "^1.7.3",
-    "vitepress-plugin-llms": "^1.15.0",
-    "vitest-mock-extended": "^5.1.1",
-    "vue": "^3.5.34",
-    "wxt": "workspace:*"
-  },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
     "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "./node_modules/.bin/nano-staged"
-  },
-  "nano-staged": {
-    "*": "prettier --ignore-unknown --write"
   }
 }

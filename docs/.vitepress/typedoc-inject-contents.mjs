@@ -1,6 +1,6 @@
+import { ReflectionKind } from 'typedoc';
 // @ts-check
 import { MarkdownPageEvent } from 'typedoc-plugin-markdown';
-import { ReflectionKind } from 'typedoc';
 
 // Same algorithm as typedoc-vitepress-theme's slugifyAnchor so TOC links resolve.
 // eslint-disable-next-line no-control-regex

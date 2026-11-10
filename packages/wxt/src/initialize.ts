@@ -1,14 +1,16 @@
+import { readdir, rename } from 'node:fs/promises';
+import path from 'node:path';
+import { styleText } from 'node:util';
+
 import { question, select, confirm } from '@topcli/prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
-import { readdir, rename } from 'node:fs/promises';
+import { x as spawn } from 'tinyexec';
+
 import { pathExists } from './internal-utils/fs-utils';
 import { normalizePath } from './internal-utils/path-utils';
-import path from 'node:path';
-import { styleText } from 'node:util';
 import { TextStyle } from './internal-utils/type-utils';
 import { createSpinner } from './internal/spinner';
-import { x as spawn } from 'tinyexec';
 
 export async function initialize(options: {
   directory?: string;
@@ -141,7 +143,9 @@ async function listTemplatesUngh(): Promise<Template[]> {
 async function listTemplatesGithub(): Promise<Template[]> {
   const res = await fetch(
     `https://api.github.com/repos/${REPO}/contents/templates`,
-    { headers: { Accept: 'application/vnd.github+json' } },
+    {
+      headers: { Accept: 'application/vnd.github+json' },
+    },
   );
   if (res.status !== 200)
     throw Error(

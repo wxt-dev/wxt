@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { TestProject } from '../utils';
 
 describe('Output Directory Structure', () => {
