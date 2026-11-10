@@ -41,10 +41,16 @@ export function menuGroup(
   c?: boolean,
 ): SidebarItem {
   if (typeof a === 'string' && Array.isArray(b)) {
+    // Resolve links eagerly instead of using `base`, since vitepress-plugin-llms
+    // doesn't handle it and generates duplicated paths.
+    const resolve = (item: SidebarItem): SidebarItem => ({
+      ...item,
+      link: item.link && !item.link.startsWith('/') ? a + item.link : item.link,
+      items: item.items?.map(resolve),
+    });
     return {
       text,
-      base: a,
-      items: b,
+      items: b.map(resolve),
       collapsed: c,
     };
   }
