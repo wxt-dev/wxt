@@ -410,8 +410,7 @@ function addEntrypoints(
     if (wxt.config.command === 'serve' && wxt.config.manifestVersion === 3) {
       contentScripts.forEach((script) => {
         script.options.matches?.forEach((matchPattern) => {
-          if (!isFileSchemePattern(matchPattern))
-            addHostPermission(manifest, matchPattern);
+          addHostPermission(manifest, matchPattern);
         });
       });
     } else {
@@ -446,8 +445,7 @@ function addEntrypoints(
       );
       runtimeContentScripts.forEach((script) => {
         script.options.matches?.forEach((matchPattern) => {
-          if (!isFileSchemePattern(matchPattern))
-            addHostPermission(manifest, matchPattern);
+          addHostPermission(manifest, matchPattern);
         });
       });
     }
@@ -642,19 +640,14 @@ function addHostPermission(
   manifest: Browser.runtime.Manifest,
   hostPermission: string,
 ): void {
+  // Chrome MV3 rejects file:// in host_permissions; access is controlled by
+  // the "Allow access to File URLs" toggle instead.
+  if (hostPermission.startsWith('file:')) return;
+
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;
-  manifest.host_permissions.push(hostPermission);
-}
 
-/**
- * `file://` is not a valid scheme for `host_permissions` in Chrome MV3 —
- * file-URL access is controlled by the per-extension "Allow access to File
- * URLs" toggle instead. Content-script `matches` still accept it, so the
- * pattern is only skipped when building the host-permissions list.
- */
-export function isFileSchemePattern(pattern: string): boolean {
-  return pattern.startsWith('file:');
+  manifest.host_permissions.push(hostPermission);
 }
 
 /**
