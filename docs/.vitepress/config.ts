@@ -81,7 +81,7 @@ export default defineConfig({
       llmstxt({
         ignoreFilesPerOutput: {
           // API reference is available in node_modules dist/**/*.d.ts, it adds too much to the index
-          llmsTxt: ['api/reference/*'],
+          llmsTxt: ['api/reference/**'],
         },
       }),
       // @ts-expect-error: Vite version mismatch between this project and the plugin
