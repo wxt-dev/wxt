@@ -32,6 +32,7 @@
     "nano-staged": "^1.0.2",
     "oxfmt": "^0.78.0",
     "p-map": "^7.0.4",
+    "puppeteer-core": "^25.17.0",
     "simple-git-hooks": "^2.14.0",
     "tinyexec": "catalog:",
     "tinyglobby": "^0.2.16",
