@@ -1,6 +1,7 @@
+import { x as spawn } from 'tinyexec';
+
 import { NpmListProject, flattenNpmListOutput, npm } from './npm';
 import { WxtPackageManagerImpl } from './types';
-import { x as spawn } from 'tinyexec';
 
 export const pnpm: WxtPackageManagerImpl = {
   overridesKey: 'resolutions', // "pnpm.overrides" has a higher priority, but I don't want to deal with nesting

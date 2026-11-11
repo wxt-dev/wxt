@@ -1,7 +1,9 @@
-import { x as spawn } from 'tinyexec';
 import { mkdir, writeFile } from 'node:fs/promises';
+
+import { x as spawn } from 'tinyexec';
 import { glob } from 'tinyglobby';
 import { describe, expect, it } from 'vitest';
+
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {

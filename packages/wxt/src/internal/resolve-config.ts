@@ -1,4 +1,20 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { loadConfig } from 'c12';
+import consola, { LogLevels } from 'consola';
+import defu from 'defu';
+import { getPort } from 'get-port-please';
+import { glob } from 'tinyglobby';
+
+import { createFsCache } from '../internal-utils/cache-utils';
+import { loadEnv } from '../internal-utils/env-utils';
+import { getEslintVersion } from '../internal-utils/eslint-utils';
+import { pathExists } from '../internal-utils/fs-utils';
+import { createWxtLogger } from '../internal-utils/log/wxt-logger';
+import { safeStringToNumber } from '../internal-utils/number-utils';
+import { normalizePath } from '../internal-utils/path-utils';
+import { NullishRequired } from '../internal-utils/type-utils';
 import {
   ConfigEnv,
   InlineConfig,
@@ -15,21 +31,7 @@ import {
   WxtResolvedUnimportOptions,
   WxtLogger,
 } from '../types';
-import path from 'node:path';
-import { createFsCache } from '../internal-utils/cache-utils';
-import consola, { LogLevels } from 'consola';
-import defu from 'defu';
-import { NullishRequired } from '../internal-utils/type-utils';
-import { pathExists } from '../internal-utils/fs-utils';
-import { normalizePath } from '../internal-utils/path-utils';
-import { glob } from 'tinyglobby';
 import { builtinModules } from './builtin-modules';
-import { getEslintVersion } from '../internal-utils/eslint-utils';
-import { safeStringToNumber } from '../internal-utils/number-utils';
-import { loadEnv } from '../internal-utils/env-utils';
-import { getPort } from 'get-port-please';
-import { fileURLToPath } from 'node:url';
-import { createWxtLogger } from '../internal-utils/log/wxt-logger';
 
 /**
  * Given an inline config, discover the config file if necessary, merge the
@@ -553,9 +555,7 @@ async function isDirMissing(dir: string) {
 
 function logMissingDir(logger: WxtLogger, name: string, expected: string) {
   logger.warnOnce(
-    `${name} directory not found: ./${normalizePath(
-      path.relative(process.cwd(), expected),
-    )}`,
+    `${name} directory not found: ./${normalizePath(path.relative(process.cwd(), expected))}`,
   );
 }
 

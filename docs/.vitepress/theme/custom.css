@@ -1,6 +1,9 @@
 /* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 /* Colors */
 :root {
+  --wxt-c-bg-panel: var(--vp-c-bg-soft);
+  --wxt-c-card-border: var(--vp-c-bg-soft);
+
   --wxt-c-green-1: #0b8a00;
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
@@ -17,6 +20,29 @@
   --wxt-c-green-2: #329929;
   --wxt-c-green-3: #21651b;
   --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
+
+  /* Black backgrounds */
+  --vp-c-bg: #000000;
+  --vp-c-bg-alt: #0a0a0a;
+  --vp-c-bg-elv: #141414;
+  --vp-c-bg-soft: #171717;
+  --vp-c-gutter: #000000;
+
+  /* Shared by the sidebar and example filters */
+  --wxt-c-bg-panel: #060606;
+  --vp-sidebar-bg-color: var(--wxt-c-bg-panel);
+  --wxt-c-card-border: var(--vp-c-divider);
+
+  --vp-c-divider: #262626;
+  --vp-c-border: #3a3a3a;
+
+  /* WCAG AA needs 4.5:1. Contrast of these on #000 through #171717: text-1 >13, text-2 >7, text-3 >5 */
+  --vp-c-text-1: rgba(255, 255, 245, 0.86);
+  --vp-c-text-2: rgba(235, 235, 245, 0.68);
+  --vp-c-text-3: rgba(235, 235, 245, 0.55);
+
+  /* White text on the default hover bg (#329929) is only 3.7:1 */
+  --vp-button-brand-hover-bg: #2a7f22;
 }
 
 * {
@@ -76,6 +102,11 @@ body {
   height: 10vh;
   top: 100vh;
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
+}
+
+.dark .VPFeature {
+  background-color: var(--wxt-c-bg-panel);
+  border-color: var(--wxt-c-card-border);
 }
 
 .item {

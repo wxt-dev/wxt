@@ -1,8 +1,10 @@
+import { mkdir } from 'node:fs/promises';
+import path from 'node:path';
+
+import { x as spawn } from 'tinyexec';
+
 import { Dependency } from '../../types';
 import { WxtPackageManagerImpl } from './types';
-import path from 'node:path';
-import { mkdir } from 'node:fs/promises';
-import { x as spawn } from 'tinyexec';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineUnlistedScript } from '../define-unlisted-script';
+
 import { UnlistedScriptDefinition } from '../../types';
+import { defineUnlistedScript } from '../define-unlisted-script';
 
 describe('defineUnlistedScript', () => {
   it('should return the object definition when given an object', () => {

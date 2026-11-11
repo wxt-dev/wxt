@@ -1,3 +1,10 @@
+import { resolve } from 'node:path';
+
+import picomatch from 'picomatch';
+import { glob } from 'tinyglobby';
+
+import { getEntrypointName } from '../../internal-utils/entrypoint-utils';
+import { CSS_EXTENSIONS_PATTERN } from '../../internal-utils/path-utils';
 import type {
   Entrypoint,
   EntrypointFinder,
@@ -5,11 +12,6 @@ import type {
   ResolvedConfig,
 } from '../../types';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../constants';
-import { CSS_EXTENSIONS_PATTERN } from '../../internal-utils/path-utils';
-import picomatch from 'picomatch';
-import { glob } from 'tinyglobby';
-import { getEntrypointName } from '../../internal-utils/entrypoint-utils';
-import { resolve } from 'node:path';
 
 const PATH_GLOB_TO_TYPE_MAP: Record<string, Entrypoint['type']> = {
   'sandbox.html': 'sandbox',

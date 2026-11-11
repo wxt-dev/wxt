@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { safeStringToNumber } from '../number-utils';
 
 describe('Number Utils', () => {

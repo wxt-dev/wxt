@@ -1,4 +1,5 @@
 import { describe, it } from 'vitest';
+
 import {
   VirtualModuleId,
   VirtualModuleName,

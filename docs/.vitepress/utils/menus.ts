@@ -41,10 +41,14 @@ export function menuGroup(
   c?: boolean,
 ): SidebarItem {
   if (typeof a === 'string' && Array.isArray(b)) {
+    const resolve = (item: SidebarItem): SidebarItem => ({
+      ...item,
+      link: item.link && !item.link.startsWith('/') ? a + item.link : item.link,
+      items: item.items?.map(resolve),
+    });
     return {
       text,
-      base: a,
-      items: b,
+      items: b.map(resolve),
       collapsed: c,
     };
   }

@@ -1,7 +1,9 @@
 import { EventEmitter } from 'node:events';
 import readline from 'node:readline';
+
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
+
 import type { WxtDevServer } from '../../types';
 import { createKeyboardShortcuts } from '../keyboard-shortcuts';
 
