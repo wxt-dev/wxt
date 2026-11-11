@@ -82,7 +82,6 @@
     "web-ext": "^10.5.0"
   },
   "patchedDependencies": {
-    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "simple-git-hooks@2.13.1": "patches/simple-git-hooks@2.13.1.patch"
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
   }
 }
