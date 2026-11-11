@@ -1,4 +1,5 @@
 import { describe, it, vi, expect } from 'vitest';
+
 import { getIsBackground } from '../getter';
 
 let mockBrowser: any;

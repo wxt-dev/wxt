@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { splitShadowRootCss } from '../split-shadow-root-css';
 
 describe('Shadow Root Utils', () => {

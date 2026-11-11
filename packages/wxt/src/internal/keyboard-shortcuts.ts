@@ -1,7 +1,8 @@
 import readline from 'node:readline';
+import { styleText } from 'node:util';
+
 import { WxtDevServer } from '../types';
 import { wxt } from './wxt';
-import { styleText } from 'node:util';
 
 export interface KeyboardShortcutWatcher {
   start(): void;

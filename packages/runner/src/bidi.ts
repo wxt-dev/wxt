@@ -1,5 +1,5 @@
-import { openWebSocket } from './web-socket';
 import { runnerDebug } from './debug';
+import { openWebSocket } from './web-socket';
 
 const debug = runnerDebug.extend('bidi');
 

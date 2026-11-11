@@ -51,7 +51,7 @@ export type SubstitutionTuple<T extends SubstitutionCount> =
   : T extends 7 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution]
   : T extends 8 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution]
   : T extends 9 ? [$1: Substitution, $2: Substitution, $3: Substitution, $4: Substitution, $5: Substitution, $6: Substitution, $7: Substitution, $8: Substitution, $9: Substitution]
-  : never
+  : never;
 
 export type TFunction<T extends I18nStructure> = {
   // Non-plural, no substitutions

@@ -1,59 +1,28 @@
 {
   "name": "@wxt-dev/i18n",
-  "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
   "version": "0.2.8",
-  "type": "module",
+  "description": "Type-safe wrapper around browser.i18n.getMessage with additional features",
+  "keywords": [
+    "i18n",
+    "module",
+    "wxt"
+  ],
+  "homepage": "http://wxt.dev/guide/i18n/installation.html",
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/i18n"
   },
-  "homepage": "http://wxt.dev/guide/i18n/installation.html",
-  "keywords": [
-    "wxt",
-    "module",
-    "i18n"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
-    "bench": "buildc --deps-only -- bun run bench/run.ts",
-    "test:coverage": "bun run test run --coverage",
-    "prepack": "bun run build"
-  },
-  "dependencies": {
-    "@wxt-dev/browser": "workspace:>=0.1",
-    "chokidar": "^5.0.0",
-    "confbox": "^0.2.4",
-    "tinyglobby": "^0.2.16"
-  },
-  "peerDependencies": {
-    "wxt": ">=0.19.7"
-  },
-  "peerDependenciesMeta": {
-    "wxt": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
-    "@types/node": "catalog:",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "tinybench": "^6.0.1",
-    "tsdown": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "vitest-plugin-random-seed": "catalog:",
-    "wxt": "workspace:*"
-  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -89,7 +58,38 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ]
+  "scripts": {
+    "build": "buildc -- tsdown",
+    "check": "buildc --deps-only -- check",
+    "test": "buildc --deps-only -- vitest",
+    "bench": "buildc --deps-only -- bun run bench/run.ts",
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
+  },
+  "dependencies": {
+    "@wxt-dev/browser": "workspace:>=0.1",
+    "chokidar": "^5.0.0",
+    "confbox": "^0.2.4",
+    "tinyglobby": "^0.2.16"
+  },
+  "devDependencies": {
+    "@aklinker1/buildc": "catalog:",
+    "@types/node": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tinybench": "^6.0.1",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-plugin-random-seed": "catalog:",
+    "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.19.7"
+  },
+  "peerDependenciesMeta": {
+    "wxt": {
+      "optional": true
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import 'wxt';
-import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 import solid, { type Options as PluginOptions } from 'vite-plugin-solid';
+import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<SolidModuleOptions>({
   name: '@wxt-dev/module-solid',

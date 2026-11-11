@@ -1,7 +1,8 @@
 import { parseHTML } from 'linkedom';
 import type * as vite from 'vite';
-import { normalizePath } from '../../../../internal-utils/path-utils';
+
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { normalizePath } from '../../../../internal-utils/path-utils';
 import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
 
 export function getPluginModules(
@@ -9,9 +10,8 @@ export function getPluginModules(
   entrypoint: Entrypoint | undefined,
 ): string[] {
   return plugins
-    .map(
-      (plugin): WxtPluginEntry =>
-        typeof plugin === 'string' ? { module: plugin } : plugin,
+    .map((plugin): WxtPluginEntry =>
+      typeof plugin === 'string' ? { module: plugin } : plugin,
     )
     .filter(
       (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),

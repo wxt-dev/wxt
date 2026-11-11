@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import type { ReloadContentScriptPayload } from '../../../utils/internal/dev-server-websocket';
 
 type ContentScript = ReloadContentScriptPayload['contentScript'];

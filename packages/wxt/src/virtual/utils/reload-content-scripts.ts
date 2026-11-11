@@ -1,7 +1,8 @@
 import { browser } from 'wxt/browser';
-import { logger } from '../../utils/internal/logger';
 import { MatchPattern } from 'wxt/utils/match-patterns';
+
 import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server-websocket';
+import { logger } from '../../utils/internal/logger';
 
 const pendingReloads = new Set<Promise<unknown>>();
 

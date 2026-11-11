@@ -1,6 +1,6 @@
 import 'wxt';
-import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 import vue, { Options as ViteOptions } from '@vitejs/plugin-vue';
+import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<VueModuleOptions>({
   name: '@wxt-dev/module-vue',
