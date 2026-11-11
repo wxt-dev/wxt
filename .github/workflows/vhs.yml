@@ -24,7 +24,8 @@ jobs:
   vhs:
     name: Create VHS
     runs-on: macos-latest
-    if: ${{ github.actor != 'github-actions[bot]' && github.repository == 'wxt-dev/wxt' }}
+    # Skip forks (PR head repo differs from this repo) and bot-authored runs
+    if: ${{ github.repository == 'wxt-dev/wxt' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && github.actor != 'github-actions[bot]' }}
     permissions:
       contents: write
     steps:
@@ -59,7 +60,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit_message: 'docs: Update `wxt init` GIF'
+          # Pushing with the deploy key triggers workflows (the actor isn't the bot),
+          # so [skip ci] stops this commit from re-running this workflow.
+          commit_message: 'docs: Update `wxt init` GIF [skip ci]'
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
           commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
