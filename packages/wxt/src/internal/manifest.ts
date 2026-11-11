@@ -642,7 +642,8 @@ function addHostPermission(
 ): void {
   // Chrome MV3 rejects file:// in host_permissions; access is controlled by
   // the "Allow access to File URLs" toggle instead.
-  if (hostPermission.startsWith('file:')) return;
+  if (wxt.config.manifestVersion === 3 && hostPermission.startsWith('file:'))
+    return;
 
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;

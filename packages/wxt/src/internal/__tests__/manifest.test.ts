@@ -1446,6 +1446,30 @@ describe('Manifest Utils', () => {
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
 
+        it('should keep file:// patterns in permissions for MV2', async () => {
+          const cs: ContentScriptEntrypoint = {
+            type: 'content-script',
+            name: 'one',
+            inputPath: 'entrypoints/one.content.ts',
+            outputDir: contentScriptOutDir,
+            options: {
+              matches: ['file:///*'],
+              registration: 'runtime',
+            },
+            skipped: false,
+          };
+          setFakeWxt({
+            config: { manifestVersion: 2, outDir, command: 'build' },
+          });
+
+          const { manifest: actual } = await generateManifest([cs], {
+            publicAssets: [],
+            steps: [{ entrypoints: cs, chunks: [] }],
+          });
+
+          expect(actual.permissions).toContain('file:///*');
+        });
+
         it('should still add manifest-registered content scripts when other content scripts are runtime-registered', async () => {
           const runtimeCs: ContentScriptEntrypoint = {
             type: 'content-script',
