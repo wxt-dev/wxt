@@ -208,9 +208,10 @@ function formatStars(r: number): string {
 
 .extension-grid > li {
   margin: 0 !important;
-  padding: 16px;
+  padding: 24px;
   display: flex;
-  background-color: var(--vp-c-bg-soft);
+  background-color: var(--wxt-c-bg-panel);
+  border: 1px solid var(--wxt-c-card-border);
   border-radius: 12px;
   flex: 1;
   gap: 24px;
