@@ -1,4 +1,5 @@
 import { Plugin } from 'vite';
+
 import { addViteConfig, defineWxtModule } from '../../modules';
 import { Wxt } from '../../types';
 

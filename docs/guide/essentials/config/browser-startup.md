@@ -83,6 +83,7 @@ export default defineWebExtConfig({
 
 ```ts [Windows]
 import { resolve } from 'node:path';
+
 import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({

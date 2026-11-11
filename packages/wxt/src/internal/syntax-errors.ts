@@ -1,6 +1,7 @@
 import { relative } from 'node:path';
-import { wxt } from './wxt';
 import { styleText } from 'node:util';
+
+import { wxt } from './wxt';
 
 export interface BabelSyntaxError extends SyntaxError {
   code: 'BABEL_PARSER_SYNTAX_ERROR';

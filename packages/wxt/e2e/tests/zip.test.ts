@@ -1,6 +1,7 @@
 import extract from 'extract-zip';
 import { x as spawn } from 'tinyexec';
 import { describe, expect, it } from 'vitest';
+
 import { TestProject } from '../utils';
 
 describe('Zipping', () => {

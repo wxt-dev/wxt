@@ -1,7 +1,16 @@
-import { Hookable } from 'hookable';
 import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
+
+import { Hookable } from 'hookable';
 import type * as vite from 'vite';
+
+import { toArray } from '../../../internal-utils/array-utils';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '../../../internal-utils/entrypoint-utils';
+import { normalizePath } from '../../../internal-utils/path-utils';
+import { safeVarName } from '../../../internal-utils/string-utils';
 import {
   BuildStepOutput,
   Entrypoint,
@@ -13,14 +22,7 @@ import {
   WxtDevServer,
   WxtHooks,
 } from '../../../types';
-import { normalizePath } from '../../../internal-utils/path-utils';
-import { toArray } from '../../../internal-utils/array-utils';
-import {
-  getEntrypointBundlePath,
-  isHtmlEntrypoint,
-} from '../../../internal-utils/entrypoint-utils';
 import { createExtensionEnvironment } from '../../environments';
-import { safeVarName } from '../../../internal-utils/string-utils';
 import { VirtualEntrypointType, VirtualModuleId } from '../../virtual-modules';
 import * as wxtPlugins from './plugins';
 

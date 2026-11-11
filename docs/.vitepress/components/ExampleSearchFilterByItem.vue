@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRaw } from 'vue';
+
 import { KeySelectedObject } from '../utils/types';
 
 defineProps<{

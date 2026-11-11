@@ -1,6 +1,6 @@
-import { BuildOutput, InlineConfig } from './types';
 import { internalBuild } from './internal/internal-build';
 import { registerWxt } from './internal/wxt';
+import { BuildOutput, InlineConfig } from './types';
 
 /**
  * Bundles the extension for production. Returns a promise of the build result.

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { registerWxt, wxt } from '../../src/internal/wxt';
 import { TestProject, occupyPort } from '../utils';
 

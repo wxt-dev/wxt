@@ -11,18 +11,20 @@
  */
 
 import 'wxt';
+import { writeFile } from 'node:fs/promises';
+import { basename, extname, join, resolve } from 'node:path';
+
+import { watch } from 'chokidar';
+import { glob } from 'tinyglobby';
+import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
 import { addAlias, defineWxtModule } from 'wxt/modules';
+
 import {
   generateChromeMessagesText,
   parseMessagesFile,
   generateTypeText,
   SUPPORTED_LOCALES,
 } from './build';
-import { glob } from 'tinyglobby';
-import { basename, extname, join, resolve } from 'node:path';
-import { watch } from 'chokidar';
-import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
-import { writeFile } from 'node:fs/promises';
 import { standardizeLocale } from './utils';
 
 export default defineWxtModule<I18nOptions>({

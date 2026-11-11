@@ -1,3 +1,8 @@
+import { extname } from 'node:path';
+
+import { createUnimport, toExports, type Unimport } from 'unimport';
+import UnimportPlugin from 'unimport/unplugin';
+
 import { addViteConfig, defineWxtModule } from '../../modules';
 import type {
   EslintGlobalsPropValue,
@@ -7,9 +12,6 @@ import type {
   WxtResolvedUnimportOptions,
   EslintConfigVersion,
 } from '../../types';
-import { createUnimport, toExports, type Unimport } from 'unimport';
-import UnimportPlugin from 'unimport/unplugin';
-import { extname } from 'node:path';
 
 export default defineWxtModule({
   name: 'wxt:built-in:unimport',
