@@ -1,6 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 
-import { hashContentScriptOptions } from '../content-script-utils';
+import {
+  hashContentScriptOptions,
+  mapWxtOptionsToRegisteredContentScript,
+} from '../content-script-utils';
 import { setFakeWxt } from '../testing/fake-objects';
 
 describe('Content Script Utils', () => {
@@ -29,6 +32,34 @@ describe('Content Script Utils', () => {
       });
 
       expect(hash1).toBe(hash2);
+    });
+  });
+
+  describe('mapWxtOptionsToRegisteredContentScript', () => {
+    it('should map every option the scripting API supports', () => {
+      const contentScript = mapWxtOptionsToRegisteredContentScript(
+        {
+          matches: ['*://example.com/*'],
+          excludeMatches: ['*://example.com/private/*'],
+          allFrames: true,
+          matchOriginAsFallback: true,
+          runAt: 'document_start',
+          world: 'MAIN',
+        },
+        ['content-scripts/content.js'],
+        ['content-scripts/content.css'],
+      );
+
+      expect(contentScript).toEqual({
+        matches: ['*://example.com/*'],
+        excludeMatches: ['*://example.com/private/*'],
+        allFrames: true,
+        matchOriginAsFallback: true,
+        runAt: 'document_start',
+        world: 'MAIN',
+        js: ['content-scripts/content.js'],
+        css: ['content-scripts/content.css'],
+      });
     });
   });
 });
