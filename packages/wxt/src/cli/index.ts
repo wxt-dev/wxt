@@ -1,6 +1,6 @@
-import cli from './commands';
 import { version } from '../version';
 import { isAliasedCommand } from './cli-utils';
+import cli from './commands';
 
 // Grab the command that we're trying to run
 cli.parse(process.argv, { run: false });

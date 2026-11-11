@@ -1,24 +1,27 @@
 {
   "name": "@wxt-dev/module-solid",
+  "version": "1.1.4",
   "description": "WXT module to enable SolidJS support",
+  "keywords": [
+    "module",
+    "solidjs",
+    "wxt"
+  ],
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-solid/README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/module-solid"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-solid/README.md",
-  "keywords": [
-    "wxt",
-    "module",
-    "solidjs"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "1.1.4",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -35,9 +38,6 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "wxt",
     "check": "bun run build && check",
@@ -46,9 +46,6 @@
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
-  },
-  "peerDependencies": {
-    "wxt": ">=0.19.16"
   },
   "dependencies": {
     "vite-plugin-solid": "^2.11.10"
@@ -60,5 +57,8 @@
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.19.16"
   }
 }

@@ -1,6 +1,7 @@
 import type { Browser } from '@wxt-dev/browser';
-import type { BuildOutput, ThemeIcon } from '../types';
+
 import { normalizePath } from '../internal-utils/path-utils';
+import type { BuildOutput, ThemeIcon } from '../types';
 import { wxt } from './wxt';
 
 /**

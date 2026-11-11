@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import useListExtensionDetails from '../composables/useListExtensionDetails';
+
 import _extensionEntries from '../../assets/extension-showcase.yml';
+import useListExtensionDetails from '../composables/useListExtensionDetails';
 
 interface StoreLink {
   label: string;

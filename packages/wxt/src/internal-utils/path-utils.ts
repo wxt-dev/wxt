@@ -1,4 +1,5 @@
 import systemPath from 'node:path';
+
 import normalize from 'normalize-path';
 
 /**

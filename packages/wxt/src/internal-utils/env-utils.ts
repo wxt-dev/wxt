@@ -1,6 +1,8 @@
-import dotenvExpand from 'dotenv-expand';
 import { existsSync, readFileSync } from 'node:fs';
 import { parseEnv } from 'node:util';
+
+import dotenvExpand from 'dotenv-expand';
+
 import type { TargetBrowser } from '../types';
 
 /** Returns true when running in a CI environment. */

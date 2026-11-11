@@ -1,12 +1,14 @@
+import { resolve } from 'node:path';
+
+import { parseHTML } from 'linkedom';
 import { describe, expect, it } from 'vitest';
-import { pointToDevServer } from '../dev-html-prerender';
+
+import { normalizePath } from '../../../../../internal-utils/path-utils';
 import {
   fakeDevServer,
   fakeResolvedConfig,
 } from '../../../../../internal-utils/testing/fake-objects';
-import { normalizePath } from '../../../../../internal-utils/path-utils';
-import { resolve } from 'node:path';
-import { parseHTML } from 'linkedom';
+import { pointToDevServer } from '../dev-html-prerender';
 
 describe('Dev HTML Prerender Plugin', () => {
   describe('pointToDevServer', () => {

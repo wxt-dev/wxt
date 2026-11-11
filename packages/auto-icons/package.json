@@ -1,18 +1,15 @@
 {
   "name": "@wxt-dev/auto-icons",
+  "version": "1.1.2",
   "description": "WXT module for automatically generating extension icons in different sizes",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wxt-dev/wxt.git",
-    "directory": "packages/auto-icons"
-  },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/README.md",
   "keywords": [
-    "wxt",
-    "module",
     "icons",
-    "manifest"
+    "manifest",
+    "module",
+    "wxt"
   ],
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/auto-icons/README.md",
+  "license": "MIT",
   "author": {
     "name": "Florian Metz",
     "email": "me@timeraa.dev"
@@ -23,8 +20,14 @@
       "email": "aaronklinker1+wxt@gmail.com"
     }
   ],
-  "license": "MIT",
-  "version": "1.1.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxt-dev/wxt.git",
+    "directory": "packages/auto-icons"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -34,18 +37,12 @@
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
     "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
-  },
-  "peerDependencies": {
-    "wxt": ">=0.19.0"
   },
   "dependencies": {
     "defu": "^6.1.4",
@@ -59,5 +56,8 @@
     "typescript": "catalog:",
     "vitest": "catalog:",
     "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.19.0"
   }
 }
