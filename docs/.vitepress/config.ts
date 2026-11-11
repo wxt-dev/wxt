@@ -256,6 +256,7 @@ export default defineConfig({
           menuItem('Upgrading WXT', 'upgrading.md'),
           menuItem('Migrate to WXT', 'migrate.md'),
           menuItem('How WXT Works', 'how-wxt-works.md'),
+          menuItem('AI Agents', 'ai-agents.md'),
         ]),
       ]),
       '/api/': menuRoot([

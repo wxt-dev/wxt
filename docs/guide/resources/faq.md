@@ -202,7 +202,7 @@ See [Issue #678](https://github.com/wxt-dev/wxt/issues/678) for additional conte
 
 ## Does WXT provide docs for LLMs?
 
-Yes, WXT's documentation provides markdown files based on the [the /llms.txt proposal](https://llmstxt.org/).
+Yes, see the [AI Agents](/guide/resources/ai-agents) page for details.
 
 ## Is there an LLM trained on WXT's docs that I chat with?
 
