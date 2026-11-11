@@ -78,7 +78,12 @@ export default defineConfig({
     //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
       // @ts-expect-error: Vite version mismatch between this project and the plugin
-      llmstxt(),
+      llmstxt({
+        ignoreFilesPerOutput: {
+          // API reference is available in node_modules dist/**/*.d.ts, it adds too much to the index
+          llmsTxt: ['api/reference/**'],
+        },
+      }),
       // @ts-expect-error: Vite version mismatch between this project and the plugin
       groupIconVitePlugin({
         customIcon: {
@@ -256,6 +261,7 @@ export default defineConfig({
           menuItem('Upgrading WXT', 'upgrading.md'),
           menuItem('Migrate to WXT', 'migrate.md'),
           menuItem('How WXT Works', 'how-wxt-works.md'),
+          menuItem('AI Agents', 'ai-agents.md'),
         ]),
       ]),
       '/api/': menuRoot([

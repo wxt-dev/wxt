@@ -125,7 +125,7 @@ const filteredExamples = computed(() => {
 
   .search {
     grid-area: search;
-    background: var(--vp-c-bg-soft);
+    background: var(--wxt-c-bg-panel);
     padding: 20px;
     border-radius: 16px;
 
