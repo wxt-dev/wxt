@@ -53,6 +53,17 @@ WXT's documentation website provides markdown files based on the [/llms.txt prop
 
 The website only serves docs for the **latest** version of WXT. If your project uses an older version, use the skill above, which reads docs from the matching git tag.
 
+## Context7
+
+[Context7](https://context7.com) is an MCP server that gives your agent up-to-date library docs. WXT is indexed as [`/wxt-dev/wxt`](https://context7.com/wxt-dev/wxt). If you have the Context7 MCP server installed, reference the library ID in your prompt so your agent doesn't pick one of the other WXT entries:
+
+```text
+Create a content script that mounts a Vue UI. use library /wxt-dev/wxt
+```
+
+> [!NOTE]
+> Context7 serves the latest docs, so it may not match older versions of WXT. Use the [WXT skill](#wxt-skill) if your project is not on the latest version.
+
 ## Ask AI
 
 There's an "Ask AI" button in the bottom right of every page, or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
