@@ -64,6 +64,19 @@ Create a content script that mounts a Vue UI. use library /wxt-dev/wxt
 > [!NOTE]
 > Context7 serves the latest docs, so it may not match older versions of WXT. Use the [WXT skill](#wxt-skill) if your project is not on the latest version.
 
+## DeepWiki
+
+[DeepWiki](https://deepwiki.com/wxt-dev/wxt) provides an AI-generated wiki and Q&A for WXT's repository. It's most useful for understanding how WXT works internally, like the build pipeline or module system.
+
+You can browse it on the website, or connect your agent to the [DeepWiki MCP server](https://docs.devin.ai/work-with-devin/deepwiki-mcp):
+
+```text
+https://mcp.deepwiki.com/mcp
+```
+
+> [!NOTE]
+> DeepWiki's answers are generated, so verify them against the docs or source code.
+
 ## Ask AI
 
 There's an "Ask AI" button in the bottom right of every page, or visit <https://knowledge.wxt.dev/> for a fullscreen experience.
