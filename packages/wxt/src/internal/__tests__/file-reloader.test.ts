@@ -90,7 +90,7 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await Promise.all([fixedFirst, fixedSecond]);
 
-    expect(rebuild).toBeCalledTimes(1);
+    expect(rebuild).toHaveBeenCalledTimes(1);
     const [allEntrypoints, rebuiltGroups] = vi.mocked(rebuild).mock.calls[0];
     expect(
       allEntrypoints.some((entry) => entry.inputPath === relevantFile),
@@ -98,7 +98,7 @@ describe('createFileReloader', () => {
     expect(
       rebuiltGroups.flat().some((entry) => entry.inputPath === relevantFile),
     ).toBe(true);
-    expect(server.reloadExtension).toBeCalledTimes(1);
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
   });
 
   it('should rebuild and reload extension when a new entrypoint is added', async () => {
@@ -141,7 +141,7 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await trigger;
 
-    expect(rebuild).toBeCalledTimes(1);
+    expect(rebuild).toHaveBeenCalledTimes(1);
     const [allEntrypoints, rebuiltGroups, cachedOutput] =
       vi.mocked(rebuild).mock.calls[0];
     expect(allEntrypoints).toEqual([backgroundEntrypoint, popupEntrypoint]);
@@ -151,8 +151,124 @@ describe('createFileReloader', () => {
         .some((entry) => entry.inputPath === newEntrypointFile),
     ).toBe(true);
     expect(cachedOutput).toEqual(currentOutput);
-    expect(server.reloadExtension).toBeCalledTimes(1);
-    expect(server.reloadContentScript).not.toBeCalled();
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
+  });
+
+  it('should reload the extension exactly once under Manifest V2, even though reloadContentScripts() already reloads it internally', async () => {
+    const backgroundFile = '/root/src/entrypoints/background.ts';
+    const newEntrypointFile = '/root/src/entrypoints/popup.html';
+    const backgroundEntrypoint = fakeBackgroundEntrypoint({
+      inputPath: backgroundFile,
+      skipped: false,
+    });
+    const popupEntrypoint = fakePopupEntrypoint({
+      inputPath: newEntrypointFile,
+      skipped: false,
+    });
+    const currentOutput = fakeBuildOutput({
+      steps: [
+        {
+          entrypoints: backgroundEntrypoint,
+          chunks: [fakeOutputChunk({ moduleIds: [backgroundFile] })],
+        },
+      ],
+      publicAssets: [],
+    });
+    const server = fakeDevServer({
+      currentOutput,
+      reloadExtension: vi.fn(),
+      reloadContentScript: vi.fn(),
+    });
+
+    setFakeWxt({
+      config: {
+        root: '/root',
+        entrypointsDir: '/root/src/entrypoints',
+        manifestVersion: 2,
+        dev: {
+          server: {
+            watchDebounce: 100,
+          },
+        },
+      },
+    });
+    vi.mocked(findEntrypoints).mockResolvedValue([
+      backgroundEntrypoint,
+      popupEntrypoint,
+    ]);
+    vi.mocked(rebuild).mockResolvedValue({
+      output: currentOutput,
+      manifest: currentOutput.manifest,
+      warnings: [],
+    });
+
+    const reloadOnChange = createFileReloader(server);
+    const trigger = reloadOnChange('add', newEntrypointFile);
+    await vi.advanceTimersByTimeAsync(500);
+    await trigger;
+
+    // `reloadContentScripts()` already calls `server.reloadExtension()` once
+    // for Manifest V2. The caller must not reload it again.
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
+  });
+
+  it('should reload the extension exactly once under Manifest V3', async () => {
+    const backgroundFile = '/root/src/entrypoints/background.ts';
+    const newEntrypointFile = '/root/src/entrypoints/popup.html';
+    const backgroundEntrypoint = fakeBackgroundEntrypoint({
+      inputPath: backgroundFile,
+      skipped: false,
+    });
+    const popupEntrypoint = fakePopupEntrypoint({
+      inputPath: newEntrypointFile,
+      skipped: false,
+    });
+    const currentOutput = fakeBuildOutput({
+      steps: [
+        {
+          entrypoints: backgroundEntrypoint,
+          chunks: [fakeOutputChunk({ moduleIds: [backgroundFile] })],
+        },
+      ],
+      publicAssets: [],
+    });
+    const server = fakeDevServer({
+      currentOutput,
+      reloadExtension: vi.fn(),
+      reloadContentScript: vi.fn(),
+    });
+
+    setFakeWxt({
+      config: {
+        root: '/root',
+        entrypointsDir: '/root/src/entrypoints',
+        manifestVersion: 3,
+        dev: {
+          server: {
+            watchDebounce: 100,
+          },
+        },
+      },
+    });
+    vi.mocked(findEntrypoints).mockResolvedValue([
+      backgroundEntrypoint,
+      popupEntrypoint,
+    ]);
+    vi.mocked(rebuild).mockResolvedValue({
+      output: currentOutput,
+      manifest: currentOutput.manifest,
+      warnings: [],
+    });
+
+    const reloadOnChange = createFileReloader(server);
+    const trigger = reloadOnChange('add', newEntrypointFile);
+    await vi.advanceTimersByTimeAsync(500);
+    await trigger;
+
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
   });
 
   it('should ignore entrypoint directory changes when no new entrypoints are found', async () => {
@@ -184,8 +300,8 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await trigger;
 
-    expect(rebuild).not.toBeCalled();
-    expect(server.reloadContentScript).not.toBeCalled();
-    expect(server.reloadExtension).not.toBeCalled();
+    expect(rebuild).not.toHaveBeenCalled();
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
+    expect(server.reloadExtension).not.toHaveBeenCalled();
   });
 });
