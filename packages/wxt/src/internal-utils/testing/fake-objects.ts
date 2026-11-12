@@ -27,6 +27,7 @@ import {
   BaseEntrypoint,
   UnlistedScriptEntrypoint,
 } from '../../types';
+import { resolveActualBrowser } from '../target-browser';
 
 faker.seed(__TEST_SEED__);
 
@@ -234,6 +235,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
 
   return {
     browser,
+    actualBrowser: resolveActualBrowser(browser),
     targetBrowsers: [],
     command,
     entrypointsDir: fakeDir(),
@@ -347,6 +349,11 @@ export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({
 
 export function setFakeWxt(overrides?: DeepPartial<Wxt>) {
   const wxt = fakeWxt(overrides);
+  // Mirror resolveConfig: `actualBrowser` is resolved from `browser` unless
+  // the test overrides it directly.
+  if (overrides?.config?.actualBrowser == null) {
+    wxt.config.actualBrowser = resolveActualBrowser(wxt.config.browser);
+  }
   setWxtForTesting(wxt);
   return wxt;
 }
