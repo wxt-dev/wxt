@@ -45,7 +45,7 @@ Instead of linking skills into agent directories, `install` writes guidance into
 
 ## Download Docs Locally
 
-[`wxt docs`](/api/cli/wxt-docs) downloads the documenation for your installed WXT version:
+[`wxt docs`](/api/cli/wxt-docs) downloads the documentation for your installed WXT version:
 
 ```sh
 wxt docs
