@@ -1,7 +1,8 @@
-import { Dependency } from '../../types';
-import { WxtPackageManagerImpl } from './types';
-import { dedupeDependencies, npm } from './npm';
 import { x as spawn } from 'tinyexec';
+
+import { Dependency } from '../../types';
+import { dedupeDependencies, npm } from './npm';
+import { WxtPackageManagerImpl } from './types';
 
 export const yarn: WxtPackageManagerImpl = {
   overridesKey: 'resolutions',

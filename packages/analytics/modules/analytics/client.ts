@@ -1,4 +1,7 @@
+import { browser, type Browser } from '@wxt-dev/browser';
+import { isBackground } from '@wxt-dev/is-background';
 import Bowser from 'bowser';
+
 import type {
   Analytics,
   AnalyticsConfig,
@@ -10,8 +13,6 @@ import type {
   AnalyticsTrackEvent,
   BaseAnalyticsEvent,
 } from './types';
-import { browser, type Browser } from '@wxt-dev/browser';
-import { isBackground } from '@wxt-dev/is-background';
 
 type AnalyticsMessage = {
   [K in keyof Analytics]: {

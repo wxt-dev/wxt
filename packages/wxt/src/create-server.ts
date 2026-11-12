@@ -1,22 +1,23 @@
 import chokidar from 'chokidar';
-import { InlineConfig, ServerInfo, WxtDevServer } from './types';
-import { internalBuild } from './internal/internal-build';
-import {
-  deinitWxtModules,
-  initWxtModules,
-  registerWxt,
-  wxt,
-} from './internal/wxt';
+
 import { unnormalizePath } from './internal-utils/path-utils';
+import {
+  createFileReloader,
+  reloadContentScripts,
+} from './internal/file-reloader';
+import { internalBuild } from './internal/internal-build';
 import { createKeyboardShortcuts } from './internal/keyboard-shortcuts';
 import {
   isBabelSyntaxError,
   logBabelSyntaxError,
 } from './internal/syntax-errors';
 import {
-  createFileReloader,
-  reloadContentScripts,
-} from './internal/file-reloader';
+  deinitWxtModules,
+  initWxtModules,
+  registerWxt,
+  wxt,
+} from './internal/wxt';
+import { InlineConfig, ServerInfo, WxtDevServer } from './types';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before

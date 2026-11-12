@@ -1,7 +1,7 @@
 import 'wxt';
-import { defineWxtModule } from 'wxt/modules';
 import defu from 'defu';
 import UnoCSS from 'unocss/vite';
+import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<UnoCSSOptions>({
   name: '@wxt-dev/unocss',

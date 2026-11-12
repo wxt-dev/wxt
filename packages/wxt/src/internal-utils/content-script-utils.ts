@@ -1,4 +1,5 @@
 import type { Browser } from '@wxt-dev/browser';
+
 import { ContentScriptEntrypoint, ResolvedConfig } from '../types';
 import { getEntrypointBundlePath } from './entrypoint-utils';
 import { ManifestContentScript } from './type-utils';
@@ -75,6 +76,7 @@ export function mapWxtOptionsToRegisteredContentScript(
   return {
     allFrames: options.allFrames,
     excludeMatches: options.excludeMatches,
+    matchOriginAsFallback: options.matchOriginAsFallback,
     matches: options.matches,
     runAt: options.runAt,
     js,

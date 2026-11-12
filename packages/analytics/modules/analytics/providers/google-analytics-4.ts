@@ -41,7 +41,10 @@ export const googleAnalytics4 =
         if (config.debug) {
           console.debug(
             '[@wxt-dev/analytics] Sending event to Google Analytics 4:',
-            { eventName, eventProperties },
+            {
+              eventName,
+              eventProperties,
+            },
           );
         }
         await fetch(url.href, {

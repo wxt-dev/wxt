@@ -7,8 +7,8 @@
  * @module @wxt-dev/storage
  */
 import { browser, type Browser } from '@wxt-dev/browser';
-import { withLock } from 'superlock';
 import { dequal } from 'dequal/lite';
+import { withLock } from 'superlock';
 
 export const storage = createStorage();
 

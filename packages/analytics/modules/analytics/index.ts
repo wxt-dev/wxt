@@ -1,14 +1,16 @@
 import 'wxt';
 import 'wxt/utils/define-app-config';
+import { relative, resolve } from 'node:path';
+
+import { normalizePath } from 'wxt';
 import {
   addAlias,
   addViteConfig,
   addWxtPlugin,
   defineWxtModule,
 } from 'wxt/modules';
-import { relative, resolve } from 'node:path';
+
 import type { AnalyticsConfig } from './types';
-import { normalizePath } from 'wxt';
 
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {

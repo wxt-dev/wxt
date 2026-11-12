@@ -1,7 +1,8 @@
 import definition from 'virtual:user-content-script-isolated-world-entrypoint';
-import { logger } from '../utils/internal/logger';
-import { ContentScriptContext } from 'wxt/utils/content-script-context';
 import { initPlugins } from 'virtual:wxt-plugins';
+import { ContentScriptContext } from 'wxt/utils/content-script-context';
+
+import { logger } from '../utils/internal/logger';
 
 const result = (async () => {
   try {

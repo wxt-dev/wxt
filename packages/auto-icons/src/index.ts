@@ -1,9 +1,10 @@
 import 'wxt';
-import { defineWxtModule } from 'wxt/modules';
+import { access, mkdir } from 'node:fs/promises';
 import { resolve, relative } from 'node:path';
+
 import defu from 'defu';
 import sharp from 'sharp';
-import { access, mkdir } from 'node:fs/promises';
+import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',

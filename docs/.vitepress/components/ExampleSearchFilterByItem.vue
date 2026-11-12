@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRaw } from 'vue';
+
 import { KeySelectedObject } from '../utils/types';
 
 defineProps<{
@@ -50,7 +51,7 @@ function toggleItem(pkg: string) {
   height: 300px;
   display: flex;
   flex-direction: column;
-  background: var(--vp-c-bg-soft);
+  background: var(--wxt-c-bg-panel);
   border-radius: 20px;
   scrollbar-width: thin;
   scrollbar-color: var(--vp-c-brand-3) transparent;

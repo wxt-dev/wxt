@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { printFileList } from '../print-file-list';
-import { setFakeWxt } from '../../testing/fake-objects';
+
+import { describe, expect, it } from 'vitest';
+
 import { wxt } from '../../../internal/wxt';
+import { setFakeWxt } from '../../testing/fake-objects';
+import { printFileList } from '../print-file-list';
 
 describe('printFileList', () => {
   it('resolves relative files against baseDir instead of the process cwd', async () => {
