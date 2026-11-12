@@ -45,27 +45,29 @@ Instead of linking skills into agent directories, `install` writes guidance into
 
 ## Download Docs Locally
 
-Use [`wxt docs`](/api/cli/wxt-docs) to download the prose docs that match your installed WXT version:
+[`wxt docs`](/api/cli/wxt-docs) downloads the documenation for your installed WXT version:
 
 ```sh
 wxt docs
 ```
 
-By default this writes into `.wxt/docs/v<version>` (for example `.wxt/docs/v0.21.5`). `--out-dir` changes the base directory; docs still land under `v<version>/` inside it. Use `--force` to redownload after upgrading WXT:
+Docs are written to `.wxt/docs/v<version>/` (for example `.wxt/docs/v0.21.5/`).
 
 ```sh
-# Writes to tmp/wxt-docs/v<version>/
+# Custom base directory → tmp/wxt-docs/v<version>/
 wxt docs --out-dir tmp/wxt-docs
+
+# Redownload after upgrading WXT
 wxt docs --force
 ```
 
-This is the version-matched offline copy agents should prefer. After downloading, point your project's `AGENTS.md` (or similar agent config) at the local files for your installed version. Update that path when you upgrade WXT:
+Point your project's `AGENTS.md` (or similar) at those files. Update the path when you upgrade WXT:
 
 ```md
 See @.wxt/docs/v<version>/guide/essentials/entrypoints.md
 ```
 
-The [wxt-docs skill](#wxt-skill) also prefers `.wxt/docs/v<version>` when present, and falls back to fetching docs from the matching git tag.
+The [wxt-docs skill](#wxt-skill) prefers this local tree when it exists. Otherwise it fetches docs from the matching git tag.
 
 ## Docs for LLMs
 
@@ -75,7 +77,9 @@ WXT's documentation website provides markdown files based on the [/llms.txt prop
 - `https://wxt.dev/<path>.md`: Any page as markdown. For example, <https://wxt.dev/guide/essentials/entrypoints.md>.
 - [`/llms-full.txt`](https://wxt.dev/llms-full.txt): The entire site in a single file. It is very large (it includes the full API reference), so prefer fetching individual pages.
 
-The website only serves docs for the **latest** version of WXT. If your project uses an older version, use the [skill](#wxt-skill) above (it fetches docs from the matching git tag). [`wxt docs`](#download-docs-locally) only exists in newer WXT releases, and it downloads docs for the version you currently have installed.
+The website only serves the **latest** WXT docs.
+
+If your project is on an older version, use the [skill](#wxt-skill). [`wxt docs`](#download-docs-locally) is only available in newer releases, and it always downloads docs for the version you have installed.
 
 ## Context7
 

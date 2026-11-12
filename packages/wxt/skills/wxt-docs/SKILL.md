@@ -31,19 +31,19 @@ The package does **not** include the prose docs. Use step 3 for those.
 
 ## 3. Prefer locally downloaded prose docs
 
-Run `wxt docs` to download the prose docs for the installed WXT version into `.wxt/docs/v<version>/` (override the base with `--out-dir`). Prefer reading from that versioned tree when it exists.
+If `.wxt/docs/v<version>/` exists, read docs from there. Paths under that directory mirror wxt.dev URLs:
 
-Examples for version `0.20.27` (paths under `v<version>/` mirror the wxt.dev URLs):
+- `.wxt/docs/v<version>/guide/essentials/config/manifest.md`
+- `.wxt/docs/v<version>/guide/essentials/entrypoints.md`
+- `.wxt/docs/v<version>/guide/essentials/content-scripts.md`
+- `.wxt/docs/v<version>/guide/essentials/wxt-modules.md`
+- `.wxt/docs/v<version>/guide/resources/upgrading.md`
 
-- `.wxt/docs/v0.20.27/guide/essentials/config/manifest.md`
-- `.wxt/docs/v0.20.27/guide/essentials/entrypoints.md`
-- `.wxt/docs/v0.20.27/guide/essentials/content-scripts.md`
-- `.wxt/docs/v0.20.27/guide/essentials/wxt-modules.md`
-- `.wxt/docs/v0.20.27/guide/resources/upgrading.md`
+If the directory is missing, run `wxt docs` (or ask the user to), then read from it.
 
-If `.wxt/docs/v<version>` is missing, run `wxt docs` (or ask the user to), then continue from that directory. Users can point `AGENTS.md` / editor rules at the downloaded files (for example `@.wxt/docs/v0.20.27/guide/essentials/entrypoints.md`).
-
-Use `--force` to redownload the current version's docs.
+- `--out-dir <dir>` changes the base directory; docs still land in `<dir>/v<version>/`
+- `--force` redownloads the current version
+- Users can point `AGENTS.md` at these files (for example `@.wxt/docs/v<version>/guide/essentials/entrypoints.md`). Update that path after upgrading WXT.
 
 ## 4. Fall back to the matching git tag
 
@@ -73,7 +73,8 @@ Notes:
 
 ## 5. Handle version differences
 
-- Read `docs/guide/resources/upgrading.md` **at the latest tag** (or from a freshly downloaded latest docs tree). It lists breaking changes between every version. Compare the project's version against it.
+- Read `docs/guide/resources/upgrading.md` **at the latest tag**. It lists breaking changes between versions. Compare it to the project's version.
+- Do not use `.wxt/docs/v<version>/guide/resources/upgrading.md` for this unless that version is the latest. `wxt docs` only downloads the installed version.
 - If the user's version is older than the docs you're reading, say so and note any API differences you can see in the local `.d.mts` types.
 
 ## 6. Latest-only shortcuts (use only when the project is on the latest version)
