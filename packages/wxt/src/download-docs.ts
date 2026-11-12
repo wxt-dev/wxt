@@ -9,6 +9,16 @@ import { version } from './version';
 
 const REPO = 'wxt-dev/wxt';
 
+/** Site/build files that are not useful as local agent docs. */
+export const DOCS_DOWNLOAD_IGNORE = [
+  '.vitepress/**',
+  'public/**',
+  'assets/**',
+  'tapes/**',
+  'typedoc.json',
+  'blog/.drafts/**',
+];
+
 export interface DownloadDocsOptions {
   /** Project root. Defaults to `process.cwd()`. */
   root?: string;
@@ -54,6 +64,7 @@ export async function downloadDocs(
     await downloadTemplate(`gh:${REPO}/docs#${tag}`, {
       dir: outDir,
       force: true,
+      ignore: DOCS_DOWNLOAD_IGNORE,
     });
   } catch (err) {
     throw new Error(

@@ -12,9 +12,15 @@ vi.mock('giget', () => ({
 
 import { downloadTemplate } from 'giget';
 
-import { downloadDocs } from '../download-docs';
+import { DOCS_DOWNLOAD_IGNORE, downloadDocs } from '../download-docs';
 
 const downloadTemplateMock = vi.mocked(downloadTemplate);
+
+const expectedDownloadOptions = (outDir: string) => ({
+  dir: outDir,
+  force: true,
+  ignore: DOCS_DOWNLOAD_IGNORE,
+});
 
 describe('downloadDocs', () => {
   let root: string;
@@ -40,7 +46,7 @@ describe('downloadDocs', () => {
     const outDir = path.join(root, '.wxt', 'docs', `v${version}`);
     expect(downloadTemplateMock).toHaveBeenCalledWith(
       `gh:wxt-dev/wxt/docs#wxt-v${version}`,
-      { dir: outDir, force: true },
+      expectedDownloadOptions(outDir),
     );
     expect(await readFile(path.join(outDir, 'index.md'), 'utf-8')).toBe(
       '# Docs\n',
@@ -53,7 +59,7 @@ describe('downloadDocs', () => {
     const outDir = path.join(root, 'tmp', 'wxt-docs', `v${version}`);
     expect(downloadTemplateMock).toHaveBeenCalledWith(
       `gh:wxt-dev/wxt/docs#wxt-v${version}`,
-      { dir: outDir, force: true },
+      expectedDownloadOptions(outDir),
     );
   });
 
@@ -75,7 +81,7 @@ describe('downloadDocs', () => {
     expect(downloadTemplateMock).toHaveBeenCalledOnce();
     expect(downloadTemplateMock).toHaveBeenCalledWith(
       `gh:wxt-dev/wxt/docs#wxt-v${version}`,
-      { dir: outDir, force: true },
+      expectedDownloadOptions(outDir),
     );
   });
 
@@ -87,7 +93,7 @@ describe('downloadDocs', () => {
     expect(downloadTemplateMock).toHaveBeenCalledOnce();
     expect(downloadTemplateMock).toHaveBeenCalledWith(
       `gh:wxt-dev/wxt/docs#wxt-v${version}`,
-      { dir: path.join(root, '.wxt', 'docs', `v${version}`), force: true },
+      expectedDownloadOptions(path.join(root, '.wxt', 'docs', `v${version}`)),
     );
   });
 
