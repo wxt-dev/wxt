@@ -1,8 +1,10 @@
-import { ResolvedConfig } from '../../../../types';
-import type * as vite from 'vite';
-import { normalizePath } from '../../../../internal-utils/path-utils';
-import { removeMainFunctionCode } from '../../../transform';
 import { resolve } from 'node:path';
+
+import type * as vite from 'vite';
+
+import { normalizePath } from '../../../../internal-utils/path-utils';
+import { ResolvedConfig } from '../../../../types';
+import { removeMainFunctionCode } from '../../../transform';
 
 /**
  * Transforms entrypoints, removing the main function from the entrypoint if it

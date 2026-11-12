@@ -14,7 +14,7 @@
     📁 modules/                    - Contains public APIs for `wxt/modules` exports
     📁 testing/                    - Contains public APIs for `wxt/testing/*` exports
     📁 utils/                      - Contains public APIs for `wxt/utils/*` exports, there are runtime utils
-    📁 virtual/                    - Contains virtual module templates, utils, and type definitions
+    📁 virtual/                    - Contains virtual module templates, utils, and type definitions. After changing, run `bun run build` and commit the regenerated `internal-utils/virtual-modules.ts`
     📄 vite-builder-env.d.ts       - Exported under `wxt/vite-builder-env`
     📄 index.ts                    - Contains public APIs for `wxt` exports
     📄 *.ts                        - Files exported by `index.ts` or are their own standalone exports at `wxt/*`

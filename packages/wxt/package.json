@@ -1,121 +1,37 @@
 {
   "name": "wxt",
-  "type": "module",
   "version": "0.21.5",
   "description": "⚡ Next-gen Web Extension Framework",
+  "keywords": [
+    "browser",
+    "bundler",
+    "chrome",
+    "extension",
+    "framework",
+    "vite",
+    "web"
+  ],
+  "homepage": "https://wxt.dev",
   "license": "MIT",
-  "scripts": {
-    "wxt": "bun run src/cli/index.ts",
-    "build": "buildc -- bun run tsdown --config-loader unrun",
-    "check": "bun run build && bun run --sequential 'check:*'",
-    "check:default": "check",
-    "check:tsc-virtual": "tsc --noEmit -p src/virtual",
-    "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
-    "prepack": "bun run build"
-  },
-  "dependencies": {
-    "@1natsu/wait-element": "^5.0.0",
-    "@aklinker1/rollup-plugin-visualizer": "5.12.0",
-    "@aklinker1/zero-zip": "^1.0.1",
-    "@topcli/prompts": "^4.0.0",
-    "@webext-core/fake-browser": "^2.0.1",
-    "@webext-core/isolated-element": "^1.1.3 || ^2 || ^3",
-    "@webext-core/match-patterns": "^2.0.0",
-    "@wxt-dev/browser": "workspace:>=0.1",
-    "@wxt-dev/storage": "workspace:^1.0.0",
-    "c12": "^3.3.4",
-    "cac": "^6.7.14 || ^7.0.0",
-    "chokidar": "^5.0.0",
-    "consola": "^3.4.2",
-    "defu": "^6.1.4",
-    "filesize": "^11.0.17",
-    "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
-    "hookable": "^6.1.0",
-    "json5": "^2.2.3",
-    "linkedom": "^0.18.12",
-    "magicast": "^0.5.2",
-    "nypm": "^0.6.5",
-    "picomatch": "^4.0.3",
-    "publish-browser-extension": "^6.0.0",
-    "superlock": "^1.3.2",
-    "tiny-open": "^1.3.0",
-    "tinyexec": "^1.2.4",
-    "tinyglobby": "^0.2.16",
-    "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0 || ^6.0.0"
-  },
-  "peerDependencies": {
-    "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0",
-    "vite": "^6.3.4 || ^7.0.0 || ^8.0.0-0",
-    "web-ext": ">=9.2.0",
-    "typescript": ">=5.4"
-  },
-  "peerDependenciesMeta": {
-    "eslint": {
-      "optional": true
-    },
-    "web-ext": {
-      "optional": true
-    },
-    "typescript": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
-    "@faker-js/faker": "^10.3.0",
-    "@types/bun": "catalog:",
-    "@types/lodash.merge": "^4.6.9",
-    "@types/node": "catalog:",
-    "@types/normalize-path": "^3.0.2",
-    "@types/picomatch": "^4.0.2",
-    "@types/prompts": "^2.4.9",
-    "dotenv-expand": "^13.0.0",
-    "eslint": "^10.1.0",
-    "extract-zip": "^2.0.1",
-    "get-port-please": "^3.2.0",
-    "happy-dom": "^20.8.3",
-    "is-wsl": "^3.1.1",
-    "lodash.merge": "^4.6.2",
-    "normalize-path": "^3.0.0",
-    "ohash": "^2.0.11",
-    "oxlint": "catalog:",
-    "publint": "catalog:",
-    "scule": "^1.3.0",
-    "tsdown": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:",
-    "vitest-plugin-random-seed": "catalog:",
-    "web-ext": "catalog:"
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git"
   },
-  "homepage": "https://wxt.dev",
-  "keywords": [
-    "vite",
-    "chrome",
-    "web",
-    "extension",
-    "browser",
-    "bundler",
-    "framework"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
   "funding": "https://github.com/sponsors/wxt-dev",
-  "files": [
-    "bin",
-    "dist"
-  ],
   "bin": {
     "wxt": "./bin/wxt.mjs",
     "wxt-publish-extension": "./bin/wxt-publish-extension.mjs"
   },
+  "files": [
+    "bin",
+    "dist",
+    "skills"
+  ],
+  "type": "module",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
@@ -203,8 +119,93 @@
       "default": "./dist/modules/index.mjs"
     }
   },
+  "scripts": {
+    "wxt": "bun run src/cli/index.ts",
+    "build": "buildc -- bun run tsdown --config-loader unrun",
+    "check": "bun run build && bun run --sequential 'check:*'",
+    "check:default": "check",
+    "check:tsc-virtual": "tsc --noEmit -p src/virtual",
+    "test": "buildc --deps-only -- vitest",
+    "test:coverage": "bun run test run --coverage",
+    "prepack": "bun run build"
+  },
+  "dependencies": {
+    "@1natsu/wait-element": "^5.0.0",
+    "@aklinker1/rollup-plugin-visualizer": "5.12.0",
+    "@aklinker1/zero-zip": "^1.0.1",
+    "@topcli/prompts": "^4.0.0",
+    "@webext-core/fake-browser": "^2.0.1",
+    "@webext-core/isolated-element": "^1.1.3 || ^2 || ^3",
+    "@webext-core/match-patterns": "^2.0.0",
+    "@wxt-dev/browser": "workspace:>=0.1",
+    "@wxt-dev/storage": "workspace:^1.0.0",
+    "c12": "^3.3.4",
+    "cac": "^6.7.14 || ^7.0.0",
+    "chokidar": "^5.0.0",
+    "consola": "^3.4.2",
+    "defu": "^6.1.4",
+    "filesize": "^11.0.17",
+    "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
+    "hookable": "^6.1.0",
+    "json5": "^2.2.3",
+    "linkedom": "^0.18.12",
+    "magicast": "^0.5.2",
+    "nypm": "^0.6.5",
+    "picomatch": "^4.0.3",
+    "publish-browser-extension": "^6.0.0",
+    "superlock": "^1.3.2",
+    "tiny-open": "^1.3.0",
+    "tinyexec": "^1.2.4",
+    "tinyglobby": "^0.2.16",
+    "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0 || ^6.0.0"
+  },
+  "devDependencies": {
+    "@aklinker1/buildc": "catalog:",
+    "@faker-js/faker": "^10.3.0",
+    "@types/bun": "catalog:",
+    "@types/lodash.merge": "^4.6.9",
+    "@types/node": "catalog:",
+    "@types/normalize-path": "^3.0.2",
+    "@types/picomatch": "^4.0.2",
+    "@types/prompts": "^2.4.9",
+    "dotenv-expand": "^13.0.0",
+    "eslint": "^10.1.0",
+    "extract-zip": "^2.0.1",
+    "get-port-please": "^3.2.0",
+    "happy-dom": "^21.0.4",
+    "is-wsl": "^3.1.1",
+    "lodash.merge": "^4.6.2",
+    "normalize-path": "^3.0.0",
+    "ohash": "^2.0.11",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "scule": "^1.3.0",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:",
+    "vitest-plugin-random-seed": "catalog:",
+    "web-ext": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0",
+    "typescript": ">=5.4",
+    "vite": "^6.3.4 || ^7.0.0 || ^8.0.0-0",
+    "web-ext": ">=9.2.0"
+  },
+  "peerDependenciesMeta": {
+    "eslint": {
+      "optional": true
+    },
+    "web-ext": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
   "engines": {
-    "node": ">=22",
-    "bun": ">=1.2.0"
+    "bun": ">=1.2.0",
+    "node": ">=22"
   }
 }

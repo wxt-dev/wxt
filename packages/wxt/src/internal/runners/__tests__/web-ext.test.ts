@@ -1,13 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import webExt, { WebExtRunInstance } from 'web-ext';
-import logger from 'web-ext/util/logger';
-import { WebExtRunner } from '../web-ext';
-import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
-import { mock, MockProxy } from 'vitest-mock-extended';
-import { WebExtConfig } from '../../../types';
 import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { mock, MockProxy } from 'vitest-mock-extended';
+import webExt, { WebExtRunInstance } from 'web-ext';
+import logger from 'web-ext/util/logger';
+
+import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
+import { WebExtConfig } from '../../../types';
+import { WebExtRunner } from '../web-ext';
 
 const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';

@@ -1,6 +1,8 @@
-import { version } from '../../version';
-import { consola } from 'consola';
 import { styleText } from 'node:util';
+
+import { consola } from 'consola';
+
+import { version } from '../../version';
 
 export function printHeader() {
   consola.log(

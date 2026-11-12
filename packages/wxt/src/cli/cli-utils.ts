@@ -1,11 +1,12 @@
 import { CAC, Command } from 'cac';
 import consola, { LogLevels, LogType } from 'consola';
+import { x as spawn } from 'tinyexec';
+
 import { filterTruthy, toArray } from '../internal-utils/array-utils';
 import { printHeader } from '../internal-utils/log';
 import { formatDuration } from '../internal-utils/time-utils';
 import { ValidationError } from '../internal/validation';
 import { registerWxt } from '../internal/wxt';
-import { x as spawn } from 'tinyexec';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug

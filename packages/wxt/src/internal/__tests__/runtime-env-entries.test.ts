@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { getRuntimeEnvEntries } from '../runtime-env-entries';
+
 import { fakeResolvedConfig } from '../../internal-utils/testing/fake-objects';
+import { getRuntimeEnvEntries } from '../runtime-env-entries';
 
 describe('getRuntimeEnvEntries', () => {
   it('should expose the raw --browser label, not the actual browser', () => {

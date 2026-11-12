@@ -1,7 +1,13 @@
 /** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
+
 import { faker } from '@faker-js/faker';
+import type { Browser } from '@wxt-dev/browser';
 import merge from 'lodash.merge';
+import { vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
+
+import { setWxtForTesting } from '../../internal/wxt';
 import {
   FsCache,
   ResolvedConfig,
@@ -21,11 +27,7 @@ import {
   BaseEntrypoint,
   UnlistedScriptEntrypoint,
 } from '../../types';
-import { mock } from 'vitest-mock-extended';
-import { vi } from 'vitest';
-import { setWxtForTesting } from '../../internal/wxt';
 import { resolveActualBrowser } from '../target-browser';
-import type { Browser } from '@wxt-dev/browser';
 
 faker.seed(__TEST_SEED__);
 

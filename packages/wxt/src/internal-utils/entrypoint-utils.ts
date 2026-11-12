@@ -1,10 +1,11 @@
+import path, { relative, resolve, extname } from 'node:path';
+
 import {
   Entrypoint,
   PerBrowserOption,
   ResolvedPerBrowserOptions,
   TargetBrowser,
 } from '../types';
-import path, { relative, resolve, extname } from 'node:path';
 import { normalizePath } from './path-utils';
 
 export function getEntrypointName(

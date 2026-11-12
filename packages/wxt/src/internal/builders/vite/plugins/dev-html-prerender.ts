@@ -1,10 +1,13 @@
-import type * as vite from 'vite';
-import { ResolvedConfig, WxtDevServer } from '../../../../types';
-import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
-import { parseHTML } from 'linkedom';
 import { dirname, relative, resolve } from 'node:path';
-import { normalizePath } from '../../../../internal-utils/path-utils';
+
+import { parseHTML } from 'linkedom';
 import { hash } from 'ohash';
+import type * as vite from 'vite';
+
+import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { normalizePath } from '../../../../internal-utils/path-utils';
+import { virtualModules } from '../../../../internal-utils/virtual-modules';
+import { ResolvedConfig, WxtDevServer } from '../../../../types';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
 const inlineScriptContents: Record<string, string> = {};
@@ -18,10 +21,7 @@ export function devHtmlPrerender(
   server: WxtDevServer | undefined,
 ): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
-  const resolvedHtmlReloadId = resolve(
-    config.wxtModuleDir,
-    'dist/virtual/reload-html.mjs',
-  );
+  const resolvedHtmlReloadId = '\0virtual:wxt-reload-html';
 
   const virtualInlineScript = 'virtual:wxt-inline-script';
   const resolvedVirtualInlineScript = '\0' + virtualInlineScript;
@@ -109,6 +109,26 @@ export function devHtmlPrerender(
         config.logger.debug('Old HTML:\n' + html);
         config.logger.debug('New HTML:\n' + newHtml);
         return newHtml;
+      },
+    },
+    {
+      name: 'wxt:reload-html-module',
+      apply: 'build',
+      resolveId: {
+        filter: {
+          id: new RegExp(`^${resolvedHtmlReloadId}$`),
+        },
+        handler(id) {
+          return id;
+        },
+      },
+      load: {
+        filter: {
+          id: new RegExp(`^${resolvedHtmlReloadId}$`),
+        },
+        handler() {
+          return virtualModules['reload-html'];
+        },
       },
     },
     {

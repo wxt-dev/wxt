@@ -1,8 +1,10 @@
-import { x as spawn } from 'tinyexec';
 import path from 'node:path';
+
+import { x as spawn } from 'tinyexec';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { pnpm } from '../pnpm';
+
 import { describeWithBin } from '../../../internal-utils/testing/fixtures';
+import { pnpm } from '../pnpm';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 

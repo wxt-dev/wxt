@@ -1,6 +1,7 @@
 import definition from 'virtual:user-content-script-main-world-entrypoint';
-import { logger } from '../utils/internal/logger';
 import { initPlugins } from 'virtual:wxt-plugins';
+
+import { logger } from '../utils/internal/logger';
 
 const result = (async () => {
   try {

@@ -1,4 +1,16 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { styleText } from 'node:util';
 import { relative, resolve } from 'path';
+
+import JSON5 from 'json5';
+import { parseHTML } from 'linkedom';
+import { camelCase } from 'scule';
+
+import {
+  isHtmlEntrypoint,
+  isJsEntrypoint,
+  resolvePerBrowserOptions,
+} from '../internal-utils/entrypoint-utils';
 import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -12,18 +24,8 @@ import {
   IsolatedWorldContentScriptEntrypointOptions,
   UnlistedScriptEntrypoint,
 } from '../types';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { parseHTML } from 'linkedom';
-import JSON5 from 'json5';
-import {
-  isHtmlEntrypoint,
-  isJsEntrypoint,
-  resolvePerBrowserOptions,
-} from '../internal-utils/entrypoint-utils';
 import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from './constants';
 import { wxt } from './wxt';
-import { camelCase } from 'scule';
-import { styleText } from 'node:util';
 
 /**
  * Return entrypoints and their configuration by looking through the project's
@@ -36,7 +38,9 @@ export async function findEntrypoints(): Promise<Entrypoint[]> {
     await writeFile(
       resolve(wxt.config.wxtDir, 'tsconfig.json'),
       JSON.stringify({}),
-      { flag: 'wx' },
+      {
+        flag: 'wx',
+      },
     );
   } catch (err) {
     if (!(err instanceof Error) || !('code' in err) || err.code !== 'EEXIST') {
