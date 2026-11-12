@@ -1,6 +1,14 @@
 import cac from 'cac';
 
-import { build, clean, createServer, initialize, prepare, zip } from '../index';
+import {
+  build,
+  clean,
+  createServer,
+  downloadDocs,
+  initialize,
+  prepare,
+  zip,
+} from '../index';
 import {
   createAliasedCommand,
   getArrayFromFlags,
@@ -144,6 +152,27 @@ cli
   .action(
     wrapAction(async (root, flags) => {
       await clean({ root, configFile: flags.config, debug: flags.debug });
+    }),
+  );
+
+// DOCS
+cli
+  .command('docs [root]', 'download docs for the installed WXT version')
+  .option(
+    '-o, --out-dir <dir>',
+    'base directory for versioned docs (default: .wxt/docs)',
+  )
+  .option(
+    '-f, --force',
+    'redownload even if docs for this version already exist',
+  )
+  .action(
+    wrapAction(async (root, flags) => {
+      await downloadDocs({
+        root,
+        outDir: flags.outDir,
+        force: flags.force,
+      });
     }),
   );
 

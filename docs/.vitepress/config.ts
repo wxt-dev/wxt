@@ -274,6 +274,7 @@ export default defineConfig({
             menuItem('wxt zip', 'wxt-zip.md'),
             menuItem('wxt prepare', 'wxt-prepare.md'),
             menuItem('wxt clean', 'wxt-clean.md'),
+            menuItem('wxt docs', 'wxt-docs.md'),
             menuItem('wxt init', 'wxt-init.md'),
             menuItem('wxt submit', 'wxt-submit.md'),
             menuItem('wxt submit init', 'wxt-submit-init.md'),
