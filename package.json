@@ -21,6 +21,7 @@
     "@aklinker1/check": "catalog:",
     "@commitlint/config-conventional": "^21.2.0",
     "@commitlint/types": "^21.2.0",
+    "@cynber/vitepress-valence": "^0.2.2",
     "@types/bun": "catalog:",
     "@types/markdown-it-footnote": "^3.0.4",
     "@vitest/coverage-v8": "catalog:",

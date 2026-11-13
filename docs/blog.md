@@ -1,9 +1,9 @@
 ---
-layout: page
+layout: doc
+aside: false
+title: Blog
 ---
 
-<script lang="ts" setup>
-import BlogHome from './.vitepress/components/BlogHome.vue';
-</script>
+# Blog
 
-<BlogHome />
+<VpvArticleList format="vertical" />

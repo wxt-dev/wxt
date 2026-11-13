@@ -1,12 +1,17 @@
 ---
-layout: blog
-title: Introducing <code>#imports</code>
-description: Learn how WXT's new <code>#imports</code> module works and how to use it.
-authors:
-  - name: Aaron Klinker
-    github: aklinker1
+aside: false
+title: 'Introducing #imports'
+summary: "Learn how WXT's new #imports module works and how to use it."
 date: 2024-12-06T14:39:00.000Z
+author: aklinker1
+status: published
+featured_image:
+  image: '/blog/imports-module.jpg'
+  alt: 'A dark puzzle piece hovering above a matching, glowing slot'
+  description: 'Final puzzle piece hovering over position - Credits to Edge2Edge Media on Unsplash'
 ---
+
+<VpvArticleHeader returnLink="/blog" returnText="Back to Blog" />
 
 WXT v0.20 introduced a new way of manually importing its APIs: **the `#imports` module**. This module was introduced to simplify import statements and provide more visibility into all the APIs WXT provides.
 

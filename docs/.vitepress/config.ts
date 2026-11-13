@@ -57,12 +57,9 @@ const knowledge = addKnowledge<DefaultTheme.Config>({
     '/api/': 'api-reference',
     '/blog/': 'blog',
   },
-  layoutSelectors: {
-    blog: '.vp-doc > .container',
-  },
   pageSelectors: {
     'examples.md': '#VPContent > .VPPage',
-    'blog.md': '#VPContent > .VPPage',
+    'blog.md': '#VPContent .vp-doc',
   },
 });
 
@@ -75,6 +72,7 @@ export default defineConfig({
   description,
   vite: {
     clearScreen: false,
+    ssr: { noExternal: ['@cynber/vitepress-valence'] },
     //TODO: REMOVE THIS @TS-EXPECT-ERROR AFTER BUMP VITEPRESS TO V2.0
     plugins: [
       // @ts-expect-error: Vite version mismatch between this project and the plugin
@@ -129,7 +127,7 @@ export default defineConfig({
         date: post.frontmatter.date,
         link: new URL(post.url, origin).href,
         title: post.frontmatter.title,
-        description: post.frontmatter.description,
+        description: post.frontmatter.summary,
       });
     });
     // console.log('rss.xml:');

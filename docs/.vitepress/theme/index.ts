@@ -1,16 +1,19 @@
+import { VpvArticleHeader, VpvArticleList } from '@cynber/vitepress-valence';
 import { createMermaidRenderer } from 'vitepress-mermaid-renderer';
 import { useData, type EnhanceAppContext } from 'vitepress/client';
 import DefaultTheme from 'vitepress/theme';
 import { h, nextTick, watch } from 'vue';
 
-import BlogLayout from '../components/BlogLayout.vue';
 import EntrypointPatterns from '../components/EntrypointPatterns.vue';
 
+import '@cynber/vitepress-valence/style.css';
 import './custom.css';
 import 'virtual:group-icons.css';
 import ExampleSearch from '../components/ExampleSearch.vue';
 import Icon from '../components/Icon.vue';
 import UsingWxtSection from '../components/UsingWxtSection.vue';
+import authors from '../data/authors';
+import { data as postsData } from '../loaders/blog.data';
 import { setupCodeGroupSync } from '../utils/code-groups-sync';
 
 export default {
@@ -21,7 +24,10 @@ export default {
       .component('EntrypointPatterns', EntrypointPatterns)
       .component('UsingWxtSection', UsingWxtSection)
       .component('ExampleSearch', ExampleSearch)
-      .component('blog', BlogLayout);
+      .component('VpvArticleHeader', VpvArticleHeader)
+      .component('VpvArticleList', VpvArticleList)
+      .provide('authors', authors)
+      .provide('postsData', postsData);
 
     setupCodeGroupSync();
   },

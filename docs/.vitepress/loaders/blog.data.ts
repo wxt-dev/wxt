@@ -7,4 +7,11 @@ export { data };
 
 export default createContentLoader<
   Array<ContentData & { frontmatter: PostFrontmatter }>
->('blog/*.md');
+>('blog/*.md', {
+  transform: (posts) =>
+    posts.sort(
+      (a, b) =>
+        new Date(b.frontmatter.date).getTime() -
+        new Date(a.frontmatter.date).getTime(),
+    ),
+});
