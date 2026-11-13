@@ -155,7 +155,7 @@ const outPaths = computed(() => {
   overflow-x: auto;
   border: 1px solid var(--vp-c-divider);
   border-radius: 16px;
-  background: var(--vp-c-bg-soft);
+  background: var(--wxt-c-bg-panel);
 }
 .pad {
   --space: 48px;
