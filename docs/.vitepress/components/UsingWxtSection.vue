@@ -121,9 +121,7 @@ const sortedExtensions = computed(() =>
     : allExtensions.value.slice(0, props.limit),
 );
 
-function formatUsers(n: number): string {
-  return `${n.toLocaleString()} users`;
-}
+const userFormatter = new Intl.NumberFormat(undefined, { notation: 'compact' });
 
 function formatStars(r: number): string {
   const rounded = Math.round(r * 10) / 10;
@@ -159,7 +157,7 @@ function formatStars(r: number): string {
         </p>
         <div v-if="extension.stores.length > 0" class="store-stats">
           <p class="store-stats-info">
-            <span>{{ formatUsers(extension.users) }}</span>
+            <span>{{ userFormatter.format(extension.users) }} users</span>
             <template v-if="extension.rating">
               <span class="store-stats-sep" aria-hidden="true">,</span>
               <span>{{ formatStars(extension.rating) }}</span>
@@ -207,12 +205,10 @@ function formatStars(r: number): string {
 
 <style scoped>
 .extension-grid > li > img {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
-  padding: 8px;
   border-radius: 8px;
-  background-color: var(--vp-c-default-soft);
 }
 
 .extension-grid {
