@@ -8,6 +8,7 @@
   --wxt-c-green-2: #096600;
   --wxt-c-green-3: #096600;
   --wxt-c-green-soft: rgba(11, 138, 0, 0.14);
+  --wxt-c-green-accent: #67d55e;
 
   --vp-c-brand-1: var(--wxt-c-green-1);
   --vp-c-brand-2: var(--wxt-c-green-2);
@@ -20,6 +21,7 @@
   --wxt-c-green-2: #329929;
   --wxt-c-green-3: #21651b;
   --wxt-c-green-soft: rgba(103, 212, 94, 0.14);
+  --wxt-c-green-accent: var(--wxt-c-green-1);
 
   /* Black backgrounds */
   --vp-c-bg: #000000;
