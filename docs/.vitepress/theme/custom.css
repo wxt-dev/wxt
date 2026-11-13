@@ -104,6 +104,10 @@ body {
   background: linear-gradient(to bottom, transparent, var(--vp-c-bg));
 }
 
+.dark .vp-doc tr:nth-child(2n) {
+  background-color: var(--wxt-c-bg-panel);
+}
+
 .dark .VPFeature {
   background-color: var(--wxt-c-bg-panel);
   border-color: var(--wxt-c-card-border);
