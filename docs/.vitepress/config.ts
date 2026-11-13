@@ -192,6 +192,7 @@ export default defineConfig({
     nav: [
       navItem('Guide', '/guide/installation'),
       navItem('Examples', '/examples'),
+
       navItem('API', '/api/reference/wxt'),
       navItem('Blog', '/blog'),
       navItem(`v${wxtVersion}`, [
@@ -258,6 +259,7 @@ export default defineConfig({
           menuItem('Compare', 'compare.md'),
           menuItem('FAQ', 'faq.md'),
           menuItem('Community', 'community.md'),
+          menuItem('Showcase', 'showcase.md'),
           menuItem('Upgrading WXT', 'upgrading.md'),
           menuItem('Migrate to WXT', 'migrate.md'),
           menuItem('How WXT Works', 'how-wxt-works.md'),

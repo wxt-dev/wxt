@@ -91,5 +91,5 @@ WXT simplifies the web extension development process by providing tools for zipp
 Battle tested and ready for production. Explore web extensions made with WXT.
 
 <ClientOnly>
-  <UsingWxtSection />
+  <UsingWxtSection :limit="12" />
 </ClientOnly>

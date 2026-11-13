@@ -4,6 +4,16 @@ import { computed } from 'vue';
 import _extensionEntries from '../../assets/extension-showcase.yml';
 import useListExtensionDetails from '../composables/useListExtensionDetails';
 
+const props = withDefaults(
+  defineProps<{
+    /** Only show the top N extensions, sorted by installs. Shows all if omitted. */
+    limit?: number;
+    /** Max columns on wide screens. */
+    columns?: 2 | 3;
+  }>(),
+  { columns: 3 },
+);
+
 interface StoreLink {
   label: string;
   url: string;
@@ -47,7 +57,7 @@ function addUtmSource(storeUrl: string): string {
   return url.href;
 }
 
-const sortedExtensions = computed((): ListedExtension[] => {
+const allExtensions = computed((): ListedExtension[] => {
   if (!data.value) return [];
 
   const chromeById = new Map(
@@ -102,9 +112,14 @@ const sortedExtensions = computed((): ListedExtension[] => {
     });
   }
 
-  const score = (e: ListedExtension) => ((e.rating ?? 5) / 5) * e.users;
-  return results.sort((a, b) => score(b) - score(a));
+  return results.sort((a, b) => b.users - a.users);
 });
+
+const sortedExtensions = computed(() =>
+  props.limit == null
+    ? allExtensions.value
+    : allExtensions.value.slice(0, props.limit),
+);
 
 function formatUsers(n: number): string {
   return `${n.toLocaleString()} users`;
@@ -124,7 +139,7 @@ function formatStars(r: number): string {
   >
     Failed to load extension details.
   </p>
-  <ul v-else class="extension-grid">
+  <ul v-else class="extension-grid" :class="`cols-${props.columns}`">
     <li v-for="extension of sortedExtensions" :key="extension.id">
       <img
         :src="extension.iconUrl"
@@ -172,6 +187,14 @@ function formatStars(r: number): string {
       </div>
     </li>
   </ul>
+  <p
+    v-if="allExtensions.length > sortedExtensions.length"
+    class="centered view-all"
+  >
+    <a href="/guide/resources/showcase" class="view-all-link"
+      >View all {{ allExtensions.length }} extensions</a
+    >
+  </p>
   <p class="centered pr">
     <a
       href="https://github.com/wxt-dev/wxt/edit/main/docs/assets/extension-showcase.yml"
@@ -184,9 +207,10 @@ function formatStars(r: number): string {
 
 <style scoped>
 .extension-grid > li > img {
-  width: 116px;
-  height: 116px;
-  padding: 16px;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  padding: 8px;
   border-radius: 8px;
   background-color: var(--vp-c-default-soft);
 }
@@ -200,21 +224,26 @@ function formatStars(r: number): string {
   margin: 16px 0;
   padding: 0;
 }
-@media (min-width: 960px) {
+@media (min-width: 800px) {
   .extension-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1100px) {
+  .extension-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .extension-grid > li {
   margin: 0 !important;
-  padding: 24px;
+  padding: 16px;
   display: flex;
   background-color: var(--wxt-c-bg-panel);
   border: 1px solid var(--wxt-c-card-border);
   border-radius: 12px;
   flex: 1;
-  gap: 24px;
+  gap: 14px;
   align-items: stretch;
 }
 
@@ -246,7 +275,7 @@ function formatStars(r: number): string {
   column-gap: 6px;
   row-gap: 4px;
   text-align: right;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.45;
   opacity: 0.72;
   color: var(--vp-c-text-2);
@@ -288,7 +317,8 @@ function formatStars(r: number): string {
   padding: 0;
   margin: 0;
   text-decoration: none;
-  font-size: large;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .extension-grid > li .extension-name:hover {
@@ -297,6 +327,8 @@ function formatStars(r: number): string {
 
 .extension-grid > li .description {
   opacity: 90%;
+  font-size: 13px;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -306,5 +338,24 @@ function formatStars(r: number): string {
 
 .pr {
   opacity: 70%;
+}
+
+.view-all {
+  margin: 24px 0;
+}
+
+.view-all-link {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--vp-button-brand-text);
+  background-color: var(--vp-button-brand-bg);
+}
+
+.view-all-link:hover {
+  color: var(--vp-button-brand-hover-text);
+  background-color: var(--vp-button-brand-hover-bg);
 }
 </style>

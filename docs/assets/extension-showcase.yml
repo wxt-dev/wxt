@@ -1,4 +1,4 @@
-# Add extension entries to end of the list. On the website, extensions will be sorted by a combination of users and rating.
+# Add extension entries to end of the list. On the website, extensions will be sorted by total installs. The homepage only shows the top 12; the rest are on the showcase page.
 #
 # Change the commit message or PR title to:
 #
