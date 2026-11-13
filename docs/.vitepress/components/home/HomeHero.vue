@@ -12,9 +12,64 @@ import { stats } from './stats';
 const MOON = { x: 1803, y: 598, r: 646 };
 const TILT = -18;
 
-const rings = [
-  { rx: 780, ry: 235, speed: 70, reverse: false },
-  { rx: 930, ry: 300, speed: 110, reverse: true },
+type Sat = { kind: 'dot' | 'station' | 'speck'; at: number };
+const rings: {
+  rx: number;
+  ry: number;
+  speed: number;
+  reverse: boolean;
+  dashed: boolean;
+  sats: Sat[];
+}[] = [
+  {
+    rx: 780,
+    ry: 235,
+    speed: 70,
+    reverse: false,
+    dashed: false,
+    sats: [
+      { kind: 'dot', at: 0.5 },
+      { kind: 'speck', at: 0.05 },
+      { kind: 'speck', at: 0.78 },
+    ],
+  },
+  {
+    rx: 930,
+    ry: 300,
+    speed: 110,
+    reverse: true,
+    dashed: true,
+    sats: [
+      { kind: 'dot', at: 0.5 },
+      { kind: 'station', at: 0.15 },
+      { kind: 'speck', at: 0.7 },
+    ],
+  },
+  {
+    rx: 1090,
+    ry: 370,
+    speed: 170,
+    reverse: false,
+    dashed: true,
+    sats: [
+      { kind: 'station', at: 0.4 },
+      { kind: 'speck', at: 0.9 },
+    ],
+  },
+];
+
+// [x, y, radius, animation delay] - kept left of the moon.
+const stars: [number, number, number, number][] = [
+  [700, 120, 1.4, 0],
+  [860, 60, 1.1, 1.5],
+  [1010, 210, 1.6, 3],
+  [780, 330, 1.2, 2],
+  [1080, 40, 1.3, 4],
+  [930, 470, 1.1, 0.8],
+  [1100, 720, 1.5, 2.6],
+  [820, 880, 1.2, 3.8],
+  [1020, 1010, 1.4, 1.2],
+  [720, 1120, 1.1, 4.4],
 ];
 
 function ellipsePath(rx: number, ry: number, reverse: boolean) {
@@ -69,25 +124,40 @@ const telemetry = [
         <g id="hero-rings">
           <template v-for="(ring, i) in rings" :key="i">
             <ellipse
-              :class="i === 0 ? 'ring' : 'dashed ring'"
+              :class="ring.dashed ? 'dashed ring' : 'ring'"
               :cx="MOON.x"
               :cy="MOON.y"
               :rx="ring.rx"
               :ry="ring.ry"
             />
-            <g v-if="animated">
-              <circle class="glow" r="14" />
-              <circle class="dot" r="4.5" />
-              <animateMotion
-                :dur="`${ring.speed}s`"
-                repeatCount="indefinite"
-                :path="ellipsePath(ring.rx, ring.ry, ring.reverse)"
-              />
-            </g>
-            <g v-else :transform="`translate(${MOON.x - ring.rx} ${MOON.y})`">
-              <circle class="glow" r="14" />
-              <circle class="dot" r="4.5" />
-            </g>
+            <template v-for="(sat, j) in ring.sats" :key="j">
+              <g v-if="animated">
+                <g v-if="sat.kind === 'dot'">
+                  <circle class="glow" r="14" />
+                  <circle class="dot" r="4.5" />
+                </g>
+                <g v-else-if="sat.kind === 'station'">
+                  <rect class="panel" x="-9" y="-2" width="6" height="4" />
+                  <rect class="panel" x="3" y="-2" width="6" height="4" />
+                  <rect class="body" x="-3" y="-3" width="6" height="6" />
+                  <circle class="beacon" cy="-6" r="1.8" />
+                </g>
+                <circle v-else class="speck" r="2.2" />
+                <animateMotion
+                  :dur="`${ring.speed}s`"
+                  :begin="`${-ring.speed * sat.at}s`"
+                  repeatCount="indefinite"
+                  :path="ellipsePath(ring.rx, ring.ry, ring.reverse)"
+                />
+              </g>
+              <g
+                v-else-if="j === 0 && i < 2"
+                :transform="`translate(${MOON.x - ring.rx} ${MOON.y})`"
+              >
+                <circle class="glow" r="14" />
+                <circle class="dot" r="4.5" />
+              </g>
+            </template>
           </template>
         </g>
       </defs>
@@ -99,6 +169,24 @@ const telemetry = [
         height="1280"
         preserveAspectRatio="xMaxYMid slice"
       />
+
+      <g v-if="animated">
+        <circle
+          v-for="([x, y, r, delay], i) in stars"
+          :key="i"
+          class="star"
+          :cx="x"
+          :cy="y"
+          :r="r"
+          :style="{ animationDelay: `${delay}s` }"
+        />
+        <g transform="translate(1100 90)">
+          <line class="comet" x1="0" y1="0" x2="120" y2="-42" />
+        </g>
+        <g transform="translate(1050 600)">
+          <line class="comet second" x1="0" y1="0" x2="90" y2="-32" />
+        </g>
+      </g>
 
       <!-- Back of the rings, then the moon, then the front of the rings. -->
       <g mask="url(#hero-behind-moon)">
@@ -147,7 +235,7 @@ const telemetry = [
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 640px;
+  min-height: max(720px, 70vh);
   overflow: hidden;
   isolation: isolate;
   background: #000;
@@ -199,7 +287,7 @@ const telemetry = [
   vector-effect: non-scaling-stroke;
 }
 .ring.dashed {
-  stroke: rgba(103, 212, 94, 0.55);
+  stroke: rgba(103, 212, 94, 0.75);
   stroke-dasharray: 2 8;
   animation: hero-drift 40s linear infinite;
 }
@@ -209,13 +297,76 @@ const telemetry = [
 .dot {
   fill: #67d45e;
 }
+.speck {
+  fill: rgba(255, 255, 255, 0.75);
+}
+.panel {
+  fill: #7dd3fc;
+  opacity: 0.85;
+}
+.body {
+  fill: #e4e4e7;
+}
+.beacon {
+  fill: #ff5a5a;
+  animation: hero-blink 2.4s ease-in-out infinite;
+}
+.star {
+  fill: #fff;
+  opacity: 0.2;
+  animation: hero-twinkle 5s ease-in-out infinite;
+}
+.comet {
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: hero-comet 19s linear infinite;
+}
+.comet.second {
+  animation-duration: 27s;
+  animation-delay: -9s;
+}
 @keyframes hero-drift {
   to {
     stroke-dashoffset: -100;
   }
 }
+@keyframes hero-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 1;
+  }
+}
+@keyframes hero-twinkle {
+  50% {
+    opacity: 0.85;
+  }
+}
+/* Idle most of the cycle, then streaks across the sky briefly. */
+@keyframes hero-comet {
+  0%,
+  93% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-260px, 90px);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .ring.dashed {
+  .ring.dashed,
+  .beacon,
+  .star,
+  .comet {
     animation: none;
   }
 }

@@ -58,11 +58,11 @@ import HomeWorkflow from './HomeWorkflow.vue';
 
 <!-- Page level overrides for VitePress's home layout. -->
 <style>
-.VPContent.wxt-home .VPHome {
+.wxt-home .VPHome {
   margin-bottom: 0;
 }
 /* Let the page use the full width instead of VitePress's centered container. */
-.VPContent.wxt-home .VPHome .vp-doc.container {
+.wxt-home .VPHome .vp-doc.container {
   max-width: none;
   margin: 0;
   padding: 0;
