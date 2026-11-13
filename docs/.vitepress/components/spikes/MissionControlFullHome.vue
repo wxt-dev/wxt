@@ -762,13 +762,13 @@ const destinations = [
 }
 
 /* systems */
-.groups {
+.mcf .groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin-top: 48px;
 }
-.group {
+.mcf .group {
   display: flex;
   flex-direction: column;
   border: 1px solid #262626;
@@ -777,48 +777,48 @@ const destinations = [
   overflow: hidden;
   transition: border-color 0.2s;
 }
-.group:hover {
+.mcf .group:hover {
   border-color: rgba(103, 212, 94, 0.5);
 }
-.group-head {
+.mcf .group-head {
   position: relative;
   padding: 24px 24px 20px;
   border-bottom: 1px solid var(--line);
   background: linear-gradient(to bottom, rgba(103, 212, 94, 0.07), transparent);
 }
-.group-head .num {
+.mcf .group-head .num {
   font: 600 12px var(--mono);
   letter-spacing: 0.12em;
   color: var(--green);
 }
-.group-head h3 {
+.mcf .group-head h3 {
   margin-top: 10px;
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff;
 }
-.group-head p {
+.mcf .group-head p {
   margin-top: 4px;
   font-size: 14px;
   color: var(--dim);
 }
-.group ul {
+.mcf .group ul {
   display: flex;
   flex-direction: column;
 }
-.group li {
+.mcf .group li {
   padding: 18px 24px;
 }
-.group li + li {
+.mcf .group li + li {
   border-top: 1px solid var(--line);
 }
-.group h4 {
+.mcf .group h4 {
   font-size: 15px;
   font-weight: 600;
   color: #fff;
 }
-.group li p {
+.mcf .group li p {
   margin-top: 4px;
   font-size: 13.5px;
   line-height: 1.6;
@@ -934,7 +934,7 @@ const destinations = [
   .orbit .dot {
     animation: none;
   }
-  .group {
+  .mcf .group {
     transition: none;
   }
 }
