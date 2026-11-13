@@ -63,7 +63,7 @@ const outPaths = computed(() => {
 
 <template>
   <section>
-    <HomeSectionHead count="03" title="One codebase. Every browser." center>
+    <HomeSectionHead count="03" title="One codebase. Every browser.">
       Write your extension once. WXT takes care of the browser-specific builds.
     </HomeSectionHead>
 
