@@ -243,7 +243,7 @@ a.card:hover {
   color: var(--vp-c-brand-1);
 }
 .chip .prompt {
-  color: var(--vp-c-text-3);
+  color: var(--vp-c-brand-1);
 }
 .arrow {
   color: var(--vp-c-text-3);

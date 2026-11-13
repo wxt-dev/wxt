@@ -25,7 +25,7 @@
   background:
     radial-gradient(
       60% 90% at 50% 120%,
-      color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent),
+      color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent),
       transparent
     ),
     var(--wxt-c-bg-panel);
