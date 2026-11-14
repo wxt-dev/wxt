@@ -64,9 +64,13 @@ jobs:
         run: bun run wxt zip
         working-directory: packages/wxt-demo
 
-  linux-tests:
-    name: Tests (Linux)
+  linux-tests-shard:
+    name: Tests (Linux, ${{ matrix.shard }})
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/2, 2/2]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -74,22 +78,33 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@d9184bf108216479bc5a137cc391f4d7b14c870b # v6.1.0
-        with:
-          version: 10.29.3
-
+      # Every package is sharded the same way; `--passWithNoTests` covers
+      # packages with fewer test files than shards.
       - name: Run Tests (Coverage)
-        run: bun run test:coverage --reporter=default --reporter=hanging-process
+        run: bun run --workspaces test:coverage --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
 
       - name: Upload Coverage
         uses: codecov/codecov-action@2320916714171c258d01dbd81040d64d798c6f8e # v7.1.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  windows-tests:
-    name: Tests (Windows)
+  # Required status check: passes only if every shard passed.
+  linux-tests:
+    name: Tests (Linux)
+    needs: linux-tests-shard
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check Shard Results
+        run: '[ "${{ needs.linux-tests-shard.result }}" = "success" ]'
+
+  windows-tests-shard:
+    name: Tests (Windows, ${{ matrix.shard }})
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/3, 2/3, 3/3]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -97,13 +112,18 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@d9184bf108216479bc5a137cc391f4d7b14c870b # v6.1.0
-        with:
-          version: 10.29.3
-
       - name: Run Tests
-        run: bun run test
+        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests
+
+  # Required status check: passes only if every shard passed.
+  windows-tests:
+    name: Tests (Windows)
+    needs: windows-tests-shard
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check Shard Results
+        run: '[ "${{ needs.windows-tests-shard.result }}" = "success" ]'
 
   template:
     name: Template
@@ -123,6 +143,8 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+        with:
+          postinstall: 'false'
 
       - name: Pack WXT package
         run: bun pm pack

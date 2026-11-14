@@ -24,7 +24,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
         with:
-          installArgs: --ignore-scripts
+          postinstall: 'false'
 
       - name: Generate Latest Code
         working-directory: packages/browser

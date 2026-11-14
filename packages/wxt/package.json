@@ -178,6 +178,7 @@
     "normalize-path": "^3.0.0",
     "ohash": "^2.0.11",
     "oxlint": "catalog:",
+    "pnpm": "10.29.3",
     "publint": "catalog:",
     "scule": "^1.3.0",
     "tsdown": "catalog:",

@@ -83,6 +83,7 @@
     "web-ext": "^10.5.0"
   },
   "patchedDependencies": {
-    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
+    "@aklinker1/buildc@1.1.7": "patches/@aklinker1%2Fbuildc@1.1.7.patch"
   }
 }
