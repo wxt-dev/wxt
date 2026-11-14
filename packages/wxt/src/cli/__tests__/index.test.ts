@@ -2,7 +2,15 @@ import consola, { LogLevels } from 'consola';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
-import { build, createServer, zip, prepare, clean, initialize } from '../../';
+import {
+  build,
+  createServer,
+  zip,
+  prepare,
+  clean,
+  downloadDocs,
+  initialize,
+} from '../../';
 
 vi.mock('../../build');
 const buildMock = vi.mocked(build);
@@ -18,6 +26,9 @@ const prepareMock = vi.mocked(prepare);
 
 vi.mock('../../clean');
 const cleanMock = vi.mocked(clean);
+
+vi.mock('../../download-docs');
+const downloadDocsMock = vi.mocked(downloadDocs);
 
 vi.mock('../../initialize');
 const initializeMock = vi.mocked(initialize);
@@ -537,6 +548,42 @@ describe('CLI', () => {
           requireGit: true,
         }),
       );
+    });
+  });
+
+  describe('docs', () => {
+    it('should not pass any options when no flags are passed', async () => {
+      mockArgv('docs');
+      await importCli();
+
+      expect(downloadDocsMock).toHaveBeenCalledWith({});
+    });
+
+    it('should respect passing a custom root', async () => {
+      mockArgv('docs', 'path/to/root');
+      await importCli();
+
+      expect(downloadDocsMock).toHaveBeenCalledWith({
+        root: 'path/to/root',
+      });
+    });
+
+    it('should respect passing --out-dir', async () => {
+      mockArgv('docs', '-o', 'tmp/docs');
+      await importCli();
+
+      expect(downloadDocsMock).toHaveBeenCalledWith({
+        outDir: 'tmp/docs',
+      });
+    });
+
+    it('should respect passing --force', async () => {
+      mockArgv('docs', '--force');
+      await importCli();
+
+      expect(downloadDocsMock).toHaveBeenCalledWith({
+        force: true,
+      });
     });
   });
 });

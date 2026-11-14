@@ -12,6 +12,7 @@ export * from './clean';
 export * from './create-server';
 export * from './define-config';
 export * from './define-web-ext-config';
+export * from './download-docs';
 export * from './initialize';
 export * from './prepare';
 export * from './types';
