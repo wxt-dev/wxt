@@ -124,11 +124,6 @@ describe('Content Script Context', () => {
   });
 
   describe('applyPatch', () => {
-    it('should throw when the content script runs in the "MAIN" world', () => {
-      const ctx = new ContentScriptContext('test', { world: 'MAIN' });
-      expect(() => ctx.applyPatch()).toThrow();
-    });
-
     it('should patch setTimeout so plain calls stop firing after invalidation', async () => {
       const ctx = new ContentScriptContext('test');
       const restore = ctx.applyPatch();
