@@ -362,17 +362,11 @@ function addEntrypoints(
   }
 
   if (sandboxes?.length) {
-    if (wxt.config.browser === 'firefox') {
-      wxt.logger.warn(
-        'Sandboxed pages not supported by Firefox. sandbox.pages was not added to the manifest',
-      );
-    } else {
-      manifest.sandbox = {
-        pages: sandboxes.map((entry) =>
-          getEntrypointBundlePath(entry, wxt.config.outDir, '.html'),
-        ),
-      };
-    }
+    manifest.sandbox = {
+      pages: sandboxes.map((entry) =>
+        getEntrypointBundlePath(entry, wxt.config.outDir, '.html'),
+      ),
+    };
   }
 
   if (sidepanels?.length) {
