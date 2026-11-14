@@ -362,6 +362,8 @@ function addEntrypoints(
   }
 
   if (sandboxes?.length) {
+    // Firefox supports the sandbox since version 154:
+    // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/sandbox#browser_compatibility
     manifest.sandbox = {
       pages: sandboxes.map((entry) =>
         getEntrypointBundlePath(entry, wxt.config.outDir, '.html'),
