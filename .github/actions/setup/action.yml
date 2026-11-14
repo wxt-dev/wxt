@@ -15,6 +15,11 @@ runs:
       with:
         bun-version-file: '.tool-versions'
 
+    - name: 💾 Put Bun cache on workspace drive (Windows)
+      if: ${{ inputs.install == 'true' && runner.os == 'Windows' }}
+      shell: bash
+      run: echo "BUN_INSTALL_CACHE_DIR=$RUNNER_TEMP\\bun-cache" >> $GITHUB_ENV
+
     - name: 🔍 Get Bun cache path
       if: ${{ inputs.install == 'true' }}
       id: bun-cache
