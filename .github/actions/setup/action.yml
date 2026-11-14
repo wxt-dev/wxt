@@ -41,15 +41,17 @@ runs:
 
     # buildc only reuses outputs whose source hash matches, so restoring an
     # older cache from the same lockfile is safe and avoids rebuilding packages
-    # a PR didn't touch.
+    # a PR didn't touch. The key includes the job ID because jobs build
+    # different subsets of packages, and only the first job to finish gets to
+    # save a given key.
     - name: 📦 Cache buildc
       if: ${{ inputs.install == 'true' }}
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .cache/packages
-        key: ${{ runner.os }}-buildc-${{ hashFiles('bun.lock') }}-${{ hashFiles('packages/*/package.json', 'packages/*/src/**') }}
+        key: ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ hashFiles('packages/*/package.json', 'packages/*/src/**') }}
         restore-keys: |
-          ${{ runner.os }}-buildc-${{ hashFiles('bun.lock') }}-
+          ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-
 
     # Lifecycle scripts are skipped here and the workspace `postinstall`
     # scripts are run below, in parallel, only when a job needs them.
