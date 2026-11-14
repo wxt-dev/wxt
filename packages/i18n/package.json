@@ -60,9 +60,9 @@
   },
   "scripts": {
     "build": "buildc -- tsdown",
-    "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
-    "bench": "buildc --deps-only -- bun run bench/run.ts",
+    "check": "buildc deps && check",
+    "test": "buildc deps && vitest",
+    "bench": "buildc deps && bun run bench/run.ts",
     "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },

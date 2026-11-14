@@ -4,20 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "buildc --deps-only -- wxt",
-    "dev:firefox": "buildc --deps-only -- wxt -b firefox",
-    "dev:firefox-mv3": "buildc --deps-only -- wxt -b firefox --mv3",
-    "build": "buildc --deps-only -- wxt build",
-    "build:all": "buildc --deps-only -- bun run --sequential 'build:*-*'",
+    "dev": "buildc deps && wxt",
+    "dev:firefox": "buildc deps && wxt -b firefox",
+    "dev:firefox-mv3": "buildc deps && wxt -b firefox --mv3",
+    "build": "buildc deps && wxt build",
+    "build:all": "buildc deps && bun run --sequential 'build:*-*'",
     "build:chrome-mv3": "wxt build",
     "build:chrome-mv2": "wxt build --mv2",
     "build:firefox-mv3": "wxt build -b firefox --mv3",
     "build:firefox-mv2": "wxt build -b firefox",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc deps && vitest",
     "test:coverage": "bun run test run --coverage",
-    "zip": "buildc --deps-only -- wxt zip",
-    "check": "buildc --deps-only -- check",
-    "postinstall": "buildc --deps-only -- wxt prepare"
+    "zip": "buildc deps && wxt zip",
+    "check": "buildc deps && check",
+    "postinstall": "buildc deps && wxt prepare"
   },
   "dependencies": {
     "@wxt-dev/i18n": "workspace:*",
@@ -44,6 +44,6 @@
     "wxt": "workspace:*"
   },
   "buildc": {
-    "cachable": false
+    "outDir": ".output"
   }
 }

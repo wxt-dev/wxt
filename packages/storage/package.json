@@ -37,8 +37,8 @@
   },
   "scripts": {
     "build": "buildc -- tsdown --deps.onlyBundle dequal",
-    "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
+    "check": "buildc deps && check",
+    "test": "buildc deps && vitest",
     "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },
