@@ -1,0 +1,34 @@
+name: Test Timings
+description: Restore and save per-file `bun test` durations so `--shard` can split files evenly by time
+
+inputs:
+  shard:
+    description: The shard this job runs, used to give each shard its own cache entry
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    # Each shard only measures its own files, so every shard saves its own
+    # entry. Restoring takes the most recent entry for the OS. It may be missing
+    # the other shards' latest durations, but timings change slowly and files
+    # without a duration are still run.
+    - name: ⏱️ Cache test timings
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: packages/*/.bun-test-timings.json
+        key: ${{ runner.os }}-test-timings-${{ inputs.shard }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-test-timings-
+
+    # `bun test --timings` requires the file to exist. An empty file falls back
+    # to splitting by file count.
+    - name: ⏱️ Seed missing test timings
+      shell: bash
+      run: |
+        for dir in packages/*/; do
+          if grep -q '"test": ".*bun test' "${dir}package.json" && [ ! -f "${dir}.bun-test-timings.json" ]; then
+            echo '{"version":1,"files":{}}' > "${dir}.bun-test-timings.json"
+          fi
+        done

@@ -83,11 +83,16 @@ jobs:
         with:
           version: 10
 
+      - name: Restore Test Timings
+        uses: ./.github/actions/test-timings
+        with:
+          shard: ${{ matrix.shard }}
+
       # Every package is sharded the same way; `--pass-with-no-tests` covers
       # packages with fewer test files than shards. `wxt-demo` still uses
       # Vitest, so it's run separately.
       - name: Run Tests
-        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests
+        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests --timings .bun-test-timings.json --update-timings
 
       - name: Run Vitest Tests
         run: bun run test run --shard=${{ matrix.shard }} --passWithNoTests
@@ -122,8 +127,13 @@ jobs:
         with:
           version: 10
 
+      - name: Restore Test Timings
+        uses: ./.github/actions/test-timings
+        with:
+          shard: ${{ matrix.shard }}
+
       - name: Run Tests
-        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests
+        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests --timings .bun-test-timings.json --update-timings
 
       - name: Run Vitest Tests
         run: bun run test run --shard=${{ matrix.shard }} --passWithNoTests

@@ -26,3 +26,4 @@ stats.html
 *-stats.txt
 /packages/wxt/inline
 .screenshots
+.bun-test-timings.json
