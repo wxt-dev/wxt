@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'bun:test';
 import { mkdir, writeFile } from 'node:fs/promises';
 
 import { glob } from 'tinyglobby';
-import { describe, expect, it } from 'vitest';
 
 import { exec } from '../../src/internal-utils/testing/exec';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
@@ -64,7 +64,7 @@ describe('Init command', () => {
     await mkdir(project.root, { recursive: true });
     await writeFile(project.resolvePath('package.json'), JSON.stringify({}));
 
-    await expect(() =>
+    await expect(
       exec(
         'bun',
         [

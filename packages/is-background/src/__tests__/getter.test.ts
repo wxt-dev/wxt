@@ -1,16 +1,34 @@
-import { describe, it, vi, expect } from 'vitest';
+import { describe, it, mock, expect, afterEach } from 'bun:test';
 
 import { getIsBackground } from '../getter';
 
 let mockBrowser: any;
-vi.mock('@wxt-dev/browser', () => ({
-  get browser() {
-    return mockBrowser;
-  },
+mock.module('@wxt-dev/browser', () => ({
+  browser: new Proxy({}, { get: (_, prop) => mockBrowser?.[prop] }),
 }));
 
 const backgroundWindow = Symbol('Background');
 const otherWindow = Symbol('Other');
+
+const globals = globalThis as Record<string, unknown>;
+const originals = new Map<string, { existed: boolean; value: unknown }>();
+
+function stubGlobal(name: string, value: unknown) {
+  if (!originals.has(name)) {
+    originals.set(name, { existed: name in globals, value: globals[name] });
+  }
+  globals[name] = value;
+}
+
+function unstubAllGlobals() {
+  for (const [name, { existed, value }] of originals) {
+    if (existed) globals[name] = value;
+    else delete globals[name];
+  }
+  originals.clear();
+}
+
+afterEach(unstubAllGlobals);
 
 function setupEnv(options: {
   window: symbol | undefined;
@@ -18,11 +36,11 @@ function setupEnv(options: {
   hasGetBackgroundPage: boolean;
   hasServiceWorkerGlobalScope: boolean;
 }): void {
-  vi.unstubAllGlobals();
+  unstubAllGlobals();
   mockBrowser = undefined;
 
   if (options.window) {
-    vi.stubGlobal('window', options.window);
+    stubGlobal('window', options.window);
   }
 
   if (options.hasExtensionApis) {
@@ -40,8 +58,8 @@ function setupEnv(options: {
 
   if (options.hasServiceWorkerGlobalScope) {
     class ServiceWorkerGlobalScope {}
-    vi.stubGlobal('ServiceWorkerGlobalScope', ServiceWorkerGlobalScope);
-    vi.stubGlobal('self', new ServiceWorkerGlobalScope());
+    stubGlobal('ServiceWorkerGlobalScope', ServiceWorkerGlobalScope);
+    stubGlobal('self', new ServiceWorkerGlobalScope());
   }
 }
 

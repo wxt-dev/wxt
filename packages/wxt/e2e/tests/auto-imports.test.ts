@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { EslintConfigVersion } from '../../src';
 import { TestProject } from '../utils';

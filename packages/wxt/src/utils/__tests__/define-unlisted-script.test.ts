@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { UnlistedScriptDefinition } from '../../types';
 import { defineUnlistedScript } from '../define-unlisted-script';
@@ -29,7 +29,7 @@ describe('defineUnlistedScript', () => {
     const actual = defineUnlistedScript(main);
 
     expect(actual).toEqual({ main });
-    expect(actual.main()).eq('test');
+    expect(actual.main()).toBe('test');
   });
 
   it('should return a promise of a result for async main functions', async () => {

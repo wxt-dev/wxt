@@ -1,28 +1,37 @@
+import { afterAll, describe, expect, it, mock, vi } from 'bun:test';
 import * as dns from 'node:dns';
 
 import consola from 'consola';
-import { describe, expect, it, vi } from 'vitest';
 
 import { ResolvedConfig } from '../../types';
 import { isOnline, fetchCached } from '../network-utils';
+import { automock, mocked } from '../testing/mock';
 
 type DnsCallback = (err: NodeJS.ErrnoException | null) => void;
 
-vi.mock('node:dns');
+const actualDns = await import('node:dns');
+const mockedDns = automock(actualDns);
+mock.module('node:dns', () => ({ ...mockedDns, default: mockedDns }));
 
 const fetchMock = vi.fn<typeof fetch>();
-global.fetch = fetchMock;
+global.fetch = fetchMock as unknown as typeof fetch;
 
-vi.mock('consola', () => ({
+const actualConsola = await import('consola');
+mock.module('consola', () => ({
   default: {
     error: vi.fn(),
   },
 }));
 
+afterAll(() => {
+  mock.module('node:dns', () => actualDns);
+  mock.module('consola', () => actualConsola);
+});
+
 describe('Network utils', () => {
   describe('isOnline', () => {
     it('should return true when online', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {
@@ -34,7 +43,7 @@ describe('Network utils', () => {
     });
 
     it('should return false on DNS error', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {
@@ -46,7 +55,7 @@ describe('Network utils', () => {
     });
 
     it('should return false on timeout', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(() => {
+      mocked(dns.resolve).mockImplementationOnce(() => {
         // Simulate timeout by not calling callback
       });
 
@@ -59,7 +68,7 @@ describe('Network utils', () => {
     });
 
     it('should handle dns.resolve errors gracefully', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(() => {
+      mocked(dns.resolve).mockImplementationOnce(() => {
         throw new Error('DNS resolution failed');
       });
 
@@ -74,7 +83,7 @@ describe('Network utils', () => {
 
   describe('fetchCached', () => {
     it('should fetch from network when online', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {
@@ -112,7 +121,7 @@ describe('Network utils', () => {
     });
 
     it('should fall back to cache when network fails', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {
@@ -148,7 +157,7 @@ describe('Network utils', () => {
     });
 
     it('should use cache when offline', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {
@@ -175,7 +184,7 @@ describe('Network utils', () => {
     });
 
     it('should throw error when offline and no cache available', async () => {
-      vi.mocked(dns.resolve).mockImplementationOnce(((
+      mocked(dns.resolve).mockImplementationOnce(((
         _: string,
         callback: DnsCallback,
       ) => {

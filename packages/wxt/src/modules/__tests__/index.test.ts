@@ -1,5 +1,6 @@
+import { describe, it, expect } from 'bun:test';
+
 import { createHooks } from 'hookable';
-import { describe, it, expect } from 'vitest';
 
 import { addImportPreset, addViteConfig } from '../';
 import { fakeWxt } from '../../internal-utils/testing/fake-objects';

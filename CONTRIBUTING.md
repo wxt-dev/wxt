@@ -148,7 +148,7 @@ To run tests for a specific file, add the filename at the end of the test comman
 bun run --filter wxt test manifest-contents
 ```
 
-All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
+Tests (unit and E2E) are written with [`bun:test`](https://bun.com/docs/test). Running `bun run test` from the root runs the tests for all packages. The exception is `packages/wxt-demo`, which still uses Vitest to test the `wxt/testing/vitest-plugin` integration.
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
 

@@ -125,7 +125,7 @@
     "check": "bun run build && bun run --sequential 'check:*'",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc --deps-only -- bun test --isolate --timeout 120000",
     "prepack": "bun run build"
   },
   "dependencies": {
@@ -160,6 +160,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "@happy-dom/global-registrator": "^21.0.4",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
     "@types/normalize-path": "^3.0.2",
@@ -178,9 +179,6 @@
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:",
-    "vitest-mock-extended": "catalog:",
-    "vitest-plugin-random-seed": "catalog:",
     "web-ext": "catalog:"
   },
   "peerDependencies": {

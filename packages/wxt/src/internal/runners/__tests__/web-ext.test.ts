@@ -1,13 +1,16 @@
+import { afterAll, beforeEach, describe, expect, it, mock, vi } from 'bun:test';
 import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mock, MockProxy } from 'vitest-mock-extended';
-import webExt, { WebExtRunInstance } from 'web-ext';
-import logger from 'web-ext/util/logger';
+import type { WebExtRunInstance } from 'web-ext';
 
 import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
+import {
+  mock as mockOf,
+  MockProxy,
+  mocked,
+} from '../../../internal-utils/testing/mock';
 import { WebExtConfig } from '../../../types';
 import { WebExtRunner } from '../web-ext';
 
@@ -15,30 +18,35 @@ const DEFAULT_IS_WSL = false;
 const DEFAULT_TARGET_BROWSER = 'chrome';
 const DEFAULT_WEB_EXT_CONFIG = undefined;
 
-let isWsl = DEFAULT_IS_WSL;
 let targetBrowser = DEFAULT_TARGET_BROWSER;
 let webExtConfig: WebExtConfig | undefined = DEFAULT_WEB_EXT_CONFIG;
 
-vi.mock('is-wsl', () => ({
-  get default() {
-    return isWsl;
-  },
-}));
+const actualIsWsl = await import('is-wsl');
+function mockIsWsl(value: boolean) {
+  mock.module('is-wsl', () => ({ default: value }));
+}
+mockIsWsl(DEFAULT_IS_WSL);
 
-vi.mock('web-ext', () => ({
+mock.module('web-ext', () => ({
   default: {
     cmd: {
       run: vi.fn(),
     },
   },
 }));
-const webExtCmdRunMock = vi.mocked(webExt.cmd.run);
+const { default: webExt } = await import('web-ext');
+const webExtCmdRunMock = mocked(webExt.cmd.run);
 
-vi.mock('web-ext/util/logger', () => ({
+mock.module('web-ext/util/logger', () => ({
   default: {
     consoleStream: {},
   },
 }));
+const { default: logger } = await import('web-ext/util/logger');
+
+afterAll(() => {
+  mock.module('is-wsl', () => actualIsWsl);
+});
 
 describe('WebExtRunner', () => {
   function setupRunner() {
@@ -57,7 +65,7 @@ describe('WebExtRunner', () => {
   }
 
   beforeEach(() => {
-    isWsl = DEFAULT_IS_WSL;
+    mockIsWsl(DEFAULT_IS_WSL);
     targetBrowser = DEFAULT_TARGET_BROWSER;
     webExtConfig = DEFAULT_WEB_EXT_CONFIG;
   });
@@ -84,7 +92,7 @@ describe('WebExtRunner', () => {
 
     describe('when in WSL', () => {
       beforeEach(() => {
-        isWsl = true;
+        mockIsWsl(true);
       });
 
       it('should do nothing', async () => {
@@ -177,7 +185,7 @@ describe('WebExtRunner', () => {
     let instance: MockProxy<WebExtRunInstance>;
 
     beforeEach(() => {
-      instance = mock<WebExtRunInstance>();
+      instance = mockOf<WebExtRunInstance>();
       webExtCmdRunMock.mockResolvedValueOnce(instance);
     });
 

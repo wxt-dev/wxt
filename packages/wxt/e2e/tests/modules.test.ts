@@ -1,17 +1,20 @@
+import { afterEach, describe, it, expect, vi } from 'bun:test';
 import { readFile } from 'node:fs/promises';
-
-import { describe, it, expect, vi } from 'vitest';
 
 import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
 import { normalizePath } from '../../src';
 import { TestProject } from '../utils';
 
 describe('Module Helpers', () => {
+  afterEach(() => {
+    delete (globalThis as any).reportOptions;
+  });
+
   describe('options', () => {
     it('should receive the options defined in wxt.config.ts based on the configKey field', async () => {
       const options = { key: '123' };
       const reportOptions = vi.fn();
-      vi.stubGlobal('reportOptions', reportOptions);
+      Object.assign(globalThis, { reportOptions });
       const project = new TestProject();
 
       project.addFile(

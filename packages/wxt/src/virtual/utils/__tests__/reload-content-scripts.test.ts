@@ -1,16 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock, vi } from 'bun:test';
 
 import type { ReloadContentScriptPayload } from '../../../utils/internal/dev-server-websocket';
 
 type ContentScript = ReloadContentScriptPayload['contentScript'];
 type Registered = ContentScript & { id: string };
 
-const mockBrowser = vi.hoisted(() => ({
+const mockBrowser = {
   scripting: {} as Record<string, unknown>,
   tabs: {} as Record<string, unknown>,
-}));
+};
 
-vi.mock('wxt/browser', () => ({ browser: mockBrowser }));
+mock.module('wxt/browser', () => ({ browser: mockBrowser }));
 
 const { reloadManifestContentScriptMv3 } =
   await import('../reload-content-scripts');

@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'bun:test';
 import { resolve } from 'node:path';
 
 import { parseHTML } from 'linkedom';
-import { describe, expect, it } from 'vitest';
 
 import { normalizePath } from '../../../../../internal-utils/path-utils';
 import {

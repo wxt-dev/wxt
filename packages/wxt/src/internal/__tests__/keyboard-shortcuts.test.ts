@@ -1,17 +1,21 @@
+import { afterAll, afterEach, describe, expect, it, mock, vi } from 'bun:test';
 import { EventEmitter } from 'node:events';
 import readline from 'node:readline';
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { mock } from 'vitest-mock-extended';
-
+import { mock as mockOf, mocked } from '../../internal-utils/testing/mock';
 import type { WxtDevServer } from '../../types';
 import { createKeyboardShortcuts } from '../keyboard-shortcuts';
 
-vi.mock('node:readline', () => ({
+const actualReadline = await import('node:readline');
+mock.module('node:readline', () => ({
   default: {
     createInterface: vi.fn(),
   },
 }));
+
+afterAll(() => {
+  mock.module('node:readline', () => actualReadline);
+});
 
 const originalIsTTY = Object.getOwnPropertyDescriptor(process.stdin, 'isTTY');
 
@@ -30,7 +34,7 @@ describe('createKeyboardShortcuts', () => {
       value: undefined,
     });
 
-    createKeyboardShortcuts(mock<WxtDevServer>()).start();
+    createKeyboardShortcuts(mockOf<WxtDevServer>()).start();
 
     expect(readline.createInterface).not.toHaveBeenCalled();
   });
@@ -41,10 +45,10 @@ describe('createKeyboardShortcuts', () => {
       value: true,
     });
     const input = new EventEmitter();
-    vi.mocked(readline.createInterface).mockReturnValue(
+    mocked(readline.createInterface).mockReturnValue(
       input as readline.Interface,
     );
-    const server = mock<WxtDevServer>();
+    const server = mockOf<WxtDevServer>();
 
     createKeyboardShortcuts(server).start();
     input.emit('line', 'o');

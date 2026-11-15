@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { registerWxt, wxt } from '../../src/internal/wxt';
 import { TestProject, occupyPort } from '../utils';

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 
 import {
   fakeArray,
@@ -20,7 +20,7 @@ describe('Validation Utils', () => {
 
       const actual = validateEntrypoints(entrypoints);
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(expected as any);
     });
 
     it('should return an error when exclude is not an array', () => {
@@ -45,7 +45,7 @@ describe('Validation Utils', () => {
 
       const actual = validateEntrypoints([entrypoint]);
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(expected as any);
     });
 
     it('should return an error when include is not an array', () => {
@@ -70,7 +70,7 @@ describe('Validation Utils', () => {
 
       const actual = validateEntrypoints([entrypoint]);
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(expected as any);
     });
 
     it('should return an error when "registration: manifest" content scripts don\'t have matches', () => {
@@ -97,7 +97,7 @@ describe('Validation Utils', () => {
 
       const actual = validateEntrypoints([entrypoint]);
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(expected as any);
     });
 
     it('should allow "registration: runtime" content scripts to not have matches', () => {
@@ -116,7 +116,7 @@ describe('Validation Utils', () => {
 
       const actual = validateEntrypoints([entrypoint]);
 
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(expected as any);
     });
   });
 });

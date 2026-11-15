@@ -8,7 +8,7 @@
     "check": "bun run cspell-order:check && check && bun run --sequential --workspaces check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
     "cspell-order:format": "bun run scripts/format-cspell-order.ts",
-    "test": "bun run --workspaces test run",
+    "test": "bun run --workspaces test",
     "prepare": "simple-git-hooks",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
@@ -68,7 +68,6 @@
     "unocss": "^66.6.8",
     "vite": "^8.2.0",
     "vitest": "^4.1.10",
-    "vitest-mock-extended": "^5.1.1",
     "vitest-plugin-random-seed": "^2.0.2",
     "web-ext": "^10.5.0"
   },

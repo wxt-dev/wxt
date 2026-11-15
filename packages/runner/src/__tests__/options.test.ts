@@ -1,15 +1,12 @@
+import { describe, it, expect, mock, vi, beforeAll } from 'bun:test';
 import { mkdir } from 'node:fs/promises';
 import { tmpdir, homedir } from 'node:os';
 import { resolve, join } from 'node:path';
 
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { resolveRunOptions } from '../options';
 
-import { ResolvedRunOptions, resolveRunOptions } from '../options';
-
-vi.mock('node:os', async () => {
-  const { vi } = await import('vitest');
-  const os: any = await vi.importActual('node:os');
-  const { join } = await import('node:path');
+const os: any = { ...(await import('node:os')) };
+mock.module('node:os', () => {
   return {
     ...os,
     tmpdir: () => join(os.tmpdir(), 'tmpdir-mock'),
@@ -28,7 +25,7 @@ describe('Options', () => {
     it('should default to the current working directory', async () => {
       const actual = await resolveRunOptions({});
 
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         extensionDir: process.cwd(),
       });
     });
@@ -38,7 +35,7 @@ describe('Options', () => {
         extensionDir: './path/to/extension',
       });
 
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         extensionDir: resolve(process.cwd(), './path/to/extension'),
       });
     });
@@ -48,7 +45,7 @@ describe('Options', () => {
         extensionDir: '/abs/path/to/extension2',
       });
 
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         extensionDir: resolve('/abs/path/to/extension2'),
       });
     });
@@ -58,7 +55,7 @@ describe('Options', () => {
     it('should be "chrome" by default', async () => {
       const actual = await resolveRunOptions({});
 
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         target: 'chrome',
       });
     });
@@ -71,7 +68,7 @@ describe('Options', () => {
         },
       });
 
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         target: 'custom',
       });
     });
@@ -101,7 +98,7 @@ describe('Options', () => {
           custom: path,
         },
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         browserBinary: expectedPath,
       });
     });
@@ -226,7 +223,7 @@ describe('Options', () => {
   describe('chromiumRemoteDebuggingPort', () => {
     it('should default to 0', async () => {
       const actual = await resolveRunOptions({});
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         chromiumRemoteDebuggingPort: 0,
         chromiumArgs: expect.arrayContaining([`--remote-debugging-port=0`]),
       });
@@ -236,7 +233,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         chromiumRemoteDebuggingPort: 9222,
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         chromiumRemoteDebuggingPort: 9222,
         chromiumArgs: expect.arrayContaining([`--remote-debugging-port=9222`]),
       });
@@ -246,7 +243,7 @@ describe('Options', () => {
   describe('firefoxRemoteDebuggingPort', () => {
     it('should default to 0', async () => {
       const actual = await resolveRunOptions({});
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         firefoxRemoteDebuggingPort: 0,
         firefoxArgs: expect.arrayContaining([`--remote-debugging-port=0`]),
       });
@@ -256,7 +253,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         firefoxRemoteDebuggingPort: 9222,
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         firefoxRemoteDebuggingPort: 9222,
         firefoxArgs: expect.arrayContaining([`--remote-debugging-port=9222`]),
       });
@@ -266,7 +263,7 @@ describe('Options', () => {
   describe('dataPersistence', () => {
     it('should default to "none"', async () => {
       const actual = await resolveRunOptions({});
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         dataPersistence: 'none',
       });
     });
@@ -275,7 +272,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'none',
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         dataPersistence: 'none',
         dataDir: expect.stringContaining(join(tmpdir(), 'wxt-runner-')),
         chromiumArgs: expect.arrayContaining([
@@ -293,7 +290,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'project',
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         dataPersistence: 'project',
         dataDir: expect.stringContaining(join(process.cwd(), '.wxt-runner')),
         chromiumArgs: expect.arrayContaining([
@@ -311,7 +308,7 @@ describe('Options', () => {
       const actual = await resolveRunOptions({
         dataPersistence: 'user',
       });
-      expect(actual).toMatchObject<Partial<ResolvedRunOptions>>({
+      expect(actual).toMatchObject({
         dataPersistence: 'user',
         dataDir: expect.stringContaining(join(homedir(), '.wxt-runner')),
         chromiumArgs: expect.arrayContaining([

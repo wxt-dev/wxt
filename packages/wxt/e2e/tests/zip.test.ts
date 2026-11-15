@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { exec, unzip } from '../../src/internal-utils/testing/exec';
 import { TestProject } from '../utils';

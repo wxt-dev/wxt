@@ -1,9 +1,8 @@
+import { vi } from 'bun:test';
 /** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
 
 import type { Browser } from '@wxt-dev/browser';
-import { vi } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
 import { setWxtForTesting } from '../../internal/wxt';
 import {
@@ -25,9 +24,10 @@ import {
   BaseEntrypoint,
   UnlistedScriptEntrypoint,
 } from '../../types';
+import { mock } from './mock';
 
 // Seeded PRNG (mulberry32) so failures can be reproduced with the same seed.
-let seedState = __TEST_SEED__ >>> 0;
+let seedState = Number(process.env.TEST_SEED ?? Date.now()) >>> 0;
 function random(): number {
   seedState = (seedState + 0x6d2b79f5) >>> 0;
   let t = seedState;

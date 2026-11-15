@@ -38,7 +38,7 @@
   "scripts": {
     "build": "buildc -- tsdown --deps.onlyBundle dequal",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc --deps-only -- bun test --isolate",
     "prepack": "bun run build"
   },
   "dependencies": {
@@ -47,12 +47,12 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "@types/bun": "catalog:",
     "@webext-core/fake-browser": "catalog:",
     "dequal": "^2.0.3",
     "oxlint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   }
 }

@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, mock, type Mock } from 'bun:test';
 import { writeFile, readFile } from 'node:fs/promises';
 
 import {
@@ -7,7 +8,6 @@ import {
   stringifyJSON,
   stringifyJSONC,
 } from 'confbox';
-import { describe, it, expect, vi } from 'vitest';
 
 import {
   parseMessagesFile,
@@ -15,9 +15,12 @@ import {
   generateTypeFile,
 } from '../build';
 
-vi.mock('node:fs/promises');
-const mockWriteFile = vi.mocked(writeFile);
-const mockReadFile = vi.mocked(readFile);
+mock.module('node:fs/promises', () => ({
+  writeFile: vi.fn(),
+  readFile: vi.fn(),
+}));
+const mockWriteFile = writeFile as Mock<typeof writeFile>;
+const mockReadFile = readFile as Mock<typeof readFile>;
 
 describe('Built Tools', () => {
   it('should correctly convert all types of message formats', async () => {

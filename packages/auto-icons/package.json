@@ -40,7 +40,7 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc --deps-only -- bun test --isolate",
     "prepack": "bun run build"
   },
   "dependencies": {
@@ -49,11 +49,11 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "@types/bun": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

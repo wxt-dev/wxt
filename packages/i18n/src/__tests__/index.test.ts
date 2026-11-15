@@ -1,10 +1,18 @@
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  mock,
+  beforeEach,
+  type Mock,
+} from 'bun:test';
+
 import { browser } from '@wxt-dev/browser';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { createI18n } from '../index';
 
-vi.mock('@wxt-dev/browser', async () => {
-  const { vi } = await import('vitest');
+mock.module('@wxt-dev/browser', () => {
   return {
     browser: {
       i18n: {
@@ -13,7 +21,9 @@ vi.mock('@wxt-dev/browser', async () => {
     },
   };
 });
-const getMessageMock = vi.mocked(browser.i18n.getMessage);
+const getMessageMock = browser.i18n.getMessage as Mock<
+  typeof browser.i18n.getMessage
+>;
 
 describe('createI18n', () => {
   beforeEach(() => {

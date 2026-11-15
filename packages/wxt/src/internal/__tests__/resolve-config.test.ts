@@ -1,16 +1,27 @@
+import { afterAll, beforeEach, describe, expect, it, mock } from 'bun:test';
+
 import { loadConfig } from 'c12';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
 import { pathExists } from '../../internal-utils/fs-utils';
+import {
+  automock,
+  mock as mockOf,
+  mocked,
+} from '../../internal-utils/testing/mock';
 import type { Logger } from '../../types';
 import { resolveConfig } from '../resolve-config';
 
-vi.mock('../../internal-utils/fs-utils');
-const pathExistsMock = vi.mocked(pathExists);
+const actualFsUtils = await import('../../internal-utils/fs-utils');
+mock.module('../../internal-utils/fs-utils', () => automock(actualFsUtils));
+const pathExistsMock = mocked(pathExists);
 
-vi.mock('c12');
-const loadConfigMock = vi.mocked(loadConfig);
+const actualC12 = await import('c12');
+mock.module('c12', () => automock(actualC12));
+afterAll(() => {
+  mock.module('../../internal-utils/fs-utils', () => actualFsUtils);
+  mock.module('c12', () => actualC12);
+});
+const loadConfigMock = mocked(loadConfig);
 
 describe('resolveConfig', () => {
   beforeEach(() => {
@@ -20,7 +31,7 @@ describe('resolveConfig', () => {
 
   describe('logger', () => {
     it('should wrap the resolved logger with warnOnce', async () => {
-      const logger = mock<Logger>();
+      const logger = mockOf<Logger>();
 
       const config = await resolveConfig({ logger }, 'build');
 
@@ -28,7 +39,7 @@ describe('resolveConfig', () => {
     });
 
     it('should warn when the entrypoints directory is missing', async () => {
-      const logger = mock<Logger>();
+      const logger = mockOf<Logger>();
       pathExistsMock.mockResolvedValue(false);
 
       await resolveConfig({ logger }, 'build');
@@ -40,7 +51,7 @@ describe('resolveConfig', () => {
   });
 
   describe('imports.dirs', () => {
-    const logger = mock<Logger>();
+    const logger = mockOf<Logger>();
 
     it('should default to the built-in directories', async () => {
       const config = await resolveConfig({ logger }, 'build');

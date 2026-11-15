@@ -1,5 +1,5 @@
 /// <reference types="chrome" />
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it } from 'bun:test';
 
 import { browser, type Browser } from '../index';
 

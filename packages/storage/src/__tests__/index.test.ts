@@ -1,6 +1,15 @@
+import {
+  beforeEach,
+  describe,
+  expect,
+  expectTypeOf,
+  it,
+  vi,
+  type Mock,
+} from 'bun:test';
+
 import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
-import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 
 import { MigrationError, type WxtStorageItem, storage } from '../index';
 
@@ -490,7 +499,7 @@ describe('Storage Utils', () => {
         it('should not throw an error when removing non-existent items', async () => {
           const item = storage.defineItem('local:non_existent');
 
-          await expect(storage.removeItems([item])).resolves.not.toThrow();
+          await expect(storage.removeItems([item])).resolves.toBeUndefined();
         });
       });
 
@@ -1062,7 +1071,7 @@ describe('Storage Utils', () => {
 
         it('should not set the version metadata when a value is already in storage', async () => {
           await fakeBrowser.storage.local.set({ count: 1, count$: { v: 2 } });
-          vi.mocked(fakeBrowser.storage.local.set).mockClear();
+          (fakeBrowser.storage.local.set as Mock<any>).mockClear();
 
           const item = defineTestItem();
           await item.setValue(2);
@@ -1679,21 +1688,21 @@ describe('Storage Utils', () => {
 
     it('should return a nullable type when getItem is called without a fallback', async () => {
       const res = await storage.getItem<string>('local:test');
-      expectTypeOf(res).toBeNullable();
+      expectTypeOf(res).toEqualTypeOf<string | null>();
     });
 
     it('should return a non-null type when getItem is called with a fallback', async () => {
       const res = await storage.getItem('local:test', {
         fallback: 'test',
       });
-      expectTypeOf(res).not.toBeNullable();
+      expectTypeOf(res).toEqualTypeOf<string>();
     });
 
     it('should return a non-null type when getItem is called with a fallback and the first type parameter is passed', async () => {
       const res = await storage.getItem<string>('local:test', {
         fallback: 'test',
       });
-      expectTypeOf(res).not.toBeNullable();
+      expectTypeOf(res).toEqualTypeOf<string>();
     });
   });
 });

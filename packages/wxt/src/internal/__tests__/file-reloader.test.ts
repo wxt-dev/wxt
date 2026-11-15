@@ -1,4 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  mock,
+  vi,
+} from 'bun:test';
 
 import {
   fakeBackgroundEntrypoint,
@@ -8,28 +17,42 @@ import {
   fakePopupEntrypoint,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
+import { mocked } from '../../internal-utils/testing/mock';
 import { createFileReloader } from '../file-reloader';
 import { findEntrypoints } from '../find-entrypoints';
 import { rebuild } from '../rebuild';
 
-vi.mock('../find-entrypoints', async () => {
-  const actual = await vi.importActual<typeof import('../find-entrypoints')>(
-    '../find-entrypoints',
-  );
-  return {
-    ...actual,
-    findEntrypoints: vi.fn(),
-  };
+const actualFindEntrypoints = await import('../find-entrypoints');
+mock.module('../find-entrypoints', () => ({
+  ...actualFindEntrypoints,
+  findEntrypoints: vi.fn(),
+}));
+
+const actualRebuild = await import('../rebuild');
+mock.module('../rebuild', () => ({
+  ...actualRebuild,
+  rebuild: vi.fn(),
+}));
+
+afterAll(() => {
+  mock.module('../find-entrypoints', () => actualFindEntrypoints);
+  mock.module('../rebuild', () => actualRebuild);
 });
 
-vi.mock('../rebuild', async () => {
-  const actual =
-    await vi.importActual<typeof import('../rebuild')>('../rebuild');
-  return {
-    ...actual,
-    rebuild: vi.fn(),
+/**
+ * Bun's fake timers are synchronous, so advance in small steps and flush
+ * microtasks in between to let code awaiting before it schedules timers run.
+ */
+async function advanceTimersByTimeAsync(ms: number) {
+  const flush = async () => {
+    for (let i = 0; i < 20; i++) await Promise.resolve();
   };
-});
+  await flush();
+  for (let elapsed = 0; elapsed < ms; elapsed += 10) {
+    vi.advanceTimersByTime(10);
+    await flush();
+  }
+}
 
 describe('createFileReloader', () => {
   beforeEach(() => {
@@ -45,7 +68,7 @@ describe('createFileReloader', () => {
         },
       },
     });
-    vi.mocked(findEntrypoints).mockResolvedValue([]);
+    mocked(findEntrypoints).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -75,23 +98,23 @@ describe('createFileReloader', () => {
       reloadExtension: vi.fn(),
     });
 
-    vi.mocked(rebuild).mockResolvedValue({
+    mocked(rebuild).mockResolvedValue({
       output: currentOutput,
       manifest: currentOutput.manifest,
       warnings: [],
     });
-    vi.mocked(findEntrypoints).mockResolvedValue([backgroundEntrypoint]);
+    mocked(findEntrypoints).mockResolvedValue([backgroundEntrypoint]);
 
     const reloadOnChange = createFileReloader(server);
 
     const fixedFirst = reloadOnChange('change', noisyProfileFile);
-    await vi.advanceTimersByTimeAsync(50);
+    await advanceTimersByTimeAsync(50);
     const fixedSecond = reloadOnChange('change', relevantFile);
-    await vi.advanceTimersByTimeAsync(500);
+    await advanceTimersByTimeAsync(500);
     await Promise.all([fixedFirst, fixedSecond]);
 
     expect(rebuild).toBeCalledTimes(1);
-    const [allEntrypoints, rebuiltGroups] = vi.mocked(rebuild).mock.calls[0];
+    const [allEntrypoints, rebuiltGroups] = mocked(rebuild).mock.calls[0];
     expect(
       allEntrypoints.some((entry) => entry.inputPath === relevantFile),
     ).toBe(true);
@@ -126,11 +149,11 @@ describe('createFileReloader', () => {
       reloadExtension: vi.fn(),
     });
 
-    vi.mocked(findEntrypoints).mockResolvedValue([
+    mocked(findEntrypoints).mockResolvedValue([
       backgroundEntrypoint,
       popupEntrypoint,
     ]);
-    vi.mocked(rebuild).mockResolvedValue({
+    mocked(rebuild).mockResolvedValue({
       output: currentOutput,
       manifest: currentOutput.manifest,
       warnings: [],
@@ -138,12 +161,12 @@ describe('createFileReloader', () => {
 
     const reloadOnChange = createFileReloader(server);
     const trigger = reloadOnChange('add', newEntrypointFile);
-    await vi.advanceTimersByTimeAsync(500);
+    await advanceTimersByTimeAsync(500);
     await trigger;
 
     expect(rebuild).toBeCalledTimes(1);
     const [allEntrypoints, rebuiltGroups, cachedOutput] =
-      vi.mocked(rebuild).mock.calls[0];
+      mocked(rebuild).mock.calls[0];
     expect(allEntrypoints).toEqual([backgroundEntrypoint, popupEntrypoint]);
     expect(
       rebuiltGroups
@@ -177,11 +200,11 @@ describe('createFileReloader', () => {
       reloadExtension: vi.fn(),
     });
 
-    vi.mocked(findEntrypoints).mockResolvedValue([backgroundEntrypoint]);
+    mocked(findEntrypoints).mockResolvedValue([backgroundEntrypoint]);
 
     const reloadOnChange = createFileReloader(server);
     const trigger = reloadOnChange('add', ignoredEntrypointDirFile);
-    await vi.advanceTimersByTimeAsync(500);
+    await advanceTimersByTimeAsync(500);
     await trigger;
 
     expect(rebuild).not.toBeCalled();

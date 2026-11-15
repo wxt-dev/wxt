@@ -26,6 +26,7 @@ export function exec(
     const child = spawn(command, args, {
       cwd: options.cwd,
       env: options.env,
+      stdio: ['ignore', 'pipe', 'pipe'],
       // npm, pnpm, etc. are `.cmd` shims on Windows and can't be spawned directly
       shell: process.platform === 'win32',
     });

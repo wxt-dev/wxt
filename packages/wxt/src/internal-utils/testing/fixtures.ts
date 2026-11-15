@@ -1,6 +1,5 @@
+import { describe } from 'bun:test';
 import { spawnSync } from 'node:child_process';
-
-import { describe } from 'vitest';
 
 import { isCI } from '../env-utils';
 

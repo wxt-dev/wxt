@@ -1,26 +1,43 @@
+import { afterAll, describe, it, beforeEach, expect, mock } from 'bun:test';
+
 import consola, { LogLevels } from 'consola';
-import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
-import { build, createServer, zip, prepare, clean, initialize } from '../../';
+import {
+  automock,
+  mock as mockOf,
+  mocked,
+} from '../../internal-utils/testing/mock';
 
-vi.mock('../../build');
-const buildMock = vi.mocked(build);
+const actualModules = {
+  '../../build': await import('../../build'),
+  '../../create-server': await import('../../create-server'),
+  '../../zip': await import('../../zip'),
+  '../../prepare': await import('../../prepare'),
+  '../../clean': await import('../../clean'),
+  '../../initialize': await import('../../initialize'),
+};
+for (const [path, actual] of Object.entries(actualModules)) {
+  mock.module(path, () => automock(actual));
+}
+afterAll(() => {
+  for (const [path, actual] of Object.entries(actualModules)) {
+    mock.module(path, () => actual);
+  }
+});
 
-vi.mock('../../create-server');
-const createServerMock = vi.mocked(createServer);
+const { build } = await import('../../build');
+const { createServer } = await import('../../create-server');
+const { zip } = await import('../../zip');
+const { prepare } = await import('../../prepare');
+const { clean } = await import('../../clean');
+const { initialize } = await import('../../initialize');
 
-vi.mock('../../zip');
-const zipMock = vi.mocked(zip);
-
-vi.mock('../../prepare');
-const prepareMock = vi.mocked(prepare);
-
-vi.mock('../../clean');
-const cleanMock = vi.mocked(clean);
-
-vi.mock('../../initialize');
-const initializeMock = vi.mocked(initialize);
+const buildMock = mocked(build);
+const createServerMock = mocked(createServer);
+const zipMock = mocked(zip);
+const prepareMock = mocked(prepare);
+const cleanMock = mocked(clean);
+const initializeMock = mocked(initialize);
 
 consola.wrapConsole();
 
@@ -30,15 +47,18 @@ function mockArgv(...args: string[]) {
   process.argv = ['/bin/node', 'bin/wxt.mjs', ...args];
 }
 
+let importCount = 0;
 async function importCli() {
-  await import('..');
+  // Bun has no `vi.resetModules`, so a unique query string forces the CLI's
+  // entry file to be evaluated again.
+  importCount += 1;
+  await import(`../index?${importCount}`);
 }
 
 describe('CLI', () => {
   beforeEach(() => {
-    vi.resetModules();
     process.argv = ogArgv;
-    createServerMock.mockResolvedValue(mock());
+    createServerMock.mockResolvedValue(mockOf());
   });
 
   describe('dev', () => {

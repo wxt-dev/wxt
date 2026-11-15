@@ -24,9 +24,9 @@
     "test": "echo 'noop'"
   },
   "devDependencies": {
+    "@types/bun": "catalog:",
     "@types/chrome": "{{chromeTypesVersion}}",
     "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   }
 }

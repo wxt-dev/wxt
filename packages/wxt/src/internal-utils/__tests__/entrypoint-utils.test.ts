@@ -1,6 +1,5 @@
+import { describe, it, expect } from 'bun:test';
 import { resolve } from 'path';
-
-import { describe, it, expect } from 'vitest';
 
 import { Entrypoint } from '../../types';
 import {
@@ -72,9 +71,9 @@ describe('Entrypoint Utils', () => {
       expect(resolvePerBrowserOption({ c: ['one'], d: ['two'] }, 'c')).toEqual([
         'one',
       ]);
-      expect(resolvePerBrowserOption({ c: false, d: true }, 'e')).toEqual(
-        undefined,
-      );
+      expect(
+        resolvePerBrowserOption({ c: false, d: true }, 'e'),
+      ).toBeUndefined();
     });
   });
 });

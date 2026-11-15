@@ -27,10 +27,10 @@
     "@types/har-format": "*"
   },
   "devDependencies": {
+    "@types/bun": "catalog:",
     "@types/chrome": "0.3.7",
     "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   },
   "peerDependencies": {}
 }

@@ -1,14 +1,23 @@
+import {
+  afterAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  Mock,
+  mock,
+} from 'bun:test';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 
 import { glob } from 'tinyglobby';
-import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { unnormalizePath } from '../../internal-utils/path-utils';
 import {
   fakeResolvedConfig,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
+import { automock, mocked } from '../../internal-utils/testing/mock';
 import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,
@@ -23,11 +32,18 @@ import { FlatEntrypointFinder } from '../entrypoint-finders/flat';
 import { findEntrypoints } from '../find-entrypoints';
 import { wxt } from '../wxt';
 
-vi.mock('tinyglobby');
-const globMock = vi.mocked(glob);
+const actualGlob = await import('tinyglobby');
+mock.module('tinyglobby', () => automock(actualGlob));
+const globMock = mocked(glob);
 
-vi.mock('node:fs/promises');
-const readFileMock = vi.mocked(readFile);
+const actualFs = await import('node:fs/promises');
+const mockedFs = automock(actualFs);
+mock.module('node:fs/promises', () => ({ ...mockedFs, default: mockedFs }));
+afterAll(() => {
+  mock.module('tinyglobby', () => actualGlob);
+  mock.module('node:fs/promises', () => actualFs);
+});
+const readFileMock = mocked(readFile);
 
 describe('findEntrypoints', () => {
   const baseConfig = {
@@ -45,7 +61,7 @@ describe('findEntrypoints', () => {
       config,
       entrypointFinder: new FlatEntrypointFinder(config),
     });
-    importEntrypointsMock = vi.mocked(wxt.builder.importEntrypoints);
+    importEntrypointsMock = mocked(wxt.builder.importEntrypoints);
     importEntrypointsMock.mockResolvedValue([]);
   });
 
@@ -251,7 +267,7 @@ describe('findEntrypoints', () => {
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
-      expect(entrypoints[0]).toEqual({ ...expected, options });
+      expect(entrypoints[0]).toEqual({ ...expected, options } as any);
       expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
@@ -289,7 +305,7 @@ describe('findEntrypoints', () => {
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
-      expect(entrypoints[0]).toEqual({ ...expected, options });
+      expect(entrypoints[0]).toEqual({ ...expected, options } as any);
       expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
@@ -452,7 +468,7 @@ describe('findEntrypoints', () => {
       const entrypoints = await findEntrypoints();
 
       expect(entrypoints).toHaveLength(1);
-      expect(entrypoints[0]).toEqual({ ...expected, options });
+      expect(entrypoints[0]).toEqual({ ...expected, options } as any);
       expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
     },
   );
@@ -732,7 +748,7 @@ describe('findEntrypoints', () => {
       'other/index.ts',
     ]);
 
-    await expect(() => findEntrypoints()).rejects.toThrowError(
+    await expect(findEntrypoints()).rejects.toThrowError(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
         '',
@@ -749,7 +765,7 @@ describe('findEntrypoints', () => {
   it('throw an error if there are no entrypoints', async () => {
     globMock.mockResolvedValueOnce([]);
 
-    await expect(() => findEntrypoints()).rejects.toThrowError(
+    await expect(findEntrypoints()).rejects.toThrowError(
       `No entrypoints found in ${unnormalizePath(config.entrypointsDir)}`,
     );
   });

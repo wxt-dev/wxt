@@ -1,6 +1,6 @@
+import { beforeEach, describe, expect, it } from 'bun:test';
+
 import type { Browser } from '@wxt-dev/browser';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
 import {
   fakeArray,
@@ -15,6 +15,7 @@ import {
   fakeWxtDevServer,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
+import { mock } from '../../internal-utils/testing/mock';
 import {
   BuildOutput,
   ContentScriptEntrypoint,
@@ -502,7 +503,7 @@ describe('Manifest Utils', () => {
               buildOutput,
             );
 
-            expect(actual.background).toEqual(expected);
+            expect(actual.background).toEqual(expected as any);
           },
         );
 
@@ -525,7 +526,7 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.background).toEqual(expected);
+          expect(actual.background).toEqual(expected as any);
         });
       });
 
@@ -551,7 +552,7 @@ describe('Manifest Utils', () => {
               buildOutput,
             );
 
-            expect(actual.background).toEqual(expected);
+            expect(actual.background).toEqual(expected as any);
           },
         );
 
@@ -574,7 +575,7 @@ describe('Manifest Utils', () => {
             buildOutput,
           );
 
-          expect(actual.background).toEqual(expected);
+          expect(actual.background).toEqual(expected as any);
         });
       });
     });
@@ -1731,9 +1732,7 @@ describe('Manifest Utils', () => {
           },
         });
 
-        await expect(() =>
-          generateManifest([], fakeBuildOutput()),
-        ).rejects.toThrow(
+        await expect(generateManifest([], fakeBuildOutput())).rejects.toThrow(
           'Non-MV3 web_accessible_resources detected: ["/icon.svg"]. When manually defining web_accessible_resources, define them as MV3 objects ({ matches: [...], resources: [...] }), and WXT will automatically convert them to MV2 when necessary.',
         );
       });
@@ -2057,7 +2056,7 @@ describe('Manifest Utils', () => {
             version: expect.any(String),
             manifest_version: manifestVersion,
             ...expected,
-          });
+          } as any);
         },
       );
     });

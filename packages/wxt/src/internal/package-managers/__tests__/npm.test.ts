@@ -1,6 +1,5 @@
+import { beforeAll, describe, expect, it } from 'bun:test';
 import path from 'node:path';
-
-import { beforeAll, describe, expect, it } from 'vitest';
 
 import { pathExists } from '../../../internal-utils/fs-utils';
 import { exec } from '../../../internal-utils/testing/exec';

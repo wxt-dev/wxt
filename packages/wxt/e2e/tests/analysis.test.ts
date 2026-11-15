@@ -1,18 +1,28 @@
-import open from 'tiny-open';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { afterAll, describe, it, expect, beforeEach, mock } from 'bun:test';
 
+import open from 'tiny-open';
+
+import { automock, mocked } from '../../src/internal-utils/testing/mock';
 import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
 import { TestProject } from '../utils';
 
-vi.mock('tiny-open');
-const openMock = vi.mocked(open);
+const actualOpen = await import('tiny-open');
+mock.module('tiny-open', () => ({
+  ...actualOpen,
+  default: automock({ default: actualOpen.default }).default,
+}));
+const openMock = mocked(open);
 
-vi.mock('../../src/internal-utils/env-utils', async (importOriginal) => ({
-  ...(await importOriginal<
-    typeof import('../../src/internal-utils/env-utils')
-  >()),
+const actualEnvUtils = await import('../../src/internal-utils/env-utils');
+mock.module('../../src/internal-utils/env-utils', () => ({
+  ...actualEnvUtils,
   isCI: () => false,
 }));
+
+afterAll(() => {
+  mock.module('tiny-open', () => actualOpen);
+  mock.module('../../src/internal-utils/env-utils', () => actualEnvUtils);
+});
 
 describe('Analysis', () => {
   beforeEach(() => {

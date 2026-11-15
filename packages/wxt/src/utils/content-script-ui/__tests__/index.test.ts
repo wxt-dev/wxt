@@ -1,11 +1,32 @@
-/** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'bun:test';
 
+import { unregisterHappyDom } from '../../../internal-utils/testing/happy-dom';
 import { ContentScriptContext } from '../../content-script-context';
 import { createIframeUi } from '../iframe';
 import { createIntegratedUi } from '../integrated';
 import { createShadowRootUi } from '../shadow-root';
 import { ContentScriptUi } from '../types';
+
+/** Retries an assertion until it passes, like Vitest's `expect.poll`. */
+async function waitFor(assertion: () => void, timeout = 1000) {
+  const start = Date.now();
+  while (true) {
+    try {
+      return assertion();
+    } catch (err) {
+      if (Date.now() - start > timeout) throw err;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  }
+}
 
 /** Util for floating promise. */
 async function runMicrotasks() {
@@ -37,6 +58,8 @@ function appendTestElement({
 
 const fetch = vi.fn();
 
+afterAll(unregisterHappyDom);
+
 describe('Content Script UIs', () => {
   let ctx: ContentScriptContext;
 
@@ -48,7 +71,7 @@ describe('Content Script UIs', () => {
         <p id="three"></p>
       </div>
     `;
-    window.fetch = fetch;
+    window.fetch = fetch as unknown as typeof window.fetch;
     fetch.mockResolvedValue({ text: () => Promise.resolve('') });
     ctx = new ContentScriptContext('test');
   });
@@ -74,7 +97,7 @@ describe('Content Script UIs', () => {
         });
         ui.mount();
 
-        expect(document.querySelector('pre')).toBe(ui.wrapper);
+        expect(document.querySelector('pre')).toBe(ui.wrapper as any);
         expect(document.querySelector('app')).not.toBeNull();
       });
     });
@@ -274,7 +297,7 @@ describe('Content Script UIs', () => {
       });
 
       it('should append the element using an XPath string', () => {
-        vi.stubGlobal('XPathResult', { FIRST_ORDERED_NODE_TYPE: 9 });
+        (globalThis as any).XPathResult = { FIRST_ORDERED_NODE_TYPE: 9 };
         document.evaluate = vi.fn().mockReturnValue({
           singleNodeValue: document.querySelector('#three'),
         });
@@ -520,11 +543,16 @@ describe('Content Script UIs', () => {
     ] as const)(
       'built-in UI type: $name',
       ({ name, createUiFunction, uiSelector }) => {
-        const onMount = vi.fn((wrapper: HTMLElement) => {
-          if (name === 'shadow-root') return;
+        const onMount = vi.fn();
+        beforeEach(() => {
+          // Mocks are reset before each test, so the implementation has to be
+          // set again.
+          onMount.mockImplementation((wrapper: HTMLElement) => {
+            if (name === 'shadow-root') return;
 
-          wrapper.setAttribute('data-wrapper-name', name);
-          appendTestApp(wrapper);
+            wrapper.setAttribute('data-wrapper-name', name);
+            appendTestApp(wrapper);
+          });
         });
 
         it('should mount if an anchor already exists at the initialization', async () => {
@@ -541,9 +569,9 @@ describe('Content Script UIs', () => {
           ui.autoMount();
           await runMicrotasks();
 
-          await expect
-            .poll(() => document.querySelector(uiSelector))
-            .not.toBeNull();
+          await waitFor(() =>
+            expect(document.querySelector(uiSelector)).not.toBeNull(),
+          );
         });
 
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
@@ -561,15 +589,15 @@ describe('Content Script UIs', () => {
           await runMicrotasks();
 
           for (let index = 0; index < 3; index++) {
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).toBeNull(),
+            );
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).not.toBeNull(),
+            );
 
             dynamicEl.remove();
             await runMicrotasks();
@@ -615,15 +643,15 @@ describe('Content Script UIs', () => {
             let dynamicEl;
             ui.autoMount({ once: true });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).toBeNull(),
+            );
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).not.toBeNull(),
+            );
 
             dynamicEl.remove();
             await runMicrotasks();
@@ -635,9 +663,9 @@ describe('Content Script UIs', () => {
             await runMicrotasks();
 
             // expect stop automount
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).toBeNull(),
+            );
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
           });
@@ -688,9 +716,9 @@ describe('Content Script UIs', () => {
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await waitFor(() =>
+              expect(document.querySelector(uiSelector)).not.toBeNull(),
+            );
 
             dynamicEl.remove();
             await runMicrotasks();

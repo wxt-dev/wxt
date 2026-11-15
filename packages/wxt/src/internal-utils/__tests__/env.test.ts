@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 
 import { isCI, loadEnv } from '../env-utils';
 
 const cwd = process.cwd();
+const originalCI = process.env.CI;
 
 describe('Env Utils', () => {
   beforeEach(() => {
@@ -13,8 +14,12 @@ describe('Env Utils', () => {
 
   describe('isCI', () => {
     beforeEach(() => {
-      vi.unstubAllEnvs();
-      vi.stubEnv('CI', '');
+      process.env.CI = '';
+    });
+
+    afterEach(() => {
+      if (originalCI == null) delete process.env.CI;
+      else process.env.CI = originalCI;
     });
 
     it('should return false when CI is not set', () => {
@@ -22,12 +27,12 @@ describe('Env Utils', () => {
     });
 
     it('should return true when CI is set', () => {
-      vi.stubEnv('CI', 'true');
+      process.env.CI = 'true';
       expect(isCI()).toBe(true);
     });
 
     it('should return false when CI is explicitly false', () => {
-      vi.stubEnv('CI', 'false');
+      process.env.CI = 'false';
       expect(isCI()).toBe(false);
     });
   });

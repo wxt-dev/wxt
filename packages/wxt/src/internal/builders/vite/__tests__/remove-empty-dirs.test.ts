@@ -1,31 +1,27 @@
+import { afterAll, beforeEach, describe, expect, it, mock, vi } from 'bun:test';
 import { mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-
 import { removeEmptyDirs } from '..';
+import { mocked } from '../../../../internal-utils/testing/mock';
 
 // `stat` is mocked (defaulting to the real implementation) so individual
 // tests can override it to simulate a file disappearing mid-walk.
-vi.mock('node:fs/promises', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('node:fs/promises')>();
-  return { ...actual, stat: vi.fn(actual.stat) };
+const actualFs = { ...(await import('node:fs/promises')) };
+const realStat = actualFs.stat;
+mock.module('node:fs/promises', () => ({
+  ...actualFs,
+  stat: vi.fn(realStat),
+}));
+afterAll(() => {
+  mock.module('node:fs/promises', () => actualFs);
 });
 
-const mockedStat = vi.mocked(stat);
-let realStat: typeof import('node:fs/promises').stat;
+const mockedStat = mocked(stat);
 
 describe('removeEmptyDirs', () => {
-  beforeAll(async () => {
-    realStat = (
-      await vi.importActual<typeof import('node:fs/promises')>(
-        'node:fs/promises',
-      )
-    ).stat;
-  });
-
-  afterEach(() => {
+  beforeEach(() => {
     mockedStat.mockImplementation(realStat);
   });
 
@@ -65,7 +61,7 @@ describe('removeEmptyDirs', () => {
         return (realStat as (...a: unknown[]) => unknown)(path, ...args);
       }) as typeof stat);
 
-      await expect(removeEmptyDirs(dir)).resolves.not.toThrow();
+      await expect(removeEmptyDirs(dir)).resolves.toBeUndefined();
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

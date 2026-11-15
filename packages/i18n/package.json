@@ -61,7 +61,7 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc --deps-only -- bun test --isolate",
     "bench": "buildc --deps-only -- bun run bench/run.ts",
     "prepack": "bun run build"
   },
@@ -73,14 +73,13 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "@types/bun": "catalog:",
     "@types/node": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
     "tinybench": "^6.0.1",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:",
-    "vitest-plugin-random-seed": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

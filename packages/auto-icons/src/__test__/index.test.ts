@@ -1,23 +1,31 @@
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  mock,
+  beforeEach,
+  type Mock,
+} from 'bun:test';
 import { access, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import type { Wxt, UserManifest } from 'wxt';
 
 import autoIconsModule, { type AutoIconsOptions } from '../index';
 
-vi.mock('node:fs/promises', () => ({
+mock.module('node:fs/promises', () => ({
   access: vi.fn(),
   mkdir: vi.fn(),
 }));
-const accessMock = vi.mocked(access);
-const mkdirMock = vi.mocked(mkdir);
+const accessMock = access as Mock<typeof access>;
+const mkdirMock = mkdir as Mock<typeof mkdir>;
 
-vi.mock('sharp', () => ({
+mock.module('sharp', () => ({
   default: vi.fn(),
 }));
-const sharpMock = vi.mocked(sharp);
+const sharpMock = sharp as unknown as Mock<(...args: any[]) => any>;
 
 // Type definitions for better type safety
 interface MockWxt {
@@ -27,10 +35,10 @@ interface MockWxt {
     mode: 'development' | 'production';
   };
   logger: {
-    warn: Mock;
+    warn: Mock<(...args: any[]) => any>;
   };
   hooks: {
-    hook: Mock;
+    hook: Mock<(...args: any[]) => any>;
   };
 }
 
@@ -183,9 +191,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+      const manifestHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
 
       expect(manifestHook).toBeDefined();
 
@@ -211,9 +219,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+      const manifestHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
 
       expect(manifestHook).toBeDefined();
 
@@ -235,9 +243,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+      const manifestHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
 
       const manifest: UserManifest = {
         icons: {
@@ -262,9 +270,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+      const manifestHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
 
       const manifest: UserManifest = {};
       if (manifestHook) {
@@ -294,9 +302,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       expect(buildHook).toBeDefined();
       if (buildHook) {
@@ -338,9 +346,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       expect(buildHook).toBeDefined();
       if (buildHook) {
@@ -369,9 +377,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
@@ -399,9 +407,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(prodMockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(prodMockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        prodMockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       if (buildHook) {
         await buildHook(prodMockWxt as unknown as Wxt, output);
@@ -421,9 +429,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
@@ -442,9 +450,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       if (buildHook) {
         await buildHook(mockWxt as unknown as Wxt, output);
@@ -470,9 +478,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const pathsHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'prepare:publicPaths')?.[1];
+      const pathsHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'prepare:publicPaths')?.[1];
 
       expect(pathsHook).toBeDefined();
 
@@ -499,9 +507,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const manifestHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
+      const manifestHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:manifestGenerated')?.[1];
 
       const manifest: UserManifest = {};
       if (manifestHook) {
@@ -531,9 +539,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       const output: BuildOutput = { publicAssets: [] };
 
@@ -551,13 +559,17 @@ describe('auto-icons module', () => {
       };
 
       // Make ensureDir throw an error
-      mkdirMock.mockRejectedValue(new Error('Directory creation failed'));
+      // The module doesn't handle this rejection, so mark it as handled to
+      // keep bun from failing the test on an unhandled rejection.
+      const rejection = Promise.reject(new Error('Directory creation failed'));
+      rejection.catch(() => {});
+      mkdirMock.mockReturnValue(rejection as any);
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       const output: BuildOutput = { publicAssets: [] };
 
@@ -578,9 +590,9 @@ describe('auto-icons module', () => {
 
       await autoIconsModule.setup!(mockWxt as unknown as Wxt, options);
 
-      const buildHook = vi
-        .mocked(mockWxt.hooks.hook)
-        .mock.calls.find((call) => call[0] === 'build:done')?.[1];
+      const buildHook = (
+        mockWxt.hooks.hook as Mock<(...args: any[]) => any>
+      ).mock.calls.find((call) => call[0] === 'build:done')?.[1];
 
       const output: BuildOutput = { publicAssets: [] };
 

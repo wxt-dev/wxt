@@ -1,8 +1,7 @@
+import { describe, expect, it } from 'bun:test';
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-
-import { describe, expect, it } from 'vitest';
 
 import { wxt } from '../../../internal/wxt';
 import { setFakeWxt } from '../../testing/fake-objects';

@@ -33,7 +33,7 @@
   },
   "scripts": {
     "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc --deps-only -- bun test --isolate",
     "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepack": "bun run build"
@@ -43,11 +43,10 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "@types/bun": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "vitest-mock-extended": "catalog:"
+    "typescript": "catalog:"
   }
 }

@@ -260,13 +260,31 @@ export class TestProject {
   }
 }
 
-/** Starts a TCP server on the given port and returns a cleanup function. */
-export function occupyPort(port: number): Promise<() => Promise<void>> {
-  return new Promise((resolve, reject) => {
+/**
+ * Starts TCP servers on the given port and returns a cleanup function.
+ *
+ * Bun resolves `localhost` to either IPv4 or IPv6 on each `listen` call, so
+ * occupy both addresses to make sure a server listening on `localhost`
+ * conflicts regardless of which one it resolves to.
+ */
+export async function occupyPort(port: number): Promise<() => Promise<void>> {
+  const servers: ReturnType<typeof createNetServer>[] = [];
+  for (const host of ['127.0.0.1', '::1']) {
     const srv = createNetServer();
-    srv.listen(port, 'localhost', () => {
-      resolve(() => new Promise<void>((res) => srv.close(() => res())));
-    });
-    srv.on('error', reject);
-  });
+    try {
+      await new Promise<void>((resolve, reject) => {
+        srv.once('error', reject);
+        srv.listen(port, host, () => resolve());
+      });
+      servers.push(srv);
+    } catch (err) {
+      // IPv6 may not be available on every machine
+      if (host === '127.0.0.1') throw err;
+    }
+  }
+  return async () => {
+    await Promise.all(
+      servers.map((srv) => new Promise<void>((res) => srv.close(() => res()))),
+    );
+  };
 }

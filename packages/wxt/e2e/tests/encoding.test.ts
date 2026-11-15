@@ -1,6 +1,5 @@
+import { describe, expect, it } from 'bun:test';
 import { readFile } from 'node:fs/promises';
-
-import { describe, expect, it } from 'vitest';
 
 import { TestProject } from '../utils';
 

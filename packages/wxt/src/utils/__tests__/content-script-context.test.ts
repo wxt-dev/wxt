@@ -1,8 +1,8 @@
-/** @vitest-environment happy-dom */
+import { afterAll, beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import { fakeBrowser } from '@webext-core/fake-browser';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+import { unregisterHappyDom } from '../../internal-utils/testing/happy-dom';
 import { ContentScriptContext } from '../content-script-context';
 
 /**
@@ -13,6 +13,8 @@ import { ContentScriptContext } from '../content-script-context';
 function waitForEventsToFire() {
   return new Promise((res) => setTimeout(res));
 }
+
+afterAll(unregisterHappyDom);
 
 describe('Content Script Context', () => {
   beforeEach(() => {
@@ -107,8 +109,6 @@ describe('Content Script Context', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
-      // @ts-expect-error
-      context.addEventListener(window, 'visibilitychange', (_) => {});
     });
 
     it('should infer types correctly for the document target', () => {

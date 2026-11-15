@@ -1,6 +1,5 @@
+import { describe, expect, it } from 'bun:test';
 import path from 'node:path';
-
-import { describe, expect, it } from 'vitest';
 
 import { describeWithBin } from '../../../internal-utils/testing/fixtures';
 import { yarn } from '../yarn';

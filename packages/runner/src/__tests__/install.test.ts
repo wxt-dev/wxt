@@ -1,23 +1,26 @@
+import { describe, it, expect, vi, mock, type Mock } from 'bun:test';
 import type { ChildProcess } from 'node:child_process';
-
-import { describe, it, expect, vi } from 'vitest';
-import { mock } from 'vitest-mock-extended';
 
 import { createBidiConnection, type BidiConnection } from '../bidi';
 import { createCdpConnection, type CDPConnection } from '../cdp';
 import { installChromium, installFirefox } from '../install';
+import { mock as mockOf } from './mock';
 
-vi.mock('../cdp');
-const createCdpConnectionMock = vi.mocked(createCdpConnection);
+mock.module('../cdp', () => ({ createCdpConnection: vi.fn() }));
+const createCdpConnectionMock = createCdpConnection as Mock<
+  typeof createCdpConnection
+>;
 
-vi.mock('../bidi');
-const createBidiConnectionMock = vi.mocked(createBidiConnection);
+mock.module('../bidi', () => ({ createBidiConnection: vi.fn() }));
+const createBidiConnectionMock = createBidiConnection as Mock<
+  typeof createBidiConnection
+>;
 
 describe('Install', () => {
   describe('Chromium', () => {
     it('Should send the install command to the process', async () => {
-      const browserProcess = mock<ChildProcess>();
-      const connection = mock<CDPConnection>({
+      const browserProcess = mockOf<ChildProcess>();
+      const connection = mockOf<CDPConnection>({
         [Symbol.dispose]: vi.fn(),
       });
       const extensionDir = '/path/to/extension';
@@ -49,7 +52,7 @@ describe('Install', () => {
       const debuggerUrl = 'http://127.0.0.1:9222';
       const extensionDir = '/path/to/extension';
       const expectedExtensionId = 'firefox-extension-id';
-      const connection = mock<BidiConnection>({
+      const connection = mockOf<BidiConnection>({
         [Symbol.dispose]: vi.fn(),
       });
 
