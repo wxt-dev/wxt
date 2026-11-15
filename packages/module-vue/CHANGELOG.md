@@ -32,7 +32,7 @@
 
 ### 🏡 Chore
 
-- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Add `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
 - **deps:** Bump @vitejs/plugin-vue from 5.1.1 to 5.1.4 ([#1020](https://github.com/wxt-dev/wxt/pull/1020))
 - Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
 - **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))

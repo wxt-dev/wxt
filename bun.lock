@@ -20,6 +20,7 @@
         "oxfmt": "^0.78.0",
         "p-map": "^7.0.4",
         "puppeteer-core": "^25.17.0",
+        "rumdl": "^0.3.4",
         "simple-git-hooks": "^2.14.0",
         "tinyexec": "catalog:",
         "tinyglobby": "^0.2.16",
@@ -396,7 +397,7 @@
   },
   "catalog": {
     "@aklinker1/buildc": "^1.1.7",
-    "@aklinker1/check": "^2.4.0",
+    "@aklinker1/check": "^2.5.0",
     "@types/bun": "^1.4.4",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
@@ -421,7 +422,7 @@
 
     "@aklinker1/buildc": ["@aklinker1/buildc@1.1.7", "", { "dependencies": { "cac": "^6.7.14", "consola": "^3.2.3", "dependency-graph": "^1.0.0", "fast-glob": "^3.3.2", "fs-extra": "^11.2.0", "ohash": "^1.1.3", "pathe": "^1.1.2", "proper-lockfile": "^4.1.2", "yaml": "^2.4.5" }, "bin": { "buildc": "bin/buildc.mjs" } }, "sha512-45gBxrm0SH+NcB2QBpmIoQ8ZuDOqVR4f08u8TFPCoqZVrJxlhYCJPGvrHX2Ge+PK8KVGdYXWu1Y8M2C/6/zc1Q=="],
 
-    "@aklinker1/check": ["@aklinker1/check@2.4.0", "", { "bin": { "check": "bin/check.mjs" } }, "sha512-HkISZz9zeE34IVvCJfisvdp544B4blb2mO1a6UQotBof2mjToFs430FzSKX/lamfCPwYlj2xkYyYD8MMnwsuRg=="],
+    "@aklinker1/check": ["@aklinker1/check@2.5.0", "", { "bin": { "check": "bin/check.mjs" } }, "sha512-w0+5UanjLEbOWdwgOpHPUsUMVlGJ5jj5fKfh8dLNOs/9LBxCytrBeSZ8JrJ7w/u4NKDBMot6FRHVh6Od8PTj5A=="],
 
     "@aklinker1/rollup-plugin-visualizer": ["@aklinker1/rollup-plugin-visualizer@5.12.0", "", { "dependencies": { "open": "^8.4.0", "picomatch": "^2.3.1", "source-map": "^0.7.4", "yargs": "^17.5.1" }, "peerDependencies": { "rollup": "2.x || 3.x || 4.x" }, "optionalPeers": ["rollup"], "bin": { "rollup-plugin-visualizer": "dist/bin/cli.js" } }, "sha512-X24LvEGw6UFmy0lpGJDmXsMyBD58XmX1bbwsaMLhNoM+UMQfQ3b2RtC+nz4b/NoRK5r6QJSKJHBNVeUdwqybaQ=="],
 
@@ -1110,6 +1111,20 @@
     "@rollup/rollup-win32-x64-gnu": ["@rollup/rollup-win32-x64-gnu@4.57.1", "", { "os": "win32", "cpu": "x64" }, "sha512-VMBH2eOOaKGtIJYleXsi2B8CPVADrh+TyNxJ4mWPnKfLB/DBUmzW+5m1xUrcwWoMfSLagIRpjUFeW5CO5hyciQ=="],
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.57.1", "", { "os": "win32", "cpu": "x64" }, "sha512-mxRFDdHIWRxg3UfIIAwCm6NzvxG0jDX/wBN6KsQFTvKFqqg9vTrWUE68qEjHt19A5wwx5X5aUi2zuZT7YR0jrA=="],
+
+    "@rumdl/cli-darwin-arm64": ["@rumdl/cli-darwin-arm64@0.3.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-YrL7fdnYIpJAtS1SFUH4tmQi6500uyDlc2x/os+OQ8uIzOVK4839lQsgg2tEJv055xYJDYKrUjFJVFkklzrZog=="],
+
+    "@rumdl/cli-darwin-x64": ["@rumdl/cli-darwin-x64@0.3.4", "", { "os": "darwin", "cpu": "x64" }, "sha512-eMfOGWv8a2GZY8e1ILTyQAgBMqufyy0Ja23ibPL/+J1yY1C38LsRv77m54qHPKJ6dLVqFukNCn75Z0Hi43dNeQ=="],
+
+    "@rumdl/cli-linux-arm64": ["@rumdl/cli-linux-arm64@0.3.4", "", { "os": "linux", "cpu": "arm64", "libc": "glibc" }, "sha512-7P1sD2mgU4h4XEBH4Zr6d2z2KJc+um5i4UvVt++yC4afJJVhHeZR4WVoGRiefFHpIJzRy6l/IZKDmPn22OSKNg=="],
+
+    "@rumdl/cli-linux-arm64-musl": ["@rumdl/cli-linux-arm64-musl@0.3.4", "", { "os": "linux", "cpu": "arm64", "libc": "musl" }, "sha512-GzgV8wxmBqKjNf62nWpZJJoIZlQEx6FTk4wFSsYcrOkD0ykDAweiA9XcsR6r7pt/hCIwZnOehvyKD9Heh3TWUQ=="],
+
+    "@rumdl/cli-linux-x64": ["@rumdl/cli-linux-x64@0.3.4", "", { "os": "linux", "cpu": "x64", "libc": "glibc" }, "sha512-ZI/pvv9d3i6P+TjcohyKJF76bCAftKPpRjhx4TlMjSF0dJEZom+jbPeLvNjBExsG/UUQP7ZmnUgQ6SjFiip21w=="],
+
+    "@rumdl/cli-linux-x64-musl": ["@rumdl/cli-linux-x64-musl@0.3.4", "", { "os": "linux", "cpu": "x64", "libc": "musl" }, "sha512-ymwyprxpA6leGKxjCQOEUnyOxfJzuVeOFgOaKkjculC/sXpJ0v69xLudBNmnbnHNgm3cC95JY4h9xJ+FwxiuUw=="],
+
+    "@rumdl/cli-win32-x64": ["@rumdl/cli-win32-x64@0.3.4", "", { "os": "win32", "cpu": "x64" }, "sha512-L+qZIDT3fKC81XPhZGLA8NnUK8dALCE+oYM1C9NTbUYnLjU4m5sYBetgfUAme501OpIcKtLnuJDeTtS6GBzPIg=="],
 
     "@shikijs/core": ["@shikijs/core@2.5.0", "", { "dependencies": { "@shikijs/engine-javascript": "2.5.0", "@shikijs/engine-oniguruma": "2.5.0", "@shikijs/types": "2.5.0", "@shikijs/vscode-textmate": "^10.0.2", "@types/hast": "^3.0.4", "hast-util-to-html": "^9.0.4" } }, "sha512-uu/8RExTKtavlpH7XqnVYBrfBkUc20ngXiX9NSrBhOVZYv/7XQRKUyhtkeflY5QsxC0GbJThCerruZfsUaSldg=="],
 
@@ -2476,6 +2491,8 @@
     "rollup": ["rollup@4.57.1", "", { "dependencies": { "@types/estree": "1.0.8" }, "optionalDependencies": { "@rollup/rollup-android-arm-eabi": "4.57.1", "@rollup/rollup-android-arm64": "4.57.1", "@rollup/rollup-darwin-arm64": "4.57.1", "@rollup/rollup-darwin-x64": "4.57.1", "@rollup/rollup-freebsd-arm64": "4.57.1", "@rollup/rollup-freebsd-x64": "4.57.1", "@rollup/rollup-linux-arm-gnueabihf": "4.57.1", "@rollup/rollup-linux-arm-musleabihf": "4.57.1", "@rollup/rollup-linux-arm64-gnu": "4.57.1", "@rollup/rollup-linux-arm64-musl": "4.57.1", "@rollup/rollup-linux-loong64-gnu": "4.57.1", "@rollup/rollup-linux-loong64-musl": "4.57.1", "@rollup/rollup-linux-ppc64-gnu": "4.57.1", "@rollup/rollup-linux-ppc64-musl": "4.57.1", "@rollup/rollup-linux-riscv64-gnu": "4.57.1", "@rollup/rollup-linux-riscv64-musl": "4.57.1", "@rollup/rollup-linux-s390x-gnu": "4.57.1", "@rollup/rollup-linux-x64-gnu": "4.57.1", "@rollup/rollup-linux-x64-musl": "4.57.1", "@rollup/rollup-openbsd-x64": "4.57.1", "@rollup/rollup-openharmony-arm64": "4.57.1", "@rollup/rollup-win32-arm64-msvc": "4.57.1", "@rollup/rollup-win32-ia32-msvc": "4.57.1", "@rollup/rollup-win32-x64-gnu": "4.57.1", "@rollup/rollup-win32-x64-msvc": "4.57.1", "fsevents": "~2.3.2" }, "bin": { "rollup": "dist/bin/rollup" } }, "sha512-oQL6lgK3e2QZeQ7gcgIkS2YZPg5slw37hYufJ3edKlfQSGGm8ICoxswK15ntSzF/a8+h7ekRy7k7oWc3BQ7y8A=="],
 
     "roughjs": ["roughjs@4.6.6", "", { "dependencies": { "hachure-fill": "^0.5.2", "path-data-parser": "^0.1.0", "points-on-curve": "^0.2.0", "points-on-path": "^0.2.1" } }, "sha512-ZUz/69+SYpFN/g/lUlo2FXcIjRkSu3nDarreVdGGndHEBJ6cXPdKguS8JGxwj5HA5xIbVKSmLgr5b3AWxtRfvQ=="],
+
+    "rumdl": ["rumdl@0.3.4", "", { "optionalDependencies": { "@rumdl/cli-darwin-arm64": "0.3.4", "@rumdl/cli-darwin-x64": "0.3.4", "@rumdl/cli-linux-arm64": "0.3.4", "@rumdl/cli-linux-arm64-musl": "0.3.4", "@rumdl/cli-linux-x64": "0.3.4", "@rumdl/cli-linux-x64-musl": "0.3.4", "@rumdl/cli-win32-x64": "0.3.4" }, "bin": { "rumdl": "bin/rumdl" } }, "sha512-pJ/PWYbKT2TwYWoUa/LsMQZFAk7CM3wWIEd5eJWKBjfH0MSuKcipNDSpz20tK/HuL8Iwq5Z8IiHYSX/PGD27Cw=="],
 
     "run-applescript": ["run-applescript@7.1.0", "", {}, "sha512-DPe5pVFaAsinSaV6QjQ6gdiedWDcRCbUuiQfQa2wmWV7+xC9bGulGI8+TdRmoFkAPaBXk8CrAbnlY2ISniJ47Q=="],
 

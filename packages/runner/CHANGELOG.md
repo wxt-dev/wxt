@@ -40,7 +40,6 @@
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
 
-
 ## v0.1.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/runner-v0.1.1...runner-v0.1.2)

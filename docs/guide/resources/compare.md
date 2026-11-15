@@ -41,9 +41,17 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 | Content Script UI                                       |   ✅    |   ✅    | ❌ [^k] |
 | I18n                                                    |   ✅    |   ❌    |   ❌    |
 
+[^n]: Appears to be in maintenance mode with little to no maintainers nor feature development happening and _(see [wxt-dev/wxt#1404 (comment)](https://github.com/wxt-dev/wxt/pull/1404#issuecomment-2643089518))_
+
+[^m]: See [crxjs/chrome-extension-tools#974](https://github.com/crxjs/chrome-extension-tools/discussions/974)
+
+[^j]: As of `v2.0.0-beta.23`, but v2 stable hasn't been released yet.
+
 [^a]: Either MV2 or MV3, not both.
 
 [^b]: File based.
+
+[^i]: Entrypoint options all configured in `manifest.json`.
 
 [^c]: Only React, Vue, and Svelte.
 
@@ -51,20 +59,12 @@ Lets compare the features of WXT vs [Plasmo](https://docs.plasmo.com/framework) 
 
 [^e]: `.html`, `.ts`, `.tsx`, `.vue`, `.svelte`.
 
+[^l]: WIP, moving very slowly. Follow [wxt-dev/wxt#357](https://github.com/wxt-dev/wxt/issues/357) for updates.
+
 [^f]: React only.
 
 [^g]: Reloads entire extension.
 
 [^h]: ESM-style loaders run asynchronously.
 
-[^i]: Entrypoint options all configured in `manifest.json`.
-
-[^j]: As of `v2.0.0-beta.23`, but v2 stable hasn't been released yet.
-
 [^k]: There is no built-in wrapper around this API. However, you can still access the standard APIs via `chrome`/`browser` globals or use any 3rd party NPM package.
-
-[^l]: WIP, moving very slowly. Follow [wxt-dev/wxt#357](https://github.com/wxt-dev/wxt/issues/357) for updates.
-
-[^m]: See [crxjs/chrome-extension-tools#974](https://github.com/crxjs/chrome-extension-tools/discussions/974)
-
-[^n]: Appears to be in maintenance mode with little to no maintainers nor feature development happening and _(see [wxt-dev/wxt#1404 (comment)](https://github.com/wxt-dev/wxt/pull/1404#issuecomment-2643089518))_

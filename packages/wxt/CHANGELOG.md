@@ -93,7 +93,6 @@
 - [@dvd233](https://github.com/dvd233)
 - [@JoeyTan21](https://github.com/JoeyTan21)
 
-
 ## v0.21.4
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/wxt-v0.21.3...wxt-v0.21.4)
@@ -170,7 +169,7 @@
 - **deps**: Replace `prompts` with `@topcli/prompts` ([#2528](https://github.com/wxt-dev/wxt/pull/2528))
 - **deps**: Replace `async-mutex` with `superlock` ([#2529](https://github.com/wxt-dev/wxt/pull/2529))
 - Use Vite 8 for WXT development ([#2540](https://github.com/wxt-dev/wxt/pull/2540))
-- **deps**: Replace `ci-info`  with custom `isCI` function ([#2543](https://github.com/wxt-dev/wxt/pull/2543))
+- **deps**: Replace `ci-info` with custom `isCI` function ([#2543](https://github.com/wxt-dev/wxt/pull/2543))
 - **deps**: Replace `jszip` with `@aklinker1/zero-zip` ([#2538](https://github.com/wxt-dev/wxt/pull/2538))
 
 ### ❤️ Contributors
@@ -843,7 +842,7 @@
 
 - Wxt normal logs are drowned by `dotenv@17.0.0` ads ([#1883](https://github.com/wxt-dev/wxt/pull/1883))
 - Optimize `splitShadowRootCss` ([#1934](https://github.com/wxt-dev/wxt/pull/1934))
-- `wxt prepare` fails with the error "__vite_ssr_exportName__ is not defined" when using Vite 7 ([#1884](https://github.com/wxt-dev/wxt/pull/1884))
+- `wxt prepare` fails with the error "**vite_ssr_exportName** is not defined" when using Vite 7 ([#1884](https://github.com/wxt-dev/wxt/pull/1884))
 
 ### 🏡 Chore
 
@@ -1107,13 +1106,13 @@ Excited to release the next major version of WXT! Follow the [Upgrade guide](htt
 
 ### 🩹 Fixes
 
-- ⚠️  Add suffix to non-production output directories ([#1086](https://github.com/wxt-dev/wxt/pull/1086))
-- ⚠️  Remove deprecated `jiti` entrypoint loader ([#1087](https://github.com/wxt-dev/wxt/pull/1087))
-- ⚠️  Rename `runner` to `webExt` ([#1180](https://github.com/wxt-dev/wxt/pull/1180))
-- ⚠️  Remove `transformManfiest` option ([#1181](https://github.com/wxt-dev/wxt/pull/1181))
+- ⚠️ Add suffix to non-production output directories ([#1086](https://github.com/wxt-dev/wxt/pull/1086))
+- ⚠️ Remove deprecated `jiti` entrypoint loader ([#1087](https://github.com/wxt-dev/wxt/pull/1087))
+- ⚠️ Rename `runner` to `webExt` ([#1180](https://github.com/wxt-dev/wxt/pull/1180))
+- ⚠️ Remove `transformManfiest` option ([#1181](https://github.com/wxt-dev/wxt/pull/1181))
 - Remove unnecessary `VITE_CJS_IGNORE_WARNING` flag ([b0ef178](https://github.com/wxt-dev/wxt/commit/b0ef178))
-- ⚠️  Make `publicDir` and `modulesDir` relative to project root ([#1216](https://github.com/wxt-dev/wxt/pull/1216))
-- ⚠️  Move `wxt/storage` to `wxt/utils/storage` ([#1271](https://github.com/wxt-dev/wxt/pull/1271))
+- ⚠️ Make `publicDir` and `modulesDir` relative to project root ([#1216](https://github.com/wxt-dev/wxt/pull/1216))
+- ⚠️ Move `wxt/storage` to `wxt/utils/storage` ([#1271](https://github.com/wxt-dev/wxt/pull/1271))
 - Add back `ExtensionRunnerConfig` as deprecated ([#1311](https://github.com/wxt-dev/wxt/pull/1311))
 - Missing browser in shadow-root file ([#1317](https://github.com/wxt-dev/wxt/pull/1317))
 
@@ -1577,7 +1576,7 @@ Excited to release the next major version of WXT! Follow the [Upgrade guide](htt
 ### 🏡 Chore
 
 - Fix type error ([#946](https://github.com/wxt-dev/wxt/pull/946))
-- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Add `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
 - **deps:** Bump ora from 8.0.1 to 8.1.0 ([#961](https://github.com/wxt-dev/wxt/pull/961))
 - **deps:** Bump unimport from 3.9.1 to 3.11.1 ([#960](https://github.com/wxt-dev/wxt/pull/960))
 - **deps:** Bump execa from 9.3.0 to 9.3.1 ([#957](https://github.com/wxt-dev/wxt/pull/957))
@@ -1619,7 +1618,7 @@ Excited to release the next major version of WXT! Follow the [Upgrade guide](htt
 ### 🩹 Fixes
 
 - **testing:** Stub `chrome` and `browser` globals with `fakeBrowser` automatically ([#925](https://github.com/wxt-dev/wxt/pull/925))
-- Ensure TSConfig paths start with `../` or  `./` so they are valid ([#927](https://github.com/wxt-dev/wxt/pull/927))
+- Ensure TSConfig paths start with `../` or `./` so they are valid ([#927](https://github.com/wxt-dev/wxt/pull/927))
 
 ### 📖 Documentation
 
@@ -1748,11 +1747,11 @@ Excited to release the next major version of WXT! Follow the [Upgrade guide](htt
 - **experimental:** First-class support for excluding `webextension-polyfill` ([#847](https://github.com/wxt-dev/wxt/pull/847))
 - **storage:** `init` option and rename `defaultValue` to `fallback` ([#827](https://github.com/wxt-dev/wxt/pull/827))
 - **hooks:** Add `prepare:publicPaths` hook ([#858](https://github.com/wxt-dev/wxt/pull/858))
-- ⚠️  Use `vite-node` to load entrypoints by default ([#859](https://github.com/wxt-dev/wxt/pull/859))
+- ⚠️ Use `vite-node` to load entrypoints by default ([#859](https://github.com/wxt-dev/wxt/pull/859))
 
 ### 🔥 Performance
 
-- **size:** ⚠️  Switch from `tsup` to `unbuild` for building WXT ([#848](https://github.com/wxt-dev/wxt/pull/848))
+- **size:** ⚠️ Switch from `tsup` to `unbuild` for building WXT ([#848](https://github.com/wxt-dev/wxt/pull/848))
 
 ### 🩹 Fixes
 

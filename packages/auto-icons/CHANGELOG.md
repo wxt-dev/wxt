@@ -28,7 +28,6 @@
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
 
-
 ## v1.1.1
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/auto-icons-v1.1.0...auto-icons-v1.1.1)
@@ -74,7 +73,7 @@
 
 ### 🏡 Chore
 
-- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Add `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
 - **deps:** Bump sharp from 0.33.4 to 0.33.5 ([#959](https://github.com/wxt-dev/wxt/pull/959))
 - Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
 - **deps:** Upgrade all non-major dependencies ([#1164](https://github.com/wxt-dev/wxt/pull/1164))

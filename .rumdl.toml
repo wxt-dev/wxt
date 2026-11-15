@@ -1,0 +1,16 @@
+[global]
+disable = ["line-length", "first-line-heading", "no-inline-html"]
+exclude = [
+  "node_modules",
+  ".git",
+  ".output",
+  "dist",
+
+  # Generated files
+  "packages/wxt/README.md",
+  "packages/*/CHANGELOG.md",
+  "docs/api",
+]
+
+[per-file-ignores]
+".github/ISSUE_TEMPLATE/**" = ["MD001"]

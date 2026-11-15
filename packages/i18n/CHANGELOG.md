@@ -12,7 +12,6 @@
 
 - Thribhuvan <thribhuvan003@gmail.com>
 
-
 ## v0.2.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.6...i18n-v0.2.7)
@@ -168,7 +167,7 @@
 
 ### 🩹 Fixes
 
-- ⚠️  Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
+- ⚠️ Remove invalid options argument ([#1048](https://github.com/wxt-dev/wxt/pull/1048))
 
 To upgrade, if you were passing a final `options` argument, remove it. If you used the third argument to escape `<` symbol... You'll need to do it yourself:
 
@@ -191,7 +190,7 @@ To upgrade, if you were passing a final `options` argument, remove it. If you us
 
 ### 🏡 Chore
 
-- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Add `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
 - Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
 
 ### ❤️ Contributors
