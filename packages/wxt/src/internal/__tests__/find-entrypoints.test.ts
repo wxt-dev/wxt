@@ -47,6 +47,7 @@ describe('findEntrypoints', () => {
     });
     importEntrypointsMock = vi.mocked(wxt.builder.importEntrypoints);
     importEntrypointsMock.mockResolvedValue([]);
+    readFileMock.mockResolvedValue('');
   });
 
   it.each<[string, string, PopupEntrypoint]>([

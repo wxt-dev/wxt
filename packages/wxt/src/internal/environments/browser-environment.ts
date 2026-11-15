@@ -1,33 +1,73 @@
-import * as litejs from '@litejs/dom';
-
-import { parseHTML } from '../../internal-utils/html-utils';
 import { createEnvironment, Environment, EnvGlobals } from './environment';
 
 export function createBrowserEnvironment(): Environment {
   return createEnvironment(getBrowserEnvironmentGlobals);
 }
 
+/**
+ * Entrypoints are imported at build time just to read their options, so the
+ * browser globals only need to not throw when top-level code touches them. They
+ * are permissive stubs, not a DOM implementation.
+ */
 export function getBrowserEnvironmentGlobals(): EnvGlobals {
-  const { document } = parseHTML(`
-    <html>
-      <head></head>
-      <body></body>
-    </html>
-  `);
   const location = createBuildTimeLocation('http://localhost/');
-  const global: EnvGlobals = {
-    Node: litejs.Node,
-    HTMLElement: litejs.HTMLElement,
-    Element: litejs.HTMLElement,
-    DocumentFragment: litejs.DocumentFragment,
-    DOMParser: litejs.DOMParser,
-    document,
-    location,
-  };
-  const window: EnvGlobals = { ...global };
+  const document = createStub();
+  const window: any = createStub({ location, document });
   window.window = window;
   window.self = window;
-  return { ...window, window, self: window };
+
+  return {
+    window,
+    self: window,
+    document,
+    location,
+    ...Object.fromEntries(
+      stubbedGlobalNames.map((name) => [name, createStub()]),
+    ),
+  };
+}
+
+const stubbedGlobalNames = [
+  'Node',
+  'Element',
+  'HTMLElement',
+  'Document',
+  'DocumentFragment',
+  'ShadowRoot',
+  'Event',
+  'CustomEvent',
+  'DOMParser',
+  'MutationObserver',
+  'ResizeObserver',
+  'IntersectionObserver',
+  'customElements',
+];
+
+/**
+ * Creates a value where reading any property, calling it, or constructing it
+ * returns another stub. `overrides` are real values for specific properties.
+ */
+function createStub(overrides: Record<string, unknown> = {}): any {
+  // Must be a regular function so it can be called, constructed, and extended
+  const target = function () {};
+  const stub: any = new Proxy(target, {
+    get(_, prop) {
+      if (typeof prop === 'string' && prop in overrides) return overrides[prop];
+      if (prop === 'prototype') return target.prototype;
+      // Not a thenable, otherwise awaiting a stub never settles
+      if (prop === 'then' || prop === 'toJSON') return undefined;
+      if (prop === Symbol.toPrimitive) return () => '';
+      if (prop === Symbol.iterator) return function* () {};
+      if (prop === Symbol.hasInstance) return () => false;
+      if (typeof prop === 'symbol') return undefined;
+      return createStub();
+    },
+    set: () => true,
+    deleteProperty: () => true,
+    apply: () => createStub(),
+    construct: () => createStub(),
+  });
+  return stub;
 }
 
 /**

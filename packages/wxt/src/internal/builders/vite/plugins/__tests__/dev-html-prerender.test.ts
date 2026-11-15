@@ -2,7 +2,10 @@ import { resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseHTML } from '../../../../../internal-utils/html-utils';
+import {
+  applyHtmlEdits,
+  scanHtml,
+} from '../../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../../internal-utils/path-utils';
 import {
   fakeDevServer,
@@ -34,7 +37,6 @@ describe('Dev HTML Prerender Plugin', () => {
       // URLs should not be changed
       ['https://example.com/style.css', 'https://example.com/style.css'],
     ])('should transform "%s" into "%s"', (input, expected) => {
-      const { document } = parseHTML('<html></html>');
       const root = '/some/root';
       const config = fakeResolvedConfig({
         root,
@@ -54,11 +56,14 @@ describe('Dev HTML Prerender Plugin', () => {
       });
       const id = root + '/entrypoints/popup/index.html';
 
-      document.head.innerHTML = `<link rel="stylesheet" href="${input}" />`;
-      pointToDevServer(config, server, id, document, 'link', 'href');
+      const html = `<html><head><link rel="stylesheet" href="${input}" /></head></html>`;
+      const link = scanHtml(html).find((tag) => tag.name === 'link')!;
+      const edits = pointToDevServer(config, server, id, html, link, 'href');
 
-      const actual = document.querySelector('link')!;
-      expect(actual.getAttribute('href')).toBe(expected);
+      const actual = scanHtml(applyHtmlEdits(html, edits)).find(
+        (tag) => tag.name === 'link',
+      )!;
+      expect(actual.attrs.href).toBe(expected);
     });
   });
 });

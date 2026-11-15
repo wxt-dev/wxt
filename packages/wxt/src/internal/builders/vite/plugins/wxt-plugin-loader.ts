@@ -1,7 +1,11 @@
 import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
-import { parseHTML } from '../../../../internal-utils/html-utils';
+import {
+  applyHtmlEdits,
+  insertIntoHeadEdit,
+  scanHtml,
+} from '../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
 
@@ -93,7 +97,9 @@ export function wxtPluginLoader(
         } else {
           // Forward resolved entrypoint to match the JS module.
           const jsModuleId = entrypoint
-            ? `${virtualModuleId}?entrypoint=${encodeURIComponent(entrypoint.name)}`
+            ? `${virtualModuleId}?entrypoint=${encodeURIComponent(
+                entrypoint.name,
+              )}`
             : virtualModuleId;
           return `import { initPlugins } from '${jsModuleId}';
             try {
@@ -125,24 +131,16 @@ export function wxtPluginLoader(
             ? `${config.dev.server?.origin}/@id/${htmlModuleId}`
             : htmlModuleId;
 
-        const { document } = parseHTML(html);
-        const existing = document.querySelector(`script[src='${src}']`);
+        const tags = scanHtml(html);
+        const existing = tags.some(
+          (tag) => tag.name === 'script' && tag.attrs.src === src,
+        );
         if (existing) return;
 
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = src;
-
-        if (document.head == null) {
-          const newHead = document.createElement('head');
-          document.documentElement.insertBefore(
-            newHead,
-            document.documentElement.firstChild,
-          );
-        }
-
-        document.head?.insertBefore(script, document.head.firstChild);
-        return document.toString();
+        const script = `<script type="module" src="${src}"></script>`;
+        return applyHtmlEdits(html, [
+          insertIntoHeadEdit(html, tags, script, 'start'),
+        ]);
       },
     },
   };

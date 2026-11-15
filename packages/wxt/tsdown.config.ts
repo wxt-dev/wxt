@@ -26,6 +26,7 @@ const inlineDeps = [
   'normalize-path',
   'ohash',
   'scule',
+  'htmlparser2',
 ];
 
 console.log();

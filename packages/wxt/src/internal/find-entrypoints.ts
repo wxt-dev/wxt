@@ -10,7 +10,7 @@ import {
   isJsEntrypoint,
   resolvePerBrowserOptions,
 } from '../internal-utils/entrypoint-utils';
-import { parseHTML } from '../internal-utils/html-utils';
+import { scanHtml } from '../internal-utils/html-utils';
 import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -170,16 +170,16 @@ async function importHtmlEntrypoint(
   info: EntrypointInfo,
 ): Promise<Record<string, any>> {
   const content = await readFile(info.inputPath, 'utf-8');
-  const { document } = parseHTML(content);
+  const tags = scanHtml(content);
 
-  const metaTags = document.querySelectorAll('meta');
+  const metaTags = tags.filter((tag) => tag.name === 'meta');
   const res: Record<string, any> = {
-    title: document.querySelector('title')?.textContent || undefined,
+    title: tags.find((tag) => tag.name === 'title')?.text || undefined,
   };
 
   metaTags.forEach((tag) => {
-    const name = tag.getAttribute('name') ?? '';
-    const content = tag.getAttribute('content') ?? '';
+    const name = tag.attrs.name ?? '';
+    const content = tag.attrs.content ?? '';
     let key: string;
 
     if (name.startsWith('manifest.')) {

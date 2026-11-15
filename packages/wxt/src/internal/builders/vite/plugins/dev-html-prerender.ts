@@ -4,7 +4,15 @@ import { hash } from 'ohash';
 import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
-import { parseHTML } from '../../../../internal-utils/html-utils';
+import {
+  applyHtmlEdits,
+  HtmlEdit,
+  HtmlTag,
+  insertIntoHeadEdit,
+  removeAttributeEdit,
+  scanHtml,
+  setAttributeEdit,
+} from '../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
 import { ResolvedConfig, WxtDevServer } from '../../../../types';
@@ -48,20 +56,31 @@ export function devHtmlPrerender(
         handler(code, id) {
           if (config.command !== 'serve' || server == null) return;
 
-          const { document } = parseHTML(code);
-
-          const _pointToDevServer = (querySelector: string, attr: string) =>
-            pointToDevServer(config, server, id, document, querySelector, attr);
-          _pointToDevServer('script[type=module]', 'src');
-          _pointToDevServer('link[rel=stylesheet]', 'href');
+          const tags = scanHtml(code);
+          const edits: HtmlEdit[] = [];
+          for (const tag of tags) {
+            if (tag.name === 'script' && tag.attrs.type === 'module') {
+              edits.push(
+                ...pointToDevServer(config, server, id, code, tag, 'src'),
+              );
+            } else if (tag.name === 'link' && tag.attrs.rel === 'stylesheet') {
+              edits.push(
+                ...pointToDevServer(config, server, id, code, tag, 'href'),
+              );
+            }
+          }
 
           // Add a script to add page reloading
-          const reloader = document.createElement('script');
-          reloader.src = htmlReloadId;
-          reloader.type = 'module';
-          document.head.appendChild(reloader);
+          edits.push(
+            insertIntoHeadEdit(
+              code,
+              tags,
+              `<script src="${htmlReloadId}" type="module"></script>`,
+              'end',
+            ),
+          );
 
-          const newHtml = document.toString();
+          const newHtml = applyHtmlEdits(code, edits);
           config.logger.debug('transform ' + id);
           config.logger.debug('Old HTML:\n' + code);
           config.logger.debug('New HTML:\n' + newHtml);
@@ -77,34 +96,33 @@ export function devHtmlPrerender(
         const name = getEntrypointName(config.entrypointsDir, ctx.filename);
         const url = `${server.origin}/${name}.html`;
         const serverHtml = await server.transformHtml(url, html, originalUrl);
-        const { document } = parseHTML(serverHtml);
+        const tags = scanHtml(serverHtml);
+        const edits: HtmlEdit[] = [];
 
-        // Replace inline script with virtual module served via dev server.
-        // Extension CSP blocks inline scripts, so that's why we're pulling them
-        // out.
-        const inlineScripts = document.querySelectorAll('script:not([src])');
-        inlineScripts.forEach((script) => {
-          // Save the text content for later
-          const textContent = script.textContent ?? '';
-          const key = hash(textContent);
-          inlineScriptContents[key] = textContent;
+        for (const tag of tags) {
+          if (tag.name !== 'script') continue;
 
-          // Replace unsafe inline script
-          const virtualScript = document.createElement('script');
-          virtualScript.type = 'module';
-          virtualScript.src = `${server.origin}/@id/${virtualInlineScript}?${key}`;
-          script.replaceWith(virtualScript);
-        });
-
-        // Change /@vite/client -> http://localhost:3000/@vite/client
-        const viteClientScript = document.querySelector<HTMLScriptElement>(
-          "script[src='/@vite/client']",
-        );
-        if (viteClientScript) {
-          viteClientScript.src = `${server.origin}${viteClientScript.src}`;
+          if (tag.attrs.src == null) {
+            // Replace inline script with virtual module served via dev server.
+            // Extension CSP blocks inline scripts, so that's why we're pulling
+            // them out.
+            const textContent = tag.text;
+            const key = hash(textContent);
+            inlineScriptContents[key] = textContent;
+            edits.push({
+              start: tag.start,
+              end: tag.closeEnd ?? tag.openEnd,
+              text: `<script type="module" src="${server.origin}/@id/${virtualInlineScript}?${key}"></script>`,
+            });
+          } else if (tag.attrs.src === '/@vite/client') {
+            // Change /@vite/client -> http://localhost:3000/@vite/client
+            edits.push(
+              setAttributeEdit(tag, 'src', `${server.origin}${tag.attrs.src}`),
+            );
+          }
         }
 
-        const newHtml = document.toString();
+        const newHtml = applyHtmlEdits(serverHtml, edits);
         config.logger.debug('transformIndexHtml ' + ctx.filename);
         config.logger.debug('Old HTML:\n' + html);
         config.logger.debug('New HTML:\n' + newHtml);
@@ -170,62 +188,55 @@ export function devHtmlPrerender(
   ];
 }
 
+/** Returns the edits that point a tag's `attr` at the dev server. */
 export function pointToDevServer(
   config: ResolvedConfig,
   server: WxtDevServer,
   id: string,
-  document: Document,
-  querySelector: string,
+  html: string,
+  tag: HtmlTag,
   attr: string,
-) {
-  document.querySelectorAll(querySelector).forEach((element) => {
-    if (
-      element.hasAttribute('vite-ignore') ||
-      element.hasAttribute('wxt-ignore')
-    ) {
-      element.removeAttribute('wxt-ignore');
-      return;
-    }
-    const src = element.getAttribute(attr);
-    if (!src || isUrl(src)) return;
+): HtmlEdit[] {
+  if ('vite-ignore' in tag.attrs || 'wxt-ignore' in tag.attrs) {
+    return removeAttributeEdit(html, tag, 'wxt-ignore');
+  }
+  const src = tag.attrs[attr];
+  if (!src || isUrl(src)) return [];
 
-    let resolvedAbsolutePath: string | undefined;
+  let resolvedAbsolutePath: string | undefined;
 
-    // Check if src uses a project alias
-    const matchingAlias = Object.entries(config.alias).find(([key]) =>
-      src.startsWith(key),
+  // Check if src uses a project alias
+  const matchingAlias = Object.entries(config.alias).find(([key]) =>
+    src.startsWith(key),
+  );
+  if (matchingAlias) {
+    // Matches a import alias
+    const [alias, replacement] = matchingAlias;
+    resolvedAbsolutePath = resolve(
+      config.root,
+      src.replace(alias, replacement),
     );
-    if (matchingAlias) {
-      // Matches a import alias
-      const [alias, replacement] = matchingAlias;
-      resolvedAbsolutePath = resolve(
-        config.root,
-        src.replace(alias, replacement),
-      );
-    } else {
-      // Some file path relative to the HTML file
-      resolvedAbsolutePath = resolve(dirname(id), src);
-    }
+  } else {
+    // Some file path relative to the HTML file
+    resolvedAbsolutePath = resolve(dirname(id), src);
+  }
 
-    // Apply the final file path
-    if (resolvedAbsolutePath) {
-      const relativePath = normalizePath(
-        relative(config.root, resolvedAbsolutePath),
-      );
+  const relativePath = normalizePath(
+    relative(config.root, resolvedAbsolutePath),
+  );
 
-      if (relativePath.startsWith('.')) {
-        // Outside the config.root directory, serve the absolute path
-        let path = normalizePath(resolvedAbsolutePath);
-        // Add "/" to start of windows paths ("D:/some/path" -> "/D:/some/path")
-        if (!path.startsWith('/')) path = '/' + path;
-        element.setAttribute(attr, `${server.origin}/@fs${path}`);
-      } else {
-        // Inside the project, use relative path
-        const url = new URL(relativePath, server.origin);
-        element.setAttribute(attr, url.href);
-      }
-    }
-  });
+  let newSrc: string;
+  if (relativePath.startsWith('.')) {
+    // Outside the config.root directory, serve the absolute path
+    let path = normalizePath(resolvedAbsolutePath);
+    // Add "/" to start of windows paths ("D:/some/path" -> "/D:/some/path")
+    if (!path.startsWith('/')) path = '/' + path;
+    newSrc = `${server.origin}/@fs${path}`;
+  } else {
+    // Inside the project, use relative path
+    newSrc = new URL(relativePath, server.origin).href;
+  }
+  return [setAttributeEdit(tag, attr, newSrc)];
 }
 
 function isUrl(str: string): boolean {

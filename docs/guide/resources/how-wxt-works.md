@@ -56,7 +56,7 @@ Let's go through each of these steps more in-depth:
 
 Entrypoints are discovered by reading the file system and looking at the files in the `wxt.config.entrypointsDir` directory that match specific filename patterns.
 
-Because WXT decided to store config for each entrypoint in the entrypoint itself, rather than in a single location like a manifest file, WXT also needs to import or read the file to extract that info. This is... problematic. For HTML files, it's simple. Just import it, parse the DOM with `@litejs/dom`, then find the `<meta>` elements. CSS files don't have config (as of October 3, 2026, v0.21.4). It's JS entrypoints that are the problem.
+Because WXT decided to store config for each entrypoint in the entrypoint itself, rather than in a single location like a manifest file, WXT also needs to import or read the file to extract that info. This is... problematic. For HTML files, it's simple. Just import it, scan the tags with `htmlparser2`, then find the `<meta>` elements. CSS files don't have config (as of October 3, 2026, v0.21.4). It's JS entrypoints that are the problem.
 
 JS entrypoints, like the background or content scripts, are meant to be run in the browser. But to extract their config, we need to import the file into a Node.js environment. That means globals, like `window` and `browser`/`chrome` are not present. So WXT does two things to import the config:
 

@@ -6,7 +6,7 @@ When loading your JS/TS entrypoints, they are imported into a NodeJS environment
 
 WXT does several pre-processing steps to try and prevent errors during this process:
 
-1. Use `@litejs/dom` to make a small set of browser globals (`window`, `document`, etc) available.
+1. Define permissive stubs for the common browser globals (`window`, `document`, etc) so accessing them does not throw.
 2. Use `@webext-core/fake-browser` to create a fake version of the `chrome` and `browser` globals expected by extensions.
 3. Pre-process the JS/TS code, stripping out the `main` function then tree-shaking unused code from the file
 
