@@ -2,7 +2,10 @@ import definition from 'virtual:user-background-entrypoint';
 import { initPlugins } from 'virtual:wxt-plugins';
 import { browser } from 'wxt/browser';
 
-import { getDevServerWebSocket } from '../utils/internal/dev-server-websocket';
+import {
+  getDevServerWebSocket,
+  onDevServerReconnect,
+} from '../utils/internal/dev-server-websocket';
 import { logger } from '../utils/internal/logger';
 import { keepServiceWorkerAlive } from './utils/keep-service-worker-alive';
 import { reloadContentScript } from './utils/reload-content-scripts';
@@ -15,6 +18,12 @@ if (import.meta.env.COMMAND === 'serve') {
     });
     ws.addWxtEventListener('wxt:reload-content-script', (event) => {
       reloadContentScript(event.detail);
+    });
+
+    // Reconnecting means builds made while disconnected would otherwise be
+    // missed, so reload to pick up whatever is currently built.
+    onDevServerReconnect(() => {
+      browser.runtime.reload();
     });
 
     if (import.meta.env.MANIFEST_VERSION === 3) {

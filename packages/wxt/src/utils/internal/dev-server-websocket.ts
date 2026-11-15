@@ -26,6 +26,8 @@ export interface WxtWebSocket extends WebSocket {
 }
 
 let ws: WxtWebSocket | undefined;
+let isReconnecting = false;
+const reconnectListeners: Array<() => void> = [];
 
 /** Connect to the websocket and listen for messages. */
 export function getDevServerWebSocket(): WxtWebSocket {
@@ -45,9 +47,18 @@ export function getDevServerWebSocket(): WxtWebSocket {
 
     ws.addEventListener('open', () => {
       logger.debug('Connected to dev server');
+      if (isReconnecting) {
+        isReconnecting = false;
+        reconnectListeners.forEach((callback) => callback());
+      }
     });
     ws.addEventListener('close', () => {
       logger.debug('Disconnected from dev server');
+      if (import.meta.env.WEB_EXT_DISABLED) {
+        isReconnecting = true;
+        ws = undefined;
+        setTimeout(() => getDevServerWebSocket(), 3000);
+      }
     });
     ws.addEventListener('error', (event) => {
       logger.error('Failed to connect to dev server', event);
@@ -68,6 +79,14 @@ export function getDevServerWebSocket(): WxtWebSocket {
   }
 
   return ws;
+}
+
+/**
+ * Register a callback to run when the connection to the dev server is
+ * reestablished after being lost.
+ */
+export function onDevServerReconnect(callback: () => void): void {
+  reconnectListeners.push(callback);
 }
 
 export interface ReloadContentScriptPayload {
