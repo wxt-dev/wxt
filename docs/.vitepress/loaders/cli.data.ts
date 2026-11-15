@@ -1,8 +1,5 @@
 import { resolve } from 'node:path';
 
-import consola from 'consola';
-import { x as spawn } from 'tinyexec';
-
 import { version } from '../../../packages/wxt/package.json';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');
@@ -11,7 +8,7 @@ const cliDirGlob = resolve(cliDir, '**');
 export default {
   watch: [cliDirGlob],
   async load() {
-    consola.info(`Generating CLI docs`);
+    console.info('Generating CLI docs');
 
     const [wxt, build, zip, prepare, clean, init, submit, submitInit] =
       await Promise.all([
@@ -25,7 +22,7 @@ export default {
         getPublishExtensionHelp('init'),
       ]);
 
-    consola.success(`Generated CLI docs`);
+    console.info('Generated CLI docs');
     return {
       wxt,
       build,
@@ -41,11 +38,20 @@ export default {
 
 async function getHelp(command: string): Promise<string> {
   const args = command.split(' ');
-  const result = await spawn(args[0], [...args.slice(1), '--help'], {
-    throwOnError: true,
-    nodeOptions: { cwd: 'packages/wxt' },
+  const proc = Bun.spawn([...args, '--help'], {
+    cwd: 'packages/wxt',
+    stdout: 'pipe',
+    stderr: 'inherit',
   });
-  return result.stdout.trimEnd();
+  const [stdout, exitCode] = await Promise.all([
+    new Response(proc.stdout).text(),
+    proc.exited,
+  ]);
+  if (exitCode !== 0)
+    throw Error(
+      `\`${args.join(' ')} --help\` failed with exit code ${exitCode}`,
+    );
+  return stdout.trimEnd();
 }
 
 async function getWxtHelp(command: string): Promise<string> {

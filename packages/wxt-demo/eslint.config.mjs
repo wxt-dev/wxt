@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
