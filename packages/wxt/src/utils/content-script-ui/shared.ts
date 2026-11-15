@@ -1,3 +1,10 @@
+import { waitElement } from '@1natsu/wait-element';
+import {
+  isExist as mountDetector,
+  isNotExist as removeDetector,
+} from '@1natsu/wait-element/detectors';
+
+import { logger } from '../internal/logger';
 import type {
   ContentScriptAnchoredOptions,
   ContentScriptPositioningOptions,
@@ -7,12 +14,6 @@ import type {
   ContentScriptUiOptions,
   MountFunctions,
 } from './types';
-import { waitElement } from '@1natsu/wait-element';
-import {
-  isExist as mountDetector,
-  isNotExist as removeDetector,
-} from '@1natsu/wait-element/detectors';
-import { logger } from '../internal/logger';
 
 export function applyPosition(
   root: HTMLElement,

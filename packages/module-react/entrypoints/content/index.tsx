@@ -1,10 +1,11 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
 import {
   defineContentScript,
   ContentScriptContext,
   createShadowRootUi,
 } from '#imports';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
 
 export default defineContentScript({
   matches: ['*://*/*'],

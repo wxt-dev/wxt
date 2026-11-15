@@ -1,7 +1,8 @@
-import { fakeWxt } from '../../internal-utils/testing/fake-objects';
-import { addImportPreset, addViteConfig } from '../';
-import { describe, it, expect } from 'vitest';
 import { createHooks } from 'hookable';
+import { describe, it, expect } from 'vitest';
+
+import { addImportPreset, addViteConfig } from '../';
+import { fakeWxt } from '../../internal-utils/testing/fake-objects';
 
 describe('Module Utilities', () => {
   describe('addViteConfig', () => {

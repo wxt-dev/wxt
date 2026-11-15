@@ -1,5 +1,5 @@
-import { defineConfig } from 'wxt';
 import { presetWind3 } from 'unocss';
+import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',

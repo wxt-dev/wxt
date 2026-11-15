@@ -1,3 +1,18 @@
+import { mkdir } from 'node:fs/promises';
+import { resolve } from 'path';
+
+import type { Browser } from '@wxt-dev/browser';
+import defu from 'defu';
+
+import {
+  hashContentScriptOptions,
+  mapWxtOptionsToContentScript,
+} from '../internal-utils/content-script-utils';
+import { ContentSecurityPolicy } from '../internal-utils/csp-utils';
+import { getEntrypointBundlePath } from '../internal-utils/entrypoint-utils';
+import { writeFileIfDifferent } from '../internal-utils/fs-utils';
+import { normalizePath } from '../internal-utils/path-utils';
+import { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
 import {
   Entrypoint,
   BackgroundEntrypoint,
@@ -7,22 +22,9 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../types';
-import { mkdir } from 'node:fs/promises';
-import { resolve } from 'path';
-import { getEntrypointBundlePath } from '../internal-utils/entrypoint-utils';
-import { ContentSecurityPolicy } from '../internal-utils/csp-utils';
-import {
-  hashContentScriptOptions,
-  mapWxtOptionsToContentScript,
-} from '../internal-utils/content-script-utils';
 import { getPackageJson } from './package';
-import { normalizePath } from '../internal-utils/path-utils';
-import { writeFileIfDifferent } from '../internal-utils/fs-utils';
-import defu from 'defu';
-import { wxt } from './wxt';
 import { addDiscoveredThemeIcons } from './theme-icons';
-import { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
-import type { Browser } from '@wxt-dev/browser';
+import { wxt } from './wxt';
 
 /** Writes the manifest to the output directory and the build output. */
 export async function writeManifest(
@@ -640,8 +642,14 @@ function addHostPermission(
   manifest: Browser.runtime.Manifest,
   hostPermission: string,
 ): void {
+  // Chrome MV3 rejects file:// in host_permissions; access is controlled by
+  // the "Allow access to File URLs" toggle instead.
+  if (wxt.config.manifestVersion === 3 && hostPermission.startsWith('file:'))
+    return;
+
   manifest.host_permissions ??= [];
   if (manifest.host_permissions.includes(hostPermission)) return;
+
   manifest.host_permissions.push(hostPermission);
 }
 

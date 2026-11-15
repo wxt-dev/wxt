@@ -1,5 +1,6 @@
-import { defineAnalyticsProvider } from '../client';
 import { browser } from '@wxt-dev/browser';
+
+import { defineAnalyticsProvider } from '../client';
 import type { BaseAnalyticsEvent } from '../types';
 
 const SDK_VERSION = 'wxt/0.1.0';

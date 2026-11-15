@@ -1,24 +1,27 @@
 {
   "name": "@wxt-dev/module-vue",
+  "version": "1.0.3",
   "description": "WXT module to enable Vue support",
+  "keywords": [
+    "module",
+    "vue",
+    "wxt"
+  ],
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-vue/README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/module-vue"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-vue/README.md",
-  "keywords": [
-    "wxt",
-    "module",
-    "vue"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "1.0.3",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -35,18 +38,12 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
-  },
-  "peerDependencies": {
-    "wxt": ">=0.19.16"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "^5.2.3 || ^6.0.0"
@@ -57,5 +54,8 @@
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "wxt": ">=0.19.16"
   }
 }

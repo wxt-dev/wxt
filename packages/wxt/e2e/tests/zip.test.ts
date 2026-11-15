@@ -1,8 +1,10 @@
-import extract from 'extract-zip';
 import path from 'node:path';
-import { glob } from 'tinyglobby';
+
+import extract from 'extract-zip';
 import { x as spawn } from 'tinyexec';
+import { glob } from 'tinyglobby';
 import { describe, expect, it } from 'vitest';
+
 import { TestProject } from '../utils';
 
 describe('Zipping', () => {

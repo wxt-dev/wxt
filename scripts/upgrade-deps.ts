@@ -1,8 +1,9 @@
-import consola from 'consola';
-import { glob } from 'tinyglobby';
 import { dirname } from 'node:path';
-import pMap from 'p-map';
 import { styleText } from 'node:util';
+
+import consola from 'consola';
+import pMap from 'p-map';
+import { glob } from 'tinyglobby';
 import {
   difference,
   findMinimumForRange,
@@ -102,7 +103,10 @@ async function getPackageJsonDependencies(
 }> {
   const packageJsonFiles = await glob(
     ['package.json', '*/*/package.json', '!**/node_modules'],
-    { onlyFiles: true, expandDirectories: false },
+    {
+      onlyFiles: true,
+      expandDirectories: false,
+    },
   );
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({

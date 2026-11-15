@@ -1,23 +1,26 @@
 {
   "name": "@wxt-dev/webextension-polyfill",
+  "version": "1.0.0",
   "description": "Use webextension-polyfill with WXT",
+  "keywords": [
+    "module",
+    "webextension-polyfill",
+    "wxt"
+  ],
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/webextension-polyfill/README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/webextension-polyfill"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/webextension-polyfill/README.md",
-  "keywords": [
-    "wxt",
-    "module",
-    "webextension-polyfill"
+  "files": [
+    "dist"
   ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
-  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -31,9 +34,6 @@
       "default": "./dist/browser.mjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "wxt",
     "check": "bun run build && check",
@@ -43,10 +43,6 @@
     "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
   },
-  "peerDependencies": {
-    "webextension-polyfill": "*",
-    "wxt": ">=0.20.0"
-  },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
     "@types/webextension-polyfill": "^0.12.5",
@@ -55,5 +51,9 @@
     "typescript": "catalog:",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "webextension-polyfill": "*",
+    "wxt": ">=0.20.0"
   }
 }

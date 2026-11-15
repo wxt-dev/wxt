@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { normalizePath } from '../path-utils';
 
 describe('Path Utils', () => {

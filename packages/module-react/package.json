@@ -1,24 +1,27 @@
 {
   "name": "@wxt-dev/module-react",
+  "version": "1.2.2",
   "description": "WXT module to enable React support",
+  "keywords": [
+    "module",
+    "react",
+    "wxt"
+  ],
+  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-react/README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+wxt@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wxt-dev/wxt.git",
     "directory": "packages/module-react"
   },
-  "homepage": "https://github.com/wxt-dev/wxt/blob/main/packages/module-react/README.md",
-  "keywords": [
-    "wxt",
-    "module",
-    "react"
-  ],
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+wxt@gmail.com"
-  },
-  "license": "MIT",
   "funding": "https://github.com/sponsors/wxt-dev",
-  "version": "1.2.2",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -35,9 +38,6 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "wxt",
     "check": "bun run build && check",
@@ -46,10 +46,6 @@
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
-  },
-  "peerDependencies": {
-    "vite": "^6.3.4 || ^7.0.0 || ^8.0.0-0",
-    "wxt": ">=0.19.16"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.4.1 || ^5.0.0 || ^6.0.0"
@@ -65,5 +61,9 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "wxt": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "^6.3.4 || ^7.0.0 || ^8.0.0-0",
+    "wxt": ">=0.19.16"
   }
 }

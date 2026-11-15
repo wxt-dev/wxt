@@ -83,6 +83,7 @@ export default defineWebExtConfig({
 
 ```ts [Windows]
 import { resolve } from 'node:path';
+
 import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({
@@ -111,6 +112,14 @@ export default defineWebExtConfig({
   disabled: true,
 });
 ```
+
+:::tip
+
+When running the dev server with `disabled: true`, restarting it will disconnect the HMR WebSocket, requiring an extension reload to resume HMR.
+
+Press **`Alt + R`** (**`Option + R`** on Mac) on any page to quickly reload the extension without opening the extension management page.
+
+:::
 
 ### Enabling Chrome Features
 

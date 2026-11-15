@@ -1,7 +1,14 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
+
 import { glob } from 'tinyglobby';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+
+import { unnormalizePath } from '../../internal-utils/path-utils';
+import {
+  fakeResolvedConfig,
+  setFakeWxt,
+} from '../../internal-utils/testing/fake-objects';
 import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,
@@ -12,14 +19,9 @@ import {
   PopupEntrypoint,
   SidepanelEntrypoint,
 } from '../../types';
-import { wxt } from '../wxt';
-import { unnormalizePath } from '../../internal-utils/path-utils';
-import {
-  fakeResolvedConfig,
-  setFakeWxt,
-} from '../../internal-utils/testing/fake-objects';
-import { findEntrypoints } from '../find-entrypoints';
 import { FlatEntrypointFinder } from '../entrypoint-finders/flat';
+import { findEntrypoints } from '../find-entrypoints';
+import { wxt } from '../wxt';
 
 vi.mock('tinyglobby');
 const globMock = vi.mocked(glob);
@@ -790,9 +792,7 @@ describe('findEntrypoints', () => {
       readFileMock.mockResolvedValueOnce(
         `<html>
           <head>
-            <meta name="manifest.include" content="['${
-              'not' + config.browser
-            }']" />
+            <meta name="manifest.include" content="['${'not' + config.browser}']" />
           </head>
         </html>`,
       );
@@ -812,9 +812,7 @@ describe('findEntrypoints', () => {
       readFileMock.mockResolvedValueOnce(
         `<html>
           <head>
-            <meta name="manifest.include" content="['${
-              'not' + config.browser
-            }']" />
+            <meta name="manifest.include" content="['${'not' + config.browser}']" />
           </head>
         </html>`,
       );
@@ -834,9 +832,7 @@ describe('findEntrypoints', () => {
       readFileMock.mockResolvedValueOnce(
         `<html>
           <head>
-            <meta name="manifest.include" content="['${
-              'not' + config.browser
-            }']" />
+            <meta name="manifest.include" content="['${'not' + config.browser}']" />
           </head>
         </html>`,
       );

@@ -1,6 +1,7 @@
 name: 📼 VHS
 on:
   push:
+    branches: [main]
     paths:
       - docs/tapes/*.tape
       - .github/workflows/vhs.yml
@@ -13,24 +14,33 @@ on:
 permissions:
   contents: read
 
+# A push to a PR branch fires both `push` and `pull_request` events. Keep only
+# one run alive per branch so both don't record and commit the GIF.
+concurrency:
+  group: vhs-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   vhs:
     name: Create VHS
     runs-on: macos-latest
-    if: ${{ github.repository == 'wxt-dev/wxt' }}
+    # Skip forks (PR head repo differs from this repo) and bot-authored runs
+    if: ${{ github.repository == 'wxt-dev/wxt' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && github.actor != 'github-actions[bot]' }}
     permissions:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup
         uses: ./.github/actions/setup
 
       - name: Setup Go
-        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: '1.25.1'
 
@@ -46,11 +56,13 @@ jobs:
           vhs docs/tapes/init-demo.tape
 
       - name: Save recorded GIF
-        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
+        uses: stefanzweifel/git-auto-commit-action@d0b01107b5db882071f96de5dd4b54961ea93f4c # v7.2.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit_message: 'docs: Update `wxt init` GIF'
+          # Pushing with the deploy key triggers workflows (the actor isn't the bot),
+          # so [skip ci] stops this commit from re-running this workflow.
+          commit_message: 'docs: Update `wxt init` GIF [skip ci]'
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
           commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>

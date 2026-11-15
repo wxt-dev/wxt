@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { ContentSecurityPolicy } from '../csp-utils';
 
 describe('Content Security Policy Builder', () => {

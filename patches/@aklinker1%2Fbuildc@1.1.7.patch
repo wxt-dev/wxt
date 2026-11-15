@@ -1,0 +1,58 @@
+diff --git a/dist/cli.mjs b/dist/cli.mjs
+index aac5357f5a9e06afd682acb5709cf5063c913b82..03cbfbd7d6bdc63711948f16b39ef68751948800 100644
+--- a/dist/cli.mjs
++++ b/dist/cli.mjs
+@@ -2,7 +2,7 @@ import cac from 'cac';
+ import consola from 'consola';
+ import fs from 'fs-extra';
+ import { spawnSync } from 'node:child_process';
+-import { resolve, join, dirname, relative } from 'pathe';
++import { resolve, join, dirname, relative, basename } from 'pathe';
+ import glob from 'fast-glob';
+ import { createHash } from 'node:crypto';
+ import { lock } from 'proper-lockfile';
+@@ -199,13 +199,14 @@ async function buildPackage(command, depsOnly = false) {
+         "build"
+       ]);
+     }
+-    if (depsOnly) {
+-      consola.info(`${targetPkg.name}: \`${command.join(" ")}\``);
+-      execCommand(targetPkg.dir, command);
+-    } else {
+-      buildCached(monorepo, targetPkg, command);
++    if (!depsOnly) {
++      await buildCached(monorepo, targetPkg, command);
+     }
+   });
++  if (depsOnly) {
++    consola.info(`${targetPkg.name}: \`${command.join(" ")}\``);
++    execCommand(targetPkg.dir, command);
++  }
+ }
+ async function buildAllPackages() {
+   const cwd = process.cwd();
+@@ -232,15 +233,24 @@ async function buildCached(monorepo, pkg, command) {
+   try {
+     consola.start(`${pkg.name}: \`${command.join(" ")}\``);
+     const cacheDir = await getCacheDir(monorepo, pkg);
++    const currentFile = join(dirname(cacheDir), "current");
++    const hash = basename(cacheDir);
+     if (pkg.options.cacheable === true && await fs.exists(cacheDir)) {
++      const current = await fs.readFile(currentFile, "utf8").catch(() => void 0);
++      if (current === hash && await fs.exists(pkg.options.outDir)) {
++        consola.success(`${pkg.name}: Up to date!`);
++        return;
++      }
+       await fs.ensureDir(pkg.options.outDir);
+       await fs.copy(cacheDir, pkg.options.outDir);
++      await fs.writeFile(currentFile, hash);
+       consola.success(`${pkg.name}: Cached!`);
+     } else {
+       execCommand(pkg.dir, command);
+       try {
+         await fs.ensureDir(cacheDir);
+         await fs.copy(pkg.options.outDir, cacheDir);
++        if (pkg.options.cacheable === true) await fs.writeFile(currentFile, hash);
+       } catch (err) {
+         consola.debug(
+           "Failed to copy cache, command probably didn't create an output.",

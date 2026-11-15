@@ -32,6 +32,7 @@ In general, you'll need to:
 &ensp;<input type="checkbox" /> Add a default export to JS entrypoints (`defineBackground`, `defineContentScript`, or `defineUnlistedScript`)<br />
 &ensp;<input type="checkbox" /> Use the `browser` global instead of `chrome`<br />
 &ensp;<input type="checkbox" /> ⚠️ Compare final `manifest.json` files, making sure permissions and host permissions are unchanged<br/>
+
 :::warning
 If your extension is already live on the Chrome Web Store, use [Google's update testing tool](https://github.com/GoogleChromeLabs/extension-update-testing-tool) to make sure no new permissions are being requested.
 :::

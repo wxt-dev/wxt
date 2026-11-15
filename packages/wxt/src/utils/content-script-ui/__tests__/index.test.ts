@@ -1,9 +1,10 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
-import { createIntegratedUi } from '../integrated';
-import { createIframeUi } from '../iframe';
-import { createShadowRootUi } from '../shadow-root';
+
 import { ContentScriptContext } from '../../content-script-context';
+import { createIframeUi } from '../iframe';
+import { createIntegratedUi } from '../integrated';
+import { createShadowRootUi } from '../shadow-root';
 import { ContentScriptUi } from '../types';
 
 /** Util for floating promise. */

@@ -1,11 +1,12 @@
 /** @module wxt/utils/content-script-ui/shadow-root */
-import { browser } from 'wxt/browser';
-import { ContentScriptContext } from '../content-script-context';
-import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 import { createIsolatedElement } from '@webext-core/isolated-element';
-import { applyPosition, createMountFunctions, mountUi } from './shared';
+import { browser } from 'wxt/browser';
+
+import { ContentScriptContext } from '../content-script-context';
 import { logger } from '../internal/logger';
 import { splitShadowRootCss } from '../split-shadow-root-css';
+import { applyPosition, createMountFunctions, mountUi } from './shared';
+import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 
 /**
  * Create a content script UI inside a

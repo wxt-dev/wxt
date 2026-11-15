@@ -1,7 +1,7 @@
-import { fileURLToPath } from 'node:url';
+import { readdir, mkdir } from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 import { sep as posixSep } from 'node:path/posix';
-import { readdir, mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 
 // Fetch latest version
@@ -28,7 +28,7 @@ newPkgJson.peerDependenciesMeta = pkgJson.peerDependenciesMeta;
 
 const outPkgJsonPath = resolve('package.json');
 await Bun.write(outPkgJsonPath, JSON.stringify(newPkgJson));
-await Bun.$`bun run --cwd ../.. prettier --write "${outPkgJsonPath}"`;
+await Bun.$`bun run --cwd ../.. oxfmt "${outPkgJsonPath}"`;
 
 // Generate declaration files
 

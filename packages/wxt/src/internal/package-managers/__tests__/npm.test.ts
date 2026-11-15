@@ -1,8 +1,10 @@
-import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
-import { npm } from '../npm';
+
 import { x as spawn } from 'tinyexec';
+import { beforeAll, describe, expect, it } from 'vitest';
+
 import { pathExists } from '../../../internal-utils/fs-utils';
+import { npm } from '../npm';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {

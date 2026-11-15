@@ -1,6 +1,8 @@
+import { resolve } from 'node:path';
+
 import consola from 'consola';
 import { x as spawn } from 'tinyexec';
-import { resolve } from 'node:path';
+
 import { version } from '../../../packages/wxt/package.json';
 
 const cliDir = resolve('packages/wxt/src/cli/commands');

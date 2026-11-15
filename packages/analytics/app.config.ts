@@ -1,4 +1,5 @@
 import { defineAppConfig } from 'wxt/utils/define-app-config';
+
 import { umami } from './modules/analytics/providers/umami';
 
 export default defineAppConfig({

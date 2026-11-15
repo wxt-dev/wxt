@@ -1,4 +1,5 @@
 import cac from 'cac';
+
 import { build, clean, createServer, initialize, prepare, zip } from '../index';
 import {
   createAliasedCommand,
@@ -151,7 +152,7 @@ cli
   .command('init [directory]', 'initialize a new project')
   .option('-t, --template <template>', 'template to use')
   .option('--pm <packageManager>', 'which package manager to use')
-  .option('--no-git', 'skip initialize git repo')
+  .option('--git', 'skip initialize git repo')
   .action(
     wrapAction(
       async (directory, flags) => {

@@ -1,9 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { resolveConfig } from '../resolve-config';
-import type { Logger } from '../../types';
-import { mock } from 'vitest-mock-extended';
 import { loadConfig } from 'c12';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
+
 import { pathExists } from '../../internal-utils/fs-utils';
+import type { Logger } from '../../types';
+import { resolveConfig } from '../resolve-config';
 
 vi.mock('../../internal-utils/fs-utils');
 const pathExistsMock = vi.mocked(pathExists);

@@ -1,8 +1,9 @@
 /** @vitest-environment happy-dom */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ContentScriptContext } from '../content-script-context';
 import { fakeBrowser } from '@webext-core/fake-browser';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { ContentScriptContext } from '../content-script-context';
 
 /**
  * When dispatching events on document/window/etc, they are fired on the next

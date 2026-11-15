@@ -1,5 +1,6 @@
-import { analytics } from '#analytics';
 import { browser } from '@wxt-dev/browser';
+
+import { analytics } from '#analytics';
 
 declare const enabledCheckbox: HTMLInputElement;
 declare const captureErrorButton: HTMLButtonElement;

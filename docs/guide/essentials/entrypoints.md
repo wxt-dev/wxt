@@ -498,10 +498,6 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/manifest/sandbox/)
 
-:::warning Chromium Only
-Firefox does not support sandboxed pages.
-:::
-
 <EntrypointPatterns
   :patterns="[
     ['sandbox.html', 'sandbox.html'],

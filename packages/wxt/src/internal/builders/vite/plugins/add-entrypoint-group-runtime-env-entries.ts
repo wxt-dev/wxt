@@ -1,4 +1,5 @@
 import type * as vite from 'vite';
+
 import { EntrypointGroup } from '../../../../types';
 import { getEntrypointRuntimeEnvEntries } from '../../../runtime-env-entries';
 

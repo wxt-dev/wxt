@@ -1,9 +1,11 @@
 import { rm } from 'node:fs/promises';
 import path from 'node:path';
-import { glob } from 'tinyglobby';
-import { InlineConfig } from './types';
-import { registerWxt, wxt } from './internal/wxt';
 import { styleText } from 'node:util';
+
+import { glob } from 'tinyglobby';
+
+import { registerWxt, wxt } from './internal/wxt';
+import { InlineConfig } from './types';
 
 /**
  * Remove generated/temp files from the directory.
