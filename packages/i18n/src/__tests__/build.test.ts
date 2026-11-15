@@ -16,6 +16,7 @@ import {
 } from '../build';
 
 mock.module('node:fs/promises', () => ({
+  mkdir: vi.fn(),
   writeFile: vi.fn(),
   readFile: vi.fn(),
 }));
