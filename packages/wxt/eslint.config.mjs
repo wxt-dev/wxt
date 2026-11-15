@@ -1,4 +1,3 @@
-// ESLint is installed as a dev dependency because it's an optional peer for
-// WXT, not because it should be used to lint this package. This file makes sure
-// `@aklinker1/check` never errors out due to ESLint.
+// ESLint is only installed as a dev dependency to test WXT's ESLint integration
+// (auto-imports). Linting is done with Oxlint, so only this file is checked.
 export default [{ ignores: ['**/*', '!eslint.config.mjs'] }];

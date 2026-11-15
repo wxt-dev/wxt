@@ -254,10 +254,18 @@ export class TestProject {
 
   /** Run a command using the project's package manager. */
   async run(...args: string[]): Promise<Result> {
+    return await this.runWithEnv({}, ...args);
+  }
+
+  async runWithEnv(
+    env: Record<string, string>,
+    ...args: string[]
+  ): Promise<Result> {
     return await spawn('bun', args, {
       throwOnError: true,
       nodeOptions: {
         cwd: this.root,
+        env: { ...process.env, ...env },
       },
     });
   }

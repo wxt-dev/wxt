@@ -380,7 +380,13 @@ describe('Auto Imports', () => {
           imports: { eslintrc: { enabled } },
         });
 
-        return await project.run('eslint', 'entrypoints/background.js');
+        // The repo's root eslint.config.mjs would otherwise be picked up by
+        // ESLint 8 and force flat config mode.
+        return await project.runWithEnv(
+          enabled === 8 ? { ESLINT_USE_FLAT_CONFIG: 'false' } : {},
+          'eslint',
+          'entrypoints/background.js',
+        );
       }
 
       describe('ESLint 9', () => {
