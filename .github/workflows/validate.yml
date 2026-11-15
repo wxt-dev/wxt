@@ -83,10 +83,15 @@ jobs:
         with:
           version: 10
 
-      # Every package is sharded the same way; `--passWithNoTests` covers
-      # packages with fewer test files than shards.
+      # Every package is sharded the same way; `--pass-with-no-tests` covers
+      # packages with fewer test files than shards. `wxt-demo` still uses
+      # Vitest, so it's run separately.
       - name: Run Tests
-        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
+        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests
+
+      - name: Run Vitest Tests
+        run: bun run test run --shard=${{ matrix.shard }} --passWithNoTests
+        working-directory: packages/wxt-demo
 
   # Required status check: passes only if every shard passed.
   linux-tests:
@@ -118,7 +123,11 @@ jobs:
           version: 10
 
       - name: Run Tests
-        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests
+        run: bun run --filter '*' --filter '!wxt-demo' test --shard=${{ matrix.shard }} --pass-with-no-tests
+
+      - name: Run Vitest Tests
+        run: bun run test run --shard=${{ matrix.shard }} --passWithNoTests
+        working-directory: packages/wxt-demo
 
   # Required status check: passes only if every shard passed.
   windows-tests:
