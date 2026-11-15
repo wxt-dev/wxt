@@ -1,4 +1,5 @@
 import { WxtModule } from '../../types';
+import autoIncludeSources from './auto-include-sources';
 import escapeUnicode from './escape-unicode';
 import faviconPermission from './favicon-permission';
 import plugins from './plugins';
@@ -8,5 +9,6 @@ export const builtinModules: WxtModule<any>[] = [
   unimport,
   faviconPermission,
   escapeUnicode,
+  autoIncludeSources,
   plugins,
 ];
