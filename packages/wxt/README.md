@@ -6,7 +6,6 @@
 [![npm version](https://img.shields.io/npm/v/wxt?labelColor=black&color=%234fa048)](https://www.npmjs.com/package/wxt)
 [![downloads](https://img.shields.io/npm/dm/wxt?labelColor=black&color=%234fa048)](https://www.npmjs.com/package/wxt)
 [![license | MIT](https://img.shields.io/npm/l/wxt?labelColor=black&color=%234fa048)](https://github.com/wxt-dev/wxt/blob/main/LICENSE)
-[![coverage](https://img.shields.io/codecov/c/github/wxt-dev/wxt?labelColor=black&color=%234fa048)](https://codecov.io/github/wxt-dev/wxt)
 
 Next-gen framework for developing web extensions.<br/>⚡<br/><q><i>It's like Nuxt, but for Web Extensions</i></q>
 

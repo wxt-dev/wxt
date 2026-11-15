@@ -35,7 +35,6 @@
     "build": "buildc -- tsdown",
     "check": "buildc --deps-only -- check",
     "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
   },
   "dependencies": {
