@@ -35,7 +35,7 @@ describe('Storage Utils', () => {
     storage.unwatch();
 
     // Setup a spy to check for excessive calls
-    fakeBrowser.storage.local.set = vi.spyOn(fakeBrowser.storage.local, 'set');
+    vi.spyOn(fakeBrowser.storage.local, 'set');
   });
 
   describe.each(['local', 'sync', 'managed', 'session'] as const)(

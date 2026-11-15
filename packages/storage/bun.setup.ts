@@ -1,8 +1,6 @@
 import { afterEach, mock, vi } from 'bun:test';
 
-import { fakeBrowser } from '@webext-core/fake-browser';
-
-Object.assign(globalThis, { chrome: fakeBrowser });
+import '@webext-core/fake-browser/auto';
 
 afterEach(() => {
   mock.restore();

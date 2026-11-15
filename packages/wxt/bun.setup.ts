@@ -1,7 +1,7 @@
 import { afterEach, mock, vi } from 'bun:test';
 import { access, rm } from 'node:fs/promises';
 
-import { fakeBrowser } from '@webext-core/fake-browser';
+import '@webext-core/fake-browser/auto';
 
 globalThis.__ENTRYPOINT__ = 'test';
 
@@ -12,8 +12,6 @@ try {
 } catch {
   // Directory doesn't exist, nothing to clean up
 }
-
-Object.assign(globalThis, { chrome: fakeBrowser, browser: fakeBrowser });
 
 // Equivalent of Vitest's `mockReset` and `restoreMocks` options
 afterEach(() => {
