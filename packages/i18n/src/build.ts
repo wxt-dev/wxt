@@ -198,6 +198,7 @@ function _parseMessagesObject(
         );
 
       if (isPluralMessage(object)) {
+        assertSupportedPluralKeys(object, path);
         const message = Object.values(object).join('|');
         const substitutions = getSubstitutionCount(message);
         const namedSubstitutions = getNamedSubstitutionNames(message);
@@ -236,9 +237,45 @@ function _parseMessagesObject(
 }
 
 function isPluralMessage(object: Message): object is PluralMessage {
-  return Object.keys(object).every(
-    (key) => key === 'n' || isFinite(Number(key)),
+  // A plural message always has an `n` form. Objects with only numeric keys
+  // and no `n` (e.g. `{ 404: ..., 500: ... }`) are regular nested messages.
+  const keys = Object.keys(object);
+  return (
+    keys.includes('n') &&
+    keys.every((key) => key === 'n' || isFinite(Number(key)))
   );
+}
+
+const SUPPORTED_PLURAL_KEYS = new Set(['0', '1', 'n']);
+
+function assertSupportedPluralKeys(
+  object: PluralMessage,
+  path: string[],
+): void {
+  const unsupported = Object.keys(object).filter(
+    (key) => !SUPPORTED_PLURAL_KEYS.has(key),
+  );
+  if (unsupported.length > 0) {
+    throw Error(
+      `Plural message "${path.join('.')}" has unsupported key(s) ${unsupported
+        .map((key) => `"${key}"`)
+        .join(', ')}. Only 0, 1, and n are supported.`,
+    );
+  }
+}
+
+/**
+ * The runtime picks a plural form by position: "one | n" or "zero | one | n".
+ * Missing forms fall back to `n` so each count gets the right form regardless
+ * of which keys were defined.
+ */
+function serializePluralMessage(
+  plurals: ParsedPluralMessage['plurals'],
+): string {
+  const { 0: zero, 1: one, n } = plurals;
+  if (zero != null) return [zero, one ?? n, n].join(' | ');
+  if (one != null) return [one, n].join(' | ');
+  return n;
 }
 
 function isChromeMessage(object: Message): object is ChromeMessage {
@@ -302,7 +339,7 @@ export function generateChromeMessages(
         break;
       case 'plural':
         acc[key] = {
-          message: Object.values(message.plurals).join(' | '),
+          message: serializePluralMessage(message.plurals),
         };
         break;
       case 'simple':
