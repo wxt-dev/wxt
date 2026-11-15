@@ -91,11 +91,11 @@
 
 ### 🚀 Enhancements
 
-- ⚠️ Svelte 5 support ([#1104](https://github.com/wxt-dev/wxt/pull/1104))
+- ⚠️  Svelte 5 support ([#1104](https://github.com/wxt-dev/wxt/pull/1104))
 
 ### 🏡 Chore
 
-- Add `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
+- Add  `oxlint` for linting ([#947](https://github.com/wxt-dev/wxt/pull/947))
 - Upgrade all non-major dependencies ([#1040](https://github.com/wxt-dev/wxt/pull/1040))
 
 #### ⚠️ Breaking Changes

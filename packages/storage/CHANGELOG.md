@@ -14,6 +14,7 @@
 - [@nishu-murmu](https://github.com/nishu-murmu)
 - [@aklinker1](https://github.com/aklinker1)
 
+
 ## v1.2.9
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.8...storage-v1.2.9)

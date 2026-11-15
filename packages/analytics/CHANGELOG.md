@@ -26,6 +26,7 @@
 - [@aklinker1](https://github.com/aklinker1)
 - [@fkatsuhiro](https://github.com/fkatsuhiro)
 
+
 ## v0.5.7
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.6...analytics-v0.5.7)
@@ -186,7 +187,7 @@
 
 ### 🩹 Fixes
 
-- ⚠️ Update min WXT version to 0.20 ([2e8baf0](https://github.com/wxt-dev/wxt/commit/2e8baf0))
+- ⚠️  Update min WXT version to 0.20 ([2e8baf0](https://github.com/wxt-dev/wxt/commit/2e8baf0))
 
 ### ❤️ Contributors
 
