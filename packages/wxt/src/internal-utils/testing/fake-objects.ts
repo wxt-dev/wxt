@@ -39,7 +39,7 @@ function random(): number {
 const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const ALPHANUMERIC = ALPHA + '0123456789';
 const FIRST_NAMES = ['alex', 'blake', 'casey', 'drew', 'emery', 'finley'];
-const LAST_NAMES = ['Adams', 'Brooks', 'Chen', 'Diaz', 'Evans', 'Fischer'];
+const LAST_NAMES = ['Adams', 'Brooks', 'Chen', 'Dunn', 'Evans', 'Fischer'];
 
 function randomBoolean(): boolean {
   return random() < 0.5;

@@ -52,7 +52,7 @@ export function exec(
 /** Extract a ZIP file into `outDir`. */
 export async function unzip(zipPath: string, outDir: string): Promise<void> {
   await mkdir(outDir, { recursive: true });
-  // `tar` (bsdtar) ships with Windows and can read ZIPs, `unzip` is on Linux and macOS
+  // `tar` ships with Windows and can read ZIPs, `unzip` is on Linux and macOS
   if (process.platform === 'win32')
     await exec('tar', ['-xf', zipPath, '-C', outDir]);
   else await exec('unzip', ['-q', '-o', zipPath, '-d', outDir]);
