@@ -32,6 +32,8 @@ jobs:
 
       - name: Basic Checks
         run: bun run check
+        env:
+          INSIDE_BUILDC: 'true' # Skip rebuilding packages via buildc, they're already buidt
 
   builds:
     name: Builds
