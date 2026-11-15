@@ -34,7 +34,6 @@
   "scripts": {
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
     "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepack": "bun run build"
@@ -48,6 +47,7 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "vitest-mock-extended": "catalog:"
   }
 }

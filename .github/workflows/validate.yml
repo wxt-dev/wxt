@@ -78,15 +78,15 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
+        with:
+          version: 10
+
       # Every package is sharded the same way; `--passWithNoTests` covers
       # packages with fewer test files than shards.
-      - name: Run Tests (Coverage)
-        run: bun run --workspaces test:coverage --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
-
-      - name: Upload Coverage
-        uses: codecov/codecov-action@2320916714171c258d01dbd81040d64d798c6f8e # v7.1.1
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run Tests
+        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
 
   # Required status check: passes only if every shard passed.
   linux-tests:
@@ -111,6 +111,11 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
+        with:
+          version: 10
 
       - name: Run Tests
         run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests

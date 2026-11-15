@@ -14,7 +14,6 @@
     "build:firefox-mv3": "wxt build -b firefox --mv3",
     "build:firefox-mv2": "wxt build -b firefox",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
     "zip": "buildc --deps-only -- wxt zip",
     "check": "buildc --deps-only -- check",
     "postinstall": "buildc --deps-only -- wxt prepare"
@@ -32,8 +31,6 @@
     "@wxt-dev/auto-icons": "workspace:*",
     "@wxt-dev/unocss": "workspace:*",
     "eslint": "^10.11.0",
-    "jiti": "^2.7.0",
-    "sass": "^1.97.3",
     "typescript": "catalog:",
     "typescript-eslint": "^8.0.0",
     "unocss": "catalog:",
