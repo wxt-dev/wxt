@@ -5,7 +5,7 @@
   ],
   "type": "module",
   "scripts": {
-    "check": "bun run cspell-order:check && check && bun run --sequential --workspaces check",
+    "check": "bun run cspell-order:check && check && bun run --parallel --workspaces check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
     "cspell-order:format": "bun run scripts/format-cspell-order.ts",
     "test": "bun run --workspaces test run",
