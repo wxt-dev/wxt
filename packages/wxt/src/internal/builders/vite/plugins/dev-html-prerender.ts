@@ -1,10 +1,10 @@
 import { dirname, relative, resolve } from 'node:path';
 
-import { parseHTML } from 'linkedom';
 import { hash } from 'ohash';
 import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { parseHTML } from '../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
 import { ResolvedConfig, WxtDevServer } from '../../../../types';

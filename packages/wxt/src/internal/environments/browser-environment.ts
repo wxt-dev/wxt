@@ -1,5 +1,6 @@
-import { parseHTML } from 'linkedom';
+import * as litejs from '@litejs/dom';
 
+import { parseHTML } from '../../internal-utils/html-utils';
 import { createEnvironment, Environment, EnvGlobals } from './environment';
 
 export function createBrowserEnvironment(): Environment {
@@ -7,22 +8,26 @@ export function createBrowserEnvironment(): Environment {
 }
 
 export function getBrowserEnvironmentGlobals(): EnvGlobals {
-  const { window, document, global } = parseHTML(`
+  const { document } = parseHTML(`
     <html>
       <head></head>
       <body></body>
     </html>
   `);
   const location = createBuildTimeLocation('http://localhost/');
-  window.location = location as Location & string;
-  global.location = location;
-  return {
-    ...global,
-    window,
+  const global: EnvGlobals = {
+    Node: litejs.Node,
+    HTMLElement: litejs.HTMLElement,
+    Element: litejs.HTMLElement,
+    DocumentFragment: litejs.DocumentFragment,
+    DOMParser: litejs.DOMParser,
     document,
-    self: global,
     location,
   };
+  const window: EnvGlobals = { ...global };
+  window.window = window;
+  window.self = window;
+  return { ...window, window, self: window };
 }
 
 /**

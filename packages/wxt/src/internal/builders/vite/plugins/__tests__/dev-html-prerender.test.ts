@@ -1,8 +1,8 @@
 import { resolve } from 'node:path';
 
-import { parseHTML } from 'linkedom';
 import { describe, expect, it } from 'vitest';
 
+import { parseHTML } from '../../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../../internal-utils/path-utils';
 import {
   fakeDevServer,

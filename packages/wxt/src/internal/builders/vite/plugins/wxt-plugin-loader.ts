@@ -1,7 +1,7 @@
-import { parseHTML } from 'linkedom';
 import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
+import { parseHTML } from '../../../../internal-utils/html-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
 
@@ -135,10 +135,13 @@ export function wxtPluginLoader(
 
         if (document.head == null) {
           const newHead = document.createElement('head');
-          document.documentElement.prepend(newHead);
+          document.documentElement.insertBefore(
+            newHead,
+            document.documentElement.firstChild,
+          );
         }
 
-        document.head?.prepend(script);
+        document.head?.insertBefore(script, document.head.firstChild);
         return document.toString();
       },
     },

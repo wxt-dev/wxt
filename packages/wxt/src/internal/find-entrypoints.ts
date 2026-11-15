@@ -3,7 +3,6 @@ import { styleText } from 'node:util';
 import { relative, resolve } from 'path';
 
 import JSON5 from 'json5';
-import { parseHTML } from 'linkedom';
 import { camelCase } from 'scule';
 
 import {
@@ -11,6 +10,7 @@ import {
   isJsEntrypoint,
   resolvePerBrowserOptions,
 } from '../internal-utils/entrypoint-utils';
+import { parseHTML } from '../internal-utils/html-utils';
 import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
@@ -178,7 +178,8 @@ async function importHtmlEntrypoint(
   };
 
   metaTags.forEach((tag) => {
-    const name = tag.name;
+    const name = tag.getAttribute('name') ?? '';
+    const content = tag.getAttribute('content') ?? '';
     let key: string;
 
     if (name.startsWith('manifest.')) {
@@ -190,9 +191,9 @@ async function importHtmlEntrypoint(
     }
 
     try {
-      res[key] = JSON5.parse(tag.content);
+      res[key] = JSON5.parse(content);
     } catch {
-      res[key] = tag.content;
+      res[key] = content;
     }
   });
 
