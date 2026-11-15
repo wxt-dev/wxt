@@ -63,7 +63,6 @@
     "check": "buildc deps && check",
     "test": "buildc deps && vitest",
     "bench": "buildc deps && bun run bench/run.ts",
-    "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },
   "dependencies": {

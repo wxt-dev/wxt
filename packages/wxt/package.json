@@ -126,7 +126,6 @@
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc deps && vitest",
-    "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },
   "dependencies": {

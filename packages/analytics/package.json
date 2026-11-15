@@ -54,8 +54,7 @@
     "build": "buildc -- tsdown",
     "prepack": "bun run build",
     "postinstall": "buildc deps && wxt prepare",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test": "echo 'noop'"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
