@@ -48,6 +48,6 @@
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
-    "vitest-mock-extended": "^5.1.1"
+    "vitest-mock-extended": "catalog:"
   }
 }
