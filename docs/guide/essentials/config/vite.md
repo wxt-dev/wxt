@@ -33,7 +33,11 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   vite: () => ({
-    plugins: [VueRouter({/* ... */})],
+    plugins: [
+      VueRouter({
+        /* ... */
+      }),
+    ],
   }),
 });
 ```

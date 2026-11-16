@@ -95,13 +95,17 @@ const resolveInlinePlugin: Rolldown.Plugin = {
   },
 };
 
+type PackageExport = { types?: string; default?: string };
+
 export default defineConfig({
   pack: [
     {
       entry: [
         // Exports
-        ...Object.values<{ default?: string }>(pkgJson.exports)
-          .filter((ex): ex is { default: string } => Boolean(ex.default))
+        ...Object.values<PackageExport>(pkgJson.exports)
+          .filter((ex): ex is PackageExport & { default: string } =>
+            Boolean(ex.default),
+          )
           .map((ex) =>
             ex.default.replace('./dist', 'src').replace('.mjs', '.ts'),
           ),

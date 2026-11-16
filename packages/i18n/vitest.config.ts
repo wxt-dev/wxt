@@ -1,5 +1,5 @@
-import RandomSeed from 'vitest-plugin-random-seed';
 import { defineProject } from 'vite-plus/test/config';
+import RandomSeed from 'vitest-plugin-random-seed';
 
 export default defineProject({
   test: {
