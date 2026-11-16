@@ -40,9 +40,14 @@
     "vue": "^3.5.34",
     "wxt": "workspace:*"
   },
+  "overrides": {
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
   "engines": {
     "bun": ">=1.4.4"
   },
+  "packageManager": "bun@1.4.4",
   "catalog": {
     "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^3.0.2",
@@ -65,9 +70,5 @@
   },
   "patchedDependencies": {
     "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
-  },
-  "overrides": {
-    "vite": "catalog:",
-    "vitest": "catalog:"
   }
 }

@@ -26,7 +26,9 @@ describe('printFileList', () => {
     ]);
 
     expect(wxt.logger.warn).not.toHaveBeenCalled();
-    const output = logs.join('\n');
+    // Colors are enabled when tests run through `vp run`, so strip them before
+    // making assertions about the rendered output.
+    const output = logs.join('\n').replace(/\u001b\[[0-9;]*m/g, '');
     expect(output).toContain('wxt-marker-a.txt');
     expect(output).toContain(
       path.join('packages', 'shared', 'wxt-marker-b.ts'),

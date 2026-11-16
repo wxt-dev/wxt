@@ -19,6 +19,7 @@ export default defineConfig({
       'pnpm-lock.yaml',
       'CHANGELOG.md',
       'packages/browser/src/gen/**',
+      'packages/wxt/src/internal-utils/virtual-modules.ts',
       'templates/**',
     ],
     overrides: [
@@ -32,11 +33,11 @@ export default defineConfig({
     ],
   },
   fmt: {
-    singleQuote: true,
-    endOfLine: 'lf',
-    printWidth: 80,
-    sortPackageJson: false,
+    sortTailwindcss: true,
+    sortImports: true,
     jsdoc: true,
+    printWidth: 80,
+    singleQuote: true,
     ignorePatterns: [
       '.output',
       'coverage',
@@ -46,6 +47,8 @@ export default defineConfig({
       'pnpm-lock.yaml',
       'CHANGELOG.md',
       'packages/browser/src/gen',
+      'packages/wxt/inline',
+      'packages/wxt/src/internal-utils/virtual-modules.ts',
     ],
   },
 });

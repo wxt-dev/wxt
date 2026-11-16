@@ -1,15 +1,21 @@
 {
-  "editor.defaultFormatter": "oxc.oxc-vscode",
   "github.copilot.chat.codeGeneration.instructions": [
     {
       "file": "CONTRIBUTING.md"
     }
   ],
-  "oxc.enable": true,
-  "oxc.fmt.configPath": "./vite.config.ts",
+
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "[javascript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[javascriptreact]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "oxc.disableNestedConfig": true,
+  "oxc.fmt.disableNestedConfig": true,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "explicit"
-  }
+  },
+  "oxc.configPath": "./vite.config.ts"
 }
