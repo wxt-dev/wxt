@@ -7,9 +7,21 @@ import { defineConfig } from 'vite-plus';
 export default defineConfig({
   pack: [
     {
+      deps: {
+        // tsdown <0.23 compatibility: resolve external dependency subpaths.
+        // Remove to preserve subpath imports as written (the new default).
+        // https://tsdown.dev/options/dependencies#deps-resolvedepsubpath
+        resolveDepSubpath: true,
+      },
       entry,
     },
     {
+      deps: {
+        // tsdown <0.23 compatibility: resolve external dependency subpaths.
+        // Remove to preserve subpath imports as written (the new default).
+        // https://tsdown.dev/options/dependencies#deps-resolvedepsubpath
+        resolveDepSubpath: true,
+      },
       entry,
       format: 'cjs',
     },
@@ -18,7 +30,9 @@ export default defineConfig({
     tasks: {
       postinstall: {
         dependsOn: ['wxt#build', '@wxt-dev/storage#build'],
-        input: [{ auto: true }, '!.wxt/**'],
+        cache: {
+          input: [{ auto: true }, '!.wxt/**'],
+        },
         command: 'vp exec wxt prepare',
       },
     },

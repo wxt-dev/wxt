@@ -800,12 +800,8 @@ JS entrypoints in the output directory have been moved. Unless you're doing some
 ```ts [wxt.config.ts]
 export default defineConfig({
   zip: {
-    ignoredSources: [
-      /*...*/
-    ], // [!code --]
-    excludeSources: [
-      /*...*/
-    ], // [!code ++]
+    ignoredSources: [/*...*/], // [!code --]
+    excludeSources: [/*...*/], // [!code ++]
   },
 });
 ```

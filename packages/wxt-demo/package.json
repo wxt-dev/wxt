@@ -27,6 +27,7 @@
     "typescript": "catalog:",
     "typescript-eslint": "^8.0.0",
     "unocss": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",

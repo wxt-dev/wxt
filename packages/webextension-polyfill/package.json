@@ -45,6 +45,7 @@
     "@types/webextension-polyfill": "^0.12.5",
     "publint": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:",
     "webextension-polyfill": "^0.12.0",
     "wxt": "workspace:*"
