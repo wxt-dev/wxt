@@ -1,9 +1,4 @@
 {
   "extends": "./tsconfig.base.json",
-  "exclude": ["packages", "templates", "node_modules"],
-  "references": [
-    {
-      "path": "tsconfig.scripts.json"
-    }
-  ]
+  "exclude": ["packages", "templates", "node_modules"]
 }
