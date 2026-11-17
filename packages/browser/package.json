@@ -31,8 +31,8 @@
     "@types/chrome": "0.3.7",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "vite-plus": "catalog:",
-    "vitest": "catalog:"
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   },
   "peerDependencies": {}
 }

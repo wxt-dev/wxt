@@ -46,6 +46,7 @@
     "publint": "catalog:",
     "typescript": "catalog:",
     "unocss": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },

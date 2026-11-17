@@ -10,9 +10,8 @@ export function getPluginModules(
   entrypoint: Entrypoint | undefined,
 ): string[] {
   return plugins
-    .map(
-      (plugin): WxtPluginEntry =>
-        typeof plugin === 'string' ? { module: plugin } : plugin,
+    .map((plugin): WxtPluginEntry =>
+      typeof plugin === 'string' ? { module: plugin } : plugin,
     )
     .filter(
       (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),

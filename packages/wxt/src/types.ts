@@ -59,8 +59,7 @@ export interface InlineConfig {
    *
    * - <span v-pre>`{{browser}}`</span>: The target browser (e.g., 'chrome',
    *   'firefox')
-   * - <span v-pre>`{{manifestVersion}}`</span>: The manifest version (e.g., 2 or
-   *   3)
+   * - <span v-pre>`{{manifestVersion}}`</span>: The manifest version (e.g., 2 or 3)
    * - <span v-pre>`{{mode}}`</span>: The build mode (e.g., 'development',
    *   'production')
    * - <span v-pre>`{{modeSuffix}}`</span>: A suffix based on the mode ('-dev' for
@@ -1110,19 +1109,21 @@ export interface FirefoxDataCollectionPermissions {
  * configure entrypoints here, they are configured inline.
  */
 export type UserManifest = {
-  [key in keyof Browser.runtime.ManifestV3 as key extends
-    | 'action'
-    | 'background'
-    | 'chrome_url_overrides'
-    | 'devtools_page'
-    | 'manifest_version'
-    | 'options_page'
-    | 'options_ui'
-    | 'permissions'
-    | 'sandbox'
-    | 'web_accessible_resources'
-    ? never
-    : key]?: Browser.runtime.ManifestV3[key];
+  [
+    key in keyof Browser.runtime.ManifestV3 as key extends
+      | 'action'
+      | 'background'
+      | 'chrome_url_overrides'
+      | 'devtools_page'
+      | 'manifest_version'
+      | 'options_page'
+      | 'options_ui'
+      | 'permissions'
+      | 'sandbox'
+      | 'web_accessible_resources'
+      ? never
+      : key
+  ]?: Browser.runtime.ManifestV3[key];
 } & {
   // Add any Browser-specific or MV2 properties that WXT supports here
   action?: Browser.runtime.ManifestV3['action'] & {

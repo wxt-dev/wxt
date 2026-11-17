@@ -63,6 +63,7 @@
   "devDependencies": {
     "publint": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:",
     "web-ext": "catalog:",
     "wxt": "workspace:*"

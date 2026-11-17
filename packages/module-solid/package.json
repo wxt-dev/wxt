@@ -52,6 +52,7 @@
     "publint": "catalog:",
     "solid-js": "^1.9.11",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },

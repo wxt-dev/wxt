@@ -32,18 +32,16 @@ const inlineDeps = [
 console.log();
 consola.info('Transforming inline dependencies...');
 const res = await Rolldown.build(
-  inlineDeps.map(
-    (id): Rolldown.BuildOptions => ({
-      input: id,
-      output: {
-        dir: 'inline',
-        entryFileNames: `${id}/index.mjs`,
-        format: 'esm',
-        minify: true,
-      },
-      platform: 'node',
-    }),
-  ),
+  inlineDeps.map((id): Rolldown.BuildOptions => ({
+    input: id,
+    output: {
+      dir: 'inline',
+      entryFileNames: `${id}/index.mjs`,
+      format: 'esm',
+      minify: true,
+    },
+    platform: 'node',
+  })),
 );
 for (const output of res) {
   consola.info(
@@ -98,6 +96,13 @@ const resolveInlinePlugin: Rolldown.Plugin = {
 type PackageExport = { types?: string; default?: string };
 
 export default defineConfig({
+  test: {
+    // Vitest v4 compatibility: preserve mock call history.
+    // Remove after tests no longer rely on calls from setup or earlier tests.
+    // https://viteplus.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
+    // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
+    clearMocks: false,
+  },
   pack: [
     {
       entry: [
@@ -115,6 +120,10 @@ export default defineConfig({
       ],
       unbundle: true,
       deps: {
+        // tsdown <0.23 compatibility: resolve external dependency subpaths.
+        // Remove to preserve subpath imports as written (the new default).
+        // https://tsdown.dev/options/dependencies#deps-resolvedepsubpath
+        resolveDepSubpath: true,
         neverBundle: ['wxt/browser', 'virtual:app-config'],
         alwaysBundle: inlineDeps,
       },
