@@ -230,7 +230,7 @@ export default defineContentScript({
 
 ```tsx [Solid]
 // entrypoints/example-ui.content/index.ts
-import { render } from 'solid-js/web';
+import { render } from '@solidjs/web';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -417,7 +417,7 @@ export default defineContentScript({
 ```tsx [Solid]
 // 1. Import the style
 import './style.css';
-import { render } from 'solid-js/web';
+import { render } from '@solidjs/web';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
