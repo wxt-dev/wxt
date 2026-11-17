@@ -70,7 +70,7 @@ describe('Built Tools', () => {
     const actualChromeMessagesFile = mockWriteFile.mock.calls[0][1];
     const actualDtsFile = mockWriteFile.mock.calls[1][1];
 
-    expect(mockWriteFile).toBeCalledTimes(2);
+    expect(mockWriteFile).toHaveBeenCalledTimes(2);
     expect(actualChromeMessagesFile).toMatchInlineSnapshot(`
       "{
         "simple": {
@@ -177,13 +177,17 @@ describe('Built Tools', () => {
     await generateChromeMessagesFile('output.json', messages);
     await generateTypeFile('output.d.ts', messages);
 
-    expect(mockWriteFile).toBeCalledTimes(2);
-    expect(mockWriteFile).toBeCalledWith(
+    expect(mockWriteFile).toHaveBeenCalledTimes(2);
+    expect(mockWriteFile).toHaveBeenCalledWith(
       'output.json',
       expectedChromeMessages,
       'utf8',
     );
-    expect(mockWriteFile).toBeCalledWith('output.d.ts', expectedDts, 'utf8');
+    expect(mockWriteFile).toHaveBeenCalledWith(
+      'output.d.ts',
+      expectedDts,
+      'utf8',
+    );
   });
 
   it('should throw an error if messages file contains null or undefined', async () => {
@@ -194,7 +198,7 @@ describe('Built Tools', () => {
 
     mockReadFile.mockResolvedValue(invalidFileContent);
 
-    await expect(parseMessagesFile('invalid.yml')).rejects.toThrowError(
+    await expect(parseMessagesFile('invalid.yml')).rejects.toThrow(
       'Messages file should not contain `null` (found at "invalidField")',
     );
   });

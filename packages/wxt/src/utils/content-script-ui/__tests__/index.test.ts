@@ -659,7 +659,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            expect(() => ui.autoMount()).toThrowError(
+            expect(() => ui.autoMount()).toThrow(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
           });
@@ -672,7 +672,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            expect(() => ui.autoMount()).toThrowError(
+            expect(() => ui.autoMount()).toThrow(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
           });
@@ -743,12 +743,12 @@ describe('Content Script UIs', () => {
             ui.autoMount({ onStop });
 
             ui.remove();
-            expect(onStop).toBeCalledTimes(1);
+            expect(onStop).toHaveBeenCalledTimes(1);
 
             ui.autoMount({ onStop });
 
             ui.remove();
-            expect(onStop).toBeCalledTimes(2);
+            expect(onStop).toHaveBeenCalledTimes(2);
           });
         });
       },

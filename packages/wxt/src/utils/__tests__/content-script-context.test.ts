@@ -29,7 +29,7 @@ describe('Content Script Context', () => {
     delete fakeBrowser.runtime.id;
     const isValid = ctx.isValid;
 
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
     expect(isValid).toBe(false);
   });
 
@@ -46,7 +46,7 @@ describe('Content Script Context', () => {
     // Should not throw, and should mark as invalid
     expect(() => ctx.isInvalid).not.toThrow();
     expect(ctx.isInvalid).toBe(true);
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
 
     // Restore for other tests
     fakeBrowser.runtime = originalRuntime;
@@ -65,7 +65,7 @@ describe('Content Script Context', () => {
     new ContentScriptContext(name);
     await waitForEventsToFire();
 
-    expect(onInvalidated).toBeCalled();
+    expect(onInvalidated).toHaveBeenCalled();
     expect(ctx.isValid).toBe(false);
   });
 
@@ -81,7 +81,7 @@ describe('Content Script Context', () => {
     new ContentScriptContext('test2');
     await waitForEventsToFire();
 
-    expect(onInvalidated).not.toBeCalled();
+    expect(onInvalidated).not.toHaveBeenCalled();
     expect(ctx.isValid).toBe(true);
   });
 
