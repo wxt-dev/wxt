@@ -1,6 +1,7 @@
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { stripVTControlCharacters } from 'node:util';
 
 import { describe, expect, it } from 'vite-plus/test';
 
@@ -28,7 +29,7 @@ describe('printFileList', () => {
     expect(wxt.logger.warn).not.toHaveBeenCalled();
     // Colors are enabled when tests run through `vp run`, so strip them before
     // making assertions about the rendered output.
-    const output = logs.join('\n').replace(/\u001b\[[0-9;]*m/g, '');
+    const output = stripVTControlCharacters(logs.join('\n'));
     expect(output).toContain('wxt-marker-a.txt');
     expect(output).toContain(
       path.join('packages', 'shared', 'wxt-marker-b.ts'),
@@ -50,6 +51,6 @@ describe('printFileList', () => {
     ]);
 
     expect(wxt.logger.warn).not.toHaveBeenCalled();
-    expect(logs.join('\n')).toContain('5 B');
+    expect(stripVTControlCharacters(logs.join('\n'))).toContain('5 B');
   });
 });
