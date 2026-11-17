@@ -122,7 +122,7 @@
   "scripts": {
     "wxt": "bun run src/cli/index.ts",
     "build": "vp pack --config-loader unrun",
-    "check": "vpr build && vpr --sequential 'check:*'",
+    "check": "vpr build && vpr check:default && vpr check:tsc-virtual",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "vp test",
