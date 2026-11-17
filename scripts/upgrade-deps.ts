@@ -145,7 +145,7 @@ function validateNoMultipleVersions(
   dependencyVersionsMap: DependencyVersionsMap,
 ): DependencyVersionMap {
   const depsWithMultipleVersions = Object.entries(dependencyVersionsMap).filter(
-    ([_, versions]) => versions.size > 1,
+    ([, versions]) => versions.size > 1,
   );
   if (depsWithMultipleVersions.length === 0) {
     return Object.fromEntries(

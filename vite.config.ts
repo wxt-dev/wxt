@@ -28,9 +28,13 @@ export default defineConfig({
         rules: {
           //* Tests often have unbound methods, and it's not worth the effort to fix them
           '@typescript-eslint/unbound-method': 'off',
+          'no-unused-vars': 'off',
         },
       },
     ],
+    rules: {
+      'unicorn/no-empty-file': 'off',
+    },
   },
   fmt: {
     sortTailwindcss: true,

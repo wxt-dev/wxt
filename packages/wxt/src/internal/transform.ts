@@ -192,7 +192,7 @@ function findUsedIdentifiers(simpleAst: any) {
       queue.push(
         Object.entries(item)
           .filter(filterFns[item.type] ?? (() => true))
-          .map(([_, value]) => value),
+          .map(([, value]) => value),
       );
     }
   }

@@ -15,7 +15,7 @@ export function createWxtLogger(logger: Logger): WxtLogger {
     set level(value) {
       logger.level = value;
     },
-    debug: logger.debug,
+    debug: logger.debug.bind(logger),
     log: logger.log.bind(logger),
     info: logger.info.bind(logger),
     warn: logger.warn.bind(logger),

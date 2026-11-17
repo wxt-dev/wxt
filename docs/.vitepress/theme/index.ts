@@ -55,7 +55,7 @@ export default {
       });
     };
 
-    nextTick(() => initMermaid());
+    void nextTick(() => initMermaid());
 
     watch(
       () => [isDark.value, localeIndex.value] as const,

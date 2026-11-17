@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-base-to-string
 import { dirname, relative, resolve } from 'node:path';
 
 import { parseHTML } from 'linkedom';

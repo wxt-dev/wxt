@@ -55,6 +55,7 @@ function arrayElement<T>(array: readonly T[]): T {
 
 function randomString(chars: string, length: number): string {
   let result = '';
+  // oxlint-disable-next-line typescript/no-misused-spread
   for (let i = 0; i < length; i++) result += arrayElement([...chars]);
   return result;
 }

@@ -19,7 +19,7 @@ describe('WXT Global', () => {
         const secondPort = wxt.config.dev.server?.port;
         expect(secondPort).toBe(firstPort);
       } finally {
-        cleanup();
+        void cleanup();
       }
     });
   });

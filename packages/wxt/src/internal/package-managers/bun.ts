@@ -1,3 +1,5 @@
+import { stripVTControlCharacters } from 'node:util';
+
 import { x as spawn } from 'tinyexec';
 
 import { dedupeDependencies, npm } from './npm';
@@ -18,16 +20,13 @@ export const bun: WxtPackageManagerImpl = {
       nodeOptions: { cwd: options?.cwd },
     });
     return dedupeDependencies(
-      res.stdout
-        // `bun pm ls` colorizes its output when colors are enabled, which
-        // breaks parsing if we don't strip the escape sequences first.
-        .replace(/\u001b\[[0-9;]*m/g, '')
+      stripVTControlCharacters(res.stdout)
         .split('\n')
         .slice(1) // Skip the first line, is not a dependency
         .map((line) => line.trim())
         .map((line) => /.* (@?\S+)@(\S+)$/.exec(line))
         .filter((match) => !!match)
-        .map(([_, name, version]) => ({ name, version })),
+        .map(([, name, version]) => ({ name, version })),
     );
   },
 };
