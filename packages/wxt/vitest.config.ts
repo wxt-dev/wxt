@@ -1,14 +1,13 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { defineConfig } from 'vite-plus';
+import { defineProject } from 'vite-plus/test/config';
 import RandomSeed from 'vitest-plugin-random-seed';
 
-export default defineConfig({
+const root = path.dirname(fileURLToPath(import.meta.url));
+
+export default defineProject({
   test: {
-    // Vitest v4 compatibility: preserve mock call history.
-    // Remove after tests no longer rely on calls from setup or earlier tests.
-    // https://viteplus.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
-    // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
     clearMocks: false,
     mockReset: true,
     restoreMocks: true,
@@ -24,8 +23,12 @@ export default defineConfig({
   plugins: [RandomSeed()],
   resolve: {
     alias: {
-      'wxt/testing/fake-browser': path.resolve('src/testing/fake-browser.ts'),
+      'wxt/testing/fake-browser': path.resolve(
+        root,
+        'src/testing/fake-browser.ts',
+      ),
       'wxt/testing/vitest-plugin': path.resolve(
+        root,
         'src/testing/wxt-vitest-plugin.ts',
       ),
     },

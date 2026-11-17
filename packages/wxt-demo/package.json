@@ -8,7 +8,7 @@
     "dev:firefox": "vp exec wxt -b firefox",
     "dev:firefox-mv3": "vp exec wxt -b firefox --mv3",
     "test": "vp test",
-    "test:coverage": "vpr test run --coverage",
+    "test:coverage": "vp test --coverage",
     "zip": "vp exec wxt zip",
     "check": "check"
   },
