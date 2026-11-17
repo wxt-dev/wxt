@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# Match Vite Task's default; override per-job if a runner has more cores.
+# https://viteplus.dev/guide/run#concurrency
+env:
+  VP_RUN_CONCURRENCY_LIMIT: 4
+
 jobs:
   checks:
     name: Checks
