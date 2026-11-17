@@ -3,7 +3,6 @@ import { WxtVitest } from 'wxt/testing/vitest-plugin';
 
 export default defineProject({
   test: {
-    clearMocks: false,
     mockReset: true,
     restoreMocks: true,
   },

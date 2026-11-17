@@ -36,6 +36,7 @@
     "test:coverage": "vp test --coverage",
     "dev": "bun run dev.ts",
     "build": "vp pack",
+    "check": "vp run build && check",
     "prepack": "vp pack"
   },
   "dependencies": {

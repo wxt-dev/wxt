@@ -8,7 +8,6 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineProject({
   test: {
-    clearMocks: false,
     mockReset: true,
     restoreMocks: true,
     testTimeout: 120e3,

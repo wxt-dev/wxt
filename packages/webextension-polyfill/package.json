@@ -37,6 +37,7 @@
   "scripts": {
     "dev": "wxt",
     "build": "vp pack",
+    "check": "vp run build && check",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'",
     "prepack": "vp pack"

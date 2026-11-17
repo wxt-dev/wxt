@@ -14,10 +14,6 @@ export default defineConfig({
       'providers/posthog': './modules/analytics/providers/posthog.ts',
     },
     deps: {
-      // tsdown <0.23 compatibility: resolve external dependency subpaths.
-      // Remove to preserve subpath imports as written (the new default).
-      // https://tsdown.dev/options/dependencies#deps-resolvedepsubpath
-      resolveDepSubpath: true,
       neverBundle: ['#analytics'],
     },
     define: {

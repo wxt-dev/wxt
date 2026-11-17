@@ -39,6 +39,7 @@
   },
   "scripts": {
     "build": "vp pack",
+    "check": "vp run build && check",
     "test": "vp test",
     "test:coverage": "vp test --coverage",
     "prepack": "vp pack"
