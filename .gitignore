@@ -15,6 +15,7 @@
 docs/.vitepress/.temp
 coverage
 dist
+.vitest
 node_modules
 TODOs.md
 web-ext.config.js
