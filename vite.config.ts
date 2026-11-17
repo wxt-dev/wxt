@@ -16,7 +16,10 @@ export default defineConfig({
     },
   },
   staged: {
-    '*.{js,jsx,ts,tsx,vue}': ['vp lint --fix', 'vp fmt'],
+    '*.{js,jsx,ts,tsx,vue}': [
+      'vp lint --fix --no-error-on-unmatched-pattern',
+      'vp fmt',
+    ],
     '*.{json,md,yml,yaml}': ['vp fmt'],
   },
   lint: {
