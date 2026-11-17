@@ -178,7 +178,6 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:",
     "vitest-mock-extended": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
     "web-ext": "catalog:"

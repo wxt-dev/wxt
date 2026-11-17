@@ -29,7 +29,6 @@
     "unocss": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
     "web-ext": "catalog:",
     "wxt": "workspace:*"
