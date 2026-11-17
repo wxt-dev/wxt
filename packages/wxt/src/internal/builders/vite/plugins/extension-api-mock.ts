@@ -58,7 +58,7 @@ export function extensionApiMock(): vite.PluginOption {
 }
 
 const setupTemplate = `
-  import { vi } from 'vitest';
+  import { vi } from 'vite-plus/test';
   import { fakeBrowser } from 'wxt/testing/fake-browser';
 
   vi.stubGlobal("chrome", fakeBrowser);

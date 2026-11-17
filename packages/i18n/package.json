@@ -79,7 +79,6 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
     "wxt": "workspace:*"
   },
