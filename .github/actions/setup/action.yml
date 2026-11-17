@@ -1,40 +1,51 @@
 name: Basic Setup
-description: Install Bun and dependencies
+description: Install Vite+ toolchain and dependencies
 
 inputs:
   install:
     default: 'true'
-    description: Whether or not to run 'bun install'
+    description: Whether or not to install dependencies
+  postinstall:
+    default: 'true'
+    description: Whether or not to run workspace `postinstall` tasks (build packages and `wxt prepare`)
 
 runs:
   using: composite
 
   steps:
-    - name: 🛠️ Setup Bun
-      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-      with:
-        bun-version-file: '.tool-versions'
+    - name: 💾 Put Bun/Vite+ caches on workspace drive (Windows)
+      if: ${{ inputs.install == 'true' && runner.os == 'Windows' }}
+      shell: bash
+      run: |
+        echo "BUN_INSTALL_CACHE_DIR=$RUNNER_TEMP/bun-cache" >> $GITHUB_ENV
+        echo "VP_HOME=$RUNNER_TEMP/vite-plus" >> $GITHUB_ENV
 
-    - uses: voidzero-dev/setup-vp@v1.21.2
+    # setup-vp installs Vite+, Node, and the package manager (bun), and can
+    # cache them. See https://viteplus.dev/guide/ci#github-actions
+    - uses: voidzero-dev/setup-vp@v1.22.0
       with:
+        version: '1.7.0'
         node-version-file: .tool-versions
         cache: true
+        cache-toolchain: true
+        run-install: false
 
+    # Lifecycle scripts are skipped here and the workspace `postinstall`
+    # scripts are run below, in parallel, only when a job needs them.
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      env:
-        INSTALL_ARGS: ${{ inputs.installArgs }}
-      run: vp install --frozen-lockfile $INSTALL_ARGS
+      run: vp install --frozen-lockfile --ignore-scripts
 
-    # Experimental: reuse Vite Task results across CI runs.
-    # https://viteplus.dev/guide/github-actions-cache
-    # Restore after install so package installation can recreate node_modules first.
     - name: 🗄️ Vite Task cache
-      if: ${{ inputs.install == 'true' }}
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: node_modules/.vite/task-cache
         key: vite-task-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
         restore-keys: |
           vite-task-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: 🔧 Run Workspace Postinstall
+      if: ${{ inputs.install == 'true' && inputs.postinstall == 'true' }}
+      shell: bash
+      run: node scripts/postinstall.mjs

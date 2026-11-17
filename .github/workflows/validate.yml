@@ -35,6 +35,8 @@ jobs:
             exit 1
           fi
 
+      # `docs/api/reference/` is gitignored. `vp check` typechecks
+      # `docs/.vitepress/config.ts` which imports `typedoc-sidebar.json` from there.
       - name: Generate Docs
         run: vpr docs:gen
 
@@ -86,13 +88,10 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
-        with:
-          version: 10
-
+      # pnpm comes from setup-vp's managed package managers (needed for
+      # packages/wxt package-manager unit tests).
       - name: Run Tests
-        run: vp test --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests
 
   # Required status check: passes only if every shard passed.
   linux-tests:
@@ -112,17 +111,35 @@ jobs:
       matrix:
         shard: [1/3, 2/3, 3/3]
     steps:
+      # Before checkout: disable Defender real-time scanning (ephemeral VM).
+      # This cuts Windows Setup/checkout time.
+      - name: Disable Defender real-time monitoring
+        shell: powershell
+        run: Set-MpPreference -DisableRealtimeMonitoring $true
+
+      # This avoids NTFS line-ending rewrites during checkout.
+      - name: Disable git autocrlf
+        shell: bash
+        run: git config --global core.autocrlf false
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          # Cone mode always keeps root files (package.json, bun.lock, …).
+          # Skip docs/templates/.vscode — not needed for Windows tests.
+          sparse-checkout: |
+            packages
+            scripts
+            patches
+            .github
+          sparse-checkout-cone-mode: true
 
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
-        with:
-          version: 10
-
+      # pnpm comes from setup-vp's managed package managers (needed for
+      # packages/wxt package-manager unit tests).
       - name: Run Tests
         run: vp test --shard=${{ matrix.shard }} --passWithNoTests
 
