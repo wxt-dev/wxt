@@ -33,8 +33,5 @@
     "vitest-plugin-random-seed": "catalog:",
     "web-ext": "catalog:",
     "wxt": "workspace:*"
-  },
-  "buildc": {
-    "cachable": false
   }
 }

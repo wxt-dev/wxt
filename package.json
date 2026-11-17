@@ -5,7 +5,7 @@
   ],
   "type": "module",
   "scripts": {
-    "check": "bun run cspell-order:check && check && vpr -r check",
+    "check": "bun run cspell-order:check && check && vpr -r check && vp check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
     "cspell-order:format": "bun run scripts/format-cspell-order.ts",
     "test": "vp test",
@@ -18,7 +18,6 @@
     "prepare": "vp config"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "@aklinker1/check": "catalog:",
     "@types/bun": "catalog:",
     "@types/markdown-it-footnote": "^3.0.4",
@@ -53,7 +52,6 @@
   },
   "packageManager": "bun@1.4.4",
   "catalog": {
-    "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^3.0.2",
     "@types/bun": "^1.4.4",
     "@types/node": "^22",

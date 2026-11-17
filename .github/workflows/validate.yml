@@ -34,7 +34,7 @@ jobs:
         run: vpr docs:gen
 
       - name: Basic Checks
-        run: vp check
+        run: vpr check
 
   builds:
     name: Builds
@@ -87,7 +87,7 @@ jobs:
           version: 10
 
       - name: Run Tests
-        run: vp test --shard=${{ matrix.shard }} --passWithNoTests --reporter=default
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
 
   # Required status check: passes only if every shard passed.
   linux-tests:

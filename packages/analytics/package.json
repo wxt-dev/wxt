@@ -51,6 +51,7 @@
     "dev": "wxt",
     "dev:build": "vp exec wxt build",
     "build": "vp pack",
+    "check": "vp run build && check",
     "prepack": "vp pack",
     "test": "echo 'noop'",
     "test:coverage": "echo 'noop'"
