@@ -258,13 +258,17 @@ async function getPopupEntrypoint(
   let _actionType = opts.actionType;
   Object.defineProperty(opts, 'actionType', {
     get: () => _actionType,
-    set: (v: typeof _actionType) => (_actionType = v),
+    set: (v: typeof _actionType) => {
+      _actionType = v;
+    },
     enumerable: true,
     configurable: true,
   });
   Object.defineProperty(opts, 'mv2Key', {
     get: () => _actionType,
-    set: (v: typeof _actionType) => (_actionType = v),
+    set: (v: typeof _actionType) => {
+      _actionType = v;
+    },
     enumerable: true,
     configurable: true,
   });

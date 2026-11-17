@@ -10,7 +10,7 @@ declare const backgroundRejectionButton: HTMLButtonElement;
 analytics.autoTrack(document);
 
 enabledCheckbox.oninput = () => {
-  analytics.setEnabled(enabledCheckbox.checked);
+  void analytics.setEnabled(enabledCheckbox.checked);
 };
 
 captureErrorButton.onclick = () => {

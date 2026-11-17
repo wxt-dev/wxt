@@ -43,7 +43,7 @@ export function createFileReloader(server: WxtDevServer) {
     const reloading = fileChangedLock(async () => {
       const fileChanges = changeQueue
         .splice(0, changeQueue.length)
-        .map(([_, file]) => file);
+        .map(([, file]) => file);
       if (fileChanges.length === 0) return;
       if (server.currentOutput == null) return;
 
@@ -78,7 +78,7 @@ export function createFileReloader(server: WxtDevServer) {
 
       if (changes.type === 'full-restart') {
         wxt.logger.info('Config changed, restarting server...');
-        server.restart();
+        void server.restart();
         return;
       }
 

@@ -188,6 +188,7 @@ function _parseMessagesObject(
     case 'object':
       if (object == null) {
         throw new Error(
+          // oxlint-disable-next-line typescript/restrict-template-expressions
           `Messages file should not contain \`${object}\` (found at "${path.join('.')}")`,
         );
       }

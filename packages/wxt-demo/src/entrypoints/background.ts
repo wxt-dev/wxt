@@ -40,12 +40,12 @@ export default defineBackground({
       PROD: import.meta.env.PROD,
     });
 
-    storage.setItem('session:startTime', Date.now());
+    void storage.setItem('session:startTime', Date.now());
   },
 });
 
 function _otherTypeChecksNotEvaluated() {
-  browser.scripting.executeScript({
+  void browser.scripting.executeScript({
     target: { tabId: 1 },
     files: [
       '/background.js',
