@@ -34,12 +34,12 @@ export type { WxtLocationChangeEvent };
  *   ctx.onInvalidated(unwatch); // Listen for invalidate here
  *
  *   await item.setValue(1);
- *   expect(watcher).toBeCalledTimes(1);
- *   expect(watcher).toBeCalledWith(1, 0);
+ *   expect(watcher).toHaveBeenCalledTimes(1);
+ *   expect(watcher).toHaveBeenCalledWith(1, 0);
  *
  *   ctx.notifyInvalidated(); // Use this function to invalidate the context
  *   await item.setValue(2);
- *   expect(watcher).toBeCalledTimes(1);
+ *   expect(watcher).toHaveBeenCalledTimes(1);
  * });
  * ```
  */

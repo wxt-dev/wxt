@@ -97,7 +97,7 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await Promise.all([fixedFirst, fixedSecond]);
 
-    expect(rebuild).toBeCalledTimes(1);
+    expect(rebuild).toHaveBeenCalledTimes(1);
     const [allEntrypoints, rebuiltGroups] = vi.mocked(rebuild).mock.calls[0];
     expect(
       allEntrypoints.some((entry) => entry.inputPath === relevantFile),
@@ -105,7 +105,7 @@ describe('createFileReloader', () => {
     expect(
       rebuiltGroups.flat().some((entry) => entry.inputPath === relevantFile),
     ).toBe(true);
-    expect(server.reloadExtension).toBeCalledTimes(1);
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
   });
 
   it('should rebuild and reload extension when a new entrypoint is added', async () => {
@@ -148,7 +148,7 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await trigger;
 
-    expect(rebuild).toBeCalledTimes(1);
+    expect(rebuild).toHaveBeenCalledTimes(1);
     const [allEntrypoints, rebuiltGroups, cachedOutput] =
       vi.mocked(rebuild).mock.calls[0];
     expect(allEntrypoints).toEqual([backgroundEntrypoint, popupEntrypoint]);
@@ -158,8 +158,8 @@ describe('createFileReloader', () => {
         .some((entry) => entry.inputPath === newEntrypointFile),
     ).toBe(true);
     expect(cachedOutput).toEqual(currentOutput);
-    expect(server.reloadExtension).toBeCalledTimes(1);
-    expect(server.reloadContentScript).not.toBeCalled();
+    expect(server.reloadExtension).toHaveBeenCalledTimes(1);
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
   });
 
   it('should ignore entrypoint directory changes when no new entrypoints are found', async () => {
@@ -191,8 +191,8 @@ describe('createFileReloader', () => {
     await vi.advanceTimersByTimeAsync(500);
     await trigger;
 
-    expect(rebuild).not.toBeCalled();
-    expect(server.reloadContentScript).not.toBeCalled();
-    expect(server.reloadExtension).not.toBeCalled();
+    expect(rebuild).not.toHaveBeenCalled();
+    expect(server.reloadContentScript).not.toHaveBeenCalled();
+    expect(server.reloadExtension).not.toHaveBeenCalled();
   });
 });
