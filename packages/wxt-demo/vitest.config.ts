@@ -3,13 +3,11 @@ import { WxtVitest } from 'wxt/testing/vitest-plugin';
 
 export default defineProject({
   test: {
-    // Vitest v4 compatibility: preserve mock call history.
-    // Remove after tests no longer rely on calls from setup or earlier tests.
-    // https://viteplus.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
-    // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
     clearMocks: false,
     mockReset: true,
     restoreMocks: true,
   },
-  plugins: [WxtVitest()],
+  // Explicit root so monorepo `vp test` (cwd = repo root) still resolves this
+  // package's wxt.config.ts and auto-imports.
+  plugins: [WxtVitest({ root: import.meta.dirname })],
 });

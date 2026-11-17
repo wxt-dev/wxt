@@ -86,10 +86,8 @@ jobs:
         with:
           version: 10
 
-      # Every package is sharded the same way; `--passWithNoTests` covers
-      # packages with fewer test files than shards.
       - name: Run Tests
-        run: vpr -r test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests --reporter=default
 
   # Required status check: passes only if every shard passed.
   linux-tests:
@@ -121,7 +119,7 @@ jobs:
           version: 10
 
       - name: Run Tests
-        run: vpr -r test run --shard=${{ matrix.shard }} --passWithNoTests
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests
 
   # Required status check: passes only if every shard passed.
   windows-tests:

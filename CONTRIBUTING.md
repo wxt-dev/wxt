@@ -148,7 +148,7 @@ To run tests for a specific file, add the filename at the end of the test comman
 bun run --filter wxt test manifest-contents
 ```
 
-All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
+All tests (unit and E2E) for all packages are run together via [Vitest projects](https://vitest.dev/guide/projects) configured in the root `vite.config.ts`. Run them with `vp test` from the workspace root.
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
 

@@ -1,8 +1,19 @@
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
+  test: {
+    // Run each package with its own Vitest config/setup instead of one flat
+    // root project (which skips package setupFiles/plugins and breaks mocks).
+    // https://vitest.dev/guide/projects
+    projects: ['packages/*/vitest.config.ts'],
+  },
   run: {
-    cache: true,
+    // Cache `vite.config.ts` tasks and package.json scripts so recursive
+    // `vp run -r <script>` calls replay unchanged work locally and in CI.
+    cache: {
+      tasks: true,
+      scripts: true,
+    },
   },
   staged: {
     '*.{js,jsx,ts,tsx,vue}': ['vp lint --fix', 'vp fmt'],
@@ -12,13 +23,18 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true },
     ignorePatterns: [
       '.output/**',
+      '.vitest/**',
       'coverage/**',
       'dist/**',
       '.wxt/**',
       'docs/.vitepress/cache/**',
+      'docs/.vitepress/dist/**',
+      'docs/api/reference/**',
+      'bun.lock',
       'pnpm-lock.yaml',
       'CHANGELOG.md',
       'packages/browser/src/gen/**',
+      'packages/wxt/inline/**',
       'packages/wxt/src/internal-utils/virtual-modules.ts',
       'templates/**',
     ],
@@ -44,15 +60,20 @@ export default defineConfig({
     singleQuote: true,
     ignorePatterns: [
       '.output',
+      '.vitest',
       'coverage',
       'dist',
       '.wxt',
       'docs/.vitepress/cache',
+      'docs/.vitepress/dist',
+      'docs/api/reference',
+      'bun.lock',
       'pnpm-lock.yaml',
       'CHANGELOG.md',
       'packages/browser/src/gen',
       'packages/wxt/inline',
       'packages/wxt/src/internal-utils/virtual-modules.ts',
+      'templates',
     ],
   },
 });
