@@ -17,7 +17,7 @@ runs:
 
     - uses: voidzero-dev/setup-vp@v1.21.2
       with:
-        node-version-file: .node-version
+        node-version-file: .tool-versions
         cache: true
 
     - name: 📦 Install Dependencies
