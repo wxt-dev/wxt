@@ -654,4 +654,7 @@
 - # Reddit Exporter
   chromeId: lnblpminojaaelpbaijpgpdkijkobcge
   firefoxSlug: reddit-exporter
+
+  - # File Transfer – Send Large Files P2P
+  chromeId: lffomfhccijamechladimcfcpijpjnne
   edgeId: ckjmcahfemjdolngoppolbcgbgahgkjc
