@@ -20,7 +20,8 @@ export function removeEntrypointMainFunction(
     transform: {
       order: 'pre',
       filter: {
-        id: new RegExp(`^${absPath}$`),
+        // Escaped, since paths can contain regex syntax (e.g. `+` in a git worktree named after `feat/x`)
+        id: new RegExp(`^${escapeRegExp(absPath)}$`),
       },
       handler(code) {
         const newCode = removeMainFunctionCode(code);
@@ -31,4 +32,12 @@ export function removeEntrypointMainFunction(
       },
     },
   };
+}
+
+/**
+ * Escapes a string for use as a literal in a `RegExp` (`RegExp.escape()` needs
+ * Node 24)
+ */
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
