@@ -20,9 +20,7 @@
   "types": "src/index.d.ts",
   "scripts": {
     "check": "check",
-    "gen": "bun run scripts/generate.ts",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "gen": "bun run scripts/generate.ts"
   },
   "dependencies": {
     "@types/har-format": "*"
