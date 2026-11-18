@@ -1,6 +1,15 @@
 import { defineConfig } from 'vite-plus';
+import { WxtVitest } from 'wxt/testing/vitest-plugin';
 
 export default defineConfig({
+  test: {
+    isolate: false,
+    mockReset: true,
+    restoreMocks: true,
+  },
+  // Explicit root so monorepo `vp test` (cwd = repo root) still resolves this
+  // package's wxt.config.ts and auto-imports.
+  plugins: [WxtVitest({ root: import.meta.dirname })],
   run: {
     tasks: {
       postinstall: {

@@ -365,7 +365,6 @@
   },
   "overrides": {
     "vite": "catalog:",
-    "vitest": "catalog:",
   },
   "catalog": {
     "@aklinker1/check": "^3.0.2",
@@ -379,7 +378,6 @@
     "unocss": "^66.6.8",
     "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
     "vite-plus": "1.7.0",
-    "vitest": "5.1.0",
     "vitest-mock-extended": "^5.1.1",
     "vitest-plugin-random-seed": "^2.0.2",
     "web-ext": "^10.5.0",

@@ -2,10 +2,10 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   test: {
-    // Run each package with its own Vitest config/setup instead of one flat
-    // root project (which skips package setupFiles/plugins and breaks mocks).
-    // https://vitest.dev/guide/projects
-    projects: ['packages/*/vitest.config.ts'],
+    // Same packages that used real Vitest on main (not `echo 'noop'`).
+    projects: [
+      'packages/{auto-icons,i18n,is-background,runner,storage,wxt,wxt-demo}/vite.config.ts',
+    ],
   },
   run: {
     // Cache `vite.config.ts` tasks and package.json scripts so recursive

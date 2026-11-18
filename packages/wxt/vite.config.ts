@@ -1,10 +1,12 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import path, { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 
 import consola from 'consola';
 import { defineConfig } from 'vite-plus';
 import { Rolldown, type UserConfig } from 'vite-plus/pack';
+import RandomSeed from 'vitest-plugin-random-seed';
 
 import pkgJson from './package.json' with { type: 'json' };
 import {
@@ -12,14 +14,11 @@ import {
   virtualModuleNames,
 } from './src/internal/virtual-modules';
 
-// Before doing the actual build, "inline" some dependencies by bundling them
-// individually to ESM and then, when building WXT, resolve them from the
-// bundled local versions instead of listing them as a package dependency.
-//
-// Normally, this is exactly what `deps.alwaysBundle` does, but that option
-// doesn't work in combination with "unbundle" mode - which WXT uses so its
-// `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
+const root = path.dirname(fileURLToPath(import.meta.url));
 
+// Pack prep (inline deps + virtual module codegen) must not run when Vitest
+// loads this file as a workspace project.
+// https://viteplus.dev/guide/test#configuration
 const inlineDeps = [
   'dotenv-expand',
   'is-wsl',
@@ -29,61 +28,71 @@ const inlineDeps = [
   'scule',
 ];
 
-console.log();
-consola.info('Transforming inline dependencies...');
-const res = await Rolldown.build(
-  inlineDeps.map((id): Rolldown.BuildOptions => ({
-    input: id,
-    output: {
-      dir: 'inline',
-      entryFileNames: `${id}/index.mjs`,
-      format: 'esm',
-      minify: true,
-    },
-    platform: 'node',
-  })),
-);
-for (const output of res) {
-  consola.info(
-    `${styleText('dim', 'inline/')}\`${output.output[0].fileName}\``,
+if (!process.env.VITEST) {
+  // Before doing the actual build, "inline" some dependencies by bundling them
+  // individually to ESM and then, when building WXT, resolve them from the
+  // bundled local versions instead of listing them as a package dependency.
+  //
+  // Normally, this is exactly what `deps.alwaysBundle` does, but that option
+  // doesn't work in combination with "unbundle" mode - which WXT uses so its
+  // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
+
+  console.log();
+  consola.info('Transforming inline dependencies...');
+  const res = await Rolldown.build(
+    inlineDeps.map((id): Rolldown.BuildOptions => ({
+      input: id,
+      output: {
+        dir: 'inline',
+        entryFileNames: `${id}/index.mjs`,
+        format: 'esm',
+        minify: true,
+      },
+      platform: 'node',
+    })),
   );
-}
-consola.success('Done!');
-console.log();
+  for (const output of res) {
+    consola.info(
+      `${styleText('dim', 'inline/')}\`${output.output[0].fileName}\``,
+    );
+  }
+  consola.success('Done!');
+  console.log();
 
-// Bundle each virtual module template into a string and write them to a
-// generated TS module, so the templates ship as strings instead of files.
+  // Bundle each virtual module template into a string and write them to a
+  // generated TS module, so the templates ship as strings instead of files.
 
-consola.info('Bundling virtual modules...');
-const virtualModuleSources: Record<string, string> = {};
-for (const moduleName of virtualModuleNames) {
-  const virtualBuild = await Rolldown.build({
-    input: `src/virtual/${moduleName}.ts`,
-    external: [
-      ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
-      'virtual:wxt-plugins',
-      'virtual:app-config',
-      // ./utils/storage => wxt/utils/storage
-      ...Object.keys(pkgJson.exports).map((path) => 'wxt' + path.slice(1)),
-    ],
-    platform: 'node',
-    output: { format: 'esm' },
-    write: false,
-  });
-  const chunk = virtualBuild.output.find((o) => o.type === 'chunk');
-  if (chunk == null)
-    throw Error(`Failed to bundle virtual module: ${moduleName}`);
-  virtualModuleSources[moduleName] = chunk.code;
+  consola.info('Bundling virtual modules...');
+  const virtualModuleSources: Record<string, string> = {};
+  for (const moduleName of virtualModuleNames) {
+    const virtualBuild = await Rolldown.build({
+      input: `src/virtual/${moduleName}.ts`,
+      external: [
+        ...virtualEntrypointModuleNames.map((name) => `virtual:user-${name}`),
+        'virtual:wxt-plugins',
+        'virtual:app-config',
+        // ./utils/storage => wxt/utils/storage
+        ...Object.keys(pkgJson.exports).map((p) => 'wxt' + p.slice(1)),
+      ],
+      platform: 'node',
+      output: { format: 'esm' },
+      write: false,
+    });
+    const chunk = virtualBuild.output.find((o) => o.type === 'chunk');
+    if (chunk == null)
+      throw Error(`Failed to bundle virtual module: ${moduleName}`);
+    virtualModuleSources[moduleName] = chunk.code;
+  }
+  await writeFile(
+    'src/internal-utils/virtual-modules.ts',
+    '// GENERATED by vite.config.ts from src/virtual/. Do not edit by hand.\n' +
+      '// Regenerate it with `bun run build` and commit the result.\n' +
+      `export const virtualModules: Record<string, string> = ${JSON.stringify(virtualModuleSources, null, 2)};\n`,
+    'utf8',
+  );
+  consola.success('Done!');
+  console.log();
 }
-await writeFile(
-  'src/internal-utils/virtual-modules.ts',
-  '// GENERATED by vite.config.ts from src/virtual/. Do not edit by hand.\n' +
-    '// Regenerate it with `bun run build` and commit the result.\n' +
-    `export const virtualModules: Record<string, string> = ${JSON.stringify(virtualModuleSources, null, 2)};\n`,
-  'utf8',
-);
-consola.success('Done!');
-console.log();
 
 const resolveInlinePlugin: Rolldown.Plugin = {
   name: 'resolve-inline',
@@ -130,6 +139,31 @@ export default defineConfig({
       },
     },
   ] satisfies UserConfig[],
+  test: {
+    mockReset: true,
+    restoreMocks: true,
+    testTimeout: 120e3,
+    setupFiles: ['./vitest.setup.ts'],
+    globalSetup: ['./vitest.globalSetup.ts'],
+  },
+  server: {
+    watch: {
+      ignored: '**/dist/**',
+    },
+  },
+  plugins: [RandomSeed()],
+  resolve: {
+    alias: {
+      'wxt/testing/fake-browser': path.resolve(
+        root,
+        'src/testing/fake-browser.ts',
+      ),
+      'wxt/testing/vitest-plugin': path.resolve(
+        root,
+        'src/testing/wxt-vitest-plugin.ts',
+      ),
+    },
+  },
 });
 
 async function replaceVars(

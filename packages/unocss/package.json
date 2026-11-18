@@ -34,8 +34,6 @@
   "scripts": {
     "build": "vp pack",
     "check": "check",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'",
     "prepack": "vp pack"
   },
   "dependencies": {

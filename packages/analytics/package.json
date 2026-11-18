@@ -52,9 +52,7 @@
     "dev:build": "vp exec wxt build",
     "build": "vp pack",
     "check": "vp run build && check",
-    "prepack": "vp pack",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
