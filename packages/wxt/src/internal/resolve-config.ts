@@ -1,9 +1,10 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { loadConfig } from 'c12';
 import consola, { LogLevels } from 'consola';
 import defu from 'defu';
+import { resolveModuleURL } from 'exsolve';
 import { getPort } from 'get-port-please';
 import { glob } from 'tinyglobby';
 
@@ -592,9 +593,13 @@ export async function resolveWxtUserModules(
   modules: string[] = [],
 ): Promise<WxtModuleWithMetadata<any>[]> {
   // Resolve node_modules modules
+  const from = pathToFileURL(path.join(root, 'index.js'));
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
-      const resolvedModulePath = import.meta.resolve(moduleId);
+      const resolvedModulePath = resolveModuleURL(moduleId, {
+        from,
+        cache: false,
+      });
       const mod: { default: WxtModule<any> } = await import(
         /* @vite-ignore */ resolvedModulePath
       );
