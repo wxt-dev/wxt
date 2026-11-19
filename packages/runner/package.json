@@ -33,7 +33,7 @@
   },
   "scripts": {
     "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc deps && vitest",
     "dev": "bun run dev.ts",
     "build": "buildc -- tsdown",
     "prepack": "bun run build"

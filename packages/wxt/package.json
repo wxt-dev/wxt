@@ -125,7 +125,7 @@
     "check": "bun run build && bun run --sequential 'check:*'",
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc deps && vitest",
     "prepack": "bun run build"
   },
   "dependencies": {

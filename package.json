@@ -54,7 +54,7 @@
     "bun": ">=1.4.4"
   },
   "catalog": {
-    "@aklinker1/buildc": "^1.1.7",
+    "@aklinker1/buildc": "2.0.0",
     "@aklinker1/check": "^3.0.2",
     "@types/bun": "^1.4.4",
     "@types/node": "^22",
@@ -73,7 +73,9 @@
     "web-ext": "^10.5.0"
   },
   "patchedDependencies": {
-    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "@aklinker1/buildc@1.1.7": "patches/@aklinker1%2Fbuildc@1.1.7.patch"
-  }
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
+  },
+  "trustedDependencies": [
+    "@aklinker1/buildc"
+  ]
 }

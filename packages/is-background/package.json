@@ -40,7 +40,7 @@
   "scripts": {
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
+    "test": "buildc deps && vitest",
     "prepack": "bun run build"
   },
   "dependencies": {

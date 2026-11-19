@@ -54,11 +54,14 @@ runs:
           ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-
 
     # Lifecycle scripts are skipped here and the workspace `postinstall`
-    # scripts are run below, in parallel, only when a job needs them.
+    # scripts are run below, in parallel, only when a job needs them. buildc's
+    # own `postinstall` is still required, since it installs the native binary.
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bun ci --ignore-scripts
+      run: |
+        bun ci --ignore-scripts
+        node node_modules/@aklinker1/buildc/postinstall.mjs
 
     - name: 🔧 Run Workspace Postinstall Scripts
       if: ${{ inputs.install == 'true' && inputs.postinstall == 'true' }}
