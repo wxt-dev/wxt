@@ -1,13 +1,15 @@
-import { createMermaidRenderer } from 'vitepress-mermaid-renderer';
-import { useData, type EnhanceAppContext } from 'vitepress/client';
+import { definePeleDiagram } from 'vitepress-pele/client';
+import { type EnhanceAppContext } from 'vitepress/client';
 import DefaultTheme from 'vitepress/theme';
-import { h, nextTick, watch } from 'vue';
+import { h } from 'vue';
 
 import BlogLayout from '../components/BlogLayout.vue';
 import EntrypointPatterns from '../components/EntrypointPatterns.vue';
 
 import './custom.css';
 import 'virtual:group-icons.css';
+import 'vitepress-pele/style.css';
+
 import ExampleSearch from '../components/ExampleSearch.vue';
 import Icon from '../components/Icon.vue';
 import UsingWxtSection from '../components/UsingWxtSection.vue';
@@ -23,47 +25,10 @@ export default {
       .component('ExampleSearch', ExampleSearch)
       .component('blog', BlogLayout);
 
+    definePeleDiagram();
     setupCodeGroupSync();
   },
   Layout: () => {
-    const { isDark, localeIndex } = useData();
-
-    const initMermaid = () => {
-      const mermaidRenderer = createMermaidRenderer({
-        theme: isDark.value ? 'dark' : 'forest',
-      });
-      mermaidRenderer.setToolbar({
-        showLanguageLabel: false,
-        downloadFormat: 'svg',
-        fullscreenMode: 'browser',
-        desktop: {
-          copyCode: 'enabled',
-          toggleFullscreen: 'enabled',
-          resetView: 'enabled',
-          zoomOut: 'enabled',
-          zoomIn: 'enabled',
-          zoomLevel: 'enabled',
-          download: 'enabled',
-        },
-        fullscreen: {
-          copyCode: 'disabled',
-          toggleFullscreen: 'enabled',
-          resetView: 'disabled',
-          zoomLevel: 'disabled',
-          download: 'enabled',
-        },
-      });
-    };
-
-    nextTick(() => initMermaid());
-
-    watch(
-      () => [isDark.value, localeIndex.value] as const,
-      () => {
-        initMermaid();
-      },
-    );
-
     return h(DefaultTheme.Layout);
   },
 };

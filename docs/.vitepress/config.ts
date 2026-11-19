@@ -5,6 +5,7 @@ import { Feed } from 'feed';
 import footnote from 'markdown-it-footnote';
 import { DefaultTheme, defineConfig } from 'vitepress';
 import addKnowledge from 'vitepress-knowledge';
+import { peleMarkdown } from 'vitepress-pele';
 import {
   groupIconMdPlugin,
   groupIconVitePlugin,
@@ -154,6 +155,7 @@ export default defineConfig({
     config: (md) => {
       md.use(footnote);
       md.use(groupIconMdPlugin);
+      md.use(peleMarkdown());
     },
     languageAlias: {
       mjs: 'js',
