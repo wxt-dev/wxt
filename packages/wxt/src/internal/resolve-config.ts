@@ -14,6 +14,10 @@ import { pathExists } from '../internal-utils/fs-utils';
 import { createWxtLogger } from '../internal-utils/log/wxt-logger';
 import { safeStringToNumber } from '../internal-utils/number-utils';
 import { normalizePath } from '../internal-utils/path-utils';
+import {
+  defaultTargetBrowserMap,
+  resolveActualBrowser,
+} from '../internal-utils/target-browser';
 import { NullishRequired } from '../internal-utils/type-utils';
 import {
   ConfigEnv,
@@ -76,9 +80,14 @@ export async function resolveConfig(
       `Current target browser \`${browser}\` is not in your \`targetBrowsers\` list!`,
     );
   }
+  const targetBrowserMap = {
+    ...defaultTargetBrowserMap,
+    ...mergedConfig.targetBrowserMap,
+  };
+  const actualBrowser = resolveActualBrowser(browser, targetBrowserMap);
   const manifestVersion =
     mergedConfig.manifestVersion ??
-    (browser === 'firefox' || browser === 'safari' ? 2 : 3);
+    (actualBrowser === 'firefox' || actualBrowser === 'safari' ? 2 : 3);
   const mode = mergedConfig.mode ?? COMMAND_MODES[command];
   const env: ConfigEnv = { browser, command, manifestVersion, mode };
 
@@ -194,6 +203,7 @@ export async function resolveConfig(
   return {
     browser,
     targetBrowsers,
+    actualBrowser,
     command,
     debug,
     entrypointsDir,

@@ -27,12 +27,28 @@ if (import.meta.env.FIREFOX) {
 
 Read about [Built-in Environment Variables](/guide/essentials/config/environment-variables.html#built-in-environment-variables) for more details.
 
+## Map Custom Browsers
+
+WXT knows how a handful of labels behave: `chrome`, `edge`, `brave`, `opera` and `chromium` generate Chromium code, `firefox` generates Firefox code, and `safari` and `ios` generate Safari code.
+
+When you build with a custom label, WXT falls back to Chromium, since it has no way to know what that label runs in. Use `targetBrowserMap` to tell it:
+
+```ts
+export default defineConfig({
+  targetBrowserMap: {
+    waterfox: 'firefox',
+  },
+});
+```
+
+Now `wxt -b waterfox` generates the same manifest, and the same default manifest version, as `wxt -b firefox`. The build still outputs to `.output/waterfox-mv2`, and `import.meta.env.BROWSER` still reports `"waterfox"`, so output paths and runtime checks keep the label you built with.
+
 ## Target a Manifest Version
 
 To target specific manifest versions, use the `--mv2` or `--mv3` CLI flags.
 
 :::tip Default Manifest Version
-By default, WXT will target MV2 for Safari and Firefox and MV3 for all other browsers.
+By default, WXT will target MV2 for Safari and Firefox, including custom labels mapped to them, and MV3 for all other browsers.
 :::
 
 Similar to the browser, you can get the target manifest version at runtime using the [built-in environment variable](/guide/essentials/config/environment-variables.html#built-in-environment-variables):
