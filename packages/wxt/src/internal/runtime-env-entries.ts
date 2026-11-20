@@ -47,6 +47,11 @@ export function getRuntimeEnvEntries(
       value: config.command,
       type: `"build" | "serve"`,
     },
+    {
+      name: 'WEB_EXT_DISABLED',
+      value: !!config.webExt.config.disabled,
+      type: `boolean`,
+    },
   ];
 }
 

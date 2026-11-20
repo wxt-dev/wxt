@@ -5,4 +5,5 @@ interface ImportMetaEnv {
   readonly COMMAND: WxtCommand;
   readonly MANIFEST_VERSION: 2 | 3;
   readonly ENTRYPOINT: string;
+  readonly WEB_EXT_DISABLED: boolean;
 }
