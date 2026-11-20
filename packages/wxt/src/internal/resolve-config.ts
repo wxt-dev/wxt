@@ -382,7 +382,6 @@ async function getUnimportOptions(
             'StorageArea',
             'WxtStorage',
             'WxtStorageItem',
-            'StorageArea',
             'StorageItemKey',
             'StorageAreaChanges',
             'MigrationError',
@@ -481,8 +480,8 @@ async function getUnimportOptions(
       },
     ],
     virtualImports: ['#imports'],
-    debugLog: logger.debug,
-    warn: logger.warn,
+    debugLog: logger.debug.bind(logger),
+    warn: logger.warn.bind(logger),
     dirsScanOptions: {
       cwd: srcDir,
     },
@@ -616,7 +615,7 @@ export async function resolveWxtUserModules(
     expandDirectories: false,
   }).catch(() => []);
   // Sort modules to ensure a consistent execution order
-  localModulePaths.sort();
+  localModulePaths.sort((a, b) => a.localeCompare(b));
   const localModules = await Promise.all<WxtModuleWithMetadata<any>>(
     localModulePaths.map(async (file) => {
       const absolutePath = normalizePath(path.resolve(modulesDir, file));

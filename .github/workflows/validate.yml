@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# Match Vite Task's default; override per-job if a runner has more cores.
+# https://viteplus.dev/guide/run#concurrency
+env:
+  VP_RUN_CONCURRENCY_LIMIT: 4
+
 jobs:
   checks:
     name: Checks
@@ -21,17 +26,22 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun run buildc all
+        run: vpr -r build
 
       - name: Verify Generated Virtual Modules
         run: |
           if ! git diff --exit-code -- packages/wxt/src/internal-utils/virtual-modules.ts; then
-            echo "::error file=packages/wxt/src/internal-utils/virtual-modules.ts::virtual-modules.ts is out of date. Run 'bun run build' in packages/wxt (or from the root: 'bun run buildc all') and commit the updated file."
+            echo "::error file=packages/wxt/src/internal-utils/virtual-modules.ts::virtual-modules.ts is out of date. Run 'vp run build' in packages/wxt (or from the root: 'vpr -r build') and commit the updated file."
             exit 1
           fi
 
+      # `docs/api/reference/` is gitignored. `vp check` typechecks
+      # `docs/.vitepress/config.ts` which imports `typedoc-sidebar.json` from there.
+      - name: Generate Docs
+        run: vpr docs:gen
+
       - name: Basic Checks
-        run: bun run check
+        run: vpr check
 
   builds:
     name: Builds
@@ -44,7 +54,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build All Packages
-        run: bun run buildc all
+        run: vpr -r build
 
   build-demo:
     name: Build Demo
@@ -57,11 +67,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: bun run build:all
+        run: vpr build:all
         working-directory: packages/wxt-demo
 
       - name: ZIP
-        run: bun run wxt zip
+        run: vp exec wxt zip
         working-directory: packages/wxt-demo
 
   linux-tests-shard:
@@ -78,15 +88,10 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
-        with:
-          version: 10
-
-      # Every package is sharded the same way; `--passWithNoTests` covers
-      # packages with fewer test files than shards.
+      # pnpm comes from setup-vp's managed package managers (needed for
+      # packages/wxt package-manager unit tests).
       - name: Run Tests
-        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests --reporter=default --reporter=hanging-process
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests
 
   # Required status check: passes only if every shard passed.
   linux-tests:
@@ -106,19 +111,37 @@ jobs:
       matrix:
         shard: [1/3, 2/3, 3/3]
     steps:
+      # Before checkout: disable Defender real-time scanning (ephemeral VM).
+      # This cuts Windows Setup/checkout time.
+      - name: Disable Defender real-time monitoring
+        shell: powershell
+        run: Set-MpPreference -DisableRealtimeMonitoring $true
+
+      # This avoids NTFS line-ending rewrites during checkout.
+      - name: Disable git autocrlf
+        shell: bash
+        run: git config --global core.autocrlf false
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          # Cone mode always keeps root files (package.json, bun.lock, …).
+          # Skip docs/templates/.vscode — not needed for Windows tests.
+          sparse-checkout: |
+            packages
+            scripts
+            patches
+            .github
+          sparse-checkout-cone-mode: true
 
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
-        with:
-          version: 10
-
+      # pnpm comes from setup-vp's managed package managers (needed for
+      # packages/wxt package-manager unit tests).
       - name: Run Tests
-        run: bun run --workspaces test run --shard=${{ matrix.shard }} --passWithNoTests
+        run: vp test --shard=${{ matrix.shard }} --passWithNoTests
 
   # Required status check: passes only if every shard passed.
   windows-tests:
@@ -152,7 +175,7 @@ jobs:
           postinstall: 'false'
 
       - name: Pack WXT package
-        run: bun pm pack
+        run: vp pm pack
         working-directory: packages/wxt
 
       - name: Install Dependencies

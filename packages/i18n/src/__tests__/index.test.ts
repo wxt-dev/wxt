@@ -1,10 +1,10 @@
 import { browser } from '@wxt-dev/browser';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vite-plus/test';
 
 import { createI18n } from '../index';
 
 vi.mock('@wxt-dev/browser', async () => {
-  const { vi } = await import('vitest');
+  const { vi } = await import('vite-plus/test');
   return {
     browser: {
       i18n: {
@@ -32,8 +32,8 @@ describe('createI18n', () => {
     const actual = i18n.t(input);
 
     expect(actual).toBe(expectedValue);
-    expect(getMessageMock).toBeCalledTimes(1);
-    expect(getMessageMock).toBeCalledWith(expectedKey);
+    expect(getMessageMock).toHaveBeenCalledTimes(1);
+    expect(getMessageMock).toHaveBeenCalledWith(expectedKey);
   });
 
   it.each([
@@ -59,15 +59,15 @@ describe('createI18n', () => {
       const actual = i18n.t(key, count);
 
       expect(actual).toBe(expected);
-      expect(getMessageMock).toBeCalledTimes(1);
-      expect(getMessageMock).toBeCalledWith(key, [String(count)]);
+      expect(getMessageMock).toHaveBeenCalledTimes(1);
+      expect(getMessageMock).toHaveBeenCalledWith(key, [String(count)]);
     },
   );
 
   it('should allow overriding the plural substitutions', () => {
     const i18n = createI18n();
     i18n.t('key', 3, ['custom']);
-    expect(getMessageMock).toBeCalledWith('key', ['custom']);
+    expect(getMessageMock).toHaveBeenCalledWith('key', ['custom']);
   });
 
   it('should replace named substitutions', () => {
@@ -80,8 +80,8 @@ describe('createI18n', () => {
     });
 
     expect(actual).toBe('My name is Ada, and I use WXT.');
-    expect(getMessageMock).toBeCalledTimes(1);
-    expect(getMessageMock).toBeCalledWith('key');
+    expect(getMessageMock).toHaveBeenCalledTimes(1);
+    expect(getMessageMock).toHaveBeenCalledWith('key');
   });
 
   it('should leave unknown named substitutions unchanged', () => {
@@ -100,7 +100,7 @@ describe('createI18n', () => {
     const actual = i18n.t('key', ['Ada'], { team: 'WXT' });
 
     expect(actual).toBe('Hello Ada from WXT.');
-    expect(getMessageMock).toBeCalledWith('key', ['Ada']);
+    expect(getMessageMock).toHaveBeenCalledWith('key', ['Ada']);
   });
 
   it('should replace named substitutions after pluralization', () => {
@@ -110,6 +110,6 @@ describe('createI18n', () => {
     const actual = i18n.t('key', 2, { item: 'files' });
 
     expect(actual).toBe('Multiple files');
-    expect(getMessageMock).toBeCalledWith('key', ['2']);
+    expect(getMessageMock).toHaveBeenCalledWith('key', ['2']);
   });
 });

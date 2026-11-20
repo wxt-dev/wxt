@@ -139,6 +139,7 @@ export function wxtPluginLoader(
         }
 
         document.head?.prepend(script);
+        // oxlint-disable-next-line typescript/no-base-to-string
         return document.toString();
       },
     },

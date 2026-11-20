@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 
 import background from '../background';
 
@@ -18,7 +18,7 @@ describe('Background Entrypoint', () => {
 
     background.main();
 
-    expect(logMock).toBeCalledWith(id);
+    expect(logMock).toHaveBeenCalledWith(id);
   });
 
   it('should set the start time in storage', async () => {

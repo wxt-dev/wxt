@@ -222,7 +222,9 @@ function createBackgroundAnalytics(
       if (config?.debug) console.debug('[@wxt-dev/analytics] exception', event);
       if (await enabled.getValue()) {
         await Promise.allSettled(
-          providers.map((provider) => provider.exception?.(event)),
+          providers.map((provider) =>
+            Promise.resolve(provider.exception?.(event)),
+          ),
         );
       } else if (config?.debug) {
         console.debug(
@@ -378,6 +380,7 @@ function serializeError(error: unknown): {
     const { name, message, stack } = error as Record<string, unknown>;
     return {
       type: typeof name === 'string' ? name : 'Error',
+      // oxlint-disable-next-line typescript/no-base-to-string
       message: typeof message === 'string' ? message : String(error),
       stack: typeof stack === 'string' ? stack : undefined,
     };

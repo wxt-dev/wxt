@@ -194,9 +194,9 @@ export const moderok = defineAnalyticsProvider<ModerokProviderOptions>(
     if (trackLifecycle) {
       browser.runtime.onInstalled.addListener((details) => {
         if (details.reason === 'install') {
-          analytics.track('__install');
+          void analytics.track('__install');
         } else if (details.reason === 'update') {
-          analytics.track('__update', {
+          void analytics.track('__update', {
             previousVersion: (details as { previousVersion?: string })
               .previousVersion,
           });
@@ -208,7 +208,7 @@ export const moderok = defineAnalyticsProvider<ModerokProviderOptions>(
         const stored = await browser.storage.local.get(PING_STORAGE_KEY);
         if (stored[PING_STORAGE_KEY] === today) return;
         await browser.storage.local.set({ [PING_STORAGE_KEY]: today });
-        analytics.track('__daily_ping');
+        void analytics.track('__daily_ping');
       })();
     }
 
@@ -224,7 +224,7 @@ export const moderok = defineAnalyticsProvider<ModerokProviderOptions>(
         options.uninstallUrl,
       );
       if (url.length <= 1023) {
-        browser.runtime.setUninstallURL(url);
+        void browser.runtime.setUninstallURL(url);
       }
     }
 

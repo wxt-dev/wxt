@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vite-plus/test';
 
 import type { InlineConfig, UnlistedScriptEntrypoint } from '../../src';
 import { normalizePath } from '../../src';
@@ -39,7 +39,7 @@ describe('Module Helpers', () => {
         example: options,
       });
 
-      expect(reportOptions).toBeCalledWith(options);
+      expect(reportOptions).toHaveBeenCalledWith(options);
     });
   });
 

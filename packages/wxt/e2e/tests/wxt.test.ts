@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import { registerWxt, wxt } from '../../src/internal/wxt';
 import { TestProject, occupyPort } from '../utils';
@@ -19,7 +19,7 @@ describe('WXT Global', () => {
         const secondPort = wxt.config.dev.server?.port;
         expect(secondPort).toBe(firstPort);
       } finally {
-        cleanup();
+        void cleanup();
       }
     });
   });

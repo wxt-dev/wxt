@@ -595,7 +595,7 @@ export interface WxtDevServer
   transformHtml(
     url: string,
     html: string,
-    originalUrl?: string | undefined,
+    originalUrl?: string,
   ): Promise<string>;
   /** Tell the extension to reload by running `browser.runtime.reload`. */
   reloadExtension: () => void;
@@ -1012,7 +1012,7 @@ export interface IsolatedWorldContentScriptDefinition extends IsolatedWorldConte
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  main(ctx: ContentScriptContext): any | Promise<any>;
+  main(ctx: ContentScriptContext): any;
 }
 
 export interface MainWorldContentScriptDefinition extends MainWorldContentScriptEntrypointOptions {
@@ -1023,7 +1023,7 @@ export interface MainWorldContentScriptDefinition extends MainWorldContentScript
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  main(): any | Promise<any>;
+  main(): any;
 }
 
 export type ContentScriptDefinition =
@@ -1046,7 +1046,7 @@ export interface UnlistedScriptDefinition extends BaseScriptEntrypointOptions {
    * values returned from this function will be returned in the `executeScript`
    * result as well. Otherwise returning a value does nothing.
    */
-  main(): any | Promise<any>;
+  main(): any;
 }
 
 /**
@@ -1287,7 +1287,7 @@ export interface WxtBuilderServer {
   transformHtml(
     url: string,
     html: string,
-    originalUrl?: string | undefined,
+    originalUrl?: string,
   ): Promise<string>;
   /** The web socket server used to communicate with the extension. */
   ws: {

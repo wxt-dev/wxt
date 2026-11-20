@@ -65,21 +65,33 @@ bun install
 
 ## Development
 
-Here are some helpful commands:
+This repo uses [Vite+](https://viteplus.dev/) (`vp`) for lint, format, test, library builds (`vp pack`), and task running. Bun remains the package manager (`packageManager` in root `package.json`).
+
+Helpful commands:
 
 ```sh
-# Build WXT package and workspace dependencies
-bun run --filter wxt build
+# Build all workspace packages (uses Vite Task cache)
+vpr -r build
 ```
 
 ```sh
 # Build workspace dependencies, then start the demo extension in dev mode
-bun run --filter wxt-demo dev
+vp run --filter wxt-demo dev
 ```
 
 ```sh
-# Run unit and E2E tests
-bun run test
+# Run unit and E2E tests (Vite+ built-in Vitest projects)
+vp test
+```
+
+```sh
+# Full monorepo checks (root script + every package `check`, with Vite Task cache)
+vpr check
+```
+
+```sh
+# Root-only: cspell-order, rumdl/cspell/tsc, and Vite+ fmt/lint/typecheck
+bun run check
 ```
 
 ```sh
@@ -87,24 +99,23 @@ bun run test
 bun run docs:dev
 ```
 
-> Above, we used bun's `--filter` flag to choose which package to run a command in, but there are other ways:
+> `vp test` / `vp check` / `vp pack` are built-ins. `vp run <script>` / `vpr` run package.json scripts or `run.tasks` from `vite.config.ts`.
+>
+> Raise task parallelism locally with `VP_RUN_CONCURRENCY_LIMIT` (default 4): <https://viteplus.dev/guide/run#concurrency>
+>
+> Other ways to target one package:
 >
 > ```sh
-> bun run -F @wxt-dev/i18n build
+> vp run --filter @wxt-dev/i18n build
 > # or
-> bun run --cwd packages/i18n build
-> # or
-> cd packages/i18n
-> bun run build
+> cd packages/i18n && vp run build
 > ```
->
-> Pick your poison!
 
 ## Profiling
 
 ```sh
 # Build the latest version
-bun run --filter wxt build
+vp run --filter wxt build
 
 # CD to the demo directory
 cd packages/wxt-demo
@@ -145,10 +156,10 @@ WXT has unit and E2E tests. When making a change or adding a feature, make sure 
 To run tests for a specific file, add the filename at the end of the test command:
 
 ```sh
-bun run --filter wxt test manifest-contents
+vp test packages/wxt -- manifest-contents
 ```
 
-All test (unit and E2E) for all packages are ran together via [Vitest workspaces](https://vitest.dev/guide/#workspaces-support).
+All tests (unit and E2E) for all packages are run together via [Vitest projects](https://vitest.dev/guide/projects) configured in the root `vite.config.ts`. Run them with `vp test` from the workspace root.
 
 If you want to manually test a change, you can modify the demo project for your test, but please don't leave those changes committed once you open a PR.
 

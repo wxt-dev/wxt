@@ -5,37 +5,36 @@
   ],
   "type": "module",
   "scripts": {
-    "check": "bun run cspell-order:check && check && bun run --sequential --workspaces check",
+    "check": "bun run cspell-order:check && check && vpr -r check && vp check",
     "cspell-order:check": "bun run scripts/check-cspell-order.ts",
     "cspell-order:format": "bun run scripts/format-cspell-order.ts",
-    "test": "bun run --workspaces test run",
-    "prepare": "simple-git-hooks",
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
     "docs:gen": "typedoc --options docs/typedoc.json",
     "docs:dev": "bun run --silent docs:gen && bun run --bun vitepress dev docs",
     "docs:build": "bun run --silent docs:gen && bun run --bun vitepress build docs",
-    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs"
+    "docs:preview": "bun run --silent docs:gen && bun run --bun vitepress preview docs",
+    "postinstall": "node scripts/postinstall.mjs",
+    "prepare": "vp config"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "@aklinker1/check": "catalog:",
     "@types/bun": "catalog:",
     "@types/markdown-it-footnote": "^3.0.4",
     "cspell": "^10.4.0",
     "feed": "^6.0.0",
     "markdown-it-footnote": "^4.0.0",
-    "nano-staged": "^1.0.2",
-    "oxfmt": "^0.78.0",
     "p-map": "^7.0.4",
     "puppeteer-core": "^25.17.0",
     "rumdl": "^0.3.4",
-    "simple-git-hooks": "^2.14.0",
-    "tsdown": "catalog:",
     "typedoc": "^0.28.20",
     "typedoc-plugin-frontmatter": "^1.3.2",
     "typedoc-plugin-markdown": "^4.13.1",
     "typedoc-vitepress-theme": "^1.1.4",
     "typescript": "catalog:",
     "verkit": "^0.5.0",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "vitepress": "^1.6.4",
     "vitepress-knowledge": "^0.4.1",
     "vitepress-mermaid-renderer": "^1.2.2",
@@ -44,36 +43,30 @@
     "vue": "^3.5.34",
     "wxt": "workspace:*"
   },
-  "simple-git-hooks": {
-    "pre-commit": "./node_modules/.bin/nano-staged"
-  },
-  "nano-staged": {
-    "*": "oxfmt --no-error-on-unmatched-pattern"
+  "overrides": {
+    "vite": "catalog:"
   },
   "engines": {
     "bun": ">=1.4.4"
   },
+  "packageManager": "bun@1.4.4",
   "catalog": {
-    "@aklinker1/buildc": "^1.1.7",
     "@aklinker1/check": "^3.0.2",
     "@types/bun": "^1.4.4",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@webext-core/fake-browser": "^1.3.4",
-    "oxlint": "^1.63.0",
     "publint": "^0.3.18",
-    "tsdown": "^0.21.0",
     "typescript": "^6.0.3",
     "unocss": "^66.6.8",
-    "vite": "^8.2.0",
-    "vitest": "^4.1.10",
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
+    "vite-plus": "1.7.0",
     "vitest-mock-extended": "^5.1.1",
     "vitest-plugin-random-seed": "^2.0.2",
     "web-ext": "^10.5.0"
   },
   "patchedDependencies": {
-    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch",
-    "@aklinker1/buildc@1.1.7": "patches/@aklinker1%2Fbuildc@1.1.7.patch"
+    "markdown-it-footnote@4.0.0": "patches/markdown-it-footnote.patch"
   }
 }

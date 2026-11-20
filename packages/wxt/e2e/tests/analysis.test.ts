@@ -1,5 +1,5 @@
 import open from 'tiny-open';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vite-plus/test';
 
 import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
 import { TestProject } from '../utils';
@@ -118,7 +118,7 @@ describe('Analysis', () => {
       },
     });
 
-    expect(openMock).toBeCalledTimes(1);
-    expect(openMock).toBeCalledWith(project.resolvePath('stats.html'));
+    expect(openMock).toHaveBeenCalledTimes(1);
+    expect(openMock).toHaveBeenCalledWith(project.resolvePath('stats.html'));
   });
 });

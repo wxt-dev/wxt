@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-import { describe } from 'vitest';
+import { describe } from 'vite-plus/test';
 
 import { isCI } from '../env-utils';
 

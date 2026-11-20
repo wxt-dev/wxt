@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 
 import { glob } from 'tinyglobby';
-import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vite-plus/test';
 
 import { unnormalizePath } from '../../internal-utils/path-utils';
 import {
@@ -252,7 +252,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
+      expect(importEntrypointsMock).toHaveBeenCalledWith([expected.inputPath]);
     },
   );
 
@@ -290,7 +290,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
+      expect(importEntrypointsMock).toHaveBeenCalledWith([expected.inputPath]);
     },
   );
 
@@ -453,7 +453,7 @@ describe('findEntrypoints', () => {
 
       expect(entrypoints).toHaveLength(1);
       expect(entrypoints[0]).toEqual({ ...expected, options });
-      expect(importEntrypointsMock).toBeCalledWith([expected.inputPath]);
+      expect(importEntrypointsMock).toHaveBeenCalledWith([expected.inputPath]);
     },
   );
 
@@ -732,7 +732,7 @@ describe('findEntrypoints', () => {
       'other/index.ts',
     ]);
 
-    await expect(() => findEntrypoints()).rejects.toThrowError(
+    await expect(() => findEntrypoints()).rejects.toThrow(
       [
         'Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.',
         '',
@@ -749,7 +749,7 @@ describe('findEntrypoints', () => {
   it('throw an error if there are no entrypoints', async () => {
     globMock.mockResolvedValueOnce([]);
 
-    await expect(() => findEntrypoints()).rejects.toThrowError(
+    await expect(() => findEntrypoints()).rejects.toThrow(
       `No entrypoints found in ${unnormalizePath(config.entrypointsDir)}`,
     );
   });

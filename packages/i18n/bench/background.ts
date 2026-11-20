@@ -11,7 +11,7 @@ setTimeout(() => {
   chrome.runtime.getPlatformInfo();
 }, 20e3);
 
-(async () => {
+void (async () => {
   const results: Record<string, any> = {};
   const runBench = async (bench: Bench) => {
     await reportProgress(`[start] ${bench.name}`);

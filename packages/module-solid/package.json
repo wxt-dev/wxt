@@ -40,21 +40,19 @@
   },
   "scripts": {
     "dev": "wxt",
-    "check": "bun run build && check",
-    "build": "buildc -- tsdown",
-    "postinstall": "buildc --deps-only -- wxt prepare",
-    "test": "echo 'noop'",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "check": "vp run build && check",
+    "prepack": "vp pack"
   },
   "dependencies": {
     "vite-plugin-solid": "^2.11.10"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "publint": "catalog:",
     "solid-js": "^1.9.11",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

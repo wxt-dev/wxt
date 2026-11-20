@@ -2,12 +2,12 @@ import { mkdir } from 'node:fs/promises';
 import { tmpdir, homedir } from 'node:os';
 import { resolve, join } from 'node:path';
 
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeAll } from 'vite-plus/test';
 
 import { ResolvedRunOptions, resolveRunOptions } from '../options';
 
 vi.mock('node:os', async () => {
-  const { vi } = await import('vitest');
+  const { vi } = await import('vite-plus/test');
   const os: any = await vi.importActual('node:os');
   const { join } = await import('node:path');
   return {
@@ -115,7 +115,7 @@ describe('Options', () => {
         chromiumArgs: ['--user-data-dir=some/custom/path'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Chromium --user-data-dir argument ignored',
@@ -130,7 +130,7 @@ describe('Options', () => {
         chromiumArgs: ['--remote-debugging-port=9222'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Chromium --remote-debugging-port argument ignored',
@@ -183,7 +183,7 @@ describe('Options', () => {
         firefoxArgs: ['--profile=some/custom/path'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Custom Firefox --profile argument ignored'),
       );
@@ -196,7 +196,7 @@ describe('Options', () => {
         firefoxArgs: ['--remote-debugging-port=9222'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Firefox --remote-debugging-port argument ignored',

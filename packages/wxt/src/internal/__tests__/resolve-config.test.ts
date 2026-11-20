@@ -1,5 +1,5 @@
 import { loadConfig } from 'c12';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { mock } from 'vitest-mock-extended';
 
 import { pathExists } from '../../internal-utils/fs-utils';
