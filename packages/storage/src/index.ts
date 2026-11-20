@@ -437,7 +437,8 @@ function createStorage(): WxtStorage {
         ]);
 
         // Used in setValue to also set the version when needed
-        needsVersionSet = value == null && meta?.v == null && !!targetVersion;
+        needsVersionSet =
+          value == null && meta?.v !== targetVersion && !!targetVersion;
 
         if (value == null) return;
 
