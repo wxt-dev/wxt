@@ -28,11 +28,11 @@ jobs:
 
       - name: Generate Latest Code
         working-directory: packages/browser
-        run: bun run gen
+        run: vpr gen
 
       - name: Run Checks
         working-directory: packages/browser
-        run: bun run check
+        run: vp check
 
       - name: Commit Changes
         id: commit
@@ -47,6 +47,6 @@ jobs:
         working-directory: packages/browser
         run: |
           cp ../../LICENSE .
-          bun pm pack
+          vp pm pack
           sudo npm i -g npm@latest
           npm publish *.tgz

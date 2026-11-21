@@ -176,7 +176,7 @@ export { type GeneratedI18nStructure }
       wxt.hooks.hookOnce('build:done', () => {
         const watcher = watch(localesDir);
         watcher.on('change', (path) => {
-          updateLocalizations(path).catch(wxt.logger.error);
+          updateLocalizations(path).catch((err) => wxt.logger.error(err));
         });
       });
     }

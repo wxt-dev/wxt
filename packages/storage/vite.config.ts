@@ -1,7 +1,8 @@
-import { defineProject } from 'vitest/config';
+import { defineConfig } from 'vite-plus';
 
-export default defineProject({
+export default defineConfig({
   test: {
+    isolate: false,
     mockReset: true,
     restoreMocks: true,
     setupFiles: ['vitest.setup.ts'],

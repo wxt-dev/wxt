@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 
 import { BackgroundDefinition } from '../../types';
 import { defineBackground } from '../define-background';

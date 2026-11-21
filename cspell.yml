@@ -27,15 +27,14 @@ words:
   - bidi
   - blocklists
   - bowser
-  - buildc
   - bunx
-  - cachable
   - cacjs
   - CFFFE
   - CFFFF
   - charmbracelet
   - chromedriver
   - Cira
+  - codegen
   - comctx
   - confbox
   - configfile
@@ -137,6 +136,7 @@ words:
   - USSS
   - verkit
   - vitepress
+  - voidzero
   - webext
   - webextension
   - webextrc

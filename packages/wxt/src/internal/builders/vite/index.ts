@@ -31,6 +31,12 @@ interface RollupAssetNameInfo {
   names?: string[];
 }
 
+// `charset` is part of esbuild's TransformOptions, but Vite 8 no longer ships
+// esbuild types, so it's missing from Vite's `ESBuildOptions`.
+type ESBuildOptionsWithCharset = vite.ESBuildOptions & {
+  charset?: 'ascii' | 'utf8';
+};
+
 export class ViteBuilder implements WxtBuilder {
   name = 'Vite';
   version: string;
@@ -192,7 +198,9 @@ export class ViteBuilder implements WxtBuilder {
       // TODO: Add charset ascii when supported by oxc
     } else {
       config.esbuild ??= {};
-      if (config.esbuild) config.esbuild.charset = 'ascii';
+      if (config.esbuild) {
+        (config.esbuild as ESBuildOptionsWithCharset).charset = 'ascii';
+      }
     }
 
     const server = this.getWxtDevServer?.();

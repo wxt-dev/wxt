@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vite-plus/test';
 
 import { pathExists } from '../../../internal-utils/fs-utils';
 import { exec } from '../../../internal-utils/testing/exec';

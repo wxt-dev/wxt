@@ -31,7 +31,9 @@ export async function printFileList(
         totalSize += stats.size;
         size = getBytesDisplay(stats.size);
       } catch (ex) {
-        wxt.logger.warn(`Could not get stats of '${file}' error: ${ex}`);
+        wxt.logger.warn(
+          `Could not get stats of '${file}' error: ${String(ex)}`,
+        );
       }
 
       return [

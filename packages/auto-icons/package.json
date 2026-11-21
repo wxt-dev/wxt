@@ -38,22 +38,21 @@
     }
   },
   "scripts": {
-    "build": "buildc -- tsdown",
-    "check": "bun run build && check",
-    "test": "buildc --deps-only -- vitest",
-    "prepack": "bun run build"
+    "build": "vp pack",
+    "check": "vp run build && check",
+    "test": "vp test",
+    "test:coverage": "vp test --coverage",
+    "prepack": "vp pack"
   },
   "dependencies": {
     "defu": "^6.1.4",
     "sharp": "^0.35.3"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
-    "oxlint": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "wxt": "workspace:*"
   },
   "peerDependencies": {

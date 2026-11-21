@@ -31,6 +31,13 @@ import { InlineConfig } from '../types';
  * });
  * ```
  *
+ * When Vitest runs this package as a project from a monorepo root, pass `root`
+ * so WXT resolves this package's config instead of `process.cwd()`:
+ *
+ * ```ts
+ * plugins: [WxtVitest({ root: import.meta.dirname })],
+ * ```
+ *
  * @param inlineConfig Customize WXT's config for testing. Any config specified
  *   here overrides the config from your `wxt.config.ts` file.
  */

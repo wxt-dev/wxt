@@ -156,7 +156,7 @@ async function createServerInternal(): Promise<WxtDevServer> {
           ignoreInitial: true,
         });
         watcher.on('all', () => {
-          watcher.close();
+          void watcher.close();
           wxt.logger.info('Syntax error resolved, rebuilding...');
           resolve();
         });

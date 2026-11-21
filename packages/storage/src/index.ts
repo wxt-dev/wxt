@@ -96,7 +96,7 @@ function createStorage(): WxtStorage {
   const setMeta = async (
     driver: WxtStorageDriver,
     driverKey: string,
-    properties: any | undefined,
+    properties?: any,
   ) => {
     const metaKey = getMetaKey(driverKey);
     const existingFields = getMetaValue(await driver.getItem(metaKey));
@@ -522,7 +522,7 @@ function createStorage(): WxtStorage {
         });
 
       // Initialize the value once migrations have finished
-      migrationsDone.then(getOrInitValue);
+      void migrationsDone.then(getOrInitValue);
 
       return {
         key,
@@ -678,7 +678,7 @@ function createDriver(storageArea: StorageArea): WxtStorageDriver {
       const listener = (changes: StorageAreaChanges) => {
         const change = changes[key] as {
           newValue?: any;
-          oldValue?: any | null;
+          oldValue?: any;
         } | null;
 
         if (change == null || dequal(change.newValue, change.oldValue)) return;

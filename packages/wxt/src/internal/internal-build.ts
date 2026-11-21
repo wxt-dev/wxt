@@ -71,7 +71,7 @@ export async function internalBuild(): Promise<BuildOutput> {
 
   // Post-build
   await printBuildSummary(
-    wxt.logger.success,
+    (...args) => wxt.logger.success(...args),
     `Built extension in ${formatDuration(Date.now() - startTime)}`,
     output,
   );
@@ -129,7 +129,9 @@ function printValidationResults({
   errors,
   warningCount,
 }: ValidationResults) {
-  (errorCount > 0 ? wxt.logger.error : wxt.logger.warn)(
+  (errorCount > 0
+    ? wxt.logger.error.bind(wxt.logger)
+    : wxt.logger.warn.bind(wxt.logger))(
     `Entrypoint validation failed: ${errorCount} error${
       errorCount === 1 ? '' : 's'
     }, ${warningCount} warning${warningCount === 1 ? '' : 's'}`,

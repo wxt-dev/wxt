@@ -1,3 +1,7 @@
 {
-  "recommendations": ["oxc.oxc-vscode", "github.vscode-github-actions"]
+  "recommendations": [
+    "oxc.oxc-vscode",
+    "github.vscode-github-actions",
+    "VoidZero.vite-plus-extension-pack"
+  ]
 }

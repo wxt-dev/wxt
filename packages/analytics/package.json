@@ -48,13 +48,11 @@
     }
   },
   "scripts": {
-    "dev": "buildc --deps-only -- wxt",
-    "dev:build": "buildc --deps-only -- wxt build",
-    "check": "bun run build && check",
-    "build": "buildc -- tsdown",
-    "prepack": "bun run build",
-    "postinstall": "buildc --deps-only -- wxt prepare",
-    "test": "echo 'noop'"
+    "dev": "wxt",
+    "dev:build": "vp exec wxt build",
+    "build": "vp pack",
+    "check": "vp run build && check",
+    "prepack": "vp pack"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
@@ -62,10 +60,10 @@
     "bowser": "^2.14.1"
   },
   "devDependencies": {
-    "@aklinker1/buildc": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "web-ext": "catalog:",
     "wxt": "workspace:*"
   },

@@ -1,5 +1,12 @@
 /** @vitest-environment happy-dom */
-import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  beforeEach,
+  vi,
+  expect,
+  afterEach,
+} from 'vite-plus/test';
 
 import { ContentScriptContext } from '../../content-script-context';
 import { createIframeUi } from '../iframe';
@@ -541,9 +548,9 @@ describe('Content Script UIs', () => {
           ui.autoMount();
           await runMicrotasks();
 
-          await expect
-            .poll(() => document.querySelector(uiSelector))
-            .not.toBeNull();
+          await vi.waitFor(() => {
+            expect(document.querySelector(uiSelector)).not.toBeNull();
+          });
         });
 
         it('should mount when an anchor is dynamically added and unmount when an anchor is removed', async () => {
@@ -561,15 +568,15 @@ describe('Content Script UIs', () => {
           await runMicrotasks();
 
           for (let index = 0; index < 3; index++) {
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).toBeNull();
+            });
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).not.toBeNull();
+            });
 
             dynamicEl.remove();
             await runMicrotasks();
@@ -615,15 +622,15 @@ describe('Content Script UIs', () => {
             let dynamicEl;
             ui.autoMount({ once: true });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).toBeNull();
+            });
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).not.toBeNull();
+            });
 
             dynamicEl.remove();
             await runMicrotasks();
@@ -635,9 +642,9 @@ describe('Content Script UIs', () => {
             await runMicrotasks();
 
             // expect stop automount
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).toBeNull();
+            });
             expect(onMount).toHaveBeenCalledTimes(1);
             expect(onRemove).toHaveBeenCalledTimes(1);
           });
@@ -652,7 +659,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            expect(() => ui.autoMount()).toThrowError(
+            expect(() => ui.autoMount()).toThrow(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
           });
@@ -665,7 +672,7 @@ describe('Content Script UIs', () => {
               page: name === 'iframe' ? '/page.html' : undefined,
               name: 'test-component',
             });
-            expect(() => ui.autoMount()).toThrowError(
+            expect(() => ui.autoMount()).toThrow(
               'autoMount and Element anchor option cannot be combined. Avoid passing `Element` directly or `() => Element` to the anchor.',
             );
           });
@@ -688,9 +695,9 @@ describe('Content Script UIs', () => {
 
             dynamicEl = appendTestElement({ id: DYNAMIC_CHILD_ID });
             await runMicrotasks();
-            await expect
-              .poll(() => document.querySelector(uiSelector))
-              .not.toBeNull();
+            await vi.waitFor(() => {
+              expect(document.querySelector(uiSelector)).not.toBeNull();
+            });
 
             dynamicEl.remove();
             await runMicrotasks();
@@ -736,12 +743,12 @@ describe('Content Script UIs', () => {
             ui.autoMount({ onStop });
 
             ui.remove();
-            expect(onStop).toBeCalledTimes(1);
+            expect(onStop).toHaveBeenCalledTimes(1);
 
             ui.autoMount({ onStop });
 
             ui.remove();
-            expect(onStop).toBeCalledTimes(2);
+            expect(onStop).toHaveBeenCalledTimes(2);
           });
         });
       },

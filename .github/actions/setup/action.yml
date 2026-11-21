@@ -1,66 +1,51 @@
 name: Basic Setup
-description: Install Bun and dependencies
+description: Install Vite+ toolchain and dependencies
 
 inputs:
   install:
     default: 'true'
-    description: Whether or not to run 'bun install'
+    description: Whether or not to install dependencies
   postinstall:
     default: 'true'
-    description: Whether or not to run workspace `postinstall` scripts, which generate the `.wxt/` directories some packages need to build, type-check, and test
+    description: Whether or not to run workspace `postinstall` tasks (build packages and `wxt prepare`)
 
 runs:
   using: composite
 
   steps:
-    - name: 🛠️ Setup Bun
-      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-      with:
-        bun-version-file: '.tool-versions'
-
-    - name: 💾 Put Bun cache on workspace drive (Windows)
+    - name: 💾 Put Bun/Vite+ caches on workspace drive (Windows)
       if: ${{ inputs.install == 'true' && runner.os == 'Windows' }}
       shell: bash
-      run: echo "BUN_INSTALL_CACHE_DIR=$RUNNER_TEMP\\bun-cache" >> $GITHUB_ENV
+      run: |
+        echo "BUN_INSTALL_CACHE_DIR=$RUNNER_TEMP/bun-cache" >> $GITHUB_ENV
+        echo "VP_HOME=$RUNNER_TEMP/vite-plus" >> $GITHUB_ENV
 
-    - name: 🔍 Get Bun cache path
-      if: ${{ inputs.install == 'true' }}
-      id: bun-cache
-      shell: bash
-      run: echo "path=$(bun pm cache)" >> $GITHUB_OUTPUT
-
-    # Restoring this cache on Windows takes ~80s (vs. a faster fresh `bun ci`), so skip it there.
-    - name: 📦 Cache Bun store
-      if: ${{ inputs.install == 'true' && runner.os != 'Windows' }}
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    # setup-vp installs Vite+, Node, and the package manager (bun), and can
+    # cache them. See https://viteplus.dev/guide/ci#github-actions
+    - uses: voidzero-dev/setup-vp@v1.22.0
       with:
-        path: ${{ steps.bun-cache.outputs.path }}
-        key: ${{ runner.os }}-bun-store-${{ hashFiles('bun.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-bun-store-
-
-    # buildc only reuses outputs whose source hash matches, so restoring an
-    # older cache from the same lockfile is safe and avoids rebuilding packages
-    # a PR didn't touch. The key includes the job ID because jobs build
-    # different subsets of packages, and only the first job to finish gets to
-    # save a given key.
-    - name: 📦 Cache buildc
-      if: ${{ inputs.install == 'true' }}
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: .cache/packages
-        key: ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ hashFiles('packages/*/package.json', 'packages/*/src/**') }}
-        restore-keys: |
-          ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-
+        version: '1.7.0'
+        node-version-file: .tool-versions
+        cache: true
+        cache-toolchain: true
+        run-install: false
 
     # Lifecycle scripts are skipped here and the workspace `postinstall`
     # scripts are run below, in parallel, only when a job needs them.
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bun ci --ignore-scripts
+      run: vp install --frozen-lockfile --ignore-scripts
 
-    - name: 🔧 Run Workspace Postinstall Scripts
+    - name: 🗄️ Vite Task cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: node_modules/.vite/task-cache
+        key: vite-task-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          vite-task-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: 🔧 Run Workspace Postinstall
       if: ${{ inputs.install == 'true' && inputs.postinstall == 'true' }}
       shell: bash
-      run: bun run --parallel --workspaces --if-present postinstall
+      run: node scripts/postinstall.mjs
