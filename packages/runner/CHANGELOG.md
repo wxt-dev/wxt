@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.4
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/runner-v0.1.3...runner-v0.1.4)
+
+### 🏡 Chore
+
+- **deps**: Bump obug from 2.1.1 to 3.0.0 ([#2713](https://github.com/wxt-dev/wxt/pull/2713))
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ❤️ Contributors
+
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@aklinker1](https://github.com/aklinker1)
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+
 ## v0.1.3
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/runner-v0.1.2...runner-v0.1.3)
@@ -39,7 +56,6 @@
 - [@okineadev](https://github.com/okineadev)
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
-
 
 ## v0.1.2
 
