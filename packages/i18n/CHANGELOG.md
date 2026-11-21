@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.2.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.8...i18n-v0.2.9)
+
+### 🏡 Chore
+
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ❤️ Contributors
+
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.2.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/i18n-v0.2.7...i18n-v0.2.8)
@@ -11,7 +25,6 @@
 ### ❤️ Contributors
 
 - Thribhuvan <thribhuvan003@gmail.com>
-
 
 ## v0.2.7
 
