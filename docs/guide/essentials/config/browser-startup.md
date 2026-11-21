@@ -115,9 +115,7 @@ export default defineWebExtConfig({
 
 :::tip
 
-When running the dev server with `disabled: true`, restarting it will disconnect the HMR WebSocket, requiring an extension reload to resume HMR.
-
-Press **`Alt + R`** (**`Option + R`** on Mac) on any page to quickly reload the extension without opening the extension management page.
+If the HMR WebSocket disconnects, press `Alt + R` (`Option + R` on Mac) to quickly reload the extension and reconnect.
 
 :::
 
