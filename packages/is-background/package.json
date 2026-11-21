@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/is-background",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Check if the current context is the background or not.",
   "keywords": [
     "background",
