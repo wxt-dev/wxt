@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.5.9
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.8...analytics-v0.5.9)
+
+### 🩹 Fixes
+
+- **analytics**: Keep frontend metadata separate from optional arguments ([#2649](https://github.com/wxt-dev/wxt/pull/2649))
+
+### 🏡 Chore
+
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ❤️ Contributors
+
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@creeperkatze](https://github.com/creeperkatze)
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v0.5.8
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/analytics-v0.5.7...analytics-v0.5.8)
@@ -25,7 +45,6 @@
 - [@creeperkatze](https://github.com/creeperkatze)
 - [@aklinker1](https://github.com/aklinker1)
 - [@fkatsuhiro](https://github.com/fkatsuhiro)
-
 
 ## v0.5.7
 
