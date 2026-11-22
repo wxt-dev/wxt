@@ -10,13 +10,14 @@ export default {
   async load() {
     console.info('Generating CLI docs');
 
-    const [wxt, build, zip, prepare, clean, init, submit, submitInit] =
+    const [wxt, build, zip, prepare, clean, docs, init, submit, submitInit] =
       await Promise.all([
         getWxtHelp(''),
         getWxtHelp('build'),
         getWxtHelp('zip'),
         getWxtHelp('prepare'),
         getWxtHelp('clean'),
+        getWxtHelp('docs'),
         getWxtHelp('init'),
         getPublishExtensionHelp(''),
         getPublishExtensionHelp('init'),
@@ -29,6 +30,7 @@ export default {
       zip,
       prepare,
       clean,
+      docs,
       init,
       submit,
       submitInit,
