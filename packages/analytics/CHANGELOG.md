@@ -7,6 +7,7 @@
 ### 🩹 Fixes
 
 - **analytics**: Keep frontend metadata separate from optional arguments ([#2649](https://github.com/wxt-dev/wxt/pull/2649))
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
 
 ### 🏡 Chore
 

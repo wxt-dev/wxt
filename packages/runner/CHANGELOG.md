@@ -4,6 +4,10 @@
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/runner-v0.1.3...runner-v0.1.4)
 
+### 🩹 Fixes
+
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
 ### 🏡 Chore
 
 - **deps**: Bump obug from 2.1.1 to 3.0.0 ([#2713](https://github.com/wxt-dev/wxt/pull/2713))

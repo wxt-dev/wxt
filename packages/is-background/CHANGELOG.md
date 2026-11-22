@@ -4,6 +4,10 @@
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/is-background-v1.0.1...is-background-v1.0.2)
 
+### 🩹 Fixes
+
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
 ### 🏡 Chore
 
 - Fix type check errors ([#2640](https://github.com/wxt-dev/wxt/pull/2640))

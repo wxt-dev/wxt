@@ -7,6 +7,7 @@
 ### 🩹 Fixes
 
 - **auto-icons**: Replace default icon sizes when custom sizes are provided ([#2644](https://github.com/wxt-dev/wxt/pull/2644))
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
 
 ### 📖 Documentation
 

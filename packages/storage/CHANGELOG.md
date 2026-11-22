@@ -8,6 +8,10 @@
 
 - **storage**: Add metadata watchers ([#2630](https://github.com/wxt-dev/wxt/pull/2630))
 
+### 🩹 Fixes
+
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
 ### 🏡 Chore
 
 - **release**: @wxt-dev/storage v1.3.0 ([`6ee6031`](https://github.com/wxt-dev/wxt/commit/6ee6031fd1267813f26ab7094e02416ce0575085))
