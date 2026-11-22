@@ -14,9 +14,6 @@ export default defineConfig({
       },
     ],
   },
-  zip: {
-    downloadPackages: ['sass'],
-  },
   analysis: {
     open: true,
   },
@@ -34,7 +31,6 @@ export default defineConfig({
       'iframe-src',
       'injected',
       'example-tsx',
-      'example-2',
       'iframe',
       'location-change',
       'main-world',

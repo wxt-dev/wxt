@@ -1,5 +1,38 @@
 # Changelog
 
+## v2.0.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/auto-icons-v1.1.2...auto-icons-v2.0.0)
+
+### 🩹 Fixes
+
+- **auto-icons**: Replace default icon sizes when custom sizes are provided ([#2644](https://github.com/wxt-dev/wxt/pull/2644))
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
+### 📖 Documentation
+
+- **auto-icons**: Add more info about `baseIconPath` configuration for `wxt.config.ts` of `auto-icons` package ([#2285](https://github.com/wxt-dev/wxt/pull/2285))
+
+### 🏡 Chore
+
+- Remove deprecated `grayscaleOnDevelopment` option ([`d68b7a6`](https://github.com/wxt-dev/wxt/commit/d68b7a64f6da2f8c31c6a01613396c2254216d6b))
+- Fix failing tests ([`de54fef`](https://github.com/wxt-dev/wxt/commit/de54fef2a5637e43f8bcb9af2e3bfae13dde4ec0))
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ⚠️ Breaking Changes
+
+- [#2644](https://github.com/wxt-dev/wxt/pull/2644): `autoIcons.sizes` now replaces the default sizes instead of extending them. To preserve the previous output, change configurations such as sizes: `[96]` to sizes: `[128, 48, 32, 16, 96]`. Omitting `sizes` or setting it to `undefined` keeps the default behavior. An empty array now generates no icons and produces an empty `manifest.icons` object.
+- [`d68b7a6`](https://github.com/wxt-dev/wxt/commit/d68b7a64f6da2f8c31c6a01613396c2254216d6b): Use `developmentIndicator: "grayscale"` instead
+
+### ❤️ Contributors
+
+- [@PatrykKuniczak](https://github.com/PatrykKuniczak)
+- [@aklinker1](https://github.com/aklinker1)
+- [@Sbrjt](https://github.com/Sbrjt)
+- [@zryyyy](https://github.com/zryyyy)
+
+
 ## v1.1.2
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/auto-icons-v1.1.1...auto-icons-v1.1.2)
@@ -27,7 +60,6 @@
 - [@okineadev](https://github.com/okineadev)
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
-
 
 ## v1.1.1
 

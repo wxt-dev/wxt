@@ -40,7 +40,6 @@
     "build": "buildc -- tsdown",
     "postinstall": "buildc --deps-only -- wxt prepare",
     "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'",
     "prepack": "bun run build"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/is-background",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Check if the current context is the background or not.",
   "keywords": [
     "background",
@@ -41,7 +41,6 @@
     "build": "buildc -- tsdown",
     "check": "bun run build && check",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },
   "dependencies": {

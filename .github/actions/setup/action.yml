@@ -5,6 +5,9 @@ inputs:
   install:
     default: 'true'
     description: Whether or not to run 'bun install'
+  postinstall:
+    default: 'true'
+    description: Whether or not to run workspace `postinstall` scripts, which generate the `.wxt/` directories some packages need to build, type-check, and test
 
 runs:
   using: composite
@@ -15,27 +18,49 @@ runs:
       with:
         bun-version-file: '.tool-versions'
 
+    - name: 💾 Put Bun cache on workspace drive (Windows)
+      if: ${{ inputs.install == 'true' && runner.os == 'Windows' }}
+      shell: bash
+      run: echo "BUN_INSTALL_CACHE_DIR=$RUNNER_TEMP\\bun-cache" >> $GITHUB_ENV
+
     - name: 🔍 Get Bun cache path
       if: ${{ inputs.install == 'true' }}
       id: bun-cache
       shell: bash
       run: echo "path=$(bun pm cache)" >> $GITHUB_OUTPUT
 
+    # Restoring this cache on Windows takes ~80s (vs. a faster fresh `bun ci`), so skip it there.
     - name: 📦 Cache Bun store
-      if: ${{ inputs.install == 'true' }}
+      if: ${{ inputs.install == 'true' && runner.os != 'Windows' }}
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.bun-cache.outputs.path }}
         key: ${{ runner.os }}-bun-store-${{ hashFiles('bun.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-bun-store-
 
+    # buildc only reuses outputs whose source hash matches, so restoring an
+    # older cache from the same lockfile is safe and avoids rebuilding packages
+    # a PR didn't touch. The key includes the job ID because jobs build
+    # different subsets of packages, and only the first job to finish gets to
+    # save a given key.
     - name: 📦 Cache buildc
       if: ${{ inputs.install == 'true' }}
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .cache/packages
-        key: ${{ runner.os }}-buildc-${{ hashFiles('bun.lock') }}
+        key: ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ hashFiles('packages/*/package.json', 'packages/*/src/**') }}
+        restore-keys: |
+          ${{ runner.os }}-buildc-${{ github.job }}-${{ hashFiles('bun.lock') }}-
 
+    # Lifecycle scripts are skipped here and the workspace `postinstall`
+    # scripts are run below, in parallel, only when a job needs them.
     - name: 📦 Install Dependencies
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bun ci ${{ inputs.installArgs }}
+      run: bun ci --ignore-scripts
+
+    - name: 🔧 Run Workspace Postinstall Scripts
+      if: ${{ inputs.install == 'true' && inputs.postinstall == 'true' }}
+      shell: bash
+      run: bun run --parallel --workspaces --if-present postinstall

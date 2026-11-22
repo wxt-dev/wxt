@@ -21,8 +21,7 @@
   "scripts": {
     "check": "check",
     "gen": "bun run scripts/generate.ts",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test": "echo 'noop'"
   },
   "dependencies": {
     "@types/har-format": "*"
