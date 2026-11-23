@@ -46,6 +46,7 @@ jobs:
         if: steps.commit.outputs.changes_detected == 'true'
         working-directory: packages/browser
         run: |
+          cp ../../LICENSE .
           bun pm pack
           sudo npm i -g npm@latest
           npm publish *.tgz

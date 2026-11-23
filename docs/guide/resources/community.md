@@ -14,6 +14,7 @@ This page is dedicated to all the awesome people how have made something for WXT
 - [`@webext-core/*`](https://webext-core.aklinker1.io/): Easy-to-use utilities for writing and testing web extensions that work on all browsers.
 - [`Comctx`](https://github.com/molvqingtai/comctx): Cross-context RPC solution with type safety and flexible adapters.
 - [`wxt-local-analytics`](https://github.com/HaNdTriX/wxt-local-analytics): Local analytics provider for [`@wxt-dev/analytics`](https://wxt.dev/analytics)
+- [`wxt-svelte-storage`](https://github.com/dragonostic/wxt-svelte-storage): Wrapper function and classes that combine Svelte built-ins with extension storage for more seamless reactivity.
 
 ## Starter Templates
 
