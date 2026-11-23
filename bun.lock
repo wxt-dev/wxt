@@ -151,6 +151,18 @@
         "wxt": ">=0.19.16",
       },
     },
+    "packages/module-safari": {
+      "name": "@wxt-dev/module-safari",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@aklinker1/buildc": "catalog:",
+        "@types/node": "catalog:",
+        "oxlint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
+      },
+    },
     "packages/module-solid": {
       "name": "@wxt-dev/module-solid",
       "version": "1.1.4",
@@ -320,6 +332,7 @@
         "@types/normalize-path": "^3.0.2",
         "@types/picomatch": "^4.0.2",
         "@types/prompts": "^2.4.9",
+        "@wxt-dev/module-safari": "workspace:*",
         "dotenv-expand": "^13.0.0",
         "eslint": "^10.1.0",
         "get-port-please": "^3.2.0",
@@ -1357,6 +1370,8 @@
     "@wxt-dev/is-background": ["@wxt-dev/is-background@workspace:packages/is-background"],
 
     "@wxt-dev/module-react": ["@wxt-dev/module-react@workspace:packages/module-react"],
+
+    "@wxt-dev/module-safari": ["@wxt-dev/module-safari@workspace:packages/module-safari"],
 
     "@wxt-dev/module-solid": ["@wxt-dev/module-solid@workspace:packages/module-solid"],
 

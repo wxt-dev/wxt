@@ -92,4 +92,39 @@ describe('resolveConfig', () => {
       expect(config.imports.dirs).toEqual([]);
     });
   });
+
+  describe('safari', () => {
+    const logger = mock<Logger>();
+
+    it('should merge safari options from user config and inline config', async () => {
+      loadConfigMock.mockResolvedValue({
+        config: {
+          safari: {
+            appCategory: 'public.app-category.productivity',
+            bundleIdentifier: 'com.example.from-file',
+            developmentTeam: 'TEAM123',
+          },
+        },
+      });
+
+      const config = await resolveConfig(
+        {
+          logger,
+          safari: {
+            appCategory: 'public.app-category.productivity',
+            bundleIdentifier: 'com.example.from-inline',
+            projectType: 'macos',
+          },
+        },
+        'build',
+      );
+
+      expect(config.safari).toEqual({
+        appCategory: 'public.app-category.productivity',
+        bundleIdentifier: 'com.example.from-inline',
+        developmentTeam: 'TEAM123',
+        projectType: 'macos',
+      });
+    });
+  });
 });

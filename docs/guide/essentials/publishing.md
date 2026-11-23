@@ -202,18 +202,31 @@ WXT uses the command `npm pack <package-name>` to download the package. That mea
 
 ### Safari
 
-> 🚧 Not supported yet
+> ✅ Supported (macOS + Xcode) &bull; [App Store Connect](https://appstoreconnect.apple.com) &bull; [Publishing Docs](https://developer.apple.com/documentation/safariservices/distributing-your-safari-web-extension)
 
-WXT does not currently support automated publishing for Safari. Safari extensions require a native MacOS or iOS app wrapper, which WXT does not create yet. For now, if you want to publish to Safari, follow this guide:
+WXT includes a built-in Safari module that automatically converts your extension into an Xcode project when you run `wxt build -b safari` on macOS.
 
-- [Packaging a web extension for Safari](https://developer.apple.com/documentation/safariservices/packaging-a-web-extension-for-safari) - "Package your existing extension as a Safari web extension using Xcode’s command-line tool."
+Configure the `safari` option in `wxt.config.ts`:
 
-When running the `safari-web-extension-packager` CLI tool, pass the `.output/safari-mv2` or `.output/safari-mv3` directory, not your source code directory.
+```ts [wxt.config.ts]
+export default defineConfig({
+  safari: {
+    appCategory: 'public.app-category.productivity',
+    bundleIdentifier: 'com.example.my-extension',
+    developmentTeam: 'YOUR_TEAM_ID', // optional
+    projectType: 'both', // 'macos' | 'ios' | 'both' (default)
+    openProject: false, // open in Xcode after build (default: false)
+  },
+});
+```
+
+Then build the Safari extension and Xcode project:
 
 ```sh
-pnpm wxt build -b safari
-xcrun safari-web-extension-packager .output/safari-mv2
+wxt build -b safari
 ```
+
+Once built, you can archive and distribute the generated Xcode project from `.output/` via Xcode or automate submission with `wxt submit`.
 
 ### Edge Addons
 
