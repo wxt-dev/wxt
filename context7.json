@@ -1,4 +1,16 @@
 {
   "url": "https://context7.com/llmstxt/wxt_dev_llms_txt",
-  "public_key": "pk_EMpk5gF9KyGFCv0ElAwmP"
+  "public_key": "pk_EMpk5gF9KyGFCv0ElAwmP",
+  "projectTitle": "WXT - Next-gen Web Extension Framework",
+  "description": "WXT provides the best developer experience, making it quick, easy, and fun to develop web extensions. With built-in utilities for building, zipping, and publishing your extension, it's easy to get started.",
+  "branch": "main",
+  "folders": ["docs"],
+  "excludeFolders": ["docs/assets", "docs/tapes"],
+  "excludeFiles": ["CONTRIBUTING.md", "MAINTAINERS.md"],
+  "rules": ["Use bun as the project runtime"],
+  "previousVersions": [
+    {
+      "tag": "wxt-v0.21.4"
+    }
+  ]
 }
