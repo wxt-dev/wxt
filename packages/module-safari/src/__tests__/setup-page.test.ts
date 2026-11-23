@@ -40,6 +40,7 @@ describe('setupPageScript', () => {
   const evaluate = (
     script: string,
     userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    maxTouchPoints = 0,
   ) => {
     const classes = new Set<string>();
     const body = {
@@ -65,7 +66,9 @@ describe('setupPageScript', () => {
       `${script}; return show`,
     );
     return {
-      show: fn(document, { userAgent }, {}) as (...args: unknown[]) => void,
+      show: fn(document, { userAgent, maxTouchPoints }, {}) as (
+        ...args: unknown[]
+      ) => void,
       classes,
     };
   };
@@ -88,8 +91,19 @@ describe('setupPageScript', () => {
     const { show, classes } = evaluate(setupPageScript());
     show('ios');
     expect(classes).toContain('platform-ios');
+    expect(classes).not.toContain('platform-mac');
     expect(classes).not.toContain('state-on');
     expect(classes).not.toContain('state-off');
+  });
+
+  it('detects iPadOS desktop-mode user agent as iOS via maxTouchPoints', () => {
+    const { classes } = evaluate(
+      setupPageScript(),
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+      5,
+    );
+    expect(classes).toContain('platform-ios');
+    expect(classes).not.toContain('platform-mac');
   });
 
   it('picks a platform on its own when native never calls show()', () => {

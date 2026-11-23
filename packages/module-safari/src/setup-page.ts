@@ -225,7 +225,8 @@ function show(a, b, c) {
     var enabled = hasPlatform ? b : a;
     var useSettingsInsteadOfPreferences = hasPlatform ? c : b;
 
-    document.body.classList.add('platform-' + platform);
+    document.body.classList.toggle('platform-mac', platform === 'mac');
+    document.body.classList.toggle('platform-ios', platform === 'ios');
 
     // "Preferences" was renamed to "Settings" in macOS 13.
     if (useSettingsInsteadOfPreferences) {
@@ -259,7 +260,9 @@ if (openButton) openButton.addEventListener('click', openPreferences);
 // known, that left the window showing nothing but the icon. Seed the platform
 // here so content always renders; a later show() from native still refines it.
 if (!/platform-(mac|ios)/.test(document.body.className)) {
-    show(/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : 'mac');
+    var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+        (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+    show(isIOS ? 'ios' : 'mac');
 }
 `;
 }
