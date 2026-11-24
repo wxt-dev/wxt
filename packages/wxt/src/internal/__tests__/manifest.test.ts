@@ -8,6 +8,7 @@ import {
   fakeBuildOutput,
   fakeContentScriptEntrypoint,
   fakeEntrypoint,
+  fakeGenericEntrypoint,
   fakeManifestCommand,
   fakeOptionsEntrypoint,
   fakePopupEntrypoint,
@@ -1521,6 +1522,38 @@ describe('Manifest Utils', () => {
           expect(actual.host_permissions).toEqual(['*://google.com/*']);
         });
       });
+    });
+
+    describe('sandbox', () => {
+      it.each(['chrome', 'firefox'])(
+        'should include sandbox pages for %s',
+        async (browser) => {
+          const sandbox = fakeGenericEntrypoint({
+            type: 'sandbox',
+            name: 'sandbox',
+            outputDir: outDir,
+            skipped: false,
+          });
+          const buildOutput = fakeBuildOutput();
+
+          setFakeWxt({
+            config: {
+              manifestVersion: 3,
+              browser,
+              outDir,
+            },
+          });
+
+          const { manifest: actual } = await generateManifest(
+            [sandbox],
+            buildOutput,
+          );
+
+          expect(actual.sandbox).toEqual({
+            pages: ['sandbox.html'],
+          });
+        },
+      );
     });
 
     describe('sidepanel', () => {
