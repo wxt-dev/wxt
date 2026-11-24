@@ -28,6 +28,7 @@ const BROWSER_MAP: Record<string, string> = {
   chrome: 'chrome',
   edge: 'edge',
   firefox: 'firefox',
+  safari: 'safari',
   chromium: 'other_chromium',
   brave: 'other_chromium',
   opera: 'other_chromium',
@@ -52,7 +53,9 @@ function detectSource(meta: BaseAnalyticsEvent['meta']): string {
   const url = meta.url;
   if (!url) return 'unknown';
   const isExtensionUrl =
-    url.startsWith('chrome-extension://') || url.startsWith('moz-extension://');
+    url.startsWith('chrome-extension://') ||
+    url.startsWith('moz-extension://') ||
+    url.startsWith('safari-web-extension://');
   if (!isExtensionUrl) return 'content_script';
 
   const path = url.toLowerCase();

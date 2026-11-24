@@ -658,3 +658,7 @@
 
 - # File Transfer – Send Large Files P2P
   chromeId: lffomfhccijamechladimcfcpijpjnne
+
+- # Hushpad - Notes and env management new tab.
+  chromeId: dgkfpeceojbjmdpjkehcelahhbdklmmd
+  firefoxSlug: hushpad
