@@ -99,10 +99,12 @@ jobs:
           preCommitCommands: |-
             bun i
           publishCommands: |-
+            cp ../../LICENSE .
             bun pm pack
             npm publish *.tgz
           dryRun: ${{ inputs.dryRun }}
           dryRunPublishCommands: |-
+            cp ../../LICENSE .
             bun pm pack
             npm publish *.tgz --dry-run
           githubToken: ${{ secrets.GITHUB_TOKEN }}
