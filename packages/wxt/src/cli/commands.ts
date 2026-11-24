@@ -125,10 +125,12 @@ cli
 cli
   .command('prepare [root]', 'prepare typescript project')
   .option('-c, --config <file>', 'use specified config file')
+  .option('-m, --mode <mode>', 'set env mode')
   .action(
     wrapAction(async (root, flags) => {
       await prepare({
         root,
+        mode: flags.mode,
         configFile: flags.config,
         debug: flags.debug,
       });

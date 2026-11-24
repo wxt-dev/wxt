@@ -8,9 +8,10 @@ When running any dev or build commands, pass the `--mode` flag:
 wxt --mode production
 wxt build --mode development
 wxt zip --mode testing
+wxt prepare --mode testing
 ```
 
-By default, `--mode` is `development` for the dev command and `production` for all other commands (build, zip, etc).
+By default, `--mode` is `development` for the dev command and `production` for all other commands (build, zip, prepare, etc).
 
 ## Get Mode at Runtime
 

@@ -413,6 +413,15 @@ describe('CLI', () => {
       });
     });
 
+    it('should respect passing a custom mode', async () => {
+      mockArgv('prepare', '-m', 'development');
+      await importCli();
+
+      expect(prepareMock).toBeCalledWith({
+        mode: 'development',
+      });
+    });
+
     it('should respect passing --debug', async () => {
       mockArgv('prepare', '--debug');
       await importCli();
