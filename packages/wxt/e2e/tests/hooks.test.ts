@@ -29,7 +29,7 @@ const hooks: WxtHooks = {
   'server:closed': vi.fn(),
 };
 
-function expectHookstoHaveBeenCalled(
+function expectHooksToHaveBeenCalled(
   called: Record<keyof WxtHooks, boolean | number>,
 ) {
   Object.keys(hooks).forEach((key) => {
@@ -54,7 +54,7 @@ describe('Hooks', () => {
 
     await project.prepare({ hooks });
 
-    expectHookstoHaveBeenCalled({
+    expectHooksToHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -87,7 +87,7 @@ describe('Hooks', () => {
 
     await project.build({ hooks });
 
-    expectHookstoHaveBeenCalled({
+    expectHooksToHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -120,7 +120,7 @@ describe('Hooks', () => {
 
     await project.zip({ hooks });
 
-    expectHookstoHaveBeenCalled({
+    expectHooksToHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -153,7 +153,7 @@ describe('Hooks', () => {
 
     await project.zip({ hooks, browser: 'firefox' });
 
-    expectHookstoHaveBeenCalled({
+    expectHooksToHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -193,7 +193,7 @@ describe('Hooks', () => {
     expect(hooks['server:closed']).not.toHaveBeenCalled();
     await server.stop();
 
-    expectHookstoHaveBeenCalled({
+    expectHooksToHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
