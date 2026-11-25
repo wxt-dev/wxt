@@ -610,7 +610,7 @@ describe('Storage Utils', () => {
           storage.watch(`${storageArea}:key`, cb);
           await storage.setItem(`${storageArea}:not-the-key`, '123');
 
-          expect(cb).not.toBeCalled();
+          expect(cb).not.toHaveBeenCalled();
         });
 
         it("should not trigger if the value doesn't change", async () => {
@@ -621,7 +621,7 @@ describe('Storage Utils', () => {
           storage.watch(`${storageArea}:key`, cb);
           await storage.setItem(`${storageArea}:key`, value);
 
-          expect(cb).not.toBeCalled();
+          expect(cb).not.toHaveBeenCalled();
         });
 
         it('should call the callback when the value changes', async () => {
@@ -632,8 +632,8 @@ describe('Storage Utils', () => {
           storage.watch(`${storageArea}:key`, cb);
           await storage.setItem(`${storageArea}:key`, newValue);
 
-          expect(cb).toBeCalledTimes(1);
-          expect(cb).toBeCalledWith(newValue, oldValue);
+          expect(cb).toHaveBeenCalledTimes(1);
+          expect(cb).toHaveBeenCalledWith(newValue, oldValue);
         });
 
         it('should remove the listener when calling the returned function', async () => {
@@ -643,7 +643,7 @@ describe('Storage Utils', () => {
           unwatch();
           await storage.setItem(`${storageArea}:key`, '123');
 
-          expect(cb).not.toBeCalled();
+          expect(cb).not.toHaveBeenCalled();
         });
       });
 
@@ -655,8 +655,8 @@ describe('Storage Utils', () => {
           storage.watchMeta(`${storageArea}:key`, cb);
           await storage.setMeta(`${storageArea}:key`, newValue);
 
-          expect(cb).toBeCalledTimes(1);
-          expect(cb).toBeCalledWith(newValue, {});
+          expect(cb).toHaveBeenCalledTimes(1);
+          expect(cb).toHaveBeenCalledWith(newValue, {});
         });
 
         it('should return an empty object when metadata is removed', async () => {
@@ -667,8 +667,8 @@ describe('Storage Utils', () => {
           storage.watchMeta(`${storageArea}:key`, cb);
           await storage.removeMeta(`${storageArea}:key`);
 
-          expect(cb).toBeCalledTimes(1);
-          expect(cb).toBeCalledWith({}, oldValue);
+          expect(cb).toHaveBeenCalledTimes(1);
+          expect(cb).toHaveBeenCalledWith({}, oldValue);
         });
 
         it('should remove the listener when calling the returned function', async () => {
@@ -678,7 +678,7 @@ describe('Storage Utils', () => {
           unwatch();
           await storage.setMeta(`${storageArea}:key`, { version: 2 });
 
-          expect(cb).not.toBeCalled();
+          expect(cb).not.toHaveBeenCalled();
         });
       });
 
@@ -690,7 +690,7 @@ describe('Storage Utils', () => {
           storage.unwatch();
           await storage.setItem(`${storageArea}:key`, '123');
 
-          expect(cb).not.toBeCalled();
+          expect(cb).not.toHaveBeenCalled();
         });
       });
     },
@@ -738,11 +738,11 @@ describe('Storage Utils', () => {
         expect(actualValue).toEqual(12);
         expect(actualMeta).toEqual({ v: 3 });
 
-        expect(migrateToV2).toBeCalledTimes(1);
-        expect(migrateToV2).toBeCalledWith(2);
+        expect(migrateToV2).toHaveBeenCalledTimes(1);
+        expect(migrateToV2).toHaveBeenCalledWith(2);
 
-        expect(migrateToV3).toBeCalledTimes(1);
-        expect(migrateToV3).toBeCalledWith(4);
+        expect(migrateToV3).toHaveBeenCalledTimes(1);
+        expect(migrateToV3).toHaveBeenCalledWith(4);
       });
 
       it('should set the version without running migrations for empty storage items', async () => {
@@ -760,7 +760,7 @@ describe('Storage Utils', () => {
 
         expect(value).toEqual(1);
         expect(meta).toEqual({ v: 2 });
-        expect(migrate).toBeCalledTimes(0);
+        expect(migrate).toHaveBeenCalledTimes(0);
       });
 
       it('should set the version and run migrations if a storage value already exists and v2 is added', async () => {
@@ -783,7 +783,7 @@ describe('Storage Utils', () => {
 
         expect(value).toEqual(2);
         expect(meta).toEqual({ v: 2 });
-        expect(migrate).toBeCalledTimes(1);
+        expect(migrate).toHaveBeenCalledTimes(1);
       });
 
       it('should call onMigrationComplete callback function if defined', async () => {
@@ -806,8 +806,8 @@ describe('Storage Utils', () => {
         });
         await waitForMigrations();
 
-        expect(onMigrationComplete).toBeCalledTimes(1);
-        expect(onMigrationComplete).toBeCalledWith(12, 3);
+        expect(onMigrationComplete).toHaveBeenCalledTimes(1);
+        expect(onMigrationComplete).toHaveBeenCalledWith(12, 3);
       });
 
       it("should not run migrations if the value doesn't exist yet", async () => {
@@ -830,8 +830,8 @@ describe('Storage Utils', () => {
         expect(actualValue).toEqual(0);
         expect(actualMeta).toEqual({});
 
-        expect(migrateToV2).not.toBeCalled();
-        expect(migrateToV3).not.toBeCalled();
+        expect(migrateToV2).not.toHaveBeenCalled();
+        expect(migrateToV3).not.toHaveBeenCalled();
       });
 
       it('should run the v2 migration when converting an unversioned item to a versioned one', async () => {
@@ -855,8 +855,8 @@ describe('Storage Utils', () => {
         expect(actualValue).toEqual(4);
         expect(actualMeta).toEqual({ v: 2 });
 
-        expect(migrateToV2).toBeCalledTimes(1);
-        expect(migrateToV2).toBeCalledWith(2);
+        expect(migrateToV2).toHaveBeenCalledTimes(1);
+        expect(migrateToV2).toHaveBeenCalledWith(2);
       });
 
       it('should not run old migrations if the version is unchanged', async () => {
@@ -877,8 +877,8 @@ describe('Storage Utils', () => {
         });
         await waitForMigrations();
 
-        expect(migrateToV2).not.toBeCalled();
-        expect(migrateToV3).not.toBeCalled();
+        expect(migrateToV2).not.toHaveBeenCalled();
+        expect(migrateToV3).not.toHaveBeenCalled();
       });
 
       it('should skip missing migration functions', async () => {
@@ -905,11 +905,11 @@ describe('Storage Utils', () => {
         expect(actualValue).toEqual(6);
         expect(actualMeta).toEqual({ v: 3 });
 
-        expect(migrateToV1).toBeCalledTimes(1);
-        expect(migrateToV1).toBeCalledWith(2);
+        expect(migrateToV1).toHaveBeenCalledTimes(1);
+        expect(migrateToV1).toHaveBeenCalledWith(2);
 
-        expect(migrateToV3).toBeCalledTimes(1);
-        expect(migrateToV3).toBeCalledWith(2);
+        expect(migrateToV3).toHaveBeenCalledTimes(1);
+        expect(migrateToV3).toHaveBeenCalledWith(2);
       });
 
       it('should throw an error if the new version is less than the previous version', async () => {
@@ -1036,16 +1036,18 @@ describe('Storage Utils', () => {
 
           expect(await item.getValue()).toBeNull();
           expect(await item.getMeta()).toEqual({});
-          expect(fakeBrowser.storage.local.set).toBeCalledTimes(0);
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledTimes(0);
 
           await item.setValue(1);
 
           expect(await item.getValue()).toBe(1);
           expect(await item.getMeta()).toEqual({ v: 2 });
           // Called twice, once for setting the value, once for updating the metadata.
-          expect(fakeBrowser.storage.local.set).toBeCalledTimes(2);
-          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 1 });
-          expect(fakeBrowser.storage.local.set).toBeCalledWith({
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledTimes(2);
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledWith({
+            count: 1,
+          });
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledWith({
             count$: { v: 2 },
           });
 
@@ -1053,11 +1055,13 @@ describe('Storage Utils', () => {
           expect(await item.getValue()).toBe(2);
           expect(await item.getMeta()).toEqual({ v: 2 });
           // Only called one more time, just for setting the value
-          expect(fakeBrowser.storage.local.set).toBeCalledTimes(3);
-          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 2 });
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledTimes(3);
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledWith({
+            count: 2,
+          });
 
           // Migration function never called throughout the whole test
-          expect(migrateToV2).not.toBeCalled();
+          expect(migrateToV2).not.toHaveBeenCalled();
         });
 
         it('should not set the version metadata when a value is already in storage', async () => {
@@ -1070,10 +1074,12 @@ describe('Storage Utils', () => {
           expect(await item.getValue()).toEqual(2);
           expect(await item.getMeta()).toEqual({ v: 2 });
 
-          expect(fakeBrowser.storage.local.set).toBeCalledTimes(1);
-          expect(fakeBrowser.storage.local.set).toBeCalledWith({ count: 2 });
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledTimes(1);
+          expect(fakeBrowser.storage.local.set).toHaveBeenCalledWith({
+            count: 2,
+          });
 
-          expect(migrateToV2).not.toBeCalled();
+          expect(migrateToV2).not.toHaveBeenCalled();
         });
       });
     });
@@ -1259,7 +1265,7 @@ describe('Storage Utils', () => {
         item.watch(cb);
         await storage.setItem(`local:not-the-key`, '123');
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
 
       it("should not trigger if the value doesn't change", async () => {
@@ -1271,7 +1277,7 @@ describe('Storage Utils', () => {
         item.watch(cb);
         await item.setValue(value);
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
 
       it('should call the callback when the value changes', async () => {
@@ -1283,8 +1289,8 @@ describe('Storage Utils', () => {
         item.watch(cb);
         await item.setValue(newValue);
 
-        expect(cb).toBeCalledTimes(1);
-        expect(cb).toBeCalledWith(newValue, oldValue);
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(newValue, oldValue);
       });
 
       it('should use the default value for the newValue when the item is removed', async () => {
@@ -1299,8 +1305,8 @@ describe('Storage Utils', () => {
         item.watch(cb);
         await item.removeValue();
 
-        expect(cb).toBeCalledTimes(1);
-        expect(cb).toBeCalledWith(defaultValue, oldValue);
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(defaultValue, oldValue);
       });
 
       it("should use the default value for the oldItem when the item didn't exist in storage yet", async () => {
@@ -1315,8 +1321,8 @@ describe('Storage Utils', () => {
         item.watch(cb);
         await item.setValue(newValue);
 
-        expect(cb).toBeCalledTimes(1);
-        expect(cb).toBeCalledWith(newValue, defaultValue);
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(newValue, defaultValue);
       });
 
       it('should remove the listener when calling the returned function', async () => {
@@ -1327,7 +1333,7 @@ describe('Storage Utils', () => {
         unwatch();
         await item.setValue('123');
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
     });
 
@@ -1342,8 +1348,8 @@ describe('Storage Utils', () => {
         item.watchMeta(cb);
         await item.setMeta(newValue);
 
-        expect(cb).toBeCalledTimes(1);
-        expect(cb).toBeCalledWith(newValue, {});
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith(newValue, {});
       });
 
       it('should not trigger when the item value changes', async () => {
@@ -1355,7 +1361,7 @@ describe('Storage Utils', () => {
         item.watchMeta(cb);
         await item.setValue(2);
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
 
       it('should remove the listener when calling the returned function', async () => {
@@ -1368,7 +1374,7 @@ describe('Storage Utils', () => {
         unwatch();
         await item.setMeta({ version: 2 });
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
     });
 
@@ -1381,7 +1387,7 @@ describe('Storage Utils', () => {
         storage.unwatch();
         await item.setValue('123');
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
       });
     });
 
@@ -1424,7 +1430,7 @@ describe('Storage Utils', () => {
         await expect(p1).resolves.toBe(expected);
         await expect(p2).resolves.toBe(expected);
 
-        expect(init).toBeCalledTimes(1);
+        expect(init).toHaveBeenCalledTimes(1);
       });
 
       it('should initialize the value in storage immediately', async () => {
@@ -1451,7 +1457,7 @@ describe('Storage Utils', () => {
           item.getValue(),
           item.getValue(),
         ]);
-        expect(init).toBeCalledTimes(1);
+        expect(init).toHaveBeenCalledTimes(1);
         expect(value1).toBe(value2);
       });
     });
@@ -1539,10 +1545,10 @@ describe('Storage Utils', () => {
           },
         ]);
 
-        expect(localGetSpy).toBeCalledTimes(1);
-        expect(localGetSpy).toBeCalledWith(['item1', 'item3']);
-        expect(sessionGetSpy).toBeCalledTimes(1);
-        expect(sessionGetSpy).toBeCalledWith(['item2']);
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(localGetSpy).toHaveBeenCalledWith(['item1', 'item3']);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledWith(['item2']);
       });
 
       it('should return values in the same order as input', async () => {
@@ -1588,10 +1594,10 @@ describe('Storage Utils', () => {
           { key: item3.key, meta: {} },
         ]);
 
-        expect(localGetSpy).toBeCalledTimes(1);
-        expect(localGetSpy).toBeCalledWith(['item1$', 'item3$']);
-        expect(sessionGetSpy).toBeCalledTimes(1);
-        expect(sessionGetSpy).toBeCalledWith(['item2$']);
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(localGetSpy).toHaveBeenCalledWith(['item1$', 'item3$']);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledWith(['item2$']);
       });
 
       it('should return the metadata in the same order as input', async () => {
@@ -1634,10 +1640,13 @@ describe('Storage Utils', () => {
           { item: item3, value: value3 },
         ]);
 
-        expect(localSetSpy).toBeCalledTimes(1);
-        expect(localSetSpy).toBeCalledWith({ item1: value1, item3: value3 });
-        expect(sessionSetSpy).toBeCalledTimes(1);
-        expect(sessionSetSpy).toBeCalledWith({ item2: value2 });
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(localSetSpy).toHaveBeenCalledWith({
+          item1: value1,
+          item3: value3,
+        });
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledWith({ item2: value2 });
       });
     });
 
@@ -1660,18 +1669,18 @@ describe('Storage Utils', () => {
         ]);
 
         console.log(localGetSpy.mock.calls);
-        expect(localGetSpy).toBeCalledTimes(1);
-        expect(localGetSpy).toBeCalledWith(['one$', 'three$']);
-        expect(sessionGetSpy).toBeCalledTimes(1);
-        expect(sessionGetSpy).toBeCalledWith(['two$']);
+        expect(localGetSpy).toHaveBeenCalledTimes(1);
+        expect(localGetSpy).toHaveBeenCalledWith(['one$', 'three$']);
+        expect(sessionGetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionGetSpy).toHaveBeenCalledWith(['two$']);
 
-        expect(localSetSpy).toBeCalledTimes(1);
-        expect(localSetSpy).toBeCalledWith({
+        expect(localSetSpy).toHaveBeenCalledTimes(1);
+        expect(localSetSpy).toHaveBeenCalledWith({
           one$: { v: 1 },
           three$: { v: 3 },
         });
-        expect(sessionSetSpy).toBeCalledTimes(1);
-        expect(sessionSetSpy).toBeCalledWith({
+        expect(sessionSetSpy).toHaveBeenCalledTimes(1);
+        expect(sessionSetSpy).toHaveBeenCalledWith({
           two$: { v: 2 },
         });
       });

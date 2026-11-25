@@ -29,7 +29,7 @@ const hooks: WxtHooks = {
   'server:closed': vi.fn(),
 };
 
-function expectHooksToBeCalled(
+function expectHookstoHaveBeenCalled(
   called: Record<keyof WxtHooks, boolean | number>,
 ) {
   Object.keys(hooks).forEach((key) => {
@@ -39,7 +39,7 @@ function expectHooksToBeCalled(
     expect(
       hooks[hookName],
       `Expected "${hookName}" to be called ${times} time(s)`,
-    ).toBeCalledTimes(times);
+    ).toHaveBeenCalledTimes(times);
   });
 }
 
@@ -54,7 +54,7 @@ describe('Hooks', () => {
 
     await project.prepare({ hooks });
 
-    expectHooksToBeCalled({
+    expectHookstoHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -87,7 +87,7 @@ describe('Hooks', () => {
 
     await project.build({ hooks });
 
-    expectHooksToBeCalled({
+    expectHookstoHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -120,7 +120,7 @@ describe('Hooks', () => {
 
     await project.zip({ hooks });
 
-    expectHooksToBeCalled({
+    expectHookstoHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -153,7 +153,7 @@ describe('Hooks', () => {
 
     await project.zip({ hooks, browser: 'firefox' });
 
-    expectHooksToBeCalled({
+    expectHookstoHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,
@@ -190,10 +190,10 @@ describe('Hooks', () => {
         disabled: true,
       },
     });
-    expect(hooks['server:closed']).not.toBeCalled();
+    expect(hooks['server:closed']).not.toHaveBeenCalled();
     await server.stop();
 
-    expectHooksToBeCalled({
+    expectHookstoHaveBeenCalled({
       ready: true,
       'config:resolved': true,
       'prepare:types': true,

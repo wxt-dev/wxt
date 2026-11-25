@@ -115,7 +115,7 @@ describe('Options', () => {
         chromiumArgs: ['--user-data-dir=some/custom/path'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Chromium --user-data-dir argument ignored',
@@ -130,7 +130,7 @@ describe('Options', () => {
         chromiumArgs: ['--remote-debugging-port=9222'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Chromium --remote-debugging-port argument ignored',
@@ -183,7 +183,7 @@ describe('Options', () => {
         firefoxArgs: ['--profile=some/custom/path'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Custom Firefox --profile argument ignored'),
       );
@@ -196,7 +196,7 @@ describe('Options', () => {
         firefoxArgs: ['--remote-debugging-port=9222'],
       });
 
-      expect(warnSpy).toBeCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'Custom Firefox --remote-debugging-port argument ignored',

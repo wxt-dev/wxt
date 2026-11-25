@@ -46,14 +46,14 @@ describe('CLI', () => {
       mockArgv();
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({});
+      expect(createServerMock).toHaveBeenCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('path/to/root');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         root: 'path/to/root',
       });
     });
@@ -62,7 +62,7 @@ describe('CLI', () => {
       mockArgv('-c', './path/to/config.ts');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         configFile: './path/to/config.ts',
       });
     });
@@ -71,7 +71,7 @@ describe('CLI', () => {
       mockArgv('-m', 'development');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         mode: 'development',
       });
     });
@@ -80,7 +80,7 @@ describe('CLI', () => {
       mockArgv('-b', 'firefox');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         browser: 'firefox',
       });
     });
@@ -89,7 +89,7 @@ describe('CLI', () => {
       mockArgv('-e', 'popup', '-e', 'options');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         filterEntrypoints: ['popup', 'options'],
       });
     });
@@ -98,7 +98,7 @@ describe('CLI', () => {
       mockArgv('--mv2');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         manifestVersion: 2,
       });
     });
@@ -107,7 +107,7 @@ describe('CLI', () => {
       mockArgv('--mv3');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         manifestVersion: 3,
       });
     });
@@ -117,7 +117,7 @@ describe('CLI', () => {
       mockArgv('--port', String(expectedPort));
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         dev: {
           server: {
             port: expectedPort,
@@ -130,7 +130,7 @@ describe('CLI', () => {
       mockArgv('--debug');
       await importCli();
 
-      expect(createServerMock).toBeCalledWith({
+      expect(createServerMock).toHaveBeenCalledWith({
         debug: true,
       });
       expect(consola.level).toBe(LogLevels.debug);
@@ -156,14 +156,14 @@ describe('CLI', () => {
       mockArgv('build');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({});
+      expect(buildMock).toHaveBeenCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('build', 'path/to/root');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         root: 'path/to/root',
       });
     });
@@ -172,7 +172,7 @@ describe('CLI', () => {
       mockArgv('build', '-c', './path/to/config.ts');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         configFile: './path/to/config.ts',
       });
     });
@@ -181,7 +181,7 @@ describe('CLI', () => {
       mockArgv('build', '-m', 'development');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         mode: 'development',
       });
     });
@@ -190,7 +190,7 @@ describe('CLI', () => {
       mockArgv('build', '-b', 'firefox');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         browser: 'firefox',
       });
     });
@@ -199,7 +199,7 @@ describe('CLI', () => {
       mockArgv('build', '-e', 'popup', '-e', 'options');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         filterEntrypoints: ['popup', 'options'],
       });
     });
@@ -208,7 +208,7 @@ describe('CLI', () => {
       mockArgv('build', '--mv2');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         manifestVersion: 2,
       });
     });
@@ -217,7 +217,7 @@ describe('CLI', () => {
       mockArgv('build', '--mv3');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         manifestVersion: 3,
       });
     });
@@ -226,7 +226,7 @@ describe('CLI', () => {
       mockArgv('build', '--analyze');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         analysis: {
           enabled: true,
         },
@@ -237,7 +237,7 @@ describe('CLI', () => {
       mockArgv('build', '--debug');
       await importCli();
 
-      expect(buildMock).toBeCalledWith({
+      expect(buildMock).toHaveBeenCalledWith({
         debug: true,
       });
       expect(consola.level).toBe(LogLevels.debug);
@@ -263,7 +263,7 @@ describe('CLI', () => {
       mockArgv('zip');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         zip: {},
       });
     });
@@ -272,7 +272,7 @@ describe('CLI', () => {
       mockArgv('zip', 'path/to/root');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         root: 'path/to/root',
         zip: {},
       });
@@ -282,7 +282,7 @@ describe('CLI', () => {
       mockArgv('zip', '-c', './path/to/config.ts');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         configFile: './path/to/config.ts',
         zip: {},
       });
@@ -292,7 +292,7 @@ describe('CLI', () => {
       mockArgv('zip', '-m', 'development');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         mode: 'development',
         zip: {},
       });
@@ -302,7 +302,7 @@ describe('CLI', () => {
       mockArgv('zip', '-b', 'firefox');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         browser: 'firefox',
         zip: {},
       });
@@ -312,7 +312,7 @@ describe('CLI', () => {
       mockArgv('zip', '--mv2');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         manifestVersion: 2,
         zip: {},
       });
@@ -322,7 +322,7 @@ describe('CLI', () => {
       mockArgv('zip', '--mv3');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         manifestVersion: 3,
         zip: {},
       });
@@ -332,7 +332,7 @@ describe('CLI', () => {
       mockArgv('zip', '--debug');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         debug: true,
         zip: {},
       });
@@ -357,7 +357,7 @@ describe('CLI', () => {
       mockArgv('zip');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         zip: {
           zipSources: undefined,
         },
@@ -368,7 +368,7 @@ describe('CLI', () => {
       mockArgv('zip', '--sources');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         zip: {
           zipSources: true,
         },
@@ -379,7 +379,7 @@ describe('CLI', () => {
       mockArgv('zip', '--sources=false');
       await importCli();
 
-      expect(zipMock).toBeCalledWith({
+      expect(zipMock).toHaveBeenCalledWith({
         zip: {
           zipSources: false,
         },
@@ -392,14 +392,14 @@ describe('CLI', () => {
       mockArgv('prepare');
       await importCli();
 
-      expect(prepareMock).toBeCalledWith({});
+      expect(prepareMock).toHaveBeenCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('prepare', 'path/to/root');
       await importCli();
 
-      expect(prepareMock).toBeCalledWith({
+      expect(prepareMock).toHaveBeenCalledWith({
         root: 'path/to/root',
       });
     });
@@ -408,7 +408,7 @@ describe('CLI', () => {
       mockArgv('prepare', '-c', './path/to/config.ts');
       await importCli();
 
-      expect(prepareMock).toBeCalledWith({
+      expect(prepareMock).toHaveBeenCalledWith({
         configFile: './path/to/config.ts',
       });
     });
@@ -417,7 +417,7 @@ describe('CLI', () => {
       mockArgv('prepare', '--debug');
       await importCli();
 
-      expect(prepareMock).toBeCalledWith({
+      expect(prepareMock).toHaveBeenCalledWith({
         debug: true,
       });
       expect(consola.level).toBe(LogLevels.debug);
@@ -443,21 +443,21 @@ describe('CLI', () => {
       mockArgv('clean');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith({});
+      expect(cleanMock).toHaveBeenCalledWith({});
     });
 
     it('should respect passing a custom root', async () => {
       mockArgv('clean', 'path/to/root');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith({ root: 'path/to/root' });
+      expect(cleanMock).toHaveBeenCalledWith({ root: 'path/to/root' });
     });
 
     it('should respect a custom config file', async () => {
       mockArgv('clean', '-c', './path/to/config.ts');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith({
+      expect(cleanMock).toHaveBeenCalledWith({
         configFile: './path/to/config.ts',
       });
     });
@@ -466,7 +466,7 @@ describe('CLI', () => {
       mockArgv('clean', '--debug');
       await importCli();
 
-      expect(cleanMock).toBeCalledWith({
+      expect(cleanMock).toHaveBeenCalledWith({
         debug: true,
       });
       expect(consola.level).toBe(LogLevels.debug);
@@ -492,14 +492,14 @@ describe('CLI', () => {
       mockArgv('init');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(expect.objectContaining({}));
+      expect(initializeMock).toHaveBeenCalledWith(expect.objectContaining({}));
     });
 
     it('should respect the provided folder', async () => {
       mockArgv('init', 'path/to/folder');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(
+      expect(initializeMock).toHaveBeenCalledWith(
         expect.objectContaining({
           directory: 'path/to/folder',
         }),
@@ -510,7 +510,7 @@ describe('CLI', () => {
       mockArgv('init', '-t', 'vue');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(
+      expect(initializeMock).toHaveBeenCalledWith(
         expect.objectContaining({
           template: 'vue',
         }),
@@ -521,7 +521,7 @@ describe('CLI', () => {
       mockArgv('init', '--pm', 'pnpm');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(
+      expect(initializeMock).toHaveBeenCalledWith(
         expect.objectContaining({
           packageManager: 'pnpm',
         }),
@@ -532,7 +532,7 @@ describe('CLI', () => {
       mockArgv('init', '--git');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(
+      expect(initializeMock).toHaveBeenCalledWith(
         expect.objectContaining({
           requireGit: true,
         }),

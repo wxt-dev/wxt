@@ -32,11 +32,11 @@ describe('Install', () => {
 
       const res = await installChromium(browserProcess, extensionDir);
 
-      expect(createCdpConnectionMock).toBeCalledTimes(1);
-      expect(createCdpConnectionMock).toBeCalledWith(browserProcess);
+      expect(createCdpConnectionMock).toHaveBeenCalledTimes(1);
+      expect(createCdpConnectionMock).toHaveBeenCalledWith(browserProcess);
 
-      expect(connection.send).toBeCalledTimes(1);
-      expect(connection.send).toBeCalledWith('Extensions.loadUnpacked', {
+      expect(connection.send).toHaveBeenCalledTimes(1);
+      expect(connection.send).toHaveBeenCalledWith('Extensions.loadUnpacked', {
         path: extensionDir,
       });
 
@@ -62,14 +62,14 @@ describe('Install', () => {
 
       const res = await installFirefox(debuggerUrl, extensionDir);
 
-      expect(createBidiConnectionMock).toBeCalledTimes(1);
-      expect(createBidiConnectionMock).toBeCalledWith(debuggerUrl);
+      expect(createBidiConnectionMock).toHaveBeenCalledTimes(1);
+      expect(createBidiConnectionMock).toHaveBeenCalledWith(debuggerUrl);
 
-      expect(connection.send).toBeCalledTimes(2);
-      expect(connection.send).toBeCalledWith('session.new', {
+      expect(connection.send).toHaveBeenCalledTimes(2);
+      expect(connection.send).toHaveBeenCalledWith('session.new', {
         capabilities: {},
       });
-      expect(connection.send).toBeCalledWith('webExtension.install', {
+      expect(connection.send).toHaveBeenCalledWith('webExtension.install', {
         extensionData: {
           type: 'path',
           path: extensionDir,

@@ -18,7 +18,7 @@ describe('Background Entrypoint', () => {
 
     background.main();
 
-    expect(logMock).toBeCalledWith(id);
+    expect(logMock).toHaveBeenCalledWith(id);
   });
 
   it('should set the start time in storage', async () => {

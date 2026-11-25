@@ -39,7 +39,7 @@ describe('Module Helpers', () => {
         example: options,
       });
 
-      expect(reportOptions).toBeCalledWith(options);
+      expect(reportOptions).toHaveBeenCalledWith(options);
     });
   });
 
