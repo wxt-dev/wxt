@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/browser",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Provides a cross-browser API for using extension APIs and types based on @types/chrome",
   "license": "MIT",
   "author": {
@@ -27,7 +27,7 @@
     "@types/har-format": "*"
   },
   "devDependencies": {
-    "@types/chrome": "0.3.7",
+    "@types/chrome": "0.3.8",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
