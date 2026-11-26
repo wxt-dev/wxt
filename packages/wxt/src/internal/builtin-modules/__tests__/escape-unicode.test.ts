@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { escapeNonCharacterUnicode } from '../escape-unicode';
 
 describe('escapeNonCharacterUnicode', () => {
