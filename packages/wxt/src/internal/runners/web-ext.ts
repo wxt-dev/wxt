@@ -71,6 +71,7 @@ export class WebExtRunner implements ExtensionRunner {
             ),
             args: [
               '--unsafely-disable-devtools-self-xss-warnings',
+              '--test-type',
               ...(wxtUserConfig?.chromiumArgs ?? []),
             ],
           }),
