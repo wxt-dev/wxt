@@ -137,6 +137,7 @@ export class TestProject {
   private generateWxtConfig(inline: InlineConfig): InlineConfig {
     return {
       ...inline,
+      // Keep these warnings suppressed to avoid noise in the e2e tests.
       suppressWarnings: {
         firefoxDataCollection: true,
         firefoxId: true,

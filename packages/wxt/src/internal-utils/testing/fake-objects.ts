@@ -349,10 +349,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     hooks: {},
     vite: () => ({}),
     plugins: [],
-    suppressWarnings: {
-      firefoxDataCollection: true,
-      firefoxId: true,
-    },
+    suppressWarnings: {},
   };
 });
 

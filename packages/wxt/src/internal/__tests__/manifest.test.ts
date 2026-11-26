@@ -2321,7 +2321,6 @@ describe('Manifest Utils', () => {
         config: {
           browser: 'firefox',
           suppressWarnings: {
-            firefoxDataCollection: false,
             firefoxId: true,
           },
         },
@@ -2343,7 +2342,6 @@ describe('Manifest Utils', () => {
           command: 'build',
           suppressWarnings: {
             firefoxDataCollection: true,
-            firefoxId: false,
           },
         },
       });
