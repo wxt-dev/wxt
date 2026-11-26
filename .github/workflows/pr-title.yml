@@ -9,18 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          # Only fetch the config file from the repository
-          sparse-checkout-cone-mode: false
-          sparse-checkout: .commitlintrc.yml
-
-      - name: Install dependencies
-        run: npm install --global @commitlint/config-conventional commitlint
-
-      - name: Check PR title with commitlint
+      - name: Check PR title
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
           HELP_URL: https://github.com/wxt-dev/wxt/blob/main/CONTRIBUTING.md#conventional-commits--pr-titles
-        run: echo "$PR_TITLE" | npx commitlint --help-url $HELP_URL
+        run: |
+          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert)(\([^()]+\))?!?: [^ ].*[^.]$'
+          if [[ ! "$PR_TITLE" =~ $pattern ]] || [ "${#PR_TITLE}" -gt 100 ]; then
+            echo "::error::Invalid PR title: \"$PR_TITLE\""
+            echo "Expected: <type>(<optional scope>): <subject>"
+            echo "  - type is one of: build, chore, ci, docs, feat, fix, perf, refactor, revert"
+            echo "  - the subject must not end with a period"
+            echo "  - the whole title must be at most 100 characters"
+            echo "See $HELP_URL"
+            exit 1
+          fi

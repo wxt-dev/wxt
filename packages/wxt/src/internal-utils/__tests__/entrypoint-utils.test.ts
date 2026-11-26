@@ -1,11 +1,13 @@
+import { resolve } from 'path';
+
 import { describe, it, expect } from 'vitest';
+
+import { Entrypoint } from '../../types';
 import {
   getEntrypointName,
   getEntrypointOutputFile,
   resolvePerBrowserOption,
 } from '../entrypoint-utils';
-import { Entrypoint } from '../../types';
-import { resolve } from 'path';
 
 describe('Entrypoint Utils', () => {
   describe('getEntrypointName', () => {

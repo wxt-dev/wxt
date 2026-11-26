@@ -1,16 +1,18 @@
-import { InlineConfig } from './types';
-import path from 'node:path';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { safeFilename } from './internal-utils/string-utils';
-import { getPackageJson } from './internal/package';
-import { formatDuration } from './internal-utils/time-utils';
-import { printFileList } from './internal-utils/log';
-import { findEntrypoints } from './internal/find-entrypoints';
-import { internalBuild } from './internal/internal-build';
-import { registerWxt, wxt } from './internal/wxt';
+import path from 'node:path';
+
 import { createZip, type Zip } from '@aklinker1/zero-zip';
 import { glob } from 'tinyglobby';
+
+import { printFileList } from './internal-utils/log';
 import { normalizePath } from './internal-utils/path-utils';
+import { safeFilename } from './internal-utils/string-utils';
+import { formatDuration } from './internal-utils/time-utils';
+import { findEntrypoints } from './internal/find-entrypoints';
+import { internalBuild } from './internal/internal-build';
+import { getPackageJson } from './internal/package';
+import { registerWxt, wxt } from './internal/wxt';
+import { InlineConfig } from './types';
 
 /**
  * Build and zip the extension for distribution.

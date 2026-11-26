@@ -1,9 +1,11 @@
-import isWsl from 'is-wsl';
-import { ExtensionRunner, ResolvedConfig } from '../../types';
-import { formatDuration } from '../../internal-utils/time-utils';
-import defu from 'defu';
-import { relative } from 'node:path';
 import { mkdir } from 'node:fs/promises';
+import { relative } from 'node:path';
+
+import defu from 'defu';
+import isWsl from 'is-wsl';
+
+import { formatDuration } from '../../internal-utils/time-utils';
+import { ExtensionRunner, ResolvedConfig } from '../../types';
 
 /**
  * WXT's default `ExtensionRunner` that uses web-ext to open the browser. It
@@ -69,6 +71,7 @@ export class WebExtRunner implements ExtensionRunner {
             ),
             args: [
               '--unsafely-disable-devtools-self-xss-warnings',
+              '--test-type',
               ...(wxtUserConfig?.chromiumArgs ?? []),
             ],
           }),

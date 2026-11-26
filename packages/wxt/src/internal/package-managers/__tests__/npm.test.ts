@@ -1,18 +1,17 @@
-import { beforeAll, describe, expect, it } from 'vitest';
 import path from 'node:path';
-import { npm } from '../npm';
-import { x as spawn } from 'tinyexec';
+
+import { beforeAll, describe, expect, it } from 'vitest';
+
 import { pathExists } from '../../../internal-utils/fs-utils';
+import { exec } from '../../../internal-utils/testing/exec';
+import { npm } from '../npm';
 
 describe('NPM Package Management Utils', () => {
   describe('listDependencies', () => {
     const cwd = path.resolve(__dirname, 'fixtures/simple-npm-project');
     beforeAll(async () => {
       // NPM needs the modules installed for 'npm ls' to work
-      await spawn('npm', ['install'], {
-        throwOnError: true,
-        nodeOptions: { cwd },
-      });
+      await exec('npm', ['install'], { cwd });
     }, 60e3);
 
     it('should list direct dependencies', async () => {

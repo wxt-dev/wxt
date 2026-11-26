@@ -1,8 +1,7 @@
-import consola from 'consola';
-import { glob } from 'tinyglobby';
 import { dirname } from 'node:path';
-import pMap from 'p-map';
 import { styleText } from 'node:util';
+
+import pMap from 'p-map';
 import {
   difference,
   findMinimumForRange,
@@ -58,31 +57,31 @@ async function main(): Promise<never> {
     dependencyVersionsMap,
   );
 
-  consola.start(
+  console.log(
     `Fetching ${Object.keys(dependencyVersionsMap).length} dependencies...`,
   );
   const dependencies = await fetchAllPackageInfos(dependencyVersionMap);
-  consola.success('Done!');
+  console.log('Done!');
 
   const isMajor = ['-m', '--major'].some((arg) => args.includes(arg));
   const upgrades = await detectUpgrades(dependencies, isMajor);
 
   if (!upgrades.length) {
-    consola.info("\nNo upgrades found, you're up to date!\n");
+    console.log("\nNo upgrades found, you're up to date!\n");
     process.exit(0);
   }
 
   printUpgrades(upgrades);
 
   if (!isWrite) {
-    consola.info('Run with `-w` to write changes to package.json files\n');
+    console.log('Run with `-w` to write changes to package.json files\n');
     process.exit(0);
   }
 
-  consola.start('Writing new versions to package.json files...');
+  console.log('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
-  consola.success('Done!');
-  consola.info('\nRun `bun install` to install new dependencies\n');
+  console.log('Done!');
+  console.log('\nRun `bun install` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -100,10 +99,10 @@ async function getPackageJsonDependencies(
   packageJsonFiles: string[];
   dependencyVersionsMap: DependencyVersionsMap;
 }> {
-  const packageJsonFiles = await glob(
-    ['package.json', '*/*/package.json', '!**/node_modules'],
-    { onlyFiles: true, expandDirectories: false },
-  );
+  const packageJsonFiles = [
+    'package.json',
+    ...(await Array.fromAsync(new Bun.Glob('*/*/package.json').scan('.'))),
+  ].filter((path) => !path.includes('node_modules'));
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
       content: await Bun.file(path).json(),
@@ -161,7 +160,7 @@ function validateNoMultipleVersions(
     ...depsWithMultipleVersions.map(([name]) => name.length),
   );
 
-  consola.info('Found multiple versions of:');
+  console.log('Found multiple versions of:');
   for (const [name, versions] of depsWithMultipleVersions) {
     console.log(
       `    ${styleText('magenta', name.padEnd(maxWidth))}  ${Array.from(
@@ -171,7 +170,7 @@ function validateNoMultipleVersions(
         .join('\t')}`,
     );
   }
-  consola.error(`${depsWithMultipleVersions.length} problem(s) found`);
+  console.error(`${depsWithMultipleVersions.length} problem(s) found`);
   process.exit(1);
 }
 
@@ -342,7 +341,7 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
   );
   const numberPadding = String(upgrades.length + 1).length + 1;
 
-  consola.info(`Found ${upgrades.length} upgrades:\n`);
+  console.log(`Found ${upgrades.length} upgrades:\n`);
 
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];

@@ -1,8 +1,10 @@
-import { x as spawn } from 'tinyexec';
 import path from 'node:path';
+
 import { beforeAll, describe, expect, it } from 'vitest';
-import { pnpm } from '../pnpm';
+
+import { exec } from '../../../internal-utils/testing/exec';
 import { describeWithBin } from '../../../internal-utils/testing/fixtures';
+import { pnpm } from '../pnpm';
 
 process.env.WXT_PNPM_IGNORE_WORKSPACE = 'true';
 
@@ -12,10 +14,7 @@ describeWithBin('pnpm', 'PNPM Package Management Utils', () => {
 
     beforeAll(async () => {
       // PNPM needs the modules installed, or 'pnpm ls' will return a blank list.
-      await spawn('pnpm', ['install'], {
-        throwOnError: true,
-        nodeOptions: { cwd },
-      });
+      await exec('pnpm', ['install'], { cwd });
     }, 30e3);
 
     it('should list direct dependencies', async () => {

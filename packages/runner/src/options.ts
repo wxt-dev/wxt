@@ -1,14 +1,15 @@
+import { mkdtemp, open } from 'node:fs/promises';
+import { homedir, tmpdir } from 'node:os';
+import { resolve, join } from 'node:path';
+import { styleText } from 'node:util';
+
 import {
   FALLBACK_TARGETS,
   KNOWN_BROWSER_PATHS,
   KnownTarget,
   type BrowserPlatform,
 } from './browser-paths';
-import { resolve, join } from 'node:path';
-import { homedir, tmpdir } from 'node:os';
 import { runnerDebug } from './debug';
-import { mkdtemp, open } from 'node:fs/promises';
-import { styleText } from 'node:util';
 
 const debug = runnerDebug.extend('options');
 

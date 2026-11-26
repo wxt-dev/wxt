@@ -1,5 +1,5 @@
-import { defineConfig } from 'wxt';
 import { presetWind3 } from 'unocss';
+import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
@@ -13,9 +13,6 @@ export default defineConfig({
         matches: ['*://*.google.com/*', '*://*.example.com/*'],
       },
     ],
-  },
-  zip: {
-    downloadPackages: ['sass'],
   },
   analysis: {
     open: true,
@@ -34,7 +31,6 @@ export default defineConfig({
       'iframe-src',
       'injected',
       'example-tsx',
-      'example-2',
       'iframe',
       'location-change',
       'main-world',

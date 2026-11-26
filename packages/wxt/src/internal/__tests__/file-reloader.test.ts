@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createFileReloader } from '../file-reloader';
-import { findEntrypoints } from '../find-entrypoints';
-import { rebuild } from '../rebuild';
+
 import {
   fakeBackgroundEntrypoint,
   fakeBuildOutput,
@@ -10,6 +8,9 @@ import {
   fakePopupEntrypoint,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
+import { createFileReloader } from '../file-reloader';
+import { findEntrypoints } from '../find-entrypoints';
+import { rebuild } from '../rebuild';
 
 vi.mock('../find-entrypoints', async () => {
   const actual = await vi.importActual<typeof import('../find-entrypoints')>(

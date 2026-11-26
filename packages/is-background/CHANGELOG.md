@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.0.2
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/is-background-v1.0.1...is-background-v1.0.2)
+
+### 🩹 Fixes
+
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
+### 🏡 Chore
+
+- Fix type check errors ([#2640](https://github.com/wxt-dev/wxt/pull/2640))
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ❤️ Contributors
+
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v1.0.1
 
 ### 🚀 Features
@@ -24,4 +44,3 @@
 - [@aklinker1](https://github.com/aklinker1)
 - [@dependabot[bot]](https://github.com/dependabot[bot])
 - [@howlettt](https://github.com/howlettt)
-

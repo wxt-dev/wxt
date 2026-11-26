@@ -1,13 +1,14 @@
 import type { Hookable } from 'hookable';
+
+import { withFirstModule } from '../internal-utils/module-utils';
 import type {
   ResolvedConfig,
   WxtBuilder,
   WxtDevServer,
   WxtHooks,
 } from '../types';
-import { ViteBuilder } from './builders/vite';
 import { UnknownBuilder } from './builders/unknown';
-import { withFirstModule } from '../internal-utils/module-utils';
+import { ViteBuilder } from './builders/vite';
 
 export function detectBuilder(
   config: ResolvedConfig,

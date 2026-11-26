@@ -1,7 +1,11 @@
 /** SHOULD ONLY BE IMPORTED IN TESTS. */
 import { resolve } from 'path';
-import { faker } from '@faker-js/faker';
-import merge from 'lodash.merge';
+
+import type { Browser } from '@wxt-dev/browser';
+import { vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
+
+import { setWxtForTesting } from '../../internal/wxt';
 import {
   FsCache,
   ResolvedConfig,
@@ -21,24 +25,76 @@ import {
   BaseEntrypoint,
   UnlistedScriptEntrypoint,
 } from '../../types';
-import { mock } from 'vitest-mock-extended';
-import { vi } from 'vitest';
-import { setWxtForTesting } from '../../internal/wxt';
-import type { Browser } from '@wxt-dev/browser';
 
-faker.seed(__TEST_SEED__);
+// Seeded PRNG (mulberry32) so failures can be reproduced with the same seed.
+let seedState = __TEST_SEED__ >>> 0;
+function random(): number {
+  seedState = (seedState + 0x6d2b79f5) >>> 0;
+  let t = seedState;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ALPHANUMERIC = ALPHA + '0123456789';
+const FIRST_NAMES = ['Alex', 'Blake', 'Casey', 'Drew', 'Emery', 'Finley'];
+const LAST_NAMES = ['Adams', 'Brooks', 'Chen', 'Dunn', 'Evans', 'Fischer'];
+
+function randomBoolean(): boolean {
+  return random() < 0.5;
+}
+
+function randomInt(min = 0, max = Number.MAX_SAFE_INTEGER): number {
+  return min + Math.floor(random() * (max - min + 1));
+}
+
+function arrayElement<T>(array: readonly T[]): T {
+  return array[randomInt(0, array.length - 1)];
+}
+
+function randomString(chars: string, length: number): string {
+  let result = '';
+  for (let i = 0; i < length; i++) result += arrayElement([...chars]);
+  return result;
+}
+
+const randomAlpha = (length = 1) => randomString(ALPHA, length);
+const randomAlphanumeric = (length = 1) => randomString(ALPHANUMERIC, length);
+const maybe = <T>(fn: () => T): T | undefined =>
+  randomBoolean() ? fn() : undefined;
+const firstName = () => arrayElement(FIRST_NAMES);
+const fullName = () =>
+  `${arrayElement(FIRST_NAMES)} ${arrayElement(LAST_NAMES)}`;
 
 type DeepPartial<T> = T extends object
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
+
+// Not using `@aklinker1/zero-factory` or similar because bases contain mocks
+// (`vi.fn()`, `mock()`) that must be kept as-is, not called or recursed into.
+function isPlainObject(value: unknown): value is Record<string, any> {
+  if (value == null || typeof value !== 'object') return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
+function deepMerge(base: any, overrides: any): any {
+  if (!isPlainObject(base) || !isPlainObject(overrides))
+    return overrides === undefined ? base : overrides;
+  // Mutate `base` instead of copying so mocks (proxies) keep their behavior
+  for (const key of Object.keys(overrides)) {
+    base[key] = deepMerge(base[key], overrides[key]);
+  }
+  return base;
+}
 function fakeObjectCreator<T>(base: () => T) {
-  return (overrides?: DeepPartial<T>): T => merge(base(), overrides);
+  return (overrides?: DeepPartial<T>): T => deepMerge(base(), overrides);
 }
 
 export function fakeFileName(): string {
-  return faker.string.alphanumeric() + '.' + faker.string.alpha({ length: 3 });
+  return randomAlphanumeric() + '.' + randomAlpha(3);
 }
 
 export function fakeFile(root = process.cwd()): string {
@@ -46,11 +102,11 @@ export function fakeFile(root = process.cwd()): string {
 }
 
 export function fakeDir(root = process.cwd()): string {
-  return resolve(root, faker.string.alphanumeric());
+  return resolve(root, randomAlphanumeric());
 }
 
 export const fakeEntrypoint = (options?: DeepPartial<BaseEntrypoint>) =>
-  faker.helpers.arrayElement([
+  arrayElement([
     fakePopupEntrypoint,
     fakeGenericEntrypoint,
     fakeOptionsEntrypoint,
@@ -63,16 +119,12 @@ export const fakeContentScriptEntrypoint =
   fakeObjectCreator<ContentScriptEntrypoint>(() => ({
     type: 'content-script',
     inputPath: fakeFile('src'),
-    name: faker.string.alpha(),
+    name: randomAlpha(),
     options: {
       matches: [],
-      matchAboutBlank: faker.datatype.boolean(),
-      matchOriginAsFallback: faker.helpers.arrayElement([
-        true,
-        false,
-        undefined,
-      ]),
-      runAt: faker.helpers.arrayElement([
+      matchAboutBlank: randomBoolean(),
+      matchOriginAsFallback: arrayElement([true, false, undefined]),
+      runAt: arrayElement([
         'document_start',
         'document_end',
         'document_idle',
@@ -80,7 +132,7 @@ export const fakeContentScriptEntrypoint =
       ]),
     },
     outputDir: fakeDir('.output'),
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }));
 
 export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
@@ -89,11 +141,11 @@ export const fakeBackgroundEntrypoint = fakeObjectCreator<BackgroundEntrypoint>(
     inputPath: 'entrypoints/background.ts',
     name: 'background',
     options: {
-      persistent: faker.datatype.boolean(),
-      type: faker.helpers.maybe(() => 'module'),
+      persistent: randomBoolean(),
+      type: maybe(() => 'module'),
     },
     outputDir: fakeDir('.output'),
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }),
 );
 
@@ -101,10 +153,10 @@ export const fakeUnlistedScriptEntrypoint =
   fakeObjectCreator<UnlistedScriptEntrypoint>(() => ({
     type: 'unlisted-script',
     inputPath: fakeFile('src'),
-    name: faker.string.alpha(),
+    name: randomAlpha(),
     outputDir: fakeDir('.output'),
     options: {},
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }));
 
 export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
@@ -114,11 +166,11 @@ export const fakeOptionsEntrypoint = fakeObjectCreator<OptionsEntrypoint>(
     name: 'options',
     outputDir: fakeDir('.output'),
     options: {
-      browserStyle: faker.datatype.boolean(),
-      chromeStyle: faker.datatype.boolean(),
-      openInTab: faker.datatype.boolean(),
+      browserStyle: randomBoolean(),
+      chromeStyle: randomBoolean(),
+      openInTab: randomBoolean(),
     },
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }),
 );
 
@@ -128,28 +180,21 @@ export const fakePopupEntrypoint = fakeObjectCreator<PopupEntrypoint>(() => ({
   name: 'popup',
   outputDir: fakeDir('.output'),
   options: {
-    defaultTitle: faker.helpers.arrayElement([
-      faker.person.fullName(),
-      undefined,
-    ]),
-    defaultIcon: faker.helpers.arrayElement([
+    defaultTitle: arrayElement([fullName(), undefined]),
+    defaultIcon: arrayElement([
       {
         '16': 'icon/16.png',
         '24': 'icon/24.png',
         '64': 'icon/64.png',
       },
     ]),
-    actionType: faker.helpers.arrayElement([
-      'browser_action',
-      'page_action',
-      undefined,
-    ]),
+    actionType: arrayElement(['browser_action', 'page_action', undefined]),
     // Firefox-specific options - kept undefined by default to avoid breaking existing tests
     browserStyle: undefined,
     defaultArea: undefined,
     themeIcons: undefined,
   },
-  skipped: faker.datatype.boolean(),
+  skipped: randomBoolean(),
 }));
 
 export const fakeSidepanelEntrypoint = fakeObjectCreator<SidepanelEntrypoint>(
@@ -159,26 +204,23 @@ export const fakeSidepanelEntrypoint = fakeObjectCreator<SidepanelEntrypoint>(
     name: 'sidepanel',
     outputDir: fakeDir('.output'),
     options: {
-      defaultTitle: faker.helpers.arrayElement([
-        faker.person.fullName(),
-        undefined,
-      ]),
-      defaultIcon: faker.helpers.arrayElement([
+      defaultTitle: arrayElement([fullName(), undefined]),
+      defaultIcon: arrayElement([
         {
           '16': 'icon/16.png',
           '24': 'icon/24.png',
           '64': 'icon/64.png',
         },
       ]),
-      openAtInstall: faker.helpers.arrayElement([true, false, undefined]),
+      openAtInstall: arrayElement([true, false, undefined]),
     },
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }),
 );
 
 export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
   () => ({
-    type: faker.helpers.arrayElement([
+    type: arrayElement([
       'sandbox',
       'bookmarks',
       'history',
@@ -187,16 +229,16 @@ export const fakeGenericEntrypoint = fakeObjectCreator<GenericEntrypoint>(
       'unlisted-page',
     ]),
     inputPath: fakeFile('src'),
-    name: faker.string.alpha(),
+    name: randomAlpha(),
     outputDir: fakeDir('.output'),
     options: {},
-    skipped: faker.datatype.boolean(),
+    skipped: randomBoolean(),
   }),
 );
 
 export const fakeOutputChunk = fakeObjectCreator<OutputChunk>(() => ({
   type: 'chunk',
-  fileName: faker.string.alphanumeric(),
+  fileName: randomAlphanumeric(),
   moduleIds: [],
 }));
 
@@ -206,14 +248,14 @@ export const fakeOutputAsset = fakeObjectCreator<OutputAsset>(() => ({
 }));
 
 export const fakeManifest = fakeObjectCreator<Browser.runtime.Manifest>(() => ({
-  manifest_version: faker.helpers.arrayElement([2, 3]),
-  name: faker.string.alphanumeric(),
-  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+  manifest_version: arrayElement([2, 3]),
+  name: randomAlphanumeric(),
+  version: `${randomInt()}.${randomInt()}.${randomInt()}`,
 }));
 
 export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
-  name: faker.string.alphanumeric(),
-  version: `${faker.number.int()}.${faker.number.int()}.${faker.number.int()}`,
+  name: randomAlphanumeric(),
+  version: `${randomInt()}.${randomInt()}.${randomInt()}`,
 }));
 
 export function fakeArray<T>(createItem: () => T, count = 3): T[] {
@@ -225,10 +267,10 @@ export function fakeArray<T>(createItem: () => T, count = 3): T[] {
 }
 
 export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
-  const browser = faker.helpers.arrayElement(['chrome', 'firefox']);
-  const command = faker.helpers.arrayElement(['build', 'serve'] as const);
-  const manifestVersion = faker.helpers.arrayElement([2, 3] as const);
-  const mode = faker.helpers.arrayElement(['development', 'production']);
+  const browser = arrayElement(['chrome', 'firefox']);
+  const command = arrayElement(['build', 'serve'] as const);
+  const manifestVersion = arrayElement([2, 3] as const);
+  const mode = arrayElement(['development', 'production']);
 
   return {
     browser,
@@ -241,11 +283,11 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
     env: { browser, command, manifestVersion, mode },
     fsCache: mock<FsCache>(),
     imports: {
-      disabled: faker.datatype.boolean(),
+      disabled: randomBoolean(),
       eslintrc: {
-        enabled: faker.helpers.arrayElement([false, 8, 9]),
+        enabled: arrayElement([false, 8, 9]),
         filePath: fakeFile(),
-        globalsPropValue: faker.helpers.arrayElement([
+        globalsPropValue: arrayElement([
           true,
           false,
           'readable',
@@ -268,7 +310,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       config: {},
     },
     runner: mock(),
-    debug: faker.datatype.boolean(),
+    debug: randomBoolean(),
     srcDir: fakeDir(),
     typesDir: fakeDir(),
     wxtDir: fakeDir(),
@@ -289,7 +331,7 @@ export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
       exclude: [],
       sourcesRoot: fakeDir(),
       sourcesTemplate: '{{name}}-sources.zip',
-      name: faker.person.firstName().toLowerCase(),
+      name: firstName().toLowerCase(),
       downloadedPackagesDir: fakeDir(),
       downloadPackages: [],
       compressionLevel: 9,
@@ -321,7 +363,7 @@ export const fakeWxt = fakeObjectCreator<Wxt>(() => ({
   logger: mock(),
   reloadConfig: vi.fn(),
   pm: mock(),
-  server: faker.helpers.arrayElement([undefined, fakeWxtDevServer()]),
+  server: arrayElement([undefined, fakeWxtDevServer()]),
   builder: mock(),
   entrypointFinder: mock({
     findEntrypoints: () => [],
@@ -365,14 +407,9 @@ export const fakeBuildStepOutput = fakeObjectCreator<BuildStepOutput>(() => ({
 
 export const fakeManifestCommand = fakeObjectCreator<Browser.commands.Command>(
   () => ({
-    description: faker.string.sample(),
+    description: randomAlphanumeric(10),
     suggested_key: {
-      default: `${faker.helpers.arrayElement(['ctrl', 'alt'])}+${faker.number.int(
-        {
-          min: 0,
-          max: 9,
-        },
-      )}`,
+      default: `${arrayElement(['ctrl', 'alt'])}+${randomInt(0, 9)}`,
     },
   }),
 );

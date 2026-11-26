@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { TestProject } from '../utils';
-import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
 import open from 'tiny-open';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+import { resetBundleIncrement } from '../../src/internal/builders/vite/plugins';
+import { TestProject } from '../utils';
 
 vi.mock('tiny-open');
 const openMock = vi.mocked(open);

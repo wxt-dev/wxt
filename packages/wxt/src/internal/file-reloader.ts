@@ -1,32 +1,34 @@
-import { withLock } from 'superlock';
 import { relative } from 'node:path';
+import { styleText } from 'node:util';
+
+import { withLock } from 'superlock';
+
+import { filterTruthy, toArray } from '../internal-utils/array-utils';
+import {
+  getContentScriptJs,
+  mapWxtOptionsToRegisteredContentScript,
+} from '../internal-utils/content-script-utils';
+import {
+  getEntrypointBundlePath,
+  isHtmlEntrypoint,
+} from '../internal-utils/entrypoint-utils';
+import { normalizePath } from '../internal-utils/path-utils';
 import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
   WxtDevServer,
 } from '../types';
-import { wxt } from './wxt';
 import {
   detectDevChanges,
   getRelevantDevChangedFiles,
 } from './detect-dev-changes';
 import { findEntrypoints } from './find-entrypoints';
 import { groupEntrypoints } from './group-entrypoints';
-import { rebuild } from './rebuild';
-import {
-  getEntrypointBundlePath,
-  isHtmlEntrypoint,
-} from '../internal-utils/entrypoint-utils';
 import { getContentScriptCssFiles, getContentScriptsCssMap } from './manifest';
-import {
-  getContentScriptJs,
-  mapWxtOptionsToRegisteredContentScript,
-} from '../internal-utils/content-script-utils';
+import { rebuild } from './rebuild';
 import { isBabelSyntaxError, logBabelSyntaxError } from './syntax-errors';
-import { styleText } from 'node:util';
-import { filterTruthy, toArray } from '../internal-utils/array-utils';
-import { normalizePath } from '../internal-utils/path-utils';
+import { wxt } from './wxt';
 
 /**
  * Returns a function responsible for reloading different parts of the extension

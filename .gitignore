@@ -9,6 +9,8 @@
 .wxt-runner
 *.log
 *.tgz
+# Copied from the root before packing in release.yml
+/packages/*/LICENSE
 /docs/.vitepress/cache
 docs/.vitepress/.temp
 coverage
@@ -25,3 +27,4 @@ stats.html
 .cache
 *-stats.txt
 /packages/wxt/inline
+.screenshots

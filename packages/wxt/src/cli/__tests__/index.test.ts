@@ -1,7 +1,8 @@
-import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build, createServer, zip, prepare, clean, initialize } from '../../';
-import { mock } from 'vitest-mock-extended';
 import consola, { LogLevels } from 'consola';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
+import { mock } from 'vitest-mock-extended';
+
+import { build, createServer, zip, prepare, clean, initialize } from '../../';
 
 vi.mock('../../build');
 const buildMock = vi.mocked(build);

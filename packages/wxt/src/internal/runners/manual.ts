@@ -1,5 +1,6 @@
-import type { ExtensionRunner, ResolvedConfig } from '../../types';
 import { relative } from 'node:path';
+
+import type { ExtensionRunner, ResolvedConfig } from '../../types';
 
 /**
  * Base runner that just tells developers to load the extension into their
