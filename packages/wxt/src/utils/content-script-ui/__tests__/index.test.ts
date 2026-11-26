@@ -41,6 +41,26 @@ describe('Content Script UIs', () => {
   let ctx: ContentScriptContext;
 
   beforeEach(() => {
+    // Happy DOM cannot fetch chrome-extension:// URLs. Enable iframe loading and
+    // return an empty document so mount() does not log unsupported-scheme errors.
+    const settings = (window as any).happyDOM.settings;
+    settings.enableIframePageLoading = true;
+    settings.fetch.interceptor = {
+      beforeAsyncRequest: async ({
+        request,
+        window: iframeWindow,
+      }: {
+        request: Request;
+        window: Window & typeof globalThis;
+      }) => {
+        if (request.url.startsWith('chrome-extension://')) {
+          return new iframeWindow.Response('<!doctype html><html></html>', {
+            headers: { 'Content-Type': 'text/html' },
+          });
+        }
+      },
+    };
+
     document.body.innerHTML = `
       <div id="parent">
         <p id="one">one</p>
