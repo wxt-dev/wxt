@@ -75,9 +75,8 @@ export const extport = defineAnalyticsProvider<ExtportProviderOptions>(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      // Only stamp the day on confirmed delivery — a failed send retries on
-      // the next background wake-up. The server is idempotent per install
-      // per UTC day, so a retry can never double-count.
+      // Stamp the day only after a successful response so failed sends retry.
+      // The server is idempotent per install per UTC day.
       if (response.ok) {
         await browser.storage.local.set({ [PING_STORAGE_KEY]: today });
       }
