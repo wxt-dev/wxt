@@ -13,7 +13,7 @@ const PING_STORAGE_KEY = 'extport:last-ping-date';
 const PING_EVENT = '__extport_ping';
 
 export interface ExtportProviderOptions {
-  /** The extension's extport id (`ext_…`), from https://dash.extport.dev. */
+  /** Extension id from https://dash.extport.dev (`ext_…`). */
   extensionId: string;
   /** Override for self-hosted extport instances. */
   apiBase?: string;
