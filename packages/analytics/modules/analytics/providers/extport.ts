@@ -15,7 +15,10 @@ const PING_EVENT = '__extport_ping';
 export interface ExtportProviderOptions {
   /** Extension id from https://dash.extport.dev (`ext_…`). */
   extensionId: string;
-  /** Base URL for a self-hosted extport instance. Defaults to `https://api.extport.dev`. */
+  /**
+   * Base URL for a self-hosted extport instance. Defaults to
+   * `https://api.extport.dev`.
+   */
   apiBase?: string;
 }
 
@@ -44,8 +47,8 @@ async function browserConsentsToAnalytics(): Promise<boolean> {
 }
 
 /**
- * extport analytics provider: one anonymous daily ping per install.
- * Custom events are ignored — pair another provider for event tracking.
+ * Extport analytics provider: one anonymous daily ping per install. Custom
+ * events are ignored — pair another provider for event tracking.
  *
  * @see https://extport.dev
  */
