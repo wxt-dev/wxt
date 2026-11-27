@@ -44,11 +44,10 @@ async function browserConsentsToAnalytics(): Promise<boolean> {
 }
 
 /**
- * [extport](https://extport.dev)'s analytics protocol has exactly one event: an
- * anonymous daily ping per install. Installs, actives, and churn are all
- * derived from the ping stream server-side, so this provider reports nothing
- * else — custom events are dropped (pair another provider like PostHog or Umami
- * if you need event tracking).
+ * extport analytics provider: one anonymous daily ping per install.
+ * Custom events are ignored — pair another provider for event tracking.
+ *
+ * @see https://extport.dev
  */
 export const extport = defineAnalyticsProvider<ExtportProviderOptions>(
   (analytics, config, options) => {
