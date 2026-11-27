@@ -25,6 +25,12 @@ jobs:
       - name: Build All Packages
         run: bun run buildc all
 
+      # pkg-pr-new rewrites each package.json before running `bun pm pack`,
+      # which changes buildc's cache hash and makes every `prepack` do a full
+      # rebuild. Everything is already built above, so skip it.
+      - name: Remove prepack Scripts
+        run: npm pkg delete scripts.prepack --workspaces
+
       - name: Publish
         run: bunx pkg-pr-new publish --compact --bun './packages/*'
 

@@ -234,6 +234,7 @@ export default defineConfig({
               menuItem('TypeScript', 'typescript.md'),
               menuItem('Hooks', 'hooks.md'),
               menuItem('Entrypoint Loaders', 'entrypoint-loaders.md'),
+              menuItem('Experimental', 'experimental.md'),
             ],
             true,
           ),

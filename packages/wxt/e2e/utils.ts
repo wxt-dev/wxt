@@ -2,8 +2,6 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer as createNetServer } from 'node:net';
 import { dirname, relative, resolve } from 'path';
 
-import merge from 'lodash.merge';
-import { Result, x as spawn } from 'tinyexec';
 import { glob } from 'tinyglobby';
 import * as vite from 'vite';
 
@@ -18,6 +16,7 @@ import {
 } from '../src';
 import { pathExists, readJson } from '../src/internal-utils/fs-utils';
 import { normalizePath } from '../src/internal-utils/path-utils';
+import { exec, ExecResult } from '../src/internal-utils/testing/exec';
 import { registerWxt } from '../src/internal/wxt';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
@@ -61,14 +60,12 @@ export class TestProject {
     this.files.push([
       'package.json',
       JSON.stringify(
-        merge(
-          {
-            name: 'E2E Extension',
-            description: 'Example description',
-            version: '0.0.0',
-          },
-          packageJson,
-        ),
+        {
+          name: 'E2E Extension',
+          description: 'Example description',
+          version: '0.0.0',
+          ...packageJson,
+        },
         null,
         2,
       ),
@@ -176,12 +173,7 @@ export class TestProject {
     // Only install dependencies if the project has custom ones - otherwise the
     // project will reuse the ones in `packages/wxt/node_modules`!
     if (this.hasCustomDependencies) {
-      await spawn('bun', ['install', '--ignore-scripts'], {
-        throwOnError: true,
-        nodeOptions: {
-          cwd: this.root,
-        },
-      });
+      await exec('bun', ['install', '--ignore-scripts'], { cwd: this.root });
     }
 
     await mkdir(resolve(this.root, 'public'), { recursive: true }).catch(
@@ -253,12 +245,17 @@ export class TestProject {
   }
 
   /** Run a command using the project's package manager. */
-  async run(...args: string[]): Promise<Result> {
-    return await spawn('bun', args, {
-      throwOnError: true,
-      nodeOptions: {
-        cwd: this.root,
-      },
+  async run(...args: string[]): Promise<ExecResult> {
+    return await this.runWithEnv({}, ...args);
+  }
+
+  async runWithEnv(
+    env: Record<string, string>,
+    ...args: string[]
+  ): Promise<ExecResult> {
+    return await exec('bun', args, {
+      cwd: this.root,
+      env: { ...process.env, ...env },
     });
   }
 }

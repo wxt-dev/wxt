@@ -126,7 +126,6 @@
     "check:default": "check",
     "check:tsc-virtual": "tsc --noEmit -p src/virtual",
     "test": "buildc --deps-only -- vitest",
-    "test:coverage": "bun run test run --coverage",
     "prepack": "bun run build"
   },
   "dependencies": {
@@ -144,7 +143,6 @@
     "chokidar": "^5.0.0",
     "consola": "^3.4.2",
     "defu": "^6.1.4",
-    "filesize": "^11.0.17",
     "giget": "^1.2.3 || ^2.0.0 || ^3.0.0",
     "hookable": "^6.1.0",
     "json5": "^2.2.3",
@@ -157,24 +155,20 @@
     "tiny-open": "^1.3.0",
     "tinyexec": "^1.2.4",
     "tinyglobby": "^0.2.16",
-    "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0 || ^6.0.0"
+    "unimport": "^7.0.3"
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
-    "@faker-js/faker": "^10.3.0",
     "@types/bun": "catalog:",
-    "@types/lodash.merge": "^4.6.9",
     "@types/node": "catalog:",
     "@types/normalize-path": "^3.0.2",
     "@types/picomatch": "^4.0.2",
     "@types/prompts": "^2.4.9",
     "dotenv-expand": "^13.0.0",
     "eslint": "^10.1.0",
-    "extract-zip": "^2.0.1",
     "get-port-please": "^3.2.0",
     "happy-dom": "^21.0.4",
     "is-wsl": "^3.1.1",
-    "lodash.merge": "^4.6.2",
     "normalize-path": "^3.0.0",
     "ohash": "^2.0.11",
     "oxlint": "catalog:",
@@ -184,6 +178,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
+    "vitest-mock-extended": "catalog:",
     "vitest-plugin-random-seed": "catalog:",
     "web-ext": "catalog:"
   },

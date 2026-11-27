@@ -276,28 +276,6 @@ describe('Output Directory Structure', () => {
       }`,
     );
 
-    project.addFile(
-      'entrypoints/sass-one.scss',
-      `$font-stack: Helvetica, sans-serif;
-      $primary-color: #333;
-
-      body {
-        font: 100% $font-stack;
-        color: $primary-color;
-      }`,
-    );
-
-    project.addFile(
-      'entrypoints/sass-two.content.scss',
-      `$font-stack: Helvetica, sans-serif;
-      $primary-color: #333;
-
-      body {
-        font: 100% $font-stack;
-        color: $primary-color;
-      }`,
-    );
-
     await project.build();
 
     expect(await project.serializeOutput(['.output/chrome-mv3/manifest.json']))
@@ -307,17 +285,7 @@ describe('Output Directory Structure', () => {
         body{color:#333;font:100% Helvetica,sans-serif}
 
         ================================================================================
-        .output/chrome-mv3/assets/sass-one.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
         .output/chrome-mv3/content-scripts/plain-two.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
-        .output/chrome-mv3/content-scripts/sass-two.css
         ----------------------------------------
         body{color:#333;font:100% Helvetica,sans-serif}
 

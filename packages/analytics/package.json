@@ -1,6 +1,6 @@
 {
   "name": "@wxt-dev/analytics",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "Add analytics to your web extension",
   "license": "MIT",
   "repository": {
@@ -45,6 +45,10 @@
     "./providers/posthog": {
       "types": "./dist/providers/posthog.d.mts",
       "default": "./dist/providers/posthog.mjs"
+    },
+    "./providers/extport": {
+      "types": "./dist/providers/extport.d.mts",
+      "default": "./dist/providers/extport.mjs"
     }
   },
   "scripts": {
@@ -54,8 +58,7 @@
     "build": "buildc -- tsdown",
     "prepack": "bun run build",
     "postinstall": "buildc --deps-only -- wxt prepare",
-    "test": "echo 'noop'",
-    "test:coverage": "echo 'noop'"
+    "test": "echo 'noop'"
   },
   "dependencies": {
     "@wxt-dev/browser": "workspace:>=0.1",
