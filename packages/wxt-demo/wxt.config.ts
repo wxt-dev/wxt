@@ -19,6 +19,7 @@ export default defineConfig({
     open: true,
   },
   webExt: {
+    startUrls: ['https://example.com'],
     chromiumPref: {
       'extensions.pinned_extensions': ['ialddiekpanaiffomfkfchejlohnhhce'],
     },
