@@ -1,14 +1,14 @@
-import { defineAnalyticsProvider } from '../client';
 import { browser } from '@wxt-dev/browser';
+
+import { defineAnalyticsProvider } from '../client';
 import type { BaseAnalyticsEvent } from '../types';
 
 const DEFAULT_API_BASE = 'https://api.extport.dev';
 const PING_STORAGE_KEY = 'extport:last-ping-date';
 
 /**
- * Internal event name used to route the daily ping through
- * `analytics.track()`, so the module's consent gate (`enabled`) applies to
- * it like any other event.
+ * Internal event name used to route the daily ping through `analytics.track()`,
+ * so the module's consent gate (`enabled`) applies to it like any other event.
  */
 const PING_EVENT = '__extport_ping';
 
@@ -23,9 +23,9 @@ export interface ExtportProviderOptions {
  * Firefox 140+ has a built-in data-collection consent mechanism: when
  * `permissions.getAll()` reports a `data_collection` array,
  * `technicalAndInteraction` must be present in it (the toggle shown in the
- * install prompt and in about:addons). When the key is absent the browser
- * has no such mechanism and the manifest disclosure governs. Read at ping
- * time so revocation needs no listener — the next ping re-checks.
+ * install prompt and in about:addons). When the key is absent the browser has
+ * no such mechanism and the manifest disclosure governs. Read at ping time so
+ * revocation needs no listener — the next ping re-checks.
  */
 async function browserConsentsToAnalytics(): Promise<boolean> {
   try {
@@ -44,11 +44,11 @@ async function browserConsentsToAnalytics(): Promise<boolean> {
 }
 
 /**
- * [extport](https://extport.dev)'s analytics protocol has exactly one
- * event: an anonymous daily ping per install. Installs, actives, and churn
- * are all derived from the ping stream server-side, so this provider
- * reports nothing else — custom events are dropped (pair another provider
- * like PostHog or Umami if you need event tracking).
+ * [extport](https://extport.dev)'s analytics protocol has exactly one event: an
+ * anonymous daily ping per install. Installs, actives, and churn are all
+ * derived from the ping stream server-side, so this provider reports nothing
+ * else — custom events are dropped (pair another provider like PostHog or Umami
+ * if you need event tracking).
  */
 export const extport = defineAnalyticsProvider<ExtportProviderOptions>(
   (analytics, config, options) => {
