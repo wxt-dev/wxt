@@ -506,9 +506,10 @@ However, you don't need to memorize or learn the new import paths! v0.20 introdu
 So to upgrade, just replace any imports from `wxt/storage`, `wxt/client`, and `wxt/sandbox` with an import to the new `#imports` module:
 
 ```ts
-import { storage } from 'wxt/storage'; // [!code --]
-import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
+import { defineContentScript } from 'wxt/sandbox'; // [!code --]
+import { storage } from 'wxt/storage'; // [!code --]
+
 import { storage } from '#imports'; // [!code ++]
 import { defineContentScript } from '#imports'; // [!code ++]
 import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
@@ -517,9 +518,10 @@ import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
 You can combine the imports into a single import statement, but it's easier to just find/replace each statement.
 
 ```ts
-import { storage } from 'wxt/storage'; // [!code --]
-import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
+import { defineContentScript } from 'wxt/sandbox'; // [!code --]
+import { storage } from 'wxt/storage'; // [!code --]
+
 import {
   // [!code ++]
   storage, // [!code ++]
@@ -587,7 +589,7 @@ If you've previously loaded the extension into your browser manually for develop
 ### Deprecated APIs Removed
 
 - `entrypointLoader` option: WXT now uses `vite-node` for importing entrypoints during the build process.
-  <!-- markdownlint-disable-next-line MD051 -->
+  <!-- rumdl-disable-next-line MD051 -->
   > This was deprecated in v0.19.0, see the [v0.19 section](#v0-18-5-rarr-v0-19-0) for migration steps.
 - `transformManifest` option: Use the `build:manifestGenerated` hook to transform the manifest instead:
   <!-- prettier-ignore -->
@@ -798,12 +800,8 @@ JS entrypoints in the output directory have been moved. Unless you're doing some
 ```ts [wxt.config.ts]
 export default defineConfig({
   zip: {
-    ignoredSources: [
-      /*...*/
-    ], // [!code --]
-    excludeSources: [
-      /*...*/
-    ], // [!code ++]
+    ignoredSources: [/*...*/], // [!code --]
+    excludeSources: [/*...*/], // [!code ++]
   },
 });
 ```

@@ -1,4 +1,5 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
+
 import { getBrowserEnvironmentGlobals } from './browser-environment';
 import { createEnvironment, Environment } from './environment';
 

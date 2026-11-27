@@ -1,4 +1,5 @@
 import { LogLevels, consola } from 'consola';
+
 import { printHeader } from './log';
 import { formatDuration } from './time-utils';
 

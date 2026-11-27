@@ -1,9 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import {
-  parseMessagesFile,
-  generateChromeMessagesFile,
-  generateTypeFile,
-} from '../build';
+import { writeFile, readFile } from 'node:fs/promises';
+
 import {
   stringifyTOML,
   stringifyYAML,
@@ -11,7 +7,13 @@ import {
   stringifyJSON,
   stringifyJSONC,
 } from 'confbox';
-import { writeFile, readFile } from 'node:fs/promises';
+import { describe, it, expect, vi } from 'vitest';
+
+import {
+  parseMessagesFile,
+  generateChromeMessagesFile,
+  generateTypeFile,
+} from '../build';
 
 vi.mock('node:fs/promises');
 const mockWriteFile = vi.mocked(writeFile);

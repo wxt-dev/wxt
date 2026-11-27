@@ -1,3 +1,9 @@
+import { resolve } from 'node:path';
+
+import { glob } from 'tinyglobby';
+import type { UnimportOptions } from 'unimport';
+import type * as vite from 'vite';
+
 /**
  * Utilities for creating [WXT
  * Modules](https://wxt.dev/guide/essentials/wxt-modules.html).
@@ -11,10 +17,6 @@ import type {
   WxtModuleOptions,
   WxtModuleSetup,
 } from '../types';
-import type * as vite from 'vite';
-import { glob } from 'tinyglobby';
-import { resolve } from 'node:path';
-import type { UnimportOptions } from 'unimport';
 
 // Re-export to prevent TS2742 type errors
 export { WxtModule };

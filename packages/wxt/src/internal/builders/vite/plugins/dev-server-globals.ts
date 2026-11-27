@@ -1,4 +1,5 @@
 import type { Plugin } from 'vite';
+
 import type { ResolvedConfig, WxtDevServer } from '../../../../types';
 
 /**

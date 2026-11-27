@@ -1,7 +1,7 @@
-import { InlineConfig } from './types';
 import { findEntrypoints } from './internal/find-entrypoints';
 import { generateWxtDir } from './internal/generate-wxt-dir';
 import { registerWxt, wxt } from './internal/wxt';
+import { InlineConfig } from './types';
 
 // #region snippet
 export async function prepare(config: InlineConfig) {

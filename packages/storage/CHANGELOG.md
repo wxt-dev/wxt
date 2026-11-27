@@ -1,5 +1,31 @@
 # Changelog
 
+## v1.4.0
+
+[compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.9...storage-v1.4.0)
+
+### 🚀 Features
+
+- **storage**: Add metadata watchers ([#2630](https://github.com/wxt-dev/wxt/pull/2630))
+
+### 🩹 Fixes
+
+- Include `LICENSE` in NPM package ([`8e6eda4`](https://github.com/wxt-dev/wxt/commit/8e6eda4b138eaaaff4b3d38b681a9bafbe08cf3b))
+
+### 🏡 Chore
+
+- **release**: @wxt-dev/storage v1.3.0 ([`6ee6031`](https://github.com/wxt-dev/wxt/commit/6ee6031fd1267813f26ab7094e02416ce0575085))
+- Move to `oxfmt` ([#2736](https://github.com/wxt-dev/wxt/pull/2736))
+- Reduce dev dependencies ([#2753](https://github.com/wxt-dev/wxt/pull/2753))
+
+### ❤️ Contributors
+
+- vansh <vansh.nagar.dev@gmail.com>
+- [@nishu-murmu](https://github.com/nishu-murmu)
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- [@aklinker1](https://github.com/aklinker1)
+
+
 ## v1.3.0
 
 [compare changes](https://github.com/wxt-dev/wxt/compare/storage-v1.2.9...storage-v1.3.0)
@@ -13,7 +39,6 @@
 - vansh <vansh.nagar.dev@gmail.com>
 - [@nishu-murmu](https://github.com/nishu-murmu)
 - [@aklinker1](https://github.com/aklinker1)
-
 
 ## v1.2.9
 

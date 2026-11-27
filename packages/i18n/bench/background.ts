@@ -1,4 +1,5 @@
 import { Bench } from 'tinybench';
+
 import { createI18n } from '../src';
 
 declare const chrome: any;

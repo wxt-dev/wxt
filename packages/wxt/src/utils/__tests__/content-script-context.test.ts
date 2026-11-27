@@ -1,8 +1,9 @@
 /** @vitest-environment happy-dom */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ContentScriptContext } from '../content-script-context';
 import { fakeBrowser } from '@webext-core/fake-browser';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { ContentScriptContext } from '../content-script-context';
 
 /**
  * When dispatching events on document/window/etc, they are fired on the next
@@ -106,7 +107,6 @@ describe('Content Script Context', () => {
       context.addEventListener(window, 'DOMContentLoaded', (_) => {});
       context.addEventListener(window, 'orientationchange', (_) => {});
       context.addEventListener(window, 'wxt:locationchange', (_) => {});
-      // @ts-expect-error
       context.addEventListener(window, 'visibilitychange', (_) => {});
     });
 

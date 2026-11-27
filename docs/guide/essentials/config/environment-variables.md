@@ -53,11 +53,13 @@ You can also access all of [Vite's environment variables](https://vite.dev/guide
 | `import.meta.env.DEV`  | `boolean` | Opposite of `import.meta.env.PROD`                                          |
 
 :::details Other Vite Environment Variables
+
 Vite provides two other environment variables, but they aren't useful in WXT projects:
 
 - `import.meta.env.BASE_URL`: Use `browser.runtime.getURL` instead.
 - `import.meta.env.SSR`: Always `false`.
-  :::
+
+:::
 
 ## Manifest
 

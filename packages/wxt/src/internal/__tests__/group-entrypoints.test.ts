@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { Entrypoint } from '../../types';
-import { groupEntrypoints } from '../group-entrypoints';
+
 import {
   fakeBackgroundEntrypoint,
   fakeGenericEntrypoint,
   fakePopupEntrypoint,
 } from '../../internal-utils/testing/fake-objects';
+import { Entrypoint } from '../../types';
+import { groupEntrypoints } from '../group-entrypoints';
 
 const background: Entrypoint = {
   type: 'background',
@@ -185,10 +186,7 @@ describe('groupEntrypoints', () => {
     expect(actual).toEqual([[background]]);
   });
 
-  it.todo(
-    'should group ESM compatible sandbox scripts with sandbox pages',
-    () => {
-      // Main world content scripts
-    },
-  );
+  it.todo('should group ESM compatible sandbox scripts with sandbox pages', () => {
+    // Main world content scripts
+  });
 });

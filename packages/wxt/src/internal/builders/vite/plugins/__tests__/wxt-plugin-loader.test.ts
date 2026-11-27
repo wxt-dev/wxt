@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { getPluginModules } from '../wxt-plugin-loader';
+
 import {
   fakeBackgroundEntrypoint,
   fakeContentScriptEntrypoint,
 } from '../../../../../internal-utils/testing/fake-objects';
 import type { WxtPluginEntry } from '../../../../../types';
+import { getPluginModules } from '../wxt-plugin-loader';
 
 describe('Plugin Loader', () => {
   describe('getPluginModules', () => {

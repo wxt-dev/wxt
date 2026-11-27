@@ -1,13 +1,15 @@
-import { findEntrypoints } from './find-entrypoints';
-import type { BuildOutput, Entrypoint } from '../types';
 import { mkdir, rm } from 'node:fs/promises';
-import { groupEntrypoints } from './group-entrypoints';
-import { formatDuration } from '../internal-utils/time-utils';
-import { printBuildSummary } from '../internal-utils/log';
-import { glob } from 'tinyglobby';
-import { unnormalizePath } from '../internal-utils/path-utils';
-import { rebuild } from './rebuild';
 import { relative } from 'node:path';
+import { styleText } from 'node:util';
+
+import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
+import open from 'tiny-open';
+import { glob } from 'tinyglobby';
+
+import { isCI } from '../internal-utils/env-utils';
+import { printBuildSummary } from '../internal-utils/log';
+import { unnormalizePath } from '../internal-utils/path-utils';
+import { formatDuration } from '../internal-utils/time-utils';
 import {
   ValidationError,
   ValidationResult,
@@ -15,10 +17,10 @@ import {
   validateEntrypoints,
 } from '../internal/validation';
 import { wxt } from '../internal/wxt';
-import { mergeJsonOutputs } from '@aklinker1/rollup-plugin-visualizer';
-import { isCI } from '../internal-utils/env-utils';
-import { styleText } from 'node:util';
-import open from 'tiny-open';
+import type { BuildOutput, Entrypoint } from '../types';
+import { findEntrypoints } from './find-entrypoints';
+import { groupEntrypoints } from './group-entrypoints';
+import { rebuild } from './rebuild';
 
 /**
  * Builds the extension based on an internal config. No more config discovery is

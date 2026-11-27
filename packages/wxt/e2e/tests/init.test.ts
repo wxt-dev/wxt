@@ -1,7 +1,9 @@
-import { x as spawn } from 'tinyexec';
 import { mkdir, writeFile } from 'node:fs/promises';
+
 import { glob } from 'tinyglobby';
 import { describe, expect, it } from 'vitest';
+
+import { exec } from '../../src/internal-utils/testing/exec';
 import { TestProject, WXT_PACKAGE_DIR } from '../utils';
 
 describe('Init command', () => {
@@ -9,7 +11,7 @@ describe('Init command', () => {
   it.skip('should download and create a template', async () => {
     const project = new TestProject();
 
-    await spawn(
+    await exec(
       'bun',
       [
         'run',
@@ -22,14 +24,7 @@ describe('Init command', () => {
         '--pm',
         'npm',
       ],
-      {
-        throwOnError: true,
-        nodeOptions: {
-          env: { ...process.env, CI: 'true' },
-          stdio: 'ignore',
-          cwd: WXT_PACKAGE_DIR,
-        },
-      },
+      { env: { ...process.env, CI: 'true' }, cwd: WXT_PACKAGE_DIR },
     );
     const files = await glob('**/*', {
       cwd: project.root,
@@ -70,7 +65,7 @@ describe('Init command', () => {
     await writeFile(project.resolvePath('package.json'), JSON.stringify({}));
 
     await expect(() =>
-      spawn(
+      exec(
         'bun',
         [
           'run',
@@ -83,15 +78,8 @@ describe('Init command', () => {
           '--pm',
           'npm',
         ],
-        {
-          throwOnError: true,
-          nodeOptions: {
-            env: { ...process.env, CI: 'true' },
-            stdio: 'ignore',
-            cwd: WXT_PACKAGE_DIR,
-          },
-        },
+        { env: { ...process.env, CI: 'true' }, cwd: WXT_PACKAGE_DIR },
       ),
-    ).rejects.toThrowError('Process exited with non-zero status (1)');
+    ).rejects.toThrow('is not empty');
   });
 });

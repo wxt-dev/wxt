@@ -13,6 +13,7 @@
  * @module wxt/browser
  */
 import { browser as _browser, type Browser } from '@wxt-dev/browser';
+
 import type { ScriptPublicPath } from './utils/inject-script';
 
 /**

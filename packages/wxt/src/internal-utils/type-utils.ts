@@ -1,5 +1,6 @@
-import type { Browser } from '@wxt-dev/browser';
 import { styleText } from 'node:util';
+
+import type { Browser } from '@wxt-dev/browser';
 
 /**
  * Remove optional from key, but keep undefined if present

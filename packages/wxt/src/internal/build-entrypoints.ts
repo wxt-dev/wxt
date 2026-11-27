@@ -1,3 +1,8 @@
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
+import { styleText } from 'node:util';
+import { dirname, resolve } from 'path';
+
+import { toArray } from '../internal-utils/array-utils';
 import {
   BuildOutput,
   BuildStepOutput,
@@ -5,12 +10,8 @@ import {
   ResolvedPublicFile,
 } from '../types';
 import { getPublicFiles } from './get-public-files';
-import { copyFile, mkdir, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'path';
 import type { Spinner } from './spinner';
 import { wxt } from './wxt';
-import { toArray } from '../internal-utils/array-utils';
-import { styleText } from 'node:util';
 
 export async function buildEntrypoints(
   groups: EntrypointGroup[],

@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { clearWarnSetForTesting, createWxtLogger } from '../wxt-logger';
-import type { Logger } from '../../../types';
 import { LogLevels } from 'consola';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { mock } from 'vitest-mock-extended';
+
+import type { Logger } from '../../../types';
+import { clearWarnSetForTesting, createWxtLogger } from '../wxt-logger';
 
 describe('createWxtLogger', () => {
   beforeEach(clearWarnSetForTesting);

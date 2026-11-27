@@ -498,10 +498,6 @@ When you define a Newtab entrypoint, WXT will automatically update the manifest 
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/mv3/manifest/sandbox/)
 
-:::warning Chromium Only
-Firefox does not support sandboxed pages.
-:::
-
 <EntrypointPatterns
   :patterns="[
     ['sandbox.html', 'sandbox.html'],
@@ -576,6 +572,8 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
 
 ### Unlisted CSS
 
+<!-- rumdl-disable MD075 -->
+
 <EntrypointPatterns
   :patterns="[
     ['{name}.(css|scss|sass|less|styl|stylus)', '{name}.css'],
@@ -586,6 +584,8 @@ In Chrome, side panels use the `side_panel` API, while Firefox uses the `sidebar
     ['{name}.content/index.(css|scss|sass|less|styl|stylus)', 'content-scripts/{name}.css'],
   ]"
 />
+
+<!-- rumdl-disable MD075 -->
 
 ```css
 body {

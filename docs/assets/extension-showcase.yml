@@ -516,6 +516,7 @@
 - # Property Track - https://www.propertytrack.co
   chromeId: ahknifalnhmbanoclebllcolcdomfdop
   firefoxSlug: propertytrack
+  edgeId: dphakfbgpkkjlaebfmciognigblfifpk
 
 - # WageSlav3
   chromeId: anhkcmapjhiiofpcgglfljphdgppilof
@@ -591,3 +592,73 @@
   chromeId: knbfidiiikhjebpijhafdikkjhbgbefe
   firefoxSlug: get-yeet
   edgeId: iaiackoabgikdcniiclhbflcnjfhnand
+
+- # Blue Badge Remover
+  chromeId: cjhmbgfnddpcdfmoicfcocekmainhhdm
+  firefoxSlug: blue-badge-remover
+
+- # LoupeKit
+  chromeId: ofmfpfegjgffkgchiebfglboklhejjgl
+  firefoxSlug: loupekit
+
+- # diffy - Review large PRs without leaving GitHub
+  chromeId: oaakiockkfndnholpbeijclfbnldnpfn
+  firefoxSlug: diffy-pr
+  edgeId: bhdajkggepmgloldkdcglcijikjkfodg
+
+- # CliqRelay
+  chromeId: lpflcbiaiffchbkehkningmmckhlibha
+
+- # typinground - Free typing speed test on any webpage
+  chromeId: ladimfhjnlalgefiajchpfnpbbjhfpem
+  firefoxSlug: typinground
+
+- # Tracemark - Live Web Markup
+  chromeId: mgckpdklnjeklihpmplgcfnhncifikjd
+
+- # Redirector
+  chromeId: lioaeidejmlpffbndjhaameocfldlhin
+  firefoxSlug: redirector-url
+  edgeId: jhdjcofnjfeljeekjklhgfmfocfgibmm
+
+- # Twitter Exporter
+  chromeId: lnklhjfbeicncichppfbhjijodjgaejm
+  firefoxSlug: twitter-exporter
+  edgeId: dmcplpafffigalgidmgcioogjihllgjl
+
+- # Input Translator
+  chromeId: namibphobdcighbjjojlhcflpnhobjeo
+  firefoxSlug: input-translator
+  edgeId: goellcedmbnelaoihnjabagfdajllejl
+
+- # Twitter Filter
+  chromeId: ejhilomfbamkbfehkjbhemkpaghpcglj
+  firefoxSlug: twitter-filter
+  edgeId: bidmffpjhlmfnfmnbfhhakpnbikcbehj
+
+- # Clean Twitter
+  chromeId: lbbfmkbgembfbohdadeggdcgdkmfdmpb
+  firefoxSlug: clean-twitter-2333
+  edgeId: akhbfdeilcclmfbmbkndjabkgfhgdede
+
+- # Twitter Blocker
+  chromeId: mbjkhjgpomohfcodieeokjniidffmcga
+  firefoxSlug: twitter-blocker1
+  edgeId: jcehlllpelphhilmbjmjfdinmgkdpclc
+
+- # Claude Exporter
+  chromeId: ifigplgihgdedekfaelihglkhdfogbme
+  firefoxSlug: claude-exporter-plus
+  edgeId: ghllcnlffdoigljhbfaoapeenmkecamd
+
+- # Reddit Exporter
+  chromeId: lnblpminojaaelpbaijpgpdkijkobcge
+  firefoxSlug: reddit-exporter
+  edgeId: ckjmcahfemjdolngoppolbcgbgahgkjc
+
+- # File Transfer – Send Large Files P2P
+  chromeId: lffomfhccijamechladimcfcpijpjnne
+
+- # Hushpad - Notes and env management new tab.
+  chromeId: dgkfpeceojbjmdpjkehcelahhbdklmmd
+  firefoxSlug: hushpad

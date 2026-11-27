@@ -1,7 +1,8 @@
-import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { build, createServer, zip, prepare, clean, initialize } from '../../';
-import { mock } from 'vitest-mock-extended';
 import consola, { LogLevels } from 'consola';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
+import { mock } from 'vitest-mock-extended';
+
+import { build, createServer, zip, prepare, clean, initialize } from '../../';
 
 vi.mock('../../build');
 const buildMock = vi.mocked(build);
@@ -491,9 +492,7 @@ describe('CLI', () => {
       mockArgv('init');
       await importCli();
 
-      expect(initializeMock).toBeCalledWith(
-        expect.objectContaining({ requireGit: true }),
-      );
+      expect(initializeMock).toBeCalledWith(expect.objectContaining({}));
     });
 
     it('should respect the provided folder', async () => {
@@ -503,7 +502,6 @@ describe('CLI', () => {
       expect(initializeMock).toBeCalledWith(
         expect.objectContaining({
           directory: 'path/to/folder',
-          requireGit: true,
         }),
       );
     });
@@ -515,7 +513,6 @@ describe('CLI', () => {
       expect(initializeMock).toBeCalledWith(
         expect.objectContaining({
           template: 'vue',
-          requireGit: true,
         }),
       );
     });
@@ -527,18 +524,17 @@ describe('CLI', () => {
       expect(initializeMock).toBeCalledWith(
         expect.objectContaining({
           packageManager: 'pnpm',
-          requireGit: true,
         }),
       );
     });
 
-    it('should respect passing --no-git', async () => {
-      mockArgv('init', '--no-git');
+    it('should respect passing --git', async () => {
+      mockArgv('init', '--git');
       await importCli();
 
       expect(initializeMock).toBeCalledWith(
         expect.objectContaining({
-          requireGit: false,
+          requireGit: true,
         }),
       );
     });

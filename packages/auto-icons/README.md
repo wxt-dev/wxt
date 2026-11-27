@@ -37,7 +37,11 @@ The module can be configured via the `autoIcons` config:
 export default defineConfig({
   modules: ['@wxt-dev/auto-icons'],
   autoIcons: {
-    // ...
+    // See AutoIconsOptions API documentation:
+    // https://npmx.dev/package-docs/@wxt-dev/auto-icons/v/latest#interface-AutoIconsOptions
+
+    // Use an absolute path to reference an icon outside srcDir.
+    baseIconPath: resolve('public/icon.svg'),
   },
 });
 ```

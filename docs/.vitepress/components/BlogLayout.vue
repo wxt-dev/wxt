@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { Ref } from 'vue';
-import useBlogDate from '../composables/useBlogDate';
 import { Content, useData } from 'vitepress';
+import { Ref } from 'vue';
+
+import useBlogDate from '../composables/useBlogDate';
 import { PostFrontmatter } from '../utils/types';
 
 const { frontmatter } = useData() as unknown as {

@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+
 import { readJson } from '../internal-utils/fs-utils';
 import { wxt } from './wxt';
 

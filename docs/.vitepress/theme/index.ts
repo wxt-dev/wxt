@@ -1,15 +1,17 @@
+import { createMermaidRenderer } from 'vitepress-mermaid-renderer';
+import { useData, type EnhanceAppContext } from 'vitepress/client';
 import DefaultTheme from 'vitepress/theme';
-import Icon from '../components/Icon.vue';
-import EntrypointPatterns from '../components/EntrypointPatterns.vue';
-import UsingWxtSection from '../components/UsingWxtSection.vue';
-import ExampleSearch from '../components/ExampleSearch.vue';
+import { h, nextTick, watch } from 'vue';
+
 import BlogLayout from '../components/BlogLayout.vue';
+import EntrypointPatterns from '../components/EntrypointPatterns.vue';
+
 import './custom.css';
 import 'virtual:group-icons.css';
-import { useData, type EnhanceAppContext } from 'vitepress/client';
+import ExampleSearch from '../components/ExampleSearch.vue';
+import Icon from '../components/Icon.vue';
+import UsingWxtSection from '../components/UsingWxtSection.vue';
 import { setupCodeGroupSync } from '../utils/code-groups-sync';
-import { createMermaidRenderer } from 'vitepress-mermaid-renderer';
-import { h, nextTick, watch } from 'vue';
 
 export default {
   extends: DefaultTheme,

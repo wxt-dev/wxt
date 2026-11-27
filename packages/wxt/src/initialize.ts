@@ -1,14 +1,16 @@
+import { readdir, rename } from 'node:fs/promises';
+import path from 'node:path';
+import { styleText } from 'node:util';
+
 import { question, select, confirm } from '@topcli/prompts';
 import { consola } from 'consola';
 import { downloadTemplate } from 'giget';
-import { readdir, rename } from 'node:fs/promises';
+import { x as spawn } from 'tinyexec';
+
 import { pathExists } from './internal-utils/fs-utils';
 import { normalizePath } from './internal-utils/path-utils';
-import path from 'node:path';
-import { styleText } from 'node:util';
 import { TextStyle } from './internal-utils/type-utils';
 import { createSpinner } from './internal/spinner';
-import { x as spawn } from 'tinyexec';
 
 export async function initialize(options: {
   directory?: string;
@@ -29,6 +31,18 @@ export async function initialize(options: {
     options.directory ??
     (await question('Project Directory', { defaultValue: '.' }));
   if (!directory) throw Error('Directory is required');
+
+  const isExists = await pathExists(directory);
+  if (isExists) {
+    const isEmpty =
+      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
+    if (!isEmpty) {
+      consola.error(
+        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
+      );
+      process.exit(1);
+    }
+  }
 
   const templateName =
     inputTemplateName ??
@@ -59,17 +73,6 @@ export async function initialize(options: {
     options.requireGit ??
     (await confirm('Initialize a new git repository?', { initial: true }));
 
-  const isExists = await pathExists(directory);
-  if (isExists) {
-    const isEmpty =
-      (await readdir(directory)).filter((dir) => dir !== '.git').length === 0;
-    if (!isEmpty) {
-      consola.error(
-        `The directory ${path.resolve(directory)} is not empty. Aborted.`,
-      );
-      process.exit(1);
-    }
-  }
   await cloneProject({ directory, template, requireGitInitialized });
 
   const cdPath = path.relative(process.cwd(), path.resolve(directory));
@@ -140,7 +143,9 @@ async function listTemplatesUngh(): Promise<Template[]> {
 async function listTemplatesGithub(): Promise<Template[]> {
   const res = await fetch(
     `https://api.github.com/repos/${REPO}/contents/templates`,
-    { headers: { Accept: 'application/vnd.github+json' } },
+    {
+      headers: { Accept: 'application/vnd.github+json' },
+    },
   );
   if (res.status !== 200)
     throw Error(
